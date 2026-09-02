@@ -4,123 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 25C7BC61DD6
-	for <kexec@archiver.kernel.org>; Wed,  2 Sep 2026 16:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D765FC624D6
+	for <kexec@archiver.kernel.org>; Wed,  2 Sep 2026 17:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=nM61rBP1BrIw92wse1BgxX/qISplnRkVLpz/2YdWlss=; b=OSNCFdoUUqvTo45eOdIFiAtKFD
-	ZZj59W/dUyh3N/eIQw9CS9ub827CKZ+qklmgwA/hqJ+9KN7LeT0/vZRaGt3uE1e+2WNRg3N/Z6NhL
-	jb+aWLdpzU/PEwxbb3qWhQly6Q40dfCIlRTydhXSc7068+RDS+dcxekXLHLl5x748IAR0R9ji01Ww
-	BnYnfmEW5voC0vqDJYYVPrmhv1t4dgHsFM1vomBKGDwFr2TMvZExiTnNfhYEhfo+ub4fgkC8krItT
-	bzlZoF91au+io4JiUwxjL9xDgtQ4tgD/P83336W1ANDo3xVXUP3JCFrZDqGw/naFXqPBQMNGGnCLE
-	ZIgH883A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=xOI6fE6IFzn2Y2SJgYgTQiaYQdwE/HE1TtjRKTx+nYQ=; b=O8+N93BK8p2TLsaORHLwfnm1KY
+	sUB3kWgZ/y6cP5uYIJfhz1VU04mxSt52kywOkTDSHan2cGTDldfg/o0uWIYFW7KNKN1ZIiA23jsFy
+	LH+eBD0t81oRjhcsAGYa/z0nOQw0Q80gyW1DyhaeIkeeApAOXkCcikXr4aoKQiPmnE2cp82ppCAmS
+	+Dhe+C4IEkgiRJ/jleeac1B1epdhv1MJtoAE56widY/XChIIZlWtmDvSQV/CMgA3Alx4YctkRoWNd
+	0E1p2NwhN63128ij/WFjFvre4gWx9SiYtfuM+v7CORI9pJ5412YSE5bqF/ndwZ63KOYTi3zfMTzHC
+	I1aKpJgQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1nrj-0000000FCo7-3SGE;
-	Wed, 02 Sep 2026 16:31:17 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1x1oSK-0000000FOOW-0oju;
+	Wed, 02 Sep 2026 17:09:00 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1nr8-0000000FCj7-2DBr
-	for kexec@bombadil.infradead.org;
-	Wed, 02 Sep 2026 16:30:46 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:MIME-Version:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=nM61rBP1BrIw92wse1BgxX/qISplnRkVLpz/2YdWlss=; b=XtCyjNgLzS6K0YXDQwhvttmxkp
-	ARLPL4FHLOKY2Lztaoajkt+wawXJN3g7nUMDr/l7JVXzb/M5Agc7KDMw/RuS825aOtaXiipLESZYB
-	UIPZOuKQmTabC1Wv55Eg2IdnCoXkcUNgC2hIyJWIanrNREhVQQNXi2O2IdkpjgNn92O5pKEPlkJGE
-	S/uGggQI+lYsmx2sQK627KrOOoT8v/4EbjLLdFsuAxVZc0o2LAk7Doa7r5ipRvoixvcT/Pbd7LKZ1
-	kcB7nJhKmmEj4o9fpxnw+beTttuSvJ9P64CO1GwTNCHy3VImrxIIuQg+LoxlpxiLaupHhidwg8muu
-	8FVs1ZrQ==;
-Received: from mail-ej1-x62f.google.com ([2a00:1450:4864:20::62f])
-	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
-	id 1x1nr3-0000000CCQq-29lI
+	id 1x1oSH-0000000FOMV-0Hrr
 	for kexec@lists.infradead.org;
-	Wed, 02 Sep 2026 16:30:31 +0000
-Received: by mail-ej1-x62f.google.com with SMTP id a640c23a62f3a-c207cb16cf5so181103466b.1
-        for <kexec@lists.infradead.org>; Wed, 02 Sep 2026 09:30:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788366625; cv=none;
-        d=google.com; s=arc-20260327;
-        b=QECWQ8vIlSdgSiS1QPdB8xX7E+/WqticW/0xs1KTlPH4TmDVkKxZFdZHlJlN0aQcea
-         SmsGGiMCd5GndCftq8XWAn9sDKdE8Bd3Hr2ZLmAY0CmQHYs4TjL7riCg5HK1TqEy2N0q
-         wyC+xKTAv79mBIqkSFeKV0JzMlCpKdYjmJniGEvEiO/Iw0BG1AxB0qt073d/q6KFWCW0
-         tQBeXOMjbEx2JTM70cRHzw9J8zmZ2I/R7WXKc4lSzCOGyLi7wQgwgXB2P+4QA4ZnyblZ
-         CMCts9pJubjknLbNCn4G0OhkGVuVvWa1TDLG8Rw+8aTzALBCPSJ4iREi+SZirnv+T+U6
-         4AZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=nM61rBP1BrIw92wse1BgxX/qISplnRkVLpz/2YdWlss=;
-        fh=WifwyjTspIiPm4zs+rES/xukqGB7IdRUIA6X+v7zq34=;
-        b=ny4CihD8+VDKgpmA+jhEsqgS67qfGlRlJavJI7vmp8l0gEpVyHEfVJrcEiHg5rYHCQ
-         6C/Dyi9oPUmRN825/54upFCuePStOnR3sUtOqUjRct/0dNl9gy4nZSUoVR9mJv66vfNK
-         CrN1AJ+No/joql6sD0qQP42HdA1+HsCJWI7WCRhPz+e1fAA1XBhadQXLbb0Wf8cKsDi/
-         xsBYr+tq2cbeEQZwez1vdFP3htHV27nzYcKH6fK4SykDuc/muhi/0E+M/9NY2jWZuRbZ
-         j1j7pMDjUWd78+Qzq+R0sEgGraybo09BdBQte/RL50u/kKr0572uy9rUJ5VkTWWlPnUT
-         jfXA==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788366625; x=1788971425; darn=lists.infradead.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=nM61rBP1BrIw92wse1BgxX/qISplnRkVLpz/2YdWlss=;
-        b=ValpyAGXzYGH5l6UKnDoK0o+MZZWvXrQ8Z8Ed1YVQS3oBBe+hENY8wWwBt3HcgWwix
-         qeUgHm8q1wcsVQnpCDG+GMEbNHZ8QPzArFBZhQJprZzkwQtsJBcuHe6m4OvJ4C6aG1rH
-         4o2kPKNejD3oFoLF+hEPd8mtprOYRSiBaYfYlVohbWopBJPvzwzSjyDwHQ/N/quBC44/
-         UzLgJjd5ykxplG/cNTt/BbY3MQF6L3TWv6TBX0OYKh9fYawQ5NZmkQDNhGEDxdMizNHK
-         1xaRnbTUqgAL7eqx24M8TTLdTBJT02wRYMekZqNJN5+mWWuzQJegOB5OI8nG7MJb11oV
-         LIDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788366625; x=1788971425;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=nM61rBP1BrIw92wse1BgxX/qISplnRkVLpz/2YdWlss=;
-        b=ShM/KT6XQt6h6jkux5OlYx6tJUcoeK/y/wbHDoVKTJzdge8QBP4Yim01/zzrL2uleI
-         DvMgBcmJMwa41wzsqIQMIt0vtDODQXUhMcfzNrak80o+PKvVZGuFJkG4Pd570vXR/eyg
-         lj9zzFL/6INXmZ0yafbI0PCLlkWGmXvUmEBUTBmQkbCTS65wgGMqpLBgA4KxvNndvfL3
-         s5a7JpOzxUzUwrl/ePMSu5Y9TO3dmx6rL6n7We6F9yQ6D36FqA/050IXF3voY0ebgDi8
-         YdwIIOQYEmP83Y/hMqqxeMbH5MA61Y900Mva0wMugoT/OEnqlomFpWnQGeFBtCd+PTAi
-         IqeA==
-X-Forwarded-Encrypted: i=1; AKwUvBx9W1SEjiZfaO6Gy5UpnlxROKigbP7DttMIIwcHzDOr/3NaBhHuifcMtvwhQws7Rd1ou/VT0w==@lists.infradead.org
-X-Gm-Message-State: AFuF++kSQASfw/ea+ToNllMpa6lajaCV5IKWb0a2EhrBMBcZlSfISxKy
-	wyIUwyAQACPGLr/zkl0NfWCxKjHar50EFnPzVg+rR8YdApyNMtQwaYPHbKRaWQXFqwnE4Yo/2ah
-	tnfF+2lm/MRT7p65Ssdw1A80g+DJMh1gouYBr2gxm
-X-Gm-Gg: AYBFou3MJnrsnMfqw7QaYXUK685LLPpkIx8fiw8a9v8omY1qt6mbWFQViYjLsq+R3cn
-	BfqfCXmUTGD03vMbjPLBuZ/pYiaCAtU+PGNfvffCLP0Niu20NZXEx0wLSpB+5CoIoRFv8LNOh4b
-	1XoPXbdef3MuqhWdaZMHuzrhs+LES0Rada8A4gJPxUEZRBEImsEs0mz5VT9ktB07x08OFhclCmQ
-	jDn6UCswx+IGYerjQGTh/8a5qizq5O1v0JvMnPN0XI3VAKJRQy6o8Te+c4sW7upsqcKWsm9NlVy
-	N8psaEuAfMsfUKU1Ih3pWIjEdgAG7wJDRi3o6A0tvar0fJ0XdqLEWeAB
-X-Received: by 2002:a17:906:99ce:b0:c25:1b4f:6d95 with SMTP id
- a640c23a62f3a-c25d529fe25mr473576466b.6.1788366624769; Wed, 02 Sep 2026
- 09:30:24 -0700 (PDT)
+	Wed, 02 Sep 2026 17:08:58 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1788368934;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=xOI6fE6IFzn2Y2SJgYgTQiaYQdwE/HE1TtjRKTx+nYQ=;
+	b=XjR0/wVjEiiJHyJFhA8eRnodcBbXKoETP0AS8xbZTy644YtQ4/vnd/gpsflrJKslqxElzV
+	R8QnxDrrD1SwBpCW0gr2K29n7tDZ7y09thJ/WAMisWw5vGATW08BRSBMJKf/X6wOOp7m7w
+	WijcQDtrrbUS99cXGGBTnnrydM/cWws=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-190-QabH0riVNguA83tMeaLkNg-1; Wed,
+ 02 Sep 2026 13:08:52 -0400
+X-MC-Unique: QabH0riVNguA83tMeaLkNg-1
+X-Mimecast-MFC-AGG-ID: QabH0riVNguA83tMeaLkNg_1788368928
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A0D9D195E920;
+	Wed,  2 Sep 2026 17:08:47 +0000 (UTC)
+Received: from djeffery-thinkpadp1gen3.rmtusga.csb (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A00C01955D8D;
+	Wed,  2 Sep 2026 17:08:43 +0000 (UTC)
+From: David Jeffery <djeffery@redhat.com>
+To: driver-core@lists.linux.dev,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	Tarun Sahu <tarunsahu@google.com>,
+	Stuart Hayes <stuart.w.hayes@gmail.com>,
+	Laurence Oberman <loberman@redhat.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	kexec@lists.infradead.org,
+	"Ewan Milne" <emilne@redhat.com>,
+	"John Meneghini" <jmeneghi@redhat.com>,
+	"Lombardi, Maurizio" <mlombard@redhat.com>,
+	"Bart Van Assche" <bvanassche@acm.org>,
+	"John Garry" <john.g.garry@oracle.com>,
+	"Jeremy Allison" <jallison@ciq.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	"Pasha Tatashin" <tatashin@google.com>,
+	David Jeffery <djeffery@redhat.com>
+Subject: [PATCH v21 0/9] shut down devices asynchronously
+Date: Wed,  2 Sep 2026 13:07:25 -0400
+Message-ID: <20260902170734.95504-1-djeffery@redhat.com>
 MIME-Version: 1.0
-References: <CALzav=eL-cARsaH4AO4PzeOPNDmTHpCZbYh9yX_U8pbz96qdTQ@mail.gmail.com>
- <apenOdHJmH_VeD-X@kernel.org> <ape5s5tdwV6WwPih@fedora> <apfYhLD0sHt2odi8@kernel.org>
-In-Reply-To: <apfYhLD0sHt2odi8@kernel.org>
-From: David Matlack <dmatlack@google.com>
-Date: Wed, 2 Sep 2026 09:29:55 -0700
-X-Gm-Features: AcwNN1W0jNM0_qebUiV26vkDEnpXQXQSrqSNV5dgX0QdrJ2hfQaq5AEYNfT2sGk
-Message-ID: <CALzav=e7J8XgdNh8998=qEXjqLVyof1DaYDf8swiApFOLVCpLw@mail.gmail.com>
-Subject: Re: RFC: Enable Sashiko code reviews for kexec@lists.infradead.org
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Baoquan He <baoquan.he@linux.dev>, kexec@lists.infradead.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Dave Young <ruirui.yang@linux.dev>, 
-	Alexander Graf <graf@amazon.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Mimecast-MFC-PROC-ID: lWTIc4mzDwRunQ4USn4G65AwIk_ddCtJKjbFRVsuFEs_1788368928
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260902_173029_782448_DF4AAFA4 
-X-CRM114-Status: GOOD (  27.08  )
+X-CRM114-CacheID: sfid-20260902_100857_187920_E53642E8 
+X-CRM114-Status: GOOD (  30.69  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -135,56 +100,186 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Sep 2, 2026 at 1:04=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wrot=
-e:
->
-> Hi Baoquan,
->
-> On Wed, Sep 02, 2026 at 01:52:51PM +0800, Baoquan He wrote:
-> > On 09/02/26 at 07:34am, Mike Rapoport wrote:
-> > > On Tue, Sep 01, 2026 at 01:27:34PM -0700, David Matlack wrote:
-> > > > Hi kexec@ mailing list and maintainers,
-> > > >
-> > > > I would like to enable Sashiko code reviews for patches sent to the
-> > > > kexec mailing list. I have found it useful for patches I have sent =
-and
-> > > > reviewed on the kvm and linux-pci mailing lists, which have Sashiko
-> > > > enabled.
-> > > >
-> > > > I sent a pull request to Sashiko to add kexec here:
-> > > >
-> > > >   https://github.com/sashiko-dev/sashiko/pull/474
-> > >
-> > > diff --git a/sashiko.dev/email_policy.toml b/sashiko.dev/email_policy=
-.toml
-> > > index e6e4fb57f..e9ad97708 100644
-> > > --- a/sashiko.dev/email_policy.toml
-> > > +++ b/sashiko.dev/email_policy.toml
-> > > @@ -175,6 +175,12 @@ reply_to_author =3D false
-> > >  cc_individuals =3D false
-> > >  cc =3D ["Chuck Lever <cel@kernel.org>", "Jeff Layton <jlayton@kernel=
-.org>", "Anna Schumaker <anna@kernel.org>"]
-> > >
-> > > +[subsystems.kexec]
-> > > +lists =3D ["kexec@lists.infradead.org"]
-> > > +reply_to_author =3D true
-> > > +send_positive_review =3D true
-> > >
-> > > Do we really want those?
-> >
-> > Some components don't want to CC list, then other people are welcome to
-> > drop any comment during reviewing, while cc to maintainer and author
-> > looks good to me. Just an input, no objection to any move.
->
-> Sorry, I wasn't clear, I meant do we really want extra emails saying
-> sashiko is happy?
+These patches are rebased against the driver-core tree's driver-core-next
+branch and should also apply against recent linux-next. Changes for v18 are
+contained in patch 3.
 
-This is currently enabled on the PCI mailing list and I have found it
-useful there. It makes it trivial to distinguish between "Sashiko
-reviewed the patch and found no issues" and "Sashiko did not review
-the patch" (could not apply it, backend bugs, whatever) without having
-to go to the Sashiko web UI to confirm. I can stay entirely on the
-mailing list.
+This patchset allows the kernel to shutdown devices asynchronously and
+unrelated async devices to be shut down in parallel to each other.
 
-But I am ok with dropping it if you feel strongly. It is a small thing.
+Only devices which explicitly enable it are shut down asynchronously. The
+default is for a device to be shut down from the synchronous shutdown loop.
+
+This can dramatically reduce system shutdown/reboot time on systems that
+have multiple devices that take many seconds to shut down (like certain
+NVMe drives). On one system tested, the shutdown time went from 11 minutes
+without this patch to 55 seconds with the patch. And on another system from
+80 seconds to 11.
+
+And thank you to everyone who has spent some of their valuable time
+providing reviews, suggestions, criticisms, or tests on the various
+iterations of this patchset.
+
+Changes from V20:
+- Move PCI bridge async enablement to before its call to device_add
+- Use srcu to prevent ensure any active device_add is completed before
+  device_shutdown begins shutting down devices.
+
+Changes from V19:
+- Convert initial creation of shutdown_one_device to a code move with no
+  changes or side effects
+- Add a warning to device_move should some device ever mix need_parent_lock
+  with device_move in the future
+- Link a PCI virtual function as consumer of its associated physical
+  function to ensure proper shutdown order
+
+Changes from V18:
+- Fix deadlock and race condition on concurrent device_add
+- Use local variable to device_shutdown for caching async_shutdown
+- Added dev->p check to avoid NULL pointer deference and tell if the
+  device is not registered so no need to be shutdown. This is to handle
+  the cases when devices consumers list might have devices that are not
+  yet registered.
+
+Changes from V17:
+
+Fix mangled text in kernel parameter description
+Re-protect the list removal with the spinlock
+  * Hold a device reference to ensure the device cannot be freed before
+    attempting list removal
+
+Changes from V16:
+
+Drop spinlock before async subsystem call which uses GFP_KERNEL
+Handle that async shutdown can widen races between device shutdown and deletion
+  * __shutdown_one_device will immediately return if a device is dead
+  * Set shutdown device completion to complete when marking a device dead to
+      prevent waiting on a dead device
+  * Only late-access a parent pointer if device is in a non-dead state to
+      ensure the pointer is still valid
+
+Changes from V15:
+
+The async_shutdown bit field is converted to a device flags bit
+Convert all patches to use the flag bit accessor macros to set or check if
+  async shutdown should be used
+Added documentation on the kernel parameter to control use of async shutdown
+
+Changes from V14:
+
+Remove unneeded use of '!!' with boolean type
+
+Changes from V13:
+
+Remove duplicate flagging of async shutdown on scsi hosts/targets/devices
+
+Changes from V12:
+
+Only acquire a parent reference if acquiring the parent's lock
+device_enable_async_shutdown should return void
+Minor comment and description cleanups
+
+Changes from V11:
+
+  * Swap the order of the first two patches
+  * Rework conditional parent locking so that lock and unlock no longer use
+    separate conditional checks
+  * Remove an used variable
+  * Comment and description text cleanups
+
+Changes from V10:
+
+Reworked to more closely match the design used for async suspend
+  * No longer uses async subsystem cookies for synchronization
+  * Minimized changes to struct device
+  * Enable async shutdown for pci and scsi devices which support async suspend
+
+Changes from V9:
+
+Address resource and timing issues when spawning a unique async thread
+for every device during shutdown:
+  * Make the asynchronous threads able to shut down multiple devices,
+    instead of spawning a unique thread for every device.
+  * Modify core kernel async code with a custom wake function so it
+    doesn't wake up a thread waiting to synchronize on a cookie until
+    the cookie has reached the desired value, instead of waking up
+    every waiting thread to check the cookie every time an async thread
+    ends.
+
+Changes from V8:
+
+Deal with shutdown hangs resulting when a parent/supplier device is
+  later in the devices_kset list than its children/consumers:
+  * Ignore sync_state_only devlinks for shutdown dependencies
+  * Ignore shutdown_after for devices that don't want async shutdown
+  * Add a sanity check to revert to sync shutdown for any device that
+    would otherwise wait for a child/consumer shutdown that hasn't
+    already been scheduled
+
+Changes from V7:
+
+Do not expose driver async_shutdown_enable in sysfs.
+Wrapped a long line.
+
+Changes from V6:
+
+Removed a sysfs attribute that allowed the async device shutdown to be
+"on" (with driver opt-out), "safe" (driver opt-in), or "off"... what was
+previously "safe" is now the only behavior, so drivers now only need to
+have the option to enable or disable async shutdown.
+
+Changes from V5:
+
+Separated into multiple patches to make review easier.
+Reworked some code to make it more readable
+Made devices wait for consumers to shut down, not just children
+  (suggested by David Jeffery)
+
+Changes from V4:
+
+Change code to use cookies for synchronization rather than async domains
+Allow async shutdown to be disabled via sysfs, and allow driver opt-in or
+  opt-out of async shutdown (when not disabled), with ability to control
+  driver opt-in/opt-out via sysfs
+  
+Changes from V3:
+
+Bug fix (used "parent" not "dev->parent" in device_shutdown)
+ 
+Changes from V2:
+ 
+Removed recursive functions to schedule children to be shutdown before
+  parents, since existing device_shutdown loop will already do this
+ 
+Changes from V1:
+
+Rewritten using kernel async code (suggested by Lukas Wunner)
+
+David Jeffery (7):
+  driver core: warn should device_move try to move a need_parent_lock
+    device
+  driver core: separate function to shutdown one device
+  driver core: do not always lock parent in shutdown
+  driver core: async device shutdown infrastructure
+  PCI: Link a virtual function to its physical function
+  PCI: Enable async shutdown support
+  scsi: Enable async shutdown support
+
+Tarun Sahu (2):
+  driver core: rely on put_device to free dev->p
+  driver core: prevent device_add() during system shutdown
+
+ .../admin-guide/kernel-parameters.txt         |  10 +
+ drivers/base/base.h                           |   2 +
+ drivers/base/core.c                           | 269 +++++++++++++++---
+ drivers/pci/iov.c                             |  11 +-
+ drivers/pci/probe.c                           |   2 +
+ drivers/scsi/hosts.c                          |   2 +
+ drivers/scsi/scsi_sysfs.c                     |   3 +
+ include/linux/device.h                        |   2 +
+ 8 files changed, 260 insertions(+), 41 deletions(-)
+
+-- 
+2.55.0
+
 
