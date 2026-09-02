@@ -4,71 +4,123 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2E838C624D3
-	for <kexec@archiver.kernel.org>; Wed,  2 Sep 2026 19:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E2AF5C624D4
+	for <kexec@archiver.kernel.org>; Wed,  2 Sep 2026 21:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
-	From:Date:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=+Ds1CN7wyBj0/WD3A2+TCEoFvSmR/wlQd0q1DEgmO68=; b=gi3LfsKI5lAMrS6UBSUI+/FKyp
-	HOYBJCOOKWFKQbT5J76jzni2aPxMyRTzZeM9GCuPaZVo1SV/jdYeqkZoGyg4x31750QuQXollew2a
-	BZambXAwlVjJ55muubDyd+0OxxiQd3rLIAFVOAVfPYFbAj5ZbIcguKdyxmztKQ9ajra01YT91KJA5
-	GQ3hhONACzH5EkkT9hCpgpKDGqmxT1Ta4UG+VPMPbDV3NVcfGXzkoXipnYlxVf3hSDcsCF8xP0Z25
-	n60cFn+rIAqSNeim/wcke3EO0Cku0nCcCLTPU1QYRaFrVC4XNyw0nW/qhVNFIch49TwvKPGncdWgG
-	mmX1LyUQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=v/HpaKadoYW3H3dqFWTG0yyc6tDzyTXTA/JVahq5GtY=; b=KXUkQRPbzZ/8VC2czFR4fgNA2i
+	nQ2Ig+7/smSsLYyQLnrlu8Gl/9IdI5IgVLmQr1owhmBYpJ/yObyAHWTqxbcw3FvctpFN057n5qSC9
+	sg4XlCYnSCxs6fXAEU470Ie+zAHN7dsa+Rf3j9GwGfENxjwzvAcQMErS/SGFCQ1ifk/fBIm3TcPAN
+	e0bFaSz6xCxS3A9dwghawij4Rsdyelj2c/1OMJ/gyYubM0amGk2kotkGVbct3CgcbIJlo65B1KDWt
+	t2V3LUwq83vZATpkrBZ3cmHdheDwpJXEAZLPZOQ+obe+0QuzBTMLTkADST6mu4m9LFHNU44svB6pM
+	VJn1pLVg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1qFW-0000000FeUB-07CZ;
-	Wed, 02 Sep 2026 19:03:54 +0000
-Received: from mgamail.intel.com ([198.175.65.16])
+	id 1x1sRT-0000000Fvyb-1W44;
+	Wed, 02 Sep 2026 21:24:23 +0000
+Received: from mgamail.intel.com ([198.175.65.12])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1qFT-0000000FeTW-1eTB
+	id 1x1sRQ-0000000Fvy4-1Pui
 	for kexec@lists.infradead.org;
-	Wed, 02 Sep 2026 19:03:52 +0000
+	Wed, 02 Sep 2026 21:24:21 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788375832; x=1819911832;
-  h=date:from:to:cc:subject:message-id;
-  bh=MZiB87hgpszJdY4Lc7Q0El+74BQGAHaSj1QLOdLBHA0=;
-  b=CtZxvopVJ4Ky8pzaRE1NykI2tEcg3Gi8gZ5+HeuFUi3yoo5s6KIjPoHm
-   CCKnNisw6dxTLt/SxeQ88NHGgTHe+iBlOT4UYqyIJ4JlgyrJ0XC7hiyI9
-   ox/ctvAEOBiCy6cVepb4yrM8W4l7jnWEvRYFXFOCDwZfMG5cZyglkLQo+
-   AY5+o8BK52qZNnt99gCmYeA3l9pTXVC+xstwjJwpPGlKlSrk5eW9+uFdx
-   YrPXTfrkqXkyTHDbcG5Mvy8s/qy6AiJ+A5m/VHQh6Dae50Ihc4VfjBPro
-   F5nBHPc8el1yYaNhaw8mh+Uwsib8M0BPyXQUA8MKfANFNKPsAEcUXqcLP
-   g==;
-X-CSE-ConnectionGUID: zizYLqkbSk2z0XMYy2q05A==
-X-CSE-MsgGUID: Rd4dNt2BRPaUR79zj4Lauw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11894"; a="89057143"
+  t=1788384260; x=1819920260;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=v/HpaKadoYW3H3dqFWTG0yyc6tDzyTXTA/JVahq5GtY=;
+  b=VhR1TmgYS5jvvsFW9J/HDYrvShz6Q3y4oWmpEyLNGJ3OH45t7ASbWGea
+   s2IKDIj9kBSSgvjmOey2I4xAJf0NRX+OWXUCPogw5nwOuO5Lz4o8vXi8c
+   I1KMHLkNdtPBP3PpSpBd5Vo3i87EqBxDhZRW5kVA+X4ONfIlvnrZkdsxj
+   tkOlIVLfZaWwYWkKUzF4YhAfcwLlDYL/wgvOG0OpIVu4LF4FBKs0bp6Z6
+   8wNOVK89WNW3Dx226enlHqCrMyG/fgwLnl/mn7jM5NN89fdaPWtvg+XtX
+   kj4yDAYDUiGrZCinnOuniS0MHDCi9vz2zbjqzYAi9IBVac8gMhndHJEEg
+   w==;
+X-CSE-ConnectionGUID: ZpQhBFRCTqaqCPGcXojPpw==
+X-CSE-MsgGUID: pYMoDG4BTtCaP7zExfWzaQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11894"; a="100372380"
 X-IronPort-AV: E=Sophos;i="6.25,258,1779174000"; 
-   d="scan'208";a="89057143"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2026 12:03:51 -0700
-X-CSE-ConnectionGUID: rtMcp61zSxWFaJS4X6YyUw==
-X-CSE-MsgGUID: nDk0159OQxeYdjP5Mh2mow==
+   d="scan'208";a="100372380"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2026 14:24:18 -0700
+X-CSE-ConnectionGUID: sI421YcMQImxK8T+gQpzyQ==
+X-CSE-MsgGUID: q5GxC6zgTxKPT6gbx4G9HQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,258,1779174000"; 
-   d="scan'208";a="273655138"
-Received: from lkp-server01.sh.intel.com (HELO bfac249b2189) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 02 Sep 2026 12:03:50 -0700
-Received: from kbuild by bfac249b2189 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1x1qFO-000000003CK-4BO3;
-	Wed, 02 Sep 2026 19:03:46 +0000
-Date: Thu, 03 Sep 2026 03:02:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org
-Subject: [liveupdate:next] BUILD SUCCESS
- c65687600ed075d237a204755d99ad538db34b47
-Message-ID: <202609030343.GkSvz1hb-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+   d="scan'208";a="266925085"
+Received: from cjhill-mobl.amr.corp.intel.com (HELO [10.125.110.134]) ([10.125.110.134])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2026 14:24:17 -0700
+Message-ID: <97887aeb-4454-4cb9-91ad-d0477d3ea5dd@intel.com>
+Date: Wed, 2 Sep 2026 14:24:16 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/2] x86/crash: reserve elfcorehdr for CONFIG_NR_CPUS,
+ not CONFIG_NR_CPUS_DEFAULT
+To: "Ionut Nechita (Wind River)" <ionut.nechita@windriver.com>,
+ x86@kernel.org, kexec@lists.infradead.org
+Cc: tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, akpm@linux-foundation.org,
+ baoquan.he@linux.dev, rppt@kernel.org, pasha.tatashin@soleen.com,
+ pratyush@kernel.org, ruirui.yang@linux.dev, eric.devolder@oracle.com,
+ hbathini@linux.ibm.com, sourabhjain@linux.ibm.com, ruanjinjie@huawei.com,
+ brads@mainlining.org, linux-kernel@vger.kernel.org
+References: <20260901071041.16311-1-ionut.nechita@windriver.com>
+ <20260901071041.16311-2-ionut.nechita@windriver.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20260901071041.16311-2-ionut.nechita@windriver.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260902_120351_466760_79BC71EB 
-X-CRM114-Status: UNSURE (   4.45  )
+X-CRM114-CacheID: sfid-20260902_142420_418194_ECFF37DF 
+X-CRM114-Status: UNSURE (   6.42  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -84,79 +136,13 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git next
-branch HEAD: c65687600ed075d237a204755d99ad538db34b47  Merge branch 'luo-internal-api' into next
+On 9/1/26 00:10, Ionut Nechita (Wind River) wrote:
+> Assisted-by: LLM
 
-elapsed time: 847m
+This seems a _bit_ opaque and imprecise. Could you take a quick look
+through:
 
-configs tested: 59
-configs skipped: 0
+https://docs.kernel.org/process/generated-content.html
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha         allnoconfig    gcc-16.1.0
-alpha        allyesconfig    gcc-16.1.0
-arc          allmodconfig    clang-24
-arc           allnoconfig    gcc-16.1.0
-arc          allyesconfig    clang-24
-arm           allnoconfig    clang-17
-arm           allnoconfig    gcc-16.1.0
-arm          allyesconfig    clang-24
-arm64        allmodconfig    clang-24
-arm64         allnoconfig    gcc-16.1.0
-csky         allmodconfig    gcc-16.1.0
-csky          allnoconfig    gcc-16.1.0
-hexagon      allmodconfig    gcc-16.1.0
-hexagon       allnoconfig    clang-24
-hexagon       allnoconfig    gcc-16.1.0
-i386         allmodconfig    clang-22
-i386          allnoconfig    gcc-14
-i386          allnoconfig    gcc-16.1.0
-i386         allyesconfig    clang-22
-loongarch    allmodconfig    clang-24
-loongarch     allnoconfig    clang-20
-loongarch     allnoconfig    gcc-16.1.0
-m68k         allmodconfig    gcc-16.1.0
-m68k          allnoconfig    gcc-16.1.0
-m68k         allyesconfig    clang-24
-microblaze    allnoconfig    gcc-16.1.0
-microblaze   allyesconfig    gcc-16.1.0
-mips         allmodconfig    gcc-16.1.0
-mips          allnoconfig    gcc-16.1.0
-mips         allyesconfig    gcc-16.1.0
-nios2        allmodconfig    clang-20
-nios2         allnoconfig    clang-24
-openrisc     allmodconfig    clang-20
-openrisc      allnoconfig    clang-24
-parisc       allmodconfig    gcc-16.1.0
-parisc        allnoconfig    clang-24
-parisc       allyesconfig    clang-17
-powerpc      allmodconfig    gcc-16.1.0
-powerpc       allnoconfig    clang-24
-riscv        allmodconfig    clang-24
-riscv         allnoconfig    clang-24
-riscv        allyesconfig    clang-24
-s390         allmodconfig    clang-17
-s390          allnoconfig    clang-24
-s390         allyesconfig    gcc-16.1.0
-sh           allmodconfig    gcc-16.1.0
-sh            allnoconfig    clang-24
-sh           allyesconfig    clang-17
-sparc         allnoconfig    clang-24
-sparc64      allmodconfig    clang-20
-um           allmodconfig    clang-17
-um            allnoconfig    clang-24
-um           allyesconfig    gcc-16.1.0
-x86_64       allmodconfig    clang-22
-x86_64        allnoconfig    clang-24
-x86_64       allyesconfig    clang-22
-x86_64      rhel-9.4-rust    clang-22
-xtensa        allnoconfig    clang-24
-xtensa       allyesconfig    clang-20
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+and try to err a bit more on the side of transparency for the next one?
 
