@@ -4,84 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A68BEC61DD3
-	for <kexec@archiver.kernel.org>; Wed,  2 Sep 2026 01:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 22CDAC61DFD
+	for <kexec@archiver.kernel.org>; Wed,  2 Sep 2026 04:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=t9UK13JKhSsPM/Vc9steoJSl+OnutIzRnlZukeamK+o=; b=gygD3GgZv+F2aeL3dQcTVkSqLm
-	U9znIPidb9D8uDKXoHvgyKy/E0VSOs27aL19Kvw6puuvbKGeKNWO47LdVJiung+tUloF8j2+xCY/K
-	qq6d6ekRdEgcfu6k6BnhFztgP8fuPX030d3H8o3siJ52VeXps5JhhKdU5LQmVSt7CnNZjlmzrMQ7e
-	ueWWSWE0/sfs1p83PeG1KbO5lzAtsc5m3Jdz/mRNeiA9UlRiCvKQWT5xsS5timyUD/VQvMyH8F7AE
-	OGyPdC34xzG9tdf1RAkuKD6KsS1Zx3m4OexwW0ynhto7dxi4k8hKUeCcEk27q7okD6jsXCqVBbskB
-	vsOVgW1A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=Xa5v7G6swyQRMVl1EcKJ/wOGI31Mh3zTDCzG8j29JfM=; b=SKoCyZ1YxxDr/y2w4BRXzNVp82
+	s3Icc6YtDxUm6TUyJpAYMRE1UDV4XAVRc9ItMLHevXAaRoXCG7cxEquJQMDwE4PnTRQz375MznJVx
+	PLNie9qnCkcBt7EWWgg634xmbzyIUX3fOsa3OqMxJ+fEAOVGETyiOS/U75xczll1yA5XvckrktCvM
+	bWNbou7M79oql6wxrFHTm/aU+KDjKjFam2XfTo9kZoUeMoB1zLb947nzXB8QO0tqETrXPXV+fUVMx
+	Lfdq+KQi2KwbGzkITV5nfEKnUOxGTbpwbFpJNqwAc0eYtPgGB57VumHwoUMdDFnCvC4mkGu3sOE1o
+	1IWY0vBQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1Zdq-0000000Dctj-2BmM;
-	Wed, 02 Sep 2026 01:19:54 +0000
-Received: from [113.46.200.227] (helo=canpmsgout12.his.huawei.com)
+	id 1x1cfp-0000000Dles-1971;
+	Wed, 02 Sep 2026 04:34:09 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1Zdo-0000000Dcsu-0dgt;
-	Wed, 02 Sep 2026 01:19:53 +0000
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=t9UK13JKhSsPM/Vc9steoJSl+OnutIzRnlZukeamK+o=;
-	b=JSc/QrUEAnbPE7s6EK6aHXX4FMrI/ak+7N46GxWAYjo+hv4+e8IRFqw3R57vf10ZXvwgmTnw1
-	5LsKKvi+A3v/zJR4bWOVaYI3bbjz5k4AHVvkI67n+bm/COW12+QwJBDOanQFb2mbBv/tq3BctvX
-	qaDBA0HnMSM+ut7AmVDhzas=
-Received: from mail.maildlp.com (unknown [172.19.162.92])
-	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hZPjt2PDTznTVd;
-	Wed,  2 Sep 2026 09:08:18 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id B4C9C40565;
-	Wed,  2 Sep 2026 09:19:31 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 2 Sep 2026 09:19:29 +0800
-Message-ID: <96ba8924-b857-4dbc-9161-4c464901f974@huawei.com>
-Date: Wed, 2 Sep 2026 09:19:28 +0800
+	id 1x1cfo-0000000Dlej-3UzQ
+	for kexec@lists.infradead.org;
+	Wed, 02 Sep 2026 04:34:08 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id E78CB4360F;
+	Wed,  2 Sep 2026 04:34:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2791D1F000E9;
+	Wed,  2 Sep 2026 04:34:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788323647;
+	bh=Xa5v7G6swyQRMVl1EcKJ/wOGI31Mh3zTDCzG8j29JfM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Q1vr1UtP3ajVLCnaVsMAGpKCZyvCbr03Y7GXoNXmmmy8ihlQhV13RSTlUtv6Zmobj
+	 mA2XVWM50AH7HbLRvdHERIPeRoH/E0c2ScZUuolMGMRudDWUrooUztVCdOezKuVlIt
+	 4Az63TewzcXfiU9h/zonwuPyFBiKwtdCFjTJYIpEfRghR3edFCr+7vT6PW76o/JQxH
+	 oCInDBeJ2rwq5Yiw/XNdo1uRD7cwhm0Iw30pw5/C2wC4cXlm3B5qHghSnxluIRseOZ
+	 N7PR05SncbpakcV0VYn1dqQkSOG6DXYOXwbdN6/GMTXXVHeii/NFHvuE3Mkyw/DAKt
+	 3HgOGaVtA/wPg==
+Date: Wed, 2 Sep 2026 07:34:01 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: David Matlack <dmatlack@google.com>
+Cc: kexec@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Dave Young <ruirui.yang@linux.dev>,
+	Alexander Graf <graf@amazon.com>
+Subject: Re: RFC: Enable Sashiko code reviews for kexec@lists.infradead.org
+Message-ID: <apenOdHJmH_VeD-X@kernel.org>
+References: <CALzav=eL-cARsaH4AO4PzeOPNDmTHpCZbYh9yX_U8pbz96qdTQ@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 15/17] crash: Simplify CRASH_MAX_MEMORY_RANGES handling
-To: Mike Rapoport <rppt@kernel.org>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
-	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
-	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
-	<tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
-	<baoquan.he@linux.dev>, <pasha.tatashin@soleen.com>, <pratyush@kernel.org>,
-	<ruirui.yang@linux.dev>, <kees@kernel.org>, <thuth@redhat.com>,
-	<gshan@redhat.com>, <jic23@kernel.org>, <james.morse@arm.com>,
-	<ardb@kernel.org>, <leitao@debian.org>, <yeoreum.yun@arm.com>,
-	<sourabhjain@linux.ibm.com>, <coxu@redhat.com>, <tangyouling@kylinos.cn>,
-	<hbathini@linux.ibm.com>, <adityag@linux.ibm.com>,
-	<ionut.nechita@windriver.com>, <liaoyuanhong@vivo.com>, <seanjc@google.com>,
-	<fuqiang.wang@easystack.cn>, <makb@juniper.net>, <piliu@redhat.com>,
-	<ebiggers@kernel.org>, <jbouron@amazon.com>, <mclapinski@google.com>,
-	<me@linux.beauty>, <graf@amazon.com>, <bgwin@google.com>, <robh@kernel.org>,
-	<takahiro.akashi@linaro.org>, <palmer@rivosinc.com>, <x86@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<kexec@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-mm@kvack.org>
-References: <20260826092541.3905933-1-ruanjinjie@huawei.com>
- <20260826092541.3905933-16-ruanjinjie@huawei.com>
- <178829364021.3691424.12328056849597833403.b4-review@b4>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <178829364021.3691424.12328056849597833403.b4-review@b4>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.109.254]
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- dggpemf500011.china.huawei.com (7.185.36.131)
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260901_181952_580516_55F0D932 
-X-CRM114-Status: GOOD (  11.13  )
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALzav=eL-cARsaH4AO4PzeOPNDmTHpCZbYh9yX_U8pbz96qdTQ@mail.gmail.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,65 +72,49 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-
-在 2026/9/2 4:14, Mike Rapoport 写道:
-> Hi,
+On Tue, Sep 01, 2026 at 01:27:34PM -0700, David Matlack wrote:
+> Hi kexec@ mailing list and maintainers,
 > 
->> Set CRASH_MAX_MEMORY_RANGES to 0 when MEMORY_HOTPLUG is disabled, then
->> remove the now unnecessary IS_ENABLED(CONFIG_MEMORY_HOTPLUG) checks in
->> powerpc and x86 arch_crash_get_elfcorehdr_size().
->>
->> No functional change intended.
->>
->> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
->>
->> diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
->> index fc0105c7af4c3..c47e3f867ea1f 100644
->> --- a/arch/powerpc/kexec/crash.c
->> +++ b/arch/powerpc/kexec/crash.c
->> @@ -474,9 +474,7 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
->>  	unsigned long phdr_cnt;
->>  
->>  	/* A program header for possible CPUs + vmcoreinfo */
->> -	phdr_cnt = num_possible_cpus() + 1;
->> -	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
->> -		phdr_cnt += CONFIG_CRASH_MAX_MEMORY_RANGES;
->> +	phdr_cnt = num_possible_cpus() + 1 + CONFIG_CRASH_MAX_MEMORY_RANGES;
->>  
->>  	return elf64_phdr_size(phdr_cnt);
->>  }
->> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
->> index 99eb8583d9321..116410ac90fb4 100644
->> --- a/arch/x86/kernel/crash.c
->> +++ b/arch/x86/kernel/crash.c
->> @@ -407,9 +407,7 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
->>  	unsigned int sz;
->>  
->>  	/* kernel_map, VMCOREINFO and maximum CPUs */
->> -	sz = 2 + num_possible_cpus();
->> -	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
->> -		sz += CONFIG_CRASH_MAX_MEMORY_RANGES;
->> +	sz = 2 + num_possible_cpus() + CONFIG_CRASH_MAX_MEMORY_RANGES;
->>  	sz *= sizeof(Elf64_Phdr);
->>  	return sz;
->>  }
->> diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
->> index a97ed9605602f..e6251dfe451a8 100644
->> --- a/kernel/Kconfig.kexec
->> +++ b/kernel/Kconfig.kexec
->> @@ -160,7 +160,8 @@ config CRASH_HOTPLUG
->>  
->>  config CRASH_MAX_MEMORY_RANGES
->>  	int "Specify the maximum number of memory regions for the elfcorehdr"
->> -	default 8192
->> +	default 8192 if MEMORY_HOTPLUG
->> +	default 0 if !MEMORY_HOTPLUG
+> I would like to enable Sashiko code reviews for patches sent to the
+> kexec mailing list. I have found it useful for patches I have sent and
+> reviewed on the kvm and linux-pci mailing lists, which have Sashiko
+> enabled.
 > 
-> This only sets the default, but a user can change the value explicitly.
-
-You're right. Let me drop this patch for now. Thanks for the review!
-
+> I sent a pull request to Sashiko to add kexec here:
 > 
+>   https://github.com/sashiko-dev/sashiko/pull/474
 
+diff --git a/sashiko.dev/email_policy.toml b/sashiko.dev/email_policy.toml
+index e6e4fb57f..e9ad97708 100644
+--- a/sashiko.dev/email_policy.toml
++++ b/sashiko.dev/email_policy.toml
+@@ -175,6 +175,12 @@ reply_to_author = false
+ cc_individuals = false
+ cc = ["Chuck Lever <cel@kernel.org>", "Jeff Layton <jlayton@kernel.org>", "Anna Schumaker <anna@kernel.org>"]
+ 
++[subsystems.kexec]
++lists = ["kexec@lists.infradead.org"]
++reply_to_author = true
++send_positive_review = true
+
+Do we really want those?
+
++cc = ["kexec@lists.infradead.org"]
+
+Please add me here.
+
+ [subsystems.kvm]
+ lists = ["kvm@vger.kernel.org"]
+ reply_to_author = true
+ 
+> I wanted to start this thread to call attention to that pull request
+> and see if there are any objections, or opinions about how it should
+> be configured.
+> 
+> Thanks.
+> --David
+
+-- 
+Sincerely yours,
+Mike.
 
