@@ -4,105 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E7F09C624A4
-	for <kexec@archiver.kernel.org>; Thu,  3 Sep 2026 13:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 28A23C624D6
+	for <kexec@archiver.kernel.org>; Thu,  3 Sep 2026 15:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=d+0Di3qj5r5ZLKVg7VMQtnJsK/2I+OQNTE5J5ZZ279A=; b=URkPteb/rY+JkBjb1jqRUl7hGB
-	XArrYqiOAELkKCCnpYL6K9Fc22FD6IM+4qKlC4+bJO1gmQuuxSURPnYMxDyHhYK6Pr/uTDapVKquo
-	Z2uP095wKQQX2sCGrA49VQEwZVMIgJIgd1MlpJQ3wI495/afjvIHsFsEBDMkCLawx3PCnBQv/yeyq
-	o0Xsaia5tdy0CCACksEedUyN1yaamDXo5ipJuI3TNEuWL+5t8SnkAqOA+6PvSihUkp1m7tXtE8Jzl
-	0fYdgKKhqRcTAOkEuUIL88kpE/zg9lOKj4u09whXlzjUJNBhyDbnNT0U84d88/t4PJx+bxXBQvLp7
-	s0aFvghQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=GmFek9macUO7lb98mH13+DwSxNV0cpAjOXbf35SyPVg=; b=EaZJP1WoVBhQoTezcrCYQPvtZH
+	dZV7GFqgb6VSmbsYV5j2OW9o71N4oxGvZLXmO0oE3dlhTB+nb6jLite8lxiQauXI7cTFdGafruHqH
+	aMtu3ubbGkA71IL6JmQzEPIIx4Zp4C4IUbH/eBzPm0FeBmSFeUDByRz3pEp6UeCZWH5VcWv7HGyue
+	MOrlkTSUXRvtPPpg+them1PXgN1xbSc2ECGsdCboHxaC3DpJhjWOp42VDNTp0d6TSxfesvG85Q13V
+	PNzC9u3xyHKtoZdbR595fR5e8/aB5F9q9O3HJuhNhlzoWum9jqqd1ajg2iW7/2DfvtWinoTGZFys4
+	gZw+jl7Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x27XS-0000000HPaX-03Op;
-	Thu, 03 Sep 2026 13:31:34 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1x29HO-000000000EB-3WOQ;
+	Thu, 03 Sep 2026 15:23:06 +0000
+Received: from mail-ej1-x646.google.com ([2a00:1450:4864:20::646])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x27XO-0000000HPZY-05TI
+	id 1x29HM-000000000Cx-299e
 	for kexec@lists.infradead.org;
-	Thu, 03 Sep 2026 13:31:32 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1788442289;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=d+0Di3qj5r5ZLKVg7VMQtnJsK/2I+OQNTE5J5ZZ279A=;
-	b=QU7kUOA0uRV02xiJC7f+1He9/CVN2bLxJ1FoeshQccVvTFbo+S68I9HI19TTx/R6brRMfS
-	EYYwjwvbP///VUy8ynMvgBdbcomMCtlcxO10uFDnAgx+ssD0vWlUE6+g7VuJ3hhuUM8l8s
-	TkR23NZ2FhvE8UQGR4L5o/quD8pU99I=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-628-atZV6ayHN7yHriB-2Y6sQQ-1; Thu, 03 Sep 2026 09:31:22 -0400
-X-MC-Unique: atZV6ayHN7yHriB-2Y6sQQ-1
-X-Mimecast-MFC-AGG-ID: atZV6ayHN7yHriB-2Y6sQQ_1788442281
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-395543dc382so3239226a91.0
-        for <kexec@lists.infradead.org>; Thu, 03 Sep 2026 06:31:22 -0700 (PDT)
+	Thu, 03 Sep 2026 15:23:05 +0000
+Received: by mail-ej1-x646.google.com with SMTP id a640c23a62f3a-c252b87e9a2so197032766b.3
+        for <kexec@lists.infradead.org>; Thu, 03 Sep 2026 08:23:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1788448981; x=1789053781; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=GmFek9macUO7lb98mH13+DwSxNV0cpAjOXbf35SyPVg=;
+        b=C6M4+zduEKqTgPttQ5PijB8l8UwH9lXqThyZGpqNjI2+XjP7/Q5KbEOWegHnw/3c9h
+         P/MdhZQz+v3z30rsj2Zz8sop0x2rQe7rmYCvQL6U49symjUO02rpGuCz8z5eNAF9r9JJ
+         WUnpQSEW3Fo2pLs8XG3DG/Zc/YXH/jsiA3iUuKU7KdbltnviqeJr+f1mfA63bAIfZ2X0
+         QLyvOvXK4fqqBJK1tHnOaKNxv8OQ7wTksZ3WuPoqVuelhhKd+m5FGMsHDqDRz0NBAFyB
+         mFC6xnIMGXCVDZ0x5JNXz7av7sL/t41a/NxMD8TONYc8LJHqHRr/92cJcTMmI6y3N4uN
+         oWGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788442281; x=1789047081;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20251104; t=1788448981; x=1789053781;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=d+0Di3qj5r5ZLKVg7VMQtnJsK/2I+OQNTE5J5ZZ279A=;
-        b=si9VRx3Zo8PI7LOjBL4Wcj6ODBA1X9nu0qaJ5PMqmSi9UTJo3sm7Vo6svqnjqDAKsp
-         dw+bfg1A+jjcIKZRH5i/aV36ipBxhuARxKRCV39sKb9HXMcp3S61X6PtLN93iQR4gGb7
-         TSEwbTbrueiGwfnj8naqZE9g9R6mGpgrFD+AtFKlWBObiEtjPo4GgJyT6tCDYU6tTKLq
-         0ncyYOfjMHOT/3nbr0RQpZwZYO94QJve0N370b7fU6Mgi1H2Klv07lkTR1oFYQh//qSg
-         YernDRRTCdF8/ZlZ+MeBqvFwCmyjcF3tnEfIvtrt1Br8KJvGJnPpGDLn1DXx4GYSJ4Tm
-         eUuw==
-X-Forwarded-Encrypted: i=1; AKwUvBzN/YXlG2yf3CwGPS1jTSo+9lAd2HhgwF+aqEVpVQykgdy06yNutE8Zdu134rGXUpcC+9a40A==@lists.infradead.org
-X-Gm-Message-State: AFuF++kjhWz4s3ZQ0rCXLIlC3k/axrA0xl0VGl+bD40xJnSkY0UCLMmA
-	FV5XmY7Rqu+y42PBk9a2Vpx7Gb4zGs5RlVMMTAW1lvXel9aHQaVO4X0rKj3QYKxDpv3s92D4e/v
-	zmgrHwgj4xUan0yKsqDAE+8IT9TxQtclOxWrzL4DEjWQ7AEshYZ/qdvYwQWo36Q==
-X-Gm-Gg: AYBFou1iwFIzYUD/QLkJ11+ZwuJNiZl87iUbXnenlSFcZK9rh2a/TCr8JwJ53e3gXV0
-	Gm54ZKptECtbUrMogbUQZJGRBJNtkFtbc9e1+EBeVMQtaA3/OvwRu0NbkYwjCrl9EnEaPKGIoq0
-	HVR4ynY7+JYXn7FocqTxboiBSYP91T4hKIaYCmdN6emZ17CBpMCLZLyzscFJd6WwUWnzxmpK8wY
-	9tnOGtdK4nsoNzxJkZG0K2J4KX8G+2Jrw7Z7twja6uQUfk1X4E8OuXaWd5jccXnmvgIAJGXLEhU
-	T+kSuV2pNsqNCPnVbaRKCX7NdfbBjoQf1mj6BMfls07cRikycaIEoXX0DzMw/gdWyHv/C2D/eJa
-	77gHF0VSA6/0ZUmqX
-X-Received: by 2002:a17:90b:5102:b0:398:9be6:f998 with SMTP id 98e67ed59e1d1-39aee16a180mr19981106a91.23.1788442281215;
-        Thu, 03 Sep 2026 06:31:21 -0700 (PDT)
-X-Received: by 2002:a17:90b:5102:b0:398:9be6:f998 with SMTP id 98e67ed59e1d1-39aee16a180mr19980948a91.23.1788442280416;
-        Thu, 03 Sep 2026 06:31:20 -0700 (PDT)
-Received: from [192.168.1.2] ([122.171.16.56])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39b08cacbb0sm5659399a91.13.2026.09.03.06.31.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2026 06:31:19 -0700 (PDT)
-Message-ID: <1b845292-1117-458d-ab58-67c3e643ddc8@redhat.com>
-Date: Thu, 3 Sep 2026 19:01:14 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kexec_file: remove unused arch_kexec_locate_mem_hole hook
-To: Sourabh Jain <sourabhjain@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc: Albert Ou <aou@eecs.berkeley.edu>,
- Andrew Morton <akpm@linux-foundation.org>, Baoquan He
- <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, Paul Walmsley <pjw@kernel.org>,
- Pratyush Yadav <pratyush@kernel.org>, linux-riscv@lists.infradead.org,
- kexec@lists.infradead.org
-References: <20260827144452.508328-1-sourabhjain@linux.ibm.com>
- <d16164ef-7211-4272-bc74-bc38efd8623e@redhat.com>
- <f1c3c554-8500-45ef-953d-b7bcece988c7@linux.ibm.com>
-From: Mukesh Pilaniya <mpilaniy@redhat.com>
-In-Reply-To: <f1c3c554-8500-45ef-953d-b7bcece988c7@linux.ibm.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: s9jEBmkE6BmuxtUglP3uLCYZOGOhmMXwRQaYJ2GNkAo_1788442281
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        bh=GmFek9macUO7lb98mH13+DwSxNV0cpAjOXbf35SyPVg=;
+        b=gK58UOOiTLcPF6SHo9NaiMkKgpVDmOLAjKSUT10im+2SuqYwVpxzHOgYkyf92kwQEa
+         B3Xdg5Rb/YZcm/JDkaM5AjbwsXpTBVqegIzy6seP2IjEnbXILtCxN9XI5eC0dQneQZl+
+         ASLz5tTaXsIa/GZnwDqnve2qywVy69d51TXjuuKZwxY5cpfbfYp6WBPhp7nXjTdYFKAk
+         vdnJI62WItquZd1qGJFFpeTjcXAMZraI1RdOKp0ySCgRx7q4KxF+Hf3vMyn4SwPPO7r5
+         KzJXHKRwpWGrp2Ixp/9Hd4WtoIiim2WjS55QI+0QBu0s1hF2yPrKzJvRh7l9GafE4oUP
+         5STQ==
+X-Forwarded-Encrypted: i=1; AKwUvBx/w54PAo+YUvcVrQk+tTh5415CekZkpmoi64YyI7OlL9ps0OiuXi8c9tRG0cuPu0YFgP6t/A==@lists.infradead.org
+X-Gm-Message-State: AFuF++mGQNfEwxnUjQkBGWT9wYpUN9m7oUBAaB9R1SCLuO2AN0OO146e
+	Y86lP5W0CGiQR36pKikUTg0SN5lJYxXUWNtYRquUaFSFpcWZ1HW60RPJf6nbglPTRicQzL5NBcA
+	BqnUfXR6dt23lcwKEXQ==
+X-Received: from ejctj4.prod.google.com ([2002:a17:907:c244:b0:c25:127e:8e75])
+ (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:907:d508:b0:c16:13e7:fd63 with SMTP id a640c23a62f3a-c260436b4e0mr108793366b.0.1788448981126;
+ Thu, 03 Sep 2026 08:23:01 -0700 (PDT)
+Date: Thu, 03 Sep 2026 15:23:00 +0000
+In-Reply-To: <aohwGv6TRqPg9Dwx@google.com>
+Mime-Version: 1.0
+References: <anphyjFv3FhF61iB@google.com> <2vxzpkzo51wg.fsf@kernel.org>
+ <anssOQFNZ2LfihbU@google.com> <2vxzik5f311e.fsf@kernel.org>
+ <anyObKiZIhfok5mk@google.com> <2vxzqzjz1x5f.fsf@kernel.org>
+ <aoMcqp0gr06YXAPU@google.com> <2vxzy0e3zgqz.fsf@kernel.org>
+ <aoSCCTTBn9D5hqzk@google.com> <2vxzy0dzy4gn.fsf@kernel.org> <aohwGv6TRqPg9Dwx@google.com>
+Message-ID: <9huzv78m2wbv.fsf@tarunix.c.googlers.com>
+Subject: Re: [PATCH v4 05/11] KVM: LUO: Support VM preservation across live updates
+From: tarunsahu@google.com
+To: Sean Christopherson <seanjc@google.com>, Pratyush Yadav <pratyush@kernel.org>
+Cc: ackerleytng@google.com, fuad.tabba@linux.dev, 
+	Andrew Morton <akpm@linux-foundation.org>, dmatlack@google.com, 
+	Shuah Khan <skhan@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, david@redhat.com, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, sagis@google.com, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mike Rapoport <rppt@kernel.org>, Alexander Graf <graf@amazon.com>, 
+	linux-kselftest@vger.kernel.org, andre.przywara@arm.com, michael.roth@amd.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, will@kernel.org, 
+	vannapurve@google.com, maz@kernel.org, fvdl@google.com, kvm@vger.kernel.org, 
+	oliver.upton@linux.dev, kvmarm@lists.linux.dev, alexandru.elisei@arm.com, 
+	skhawaja@google.com, aneesh.kumar@kernel.org, linux-doc@vger.kernel.org, 
+	David Hildenbrand <david@kernel.org>, yan.y.zhao@intel.com, kexec@lists.infradead.org, 
+	suzuki.poulose@arm.com
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260903_063130_121051_A674C60D 
-X-CRM114-Status: GOOD (  26.51  )
+X-CRM114-CacheID: sfid-20260903_082304_599617_6F8FBFB4 
+X-CRM114-Status: GOOD (  60.33  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,138 +103,209 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Sourabh,
+Sean Christopherson <seanjc@google.com> writes:
 
-On 29/08/26 10:28 am, Sourabh Jain wrote:
-> Hello Mukesh,
-> 
-> On 28/08/26 18:50, Mukesh Pilaniya wrote:
->> Hi Sourabh,
->>
->> The patch touches three files across three subsystems so kexec: would be
->> a more accurate prefix than kexec_file, for e.g.:
->>
->> kexec: remove unused arch_kexec_locate_mem_hole hook
-> 
-> As I understand it, the kexec: prefix is generally used when the changes
-> apply to both
-> the kexec_load and kexec_file_load syscalls.
-> 
-> Since these changes are specific to kexec_file_load, I used the
-> kexec_file: prefix for the patch title.
-> 
-> That said, I’m happy to follow the convention if you and others feel the
-> patch should use the
-> kexec: prefix. Otherwise, I would prefer to keep the kexec_file: prefix.
+> On Fri, Aug 21, 2026, Pratyush Yadav wrote:
+>> Hi Sean,
+>> 
+>> On Tue, Aug 18 2026, Sean Christopherson wrote:
+>> >> Does this idea of "backwards compatibility" sound acceptable to you, at
+>> >> least at a high level?
+>> >
+>> > No.
+>> >
+>> > It's probably fine for Google and other large companies that tightly control their
+>> > kernels and use cases, and have the resources to juggle the resulting complexity,
+>> > e.g. have kernel engineers on staff to track feature and dependencies, coordinate
+>> > and plan kernel upgrades, etc.
+>> >
+>> > It's not acceptable for upstream, where downstream consumers often run a distro
+>> > kernel, have much more varied use cases, and don't always have a horde of kernel
+>> > engineers on staff to help them thread the needle you describe above.  And if
+>> > supporting live update as a general feature for all users of the kernel isn't
+>> > being factored into design considerations, then that needs to change, otherwise
+>> > this is all dead in the water.
+>> >
+>> > I also don't see the point.  Maintaining a rigid save/restore ABI is annoying,
+>> > but it's not _hard_ (or at least, not _that_ hard), especially if there's a set
+>> > of well-documented best known practices that subsystems can follow, e.g. so that
+>> > individual subsystems don't need to learn painful lessons first-hand.  I genuinely
+>> > believe that maintaining the version hell you describe above would be more costly
+>> > in the long run than simply committing to full backwards compatibility within a
+>> > given subsystem.  I can imagine that enumerating what subsystems' information is
+>> > in the payload will require a different scheme, but for a given subsystem, I don't
+>> > see any reason to aim for anything less than full backwards compatibility.
+>> 
+>> Let's say for argument's sake that we commit for a fully stable
+>> backwards compatible ABI. Even then, you have to deal with multiple ABI
+>> versions.
+>> 
+>> Live update's ABI is more complex compared to KVM's save/restore ABI.
+>> For the KVM save/restore uAPI, you are largely describing architectural
+>> state like CPU registers, etc. These things don't evolve as fast and
+>> more or less stay the same.
 >
+> Right, because nothing meaningful has changed in any architecture in the 20+
+> years since KVM has provided save/restore support, whereas guest_memfd looks
+> nothing like it did when it was introduced three years ago.
+>
+>> Live update needs to describe the state of kernel objects. These are
+>> more complex
+>
+> LOL, you might be the first to claim x86 virtualization isn't all that complex.
+>
+>> and evolve faster.
+>
+> The speed at which things change doesn't automatically mean we shouldn't strive
+> for backwards compatibility.  Yes, providing backwards compatibility requires
+> additional care and planning, and over time *might* lead to an ABI that is
+> difficult to maintain.  But IMO, that just makes it all the more important to
+> get the design right the first time, not that we shouldn't even try because it's
+> hard.
+>
+>> For example, say you merge guest_memfd preservation today. Some time
+>> later, someone comes up with a more efficient data structure to track
+>> the folios in the file. You _have_ to make a backwards-incompatible ABI
+>> change to use this data structure.
+>
+> Only if those details bleed into the ABI/contract.  I actually have a concrete
+> KVM (well, virtualization) example for this.
+>
+> Intel's VMX architecture disallows direct memory accesses to the VMCS, and instead
+> requires software to access the VMCS via dedicated ISA, using architectural encoding
+> numbers to reference VMCS fields.  I.e. VMX decouples how data is stored in memory
+> (the data structures) from the ABI/contract with software (VMCS field encodings).
+>
+> This allows Intel to optimize the data structures to be more efficient and performant
+> for each microarchitecture based on the features and properties of each uarch, all
+> without breaking backwards/forwards compatibility with software.
+>
+> My favorite esoteric example is AR_BYTES packing.  For Haswell, Intel added an
+> optimization in ucode to allow saving/loading segment register state in a single
+> uop (IIRC).  The optimization was especially valuable for virtualization as it
+> shaved cycles off the VM-Enter/VM-Exit hot paths.  A key piece of the optimization
+> was it required the AR_BYTES metadata to be stored in 16 bits, but existing CPUs
+> stored AR_BYTES using 32 bits in an "unpacked" format.
+>
+> Fortunately, because the in-memory representation was decoupled from the contract
+> with software, Intel could pack AR_BYTES into 16 bits for Haswell+ and pack/unpack
+> the data on VMWRITE/VMREAD, so that the format presented to software remained
+> unchanged.
+>
+> Does VMX's decoupling of the in-memory represntation of a VMCS have downsides?
+> Absolutely.  Most notably, it incurs extra complexity (in software and hardware)
+> to achieve comparable performance to directly accessible data structures (AMD's
+> VMCB and Hyper-V's eVMCS) for nested virtualization.  And I'm sure it has placed
+> contraints on Intel's designs, and obviously introduces complexity into the
+> overall system by adding a layer of indirection.  But IMO the VMX architecture
+> has been a huge win overall for Intel.
+>
+>> Or say you add a new memory backend (like the HugeTLB patches in
+>> flight). That likely will need a different ABI to describe the state of
+>> the guest_memfd.
+>> 
+>> So you will end up with multiple ABI versions that aren't always
+>> backwards compatible.
+>
+> No, you end up with *features* that aren't backwards compatible.  I can't imagine
+> anyone will argue that we should never add new features because then we can't
+> rollback to an older kernel.
+>
+> But adding a new feature shouldn't break the existing ABI.  E.g. adding support
+> for HugeTLB in guest_memfd shouldn't prevent rolling back to an older kernel when
+> the HugeTLB functionality isn't being used.
+>
+> Using AMD's VMCB and Intel's VMCS as examples, literally every major new AMD/Intel
+> uarch extends the VMC{B,S} in some way, but without fail it's always done in a way
+> that is backwards compatible with existing software.  I.e. AMD and Intel ship new
+> features, but existing software continues to work, and VMs continue to be migratable
+> across CPU generations[*], with the obvious restriction that migrating a VM using
+> a feature introduced on generation N to a generation N-1 CPU isn't a smart idea.
+>
+> [*] There are exceptions.  E.g. Intel removed MPX, and so VMs with MPX can't be
+>     migrated to newer CPUs.  Migrating between CPUs with different MAXPHYADDR is
+>     sketchy (and simply not done by some CSPs) because neither AMD nor Intel
+>     virtualizes MAXPHYADDR.  But those exceptions are absolutely Big Deals that
+>     undergo significant scrutiny, from all parties involved.
+>
+>> If you refuse that idea too, then KVM live update will be dead in the
+>> water for a different reason. It will be damn near useless because it
+>> can't keep up with an evolving subsystem.
+>> 
+>> Now once you get multiple ABI versions and you can seamlessly go from
+>> old to new one, say you have a version that was superseded 5 years ago.
+>> It would be completely reasonable to say that this version is old enough
+>> and no one should be going from a 5 year old kernel to a modern one.
+>
+> LOL, Google literally does this.  Granted, the extreme cases only happen for
+> stragglers, and I think we do force VMs to bounce through a "middle" kernel in
+> those cases, but I doubt Google is the only company that runs frankenkernels
+> for an absurd number of years for a variety of reasons.  E.g. 4.4 LTS was officially
+> supported for 6 years, and I'll bet dollars to donuts people ran it for much longer
+> than that.
+>
+>> So you deprecate this ABI. Deprecating old unused uAPIs is not unprecedented.
+>
+> When there are provably no users, or we can convince existing userspace to migrate
+> to an alternative.
+>
+>> I think we are better off formalizing this deprecation period from the
+>> get go.
+>
+> Why?  What does it buy us?  Because all I see is potential abuse and an excuse
+> for not spending time getting the designs right.
+>
+>> A somewhat tangential example is BPF kfuncs. My BPF program that works
+>> in kernel X might not work in kernel Y because the kfunc has changed or
+>> been removed.
+>> 
+>> The argument they make in kfuncs.rst is that kfuncs "provide a kernel
+>> <-> kernel API, and thus are not bound by any of the strict stability
+>> restrictions associated with kernel <-> user UAPIs".
+>
+> BPF's documentation isn't arguing anything, it's merely reiterating Linux's
+> long-standing policy that there is no such thing as a stable kernel ABI (in upstream).
+>
+>> For LUO as well, this is a kernel -> kernel API.
+>
+> Stating the obvious, I disagree with this.  As I said before, if this is the
+> stance LUO wants to take, then so be it, but my NAK stands.
+>
+>> Users can also still do a regular kexec or reboot. They just won't get the
+>> performance optimization of LUO.
+>
+> The amount of time, energy, and money poured into minimizing VM downtime on live
+> migration suggests the overwhelming majority of LUO's targeted users aren't going
+> to take kindly to this stance.
+>
+>> Regardless of if you agree with the last bit about deprecating old
+>> versions, ABIs evolving with the subsystem is a ground reality of live
+>> update and it would be foolish to think we can do with only
+>> backwards-compatible ABI changes forever.
+>
+> I never said the ABI is immutable, I said it needs to be backwards/forwards
+> compatible.
 
-You're right, I hadn't noticed that the hook is entirely within the
-CONFIG_KEXEC_FILE block and both callers are in the kexec_file_load
-path. kexec_file: is the correct prefix here. Thanks for the clarification.
 
-> 
->>
->> On 27/08/26 8:14 pm, Sourabh Jain wrote:
->>> No architecture provides an implementation of
->>> arch_kexec_locate_mem_hole(). Use kexec_locate_mem_hole() directly
->>> and remove the unused fallback wrapper from the kexec header.
->>>
->>> This simplifies the kexec memory allocation path without changing
->>> its behavior.
->>>
->> Also, it might be worth mentioning in the commit message that this hook
->> was originally introduced by commit f891f19736bd and that the last arch
->> override was removed in commit 6e5250eaa665; making it safe to remove
->> now.
-> 
-> Sure, I don’t mind including this in v2.
-> 
-> 
->>
->> Otherwise, the change looks good to me. Feel free to add:
->> Reviewed-by: Mukesh Pilaniya <mpilaniy@redhat.com>
-> 
-> Thanks for the review.
-> 
-> - Sourabh Jain
-> 
->>
->>> Cc: Albert Ou <aou@eecs.berkeley.edu>
->>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>> Cc: Baoquan He <baoquan.he@linux.dev>
->>> Cc: Mike Rapoport <rppt@kernel.org>
->>> Cc: Palmer Dabbelt <palmer@dabbelt.com>
->>> Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
->>> Cc: Paul Walmsley <pjw@kernel.org>
->>> Cc: Pratyush Yadav <pratyush@kernel.org>
->>> Cc: linux-riscv@lists.infradead.org
->>> Cc: kexec@lists.infradead.org
->>> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
->>> ---
->>>   arch/riscv/kernel/kexec_elf.c |  2 +-
->>>   include/linux/kexec.h         | 15 ---------------
->>>   kernel/kexec_file.c           |  2 +-
->>>   3 files changed, 2 insertions(+), 17 deletions(-)
->>>
->>> diff --git a/arch/riscv/kernel/kexec_elf.c b/arch/riscv/kernel/
->>> kexec_elf.c
->>> index 3e9a32acb8f2..ca5abbad59e5 100644
->>> --- a/arch/riscv/kernel/kexec_elf.c
->>> +++ b/arch/riscv/kernel/kexec_elf.c
->>> @@ -91,7 +91,7 @@ static int elf_find_pbase(struct kimage *image,
->>> unsigned long kernel_len,
->>>       kbuf.memsz = ALIGN(kernel_len, PAGE_SIZE);
->>>       kbuf.cma = NULL;
->>>       kbuf.top_down = false;
->>> -    ret = arch_kexec_locate_mem_hole(&kbuf);
->>> +    ret = kexec_locate_mem_hole(&kbuf);
->>>       if (!ret) {
->>>           *old_pbase = lowest_paddr;
->>>           *new_pbase = kbuf.mem;
->>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->>> index 0af8ae4fdd08..e5f1cfc11fef 100644
->>> --- a/include/linux/kexec.h
->>> +++ b/include/linux/kexec.h
->>> @@ -259,21 +259,6 @@ int kexec_kernel_verify_pe_sig(const char
->>> *kernel, unsigned long kernel_len);
->>>   extern int kexec_add_buffer(struct kexec_buf *kbuf);
->>>   int kexec_locate_mem_hole(struct kexec_buf *kbuf);
->>>   -#ifndef arch_kexec_locate_mem_hole
->>> -/**
->>> - * arch_kexec_locate_mem_hole - Find free memory to place the segments.
->>> - * @kbuf:                       Parameters for the memory search.
->>> - *
->>> - * On success, kbuf->mem will have the start address of the memory
->>> region found.
->>> - *
->>> - * Return: 0 on success, negative errno on error.
->>> - */
->>> -static inline int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
->>> -{
->>> -    return kexec_locate_mem_hole(kbuf);
->>> -}
->>> -#endif
->>> -
->>>   #ifndef arch_kexec_apply_relocations_add
->>>   /*
->>>    * arch_kexec_apply_relocations_add - apply relocations of type RELA
->>> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
->>> index 59fb9d71e9d8..9a981359addd 100644
->>> --- a/kernel/kexec_file.c
->>> +++ b/kernel/kexec_file.c
->>> @@ -784,7 +784,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
->>>       kbuf->cma = NULL;
->>>         /* Walk the RAM ranges and allocate a suitable range for the
->>> buffer */
->>> -    ret = arch_kexec_locate_mem_hole(kbuf);
->>> +    ret = kexec_locate_mem_hole(kbuf);
->>>       if (ret)
->>>           return ret;
->>>   
-> 
+Thanks Sean, Pratyush. @loganodell has recently sent the RFC[1] on
+backward compatibility for liveupdate. This discussion is important
+so I propose to move the backward compatibility discussion on [1].
 
--- 
-Regards,
-Mukesh Pilaniya
+For guest_memfd preservation, I will sent v5 soon with the following
+changes:
+1. Suggestions from across the patches
+2. tentative Plan for future Guest_memfd preservation
+3. tentative Plan for VM preservation.
+4. Backward compatibility built on top of RFC [1]
+
+What do you think?
+
+[1]: https://lore.kernel.org/all/20260903023452.721732-1-loganodell@google.com/
+
+
+
+
+
+
 
 
