@@ -4,61 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0CCF6C61DD6
-	for <kexec@archiver.kernel.org>; Thu,  3 Sep 2026 01:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 13D68C61DD6
+	for <kexec@archiver.kernel.org>; Thu,  3 Sep 2026 02:35:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:To:References:Message-Id:Cc:
-	Date:In-Reply-To:From:Subject:Mime-Version:Content-Transfer-Encoding:
-	Content-Type:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=8g8KymnKrLeIxleep9l0L91rv8EWX79pScHra9GPCf4=; b=xiuv33p9cCu6sbL15u4KNkiw6+
-	xpaj2QWprVS/Ov5KxUcy7p/vJ2V/AuY/dBTxlR8Lga2Oyi8Xgk7u4QHH32l2Ufd+W3xxiF5dm1ObM
-	RJLQY3/YfQIxTFEpXs8DB7S9roD7ED0QoFTNAfzxZGG+9o2bECBmibZjmQFKCkZJ/ta6mSsYwymwg
-	6cuaPboQSVwDPWdFKIyQQHo9n6ZueTA0YZhXG8oCPJaAQbaMNThFvPqvlJEkqrToIipUR+czWH5Ao
-	nqYEUOzLtmqiTRajYtrWDqxKgfaTokvg44L0sGXm3MeR0xQgOiww6YsB8x2gFzOYjw2BnHYOT0jX1
-	gbQ8xONw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=Z/CUOTjDyaAxtZC1lTIYdZbcKOF2SIWxflbwVxpxItE=; b=TpGgbJinWQugzMdKUBDxt2WmoY
+	XDbCrCKR9fDyvrSV5gw0+Zmc04Q9wf7kVa9Bh3iyaVIYU811sVGJMoUHMO7Cp3Hn1muvwR9Ltgx2Q
+	JAMUq8VN2TsLSw3VJJ3+dzfqFTQPLGgLGdtH+K+KFvbBk77WKt1oamQuVh695uD5ca6HoJpZMGY5k
+	e68QHy/7taIYct7j6iZq4QwHfiGERUTYO4xONo/WAM3gfxVC3a5XHL9XchQQBvxxRCBRFSOPelrvu
+	OcXUIoc65+OtWp/HkVmEts/pMRhvOa1sX5lv083tm/IAUgSYPX0apUpGT5zc//POl1MTdFlx0bfhG
+	fWzjMlHg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1vr5-0000000G90Z-3rce;
-	Thu, 03 Sep 2026 01:03:03 +0000
-Received: from out-204.mta1.migadu.com ([95.215.58.204] helo=mta1.migadu.com)
+	id 1x1xI4-0000000GD9b-0gZ9;
+	Thu, 03 Sep 2026 02:35:00 +0000
+Received: from mail-pj1-x1048.google.com ([2607:f8b0:4864:20::1048])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1vr2-0000000G8yQ-0k8y
+	id 1x1xI1-0000000GD7b-2Gcr
 	for kexec@lists.infradead.org;
-	Thu, 03 Sep 2026 01:03:02 +0000
-X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=AeDxW45QjwesbUw8iPATCrxihLV2KDavoNyjbkC0yyo=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1788397375; v=1; x=1789002175;
- b=D3KjKq5I0SoMG0uiJyPYJ/4Cp03M/eeuiyzYyKwedBd4HBVGMrU6Ye4IyX+NhNSulqQDecRA
- EcGTywtsZqQCcTqxt1sIA5MkUwrZzI6444bvocgiKsszx8COO5xq/XeBkcvhRBNXqkCbacc3xQh
- lJ6qRl+DBO0G+Qh0tSoNGlTw=
-X-Envelope-To: kexec@lists.infradead.org
-Received: by mta10.migadu.com with ESMTPS id 474d10de32a6a109;
-	Thu, 03 Sep 2026 01:02:45 +0000
-X-Mizu-Trace-ID: 474d10de32a6a109
-X-Migadu-Flow: FLOW_OUT
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (1.0)
-Subject: Re: RFC: Enable Sashiko code reviews for kexec@lists.infradead.org
-From: Roman Gushchin <roman.gushchin@linux.dev>
-In-Reply-To: <CALzav=cE2AGXDAA4PCcohzqKwQNOZYEo4j33H6HxpMPX9Sdz0g@mail.gmail.com>
-Date: Wed, 2 Sep 2026 18:02:29 -0700
-Cc: Pratyush Yadav <pratyush@kernel.org>,
- Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
- kexec@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Dave Young <ruirui.yang@linux.dev>, Alexander Graf <graf@amazon.com>
-Message-Id: <C6F5E157-B26C-496D-AF83-B6AA784BC74F@linux.dev>
-References: <CALzav=cE2AGXDAA4PCcohzqKwQNOZYEo4j33H6HxpMPX9Sdz0g@mail.gmail.com>
-To: David Matlack <dmatlack@google.com>
-X-Mailer: iPad Mail (23G83)
+	Thu, 03 Sep 2026 02:34:58 +0000
+Received: by mail-pj1-x1048.google.com with SMTP id 98e67ed59e1d1-38f97b3f853so3215506a91.3
+        for <kexec@lists.infradead.org>; Wed, 02 Sep 2026 19:34:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1788402896; x=1789007696; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Z/CUOTjDyaAxtZC1lTIYdZbcKOF2SIWxflbwVxpxItE=;
+        b=S+mWjDbD2LFetD5ltZqEmBm3nvJ7sV7HkxFPuEqKWT0X6gqq2k3ArON5HwQkKlzHjV
+         QubZ9WlXtsNR5WsEKNfq6SXI+k/YuslbxDJmoeIYGth/uTb5thqO0GY5UIDDUsAAhlxz
+         EU4A9zz2BX4Fn51HwjMNIxsOYE2m3V8P0uRglt5wI4hQz0axf6Alf40ytCR7hx9g8MbF
+         Kz4DhcMD7I7wryaLiRfO6n32qGl5f3XpNZ5Qyg4K/qkFGslm7866aF7K3+O/PcTs5A+O
+         SacTDUIDlNSNbYvnuFZ/yPJfuy4HKNZ9GXsLVNpTlzDGR3FVgwcCGiUNLFzrG55eBX53
+         nbdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788402896; x=1789007696;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Z/CUOTjDyaAxtZC1lTIYdZbcKOF2SIWxflbwVxpxItE=;
+        b=HQfE9WNL+DRD+wKDfLHvOpnlWbAYZeIzYQmX6Vj/Gk9V2At+r2uPguXniKdLVHqjsC
+         EZwdhEtUimHgzMETVngS9qogQ7uYINkvdm4f4PIPsacpnumGnUEv7Jt9+uX1iH7JACgW
+         dH8T30R4KAUxe4mBM8x2psBmoUXQ20JazZUDU9EM8hteyqWvvf1HqB2+KQteldlI32tE
+         DYbImyZwyL9A+Y5nj90fWkzdC1kyKl5Pwyte0GvWrg0J2EVOu0kfXxtmLQW69WtBPpgr
+         mTlgmhROYIzV7b4REiMgnWBOVABG4pPOPo9eioKfqzvS5wvvouKRZyDyfQCIYiRu0QBI
+         86UA==
+X-Forwarded-Encrypted: i=1; AKwUvBwtdFuHrdfPvHalMntw/dGbuZhidiRKNBu1viRG07j4gOnDtLPNIIRIOVtSkRvCzX9DFxggDQ==@lists.infradead.org
+X-Gm-Message-State: AFuF++leNzaoG1MhWjcg/Tn8EYbAuRH+pV42PxB4rgr/ZaqkH5a6euMj
+	HMQwtjDIqFiMgeAIPgiAG2JoV+SqBpzSIcJdiK2SMW+fOPCMFb7Oc22qyC7+7PkHdLyjBvnTGIx
+	vXXXy0zPPXEHiDwdTOwnajA==
+X-Received: from dysc26.prod.google.com ([2002:a05:7300:3b1a:b0:332:2edd:e13a])
+ (user=loganodell job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:2d85:b0:398:9c00:29f0 with SMTP id 98e67ed59e1d1-39aee249bd7mr14082963a91.24.1788402895806;
+ Wed, 02 Sep 2026 19:34:55 -0700 (PDT)
+Date: Wed,  2 Sep 2026 19:34:49 -0700
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.55.0.979.g7e5102b832-goog
+Message-ID: <20260903023452.721732-1-loganodell@google.com>
+Subject: [RFC PATCH 0/3] liveupdate: Move to feature flags for LUO and memfd
+ ABI compatibility
+From: Logan Odell <loganodell@google.com>
+To: arnd@arndb.de, pasha.tatashin@soleen.com, rppt@kernel.org, 
+	pratyush@kernel.org, graf@amazon.com, akpm@linux-foundation.org, 
+	pbonzini@redhat.com, maz@kernel.org, oupton@kernel.org, seanjc@google.com, 
+	bhelgaas@google.com, alex@shazbot.org, jgg@nvidia.com, kevin.tian@intel.com, 
+	dwmw2@infradead.org, baolu.lu@linux.intel.com, joro@8bytes.org, 
+	will@kernel.org, robin.murphy@arm.com
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kexec@lists.infradead.org, linux-mm@kvack.org, kvm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	linux-pci@vger.kernel.org, iommu@lists.linux.dev, 
+	Logan Odell <loganodell@google.com>
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260902_180301_026136_FB865840 
-X-CRM114-Status: GOOD (  38.27  )
+X-CRM114-CacheID: sfid-20260902_193457_581907_C5C5A8C5 
+X-CRM114-Status: GOOD (  16.98  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,162 +96,71 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+We're including maintainers from all subsystems that currently is or
+will be expected to participate in live update to ensure alignment on
+the path forward for compatibility.
 
-> On Sep 2, 2026, at 10:59=E2=80=AFAM, David Matlack <dmatlack@google.com> w=
-rote:
->=20
-> =EF=BB=BFOn Wed, Sep 2, 2026 at 2:18=E2=80=AFAM Pratyush Yadav <pratyush@k=
-ernel.org> wrote:
->>=20
->> +Cc Roman because I am complaining about Sashiko ;-)
->>=20
->>> On Wed, Sep 02 2026, Baoquan He wrote:
->>>=20
->>> On 09/02/26 at 11:04am, Mike Rapoport wrote:
->>>> Hi Baoquan,
->>>>=20
->>>> On Wed, Sep 02, 2026 at 01:52:51PM +0800, Baoquan He wrote:
->>>>> On 09/02/26 at 07:34am, Mike Rapoport wrote:
->>>>>> On Tue, Sep 01, 2026 at 01:27:34PM -0700, David Matlack wrote:
->>>>>>> Hi kexec@ mailing list and maintainers,
->>>>>>>=20
->>>>>>> I would like to enable Sashiko code reviews for patches sent to the
->>>>>>> kexec mailing list. I have found it useful for patches I have sent a=
-nd
->>>>>>> reviewed on the kvm and linux-pci mailing lists, which have Sashiko
->>>>>>> enabled.
->>>>>>>=20
->>>>>>> I sent a pull request to Sashiko to add kexec here:
->>>>>>>=20
->>>>>>>  https://github.com/sashiko-dev/sashiko/pull/474
->>>>>>=20
->>>>>> diff --git a/sashiko.dev/email_policy.toml b/sashiko.dev/email_policy=
-.toml
->>>>>> index e6e4fb57f..e9ad97708 100644
->>>>>> --- a/sashiko.dev/email_policy.toml
->>>>>> +++ b/sashiko.dev/email_policy.toml
->>>>>> @@ -175,6 +175,12 @@ reply_to_author =3D false
->>>>>> cc_individuals =3D false
->>>>>> cc =3D ["Chuck Lever <cel@kernel.org>", "Jeff Layton <jlayton@kernel.=
-org>", "Anna Schumaker <anna@kernel.org>"]
->>>>>>=20
->>>>>> +[subsystems.kexec]
->>>>>> +lists =3D ["kexec@lists.infradead.org"]
->>>>>> +reply_to_author =3D true
->>>>>> +send_positive_review =3D true
->>>>>>=20
->>>>>> Do we really want those?
->>>>>=20
->>>>> Some components don't want to CC list, then other people are welcome t=
-o
->>>>> drop any comment during reviewing, while cc to maintainer and author
->>>>> looks good to me. Just an input, no objection to any move.
->>>>=20
->>>> Sorry, I wasn't clear, I meant do we really want extra emails saying
->>>> sashiko is happy?
->>>=20
->>> Oh, sorry. I misunderstood, I thought you had agreed to introduce
->>> sashiko to part of list/author/maintainer or all.
->>>=20
->>> I think there are two different ways and they have different impact:
->>>=20
->>> 1) CC list (CC author and maintainer can be ignored beause all people
->>> can see it)
->>=20
->> This is a side topic, but if we only Cc the list then Sashiko won't Cc
->> the other people in the thread, like the usual "reply to all" every mail
->> clients does. It will _only_ Cc the list. See [0] for example.
->>=20
->> I don't think that is a good idea, because Sashiko might complain about
->> something, and then the patch author can reply to the complaint. People
->> who are not subscribed to the list will neither see Sashiko's complaint
->> nor the author's response. So they lose a useful part of the patch
->> review process.
->>=20
->> I am one of those people. I don't subscribe to any mailing lists and
->> instead use lei [1] to fetch them. I treat my inbox as the primary
->> stream of patches, and then glance at the lists every now and then. If I
->> get some patches in my inbox but then I don't get any of the follow-ups
->> from the author to Sashiko, that's annoying. Sure, I might see them on
->> the list later, but it is still annoying.
+Currently, Live Update Orchestrator (LUO) and its file handlers rely on
+monolithic compatibility strings (such as "luo-v5" and "memfd-v1") to
+validate ABI compatibility across kexec live updates. Any modification
+to serialized structures requires bumping the version string, which
+strictly breaks compatibility between adjacent kernels even when changes
+are additive, backwards-compatible, or optional.
 
-It feels like there are two types of people: some know how to use email filt=
-ers and some don=E2=80=99t.
-Unfortunately, the latter group is often very vocal about what they don=E2=80=
-=99t want
-to see on mailing lists. I can easily see the problem with too much ai-gener=
-ated noise
-(and useful information as well), so no complaints from me, just saying that=
- there is a reason
-sashiko is fairly conservative here.
+This RFC series transitions LUO and subsystem file handlers to use
+granular feature bitmasks instead of compatibility strings. We replace
+the compatibility string with a header structure that includes some
+reserved space to define the features that are included after the
+feature.
 
->>=20
->> And of course, there might be patches that touch multiple subsystems and
->> maintainers of that subsystem might not subscribe to or track kexec@ at
->> all. So they will entirely miss the conversation.
->>=20
->> If Sashiko is useful enough to send replies on the list, then I think it
->> is useful enough to reply to everyone.
->=20
-> It looks like this can be configured:
->=20
-> - reply_all=3Dtrue will have Sashiko reply to everyone on the To/Cc line.
-> - cc_individuals=3Dtrue will have Sashiko include all inidividuals from th=
-e
->   To/Cc line of the original patch.
->=20
->>=20
->> IIRC some people have complained in the past about automatically getting
->> replies from Sashiko so maybe that is why this behaviour exists? Roman,
->> is that correct? Is there any appetite yet to change that behaviour?
+We include 3 bits of data for each feature: supported, active, and
+required. When the supported bit is set in the next kernel, the previous
+kernel can serialize the feature and pass it to the next kernel. When
+the active bit is set, it means the previous occurred and the data for
+that feature is valid. When the required bit is set, it means that the
+next kernel must have the associated supported bit in order to be
+compatible.
 
-Can you, please, describe, what behavior do you want?
+If a feature is required in that it cannot live update to a kernel that
+does not support the feature, it is expected that the feature not be
+active or required initially. This allows for an intermediate upgrade
+path.
 
->>=20
->> Or could we perhaps have an unsubscribe mechanism where people who don't
->> want to see anything from Sashiko can unsubscribe themselves and Sashiko
->> will skip them when replying?
+Overview of Changes:
+1. Define feature header and migrate luo_ser (Patch 1):
+  - Introudce the feature header with the supported, active, and
+    required bits.
+  - Replace the luo compatibility string with this new header.
+  - Validate the preserved size is at least the size of the header. This
+    breaks compatibility with the old way.
 
-This is the territory I don=E2=80=99t really want to go, honestly. Not a dea=
-lbreaker if there is a very strong
-reason to implement it, but I don=E2=80=99t think we have similar lists for o=
-ther tools like syzbot or the build verifier.
-I feel it=E2=80=99s more about the politics around ai then a real technical r=
-eason (it=E2=80=99s like super trivial to drop emails from
-a specific sender), so I=E2=80=99d avoid this if possible.
+2. Export feature header information to vmlinux (Patch 2):
+  - Adds a .liveupdate_features section in vmlinux containing
+  - Adds helper macros to export feature information for a given
+    subsystem
+  - Export luo's feature information
 
-Thanks
+3. Memfd Handler Migration (Patch 3):
+  - Migrate memfd to use the feature header instead of compatibility
+    strings
 
->>=20
->> [0] https://lore.kernel.org/kvm/20260902072059.90ADC1F000E9@smtp.kernel.o=
-rg/
->> [1] https://public-inbox.org/lei.txt
->>=20
->>>  This equals to cc author and push other reviewers away. And no
->>>  reviewers will be patient and curious enough to check the sashiko
->>>  report except of maintainers. Because maintainers need pick patch
->>>  and may check if all reported issues are handled;
->>>=20
->>> 2) Cc maintainers when patch is cooked
->>>  Maintainers tell patch author to check the report. Maybe CC patch
->>>  author directly can save maintainers' effort.
->>>=20
->>> I personally think 2) is good. About whether introducing sashiko,
->>> I would vote yes. I buy token by myself, sashiko would be a plus.
->>=20
->> FWIW, Sashiko already tracks the kexec@ list and you can see all the
->> patches in the web interface [2]. So you don't need to burn your tokens
->> on reviewing kexec patches ;-)
->>=20
->> What David is proposing is to send those reviews to the list.
->>=20
->> [2] https://sashiko.dev/#/?list=3Dorg.infradead.lists.kexec
->>=20
->>>=20
->>> Thanks
->>> Baoquan
->>=20
->> --
->> Regards,
->> Pratyush Yadav
+Logan Odell (3):
+  luo: Move to feature flags instead of compatibility strings
+  luo: Export feature support to vmlinux section
+  luo: memfd: Move to feature flags instead of compatibility strings
+
+ include/asm-generic/vmlinux.lds.h |  12 ++++
+ include/linux/kho/abi/luo.h       | 114 +++++++++++++++++++++++++-----
+ include/linux/kho/abi/memfd.h     |  41 +++++++----
+ include/linux/liveupdate.h        |  22 ++++--
+ kernel/liveupdate/luo_core.c      |  60 ++++++++++++----
+ kernel/liveupdate/luo_file.c      |  28 ++++----
+ kernel/liveupdate/luo_flb.c       |   2 +-
+ lib/tests/liveupdate.c            |   2 +-
+ mm/memfd_luo.c                    |  40 ++++++++---
+ 9 files changed, 246 insertions(+), 75 deletions(-)
+
+-- 
+2.55.0.979.g7e5102b832-goog
+
 
