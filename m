@@ -4,86 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B0EDEC624D6
-	for <kexec@archiver.kernel.org>; Thu,  3 Sep 2026 02:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C5111C624A4
+	for <kexec@archiver.kernel.org>; Thu,  3 Sep 2026 07:06:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=t1Sj3SZIoFO1IrO+MibWwCI7jpIestNZ9bFRqEQ8nhA=; b=vKsFTeSiU09V4i62ir2LWXyFMq
-	+MAxvEAL7wvU81hU7rK5d7n6EQ8leSGJ5AuDwdXrhdy7cMt5C0Z1gcUl6/2p6VucH65vQ9KO0LzNW
-	9XtWwrmkig9aZ4pk/BzpyLugMsKudQ6XF0mVBKvLYRLFzCDlTLsk1OEpDXmttT0/bDsFHD4gYx+lK
-	nEDrvBeyaTkM+8+AAGimY4GdqzYg5X5q6GzjPteQBmx3P4FBfTP9m7OxLv5NyOuv2efNootdR0AfL
-	Go+YfQFQLggWQv0W15cRt0owJhf/GiFkDuZJiZ+aTmeHOwCISE22KwvGsj9clDx8PITeYJRdg4AMh
-	lSX8vGpg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=bPr0Tiyi9ufsaoMkecG9LBvmdZ8IsvdK2aRx8FqQP84=; b=Gr4RG3rhrA8dFO8eoMTlpdq1zM
+	EE6Ql9/XZK/dxqh1XR104sCA/fWAUyFSs0OyhTGN+UCHLHfVkPElxbwLkn1qJJOVGtQtXP3WtOtKY
+	5wW8GgFgRl5dTnHEvdgb1zvEjXI/CHg1jCpl1rmi1iDlM2SYPY00WVXohciCh/vba47hUvZr+3u1D
+	itluwgDSHFmvhnJcBNT9Rdqoqc0LVOe1NSqOWYfOZ95muuXd387tBnwsYhyedUywMXBndfS2CnHto
+	nLEQGRsohKvGAmakRxNt1ujJjSL5UzkHe4IiAgwTp+qM8YrDB7XwjKGVDetkR6qm6VfwYfZ4HfTKh
+	e7DGBztg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1xI9-0000000GDEn-2L0V;
-	Thu, 03 Sep 2026 02:35:05 +0000
-Received: from mail-pj1-x1047.google.com ([2607:f8b0:4864:20::1047])
+	id 1x21WL-0000000GWZ6-2MUW;
+	Thu, 03 Sep 2026 07:06:01 +0000
+Received: from mail-pj2-x0b.google.com ([2607:f8b0:4864:39::b])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1xI3-0000000GD88-32t2
+	id 1x21WI-0000000GWXj-1EvX
 	for kexec@lists.infradead.org;
-	Thu, 03 Sep 2026 02:35:02 +0000
-Received: by mail-pj1-x1047.google.com with SMTP id 98e67ed59e1d1-398dc3d8f0fso618191a91.0
-        for <kexec@lists.infradead.org>; Wed, 02 Sep 2026 19:34:58 -0700 (PDT)
+	Thu, 03 Sep 2026 07:06:00 +0000
+Received: by mail-pj2-x0b.google.com with SMTP id 98e67ed59e1d1-38de693676dso1208046a91.0
+        for <kexec@lists.infradead.org>; Thu, 03 Sep 2026 00:05:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788402898; x=1789007698; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+        d=gmail.com; s=20251104; t=1788419157; x=1789023957; darn=lists.infradead.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=t1Sj3SZIoFO1IrO+MibWwCI7jpIestNZ9bFRqEQ8nhA=;
-        b=fOR/nqVM8iG00vf9FMZcN+8YCru0WHbcssz8CTMMAxk6PIIxZ00LYmKf+EPjVIHQgy
-         cdrp8M3EIEM+30quCgn1m/XQNot0Ow5YaiU3Vkq9UDsaoDAfK5HYaIk6XnywksJ3Xwou
-         fcOmqfp1rOiAQVrx0Y49AaG+wSDRpH3enOLsMIsNMbYoJz5kOFsYiW4uUJkK0G0x4p/8
-         JEGDdRbL86u7Fcqu2pX1ThXSssyDBThUp3CmNe5eacDw/29NwDEGobchfqswbiYJ2XgW
-         czAZ5aJ//AnASs+S4pUJXbmexVxel8uUoTwtiPyNxmN1UPKf2csmRgrxglGIptuMmKe3
-         GjNg==
+        bh=bPr0Tiyi9ufsaoMkecG9LBvmdZ8IsvdK2aRx8FqQP84=;
+        b=jw+LEBMFRjL/MLyA3D0nGu7jJYdXg0/4gf9Lhibb1ru0M6BEP0MPXxztW8rSDhhCNl
+         coH1+zn9JPhVtjq9PF/QcCXtFnDD5AOL808HldVhXrPJK7Zo/YnjxL9YRUznWy4XQVIb
+         2F5ac0vmcIrXx2kLuNBoU+IrJvrirIA8JYAMhLUY1dtUdc3DAcKRN/hjWVbS0PoBb8fY
+         ai8UZcbJzh15xATP8wWplKWyIMlnXjkOC2PshyZjPYEMUpjXnzIDgtUDdnv7aR7DBSYU
+         79Ou2T6fU0QmMCdPfRSLDWM22pg795bkNlw/KenfNYggorO6w82XEwNHJCk1KC66mHS5
+         vLgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788402898; x=1789007698;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20251104; t=1788419157; x=1789023957;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=t1Sj3SZIoFO1IrO+MibWwCI7jpIestNZ9bFRqEQ8nhA=;
-        b=pZhppLgeFgoDnWAW+5bMcCWCP/PyygjyFruQ+JlOLP4PYqOlLpHJw7nqCkVS4mzjfm
-         5QojEDZA0ZZj1oZBPHmH3Eva8KP0hz17OG86dgV3BeCWEMtem2FY/vLtmvDnJrXiLCVs
-         JNvz7/XNPddyItkUSYhD2ghBzjvf3Ds3K8ckeEjbJApPb6uTdnctYMd1Nw/ut3p9QTzv
-         V+WhqBnO+Y1Ku2iG5s+2iZvXRBHjo+FRUMI8d3LdenHmRy01KKTl9MsQ+TQZBEG82fIe
-         WzxKsBdsa8jmSi7x1gtzwRVkoCECNbCdhsCN6BfGLgEc6CCIQdY+Yg9dRManDLhQImmV
-         3S2A==
-X-Forwarded-Encrypted: i=1; AKwUvBye09o4HsIvMczDRBzlJG6o43oeDZy+OyDi08hUEoeUHE2QSdPu1x766/ubEQbJd8UoQHLTTQ==@lists.infradead.org
-X-Gm-Message-State: AFuF++kCkhiRHIwCEx3yZPPFICd4ygpN7VM29eCfaO0i4Ps/ijAPEAh6
-	skYJal/n5UmnODKKxF6jD0DbsFyW4h3+ukqVckOwaLfcQzn1+o4mx+n+XKPpOjf96hLEMLzkIr5
-	hxatMgiuKewG4Fxlpq8GL5w==
-X-Received: from dybdb19.prod.google.com ([2002:a05:7300:b093:b0:328:684d:3f7])
- (user=loganodell job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:4b04:b0:396:4ce0:6400 with SMTP id 98e67ed59e1d1-39b07f33963mr3591851a91.2.1788402897557;
- Wed, 02 Sep 2026 19:34:57 -0700 (PDT)
-Date: Wed,  2 Sep 2026 19:34:51 -0700
-In-Reply-To: <20260903023452.721732-1-loganodell@google.com>
-Mime-Version: 1.0
-References: <20260903023452.721732-1-loganodell@google.com>
-X-Mailer: git-send-email 2.55.0.979.g7e5102b832-goog
-Message-ID: <20260903023452.721732-3-loganodell@google.com>
-Subject: [RFC PATCH 2/3] luo: Export feature support to vmlinux section
-From: Logan Odell <loganodell@google.com>
-To: arnd@arndb.de, pasha.tatashin@soleen.com, rppt@kernel.org, 
-	pratyush@kernel.org, graf@amazon.com, akpm@linux-foundation.org, 
-	pbonzini@redhat.com, maz@kernel.org, oupton@kernel.org, seanjc@google.com, 
-	bhelgaas@google.com, alex@shazbot.org, jgg@nvidia.com, kevin.tian@intel.com, 
-	dwmw2@infradead.org, baolu.lu@linux.intel.com, joro@8bytes.org, 
-	will@kernel.org, robin.murphy@arm.com
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-mm@kvack.org, kvm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-pci@vger.kernel.org, iommu@lists.linux.dev, 
-	Logan Odell <loganodell@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        bh=bPr0Tiyi9ufsaoMkecG9LBvmdZ8IsvdK2aRx8FqQP84=;
+        b=W0bevuauwwFvWl7MzdkPobfsZoFvnQWqV+R1cyvZ5goIlIU9so9OQ9QuM2S6lh0cxe
+         0RwMZvljnKg4C0zE6uP2SfRtdNhMVCJSM5tok3Y5BRiPISQRKbhwH57QcvPbnnLZJU3a
+         lxgNc0dNCfufRv58GX45XfL9mcGK3JdtA7FGPQsirJbpuUvvcGmIWDSDPRsZNPcVmKpx
+         xCyJBhkeoUPDH8H3Ak+ADXaB8sFcvHdYcD4fbFeNg33kU3jU0rmbIg/XmC15agZhj8F0
+         j2cQ67JhtXM8+R6KNe7i80STX7umCVwHWETKp4hO9xsnELpMzKEvg5eR8kEI4Du7huO0
+         Qp8Q==
+X-Forwarded-Encrypted: i=1; AKwUvBxC2mI92rTR4/ufUZCDx1ENiJNsp+yghZazrs9alAsyYz4H/If4f95HYOY82dgoDRJklY0JIg==@lists.infradead.org
+X-Gm-Message-State: AFuF++mLo6pX2EJk1S1jIS9pri8WF/cgRz/Mgl85dk53pT8MQQi9OsBY
+	/y1Z1zB/YUUbVLAdPEwqqpbAyvZpAhjf9ilye9F2H3dBSpmdLhJW5okj
+X-Gm-Gg: AYBFou0upLmZxF1L/hy6jcSDbwUlewBKf0uRUA154OFlPCmmZ/P0kOuEE3aq2YrDq/w
+	krQF4f77lAUPfgz5iUgSooYSaVnS66gbqe37rX8h3WdMLUcJvcaVU/R8bpju0XOUKYl/6Ggc1LI
+	pJ9n/Yvfy5+LUnB8mPuoqGul/tS8+ckg2OzyUzvrlFwxaN6jPzHmq+uXJcFEUa/DUgQ9wkqsF26
+	ChCUT2sUR/BqKvWVfoHCpT5TNN779dZCNyAW6nhtfuFhGC+YAlreuuYf4J5E+iDTwlC15h+Ra28
+	g1wGceKSoTUpdtGI0Io3li3RzZzTSQ3QJGeiG3UnvgrVg29q9l2qm+WTG+nDpLXYaQtWSGqCeA1
+	e9OWhcbYHIS1W7DCTAU0JFDwP06pwQy35YTdOHw2meXh5ykdzQImhGP5OQ/HbwLNA3EFbfMpC0H
+	a0raLMLS3iqyiokUtQs9tRhERLmhhiiw7aTDc3CRYBQsQZUcMVXb/x7jmhYGsSKicMB2XwYy4jo
+	QxFSPw=
+X-Received: by 2002:a17:90b:2b46:b0:39a:e002:f192 with SMTP id 98e67ed59e1d1-39aee26d6c3mr16239819a91.22.1788419157335;
+        Thu, 03 Sep 2026 00:05:57 -0700 (PDT)
+Received: from [10.125.112.20] ([122.11.210.25])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39b07b197a9sm3382844a91.0.2026.09.03.00.05.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Sep 2026 00:05:56 -0700 (PDT)
+Message-ID: <6aef2f48-1cc5-408d-a5a2-2b4b4d45ad7b@gmail.com>
+Date: Thu, 3 Sep 2026 15:05:44 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 00/10] kdump: reduce vmcore size and capture time
+To: Baoquan He <baoquan.he@linux.dev>
+Cc: catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
+ pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, tglx@kernel.org,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+ robh@kernel.org, saravanak@kernel.org, akpm@linux-foundation.org,
+ rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org,
+ m.szyprowski@samsung.com, mark.rutland@arm.com, kernel@xen0n.name,
+ alex@ghiti.fr, hpa@zytor.com, ruirui.yang@linux.dev, robin.murphy@arm.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ devicetree@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org,
+ iommu@lists.linux.dev
+References: <20260902073116.802752-1-chenwandun1@gmail.com>
+ <apfkDlcMYrgiuGYA@fedora>
+Content-Language: en-US
+From: Wandun <chenwandun1@gmail.com>
+In-Reply-To: <apfkDlcMYrgiuGYA@fedora>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260902_193459_764809_0420C909 
-X-CRM114-Status: GOOD (  18.60  )
+X-CRM114-CacheID: sfid-20260903_000558_370910_E6C03B6C 
+X-CRM114-Status: GOOD (  28.64  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,153 +113,165 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Create a liveupdate_features section that contains the feature
-information for a given liveupdate component. Add the LUO component
-first. These can be compared between two kernels to determine live
-update compatibility. Features marked as required in the running kernel
-will need to have that feature marked as supported in the next kernel to
-be eligible for compatibility.
 
-Suggested-by: Pratyush Yadav <pratyush@kernel.org>
-Signed-off-by: Logan Odell <loganodell@google.com>
----
- include/asm-generic/vmlinux.lds.h | 12 +++++++++++
- include/linux/kho/abi/luo.h       | 34 +++++++++++++++++++++++++++++++
- include/linux/liveupdate.h        | 12 +++++++++++
- kernel/liveupdate/luo_core.c      | 16 +++++++++++++++
- 4 files changed, 74 insertions(+)
 
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 5659f4b5a125..aed4e282a78c 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -359,6 +359,17 @@
- #define THERMAL_TABLE(name)
- #endif
- 
-+#ifdef CONFIG_LIVEUPDATE
-+#define LIVEUPDATE_FEATURES						\
-+	. = ALIGN(8);							\
-+	.liveupdate_features : AT(ADDR(.liveupdate_features) - LOAD_OFFSET) {	\
-+		KEEP(*(.liveupdate_sec_hdr))				\
-+		KEEP(*(.liveupdate_features))				\
-+	}
-+#else
-+#define LIVEUPDATE_FEATURES
-+#endif
-+
- #define KERNEL_DTB()							\
- 	STRUCT_ALIGN();							\
- 	__dtb_start = .;						\
-@@ -554,6 +565,7 @@
- 	RO_EXCEPTION_TABLE						\
- 	NOTES								\
- 	BTF								\
-+	LIVEUPDATE_FEATURES						\
- 									\
- 	. = ALIGN((align));						\
- 	__end_rodata = .;
-diff --git a/include/linux/kho/abi/luo.h b/include/linux/kho/abi/luo.h
-index 0a7662a0cf9a..5b25e1b48cf5 100644
---- a/include/linux/kho/abi/luo.h
-+++ b/include/linux/kho/abi/luo.h
-@@ -230,4 +230,38 @@ struct luo_flb_ser {
- #define LIVEUPDATE_TEST_FLB_COMPATIBLE(i)	"liveupdate-test-flb-v" #i
- #endif
- 
-+#define LIVEUPDATE_VER_HDR_MAGIC	0x4c565550 /* 'LVUP' */
-+#define LIVEUPDATE_VER_HDR_VER		1
-+
-+/**
-+ * struct liveupdate_ver_hdr - Header of vmlinux section with version lists
-+ * @magic:     Magic number ('LVUP').
-+ * @version:   Version of the header format.
-+ *
-+ * This struct is the header for the vmlinux section ".liveupdate_features". The
-+ * section contains the list of feature/version entries that the kernel supports.
-+ */
-+struct liveupdate_ver_hdr {
-+	u32 magic;
-+	u32 version;
-+} __packed;
-+
-+/**
-+ * struct liveupdate_feature_entry - Live update feature/version entry
-+ * @name:       Name of the subsystem or feature ("luo" for core).
-+ * @feat_bytes: Number of bytes covered by supp, req, and active bitmaps (e.g. 8).
-+ * @reserved:   Reserved / padding for alignment.
-+ * @supp:       Bitmask of supported features.
-+ * @req:        Bitmask of required features.
-+ * @active:     Bitmask of active features.
-+ */
-+struct liveupdate_feature_entry {
-+	char name[LIVEUPDATE_HNDL_COMPAT_LENGTH];
-+	u32 feat_bytes;
-+	u32 reserved;
-+	u64 supp;
-+	u64 req;
-+	u64 active;
-+} __packed;
-+
- #endif /* _LINUX_KHO_ABI_LUO_H */
-diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
-index 6051abc0612c..e058df23fed1 100644
---- a/include/linux/liveupdate.h
-+++ b/include/linux/liveupdate.h
-@@ -229,6 +229,16 @@ struct liveupdate_flb {
- 
- #ifdef CONFIG_LIVEUPDATE
- 
-+#define LIVEUPDATE_FEATURE_ENTRY(_id, _name, _supp, _req, _active)	\
-+	static const struct liveupdate_feature_entry __lu_feat_##_id	\
-+	__used __section(".liveupdate_features") __aligned(8) = {	\
-+		.name       = _name,					\
-+		.feat_bytes = sizeof(u64),				\
-+		.supp       = (_supp),					\
-+		.req        = (_req),					\
-+		.active     = (_active),				\
-+	}
-+
- /* Return true if live update orchestrator is enabled */
- bool liveupdate_enabled(void);
- 
-@@ -259,6 +269,8 @@ int liveupdate_get_token_outgoing(struct liveupdate_session *s,
- 
- #else /* CONFIG_LIVEUPDATE */
- 
-+#define LIVEUPDATE_FEATURE_ENTRY(_id, _name, _supp, _req, _active)
-+
- static inline bool liveupdate_enabled(void)
- {
- 	return false;
-diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
-index 6add1ecc463f..27413f895174 100644
---- a/kernel/liveupdate/luo_core.c
-+++ b/kernel/liveupdate/luo_core.c
-@@ -64,6 +64,22 @@
- #include "kexec_handover_internal.h"
- #include "luo_internal.h"
- 
-+/*
-+ * This is the header for the ".liveupdate_features" section in vmlinux.
-+ * The linker makes sure that this header precedes the entries.
-+ */
-+static const struct liveupdate_ver_hdr ver_hdr
-+	__used __section(".liveupdate_sec_hdr") __aligned(8) = {
-+	.magic   = LIVEUPDATE_VER_HDR_MAGIC,
-+	.version = LIVEUPDATE_VER_HDR_VER,
-+};
-+
-+/* Core LUO features */
-+LIVEUPDATE_FEATURE_ENTRY(luo_core, "luo",
-+			 LUO_CORE_FEATURES_SUPP,
-+			 LUO_CORE_FEATURES_REQ,
-+			 LUO_CORE_FEATURES_ACTIVE);
-+
- static struct {
- 	bool enabled;
- 	struct luo_ser *luo_ser_out;
--- 
-2.55.0.979.g7e5102b832-goog
+On 9/2/26 16:53, Baoquan He wrote:
+> Hi Wandun,
+> 
+> On 09/02/26 at 03:31pm, Wandun Chen wrote:
+>> From: Wandun Chen <chenwandun@lixiang.com>
+>>
+>> On SoCs that carve out large firmware-owned reserved memory (GPU,
+>> camera ISP, ...), kdump currently dumps those carveouts as part of
+>> system RAM even though their contents are firmware state that is not
+>> useful for kernel crash analysis.
+>>
+>> This series introduces a MEMBLOCK_NODUMP flag in memblock to filter
+>> reserved memory on DT-based architectures (arm64, riscv, loongarch).
+>> Reserved regions default are marked MEMBLOCK_NODUMP so kdump omits them;
+>> reusable CMA regions are different because their pages are handed back
+>> to the buddy allocator and may carry crash-relevant data.
+>>
+>> ACPI systems already filter reserved memory out of the vmcore through
+>> their existing path; only DT-based systems currently fail to filter these
+>> regions, which is what this series addresses. The flag lives in memblock
+>> itself rather than in a DT-only structure, so the mechanism is generic and
+>> both ACPI and DT systems can benefit from it (suggested by Rob, thanks) [1].
+> 
+> Thanks for the effort. I am not against this patchset, and I haven't
+> went through it carefully. Just from the cover letter, you mentioned
+> generic, I am wondering if this can be generic for excluding other
+> memory regions. Asking this because I try to find a way to exclude
+> unwanted memory regions too, please check below link where there's
+> the relevant discussion. We definitely don't like inventing wheels
+> time after time. Do you think this memblock region excluding can
+> be used in other places of kernel?
+> 
+> https://lore.kernel.org/all/aoLFai0gzzH2bGgy@MiWiFi-R3L-srv/T/#u
+
+
+Thanks for taking a look, and for the pointer to the crash-wipe thread.
+
+To answer your question directly: the exclusion mechanism in this series
+is already generic, memblock_mark_nodump() is the entry point. Any code
+that wants a region out of the vmcore just marks it MEMBLOCK_NODUMP, when
+preparing vmcore elf header by walking memblock, these regionss are skipped;
+This series is simply one caller, marking the DTS /reserved-memory and
+/memreserve/ regions with MEMBLOCK_NODUMP.
+
+x86 currently builds the vmcore elf header from iomem_resource, not
+memblock; it could be switched to memblock, but that would bring no
+benefit for the problem this series solves, so this series makes no
+x86 change. I'd personally be in favor of switching to memblock for
+a unified implementation across architectures.
+
+Best regards
+Wandun
+
+
+> 
+>>
+>> Since the reserved memory regions are filtered out, the vmcore is
+>> smaller in size and faster to produce. 
+>>
+>> The series is based on linux-next and is organized as follows:
+>>
+>> Patches 1-4: Preparation and bugfixes: fix the missing HugeTLB
+>>              flagname, switch riscv crash_mem to memblock, fold the
+>>              duplicated per-arch memblock walks into the weak
+>>              defaults, and serialize crash header preparation against
+>>              memory hotplug.
+>> Patches 5-9: NODUMP infrastructure: switch crash_core to
+>>              for_each_mem_region(), introduce the MEMBLOCK_NODUMP
+>>              flag, add a dumpable flag to struct reserved_mem, and
+>>              mark /reserved-memory and /memreserve/ entries with
+>> 	     MEMBLOCK_NODUMP flag.
+>> Patch 10:    Exclude MEMBLOCK_NODUMP regions from the vmcore ELF
+>>              header.
+>>
+>> In v5, Sashiko found some pre-existing issues related to reserved-memory,
+>> and has no dependency on this series, so these issues have been addressed
+>> in a separate series [2].
+>>
+>> v5 --> v6:
+>> 1. Serialize crash header preparation against memory hotplug to avoid
+>>    out-of-bounds or use-after-free issues.
+>>
+>> 2. MEMBLOCK_NODUMP marking is now done after memblock allows resizing,
+>>    avoiding a panic from too few regions before resize is permitted.
+>>
+>> 3. Reordered the patches, put pre-existing bugfixes earlier in the series.
+>>
+>>
+>> v4 --> v5:
+>> 1. Rework the mechanism around a memblock-level MEMBLOCK_NODUMP flag
+>>    (suggested by Rob) instead of the v4 opt-in 'dumpable' flag on
+>>    DT-only struct reserved_mem.
+>> 2. Switch the riscv vmcore elf header preparation to use memblock
+>>    instead of the resource tree, aligning it with arm64 and loongarch,
+>>    so riscv also can exclude reserved memory from vmcore.
+>> 3. Deduplicate the vmcore elf header preparation: arm64, riscv and
+>>    loongarch open-coded the same logic, so fold it into shared
+>>     __weak defaults in crash_core.
+>> 4.  Drop the v4 patch that saved /memreserve/ entries into the
+>>     reserved_mem array; /memreserve/ is now marked MEMBLOCK_NODUMP
+>>     directly.
+>>
+>> v3 --> v4:
+>> 1. Rebase this series on v7.2-rc1.
+>> 2. Add two cleanup patches (patch 02/03).
+>> 3. Simplify patch 03 to avoid checking whether initial_boot_params is
+>>    NULL multiple times, suggested by Rob.
+>>
+>> v2 --> v3:
+>> 1. Fix out-of-bounds issue if device tree lacks /reserved-memory node.
+>> 2. Fix UAF issue when alloc_reserved_mem_array() fails.
+>> 3. Add some prepare patches.
+>>
+>> v1 --> v2:
+>> 1. v1 added an opt-out DT property ('linux,no-dump'). Per Rob's
+>>    feedback [3], v2 drop that property and exclude reserve memory
+>>    by default.
+>> 2. Split some prepared patches from the original patches.
+>> 3. Address coding-style comments on patch 5 from Rob.
+>>
+>> [1] https://lore.kernel.org/lkml/20260723234126.GA3253409-robh@kernel.org/
+>> [2] https://lore.kernel.org/lkml/20260818092420.2859026-1-chenwandun1@gmail.com/
+>> [3] https://lore.kernel.org/lkml/20260506144542.GA2072596-robh@kernel.org/
+>>
+>> Meijing Zhao (1):
+>>   mm: memblock: add missing HugeTLB flag name
+>>
+>> Wandun Chen (9):
+>>   riscv: build crash_mem ranges from memblock instead of resource tree
+>>   crash_core: fold duplicated memblock arch hooks into the weak default
+>>   crash_core: serialize crash header preparation against hotplug
+>>   crash_core: replace for_each_mem_range() with for_each_mem_region()
+>>   memblock: introduce MEMBLOCK_NODUMP flag
+>>   of: reserved_mem: add dumpable flag to opt-in vmcore
+>>   of: reserved_mem: mark /reserved-memory entries with MEMBLOCK_NODUMP
+>>   of: reserved_mem: mark /memreserve/ entries as MEMBLOCK_NODUMP
+>>   crash_core: skip MEMBLOCK_NODUMP regions when building vmcore ELF
+>>     header
+>>
+>>  arch/arm64/kernel/machine_kexec_file.c     | 29 ------------
+>>  arch/loongarch/kernel/machine_kexec_file.c | 27 ------------
+>>  arch/riscv/Kconfig                         |  2 +-
+>>  arch/riscv/kernel/machine_kexec_file.c     | 33 --------------
+>>  arch/x86/kernel/crash.c                    |  2 +-
+>>  drivers/of/fdt.c                           |  2 +
+>>  drivers/of/of_private.h                    |  2 +
+>>  drivers/of/of_reserved_mem.c               | 48 ++++++++++++++++++++
+>>  include/linux/crash_core.h                 |  2 +
+>>  include/linux/memblock.h                   |  9 ++++
+>>  include/linux/of_reserved_mem.h            |  1 +
+>>  kernel/crash_core.c                        | 51 ++++++++++++++++++++--
+>>  kernel/dma/contiguous.c                    |  1 +
+>>  mm/memblock.c                              | 17 ++++++++
+>>  14 files changed, 131 insertions(+), 95 deletions(-)
+>>
+>> -- 
+>> 2.43.0
+>>
 
 
