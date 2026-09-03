@@ -4,161 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DD872C982F3
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E54A9C982F5
 	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
-	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Date:Message-Id:From:Subject:Content-Transfer-Encoding:MIME-Version:
+	Content-Type:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=0WQSV2M4dYwT0nemuMW5I3vbKfQKNkPtdhJ2W+zZzFM=; b=yHWA2Y4MQ86Cwha6fJYa/BXHfQ
-	NmlYYK3oriEnAQh6dYllV7EaVtnzr++T+CnEHhbMEGM6LjnqSvHriRiTMfFvb0CoCXY7xU55JaqrB
-	HJzzWu12esVqdFxAfdZbytStAtvmPzKz0ispOfX2CtTI/N0uGZYa+fFc2OLUsbLMoZ3SyT70ML5og
-	FsOmXpgCac24iVvoEy38bIaH2J7jSiRYZQpaWrvhjrWC++b10p/EewPZAd38e7o7bbCPmWvluphuk
-	cxJvR88vvRjn+EgiK7RqLaf7gNrokUt0OuzTZ5AdsCaxEw9jbUxD3zLDKTJ5b53ALg2/R3QMBqWuI
-	h7uxwk5w==;
+	bh=0GGJyshhlAlKfjOpgr7j97Mh0m1+5qav5ykVgFpFUIA=; b=LyzMHQAS9TaFg24J7hjOmTSy+J
+	irpNwEctTvSo3VAI5jFtrO0loaOTyAS3uc0zo4KCVcLpSGpqe27hWkChFBWSjijLDD4Ry0JBUNOr7
+	8eVEovRhywNq6gjaqYqOEWL0lUyTrizVdVxyJpdDGBxL2Zss7UTblUeswuB/3c10Yx3U63YTfmzdP
+	k1r8CdNTmkKnWxwh4H98LRNJu+ylOADKOX4ffGhEOfmWV/7M+USbcgvgSuz87uaGbPGNh0q55gdOq
+	6izhcpfl40Pi5bG6E870kfjaFvdPMyYUFGVZtxirblls+i2bUE4SotfHAdA2OkYoNJ+ZSfsWs1+Ji
+	17RdJ6jQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8O4M-00000000MFY-0a2A;
-	Sun, 20 Sep 2026 20:23:26 +0000
-Received: from mail-yx2-x0e.google.com ([2607:f8b0:4864:41::e])
+	id 1x8O4L-00000000MES-0tJV;
+	Sun, 20 Sep 2026 20:23:25 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8NLk-00000000IMs-0pgc
-	for kexec@lists.infradead.org;
-	Sun, 20 Sep 2026 19:37:22 +0000
-Received: by mail-yx2-x0e.google.com with SMTP id 00721157ae682-8961cca9193so28158757b3.3
-        for <kexec@lists.infradead.org>; Sun, 20 Sep 2026 12:37:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1789933039; x=1790537839; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=0WQSV2M4dYwT0nemuMW5I3vbKfQKNkPtdhJ2W+zZzFM=;
-        b=Zvw63ThjZjgcueVn1xvasnLJCP3oUR/S58VccQeInxXQCKvknXmRzSXB8vkRtEj2wq
-         gVVZrFSq1nrRdNfbppims78P5L4gzG5BscI2JayiKgGtAr5a7cC09Mg+TIKUXfV1dbSZ
-         SCAFhFE2dfpCjiICDlQPPTUx/VddfutyhBkP2rmbjQJ/arluHECjeUjVpMryy1YTN3QC
-         IGVQZxeqj3ruaWiZRd/q8hR+jdY8Zzv6xkkOX6eH3tmzngDWZG+qokGB6IEO7WQfoOPJ
-         L0ZNv39z95Zb3P7ba+Bng/gGrIMWgu3VoPyf0fKdbXpfyziL2AWW7Hwa1kMgF9O2JRO/
-         r2sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789933039; x=1790537839;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=0WQSV2M4dYwT0nemuMW5I3vbKfQKNkPtdhJ2W+zZzFM=;
-        b=Xgr6PYje9+jBACPluP12vwsESBS54w0M5WaPodcgELU/eCt3zeUYsBHv7dJh7AR20f
-         V0xCRlnNVWyLmFOHFENGwTjaxp1RAeGcwB2TKyjbwBT5s4lPj7i9Z3RCnxobq7m7cebh
-         WY0rqdI8HqupE6ARnHT7qGZPTwSvKGo9J5DPucBReRizDByw9aNh7DnZBYo/m0iG8YtB
-         /jllhW9zJmViQpRbqwGOztAewaSxOn5BTJfKciH0IHnZ6UrqNMWr8ch3U2fcmw/OLf8A
-         XMEFu4vHHrpeMJ0nJGhPZ1dqrec/PrQwWYwVI4ObVw4D4eiL4F8AaXpHGCGFQrheoOnc
-         hXSQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwErkY4Zs76nuLw0t/c6PsuNQYO2Lgo46f7s/wri+NggKXCEEGCs0qdNq/XNq+3KJTwYih4OQ==@lists.infradead.org
-X-Gm-Message-State: AFuF++nHPVmMoMM9ABBEqPG5DqcMaFEHtmEwofNgGEB77LPImW6bMRGp
-	mNXWPFe3BUV371wiDJWfUyeuPHTHkE2/4fLOG7I235sNQa/sGLCm5doyUIMxxjJYaSc=
-X-Gm-Gg: AYBFou0aKP3cKd0oY+KzzAmMqDqdcHhDST79wHSzM5sFNfQQIBa0eCITlUTT3DGoIzd
-	ADjHm56M63Ej60HtI6V2d3odF2MzaPncHVfEDo30UuLPG9MOPmpqdyQ7nzmep4oDC85wbkD9pQT
-	VQr+9YYdKSh/YfEzdq1zdgwfTlmqV6H5qhZpC1+NO6xLFyS47f4OAZJD32MptIUOcp+esSio/0N
-	Wbg/evXmM3z7jFzpbxg58Kp/ZuI06kXQEIHB1tQ3Jw3FbEkOc/lJpaGwMS3mcmex9fBufC3Jn2z
-	Bu8kg6KLJ9+D3h5FV2dR0ZU7T68A4Skt2jRkzg6KKw3M78ya/RpYW6xZ9wGu39a3ZYxkvXdkNAz
-	zFop+z91fR4W1I7bsVXcbbTmSWAjHnkAo/5KBYWfI18HeK+aQmyOY0rBdALivKCca8+Cymmcu36
-	qHVqpFAUrujY8Fa7dNCfh6vxUonbdmJkm67GC4VQfRktZC2Tl6R35DUWYW7hRnh4f0+s0jw0vV6
-	78KR/TMhcWvOGZvzjI766TkRuiIGXDDTCf1U57PRtL2m2drTGzqnPnnhHuoVvkxGA1pHl6YMqKD
-	eIs6S7uJfe3AyyfgNuE=
-X-Received: by 2002:a05:690c:e1ca:20b0:854:9062:73ae with SMTP id 00721157ae682-89736b3f795mr32929267b3.33.1789933039155;
-        Sun, 20 Sep 2026 12:37:19 -0700 (PDT)
-Received: from soleen.c.googlers.com.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-89a48d99122sm18294247b3.48.2026.09.20.12.37.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Sep 2026 12:37:17 -0700 (PDT)
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: linux-kselftest@vger.kernel.org,
-	legion@kernel.org,
-	kees@kernel.org,
-	will@kernel.org,
-	ruanjinjie@huawei.com,
-	atomlin@atomlin.com,
-	rppt@kernel.org,
-	jani.nikula@intel.com,
-	hamzamahfooz@linux.microsoft.com,
-	joey.gouly@arm.com,
-	tglx@kernel.org,
-	nsc@kernel.org,
-	alexandre.chartre@oracle.com,
-	james.morse@arm.com,
-	dianders@chromium.org,
-	bp@alien8.de,
-	jpoimboe@kernel.org,
-	shuah@kernel.org,
-	catalin.marinas@arm.com,
-	linux-kbuild@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	kvmarm@lists.linux.dev,
-	jaredwhite@microsoft.com,
-	johan@kernel.org,
-	pbonzini@redhat.com,
-	mingo@redhat.com,
-	linux-mm@kvack.org,
-	seanjc@google.com,
-	mark.rutland@arm.com,
-	vdonnefort@google.com,
-	tarunsahu@google.com,
-	gshan@redhat.com,
-	skhan@linuxfoundation.org,
-	linux-doc@vger.kernel.org,
-	xur@google.com,
-	djbw@kernel.org,
-	oupton@kernel.org,
-	nogikh@google.com,
-	sumitg@nvidia.com,
-	linux-kernel@vger.kernel.org,
-	zengheng4@huawei.com,
-	peterz@infradead.org,
-	corbet@lwn.net,
-	suzuki.poulose@arm.com,
-	luto@kernel.org,
-	hpa@zytor.com,
-	zhangpengjie2@huawei.com,
-	x86@kernel.org,
-	yuzenghui@huawei.com,
-	jic23@kernel.org,
-	ardb@kernel.org,
-	pasha.tatashin@soleen.com,
-	petr.pavlu@suse.com,
-	ryan.roberts@arm.com,
-	kexec@lists.infradead.org,
-	pratyush@kernel.org,
-	dave.hansen@linux.intel.com,
-	rdunlap@infradead.org,
-	kvm@vger.kernel.org,
-	fuad.tabba@linux.dev,
-	maz@kernel.org,
-	mbenes@suse.cz,
-	jgross@suse.com,
-	seiden@linux.ibm.com,
-	pierre.gondois@arm.com,
-	song@kernel.org,
-	nathan@kernel.org,
-	pmladek@suse.com,
-	graf@amazon.com,
-	chao.gao@intel.com,
-	zhenglifeng1@huawei.com,
-	arnd@arndb.de,
-	sidnayyar@google.com,
-	linux-arm-kernel@lists.infradead.org,
-	vladimir.murzin@arm.com,
-	kas@kernel.org
-Subject: [RFC PATCH 04/46] x86/mm/ident_map: Add force_pte to support 4K PTE identity mappings
-Date: Sun, 20 Sep 2026 15:36:08 -0400
-Message-ID: <20260920193650.3373435-5-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-In-Reply-To: <20260920193650.3373435-1-pasha.tatashin@soleen.com>
-References: <20260920193650.3373435-1-pasha.tatashin@soleen.com>
+	id 1x2A1p-000000007xx-1b42;
+	Thu, 03 Sep 2026 16:11:05 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id B2F9E42AD7;
+	Thu,  3 Sep 2026 16:11:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 929241F00A3D;
+	Thu,  3 Sep 2026 16:11:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788451864;
+	bh=0GGJyshhlAlKfjOpgr7j97Mh0m1+5qav5ykVgFpFUIA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc;
+	b=JxlK65jBcGgrsk9TAjqXxFnNxMSr2EUzOMWx942qjPBc2ybpTNX4WvsfPUiPxOaFl
+	 CvaTGDSQ1oizIiQKMXWYE2OVnwqIcGg5ydGC/+fP1+mqJ1GuK69hXukg6W16b7JT1r
+	 w2aaHejOOmNUZBUXMT7w7PrSbcyV2uNkwH9yBFLEDwdRzAceRy7X++SL5zY6FEYsfi
+	 FKkGMEhCG0T0FcIFQ+7naHWPwvlEPmk672vo9ZWS+QDqA+Td4EZLGZ+BJGrxKQ67ij
+	 TyZdI3BpB9bpqUcAWwS6PSI4Q7NaBwZ/Wa6AfOhrb223ZyOEtRQ2bZ96TF514AV+At
+	 BAPEfyocjj+3A==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 1986738119CB;
+	Thu,  3 Sep 2026 16:10:07 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260920_123720_251742_AE7DB153 
-X-CRM114-Status: GOOD (  16.04  )
+Subject: Re: [f2fs-dev] [PATCH RFC 00/14] Remove PG_private by using
+ page/folio->private checks instead
+From: patchwork-bot+f2fs@kernel.org
+Message-Id: <178845180590.3423963.571905514968785918.git-patchwork-notify@kernel.org>
+Date: Thu, 03 Sep 2026 16:10:05 +0000
+References: <20260731-remove-pg_private-v1-0-142c97ba3562@nvidia.com>
+In-Reply-To: <20260731-remove-pg_private-v1-0-142c97ba3562@nvidia.com>
+To: Zi Yan <ziy@nvidia.com>
+Cc: david@kernel.org, willy@infradead.org, akpm@linux-foundation.org,
+ muchun.song@linux.dev, ljs@kernel.org, liam@infradead.org, vbabka@kernel.org,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+ baolin.wang@linux.alibaba.com, nico.pache@linux.dev, ryan.roberts@arm.com,
+ dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
+ usama.arif@linux.dev, gourry@gourry.net, ying.huang@linux.alibaba.com,
+ apopple@nvidia.com, hannes@cmpxchg.org, qi.zheng@linux.dev,
+ shakeel.butt@linux.dev, kasong@tencent.com, mark.rutland@arm.com,
+ irogers@google.com, jack@suse.cz, linux-doc@vger.kernel.org,
+ amarkuze@redhat.com, peterz@infradead.org, kexec@lists.infradead.org,
+ dave.hansen@linux.intel.com, ruirui.yang@linux.dev, adrian.hunter@intel.com,
+ linux-mm@kvack.org, hongbohbli@tencent.com, hpa@zytor.com,
+ guochunhai@vivo.com, skhan@linuxfoundation.org, ceph-devel@vger.kernel.org,
+ baoquan.he@linux.dev, matthew.brost@intel.com, anna@kernel.org,
+ sstabellini@kernel.org, zbestahu@gmail.com, rakie.kim@sk.com,
+ minchan@kernel.org, richard@nod.at, x86@kernel.org, ebiggers@kernel.org,
+ alexander.shishkin@linux.intel.com, mingo@redhat.com, slava@dubeyko.com,
+ weixugc@google.com, yukuai@fygo.io, xen-devel@lists.xenproject.org,
+ xiang@kernel.org, magiclinan@didiglobal.com, mhiramat@kernel.org,
+ joshua.hahnjy@gmail.com, xiao@kernel.org, byungchul@sk.com,
+ james.clark@linaro.org, acme@kernel.org, linux-raid@vger.kernel.org,
+ linux-fscrypt@vger.kernel.org, bp@alien8.de, rostedt@goodmis.org,
+ linux-mtd@lists.infradead.org, axelrasmussen@google.com,
+ jefflexu@linux.alibaba.com, namhyung@kernel.org, jaegeuk@kernel.org,
+ yuanchu@google.com, idryomov@gmail.com, osalvador@suse.de, jgross@suse.com,
+ pratyush@kernel.org, linux-nfs@vger.kernel.org, tytso@mit.edu,
+ oleksandr_tyshchenko@epam.com, song@kernel.org, corbet@lwn.net,
+ pasha.tatashin@soleen.com, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-perf-users@vger.kernel.org,
+ senozhatsky@chromium.org, tglx@kernel.org, jolsa@kernel.org,
+ linux-fsdevel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+ trondmy@kernel.org
 X-Mailman-Approved-At: Sun, 20 Sep 2026 13:23:19 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -174,155 +103,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Extend kernel_ident_mapping_init() with ident_pte_init() and a force_pte
-flag in struct x86_mapping_info so callers can request 4K PTE leaf
-mappings instead of 2M PMD or 1G PUD leaves.
+Hello:
 
-Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
----
- arch/x86/include/asm/init.h |  3 +-
- arch/x86/mm/ident_map.c     | 72 ++++++++++++++++++++++++++++++++-----
- 2 files changed, 65 insertions(+), 10 deletions(-)
+This patch was applied to jaegeuk/f2fs.git (dev)
+by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-diff --git a/arch/x86/include/asm/init.h b/arch/x86/include/asm/init.h
-index 01ccdd168df0..d9caed494e7d 100644
---- a/arch/x86/include/asm/init.h
-+++ b/arch/x86/include/asm/init.h
-@@ -6,10 +6,11 @@ struct x86_mapping_info {
- 	void *(*alloc_pgt_page)(void *); /* allocate buf for page table */
- 	void (*free_pgt_page)(void *, void *); /* free buf for page table */
- 	void *context;			 /* context for alloc_pgt_page */
--	unsigned long page_flag;	 /* page flag for PMD or PUD entry */
-+	unsigned long page_flag;	 /* page flag for PTE, PMD or PUD entry */
- 	unsigned long offset;		 /* ident mapping offset */
- 	bool direct_gbpages;		 /* PUD level 1GB page support */
- 	unsigned long kernpg_flag;	 /* kernel pagetable flag override */
-+	bool force_pte;			 /* force 4K PTE mappings */
- };
- 
- int kernel_ident_mapping_init(struct x86_mapping_info *info, pgd_t *pgd_page,
-diff --git a/arch/x86/mm/ident_map.c b/arch/x86/mm/ident_map.c
-index 5a15bffe6574..83013513ba94 100644
---- a/arch/x86/mm/ident_map.c
-+++ b/arch/x86/mm/ident_map.c
-@@ -77,24 +77,73 @@ void kernel_ident_mapping_free(struct x86_mapping_info *info, pgd_t *pgd)
- 	info->free_pgt_page(pgd, info->context);
- }
- 
--static void ident_pmd_init(struct x86_mapping_info *info, pmd_t *pmd_page,
--			   unsigned long addr, unsigned long end)
-+static int ident_pte_init(struct x86_mapping_info *info, pte_t *pte_page,
-+			  unsigned long addr, unsigned long end)
- {
--	addr &= PMD_MASK;
--	for (; addr < end; addr += PMD_SIZE) {
-+	addr &= PAGE_MASK;
-+	for (; addr < end; addr += PAGE_SIZE) {
-+		pte_t *pte = pte_page + pte_index(addr);
-+
-+		if (pte_present(*pte))
-+			continue;
-+
-+		set_pte(pte, __pte(((addr - info->offset) | info->page_flag) & ~_PAGE_PSE));
-+	}
-+
-+	return 0;
-+}
-+
-+static int ident_pmd_init(struct x86_mapping_info *info, pmd_t *pmd_page,
-+			  unsigned long addr, unsigned long end)
-+{
-+	unsigned long next;
-+	int result;
-+
-+	for (; addr < end; addr = next) {
- 		pmd_t *pmd = pmd_page + pmd_index(addr);
-+		pte_t *pte;
- 
--		if (pmd_present(*pmd))
-+		next = pmd_addr_end(addr, end);
-+
-+		if (!info->force_pte) {
-+			if (pmd_present(*pmd))
-+				continue;
-+
-+			set_pmd(pmd, __pmd(((addr & PMD_MASK) - info->offset) | info->page_flag));
- 			continue;
-+		}
- 
--		set_pmd(pmd, __pmd((addr - info->offset) | info->page_flag));
-+		/* if this is already a 2MB page, this portion is already mapped */
-+		if (pmd_leaf(*pmd))
-+			continue;
-+
-+		if (pmd_present(*pmd)) {
-+			pte = pte_offset_kernel(pmd, 0);
-+			result = ident_pte_init(info, pte, addr, next);
-+			if (result)
-+				return result;
-+			continue;
-+		}
-+
-+		pte = (pte_t *)info->alloc_pgt_page(info->context);
-+		if (!pte)
-+			return -ENOMEM;
-+
-+		result = ident_pte_init(info, pte, addr, next);
-+		if (result)
-+			return result;
-+
-+		set_pmd(pmd, __pmd(__pa(pte) | info->kernpg_flag));
- 	}
-+
-+	return 0;
- }
- 
- static int ident_pud_init(struct x86_mapping_info *info, pud_t *pud_page,
- 			  unsigned long addr, unsigned long end)
- {
- 	unsigned long next;
-+	int result;
- 
- 	for (; addr < end; addr = next) {
- 		pud_t *pud = pud_page + pud_index(addr);
-@@ -108,7 +157,7 @@ static int ident_pud_init(struct x86_mapping_info *info, pud_t *pud_page,
- 			continue;
- 
- 		/* Is using a gbpage allowed? */
--		use_gbpage = info->direct_gbpages;
-+		use_gbpage = info->direct_gbpages && !info->force_pte;
- 
- 		/* Don't use gbpage if it maps more than the requested region. */
- 		/* at the beginning: */
-@@ -129,13 +178,17 @@ static int ident_pud_init(struct x86_mapping_info *info, pud_t *pud_page,
- 
- 		if (pud_present(*pud)) {
- 			pmd = pmd_offset(pud, 0);
--			ident_pmd_init(info, pmd, addr, next);
-+			result = ident_pmd_init(info, pmd, addr, next);
-+			if (result)
-+				return result;
- 			continue;
- 		}
- 		pmd = (pmd_t *)info->alloc_pgt_page(info->context);
- 		if (!pmd)
- 			return -ENOMEM;
--		ident_pmd_init(info, pmd, addr, next);
-+		result = ident_pmd_init(info, pmd, addr, next);
-+		if (result)
-+			return result;
- 		set_pud(pud, __pud(__pa(pmd) | info->kernpg_flag));
- 	}
- 
-@@ -189,6 +242,7 @@ int kernel_ident_mapping_init(struct x86_mapping_info *info, pgd_t *pgd_page,
- 
- 	/* Filter out unsupported __PAGE_KERNEL_* bits: */
- 	info->kernpg_flag &= __default_kernel_pte_mask;
-+	info->page_flag &= __default_kernel_pte_mask;
- 
- 	for (; addr < end; addr = next) {
- 		pgd_t *pgd = pgd_page + pgd_index(addr);
+On Fri, 31 Jul 2026 22:13:23 -0400 you wrote:
+> Hi all,
+> 
+> This patchset removes PG_private to make space for upcoming PG_folio
+> (reserved as __PG_folio) for identifying pages from a folio (more details
+> in Note below). Instead of checking PG_private, all code is changed to
+> check page/folio->private != NULL instead.
+> 
+> [...]
+
+Here is the summary with links:
+  - [f2fs-dev,RFC,06/14] fs/f2fs: stop using PG_private
+    https://git.kernel.org/jaegeuk/f2fs/c/5ad9409a9533
+
+You are awesome, thank you!
 -- 
-2.55.0.1082.g2b9226bbc0-goog
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
 
