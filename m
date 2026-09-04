@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E4EE1C79F83
-	for <kexec@archiver.kernel.org>; Fri,  4 Sep 2026 10:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B1E7EC79F83
+	for <kexec@archiver.kernel.org>; Fri,  4 Sep 2026 10:10:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=o3wkuTeSXY6ZguztNITu+uR9AE+arZh/2zJ/JhX9Oew=; b=LOGH6Bf1diPkLMCFlqB4Wmbdp9
-	vMDSJexFqhm3VBMmuZoqpRxuQOvFOX0yJaxiPkJCrLYgrRPpxpBN7or7BvxYhieg1FUnuiGCs1jJQ
-	kLtSrAkXCDdB8XX1YCEMaHE0An+IoTOYmNZSSxmyYeL+dGEzvtX12CrEiMXSzuC0gl1kMk2xpTnIb
-	HOcA7lfYUblnjyDOJJvTlMP4aS08ec+p9R/OaYcKZ12BoNUsSULtmLrw6bm4HHfMu0A0kwOtl4M1z
-	L3IC62Mk7aQy5OdvpmjyDUW1bMPrSFwknVah1xRZZe/hq8BltWlkGTT7MhdmUHxFFSKsIfxmBJ8Nh
-	oDH1RPqw==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=LTixsxuGb1ShvX5LUOrF9FQYyrN030TPzy93bsFnjSQ=; b=BwkXgvKWhqkTYMuluWKJJfyvnn
+	utZGmqr1JGKpxYGC69BrhxD+sISHWEJQsVC3EogA3uCZkF9cAXooXcmq5yMx+gd64vP7xF/IXCftj
+	4umjKSR6pO1Xt99ZxqDjWBRCm7ZwRB6FNE6sLD5HhjnSK2nRq18xOIe0+rpPKKqNAmCaBbdx9i95f
+	qmTl8X78Wpfzvp+Yna+ArYz/yOGqJhRVL2gQNefUC2D1Lf1NV/MdXs7MXjUOZ0nwAZbflXEYICqfz
+	NZpaIDO+jcafGJpMJ+JGvReY900R7NN+myWgQDcsSstR2CrjveCF5XXEbyn4EzchM89TsDBxz4WcP
+	C2YaqA2Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x2QsP-00000001cgs-04Bp;
-	Fri, 04 Sep 2026 10:10:29 +0000
-Received: from out-71.mta1.migadu.com ([95.215.58.71] helo=mta1.migadu.com)
+	id 1x2QsU-00000001cjh-0wQf;
+	Fri, 04 Sep 2026 10:10:34 +0000
+Received: from out-95.mta1.migadu.com ([95.215.58.95] helo=mta1.migadu.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x2QsL-00000001cg9-0OMg
+	id 1x2QsP-00000001cgq-1rXN
 	for kexec@lists.infradead.org;
-	Fri, 04 Sep 2026 10:10:27 +0000
+	Fri, 04 Sep 2026 10:10:31 +0000
 X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=3i8Bvzh7qkOslCU/FvOhfyi9i8JlWiGHdZetbC/2/1E=;
+DKIM-Signature: a=rsa-sha256; bh=PHW2ypkolV+36MeBrIflBY2kZtvuYhFSqnZa7Us0mSc=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1788516623; v=1; x=1789121423;
- b=Mdl6C3gWkeRVQGtfrYp+sYhl5B9ZDcyJkTQC8BlAzaOvrjgtHTaF36bOpCWd0rCtUaUtdSGU
- +yD6/dRShGierBbIkPZBE5+FK0riK1IqOdGlRlET62nE5xEwiTDfK+SmJ7FLZF8YTkWr8fKYfyV
- /bFrjxsZYzzUebrsAPVJJIiw=
+ t=1788516627; v=1; x=1789121427;
+ b=PXOgys016DDQhBb/QNKwSkffh+43zc78rYU4UKbXwE6RWxIzonFp+epRA1onkLuvSzHVdEL+
+ VNsS5zGIUqkzkGmkoqh91TGfrg5FhVDnPYpbgM595l95zXwS+ioLRT2IssUtaRA8U+rJAL9eGUb
+ AG038oagG6EWQpo4yMmgyNv4=
 X-Envelope-To: kexec@lists.infradead.org
-Received: by smtp.migadu.com with ESMTPS id e95a607b71039ff5;
-	Fri, 04 Sep 2026 10:10:22 +0000
-X-Mizu-Trace-ID: e95a607b71039ff5
+Received: by smtp.migadu.com with ESMTPS id b181acf3ff0b524f;
+	Fri, 04 Sep 2026 10:10:27 +0000
+X-Mizu-Trace-ID: b181acf3ff0b524f
 X-Migadu-Flow: FLOW_OUT
 From: George Guo <dongtai.guo@linux.dev>
 To: rppt@kernel.org,
@@ -61,15 +61,17 @@ Cc: ilias.apalodimas@linaro.org,
 	linux-mm@kvack.org,
 	linux-kselftest@vger.kernel.org,
 	linux-efi@vger.kernel.org
-Subject: [PATCH v5 0/5] LoongArch: add KHO support and selftests
-Date: Fri,  4 Sep 2026 18:08:47 +0800
-Message-ID: <20260904100852.26006-1-dongtai.guo@linux.dev>
+Subject: [PATCH v5 2/5] liveupdate: synchronize EFI KHO channel at execution
+Date: Fri,  4 Sep 2026 18:08:49 +0800
+Message-ID: <20260904100852.26006-3-dongtai.guo@linux.dev>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260904100852.26006-1-dongtai.guo@linux.dev>
+References: <20260904100852.26006-1-dongtai.guo@linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260904_031025_295089_4A797419 
-X-CRM114-Status: GOOD (  19.17  )
+X-CRM114-CacheID: sfid-20260904_031029_626814_4C2C1CCE 
+X-CRM114-Status: GOOD (  15.45  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,160 +86,131 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This series enables Kexec HandOver (KHO) on 64-bit LoongArch and adds
-LoongArch coverage to the KHO QEMU selftest.  KHO is the remaining
-architecture gate needed by Live Update (LUO) on LoongArch.
+From: George Guo <guodongtai@kylinos.cn>
 
-The transport is the central problem.  Arm64 and riscv can pass the KHO
-state FDT and scratch area through properties under /chosen in a boot
-FDT.  LoongArch boots through EFI without a boot FDT, so that path is not
-available.
+The EFI KHO configuration table is a global channel. Updating it while
+a candidate kexec image is still being loaded can leave the channel
+pointing at the failed candidate even though the previous image remains
+installed. Synchronize it instead from the image selected for execution.
 
-EFI KHO channel:
+Use the actual scratch payload size rather than its page-aligned segment
+size, and propagate update failures before live-update serialization.
+Keep clearing the channel for cold and crash images best-effort.
 
-v5 reworks the EFI transport following Pratyush's and Huacai's reviews
-[1, 2].  Instead of rebuilding the EFI configuration table in
-LoongArch code and switching st->tables before kexec, the common EFI stub
-allocates and installs a persistent table under
-LINUX_EFI_KEXEC_HANDOVER_GUID.  This follows the model used by
-LINUX_EFI_MEMRESERVE_TABLE_GUID.
+Signed-off-by: George Guo <guodongtai@kylinos.cn>
+---
+ kernel/crash_core.c                |  7 +++++++
+ kernel/kexec_core.c                |  5 +++++
+ kernel/kexec_internal.h            |  3 +++
+ kernel/liveupdate/kexec_handover.c | 33 ++++++++++++++++++++++++++++++
+ 4 files changed, 48 insertions(+)
 
-The common EFI table parser reserves the stub-allocated table, reads it
-during early boot, and calls kho_populate().  An early initcall keeps the
-table persistently mapped so it can also be updated on the crash kexec
-path.  The implementation is architecture-independent; LoongArch only
-selects EFI_KHO when KEXEC_HANDOVER is enabled.
-
-The EFI table is global, but kexec can keep separate normal and crash
-images and can replace a loaded candidate.  Updating the table while a
-candidate image is being loaded could therefore leave it pointing at a
-failed candidate while the previously installed image remains the one
-that will be executed.  v5 records the KHO data in struct kimage and
-synchronizes the channel from the image selected for execution.  Images
-without KHO data, including legacy and crash images, clear the channel so
-the next kernel boots cold rather than reviving stale state.
-
-The GUID name is changed to LINUX_EFI_KEXEC_HANDOVER_GUID as suggested by
-Huacai and Pratyush [3].  Existing x86 KHO support continues to use its
-setup_data transport.  Besides supporting non-UEFI boot, that entry is
-consumed by the x86 decompressor before normal EFI table parsing, so KASLR
-only uses KHO scratch areas and does not overwrite preserved memory.  The
-new channel is installed by the generic EFI-stub entry path and relies on
-EFI_GENERIC_STUB, which x86 does not select.  Moving x86 would therefore
-require installing the table from the x86-specific EFI stub and scanning it
-in the decompressor, not just selecting EFI_KHO.
-
-LoongArch enablement and build fix:
-
-The architecture patch now only enables ARCH_SUPPORTS_KEXEC_HANDOVER and
-selects the generic EFI channel.  No LoongArch setup reader, kexec writer,
-or EFI system-table replacement remains.
-
-The linux/mm.h build fix is moved from luo_session.c to kho_block.c, where
-the virt_to_phys() and phys_to_virt() calls reside after the liveupdate
-refactoring.  This addresses Pratyush's review [4].  Adding linux/mm.h to
-asm/io.h was previously attempted, but creates an include cycle under
-CONFIG_KFENCE [5].  The fix precedes LoongArch enablement so every
-intermediate commit builds with CONFIG_KFENCE=y.
-
-Selftest:
-
-The LoongArch vmtest boots vmlinux.efi through EDK2 because the initial
-EFI stub invocation installs the channel being tested.  QEMU_EFI can
-override the firmware filename for distributions that install it under a
-different name or path.
-
-CONFIG_ACPI_SPCR_TABLE lets the bare earlycon parameter obtain the UART
-description from EDK2's SPCR table.  CONFIG_PCI_HOST_GENERIC keeps i8042
-enabled while ensuring that the QEMU virt machine's PCI I/O space is
-mapped before the legacy fallback probe, addressing Huacai's concern that
-the same kernel configuration should remain usable for hosts and guests.
-
-With EFI runtime reset services available, panic=-1 and QEMU's existing
--no-reboot option terminate the test normally.  The generic QEMU runner
-therefore remains unchanged and does not mask failures by forcibly
-terminating QEMU after a timeout.
-
-The LoongArch vmtest uses the default KHO scratch-sizing path.  This
-series is based on the generic fix that calculates per-node scratch sizes
-before scratch allocation [6].
-
-The KHO vmtest passes on:
-
-  * LoongArch with KVM using QEMU_EFI.fd from edk2-loongarch64.
-  * x86_64 with KVM, as regression coverage for the generic kexec/KHO
-    changes.
-
-Patch layout:
-
-  1. Add the generic EFI KHO channel and its ABI.
-  2. Synchronize the channel from the selected image at execution.
-  3. Fix the kho_block.c header dependency exposed by LoongArch/KFENCE.
-  4. Enable KHO on 64-bit LoongArch through the generic EFI channel.
-  5. Add LoongArch to the KHO QEMU selftest.
-
-Changes since v4:
-
-  * Allocate and install the KHO table from the common EFI stub, following
-    the EFI memreserve-table model (Pratyush).
-  * Parse, reserve, map, and update the channel in generic EFI code; remove
-    the LoongArch-specific reader, writer, and st->tables replacement
-    (Pratyush, Huacai).
-  * Synchronize the global channel at execution rather than image load;
-    clear it for cold and crash images and use the scratch payload size.
-  * Rename the GUID to LINUX_EFI_KEXEC_HANDOVER_GUID (Huacai, Pratyush).
-  * Move the linux/mm.h include from luo_session.c to the actual caller,
-    kho_block.c, and place the fix before architecture enablement
-    (Pratyush, Huacai).
-  * Boot the vmtest through EDK2, allow QEMU_EFI to override the firmware,
-    and use vmlinux.efi to exercise the EFI stub and channel.
-  * Keep i8042 enabled and select PCI_HOST_GENERIC instead of disabling
-    the host configuration in the selftest (Huacai).
-  * Enable ACPI_SPCR_TABLE and use the SPCR-provided early console.
-  * Exercise the default KHO scratch-sizing path in the LoongArch vmtest;
-    depend on the separately posted generic sizing fix [6].
-  * Drop the generic QEMU timeout now that EFI runtime reset services make
-    the LoongArch guest terminate normally.
-  * Rebase onto Linux 7.3-rc1.
-
-[1] Pratyush Yadav:
-    https://lore.kernel.org/r/2vxzo6f96fmn.fsf@kernel.org/
-[2] Huacai Chen:
-    https://lore.kernel.org/r/CAAhV-H4PKRNCa4g=6TGepP+trtM82JiMoWgVr3O7PqbZYP9uGw@mail.gmail.com/
-[3] https://lore.kernel.org/r/2vxzse4m54nz.fsf@kernel.org/
-[4] https://lore.kernel.org/r/2vxzfr0l6fam.fsf@kernel.org/
-[5] https://lore.kernel.org/r/202605211925.DbDvQ6ii-lkp@intel.com/
-[6] https://lore.kernel.org/loongarch/20260904025101.9959-1-dongtai.guo@linux.dev/
-
-Previous version:
-
-v4: https://lore.kernel.org/loongarch/20260807103714.33074-1-dongtai.guo@linux.dev/
-
-George Guo (5):
-  efi: add a KHO configuration table channel
-  liveupdate: synchronize EFI KHO channel at execution
-  liveupdate: kho_block: include linux/mm.h for virt/phys translation
-  LoongArch: enable kexec handover (KHO)
-  selftests/kho: add LoongArch vmtest support
-
- arch/loongarch/Kconfig                     |  4 ++
- drivers/firmware/efi/Kconfig               | 12 ++++
- drivers/firmware/efi/efi.c                 | 78 ++++++++++++++++++++++
- drivers/firmware/efi/libstub/efi-stub.c    | 25 +++++++
- include/linux/efi.h                        | 36 ++++++++++
- kernel/crash_core.c                        |  7 ++
- kernel/kexec_core.c                        |  5 ++
- kernel/kexec_internal.h                    |  3 +
- kernel/liveupdate/kexec_handover.c         | 33 +++++++++
- kernel/liveupdate/kho_block.c              |  1 +
- tools/testing/selftests/kho/loongarch.conf | 11 +++
- tools/testing/selftests/kho/vmtest.sh      |  3 +-
- 12 files changed, 217 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/kho/loongarch.conf
-
-
-base-commit: cee9395acd8043be0644b25c34bfa86623f2b935
-prerequisite-patch-id: a2f06addb17cc379b9f98674f087a1642588dc6e
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 2b36aa9fade0..6166ce4203d3 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -138,6 +138,13 @@ void __noclone __crash_kexec(struct pt_regs *regs)
+ 		if (kexec_crash_image) {
+ 			struct pt_regs fixed_regs;
+ 
++			/*
++			 * A crash image carries no KHO state: clear the
++			 * transport so the crash kernel boots cold instead
++			 * of reviving from stale state.
++			 */
++			(void)kho_sync_channel(kexec_crash_image);
++
+ 			crash_setup_regs(&fixed_regs, regs);
+ 			crash_save_vmcoreinfo();
+ 			machine_crash_shutdown(&fixed_regs);
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index dc770b9a6d05..147f5b5b23d4 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1146,6 +1146,11 @@ int kernel_kexec(void)
+ 		goto Unlock;
+ 	}
+ 
++	/* Synchronize the handover transport with the image being executed. */
++	error = kho_sync_channel(kexec_image);
++	if (error)
++		goto Unlock;
++
+ 	if (!kexec_image->preserve_context) {
+ 		error = liveupdate_reboot();
+ 		if (error)
+diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
+index 228bb88c018b..4d4c2290e85c 100644
+--- a/kernel/kexec_internal.h
++++ b/kernel/kexec_internal.h
+@@ -46,6 +46,7 @@ struct kexec_buf;
+ int kho_locate_mem_hole(struct kexec_buf *kbuf,
+ 			int (*func)(struct resource *, void *));
+ int kho_fill_kimage(struct kimage *image);
++int kho_sync_channel(struct kimage *image);
+ #else
+ static inline int kho_locate_mem_hole(struct kexec_buf *kbuf,
+ 				      int (*func)(struct resource *, void *))
+@@ -54,5 +55,7 @@ static inline int kho_locate_mem_hole(struct kexec_buf *kbuf,
+ }
+ 
+ static inline int kho_fill_kimage(struct kimage *image) { return 0; }
++
++static inline int kho_sync_channel(struct kimage *image) { return 0; }
+ #endif /* CONFIG_KEXEC_HANDOVER */
+ #endif /* LINUX_KEXEC_INTERNAL_H */
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index 39f489a258d9..3aa5c66dfc6d 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -14,6 +14,7 @@
+ #include <linux/cma.h>
+ #include <linux/kmemleak.h>
+ #include <linux/count_zeros.h>
++#include <linux/efi.h>
+ #include <linux/kasan.h>
+ #include <linux/kexec.h>
+ #include <linux/kexec_handover.h>
+@@ -2074,6 +2075,38 @@ int kho_fill_kimage(struct kimage *image)
+ 	return 0;
+ }
+ 
++/*
++ * Synchronize the handover transport with the image that is about to be
++ * executed.  The EFI config table channel is global, while kexec keeps
++ * separate images for a normal reboot and for crash.  Write the state of the
++ * selected image immediately before it is executed, rather than while a
++ * candidate image is being loaded, so a failed replacement cannot leave the
++ * channel pointing at that failed image.
++ *
++ * An image loaded through the legacy kexec_load() syscall, a crash image, or
++ * an image loaded while KHO is disabled carries no handover state.  Clear the
++ * channel for those images so the next kernel boots cold instead of reviving
++ * from stale state.  Clearing is best-effort because an absent channel cannot
++ * affect a cold boot.
++ */
++int kho_sync_channel(struct kimage *image)
++{
++	int err;
++
++	if (!image->kho.fdt || !image->kho.scratch) {
++		efi_kho_update(0, 0, 0, 0);
++		return 0;
++	}
++
++	err = efi_kho_update(image->kho.fdt, PAGE_SIZE,
++			     image->kho.scratch->mem,
++			     image->kho.scratch->bufsz);
++	if (err)
++		pr_warn("failed to update EFI config table: %d\n", err);
++
++	return err;
++}
++
+ static int kho_walk_scratch(struct kexec_buf *kbuf,
+ 			    int (*func)(struct resource *, void *))
+ {
 -- 
 2.53.0
+
 
