@@ -4,101 +4,128 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1B770C61DD6
-	for <kexec@archiver.kernel.org>; Fri,  4 Sep 2026 11:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A4BC9C79F82
+	for <kexec@archiver.kernel.org>; Fri,  4 Sep 2026 14:51:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=JgjLk2Wj4ezNGWQB3j7DpVIqIrI833hmatUkGCCEbj4=; b=NzZU9SBm/QejxcvoDYEvMB7+4Q
-	cX4BGFwfQEA51GHKyk4TDUDrXwiZDBfyQnH39Wuw3AkpgwjkeRmdGKsZqQg8ukWCQcnVlIgGFTv59
-	mkCDNeRQWjQNr5BmfXUbbIIO7DHN9r96YHc+RgT/31Y9aF7sQAnbRNoDI4YZdRZJ77wmoZ8/0e9Fq
-	53ZHlVqtwCRBTN+7WINH6nXcG52bU+tQFHL9aa27gPCIZ7plSuDQu48dUxkNIQeKKA7JGA0tlWqz7
-	1g3Gl/WFxc7C9ddhRvA94c+c4awBjI/Re0Z0ol/l4M5LK85KOCT4s9LyS6VKR8Q1MjW45Rct0+5eI
-	2cwcKVQA==;
+	bh=z84wpOj7CNOGSg65mDGIrYSnrJrlGh4ehhkoEAM8pT0=; b=HdDNb+c8LxsEitqUDO680VsWoM
+	X4mhBA9Bvi0QbD112JE2oXYx2O7dkeDDN2lD28x5m602i2jDz5fKwUOwOjZVqHW6f/ssPwiUelDny
+	HliI0gtAzdbicM4VS+Jxb4fm8aPGM75smQQUWgy8/NchrAQQX59RK37oUA06uzz+wgEyoaTLlYFjx
+	9pTuCXBQvmHz16xOi8E+X/t/XSWzbP5MuA2MNVsY/qnNVgKRCD0ps0qXHADx3VbupNRCLKfBDPWHk
+	uRWrEAr90ikxCRjVm0cJwR+XGobW2WODarVh4mb/fUzOBdsa/pnDukwciZc6LXzJJ6d55ltJ7cNDU
+	21Lm7n9g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x2RnH-00000001mP2-4BE8;
-	Fri, 04 Sep 2026 11:09:16 +0000
-Received: from mail-pj2-x07.google.com ([2607:f8b0:4864:39::7])
+	id 1x2VG5-00000002RSW-1ZwO;
+	Fri, 04 Sep 2026 14:51:13 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x2RnF-00000001mNF-2i7F
+	id 1x2VG0-00000002RQl-1krn
 	for kexec@lists.infradead.org;
-	Fri, 04 Sep 2026 11:09:15 +0000
-Received: by mail-pj2-x07.google.com with SMTP id d9443c01a7336-2d561173f9fso5047295ad.0
-        for <kexec@lists.infradead.org>; Fri, 04 Sep 2026 04:09:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788520152; x=1789124952; darn=lists.infradead.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=JgjLk2Wj4ezNGWQB3j7DpVIqIrI833hmatUkGCCEbj4=;
-        b=MzItqUIOcuUj3ih9YSV4bmzIFGg9FvVPPvqrh8Uz7dMygb5g5NtMvYasp9zNmtx4nL
-         zS0JwlxEaSEquHN7FueDMhqBHQKCRqGFr92ZV9+Q38AcV6XX7oupu23m2Lq0DHEJ7ZnB
-         4BCg70k5n1TfJuyBj9XgtbvqHlHJR8RQVOD0vf29xE96TMtWBSqpc9yOojY14/IJlX1M
-         RbndL065j/pRQAigf8XqTS8nhsuYXB2i6fVrzCfZV+n7YzZEy8c0q94O3HA6Sikwo5nc
-         v2qQ6956bbr10BJLqPYCKjRGajwQ36MH9kAwC+ahK1/A4UKf+TWfpnnF6nwrdJqkhXWI
-         1EfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788520152; x=1789124952;
-        h=content-transfer-encoding:content-type:in-reply-to:from:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=JgjLk2Wj4ezNGWQB3j7DpVIqIrI833hmatUkGCCEbj4=;
-        b=PWK/m2Xcl+vEPXLGM6DtQm+z0N5ZbV4Hi81w7kBokw888Msk30+oyXXLAJDz+TeD/5
-         n1hW8WluZDVo+JcQuRMgD5lf3Ph3HqGdnLqhcLpnhNT4wPK++tSuh2j4Nktme8HTi96F
-         8I4Yhoymyc5uhJI68nX5wQlYahWNrJBZedLveu+LznNge9+X33zEplhkPq1louEDQccX
-         1zjXSTdg7IgV7tD2KE9YbHMzkw4LUn+xNfsUue0m4EQ4VlxGyQm/kyikwZStPCg5MC0o
-         bFaqYDtdk3DMrbampJ+UVD/o5STa2Jm14YM9mqHw4gni1BqUfT4W7W1rKQOovOCyZFRt
-         pBJA==
-X-Forwarded-Encrypted: i=1; AKwUvByl14gUomY3LNVCwYTM+8nZmyPfSosB4/O6eIo8P9LYHLCGFHBozuz2g6eGkyA19fyGsNEo/Q==@lists.infradead.org
-X-Gm-Message-State: AFuF++nHr1LXy6v8vEwgHvnD9FnQhKEdvIqkbFMgCiTB4Ml5l+OeZ7DD
-	tLFEVgk5VEyLVEkj0uZF0aaxI2sP6e/9M3M8Bumo/4Onbba50j8rNnFX
-X-Gm-Gg: AYBFou2uwCsC6AJwnGPKFWfu3Ewekbx3W1Imxj2j/0a6LUIHTpaEjB2JSGshJ4iOsLg
-	+1beH4iJmSddDkmISxnvGv0gjYs/SxlvF1dnM6NW444pRI5c4VK3fn8EIxujIdNtl2mDaojDveY
-	G9zRV2fntSqgqlnGVZYjxSKtgnueMQNbu1ZcpzmprqAsb4vfKEcwJK01uF9Yrn2g0IcW1h4wPfx
-	VHe3RXF8ZxrfOm+5QS2X5oMf2rgSC6VU3jsIYLl/V0nIPloO+lVHidC9CAh3+GGTHm+RdtF1jmf
-	0dPPKEizJROG7fLIsMVHaIlJJnUpxDmVQ7oueWYlr+wECeK08z1w5QC561NUMTmpD7xUpy4lGBb
-	9TVUca2S4mCiEa9ldWLH6TbkKiIktpfK/pcaHkb/XU1iyMBHMfNF6swgPuWeT3fz41Cj6njO/U+
-	dSSsWjwzPZc+M5EedV6fcKiTikj4yRste/fWAQyZDa/oEWbz8UP2KgO8qXB6J33pEpxCnWSAtx8
-	fzR/9BQcJnKHUPhGg==
-X-Received: by 2002:a17:902:fb48:b0:2d7:203b:9863 with SMTP id d9443c01a7336-2db1232c6a9mr51752645ad.1.1788520152439;
-        Fri, 04 Sep 2026 04:09:12 -0700 (PDT)
-Received: from [10.240.227.78] ([114.111.24.207])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2db148404d1sm8326655ad.6.2026.09.04.04.09.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Sep 2026 04:09:11 -0700 (PDT)
-Message-ID: <a859f6dd-cc65-4bce-b4a0-0b757248f6d2@gmail.com>
-Date: Fri, 4 Sep 2026 19:08:57 +0800
+	Fri, 04 Sep 2026 14:51:12 +0000
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 684E1nul1809083;
+	Fri, 4 Sep 2026 14:50:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=z84wpO
+	j7CNOGSg65mDGIrYSnrJrlGh4ehhkoEAM8pT0=; b=VlUnJy5LSg7sY30IsA5Bl3
+	wDXrdDbOjtTj42TngRcuf260Mlbbvqo5y8A6n5pFx0HeqFY1bz5rqelkYFaz56oz
+	iF9MqCfKrjc2e9PFwExohrJkvYSbdvWAzZv/tYUOh2Cu0Z1AuCZNbAljinYIuTvi
+	m6LC8oDEPbFFaeEnrCN0q+lpie58c6edzC/V0bsPDshJDHN0Nyj4sp6bobZGK6HW
+	NtySuTJF8c1V1DZL2YGTI1UE/IlRL0UMOZfvKQZUP9E4TZdYcbcWyqdxHhLhi6hi
+	5tLxlgMVwFzC0JvlGUNqN9sIwfmPCCvUBxq8PSYVQBPo2HHnV62Rz/UyTxCIeJjA
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gbmujb2re-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Sep 2026 14:50:49 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 684EfGJY005113;
+	Fri, 4 Sep 2026 14:50:48 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4gcbygwf73-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Sep 2026 14:50:48 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 684Eoj0m42467610
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 4 Sep 2026 14:50:45 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 070A120040;
+	Fri,  4 Sep 2026 14:50:45 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 496CD20043;
+	Fri,  4 Sep 2026 14:50:40 +0000 (GMT)
+Received: from [9.43.71.40] (unknown [9.43.71.40])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  4 Sep 2026 14:50:40 +0000 (GMT)
+Message-ID: <8fa790a7-f387-48f6-ac76-11cf71ef5589@linux.ibm.com>
+Date: Fri, 4 Sep 2026 20:20:38 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 00/10] kdump: reduce vmcore size and capture time
-To: Baoquan He <baoquan.he@linux.dev>
-Cc: catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
- pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, tglx@kernel.org,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
- robh@kernel.org, saravanak@kernel.org, akpm@linux-foundation.org,
- rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org,
- m.szyprowski@samsung.com, mark.rutland@arm.com, kernel@xen0n.name,
- alex@ghiti.fr, hpa@zytor.com, ruirui.yang@linux.dev, robin.murphy@arm.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- devicetree@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org,
- iommu@lists.linux.dev
-References: <20260902073116.802752-1-chenwandun1@gmail.com>
- <apfkDlcMYrgiuGYA@fedora> <6aef2f48-1cc5-408d-a5a2-2b4b4d45ad7b@gmail.com>
- <apkiW8gn9Z5XaVQh@fedora> <edd83cd6-663f-43f5-8058-99e59d941d5b@gmail.com>
- <aplAA9-NX3pw9Wmb@fedora>
-From: Chen Wandun <chenwandun1@gmail.com>
-In-Reply-To: <aplAA9-NX3pw9Wmb@fedora>
+Subject: Re: [RFC PATCH 2/3] powerpc: add support for Kexec HandOver (KHO)
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: linuxppc-dev@lists.ozlabs.org, Aditya Gupta <adityag@linux.ibm.com>,
+        Alexander Graf <graf@amazon.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <baoquan.he@linux.dev>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>, Mike Rapoport <rppt@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>,
+        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+        Shivang Upadhyay <shivangu@linux.ibm.com>,
+        Shrikanth Hegde <sshegde@linux.ibm.com>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20260821105609.983622-1-sourabhjain@linux.ibm.com>
+ <20260821105609.983622-3-sourabhjain@linux.ibm.com>
+ <2vxza4qfznyo.fsf@kernel.org>
+ <7bb84b8a-c394-4895-9e22-632dc506cbb6@linux.ibm.com>
+ <2vxz5x0ox7p9.fsf@kernel.org>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <2vxz5x0ox7p9.fsf@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-GUID: ZuVGYkq6M7Ac90dVE0d7ogJJ4Uw4f_V4
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTA0MDEzMiBTYWx0ZWRfX6HJ8GB5LIm1I
+ 9yyQiaZCLp78oRy6HCn4nEMsi2sB+ws+Gaf9FPNv8AERig+Byvw9SOuYa8DJS3uEtjHkFBqkvfQ
+ b8eNm5a1hp9Z8Bt8hsYNjjDyntf2fkwe4WirN60gpMQeGBy1XYz5RAEYN+Tdcwpln+1A9iWPtz8
+ RBmOdmj23sII7TpxLxvzHgaYPYc2TU8ET5D9aRStiL7K28xbWIz/LVLhSwuYe1LZCwREjaYwS49
+ YKNVHNDcmWBnyRVf9NGh6vLnAELnaOy2jep1nAaPsvJRN1MBDHTQH7HnTxmTcWsextWoMRmjZFg
+ bvYT8DnLfZFVwFkw0q+nwg7tA/YKhKYDch1Du3ItdiSxPrlG3rFqwGU9FnkMLtup9L+xpH0hMTj
+ a1GrZvLYeLhVPaqmzPDEnef8e4c6GP2N0ExCdXbvLVHHay83sdkiS1oj9mLksGxOudJYSuXpo1L
+ ARZwAm6xfM2maxxcUlQ==
+X-Authority-Analysis: v=2.4 cv=Osl/DS/t c=1 sm=1 tr=0 ts=6a9adaca cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=sUgROpt_8gkIZWawIRsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTA0MDEzMiBTYWx0ZWRfX8pPn+rD+4iEK
+ QBTaJF7ilWe0zR0ir5GN0ZjiCfAQhxq/OGnQmI4KeOwkpxxEPP4U7MQyrcuQP1tb3mUW6bYWaTL
+ JwHy9Y5f2UH6+XCBTHqvOYr86ofcLGc=
+X-Proofpoint-ORIG-GUID: 55JCyPY_GdeWZ6Pfh6526yIwK2uy6q3s
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-04_04,2026-09-03_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 malwarescore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0
+ adultscore=0 impostorscore=0 phishscore=0 clxscore=1015 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2609040132
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260904_040913_704812_1BE9F1E9 
-X-CRM114-Status: GOOD (  23.98  )
+X-CRM114-CacheID: sfid-20260904_075108_582876_2D7322AE 
+X-CRM114-Status: GOOD (  60.04  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -115,200 +142,275 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
 
-On 9/3/26 5:38 PM, Baoquan He wrote:
-> On 09/03/26 at 03:43pm, Wandun wrote:
->>
->>
->> On 9/3/26 15:31, Baoquan He wrote:
->>> On 09/03/26 at 03:05pm, Wandun wrote:
->>>>
->>>>
->>>> On 9/2/26 16:53, Baoquan He wrote:
->>>>> Hi Wandun,
->>>>>
->>>>> On 09/02/26 at 03:31pm, Wandun Chen wrote:
->>>>>> From: Wandun Chen <chenwandun@lixiang.com>
->>>>>>
->>>>>> On SoCs that carve out large firmware-owned reserved memory (GPU,
->>>>>> camera ISP, ...), kdump currently dumps those carveouts as part of
->>>>>> system RAM even though their contents are firmware state that is not
->>>>>> useful for kernel crash analysis.
->>>>>>
->>>>>> This series introduces a MEMBLOCK_NODUMP flag in memblock to filter
->>>>>> reserved memory on DT-based architectures (arm64, riscv, loongarch).
->>>>>> Reserved regions default are marked MEMBLOCK_NODUMP so kdump omits them;
->>>>>> reusable CMA regions are different because their pages are handed back
->>>>>> to the buddy allocator and may carry crash-relevant data.
->>>>>>
->>>>>> ACPI systems already filter reserved memory out of the vmcore through
->>>>>> their existing path; only DT-based systems currently fail to filter these
->>>>>> regions, which is what this series addresses. The flag lives in memblock
->>>>>> itself rather than in a DT-only structure, so the mechanism is generic and
->>>>>> both ACPI and DT systems can benefit from it (suggested by Rob, thanks) [1].
->>>>>
->>>>> Thanks for the effort. I am not against this patchset, and I haven't
->>>>> went through it carefully. Just from the cover letter, you mentioned
->>>>> generic, I am wondering if this can be generic for excluding other
->>>>> memory regions. Asking this because I try to find a way to exclude
->>>>> unwanted memory regions too, please check below link where there's
->>>>> the relevant discussion. We definitely don't like inventing wheels
->>>>> time after time. Do you think this memblock region excluding can
->>>>> be used in other places of kernel?
->>>>>
->>>>> https://lore.kernel.org/all/aoLFai0gzzH2bGgy@MiWiFi-R3L-srv/T/#u
->>>>
->>>>
->>>> Thanks for taking a look, and for the pointer to the crash-wipe thread.
->>>>
->>>> To answer your question directly: the exclusion mechanism in this series
->>>> is already generic, memblock_mark_nodump() is the entry point. Any code
->>>> that wants a region out of the vmcore just marks it MEMBLOCK_NODUMP, when
->>>> preparing vmcore elf header by walking memblock, these regionss are skipped;
->>>> This series is simply one caller, marking the DTS /reserved-memory and
->>>> /memreserve/ regions with MEMBLOCK_NODUMP.
+On 02/09/26 16:04, Pratyush Yadav wrote:
+> On Sun, Aug 23 2026, Sourabh Jain wrote:
+>
+>> On 21/08/26 17:26, Pratyush Yadav wrote:
+>>> On Fri, Aug 21 2026, Sourabh Jain wrote:
 >>>
->>> Thanks, for memory not allocated from memblock, e.g buddy, is it still
->>> good?
+>>>> Add the architecture bits needed to enable CONFIG_KEXEC_HANDOVER on
+>>>> powerpc.
+>>>>
+>>>> Set ARCH_SUPPORTS_KEXEC_HANDOVER for PPC64, following the existing
+>>>> pattern used by ARCH_SUPPORTS_KEXEC and ARCH_SUPPORTS_KEXEC_FILE.
+>>>>
+>>>> On the boot path, parse the "linux,kho-fdt" and "linux,kho-scratch"
+>>>> properties from /chosen and pass them to kho_populate(). This lets a
+>>>> kernel booted via KHO kexec recover the FDT and scratch region left
+>>>> behind by the previous kernel. The call is placed early in
+>>>> setup_arch(), before unflatten_device_tree().
+>>>>
+>>>> Open issues:
+>>>> ============
+>>>>
+>>>> This patch also adds "depends on !CRASH_DUMP" to
+>>>> ARCH_SUPPORTS_KEXEC_HANDOVER. This is needed because of an ordering
+>>>> conflict between crashkernel reservation and KHO scratch reservation
+>>>> on powerpc.
+>>>>
+>>>> Crashkernel memory is reserved very early in boot, from arch-specific
+>>>> code: head.S -> early_setup() -> early_init_devtree() ->
+>>>> arch_reserve_crashkernel() / fadump_reserve_mem(). KHO's scratch
+>>>> region is reserved later, from generic code: start_kernel() ->
+>>>> mm_core_init() -> kho_memory_init(). So on powerpc, crashkernel
+>>>> memory is always reserved first.
+>>>>
+>>>> This ordering causes a real failure. In the common case, crashkernel
+>>>> reservation on powerpc starts at a 512M offset (the exact offset can
+>>>> vary, but 512M is typical). So with crashkernel=3G, the reservation
+>>>> occupies memory from 512M up to 3.5G -- roughly 75% of the entire low
+>>>> 4G area.
+>>>>
+>>>> Since crashkernel reservation always happens first, that 3G is
+>>>> already committed by the time kho_memory_init() runs. It then tries
+>>>> to reserve a low scratch region sized at 200% of whatever is already
+>>>> reserved below 4G. With ~75% of that 4G area already taken by
+>>>> crashkernel memory, 200% of that easily exceeds the remaining space
+>>>> -- and since the low scratch region is itself capped at 4G, there's
+>>>> no room left to fit it. The reservation fails.
+>>> crashkernel has the variant "crashkernel=size[KMG],high", which ensures
+>>> memory is allocated above 4G. Unless powerpc has some requirement for
+>>> strictly having the crashkernel below 4G, I think it will make a lot of
+>>> sense to enable support for this feature. So KHO users can specify this
+>>> to get crashkernel working with KHO.
+>> I agree that this is one way to work around the low-memory reservation problem.
+>> However, there are a few things that come into play here:
 >>
->> Yes, still good, only need to pass the physical range to memblock_mark_nodump().
-> 
-> That's interesting. If drivers or any component allocate memory from
-> buddy, then you will call memblock_mark_nodump() to mark the region
-> specifically (memblock_setclr_flag will split regions if it's a sub
-> region of existing memblock region), it won't impact anything?
+>> 1. On powerpc, the crashkernel reservation can go up to 64 GB for kdump. With
+>> the
+>>     current default scratch memory reservation policy, this could result in
+>> reserving
+>>     up to 256 GB of scratch memory: 200% for the high-memory reservation and
+>> another
+>>     200% for per-node memory.
+> That calculation looks off. It _should_ be 200% once not twice. So 128
+> GB total. If the allocation came out via the global area, it should
+> _only_ be accounted to the global scratch size. Similarly, only the
+> allocations made specifically on that node should be counted for the
+> per-node scratch size.
 
-IIUC, it won't impact anyting; memblock_mark_nodump() only set
-the MEMBLOCK_NODUMP bit on the matching memblock.memory regions,
-and from the buddy allocator's view, there is nothing changed.
+For example, if a system has only one node and 64 GB is allocated from
+that node before the kernel starts calculating the per-node and global
+allocations for scratch memory, wouldn't the per-node allocation also be 
+64 GB?
 
-The only effect is the region split you already pointed out: marking
-a sub-range costs up to two extra entries in the memblock.memory
-region array.
-
-
-Best regards,
-Wandun
+If so, wouldn't that result in 200% of 64 GB being allocated for the global
+area and another 200% of 64 GB for the per-node area, resulting in 256 GB
+of total scratch memory allocation? Or am I missing something here?
 
 
-> 
+>
+> But I have also noticed this problem on some of the systems Google has.
+> Which makes me wonder if scratch_size_update() is broken and
+> over-calculating. I have this on my TODO list and have been meaning to
+> look into it, but other things keep intervening.
+>
+> If you are interested, feel free to take it off my hands.
+
+Yes, I can take this up and propose patches to make crashkernel and
+scratch reservations work together.
+
+Based on my current testing, a Linux partition (powerpc) with 16 CPUs 
+and 30 GB
+of RAM needs only 16 MB of scratch memory in the low-memory area when
+crashkernel=xxM is not specified.
+
+16 MB is not much. I am also trying to get a larger Linux partition with 
+1000+
+CPUs to get a better idea of the limits for low-memory reservations.
+
+BTW, do you know the rationale behind the 200% value?
+
+I couldn't find any explanation for it in the commit message of
+3dc92c311498c ("kexec: add Kexec HandOver (KHO) generation helpers")
+
+
+>
+>>     For fadump, which is the powerpc-specific memory dump capture mechanism, the
+>> crashkernel
+>>     reservation can go up to 180 GB. In this case, we could end up reserving up
+>> to 720 GB of
+>>     scratch memory, which is too much. I agree that users can tune this, but I
+>> think the
+>>     default scale should be more reasonable for powerpc.
+> Once we fix scratch_size_update() to actually use 200% and not 400%,
+> perhaps that alone will be enough? If not, we can discuss reducing the
+> default scratch scale to maybe 150%. But I'd rather do it for all
+> platforms if we do it at all, because this problem doesn't seem specific
+> to PowerPC.
+
+Yes, it makes sense to have a general fix that works for all architectures.
+
+BTW, I was able to reproduce this issue on x86 as well. Please have a
+look at this:
+
+https://lore.kernel.org/all/008fe00e-fd52-4010-86ca-f0ab80a65a46@linux.ibm.com/ 
+<https://lore.kernel.org/all/008fe00e-fd52-4010-86ca-f0ab80a65a46@linux.ibm.com/>
+
+I have also suggested an approach to handle this issue which is similar 
+how you handle
+huge pages. Please share your thoughts on it.
+
+
+>
 >>
->>>
->>>>
->>>> x86 currently builds the vmcore elf header from iomem_resource, not
->>>> memblock; it could be switched to memblock, but that would bring no
->>>> benefit for the problem this series solves, so this series makes no
->>>> x86 change. I'd personally be in favor of switching to memblock for
->>>> a unified implementation across architectures.
->>>>
->>>> Best regards
->>>> Wandun
->>>>
->>>>
->>>>>
->>>>>>
->>>>>> Since the reserved memory regions are filtered out, the vmcore is
->>>>>> smaller in size and faster to produce.
->>>>>>
->>>>>> The series is based on linux-next and is organized as follows:
->>>>>>
->>>>>> Patches 1-4: Preparation and bugfixes: fix the missing HugeTLB
->>>>>>               flagname, switch riscv crash_mem to memblock, fold the
->>>>>>               duplicated per-arch memblock walks into the weak
->>>>>>               defaults, and serialize crash header preparation against
->>>>>>               memory hotplug.
->>>>>> Patches 5-9: NODUMP infrastructure: switch crash_core to
->>>>>>               for_each_mem_region(), introduce the MEMBLOCK_NODUMP
->>>>>>               flag, add a dumpable flag to struct reserved_mem, and
->>>>>>               mark /reserved-memory and /memreserve/ entries with
->>>>>> 	     MEMBLOCK_NODUMP flag.
->>>>>> Patch 10:    Exclude MEMBLOCK_NODUMP regions from the vmcore ELF
->>>>>>               header.
->>>>>>
->>>>>> In v5, Sashiko found some pre-existing issues related to reserved-memory,
->>>>>> and has no dependency on this series, so these issues have been addressed
->>>>>> in a separate series [2].
->>>>>>
->>>>>> v5 --> v6:
->>>>>> 1. Serialize crash header preparation against memory hotplug to avoid
->>>>>>     out-of-bounds or use-after-free issues.
->>>>>>
->>>>>> 2. MEMBLOCK_NODUMP marking is now done after memblock allows resizing,
->>>>>>     avoiding a panic from too few regions before resize is permitted.
->>>>>>
->>>>>> 3. Reordered the patches, put pre-existing bugfixes earlier in the series.
->>>>>>
->>>>>>
->>>>>> v4 --> v5:
->>>>>> 1. Rework the mechanism around a memblock-level MEMBLOCK_NODUMP flag
->>>>>>     (suggested by Rob) instead of the v4 opt-in 'dumpable' flag on
->>>>>>     DT-only struct reserved_mem.
->>>>>> 2. Switch the riscv vmcore elf header preparation to use memblock
->>>>>>     instead of the resource tree, aligning it with arm64 and loongarch,
->>>>>>     so riscv also can exclude reserved memory from vmcore.
->>>>>> 3. Deduplicate the vmcore elf header preparation: arm64, riscv and
->>>>>>     loongarch open-coded the same logic, so fold it into shared
->>>>>>      __weak defaults in crash_core.
->>>>>> 4.  Drop the v4 patch that saved /memreserve/ entries into the
->>>>>>      reserved_mem array; /memreserve/ is now marked MEMBLOCK_NODUMP
->>>>>>      directly.
->>>>>>
->>>>>> v3 --> v4:
->>>>>> 1. Rebase this series on v7.2-rc1.
->>>>>> 2. Add two cleanup patches (patch 02/03).
->>>>>> 3. Simplify patch 03 to avoid checking whether initial_boot_params is
->>>>>>     NULL multiple times, suggested by Rob.
->>>>>>
->>>>>> v2 --> v3:
->>>>>> 1. Fix out-of-bounds issue if device tree lacks /reserved-memory node.
->>>>>> 2. Fix UAF issue when alloc_reserved_mem_array() fails.
->>>>>> 3. Add some prepare patches.
->>>>>>
->>>>>> v1 --> v2:
->>>>>> 1. v1 added an opt-out DT property ('linux,no-dump'). Per Rob's
->>>>>>     feedback [3], v2 drop that property and exclude reserve memory
->>>>>>     by default.
->>>>>> 2. Split some prepared patches from the original patches.
->>>>>> 3. Address coding-style comments on patch 5 from Rob.
->>>>>>
->>>>>> [1] https://lore.kernel.org/lkml/20260723234126.GA3253409-robh@kernel.org/
->>>>>> [2] https://lore.kernel.org/lkml/20260818092420.2859026-1-chenwandun1@gmail.com/
->>>>>> [3] https://lore.kernel.org/lkml/20260506144542.GA2072596-robh@kernel.org/
->>>>>>
->>>>>> Meijing Zhao (1):
->>>>>>    mm: memblock: add missing HugeTLB flag name
->>>>>>
->>>>>> Wandun Chen (9):
->>>>>>    riscv: build crash_mem ranges from memblock instead of resource tree
->>>>>>    crash_core: fold duplicated memblock arch hooks into the weak default
->>>>>>    crash_core: serialize crash header preparation against hotplug
->>>>>>    crash_core: replace for_each_mem_range() with for_each_mem_region()
->>>>>>    memblock: introduce MEMBLOCK_NODUMP flag
->>>>>>    of: reserved_mem: add dumpable flag to opt-in vmcore
->>>>>>    of: reserved_mem: mark /reserved-memory entries with MEMBLOCK_NODUMP
->>>>>>    of: reserved_mem: mark /memreserve/ entries as MEMBLOCK_NODUMP
->>>>>>    crash_core: skip MEMBLOCK_NODUMP regions when building vmcore ELF
->>>>>>      header
->>>>>>
->>>>>>   arch/arm64/kernel/machine_kexec_file.c     | 29 ------------
->>>>>>   arch/loongarch/kernel/machine_kexec_file.c | 27 ------------
->>>>>>   arch/riscv/Kconfig                         |  2 +-
->>>>>>   arch/riscv/kernel/machine_kexec_file.c     | 33 --------------
->>>>>>   arch/x86/kernel/crash.c                    |  2 +-
->>>>>>   drivers/of/fdt.c                           |  2 +
->>>>>>   drivers/of/of_private.h                    |  2 +
->>>>>>   drivers/of/of_reserved_mem.c               | 48 ++++++++++++++++++++
->>>>>>   include/linux/crash_core.h                 |  2 +
->>>>>>   include/linux/memblock.h                   |  9 ++++
->>>>>>   include/linux/of_reserved_mem.h            |  1 +
->>>>>>   kernel/crash_core.c                        | 51 ++++++++++++++++++++--
->>>>>>   kernel/dma/contiguous.c                    |  1 +
->>>>>>   mm/memblock.c                              | 17 ++++++++
->>>>>>   14 files changed, 131 insertions(+), 95 deletions(-)
->>>>>>
->>>>>> -- 
->>>>>> 2.43.0
->>>>>>
->>>>
+>> 2. Fadump also uses the crashkernel kernel command-line argument, but its
+>> reservation policy
+>>     is different from kdump. The crashkernel base address starts after the memory
+>> needed for
+>>     fadump. For example, with crashkernel=3G, the base address would be 3 GB, and
+>> the crashkernel
+>>     reservation would be from 3 GB to 6 GB. So, depending on the crashkernel
+>> size, the reservation
+>>     may or may not fall within low memory. Also, fadump does not support
+>> crashkernel=xxM,high.
 >>
+>> 3. I do have a patch [1] to support high crashkernel reservations with kdump,
+>> but this would not
+>>     work with Hash MMU. With Hash MMU, the kernel image is constrained to low
+>> memory, whereas with
+>>     crashkernel=,high, all segments would be loaded into high memory.
+> Oh, nice!
+>
+>> So, while supporting crashkernel=,high can help address the low-memory
+>> reservation issue for kdump,
+>> I think there are still some powerpc-specific constraints to consider. I would
+>> like to explore
+>> whether we can fix the ordering between crashkernel and scratch memory
+>> reservations, so that we can
+>> avoid unnecessarily large scratch memory reservations and address some of the
+>> other constraints mentioned
+>> above. Please share your thoughts.
+>>
+>>> Powerpc doesn't support this right now, but from a quick skim of the
+>>> code, I think it should be simple enough.
+>> I have patch series under review for the same:
+>> [1]
+>> https://lore.kernel.org/all/20260708143357.673251-1-sourabhjain@linux.ibm.com/
+>>
+>>> From
+>>> arch_reserve_crashkernel() you just need to pass a bool * to
+>>> parse_crashkernel(), and then pass the result to
+>>> reserve_crashkernel_generic().
+>> Due to some architecture-specific dependencies (such as RTAS), booting the
+>> kernel from above 4G with
+>> support for high crashkernel is not as straightforward as on other
+>> architectures. Patch 2/4 in [1] has the
+>> details.
+>>
+>>> Solving the ordering of crash reservations and KHO is tricky and comes
+>>> with some difficult tradeoffs. Allocating crash from highmem should be a
+>>> lot simpler.
+>>
+>> Could you please elaborate a bit on what makes the ordering tricky and what the
+>> main tradeoffs are between crash reservations and KHO? It would help me better
+>> understand the concerns here.
+> The problem today is that kho_preserved_memory_reserve() (called by
+> kho_mem_retrieve()) does a memblock_reserve() for each preserved folio.
+> So if you have a lot of order-0 (or, 4k) folios, you end up with a lot
+> of reservations in memblock. The large number of reservations can slow
+> down later memblock operations like allocations too since memblock might
+> have to walk through a lot of ranges to find free memory.
+>
+> We kind of work around this problem by calling kho_mem_retrieve() as
+> pretty much the last thing in the MM init. So all allocations prior to
+> this have already been fulfilled from scratch without any of the
+> reservations added, so it should be pretty fast. You only take the
+> performance hit at the end, where the only thing left is to release
+> pages to buddy.
 
+Ah, okay, that makes sense. Thanks for the clarification.
+
+
+> Even then, the memblock reservations can get pretty damn slow. In some
+> of my testing with under-load systems, preserving a 2G memfd with 4k
+> pages can go over **5 minutes** in only kho_mem_retrieve() if the folios
+> of the memfd are fragmented enough. Plus there is the memory overhead of
+> the regions in memblock.reserved.
+
+5 minutes in kho_mem_retrieve(), which is primarily marking a bunch
+of memory as reserved using memblock, seems like quite a lot. If you
+have the test case handy somewhere, I would be interested in trying it
+myself, just to get a better feel for the issue.
+
+Regardless, I understand the concern now. From my perspective also, the
+current ordering of crashkernel and scratch memory reservations seems
+reasonable, because crashkernel is not as flexible as scratch reservation
+atleast on powerpc.
+
+On powerpc, the crashkernel offset is determined first, and the
+corresponding memory region is reserved. To make sure that no
+other reservation falls within the crashkernel region, the crashkernel
+reservation is one of the first reservations we make on powerpc.
+
+If we change this ordering, there is a possibility that a scratch
+reservation could end up in a region where the crashkernel is supposed
+to be placed. That would lead to crashkernel reservation failure.
+
+Also, reserving scratch memory at a location where the crashkernel
+cannot be placed could be problematic. Each architecture has its own
+constraints on where the crashkernel can be placed, so the available
+memory for scratch reservation may need to account for those constraints.
+Which I think too much to take care off...
+
+And, of course, moving kho_mem_retrieve()earlier during boot would
+also mean taking the performance hit you mentioned earlier.
+
+So let's keep the current ordering and find a way to make both
+reservations work with it: reserve the crashkernel first, and then
+reserve the scratch memory.
+
+
+> So long-term, I would like to get rid of the memblock reservations
+> entirely and use scratch-only mode all the way until buddy comes up. And
+> I would like to modify buddy init (free_low_memory_core_early() and
+> deferred_init_memmap_chunk()) to be KHO-aware and directly skip the KHO
+> pages.
+>
+> This vision goes in the opposite direction of turning scratch-only mode
+> off _earlier_. And turning off scratch-only mode earlier is necessary
+> for doing crash reservations outside of scratch.
+>
+> That is the tradeoff I mentioned. Hope I was clear enough.
+
+Yes, that makes sense. I understand the tradeoff you're pointing out
+now.
+
+>
+>>> And on that note, I don't think you should do a depends on !CRASH_DUMP.
+>>> Even when CONFIG_KEXEC_HANDOVER is enabled, KHO isn't on by default
+>>> (well, unless KEXEC_HANDOVER_ENABLE_DEFAULT is set). You need to enable
+>>> it via cmdline. So it is entirely possible for people using KHO on PPC
+>>> to not use crash and vice versa. This decision can be made at deployment
+>>> time, not at compile time.
+>> Agree. depends on !CRASH_DUMP is temporary and will be removed once
+>> we settle the crashkernel reservation and scratch region handling.
+> My point is that !CRASH_DUMP can be removed _even if_ we don't settle
+> the reservation thing, because it is perfectly valid for the same kernel
+> to use either KHO or crash but not at the same time. These both can be
+> enabled/disabled at runtime.
+
+Agree I will drop the !CRASH_DUMP dependency...
+
+- Sourabh Jain
 
