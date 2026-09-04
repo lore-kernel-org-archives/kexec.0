@@ -4,70 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7F8E5C624DB
-	for <kexec@archiver.kernel.org>; Fri,  4 Sep 2026 03:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 30CD0C79F80
+	for <kexec@archiver.kernel.org>; Fri,  4 Sep 2026 06:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=7GLPFSnnFeOlonSv4cUL0ZxqzHYNNFqmWiEIZlFftr0=; b=GE2/c7jO5PPlIUtAE9t+jV6GBG
-	doTpA+aTWjXqW2iFeEdUvTbUKC0Krgm/RckCXSnd7XGlGOUGj+sGYFsg8Ga9bBa36t7Ex94NFDGyq
-	7DH40YMtJcSU37Ow69Sf1s5q5yd5N/FfK38wdvSvo3GGam86p/RsegqlfvpukxNwJAwVJ0JJpiiPH
-	yskbtfUYVuTVh3N24X7MGEeecXM/Dy72hERi2jM/iClbneRJZmFGTXy9jyqUX4OARAt/+ZIIVfqD/
-	ykRNY70dqstIb6XR4nzDv2gWyZLw8id6v2OqsGqoEMEE09xL6T940n9UafbVmuSYBfpL/nzbFXDn+
-	ZZyis6tA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
+	From:Date:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=+9DLNRkgbWtBESqmvVBPyn+gE3IuAewscBv5ZAQ2j2A=; b=k+ljCcj/bNDdIr7A6sHLaN4Hfq
+	QKmNBrpDrAauvmqQClHLhRPF8XfOOh7vai4beclCW1l8sIw9CSlNhgXo++cZ1BX4QmHsQmqxZUh3N
+	woUVdEpEAB8yXw4fZfIfEv6zdHCIgd37dhJ+VfdcqAzzIrApFFB7brJJPZPM84laHDG9s/+dA8qhO
+	bnqI1VEINN63Z5e1EUYeQSM94+QRdQbp6JM/QedL3m+kXnMF8n497kGcYfBbL/HhErCG5dJAGODp7
+	WidyYfnfN1MBEI2R5lh9Q2suu/6vrinteN+mU344r6YS9N3zB5ayR2w03kvzXSFdY/lEaR6jewJh9
+	QeVo/k/g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x2KKm-00000000uJr-0Kwr;
-	Fri, 04 Sep 2026 03:11:20 +0000
-Received: from out-84.mta0.migadu.com ([2001:41d0:1004:224b::54] helo=mta0.migadu.com)
+	id 1x2NHX-000000017H6-3RJl;
+	Fri, 04 Sep 2026 06:20:11 +0000
+Received: from mgamail.intel.com ([192.198.163.18])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x2KKj-00000000uJY-02Ug
+	id 1x2NHT-000000017GW-43yk
 	for kexec@lists.infradead.org;
-	Fri, 04 Sep 2026 03:11:18 +0000
-X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=nx/eitTR44C33VFjQT5eDwZTcChTpu7T7AIpTkNv5MY=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1788491473; v=1; x=1789096273;
- b=tIP0PUq12dU0AdfeuLhKXHPIC7GZk4dQfvotWfPZjBVhXvOw9s3vCeHO6VIEy/icCoYZfTwR
- jvKIXO2+z2Bo2WERgsssEfGAAQc630iIfIsRCEpYLH1X02A0mhaRoiDxZS3UmiStPUSL3gy8sPR
- MphpGHrucCPQMo3EJPke+xHQ=
-X-Envelope-To: kexec@lists.infradead.org
-Received: by smtp.migadu.com with ESMTPS id 946ef5c41bdd8706;
-	Fri, 04 Sep 2026 03:11:12 +0000
-X-Mizu-Trace-ID: 946ef5c41bdd8706
-X-Migadu-Flow: FLOW_OUT
-From: George Guo <dongtai.guo@linux.dev>
-To: chenhuacai@kernel.org,
-	rppt@kernel.org,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	shuah@kernel.org,
-	ardb@kernel.org
-Cc: guodongtai@kylinos.cn,
-	kernel@xen0n.name,
-	graf@amazon.com,
-	liukexin@kylinos.cn,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: Re: [PATCH v4 4/4] selftests/kho: add LoongArch vmtest support
-Date: Fri,  4 Sep 2026 11:11:08 +0800
-Message-ID: <20260904031108.11986-1-dongtai.guo@linux.dev>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260807103714.33074-5-dongtai.guo@linux.dev>
-References: <20260807103714.33074-5-dongtai.guo@linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+	Fri, 04 Sep 2026 06:20:10 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788502808; x=1820038808;
+  h=date:from:to:cc:subject:message-id;
+  bh=k79b0LvgZawCkxn44ojCief4hKByBm+YlZZmYHLrdak=;
+  b=bojt3+LWqxm5VZvqOyA45iFf7QgyNmT4cVaHQBF+zNw4C7J04rf29B1Z
+   q7JBr1CHyh++6DE28pxXOSVWYS18jub+X5WvWkRg5LX3wEpnaHva+gY8g
+   lm5UtoMaObxu+4Adiaz/9nWXhVNmrVlt48aHb9rSCk2B5RasZeWP0CO0j
+   e3CYEsJpdI+JO6bUiV7uRrgEyqhgBhZCQr51U1NbZr3AsD0NiKtsmh4w3
+   7JdK0Y60gi0NH8nAd1QeMTj9FCVbvpVKBWHNrSPvN10HDKmaE8ZlaPOYy
+   qNCriWWQXStNIg+e+nvSzjaA/8Asns3b/Fnk/hc/1eMS7ZD2aryV5oPde
+   Q==;
+X-CSE-ConnectionGUID: Krx2+u5KTDa15CgfAqgFIQ==
+X-CSE-MsgGUID: VOkSdrhqQwaHqi7+3FwkoA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11895"; a="88141460"
+X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
+   d="scan'208";a="88141460"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 23:20:07 -0700
+X-CSE-ConnectionGUID: TsbOkX6xRCinRdmyFs4MLg==
+X-CSE-MsgGUID: tgL7VRNkSBay+ZAuhOrSEA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
+   d="scan'208";a="293466966"
+Received: from lkp-server01.sh.intel.com (HELO bfac249b2189) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 03 Sep 2026 23:20:05 -0700
+Received: from kbuild by bfac249b2189 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1x2NHP-000000005wz-0mHz;
+	Fri, 04 Sep 2026 06:20:03 +0000
+Date: Fri, 04 Sep 2026 14:19:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org
+Subject: [liveupdate:kexec-fixes] BUILD SUCCESS
+ a901b0778ae82d46084b55237e65d3a7bb5f0c86
+Message-ID: <202609041446.ZACbXsLf-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260903_201117_336935_FEE4A467 
-X-CRM114-Status: UNSURE (   4.89  )
+X-CRM114-CacheID: sfid-20260903_232008_035534_699CAB56 
+X-CRM114-Status: UNSURE (   3.90  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -83,32 +84,93 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git kexec-fixes
+branch HEAD: a901b0778ae82d46084b55237e65d3a7bb5f0c86  Merge patch series "kexec: fix probe error codes and error propagation"
 
-While preparing v5, I retested the LoongArch vmtest without the explicit
-`kho_scratch=16M,16M,16M` setting. That setting was masking a pre-existing
-bug in the generic percentage-based KHO scratch sizing.
+elapsed time: 2964m
 
-The percentage heuristic itself is reasonable, but the old implementation
-calculated each per-node baseline after allocating the lowmem and global
-scratch areas. Since memblock allocations are marked MEMBLOCK_RSRV_KERN,
-those scratch areas were counted as new kernel demand and scaled again.
+configs tested: 73
+configs skipped: 4
 
-On the 1 GiB LoongArch guest, the 98.45 MiB reservation baseline and 32 MiB
-alignment made the old ordering request 224 MiB of lowmem scratch followed
-by 672 MiB for node 0. The node allocation failed and disabled KHO. I sent
-a separate generic fix here:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-  https://lore.kernel.org/loongarch/20260904025101.9959-1-dongtai.guo@linux.dev
+tested configs:
+alpha         allnoconfig    gcc-16.1.0
+alpha        allyesconfig    gcc-16.1.0
+arc          allmodconfig    gcc-16.1.0
+arc           allnoconfig    gcc-16.1.0
+arc          allyesconfig    clang-24
+arc          allyesconfig    gcc-16.1.0
+arm           allnoconfig    clang-17
+arm           allnoconfig    gcc-16.1.0
+arm          allyesconfig    gcc-16.1.0
+arm64        allmodconfig    clang-24
+arm64         allnoconfig    gcc-16.1.0
+csky         allmodconfig    gcc-16.1.0
+csky          allnoconfig    gcc-16.1.0
+hexagon      allmodconfig    clang-24
+hexagon      allmodconfig    gcc-16.1.0
+hexagon       allnoconfig    clang-24
+hexagon       allnoconfig    gcc-16.1.0
+i386         allmodconfig    clang-22
+i386          allnoconfig    gcc-14
+i386          allnoconfig    gcc-16.1.0
+i386         allyesconfig    clang-22
+loongarch    allmodconfig    clang-19
+loongarch    allmodconfig    clang-24
+loongarch     allnoconfig    clang-20
+loongarch     allnoconfig    gcc-16.1.0
+m68k         allmodconfig    gcc-16.1.0
+m68k          allnoconfig    gcc-16.1.0
+m68k         allyesconfig    gcc-16.1.0
+microblaze    allnoconfig    gcc-16.1.0
+microblaze   allyesconfig    gcc-16.1.0
+mips         allmodconfig    gcc-16.1.0
+mips          allnoconfig    gcc-16.1.0
+mips         allyesconfig    gcc-16.1.0
+nios2        allmodconfig    gcc-11.5.0
+nios2         allnoconfig    clang-24
+nios2         allnoconfig    gcc-11.5.0
+openrisc     allmodconfig    gcc-16.1.0
+openrisc      allnoconfig    clang-24
+openrisc      allnoconfig    gcc-16.1.0
+parisc       allmodconfig    gcc-16.1.0
+parisc        allnoconfig    clang-24
+parisc        allnoconfig    gcc-16.1.0
+parisc       allyesconfig    gcc-16.1.0
+powerpc      allmodconfig    gcc-16.1.0
+powerpc       allnoconfig    clang-24
+powerpc       allnoconfig    gcc-16.1.0
+riscv        allmodconfig    clang-24
+riscv         allnoconfig    clang-24
+riscv         allnoconfig    gcc-16.1.0
+riscv        allyesconfig    clang-24
+s390         allmodconfig    clang-24
+s390          allnoconfig    clang-24
+s390         allyesconfig    gcc-16.1.0
+sh           allmodconfig    gcc-16.1.0
+sh            allnoconfig    clang-24
+sh            allnoconfig    gcc-16.1.0
+sh           allyesconfig    gcc-16.1.0
+sparc         allnoconfig    clang-24
+sparc         allnoconfig    gcc-16.1.0
+sparc64      allmodconfig    clang-20
+um           allmodconfig    clang-17
+um            allnoconfig    clang-17
+um            allnoconfig    clang-24
+um           allyesconfig    gcc-14
+um           allyesconfig    gcc-16.1.0
+x86_64       allmodconfig    clang-22
+x86_64        allnoconfig    clang-22
+x86_64        allnoconfig    clang-24
+x86_64       allyesconfig    clang-22
+x86_64      rhel-9.4-rust    clang-22
+xtensa        allnoconfig    clang-24
+xtensa        allnoconfig    gcc-16.1.0
+xtensa       allyesconfig    gcc-16.1.0
 
-With that fix, the total aligned request is 448 MiB and the LoongArch
-vmtest passes using the default percentage-based sizing. I also ran the x86
-KHO vmtest with the fix; it passes as well.
-
-Therefore, I will remove `kho_scratch=16M,16M,16M` from loongarch.conf in
-v5 so that it tests the default sizing path, matching the existing x86
-selftest behavior.
-
-Thanks,
-George
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
