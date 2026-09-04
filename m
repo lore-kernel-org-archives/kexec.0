@@ -4,79 +4,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5B0EBC624DE
-	for <kexec@archiver.kernel.org>; Fri,  4 Sep 2026 15:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 58D1CC79F80
+	for <kexec@archiver.kernel.org>; Fri,  4 Sep 2026 16:01:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=MYO1KvVzPLClFw7IZqRu5rT86PANfLF01lGRYL9GdyA=; b=x1Dj7cAvkTIH8VjxLpLdumXtYg
-	avNzgnGiuJQJUxyFPV4fd3YGMXOz4UJ2b8JZ+KG7lOfy+Z2TIUPZWR31M0AQGjhLBd5RSfpxEUp9U
-	Hnpt3lhVCmAjObvhE/rKG1VQeOtegC6njx9qMkpQOIX0mvvFMZ1gEJIXs2ZQcY8Ts/pt+kOQKaGcd
-	UNp4jIov3YF9YncrlbVdtqnA4SRaYfBkAVSQNTdWC5cMkbyOnKRNz3OQ0WQ1cI5eVlBfa7Jyma0ED
-	r6fiotNw1iGsaKM94XIRcq5jNY0uQo2vH2CYnJPZiCCpdSt9HlTkUIsW5tXTJ2/s5Ws2m7wZPTytd
-	VqnLr+Ag==;
+	bh=WisfPxbQJQ7TDJJHqC8qQmgkAFnmwETL6QTYfMAUrN4=; b=s3OSMHgEQt0aKbuFg2rFFqDyse
+	I1q7sX9Q9+l7gfh2iOqJKpM0SN8ILA6O11QK9dLkvHub44eq5PYnayfvohGB5FiZfJDr781zYxDVr
+	IycPbf5rGBgZbdtQ5HxVJv3MKH02h2OGykl7MjaZtMrlGd16hPaOAswMZqzMRF90GjfzlLlZrgiqg
+	JA+8FL0on3nm1vCXgeRK/R/RSNI1PyKCWRTz8/0GIr5SgKx6WMQI8yzpwcHDiy5qN4SCOqGg0IY+i
+	Symi3ZRSXg6D9QaGBHSvgHCUdbGEi2s+1vxNG/F+qnC2AYRDbYimHm/DVIyfeSwmGFLzu26PR2DbR
+	vDFTByvw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x2VvB-00000002XZt-0mqX;
-	Fri, 04 Sep 2026 15:33:41 +0000
-Received: from mail-ej1-x647.google.com ([2a00:1450:4864:20::647])
+	id 1x2WLg-00000002ecz-1z9A;
+	Fri, 04 Sep 2026 16:01:04 +0000
+Received: from mail-eastus2azon11011050.outbound.protection.outlook.com ([52.101.57.50] helo=BN8PR05CU002.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x2Vv8-00000002XZM-47wE
-	for kexec@lists.infradead.org;
-	Fri, 04 Sep 2026 15:33:40 +0000
-Received: by mail-ej1-x647.google.com with SMTP id a640c23a62f3a-c252a2ae8e1so127128166b.1
-        for <kexec@lists.infradead.org>; Fri, 04 Sep 2026 08:33:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788536016; x=1789140816; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=MYO1KvVzPLClFw7IZqRu5rT86PANfLF01lGRYL9GdyA=;
-        b=lV0iylEnuHmcjzm/wKJr5zWbFIohyepStQuxblzjjLZRcdhWKG+ZRLoPzHyisvGgzb
-         7hRqjrdrTcoJWCuadCr5NesHMWv0+aBBNMU9ccXTdNymVFYVRbVWhGzxYQzuye+WP4iX
-         gnkrTfILYSozwl7nnXBOx+rRac+jqmcI17HpDY6zOx8FJmKmcKu5JtozTT7gfsbPZoyb
-         eu6zLJy6/fS7cEjmhZsI4Qg+A9r2cxzDK3kk7ovFe1UnelyOqIjyAHsHhuHI20R/gu/u
-         izx1LixwlUZ0EqzapF8DBVoZhi4FaAO70lnNjUcXSkdEh4xGbny3lBwjZ0Q7Ps7OE2dN
-         hd3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788536016; x=1789140816;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=MYO1KvVzPLClFw7IZqRu5rT86PANfLF01lGRYL9GdyA=;
-        b=caBs++vb1jZC9JSV4eBe2fas6HDXnW2NjsYuBh+vXcihuBK7OLqP3qtTciolryzGeS
-         YCWt6i9XYaXLPxT9jXNnr1NGyPC0qBerZKiky4i+SxKbvtpCemD7Dwp09foijuXy2Vgz
-         vkY80RMS4pqtBN49L4rBmz8NEpZ01I8jfly2sJ5YtxGqkS5jIqcQbUKI2kT+EAezE5E2
-         bNBL3Rb5pMJQauvsLFtDt2At7hjn/6s+Lp7MshNmW6ME5owLSsC38TTeiHHWmGB0+0f0
-         IJLUyKuOi1FymGNq5vALGwGk0EgVWDHyA0uS/WelTBEo7c9NjUgCKBP5LTKjPRHct048
-         ecBw==
-X-Forwarded-Encrypted: i=1; AKwUvBwdnVJMgCyfETf2L++ckbRsDSAR3ly6WFXqyAUsqgl/IDQG1XaPrahkSrPLjTAoL9D5kvVqWw==@lists.infradead.org
-X-Gm-Message-State: AFuF++kSh/MKtUaykcPzKiKkk3UdMfDB30OGDN8vTw3/YtBBWvb/t4+B
-	dyK3SuIawWvh5NDHJ9Ni4ApWSlJiG2xRRaey5e4bqrpq7Q+P4jk9SLnP3RUrzg/tNaYwoGuXI2e
-	Bv2qAY1BUWcCKWeAA6Q==
-X-Received: from edj28.prod.google.com ([2002:a05:6402:325c:b0:6a7:e24b:5a30])
- (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6402:f0b:b0:6a7:ee56:815f with SMTP id 4fb4d7f45d1cf-6a7ee568276mr1201539a12.45.1788536016263;
- Fri, 04 Sep 2026 08:33:36 -0700 (PDT)
-Date: Fri, 04 Sep 2026 15:33:35 +0000
-In-Reply-To: <925c45d9-91dc-406a-9ff5-8c16f3ee0d9f@arm.com>
-Mime-Version: 1.0
-References: <20260903155907.1065681-1-tarunsahu@google.com> <925c45d9-91dc-406a-9ff5-8c16f3ee0d9f@arm.com>
-Message-ID: <9huz4ig51168.fsf@tarunix.c.googlers.com>
-Subject: Re: [PATCH] memblock: use binary search to locate candidate regions
-From: tarunsahu@google.com
-To: Dev Jain <dev.jain@arm.com>, dmatlack@google.com, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Pratyush Yadav <pratyush@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+	id 1x2WL7-00000002eEp-1z0F;
+	Fri, 04 Sep 2026 16:00:47 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=P7zR96oJc1JwWXQbSclXfqcTceTTZa6mxDPVM+CZdkIqJ13Z7PGcWil7nXemsbieCmqGW35GU0U4/RHyikSYRUTLLlkqHv0U7DE19C/iC2o+NQtim/YbcKZG2tw5T3MnH6wIIBGsV7iIu4trg01H7sS1aIkaTi27jMpaGhPk6+Axj/vwjJz62YwAquQHKVb2ryWnCXpSsrrTqoHsAKzLTvu87sXMGonycNS/ctgpOnfQLGhSiktKko6AxU4q7Eg3ubgkblqVySQgfBpkBbH3OAM03Fupv2Osup1ip5upZDCjZIxfMfAC5tmKSv8mgQvAXJTSvfIa8mkeqrpanCoXKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WisfPxbQJQ7TDJJHqC8qQmgkAFnmwETL6QTYfMAUrN4=;
+ b=h+xMXZIpNxYSXA6TgDhUO7xEjthNu6WUYFduwHv0E9aTF8PgZ07F+dcUjoe8Iimx/x8J8mhtGp+G00XePpKdEmNvkO4z2rKggI/1ImWhQLePg37tK2xlbotmfCY2D1G4zo58/Vd2J/xhaboraW4II0J9GMcxWQ4IpL2J4HBSdMmlxfO1PlUPsUPI+gsEb8hHPci4sklfLNJK/kH6AzYwRM47KgD6yqiA3pentgWZobrd2PhzMcQvtcoYGAbpdBvDS3hhIsUVsxb19+ugoAlghz/5OFAl/j7OdS7t6NXg7Uym11T//PuQMCYlkyiorJPsc6NJcStibEGWHo4RmTI0VA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WisfPxbQJQ7TDJJHqC8qQmgkAFnmwETL6QTYfMAUrN4=;
+ b=gvWW3BhICwoQ4/ReEXGlyVNT1C2iCeTmnDYNdlt2kFQe/4/0izgW4ksKo8cxOpE3NzjtFy6xP5K2KN4M0hlQ667WuWhgcI3BWkJ/EgQsHx597W74jrlQzKDJB8Evgy6S5Ojo/hzsK5oT4TbH1fmlG+cAf0uL6OZ0CrVtApWDiyFkQ797C5hLry8WkAB71ReXsDu9IOXET96E0ZiPV1zR/q7oeAAtTkfRFe0VhYTt+Wj4Tr/nBCh4d6pcP6urIOdeXNjihwCkqKyE18PFkpikwYPhaflcB90SNlFzrqoj9VtR0INuzHQaisbtYhtoW5nbm2t7IYhXl5k03dh3rZfraA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by PH8PR12MB6772.namprd12.prod.outlook.com (2603:10b6:510:1c7::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.13; Fri, 4 Sep
+ 2026 16:00:11 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528%4]) with mapi id 15.21.0360.008; Fri, 4 Sep 2026
+ 16:00:11 +0000
+Date: Fri, 4 Sep 2026 13:00:09 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Logan Odell <loganodell@google.com>
+Cc: arnd@arndb.de, pasha.tatashin@soleen.com, rppt@kernel.org,
+	pratyush@kernel.org, graf@amazon.com, akpm@linux-foundation.org,
+	pbonzini@redhat.com, maz@kernel.org, oupton@kernel.org,
+	seanjc@google.com, bhelgaas@google.com, alex@shazbot.org,
+	kevin.tian@intel.com, dwmw2@infradead.org, baolu.lu@linux.intel.com,
+	joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org, linux-mm@kvack.org, kvm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-pci@vger.kernel.org, iommu@lists.linux.dev
+Subject: Re: [RFC PATCH 0/3] liveupdate: Move to feature flags for LUO and
+ memfd ABI compatibility
+Message-ID: <20260904160009.GV4157646@nvidia.com>
+References: <20260903023452.721732-1-loganodell@google.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260903023452.721732-1-loganodell@google.com>
+X-ClientProxiedBy: YT3PR01CA0126.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:83::22) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|PH8PR12MB6772:EE_
+X-MS-Office365-Filtering-Correlation-Id: cfa9b40b-c6ce-401b-5f7c-08df0a9d999a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|23010399003|366016|11063799006|56012099006|10067099003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info: c1F5s7/JCC6wWnKfOceMxpvxGfhciNBegPTQUfHiHL6vdTVr90mbs40Jt8X7/cTHsglFxz/pP/BQEKTV2d/QF/LCOjvspiPsYoh5PP7m8QcfmeNReKq+FLnbDU86YqC2/zqm0cryA9ITOrjfuVpr7k8HHbxEagx90XP/NbhO543i9Eaaf7o/O0CyTdVmYTMXZ5OqlS8hUjoGW9C9QkTYGnymAgZKR1KS62mbRzIRwPDPPnRTFHI5J9RVqDb9CIlpFuPZnEvLsC79xgAjgKU8+ITNb1zttBZWg25xmyXkeEKPBOZQHqJ+Ukm8XBnf5PLD/2PYeXKiw70fvVscdkXWP51e81kt8gh8cR8ADpuk+xSaL4+2kSEaiYLw/TT0GpDMgkhgbZ+hFdJDow8J06PtlY7O0ovGEZg7FQugPhDukqC7Kp2ZlJ0VuHsExxGxiJAlE2EnQAqykUiGg65Edvts7HO7C6lJZk1UUcKLTrN3t0PR8HeUqrMp0FVtf9VrOU8cSKROYzuGKsSUjRDTiVTA2QFj++QJZRNTmFfwlJ2o3PH0/JYySXxG7F4LTtWtozZstQqDmE4S6rdkBE6VwrXtjZ8aMxvUDBplspdLg/GcPx3mFCcFC4scHI6N9S5Gl5qN27j/HgqCkyaKZDyJvluPRjVHlocBbRJMR52+HJas1Zo=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(23010399003)(366016)(11063799006)(56012099006)(10067099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xV5sl24cOng/+JXfKVV+LpvyukxPrPvydPS/6gUXIv8OPVUoFbSED6nAKr6U?=
+ =?us-ascii?Q?ig3NhsIPud/LTHR44SHYWQ5ezyu99GAzvgHT+5gItsXZ4n4P5hDrhhhSJjzw?=
+ =?us-ascii?Q?F5RM8icwxbLQequ1f3QXcU1t6OzwjfTBFkAGnUW31B76c7+rZ4BEjcqVJcCh?=
+ =?us-ascii?Q?MW+IjMKVBIdxC7J1XSccQEILKba4a51OhK6tFQqzJrwTR//HnvlBn42jkAxN?=
+ =?us-ascii?Q?se5C1kljO1CS/ZYW4SM3Z5xXXoDAJw2iwm0qrBFf/fuxRrPZ/lA7P5HFCWSs?=
+ =?us-ascii?Q?9kLaBl+Cz+KJT0WACsw/bmWlnome3lDytqxkXtekzoRY6SCb/wGxRqGByBGw?=
+ =?us-ascii?Q?cTOnLa1O30aJS6yCxkM4tVnOhi2r1Ks/p593fjRMUedZoiqesmKs0PuhgXY/?=
+ =?us-ascii?Q?TlNQ5ST9ohavmeStTg0C5P8gomlqmEGmbTx8GrR3pXt/YyCdtMNKjgsB3U2a?=
+ =?us-ascii?Q?Y/cySKJqYmPgx1VItcpP3WxnRv3rnyZgqiFHV9jtb/aaRM+cXFeJ2m/Iicb9?=
+ =?us-ascii?Q?eSeQHjcgf8Ho6q3zbh64P1dJMKMn8velA5hwJcsjSVtpKfossGjy6tQuH7Lp?=
+ =?us-ascii?Q?e2RPBeFOHzbkUjYEGRjr6g5n+KEMRLdc5VKr0TgejbNsfbZBkPhRzfTNASq9?=
+ =?us-ascii?Q?ZiLWAOutMFSXW/gIJXfxL8XaGQZ3eDhf9zImq2cUj2/4vM/yUfC7DK4uOASw?=
+ =?us-ascii?Q?UBovpc9VHielk5AJfJbvEJS0zLWGhi2g8Opvr3TUeVLgRJOIWHny72a8Vgfh?=
+ =?us-ascii?Q?VPDFJHvBXcYLYg92JlPKFWcTAqzoDg+o6f9o2OpyI1TZxegrvWYzjhsUuueL?=
+ =?us-ascii?Q?oYNJNup/qOt6iN1wvV3e+zZEHHykYKncqUflCs1YIfz1MS/ilkI+SbZ+iZna?=
+ =?us-ascii?Q?Ubh860vrgetZeYadBmidAG1oQ71QOQS5kdopI09ira3HzCk9We+QSHdX/nSm?=
+ =?us-ascii?Q?Uul62+VSfo4w8K3R+lj1oUYUvtn6GiKzGV9gvouWeVszdlQrJAO4BfnWWg1D?=
+ =?us-ascii?Q?C1wRBuzpAlrvMESJ39YwxXCUawHaHf2e/6Hql5Xh3eoMtlcR1sJRu6EH6Fhy?=
+ =?us-ascii?Q?HcYnOAI3zXHd3MiFZJsoePbtGGxrusaJd4S49TQKAEMGahwiy812+n+DfrHx?=
+ =?us-ascii?Q?XWevVpwJzTwcFDX1SE401Bcu4faYOgBZ73RtEzledDBSQ6KX8hVma02Wlo41?=
+ =?us-ascii?Q?C/x+v6qlKtOXXQ12pFspnTXiaN8uLX4w1yfD8KEm9yRkzstgp1TQbLprv/pi?=
+ =?us-ascii?Q?exScVHGVpT6/Qs1f9EsLKL3srJvW6qgSnzWJCshVHONBz4206BpmNGQV8sBb?=
+ =?us-ascii?Q?JZR01urlOqkuYrZdaiZYXXNXOpm3ey/xo5u92sY4q6eOh+psBzE3USq4+yU7?=
+ =?us-ascii?Q?wtBq/av3ZsecegOOAXwvop40IWxNfBV5S1E8W+gS6MENOvwcreVlsDndmPuu?=
+ =?us-ascii?Q?f7gRRoNA3lpA1qvVQk/pQUDimVo78OJVozp8gwY3/KwKALfH0vlcbSt4S1fI?=
+ =?us-ascii?Q?8b/GYswBpPg1b6UxEXFKd36fHveuP4/xLRHIsVvSwFzdu9qDEqyDpCScsaDP?=
+ =?us-ascii?Q?aTTNmYE9tyXQkzLgjVheELag0z+tyfHmzkwUIZV1hYljypL1MvKvv4o0PsAJ?=
+ =?us-ascii?Q?lWb7nSzA+12aiBGKlcBUDLl1iOhxP/eU96hmpK+6BuUgztKNUYmJ9J9u0f57?=
+ =?us-ascii?Q?xpbQfmtrnx4ZsHJKvTAiDs/ocsQ3wd8gd54iwLC5tw4EedA5?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cfa9b40b-c6ce-401b-5f7c-08df0a9d999a
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Sep 2026 16:00:11.5213
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rWdojgZNSskNuyGNN+ISFbG6xbEC5yT8H16EoHvt4xWi+RHq5Wshm8JQxguaRiwy
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6772
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260904_083339_049770_8DF2E5EF 
-X-CRM114-Status: GOOD (  26.27  )
+X-CRM114-CacheID: sfid-20260904_090033_396867_FBCF1EE1 
+X-CRM114-Status: GOOD (  11.39  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,141 +142,33 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Dev Jain <dev.jain@arm.com> writes:
+On Wed, Sep 02, 2026 at 07:34:49PM -0700, Logan Odell wrote:
+> We're including maintainers from all subsystems that currently is or
+> will be expected to participate in live update to ensure alignment on
+> the path forward for compatibility.
+> 
+> Currently, Live Update Orchestrator (LUO) and its file handlers rely on
+> monolithic compatibility strings (such as "luo-v5" and "memfd-v1") to
+> validate ABI compatibility across kexec live updates. Any modification
+> to serialized structures requires bumping the version string, which
+> strictly breaks compatibility between adjacent kernels even when changes
+> are additive, backwards-compatible, or optional.
 
-> On 03/09/26 9:29 pm, Tarun Sahu wrote:
->> Use binary search (memblock_bsearch_start) in memblock_add_range() and
->> memblock_isolate_range() to locate candidate regions instead of linearly
->> scanning from index 0.
->> 
->> Under heavy memory fragmentation (such as KHO page preservation registering
->> hundreds of thousands of disjoint folios), scanning from index 0 on every
->> insertion and isolation results in O(N^2) complexity, causing boot-time
->> memory retrieval to take several minutes (~268s for 393k pages).
->> 
->> Using binary search reduces the worst-case complexity to O(N log N)
->> (and O(N) for sequential appends), cutting KHO memory retrieval time
->> from ~268s to ~50ms.
->> 
->> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
->> ---
->
-> I recall noticing this 2 years ago : ) but then abandoned because
-> I couldn't think of a usecase.
->
-> I have forgotten memblock and no idea on KHO, but are you sure
-> this patch won't have negative consequence for the usual cases?
-> In other words is this something KHO specific, and in the usual
-> cases a linear search is more cache/CPU friendly?
->
+That was the intention, I aruged strongly that upstream does not want
+to maintain a CSP matrix of endless kernel version combinations. That
+is far too much work to push on maintainers. Upstream would do much
+less, maybe only same-version, depending.
 
-Linear search on very large list: A very big problem
-Linear search on small list (< 100): Good and almost 100% cache hit
-because of next memory prediction by CPU.
+> This RFC series transitions LUO and subsystem file handlers to use
+> granular feature bitmasks instead of compatibility strings. We replace
+> the compatibility string with a header structure that includes some
+> reserved space to define the features that are included after the
+> feature.
 
-Binary Search on very large list: very good thing
-Binary search on small list (< 100): Algorithm anyway faster (worst case
-cycle 3-4 vs 100 in linear search), yes cache miss is problem but IIUC,
-To contribute to latency significantly, the quantity of such cache
-misses is very less. Binary search uses more instruction per loop than
-linear search, so of course linear search is better in this case, But
-that micro/nano seconds latency affect is really an issue here? because
-memblock is boot time initialization code. (Except memory hotplug) So No
-userspace application like HFT or gaming will be affected by this.
+The compatability string is only a small part of it, you also need a
+serializing ABI that can handle some random mixmash of these
+features. Ie the various TLV schemes that were all proposed. What is
+the plan here?
 
-So I believe, binary search wins here. Let me know your thoughts?
-
-> Also below I see you have implemented a custom binary search helper.
-> I recall a generic one is there in some .h file somewhere in the
-> codebase, perhaps that may be useful, just FYI, ignore if already
-> tried that.
-
-This one does lower bound serach:  To find the first element where the
-addition can be done instead of trying to find the exact match.
-
-This one has a fast-path unlike to general binary search:
-
-+	if (type->cnt && base >= type->regions[type->cnt - 1].base +
-+				 type->regions[type->cnt - 1].size)
-+		return type->cnt;
-
-Also, I followed what memblock_search already does, Having its own
-binary search.
-
-~Tarun
-
->
->>  mm/memblock.c | 38 ++++++++++++++++++++++++++++++++++++--
->>  1 file changed, 36 insertions(+), 2 deletions(-)
->> 
->> diff --git a/mm/memblock.c b/mm/memblock.c
->> index 9ce86349a29f..88940474b020 100644
->> --- a/mm/memblock.c
->> +++ b/mm/memblock.c
->> @@ -160,6 +160,11 @@ static __refdata struct memblock_type *memblock_memory = &memblock.memory;
->>  	     i < memblock_type->cnt;					\
->>  	     i++, rgn = &memblock_type->regions[i])
->>  
->> +#define for_each_memblock_type_from(i, memblock_type, rgn, start)	\
->> +	for (i = (start), rgn = &memblock_type->regions[i];		\
->> +	     i < memblock_type->cnt;					\
->> +	     i++, rgn = &memblock_type->regions[i])
->> +
->>  #define memblock_dbg(fmt, ...)						\
->>  	do {								\
->>  		if (memblock_debug)					\
->> @@ -591,6 +596,33 @@ static void __init_memblock memblock_insert_region(struct memblock_type *type,
->>  	type->total_size += size;
->>  }
->>  
->> +/**
->> + * memblock_bsearch_start - Find the first region index where rend > base
->> + * @type: memblock type to search
->> + * @base: base physical address of the candidate range
->> + *
->> + * Returns the first region index that could potentially overlap @base.
->> + */
->> +static int __init_memblock memblock_bsearch_start(struct memblock_type *type,
->> +						  phys_addr_t base)
->> +{
->> +	int mid, low = 0;
->> +	int high = type->cnt;
->> +
->> +	if (type->cnt && base >= type->regions[type->cnt - 1].base +
->> +				 type->regions[type->cnt - 1].size)
->> +		return type->cnt;
->> +
->> +	while (low < high) {
->> +		mid = (low + high) / 2;
->> +		if (type->regions[mid].base + type->regions[mid].size <= base)
->> +			low = mid + 1;
->> +		else
->> +			high = mid;
->> +	}
->> +	return low;
->> +}
->> +
->>  /**
->>   * memblock_add_range - add new memblock region
->>   * @type: memblock type to add new region into
->> @@ -651,7 +683,8 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
->>  	base = obase;
->>  	nr_new = 0;
->>  
->> -	for_each_memblock_type(idx, type, rgn) {
->> +	for_each_memblock_type_from(idx, type, rgn,
->> +				    memblock_bsearch_start(type, base)) {
->>  		phys_addr_t rbase = rgn->base;
->>  		phys_addr_t rend = rbase + rgn->size;
->>  
->> @@ -827,7 +860,8 @@ static int __init_memblock memblock_isolate_range(struct memblock_type *type,
->>  		if (memblock_double_array(type, base, size) < 0)
->>  			return -ENOMEM;
->>  
->> -	for_each_memblock_type(idx, type, rgn) {
->> +	for_each_memblock_type_from(idx, type, rgn,
->> +				    memblock_bsearch_start(type, base)) {
->>  		phys_addr_t rbase = rgn->base;
->>  		phys_addr_t rend = rbase + rgn->size;
->>  
+Jason
 
