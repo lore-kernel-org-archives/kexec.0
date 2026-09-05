@@ -4,75 +4,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 753ABC624D6
-	for <kexec@archiver.kernel.org>; Sat,  5 Sep 2026 04:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 15DE2C624D3
+	for <kexec@archiver.kernel.org>; Sat,  5 Sep 2026 14:59:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=swmnUz3epL8rr3V5+L0G3wg1OAO3XsfkpT2QJi7c4SQ=; b=r5d2hEmghyEG1xzYJEra0ai7S9
-	spbIpnkFR9+oX5NDcF0KaDwsI5BDGH0A4g78dvZUL23aqYIwRq++ZNb/gjBpbGdr/maQT3IDZhCxw
-	roztagS3hugypRFdgsGnGOdMbVpU60rSu6XyC2dV6FCMhBu8viInNue0Ej+Tc9ZTJM7raw5vi8gzK
-	R+BYEBnrdrben/lVZN2AuTFH9ItAgrT8gPmPymCDhXf4jyX1QWyTSEXUVeBVnWxRNitLPPJoV9oWf
-	QyblJfer2k4VT+VGc5RdXNlfNXSqx60L3wuFM3Aai6NcfXC/eis6lMDmZAaMoaf98Ca7YOS1c4JBY
-	ok/bs0NQ==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=Ij9z5kPKoq2gHQuITtcWtjtOtVF5/aUZLaHD2xUAnEc=; b=k43O9j7hol4bTQHhW7Em6GXxvf
+	1uJHQKKsbVw3h6nF8BQ35O26hCEIUHAyPNRju5yuB4nTzxtyuyoGqxGPtzTxXsQ8bBEgSPuCS5K2o
+	r2Vy5SXtvLzbXG9cwudSn+JJbOWzsmVACXH8zZlMBpLaXHVUFbQ2/Ictd1dpQLS/xyHVr3SAenhQS
+	B/+Jq4kgp42a1kTcPAYdA69SKb93Jjskg7vFas+V7kKnNwdP1GwiQ0PeHIi8O0KFkQbVRWPMlzLZS
+	ujrB6Y8bXCHTHcbsq84puMtiLPkWBIpIzfp5deOIVwyj8xRVCGEj+ClHGTq/gijv6gt4+0ADzdqx5
+	qAI+qAkg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x2hhR-00000003eoO-3IIS;
-	Sat, 05 Sep 2026 04:08:17 +0000
-Received: from out-158.mta0.migadu.com ([2001:41d0:1004:224b::9e] helo=mta0.migadu.com)
+	id 1x2rrK-00000004AA4-17q3;
+	Sat, 05 Sep 2026 14:59:10 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x2hhN-00000003ens-2kPO
-	for kexec@lists.infradead.org;
-	Sat, 05 Sep 2026 04:08:16 +0000
-X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=Ogjcy6AWuIiNMoFElPu+5M0YUvjA1DAHyKooz++N5NU=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1788581289; v=1; x=1789186089;
- b=h0m9iSViCse/ejJSm8+5HMIXz7cna1EPV225TkyAJuyIJeXjBl/i1XdzNA+khOH3q/PQaElM
- XiAHPsrupi7MmolggXHPIYA9nOvRdo8VsJpXDcXiMCo20SRUog6KGljhmBDmdKfCQP/p6G1kZhM
- sxddT5qZ4EsGtJPFGW9RJL8w=
-X-Envelope-To: kexec@lists.infradead.org
-Received: by smtp.migadu.com with ESMTPS id 92059d4e748b9bc4;
-	Sat, 05 Sep 2026 04:07:59 +0000
-X-Mizu-Trace-ID: 92059d4e748b9bc4
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <ffe712c9-6c24-4452-b703-c8e01828ed18@linux.dev>
-Date: Fri, 4 Sep 2026 21:07:50 -0700
+	id 1x2rrH-00000004A9b-3jAf;
+	Sat, 05 Sep 2026 14:59:09 +0000
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 685CkXfm2741214;
+	Sat, 5 Sep 2026 14:58:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=Ij9z5kPKoq2gHQuITtcWtjtOtVF5/aUZLaHD2xUAn
+	Ec=; b=Dr6g+1yh2Y7PdCauRLyBLQ7PhMl5S5H31CZLT+lPBEctq1psTb2b9CeHP
+	sErtPvOSEfi//r60GAcziDQQLR33OK+7NTU1dwGfq+cDVOQMd+gVPUoPJg0c1iz1
+	4Q1WqsMus0JCKODt0NonHb+/V4xrlyne8QJRycS4hAHyNiYNlGi9fcGe5pvIn4Pg
+	C4ZcW6a92LOXt8tgin1zQPU9Du9TWlMcbZ1VJcMxjGZRq0oMj5TVSx9RsffHDqvS
+	qw8ognmmImXb8qQaGBwSg6y/7bC3T489ZB2bhcguJlfKCktHs3ap0A7LTgc6EucS
+	xQORg2ngLL6MvDDNFvHXpx9CnEhXw==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ggbqjhcqr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 05 Sep 2026 14:58:52 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 685EuPiA015563;
+	Sat, 5 Sep 2026 14:58:51 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ggbm49d8s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 05 Sep 2026 14:58:50 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 685EwmKg27132432
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 5 Sep 2026 14:58:48 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B078820049;
+	Sat,  5 Sep 2026 14:58:48 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6D08F20040;
+	Sat,  5 Sep 2026 14:58:45 +0000 (GMT)
+Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.43.52.173])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sat,  5 Sep 2026 14:58:45 +0000 (GMT)
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: linux-kernel@vger.kernel.org
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Paul Walmsley <pjw@kernel.org>, Pratyush Yadav <pratyush@kernel.org>,
+        linux-riscv@lists.infradead.org, kexec@lists.infradead.org,
+        Baoquan He <baoquan.he@linux.dev>,
+        Mukesh Pilaniya <mpilaniy@redhat.com>
+Subject: [PATCH v2] kexec_file: remove unused arch_kexec_locate_mem_hole hook
+Date: Sat,  5 Sep 2026 20:28:35 +0530
+Message-ID: <20260905145835.501635-1-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.55.0
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 17/20] vfio: selftests: Add
- vfio_pci_liveupdate_kexec_test
-To: Vipin Sharma <vipinsh@google.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, ajayachandra@nvidia.com, alex@shazbot.org,
- amastro@fb.com, ankita@nvidia.com, apopple@nvidia.com, bhelgaas@google.com,
- chrisl@kernel.org, christian.koenig@amd.com, corbet@lwn.net,
- dmatlack@google.com, graf@amazon.com, jacob.pan@linux.microsoft.com,
- jgg@nvidia.com, jgg@ziepe.ca, jrhilke@google.com, julianr@linux.ibm.com,
- kees@kernel.org, kevin.tian@intel.com, leon@kernel.org, leonro@nvidia.com,
- lukas@wunner.de, mattev@meta.com, michal.winiarski@intel.com,
- parav@nvidia.com, pasha.tatashin@soleen.com, praan@google.com,
- pratyush@kernel.org, rananta@google.com, rientjes@google.com,
- rodrigo.vivi@intel.com, rppt@kernel.org, saeedm@nvidia.com,
- schnelle@linux.ibm.com, skhan@linuxfoundation.org, skhawaja@google.com,
- vivek.kasireddy@intel.com, witu@nvidia.com, yi.l.liu@intel.com,
- "yanjun.zhu@linux.dev" <yanjun.zhu@linux.dev>
-References: <20260714151505.3466855-1-vipinsh@google.com>
- <20260714151505.3466855-18-vipinsh@google.com>
- <0556e2fc-3be5-4023-a9a4-8482fa8c88b2@linux.dev>
- <20260805055042.GA806762.vipinsh@google.com>
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <20260805055042.GA806762.vipinsh@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: NGhEFk5FrrcP4fqNX72WvC7krHIvxnGR
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTA1MDE2MCBTYWx0ZWRfX+mNDmrWD8o2/
+ iJbpgaKFbeuL3k70UD6/9EB8vA+bznHTQ34yS6SkUw62gRJWRq9VSDqWro92jzWxDUcXyke6g3w
+ c73NTcV1KGsnn0ojieBqmua3lHT3m4Q=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTA1MDE2MCBTYWx0ZWRfX0WNMTW+7pmkb
+ XnxVF2GDahTK7zdNV5hn8+146ObORibZ/tbUXcO0Ct09HiUMD9mKI6wT7kgYKk8wtYAzggq4Vxp
+ rRCo//mNHNhai9M3VKpy4nL4RIqbAGbhO4xhXbS8T8tS6H2Yd1Ffq+Ymtyj5+zY0N1xtFsbkQr0
+ QxJt1MQ9KLZA7jbh7z2lThDgzNmZf1P8SdPg5WpTIJogjy8bG0piOp8e9qFbtj2mx4Hwd0e6KLO
+ 2yIBk5c1krg4i/LRruDQ/94iaY5KK0PUSAdeJcjpdZK3F0yi/8Z8XngxvyQQU6ARrnq3vI5JxmF
+ s1hKcabVH82OmzvI7nbuKKWedDoO7RO4BspngQUNtG08ZyVhKRaBPuvLZySf5skCZwjQQAFl1zQ
+ 0X6GLfGUBwVMErfdeWShJlteUesowas7a21+u5q7BpLcX+CLk96cDfJdjEXziNsTeD489aXfmM3
+ w89W0eN1JuaZWtQzL/A==
+X-Authority-Analysis: v=2.4 cv=JaKMa0KV c=1 sm=1 tr=0 ts=6a9c2e2c cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=Z4Rwk6OoAAAA:8
+ a=_O3DOGVWAAAA:8 a=7ipKWUHlAAAA:8 a=JfrnYn6hAAAA:8 a=20KFwNOVAAAA:8
+ a=uyLIc9BhHJT_Q4kdqAgA:9 a=HkZW87K1Qel5hWWM3VKY:22 a=2TKV-7w1aU1AVAwN0oqT:22
+ a=gpc5p9EgBqZVLdJeV_V1:22 a=1CNFftbPRP8L7MoqJWF3:22
+X-Proofpoint-GUID: NGhEFk5FrrcP4fqNX72WvC7krHIvxnGR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-05_04,2026-09-03_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 spamscore=0 phishscore=0 impostorscore=0 lowpriorityscore=0
+ adultscore=0 bulkscore=0 priorityscore=1501 suspectscore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2609050160
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260904_210814_250379_86680A50 
-X-CRM114-Status: GOOD (  18.66  )
+X-CRM114-CacheID: sfid-20260905_075907_957190_2DEF9760 
+X-CRM114-Status: GOOD (  17.02  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,102 +125,99 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+No architecture provides an implementation of
+arch_kexec_locate_mem_hole(). Use kexec_locate_mem_hole() directly
+and remove the unused fallback wrapper from the kexec header.
 
-在 2026/8/4 23:02, Vipin Sharma 写道:
-> On Tue, Aug 04, 2026 at 03:19:34PM -0700, Yanjun.Zhu wrote:
->> On 7/14/26 8:15 AM, Vipin Sharma wrote:
->>> Add a selftest to exercise preserving a vfio-pci device across a Live
->>> Update. For now the test is extremely simple and just verifies that the
->>> device file can be preserved and retrieved. In the future this test will
->>> be extended to verify more parts about device preservation as they are
->>> implemented.
->>>
->>> This test is added to TEST_GEN_PROGS_EXTENDED since it must be run
->>> manually along with a kexec.
->>>
->>> To run this test manually:
->>>
->>>    $ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
->>>    $ tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test --stage 1 0000:00:04.0
->>>
->>>    $ kexec ...   # NOTE: Exact method will be distro-dependent
->>>
->>>    $ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
->>>    $ tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test --stage 2 0000:00:04.0
->> Hi, Vipin
->>
->> Thanks a lot for your help. I followed your suggestion, vfio-pci setup can
->> work.
-> I am glad your setup using virsh is working.
->
->> The followings are the test result. In the step 3, after kexec, there are
->> some fails. I am not sure if these are known problem or not.
->>
->> 1. Before kexec command
->>
->> + modprobe -v vfio-pci
->> + tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
->> + echo "vfio-pci" > /sys/bus/pci/devices/0000:00:04.0/driver_override
->> + echo "0000:00:04.0" > /sys/bus/pci/drivers/vfio-pci/bind
->> + tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test --stage 1
->> 0000:00:04.0
->> Preserving device in session
->> Preserving memfd of size 0x40100000 in session
->> # [STAGE 1] Forking persistent child to hold sessions...
->> # [STAGE 1] Child PID: 1236. Resources are pinned.
->> # [STAGE 1] You may now perform kexec reboot.
->> + set +x
->>
->> 2. Run kexec command
->>
->> 3. After kexec command
->>
->> + echo "vfio-pci" > /sys/bus/pci/devices/0000:00:04.0/driver_override
->> + echo "0000:00:04.0" > /sys/bus/pci/drivers/vfio-pci/bind
->> Checking open(/dev/vfio/devices/vfio0) fails  <--- I can confirm that the
->> /dev/vfio/devices/vfio0 exists. But open this failed.
-> This is correct output. Test is verifying that open should fail. If it
-> didn't fail the ntest would have exited with an error. A preserved VFIO
-> FD can only be retrived using Live Update session ioctls and not through
-> usual VFIO dev path.
->
->> Checking ioctl(group_fd, VFIO_GROUP_GET_DEVICE_FD, "0000:00:04.0") fails
->> (vfio_type1_iommu)      <--- fails
->> Checking ioctl(group_fd, VFIO_GROUP_GET_DEVICE_FD, "0000:00:04.0") fails
->> (vfio_type1v2_iommu).  <--- fails
->> Checking ioctl(group_fd, VFIO_GROUP_GET_DEVICE_FD, "0000:00:04.0") fails
->> (iommufd_compat_type1)  <--- fails
->> Checking ioctl(group_fd, VFIO_GROUP_GET_DEVICE_FD, "0000:00:04.0") fails
->> (iommufd_compat_type1v2). <--- fails
-> These are all correct output. Test is verifying that userspace should
-> not be able to get VFIO device FD only through Live Update session
-> ioctls and nothing else.
->
->> Retrieving memfd from LUO
->> Finishing the session before retrieving the device (should fail)
->> Retrieving the device FD from LUO
->> Finishing the session before binding to iommufd (should fail)
->> Binding the device to an iommufd and setting it up
->> Finishing the session
->>
-> This is shows VFIO FD is successfully retrived by Live Update ioctl.
->
-> So, you saw expected output from successful test run. I will change
-> the message getting printed to avoid confusion. I think current way of
-> printing ".... fails" is confusing.
+This simplifies the kexec memory allocation path without changing
+its behavior. No functional changes intended.
 
-Thanks a lot. I have made tests in KVM. I can get the same test results.
+The arch hook was introduced by commit f891f19736bd ("kexec_file: Allow
+archs to handle special regions while locating memory hole"), and its
+last user was removed by commit 6e5250eaa665 ("powerpc/crash: use
+generic APIs to locate memory hole for kdump").
 
-Reviewed-and-tested-by: Zhu Yanjun <yanjun.zhu@linux.dev>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Paul Walmsley <pjw@kernel.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>
+Cc: linux-riscv@lists.infradead.org
+Cc: kexec@lists.infradead.org
+Acked-by: Baoquan He <baoquan.he@linux.dev>
+Reviewed-by: Mukesh Pilaniya <mpilaniy@redhat.com>
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+---
+Changelog:
 
-Zhu Yanjun
+v1:
+https://lore.kernel.org/all/20260827144452.508328-1-sourabhjain@linux.ibm.com/
 
->
-> Thanks
-> Vipin
+v2:
+ - Update the commit references in the commit message to clarify the
+   history of the arch hook.
 
+---
+ arch/riscv/kernel/kexec_elf.c |  2 +-
+ include/linux/kexec.h         | 15 ---------------
+ kernel/kexec_file.c           |  2 +-
+ 3 files changed, 2 insertions(+), 17 deletions(-)
+
+diff --git a/arch/riscv/kernel/kexec_elf.c b/arch/riscv/kernel/kexec_elf.c
+index 3e9a32acb8f2..ca5abbad59e5 100644
+--- a/arch/riscv/kernel/kexec_elf.c
++++ b/arch/riscv/kernel/kexec_elf.c
+@@ -91,7 +91,7 @@ static int elf_find_pbase(struct kimage *image, unsigned long kernel_len,
+ 	kbuf.memsz = ALIGN(kernel_len, PAGE_SIZE);
+ 	kbuf.cma = NULL;
+ 	kbuf.top_down = false;
+-	ret = arch_kexec_locate_mem_hole(&kbuf);
++	ret = kexec_locate_mem_hole(&kbuf);
+ 	if (!ret) {
+ 		*old_pbase = lowest_paddr;
+ 		*new_pbase = kbuf.mem;
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 0af8ae4fdd08..e5f1cfc11fef 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -259,21 +259,6 @@ int kexec_kernel_verify_pe_sig(const char *kernel, unsigned long kernel_len);
+ extern int kexec_add_buffer(struct kexec_buf *kbuf);
+ int kexec_locate_mem_hole(struct kexec_buf *kbuf);
+ 
+-#ifndef arch_kexec_locate_mem_hole
+-/**
+- * arch_kexec_locate_mem_hole - Find free memory to place the segments.
+- * @kbuf:                       Parameters for the memory search.
+- *
+- * On success, kbuf->mem will have the start address of the memory region found.
+- *
+- * Return: 0 on success, negative errno on error.
+- */
+-static inline int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
+-{
+-	return kexec_locate_mem_hole(kbuf);
+-}
+-#endif
+-
+ #ifndef arch_kexec_apply_relocations_add
+ /*
+  * arch_kexec_apply_relocations_add - apply relocations of type RELA
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 59fb9d71e9d8..9a981359addd 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -784,7 +784,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+ 	kbuf->cma = NULL;
+ 
+ 	/* Walk the RAM ranges and allocate a suitable range for the buffer */
+-	ret = arch_kexec_locate_mem_hole(kbuf);
++	ret = kexec_locate_mem_hole(kbuf);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
-Best Regards,
-Yanjun.Zhu
+2.55.0
 
 
