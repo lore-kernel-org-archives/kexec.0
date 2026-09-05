@@ -4,100 +4,147 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EEC24C79F8B
-	for <kexec@archiver.kernel.org>; Fri,  4 Sep 2026 22:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 62577C79F8C
+	for <kexec@archiver.kernel.org>; Sat,  5 Sep 2026 01:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=eSoy4tzP5/vZd/n79Ub53Qw/sODynJmx2A4LOY3bVO0=; b=TmcUcUSBfpYkbIIsnOU7G5tPz+
-	HFcZe950ElctfFmHFXjAHC6qXDB+eTI3Z+hu1BkHq3ezGK6cQsDPsluWYaspm8s35HobGkDAwT24/
-	yUNt30yemv8ySGg++RrRHnR6tZOrE8lYs5J34ZlIEAPMKd/0m+mTgkk4++L5tho6JFtRWFawftjnT
-	QE5222sWUc752psKFh1VWMFzOzDh6onDRzIiRaicxE+S00B/CxICyPFBX2Qhisz/8vqDknAvCDIMz
-	XWlYuRiO6zdfTiCON1zcoKF18sz2ezTJMxenOLfx6MPAabOQshsIlrkmJIIiyQbwuHoV3KA8dSV0y
-	nKX1QL9Q==;
+	bh=dPPqK/uvjfP9HtCSG+rqEnPZj/SQwhg0aFE+SJ/tvC8=; b=GlBoGoTyagZRmjziPSA5RLIpt/
+	BERXoC5L6PLRRW1pMamzai2K+06jSxtcjcHTMpl3/+9u6Xqutcz0bE6ifIJqTUvK5APuQAwWo8YTz
+	9azLzBB4d6XORvjYkDktlLFcmSlyAN/Qzd3aVsVTdCzgvhYKLXa/Ay6/VNBAKB1IGr5ZuTUYfsMyU
+	SoB03dnT8aEZRb/tmghfnN75P46sbm5lwwJWrGLz+2mpGLzP3JBAorpSgTP5Xmgj4o80HNtEg7kWf
+	ITxIhdDcc4GpWPE9cenf2fE2zS94f6aW1DHn18ROILlFrP1KuXa0TlRNxMGcsQRQ74FSMnVv/oJWW
+	H6/zKzcQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x2cKl-00000003NpC-0znB;
-	Fri, 04 Sep 2026 22:24:31 +0000
-Received: from mail-pg1-x52c.google.com ([2607:f8b0:4864:20::52c])
+	id 1x2f4h-00000003ZJt-2B71;
+	Sat, 05 Sep 2026 01:20:07 +0000
+Received: from mail-westcentralusazon11013009.outbound.protection.outlook.com ([40.93.201.9] helo=CY3PR05CU001.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x2cKi-00000003NoC-064G
+	id 1x2f4f-00000003ZJY-23se
 	for kexec@lists.infradead.org;
-	Fri, 04 Sep 2026 22:24:29 +0000
-Received: by mail-pg1-x52c.google.com with SMTP id 41be03b00d2f7-cc1c3c90074so1304800a12.2
-        for <kexec@lists.infradead.org>; Fri, 04 Sep 2026 15:24:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788560667; x=1789165467; darn=lists.infradead.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=eSoy4tzP5/vZd/n79Ub53Qw/sODynJmx2A4LOY3bVO0=;
-        b=oyho/LgHsB+V3cdNGQboVNO1+/9x4jR69Obr8Ykma3cI6Ptu9dA4ME/UaHXt5OKTOI
-         yDa5nfGTTZAfkzggWLAXNfVJpLxzU1b96+Z1O9Ps+cmIg91k6X0i4QRziTSuKqsp2vQy
-         rcn4SngVAx/QDdxKQOITSHE42hgHdEypBc+ak+YfXaN/aA2M779IJJ827lL5lB36cQ4+
-         Q08yMfTBHLle6c4D4vtyIm1Qp91cnMcCjc4qLMJF8pG214q0vIlWeowxGbX3tv0lzSG1
-         GvkX71yu33SHXXtylyfiF/YBWsmpnDpKjZeP90k7SV7xhNUrHAw3n/YJz1AsuYq3V3XR
-         J/8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788560667; x=1789165467;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=eSoy4tzP5/vZd/n79Ub53Qw/sODynJmx2A4LOY3bVO0=;
-        b=U3IM3OsPxzN2TpHeW+UCSByYU0XFH0CEvb1Qsl52L5NiiPkcNnhEZKG/Xzx4TmONIu
-         RAm1IOGqYKDhCt4MqzgqkURfqo55GoELZz0MYZiWYQffcAqZslvUA2HwmY08kkJKPKiZ
-         onKosKT498ceiAKf3YDQ0blTxEXDn+pgKOJ4HdLpfOI8/Klz02f0W3qba0OYz+Wk24w6
-         R4Q9TLPsdK/JF8HkmjVjUVTMbfIfhpHqxU4Qrx9LgQOH+6vOyFxCoPpM8letpqVASV0O
-         bsjR+52FzU0Vha+CKQWamvLptNzzvSdL7EFLLFUsAGTg0GHGTKZxpe7nIDa6qqVIKF7T
-         9//Q==
-X-Forwarded-Encrypted: i=1; AKwUvByEuF5pXEsMBDv96Ny/UUUuk1AiH0KXw3Lmu1zVg6arSnd6V/JR31kNXEk1oOcxIYNzpagfrQ==@lists.infradead.org
-X-Gm-Message-State: AFuF++k0d7AXSLOL/TJm6h/CSMNgxcORYuII+PwXPhyX8BxelEUPp64z
-	iqOfoDJm8x7OH5drXgl0L0JIwCAnqVTvhBtpr9P/PVl48RBCWZsc7jZJAS2JxerbbQ==
-X-Gm-Gg: AYBFou2Cg/GNKiUzf+SHJiR/p4cblQLKUtKMal2vNgj7qmqf0NOX+rhyRiMvVGdO1yf
-	l34EN/XsMKYi3MwWjAd6o7+xQH2ZRSdNizF+BTtIPEIsBDFy4Ka/TrPg+qhcQeEJG2v9bD1mN8b
-	3Vb/mogc9Hl8IR5r8gflpkK6y4gQC9LWK+ZrnjIsP0KFNTYwpTFCxkFY2zxymdGRlyBDHUinjzj
-	q7Qop8B/sTsXWoBzYOqJogsVSL7Bit2z3KIxrv6J1wcSPI8jr84BI2RJAnU7Ko484qAaF11VZ9n
-	0QMcwtJ6SZcZIYi8gmeXRo9wYSocKA09W2DCV1mB1KIos0RGV5IHglwr2dp0BulBcxIwe/7/fgX
-	7EgVuY5epn9h+l5W/t7KaW5ut69wF/U3k1DuRLmWdbjMVBnTRYu987Ynl/ie557Kqljyu96aicx
-	azKJNQ17+ekfIB0eO6dnAAEUXIIhP8XRQraKfYUy6Y7O7VdjD/bfhs3XJg+/v2twj+9LWzsd8QP
-	Nud9RIUcMnGTBfxU35lAwQdTkU5eQ==
-X-Received: by 2002:a05:6a00:2e99:b0:84c:4b58:2cec with SMTP id d2e1a72fcca58-8616b26f6bfmr12056954b3a.15.1788560666130;
-        Fri, 04 Sep 2026 15:24:26 -0700 (PDT)
-Received: from google.com (132.200.185.35.bc.googleusercontent.com. [35.185.200.132])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-86153a1c1basm1621740b3a.52.2026.09.04.15.24.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2026 15:24:25 -0700 (PDT)
-Date: Fri, 4 Sep 2026 22:24:21 +0000
-From: David Matlack <dmatlack@google.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Logan Odell <loganodell@google.com>, arnd@arndb.de,
-	pasha.tatashin@soleen.com, rppt@kernel.org, pratyush@kernel.org,
-	graf@amazon.com, akpm@linux-foundation.org, pbonzini@redhat.com,
-	maz@kernel.org, oupton@kernel.org, seanjc@google.com,
-	bhelgaas@google.com, alex@shazbot.org, kevin.tian@intel.com,
-	dwmw2@infradead.org, baolu.lu@linux.intel.com, joro@8bytes.org,
-	will@kernel.org, robin.murphy@arm.com, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-mm@kvack.org, kvm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-pci@vger.kernel.org, iommu@lists.linux.dev
-Subject: Re: [RFC PATCH 0/3] liveupdate: Move to feature flags for LUO and
- memfd ABI compatibility
-Message-ID: <aptFFYqcSiBdMLE8@google.com>
-References: <20260903023452.721732-1-loganodell@google.com>
- <20260904160009.GV4157646@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+	Sat, 05 Sep 2026 01:20:06 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=T3CXwrOfxkJ+sc8rDxm2CZzbfx5G1qP71oYFa47hiPaB1IR/E/rvnWBqk8pZgrYUHFM6us1yN/EqHFsvfbtAZl1XKZvHuzOoKA8YMfIvzvngtg2FXNUfKWn+i98IU3UnY84zte9qvWYN2bgvil8QOyn4B0yovr/U37uwUWiqBWmkneGf4G/OkPJGQBz1WLUhmsARE/CtI0aoRtJHb1b0g9udhkkeh1bX6uTe8S5VIpH837dHDp55nveqz7PgdX/A8ugrsCLSFB1wVb5s1F3M6BRKIgvwjZIfZmf+u52pk83eK5s0UM9hFwbTr35q6pCZ1BEZ718u45ezA5+OlYfGeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dPPqK/uvjfP9HtCSG+rqEnPZj/SQwhg0aFE+SJ/tvC8=;
+ b=u+6R+7WlIyOqvfXMM4uSiS5TI2Og6YLd/orkSpuKAtTY8tvhZ4ptrKSItJZ1Q5mGaZVqxJlqLlw9C0zHKWMP77zm7FmTxxuuUt75bcENTQQnqhrwsgQaigCgFc+/laQBmivgF/3UzS1v1JQ1lvqZCZaAZcyoNcpkvEk86EbsrehnNlBUB1RZQhPW2A049AKj+AYCIFtlaNDYynPH7+qmTCRIWkcTUB55f3vgCgdjulhJFobveEZqgpFe7C/esNYe8MPxUtpDnh5pvxkcKkHNzEZhm962hIB+bYU5F4km5ten0DwaNJ/6mhf8VvwNVbKO6o77YvbWPfFwPPMYY0OIig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dPPqK/uvjfP9HtCSG+rqEnPZj/SQwhg0aFE+SJ/tvC8=;
+ b=aiCMYrujHFm4YY3gDQoYpaNOes+M3kRC4CsZ4WIOFTd1QMf5YPkYLbGgINh68Vlza5hTxAyMRmhrU9yfsy7mIgu43XHMeSY2BskAT3E44MX6s8M5mMLWvGU5jhq9/GkYDZpPpWlUDjq0JBAJdkCJtmGivYUSDj4WDkX5zY3IUfHkMVZQzlHsghlBYIQHqjFPC+8zMDHRrYWGQv8v4I1Ry4LH1/bXOlx535HEKtdA3GQd8krEOlWxwUfc3m/sSUK4k+WoJ/gjxv58J2caN8gPUqrghcs0FINNZ2VAd47KJRD0v0I0OrOfRWaxccRZi9Ygvw9VtynRx1NB3BocnFohmg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by MN0PR12MB6001.namprd12.prod.outlook.com (2603:10b6:208:37d::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.13; Sat, 5 Sep
+ 2026 01:19:58 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528%4]) with mapi id 15.21.0360.008; Sat, 5 Sep 2026
+ 01:19:58 +0000
+Date: Fri, 4 Sep 2026 22:19:56 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>, Tarun Sahu <tarunsahu@google.com>,
+	ackerleytng@google.com, fuad.tabba@linux.dev,
+	Andrew Morton <akpm@linux-foundation.org>, dmatlack@google.com,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, david@redhat.com,
+	Pasha Tatashin <pasha.tatashin@soleen.com>, sagis@google.com,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Mike Rapoport <rppt@kernel.org>, Alexander Graf <graf@amazon.com>,
+	linux-kselftest@vger.kernel.org, andre.przywara@arm.com,
+	michael.roth@amd.com, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, will@kernel.org, vannapurve@google.com,
+	maz@kernel.org, fvdl@google.com, kvm@vger.kernel.org,
+	oliver.upton@linux.dev, kvmarm@lists.linux.dev,
+	alexandru.elisei@arm.com, skhawaja@google.com,
+	aneesh.kumar@kernel.org, linux-doc@vger.kernel.org,
+	David Hildenbrand <david@kernel.org>, yan.y.zhao@intel.com,
+	kexec@lists.infradead.org, suzuki.poulose@arm.com
+Subject: Re: [PATCH v4 05/11] KVM: LUO: Support VM preservation across live
+ updates
+Message-ID: <20260905011956.GA856309@nvidia.com>
+References: <20260728121138.1103610-6-tarunsahu@google.com>
+ <anphyjFv3FhF61iB@google.com>
+ <2vxzpkzo51wg.fsf@kernel.org>
+ <anssOQFNZ2LfihbU@google.com>
+ <2vxzik5f311e.fsf@kernel.org>
+ <anyObKiZIhfok5mk@google.com>
+ <2vxzqzjz1x5f.fsf@kernel.org>
+ <aoMcqp0gr06YXAPU@google.com>
+ <2vxzy0e3zgqz.fsf@kernel.org>
+ <aoSCCTTBn9D5hqzk@google.com>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260904160009.GV4157646@nvidia.com>
+In-Reply-To: <aoSCCTTBn9D5hqzk@google.com>
+X-ClientProxiedBy: BLAPR03CA0170.namprd03.prod.outlook.com
+ (2603:10b6:208:32f::17) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|MN0PR12MB6001:EE_
+X-MS-Office365-Filtering-Correlation-Id: fa80e47d-db93-40df-3eed-08df0aebcca2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|23010399003|376014|366016|1800799024|4143699003|10067099003|5023799004|11063799006|6133799003|22082099003|18002099003|56012099006|3023799007;
+X-Microsoft-Antispam-Message-Info: krjHVeiqggH9BowlYRBBf36cUNaZ5jLRr6rmP8j7va1L0HT8Ogd9IkzHihNIY238ZxdqR9ICEEmlLlH0376hrlaA8W8sweD9N2l0yf8asseMR3HAjPavrcSXsnouZ1QNJTNI9kUZh9OkFl+hdi8Z58BYZCvDLaWIaafNNd42/CKGxe5S8ftXSMe3k9/kgzLnRFlczNX9Mg5xYJTirEusuH9HXP1u+Zf0eHW63IQa1FQZN3jsNIwVCzLD4Wszdx1hfsfOvA9fzp4+RQk5WvHsdHh9EwV/xBbQPIxnlkdmquH+ow5GdjkmROB9Z3Ke/la7ooXvVFgFGCuPdIYddb+EPxrgaePP3gX698eVqQ62fOssEuoQUbH8CrJEv9BI4+uHHrmyJWxkMZeKZPKO6bE1fDrKpO9EaB1HhgWAb4HrMeWVkLajrJHCM4qg+dKpUi6HGy6V1zdeg0y9usmf6y0bvo12qBTPWbyizxukKR9+MK8ZdY4kzcanNHX4CQOCDBhQugkMHTbsEUD5celV5a5u5akHXSVWtPhAcfcxwzh9p66AbHrW24LKVpqAs+n0z19FKjjk8JSUT9xZ6YHyzCnOD02BpEE6ZAK/8f2h+fol9ynD21Ux5jNUndMmnXks23zpz5j68aP5F5QMkfWlXHgEDbBJ+a3/paqDrLiSaOUsGAQ=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(23010399003)(376014)(366016)(1800799024)(4143699003)(10067099003)(5023799004)(11063799006)(6133799003)(22082099003)(18002099003)(56012099006)(3023799007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?+IpZEI2Sr37Sd5xHl5k2BlMHh1CODkXat0QJdJbD9D1ZxHnE8z0IgxpOHh8N?=
+ =?us-ascii?Q?/5/NtHrXCgQEtAEpMvPNL9bksezr0sHxHqrh6Nb5ypAWFeggoR7tv1PYRaUt?=
+ =?us-ascii?Q?C1ziT/NQszhDbWF5gaS97JPmePMfey3xAE/hNwHlkSrkNPKR0dayIcr1//mx?=
+ =?us-ascii?Q?ab3l01EnfrcrIWQbwtm38d89S3LqZhlOeWx0oq1QHGrFqUwWf8xKY6M2UCIV?=
+ =?us-ascii?Q?kcyvzTnnNdxj9vAQ3b9uOon3Cn412geTTGyC1v9E8SzcaErFUGsk+H73t7nt?=
+ =?us-ascii?Q?2EN6aT5zs7jmhSeWKYrJeyDAPhT2VVqn9MyTt0lTfqhJorg7xCtXgoHO/+sF?=
+ =?us-ascii?Q?8por4zw/3X5OZHPl9FRaH3zEkvUvZjICNMDsHTGH9nkyKDemYaOi3dPOj2dU?=
+ =?us-ascii?Q?NPKR4Q/RBjZHwM4Vl9u6OCP4Cl2IAsSGnvl9NTqRZwtEeJL8J8T1DrtmjC7T?=
+ =?us-ascii?Q?T5+Qy1R2FW+NTqlCy3JifMsYGYVaUbcs5qQDqizBJxz++OUO2Uw303SIsIxR?=
+ =?us-ascii?Q?HZvNpTWYK+tvnipwcAW3p0kSq0EEf3BOYXr4XfZAac+JowKTaqsj7gnB+3Uh?=
+ =?us-ascii?Q?rP7/BCfyRF34txqT8IW+9jPRVOQxPpPH7niEh7jE8GMqSQczVJSQ46wkRj8L?=
+ =?us-ascii?Q?i2e2iLso1LbFf/KBKoM4elMAFiyBm5ZRCwNifxHsfJAvxqmSD7G2gPctBZWC?=
+ =?us-ascii?Q?rrDHcYV6hgbcQPcgvkrJt2GxPwQPUJs9mmKEqHqn7XO5nutS+HGK4mWi0VlI?=
+ =?us-ascii?Q?PggaNV+8oD+Vuhy0/qJZU3GccJGiCJvlxhr5LF3y5oTOcR8XsjEQMw54TVHu?=
+ =?us-ascii?Q?8iHPz1nW4VI0spp90EgwNJgIrmozWoTwO6W29VYTgqB14P4rCwDGRsckXUQX?=
+ =?us-ascii?Q?neqBwyl9ClsCCTufqLp3pXO1+JPhSbjSUc0ZQ7eBJt0zJCtsA61GZNL6HCyP?=
+ =?us-ascii?Q?A2sjQshBioXslxhAy67+iEg1bG5Jcd4GjLHNC82up9uLUBgVzZ/znm+i3oUb?=
+ =?us-ascii?Q?Fw/A2FhS1bsG0OCBZtZ7dXbugiBWKPConO8ohEDt6zzz6trSs0f3DPLCMe5E?=
+ =?us-ascii?Q?kshmByM7k7H8xzvdMyCV5pzp3sHIQBT5a9A1iNRylWvFWMECQKj3O5ylMTxX?=
+ =?us-ascii?Q?OEnxJ3z1uJ94ktCyGh9Z5d4BSfwITgsdjBQU655X5DdJw8/suBwLLJGauivh?=
+ =?us-ascii?Q?77edg5JCxoEukgnrvLZMhwKw2GYu9OGjH6UqKnCEsGuw2GfCNjoJpflJmZ6I?=
+ =?us-ascii?Q?dt11oC/i16w5mN1r7JA9lVtVYBywEcJ8y/n7FCnxW8fNQBOK7n5WBCoHCdqd?=
+ =?us-ascii?Q?+3SsMBH9NIsMRz56v8KQo35ULdAdRWx9DtPq569dL4s/18YfHxah788c+mHH?=
+ =?us-ascii?Q?IvS+BD90HKLW8fTNBvyyaHuTs925wROVW7a696aw41JIWSZLnPnSFeu2VTo4?=
+ =?us-ascii?Q?n1+CG2Hmm95rCGGjf2ixyAv4Z6NagTf7f9J1TO5dAeWclXlW8d5UvNxUhp+K?=
+ =?us-ascii?Q?rM6iMDsZ3PExsp9463OLlBddKeaGBMN1EkuBt26s+gqHNbhkKZ5mFwjBPTWA?=
+ =?us-ascii?Q?jwEjq269YQWB3jCU2gGMzbx+vYbYQCeIei8s4G56izm1rqgwj11uguMyBwvo?=
+ =?us-ascii?Q?+Xz3yLmWFIQAOg/By1+ywbfl5s/ARPxyIrZfKIrBT7oLeVYM9o/LyUFka2Xl?=
+ =?us-ascii?Q?Eamlsdm6cWHD8ZWqjYUlYFN6QsubohPH6nVufhCSOLKp5bBx?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa80e47d-db93-40df-3eed-08df0aebcca2
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2026 01:19:57.9919
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uRRc4cXkdf/0ewHZR6XaYxD34qqt6orXQZdmTvAly1G7vgv2x35ZZstKvjk09yU2
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6001
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260904_152428_066538_6B9EFE34 
-X-CRM114-Status: GOOD (  24.04  )
+X-CRM114-CacheID: sfid-20260904_182005_563099_4A76BABC 
+X-CRM114-Status: GOOD (  40.44  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,56 +159,120 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-09-04 01:00 PM, Jason Gunthorpe wrote:
-> On Wed, Sep 02, 2026 at 07:34:49PM -0700, Logan Odell wrote:
-> > We're including maintainers from all subsystems that currently is or
-> > will be expected to participate in live update to ensure alignment on
-> > the path forward for compatibility.
+On Tue, Aug 18, 2026 at 09:02:17AM -0700, Sean Christopherson wrote:
+> On Tue, Aug 18, 2026, Pratyush Yadav wrote:
+> > Hi Sean,
 > > 
-> > Currently, Live Update Orchestrator (LUO) and its file handlers rely on
-> > monolithic compatibility strings (such as "luo-v5" and "memfd-v1") to
-> > validate ABI compatibility across kexec live updates. Any modification
-> > to serialized structures requires bumping the version string, which
-> > strictly breaks compatibility between adjacent kernels even when changes
-> > are additive, backwards-compatible, or optional.
+> > On Mon, Aug 17 2026, Sean Christopherson wrote:
+> > 
+> > > On Sat, Aug 15, 2026, Pratyush Yadav wrote:
+> > >> On Wed, Aug 12 2026, Sean Christopherson wrote:
+> > >> > On Wed, Aug 12, 2026, Pratyush Yadav wrote:
+> > >> So with live update, we don't need to keep backwards compatibility in
+> > >> the ABI forever. Of course, it is good to minimize changes, but we have
+> > >> more freedom to change it.
+> > >
+> > > Ah.  So this is the heart of the disconnect.  I very strongly disagree with the
+> > > statement that live update doesn't need to support backwards compatibility.  I
+> > > can totally believe that the folks working on live update are ok breaking backwards
+> > > compatibility because their use cases are "fine" with such breakage.  And I can
+> > > also believe live update as an upstream kernel feature being developed by those
+> > > same folks is also ok with breaking backwards compatibility.
+> > >
+> > > But with my upstream KVM maintainer hat on, I am not ok with that.  I did not agree
+> > > to support a world where KVM is allowed to break backwards compatibility, so long
+> > > as it's done "carefully" or whatever.  If y'all want to deal with the resulting
+> > > complexity, that's fine by me, but you'll be doing it without KVM.
+> > 
+> > Let's step back a bit. I don't think backwards compatibility in the
+> > _ABI_ is all that important in live update's context. What is important
+> > is that our users are able to live update from kernel version X to Y.
+> > The line format the kernel uses to describe its state is an
+> > implementation detail. Our users never see it.
 > 
-> That was the intention, I aruged strongly that upstream does not want
-> to maintain a CSP matrix of endless kernel version combinations. That
-> is far too much work to push on maintainers. Upstream would do much
-> less, maybe only same-version, depending.
+> The rule is thou shalt not break userspace.  Whether or not the
+> breakage is the result of an explicit ABI change is irrelevant.
 
-We received basically the opposite stance from Sean regarding the KVM
-LUO ABI:
+I argued strongly for this simpler approach, I will write here the
+reasoning I gave.
 
-  https://lore.kernel.org/kvm/aoSCCTTBn9D5hqzk@google.com/
+Firstly, "live update" is not uABI per-say. It is not "userspace
+breaking", and it is not a "regression". It is an internal kernel
+mechanism to allow the kernel to self-upgrade. In the industry it is
+typical any of these hitless update/patch/etc schemes to only work
+between a few tightly controlled version pairs.
 
-So we're trying to use this series to get some alignment across LUO
-ABIs.
+Asking upstream to carry a full matrix of every single version pair
+ever released is massive over-engineering and cost on upstream
+maintainers. Refusing to do this is not a uABI breakage, it is not a
+regression, it is simply a lack of a feature.
 
-> > This RFC series transitions LUO and subsystem file handlers to use
-> > granular feature bitmasks instead of compatibility strings. We replace
-> > the compatibility string with a header structure that includes some
-> > reserved space to define the features that are included after the
-> > feature.
-> 
-> The compatability string is only a small part of it, you also need a
-> serializing ABI that can handle some random mixmash of these
-> features. Ie the various TLV schemes that were all proposed. What is
-> the plan here?
+I think upstream should start by agreeing to only support forward
+going upgrades within a single stable branch. If live update becomes a
+success then maybe we could do from a stable branch to the immediate
+next stable branch too. I don't know.
 
-The proposal here (which is inspired by the KVM UAPI) is to ensure every
-LUO ABI struct has 2 properties:
+This alone is already much more powerful than live patching.
 
- 1. A field to encode options/features (e.g. u64 flags).
- 2. A way way to grow without breaking backward compatibility (e.g. so
-    we can add new fields).
+The balancing issue here is the impact on the kernel subsystems
+adopting luo. Every time you change anything about the internal
+function of the subystem you now have to go test a massive version
+pair matrix to make sure everything works? No thanks.
 
-Each flag can mean whatever it needs to. e.g. It can indicate the
-precence of one or more fields (i.e. new fields in the struct), or it
-can mean a field now has a different meaning (i.e. union in the struct).
+Luo is very invasive and a huge PITA at the best of times. It doesn't
+need to be even worse.
 
-This would enable adding support for new features without breaking
-backward compatibility. Downstream users would have to ensure their
-kernel does not start using a new feature while it can still rollback to
-a version that does not support the new feature.
+> It's probably fine for Google and other large companies that tightly
+> control their kernels and use cases, and have the resources to
+> juggle the resulting complexity, e.g. have kernel engineers on staff
+> to track feature and dependencies, coordinate and plan kernel
+> upgrades, etc.
+
+Every downstream that wants to support luo is going to necessarily
+severely restrict the version pairs that can work. Like a RH type
+distro may only support it for 9.1.x -> 9.1.x+1 - they can carry the
+cost of figuring out how to manage their patching and compatability
+matrix on their own with the tools upstream provides.
+
+> engineers on staff to help them thread the needle you describe
+> above.  And if supporting live update as a general feature for all
+> users of the kernel isn't being factored into design considerations,
+> then that needs to change, otherwise this is all dead in the water.
+
+General uses can use upstream and do CVE upgrades within a single
+stable branch. That's good enough, lets start there. We don't need to
+boil the ocean.
+
+> I also don't see the point.  Maintaining a rigid save/restore ABI is
+> annoying, but it's not _hard_ (or at least, not _that_ hard),
+> especially if there's a set
+
+I was told KVM had the smallest luo footprint of everything, so
+perhaps your perspective is different.
+
+In other places luo becomes coupled to the internal datastructures of
+the kernel, we literally have to preserve lots of kernel memory
+utterly unchanged without any kind of serialization at all. This
+inevitably creates restrictions on the evolution of the kernel in
+general if we can no longer change in-kernel architecture because it
+would make some data structure incompatible with a kernel 10 years
+old.
+
+There is also a need for *downgrade*. Meaning the N+1 kernel has to
+strictly emulate the limitations and capabilities of the N kernel so
+it can be rolled back. Can you imagine the nightmare of trying to
+codify the feature progression for every single kernel release forever
+in some impossible scheme to enable this? Again, no thanks.
+
+So, what upstream can reasonably do, that still provides real value
+without severely burdening every subsystem, is upgrades within a
+stable kernel branch only.
+
+If some distro or CSP wants to do more, they can deal with it. They
+have a far, far simpler problem because they can exactly lock down
+their version pairs to a very small universe. They don't need a single
+kernel that can emulate 10 different releases of behaviors
+concurrently.
+
+Jason
 
