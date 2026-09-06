@@ -4,131 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00BFDC79F9F
-	for <kexec@archiver.kernel.org>; Sun,  6 Sep 2026 15:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A55F1C79F99
+	for <kexec@archiver.kernel.org>; Sun,  6 Sep 2026 20:08:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=fZE0IWCrA6YqXzzv6iwoA4J+1qBR7GnxKy1Cf5FXBjI=; b=VrA96DDldIFVt77u5GMHP7jav+
-	Zds0zB2ozFS4kpIOkfCwChxl3W61bswHKRX8ztRNE3ZNxAtntmb7+L4jisuEZaqJq7Q6d1HL7i3Bg
-	r5XtWlDCCet1127FeqfutDIpo5HQdb1peK1M5i67BSH83iKQ6b4+T9FPULEQiU8O2jEhRtMN2pElN
-	/3RR82KQPPy+LLw1Tgxi6gETbCwNwGM6FsElTWKyoD08fGcOqlsTnRZ5jvmQsKM3r25j5j1DXEPqv
-	nsPLcAbWCgd/C3ffk7cLwu7lXybfnDibf7MNA3Waz+2UJadQeVvDvpw2EEWTlY/Uyg3mjShDNbkk8
-	9xe3DUmw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=6dLtZ4diiABDwf70eKATggUD/DCfK2UIavuZ29uFn94=; b=OwPmTi+Ez8YKPeQ4UTfHT5zeU0
+	dKq93Aa6QWXEdH4t7gLGPO0ASqZrgh27xVeZ9Sklcr8fMXJ07IF2MJe1dUQWXkaOvPGgLd4TlC9Ae
+	WGpk0c8aky3CK/HsaU3UqCcYJTDVCMbt4cL1zJ5rTwh1VPnrT4Tst3a4pJfjwX3qAvJfXbBanfaDj
+	LpoX2ct5gm4ufnkCBXpcrS+k7QyrDsSDY6xu57pmR8nYc1paYHRjTRDe5cZWj0UtAIV+sm7CGAiJN
+	7s6W6MGXoaErLBkt0026PDwjryrDshU3gFZJp/HzERsXcedFVtD7/lcq5gtZ8TbtBimP53KYlwVhd
+	L6CsD31w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x3Erh-000000058kC-1kQG;
-	Sun, 06 Sep 2026 15:33:05 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1x3J9j-00000005XQ0-2RBa;
+	Sun, 06 Sep 2026 20:07:59 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x3Ere-000000058ic-2m1d
+	id 1x3J9j-00000005XPu-0SVL
 	for kexec@lists.infradead.org;
-	Sun, 06 Sep 2026 15:33:04 +0000
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 686EXLSh3368966;
-	Sun, 6 Sep 2026 15:32:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=fZE0IW
-	CrA6YqXzzv6iwoA4J+1qBR7GnxKy1Cf5FXBjI=; b=PSgBSbuIDFC+l+9NFjin70
-	46Iz+7CYe6lCglqKt5vuODjjf1YNNbfg4Cc1RhGwy21o14rpizEBBaJ8fsF4uFDC
-	xrdVRw5kteeiTQvCiXZldzJvOPa5Fk864OUV8rcK6qNn5zYFcN0CahiHSxlCUcwf
-	Dxfe6al1S9DQrDmESt7CcQN3aK7CfzC/wPTqj5kJRvb/AAurMbeRfExX92tAO4Vn
-	tgb7ZjqZRgIFk9O5Lma99LmikUDrm2AxSPl9nwtKLA8waaHWGPA/Jkq5yRacYpeu
-	ZJRhJfgENvtW5zaqzcZvahEtoHC/CTUKVmso4frQQDxjoa6fTQNFWrSAPMgh99tg
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ggbf3mk5y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 06 Sep 2026 15:32:36 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 686FQHkj003707;
-	Sun, 6 Sep 2026 15:32:34 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ggxwgsr19-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 06 Sep 2026 15:32:34 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 686FWUZe42795302
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 6 Sep 2026 15:32:30 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BDD8920043;
-	Sun,  6 Sep 2026 15:32:30 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2F1AB20040;
-	Sun,  6 Sep 2026 15:32:26 +0000 (GMT)
-Received: from [9.43.69.205] (unknown [9.43.69.205])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sun,  6 Sep 2026 15:32:25 +0000 (GMT)
-Message-ID: <5854ba8b-07f3-4c88-90f0-3003bdbf9644@linux.ibm.com>
-Date: Sun, 6 Sep 2026 21:02:24 +0530
+	Sun, 06 Sep 2026 20:07:59 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 2325B601F9;
+	Sun,  6 Sep 2026 20:07:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96AFA1F00A3A;
+	Sun,  6 Sep 2026 20:07:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788725277;
+	bh=6dLtZ4diiABDwf70eKATggUD/DCfK2UIavuZ29uFn94=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=RqoOuRgRG1enfRI1D9SjcgS9tKVhnFREjkX+IlSFfMW3MsqNns+AWPlyPdeEKBY7e
+	 uG2BwFv3LXCAunkIOcVcViIXknbGSpB/bAjMbYO+mF2ZGpYOTTsSbcswzh6Fk7Bspk
+	 xoRdD8yV3EJZtO7zX2zPJxTGqrjmO5vXSbfXu6LB+CQU0sfi3Y3uUHxZppAMqYvAoR
+	 5eXN/m+EszZdq0meyMub1OCprX5zkG3e4PePLPkwZ7ydRDpkCPRWlF/F33DUyD2oX9
+	 OdIfAzYrAWfx2F44BxBIa/LZtftjfA4FnjPC4YITR6DlSoZQynoO34dyoQrkzp6mLU
+	 e9LTmn9kZa7gA==
+Date: Sun, 6 Sep 2026 23:07:49 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: George Guo <dongtai.guo@linux.dev>
+Cc: pasha.tatashin@soleen.com, pratyush@kernel.org, graf@amazon.com,
+	changyuanl@google.com, akpm@linux-foundation.org,
+	chenhuacai@kernel.org, liukexin@kylinos.cn, guodongtai@kylinos.cn,
+	kexec@lists.infradead.org, linux-mm@kvack.org,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] liveupdate: kho: calculate per-node scratch sizes
+ before allocation
+Message-ID: <ap3IFd2FVvfKkHkV@kernel.org>
+References: <20260904025101.9959-1-dongtai.guo@linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 2/3] powerpc: add support for Kexec HandOver (KHO)
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org, Aditya Gupta <adityag@linux.ibm.com>,
-        Alexander Graf <graf@amazon.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Baoquan He <baoquan.he@linux.dev>,
-        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>, Mike Rapoport <rppt@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Pasha Tatashin <pasha.tatashin@soleen.com>,
-        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-        Shivang Upadhyay <shivangu@linux.ibm.com>,
-        Shrikanth Hegde <sshegde@linux.ibm.com>, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Tarun Sahu <tarunsahu@google.com>
-References: <20260821105609.983622-1-sourabhjain@linux.ibm.com>
- <20260821105609.983622-3-sourabhjain@linux.ibm.com>
- <2vxza4qfznyo.fsf@kernel.org>
- <7bb84b8a-c394-4895-9e22-632dc506cbb6@linux.ibm.com>
- <2vxz5x0ox7p9.fsf@kernel.org>
- <8fa790a7-f387-48f6-ac76-11cf71ef5589@linux.ibm.com>
- <2vxzwlt1vvet.fsf@kernel.org>
-Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <2vxzwlt1vvet.fsf@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-ORIG-GUID: aIIFFm0oA4TrhPCrZM2DRWJbzO1uK31S
-X-Proofpoint-GUID: yfNnEcJ45EF43dtPKGFTPTgh1KwayJmg
-X-Authority-Analysis: v=2.4 cv=DbEnbPtW c=1 sm=1 tr=0 ts=6a9d8794 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8 a=X0f19CpMum2MarKMJ0sA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTA2MDE3MyBTYWx0ZWRfXztOVvKy3wrI5
- 8Q5Z9BXXZGPs/ZelOb6OfaVMXZztVya4JmVLoYp9OPdoyxi/4LCkS6FkrKDNUM9RPtvGwO5B3cm
- hJo992kdjKOw7lcjPnwiilSAdA0/GV+YmVBsRFojuIQaqdKCDiEHaho+K+l79nAOaLlksECjf36
- 5DaG522uWauDR8iYfcMcovzz3kdlMCMxTzTRGfXdvsUnYC4RG/AZMiNrkOr1ZUS/R32AN5NymEi
- AMHqfHB1vvlSurEHM3oJPpbSMPMVNAIDZwua139AqpnMXepVw2n/IfrxbYXGrOeb5LKjFvKC0gk
- Beu2SeiTommUQesdVymmVLDWBu/YcIlce1gspmd116jslYL+ZU0cFHLWGf6kae0OB4jiGr2sfUz
- aA3qJf206XrK5VgL/wPWI4d3V1q5SAMsKBCjGHov7Xr6dATNarSXB0mAWLIKm+pvSSLqsPFVlqv
- EjjUK/WeTfnHuOA5i4w==
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTA2MDE3MyBTYWx0ZWRfX4b311dRuVv39
- v/JSAgJ6D1WKfvBnaGMVv3I/FDmYwaZuw2fKJ/qH9q49qdGgfKCVUyrO6pWTTOZ8QZ1YW6gB0FB
- 7j0oEErUYCuc0aAxSrl3J+fL9JU7LOQ=
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-06_01,2026-09-03_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 impostorscore=0 adultscore=0 spamscore=0
- clxscore=1015 suspectscore=0 bulkscore=0 malwarescore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2609060173
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260906_083302_745707_097E2A96 
-X-CRM114-Status: GOOD (  69.86  )
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260904025101.9959-1-dongtai.guo@linux.dev>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -143,280 +72,92 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Hi George,
 
+On Fri, Sep 04, 2026 at 10:51:01AM +0800, George Guo wrote:
+> From: George Guo <guodongtai@kylinos.cn>
+> 
+> The default percentage-based policy sizes scratch areas from the current
+> kernel's MEMBLOCK_RSRV_KERN footprint. This is a reasonable heuristic for
+> predicting the early memory demand of the next kernel.
+> 
+> scratch_size_update() calculates the lowmem and global sizes before either
+> area is allocated. However, kho_reserve_scratch() calculates each per-node
+> size only after allocating the lowmem and global areas. Since memblock
+> allocations are marked MEMBLOCK_RSRV_KERN, the per-node calculation
+> includes those newly allocated scratch areas and scales them again.
+> 
+> This feedback substantially inflates the per-node request. On a 1 GiB
+> LoongArch QEMU guest, the relevant reservation baseline is about
+> 98.45 MiB. With the default 200% scale and 32 MiB alignment, the old
+> ordering allocates 224 MiB of lowmem scratch, then requests 672 MiB for
+> node 0, for a total of 896 MiB. The node allocation fails and KHO is
+> disabled. The same incorrect calculation is hidden on the tested 1 GiB
+> x86 guest because its baseline is smaller and its memory map can satisfy
+> the inflated request.
+> 
+> Calculate and save all per-node sizes in the scratch descriptors before
+> reserving any scratch areas, then use the saved sizes during allocation.
+> This keeps the percentage heuristic while preventing scratch memory from
+> becoming input to the sizing of more scratch memory. On the LoongArch
+> guest, the aligned total is reduced from 896 MiB to 448 MiB.
+> 
+> The KHO vmtest passes on 1 GiB LoongArch and x86 QEMU guests with this
+> change.
 
-On 04/09/26 21:52, Pratyush Yadav wrote:
-> On Fri, Sep 04 2026, Sourabh Jain wrote:
->
->> On 02/09/26 16:04, Pratyush Yadav wrote:
->>> On Sun, Aug 23 2026, Sourabh Jain wrote:
->>>
->>>> On 21/08/26 17:26, Pratyush Yadav wrote:
->>>>> On Fri, Aug 21 2026, Sourabh Jain wrote:
-> [...]
->>>> I agree that this is one way to work around the low-memory reservation problem.
->>>> However, there are a few things that come into play here:
->>>>
->>>> 1. On powerpc, the crashkernel reservation can go up to 64 GB for kdump. With
->>>> the
->>>>      current default scratch memory reservation policy, this could result in
->>>> reserving
->>>>      up to 256 GB of scratch memory: 200% for the high-memory reservation and
->>>> another
->>>>      200% for per-node memory.
->>> That calculation looks off. It _should_ be 200% once not twice. So 128
->>> GB total. If the allocation came out via the global area, it should
->>> _only_ be accounted to the global scratch size. Similarly, only the
->>> allocations made specifically on that node should be counted for the
->>> per-node scratch size.
->> For example, if a system has only one node and 64 GB is allocated from
->> that node before the kernel starts calculating the per-node and global
->> allocations for scratch memory, wouldn't the per-node allocation also be 64 GB?
->>
->> If so, wouldn't that result in 200% of 64 GB being allocated for the global
->> area and another 200% of 64 GB for the per-node area, resulting in 256 GB
->> of total scratch memory allocation? Or am I missing something here?
-> It shouldn't. If the 64 GB of allocation was done with NUMA_NO_NODE, and
-> it _happened_ to land on node X, it should not be counted for per-node
-> sizing. It should count towards the global pool. Only allocations that
-> were explicitly requested with node X should be count for that node's
-> scratch size.
->
-> So on a one node system where 64G of memory is allocated with
-> NUMA_NO_NODE and 8G is allocated with node X, we should get 128G of
-> global scratch and 16G of per-node scratch, giving us a total of 144G.
+This reads as LLM-generated text. Please add LLM attribution as per 
 
-That makes sense. I was just going by the reservation that was made. As
-you mentioned, an allocation made on a specific node can be
-differentiated from a general allocation because users pass the NID for
-a specific NUMA allocation and |NUMA_NO_NODE|for a general allocation.
+https://docs.kernel.org/process/coding-assistants.html#attribution
+ 
+> Fixes: 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation helpers")
+> Reported-by: Kexin Liu <liukexin@kylinos.cn>
+> Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
+> Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> ---
+>  kernel/liveupdate/kexec_handover.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+> index 7c4d86daf86d..39f489a258d9 100644
+> --- a/kernel/liveupdate/kexec_handover.c
+> +++ b/kernel/liveupdate/kexec_handover.c
+> @@ -847,6 +847,17 @@ static void __init kho_reserve_scratch(void)
+>  		goto err_disable_kho;
+>  	}
+>  
+> +	/*
+> +	 * Calculate the per-node sizes before reserving any scratch areas.
+> +	 * memblock allocations are marked MEMBLOCK_RSRV_KERN, so calculating
+> +	 * them later would count the lowmem and global scratch areas as kernel
+> +	 * allocations and scale them again.
+> +	 */
+> +	i = 2;
+> +	for_each_node_state(nid, N_MEMORY)
+> +		kho_scratch[i++].size = scratch_size_node(nid);
+> +	i = 0;
 
-Thanks for the clarification!
+Ugh, this really does not look nice.
+Can't we just calculated all the sizes first and than do the allocations?
 
+> +
+>  	/*
+>  	 * reserve scratch area in low memory for lowmem allocations in the
+>  	 * next kernel
+> @@ -880,7 +891,7 @@ static void __init kho_reserve_scratch(void)
+>  	 * memoryless nodes, as we can not allocate scratch areas there.
+>  	 */
+>  	for_each_node_state(nid, N_MEMORY) {
+> -		size = scratch_size_node(nid);
+> +		size = kho_scratch[i].size;
+>  		addr = memblock_alloc_range_nid(size, SCRATCH_ALIGNMENT_BYTES,
+>  						0, MEMBLOCK_ALLOC_ACCESSIBLE,
+>  						nid, true);
+> -- 
+> 2.53.0
+> 
 
-> I took a quick look and it looks like the problem might be that the
-> calculation for global scratch includes _all_ nodes in it. See
-> memblock_reserved_kern_size():
->
-> 	for_each_reserved_mem_region(r) {
-> 		...
->                  
-> 		if (nid == memblock_get_region_node(r) || !numa_valid_node(nid))
-> 			if (r->flags & MEMBLOCK_RSRV_KERN)
-> 				total += size;
-> 	}
->
-> And for global scratch we pass nid as NUMA_NO_NODE.
->
-> For KHO we could just drop the || !numa_valid_node(), but
-> memblock_estimated_nr_free_pages() seems to depend on that behaviour. It
-> wants to get _all_ allocations across all nodes. KHO only wants
-> allocations explicitly made with NUMA_NO_NODE.
-
-Yes the above explanation seems correct to me. !numa_valid_node() is 
-problem in KHO scratch memory reservation context.
-> But disclaimer: all this is from reading the code for maybe 15 minutes.
-> I didn't run anything and might be missing something. So please
-> double-check what I am saying.
->
-> Not sure how to fix this. Since memblock_estimated_nr_free_pages() needs
-> all the reservations anyway, perhaps open code a simple counting loop
-> there? And the drop the || !numa_valid_node() from
-> memblock_reserved_kern_size().
->
-> But yeah, it would be much appreciated if you'd care to fix this.
-
-I will send a fix for this.
-
->
-> The fix should be a separete patch, since it fixes problems on all
-> platforms, and not just PowerPC.
-
-Yes the fix shouldn't be part of this series...
-
->
->>> But I have also noticed this problem on some of the systems Google has.
->>> Which makes me wonder if scratch_size_update() is broken and
->>> over-calculating. I have this on my TODO list and have been meaning to
->>> look into it, but other things keep intervening.
->>>
->>> If you are interested, feel free to take it off my hands.
->> Yes, I can take this up and propose patches to make crashkernel and
->> scratch reservations work together.
->>
->> Based on my current testing, a Linux partition (powerpc) with 16 CPUs and 30 GB
->> of RAM needs only 16 MB of scratch memory in the low-memory area when
->> crashkernel=xxM is not specified.
->>
->> 16 MB is not much. I am also trying to get a larger Linux partition with 1000+
->> CPUs to get a better idea of the limits for low-memory reservations.
->>
->> BTW, do you know the rationale behind the 200% value?
->>
->> I couldn't find any explanation for it in the commit message of
->> 3dc92c311498c ("kexec: add Kexec HandOver (KHO) generation helpers")
-> We need to ask Alex (or maybe Mike?; I forget who added this).
->
-> But if I were to guess, I don't think there is much science involved
-> behind the number. Since the scratch lives across all kexecs, it needs
-> to be large enough in case the next kernel uses more memory. 200% sounds
-> "large enough".
-
-OK..
-
->
->>>>      For fadump, which is the powerpc-specific memory dump capture mechanism, the
->>>> crashkernel
->>>>      reservation can go up to 180 GB. In this case, we could end up reserving up
->>>> to 720 GB of
->>>>      scratch memory, which is too much. I agree that users can tune this, but I
->>>> think the
->>>>      default scale should be more reasonable for powerpc.
->>> Once we fix scratch_size_update() to actually use 200% and not 400%,
->>> perhaps that alone will be enough? If not, we can discuss reducing the
->>> default scratch scale to maybe 150%. But I'd rather do it for all
->>> platforms if we do it at all, because this problem doesn't seem specific
->>> to PowerPC.
->> Yes, it makes sense to have a general fix that works for all architectures.
->>
->> BTW, I was able to reproduce this issue on x86 as well. Please have a
->> look at this:
->>
->> https://lore.kernel.org/all/008fe00e-fd52-4010-86ca-f0ab80a65a46@linux.ibm.com/
->>
->> I have also suggested an approach to handle this issue which is similar how you
->> handle
->> huge pages. Please share your thoughts on it.
-> I missed this.
->
-> We can exclude HugeTLB pages from scratch accounting because the series
-> updates HugeTLB to use a new routine called memblock_alloc_hugetlb() to
-> allocate pages. This special allocator makes sure the pages are
-> _outside_ of scratch even if scratch-only mode is used. Since HugeTLB
-> pages come outside of scratch, they don't get counted in scratch sizing.
->
-> We need to do this for HugeTLB mainly because we want to preserve
-> HugeTLB pages in the future, and pages from scratch can't be preserved.
->
-> We could perhaps do so for crash as well, but I need to think more about
-> this.
->
-> But at first glance, if you need to allocate crash super early, perhaps
-> memblock won't be able to cope. Because allocating crash outside of
-> scratch would depend on kho_extend_scratch() and that needs
-> memblock_allow_resize() to be called to be able to cope with multiple
-> memory regions.
-
-I just saw your patches to handle HugeTLB separately. I was thinking of
-handling the crashkernel reservation in a similar way.
-
-Let me first understand the HugeTLB handling in KHO completely, and then
-I can propose a similar approach for the crashkernel reservation. This
-should allow the crashkernel and scratch reservations to coexist in most
-cases.
-
-
-
->
-> [...]
->>>> Could you please elaborate a bit on what makes the ordering tricky and what the
->>>> main tradeoffs are between crash reservations and KHO? It would help me better
->>>> understand the concerns here.
->>> The problem today is that kho_preserved_memory_reserve() (called by
->>> kho_mem_retrieve()) does a memblock_reserve() for each preserved folio.
->>> So if you have a lot of order-0 (or, 4k) folios, you end up with a lot
->>> of reservations in memblock. The large number of reservations can slow
->>> down later memblock operations like allocations too since memblock might
->>> have to walk through a lot of ranges to find free memory.
->>>
->>> We kind of work around this problem by calling kho_mem_retrieve() as
->>> pretty much the last thing in the MM init. So all allocations prior to
->>> this have already been fulfilled from scratch without any of the
->>> reservations added, so it should be pretty fast. You only take the
->>> performance hit at the end, where the only thing left is to release
->>> pages to buddy.
->> Ah, okay, that makes sense. Thanks for the clarification.
->>
->>
->>> Even then, the memblock reservations can get pretty damn slow. In some
->>> of my testing with under-load systems, preserving a 2G memfd with 4k
->>> pages can go over **5 minutes** in only kho_mem_retrieve() if the folios
->>> of the memfd are fragmented enough. Plus there is the memory overhead of
->>> the regions in memblock.reserved.
->> 5 minutes in kho_mem_retrieve(), which is primarily marking a bunch
->> of memory as reserved using memblock, seems like quite a lot. If you
->> have the test case handy somewhere, I would be interested in trying it
->> myself, just to get a better feel for the issue.
-> I do, but unfortunately based on downstream code so it is neither useful
-> to you nor something I can share I think.
->
-> But your friendly neighbourhood LLM can help here. Ask it to preserve
-> you a memfd but fragment/shatter buddy blocks first. That's pretty much
-> how I wrote my test.
-
-Sure I will try it and share my experience.
-
->
-> But also see [0] which fixes the problem. Maybe Tarun (+Cc) has a test
-> based on upstream that he can share?
->
-> [0] https://lore.kernel.org/kexec/20260903155907.1065681-1-tarunsahu@google.com/
-
-Thanks for the Cc. I will try the above patch also.
-
->
->> Regardless, I understand the concern now. From my perspective also, the
->> current ordering of crashkernel and scratch memory reservations seems
->> reasonable, because crashkernel is not as flexible as scratch reservation
->> atleast on powerpc.
->>
->> On powerpc, the crashkernel offset is determined first, and the
->> corresponding memory region is reserved. To make sure that no
->> other reservation falls within the crashkernel region, the crashkernel
->> reservation is one of the first reservations we make on powerpc.
->>
->> If we change this ordering, there is a possibility that a scratch
->> reservation could end up in a region where the crashkernel is supposed
->> to be placed. That would lead to crashkernel reservation failure.
->>
->> Also, reserving scratch memory at a location where the crashkernel
->> cannot be placed could be problematic. Each architecture has its own
->> constraints on where the crashkernel can be placed, so the available
->> memory for scratch reservation may need to account for those constraints.
->> Which I think too much to take care off...
-> That's a real problem. But I am hoping the restrictions are something
-> along the lines of "crash kernel must be in lowmem", so the lowmem
-> scratch already solves that problem?
-
-
-Yes, for different reasons, the architecture may need to load the
-vmlinux kexec segment in low memory. Alternatively, there may need to
-be some crashkernel reservation in low memory to satisfy the memory
-requirements of components that can only allocate memory from low
-memory.
-
-
-I will also explore how KHO handles reserved memory regions.
-
-For example, let’s say the firmware marks 10 MB as reserved and exports
-that region as reserved in the DTB. If I am not mistaken, while parsing the
-FDT, the kernel calls memblock_reserve() for these regions. PowerPC has
-some such regions, like RTAS and OPAL. Generally, these regions should
-persist across KHO.
-
-So I will explore:
-- How these regions are handled by KHO
-- How they affect the scratch kernel reservation, specially in lowmem
-
-- Sourabh Jain
-
->> And, of course, moving kho_mem_retrieve()earlier during boot would
->> also mean taking the performance hit you mentioned earlier.
->>
->> So let's keep the current ordering and find a way to make both
->> reservations work with it: reserve the crashkernel first, and then
->> reserve the scratch memory.
-> [...]
->
-
+-- 
+Sincerely yours,
+Mike.
 
