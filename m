@@ -4,58 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D21B9C79F85
-	for <kexec@archiver.kernel.org>; Sun,  6 Sep 2026 10:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BF412C79F99
+	for <kexec@archiver.kernel.org>; Sun,  6 Sep 2026 10:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=2XPq6jBsWxzSGkLN5JMNAqBj9VumCx6phCWWl2LqB4Y=; b=m+WAdNnGY0mrTOfZ7JzWCKru/L
-	zN6pBikO5NS1nZ82b0Sy3r/jGQHNjlkw+TELctKLbIBd9XFgxaKfmuvTzcjTnsTGqZ+hpv5Eozpyn
-	NIY6tNBEoYtQu3dNzzQ3elz0JUEbT/FFhF8/5SfB57E8Msw0UFO3BXgev+VHIw8G42nwAOiga4+0N
-	l4gzDqeDIH4Q4hkGS9YXqsqjNABKdTopcYMuQlDuLOdtXBFN3K5y2VJAeGoN5Wu4Wx5Tc99jRmiQA
-	kqmchHCHUHLIfYJHlB1GTUcmWiVyJ2ug6kFP+D6rseE1IaYUbOHvTYIG4C+2m9+3k6/0hDuT6ys/d
-	wtJzFtWg==;
+	bh=W6DNGqDYfT3d8o6uHJqWVZo4/oRgPdSR1cxwF3mU6L4=; b=HaaPU2T6tKqRU+tpx6pmHDQ2up
+	T/2jZTQ9CG0MqcMrbacA8Yw2AfhQeKDEmrCWrzblHnCWxEbvkWVEyirGEObFZfOKzo1yoWJUGvAup
+	1BDmFMtpeQRLDfeCzBXRrXWjpGxxJ8cJyDxkZ22XT7jz9/GU/bx4MbF1XZlNdKmTOSTwSFIbgVjkL
+	NRkOc6lBGM/QC9GcQ+fKlvVkWW1KiGts6uss6i88K2nDIZ6r1+mxiVFOT0oqDNXQys/WlOcgMa4mF
+	plJ5WUj55Zr8AdTaa/I4Oqaae1jGcn6raF4gWNbpL1T0hOcRzkUFWHbksCSFwfmTSmLlavgGnS1/W
+	koNYuAZQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x3A4B-00000004w0I-1wxh;
-	Sun, 06 Sep 2026 10:25:39 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1x3APQ-00000004xZP-0hLU;
+	Sun, 06 Sep 2026 10:47:36 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x3A45-00000004w0C-1hUy
+	id 1x3APP-00000004xZ9-0PMM
 	for kexec@lists.infradead.org;
-	Sun, 06 Sep 2026 10:25:34 +0000
+	Sun, 06 Sep 2026 10:47:35 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 51F6F40C51;
-	Sun,  6 Sep 2026 10:25:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C4E71F00A3A;
-	Sun,  6 Sep 2026 10:25:29 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 3723D600AA;
+	Sun,  6 Sep 2026 10:47:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E62E81F00A3A;
+	Sun,  6 Sep 2026 10:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788690332;
-	bh=2XPq6jBsWxzSGkLN5JMNAqBj9VumCx6phCWWl2LqB4Y=;
+	s=k20260515; t=1788691653;
+	bh=W6DNGqDYfT3d8o6uHJqWVZo4/oRgPdSR1cxwF3mU6L4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=aT+A71hJ8NCIRzwZvUAlmCF2acDHq2xysOzGVgGT3iPsEhswJ4mdi3jeaJj0iN+1f
-	 HJ8Wr8RRz4il12phVpTJYqK7TZm6HBoFHc23BkPlzoVI5sOLzIcKxRJuafbti3zxqq
-	 bBXfVWqy+KEdv6XsvE4Qy0digyusQeELvEYWRpU8teA74oWoYP3Zt0fHRT4wrmKt5g
-	 0m94g72F2kB5Tbe47F6EGnNZHQc88m1JsxF1TNvzE9iMJY45iWStpPyPTxmO6fgjcY
-	 wZ3IdvyxptArEnj1FQAsXDPHZTNWBFUPdAkGExdGbWnfmejDhiw5BQZPl6GBlhefSg
-	 0tHqpXaRiaZLg==
-Date: Sun, 6 Sep 2026 13:25:25 +0300
+	b=kPTf9X6DCXVGxujdL6WGrcgDganHIgiyQ9VBs+LBDov8fdt4oMm5QEcC94AO24BYc
+	 TkkmPvx8FbDlhKTM6cspMGdzaoKTbNDizMXQFr2Ou+agCaepmZ498pKLqlNoto3itn
+	 quYCQ6taSHLzKo3HO4C30x8EOugzHLGsst1sBQBoecwdIe6WN7ivDDl+TfjUhlVxxN
+	 y1tR2o0H7eQnDNUnFFgerBVzhIzOm92pIl3LFErLMVMRM1LjWpCFmUOwYTk0sgiYYt
+	 0/uqFL4lj269UqdlzS9uR2f9+KxXdifPrgtFTgHRtEyjQg3ZdZnZ+uCbWT4hVa+u5J
+	 zZG0AXACyM3pA==
+Date: Sun, 6 Sep 2026 13:47:24 +0300
 From: Mike Rapoport <rppt@kernel.org>
-To: Tarun Sahu <tarunsahu@google.com>
-Cc: dmatlack@google.com, Pasha Tatashin <pasha.tatashin@soleen.com>,
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+	Aditya Gupta <adityag@linux.ibm.com>,
+	Alexander Graf <graf@amazon.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Pratyush Yadav <pratyush@kernel.org>, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, linux-mm@kvack.org
-Subject: Re: [PATCH] memblock: use binary search to locate candidate regions
-Message-ID: <ap0_lSVF43FP3PPb@kernel.org>
-References: <20260903155907.1065681-1-tarunsahu@google.com>
+	Baoquan He <baoquan.he@linux.dev>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Hari Bathini <hbathini@linux.ibm.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+	Shivang Upadhyay <shivangu@linux.ibm.com>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Tarun Sahu <tarunsahu@google.com>
+Subject: Re: [RFC PATCH 2/3] powerpc: add support for Kexec HandOver (KHO)
+Message-ID: <ap1EvH00nKze9Kj4@kernel.org>
+References: <20260821105609.983622-1-sourabhjain@linux.ibm.com>
+ <20260821105609.983622-3-sourabhjain@linux.ibm.com>
+ <2vxza4qfznyo.fsf@kernel.org>
+ <7bb84b8a-c394-4895-9e22-632dc506cbb6@linux.ibm.com>
+ <2vxz5x0ox7p9.fsf@kernel.org>
+ <8fa790a7-f387-48f6-ac76-11cf71ef5589@linux.ibm.com>
+ <2vxzwlt1vvet.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260903155907.1065681-1-tarunsahu@google.com>
+In-Reply-To: <2vxzwlt1vvet.fsf@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,108 +88,90 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Tarun,
-
-On Thu, Sep 03, 2026 at 03:59:06PM +0000, Tarun Sahu wrote:
-> Use binary search (memblock_bsearch_start) in memblock_add_range() and
-> memblock_isolate_range() to locate candidate regions instead of linearly
-> scanning from index 0.
+On Fri, Sep 04, 2026 at 06:22:18PM +0200, Pratyush Yadav wrote:
+> On Fri, Sep 04 2026, Sourabh Jain wrote:
+> > On 02/09/26 16:04, Pratyush Yadav wrote:
+> >> On Sun, Aug 23 2026, Sourabh Jain wrote:
+> >>
+> >>> On 21/08/26 17:26, Pratyush Yadav wrote:
+> >>>> On Fri, Aug 21 2026, Sourabh Jain wrote:
+> [...]
+> >>> I agree that this is one way to work around the low-memory reservation problem.
+> >>> However, there are a few things that come into play here:
+> >>>
+> >>> 1. On powerpc, the crashkernel reservation can go up to 64 GB for kdump. With
+> >>> the
+> >>>     current default scratch memory reservation policy, this could result in
+> >>> reserving
+> >>>     up to 256 GB of scratch memory: 200% for the high-memory reservation and
+> >>> another
+> >>>     200% for per-node memory.
+> >> That calculation looks off. It _should_ be 200% once not twice. So 128
+> >> GB total. If the allocation came out via the global area, it should
+> >> _only_ be accounted to the global scratch size. Similarly, only the
+> >> allocations made specifically on that node should be counted for the
+> >> per-node scratch size.
+> >
+> > For example, if a system has only one node and 64 GB is allocated from
+> > that node before the kernel starts calculating the per-node and global
+> > allocations for scratch memory, wouldn't the per-node allocation also be 64 GB?
+> >
+> > If so, wouldn't that result in 200% of 64 GB being allocated for the global
+> > area and another 200% of 64 GB for the per-node area, resulting in 256 GB
+> > of total scratch memory allocation? Or am I missing something here?
 > 
-> Under heavy memory fragmentation (such as KHO page preservation registering
-> hundreds of thousands of disjoint folios), scanning from index 0 on every
-> insertion and isolation results in O(N^2) complexity, causing boot-time
-> memory retrieval to take several minutes (~268s for 393k pages).
+> It shouldn't. If the 64 GB of allocation was done with NUMA_NO_NODE, and
+> it _happened_ to land on node X, it should not be counted for per-node
+> sizing. It should count towards the global pool. Only allocations that
+> were explicitly requested with node X should be count for that node's
+> scratch size.
 > 
-> Using binary search reduces the worst-case complexity to O(N log N)
-> (and O(N) for sequential appends), cutting KHO memory retrieval time
-> from ~268s to ~50ms.
+> So on a one node system where 64G of memory is allocated with
+> NUMA_NO_NODE and 8G is allocated with node X, we should get 128G of
+> global scratch and 16G of per-node scratch, giving us a total of 144G.
 > 
-> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
-> ---
->  mm/memblock.c | 38 ++++++++++++++++++++++++++++++++++++--
->  1 file changed, 36 insertions(+), 2 deletions(-)
+> I took a quick look and it looks like the problem might be that the
+> calculation for global scratch includes _all_ nodes in it. See
+> memblock_reserved_kern_size():
 > 
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 9ce86349a29f..88940474b020 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -160,6 +160,11 @@ static __refdata struct memblock_type *memblock_memory = &memblock.memory;
->  	     i < memblock_type->cnt;					\
->  	     i++, rgn = &memblock_type->regions[i])
->  
-> +#define for_each_memblock_type_from(i, memblock_type, rgn, start)	\
-> +	for (i = (start), rgn = &memblock_type->regions[i];		\
-> +	     i < memblock_type->cnt;					\
-> +	     i++, rgn = &memblock_type->regions[i])
-> +
->  #define memblock_dbg(fmt, ...)						\
->  	do {								\
->  		if (memblock_debug)					\
-> @@ -591,6 +596,33 @@ static void __init_memblock memblock_insert_region(struct memblock_type *type,
->  	type->total_size += size;
->  }
->  
-> +/**
-> + * memblock_bsearch_start - Find the first region index where rend > base
-> + * @type: memblock type to search
-> + * @base: base physical address of the candidate range
-> + *
-> + * Returns the first region index that could potentially overlap @base.
-> + */
-> +static int __init_memblock memblock_bsearch_start(struct memblock_type *type,
-> +						  phys_addr_t base)
-> +{
+> 	for_each_reserved_mem_region(r) {
+> 		...
+>                 
+> 		if (nid == memblock_get_region_node(r) || !numa_valid_node(nid))
+> 			if (r->flags & MEMBLOCK_RSRV_KERN)
+> 				total += size;
+> 	}
+> 
+> And for global scratch we pass nid as NUMA_NO_NODE.
+> 
+> For KHO we could just drop the || !numa_valid_node(), but
+> memblock_estimated_nr_free_pages() seems to depend on that behaviour. It
+> wants to get _all_ allocations across all nodes. KHO only wants
+> allocations explicitly made with NUMA_NO_NODE.
+> 
+> But disclaimer: all this is from reading the code for maybe 15 minutes.
+> I didn't run anything and might be missing something. So please
+> double-check what I am saying.
 
-We already have memblock_search() ;-)
+That sounds about right, although I didn't check anything at all :)
+ 
+> > BTW, do you know the rationale behind the 200% value?
+> >
+> > I couldn't find any explanation for it in the commit message of
+> > 3dc92c311498c ("kexec: add Kexec HandOver (KHO) generation helpers")
+> 
+> We need to ask Alex (or maybe Mike?; I forget who added this).
+> 
+> But if I were to guess, I don't think there is much science involved
+> behind the number. Since the scratch lives across all kexecs, it needs
+> to be large enough in case the next kernel uses more memory. 200% sounds
+> "large enough".
 
-> +	int mid, low = 0;
-> +	int high = type->cnt;
-> +
-> +	if (type->cnt && base >= type->regions[type->cnt - 1].base +
-> +				 type->regions[type->cnt - 1].size)
-> +		return type->cnt;
-> +
-> +	while (low < high) {
-> +		mid = (low + high) / 2;
-> +		if (type->regions[mid].base + type->regions[mid].size <= base)
-> +			low = mid + 1;
-> +		else
-> +			high = mid;
-> +	}
-> +	return low;
-> +}
-> +
->  /**
->   * memblock_add_range - add new memblock region
->   * @type: memblock type to add new region into
-> @@ -651,7 +683,8 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
->  	base = obase;
->  	nr_new = 0;
->  
-> -	for_each_memblock_type(idx, type, rgn) {
-> +	for_each_memblock_type_from(idx, type, rgn,
-> +				    memblock_bsearch_start(type, base)) {
+Yeah, that was the rationale indeed :)
 
-I think we can just kill for_each_memblock_type() and open code all loops
-that use it and make memblock_add_range() and memblock_isolate_range() use
-binary search.
-
->  		phys_addr_t rbase = rgn->base;
->  		phys_addr_t rend = rbase + rgn->size;
->  
-> @@ -827,7 +860,8 @@ static int __init_memblock memblock_isolate_range(struct memblock_type *type,
->  		if (memblock_double_array(type, base, size) < 0)
->  			return -ENOMEM;
->  
-> -	for_each_memblock_type(idx, type, rgn) {
-> +	for_each_memblock_type_from(idx, type, rgn,
-> +				    memblock_bsearch_start(type, base)) {
->  		phys_addr_t rbase = rgn->base;
->  		phys_addr_t rend = rbase + rgn->size;
->  
 > -- 
-> 2.55.0.970.g62bdec98f9-goog
-> 
+> Regards,
+> Pratyush Yadav
 
 -- 
 Sincerely yours,
