@@ -4,62 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 02CC4C79F99
-	for <kexec@archiver.kernel.org>; Sun,  6 Sep 2026 20:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5C3EAC79F99
+	for <kexec@archiver.kernel.org>; Sun,  6 Sep 2026 20:39:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=3uA93cxqW2HvNr9qUovcFs04ocnOSCf6zitvtFhj/vc=; b=0VbEmd09Pat0XES4jLuP6rZOJ+
-	rJ9xY7Es7REiorZwaUXaAL2CpU6H88jkoqk5sYcBeUCtUCZbZwSnUudwnxPBm4RK6GvT2tKxO5HR8
-	piKHnClQ/BSEOg8a85xD8AZKs4cKRFdMRuAM4a/XmrXITWfhiIYNrKJZ6CRs8Vp/5hWnk1fb/qklo
-	JN/TgaCRnHECXV8Zo4yFFyQOrF6AIjFenpLHPFGZ5ZdxxwuQO0hnV665wnPTkr/TifJH3vJ1ly0wh
-	bx4s0FgXfM5fUXQb/pd0FiYKu9PXZWs68orT1YHehZWjDM/7+UWKEwkonx4LujlW59UuNaqjBpCq1
-	PcEJMf7Q==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
+	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=9lfkzVniauHBDUZUWwmYVmAXW8jioDZoVwHD1zl/aeo=; b=VQCRycG8vfmifMGlEnCvnoQw/F
+	G3TsS4vur2e2QnUKAqjIsI+wdXYWObji1fk1VS/V0ZNf1ccaeTG3HnJCon1fmgfLd0b4aJJnnjaD6
+	DuYj7k8Xaw4Ukd0N/Ha1d9wPUo+SE2yUenCJwgG+SnCS7cCPFdoItelYAKJHgJ7gcCY1Kx/f0lAJW
+	3l477NcLp72ODD3zzlrbXwbujq+JjeJqFwPz7SGhMrcVVTTMJolFN4HY+MiMnKiXLE4EB9Ibmzwxs
+	9XiIGUJDuTZ3rLKENEqekIQmIy4bE2dfvLHPqYi7wxu/JbhNwvwM6JogkzRYoTEgF1S4ddjb7+dPk
+	MWFTt2bQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x3JJF-00000005Y1T-0gEp;
-	Sun, 06 Sep 2026 20:17:49 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1x3JeZ-00000005Z2U-1xLw;
+	Sun, 06 Sep 2026 20:39:51 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x3JJD-00000005Y1J-3sTy
+	id 1x3JeX-00000005Z2L-3W1x
 	for kexec@lists.infradead.org;
-	Sun, 06 Sep 2026 20:17:47 +0000
+	Sun, 06 Sep 2026 20:39:49 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 1E9BA40C26;
-	Sun,  6 Sep 2026 20:17:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 323381F00A3A;
-	Sun,  6 Sep 2026 20:17:40 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 284BE40AF6;
+	Sun,  6 Sep 2026 20:39:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8F841F00A3A;
+	Sun,  6 Sep 2026 20:39:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788725867;
-	bh=3uA93cxqW2HvNr9qUovcFs04ocnOSCf6zitvtFhj/vc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=OqNJUzP0i6ZpwRKqxhufYQAH5I3kHVxdsoCT87l5waW4epTijN0y0zPeWiaXN5JUb
-	 23WBzGGChe/MsQNytXS9qXlB+G8Y+nG4g1RIIJSYzv5ZhnU3l6NEbSLgBr0qSJSg14
-	 hjWsMrBdN+py/LNBhl+18Vd2NK6kvVdAnYFLK0hTuukpq6uGC99HSh9hiIIwb2OobH
-	 MF/FqwTyPgkwa3/oUOIM5Gxt6TJQUqBgU5GtS5LW2mdR8Jduh3KBQ/v21tk1TecpeS
-	 mFvEkLidNfvT2xsGG/h7cTnvivMSUiQPEg6G6MRxOaDRL/6ZS0zowMbTWh6om2J3LK
-	 nhYJ+2tU29SAA==
-Date: Sun, 6 Sep 2026 23:17:37 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: George Guo <dongtai.guo@linux.dev>
-Cc: pasha.tatashin@soleen.com, pratyush@kernel.org, chenhuacai@kernel.org,
-	ardb@kernel.org, shuah@kernel.org, ilias.apalodimas@linaro.org,
-	akpm@linux-foundation.org, baoquan.he@linux.dev,
-	ruirui.yang@linux.dev, guodongtai@kylinos.cn, kernel@xen0n.name,
-	graf@amazon.com, liukexin@kylinos.cn, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: Re: [PATCH v5 0/5] LoongArch: add KHO support and selftests
-Message-ID: <ap3KYSXQJfC0iysw@kernel.org>
-References: <20260904100852.26006-1-dongtai.guo@linux.dev>
+	s=k20260515; t=1788727187;
+	bh=9lfkzVniauHBDUZUWwmYVmAXW8jioDZoVwHD1zl/aeo=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date;
+	b=cp8wQt8aNj9FIuyGPFzrAcRmVtPOlyFJs6mbjmxyTlntQd9qnR2Rmve+W1ZA3fBv+
+	 6+H5TpbE0vf9TAZZ4DSuyMBRvoEZL/BllBU0dc/g2eEf61w78Ka38iXC7RiWUXlXo0
+	 dRnyL2RPbFrV2sNfipbi9kMPUldv5J1xSUHeZK2cOghPOVE+EZjbdNJl4CJRIR+KGX
+	 a5igwscUE7ctwAA048l5Py4Hc4jVtrsy1mlY9NurCjNn6SN4rBlHdXX7aAGIvyeF8U
+	 jGbOXs9AMbG7IHcewhwZvUFvUW4EeIAc1QWiLnhTz/bzHfHFylAnj6OvvaVU9XUJ65
+	 5q6FgCKLIZpCw==
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260904100852.26006-1-dongtai.guo@linux.dev>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 1/1] liveupdate: luo_file: Add documentation for
+ dependencies
+From: Mike Rapoport <rppt@kernel.org>
+To: Samiullah Khawaja <skhawaja@google.com>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, 
+ Alexander Graf <graf@amazon.com>, David Matlack <dmatlack@google.com>, 
+ tarunsahu@google.com, open list <linux-kernel@vger.kernel.org>, 
+ "open list:KEXEC HANDOVER (KHO)" <kexec@lists.infradead.org>, 
+ "open list:KEXEC HANDOVER (KHO)" <linux-mm@kvack.org>
+In-Reply-To: <20260904220555.589752-2-skhawaja@google.com>
+References: <20260904220555.589752-1-skhawaja@google.com>
+ <20260904220555.589752-2-skhawaja@google.com>
+Date: Sun, 06 Sep 2026 23:39:41 +0300
+Message-Id: <178872718104.3691424.15410189304450384708.b4-review@b4>
+X-Mailer: b4 0.17-dev
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,181 +75,17 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi George,
+Hi Sami,
 
-On Fri, Sep 04, 2026 at 06:08:47PM +0800, George Guo wrote:
-> This series enables Kexec HandOver (KHO) on 64-bit LoongArch and adds
-> LoongArch coverage to the KHO QEMU selftest.  KHO is the remaining
-> architecture gate needed by Live Update (LUO) on LoongArch.
-> 
-> The transport is the central problem.  Arm64 and riscv can pass the KHO
-> state FDT and scratch area through properties under /chosen in a boot
-> FDT.  LoongArch boots through EFI without a boot FDT, so that path is not
-> available.
-> 
-> EFI KHO channel:
+> Add documentation for dependencies between FDs preserved by File
+> Handlers. This supplements the previously added
 
-I can't say I like "transport" and "channel" terminology. We don't send
-anything anywhere.
- 
-> v5 reworks the EFI transport following Pratyush's and Huacai's reviews
-> [1, 2].  Instead of rebuilding the EFI configuration table in
-> LoongArch code and switching st->tables before kexec, the common EFI stub
-> allocates and installs a persistent table under
-> LINUX_EFI_KEXEC_HANDOVER_GUID.  This follows the model used by
-> LINUX_EFI_MEMRESERVE_TABLE_GUID.
-> 
-> The common EFI table parser reserves the stub-allocated table, reads it
-> during early boot, and calls kho_populate().  An early initcall keeps the
-> table persistently mapped so it can also be updated on the crash kexec
-> path.  The implementation is architecture-independent; LoongArch only
-> selects EFI_KHO when KEXEC_HANDOVER is enabled.
-> 
-> The EFI table is global, but kexec can keep separate normal and crash
-> images and can replace a loaded candidate.  Updating the table while a
-> candidate image is being loaded could therefore leave it pointing at a
-> failed candidate while the previously installed image remains the one
-> that will be executed.  v5 records the KHO data in struct kimage and
-> synchronizes the channel from the image selected for execution.  Images
-> without KHO data, including legacy and crash images, clear the channel so
-> the next kernel boots cold rather than reviving stale state.
-> 
-> The GUID name is changed to LINUX_EFI_KEXEC_HANDOVER_GUID as suggested by
-> Huacai and Pratyush [3].  Existing x86 KHO support continues to use its
-> setup_data transport.  Besides supporting non-UEFI boot, that entry is
-> consumed by the x86 decompressor before normal EFI table parsing, so KASLR
-> only uses KHO scratch areas and does not overwrite preserved memory.  The
-> new channel is installed by the generic EFI-stub entry path and relies on
-> EFI_GENERIC_STUB, which x86 does not select.  Moving x86 would therefore
-> require installing the table from the x86-specific EFI stub and scanning it
-> in the decompressor, not just selecting EFI_KHO.
-> 
-> LoongArch enablement and build fix:
-> 
-> The architecture patch now only enables ARCH_SUPPORTS_KEXEC_HANDOVER and
-> selects the generic EFI channel.  No LoongArch setup reader, kexec writer,
-> or EFI system-table replacement remains.
-> 
-> The linux/mm.h build fix is moved from luo_session.c to kho_block.c, where
-> the virt_to_phys() and phys_to_virt() calls reside after the liveupdate
-> refactoring.  This addresses Pratyush's review [4].  Adding linux/mm.h to
-> asm/io.h was previously attempted, but creates an include cycle under
-> CONFIG_KFENCE [5].  The fix precedes LoongArch enablement so every
-> intermediate commit builds with CONFIG_KFENCE=y.
-> 
-> Selftest:
-> 
-> The LoongArch vmtest boots vmlinux.efi through EDK2 because the initial
-> EFI stub invocation installs the channel being tested.  QEMU_EFI can
-> override the firmware filename for distributions that install it under a
-> different name or path.
-> 
-> CONFIG_ACPI_SPCR_TABLE lets the bare earlycon parameter obtain the UART
-> description from EDK2's SPCR table.  CONFIG_PCI_HOST_GENERIC keeps i8042
-> enabled while ensuring that the QEMU virt machine's PCI I/O space is
-> mapped before the legacy fallback probe, addressing Huacai's concern that
-> the same kernel configuration should remain usable for hosts and guests.
-> 
-> With EFI runtime reset services available, panic=-1 and QEMU's existing
-> -no-reboot option terminate the test normally.  The generic QEMU runner
-> therefore remains unchanged and does not mask failures by forcibly
-> terminating QEMU after a timeout.
-> 
-> The LoongArch vmtest uses the default KHO scratch-sizing path.  This
-> series is based on the generic fix that calculates per-node scratch sizes
-> before scratch allocation [6].
+Why capital F and H? :)
 
-The text here and in the patches changelog reads reads as LLM-generated
-text. First, it's quite blind and unreadable with wall-to-wall text.
-Second, LLMs tend to describe what they did in the context of a session,
-but since we apply the cover letter to the liveupdate tree, the description
-here should *only* describe why the changes are required and how they are
-implemented. The history belongs to changes since vN-1 section.
-
-And last, but not least, please add LLM attribution as per 
-
-https://docs.kernel.org/process/coding-assistants.html#attribution
- 
-> The KHO vmtest passes on:
-> 
->   * LoongArch with KVM using QEMU_EFI.fd from edk2-loongarch64.
->   * x86_64 with KVM, as regression coverage for the generic kexec/KHO
->     changes.
-> 
-> Patch layout:
-> 
->   1. Add the generic EFI KHO channel and its ABI.
->   2. Synchronize the channel from the selected image at execution.
->   3. Fix the kho_block.c header dependency exposed by LoongArch/KFENCE.
->   4. Enable KHO on 64-bit LoongArch through the generic EFI channel.
->   5. Add LoongArch to the KHO QEMU selftest.
-> 
-> Changes since v4:
-> 
->   * Allocate and install the KHO table from the common EFI stub, following
->     the EFI memreserve-table model (Pratyush).
->   * Parse, reserve, map, and update the channel in generic EFI code; remove
->     the LoongArch-specific reader, writer, and st->tables replacement
->     (Pratyush, Huacai).
->   * Synchronize the global channel at execution rather than image load;
->     clear it for cold and crash images and use the scratch payload size.
->   * Rename the GUID to LINUX_EFI_KEXEC_HANDOVER_GUID (Huacai, Pratyush).
->   * Move the linux/mm.h include from luo_session.c to the actual caller,
->     kho_block.c, and place the fix before architecture enablement
->     (Pratyush, Huacai).
->   * Boot the vmtest through EDK2, allow QEMU_EFI to override the firmware,
->     and use vmlinux.efi to exercise the EFI stub and channel.
->   * Keep i8042 enabled and select PCI_HOST_GENERIC instead of disabling
->     the host configuration in the selftest (Huacai).
->   * Enable ACPI_SPCR_TABLE and use the SPCR-provided early console.
->   * Exercise the default KHO scratch-sizing path in the LoongArch vmtest;
->     depend on the separately posted generic sizing fix [6].
->   * Drop the generic QEMU timeout now that EFI runtime reset services make
->     the LoongArch guest terminate normally.
->   * Rebase onto Linux 7.3-rc1.
-> 
-> [1] Pratyush Yadav:
->     https://lore.kernel.org/r/2vxzo6f96fmn.fsf@kernel.org/
-> [2] Huacai Chen:
->     https://lore.kernel.org/r/CAAhV-H4PKRNCa4g=6TGepP+trtM82JiMoWgVr3O7PqbZYP9uGw@mail.gmail.com/
-> [3] https://lore.kernel.org/r/2vxzse4m54nz.fsf@kernel.org/
-> [4] https://lore.kernel.org/r/2vxzfr0l6fam.fsf@kernel.org/
-> [5] https://lore.kernel.org/r/202605211925.DbDvQ6ii-lkp@intel.com/
-> [6] https://lore.kernel.org/loongarch/20260904025101.9959-1-dongtai.guo@linux.dev/
-> 
-> Previous version:
-> 
-> v4: https://lore.kernel.org/loongarch/20260807103714.33074-1-dongtai.guo@linux.dev/
-> 
-> George Guo (5):
->   efi: add a KHO configuration table channel
->   liveupdate: synchronize EFI KHO channel at execution
->   liveupdate: kho_block: include linux/mm.h for virt/phys translation
->   LoongArch: enable kexec handover (KHO)
->   selftests/kho: add LoongArch vmtest support
-> 
->  arch/loongarch/Kconfig                     |  4 ++
->  drivers/firmware/efi/Kconfig               | 12 ++++
->  drivers/firmware/efi/efi.c                 | 78 ++++++++++++++++++++++
->  drivers/firmware/efi/libstub/efi-stub.c    | 25 +++++++
->  include/linux/efi.h                        | 36 ++++++++++
->  kernel/crash_core.c                        |  7 ++
->  kernel/kexec_core.c                        |  5 ++
->  kernel/kexec_internal.h                    |  3 +
->  kernel/liveupdate/kexec_handover.c         | 33 +++++++++
->  kernel/liveupdate/kho_block.c              |  1 +
->  tools/testing/selftests/kho/loongarch.conf | 11 +++
->  tools/testing/selftests/kho/vmtest.sh      |  3 +-
->  12 files changed, 217 insertions(+), 1 deletion(-)
->  create mode 100644 tools/testing/selftests/kho/loongarch.conf
-> 
-> 
-> base-commit: cee9395acd8043be0644b25c34bfa86623f2b935
-> prerequisite-patch-id: a2f06addb17cc379b9f98674f087a1642588dc6e
-> -- 
-> 2.53.0
+I think we use "file handler" in the most places.
 
 -- 
 Sincerely yours,
 Mike.
+
 
