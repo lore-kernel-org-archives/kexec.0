@@ -4,74 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 01E4CC79F9E
-	for <kexec@archiver.kernel.org>; Mon,  7 Sep 2026 14:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6DD49C79F99
+	for <kexec@archiver.kernel.org>; Mon,  7 Sep 2026 14:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=J8wgTvZrkyOjbsQqIGG8z/GcZBW64PcNCuag9I7xU18=; b=NcokGJr/xknExDtLg9j4D+lsNF
-	El8DjL7xA6+DuOdgC5jKsPVqL89/E02PnFdv79O84v9sOSFaXbgdqalTPtEEaeRIxzu+bTxelyrZn
-	Agqp6IDaOQpH7USXRQmMkLyT6REx+hIUJoCZ681uK7XBYtZRkLgYpsg0tz70yvzp/qb+FBQ94Ubz7
-	aVy0YDQiGhol+bbvgBZRt8MqMj0EsYZQWDeSnzdjqb3wp/lrQtmQv3ILFE+NJ9h2pKJJKwKLegODe
-	I+pMyaUNvO2Yoj+tIocpX94+sMcIlZhPAdy7qTOtkb+ZpXMoh9ABTxgXQhSEkDAYu8yEcPlxcrjXa
-	LtH1VOfg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=rztXTxArE4kzHUFZdIzTTHMPPaOeWfni0CGbnXtVrRk=; b=IhqnQWM1G61bPTvpIuIZ9Sws75
+	Mvl4TR7Uz6iqb6ghkYnRUILAlnB5ndpTDbhvb4GeonGkb+jjClD/K9AbOwXf+fLoyZgbUGY7l2Yio
+	VoWml1cT8y0XojhQLXA3Hv80c7h/ZWvFI93c5CPnY/QT0ybOHHoCkaYAjJ2cjMHGg6B3H2a4I8Ai5
+	fCtDuaj3bCeN4XCkxWR/3Qw/J8TSptWBNHr1wvzbzlHRqJYCK04zHdQqFV1cUdSs/exAFVfU1oOFb
+	4kZYjv2BKvU/DsTunrePtAvVBWSx8LU2Bx1pEURZ9h/iXm9hwxg2hnVjOQXwpbMOcVu26bxg2nh7X
+	YOXdqD+Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x3Zyk-000000070Mf-2JQ5;
-	Mon, 07 Sep 2026 14:05:46 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1x3aKF-000000072km-1bdL;
+	Mon, 07 Sep 2026 14:27:59 +0000
+Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x3Zyh-000000070MQ-1HqC
+	id 1x3aKC-000000072k8-3fmi
 	for kexec@lists.infradead.org;
-	Mon, 07 Sep 2026 14:05:44 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 0C4AD447F7
-	for <kexec@lists.infradead.org>; Mon,  7 Sep 2026 14:05:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 049B21F00ACA
-	for <kexec@lists.infradead.org>; Mon,  7 Sep 2026 14:05:43 +0000 (UTC)
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6a61910369bso3802913a12.0
-        for <kexec@lists.infradead.org>; Mon, 07 Sep 2026 07:05:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBxkwQjNeVaQLvaekklNOL5RP/YLtjBCfjHoyiZ1TdoDbuTzfqxoOtAYbEtzyBPBHU6A9McXMA==@lists.infradead.org
-X-Gm-Message-State: AFuF++kuhy9T1giIpiGO22c2b9j3c0ENov197CPQQ41dWIS9tszkvtbL
-	1Zs7H74jjVz7NvUJBFxdjhBs1UU/XBaV93Q0TZyUF5uOKVptElxoNdwXfu7WLPQ/H2m4e4q7qKi
-	8h6v5Tq8UXJ+7C9sUG256aFROsElzbY8=
-X-Received: by 2002:a05:6402:44db:b0:6a6:7fa6:f0ac with SMTP id
- 4fb4d7f45d1cf-6a7e8f9e843mr12416286a12.22.1788789941040; Mon, 07 Sep 2026
- 07:05:41 -0700 (PDT)
+	Mon, 07 Sep 2026 14:27:58 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=rztXTxArE4kzHUFZdIzTTHMPPaOeWfni0CGbnXtVrRk=; b=Umw5ALif/GaeXHkSspbhFvoHpV
+	ijLLQm+T/BV/rHhk0gvAwCxMVRwRTOMtx26aNAEHtJIKbdhQM3WxgK4MokEQAWyeeKWPCAJTVlXML
+	bmc2f/MAzn+EgE22BwT5eY0Is8BLiPfaf1n6kzhQdx27HssCtRhiyNcPcRoU9gHy+ibvVg0M0nioW
+	3IuJob4fpt0JUH/gtsGGD6qsBZRPB705AgrGraAsrtjCn18wDiA9nrnJsMkZcITC2MHW5AijAEs0G
+	Ijk7UlL2EHiQ2VcO5N1WnjmfJ2soy0YOdupGKE5BNrIOLkbQ2wmdqdrBHZfhCMFHJJjpUuKqfX4Ts
+	ceKTlfCw==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1x3aJu-001ZS2-1N;
+	Mon, 07 Sep 2026 14:27:38 +0000
+Date: Mon, 7 Sep 2026 07:27:31 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Kiryl Shutsemau <kas@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Naoya Horiguchi <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	kexec@lists.infradead.org, David Hildenbrand <david@kernel.org>, 
+	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, linux-efi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, rmikey@meta.com, riel@surriel.com, 
+	kernel-team@meta.com
+Subject: Re: [PATCH v3 1/5] mm/memory-failure: efi: add the
+ LINUX_EFI_POISONED_MEMORY configuration table
+Message-ID: <ap7HHvF7tXmz4Nsz@gmail.com>
+References: <20260826-hwpoison-kho-v3-0-6f79c4b605bc@debian.org>
+ <20260826-hwpoison-kho-v3-1-6f79c4b605bc@debian.org>
+ <apGOr0BAFc1DMQe6@thinkstation>
 MIME-Version: 1.0
-References: <20260907125404.922123-1-ruanjinjie@huawei.com> <20260907125404.922123-6-ruanjinjie@huawei.com>
-In-Reply-To: <20260907125404.922123-6-ruanjinjie@huawei.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 7 Sep 2026 22:05:34 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7qjJ7BPnJ2KoQZSyMUvX_6i9H=EfdadXnmXtNiiB4ROA@mail.gmail.com>
-X-Gm-Features: AcwNN1WbqzVfALnNIkIUg_l9MiYgRfsYFTxDDEyu_aV6t47lWMUK_7ZDBokn7zg
-Message-ID: <CAAhV-H7qjJ7BPnJ2KoQZSyMUvX_6i9H=EfdadXnmXtNiiB4ROA@mail.gmail.com>
-Subject: Re: [PATCH v4 05/12] LoongArch: kexec_file: Fix CMA page leaks in
- segment placement retry loops
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, 
-	kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
-	chleroy@kernel.org, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, akpm@linux-foundation.org, 
-	baoquan.he@linux.dev, rppt@kernel.org, pasha.tatashin@soleen.com, 
-	pratyush@kernel.org, ruirui.yang@linux.dev, kees@kernel.org, thuth@redhat.com, 
-	jic23@kernel.org, tan.shaopeng@jp.fujitsu.com, zengheng4@huawei.com, 
-	james.morse@arm.com, ardb@kernel.org, leitao@debian.org, yeoreum.yun@arm.com, 
-	sourabhjain@linux.ibm.com, robh@kernel.org, coxu@redhat.com, 
-	tangyouling@kylinos.cn, hbathini@linux.ibm.com, adityag@linux.ibm.com, 
-	djbw@kernel.org, seanjc@google.com, liaoyuanhong@vivo.com, 
-	vishal.l.verma@intel.com, fuqiang.wang@easystack.cn, makb@juniper.net, 
-	piliu@redhat.com, ebiggers@kernel.org, jbouron@amazon.com, 
-	mclapinski@google.com, me@linux.beauty, graf@amazon.com, bgwin@google.com, 
-	takahiro.akashi@linaro.org, palmer@rivosinc.com, x86@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <apGOr0BAFc1DMQe6@thinkstation>
+X-Debian-User: leitao
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260907_072757_283982_078986E3 
+X-CRM114-Status: GOOD (  15.09  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,79 +83,45 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi, Jinjie,
+On Fri, Aug 28, 2026 at 02:47:39PM +0100, Kiryl Shutsemau wrote:
+> On Wed, Aug 26, 2026 at 05:03:52AM -0700, Breno Leitao wrote:
+> > @@ -1271,6 +1274,16 @@ struct linux_efi_memreserve {
+> >  #define EFI_MEMRESERVE_COUNT(size) (((size) - sizeof(struct linux_efi_memreserve)) \
+> >  	/ sizeof_field(struct linux_efi_memreserve, entry[0]))
+> >  
+> > +/* Bit N covers unit N of physical address space, counting from address 0. */
+> > +struct linux_efi_poisoned_memory {
+> > +	u32		version;
+> > +	u32		unit_size;	/* bytes of phys space per bitmap bit */
+> > +	u64		size;		/* bitmap size in bytes */
+> > +	unsigned long	bitmap[];
+> > +};
+> 
+> struct efi_unaccepted_memory has 'phys_base'. Do we want it here too?
+> 
+> It can be helpful if physical memory starts very high for some reason.
+> I believe it is common for risc-v.
+> 
+> Tenstorrent Blackhole card has 4G of RAM based at 0x400030000000.
+> Counting from address 0 that is a 4M bitmap for 4G of RAM. :-/
 
-On Mon, Sep 7, 2026 at 8:53=E2=80=AFPM Jinjie Ruan <ruanjinjie@huawei.com> =
-wrote:
->
-> During kexec image placement retry loops, any midway failure causes
-> the loader to truncate `image->nr_segments` back to its initial state
-> to purge the failed segments.
->
-> However, this truncation introduces a memory leak. The CMA pages
-> allocated via kexec_add_buffer() during the failed attempt are tracked
-> in the `image->segment_cma` array. Because the subsequent cleanup paths
-> only iterate up to the truncated `nr_segments` boundary, these allocated
-> CMA pages outside the new boundary are permanently leaked.
->
-> Fix this by explicitly releasing the associated CMA buffers in
-> the failure paths before `image->nr_segments` is reduced.
-I'm not sure but does the elf version have similar problems as the efi vers=
-ion?
+Sure, although this won't be used much right now, it will prepare the
+structure for future expansion. It also shouldn't add much complexity to
+the process.
 
-Huacai
+I will get the structure like this now
 
->
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: WANG Xuerui <kernel@xen0n.name>
-> Cc: Youling Tang <tangyouling@kylinos.cn>
-> Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
-> Cc: Kees Cook <kees@kernel.org>
-> Cc: stable@vger.kernel.org
-> Link: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%=
-40huawei.com
-> Fixes: 55d990f0084c ("LoongArch: Add EFI binary support for kexec_file")
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> ---
->  arch/loongarch/kernel/kexec_efi.c          | 1 +
->  arch/loongarch/kernel/machine_kexec_file.c | 6 +++++-
->  2 files changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/ke=
-xec_efi.c
-> index 5ee78ebb1546..15fd797ff3de 100644
-> --- a/arch/loongarch/kernel/kexec_efi.c
-> +++ b/arch/loongarch/kernel/kexec_efi.c
-> @@ -86,6 +86,7 @@ static void *efi_kexec_load(struct kimage *image,
->                  * We couldn't find space for the other segments; erase t=
-he
->                  * kernel segment and try the next available hole.
->                  */
-> +               kexec_free_segment_cma(image, kernel_segment_number);
->                 image->nr_segments -=3D 1;
->                 kbuf.buf_min =3D kernel_segment->mem + kernel_segment->me=
-msz;
->                 kbuf.mem =3D KEXEC_BUF_MEM_UNKNOWN;
-> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/=
-kernel/machine_kexec_file.c
-> index 5412aa9f3568..62a5be102065 100644
-> --- a/arch/loongarch/kernel/machine_kexec_file.c
-> +++ b/arch/loongarch/kernel/machine_kexec_file.c
-> @@ -217,7 +217,11 @@ int load_other_segments(struct kimage *image,
->         return 0;
->
->  out_err:
-> -       image->nr_segments =3D orig_segments;
-> +       while (image->nr_segments > orig_segments) {
-> +               kexec_free_segment_cma(image, image->nr_segments - 1);
-> +               image->nr_segments--;
-> +       }
-> +
->         kfree(modified_cmdline);
->         return ret;
->  }
-> --
-> 2.34.1
->
+  /* Bit N covers the unit at @phys_base + N * @unit_size. */
+  struct linux_efi_poisoned_memory {
+        u32             version;
+        u32             unit_size;      /* bytes of phys space per bitmap bit */
+        u64             phys_base;      /* address bit 0 covers */
+        u64             size;           /* bitmap size in bytes */
+        unsigned long   bitmap[];
+  };
+
+and then offset the entities in the bitmap by phys_base.
+
+Thanks for the feedback,
+--breno
 
