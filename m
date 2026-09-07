@@ -4,64 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 79FE6C79F9E
-	for <kexec@archiver.kernel.org>; Mon,  7 Sep 2026 02:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C4EE5C79F89
+	for <kexec@archiver.kernel.org>; Mon,  7 Sep 2026 04:00:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ITrHZZ8rFti8xjokpB08YgEUYRp03SaerzjjJ5SMLDY=; b=jjomNUEW8Hta76T0EVxxtTlOIP
-	RUK4WU2Ydimau+5kgdrhSEkXKJe/HAsUb6z8bcdrwWVyJgQefGZUn/Pg3XNcZKlTlEL8MVuEc8R3h
-	xrc0ZEzzO8Gs6ecB/WbCR4t7yB85Aigynalifb2SVP/6z6P1AKAMQuxK0cOI9fXhogGq89SSbur+h
-	5xR/fq0dog4ESpt1eW8AGysJoMgec/5wsoJbxS1TXD+IgO3LuaavpqtXiTVjjgk0j7xFYurhwKbDn
-	2xKDUCIFiXqEoJE3SEPNiDMsAjIJ0o6EACbe0H3kGECpyQNP9m6NDlRAAIMHDj7sRo8BLTocHvohE
-	lVjUKGaw==;
+	bh=um99HQvxm8U8bWkMubZ+aKjTZImXgaTd+AqHI5SXH5Q=; b=ENE7cKVVFzmlKyOlk/HmaoTYNz
+	2w5Yipz8JthZqdp3ARg3ltCQ97olJiJL4sdIqGn9R9X9t1CaDizpNVo4RLfA0J1S0/ikAWJBNDCxG
+	2nGEyrLpKY70OmUytMjklas740OoUNYZyFW6g6mVm6mWqaVuk1Ar2yqgxgTYWiwFuPriTYwvR8hxZ
+	R/ZVmA1O2ZY4NUJ83GeBC1NQUWQu4JcmqZgEjYVKV4pTMbC7fvTQXsk/gG66aYccu0nYD5PmzhE0D
+	8pRmQ/8j2Qyzu+9b0Mbhyi+AB9ZDu+Ozfhv3oCajU+PmmTE89mV2DzUeD4biSqiJmBpcVGXweUTvp
+	Ie7yz7lw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x3Ooe-00000005hJU-3UXd;
-	Mon, 07 Sep 2026 02:10:36 +0000
-Received: from out-202.mta0.migadu.com ([2001:41d0:1004:224b::ca] helo=mta0.migadu.com)
+	id 1x3QX5-00000005paY-1xXv;
+	Mon, 07 Sep 2026 04:00:35 +0000
+Received: from mail-ed1-x546.google.com ([2a00:1450:4864:20::546])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x3Oob-00000005hIt-0Q9h
+	id 1x3QX3-00000005pZy-11uY
 	for kexec@lists.infradead.org;
-	Mon, 07 Sep 2026 02:10:34 +0000
-X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=EbvF9Cfk/cA1UnK4pJESDFS+FSWdBEe7J8RaYNhSipA=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1788747030; v=1; x=1789351830;
- b=KTOdsk2BPwPmMkX4vNr9rg9mvTfk+mNhEQ28HiFtEyVa3+JXcHcPDCTAfrjmaaHbfcb8t9H1
- QyZpSiEVUTYJrNffsKQv0HOOPGg3mCdHjk5o1+yIKqlSyYJ/EbQk98t3S19KMRsfoDHRsROW0KD
- g7dH8iKai+qqw/LRFC1nmdZw=
-X-Envelope-To: kexec@lists.infradead.org
-Received: by mta10.migadu.com with ESMTPS id 17ffc60dbd957c97;
-	Mon, 07 Sep 2026 02:10:30 +0000
-X-Mizu-Trace-ID: 17ffc60dbd957c97
-X-Migadu-Flow: FLOW_OUT
-Date: Mon, 7 Sep 2026 10:10:22 +0800
-From: Baoquan He <baoquan.he@linux.dev>
-To: George Guo <dongtai.guo@linux.dev>
-Cc: rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org,
-	chenhuacai@kernel.org, ardb@kernel.org, shuah@kernel.org,
-	ilias.apalodimas@linaro.org, akpm@linux-foundation.org,
-	ruirui.yang@linux.dev, guodongtai@kylinos.cn, kernel@xen0n.name,
-	graf@amazon.com, liukexin@kylinos.cn, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: Re: [PATCH v5 0/5] LoongArch: add KHO support and selftests
-Message-ID: <ap4dDsKBo22t4_Jh@fedora>
-References: <20260904100852.26006-1-dongtai.guo@linux.dev>
- <ap4XzvnM3WUn5ard@fedora>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ap4XzvnM3WUn5ard@fedora>
+	Mon, 07 Sep 2026 04:00:34 +0000
+Received: by mail-ed1-x546.google.com with SMTP id 4fb4d7f45d1cf-6a5d46edd1eso2781954a12.1
+        for <kexec@lists.infradead.org>; Sun, 06 Sep 2026 21:00:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1788753629; x=1789358429; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=um99HQvxm8U8bWkMubZ+aKjTZImXgaTd+AqHI5SXH5Q=;
+        b=M6tJ9yyZWvnujmT0XvgGaZr4HSMs1YwoCGquVXhcKGGHjzb3kC2QspzHWo0XDjTpAW
+         qDf4grHjtaZEvVgOTEYumXHxh6i0KbsTcBRJueYGkj5ekQ3GeVR5QMGGJ7nMSohgrBD8
+         iktfDtW/EfRWvaTkdttfbju1xk2rYx31E17wALqfYm731Ap+kXJkvfaTyLb70vVMtBuT
+         7tfIVtPgZZAtsHaLscInmeUWg/hH3iaZUrnrlgO921T6RPJB1Zaq9y4Qc9koqAqqmFyF
+         VfobpcrEn3QCXW449NhDpDo0SBZDLvySe3G8TEXOlnfmSk4K9s0H6o5rLY6Ezlc4j9Dq
+         LefA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788753629; x=1789358429;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=um99HQvxm8U8bWkMubZ+aKjTZImXgaTd+AqHI5SXH5Q=;
+        b=Hj0I+mfPWbAr3GUaVSnD4GKKo48SKrwXUzBZx0mTdyJbJNrqQcIxy0VlKdDyW2rVEJ
+         8fTv8u4Fw0288SyaVMqMlM+KvT/DoFoH9NR2kD3L7e4NqGV4pXvJDB+2hYNL4r9NnET6
+         ReKZoZPUy8C4k2JjcnvUzMBueGmCTx6bGwBxjbTtrZsZ3pVIqYF7mIhkytUThg6vIBgV
+         d717cZh3p78ewN8isDuDdEBYKgLB3DjvN5+RVIgjB4a1a8tg/OzIf+tZULZ1pMkIBTzt
+         QaN5/ccH2KEJp6Qze9c5ScjZruNUjnBiM5xncCiuCFWKm4jB+19mUtYxNDWzEAfPh8jW
+         aopQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxYxqqAwiK2VzwZ1ZZExqpOYNspvQgGFBjxirQQCFPoFjt/eN7IUtlVGlzol+b0Agc6Mhi37g==@lists.infradead.org
+X-Gm-Message-State: AFuF++kC+i29vTqNJBiFqbOTR2RbRzj/1hp/oRwz9r3cstqx4JCDzkJ9
+	lXZgbDf9lN1GOFWuDZ+ZfB3RXVeAlLuw+a10Rr3FzEfYKsdIWgcvHsr3DQaAMXUpiIoykihw+OZ
+	Iroh0VUFZi8iOVWXeYA==
+X-Received: from edqt8.prod.google.com ([2002:aa7:d708:0:b0:6a7:60c4:e4ad])
+ (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6402:3241:b0:6a6:32fa:1e9a with SMTP id 4fb4d7f45d1cf-6a7e90c2f67mr4994847a12.18.1788753628866;
+ Sun, 06 Sep 2026 21:00:28 -0700 (PDT)
+Date: Mon, 07 Sep 2026 04:00:28 +0000
+In-Reply-To: <ap0_lSVF43FP3PPb@kernel.org>
+Mime-Version: 1.0
+References: <20260903155907.1065681-1-tarunsahu@google.com> <ap0_lSVF43FP3PPb@kernel.org>
+Message-ID: <9huzwlsxk8wz.fsf@tarunix.c.googlers.com>
+Subject: Re: [PATCH] memblock: use binary search to locate candidate regions
+From: tarunsahu@google.com
+To: Mike Rapoport <rppt@kernel.org>
+Cc: dmatlack@google.com, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Pratyush Yadav <pratyush@kernel.org>, 
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260906_191033_288191_776B06D1 
-X-CRM114-Status: GOOD (  41.43  )
+X-CRM114-CacheID: sfid-20260906_210033_345958_203E2B4A 
+X-CRM114-Status: GOOD (  28.26  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,177 +90,168 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 09/07/26 at 09:47am, Baoquan He wrote:
-> On 09/04/26 at 06:08pm, George Guo wrote:
-> > This series enables Kexec HandOver (KHO) on 64-bit LoongArch and adds
-> > LoongArch coverage to the KHO QEMU selftest.  KHO is the remaining
-> > architecture gate needed by Live Update (LUO) on LoongArch.
-> > 
-> > The transport is the central problem.  Arm64 and riscv can pass the KHO
-> > state FDT and scratch area through properties under /chosen in a boot
-> > FDT.  LoongArch boots through EFI without a boot FDT, so that path is not
-> > available.
-> 
-> I didn't look into your patchset very carefully, but I doubt you
-> are reinventing the wheel. X86 didn't have FDT, seems it introduces FDT
-> for KHO support. LoongArch doesn't have FDT, so you reworks the EFI
-> transport. Is there a reason you don't want to follow the standard KHO
-> way using FDT too?
-> 
-> Please correct me if I am wrong.
+Mike Rapoport <rppt@kernel.org> writes:
 
-I was wrong. x86 doesn't introduce FDT, it just adds a SETUP_KEXEC_KHO
-entry into setup_data in setup_kho(). Please forgot about it, and sorry
-for the noise.
+> Hi Tarun,
+>
+> On Thu, Sep 03, 2026 at 03:59:06PM +0000, Tarun Sahu wrote:
+>> Use binary search (memblock_bsearch_start) in memblock_add_range() and
+>> memblock_isolate_range() to locate candidate regions instead of linearly
+>> scanning from index 0.
+>> 
+>> Under heavy memory fragmentation (such as KHO page preservation registering
+>> hundreds of thousands of disjoint folios), scanning from index 0 on every
+>> insertion and isolation results in O(N^2) complexity, causing boot-time
+>> memory retrieval to take several minutes (~268s for 393k pages).
+>> 
+>> Using binary search reduces the worst-case complexity to O(N log N)
+>> (and O(N) for sequential appends), cutting KHO memory retrieval time
+>> from ~268s to ~50ms.
+>> 
+>> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
+>> ---
+>>  mm/memblock.c | 38 ++++++++++++++++++++++++++++++++++++--
+>>  1 file changed, 36 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/mm/memblock.c b/mm/memblock.c
+>> index 9ce86349a29f..88940474b020 100644
+>> --- a/mm/memblock.c
+>> +++ b/mm/memblock.c
+>> @@ -160,6 +160,11 @@ static __refdata struct memblock_type *memblock_memory = &memblock.memory;
+>>  	     i < memblock_type->cnt;					\
+>>  	     i++, rgn = &memblock_type->regions[i])
+>>  
+>> +#define for_each_memblock_type_from(i, memblock_type, rgn, start)	\
+>> +	for (i = (start), rgn = &memblock_type->regions[i];		\
+>> +	     i < memblock_type->cnt;					\
+>> +	     i++, rgn = &memblock_type->regions[i])
+>> +
+>>  #define memblock_dbg(fmt, ...)						\
+>>  	do {								\
+>>  		if (memblock_debug)					\
+>> @@ -591,6 +596,33 @@ static void __init_memblock memblock_insert_region(struct memblock_type *type,
+>>  	type->total_size += size;
+>>  }
+>>  
+>> +/**
+>> + * memblock_bsearch_start - Find the first region index where rend > base
+>> + * @type: memblock type to search
+>> + * @base: base physical address of the candidate range
+>> + *
+>> + * Returns the first region index that could potentially overlap @base.
+>> + */
+>> +static int __init_memblock memblock_bsearch_start(struct memblock_type *type,
+>> +						  phys_addr_t base)
+>> +{
+>
+> We already have memblock_search() ;-)
 
-> 
-> > 
-> > EFI KHO channel:
-> > 
-> > v5 reworks the EFI transport following Pratyush's and Huacai's reviews
-> > [1, 2].  Instead of rebuilding the EFI configuration table in
-> > LoongArch code and switching st->tables before kexec, the common EFI stub
-> > allocates and installs a persistent table under
-> > LINUX_EFI_KEXEC_HANDOVER_GUID.  This follows the model used by
-> > LINUX_EFI_MEMRESERVE_TABLE_GUID.
-> 
-> > 
-> > The common EFI table parser reserves the stub-allocated table, reads it
-> > during early boot, and calls kho_populate().  An early initcall keeps the
-> > table persistently mapped so it can also be updated on the crash kexec
-> > path.  The implementation is architecture-independent; LoongArch only
-> > selects EFI_KHO when KEXEC_HANDOVER is enabled.
-> > 
-> > The EFI table is global, but kexec can keep separate normal and crash
-> > images and can replace a loaded candidate.  Updating the table while a
-> > candidate image is being loaded could therefore leave it pointing at a
-> > failed candidate while the previously installed image remains the one
-> > that will be executed.  v5 records the KHO data in struct kimage and
-> > synchronizes the channel from the image selected for execution.  Images
-> > without KHO data, including legacy and crash images, clear the channel so
-> > the next kernel boots cold rather than reviving stale state.
-> > 
-> > The GUID name is changed to LINUX_EFI_KEXEC_HANDOVER_GUID as suggested by
-> > Huacai and Pratyush [3].  Existing x86 KHO support continues to use its
-> > setup_data transport.  Besides supporting non-UEFI boot, that entry is
-> > consumed by the x86 decompressor before normal EFI table parsing, so KASLR
-> > only uses KHO scratch areas and does not overwrite preserved memory.  The
-> > new channel is installed by the generic EFI-stub entry path and relies on
-> > EFI_GENERIC_STUB, which x86 does not select.  Moving x86 would therefore
-> > require installing the table from the x86-specific EFI stub and scanning it
-> > in the decompressor, not just selecting EFI_KHO.
-> > 
-> > LoongArch enablement and build fix:
-> > 
-> > The architecture patch now only enables ARCH_SUPPORTS_KEXEC_HANDOVER and
-> > selects the generic EFI channel.  No LoongArch setup reader, kexec writer,
-> > or EFI system-table replacement remains.
-> > 
-> > The linux/mm.h build fix is moved from luo_session.c to kho_block.c, where
-> > the virt_to_phys() and phys_to_virt() calls reside after the liveupdate
-> > refactoring.  This addresses Pratyush's review [4].  Adding linux/mm.h to
-> > asm/io.h was previously attempted, but creates an include cycle under
-> > CONFIG_KFENCE [5].  The fix precedes LoongArch enablement so every
-> > intermediate commit builds with CONFIG_KFENCE=y.
-> > 
-> > Selftest:
-> > 
-> > The LoongArch vmtest boots vmlinux.efi through EDK2 because the initial
-> > EFI stub invocation installs the channel being tested.  QEMU_EFI can
-> > override the firmware filename for distributions that install it under a
-> > different name or path.
-> > 
-> > CONFIG_ACPI_SPCR_TABLE lets the bare earlycon parameter obtain the UART
-> > description from EDK2's SPCR table.  CONFIG_PCI_HOST_GENERIC keeps i8042
-> > enabled while ensuring that the QEMU virt machine's PCI I/O space is
-> > mapped before the legacy fallback probe, addressing Huacai's concern that
-> > the same kernel configuration should remain usable for hosts and guests.
-> > 
-> > With EFI runtime reset services available, panic=-1 and QEMU's existing
-> > -no-reboot option terminate the test normally.  The generic QEMU runner
-> > therefore remains unchanged and does not mask failures by forcibly
-> > terminating QEMU after a timeout.
-> > 
-> > The LoongArch vmtest uses the default KHO scratch-sizing path.  This
-> > series is based on the generic fix that calculates per-node scratch sizes
-> > before scratch allocation [6].
-> > 
-> > The KHO vmtest passes on:
-> > 
-> >   * LoongArch with KVM using QEMU_EFI.fd from edk2-loongarch64.
-> >   * x86_64 with KVM, as regression coverage for the generic kexec/KHO
-> >     changes.
-> > 
-> > Patch layout:
-> > 
-> >   1. Add the generic EFI KHO channel and its ABI.
-> >   2. Synchronize the channel from the selected image at execution.
-> >   3. Fix the kho_block.c header dependency exposed by LoongArch/KFENCE.
-> >   4. Enable KHO on 64-bit LoongArch through the generic EFI channel.
-> >   5. Add LoongArch to the KHO QEMU selftest.
-> > 
-> > Changes since v4:
-> > 
-> >   * Allocate and install the KHO table from the common EFI stub, following
-> >     the EFI memreserve-table model (Pratyush).
-> >   * Parse, reserve, map, and update the channel in generic EFI code; remove
-> >     the LoongArch-specific reader, writer, and st->tables replacement
-> >     (Pratyush, Huacai).
-> >   * Synchronize the global channel at execution rather than image load;
-> >     clear it for cold and crash images and use the scratch payload size.
-> >   * Rename the GUID to LINUX_EFI_KEXEC_HANDOVER_GUID (Huacai, Pratyush).
-> >   * Move the linux/mm.h include from luo_session.c to the actual caller,
-> >     kho_block.c, and place the fix before architecture enablement
-> >     (Pratyush, Huacai).
-> >   * Boot the vmtest through EDK2, allow QEMU_EFI to override the firmware,
-> >     and use vmlinux.efi to exercise the EFI stub and channel.
-> >   * Keep i8042 enabled and select PCI_HOST_GENERIC instead of disabling
-> >     the host configuration in the selftest (Huacai).
-> >   * Enable ACPI_SPCR_TABLE and use the SPCR-provided early console.
-> >   * Exercise the default KHO scratch-sizing path in the LoongArch vmtest;
-> >     depend on the separately posted generic sizing fix [6].
-> >   * Drop the generic QEMU timeout now that EFI runtime reset services make
-> >     the LoongArch guest terminate normally.
-> >   * Rebase onto Linux 7.3-rc1.
-> > 
-> > [1] Pratyush Yadav:
-> >     https://lore.kernel.org/r/2vxzo6f96fmn.fsf@kernel.org/
-> > [2] Huacai Chen:
-> >     https://lore.kernel.org/r/CAAhV-H4PKRNCa4g=6TGepP+trtM82JiMoWgVr3O7PqbZYP9uGw@mail.gmail.com/
-> > [3] https://lore.kernel.org/r/2vxzse4m54nz.fsf@kernel.org/
-> > [4] https://lore.kernel.org/r/2vxzfr0l6fam.fsf@kernel.org/
-> > [5] https://lore.kernel.org/r/202605211925.DbDvQ6ii-lkp@intel.com/
-> > [6] https://lore.kernel.org/loongarch/20260904025101.9959-1-dongtai.guo@linux.dev/
-> > 
-> > Previous version:
-> > 
-> > v4: https://lore.kernel.org/loongarch/20260807103714.33074-1-dongtai.guo@linux.dev/
-> > 
-> > George Guo (5):
-> >   efi: add a KHO configuration table channel
-> >   liveupdate: synchronize EFI KHO channel at execution
-> >   liveupdate: kho_block: include linux/mm.h for virt/phys translation
-> >   LoongArch: enable kexec handover (KHO)
-> >   selftests/kho: add LoongArch vmtest support
-> > 
-> >  arch/loongarch/Kconfig                     |  4 ++
-> >  drivers/firmware/efi/Kconfig               | 12 ++++
-> >  drivers/firmware/efi/efi.c                 | 78 ++++++++++++++++++++++
-> >  drivers/firmware/efi/libstub/efi-stub.c    | 25 +++++++
-> >  include/linux/efi.h                        | 36 ++++++++++
-> >  kernel/crash_core.c                        |  7 ++
-> >  kernel/kexec_core.c                        |  5 ++
-> >  kernel/kexec_internal.h                    |  3 +
-> >  kernel/liveupdate/kexec_handover.c         | 33 +++++++++
-> >  kernel/liveupdate/kho_block.c              |  1 +
-> >  tools/testing/selftests/kho/loongarch.conf | 11 +++
-> >  tools/testing/selftests/kho/vmtest.sh      |  3 +-
-> >  12 files changed, 217 insertions(+), 1 deletion(-)
-> >  create mode 100644 tools/testing/selftests/kho/loongarch.conf
-> > 
-> > 
-> > base-commit: cee9395acd8043be0644b25c34bfa86623f2b935
-> > prerequisite-patch-id: a2f06addb17cc379b9f98674f087a1642588dc6e
-> > -- 
-> > 2.53.0
+Yes, I preferred to have saperate function because we need to search
+lower bound but not the exact match, as new entry might not exist and
+memblock_search will return -1 in that case.
+
+To not duplicate the binary search code, we can update the
+memblock_search as the wrapper of memblock_bsearch_start (Approach 1):
+
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 88940474b020..d9a71234abcd 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -2096,17 +2096,10 @@ static void __init_memblock memblock_dump(struct memblock_type *type)
+ static int __init_memblock memblock_search(struct memblock_type *type, phys_addr_t addr)
+ {
+-	unsigned int left = 0, right = type->cnt;
+-
+-	do {
+-		unsigned int mid = (right + left) / 2;
+-
+-		if (addr < type->regions[mid].base)
+-			right = mid;
+-		else if (addr >= (type->regions[mid].base +
+-				  type->regions[mid].size))
+-			left = mid + 1;
+-		else
+-			return mid;
+-	} while (left < right);
+-	return -1;
++	int idx = memblock_bsearch_start(type, addr);
++
++	if (idx < type->cnt && addr >= type->regions[idx].base)
++		return idx;
++	return -1;
+ }
+
+OR Approach 2:
+
+The above approach still introduce two function for doing the search.
+So, I thought of updating the memblock_search(..., enum search_type) but
+this will require changes to all the places of memblock_search also.
+
+I prefer approach 1, As it will keep the binary_search code
+within single function and have two function for two different type
+return values.
+
+WDYT?
+
+>
+>> +	int mid, low = 0;
+>> +	int high = type->cnt;
+>> +
+>> +	if (type->cnt && base >= type->regions[type->cnt - 1].base +
+>> +				 type->regions[type->cnt - 1].size)
+>> +		return type->cnt;
+>> +
+>> +	while (low < high) {
+>> +		mid = (low + high) / 2;
+>> +		if (type->regions[mid].base + type->regions[mid].size <= base)
+>> +			low = mid + 1;
+>> +		else
+>> +			high = mid;
+>> +	}
+>> +	return low;
+>> +}
+>> +
+>>  /**
+>>   * memblock_add_range - add new memblock region
+>>   * @type: memblock type to add new region into
+>> @@ -651,7 +683,8 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
+>>  	base = obase;
+>>  	nr_new = 0;
+>>  
+>> -	for_each_memblock_type(idx, type, rgn) {
+>> +	for_each_memblock_type_from(idx, type, rgn,
+>> +				    memblock_bsearch_start(type, base)) {
+>
+> I think we can just kill for_each_memblock_type() and open code all loops
+> that use it and make memblock_add_range() and memblock_isolate_range() use
+> binary search.
+
+Agree, there were three places memblock_add_range, memblock_dump,
+memblock_isolate_range, This patch already updating two of them.
+The for loop is not complex to be part of the macro, Open code sounds
+good to me.
+
+
+~Tarun
+>
+>>  		phys_addr_t rbase = rgn->base;
+>>  		phys_addr_t rend = rbase + rgn->size;
+>>  
+>> @@ -827,7 +860,8 @@ static int __init_memblock memblock_isolate_range(struct memblock_type *type,
+>>  		if (memblock_double_array(type, base, size) < 0)
+>>  			return -ENOMEM;
+>>  
+>> -	for_each_memblock_type(idx, type, rgn) {
+>> +	for_each_memblock_type_from(idx, type, rgn,
+>> +				    memblock_bsearch_start(type, base)) {
+>>  		phys_addr_t rbase = rgn->base;
+>>  		phys_addr_t rend = rbase + rgn->size;
+>>  
+>> -- 
+>> 2.55.0.970.g62bdec98f9-goog
+>> 
+>
+> -- 
+> Sincerely yours,
+> Mike.
 
