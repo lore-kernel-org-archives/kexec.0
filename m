@@ -4,71 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D6AD5C79FA0
-	for <kexec@archiver.kernel.org>; Mon,  7 Sep 2026 15:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1CF5AC79F99
+	for <kexec@archiver.kernel.org>; Mon,  7 Sep 2026 21:02:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6c435i0Ybwx2SpPArP3T09GV23HR1EORsj2zutcyrsA=; b=s1yT8TjQO2cOAms06mMqJmYZFs
-	YcoYUxc85i14tRtokajCS4RwsuJiPRGY7EvQ9xZL5f5MyyLiQo/Ndq6HGoC/Qnn+tIx1hzxpF3WCH
-	envVRnlKn5r+D/riJheIy+iRiXZ4eLAizT98P8qeUYj2ufjJg47CVBmGRreqOlat2EJe4qPUPMjCe
-	zHN6oZYmM3lRgiwOFi7RY6Md2aM5OoyPHCQBbOICKFrrmcAe5Ald3UzEz4SVBYr/nbM7mjNp2p0Xh
-	lEZM/p9j5BC54y6PUlgOv8PFAiPHOzLsMsQCenCz22WUbvrgfx2uDCJjT4Xh8OW1ABrtq2ah+X6X6
-	PMXFKAvQ==;
+	bh=TGJyWqg8b9I8pDWEAS1fAo54dmwDkCp8//1b4QCLnMM=; b=FPl+Kg109Jq65Fh+ZvUnp4sfUC
+	siNFbaf1BDnJro2/oK5dOJ2ey4VJYAaKKz36esiUq2kF+nI/tOorcAqKoEXzIbekoRU3ihkNY7Gw4
+	LchRedFfNstHyWcTNIB226bMbrQN8CrRPWkLsHWzb8fhSsmUvH9yGRCJ6hWsU6KOzbEMWYL0ZzABJ
+	8JrUHYEJQnjCf7TGC1rzzvdmnVnkdMeCVgXlFYm4OYNHdZd+eIlfjr1xmN8zStk4g/NqZ6ymV5hQL
+	lHFAXZ6XFVXrP5VH0+dF9GT+fXeFL434pgfLpGeQFmHYHawLlDTrWeYUXOUKA7VkpJ1KXgSi1T+Do
+	N7IZ+/rA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x3bCW-000000079ER-2zBT;
-	Mon, 07 Sep 2026 15:24:04 +0000
-Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
+	id 1x3gTX-00000007jx4-35Wu;
+	Mon, 07 Sep 2026 21:01:59 +0000
+Received: from mail-pj2-x10.google.com ([2607:f8b0:4864:39::10])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x3bCU-000000079Dy-1Cvn
+	id 1x3gTV-00000007jwI-2BbA
 	for kexec@lists.infradead.org;
-	Mon, 07 Sep 2026 15:24:03 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=6c435i0Ybwx2SpPArP3T09GV23HR1EORsj2zutcyrsA=; b=TwhS7pT7b6MrSEMKFQfGDeSRIA
-	mv6TiijYkOzV3ljABhwcKRIImezX6VdLF59YDNzKwVu9XJSBnGJI+8bj+Zieec2dbmSX+dI64ObiU
-	C6HdX1Joy5LOL3lb5qIr5LcgDoacSanCjFIsu3Kvf6RuotHWPs8FxHINv1Mo6Jw8NyZsEJZmyioRK
-	Ei8ZzeJcwumibhpITvX9zwoCt14QChw+J8HOtulb9LVA4kEShJ+v6nO0XqbRUzgWQ7L1V+pSaiCHT
-	tbHwZpkOABgvU1Qwurrtp391g+wt6DKKAT7yXWR5gRPtkmNkPLKZHrevAIYTNDGTBgmBkr3mc7fuO
-	e3n1TF0Q==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1x3bCK-001bGs-0M;
-	Mon, 07 Sep 2026 15:23:52 +0000
-Date: Mon, 7 Sep 2026 08:23:46 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Kiryl Shutsemau <kas@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	kexec@lists.infradead.org, David Hildenbrand <david@kernel.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, linux-efi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, rmikey@meta.com, riel@surriel.com, 
-	kernel-team@meta.com
-Subject: Re: [PATCH v3 3/5] mm/memory-failure: efi: record hardware-poisoned
- frames into the poisoned-memory table
-Message-ID: <ap7Tup6mahjIljVF@gmail.com>
-References: <20260826-hwpoison-kho-v3-0-6f79c4b605bc@debian.org>
- <20260826-hwpoison-kho-v3-3-6f79c4b605bc@debian.org>
- <apGWUWi5-RbhFHpe@thinkstation>
+	Mon, 07 Sep 2026 21:01:58 +0000
+Received: by mail-pj2-x10.google.com with SMTP id d9443c01a7336-2d6ff390a6cso131935ad.1
+        for <kexec@lists.infradead.org>; Mon, 07 Sep 2026 14:01:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1788814914; x=1789419714; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=TGJyWqg8b9I8pDWEAS1fAo54dmwDkCp8//1b4QCLnMM=;
+        b=UIl8eVTCisPly412x+Q5WKJAFePOwbwRQZ6bGLnv1doTLjW1nYfMztqrEqam2USyXa
+         /9LCA7yDVtocwxDT4oEprAzmWk+Mzoh73EhWqPPgSpr3CXXH2L5n5xyJ5j0Vc9OykeZx
+         sjvF/ljGaBB5u+hf4RJDtow/y+6osi24N1RSE2rHbXZwlmfJFk9Qnh390Z4GyrNmbkDL
+         hLPr7nf0p7Qd25D6jyfN4bvNv0dOgMG5WW0mqkCeaDk2ngYDvTwe9M7RsucPXDV3CV8O
+         8qUfBjmbSKh+XjNtjt22N66j3smm2bD7G+vnUKxOSiearbVVeDq6HEFydd3iv8Qb5PGm
+         0j8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788814914; x=1789419714;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=TGJyWqg8b9I8pDWEAS1fAo54dmwDkCp8//1b4QCLnMM=;
+        b=soCbkZuJ1DMseMqgtPM1V0s+0PxDD+qp/IGjndIQnIUwbQ69qlQ5SkMA4ZZ0UK4tJ4
+         nJK6fQBmIG69XufdAh1GUes2sZ6aHWUC2cjs0l2o65d/npAqwofzX1FlKCsW57t7rclY
+         mlFEE002JQjoOQOMdJyccfB9rdIAbLMLIRJFMTMLdiV8LuFiOV175CpxXrD0CuiHPVJ3
+         3xa6RXi7Ju5/xOdlSxr5hwoEIR86wMbW7KGj62n41vZ8OBXQZLHaARRJwaQrqgnXWsVZ
+         1wei2sFVBiWflQ8oFXiXdY2peQIGE7On7lta6w3N0C0Kjg/pPYX65W+ZxIH7+ROjmWMl
+         UtKQ==
+X-Forwarded-Encrypted: i=1; AKwUvByZ5lN2FsNLeF5/fvCYBaXqwoslSUVGEBqrt4pXOAJZBs2CLgw1MNhXdTvPGE1oQGpqwFIUVw==@lists.infradead.org
+X-Gm-Message-State: AFuF++ky3mcl60eqRUa+LEqpsOse40zL33xYmZMTyI37W0oESFHHWkGD
+	V6MPuL9dMTVKsFKKNr35swYEKvJv3hg/1ZF5x3rR+DTeMMbBvlFRvPrKUaAO9M17W6VtALjVilU
+	V2vX07Q==
+X-Gm-Gg: AYBFou0c1uXYOmL0BN16U9MyUG5qu9tq0slvctQJu28h2mp9ucDri7mL2vBmn41Z3st
+	jHQZ/ikTCopm4k1hx665774Ue2cbPKqpIvjw2INiK9FtD/34zwwXBSRKJ6AhQmvAsAm4mUMRpcK
+	jxXvx9CT+zG6oEmMoGLpn1F8JBrVZhcJw4eT4y9fYa0aQLi0mgY323435y4l0C/Y5ZVbKX6KVFP
+	rZKTcxx6PIa3YcdQwxx8FBhq+N1qwxhnQABpV2l5fn7nrp4R+uidvO3ZhSCvwgchvHlgU3Y8Iok
+	tq6OcNlgDGT4sA3L70owiVJFnsYCxipxn9eFkcnbDUDI1y0ZseeXYxv1QGhwQbswnNugZioWZCg
+	xHErc7y/pM8YFn3WOxVwkcMtJ5SmD0tXmYYHGphH9srPyK8qa8TqK8FZsHsp4FkQ3kkIu3GxEyA
+	YjNfWUCY3p5+42hVwEynT+zwb6KJutoDO/9qGXfDCTvkIkuXCURYnErUK6dh88uL5IRov9b4xGL
+	pMLzAxf3mJQx4PeHla2phstkA5K5e+hWuANAGOf/Lc8yM6H9r+fmpgEeXse2b6SLDp/PA==
+X-Received: by 2002:a17:902:e745:b0:2cf:4353:f117 with SMTP id d9443c01a7336-2db7773ef8bmr714085ad.0.1788814913291;
+        Mon, 07 Sep 2026 14:01:53 -0700 (PDT)
+Received: from google.com (210.87.127.34.bc.googleusercontent.com. [34.127.87.210])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39ae92c5d72sm8942409a91.4.2026.09.07.14.01.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2026 14:01:52 -0700 (PDT)
+Date: Mon, 7 Sep 2026 21:01:47 +0000
+From: Samiullah Khawaja <skhawaja@google.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
+	David Matlack <dmatlack@google.com>, tarunsahu@google.com, open list <linux-kernel@vger.kernel.org>, 
+	"open list:KEXEC HANDOVER (KHO)" <kexec@lists.infradead.org>, "open list:KEXEC HANDOVER (KHO)" <linux-mm@kvack.org>
+Subject: Re: [PATCH 1/1] liveupdate: luo_file: Add documentation for
+ dependencies
+Message-ID: <ap3UCMlxUKU_DFDO@google.com>
+References: <20260904220555.589752-1-skhawaja@google.com>
+ <20260904220555.589752-2-skhawaja@google.com>
+ <178872718104.3691424.15410189304450384708.b4-review@b4>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <apGWUWi5-RbhFHpe@thinkstation>
-X-Debian-User: leitao
+In-Reply-To: <178872718104.3691424.15410189304450384708.b4-review@b4>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260907_082402_329636_3EF35F83 
-X-CRM114-Status: GOOD (  13.54  )
+X-CRM114-CacheID: sfid-20260907_140157_567333_8D126F3A 
+X-CRM114-Status: GOOD (  11.45  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,39 +106,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Aug 28, 2026 at 03:11:10PM +0100, Kiryl Shutsemau wrote:
-> On Wed, Aug 26, 2026 at 05:03:54AM -0700, Breno Leitao wrote:
-> > +#include <linux/memblock.h>
-> 
-> Is it leftover? I don't see any memblock usage.
+Hi Mike,
 
-Yes, good catch, I will remove.
-> > +#include <linux/mm.h>
-> > +#include <linux/overflow.h>
-> > +
-> > +static struct linux_efi_poisoned_memory *efi_poison __ro_after_init;
-> > +static u64 efi_poison_nbits __ro_after_init;
-> > +
-> > +static u64 __init
-> > +efi_poison_usable_size(const struct linux_efi_poisoned_memory *pm)
-> > +{
-> > +	u64 nr_units = DIV_ROUND_UP(PFN_PHYS(max_pfn), pm->unit_size);
-> > +	u64 bytes = DIV_ROUND_UP(nr_units, BITS_PER_BYTE);
-> > +
-> > +	/* Whole words: the bitmap is reached an unsigned long at a time. */
-> > +	return min(round_up(bytes, sizeof(unsigned long)), pm->size);
-> 
-> Hm. Why bother to clamp to max_pfn? What's what's wrong with just using
-> pm->size directly?
+On Sun, Sep 06, 2026 at 11:39:41PM +0300, Mike Rapoport wrote:
+>Hi Sami,
+>
+>> Add documentation for dependencies between FDs preserved by File
+>> Handlers. This supplements the previously added
+>
+>Why capital F and H? :)
+>
+>I think we use "file handler" in the most places.
 
-The clamp is a min(), so it can only ever make the kernel use less of
-the table than the table claims, just a silly and cheap optimization.
+Ah, force of habit! You are right, it should be lowercased.
 
-That said, pm->size is more than enought for now, and we optimize later.
-
-I will drop efi_poison_usable_size() completely and replace it by
-pm->size.
+Let me send a v2 for this patch with the capitalization fixed. I will
+check if I did the same in the source file also.
 
 Thanks,
---breno
+Sami
+>
+>-- 
+>Sincerely yours,
+>Mike.
+>
 
