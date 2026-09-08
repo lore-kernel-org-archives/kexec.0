@@ -4,94 +4,155 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1CF5AC79F99
-	for <kexec@archiver.kernel.org>; Mon,  7 Sep 2026 21:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 69B24C79FAB
+	for <kexec@archiver.kernel.org>; Tue,  8 Sep 2026 02:57:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Cc:To:
+	In-Reply-To:References:Message-Id:Content-Transfer-Encoding:Content-Type:
+	Subject:Date:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=TGJyWqg8b9I8pDWEAS1fAo54dmwDkCp8//1b4QCLnMM=; b=FPl+Kg109Jq65Fh+ZvUnp4sfUC
-	siNFbaf1BDnJro2/oK5dOJ2ey4VJYAaKKz36esiUq2kF+nI/tOorcAqKoEXzIbekoRU3ihkNY7Gw4
-	LchRedFfNstHyWcTNIB226bMbrQN8CrRPWkLsHWzb8fhSsmUvH9yGRCJ6hWsU6KOzbEMWYL0ZzABJ
-	8JrUHYEJQnjCf7TGC1rzzvdmnVnkdMeCVgXlFYm4OYNHdZd+eIlfjr1xmN8zStk4g/NqZ6ymV5hQL
-	lHFAXZ6XFVXrP5VH0+dF9GT+fXeFL434pgfLpGeQFmHYHawLlDTrWeYUXOUKA7VkpJ1KXgSi1T+Do
-	N7IZ+/rA==;
+	bh=/a8D+bFtx0HUA3t19qonoIIEgpEm7wqE1QXKariwwko=; b=2cRV061faTngX2dt90yOG0PHtM
+	KtZa/hZYy2jftePYME5ShysTMEbxvVw5tGXmbMxZgb4cadlJQDjYewgGTQR9NT4CsRcKWcpTXk5AP
+	EKfMpyi519W5lQ/BObOl7mYEGdJuB+jwdRUMvDDk2JbNmkHbrISXVQpQcDbgJW4NXr2NUtoPmH/EM
+	866mcMMhDXTa8CIZAsYm27LqeFj6MPkvtYfFHQvPvni56cWza/SCZhu+qgcPonzmkITnZjwUKrXWe
+	7985KGsNp8zoOm3q8NjTBBG6Ksb7F+EZ2KIjUFn8Khl596DmyWQAnkFxKh294WULx4h36YyKEA9lb
+	Js6DmqTg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x3gTX-00000007jx4-35Wu;
-	Mon, 07 Sep 2026 21:01:59 +0000
-Received: from mail-pj2-x10.google.com ([2607:f8b0:4864:39::10])
+	id 1x3m17-00000007wx7-49lc;
+	Tue, 08 Sep 2026 02:57:01 +0000
+Received: from mail-westus2azlp170120002.outbound.protection.outlook.com ([2a01:111:f403:c007::2] helo=MW6PR02CU001.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x3gTV-00000007jwI-2BbA
+	id 1x3m14-00000007wtO-3i0L
 	for kexec@lists.infradead.org;
-	Mon, 07 Sep 2026 21:01:58 +0000
-Received: by mail-pj2-x10.google.com with SMTP id d9443c01a7336-2d6ff390a6cso131935ad.1
-        for <kexec@lists.infradead.org>; Mon, 07 Sep 2026 14:01:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788814914; x=1789419714; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=TGJyWqg8b9I8pDWEAS1fAo54dmwDkCp8//1b4QCLnMM=;
-        b=UIl8eVTCisPly412x+Q5WKJAFePOwbwRQZ6bGLnv1doTLjW1nYfMztqrEqam2USyXa
-         /9LCA7yDVtocwxDT4oEprAzmWk+Mzoh73EhWqPPgSpr3CXXH2L5n5xyJ5j0Vc9OykeZx
-         sjvF/ljGaBB5u+hf4RJDtow/y+6osi24N1RSE2rHbXZwlmfJFk9Qnh390Z4GyrNmbkDL
-         hLPr7nf0p7Qd25D6jyfN4bvNv0dOgMG5WW0mqkCeaDk2ngYDvTwe9M7RsucPXDV3CV8O
-         8qUfBjmbSKh+XjNtjt22N66j3smm2bD7G+vnUKxOSiearbVVeDq6HEFydd3iv8Qb5PGm
-         0j8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788814914; x=1789419714;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=TGJyWqg8b9I8pDWEAS1fAo54dmwDkCp8//1b4QCLnMM=;
-        b=soCbkZuJ1DMseMqgtPM1V0s+0PxDD+qp/IGjndIQnIUwbQ69qlQ5SkMA4ZZ0UK4tJ4
-         nJK6fQBmIG69XufdAh1GUes2sZ6aHWUC2cjs0l2o65d/npAqwofzX1FlKCsW57t7rclY
-         mlFEE002JQjoOQOMdJyccfB9rdIAbLMLIRJFMTMLdiV8LuFiOV175CpxXrD0CuiHPVJ3
-         3xa6RXi7Ju5/xOdlSxr5hwoEIR86wMbW7KGj62n41vZ8OBXQZLHaARRJwaQrqgnXWsVZ
-         1wei2sFVBiWflQ8oFXiXdY2peQIGE7On7lta6w3N0C0Kjg/pPYX65W+ZxIH7+ROjmWMl
-         UtKQ==
-X-Forwarded-Encrypted: i=1; AKwUvByZ5lN2FsNLeF5/fvCYBaXqwoslSUVGEBqrt4pXOAJZBs2CLgw1MNhXdTvPGE1oQGpqwFIUVw==@lists.infradead.org
-X-Gm-Message-State: AFuF++ky3mcl60eqRUa+LEqpsOse40zL33xYmZMTyI37W0oESFHHWkGD
-	V6MPuL9dMTVKsFKKNr35swYEKvJv3hg/1ZF5x3rR+DTeMMbBvlFRvPrKUaAO9M17W6VtALjVilU
-	V2vX07Q==
-X-Gm-Gg: AYBFou0c1uXYOmL0BN16U9MyUG5qu9tq0slvctQJu28h2mp9ucDri7mL2vBmn41Z3st
-	jHQZ/ikTCopm4k1hx665774Ue2cbPKqpIvjw2INiK9FtD/34zwwXBSRKJ6AhQmvAsAm4mUMRpcK
-	jxXvx9CT+zG6oEmMoGLpn1F8JBrVZhcJw4eT4y9fYa0aQLi0mgY323435y4l0C/Y5ZVbKX6KVFP
-	rZKTcxx6PIa3YcdQwxx8FBhq+N1qwxhnQABpV2l5fn7nrp4R+uidvO3ZhSCvwgchvHlgU3Y8Iok
-	tq6OcNlgDGT4sA3L70owiVJFnsYCxipxn9eFkcnbDUDI1y0ZseeXYxv1QGhwQbswnNugZioWZCg
-	xHErc7y/pM8YFn3WOxVwkcMtJ5SmD0tXmYYHGphH9srPyK8qa8TqK8FZsHsp4FkQ3kkIu3GxEyA
-	YjNfWUCY3p5+42hVwEynT+zwb6KJutoDO/9qGXfDCTvkIkuXCURYnErUK6dh88uL5IRov9b4xGL
-	pMLzAxf3mJQx4PeHla2phstkA5K5e+hWuANAGOf/Lc8yM6H9r+fmpgEeXse2b6SLDp/PA==
-X-Received: by 2002:a17:902:e745:b0:2cf:4353:f117 with SMTP id d9443c01a7336-2db7773ef8bmr714085ad.0.1788814913291;
-        Mon, 07 Sep 2026 14:01:53 -0700 (PDT)
-Received: from google.com (210.87.127.34.bc.googleusercontent.com. [34.127.87.210])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39ae92c5d72sm8942409a91.4.2026.09.07.14.01.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2026 14:01:52 -0700 (PDT)
-Date: Mon, 7 Sep 2026 21:01:47 +0000
-From: Samiullah Khawaja <skhawaja@google.com>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
-	David Matlack <dmatlack@google.com>, tarunsahu@google.com, open list <linux-kernel@vger.kernel.org>, 
-	"open list:KEXEC HANDOVER (KHO)" <kexec@lists.infradead.org>, "open list:KEXEC HANDOVER (KHO)" <linux-mm@kvack.org>
-Subject: Re: [PATCH 1/1] liveupdate: luo_file: Add documentation for
- dependencies
-Message-ID: <ap3UCMlxUKU_DFDO@google.com>
-References: <20260904220555.589752-1-skhawaja@google.com>
- <20260904220555.589752-2-skhawaja@google.com>
- <178872718104.3691424.15410189304450384708.b4-review@b4>
+	Tue, 08 Sep 2026 02:57:00 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Mg6AdhQtKzb4KkBJbbZXUIViVZuSYg7pG1vGBehAaeCmyroT1u9O/5icrrmV96N1H/sE8DnheC+jL4Y+xEV2ibiLnpXxvld9gQTBWKjlaF7LmCqLci9r82LRsFc6KB91+TXeqqWwLWMzV5j730nZsVjHjq8pg8NiTQL7ZE53XnRoYVluojckNZVBJ/AaOWmqznyO00rwAE/s3SezoeneAAWqSzdYSNJi9YgG86++3aNmsHdprMArUhUMweIQJgPO+SyYyCDUeh7SAL+E67F8YeGF2Bhvy+epLSbvKh8+Xy8IS6+6Cn5gkTmTrc2pjxfrbz2pD9GupCrFSOItc1owPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/a8D+bFtx0HUA3t19qonoIIEgpEm7wqE1QXKariwwko=;
+ b=BX7We2Sak9x7BlEV0H3oFavKEOzjfLg4Y685w3lfOKBkTjD2rYVUtOXFBsQO82S7/k5lFy5/u6adAtMXHvznW+QU6zFMnsm2X4iPq+rRLlrVWtq4OCxhhZZd0xpNSzELlrZDKIRsmx3Jy7vvImDbjl3PAcecZcqpuNCr1DPEoY19ro1gRNnQNP/U50n+sqHY8zWivVqxo+Xy5/RZroY3NmZjRE8+7u8eah8Ldmli7WO7FJM6bXjEIxdQgZqi2EnwCkFm+RjeOuXMjGdPZjRfEQvi5qW9+1Q7P0olAEzmoYm82n6E0631pzCPKLSpq8q0/8t3Ai36IMKHcHFrAW+n6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/a8D+bFtx0HUA3t19qonoIIEgpEm7wqE1QXKariwwko=;
+ b=AfoIAkaRQa5v/I3+Myjzqk+AQb1YEdXyYGWW7Ipw4L/I4mM3X92ZpR66doj/sp09HH0uiOQyUyUCjCQ6dG3xJAcBzXvjTA0aw5OJL5zdLyWHhPSvKbDV2m6m5n4aZIKbGbvfAysHsrXYz6ylIlKaPNo66O6unwPLhP3afkmO/HVHG0o3JPrhssuUn/fMRIuxCHTiOuXFIS6QH3vRAJ/BIoJTDrNtNUqJYnDiZT37NoDDszHJs0oqrALihu1PWX/RGHUVaxdqyC0oNny7t3kC5tk8PyrlloMIlQh82oeYbjoumtLAngL6Ql1xqB0Y02khqXEO79lr6s0bkWHhvnnwOw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
+ by DM6PR12MB4435.namprd12.prod.outlook.com (2603:10b6:5:2a6::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.382.15; Tue, 8 Sep
+ 2026 02:56:47 +0000
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16%5]) with mapi id 15.21.0382.014; Tue, 8 Sep 2026
+ 02:56:47 +0000
+From: Zi Yan <ziy@nvidia.com>
+Date: Mon, 07 Sep 2026 22:56:21 -0400
+Subject: [PATCH v3 14/14] mm/page-flags: remove PG_private
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260907-remove-pg_private-v3-14-6ae22f9d9272@nvidia.com>
+References: <20260907-remove-pg_private-v3-0-6ae22f9d9272@nvidia.com>
+In-Reply-To: <20260907-remove-pg_private-v3-0-6ae22f9d9272@nvidia.com>
+To: David Hildenbrand <david@kernel.org>, 
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Muchun Song <muchun.song@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+ Michal Hocko <mhocko@suse.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, 
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+ Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
+ Gregory Price <gourry@gourry.net>, 
+ Ying Huang <ying.huang@linux.alibaba.com>, 
+ Alistair Popple <apopple@nvidia.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+ Kairui Song <kasong@tencent.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ Zi Yan <ziy@nvidia.com>, Baoquan He <baoquan.he@linux.dev>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+ Jan Kara <jack@suse.cz>, Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Dave Young <ruirui.yang@linux.dev>, 
+ Shuah Khan <skhan@linuxfoundation.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+X-Mailer: b4 0.15.2
+X-ClientProxiedBy: YQBPR0101CA0084.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:4::17) To IA0PR12MB8374.namprd12.prod.outlook.com
+ (2603:10b6:208:40e::7)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <178872718104.3691424.15410189304450384708.b4-review@b4>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|DM6PR12MB4435:EE_
+X-MS-Office365-Filtering-Correlation-Id: 26bc9ed2-10aa-408d-c825-08df0d54d2bf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|23010399003|1800799024|921020|6133799003|5023799004|10067099003|56012099006|11063799006|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info: r8ig8Z0s8zks6rz7cAkiPPXjse5Ms9hqAixaivp2StYdcD0W+y8E60G5huITjb5VV9aCvV9WoTHo8CN49Vn5B48f/JbaDaKS7hMh7+twb8GBckh6SGo7NFb6PMwjA1JmEKBH4K9+Ykae2cjYCHWX7BUpBD9Nzy99o8VHYiHC1f0+t6O1ZsuM0zXYUdMGYlN6GRbpuYJ9XtD85ZqGh5jkNd64n596LRkHqYhbDtYmZsmkSWTfRNXwYzHe5YptC30FxPPGOeFDmLcDfHT1cp4xXFOdcz57biqWWya8MzBOvlWU3iK9q1g+/2w/4rWthHNJgBzo/xVCkO3mjKst74NHJ4Ql3TqSU2AkjUFTYZBPWzHwSaqGp0BYV4hqRZoXRfd2aybnbKYjik5/uNvvx8HqIJcSfUQkMqKsadBqkQ4uuOttDw+Dw6brmFp9merfXHEJnHk5Mxq8us4VcxA19/tpu4q7oC0bOcbogTAU3PjBcCgITrrb1NOS+dNQBaFHejgueWblFnLwdMw/2OhxgkJ+vZNplks4THqCfFERknzkQCXid3MX2YOZmlXxeNCXsJOG8/Jl3Q66AG7/aE0XES4tdF1OQw19a/vnuDt2g8JyThJXc2Iz+xQaOE4Cg2KtoA/Be9VMV4JV4IvcEozjrK/3aeDY8VIvvAQqlW49lSdy9HXeshm/2OEJbESKhaSci8WynWEfRHsE6KVA6JVmyKNHTg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(23010399003)(1800799024)(921020)(6133799003)(5023799004)(10067099003)(56012099006)(11063799006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QUpFME95eldhdmxrVGhlOFRjOGkxQ1BpbmpLMGlSNW81YklpTUxOZ3FNSjJi?=
+ =?utf-8?B?aWQ4TzVlOEI3Vis4bEgyMjFGanJaLzZzSERScEY4UDdLajViQXNUZzFoczVC?=
+ =?utf-8?B?ZGlqOUxJemhQcGV6ckFjSkpEaGxJNVlhemNRNTFjRFdmMjVVckZMTXlTemFM?=
+ =?utf-8?B?S3JrZDg2WnR5Sk1rVE9wRDdwY0d5WHpyOXVNZzRJQkVoRXd3NUZmS1dCbXZm?=
+ =?utf-8?B?TTIvSkhURERiN1dtVjRrb0FVQ1J4NVREdDdnOHM5dWNBQmJJUzdZU3BhYnRz?=
+ =?utf-8?B?a0p3UmJEbVhvZU9aUk1hQ1hwUVJIbjV5TlIxVmt2WTk3M2Flbm9VZ1BHTG9K?=
+ =?utf-8?B?bkRkaUtiR2t4QkE5MzFvL1JuTGgvV3Z6RVAyOFY4ZGRseDVwRGtGUnFUY0Zo?=
+ =?utf-8?B?VHovM2RhTWplSlZVN1F2MFEyc1dDalVCNkFTTmRMaGZaZnJvUlMrT2ZUQWc4?=
+ =?utf-8?B?SFVMZXV5WFFDMEpEM0pMZHNHL0thVVh4bDU2TEEvTXNlSHBQRlJ5ekorZnl1?=
+ =?utf-8?B?UFFJbi9ORGtacG95N01pQU9ETFFURkhaT3lOeVc1UXN5Z2E3eUtrMVhPTm92?=
+ =?utf-8?B?V1FTZWNlMm5aYXhtQk5XMHY4T3pzMlJ5aFl4T1RjRTlHamRYeDZ3OEdSbFdE?=
+ =?utf-8?B?TTM1YzVYR3ArRFpYNVNXNGVoTmtxRlpoVDMwaWxQWERyeUJvbkFJVWF5SGk5?=
+ =?utf-8?B?Lys0dEw1N0lPYk5NQW5YbEVnT2lTcGV1MGtvSm9qbWwrckUvNk9XUHBFdGdm?=
+ =?utf-8?B?bHZuQmJBSXQvQ0lKNW5TcjN0d3l3RWFyaFlLVDY0ZThJa1NzazZVd1haUWNr?=
+ =?utf-8?B?SW55TDRhQ1NteExNbFRTZjRRVTFTenlMczJOeVlFWWlIdVp4SjNHV2RNeDU1?=
+ =?utf-8?B?OEFKMVVWN0dCMkVPcjQ3a1E3eEhNWHZKV2hhMmVBV2pVL0dGZDNpUUJsallL?=
+ =?utf-8?B?SFZ2aUNyK1NOS3lSOGFYaFBNTmc1S2RLdDBSK3lvUXZSa1c2OFZkS3BWS3Q0?=
+ =?utf-8?B?eEdaUTdrTUtIelowMUtKdFpmaGt0T3FJT3BlbzR2VnJHV0RkeUdoQmY3MGFQ?=
+ =?utf-8?B?RnRDZkk0cnc5UCtITHQ2SitXNmhVSUN3UXZjcFA2RDNvKzA1ekpmdWFRQ1ow?=
+ =?utf-8?B?cTVWSE5tVGUvaU9GUTlScXJkSTNXUUtnR0R3WEJiR2Q1TjJMRDMzVDlMZHhN?=
+ =?utf-8?B?YS9nV0FCVndpbHdIVG04RDREK1BiaUVwNDlXc2hMdTllUFpBaC9tTTlkbVUr?=
+ =?utf-8?B?OEExUUhhTGJ3UDIxVHJZUTd0R0RhZEhBbmNrYWJTdm1KK1Z6akcwNW5ZTWhG?=
+ =?utf-8?B?R0hZSnFKdEFsOS9VNVhDNVkyc3MvSWs4TmdRRmljYjgydzAyallYRjdmVUdQ?=
+ =?utf-8?B?VndsbW4xelVXcDhpZTBnc2plMytRQStRUk5abHFYWDExR2grOVIwUGtDU0Iz?=
+ =?utf-8?B?Sk45cWpVaFR4b1M1dEZ1WWRvV0ZjY0dvZXlPVmJUNkZUVjExWk5vMEhVZmNm?=
+ =?utf-8?B?dmhsazZoWmorcFdhS1VDa0NOYVZyVXdyY2hPR2dObDVZT1lEMUZVdHpveHRZ?=
+ =?utf-8?B?bWxORWl0T0VLRTZGM1M0YUlGUEdyS213YW13ZnlSTXV3VDB6d0FsTU1pUVkr?=
+ =?utf-8?B?WGJsMVorZndxaGVHUXNZeVFEbm9ZVVVxTGJDMG9pcW9KRHhGanlkR3h1aWdt?=
+ =?utf-8?B?U3owcy9jNzlmekRDV1dWWFBZM09uM2dBUHE3bmZBWmVweklQaVorelFSbnZK?=
+ =?utf-8?B?dmp1c3EwREE1SjhraEs4SUNhZmdHNHpGbVp3bmdQMmhIN0tTSVB3OXpjclRu?=
+ =?utf-8?B?d0xmdjVzZ1VZUjEyUXcwRkJ3UzZBTlZRR1g0SVBtS3hRS2NMUDU3d2JnbTdh?=
+ =?utf-8?B?ZVhnQjB5NzJ0M0p5UHBVMW4rN1hPbDJEb1lGUW44Qm1Pb2dzU1hrNDlsS3Ay?=
+ =?utf-8?B?RVpEUzdiSkhlM3I2ZXZQU09JV2xFa1JONlZZdW9qRXBSK0hxYmtURC8vS01W?=
+ =?utf-8?B?ZmJJVHJuNEF5Z0RjbUU2RmJtNHAxLy9DQmRBTGhuNk94TzVVRExwbHB3d2to?=
+ =?utf-8?B?MUVVcEdRazFDd1BIMWNTL0xabmZWaUFLVkVNL3JXQkMzUUluSDNma1llck04?=
+ =?utf-8?B?L3lRaUZJWGRkV3RPdW5JbWx3U0R5VTJzQk1IZEpRVE55UXM2bzRBb3RCQ05H?=
+ =?utf-8?B?MWVqS2ZDN3dCUlQ3eEZTSFJiSENnOWRHY1UzcFJzUFJTdHdJL3Z2M1hHZlJH?=
+ =?utf-8?B?K1VPRmEraWUvRXMza2h6Q3djVG5XaVpvUUV2TTV0MUtkR1pFS2p1bGV1SHMz?=
+ =?utf-8?Q?5r0pXtOeReH6qVTa+B?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 26bc9ed2-10aa-408d-c825-08df0d54d2bf
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2026 02:56:47.5186
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EHXnXbPsI3rSGoTfTxuNgXB7QGWuWPz6iEbP3NFCQ8TeNobD8Rpcy2C5VU5NPl69
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4435
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260907_140157_567333_8D126F3A 
-X-CRM114-Status: GOOD (  11.45  )
+X-CRM114-CacheID: sfid-20260907_195658_967291_F60F5983 
+X-CRM114-Status: GOOD (  19.74  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,28 +167,174 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Mike,
+folio->private != NULL indicates a folio carries private data, replacing
+PG_private. All PG_private users are converted. Remove PG_private and
+reserve the space as __PG_folio for future use.
 
-On Sun, Sep 06, 2026 at 11:39:41PM +0300, Mike Rapoport wrote:
->Hi Sami,
->
->> Add documentation for dependencies between FDs preserved by File
->> Handlers. This supplements the previously added
->
->Why capital F and H? :)
->
->I think we use "file handler" in the most places.
+__DEF_PAGEFLAG_NAME() is added to show __PG_folio.
 
-Ah, force of habit! You are right, it should be lowercased.
+Also update files in Documentation. hugetlbfs_reserv.rst is outdated and
+left unchanged. It should be rewritten.
 
-Let me send a v2 for this patch with the capitalization fixed. I will
-check if I did the same in the source file also.
+Assisted-by: Claude:claude-opus-4-8
+Assisted-by: Codex:gpt-5
+Signed-off-by: Zi Yan <ziy@nvidia.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+To: Baoquan He <baoquan.he@linux.dev>
+To: Mike Rapoport <rppt@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: Pratyush Yadav <pratyush@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To: Jan Kara <jack@suse.cz>
+To: David Hildenbrand <david@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Dave Young <ruirui.yang@linux.dev>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Lorenzo Stoakes <ljs@kernel.org>
+Cc: "Liam R. Howlett" <liam@infradead.org>
+Cc: Vlastimil Babka <vbabka@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: kexec@lists.infradead.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-trace-kernel@vger.kernel.org
+---
+ Documentation/admin-guide/kdump/vmcoreinfo.rst |  2 +-
+ Documentation/filesystems/vfs.rst              |  6 +++---
+ include/linux/page-flags.h                     | 19 ++-----------------
+ include/trace/events/mmflags.h                 |  3 ++-
+ kernel/vmcore_info.c                           |  1 -
+ 5 files changed, 8 insertions(+), 23 deletions(-)
 
-Thanks,
-Sami
->
->-- 
->Sincerely yours,
->Mike.
->
+diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+index 7663c610fe901..5f1df6d080508 100644
+--- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
++++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+@@ -325,7 +325,7 @@ NR_FREE_PAGES
+ On linux-2.6.21 or later, the number of free pages is in
+ vm_stat[NR_FREE_PAGES]. Used to get the number of free pages.
+ 
+-PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_hwpoison|PG_head_mask
++PG_lru|PG_swapcache|PG_swapbacked|PG_hwpoison|PG_head_mask
+ --------------------------------------------------------------------------
+ 
+ Page attributes. These flags are used to filter various unnecessary for
+diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
+index d3a93eec3945f..dec7816303c6a 100644
+--- a/Documentation/filesystems/vfs.rst
++++ b/Documentation/filesystems/vfs.rst
+@@ -649,8 +649,8 @@ Writeback.
+ 
+ The first can be used independently to the others.  The VM can try to
+ release clean pages in order to reuse them.  To do this it can call
+-->release_folio on clean folios with the private
+-flag set.  Clean pages without PagePrivate and with no external references
++->release_folio on clean folios with folio->private set. Clean pages
++without folio->private set and with no external references
+ will be released without notice being given to the address_space.
+ 
+ To achieve this functionality, pages need to be placed on an LRU with
+@@ -674,7 +674,7 @@ filemap_fdatawait_range, to wait for all writeback to complete.
+ 
+ An address_space handler may attach extra information to a page,
+ typically using the 'private' field in the 'struct page'.  If such
+-information is attached, the PG_Private flag should be set.  This will
++information is attached, non-NULL 'private' field will
+ cause various VM routines to make extra calls into the address_space
+ handler to deal with that data.
+ 
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index ce7fccd90367b..7b7783c0a5216 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -44,10 +44,6 @@
+  * Consequently, PG_reserved for a page mapped into user space can indicate
+  * the zero page, the vDSO, MMIO pages or device memory.
+  *
+- * The PG_private bitflag is set on pagecache pages if they contain filesystem
+- * specific data (which is normally at page->private). It can be used by
+- * private allocations for its own usage.
+- *
+  * During initiation of disk I/O, PG_locked is set. This bit is set before I/O
+  * and cleared when writeback _starts_ or when read _completes_. PG_writeback
+  * is set before writeback starts and cleared when it finishes.
+@@ -105,7 +101,7 @@ enum pageflags {
+ 	PG_owner_2,		/* Owner use. If pagecache, fs may use */
+ 	PG_arch_1,
+ 	PG_reserved,
+-	PG_private,		/* If pagecache, has fs-private data */
++	__PG_folio,		/* Do not use: reserved for folio identification */
+ 	PG_private_2,		/* If pagecache, has fs aux data */
+ 	PG_reclaim,		/* To be reclaimed asap */
+ 	PG_swapbacked,		/* Page is backed by RAM/swap */
+@@ -576,7 +572,7 @@ FOLIO_FLAG(swapbacked, FOLIO_HEAD_PAGE)
+ /*
+  * Private page markings that may be used by the filesystem that owns the page
+  * for its own purposes.
+- * - PG_private and PG_private_2 cause release_folio() and co to be invoked
++ * - folio->private and PG_private_2 cause release_folio() and co to be invoked
+  */
+ 
+ static __always_inline bool folio_test_private(const struct folio *folio)
+@@ -584,17 +580,6 @@ static __always_inline bool folio_test_private(const struct folio *folio)
+ 	return folio->private;
+ }
+ 
+-static __always_inline int PagePrivate(const struct page *page)
+-{
+-	return !!page->private;
+-}
+-
+-/* no-ops during transition */
+-static __always_inline void folio_set_private(struct folio *folio) { }
+-static __always_inline void folio_clear_private(struct folio *folio) { }
+-static __always_inline void SetPagePrivate(struct page *page) { }
+-static __always_inline void ClearPagePrivate(struct page *page) { }
+-
+ FOLIO_FLAG(private_2, FOLIO_HEAD_PAGE)
+ 
+ /* owner_2 can be set on tail pages for anon memory */
+diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
+index ef9aa388b84f7..38a2d30230443 100644
+--- a/include/trace/events/mmflags.h
++++ b/include/trace/events/mmflags.h
+@@ -130,6 +130,7 @@ TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
+ #endif
+ 
+ #define DEF_PAGEFLAG_NAME(_name) { 1UL <<  PG_##_name, __stringify(_name) }
++#define __DEF_PAGEFLAG_NAME(_name) { 1UL <<  __PG_##_name, __stringify(_name) }
+ 
+ #define __def_pageflag_names						\
+ 	DEF_PAGEFLAG_NAME(locked),					\
+@@ -144,7 +145,7 @@ TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
+ 	DEF_PAGEFLAG_NAME(owner_2),					\
+ 	DEF_PAGEFLAG_NAME(arch_1),					\
+ 	DEF_PAGEFLAG_NAME(reserved),					\
+-	DEF_PAGEFLAG_NAME(private),					\
++	__DEF_PAGEFLAG_NAME(folio),					\
+ 	DEF_PAGEFLAG_NAME(private_2),					\
+ 	DEF_PAGEFLAG_NAME(writeback),					\
+ 	DEF_PAGEFLAG_NAME(head),					\
+diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
+index 8614430ca212a..5a417f8a922ab 100644
+--- a/kernel/vmcore_info.c
++++ b/kernel/vmcore_info.c
+@@ -216,7 +216,6 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_LENGTH(free_area.free_list, MIGRATE_TYPES);
+ 	VMCOREINFO_NUMBER(NR_FREE_PAGES);
+ 	VMCOREINFO_NUMBER(PG_lru);
+-	VMCOREINFO_NUMBER(PG_private);
+ 	VMCOREINFO_NUMBER(PG_swapcache);
+ 	VMCOREINFO_NUMBER(PG_swapbacked);
+ #define PAGE_SLAB_MAPCOUNT_VALUE	(PGTY_slab << 24)
+
+-- 
+2.53.0
+
 
