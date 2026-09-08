@@ -4,117 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id ED8CEC79F99
-	for <kexec@archiver.kernel.org>; Tue,  8 Sep 2026 03:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 79DE5C79FA0
+	for <kexec@archiver.kernel.org>; Tue,  8 Sep 2026 07:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=JI1gDaiGExfkFf7o12oBro86gar1gFBU0XgxjnWY3FE=; b=HyblPQrlb5xhJg04Va11XvfACK
-	y/V2p3LUoqGaW+fNgRiYuiZrEzCACM7VTtSwMJs6mG0w+y8NmS13pkwjxQa54mluMPT2Oe1fofAFQ
-	dk7xZr69Jkje4JnyAfzPl+apWPFa4vOuDDQhxYIPCI0msVYy4sfYgNytqAYL/P45jrjuneAj+/Y/t
-	lVYv7UzB8PymyxQycWtFE//l15wo5jPJIzOo9Hkx6O0kTetc+2l30z+9GEgkgC6LeJ6dTW8R8cmkn
-	3rYOSM7ueab6X6W19+ncWZ1AV0CKK+JTNFrlMV9oBv9SaUrnfXVjiOTPH5QbgwFXuM6E2golMFMNx
-	rr4rvFMg==;
+	bh=G7nz+2I01rp2LskTbFRR2FK0vPBroOC8XutcipcnIsM=; b=y0qyGzJyc3n4Ai5aml3+4WTmnn
+	wjf5u5gX8JjpG2o/3t2God3xNneqwmWsAWpsNnlODIWlXEiRhWL8zv5qHqP5/mMTSd8g4cVo3eYEU
+	KcGLGQnqwupNFA8aK7q/9TP+8FZCq7CVKoWPB5W1koqd6txZcg1LBIt+lIcg1I7uyqAhAhkBoAvDp
+	dNMqSuVfXX9gCHEe6FpA5OnnqXfZ5a8ZOMHAu/PU8mPkdx4UctT7poLdPKZFjPq67S3seopKAKYc1
+	aGa5rmmdO4r3EIp2h06Hsfz8Ryz0/acdCBhDrubgSlJuol6nU56c2E7B0yEXVhq+KoZ30ZRM4Bt1W
+	iZRzlWrA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x3mA8-00000007xkb-3Oxe;
-	Tue, 08 Sep 2026 03:06:20 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1x3qAv-00000008Gg6-1xjw;
+	Tue, 08 Sep 2026 07:23:25 +0000
+Received: from canpmsgout11.his.huawei.com ([113.46.200.226])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x3mA5-00000007xk9-2IYg
-	for kexec@lists.infradead.org;
-	Tue, 08 Sep 2026 03:06:19 +0000
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68801pt63372633;
-	Tue, 8 Sep 2026 03:05:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=JI1gDa
-	iGExfkFf7o12oBro86gar1gFBU0XgxjnWY3FE=; b=tczGJAskUn5OHyfNYj9711
-	w3rh84Sz65UGBIwENufTX/4E4Jj28t6+Yi9+zSR+yldPAvk6sjRdL3BJip1UmM7Y
-	zDDfqo094aU/rCaWDHvk/mDPdF4ytY8n+2wodLkVUaCzthVJEiGV4uJai9tJdqKB
-	O70Sfsv7QAw45NMKqXqYvBklV2JDCnAhqNmtv/1GVU5x44+9ft+XJror/7uSIWTl
-	0L6Txy8QqLHi8EU1jRlDPW9nfH7HtpbjkahFqZt1Lew43WzgS4Yl/cPW87f5W+2u
-	OaWCMxWo/jzYawegUSw2TSQfAldcqCyPqHukDvtbzetu4a2TF+n5V/xFfXWwAGyQ
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ggbhkm4v2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Sep 2026 03:05:58 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6882uDAI006500;
-	Tue, 8 Sep 2026 03:05:57 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ggxdjs9bv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Sep 2026 03:05:57 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68835tdS43057662
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 8 Sep 2026 03:05:55 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6456F20049;
-	Tue,  8 Sep 2026 03:05:55 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6B68B20040;
-	Tue,  8 Sep 2026 03:05:52 +0000 (GMT)
-Received: from [9.123.14.142] (unknown [9.123.14.142])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  8 Sep 2026 03:05:52 +0000 (GMT)
-Message-ID: <0e8d8903-069f-413d-b96c-5c8c501fb5cf@linux.ibm.com>
-Date: Tue, 8 Sep 2026 08:35:51 +0530
+	id 1x3qAr-00000008GfY-2YE5;
+	Tue, 08 Sep 2026 07:23:24 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=G7nz+2I01rp2LskTbFRR2FK0vPBroOC8XutcipcnIsM=;
+	b=hyaS2dA64DcCg3GRIM7kcjDzC2hUqQBzbi0wYEmlK75paxqrzZ4Qk09vQIT+D6ItcGzT9PK7K
+	+Fa6fiPBtKYscFQTRzVIbY6yweWimJ2oM5lKsGuwlq23S1Lfx1H1u//nCgErq4AFzAXXYPebOeM
+	yjA4Etr6FTTSMfxdr1fEXw0=
+Received: from mail.maildlp.com (unknown [172.19.163.15])
+	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hfFVy3mfZzKmVp;
+	Tue,  8 Sep 2026 15:12:10 +0800 (CST)
+Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id D100C40586;
+	Tue,  8 Sep 2026 15:23:07 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ kwepemk200008.china.huawei.com (7.202.194.74) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Tue, 8 Sep 2026 15:23:05 +0800
+Message-ID: <92050fca-96ff-46e6-aca8-3cecd7cfb778@huawei.com>
+Date: Tue, 8 Sep 2026 15:23:04 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] liveupdate: kho: calculate per-node scratch sizes
- before allocation
-To: George Guo <dongtai.guo@linux.dev>, Mike Rapoport <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
-        Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>,
-        changyuanl@google.com, akpm@linux-foundation.org,
-        Huacai Chen <chenhuacai@kernel.org>, Kexin Liu <liukexin@kylinos.cn>,
-        guodongtai@kylinos.cn, kexec@lists.infradead.org, linux-mm@kvack.org,
-        loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20260904025101.9959-1-dongtai.guo@linux.dev>
- <ap3IFd2FVvfKkHkV@kernel.org> <20260907102414.18958-1-dongtai.guo@linux.dev>
-Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <20260907102414.18958-1-dongtai.guo@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTA4MDAzMSBTYWx0ZWRfX8qhb1C1IzXnz
- PiQg8OpyvvK19tWxryma6GZPvHA7uePRzIcUnEjmAo1PirYBBKUJA7L/Eni32ft8eMaSipjP4it
- vl1qWUudZDYk4jnRx2RP+ayqlJMy0Sc=
-X-Proofpoint-ORIG-GUID: L0d-Rs4RpZmoKJ_MI1mk07mjPeNv8GNW
-X-Authority-Analysis: v=2.4 cv=NMDlPU6g c=1 sm=1 tr=0 ts=6a9f7b97 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=VwQbUJbxAAAA:8
- a=gLbRH2pEsQEO1hv6ekEA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTA4MDAzMSBTYWx0ZWRfX81vxZP+gH7sU
- B552ica4WgKl4/n31BNLO4r/I8rZ3hhu2zvYSN5f5/AWGBJGTnvbzn0cgqJ9KzCcO0lWxplCbtn
- kdaQD4j1zlJ2KKB7CdcQnUv2AeQLkqZide2n5plIoh7QrSt/PZxTwIbil5wKF+grAk8ALKuLBhr
- huES++m+OQmzUzqG/6MwBz8ZMMwqP67Zrf7WOhPcBzjWHHV2xmqB+QB85OQyDhEaHH9LVScmHcA
- P27nQ7PM6NZpoZ+/p3m1QOYMbOrV0rpENDavcS/4ic0gLOfT6J1Ii9usiUjnn5xoYg4y+5bTub7
- hRuBBKP5th1PS1C+0lcA7vJcF2Aik9XujxduKRNjtdn/fh+Wd331a+vPy983ZATiUy442K41RYT
- kD5R0CJh19vy+G85kPx1sE4ia/bGka/Z0Ti3YUQfKyVrsGRgebXv2I6Y3KT11Xgc89oomUu7j+u
- f5O7kNXZFp9Kw3OY1Vg==
-X-Proofpoint-GUID: I9LhQLXtjZsXJNKbCckjExOK-cgk-eyn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-07_07,2026-09-07_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 spamscore=0 lowpriorityscore=0 clxscore=1011 adultscore=0
- impostorscore=0 bulkscore=0 malwarescore=0 priorityscore=1501 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2609080031
+Subject: Re: [PATCH v4 05/12] LoongArch: kexec_file: Fix CMA page leaks in
+ segment placement retry loops
+To: Huacai Chen <chenhuacai@kernel.org>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
+	<kernel@xen0n.name>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
+	<npiggin@gmail.com>, <chleroy@kernel.org>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <akpm@linux-foundation.org>, <baoquan.he@linux.dev>,
+	<rppt@kernel.org>, <pasha.tatashin@soleen.com>, <pratyush@kernel.org>,
+	<ruirui.yang@linux.dev>, <kees@kernel.org>, <thuth@redhat.com>,
+	<jic23@kernel.org>, <tan.shaopeng@jp.fujitsu.com>, <zengheng4@huawei.com>,
+	<james.morse@arm.com>, <ardb@kernel.org>, <leitao@debian.org>,
+	<yeoreum.yun@arm.com>, <sourabhjain@linux.ibm.com>, <robh@kernel.org>,
+	<coxu@redhat.com>, <tangyouling@kylinos.cn>, <hbathini@linux.ibm.com>,
+	<adityag@linux.ibm.com>, <djbw@kernel.org>, <seanjc@google.com>,
+	<liaoyuanhong@vivo.com>, <vishal.l.verma@intel.com>,
+	<fuqiang.wang@easystack.cn>, <makb@juniper.net>, <piliu@redhat.com>,
+	<ebiggers@kernel.org>, <jbouron@amazon.com>, <mclapinski@google.com>,
+	<me@linux.beauty>, <graf@amazon.com>, <bgwin@google.com>,
+	<takahiro.akashi@linaro.org>, <palmer@rivosinc.com>, <x86@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<kexec@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-mm@kvack.org>
+References: <20260907125404.922123-1-ruanjinjie@huawei.com>
+ <20260907125404.922123-6-ruanjinjie@huawei.com>
+ <CAAhV-H7qjJ7BPnJ2KoQZSyMUvX_6i9H=EfdadXnmXtNiiB4ROA@mail.gmail.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <CAAhV-H7qjJ7BPnJ2KoQZSyMUvX_6i9H=EfdadXnmXtNiiB4ROA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.109.254]
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemk200008.china.huawei.com (7.202.194.74)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260907_200617_604541_4FF7CFE4 
-X-CRM114-Status: GOOD (  11.66  )
+X-CRM114-CacheID: sfid-20260908_002322_295986_08605296 
+X-CRM114-Status: GOOD (  17.54  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -131,27 +100,84 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
 
-On 07/09/26 15:54, George Guo wrote:
-> Hi Mike,
->
->> This reads as LLM-generated text. Please add LLM attribution as per
+在 2026/9/7 22:05, Huacai Chen 写道:
+> Hi, Jinjie,
+
+Hi Huacai,
+
+> 
+> On Mon, Sep 7, 2026 at 8:53 PM Jinjie Ruan <ruanjinjie@huawei.com> wrote:
 >>
->> https://docs.kernel.org/process/coding-assistants.html#attribution
-> I'll add the Assisted-by tag.
->
->> Can't we just calculated all the sizes first and than do the allocations?
-> Yes, I'll rework this to calculate all scratch sizes together before
-> allocating the scratch areas.
->
-> Adding Sourabh to Cc, since this relates to the scratch-sizing discussion
-> in the PowerPC KHO thread.
->
-> Sourabh, this patch prevents newly allocated scratch areas from being
-> counted in the per-node baseline. It does not address the overlap between
-> global and per-node accounting. Could you review this approach as well?
+>> During kexec image placement retry loops, any midway failure causes
+>> the loader to truncate `image->nr_segments` back to its initial state
+>> to purge the failed segments.
+>>
+>> However, this truncation introduces a memory leak. The CMA pages
+>> allocated via kexec_add_buffer() during the failed attempt are tracked
+>> in the `image->segment_cma` array. Because the subsequent cleanup paths
+>> only iterate up to the truncated `nr_segments` boundary, these allocated
+>> CMA pages outside the new boundary are permanently leaked.
+>>
+>> Fix this by explicitly releasing the associated CMA buffers in
+>> the failure paths before `image->nr_segments` is reduced.
+> I'm not sure but does the elf version have similar problems as the efi version?
 
-Sure I will review your patch.
+This issue does not exist in the ELF version, as the retry loop for
+load_other_segments() does not exit here.
 
-- Sourabh Jain
+Best regards,
+Jinjie
+
+> 
+> Huacai
+> 
+>>
+>> Cc: Huacai Chen <chenhuacai@kernel.org>
+>> Cc: WANG Xuerui <kernel@xen0n.name>
+>> Cc: Youling Tang <tangyouling@kylinos.cn>
+>> Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>> Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
+>> Cc: Kees Cook <kees@kernel.org>
+>> Cc: stable@vger.kernel.org
+>> Link: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%40huawei.com
+>> Fixes: 55d990f0084c ("LoongArch: Add EFI binary support for kexec_file")
+>> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+>> ---
+>>  arch/loongarch/kernel/kexec_efi.c          | 1 +
+>>  arch/loongarch/kernel/machine_kexec_file.c | 6 +++++-
+>>  2 files changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
+>> index 5ee78ebb1546..15fd797ff3de 100644
+>> --- a/arch/loongarch/kernel/kexec_efi.c
+>> +++ b/arch/loongarch/kernel/kexec_efi.c
+>> @@ -86,6 +86,7 @@ static void *efi_kexec_load(struct kimage *image,
+>>                  * We couldn't find space for the other segments; erase the
+>>                  * kernel segment and try the next available hole.
+>>                  */
+>> +               kexec_free_segment_cma(image, kernel_segment_number);
+>>                 image->nr_segments -= 1;
+>>                 kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
+>>                 kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
+>> index 5412aa9f3568..62a5be102065 100644
+>> --- a/arch/loongarch/kernel/machine_kexec_file.c
+>> +++ b/arch/loongarch/kernel/machine_kexec_file.c
+>> @@ -217,7 +217,11 @@ int load_other_segments(struct kimage *image,
+>>         return 0;
+>>
+>>  out_err:
+>> -       image->nr_segments = orig_segments;
+>> +       while (image->nr_segments > orig_segments) {
+>> +               kexec_free_segment_cma(image, image->nr_segments - 1);
+>> +               image->nr_segments--;
+>> +       }
+>> +
+>>         kfree(modified_cmdline);
+>>         return ret;
+>>  }
+>> --
+>> 2.34.1
+>>
 
 
