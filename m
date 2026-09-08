@@ -4,85 +4,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 07088C79FAA
-	for <kexec@archiver.kernel.org>; Tue,  8 Sep 2026 15:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AD681C79F99
+	for <kexec@archiver.kernel.org>; Tue,  8 Sep 2026 18:07:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=+Xk5g9hhke4NmnhJKxFuptmSPt0Ay2UA09dJINvaSs4=; b=JiWAt2ygyBWC3dO+sv4H85lsHU
-	/8i6PTJ4Zw7VbObEsXLcBzX3EicJ2shJYr7scY8Qw7ZPysxntw0HMSKN3C/PqhRFCCkm3vPGJI09p
-	by1uSt3VkwFMcuTchoNKDu8FHzOvWFg37X7wtvLvzqAuwV3i1rkajMNNu7EptwokGRFVnOhC/Wefy
-	GCMlFG78ifbsv/2boXwRgMZOteSjbDTcMKNJ1UIAxHj6wyOVLdlsThoE5cdzkoFPvhcyXoW/DQAXq
-	YbqT15lqpRomsyJcldUzIffoU06+rPPiS2XrNmMMA2FGydazJLRJeSPAnk/JQH3LBCjiPchUobors
-	liXyejjw==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=r+VLJNR2ClH5aaw8GL8jeSbQjtC7qAwKNhxP9YK5biY=; b=SeDHKqxc0QBcKhuW2z3etEh0Wt
+	DtIkO2N/3HrIFXuLqQzRrBObRh3epkELemV92rJz/eqvjMbiedmNcnsq0Z28Oe7bMqwhduNOKWOmq
+	Vssa2OzrU34WgohENVwnCV6g+NZcqLmpiED3eSCICM2+60/vwqOhWEFQ93Ku9Z0U/vPjbtdAaWD8P
+	6s+wE1uli/f0ySqSxa4cY1m+aT3hicGogM8BFGbhNqVZeGwZn5zodYGpUtU/fYadMhBTMzH2Zl8jT
+	ticaVn1u+x4hFILCIV0a6azZ6f26hsHzD9/WE9yxlGl+IkcsFcWJg+77UFuBmncc0nV2G8xeOb3Wy
+	rP6xpPlw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x3yC8-00000009ZRH-3PVY;
-	Tue, 08 Sep 2026 15:57:12 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1x40EI-00000009w6F-3Rx0;
+	Tue, 08 Sep 2026 18:07:34 +0000
+Received: from mail-oo1-xc61.google.com ([2607:f8b0:4864:20::c61])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x3yC7-00000009ZQX-1XSz
+	id 1x40EF-00000009w5K-1M3V
 	for kexec@lists.infradead.org;
-	Tue, 08 Sep 2026 15:57:11 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id B404260232;
-	Tue,  8 Sep 2026 15:57:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D5121F00A3A;
-	Tue,  8 Sep 2026 15:57:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788883030;
-	bh=+Xk5g9hhke4NmnhJKxFuptmSPt0Ay2UA09dJINvaSs4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=HJKdL4riRsnh3DhO2GkvZ/ogoKy4cKyEmOvTJglm7Ip96uP51Mz6B+llNdwnkey88
-	 LZjxDsVk+bxYDC3x0yZrX+z9K5M8WjQXBHz2A9ZSDLpBDcggVMYJ+W9OeRvRrL9S5Y
-	 7O+ISDfA90VfnmJu98usOYjZzwB2elVtj2fC9KDpoG8tgUEdXQyBu0CWNrUuSSpuHU
-	 kPym+dsZ2ZJALMPqLE6/XBd+DwP8PhFxyjGkUgYyW7VVCTAAQKmnTorAKqKeWDjEEV
-	 yHI92h3lTYDHxB+8tzNmqQsHc0q1ey9cBKFP8p8hpvhYnhWdZpkAUStQjHdaT0XUj4
-	 dSX4btIS8Uatw==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
+	Tue, 08 Sep 2026 18:07:33 +0000
+Received: by mail-oo1-xc61.google.com with SMTP id 006d021491bc7-6bd07679624so842422eaf.1
+        for <kexec@lists.infradead.org>; Tue, 08 Sep 2026 11:07:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788890849; x=1789495649;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:dkim-signature:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=r+VLJNR2ClH5aaw8GL8jeSbQjtC7qAwKNhxP9YK5biY=;
+        b=IZ/sjRJR7W5NF1cs9vqK14ZpzkDaSCZkByDhQHHaVqJW3kaqq6ExdZ5ZH4wMJ6d8TY
+         irkcubktDd/RqahDSyqhiG2Lac1Pdiq+DOjttCQJatM6izmZoO8Cvj2d/NJUNzoNPoMU
+         jh9I5FJrbcBhIW5nBlnUy2PEvrgv8NV9PjRlQUaYLEXpsmW7qncqAKeCOquFbN+qu91x
+         q7iSvEV9nh17tLT02CDKqt4ZbkAyCgi+UVfVLME9QE1uXLreT++DTBzeru+p7wQj07c0
+         gAvfsDZ5qlgcle+W1oZMwNJP5hEa9GllpqFuwtQLkXL2PxxqZ2jpFXTBTOrvrc/tjUcb
+         bWKg==
+X-Forwarded-Encrypted: i=1; AKwUvBxlw3aTh194r+FuptkDUyILjje9m3JTPANEEWHiqSvD2sv5hLBcvEmA+gDK2hcctV88pIuWnA==@lists.infradead.org
+X-Gm-Message-State: AFuF++mLFMR7rPRn1rl1rEQyjpF/1hhlwj96IZ4UtlElqxMxDrZadI2S
+	gCEDkhJxzzUqRoZKfgXEV5fa0j79/BaoOgTLrB5qOSuB/2C9jttdDN6lgL7ZL4olMQhoaFKACsJ
+	N94FS9keL05dIQTz0XgAmT8zmxzbYkRecUW/p5rK9vh0niHQ/D++K57Fc6uvvsXMBbseaTqF1GV
+	BuklehEKm/ZcJNzPgi4EjoonJV+f/BZUPupNdFc7Hw9ltApXjEUJYfkajJ0IJIOkdbbkWyTDW5V
+	uceqEU9cJie
+X-Gm-Gg: AYBFou2gALEK+JQ1jikUgrBV+Zwf79y9ljhp/d2vO5yLjcCluBo2KHW750i8qooLxE2
+	CTE1gLEzHJi93JRgyp1a5/iCVbDKw3cSARpzobd2tEZrC8fhp2ahszI4qZ7FO9KNv7jmyx1dSpH
+	p4Ts3Bl6GUz49k4rxtpqYUsMc3vAF4VdpP9e4wesSm+B9x9s+DowonhZazx0XdwTSyJJqduePLQ
+	vDVSiESbpK2GZ+DuPfo6IGVD16wfsUgLkdcHQ4GqKEZ11zMeOGbQ5qLlSwF2sJWP1a7ceWzUUdH
+	rkTRNKlSZkm2hrlsCxr1iDBz5zdFe3GtQWGwqm9vvrS/NEDu8OvHMlMnQG3yU2+MEgA71bLGLhr
+	riVvwHfVvtBXCaK0604WHASNzsxaoifXg6YzaFSj+kom6QNnclGQwnkyDNmRKa7DGSrJq14gDqY
+	NXUwab0DYHn6h/RyE/IhpQ1J8YJEW8vCbA
+X-Received: by 2002:a05:6820:201b:b0:6b7:46fc:1d0 with SMTP id 006d021491bc7-6b746fc0280mr16791935eaf.47.1788890848880;
+        Tue, 08 Sep 2026 11:07:28 -0700 (PDT)
+Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-27.dlp.protect.broadcom.com. [144.49.247.27])
+        by smtp-relay.gmail.com with ESMTPS id 586e51a60fabf-475523da584sm223082fac.1.2026.09.08.11.07.28
+        for <kexec@lists.infradead.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Sep 2026 11:07:28 -0700 (PDT)
+X-Relaying-Domain: broadcom.com
+X-CFilter-Loop: Reflected
+Received: by mail-yx1-f72.google.com with SMTP id 956f58d0204a3-66c73057f18so3394756d50.3
+        for <kexec@lists.infradead.org>; Tue, 08 Sep 2026 11:07:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1788890847; x=1789495647; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=r+VLJNR2ClH5aaw8GL8jeSbQjtC7qAwKNhxP9YK5biY=;
+        b=NovQvU+p+0nWUkHf2hTsMDNFM0EWYws11BC/4quGduV08XZQeCiuIJG3yHKY6tGFgK
+         VhKQs3GRSlVihg6Y0RSSR8fpWIAclXC4dYScowX2muYNNet7TbNrvUsRcBTH4pMmpdmQ
+         P8seUPqFCLxkj/b73stWgwiHLLtPfk1ywo69I=
+X-Forwarded-Encrypted: i=1; AKwUvBxehHicJ34QgIVdv8eQokezpcJ9g1uKLshL4rEt260+GcxKv/Je+vWPe7HNdfI1Ofx1bS1qow==@lists.infradead.org
+X-Received: by 2002:a53:e8c5:0:b0:66f:c1be:84d8 with SMTP id 956f58d0204a3-66fc1be866cmr7220604d50.70.1788890847347;
+        Tue, 08 Sep 2026 11:07:27 -0700 (PDT)
+X-Received: by 2002:a53:e8c5:0:b0:66f:c1be:84d8 with SMTP id 956f58d0204a3-66fc1be866cmr7220569d50.70.1788890846854;
+        Tue, 08 Sep 2026 11:07:26 -0700 (PDT)
+Received: from vertex.localdomain (pool-173-49-113-140.phlapa.fios.verizon.net. [173.49.113.140])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-9106412e038sm27114866d6.20.2026.09.08.11.07.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2026 11:07:25 -0700 (PDT)
+From: Zack Rusin <zack.rusin@broadcom.com>
+To: Borislav Petkov <bp@alien8.de>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	x86@kernel.org,
+	Petr Mladek <pmladek@suse.com>,
+	Joel Granados <joel.granados@kernel.org>,
+	Baoquan He <baoquan.he@linux.dev>
+Cc: Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	virtualization@lists.linux.dev,
+	bcm-kernel-feedback-list@broadcom.com,
+	linux-kernel@vger.kernel.org,
+	John Ogness <john.ogness@linutronix.de>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
 	Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
 	Pratyush Yadav <pratyush@kernel.org>,
-	Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Baoquan He <baoquan.he@linux.dev>
-Cc: x86@kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	Dave Young <ruirui.yang@linux.dev>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Bo Gan <bo.gan@broadcom.com>,
+	Brennan Lamoreaux <brennan.lamoreaux@broadcom.com>,
 	kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-efi@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arch@vger.kernel.org
-Subject: [PATCH v2 4/4] kho: rename kho_scratch= commandline parameter to kho_bootmem=
-Date: Tue,  8 Sep 2026 17:56:38 +0200
-Message-ID: <20260908155639.2496551-5-pratyush@kernel.org>
-X-Mailer: git-send-email 2.55.0.979.g7e5102b832-goog
-In-Reply-To: <20260908155639.2496551-1-pratyush@kernel.org>
-References: <20260908155639.2496551-1-pratyush@kernel.org>
+	linux-doc@vger.kernel.org,
+	Zack Rusin <zack.rusin@broadcom.com>
+Subject: [PATCH v1 0/4] x86/vmware: Preserve panic diagnostics in vmware.log
+Date: Tue,  8 Sep 2026 14:07:12 -0400
+Message-ID: <cover.1788414671.git.zack.rusin@broadcom.com>
+X-Mailer: git-send-email 2.53.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260908_110731_371511_ACDC2B5A 
+X-CRM114-Status: UNSURE (   9.92  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,77 +137,50 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+A virtual machine may have neither guest-local persistent storage nor
+working userspace after a panic. The host's vmware.log remains available
+after the VM terminates, and a production encrypted guest is the only
+component able to export readable panic text. Hyper-V already provides
+this class of host-persistent panic reporting.
 
-KHO now no longer uses "scratch" to describe the memory areas passed by
-previous kernel. Instead, it calls them boot memory, or bootmem in
-short. Rename the kho_scratch= commandline parameter to reflect this
-terminology change.
+Add a panic-only VMware logger that copies the newest 4 KiB of the kernel
+log and sends it with bounded low-bandwidth RPC work. Ordinary guests
+enable text transfer by default; encrypted guests require an administrator
+to opt in through kernel.vmware_record_panic_msg. A separate late dumper
+reports the structured crash event after built-in dumpers and suppresses
+the event while a crash kernel is loaded, because a configured VMware host
+may terminate the VM before the reporting hypercall returns.
 
-Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
----
- Documentation/admin-guide/kernel-parameters.txt | 2 +-
- Documentation/admin-guide/mm/kho.rst            | 4 ++--
- kernel/liveupdate/kexec_handover.c              | 6 +++---
- 3 files changed, 6 insertions(+), 6 deletions(-)
+Patch 4 makes panic diagnostics run before kdump by default on VMware
+guests. This follows existing platform uses of
+crash_kexec_post_notifiers, with Hyper-V as the closest guest-reporting
+precedent. Unlike Hyper-V, VMware exposes no capability bit for this
+behavior. An explicit crash_kexec_post_notifiers=0 still wins, and patch 4
+can be dropped without affecting patches 1 through 3.
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 6132fa73382a..8a42a924f133 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3031,7 +3031,7 @@ Kernel parameters
- 			"0" | "off" | "n" - kexec handover is disabled
- 			"1" | "on" | "y" - kexec handover is enabled
- 
--	kho_scratch=	[KEXEC,EARLY]
-+	kho_bootmem=	[KEXEC,EARLY]
- 			Format: ll[KMG],mm[KMG],nn[KMG] | nn%
- 
- 			Defines the size of the KHO boot memory region. The
-diff --git a/Documentation/admin-guide/mm/kho.rst b/Documentation/admin-guide/mm/kho.rst
-index 4fae09096038..f14c8d9ad6a4 100644
---- a/Documentation/admin-guide/mm/kho.rst
-+++ b/Documentation/admin-guide/mm/kho.rst
-@@ -20,8 +20,8 @@ need to enable if you would like to preserve their respective state across
- kexec.
- 
- To use KHO, please boot the kernel with the ``kho=on`` command line
--parameter. You may use ``kho_scratch`` parameter to define size of the
--boot memory regions. For example ``kho_scratch=16M,512M,256M`` will reserve a
-+parameter. You may use ``kho_bootmem`` parameter to define size of the
-+boot memory regions. For example ``kho_bootmem=16M,512M,256M`` will reserve a
- 16 MiB low memory bootmem area, a 512 MiB global bootmem region, and 256 MiB
- per NUMA node bootmem regions on boot.
- 
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index fe4b76ff5a2c..7018e25e4eda 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -671,12 +671,12 @@ unsigned int kho_bootmem_cnt;
-  * The bootmem areas are scaled by default as percent of memory allocated from
-  * memblock. A user can override the scale with command line parameter:
-  *
-- * kho_scratch=N%
-+ * kho_bootmem=N%
-  *
-  * It is also possible to explicitly define size for a lowmem, a global and
-  * per-node bootmem areas:
-  *
-- * kho_scratch=l[KMG],n[KMG],m[KMG]
-+ * kho_bootmem=l[KMG],n[KMG],m[KMG]
-  *
-  * The explicit size definition takes precedence over scale definition.
-  */
-@@ -751,7 +751,7 @@ static int __init kho_parse_bootmem_size(char *p)
- 
- 	return 0;
- }
--early_param("kho_scratch", kho_parse_bootmem_size);
-+early_param("kho_bootmem", kho_parse_bootmem_size);
- 
- static void __init bootmem_size_update(void)
- {
+This replaces patches 2 and 3 of Alexey's v2 posting:
+https://lore.kernel.org/all/20260309235250.2611115-1-alexey.makhalov@broadcom.com/
+
+The intended merge path is tip's x86/vmware branch. Boris please review the
+VMware transport and policy. Petr and John, please review the panic-only
+dumper use and registration ordering. Joel and Kees, please review the
+sysctl. Baoquan and the KEXEC/KDUMP team, please review the 
+loaded-crash-kernel guard and the default in patch 4.
+
+Zack Rusin (4):
+  x86/vmware: Add a bounded panic log sender
+  x86/vmware: Add the vmware_record_panic_msg sysctl
+  x86/vmware: Report guest crashes after kmsg dumpers
+  x86/vmware: Run panic diagnostics before kdump by default
+
+ Documentation/admin-guide/sysctl/kernel.rst |  14 ++
+ arch/x86/include/asm/vmware.h               |   2 +
+ arch/x86/kernel/cpu/vmware.c                | 245 ++++++++++++++++++++
+ 3 files changed, 261 insertions(+)
+
+
+base-commit: cee9395acd8043be0644b25c34bfa86623f2b935
 -- 
-2.55.0.979.g7e5102b832-goog
+2.53.0
 
 
