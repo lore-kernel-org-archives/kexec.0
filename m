@@ -4,86 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0C2B0C79F9E
-	for <kexec@archiver.kernel.org>; Tue,  8 Sep 2026 18:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BC729C79F99
+	for <kexec@archiver.kernel.org>; Tue,  8 Sep 2026 18:40:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Rb9I7ysehn3T8EdRE3wvUpvmDJ0lCancFwS1A6o0B9Y=; b=x7hXQQQC005tUDjviRiRdPUWZ+
-	Bx/t5BCZfhkvgE6D1uLHYk6q7R7j+wc/5QqJfPKbS+1QAkF4DrekjyDfjVqZCrYV7UN8ciqp+KYF8
-	E9xS8UeBGUCDGzm0PfJfP+VET4f4lhb9w8D/ADIROrQLVYHnYX00PBoCZFSKNW8YwhEk8eyih+Ihj
-	vvHCbPoC/K95kW+H6dqiI/xBZMDH1Y992yC2Aconbpu2mz8UhDKTilUo2J7hJVEKVx5VABWaYG1zc
-	IHQL8yuB2BLrccp4A33h8ltZgw08WXFbh6qUerTHi2QMsgbRkDMctCbRdfmtaXGV7LHV2cXTuw3lg
-	FXz4xC4Q==;
+	bh=X96+zYCvaN6SOrdHaZFaRkSOvwWaLyxQvweykkN1/zc=; b=ZTtvCtNFNviL8oIBh1iFWJMiX8
+	IimWmv47DrkpK9PcPhavnj2dG1myMh6L3/zwKJSb7rzK8Qi759CdYkLjOxOBew+42k19sYQB+5P8H
+	LQfyZ3wFnUYBxoK+2AgqoJUpmJF+zNHl5rx5yCvCLjA8b3sao8SaVrJa96jAn/9RroYF2VRdfpFZg
+	HVoApvSttWQn72u3IL1eQI064SZ9g9JjEzO9eJH/ZZks9yKuMgbLMrFH/ii5HGeLOUtipNKDzPFwM
+	MmZDKvVwrouF7k4nKZ2ELvUmUCtAaibBfGIxOIs6cWGKR8m57VR5meshh6bfUlxFmdDx63efyxr8m
+	ZedxVZ/A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x40EU-00000009wBX-1ABi;
-	Tue, 08 Sep 2026 18:07:46 +0000
-Received: from mail-pj1-x1063.google.com ([2607:f8b0:4864:20::1063])
+	id 1x40kP-00000009zfC-3V4M;
+	Tue, 08 Sep 2026 18:40:45 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x40ES-00000009w9o-27sR
+	id 1x40kN-00000009zei-0QTN
+	for kexec@bombadil.infradead.org;
+	Tue, 08 Sep 2026 18:40:45 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
+	:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-Type:Content-ID:Content-Description;
+	bh=X96+zYCvaN6SOrdHaZFaRkSOvwWaLyxQvweykkN1/zc=; b=a/1oOaiD4CXs2wF3Ibx5TR8fEW
+	GrtjzfhTR+dPOstOvY99x/DpnhZkb37aDrNozcQcveUGaOiN7emjnl7dkp6B47bawoYtGhiS3xKzL
+	CznYDJAUzRrem4re76ur6Yx9PDV0ycI1rGNh5JNPEkEKtksY/kSyg4KGl2z/1RpFrEzI/xwojvcAA
+	iB6Ciscvfp9yviTqKfjKSqOrNUg2ak4V+BjHIrV7XosskDQMLYj87GD493+TlUbwGRTwJnO9H94ya
+	/z1OcGc1DTE+wjjb+gdJlq0vslBoy3y/rPeL6PmUNy48MGdxaDm0QsR8mWo0jFPk8t+hGJdL0DUXJ
+	8xf2Owfg==;
+Received: from mail-pj1-x1061.google.com ([2607:f8b0:4864:20::1061])
+	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1x40kJ-00000000ELm-38ps
 	for kexec@lists.infradead.org;
-	Tue, 08 Sep 2026 18:07:45 +0000
-Received: by mail-pj1-x1063.google.com with SMTP id 98e67ed59e1d1-3964e480f76so5655805a91.1
-        for <kexec@lists.infradead.org>; Tue, 08 Sep 2026 11:07:44 -0700 (PDT)
+	Tue, 08 Sep 2026 18:40:41 +0000
+Received: by mail-pj1-x1061.google.com with SMTP id 98e67ed59e1d1-395cf2535acso4964930a91.1
+        for <kexec@lists.infradead.org>; Tue, 08 Sep 2026 11:40:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788890864; x=1789495664;
+        d=1e100.net; s=20251104; t=1788892836; x=1789497636;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:dkim-signature:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Rb9I7ysehn3T8EdRE3wvUpvmDJ0lCancFwS1A6o0B9Y=;
-        b=rCgAVM1MJKAG9g9rdmJwcSzdcb3T4jWKsMGxBUyZH59NifI/mQdh1emNV1IAi9pshI
-         VSa8TDPoA0c5nO/B1t95C8wei8HbzO0GzYweS1W1qsj8UfkFxOScsMkeFqmQNeefRG37
-         ih2KALIhCzJYPbnc5GWMgDO7JDg3P2rVG1wXjJTq+ZanWrSQUPDFEKGzxLggk1OLLuOT
-         WmNf4Y9UlfJHhvC8WeOx8/n2vl0a4jNa5/vY9BWGwkyZ4imOBPusSe1B2B6nPXJuBSVj
-         FgQajb+kMAdZmRCIuDHwZVTr5jNoL63BaQOwhhyMe7xxOTG5UTrJ+/OQmDyUV2xOtmoY
-         9nRg==
-X-Forwarded-Encrypted: i=1; AKwUvBymLuUx/pqoa4MVWV/s8pqvM7UPO3IoR8RYErCzcOf5phcRXLO7csOXDzNQrzaz1G/Kq1i02Q==@lists.infradead.org
-X-Gm-Message-State: AFuF++lEiii+tuSjti2Pjv55WTw9++HQC+PiHLOgFnM4G6SOvZfEHCOP
-	ueQ+nFmB4XazT7TRNdicx9LvWGfirlmDo/xdfXCHecrBWifTFo/umSjoe6vYw2ICs9WFRRaxqxr
-	aHzuEqCfskATpeV9lFEfUZchXBFStd6ftQ8VgZjerr2A+anJPMsK6SZUT0CWu2Ufs/AsHBwv7/Z
-	9iq/G9wPogvPnD18MN0ejeBsaQz4X1mjBK7903Gnn9JfbszrJIcyZ9Mm+wd82AgB1hkXymlHLE5
-	n70xRGKDA4K
-X-Gm-Gg: AYBFou3tUkfHxVRF7K9KKewNv4FjL5Hoq3dR0tyHimbZ1nFR/Vz+21VXcIcnmT4kNTU
-	brx1tln0FnojEEb9myY/j+RcXAF0NuMZofYi8ivrwDogLkw2ihYApBJzyWfJgFnV0C5UE78JrpZ
-	lFnzDUMS25BfdR1xT3Q2AAuDzhIlPrGUDDcDFJJ5bNbSJVT64sDkiYwvKAGA4uXsZgZ6W2tF3jl
-	VowoZm4beV1WZd1/rBq4YLibjl4X4xdvl6mlP3RLoGipMC4vnzUHhWMsanY9YG4oltEppUM1gVx
-	VEB+VtyvFurp0QMbQ+RLFVmftoUcCXDid3xPuwpBgvDidtzUzKCXf+ZoGAn9jRYsKiwNybPNzux
-	fJiUfffHWuZXu6saJ/6uHNxz+I5U3l31bLSVAwKC6Z1LQNLv0sNRybdZrFf5zGYwmn8S9wTNJ2N
-	r1QABRORlwB4AMgB4tOE8BQ0aFwU59T+7D
-X-Received: by 2002:a17:90b:268d:b0:398:bdb0:adb7 with SMTP id 98e67ed59e1d1-39b261e1beemr49103792a91.16.1788890863600;
-        Tue, 08 Sep 2026 11:07:43 -0700 (PDT)
-Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-27.dlp.protect.broadcom.com. [144.49.247.27])
-        by smtp-relay.gmail.com with ESMTPS id 98e67ed59e1d1-39b28c68f8csm8522494a91.5.2026.09.08.11.07.43
+        bh=X96+zYCvaN6SOrdHaZFaRkSOvwWaLyxQvweykkN1/zc=;
+        b=PvLhi4j6BmrnepvNURL6Zm8OdsjiMxg524V5EF6+W01V4DQtkrla7aWIS5H8PQqvsU
+         hS9/R42GbTN5n0UafqLssdbmY/ponFJ2/xQZZPoPgzPFX24afOsFfwvmnG8SHz8hDClg
+         bssTeiR1aXjUaRkCfqv6niBiFRA8hvDI1g8dmC0vmnsNIlicBDoZfgdxu5UZvgUFdGNQ
+         u6LN/WgdjaIPLaUKjxk5WfMJnRTHtHZ6GsxSBXAAGxbfyU99xARd3VaCRNIvywZ8Nx0P
+         uz9/H7VEWDyjYdiKyTa8hG4i5lEKq6Cp7k4TNXKv/kbqG2+q/Dje1zpKh4R++PgoLa6J
+         Jw7Q==
+X-Forwarded-Encrypted: i=1; AKwUvBzJfz3bP0k5P0pLFneH0/Lbx1ejTWq3m/iz04BGfGkWjSKTnvRyauGBiuNjXb+gBTmh8NASEg==@lists.infradead.org
+X-Gm-Message-State: AFuF++mkaiqbIULoVAUbqDwgOF+w8Zu3Jb1ymjXELOZ8R8e1m3oliN6A
+	EtCpTbtcoSHYs2TzKs2GCehc1sZg+WbgEJRtXyUqhOa9rUoFO9vUVVHQNszzNXqZsUtRbiEcy46
+	L25YbN7I52RM+90BLn1TjqDTbaaUUdCp6Q3EIJMdy5TBdjHsUST1uLYZlJs7HNmL6NLWW7cj0Z3
+	i9wg1TlvSS72R5tLghN1YxUwgF6hdua6G1IFNjJV2Fu3QYkf2fUDWutBKqUvbr92bgiwP5QdCGu
+	YOu2aG+USGr
+X-Gm-Gg: AYBFou2JAJ5iV0frO3LqaUk67/1SuY3hPHbuvx1vzL96hhRUZPWF41uTJXZSnZzMqZS
+	cRDsQhv0O55+Kp4x5Y0GroVGqu87LnbTcTE3UUAso8DRfYeW7//cXX6v5zVFxpc/RZqmRrYHiTp
+	oYoys4BCyNiQd15rLqItsuWU7iq+GUW6wDFAIdt8Zr9DlZywVTpgNDaLQEFAb2vq06W0MAErZzD
+	oQY9D+Kxwy9AkRcLMO56tYYSyRpaHlukFYt4R1vM6eXqvVyx6ROagErPZZCzYJDw7WBoKCPxUeO
+	bo0qKBARxu3l9Ny4tsJv5fho29cQ4f6D6QWGiiFawaTuhYBs6Waiuz3i2ptc+UO3OO4YZCLx5sL
+	Kwd/TwlbTtz2E6IU1uQtGI7whbCuJwEsMsWjPvC3JBGXDVvEO6X8neh2P6zXgVhmNE45cFf190L
+	sr7DoI10Ia8Z0Pbxb7Z4Iq782YAQuEkPNr
+X-Received: by 2002:a17:90b:5743:b0:38e:c232:9d2c with SMTP id 98e67ed59e1d1-39b8bc9422emr6624845a91.2.1788892836106;
+        Tue, 08 Sep 2026 11:40:36 -0700 (PDT)
+Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-25.dlp.protect.broadcom.com. [144.49.247.25])
+        by smtp-relay.gmail.com with ESMTPS id 98e67ed59e1d1-39b9972213fsm1606959a91.7.2026.09.08.11.40.35
         for <kexec@lists.infradead.org>
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 08 Sep 2026 11:07:43 -0700 (PDT)
+        Tue, 08 Sep 2026 11:40:36 -0700 (PDT)
 X-Relaying-Domain: broadcom.com
 X-CFilter-Loop: Reflected
-Received: by mail-yx1-f72.google.com with SMTP id 956f58d0204a3-66f7d131b55so516671d50.0
-        for <kexec@lists.infradead.org>; Tue, 08 Sep 2026 11:07:42 -0700 (PDT)
+Received: by mail-oa1-f70.google.com with SMTP id 586e51a60fabf-45eb9967696so5128818fac.1
+        for <kexec@lists.infradead.org>; Tue, 08 Sep 2026 11:40:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1788890862; x=1789495662; darn=lists.infradead.org;
+        d=broadcom.com; s=google; t=1788892835; x=1789497635; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Rb9I7ysehn3T8EdRE3wvUpvmDJ0lCancFwS1A6o0B9Y=;
-        b=avA8iSCRdphymYC8I2oUxncPm/CD2bfMaiWQHE/bScURLBdp6TNE8j02aKv/7AYsx6
-         XlFDFRxG1KBByiKJQsdbTNIvvDH2LHcFxsUK7koS4f6T3Jo085dQHcMlUhWtaT9OOMjU
-         LjD+P7zCXblHBvrlZ+mr3f2+eja8+BCuxgIPw=
-X-Forwarded-Encrypted: i=1; AKwUvByRk4EcTCiYXL+OCYIynfk9YIhxUJFEhAUi+Dbwzt2LloOVUvHSZ51f/nQ5pcj5jukQQldpWA==@lists.infradead.org
-X-Received: by 2002:a05:690e:1b44:b0:66f:9e32:fe1 with SMTP id 956f58d0204a3-66fb5921a72mr6969458d50.10.1788890861951;
-        Tue, 08 Sep 2026 11:07:41 -0700 (PDT)
-X-Received: by 2002:a05:690e:1b44:b0:66f:9e32:fe1 with SMTP id 956f58d0204a3-66fb5921a72mr6969419d50.10.1788890861415;
-        Tue, 08 Sep 2026 11:07:41 -0700 (PDT)
-Received: from vertex.localdomain (pool-173-49-113-140.phlapa.fios.verizon.net. [173.49.113.140])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-9106412e038sm27114866d6.20.2026.09.08.11.07.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=X96+zYCvaN6SOrdHaZFaRkSOvwWaLyxQvweykkN1/zc=;
+        b=gLzNuSW1niuBCgNWIr6TQ1ZJPJ5lS1ngGSpCxc4BzFvAo/KohkXWqrv2w1anbIlIVg
+         ig2nBurOXff3QxVRQdbGIVmsj/eirEYwyM+rnpnSMb1gq1rYtmRPIM2pCf3bTR8IR5l1
+         S7Ds9WH3yBnGVmZS16ctPc7cjAKuFZ0Ml0eg8=
+X-Forwarded-Encrypted: i=1; AKwUvBwYNacoYM5vzNGQaoRFzIayfJtMvMiAIXq+q1BspgndXCO4liMAr1UgTrATGMNjpuW9soJwWQ==@lists.infradead.org
+X-Received: by 2002:a05:690e:418d:b0:671:4d2:804e with SMTP id 956f58d0204a3-67104d28276mr98611d50.36.1788890858312;
         Tue, 08 Sep 2026 11:07:38 -0700 (PDT)
+X-Received: by 2002:a05:690e:418d:b0:671:4d2:804e with SMTP id 956f58d0204a3-67104d28276mr98573d50.36.1788890857670;
+        Tue, 08 Sep 2026 11:07:37 -0700 (PDT)
+Received: from vertex.localdomain (pool-173-49-113-140.phlapa.fios.verizon.net. [173.49.113.140])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-9106412e038sm27114866d6.20.2026.09.08.11.07.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2026 11:07:34 -0700 (PDT)
 From: Zack Rusin <zack.rusin@broadcom.com>
 To: Borislav Petkov <bp@alien8.de>,
 	Ajay Kaher <ajay.kaher@broadcom.com>,
@@ -114,9 +129,9 @@ Cc: Thomas Gleixner <tglx@kernel.org>,
 	kexec@lists.infradead.org,
 	linux-doc@vger.kernel.org,
 	Zack Rusin <zack.rusin@broadcom.com>
-Subject: [PATCH v1 4/4] x86/vmware: Run panic diagnostics before kdump by default
-Date: Tue,  8 Sep 2026 14:07:16 -0400
-Message-ID: <7487011dfb95aadda9515b22a5852680df1982c5.1788414671.git.zack.rusin@broadcom.com>
+Subject: [PATCH v1 3/4] x86/vmware: Report guest crashes after kmsg dumpers
+Date: Tue,  8 Sep 2026 14:07:15 -0400
+Message-ID: <8243a70e3bc282e3fbc1b507f40b889cb7e74305.1788414671.git.zack.rusin@broadcom.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1788414671.git.zack.rusin@broadcom.com>
 References: <cover.1788414671.git.zack.rusin@broadcom.com>
@@ -124,8 +139,8 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260908_110744_549394_C3D241F9 
-X-CRM114-Status: GOOD (  13.17  )
+X-CRM114-CacheID: sfid-20260908_194039_843868_A0020573 
+X-CRM114-Status: GOOD (  18.53  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -140,44 +155,135 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The core panic path enters a loaded crash kernel before running kmsg
-dumpers, so the VMware logger cannot preserve the panic in the host log.
-Set crash_kexec_post_notifiers during VMware platform setup. setup_arch()
-runs before ordinary core parameters are parsed, so an explicit
-crash_kexec_post_notifiers=0 still overrides this default. The 0644
-parameter also remains writable at runtime.
+VMware accepts a structured guest-crash event, but a host configured with
+backdoor.coredumpOnCrash may terminate the VM before the hypercall
+returns. Sending the event from a panic notifier could prevent later kmsg
+dumpers and a loaded crash kernel from running.
 
-VMware exposes no capability bit for this behavior, so the default changes
-for every VMware guest. Running the logger first adds work to the panic
-path and can reduce kdump reliability.
+Register a second panic-only kmsg dumper with late_initcall_sync(). Kmsg
+dumpers run in registration order, placing the report after the early
+VMware logger and built-in dumpers registered by then. This leaves no
+report before the late initcall, but avoids losing dump output to a
+terminating host.
 
-A full log transfer uses 1027 low-bandwidth hypercalls; three checkpoint
-attempts are bounded at 3077. In vmcall tests, a maximum-size transfer
-took at most 7.47 ms; three complete transfers comprising 3081 calls took
-at most 21.58 ms.
+Skip the event when a crash kernel is loaded. The earlier logger can still
+write panic text to vmware.log before __crash_kexec(). If kdump later
+fails, no structured event is sent; issuing it first could prevent kdump
+from running at all.
 
-The crash report remains suppressed while a crash kernel is loaded because
-the host may terminate the VM inside that call. A future report from the
-crash kernel or kdump userspace can restore the event after saving the
-vmcore.
+Issue the event at most once. With CONFIG_PRINTK=n, install a late
+INT_MIN panic notifier. An unexpected dumper registration failure with
+printk enabled leaves reporting disabled because a notifier fallback
+would overtake working dumpers.
 
+Link: https://lore.kernel.org/r/20260309235250.2611115-4-alexey.makhalov@broadcom.com
+Co-developed-by: Brennan Lamoreaux <brennan.lamoreaux@broadcom.com>
+Signed-off-by: Brennan Lamoreaux <brennan.lamoreaux@broadcom.com>
+Co-developed-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
+Signed-off-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
 Signed-off-by: Zack Rusin <zack.rusin@broadcom.com>
 ---
- arch/x86/kernel/cpu/vmware.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/include/asm/vmware.h |  1 +
+ arch/x86/kernel/cpu/vmware.c  | 63 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 64 insertions(+)
 
+diff --git a/arch/x86/include/asm/vmware.h b/arch/x86/include/asm/vmware.h
+index 598d4cd448ec..ea2ce5272a00 100644
+--- a/arch/x86/include/asm/vmware.h
++++ b/arch/x86/include/asm/vmware.h
+@@ -61,6 +61,7 @@
+ #define VMWARE_CMD_GETHZ		45
+ #define VMWARE_CMD_GETVCPU_INFO		68
+ #define VMWARE_CMD_STEALCLOCK		91
++#define VMWARE_CMD_REPORTGUESTCRASH	102
+ /*
+  * Hypercall command mask:
+  *   bits [6:0] command, range [0, 127]
 diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
-index c21fc835537f..d88c625d8389 100644
+index 3848811550e9..c21fc835537f 100644
 --- a/arch/x86/kernel/cpu/vmware.c
 +++ b/arch/x86/kernel/cpu/vmware.c
-@@ -646,6 +646,7 @@ static void __init vmware_platform_setup(void)
- {
- 	u32 eax, ebx, ecx;
- 	u64 lpj, tsc_khz;
-+	crash_kexec_post_notifiers = true;
+@@ -22,10 +22,14 @@
+  */
  
- 	eax = vmware_hypercall3(VMWARE_CMD_GETHZ, UINT_MAX, &ebx, &ecx);
+ #include <linux/dmi.h>
++#include <linux/atomic.h>
++#include <linux/crash_core.h>
+ #include <linux/init.h>
+ #include <linux/export.h>
+ #include <linux/kmsg_dump.h>
++#include <linux/limits.h>
+ #include <linux/mm.h>
++#include <linux/panic_notifier.h>
+ #include <linux/clocksource.h>
+ #include <linux/cpu.h>
+ #include <linux/efi.h>
+@@ -323,6 +327,65 @@ static int __init vmware_panic_log_init(void)
+ }
+ early_initcall(vmware_panic_log_init);
  
++static atomic_t vmware_crash_reported = ATOMIC_INIT(0);
++
++static void vmware_report_guest_crash(void)
++{
++	if (kexec_crash_loaded())
++		return;
++	if (atomic_xchg(&vmware_crash_reported, 1))
++		return;
++
++	vmware_hypercall1(VMWARE_CMD_REPORTGUESTCRASH, 0);
++}
++
++static void vmware_crash_report_dump(struct kmsg_dumper *dumper,
++				     struct kmsg_dump_detail *detail)
++{
++	vmware_report_guest_crash();
++}
++
++static struct kmsg_dumper vmware_crash_report_dumper = {
++	.dump = vmware_crash_report_dump,
++	.max_reason = KMSG_DUMP_PANIC,
++};
++
++static int vmware_crash_report_notify(struct notifier_block *nb,
++				      unsigned long action, void *data)
++{
++	vmware_report_guest_crash();
++	return NOTIFY_DONE;
++}
++
++static struct notifier_block vmware_crash_report_nb = {
++	.notifier_call = vmware_crash_report_notify,
++	.priority = INT_MIN,
++};
++
++static int __init vmware_crash_report_init(void)
++{
++	int ret;
++
++	if (!hypervisor_is_type(X86_HYPER_VMWARE))
++		return 0;
++
++	ret = kmsg_dump_register(&vmware_crash_report_dumper);
++	if (!ret)
++		return 0;
++	if (IS_ENABLED(CONFIG_PRINTK)) {
++		pr_err("failed to register crash report dumper: %d\n", ret);
++		return 0;
++	}
++
++	ret = atomic_notifier_chain_register(&panic_notifier_list,
++					     &vmware_crash_report_nb);
++	if (ret)
++		pr_err("failed to register crash report notifier: %d\n", ret);
++
++	return 0;
++}
++late_initcall_sync(vmware_crash_report_init);
++
+ #ifdef CONFIG_PARAVIRT
+ static struct cyc2ns_data vmware_cyc2ns __ro_after_init;
+ static bool vmw_sched_clock __initdata = true;
 -- 
 2.53.0
 
