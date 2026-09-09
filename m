@@ -4,74 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A0E2FC79FB6
-	for <kexec@archiver.kernel.org>; Wed,  9 Sep 2026 14:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1B669C79FB6
+	for <kexec@archiver.kernel.org>; Wed,  9 Sep 2026 14:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ZqGD6+EIHmen/yXXRwBLkUFq1BO6jBImOTP5fEBlNDw=; b=RrWgxgC0na/crZ7wiw7vwYISrN
-	XCxLQtEuvQRICoYDc0LMvovwPeh3gQZwdz3Z6Gh2Z5Gk1KwjVBJLSmXnx4c+GwFbXmUuuzxb8UTVi
-	1g37xhti82Kiu3Qi+DNHaZZqwfvTJqapXEW/uifSXZVtDi07KJskN9fW1BzU1bqwom3MavRjYxpTM
-	lJeiCi5G1z0W83NYVGIcekZ64Ar2aoI3Zs1OCBYnWWzFzCZ/WgCdzJ9qs5spHSjSlzzUDtS772L/1
-	x5dRtQIX+u4A3oGDxxKrsiXICOBGJsiHKJRq7jcoAjHuCagreiW8HXrYLUHQr6RHQryjSiy9xUVtQ
-	FmT/Vmog==;
+	bh=ARyHcdAb0HLmyx/eDFN86Rb81gJGVIXThCIEa265DUA=; b=qcjBa5dlcBkX6REffbrdxOmiMs
+	1NTV+yDswyed+SfhjlW3SLu2FCw4cZtW6NjtPWy+QEHLH8R2JM/5evUvbHiQxzXZPQcuT544zbJ1C
+	oSVP+goNLq3f/dGAEWiaZrr9amCPq+OQLmxSag2CmbOTL0qGF8EPKWH2A6KRifiE+5InJpcTu7BNb
+	jSQdMIvx3gknaDEMqKbVszr5euVJTFLV2KwIAEvROZu2wBoSTI7GzVPi5PdngKTfgFQaM3+x+16+d
+	SBBe8Y8ShZ/kERZT4m1IE82jKZj9A7GxEDSYIbhFOPB4UyjgLNGSj4GvggwseozWHaSxgnRcUCMUr
+	nPkId/PA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x4IrX-0000000BrrQ-3QDw;
-	Wed, 09 Sep 2026 14:01:19 +0000
+	id 1x4Iwu-0000000BtaU-2a5c;
+	Wed, 09 Sep 2026 14:06:52 +0000
 Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x4IrU-0000000Brqj-123m
+	id 1x4Iwr-0000000BtZb-3Ik6
 	for kexec@lists.infradead.org;
-	Wed, 09 Sep 2026 14:01:17 +0000
+	Wed, 09 Sep 2026 14:06:51 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
 	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ZqGD6+EIHmen/yXXRwBLkUFq1BO6jBImOTP5fEBlNDw=; b=cTCDZr6ZCnhsx+vTe2Bu439RDN
-	zgmXwoq1tVj2rx1oPZhMrSaFompcN5ZiFJdN/lhLCVc6R5T3U/Utt6CUPXc2qguLiC9jxT+VCRK/F
-	U3ncOktFQ9HN+NnyyZ2Y71JQr6LSiFDnT8eLQMzOY+g97udoqNxU3Fjkl8/RX0cwOuFk45/Cl2qcu
-	J+drc+sx7Y2+76t/NIr7LdQcnx66ZNjf3vXefaNaYQXDTvp4kor32JZGM20hxOsmjbCdHPvyiR5XX
-	2GFIhX2leHw0/Vg/YI7PM1Vmbtf7uRgGps32nBAS2NlQyuwr3fpCx4xgVi5FR/JZs92o3FEwfD2zb
-	H3lcLMpQ==;
+	bh=ARyHcdAb0HLmyx/eDFN86Rb81gJGVIXThCIEa265DUA=; b=rcsC1nVJ458PkGkasholnKxN6Y
+	8410oN/kuEDXUbOFmM+71oC19ElLRGi06Vt5lELxPN2NRrvCvoeFrsuLjkPROFDyV4u3NzsHyF0Dw
+	4EQKOZ0A4I5dZd4/wWWTiaK8hrAjVAFqM33pEkIiQi5D4RBK54/6Ywa0Ltduv+4JyaWasZgqS3bhm
+	pPivoqW8OISS6nImyYN3ZxQ2g6tRDXdHf0LegFyAOOcbpFXay9V6Q3b6/OKIBV7i4y9Kf93r21acK
+	b5ht4rH+nV412qx7B1mw5ATercq3FkeW0Sku5yJAxhNUuXQRReH+Ypx4/wZnjMY5NPNXqRIGMa9Ru
+	AE5xkGuw==;
 Received: from authenticated-user
 	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.96)
 	(envelope-from <leitao@debian.org>)
-	id 1x4Iqs-0036XE-0I;
-	Wed, 09 Sep 2026 14:00:38 +0000
-Date: Wed, 9 Sep 2026 07:00:30 -0700
+	id 1x4Iw9-0036hX-08;
+	Wed, 09 Sep 2026 14:06:05 +0000
+Date: Wed, 9 Sep 2026 07:05:57 -0700
 From: Breno Leitao <leitao@debian.org>
 To: sashiko-reviews@lists.linux.dev
-Cc: David Hildenbrand <david@kernel.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Naoya Horiguchi <nao.horiguchi@gmail.com>, 
-	Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, Ingo Molnar <mingo@redhat.com>, 
-	Zi Yan <ziy@nvidia.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Johannes Weiner <hannes@cmpxchg.org>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Lorenzo Stoakes <ljs@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Ard Biesheuvel <ardb@kernel.org>, kas@kernel.org, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, "Liam R. Howlett" <liam@infradead.org>, x86@kernel.org, 
-	Suren Baghdasaryan <surenb@google.com>, Brendan Jackman <brendan.jackman@linux.dev>, harry@kernel.org, 
-	linux-efi@vger.kernel.org, riel@surriel.com, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, kexec@lists.infradead.org, rmikey@meta.com, kernel-team@meta.com
-Subject: Re: [PATCH v4 2/5] mm/memory-failure: libstub: install the
- poisoned-memory EFI table
-Message-ID: <aqFmJao8Os0ySPjF@gmail.com>
+Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+	Michal Hocko <mhocko@suse.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, kas@kernel.org, Vlastimil Babka <vbabka@kernel.org>, 
+	x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	David Hildenbrand <david@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
+	Brendan Jackman <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Borislav Petkov <bp@alien8.de>, Suren Baghdasaryan <surenb@google.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Zi Yan <ziy@nvidia.com>, Thomas Gleixner <tglx@kernel.org>, kernel-team@meta.com, 
+	rmikey@meta.com, harry@kernel.org, linux-efi@vger.kernel.org, riel@surriel.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, kexec@lists.infradead.org
+Subject: Re: [PATCH v4 3/5] mm/memory-failure: efi: record hardware-poisoned
+ frames into the poisoned-memory table
+Message-ID: <aqFm1ep0mIlJpA-d@gmail.com>
 References: <20260909-hwpoison-kho-v4-0-359313564495@debian.org>
- <20260909-hwpoison-kho-v4-2-359313564495@debian.org>
- <20260909131911.76D361F00A3A@smtp.kernel.org>
+ <20260909-hwpoison-kho-v4-3-359313564495@debian.org>
+ <20260909132128.AD4D01F00A3A@smtp.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260909131911.76D361F00A3A@smtp.kernel.org>
+In-Reply-To: <20260909132128.AD4D01F00A3A@smtp.kernel.org>
 X-Debian-User: leitao
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260909_070116_284181_DEBD3F29 
-X-CRM114-Status: GOOD (  15.97  )
+X-CRM114-CacheID: sfid-20260909_070649_825969_00D7276E 
+X-CRM114-Status: GOOD (  12.75  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,43 +87,32 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Sep 09, 2026 at 01:19:11PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Critical] Integer truncation in efi_poison_alloc leads to a massive heap buffer overflow during memset on 32-bit or mixed-mode systems.
-> --
+On Wed, Sep 09, 2026 at 01:21:28PM +0000, sashiko-bot@kernel.org wrote:
+> > --- /dev/null
+> > +++ b/drivers/firmware/efi/poison.c
+> >
+> > +	/* Whole words, and a bit count that can be taken without wrapping. */
+> > +	if (!pm->size || !IS_ALIGNED(pm->size, sizeof(unsigned long)) ||
+> > +	    check_mul_overflow(pm->size, (u64)BITS_PER_BYTE, &nbits))
+> > +		return false;
 > 
-> commit 626632820fe1fdcddc73aaeb109705cbddc9828c
-> Author: Breno Leitao <leitao@debian.org>
-> Subject: mm/memory-failure: libstub: install the poisoned-memory EFI table
-> 
-> This patch introduces functionality in the EFI stub to create and install a
-> poisoned-memory EFI configuration table. It walks the UEFI memory map to find
-> the RAM range and allocates a bitmap to track poisoned memory granules.
-> 
-> > diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-> > index 48f93f7758e9e..5cbe675491333 100644
-> > --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-> > +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-> [ ... ]
-> > +static struct linux_efi_poisoned_memory *efi_poison_alloc(u64 phys_base,
-> > +							  u64 bitmap_size)
-> > +{
-> > +	struct linux_efi_poisoned_memory *pm;
-> > +	efi_status_t status;
-> > +
-> > +	status = efi_bs_call(allocate_pool, EFI_ACPI_RECLAIM_MEMORY,
-> > +			     sizeof(*pm) + bitmap_size, (void **)&pm);
-> 
-> [Severity: Critical]
-> Could sizeof(*pm) + bitmap_size overflow 32 bits on 32-bit or mixed-mode
-> systems?
+> [Severity: High]
+> Does this validation fully protect against an excessively large pm->size?
 
-This feature (EFI_POISONED_MEMORY) is only enabled on 32-bits system,
-so, 32-bit issues is not a real issue. See very first patch:
+I was clamping the table before, but we decided to drop it in the last
+revision. See the discusion in here:
 
-	+config EFI_POISONED_MEMORY
-	+	def_bool y
-	+	depends on EFI_STUB && MEMORY_FAILURE && 64BIT
+https://lore.kernel.org/all/apGWUWi5-RbhFHpe@thinkstation/
 
-So, this is a false positive
+> > +	start = PAGE_ALIGN_DOWN(efi.poisoned_memory);
+> > +	end = PAGE_ALIGN(efi.poisoned_memory + sizeof(*pm) + pm->size);
+> 
+> [Severity: High]
+> Can this computation wrap around if pm->size is maliciously large?
+
+Yes, but that means that someone was able to write to EFI memory to
+update size?
+
+I can definitely BUG_ON() on "large"  pm->size, but, I don't think this
+is what we want here.
 
