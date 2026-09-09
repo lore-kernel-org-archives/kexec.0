@@ -4,122 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AF4FAC79FB7
-	for <kexec@archiver.kernel.org>; Wed,  9 Sep 2026 14:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B2ADBC79FB6
+	for <kexec@archiver.kernel.org>; Wed,  9 Sep 2026 14:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:Subject:References:In-Reply-To:Message-Id:Cc:To:From:Date:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=81t5dUSp9NBhDobvQnuTMVyhlj2QjrqDWTWphqDthVs=; b=u3lDceE6R1XacJIelk0qTr3lK1
-	Q3FfRWa8mCOI1mOLRcxjeK7Hd3QJzZBPpeO9opUzSRHqM42BXCOUoRYu5egU0XC3kZbo91XSLnrJW
-	Ex8H0HxzkknIJF7h4XxJFR8FKJERiBCXejCESo0KcTf0jsueoH2LCdRa/6aBQf9MY6Q7lD/kqoYjT
-	SXg4q9AfiwMjALgWYSMSN//ACpy1pkeE/4Bd7Y1NvRr9P+IRiAGs9LZpxj1yFoEeV/BthgoWw4yKO
-	SidEv4n3pb5tAz5b0wU1rDMBJ4CAuwGCV1x4dVRtNQSRvREACBfhdbY23FBbp5ltNi5HwschZcQTm
-	NN4CdB3g==;
+	bh=305fiDZR5O30XyYnejmNt8DXKRI31wkY0vRofwAAD4Q=; b=aFAs8fJIm5gX2uXPEs1d0BR4eH
+	ws3ZmeEwlHxWZlhtoghw6ynVzD1Fhmx/qVy9OzJfClUk0oGx2NHE1aiV7pZrmt/mc4rTV3dEAzblv
+	B3skhHojV9cFPpstyxESOm3s4uFkQFE4hjUp7Qsefl3NkK/JE8qJ7d55tgkBwu3qbfbj/KT2cxLtl
+	oSVxNG8ZICOy0gUFQXeaCJPCmtq00Xla2fChBK0hFjoT9XPNUPAgygmxgildkWfgU5n+Tf1gXNZ9o
+	wjJ2gFhFi+HIeEJ63PdPO7NV0ZyaOGBLFA3eUG9vRXU7qDrW8kvU+Uv8l/YWHaoWlJ7FGeRVZezhA
+	3ZTW6pVg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x4JLJ-0000000Bz1F-1Avm;
-	Wed, 09 Sep 2026 14:32:05 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1x4Jai-0000000C2b4-0Vqe;
+	Wed, 09 Sep 2026 14:48:00 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x4JLI-0000000Bz0m-0XnV
+	id 1x4Jag-0000000C2ar-2dRf
 	for kexec@lists.infradead.org;
-	Wed, 09 Sep 2026 14:32:04 +0000
+	Wed, 09 Sep 2026 14:47:58 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 629616020A;
-	Wed,  9 Sep 2026 14:32:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 111A91F00A3A;
-	Wed,  9 Sep 2026 14:31:51 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 1377C43F53;
+	Wed,  9 Sep 2026 14:47:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C8781F00A3A;
+	Wed,  9 Sep 2026 14:47:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788964323;
-	bh=81t5dUSp9NBhDobvQnuTMVyhlj2QjrqDWTWphqDthVs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ooE8DWa5CDIiME+I6yLmCXTKES6hNTyRb7PC8UxkjursSc8yN+HrzSX5UyO6mzMIV
-	 eqKqU+0oFTCr/RTvmo7df6nyKIN/3tYL2Ut4KbBoBqDPVFMQH025G+H3g9edB6dIhD
-	 5jzVh9mjdj3vbNdizWQoV8/MbCU8/u/CI8yb6JFQctbgQcuasxa4z34UqihPB1OhXT
-	 kB/dWNswLQiw+qzzkbmwu3VnbxWY0KL6I3d+Qc2thdBfbAsgEc3g2LLUdGoAO8aulM
-	 9WYEhgR+uCb8cquBu0fepHWMAdhSszvuSH0jxUn/EviRDLNyH85H6lpRXMOkIMF71N
-	 UC7rL6M5zItUQ==
-Message-ID: <d8e9b629-4198-4281-a3b2-d54445201fd2@kernel.org>
-Date: Wed, 9 Sep 2026 16:31:49 +0200
+	s=k20260515; t=1788965278;
+	bh=305fiDZR5O30XyYnejmNt8DXKRI31wkY0vRofwAAD4Q=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=ZZFAwEJVzbtlIAGO+fnOtB5jWW+zWKG7gl4n2jkYO3JtYzVGXWG2RvQTp8NXSf30X
+	 Zvl/gda0d3cgBOGxI695iMFajpKW+qwBgkqrtr0V5OmTpAxcDds2Hs+D/Kc46QThqn
+	 tu/dAGPncf6jkqObNIqe+6Ty4QEkI3dwWNepx7RKLxKFT0UBT183Wx8B2RfjX88qbG
+	 jHmOeJn5vYAEpERvQxET/FVb6MTuCbpquGrw6ZzfMSfTSZ9jxR2HD1a2P47k9LYfpG
+	 lnepF+o9g0rXIAlSDHS1hrYbSAPfki7euioGuULEjkXR/xQBEeudn7PlQFoEJ96EsY
+	 cp11YPDnYQlGw==
+Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
+	by mailfauth.ams.internal (Postfix) with ESMTP id A4D75198003A;
+	Wed,  9 Sep 2026 10:47:54 -0400 (EDT)
+Received: from ams-imap-11 ([10.64.2.31])
+  by ams-compute-02.internal (MEProxy); Wed, 09 Sep 2026 10:47:54 -0400
+X-ME-Sender: <xms:lXGhalsJpXFCBjo_K3bvHiiBuzsJiOJeG96f1ivVJUtfw3ic8tAuqA>
+    <xme:lXGhapSRHw_5ZqAHSvUhZJODY4NNznJyd-ClKtHphmi3uzVQ5g22quM3OXEH62ZOQ
+    AtmIeQVMfPWMqpnJ5oASUy1xfuD2IayapsdLOJrcKenZyVkvisU91OS>
+X-ME-Proxy-Cause: dmFkZTE6jmqC424uS50ngBXddaPLMfJzFShd+1mTL0Ixo+2iSVYras5InCqXE6NTcXbwJj
+    blle7PySdPpumsjtyWm7gKb+QFtda9yypgBSD/tGgHWlaQzIaeqPqHd+JXpc+hHQ7cNnwp
+    bx/EVJvlyTofZ/JA8PThZhe594JSfmn+cmcpXl9DSqaoShAAWLC7MFAwSI/Knogapul3g5
+    /GpcynIMWR7hq+SLxVUK7ASoGqyAh7edjCF0RO34X2CrBuOmnHnAki9dV6WSXefxAOETRL
+    Y8S58oOxIqzGZi7jKElLzjU9t9opg1Dpo8i8+I3BPclrRAeyP9iDr2SDYeKKmpYeckwzFA
+    VuGG0qxaUE3VzLBKTxJ7QRsOtrnpJ7uoKpMGSGQP+lrWf5swrzuIMO15r8hWWSGi+Jq8AW
+    VlQbk9QotDYCbFZkJb2X9MtFJ59KADeOlXu05UJZVjwaxHPosLKGjtE9XCPICGlkCPNlZn
+    Xk7Twd21fa9s4I4jrGJ8lox7ZtGwI0CVuilgbD4HM9QyCOr3+fGlE2prt4hv9Ir0ga46UG
+    GyJWCJZtIZ1NVdunaJcz//hPli6MyXJQihxpszckpaX2jT2tyd33qv2gToQ/l8FEn8R2oj
+    BQyKzngPCRzo/Jwyf4v9KPdujqT7Xgsi05wMzp/XXAkbq34p7yxD6jLJsHRQ
+X-ME-Proxy: <xmx:mnGham6Acb4iT1vA9qm3Lr1t9oU8OIUGoheuL9VEG-DiTldY1xj-8g>
+    <xmx:mnGham2EsdJWyC2SA5GUYRnyfpV1ifoldQMroELi1I1DvNyAWROEXA>
+    <xmx:mnGhar77y1ix8YaN9_NS8HZiCq8iec08hm6soV_k0sIRr-bnd_U0Jw>
+    <xmx:mnGhahrtoSs6QcVfrl1Xz9fNDcOgGZ8pPKcg4brx7CnunmDkZjKbXg>
+    <xmx:mnGharV_tFyeApxnmSPSCH6YG4Pam3hCsuzLELRJML0H6O-x9MSms6l9>
+Feedback-ID: ice86485a:Fastmail
+Received: by mailuser.ams.internal (Postfix, from userid 501)
+	id A5932F8007D; Wed,  9 Sep 2026 10:47:49 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 14/14] mm/page-flags: remove PG_private
-To: Zi Yan <ziy@nvidia.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Muchun Song <muchun.song@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>,
- Gregory Price <gourry@gourry.net>, Ying Huang
- <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Kairui Song <kasong@tencent.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Baoquan He <baoquan.he@linux.dev>, Pasha Tatashin
- <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Jan Kara <jack@suse.cz>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Dave Young <ruirui.yang@linux.dev>,
- Shuah Khan <skhan@linuxfoundation.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- kexec@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20260907-remove-pg_private-v3-0-6ae22f9d9272@nvidia.com>
- <20260907-remove-pg_private-v3-14-6ae22f9d9272@nvidia.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzS5EYXZpZCBIaWxk
- ZW5icmFuZCAoQ3VycmVudCkgPGRhdmlkQGtlcm5lbC5vcmc+wsGQBBMBCAA6AhsDBQkmWAik
- AgsJBBUKCQgCFgICHgUCF4AWIQQb2cqtc1xMOkYN/MpN3hD3AP+DWgUCaYJt/AIZAQAKCRBN
- 3hD3AP+DWriiD/9BLGEKG+N8L2AXhikJg6YmXom9ytRwPqDgpHpVg2xdhopoWdMRXjzOrIKD
- g4LSnFaKneQD0hZhoArEeamG5tyo32xoRsPwkbpIzL0OKSZ8G6mVbFGpjmyDLQCAxteXCLXz
- ZI0VbsuJKelYnKcXWOIndOrNRvE5eoOfTt2XfBnAapxMYY2IsV+qaUXlO63GgfIOg8RBaj7x
- 3NxkI3rV0SHhI4GU9K6jCvGghxeS1QX6L/XI9mfAYaIwGy5B68kF26piAVYv/QZDEVIpo3t7
- /fjSpxKT8plJH6rhhR0epy8dWRHk3qT5tk2P85twasdloWtkMZ7FsCJRKWscm1BLpsDn6EQ4
- jeMHECiY9kGKKi8dQpv3FRyo2QApZ49NNDbwcR0ZndK0XFo15iH708H5Qja/8TuXCwnPWAcJ
- DQoNIDFyaxe26Rx3ZwUkRALa3iPcVjE0//TrQ4KnFf+lMBSrS33xDDBfevW9+Dk6IISmDH1R
- HFq2jpkN+FX/PE8eVhV68B2DsAPZ5rUwyCKUXPTJ/irrCCmAAb5Jpv11S7hUSpqtM/6oVESC
- 3z/7CzrVtRODzLtNgV4r5EI+wAv/3PgJLlMwgJM90Fb3CB2IgbxhjvmB1WNdvXACVydx55V7
- LPPKodSTF29rlnQAf9HLgCphuuSrrPn5VQDaYZl4N/7zc2wcWM7BTQRVy5+RARAA59fefSDR
- 9nMGCb9LbMX+TFAoIQo/wgP5XPyzLYakO+94GrgfZjfhdaxPXMsl2+o8jhp/hlIzG56taNdt
- VZtPp3ih1AgbR8rHgXw1xwOpuAd5lE1qNd54ndHuADO9a9A0vPimIes78Hi1/yy+ZEEvRkHk
- /kDa6F3AtTc1m4rbbOk2fiKzzsE9YXweFjQvl9p+AMw6qd/iC4lUk9g0+FQXNdRs+o4o6Qvy
- iOQJfGQ4UcBuOy1IrkJrd8qq5jet1fcM2j4QvsW8CLDWZS1L7kZ5gT5EycMKxUWb8LuRjxzZ
- 3QY1aQH2kkzn6acigU3HLtgFyV1gBNV44ehjgvJpRY2cC8VhanTx0dZ9mj1YKIky5N+C0f21
- zvntBqcxV0+3p8MrxRRcgEtDZNav+xAoT3G0W4SahAaUTWXpsZoOecwtxi74CyneQNPTDjNg
- azHmvpdBVEfj7k3p4dmJp5i0U66Onmf6mMFpArvBRSMOKU9DlAzMi4IvhiNWjKVaIE2Se9BY
- FdKVAJaZq85P2y20ZBd08ILnKcj7XKZkLU5FkoA0udEBvQ0f9QLNyyy3DZMCQWcwRuj1m73D
- sq8DEFBdZ5eEkj1dCyx+t/ga6x2rHyc8Sl86oK1tvAkwBNsfKou3v+jP/l14a7DGBvrmlYjO
- 59o3t6inu6H7pt7OL6u6BQj7DoMAEQEAAcLBfAQYAQgAJgIbDBYhBBvZyq1zXEw6Rg38yk3e
- EPcA/4NaBQJonNqrBQkmWAihAAoJEE3eEPcA/4NaKtMQALAJ8PzprBEXbXcEXwDKQu+P/vts
- IfUb1UNMfMV76BicGa5NCZnJNQASDP/+bFg6O3gx5NbhHHPeaWz/VxlOmYHokHodOvtL0WCC
- 8A5PEP8tOk6029Z+J+xUcMrJClNVFpzVvOpb1lCbhjwAV465Hy+NUSbbUiRxdzNQtLtgZzOV
- Zw7jxUCs4UUZLQTCuBpFgb15bBxYZ/BL9MbzxPxvfUQIPbnzQMcqtpUs21CMK2PdfCh5c4gS
- sDci6D5/ZIBw94UQWmGpM/O1ilGXde2ZzzGYl64glmccD8e87OnEgKnH3FbnJnT4iJchtSvx
- yJNi1+t0+qDti4m88+/9IuPqCKb6Stl+s2dnLtJNrjXBGJtsQG/sRpqsJz5x1/2nPJSRMsx9
- 5YfqbdrJSOFXDzZ8/r82HgQEtUvlSXNaXCa95ez0UkOG7+bDm2b3s0XahBQeLVCH0mw3RAQg
- r7xDAYKIrAwfHHmMTnBQDPJwVqxJjVNr7yBic4yfzVWGCGNE4DnOW0vcIeoyhy9vnIa3w1uZ
- 3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
- CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
- qIws/H2t
-In-Reply-To: <20260907-remove-pg_private-v3-14-6ae22f9d9272@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
+Date: Wed, 09 Sep 2026 16:47:27 +0200
+From: "Ard Biesheuvel" <ardb@kernel.org>
+To: "Breno Leitao" <leitao@debian.org>,
+ "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
+ "Miaohe Lin" <linmiaohe@huawei.com>,
+ "Naoya Horiguchi" <nao.horiguchi@gmail.com>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Kiryl Shutsemau (Meta)" <kas@kernel.org>, kexec@lists.infradead.org,
+ "David Hildenbrand" <david@kernel.org>, "Lorenzo Stoakes" <ljs@kernel.org>,
+ "Liam R. Howlett" <liam@infradead.org>,
+ "Vlastimil Babka" <vbabka@kernel.org>, "Mike Rapoport" <rppt@kernel.org>,
+ "Suren Baghdasaryan" <surenb@google.com>, "Michal Hocko" <mhocko@suse.com>,
+ "Thomas Gleixner" <tglx@kernel.org>, "Ingo Molnar" <mingo@redhat.com>,
+ "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ "Brendan Jackman" <brendan.jackman@linux.dev>,
+ "Johannes Weiner" <hannes@cmpxchg.org>, "Zi Yan" <ziy@nvidia.com>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, rmikey@meta.com, riel@surriel.com, harry@kernel.org,
+ kernel-team@meta.com
+Message-Id: <2c9a7bef-3189-4f78-a6cb-61d2f7afd643@app.fastmail.com>
+In-Reply-To: <20260909-hwpoison-kho-v4-2-359313564495@debian.org>
+References: <20260909-hwpoison-kho-v4-0-359313564495@debian.org>
+ <20260909-hwpoison-kho-v4-2-359313564495@debian.org>
+Subject: Re: [PATCH v4 2/5] mm/memory-failure: libstub: install the poisoned-memory EFI
+ table
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -135,132 +113,226 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 9/8/26 04:56, Zi Yan wrote:
-> folio->private != NULL indicates a folio carries private data, replacing
-> PG_private. All PG_private users are converted. Remove PG_private and
-> reserve the space as __PG_folio for future use.
-> 
-> __DEF_PAGEFLAG_NAME() is added to show __PG_folio.
-> 
-> Also update files in Documentation. hugetlbfs_reserv.rst is outdated and
-> left unchanged. It should be rewritten.
-> 
-> Assisted-by: Claude:claude-opus-4-8
-> Assisted-by: Codex:gpt-5
-> Signed-off-by: Zi Yan <ziy@nvidia.com>
-> To: Andrew Morton <akpm@linux-foundation.org>
-> To: Baoquan He <baoquan.he@linux.dev>
-> To: Mike Rapoport <rppt@kernel.org>
-> To: Pasha Tatashin <pasha.tatashin@soleen.com>
-> To: Pratyush Yadav <pratyush@kernel.org>
-> To: Jonathan Corbet <corbet@lwn.net>
-> To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> To: Jan Kara <jack@suse.cz>
-> To: David Hildenbrand <david@kernel.org>
-> To: Steven Rostedt <rostedt@goodmis.org>
-> To: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Dave Young <ruirui.yang@linux.dev>
-> Cc: Shuah Khan <skhan@linuxfoundation.org>
-> Cc: Lorenzo Stoakes <ljs@kernel.org>
-> Cc: "Liam R. Howlett" <liam@infradead.org>
-> Cc: Vlastimil Babka <vbabka@kernel.org>
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: kexec@lists.infradead.org
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-trace-kernel@vger.kernel.org
+Hello Breno,
+
+Apologies for chiming in late.
+
+On Wed, 9 Sep 2026, at 15:05, Breno Leitao wrote:
+> A EFI config table can only be installed while boot services are still
+> up, so the stub has to create it; the running kernel can only flip bits
+> in a table that already exists.
+>
+
+This is true, but that also means a config table could have a 'next' field
+pointing to an allocation that was added later.
+
+There is a EFI memreserve table based on this principle: this is a hack
+that we added for the arm64 GICv3 LPI table handling, which is a braindead
+piece of kit that must use the same physical allocation as the previous
+kernel. It is not currently enabled on x86.
+
+Please consider whether or not that is more suitable, and can be repurposed
+or shared. (Feel free to make changes to the current format if needed).
+
+I don't have a strong preference either way, but I feel the 2M granularity
+may be a bit wasteful, no?
+
+> Size the bitmap from the span the UEFI memory map describes, which
+> efi_get_ram_range() walks since the stub has no max_pfn. Bit 0 covers
+> the bottom of that span, recorded in phys_base, so a machine whose RAM
+> starts high does not pay for the hole below it. Memory the firmware
+> hot-adds later sits outside the span and is not carried across a kexec.
+>
+> One table has to serve every architecture, and they do not agree on what
+> becomes RAM: x86 decides by descriptor type, arm64 by attribute. So
+> efi_get_ram_range() does not filter at all and spans every descriptor in
+> the map. Sizing wide only costs bitmap bytes; sizing narrow silently
+> drops the records for every frame outside the span.
+>
+> At one bit per 2M that is 64K per TiB, and 256M at the 4PB x86
+> architectural maximum. The 2M granule is called "unit" here, and the
+> table carries it so the granule can change later without breaking the
+> kernels already reading it.
+>
+> Allocate it as EFI_ACPI_RECLAIM_MEMORY so the next kernel does not take
+> it for free RAM, and install it empty.
+>
+> A table installed by an earlier boot rides the system table across kexec
+> and is reused as-is.
+>
+> x86 does not go through efi_stub_common(), so the generic stub and the
+> x86 stub each need the call; on x86 it has to come before exit_boot(),
+> which is the last point a configuration table can be installed.
+>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 > ---
->  Documentation/admin-guide/kdump/vmcoreinfo.rst |  2 +-
->  Documentation/filesystems/vfs.rst              |  6 +++---
->  include/linux/page-flags.h                     | 19 ++-----------------
->  include/trace/events/mmflags.h                 |  3 ++-
->  kernel/vmcore_info.c                           |  1 -
->  5 files changed, 8 insertions(+), 23 deletions(-)
+>  drivers/firmware/efi/libstub/efi-stub-helper.c | 100 +++++++++++++++++++++++++
+>  drivers/firmware/efi/libstub/efi-stub.c        |   1 +
+>  drivers/firmware/efi/libstub/efistub.h         |   6 ++
+>  drivers/firmware/efi/libstub/x86-stub.c        |   2 +
+>  4 files changed, 109 insertions(+)
+>
+> diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c 
+> b/drivers/firmware/efi/libstub/efi-stub-helper.c
+> index 48f93f7758e9e..5cbe675491333 100644
+> --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
+> +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
+> @@ -774,3 +774,103 @@ void efi_remap_image(unsigned long image_base, 
+> unsigned alloc_size,
+>  			efi_warn("Failed to remap data region non-executable\n");
+>  	}
+>  }
+> +
+> +#ifdef CONFIG_EFI_POISONED_MEMORY
+> +/*
+> + * Find the base and top of the memory, so, we can create the bitmap 
+> for
+> + * the full range.
+> + */
+> +static efi_status_t efi_get_ram_range(u64 *base, u64 *top)
+> +{
+> +	struct efi_boot_memmap *map __free(efi_pool) = NULL;
+> +	u64 ram_base = ULLONG_MAX, ram_top = 0;
+> +	efi_status_t status;
+> +	int i, nr_desc;
+> +
+> +	status = efi_get_memory_map(&map, false);
+> +	if (status != EFI_SUCCESS)
+> +		return status;
+> +
+> +	nr_desc = map->map_size / map->desc_size;
+> +	for (i = 0; i < nr_desc; i++) {
+> +		efi_memory_desc_t *d;
+> +
+> +		d = efi_memdesc_ptr((unsigned long)map->map, map->desc_size, i);
+> +		ram_base = min(ram_base, d->phys_addr);
+> +		ram_top = max(ram_top,
+> +			      d->phys_addr + d->num_pages * EFI_PAGE_SIZE);
+> +	}
+> +	if (!ram_top || ram_base == ULLONG_MAX)
+> +		return EFI_NOT_FOUND;
+> +
+> +	*base = round_down(ram_base, EFI_POISON_UNIT_SIZE);
+> +	*top = round_up(ram_top, EFI_POISON_UNIT_SIZE);
+> +
+> +	return EFI_SUCCESS;
+> +}
+> +
+> +/* The size of the bitmap */
+> +static u64 efi_poison_bitmap_size(u64 span)
+> +{
+> +	u64 bytes = DIV_ROUND_UP(DIV_ROUND_UP(span, EFI_POISON_UNIT_SIZE),
+> +				 BITS_PER_BYTE);
+> +
+> +	return round_up(bytes, sizeof(unsigned long));
+> +}
+> +
+> +static struct linux_efi_poisoned_memory *efi_poison_alloc(u64 
+> phys_base,
+> +							  u64 bitmap_size)
+> +{
+> +	struct linux_efi_poisoned_memory *pm;
+> +	efi_status_t status;
+> +
+> +	status = efi_bs_call(allocate_pool, EFI_ACPI_RECLAIM_MEMORY,
+> +			     sizeof(*pm) + bitmap_size, (void **)&pm);
+> +	if (status != EFI_SUCCESS)
+> +		return NULL;
+> +
+> +	pm->version = 1;
+> +	pm->unit_size = EFI_POISON_UNIT_SIZE;
+> +	pm->phys_base = phys_base;
+> +	pm->size = bitmap_size;
+> +	memset(pm->bitmap, 0, bitmap_size);
+> +
+> +	return pm;
+> +}
+> +
+> +/* This needs to be done while boot service is still active */
+> +void install_poisoned_memory_table(void)
+> +{
+> +	efi_guid_t poisoned_memory_table_guid = 
+> LINUX_EFI_POISONED_MEMORY_TABLE_GUID;
+> +	struct linux_efi_poisoned_memory *pm;
+> +	u64 ram_base, ram_top, bitmap_size;
+> +	efi_status_t status;
+> +
+> +	/* A table installed by an earlier boot rides the system table across 
+> kexec. */
+> +	pm = get_efi_config_table(poisoned_memory_table_guid);
+> +	if (pm) {
+> +		if (pm->version != 1)
+> +			efi_err("Unknown version of poisoned-memory table\n");
+> +		return;
+> +	}
+> +
+> +	if (efi_get_ram_range(&ram_base, &ram_top) != EFI_SUCCESS) {
+> +		efi_err("Failed to size the poisoned-memory table!\n");
+> +		return;
+> +	}
+> +
+> +	bitmap_size = efi_poison_bitmap_size(ram_top - ram_base);
+> +	pm = efi_poison_alloc(ram_base, bitmap_size);
+> +	if (!pm) {
+> +		efi_err("Failed to allocate poisoned-memory table!\n");
+> +		return;
+> +	}
+> +
+> +	status = efi_bs_call(install_configuration_table,
+> +			     &poisoned_memory_table_guid, pm);
+> +	if (status != EFI_SUCCESS) {
+> +		efi_bs_call(free_pool, pm);
+> +		efi_err("Failed to install poisoned-memory config table!\n");
+> +	}
+> +}
+> +#endif
+> diff --git a/drivers/firmware/efi/libstub/efi-stub.c 
+> b/drivers/firmware/efi/libstub/efi-stub.c
+> index 235c9738da2d6..22a315e2814a1 100644
+> --- a/drivers/firmware/efi/libstub/efi-stub.c
+> +++ b/drivers/firmware/efi/libstub/efi-stub.c
+> @@ -179,6 +179,7 @@ efi_status_t efi_stub_common(efi_handle_t handle,
+>  			 EFI_RT_SUPPORTED_SET_VIRTUAL_ADDRESS_MAP);
 > 
-> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> index 7663c610fe901..5f1df6d080508 100644
-> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> @@ -325,7 +325,7 @@ NR_FREE_PAGES
->  On linux-2.6.21 or later, the number of free pages is in
->  vm_stat[NR_FREE_PAGES]. Used to get the number of free pages.
->  
-> -PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_hwpoison|PG_head_mask
-> +PG_lru|PG_swapcache|PG_swapbacked|PG_hwpoison|PG_head_mask
->  --------------------------------------------------------------------------
->  
->  Page attributes. These flags are used to filter various unnecessary for
-> diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
-> index d3a93eec3945f..dec7816303c6a 100644
-> --- a/Documentation/filesystems/vfs.rst
-> +++ b/Documentation/filesystems/vfs.rst
-> @@ -649,8 +649,8 @@ Writeback.
->  
->  The first can be used independently to the others.  The VM can try to
->  release clean pages in order to reuse them.  To do this it can call
-> -->release_folio on clean folios with the private
-> -flag set.  Clean pages without PagePrivate and with no external references
-> +->release_folio on clean folios with folio->private set. Clean pages
-> +without folio->private set and with no external references
->  will be released without notice being given to the address_space.
-
-This reads like it would belong into patch #13?
-
->  
->  To achieve this functionality, pages need to be placed on an LRU with
-> @@ -674,7 +674,7 @@ filemap_fdatawait_range, to wait for all writeback to complete.
->  
->  An address_space handler may attach extra information to a page,
->  typically using the 'private' field in the 'struct page'.  If such
-> -information is attached, the PG_Private flag should be set.  This will
-> +information is attached, non-NULL 'private' field will
-
-Same here?
-
-Likely this could have been restructured to cause less head scratches. I'd
-expect any documentation that refers to PG_private to get removed before finally
-removing the bit.
-
-Not the end of the world, just a bit confusing while reviewing.
-
->  cause various VM routines to make extra calls into the address_space
->  handler to deal with that data.
->  
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index ce7fccd90367b..7b7783c0a5216 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -44,10 +44,6 @@
->   * Consequently, PG_reserved for a page mapped into user space can indicate
->   * the zero page, the vDSO, MMIO pages or device memory.
->   *
-> - * The PG_private bitflag is set on pagecache pages if they contain filesystem
-> - * specific data (which is normally at page->private). It can be used by
-> - * private allocations for its own usage.
-> - *
->   * During initiation of disk I/O, PG_locked is set. This bit is set before I/O
->   * and cleared when writeback _starts_ or when read _completes_. PG_writeback
->   * is set before writeback starts and cleared when it finishes.
-> @@ -105,7 +101,7 @@ enum pageflags {
->  	PG_owner_2,		/* Owner use. If pagecache, fs may use */
->  	PG_arch_1,
->  	PG_reserved,
-> -	PG_private,		/* If pagecache, has fs-private data */
-> +	__PG_folio,		/* Do not use: reserved for folio identification */
-
-Do we really have to annotate it with __PG_folio ? I'd just keep it simple and
-have the comment. That also avoids __DEF_PAGEFLAG_NAME just for this use case.
-
-(sorry if this was discussed in previous review rounds)
-
-
-
--- 
-Cheers,
-
-David
+>  	install_memreserve_table();
+> +	install_poisoned_memory_table();
+> 
+>  	status = efi_boot_kernel(handle, image, image_addr, cmdline_ptr);
+> 
+> diff --git a/drivers/firmware/efi/libstub/efistub.h 
+> b/drivers/firmware/efi/libstub/efistub.h
+> index fd91fc15ec810..44436869c4efe 100644
+> --- a/drivers/firmware/efi/libstub/efistub.h
+> +++ b/drivers/firmware/efi/libstub/efistub.h
+> @@ -1169,6 +1169,12 @@ efi_enable_reset_attack_mitigation(void) { }
+> 
+>  void efi_retrieve_eventlog(void);
+> 
+> +#ifdef CONFIG_EFI_POISONED_MEMORY
+> +void install_poisoned_memory_table(void);
+> +#else
+> +static inline void install_poisoned_memory_table(void) { }
+> +#endif
+> +
+>  struct sysfb_display_info *alloc_primary_display(void);
+>  struct sysfb_display_info *__alloc_primary_display(void);
+>  void free_primary_display(struct sysfb_display_info *dpy);
+> diff --git a/drivers/firmware/efi/libstub/x86-stub.c 
+> b/drivers/firmware/efi/libstub/x86-stub.c
+> index 0bae0f06b6763..3136132b9628a 100644
+> --- a/drivers/firmware/efi/libstub/x86-stub.c
+> +++ b/drivers/firmware/efi/libstub/x86-stub.c
+> @@ -1024,6 +1024,8 @@ void __noreturn efi_stub_entry(efi_handle_t 
+> handle,
+> 
+>  	setup_unaccepted_memory();
+> 
+> +	install_poisoned_memory_table();
+> +
+>  	status = exit_boot(boot_params, handle);
+>  	if (status != EFI_SUCCESS) {
+>  		efi_err("exit_boot() failed!\n");
+>
+> -- 
+> 2.53.0-Meta
 
