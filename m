@@ -4,141 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 449F3C79FBB
-	for <kexec@archiver.kernel.org>; Thu, 10 Sep 2026 22:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5AEE2C88E41
+	for <kexec@archiver.kernel.org>; Thu, 10 Sep 2026 23:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ag53OsvdHGBUIgQF6RYGdy69fiQDTevZ1Y5ABCjO8N8=; b=lplkreNxV7knBxV3xsbdbcATUp
-	zp6X40dSymlk9iVR123xdviHcsOKwh5ZVhD43q7SGM+Ry/nAxfgYmAv6BOXYRnwIAKgREMLlYi9qL
-	Us7s7+vRn+BIfXWCxqYlyy7I+F7OrblgE+oY431xiI1F3a5kLzlrzrJs1AOnfWKnVcgNiJX25AVgU
-	T/E6GQiUxDKPGY2QgMSabwMhdGdKx4tN5QUa9yJhttice5Oe3T4CgVZeVdHuNTEWG7dWpU82SrKKy
-	1EWjCMkRR9nzBuK9x5dEanR86hQuysAfalbnYlN8C7EQ8LIqiI0o0r0mNc0oB/k6jnqo9h5wbPCnB
-	EcBz2xJg==;
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+	List-Owner; bh=veei4zxnSmGQSdcpRlhDQcyCNXo82aQ5tDwmq9b9C9g=; b=QRuks/UaiKDQcp
+	EzRtxIUp6ghbuffbDflCT00TludpCjZttKt24/UTZdB03OvxpMLvkBtm0b9TLLHqQurpvPA/ImVvl
+	6j4f896CAderjUXXgxMsGVW+IK7juKnZllvIhIE5a2Xwa3z+I4gFXyPck8PMe5DWjNZbccVKmRtDP
+	H7/GatV+tHiEn+frRaHoj1+4f00Rk80YWhe1FFQjwVvxHPVSyHAtmVCk4FNjhBJEQdlgDSgZwBUky
+	GdQygLIwL5w16yJ9vz36j62Pu2JXugku1sg38zx7OXB9qxXEo1TKIq38GFQvJOwPRqSd+Mo35RXYC
+	Zzclfg5dFnd7ShJrYnng==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x4niA-0000000FVQs-1NSx;
-	Thu, 10 Sep 2026 22:57:42 +0000
-Received: from mail-centralusazlp170100005.outbound.protection.outlook.com ([2a01:111:f403:c111::5] helo=DM1PR04CU001.outbound.protection.outlook.com)
+	id 1x4oVG-0000000FZxQ-3GbG;
+	Thu, 10 Sep 2026 23:48:26 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x4ni7-0000000FVQQ-1zdJ;
-	Thu, 10 Sep 2026 22:57:40 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qQjj39L4OIymJtFEXdkNgxI0nQkcHpiWHcZUTvuTVPN17ZKrKPXbIFG/WvFT3dxXkKgv9nSbW4jRBTGS+NZZbxi+UKL2fY2qM6GknC/Cd21scJoGi6REb6uLyuvQPPYx510fRjjX9vBUfm8PGDoG8z/CiVqC6pYVo03jGndUCRVWjkxtfpzlK1q4uoI8qWdFSzebqX8sNz9+hZIJRJdMEMEUZRsbGx3aUBB3TB+PHpkqvXxdI18EF+WDx8plAYLGG1B8hTkjrzLh/UzqdYnHQRHnrOuKjWUlDmCS0J+cMtw8SbpB3luJfwwz6GJzXKLMIvIASYkoO7pxezpU99oCwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ag53OsvdHGBUIgQF6RYGdy69fiQDTevZ1Y5ABCjO8N8=;
- b=EBemnTOgD/yaoe/Uzb59KN23nGkJf9/vxz+q/2T5Cx1sGcgzfNTqhFx7JIUe4EBf6nmk+K3A45AUMaOcJSYsuwAyXnvqDZaGKIE0LLrSVxmJYn1EIPwNxdp8fk77/gZ7neWRGUlqhngspeV89m5ztNZ+hxtBb3qGXbcik4shNwFaV4RB82+4HoxRxBJ8IkPDtmVUJ00Or8IvH2QeBJUEUEt9j6LXAzz2/xdmhLBsNxMAZyNKJ06147usRwUYR8M5ISr445NL0q19udIsfEuZD+reRlGw1nl8nMAHvrBMR1GAjiz4vHHc2YzKLIGQBOKmXBFa1q0CJiHVC036FsM6qQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ag53OsvdHGBUIgQF6RYGdy69fiQDTevZ1Y5ABCjO8N8=;
- b=oyjwQlTwUYrjKykJRsKa8sqhPd+EXg8rm16AloxZ+BPzbwqE9KLWm1u9ZIbGzMImqeTIQNoi+wEPPGJuwIE1BqlGC9U/xCtaGV68YnfJm3N1eslRHmfn+G/LGJqa9jF3q2n7kB6MqQhE47B4iPYVhYsvv2rxHAOfDWYCLRttCWbo4pJwXMJN+8yR6r5eB+1dHJVaNoLU1HsKSDjHLLpRVXC+jGty0KOfQaPkJJIgu7z3dvcU0eY/pXmnRxqOYxZANAq0fTt/qP+jZVLWcMDRNhlR0Gh4zm3o9Iyh1q9t0ZmDr1w2m24MRbiVeRK5zf1TQfDPBQHBnJkBJ5g/3CismA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CHBPR12MB731189.namprd12.prod.outlook.com
- (2603:10b6:610:33d::12) by SN7PR12MB7912.namprd12.prod.outlook.com
- (2603:10b6:806:341::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.9; Thu, 10 Sep
- 2026 22:57:31 +0000
-Received: from CHBPR12MB731189.namprd12.prod.outlook.com
- ([fe80::b0e5:123d:fe06:e10d]) by CHBPR12MB731189.namprd12.prod.outlook.com
- ([fe80::b0e5:123d:fe06:e10d%6]) with mapi id 15.21.0406.007; Thu, 10 Sep 2026
- 22:57:29 +0000
-Date: Thu, 10 Sep 2026 19:57:28 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: David Matlack <dmatlack@google.com>,
-	Logan Odell <loganodell@google.com>, arnd@arndb.de,
-	pasha.tatashin@soleen.com, rppt@kernel.org, pratyush@kernel.org,
-	graf@amazon.com, akpm@linux-foundation.org, pbonzini@redhat.com,
-	maz@kernel.org, oupton@kernel.org, bhelgaas@google.com,
-	alex@shazbot.org, kevin.tian@intel.com, dwmw2@infradead.org,
-	baolu.lu@linux.intel.com, joro@8bytes.org, will@kernel.org,
-	robin.murphy@arm.com, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-mm@kvack.org, kvm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-pci@vger.kernel.org, iommu@lists.linux.dev
-Subject: Re: [RFC PATCH 0/3] liveupdate: Move to feature flags for LUO and
- memfd ABI compatibility
-Message-ID: <20260910225728.GB857650@nvidia.com>
-References: <20260904160009.GV4157646@nvidia.com>
- <aptFFYqcSiBdMLE8@google.com>
- <20260905012403.GX4157646@nvidia.com>
- <aqIAtOoew-_6jw29@google.com>
- <20260910143448.GD3968357@nvidia.com>
- <aqLOWkuVKccR-I7W@google.com>
- <20260910171210.GF3968357@nvidia.com>
- <aqMgjXfTJ8u3n7Kj@google.com>
- <20260910221832.GH3968357@nvidia.com>
- <aqMyXE-fD-UN6w5L@google.com>
+	id 1x4oVF-0000000FZxI-379i
+	for kexec@lists.infradead.org;
+	Thu, 10 Sep 2026 23:48:25 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 7DB66435CD;
+	Thu, 10 Sep 2026 23:48:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 359201F000FF;
+	Thu, 10 Sep 2026 23:48:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789084105;
+	bh=veei4zxnSmGQSdcpRlhDQcyCNXo82aQ5tDwmq9b9C9g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To;
+	b=VPFD3EsRcr4ia0sKruJohfqNMlr0NVwgC2Ew7jj25LFYREBdckasctt5X5XrbDg2s
+	 l1s9JR5H9rwkZP+oMf0dARzjSWFPSzgEGSwo0E4FAKUSK8ZxuVMrQ9vWpAN38ZCy4i
+	 zcl/EGT5+6gWDxhv4pX0uEiJer7TjC1TuwK2WU5OQAdkO88J9gjriMZwoV+7FUYOsE
+	 9PL3U2gmyViGURsIseLdyUQbO0UsayyXUSuMysDSTnHFAR3wLkT0ZPqHFl2oEAIn1k
+	 TM3nI+8zvWasXzt356+nogS+PTuKt4IgACezaOw3gI560jBnM4AWXnhtIo4jz84Hw9
+	 UvC/f8SMtIojg==
+Date: Thu, 10 Sep 2026 18:48:24 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: David Matlack <dmatlack@google.com>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Alexander Graf <graf@amazon.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
+	Josh Hilke <jrhilke@google.com>,
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pranjal Shrivastava <praan@google.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v8 01/12] PCI: liveupdate: Set up FLB handler for the PCI
+ core
+Message-ID: <20260910234824.GA366888@bhelgaas>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aqMyXE-fD-UN6w5L@google.com>
-X-ClientProxiedBy: YT4P288CA0049.CANP288.PROD.OUTLOOK.COM
- (2603:10b6:b01:d2::6) To CHBPR12MB731189.namprd12.prod.outlook.com
- (2603:10b6:610:33d::12)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CHBPR12MB731189:EE_|SN7PR12MB7912:EE_
-X-MS-Office365-Filtering-Correlation-Id: ce92fa94-ed34-4200-3035-08df0f8ee425
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|1800799024|7416014|376014|366016|10067099003|18002099003|22082099003|11063799006|4143699003|56012099006;
-X-Microsoft-Antispam-Message-Info: QA5RbieWk9Ug+h6zWar2Mc7zFSemvkKfp7HRhyfGIrPhb9Swufb/L5VxDNe9UnBlPG7C4zaO7N77kov1G2MXp/BQD0gB8YM6lERETqN5AmHywB/xQiXIF0DI8rxKyxziXW3cLYQRJjPZJcByoxMI82d+LUmb98IuWR7pJH6CZhK6ccah6go2otxB4In2Nm6QmaOQloA5TU0VNW1G9yGJdH9SyHSrogOIABj2ReLMnRzdBj3an4ef5YruBjK0WCWaG26hFOOsjFZXknmQCT/pdCI+WU0WndryKHq1tnmAoAHy+BBADwReJdop24LlNvCwInWA2ofHd92waGuXSMfLyxxHiLl0AkQevAyPusMYOwF67/DIWdiI3Cda3RzSwRjzyZCimuI1f7StdHHVXtZcziB68D8c6SwSJpFC9qHpusn4mFjRFEH9unYStnmPXhpzZxEGcFUAd4X9a9abKN1sffNMILcICPATwYB1eCXmmzfHlk78izHDM2grnaRWeyt710IuGJrQTL8YPwmEn4hFwI97J3+LTqAomlP1cLd+A1pyEc4cWO3kRhJPoqQW1Xw2f0b9fh97PmW3+Qy9qsZ+sT3ShqUNNoAWfPiB0+8gEcRcwG1MqNtjTl/8vuqehDFgILU3qds9xCdYcviy2yWZKQ6xsSFwjTJGoWUTowkf/KY=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CHBPR12MB731189.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(7416014)(376014)(366016)(10067099003)(18002099003)(22082099003)(11063799006)(4143699003)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xKifFiTJRwDydIcyBACTq2CVlVVavCLWXlYEMG5cDpfXg+uZLvtv8DgCFQyu?=
- =?us-ascii?Q?stwFGtikYizqj53H+XhXC5iby3knbe0TPa+XDnrC0qhY78BxXLQGbHjGU88l?=
- =?us-ascii?Q?lnM/R/ICjDBginJNOm1YcIk8uOGGvGz88oj8EkuMGlhAicMc83dZcVzfVYLa?=
- =?us-ascii?Q?RkTJgp25VXB7bg08TbQnYGc5QlKh/LkhUs+8Jto2EynWM7dNY9ksvPi1aVey?=
- =?us-ascii?Q?PV81xV4MAPCZRa64EXIe/unhXQ8u6/SVbjLP+b9OtFprOWofRlDK8jBTfnaq?=
- =?us-ascii?Q?1syBxj9RRhp5suR3SnBKFKw0Mhx2zB3m6HyCVAD5t+aE62gbbxE25ytDI7AJ?=
- =?us-ascii?Q?1QC5Y2Dao7z/hqJZmSePELPCel3w5lU7p5X/OMfUERxSRHWh+USZZE3xJGKb?=
- =?us-ascii?Q?U/hxlmfmrUOegjaIZCDy0R/a3Yseg+SxFBNXN9LGekVGqjwBkSSCbOQ3hAFU?=
- =?us-ascii?Q?GWjYPWkxNbjbV9raHxQmd9gN8bdPZ8xy+EKjDQCjIW2APjiRMzHQMkW+eGUW?=
- =?us-ascii?Q?WF09yhOEhxlQvLhASHwwRoshyQjaahWBCANyG6lloaLcb15LPFaRchKOTSrC?=
- =?us-ascii?Q?rSSrjs2D4d0TMyue2IxDiHbq2XL+E5pd5HQ//MMehfQvf6dhli/EhomZkwwH?=
- =?us-ascii?Q?Q3kWh8oXj7uEraVAIZDVLiZD2znKam2r5E63t/xpAIqtmTNuP86ITWjUUR8J?=
- =?us-ascii?Q?TAECWin57jZHBw/a1+dxddv9NNOoxebQVk3Zorfk58XPjqH6QOEbLaqra1Jw?=
- =?us-ascii?Q?rgO0PuxSM1w28zFiMjt3RHDXZyCYwBKQYyVKNar2V5HYzBq2vOMbWUd0f/Yc?=
- =?us-ascii?Q?rc18xxd8T88hpL9I6rEx0m2SXeU74uJB4COS0fij4qPS2yZAyH2zJpaPGmtM?=
- =?us-ascii?Q?YdMFLVauX9fjhHbKiKzC/E68pWrbUIw49vzYUqzJCq4MuW0aPna3+1YEiw/n?=
- =?us-ascii?Q?JteQMFsTi2pJkl6rsTVnSjEcpx+3IfNuHw7x4DxlHTlAEbdydD3Zrr1mCnRO?=
- =?us-ascii?Q?YH1wXAJIXO2Csvzg3TtcFZeuQozbcXeo/V0ePGwjr4SQZlpaRA4DfN4XyHyt?=
- =?us-ascii?Q?EryXaStlowlthfZWrcM2ydc6Zh+5hoWspUQSxu+4TWj4gtQNAMOfVzVHvL0t?=
- =?us-ascii?Q?H+qqelTGH30cYyDW893uGtKr+futVavzQwhPpsc1EPlrkz1z/ny3zdsgZVfP?=
- =?us-ascii?Q?NZEaqz5PUeRARySqOQ0v3BZBEFlyL1LaVO+CZuiUDFH/7Ip+1E/KIBPJyONh?=
- =?us-ascii?Q?Azj2MUr1ykkUO7JVnLsbYOg78IkBquukFrHiWmZlZMwAxcsxoyVacwUq48nY?=
- =?us-ascii?Q?1Jf13ana/1AXX5Gg1mfS5aVrMkiY7ATcWRtMskN49LeVoKP2k4ROAlnr5JWn?=
- =?us-ascii?Q?CG3zbuVf2/w6kmOM280wgBUrsrbtWUi+jhXa44qFcuhW8zWpRodZI3s2BIOs?=
- =?us-ascii?Q?tCGXF0B7zQ5QzZGD2t6WNhI0ymASqCz9SdThPoayyj5WzPualijIG7pmyVya?=
- =?us-ascii?Q?HcQxHlwmtxGLDj6pwCifqQeaOeypzf+hs7CqnNdV4QgHf1B1J/wG7KoeMg5t?=
- =?us-ascii?Q?nb8JVFrdsxTSC+6Smf+WxcROG+JD3vNRvTApd344LzsztgVQDtlBqqeBjPfe?=
- =?us-ascii?Q?uv6wZSgV9nPnTJuX2ck5JqtZNCQLfJ+o5WuEdkm74iXgHzODji/76f6MYfzk?=
- =?us-ascii?Q?yQXq6MzWFenULbiHkrhioxId20iiE9v1e6HnSwdOKyQx2lVB?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce92fa94-ed34-4200-3035-08df0f8ee425
-X-MS-Exchange-CrossTenant-AuthSource: CHBPR12MB731189.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2026 22:57:29.8056
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hUtyDIBMFosI+6EJYNaCdR9Y6eTdR2zGFy6vAHrPkLLhm+Ol8YVTdvcRoaSmMQJb
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7912
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260910_155739_533332_84522CE7 
-X-CRM114-Status: GOOD (  12.42  )
+In-Reply-To: <20260728221007.2098560-2-dmatlack@google.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -153,30 +87,496 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Sep 10, 2026 at 03:42:36PM -0700, Sean Christopherson wrote:
-> On Thu, Sep 10, 2026, Jason Gunthorpe wrote:
-> > Sean's initial email was asking for strict never-break ABI compatability
-> > rules on top, and that is what I've been reacting to.
-> 
-> No, I was never asking for that.  I think we just have a different interpretation
-> of ABI, or rather are talking about different pieces of ABI.
-> 
-> I am still asking for never-break serialization format compatibility, i.e. the
-> more literal save/restore ABI.  I'm not asking for full backwards/forwards
-> compatibility across all kernels version, i.e. the higher level "kernel" ABI.
-> 
-> To phrase things differently: I am a-ok if kernels are inherently incompatible
-> because they fundamentally operate differently and/or support different features.
-> I am not ok if we end up with incompatible kernels because the save/restore
-> interfaces and payloads are poorly designed, lack abstraction, etc.  
+On Tue, Jul 28, 2026 at 10:09:55PM +0000, David Matlack wrote:
+> Set up a File-Lifecycle-Bound (FLB) handler for the PCI core to enable
+> it to participate in the preservation of PCI devices across Live Update.
+> Essentially, this commit enables the PCI core to allocate a struct
+> (struct pci_ser) and preserve it across a Live Update whenever at least
+> one device is preserved.
 
-I can more agree with this, it is mostly what I thought we'd end up
-doing anyhow with version numbers and growing the structs not
-replacing them.
+I assume pci_ser is the state the PCI core needs to preserve across
+kexec so the new kernel's enumeration doesn't interrupt the device
+operation.  And that whatever state the endpoint drivers need to
+adopt/inherit the device in the new kernel is managed without any help
+from the PCI core?
 
-So you still end up with a version label (string I guess?) because we
-can break it from time to time, just the version should have the
-feature mechanism layered under it? I'm fine with that
+> Preserving PCI devices across Live Update is built on top of the Live
+> Update Orchestrator's (LUO) support for file preservation. Drivers are
+> expected to expose a file to userspace to represent a single PCI device
+> and support preservation of that file. This is intended primarily to
+> support preservation of PCI devices bound to VFIO drivers.
 
-Jason
+Where do drivers expose this file?  sysfs?  I guess it's a file per
+preserved device?  Thinking like a driver writer, I'm expecting a hint
+about how to expose this file (should also be in the file doc somehere
+if it's not already).
+
+> This commit enables drivers to register their liveupdate_file_handler
+> with the PCI core so that the PCI core can do its own tracking and
+> enforcement of which devices are preserved.
+> 
+>   pci_liveupdate_register_flb(driver_file_handler);
+>   pci_liveupdate_unregister_flb(driver_file_handler);
+
+So a driver calls pci_liveupdate_register_flb() once, then
+pci_liveupdate_preserve() once for each device it wants preserved?
+
+> When the first file (with a handler registered with the PCI core) is
+> preserved, the PCI core will be notified to allocate its tracking struct
+> (pci_ser).
+
+The passive voice here makes the actors a bit obscure.  I guess a
+LIVEUPDATE_SESSION_PRESERVE_FD ioctl on some per-device file kicks
+this off?
+
+I guess the pci_ser allocation is in
+pci_liveupdate_flb_ops.preserve(), i.e., pci_flb_preserve()?
+
+So the PCI core tracker (pci_ser) isn't actually allocated at the time
+of pci_liveupdate_register_flb(); it's allocated on the first
+LIVEUPDATE_SESSION_PRESERVE_FD ioctl for a driver that has called
+pci_liveupdate_register_flb()?
+
+IIUC the call tree for that ioctl looks something like this:
+
+  <driver>
+    pci_liveupdate_register_flb
+      liveupdate_register_flb(fh, &pci_liveupdate_flb)
+
+  luo_session_ioctl
+    op = &luo_session_ioctl_ops[...]
+    op->execute                               # eg luo_session_preserve_fd()
+      luo_session_preserve_fd
+        luo_preserve_file
+          luo_flb_file_preserve
+            luo_flb_file_preserve_one
+              if (outgoing_count == 0)        # only for first FLB device
+                flb->ops->preserve            # eg pci_flb_preserve()
+                  pci_flb_preserve
+                    ser = kho_alloc_preserve  <-- alloc pci_ser
+                outgoing.count = 1
+          fh->ops->preserve                   # something not included here
+
+  pci_liveupdate_preserve
+    pci_liveupdate_preserve_device
+      dev_ser = pci_flb_alloc_dev_ser  <-- alloc per-dev PCI core serialized state
+      dev_ser->bdf = pci_dev_id(dev)
+
+Seems like kind of an awkward way to allocate pci_ser.  Couldn't it be
+allocated on the first call to pci_liveupdate_register_flb()?  That
+would be a lot easier for driver writers to trace through.
+
+> When the last file is unpreserved (i.e. preservation
+> cancelled) the PCI core will be notified to free struct pci_ser.
+
+There's a lot going on behind "PCI core will be notified".  I assume
+these refer to the first-time behavior of luo_flb_file_preserve_one()
+and last-time behavior of liveupdate_flb_put_outgoing(), which is
+honestly kind of hard to suss out.
+
+This series doesn't include a caller of pci_liveupdate_preserve() (or
+pci_liveupdate_register_flb()), so I can't figure out the ordering.
+Obviously pci_liveupdate_register_flb() must be first.
+
+I first thought pci_liveupdate_preserve() would be called via the
+fh->ops->preserve() in the luo_session_preserve_fd() ioctl path, but
+it's not.  pci_liveupdate_preserve() is intended for the driver to
+call it directly.  But it looks like it has to be called *after* the
+ioctl?  Obviously I'm confused :)
+
+> This struct is preserved across a Live Update using KHO and can be
+> fetched by the PCI core during early boot (e.g. during device
+> enumeration) so that it knows which devices were preserved.
+> 
+> Note: This commit only allocates struct pci_ser and preserves it across
+> Live Update. A subsequent commit will add an API for drivers to tell the
+> PCI core exactly which devices are being preserved.
+> 
+> Note: There is no reason to check for kho_is_enabled() since it can be
+> assumed to return true. If KHO was not enabled then Live Update would
+> not be enabled and these routines would never run.
+> 
+> Reviewed-by: Pranjal Shrivastava <praan@google.com>
+> Signed-off-by: David Matlack <dmatlack@google.com>
+> ---
+>  Documentation/core-api/liveupdate.rst |   4 +
+>  MAINTAINERS                           |  13 +++
+>  drivers/pci/Kconfig                   |  15 +++
+>  drivers/pci/Makefile                  |   1 +
+>  drivers/pci/liveupdate.c              | 158 ++++++++++++++++++++++++++
+>  include/linux/kho/abi/pci.h           |  63 ++++++++++
+>  include/linux/pci.h                   |   1 +
+>  include/linux/pci_liveupdate.h        |  30 +++++
+>  8 files changed, 285 insertions(+)
+>  create mode 100644 drivers/pci/liveupdate.c
+>  create mode 100644 include/linux/kho/abi/pci.h
+>  create mode 100644 include/linux/pci_liveupdate.h
+> 
+> diff --git a/Documentation/core-api/liveupdate.rst b/Documentation/core-api/liveupdate.rst
+> index 5a292d0f3706..b3c689e633c1 100644
+> --- a/Documentation/core-api/liveupdate.rst
+> +++ b/Documentation/core-api/liveupdate.rst
+> @@ -1,5 +1,7 @@
+>  .. SPDX-License-Identifier: GPL-2.0
+>  
+> +.. _luo:
+> +
+>  ========================
+>  Live Update Orchestrator
+>  ========================
+> @@ -18,6 +20,8 @@ LUO Preserving File Descriptors
+>  .. kernel-doc:: kernel/liveupdate/luo_file.c
+>     :doc: LUO File Descriptors
+>  
+> +.. _flb:
+> +
+>  LUO File Lifecycle Bound Global Data
+>  ====================================
+>  .. kernel-doc:: kernel/liveupdate/luo_flb.c
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a3ed337e827d..9cc7b9291ace 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -20824,6 +20824,19 @@ L:	linux-pci@vger.kernel.org
+>  S:	Supported
+>  F:	Documentation/PCI/pci-error-recovery.rst
+>  
+> +PCI LIVE UPDATE
+> +M:	David Matlack <dmatlack@google.com>
+> +R:	Pasha Tatashin <pasha.tatashin@soleen.com>
+> +R:	Mike Rapoport <rppt@kernel.org>
+> +R:	Pratyush Yadav <pratyush@kernel.org>
+> +L:	kexec@lists.infradead.org
+> +L:	linux-pci@vger.kernel.org
+> +S:	Maintained
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git
+> +F:	drivers/pci/liveupdate.c
+> +F:	include/linux/kho/abi/pci.h
+> +F:	include/linux/pci_liveupdate.h
+> +
+>  PCI MSI DRIVER FOR ALTERA MSI IP
+>  L:	linux-pci@vger.kernel.org
+>  S:	Orphan
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 0c7408509ba2..3781e2b5f095 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -271,6 +271,21 @@ config VGA_ARB_MAX_GPUS
+>  	  Reserves space in the kernel to maintain resource locking for
+>  	  multiple GPUS.  The overhead for each GPU is very small.
+>  
+> +config PCI_LIVEUPDATE
+> +	bool "PCI Live Update Support"
+> +	depends on PCI && LIVEUPDATE
+> +	help
+> +	  Enable PCI core support for preserving PCI devices across Live
+> +	  Update. This, in combination with support in a device's driver,
+> +	  enables PCI devices to run and perform memory transactions
+> +	  uninterrupted during a kexec for Live Update.
+> +
+> +	  This option should only be enabled by users who plan to use Live
+> +	  Update for kernel upgrades and require preserving PCI devices during
+> +	  those upgrades.
+> +
+> +	  If unsure, say N.
+> +
+>  source "drivers/pci/hotplug/Kconfig"
+>  source "drivers/pci/controller/Kconfig"
+>  source "drivers/pci/endpoint/Kconfig"
+> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+> index 41ebc3b9a518..e8d003cb6757 100644
+> --- a/drivers/pci/Makefile
+> +++ b/drivers/pci/Makefile
+> @@ -16,6 +16,7 @@ obj-$(CONFIG_PROC_FS)		+= proc.o
+>  obj-$(CONFIG_SYSFS)		+= pci-sysfs.o slot.o
+>  obj-$(CONFIG_ACPI)		+= pci-acpi.o
+>  obj-$(CONFIG_GENERIC_PCI_IOMAP) += iomap.o
+> +obj-$(CONFIG_PCI_LIVEUPDATE)	+= liveupdate.o
+>  endif
+>  
+>  obj-$(CONFIG_OF)		+= of.o
+> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+> new file mode 100644
+> index 000000000000..fffb41a66ca7
+> --- /dev/null
+> +++ b/drivers/pci/liveupdate.c
+> @@ -0,0 +1,158 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/*
+> + * Copyright (c) 2026, Google LLC.
+> + * David Matlack <dmatlack@google.com>
+> + */
+> +
+> +/**
+> + * DOC: PCI Live Update
+> + *
+> + * The PCI subsystem participates in the Live Update process to enable drivers
+> + * to preserve their PCI devices across kexec.
+> + *
+> + * :ref:`FLB <flb>` Data
+> + * =====================
+> + *
+> + * PCI device preservation across Live Update is built on top of the
+> + * :ref:`LUO <luo>` support for file preservation across kexec. Drivers are
+> + * expected to expose a file to represent a single PCI device and support
+> + * preservation of that file with ``ioctl(LIVEUPDATE_SESSION_PRESERVE_FD)``.
+> + * This allows userspace to control the preservation of devices and ensure
+> + * proper lifecycle management while a device is preserved. The first intended
+> + * use-case is preserving vfio-pci device files.
+> + *
+> + * The PCI core maintains its own state about what devices are being preserved
+> + * across Live Update using FLB data in LUO. Essentially, this allows the PCI
+> + * core to allocate struct pci_ser when the first device (file) is preserved
+> + * and free it when the last device (file) is unpreserved. After kexec, the
+> + * PCI core can fetch the struct pci_ser (which was constructed by the previous
+> + * kernel) from LUO at any time (e.g. during enumeration) so that it knows
+> + * which devices were preserved.
+> + *
+> + * To enable the PCI core to be notified whenever a file representing a device
+> + * is preserved, drivers must register their struct liveupdate_file_handler with
+> + * the PCI core by using the following APIs:
+> + *
+> + *  * ``pci_liveupdate_register_flb(driver_file_handler)``
+> + *  * ``pci_liveupdate_unregister_flb(driver_file_handler)``
+> + */
+> +
+> +#define pr_fmt(fmt) "PCI: liveupdate: " fmt
+> +
+> +#include <linux/io.h>
+> +#include <linux/kexec_handover.h>
+> +#include <linux/kho/abi/pci.h>
+> +#include <linux/kho_block.h>
+> +#include <linux/liveupdate.h>
+> +#include <linux/mm.h>
+> +#include <linux/mutex.h>
+> +#include <linux/pci.h>
+> +#include <linux/slab.h>
+> +
+> +/**
+> + * struct pci_flb_outgoing - Outgoing PCI FLB object
+> + * @ser: Pointer to the preserved struct pci_ser.
+> + * @block_set: The KHO block set holding the outgoing devices.
+> + *
+> + * This structure holds the runtime state for the outgoing PCI Live Update
+> + * state. It wraps the serialized pci_ser and the block_set used to manage
+> + * the serialized entries.
+> + */
+> +struct pci_flb_outgoing {
+> +	struct pci_ser *ser;
+> +	struct kho_block_set block_set;
+> +};
+> +
+> +static int pci_flb_preserve(struct liveupdate_flb_op_args *args)
+> +{
+> +	struct pci_flb_outgoing *outgoing __free(kfree) = NULL;
+> +	struct pci_ser *ser;
+> +
+> +	outgoing = kzalloc_obj(*outgoing);
+> +	if (!outgoing)
+> +		return -ENOMEM;
+> +
+> +	ser = kho_alloc_preserve(sizeof(*ser));
+> +	if (IS_ERR(ser))
+> +		return PTR_ERR(ser);
+> +
+> +	ser->version = PCI_LUO_FLB_VERSION;
+> +	ser->nr_devices = 0;
+> +	ser->devices = 0;
+> +
+> +	outgoing->ser = ser;
+> +	kho_block_set_init(&outgoing->block_set, sizeof(struct pci_dev_ser));
+> +
+> +	args->obj = no_free_ptr(outgoing);
+> +	args->data = virt_to_phys(ser);
+> +	pr_debug("Preserved struct pci_ser (0x%llx)\n", args->data);
+> +	return 0;
+> +}
+> +
+> +static void pci_flb_unpreserve(struct liveupdate_flb_op_args *args)
+> +{
+> +	struct pci_flb_outgoing *outgoing = args->obj;
+> +
+> +	pr_debug("Unpreserving struct pci_ser (0x%llx)\n", args->data);
+> +
+> +	WARN_ON(outgoing->ser->nr_devices);
+> +	kho_block_set_destroy(&outgoing->block_set);
+> +	kho_unpreserve_free(outgoing->ser);
+> +	kfree(outgoing);
+> +}
+> +
+> +static int pci_flb_retrieve(struct liveupdate_flb_op_args *args)
+> +{
+> +	pr_debug("Retrieving struct pci_ser (0x%llx)\n", args->data);
+> +	args->obj = phys_to_virt(args->data);
+> +	return 0;
+> +}
+> +
+> +static void pci_flb_finish(struct liveupdate_flb_op_args *args)
+> +{
+> +	pr_debug("Finished struct pci_ser (0x%llx)\n", args->data);
+> +	kho_restore_free(args->obj);
+> +}
+> +
+> +static struct liveupdate_flb_ops pci_liveupdate_flb_ops = {
+> +	.preserve = pci_flb_preserve,
+> +	.unpreserve = pci_flb_unpreserve,
+> +	.retrieve = pci_flb_retrieve,
+> +	.finish = pci_flb_finish,
+> +	.owner = THIS_MODULE,
+> +};
+> +
+> +static struct liveupdate_flb pci_liveupdate_flb = {
+> +	.ops = &pci_liveupdate_flb_ops,
+> +	.compatible = PCI_LUO_FLB_COMPATIBLE,
+> +};
+> +
+> +/**
+> + * pci_liveupdate_register_flb() - Register a file handler with the PCI core
+> + * @fh: The file handler to register.
+> + *
+> + * Drivers should call pci_liveupdate_register_flb() to register their
+> + * struct liveupdate_file_handler with the PCI core. This enables the PCI core
+> + * to allocate its outgoing struct pci_ser whenever the first device is
+> + * preserved, and free it when the last device is unpreserved.
+> + *
+> + * Return: 0 on success, <0 on failure.
+> + */
+> +int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh)
+> +{
+> +	pr_debug("Registering file handler \"%s\"\n", fh->compatible);
+> +	return liveupdate_register_flb(fh, &pci_liveupdate_flb);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_liveupdate_register_flb);
+> +
+> +/**
+> + * pci_liveupdate_unregister_flb() - Unregister a file handler with the PCI core
+> + * @fh: The file handler to unregister.
+> + */
+> +void pci_liveupdate_unregister_flb(struct liveupdate_file_handler *fh)
+> +{
+> +	pr_debug("Unregistering file handler \"%s\"\n", fh->compatible);
+> +	liveupdate_unregister_flb(fh, &pci_liveupdate_flb);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_liveupdate_unregister_flb);
+> diff --git a/include/linux/kho/abi/pci.h b/include/linux/kho/abi/pci.h
+> new file mode 100644
+> index 000000000000..d4881c2d2fc9
+> --- /dev/null
+> +++ b/include/linux/kho/abi/pci.h
+> @@ -0,0 +1,63 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +/*
+> + * Copyright (c) 2026, Google LLC.
+> + * David Matlack <dmatlack@google.com>
+> + */
+> +
+> +#ifndef _LINUX_KHO_ABI_PCI_H
+> +#define _LINUX_KHO_ABI_PCI_H
+> +
+> +#include <linux/bug.h>
+> +#include <linux/compiler.h>
+> +#include <linux/types.h>
+> +
+> +/**
+> + * DOC: PCI File-Lifecycle Bound (FLB) Live Update ABI
+> + *
+> + * This header defines the ABI for preserving core PCI state across kexec using
+> + * Live Update File-Lifecycle Bound (FLB) data.
+> + *
+> + * This interface is a contract. Any modification to any of the serialization
+> + * structs defined here constitutes a breaking change. Such changes require
+> + * incrementing the version number in the PCI_LUO_FLB_VERSION number.
+> + */
+> +
+> +#define PCI_LUO_FLB_COMPATIBLE "pci"
+> +#define PCI_LUO_FLB_VERSION 1
+> +
+> +/**
+> + * struct pci_dev_ser - Serialized state about a single PCI device.
+> + *
+> + * @domain: The device's PCI domain number (segment).
+> + * @bdf: The device's PCI bus, device, and function number.
+> + * @refcount: Reference count used by the PCI core to keep track of whether it
+> + *            is done using a device's struct pci_dev_ser. The value of the
+> + *            refcount is equal to 1 when the struct pci_dev_ser is in use, and
+> + *            0 otherwise.
+> + */
+> +struct pci_dev_ser {
+> +	u32 domain;
+> +	u16 bdf;
+> +	u16 refcount;
+> +} __packed;
+> +
+> +/**
+> + * struct pci_ser - PCI Subsystem Live Update State
+> + *
+> + * This struct tracks state about all devices that are being preserved across
+> + * a Live Update for the next kernel.
+> + *
+> + * @version: The version of the "pci" FLB struct. This field must never be
+> + *           deleted, moved, or resized, as the kernel depends on always being
+> + *           able to check the struct pci_ser version number.
+> + * @nr_devices: The number of devices that were preserved.
+> + * @devices: Physical address of the first KHO block containing pci_dev_ser.
+> + */
+> +struct pci_ser {
+> +	u32 version;
+> +	u32 nr_devices;
+> +	u64 devices;
+> +} __packed;
+> +
+> +#endif /* _LINUX_KHO_ABI_PCI_H */
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index ebb5b9d76360..da58aa101e4c 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -43,6 +43,7 @@
+>  #include <uapi/linux/pci.h>
+>  
+>  #include <linux/pci_ids.h>
+> +#include <linux/pci_liveupdate.h>
+>  
+>  #define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY  | \
+>  			       PCI_STATUS_SIG_SYSTEM_ERROR | \
+> diff --git a/include/linux/pci_liveupdate.h b/include/linux/pci_liveupdate.h
+> new file mode 100644
+> index 000000000000..8ec98beefcb4
+> --- /dev/null
+> +++ b/include/linux/pci_liveupdate.h
+> @@ -0,0 +1,30 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * PCI Live Update support (Public/Driver API)
+> + *
+> + * Copyright (c) 2026, Google LLC.
+> + * David Matlack <dmatlack@google.com>
+> + */
+> +#ifndef LINUX_PCI_LIVEUPDATE_H
+> +#define LINUX_PCI_LIVEUPDATE_H
+> +
+> +#include <linux/liveupdate.h>
+> +#include <linux/types.h>
+> +
+> +struct pci_dev;
+> +
+> +#ifdef CONFIG_PCI_LIVEUPDATE
+> +int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh);
+> +void pci_liveupdate_unregister_flb(struct liveupdate_file_handler *fh);
+> +#else
+> +static inline int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static inline void pci_liveupdate_unregister_flb(struct liveupdate_file_handler *fh)
+> +{
+> +}
+> +#endif
+> +
+> +#endif /* LINUX_PCI_LIVEUPDATE_H */
+> -- 
+> 2.55.0.487.gaf234c4eb3-goog
+> 
 
