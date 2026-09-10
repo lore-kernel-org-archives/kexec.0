@@ -4,91 +4,152 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E660AC79F9F
-	for <kexec@archiver.kernel.org>; Thu, 10 Sep 2026 16:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 61977C79F9F
+	for <kexec@archiver.kernel.org>; Thu, 10 Sep 2026 17:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=PjpQmguvZKqFc40yaCCUF9DxHpcHtd3drRjNMUjWpE8=; b=1bOVJr42ECshvUJe04fMyj7hHY
-	5cNCs/jYe9bH5FRgsWUfA/rHP3xCA8qHLtAf9dHvttNJFkeTHx7dTz5RqtZcn1dmdfDQ6v0IOS7mm
-	cbg8GlcAVFoagPl3YsX39fybI4lS/2bhCRtS26tCtrsHNCHusJF/qsR73tkGUTxmUdW9a+lmYQBy0
-	lAoiez6BuQCovV37T+h7N6o+6RtWZf/nnGn53B0rpYkA/9Gs4EhKnYt1m/pLtdWJwr+mps93H/vAM
-	6t6og1qJnP8/Dv2NE0eYo//2Hs0DdRIEVsWHU/+fE7aEyLIwKXT0M0J9xDSw0LvmFBHTuqEdDpFA7
-	szr2VBGw==;
+	bh=P7tMA52PfXUUwFSViKt8NC1NiassUU0VI3kSP2XbenY=; b=NnAtzx3oLp0G1jSIUm9xDdso1j
+	aEisWU+4s/uVa+RIqZLVfqJJv/L5Md/qT+pzAqO0Xpy6XnME5sMiNnj364AnK6Yjkwexs9c1nhS2w
+	Ra9X9NQPz9hZ1whfFQyMXPhJ2kCxblvojFQzve27eiKQSDB5ESm/ktei2DxFRHF+8E2MqdYuZnOnA
+	ZCwpfDakZrPGz6RmHXtMGoRw91UgZ+e9qhAGVRN/g1NMyHX0YezSs6I6FJm+RoI/YWI4JWW29Abgs
+	URpEt5DimDgSE+MlFyIGgsbv+JA3EAYQHNzPxEzczYwbHojWBEitZ35ck4+q1WfGRFBwZxYZm70iW
+	/Thaa7ow==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x4hFp-0000000Etba-20Zt;
-	Thu, 10 Sep 2026 16:04:01 +0000
-Received: from mail-pg1-x547.google.com ([2607:f8b0:4864:20::547])
+	id 1x4iK8-0000000F2Xs-3tF5;
+	Thu, 10 Sep 2026 17:12:32 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x4hFm-0000000Etau-3JZ3
-	for kexec@lists.infradead.org;
-	Thu, 10 Sep 2026 16:03:59 +0000
-Received: by mail-pg1-x547.google.com with SMTP id 41be03b00d2f7-cc489e7a701so5548617a12.2
-        for <kexec@lists.infradead.org>; Thu, 10 Sep 2026 09:03:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789056237; x=1789661037; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=PjpQmguvZKqFc40yaCCUF9DxHpcHtd3drRjNMUjWpE8=;
-        b=TbXTGGvTPOXeW2FW7YtTdPVH5CEAs0KN+f7MftuddU4GZS+JhLPZP+VZ1q1mkymi5t
-         c3wNvCrsWR6ejgVnQDjkwS2Jmfv0jnmDX7uR5C9ummS5q6P9Qdhz+3NYHvXjdlC0dxFX
-         xjV8+BAs5ysx1d+8ZrcA4wwXMRZucu5+BatJnTK5LGKOi/pL6m3/8FRD7XtsNADSFBso
-         PhaxyYIhgyFhZaMlBCzMe4JMg8t0AXbixU6ze/CeWjI/smSbFdht76jrSg4olwVhUiPf
-         3FDXAQ7ua/ab4dfl7uMbLKpPVhUPxtghWH0xoKiLQ1MDuGa8t/thUiPmYDaHv3zmES3y
-         onoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789056237; x=1789661037;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=PjpQmguvZKqFc40yaCCUF9DxHpcHtd3drRjNMUjWpE8=;
-        b=OV3hg8wHDBdZWnVW5l9Ec/z3ZX/Bqwzen8YeydZNiKa4Xv2pSrM5+7JwHnR8EeffME
-         knYK1TTiPpFH+I1tUSUge0YyrQez6oWVLesgBj99vL6+oJ7sOb6mnXhkcYkAppKPLEXx
-         smCMIS3OdeWeBhG9zw+4Fg4cjK449zNdKL6nuUxmE2aHkGeJJ3/62m1i/6UxTBD5DYcr
-         UbwXf6TvmUHXWx4/ZD9iqCjjRPjK2YASZrdBP52vk8CXnhQfPKCzHqEJa2gtsSgYutjA
-         bwiI4AtLqTqoffvKcAY4//aWFCYr4/QpJNHlM0IMBelLsGZY4Et0IeidZSLVgVm/LahH
-         SB4A==
-X-Forwarded-Encrypted: i=1; AKwUvBx6qdLZzWTj6Aa4924UqH5BbbvnJj5djtnT2sqtXk3iZKNekEfRm/g5mIQOxSKWQDAfDXVe6A==@lists.infradead.org
-X-Gm-Message-State: AFuF++mWnGKMdTw5mj7ofBPWIDsenhjPjefv0gWKe+JWkcT5nuWppdqd
-	NZJratTis54a4t9wolFBAfE2pj0+VhyFvQEzH5X3k5FtJbfWburiD0SZOpGZjugkr60i2YNUMdm
-	hRHe0rQ==
-X-Received: from pgmh20.prod.google.com ([2002:a63:5754:0:b0:cc4:3b01:7730])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:4303:b0:3c3:7179:a640
- with SMTP id adf61e73a8af0-3dacbd6e061mr12520616637.3.1789056236336; Thu, 10
- Sep 2026 09:03:56 -0700 (PDT)
-Date: Thu, 10 Sep 2026 09:03:55 -0700
-In-Reply-To: <20260905011956.GA856309@nvidia.com>
-Mime-Version: 1.0
-References: <anphyjFv3FhF61iB@google.com> <2vxzpkzo51wg.fsf@kernel.org>
- <anssOQFNZ2LfihbU@google.com> <2vxzik5f311e.fsf@kernel.org>
- <anyObKiZIhfok5mk@google.com> <2vxzqzjz1x5f.fsf@kernel.org>
- <aoMcqp0gr06YXAPU@google.com> <2vxzy0e3zgqz.fsf@kernel.org>
- <aoSCCTTBn9D5hqzk@google.com> <20260905011956.GA856309@nvidia.com>
-Message-ID: <aqLU653FXjJjhbop@google.com>
-Subject: Re: [PATCH v4 05/11] KVM: LUO: Support VM preservation across live updates
-From: Sean Christopherson <seanjc@google.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>, Tarun Sahu <tarunsahu@google.com>, ackerleytng@google.com, 
-	fuad.tabba@linux.dev, Andrew Morton <akpm@linux-foundation.org>, dmatlack@google.com, 
-	Shuah Khan <skhan@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, david@redhat.com, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, sagis@google.com, 
-	Paolo Bonzini <pbonzini@redhat.com>, Mike Rapoport <rppt@kernel.org>, Alexander Graf <graf@amazon.com>, 
-	linux-kselftest@vger.kernel.org, andre.przywara@arm.com, michael.roth@amd.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, will@kernel.org, 
-	vannapurve@google.com, maz@kernel.org, fvdl@google.com, kvm@vger.kernel.org, 
-	oliver.upton@linux.dev, kvmarm@lists.linux.dev, alexandru.elisei@arm.com, 
-	skhawaja@google.com, aneesh.kumar@kernel.org, linux-doc@vger.kernel.org, 
-	David Hildenbrand <david@kernel.org>, yan.y.zhao@intel.com, kexec@lists.infradead.org, 
-	suzuki.poulose@arm.com
-Content-Type: text/plain; charset="us-ascii"
+	id 1x4iK6-0000000F2X0-2DQo;
+	Thu, 10 Sep 2026 17:12:30 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=MIME-Version:In-Reply-To:Content-Type:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=P7tMA52PfXUUwFSViKt8NC1NiassUU0VI3kSP2XbenY=; b=MnDcIvneXASAwWj6oauj7SSMu4
+	Y/Dx01FpWxa+7zgDgDEeAnAXQr+crZj0Q901zMIJBRVcknytbtcy7tfLzrxJ3GD9FehpoYQxoeJ7b
+	YVYLlhciOF3IoH1pwSyA1h+exfdGIN5zUv5zEIw0QOxMa7RWoORdEdn7S5iC2Lz4NzZpXGs87unqz
+	un40jhrIryigqZFLwOu1fjRYb3xfAfdlFEK9dTPp6KkPmPZIPtuvFV4K5a0QH5VEJFgkfik7M54/e
+	V1OSj5JsJkBALwQwLuOST3kMFWKDLGg+DJ9NO+3bqylGPuV/vUI4yTd8EuRhf5mrwGpSYY9bWkXae
+	bBBV0d3A==;
+Received: from mail-westcentralusazlp170130007.outbound.protection.outlook.com ([2a01:111:f403:c112::7] helo=CY3PR05CU001.outbound.protection.outlook.com)
+	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1x4iK3-00000002mZB-0UW8;
+	Thu, 10 Sep 2026 17:12:29 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=V7WvY/hQLeK1mELkx1Ir/mI1yoolyBz9LoS8kEqxCxNyhvLMTWHTmCZsSZBMPHPiznex37osU6tsd7skZtfXgpiRwMaJEhx/wbWSmATVBHE/9GeYYPgjf9pPfleehyK9CniIPxOKJIND8+xs0dcjRVdFS5XOkjJZP1A6DyZbiWkFGdg0l34GqR9hvWoxG6ShJBXhl15y2zsnjfDlUctebjWzmuMRDPuzvxp9a8W0wTE3Q4djKI1ZPjO6Nl8EGweZMkBStnsq1eY3BnshaQO4GyH9Uy+4oY5+IZtPUkve22LdWZoM33LbHy2tSvYFmrtL71bMHKGzbtpQ1J8VNkS3bg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=P7tMA52PfXUUwFSViKt8NC1NiassUU0VI3kSP2XbenY=;
+ b=cTBMqnhdQmcQtZy3jUwNv3OM/RxiBPI9yasfI6Bk1Uxq7gWn94LMdlGIBMIaObonWVouXl3pkNWkmYIfBY9sm9KxyKlzAMqvKYiO/NVa2xGrF5/ZYU7iZQUXHQmJKCP8eeabKOAISE8un7euMNqUexWiZhZfPGsLMvFZIX0Ov6LA2WAjOM7MguLY0ZGcHdVjvVNWJpD3s4s99GDqs2b/QUfFeUZ9d9KfeQxPUWfrlcSQ0XOk29O0Gg22Y0voavJBosErfbjZ98SqfcZ3ZuKCCU7QENMBx4PwSRAxT9XH77xRsX63UnC1Y5wXzNd6uZDb0GQp8VHG7bn4kua50vDfFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P7tMA52PfXUUwFSViKt8NC1NiassUU0VI3kSP2XbenY=;
+ b=RcGWYLNs1X7GvJmf1+PAHtmFIHz9OBDpwzMtHpErV3C0LOSruwewEmAyy3q0rdHYf7u11TyYr5wFSXbVKQRP9iz4RzUNVlpKM0w23EV0PbvmYeC2jLGoKM1lBNdWhlpdfWOU6+4W+YPvk0ROILJ7lhDtkS+b5Dc56aHTj+7u/5FDzsJ/Vv9RkWJSTD+16K/SPmBVLIpAtJxKZ3J2IApCEsrFvzEFYj6jRq/oR3IvtvIsi2EI35ZfbqYwdD8RP1zlIORSLdkeuWPRC5A8KXwTMjgTEVASNKE7f3vGMI7JmlT3wOFALujzMCrUTTx3qcObNNhlGcvx1RG1NxPxHd7gjg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by IA1PR12MB6435.namprd12.prod.outlook.com (2603:10b6:208:3ad::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.9; Thu, 10 Sep
+ 2026 17:12:12 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528%4]) with mapi id 15.21.0406.007; Thu, 10 Sep 2026
+ 17:12:12 +0000
+Date: Thu, 10 Sep 2026 14:12:10 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: David Matlack <dmatlack@google.com>,
+	Logan Odell <loganodell@google.com>, arnd@arndb.de,
+	pasha.tatashin@soleen.com, rppt@kernel.org, pratyush@kernel.org,
+	graf@amazon.com, akpm@linux-foundation.org, pbonzini@redhat.com,
+	maz@kernel.org, oupton@kernel.org, bhelgaas@google.com,
+	alex@shazbot.org, kevin.tian@intel.com, dwmw2@infradead.org,
+	baolu.lu@linux.intel.com, joro@8bytes.org, will@kernel.org,
+	robin.murphy@arm.com, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	linux-mm@kvack.org, kvm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-pci@vger.kernel.org, iommu@lists.linux.dev
+Subject: Re: [RFC PATCH 0/3] liveupdate: Move to feature flags for LUO and
+ memfd ABI compatibility
+Message-ID: <20260910171210.GF3968357@nvidia.com>
+References: <20260903023452.721732-1-loganodell@google.com>
+ <20260904160009.GV4157646@nvidia.com>
+ <aptFFYqcSiBdMLE8@google.com>
+ <20260905012403.GX4157646@nvidia.com>
+ <aqIAtOoew-_6jw29@google.com>
+ <20260910143448.GD3968357@nvidia.com>
+ <aqLOWkuVKccR-I7W@google.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aqLOWkuVKccR-I7W@google.com>
+X-ClientProxiedBy: CH0PR03CA0304.namprd03.prod.outlook.com
+ (2603:10b6:610:118::28) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|IA1PR12MB6435:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7d6e78ae-31bc-4215-ed82-08df0f5ea73f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|376014|7416014|366016|1800799024|10067099003|6133799003|18002099003|22082099003|56012099006|4143699003|11063799006;
+X-Microsoft-Antispam-Message-Info: GKQccKKe63WIeMQodEr1ChpdjstsQwwo3mgXmpgJ8KCe2Dh34FxJytuK5U5IlFyNR6UQQ+7sZvfDIDX8+I4g4myAMUJnHBa12AbufDNiqVf6v5GYXt5eBypXBMUuNLCL/LXXxTHmSKJO3jSad+C3La54HE92szCQgXjSiiTAKQLv3weE34zTwgiQ2s1Dn6866+Y+LGOps4aHe16nStsGYBHlSBBXI7LCMAGxyOqnhjxsI8YkNFGeofkwJL9VNGx87eXMplMdvH6TLa5KD9YqodmPoavfwBs8waT2PK5Uh42nCqXZpresxfhmJVFX7NQBDhiozjsecdOYfp6g0ZC0lzoea42JFgJK3/9/UUm5ZcaoxibtN1D6+DJgJphxQ9de4CxYYdtV38NS3mPhUqX04i2h9Q3uQCu0TIHaguNuuThaKIp3v6jkAs+J5PAW8Vc3jIWvwTl6TVmqVlbJshpkDzauEcNdZFJODAwd25gRJq2gQvs7HjfQy8eTFz0GTDd8XsOJgqx5HJh99MW+K2lwbz8ro0T6bWvaHfMAt9c8e9lecSm4Vv0B2lmG0bQStISVuMdL0aDRroF5G7qfcKUu6A4WNpAzEm+DGPogUL22mVQ0o1tGeVQ9168GGPjV5QxcKFOkvT6cR9Zqf8DF2qHSzaTQx0Twh4IDxgiCQNh/m1U=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(7416014)(366016)(1800799024)(10067099003)(6133799003)(18002099003)(22082099003)(56012099006)(4143699003)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?//bM3Afhm6tWeD55iMTwEtIEjrtpn7/llKkHijhqXiadIPQjebLiuJw9Afmb?=
+ =?us-ascii?Q?WUdAKtnetQactYlUsRoGw8chgfVhmEzvaLP0UemehCwR1cK4GTqCRMwZmPy1?=
+ =?us-ascii?Q?0KBPeYazOMMnApnIKlgDta0wkvh9J0FB2YY/Lmap7y4aTG8wB2KS3L9XqTaN?=
+ =?us-ascii?Q?b7sH8hzHuhCL/is9SZzmXcZO1KvcU76vCOw97M3kRZSj7BzFuAs1X6WTqqm1?=
+ =?us-ascii?Q?F4GManZNSo79KK8ri3+E1PQHNbHTQ3iy9JUIYAGiFw3NBt9PSKZFuMBzAoYk?=
+ =?us-ascii?Q?MzXAXt9QxXjh2swZuz2U6vP5JGmwbLKuO03qEJFDclrU6cjKTwSc77mc4M3l?=
+ =?us-ascii?Q?RDin4Zrk6AFgWqH13tCGq6n1wWq3Rt5AsJpK60vNeBvPSer0AsT8k90ufKJ6?=
+ =?us-ascii?Q?MfkZp9CGgN697Z3ShkmPAUNKWxeq5wiyBzW2I5SLZ9DwRw4nxe123yZdMceM?=
+ =?us-ascii?Q?QlcQEZOKN2a0AGXWx9z1Ws8xQ8jpayCKBL5V3m2ez0VS5PPgS1lPURKGYYhF?=
+ =?us-ascii?Q?SzsiWJBUaz0bMkCP9yp8DvR+q8atAwmUS8D+0pat1HsP7yVJo4jeGVdrJYIy?=
+ =?us-ascii?Q?KeD6QxDwJEutcdz1fOiy5D+yBj7IaV09piGVmJvWh1n94+EdlEyo5pRol4HX?=
+ =?us-ascii?Q?c2YevB9sXKtHLh4smWTb/DYf2ztk7KCo/s7DM/NBIYTimN7hGAA4msPik9Bs?=
+ =?us-ascii?Q?mUGXpUd6ZEDk2FOwLJzia3RR7SJF5LXMDDfRGjLL6PMU0p0bS2gIfvHOCOFV?=
+ =?us-ascii?Q?0h5ZmCvFZAw+0YeqXxj6YN3S6U9EWLALS3Tcl81bRA1GaRSArYx6lXxt+uD7?=
+ =?us-ascii?Q?0/mORqkUc/SXECmyAwUwZLne0lvRxbaQJpVTFYFSlbFOp0Mj+80BBqn0K5CN?=
+ =?us-ascii?Q?pW6SrlSXUHPoN8pOcaofDcdt/t67+GzMl4/7+gGX7fpSu3bKH2gkGlpnloVN?=
+ =?us-ascii?Q?fgqjdbvPbaz7mV5SSAGmYOWCDCnM/TMSlrMgbip+BdNC6H5iAlByoV0RrK/+?=
+ =?us-ascii?Q?Zq3BnY1L3J4gxA1edHD/U+PZK5FB4Y7PTqFUIUyPA+Woj+y+7nc0TkP9mGoJ?=
+ =?us-ascii?Q?/FbvRltJ1soaM/IbMyYXvkUnESap7C/MBcz633GDs986DMxnDKdF6X1d9AXA?=
+ =?us-ascii?Q?qIG/m2AK52yWvPuLl2OIO+ieC42j5LOPWcS5GI0b2sAbW+sOIgVZTtzz1Cwa?=
+ =?us-ascii?Q?1utBxWtAJZECS0stXVVfYq0lUgm5XAlBiCcefIUu/+CPB3TgOOynBp5es+3S?=
+ =?us-ascii?Q?EB1ho8YIwot0lD9DSlwg34okMT8rzD78KHyzJCBaf1kVSnj5ObWfd4SCj3cS?=
+ =?us-ascii?Q?1SPkTSnqHHSxWMxL97Q32MuJqF3Z8ZboFHvoF6X+sz69x/DrutVHdGWfHpx/?=
+ =?us-ascii?Q?qwqKFT8WK5kj3ivxRFYAQkB7zQZSQLWq/NrObaE8TyoC4J1rF3Fy3O2/AZuW?=
+ =?us-ascii?Q?hBxjcpVb0otBLcoc4FVO26pEpg3xKXP3ZCpYtdHsc6G+qg4NBv7q1XjNBjyV?=
+ =?us-ascii?Q?Knhj++8Oy7yhJi2OC/HXNADRWKv4w0z5DbxWsyTC6YG98eUzIiMvEqB0E8CE?=
+ =?us-ascii?Q?B60BlR9Ed8l+sbT7m5oQGAipBB1kKullYIYMTWU8fqH5sejOy4US3qXWu48m?=
+ =?us-ascii?Q?yitxaJ7DNKj2TJucpjTI/zvdwg+6ggSFd41Jctf0tmLVVikoq7SNp8X3wlwn?=
+ =?us-ascii?Q?im9Lkg4odRhvFhRMse7c416Hlpq/6ruOKVL4YOqb4b8j+EII?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d6e78ae-31bc-4215-ed82-08df0f5ea73f
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2026 17:12:11.9421
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Jy2mFyLKp5VkZYd66lrkn8GJLcfymEeIAcdGzDgsO7SncAeXDFDy/hGzq6ek9uTV
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6435
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260910_090358_845067_8C0FF611 
-X-CRM114-Status: GOOD (  45.31  )
+X-CRM114-CacheID: sfid-20260910_181227_609995_9BA2D556 
+X-CRM114-Status: GOOD (  47.61  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,119 +164,152 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Sep 04, 2026, Jason Gunthorpe wrote:
-> On Tue, Aug 18, 2026 at 09:02:17AM -0700, Sean Christopherson wrote:
-> > The rule is thou shalt not break userspace.  Whether or not the
-> > breakage is the result of an explicit ABI change is irrelevant.
-> 
-> I argued strongly for this simpler approach, I will write here the
-> reasoning I gave.
-> 
-> Firstly, "live update" is not uABI per-say. It is not "userspace
-> breaking", and it is not a "regression". It is an internal kernel
-> mechanism to allow the kernel to self-upgrade. In the industry it is
-> typical any of these hitless update/patch/etc schemes to only work
-> between a few tightly controlled version pairs.
-> 
-> Asking upstream to carry a full matrix of every single version pair
-> ever released is massive over-engineering and cost on upstream
-> maintainers. Refusing to do this is not a uABI breakage, it is not a
-> regression, it is simply a lack of a feature.
-> 
-> I think upstream should start by agreeing to only support forward
-> going upgrades within a single stable branch. If live update becomes a
-> success then maybe we could do from a stable branch to the immediate
-> next stable branch too. I don't know.
+On Thu, Sep 10, 2026 at 08:35:54AM -0700, Sean Christopherson wrote:
 
-From that perspective, what I am proposing actually goes a step further.  I'm
-saying don't commit to supporting *any* specific versions in upstream.  Express
-the feature requirements in the serialization payloads, and let userspace sort
-out what kernels are compatible based on their actual usage.  The kernel may need
-to provide additional discovery mechanisms, e.g. so that userspace can probe to
-see what is supported, but discovery is usually fairly simple to implement and
-maintain.
-
-> This alone is already much more powerful than live patching.
+> I guess maybe we have a different definition of ABI? 
 > 
-> The balancing issue here is the impact on the kernel subsystems
-> adopting luo. Every time you change anything about the internal
-> function of the subystem you now have to go test a massive version
-> pair matrix to make sure everything works? No thanks.
+> I'm not saying that upstream has to be 100% forwards and backwards compatible.
+> I'm saying the serialization payload itself should communicate what features are
+> effectively required.  I.e. *if* there are incompatibilities, they should be
+> naturally expressed in the serialization format, not communicated out-of-band
+> through magic numbers.
 
-No, the subsystem just needs to make sure that it serializes its data using the
-defined ABI (where ABI here means the format of the payload and the meaning of
-any flags in the header).  That should be *easier* for maintainers to handle than
-trying to support arbitrary versions, because it eliminates subjectivity and
-having to make judgment calls or remember magic version numbers.
+The ABI strings were introduced specifically because extension makes
+the actual compatibility indeterminate by userspace. 
 
-> Luo is very invasive and a huge PITA at the best of times. It doesn't
-> need to be even worse.
+Keep in mind the actual goal here. Someone has kernel A and they need
+to blind kexec into kernel B and NOT have the machine explode, or all
+the VMs sitting on it lost.
+
+Meaning you must have a way to determine before the kexec if kernel A
+is producing something B will *accept*. Accept is not "parse and fail
+with EOPNOTSUPP" like most uapi schems. Aceept means bring in and
+actually fully support and use.
+
+So how do you solve this problem? You MUST declare in some kind of
+manifest exactly what ABIs are supported, in some way.
+
+> The scenario you describe fits exactly with what I am proposing.  
+
+It does not. What is really wanted here is to tell kernel A to only
+support ABI 1 for memfd and so kernel A will fail to serialize if it
+cannot do it because a newer seal flag was used.
+
+We do not want to succeed to serialize then fail to accept after
+kexec and have a dead machine.
+
+This is not anything like a normal uapi compatability problem.
+
+> actually starts using the new sealing flag, the CSP can downgrade to
+> older kernels at will.  And if the user cares about downgrading,
+> then they need to prevent the flag from being used until the new
+> kernel is rollback-safe and deployed to enough hosts to prevent
+> stockout.
+
+Yeah, CSP broadly has to do exactly this across a wide range of
+topics. It is a further reason why this feature is not exactly usable
+by a "mainstream" user :\
+
+> > This is why I think the very idea we can support any version pair is
+> > too much to ask for. We should focus on supporting a small set of
+> > version pairs and not making it too invasive or hard in the kernel or
+> > on the maintainers.
+> >
+> > Thus live update within a stable branch only is my proposal for
+> > upstream support.
+> > 
+> > If it really succeeds at that and it becomes very popular, then let's
+> > discuss upstreaming doing additional version combinations.
+>
+> Why on earth would we have version numbers in the first place?  IMO, monotically
+> increasing version numbers are flat out the worst way to communicate
+> features.
+
+As above, discoverablility is a key requirement.
+
+Each version number is a very specific upstream defined ABI, in the
+sense if kernel A emits version X and kernel B accepts version X then
+kexec *must* work.
+
+You can make some manifest in other more complicated ways, but I'm
+deeply skeptical that is really going to bring any value. It feels
+like it is just increasing the testing matrix :\
+ 
+> > > I could see things like HugeTLB not working if someone booted the kernel with
+> > > support for only 1GiB pages and then tried to feed it payload with sub-1GiB ranges.
+> > > But to me, those sorts of things fall into the "well yeah, don't do that" category.
+> > 
+> > Okay, how about worse, todays kernel has hugetlbfs and there are
+> > patches around to luo serialize that. Lots and lots of talks about a
+> > post-hugetlbfs world out there.
 > 
-> > It's probably fine for Google and other large companies that tightly
-> > control their kernels and use cases, and have the resources to
-> > juggle the resulting complexity, e.g. have kernel engineers on staff
-> > to track feature and dependencies, coordinate and plan kernel
-> > upgrades, etc.
+> And?  Adding a compatibility layer to a future kernel so that it
+> understands an incoming HugeTLBFS payload should be trivial.
+
+From my experience that's optimistic :(
+
+> > Do we want to constrain what is possible to ensure we accomodate this
+> > hugetlbfs serialization? I vote no.
 > 
-> Every downstream that wants to support luo is going to necessarily
-> severely restrict the version pairs that can work. Like a RH type
-> distro may only support it for 9.1.x -> 9.1.x+1 - they can carry the
-> cost of figuring out how to manage their patching and compatability
-> matrix on their own with the tools upstream provides.
+> In what way is providing strong ABI guarantees for individual components
+> constraining HugeTBLFS serialization?
+
+I bet it will. Other things we've looked at seemed to be like that.
+Even the above about "yall screwed up" with memfd has the problem
+already. I don't believe we can ever do this so right that it won't be
+constraining to the kernel internals.
+
+> > Do we want to reject the hugetlbfs serialization until we have a year
+> > of debate outlining every possible ABI scenario? I also vote no.
 > 
-> > engineers on staff to help them thread the needle you describe
-> > above.  And if supporting live update as a general feature for all
-> > users of the kernel isn't being factored into design considerations,
-> > then that needs to change, otherwise this is all dead in the water.
+> That's a bit of a strawman argument.  Is designing a forward-looking ABI easy?
+> No, but IMO "a year" is a massive exaggeration of the effort required to come up
+> with a scheme that can survive a variety of plausible upgrade/downgrade scenarios.
+
+Have you tried to get anything merged into the kernel lately? I've got
+lots of uncontroversial stuff pushed out past 4 months already. Some
+luo patches are close to a year already and don't even have any
+controversy.
+
+> And again, I'm not saying we have to support infinite compatibility.  
+
+Okay, I said same stable branch only, do you have some wider
+limitation in mind?
+
+> > Should we make a downgrade round trip a downstream problem? I think
+> > so!
 > 
-> General uses can use upstream and do CVE upgrades within a single
-> stable branch. That's good enough, lets start there. We don't need to
-> boil the ocean.
+> Hard NAK.  There will inevitably be boundaries that cannot be crossed, but I am
+> not at all ok punting on downgrades.  To me, that's basically saying "we want to
+> add just enough support upstream so that it's not too painful to carry full support
+> out-of-tree".  That completely goes against the spirit of open source and upstream
+> Linux, and I want no part of it.
 
-We're in violent agreement on this point, I think we just disagree on how to
-express compatibility.
+I generally agree with you sentiment, but I think this is a unique
+case. I've asked around a fair bit, this is sufficiently complicated,
+requires alot of userspace that the CSPs are not open sourcing so has
+a very minimal usage foot print out side their world. I found one
+other possible user that might be more open source oriented..
 
-> > I also don't see the point.  Maintaining a rigid save/restore ABI is
-> > annoying, but it's not _hard_ (or at least, not _that_ hard),
-> > especially if there's a set
-> 
-> I was told KVM had the smallest luo footprint of everything, so
-> perhaps your perspective is different.
+So, if I was feeling unreasonable I'd say stay out of the upstream
+kernel entirely.
 
-Only because KVM already has a massive ABI surface for save/restore.  If you
-want to convince me that magic version numbers are the right approach, then show
-me how KVM's existing save/restore support would be made "better" and easier to
-maintain by throwing away all of KVM's save/restore uAPI and replacing it with a
-versioning scheme.
+Though, I think this could grow and maybe some open source ecosystem
+will develop around it. I don't know. I'm willing to give it a
+chance.
 
-> In other places luo becomes coupled to the internal datastructures of
-> the kernel, we literally have to preserve lots of kernel memory
-> utterly unchanged without any kind of serialization at all. 
+HOWEVER upstream is not some kind of free outsourcing for the CSP's
+proprietary forks! Do not ask maintainers to do significant and
+burdensome work that only a CSP is ever going to consume and can only
+really work in a closed proprietary environment. There is no "spirit
+of open source" in that kind of demand. I will be NAKing anything like
+that in my subsystems, I am not signing up to do live update stable
+ABI so the CSPs alone can have a better proprietary product.
 
-Have to, or choose to?  I have a very, very hard time believing that it's infeasible
-to define a serialization format that is decoupled from kernel internals.
+This is how I come to my conclusion that upstream should support same
+stable branch only at this point. It minimizes the burden, it is a
+decent trail of the technology, and if things go well with a quality
+open ecosystem then sure, upstream can change its mind.
 
-> This inevitably creates restrictions on the evolution of the kernel in
-> general if we can no longer change in-kernel architecture because it would
-> make some data structure incompatible with a kernel 10 years old.
-
-Only if the relevant subsystem defined a poor save/restore ABI in the first place.
-
-> There is also a need for *downgrade*. Meaning the N+1 kernel has to
-> strictly emulate the limitations and capabilities of the N kernel so
-> it can be rolled back. Can you imagine the nightmare of trying to
-> codify the feature progression for every single kernel release forever
-> in some impossible scheme to enable this? Again, no thanks.
-> 
-> So, what upstream can reasonably do, that still provides real value
-> without severely burdening every subsystem, is upgrades within a
-> stable kernel branch only.
-> 
-> If some distro or CSP wants to do more, they can deal with it. They
-> have a far, far simpler problem because they can exactly lock down
-> their version pairs to a very small universe. They don't need a single
-> kernel that can emulate 10 different releases of behaviors
-> concurrently.
-> 
-> Jason
+Jason
 
