@@ -4,88 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C7425C88E41
-	for <kexec@archiver.kernel.org>; Thu, 10 Sep 2026 15:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E660AC79F9F
+	for <kexec@archiver.kernel.org>; Thu, 10 Sep 2026 16:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=2+MOwVd/hSplAvFbBk52yvKLS3w7cDWTRO3ieRL0csc=; b=YnWyBCGLBxg7yxaG6BOUUtcPoo
-	6/5w3vX+QvQ9cLhvQnVErn1KfFW9xrr5Gj/n88aPAyblWanSMGXNxVYA6UfpV7yHo+5Qmc+fYbHZm
-	sFVga+xfRlG+syI8yOi5sRqrLrUDGxhADBVXYcLivphYmpx0FCu44BFtqLflPacPU2/rxR5thVivw
-	+xcFxnFQo3Ydd03k8ekp8Sol1EFfVGZJY6JcheBnNCEz5U+8395Mu/5Z+UaXnv96YWf2gk9/KI9cY
-	Woz9EaujLteSllrprO5DXGXTeVMQu78y6tCnEeQDaYZ6xV3ZycW2HZIoH7DENkFN4vUf9yGma99PI
-	bZFk2mPA==;
+	bh=PjpQmguvZKqFc40yaCCUF9DxHpcHtd3drRjNMUjWpE8=; b=1bOVJr42ECshvUJe04fMyj7hHY
+	5cNCs/jYe9bH5FRgsWUfA/rHP3xCA8qHLtAf9dHvttNJFkeTHx7dTz5RqtZcn1dmdfDQ6v0IOS7mm
+	cbg8GlcAVFoagPl3YsX39fybI4lS/2bhCRtS26tCtrsHNCHusJF/qsR73tkGUTxmUdW9a+lmYQBy0
+	lAoiez6BuQCovV37T+h7N6o+6RtWZf/nnGn53B0rpYkA/9Gs4EhKnYt1m/pLtdWJwr+mps93H/vAM
+	6t6og1qJnP8/Dv2NE0eYo//2Hs0DdRIEVsWHU/+fE7aEyLIwKXT0M0J9xDSw0LvmFBHTuqEdDpFA7
+	szr2VBGw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x4goh-0000000EoEF-33SE;
-	Thu, 10 Sep 2026 15:35:59 +0000
-Received: from mail-pl1-x645.google.com ([2607:f8b0:4864:20::645])
+	id 1x4hFp-0000000Etba-20Zt;
+	Thu, 10 Sep 2026 16:04:01 +0000
+Received: from mail-pg1-x547.google.com ([2607:f8b0:4864:20::547])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x4gof-0000000EoCT-0D4m
+	id 1x4hFm-0000000Etau-3JZ3
 	for kexec@lists.infradead.org;
-	Thu, 10 Sep 2026 15:35:58 +0000
-Received: by mail-pl1-x645.google.com with SMTP id d9443c01a7336-2ccb6823efcso74824595ad.0
-        for <kexec@lists.infradead.org>; Thu, 10 Sep 2026 08:35:56 -0700 (PDT)
+	Thu, 10 Sep 2026 16:03:59 +0000
+Received: by mail-pg1-x547.google.com with SMTP id 41be03b00d2f7-cc489e7a701so5548617a12.2
+        for <kexec@lists.infradead.org>; Thu, 10 Sep 2026 09:03:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789054555; x=1789659355; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1789056237; x=1789661037; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=2+MOwVd/hSplAvFbBk52yvKLS3w7cDWTRO3ieRL0csc=;
-        b=i4067qxb3NGzOipqPmKN6x37anplWN2BA8DjmfZA7QVlKx9Xv/2K2bVDahYktTgdu2
-         d1tLhzqRMFd880+Y6KZikHj6s8FQvKN1hBFD/1715lYp1os7w30QdF+YfsdK3BqUUNG/
-         CytG/w/u8Nb31c7Js32jXwKRjmJIQiAyQuJVOb/TbY6uHd7Xe6eIvDx80qKboFnQKxVh
-         ZrtBwb03xmFQGI3HOENR+8m/AoZnxyGBcfqGeFrakkjLXjkFK7xqVtXF8cNI6FSKciKV
-         YJ4ivfu99A8EBv6S6VVOSlUxKz9q8tCAQ0tRa0dDuOLL/EWfRIj/+Z0eMih++BLpeUPi
-         ZdJw==
+        bh=PjpQmguvZKqFc40yaCCUF9DxHpcHtd3drRjNMUjWpE8=;
+        b=TbXTGGvTPOXeW2FW7YtTdPVH5CEAs0KN+f7MftuddU4GZS+JhLPZP+VZ1q1mkymi5t
+         c3wNvCrsWR6ejgVnQDjkwS2Jmfv0jnmDX7uR5C9ummS5q6P9Qdhz+3NYHvXjdlC0dxFX
+         xjV8+BAs5ysx1d+8ZrcA4wwXMRZucu5+BatJnTK5LGKOi/pL6m3/8FRD7XtsNADSFBso
+         PhaxyYIhgyFhZaMlBCzMe4JMg8t0AXbixU6ze/CeWjI/smSbFdht76jrSg4olwVhUiPf
+         3FDXAQ7ua/ab4dfl7uMbLKpPVhUPxtghWH0xoKiLQ1MDuGa8t/thUiPmYDaHv3zmES3y
+         onoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789054555; x=1789659355;
+        d=1e100.net; s=20251104; t=1789056237; x=1789661037;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=2+MOwVd/hSplAvFbBk52yvKLS3w7cDWTRO3ieRL0csc=;
-        b=JptyR7qtOIadJseHn+wTpTCi6rr5WczSdGLcn05/Vfz51UeVeEnpQfd3V3QowKGZm8
-         z3Y4d5/FEnXEQiMgMk5PIawL5wHPPDDxhJk7YzOO4wiXS1JRsXnv1O09EpBtQ2USNwaf
-         eKSy9KTX5Y6w7RM3+K2OWbSRz7rhxxKkP57jELo+xacLrvYftpcbC3rAwVzJVvLqDyfn
-         piaEEEmX+Cpazh/c+HA7CEOxOX7hIDAAMgPp7hNOwRER5Z8/EmxusGIeTBEBlkFckjeV
-         VZKEwQSAGbZicVJClAYzJhqFAa4EXJTN9FqCO1Hc9kW4l4Ct+e9JTd2dBq5X+NAILBqX
-         DAug==
-X-Forwarded-Encrypted: i=1; AKwUvBzBIEamyfnEXoBluare1Bz494MeY3jGLC/wC9qggsxV9miPqPw46K84gMWD07/OifFJD4hTzg==@lists.infradead.org
-X-Gm-Message-State: AFuF++lAc1Lsv5SmFxAJr6HpVozKQo+ujZmXhz0KCvngpVlFLw5xe0+H
-	kCNcDcVHkxVXA08WQFV5MLDXZNqFsAzantD6h3/5Yo1aQB+/TUipvThmIsqIj5UvPTLbilCwWfV
-	+x2RC0A==
-X-Received: from pjbdt17.prod.google.com ([2002:a17:90a:fa51:b0:39d:8f18:feb5])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:6081:b0:39b:51cc:4586
- with SMTP id 98e67ed59e1d1-39b51cc65admr27199424a91.19.1789054554982; Thu, 10
- Sep 2026 08:35:54 -0700 (PDT)
-Date: Thu, 10 Sep 2026 08:35:54 -0700
-In-Reply-To: <20260910143448.GD3968357@nvidia.com>
+        bh=PjpQmguvZKqFc40yaCCUF9DxHpcHtd3drRjNMUjWpE8=;
+        b=OV3hg8wHDBdZWnVW5l9Ec/z3ZX/Bqwzen8YeydZNiKa4Xv2pSrM5+7JwHnR8EeffME
+         knYK1TTiPpFH+I1tUSUge0YyrQez6oWVLesgBj99vL6+oJ7sOb6mnXhkcYkAppKPLEXx
+         smCMIS3OdeWeBhG9zw+4Fg4cjK449zNdKL6nuUxmE2aHkGeJJ3/62m1i/6UxTBD5DYcr
+         UbwXf6TvmUHXWx4/ZD9iqCjjRPjK2YASZrdBP52vk8CXnhQfPKCzHqEJa2gtsSgYutjA
+         bwiI4AtLqTqoffvKcAY4//aWFCYr4/QpJNHlM0IMBelLsGZY4Et0IeidZSLVgVm/LahH
+         SB4A==
+X-Forwarded-Encrypted: i=1; AKwUvBx6qdLZzWTj6Aa4924UqH5BbbvnJj5djtnT2sqtXk3iZKNekEfRm/g5mIQOxSKWQDAfDXVe6A==@lists.infradead.org
+X-Gm-Message-State: AFuF++mWnGKMdTw5mj7ofBPWIDsenhjPjefv0gWKe+JWkcT5nuWppdqd
+	NZJratTis54a4t9wolFBAfE2pj0+VhyFvQEzH5X3k5FtJbfWburiD0SZOpGZjugkr60i2YNUMdm
+	hRHe0rQ==
+X-Received: from pgmh20.prod.google.com ([2002:a63:5754:0:b0:cc4:3b01:7730])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:4303:b0:3c3:7179:a640
+ with SMTP id adf61e73a8af0-3dacbd6e061mr12520616637.3.1789056236336; Thu, 10
+ Sep 2026 09:03:56 -0700 (PDT)
+Date: Thu, 10 Sep 2026 09:03:55 -0700
+In-Reply-To: <20260905011956.GA856309@nvidia.com>
 Mime-Version: 1.0
-References: <20260903023452.721732-1-loganodell@google.com>
- <20260904160009.GV4157646@nvidia.com> <aptFFYqcSiBdMLE8@google.com>
- <20260905012403.GX4157646@nvidia.com> <aqIAtOoew-_6jw29@google.com> <20260910143448.GD3968357@nvidia.com>
-Message-ID: <aqLOWkuVKccR-I7W@google.com>
-Subject: Re: [RFC PATCH 0/3] liveupdate: Move to feature flags for LUO and
- memfd ABI compatibility
+References: <anphyjFv3FhF61iB@google.com> <2vxzpkzo51wg.fsf@kernel.org>
+ <anssOQFNZ2LfihbU@google.com> <2vxzik5f311e.fsf@kernel.org>
+ <anyObKiZIhfok5mk@google.com> <2vxzqzjz1x5f.fsf@kernel.org>
+ <aoMcqp0gr06YXAPU@google.com> <2vxzy0e3zgqz.fsf@kernel.org>
+ <aoSCCTTBn9D5hqzk@google.com> <20260905011956.GA856309@nvidia.com>
+Message-ID: <aqLU653FXjJjhbop@google.com>
+Subject: Re: [PATCH v4 05/11] KVM: LUO: Support VM preservation across live updates
 From: Sean Christopherson <seanjc@google.com>
 To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: David Matlack <dmatlack@google.com>, Logan Odell <loganodell@google.com>, arnd@arndb.de, 
-	pasha.tatashin@soleen.com, rppt@kernel.org, pratyush@kernel.org, 
-	graf@amazon.com, akpm@linux-foundation.org, pbonzini@redhat.com, 
-	maz@kernel.org, oupton@kernel.org, bhelgaas@google.com, alex@shazbot.org, 
-	kevin.tian@intel.com, dwmw2@infradead.org, baolu.lu@linux.intel.com, 
-	joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, 
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-mm@kvack.org, kvm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-pci@vger.kernel.org, iommu@lists.linux.dev
+Cc: Pratyush Yadav <pratyush@kernel.org>, Tarun Sahu <tarunsahu@google.com>, ackerleytng@google.com, 
+	fuad.tabba@linux.dev, Andrew Morton <akpm@linux-foundation.org>, dmatlack@google.com, 
+	Shuah Khan <skhan@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, david@redhat.com, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, sagis@google.com, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mike Rapoport <rppt@kernel.org>, Alexander Graf <graf@amazon.com>, 
+	linux-kselftest@vger.kernel.org, andre.przywara@arm.com, michael.roth@amd.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, will@kernel.org, 
+	vannapurve@google.com, maz@kernel.org, fvdl@google.com, kvm@vger.kernel.org, 
+	oliver.upton@linux.dev, kvmarm@lists.linux.dev, alexandru.elisei@arm.com, 
+	skhawaja@google.com, aneesh.kumar@kernel.org, linux-doc@vger.kernel.org, 
+	David Hildenbrand <david@kernel.org>, yan.y.zhao@intel.com, kexec@lists.infradead.org, 
+	suzuki.poulose@arm.com
 Content-Type: text/plain; charset="us-ascii"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260910_083557_089547_E82225A9 
-X-CRM114-Status: GOOD (  56.01  )
+X-CRM114-CacheID: sfid-20260910_090358_845067_8C0FF611 
+X-CRM114-Status: GOOD (  45.31  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,136 +103,119 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Sep 10, 2026, Jason Gunthorpe wrote:
-> On Wed, Sep 09, 2026 at 05:58:28PM -0700, Sean Christopherson wrote:
-> > On Fri, Sep 04, 2026, Jason Gunthorpe wrote:
-> > > On Fri, Sep 04, 2026 at 10:24:21PM +0000, David Matlack wrote:
-> > > 
-> > > > The proposal here (which is inspired by the KVM UAPI) is to ensure every
-> > > > LUO ABI struct has 2 properties:
-> > > > 
-> > > >  1. A field to encode options/features (e.g. u64 flags).
-> > > >  2. A way way to grow without breaking backward compatibility (e.g. so
-> > > >     we can add new fields).
-> > > > 
-> > > > Each flag can mean whatever it needs to. e.g. It can indicate the
-> > > > precence of one or more fields (i.e. new fields in the struct), or it
-> > > > can mean a field now has a different meaning (i.e. union in the struct).
-> > > > 
-> > > > This would enable adding support for new features without breaking
-> > > > backward compatibility. Downstream users would have to ensure their
-> > > > kernel does not start using a new feature while it can still rollback to
-> > > > a version that does not support the new feature.
-> > > 
-> > > This was never the biggest problem. The main issue was the functional
-> > > behaviors of the kernel that cannot be represented simply as data in a
-> > > struct with some flag bits.
-> > > 
-> > > Like for instance kernel A supports memfd folio sizes far larger than
-> > > kernel B because we fixed MAX_ORDER. You can't fix that just with
-> > > simplistic flags.
-> > 
-> > Can you elaborate on why the folio sizes matter?  Honest question, because I don't
-> > understand why the serialization format wouldn't express things as "N contiguous
-> > pages starting at PFN X".  Then the implementation would rebuild its folios as
-> > appropriate.
+On Fri, Sep 04, 2026, Jason Gunthorpe wrote:
+> On Tue, Aug 18, 2026 at 09:02:17AM -0700, Sean Christopherson wrote:
+> > The rule is thou shalt not break userspace.  Whether or not the
+> > breakage is the result of an explicit ABI change is irrelevant.
 > 
-> That's an idyllic view, yes, but my point is (IIRC) we didn't do
-> exactly that for memfd.
-
-Well, y'all screwed up then.  I don't see why past mistakes should force other
-subsystems to support a flawed implementation.  Learn from the mistakes, add v2
-of serialization for memfd, and move on.
-
-> Sometimes you can do more and more work to try and be more and more
-> general but this is *alot* of work and even then eventually hits
-> problematic limits. Like what do you do with the sealing flags? That's
-> ABI breaking if the successor does not support them, and downgrades
-> make exactly that possible.
->
-> A CSPish user can do things like patch the new sealing flag into their
-> current kernel (while preventing userspace from using it), ensure
-> everything is updated to that, then jump ahead to a newer kernel and
-> enjoy the new flag with full downgrade support. There is so much more
-> control on their part that makes the problem far more managably simple
-> that upstream does not get to have.
-
-I guess maybe we have a different definition of ABI? 
-
-I'm not saying that upstream has to be 100% forwards and backwards compatible.
-I'm saying the serialization payload itself should communicate what features are
-effectively required.  I.e. *if* there are incompatibilities, they should be
-naturally expressed in the serialization format, not communicated out-of-band
-through magic numbers.
-
-The scenario you describe fits exactly with what I am proposing.  Until something
-actually starts using the new sealing flag, the CSP can downgrade to older kernels
-at will.  And if the user cares about downgrading, then they need to prevent the
-flag from being used until the new kernel is rollback-safe and deployed to enough
-hosts to prevent stockout.
-
-> This is why I think the very idea we can support any version pair is
-> too much to ask for. We should focus on supporting a small set of
-> version pairs and not making it too invasive or hard in the kernel or
-> on the maintainers.
->
-> Thus live update within a stable branch only is my proposal for
-> upstream support.
+> I argued strongly for this simpler approach, I will write here the
+> reasoning I gave.
 > 
-> If it really succeeds at that and it becomes very popular, then let's
-> discuss upstreaming doing additional version combinations.
-
-Why on earth would we have version numbers in the first place?  IMO, monotically
-increasing version numbers are flat out the worst way to communicate features.
-
-I am completely against supporting any scheme that relies on magic version numbers.
-It creates problems where none need exist, and checking for compatibility can't be
-sanely done in a programmatic way, because by definition it relies on magic numbers.
-
-E.g. if the ABI for a given component hasn't changed, why should anyone care if
-the overall "version" of the kernel is ahead or behind by N kernels?
-
-> > I could see things like HugeTLB not working if someone booted the kernel with
-> > support for only 1GiB pages and then tried to feed it payload with sub-1GiB ranges.
-> > But to me, those sorts of things fall into the "well yeah, don't do that" category.
+> Firstly, "live update" is not uABI per-say. It is not "userspace
+> breaking", and it is not a "regression". It is an internal kernel
+> mechanism to allow the kernel to self-upgrade. In the industry it is
+> typical any of these hitless update/patch/etc schemes to only work
+> between a few tightly controlled version pairs.
 > 
-> Okay, how about worse, todays kernel has hugetlbfs and there are
-> patches around to luo serialize that. Lots and lots of talks about a
-> post-hugetlbfs world out there.
+> Asking upstream to carry a full matrix of every single version pair
+> ever released is massive over-engineering and cost on upstream
+> maintainers. Refusing to do this is not a uABI breakage, it is not a
+> regression, it is simply a lack of a feature.
+> 
+> I think upstream should start by agreeing to only support forward
+> going upgrades within a single stable branch. If live update becomes a
+> success then maybe we could do from a stable branch to the immediate
+> next stable branch too. I don't know.
 
-And?  Adding a compatibility layer to a future kernel so that it understands an
-incoming HugeTLBFS payload should be trivial.  I can totally see not wanting to
-support serializing a post-HugeTBLFS kernel's memory representation into the "old"
-format, though even that probably wouldn't be all that difficult.
+From that perspective, what I am proposing actually goes a step further.  I'm
+saying don't commit to supporting *any* specific versions in upstream.  Express
+the feature requirements in the serialization payloads, and let userspace sort
+out what kernels are compatible based on their actual usage.  The kernel may need
+to provide additional discovery mechanisms, e.g. so that userspace can probe to
+see what is supported, but discovery is usually fairly simple to implement and
+maintain.
 
-> Do we want to constrain what is possible to ensure we accomodate this
-> hugetlbfs serialization? I vote no.
+> This alone is already much more powerful than live patching.
+> 
+> The balancing issue here is the impact on the kernel subsystems
+> adopting luo. Every time you change anything about the internal
+> function of the subystem you now have to go test a massive version
+> pair matrix to make sure everything works? No thanks.
 
-In what way is providing strong ABI guarantees for individual components
-constraining HugeTBLFS serialization?
+No, the subsystem just needs to make sure that it serializes its data using the
+defined ABI (where ABI here means the format of the payload and the meaning of
+any flags in the header).  That should be *easier* for maintainers to handle than
+trying to support arbitrary versions, because it eliminates subjectivity and
+having to make judgment calls or remember magic version numbers.
 
-> Do we want to reject the hugetlbfs serialization until we have a year
-> of debate outlining every possible ABI scenario? I also vote no.
+> Luo is very invasive and a huge PITA at the best of times. It doesn't
+> need to be even worse.
+> 
+> > It's probably fine for Google and other large companies that tightly
+> > control their kernels and use cases, and have the resources to
+> > juggle the resulting complexity, e.g. have kernel engineers on staff
+> > to track feature and dependencies, coordinate and plan kernel
+> > upgrades, etc.
+> 
+> Every downstream that wants to support luo is going to necessarily
+> severely restrict the version pairs that can work. Like a RH type
+> distro may only support it for 9.1.x -> 9.1.x+1 - they can carry the
+> cost of figuring out how to manage their patching and compatability
+> matrix on their own with the tools upstream provides.
+> 
+> > engineers on staff to help them thread the needle you describe
+> > above.  And if supporting live update as a general feature for all
+> > users of the kernel isn't being factored into design considerations,
+> > then that needs to change, otherwise this is all dead in the water.
+> 
+> General uses can use upstream and do CVE upgrades within a single
+> stable branch. That's good enough, lets start there. We don't need to
+> boil the ocean.
 
-That's a bit of a strawman argument.  Is designing a forward-looking ABI easy?
-No, but IMO "a year" is a massive exaggeration of the effort required to come up
-with a scheme that can survive a variety of plausible upgrade/downgrade scenarios.
+We're in violent agreement on this point, I think we just disagree on how to
+express compatibility.
 
-And again, I'm not saying we have to support infinite compatibility.  If some
-future kernel drops HugeTLBFS, and we decide not to provide a shim to support
-downgrading (which IMO is totally reasonable), then it's on the user to understand
-that moving to that new kernel is a one-way street.  Given that dropping something
-like HugeTLBFS would require significant changes in the software stack, I think
-it's perfectly fine to put the burden of understanding the implications on the end
-user (though realistically, there would be a copious amount of documentation and
-deprecation warnings).
+> > I also don't see the point.  Maintaining a rigid save/restore ABI is
+> > annoying, but it's not _hard_ (or at least, not _that_ hard),
+> > especially if there's a set
+> 
+> I was told KVM had the smallest luo footprint of everything, so
+> perhaps your perspective is different.
 
-> Should we make a downgrade round trip a downstream problem? I think
-> so!
+Only because KVM already has a massive ABI surface for save/restore.  If you
+want to convince me that magic version numbers are the right approach, then show
+me how KVM's existing save/restore support would be made "better" and easier to
+maintain by throwing away all of KVM's save/restore uAPI and replacing it with a
+versioning scheme.
 
-Hard NAK.  There will inevitably be boundaries that cannot be crossed, but I am
-not at all ok punting on downgrades.  To me, that's basically saying "we want to
-add just enough support upstream so that it's not too painful to carry full support
-out-of-tree".  That completely goes against the spirit of open source and upstream
-Linux, and I want no part of it.
+> In other places luo becomes coupled to the internal datastructures of
+> the kernel, we literally have to preserve lots of kernel memory
+> utterly unchanged without any kind of serialization at all. 
+
+Have to, or choose to?  I have a very, very hard time believing that it's infeasible
+to define a serialization format that is decoupled from kernel internals.
+
+> This inevitably creates restrictions on the evolution of the kernel in
+> general if we can no longer change in-kernel architecture because it would
+> make some data structure incompatible with a kernel 10 years old.
+
+Only if the relevant subsystem defined a poor save/restore ABI in the first place.
+
+> There is also a need for *downgrade*. Meaning the N+1 kernel has to
+> strictly emulate the limitations and capabilities of the N kernel so
+> it can be rolled back. Can you imagine the nightmare of trying to
+> codify the feature progression for every single kernel release forever
+> in some impossible scheme to enable this? Again, no thanks.
+> 
+> So, what upstream can reasonably do, that still provides real value
+> without severely burdening every subsystem, is upgrades within a
+> stable kernel branch only.
+> 
+> If some distro or CSP wants to do more, they can deal with it. They
+> have a far, far simpler problem because they can exactly lock down
+> their version pairs to a very small universe. They don't need a single
+> kernel that can emulate 10 different releases of behaviors
+> concurrently.
+> 
+> Jason
 
