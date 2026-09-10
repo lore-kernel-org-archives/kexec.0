@@ -4,92 +4,140 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 85C65C79FBB
-	for <kexec@archiver.kernel.org>; Thu, 10 Sep 2026 21:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 13664C88E41
+	for <kexec@archiver.kernel.org>; Thu, 10 Sep 2026 22:18:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:
-	From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ozbwghE9AMpwIIhz2P8UJs4AXIT1SYFdl3Q4CzsGjEs=; b=W7cUCpCiEXwtfzrNc1KRoHEJtb
-	nS0KitM6QFHL8dMOBjyDXC/htikB/vRzRQLadyS5lJaLhXAnx3q4XrW4YkNm2u8yqucJuq5KwsoI6
-	n6aaO+mu1lY1AFu4FVd3YFh3DFWDkwvQ0NAQR7mtzB76iUkfDhfCyMMeHlYRyZPstdfUZ3B8BuUyv
-	Ur5EJhuf5ewXLYlfL2RyUpYYlOFWBlnQz5EtbFgY2k5PMYx4GSFVRt9ia3zxjU0z9kebK+hQUd7CR
-	GzgQ60SkPLcouqOB5IAWDXufQkT0pRsr00Wbfa8ETl28N2sUEecr8zdWorIoUeeEWSmHMwiDK6K3T
-	2NF+dkZA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=skSZMJCxx5hkdKhii/CR8+Hb56esOFV3bhF6MfbbNWk=; b=s/7XTBb/d4t6H8R6WiMgotj3Vp
+	AmdBfDgjfUT8NG8oqQKLzfxXCzo1LsRCl81Loq3Gfj8gu1oElLB57vwDCXc7IsXs5OH5PJbw0ETyq
+	gH0T7r70n3RmOa+cv3hX5KVlgXp761auruw4NMtlIOHVdwJvGWVBRpUX/6tUoxXpxoLCbSO3oFuhW
+	zSrJCm5/PxUOthRcp8lAEup2EX4iQvv8/XlnSP64fDnCbtSq48knxB80YjkQySkuaAFGROiCgO6h7
+	nHZKEEqu9lkmhgzt8pht6kFtLg2DCJmSoxiYkynVeP/mJUc7JHiyCHDHYzYqjEHT9NRBpRj/qxXGd
+	vxE+2W2Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x4mSn-0000000FQtq-3X6M;
-	Thu, 10 Sep 2026 21:37:45 +0000
-Received: from mail-qt1-x82c.google.com ([2607:f8b0:4864:20::82c])
+	id 1x4n6X-0000000FTbk-1zkO;
+	Thu, 10 Sep 2026 22:18:49 +0000
+Received: from mail-westusazlp170120002.outbound.protection.outlook.com ([2a01:111:f403:c001::2] helo=SJ2PR03CU001.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x4mSl-0000000FQtC-15wV
-	for kexec@lists.infradead.org;
-	Thu, 10 Sep 2026 21:37:44 +0000
-Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-52f83889a93so3198921cf.2
-        for <kexec@lists.infradead.org>; Thu, 10 Sep 2026 14:37:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1789076261; x=1789681061; darn=lists.infradead.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=ozbwghE9AMpwIIhz2P8UJs4AXIT1SYFdl3Q4CzsGjEs=;
-        b=k/JOTzJP6u9HpJUkotx462XKhBEf3WCT8yhgVzTusvmZ/pZBDgalxi8jkwaSS4qTGn
-         zF/g58G7BU7cQ9qjL3E83yDl0fL5FEd2aoIWyvDrnPe7UYWZVG8oZRYAflCm/F8cA0np
-         cHj4hbF/g+SwADaS6aUh00LblGtho9zXD+WpvwGAdxmB/Qq8yMx+XQCmVsFuKiOhKYMq
-         dwJY9d5cM1vH/dKYKZoGcjFXLNb8yZH2CEDV+UphEZbX8Sb8jsfNZhLcZbIIEinoQVYJ
-         iZHlCvhYcPC4JO2HODweF5WfFM597iyXuZ/ttQ566EYMM39W5VyifrY7sHDtsffMW2JM
-         fJ7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789076261; x=1789681061;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ozbwghE9AMpwIIhz2P8UJs4AXIT1SYFdl3Q4CzsGjEs=;
-        b=SnIfUixRHYEZgqdoYo3NgEY+s9jA5GAF/ivIEWeeVOpt4V8twICEu6KDgLrRNEs5jf
-         SkbhDZKr9W3a86amcfe7ViO5G/QoBr3xISq8RfbkYCXkKatiuxVW7nKcraNCaLqK4kdI
-         bMADPLZVzsliffXmT7SMQ+OeISyNNsU5UeJLSH3JA7r631BayLw0qC/SgPcqRcVQsXgD
-         u61c5QLq6FP/y5wfLGM771I4PWj9DsPKUbGKVlnxI/b719rdXgh1D+6G6kt4vUyXSEml
-         FeuvCUOFFhhcsNtWsb5lYpjHZzJWlVDhuwl5xu+r0g2cTXJWEiMXU7FvxNsKiJuStOYy
-         WTAg==
-X-Gm-Message-State: AFuF++nJ+ntD0kCmlyWSM2qZepvpawzDQDRsuLIUcGgJb8SluTLDZrJB
-	91R5Cl8OWesu3omteaQcx4TjsUGWFCW4HQeuduaY6IXdlYgnp5Zm5RVmXhx8FHFpNCnOA4VzNz4
-	LJKcONH8=
-X-Gm-Gg: AYBFou1IDlejDrMa3rYvbcs0Ocr6trYzrYbvgw0yzVevaQQMElLIRF3QKWr/s0loysK
-	bEuty5eBv6QDORa/OWJSeJyWFRcTz/aCszXYiO0mYeRgnEvftdhbWD69zfpzCRohUncSAr1EkST
-	mXVMzpDuoEfzL9V5VD1m09/yBFrPS7tVTp99xvica1Yxvv27H8DKiz+Vx6uArhj4Oxj68eK5dFv
-	YdPE4rTeFrfMdN2YMjG8eSFQ6XKNCeCfiikABA9uNVeogYm6Ke+xMsf2PFN7kLrplAQFNF2bhuo
-	3bE8+qRO4NRgTlJsKzxrkwnK7diGAGmjREK7MT1ssprPq4AwmB5bvW+CgHT7eNn5ib+hHqfk7h0
-	/yrpzeIVmldbyU/BrLtNWyckmj3t3wocCvDpA/QKZU2LJniBcCWnJPoXW81Ni0XsieFWGxWmNvh
-	3L1nlshpdnqDw0f911wX6Fguzzjo+9Ow6mVchjNuxV9aMgm3/adlZniShB321ZUaR9p6/wA4tij
-	n5N4SAF4EAxim3tN0lX7eNQc6ui+t78u2VT
-X-Received: by 2002:a05:622a:393:b0:530:a441:c52d with SMTP id d75a77b69052e-530c876307fmr21122731cf.46.1789076261010;
-        Thu, 10 Sep 2026 14:37:41 -0700 (PDT)
-Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-9120f4d3779sm5444196d6.43.2026.09.10.14.37.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2026 14:37:40 -0700 (PDT)
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: kexec@lists.infradead.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-pci@vger.kernel.org,
-	David Matlack <dmatlack@google.com>
-Subject: Re: [PATCH v8 00/12] PCI: liveupdate: PCI core support for Live Update
-Date: Thu, 10 Sep 2026 21:37:36 +0000
-Message-ID: <178907602445.560913.2482730956380750475.b4-ty@b4>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260728221007.2098560-1-dmatlack@google.com>
-References: <20260728221007.2098560-1-dmatlack@google.com>
+	id 1x4n6U-0000000FTap-0xSb;
+	Thu, 10 Sep 2026 22:18:47 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wHrARG1sxBtLue13PauEtIp4t1lYqz19P2FbbuiJbKcWeFYPvxkPQDHmGH7dN050Z6OHI5xhn7J0KT86X+hxcq0uE0XjHWWFPH55jFUi8WXcIyGj9Q7p3Yp+nDRqo2aMKonMTKg8sOC4s2SX5lw/zaJfoCqf+SCYPJH7+CRiehpCGkmXWgjuUUTQUXWO/R7F8CU2BONeHYThkWz66QH5xk0VPpVFpfdseLXTrybr9nYO2+am0w5ZbZbrStLfWiHgiWTVCvkH3Ti81tk8VuQ1PZHja4u4kGS3ZsNlh3lNFP2me2Yu+XlR/qFTx8j0yYtQVzbhVGQ6q0ADCEOqOgxuww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=skSZMJCxx5hkdKhii/CR8+Hb56esOFV3bhF6MfbbNWk=;
+ b=Cvtdvgv+4JvHx5+DgwUv+0AbQ03VB16pgcjq7dVJhqkhGBiqSIG4XFDBudj28y9TTIwtmUZR+WYqAFe/43Rkx9ijHTiEnPQD1K6OTGG6sQmd+rjjmuFH3sQgda0FnyKh2Eq5e/S2TM6lO9XzHinx7KSGBeJL+kDMViq5LEKjnYKDQq7CypGKTDz1+cdKAGq0kQTUKWXbcqeMzxCWtlai2ihBsw6HS1iz7cLNBibyfwvsZsEK272UM61PuTnA5hUG6jbZ1F9fzIPDT/MOe6JKG6zkv787zHBxwLNQcHtrKeTCWgRk5/vCHfDzsOwAiPSJpqKupQ6EKClurVAzyQNI0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=skSZMJCxx5hkdKhii/CR8+Hb56esOFV3bhF6MfbbNWk=;
+ b=uQVXA4ZPv1GD/4HvsVpUy2HEyMvmowkDxhAdyjam+XINl5GibTrTCPBBiT+BVw9tZ+oTDDAnp8qCjkqmctCHBBS/sScz3tlG52fNBvJ05VCKRg+EDLIwzBN4DqwTEyYuRjbZXO7kHhBHnUuXG9hYVkSSHewfGDXAfMisZRtx7pW/8QhUxRmXkCzS/iIXaWNsFTHxaXPyVKvb6eXa8ZJBTw4Ud/TQt5pgT8f8pQSohTjKiRWvLIykzyJsyt5fhwRh5UG8Fbu9sd1zOW3IcdFGEnSPhvP6IZ/g0sjeE6FpomKgOJaVv/VLgIjBmyXAfJE05GMrNi5MvsWIm6J+6FB2rA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CHBPR12MB731189.namprd12.prod.outlook.com
+ (2603:10b6:610:33d::12) by CY5PR12MB6600.namprd12.prod.outlook.com
+ (2603:10b6:930:40::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.7; Thu, 10 Sep
+ 2026 22:18:33 +0000
+Received: from CHBPR12MB731189.namprd12.prod.outlook.com
+ ([fe80::b0e5:123d:fe06:e10d]) by CHBPR12MB731189.namprd12.prod.outlook.com
+ ([fe80::b0e5:123d:fe06:e10d%6]) with mapi id 15.21.0406.007; Thu, 10 Sep 2026
+ 22:18:33 +0000
+Date: Thu, 10 Sep 2026 19:18:32 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: David Matlack <dmatlack@google.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Logan Odell <loganodell@google.com>, arnd@arndb.de,
+	pasha.tatashin@soleen.com, rppt@kernel.org, pratyush@kernel.org,
+	graf@amazon.com, akpm@linux-foundation.org, pbonzini@redhat.com,
+	maz@kernel.org, oupton@kernel.org, bhelgaas@google.com,
+	alex@shazbot.org, kevin.tian@intel.com, dwmw2@infradead.org,
+	baolu.lu@linux.intel.com, joro@8bytes.org, will@kernel.org,
+	robin.murphy@arm.com, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	linux-mm@kvack.org, kvm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-pci@vger.kernel.org, iommu@lists.linux.dev
+Subject: Re: [RFC PATCH 0/3] liveupdate: Move to feature flags for LUO and
+ memfd ABI compatibility
+Message-ID: <20260910221832.GH3968357@nvidia.com>
+References: <20260903023452.721732-1-loganodell@google.com>
+ <20260904160009.GV4157646@nvidia.com>
+ <aptFFYqcSiBdMLE8@google.com>
+ <20260905012403.GX4157646@nvidia.com>
+ <aqIAtOoew-_6jw29@google.com>
+ <20260910143448.GD3968357@nvidia.com>
+ <aqLOWkuVKccR-I7W@google.com>
+ <20260910171210.GF3968357@nvidia.com>
+ <aqMgjXfTJ8u3n7Kj@google.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aqMgjXfTJ8u3n7Kj@google.com>
+X-ClientProxiedBy: YT4PR01CA0436.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:10d::8) To CHBPR12MB731189.namprd12.prod.outlook.com
+ (2603:10b6:610:33d::12)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CHBPR12MB731189:EE_|CY5PR12MB6600:EE_
+X-MS-Office365-Filtering-Correlation-Id: a15d49df-9717-4f83-750c-08df0f897359
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|23010399003|1800799024|7416014|376014|6133799003|22082099003|18002099003|4143699003|56012099006|11063799006|10067099003;
+X-Microsoft-Antispam-Message-Info: 1MrG7hkEr3/b3LgVUbr3162uj/00KXpgrem1FS0xbTzLzM3PogRZ6ft/V8vIiKXJ8OVtbi8DxkFKxmamRPOP1w6Fn11gb+rXacwmsSNNjmV4uPfLWIkPPTgyGyWvnRqHiyS6Uq2oagzDuU0sdraG+aYdtLYfQS/MUop0XfL5UXF24KveLIiOMxnOnnew2Ld8F8mww4OGPrqAOIGVi1A63zX4HXmE4CRpg+JGsp9KYXvYreTHuUyeBZZ7qHttNIqwgnFOAjmX0gwDzKNha+KwrLEapgcYx3On8gjDmS6D5Paceyzov5QAIwWosma0dZbfzi473LfDrgIlQS3t2QSkMAYi6X52XKYi26SZp+SBo7SN9IrORW8zbVgxTpr4opfnq+U00wxEG8mNKkOhUr3HQ6YpZKrBAPTuAl8m4eQvoKcvGGWO6R6CAhw+vK9bIHdAYQHOSLKI+q63cG4YxysIOUwbtMb2uGzG+M8hESfeEa6dfI3ywOMIIUV3idfV1GmtrRRhvKUu2o5XkmOHN6C13Hnw62pVS0fkEbO/9BvACzmd2Aajrf4UkwJs+1iVJ6PvSyWXiPMBsD1YmrP0yY3R552muNiaaxkcxGeXYSeK7KGXhZZr9E/Ahy40Nfh39DFzC1j9T5eciGxPqzmdz5FPoc1BRAXkuQ49f0/oh42TpJ4=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CHBPR12MB731189.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(7416014)(376014)(6133799003)(22082099003)(18002099003)(4143699003)(56012099006)(11063799006)(10067099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?DDe9Xc7gGk3KAGlAubroCNFNm8Bxdjzpg13Pguni19iU70Qbi5dn10yABek7?=
+ =?us-ascii?Q?+BbPvjPhOkMMWVPW4ZATvYezSPIri5b1bMC0hkGPf8h+WGU7HXfoNQxpuTtL?=
+ =?us-ascii?Q?v6jo90Cgt+p/9c95391WcvrsWRT9cKvgBP7UgNm83M17W1S9gyJEC5cnf4nK?=
+ =?us-ascii?Q?giVW2PkEkYA8gwcSBPrNjI0yMN5kvvJwOC73Prt63j+qPnqSkXwvhIf0XG0l?=
+ =?us-ascii?Q?rOvHNTF2KSVZMTpp31V2oEWOpy9hTNTgDPtXgkSu0wd0E7M6A3U4hhGtxkxV?=
+ =?us-ascii?Q?W4RLjl2WTGQjCe+wEBEF3KkBVbSt4oPITguHm9V1Qr1VzcCfWcsXZrKDmCV9?=
+ =?us-ascii?Q?bUp13/PyjWNpWh9MxpElG+BExyyiNOJdUA89xBYH+TYCkPRrb0IB66RwWFIZ?=
+ =?us-ascii?Q?PIBrstGRpT2i6K5Eq5sQWNhpqVtImaoig8Noc/wouZqb07XpdC/9M+XU/3vo?=
+ =?us-ascii?Q?XrGyYeUth4pM775w8j94D9z2PA2bczU+GF1dSsklciTEkPmOzGz2pplgVHl2?=
+ =?us-ascii?Q?lctyduI7G81zuOIJFcej/OoV1VS+a7CYPRL8F4NQW1mkyaeh/7iaTjBUFF2J?=
+ =?us-ascii?Q?W0ba4k+kkkEQxfWz4K37Ht+eN6H23hsKNfSaL8FaqV6qV9E94kqmgyOBzLZH?=
+ =?us-ascii?Q?NUJer5Z2h7b+HAcr3XmwYqvNIUqKHiY+l8jxicwcIH/6WNcdNKedqLQuW8ND?=
+ =?us-ascii?Q?FGzaPt0V4kKXdUO7pUzZDAKQ9PUX+oVrr6S4b539Cs4eiVklioZZd4BgRmBH?=
+ =?us-ascii?Q?ehaX2PKmQoS6a1Nw6bGlp5o4OGwslD4GuOtk6LiFtA6St3KLZb0UFtUczR9L?=
+ =?us-ascii?Q?0jCLTMbZYtniOqDvRf7HR3KJkxNepSGS1VcNgi5/Ia5CSnKbOrpEAL2kBPGG?=
+ =?us-ascii?Q?MbVGtbt12vuPRmSERGI+O/SIwydjWDnOLkrRJyaN3HjoeKb7PFnLX8as2GEF?=
+ =?us-ascii?Q?N5504hHIsB2foJ/XgyvYTjlmWFQQLkBoUAbsOxi6OGIJh6++uLJ2UN8sYJSv?=
+ =?us-ascii?Q?fZjS1gUPe/PWiGwXnhKsuWAFhnakOZz82LkBQU/0RtIipjJ0UZI6WCG2TqER?=
+ =?us-ascii?Q?NnG0CH7Bk5w2/6Ju5CRi+dnwG4ZjjWJVm9NHp0+nvfdY+29YY0a99LJ1U1uv?=
+ =?us-ascii?Q?G1ZmDpBNZSz60SHyCgtA8Osum/ORpMVzoqGWQcc/UET12xV4Tvyx0cxNVgTM?=
+ =?us-ascii?Q?G1ATxp++dwtYMBQ74GCi0BltsFUg2hpkEGBB70uFuFZJFTYIQiL2R73gIEF4?=
+ =?us-ascii?Q?OLxojJrXfZ9/cUJ1PWMA+JlY76t5DkxqIAg111fZRHciNTMWdWhIviT/WDvr?=
+ =?us-ascii?Q?zpgnKnaJBP2Eu+MVC1iOTjMN6JUDWO5lSdj2+p4Z3FT1JHQj+SstEmesPhdt?=
+ =?us-ascii?Q?CAv2TJhvRTdeTOv7wnTFMjj2BPRh6AbZ2uo5Rn83Krwppf3XGYy8hqz7gykH?=
+ =?us-ascii?Q?KJk4AStKO7CPyunikXj5Iu1R9eXnLLMaKffBtvZqXG1yEWsrsJV3VzuGBCbt?=
+ =?us-ascii?Q?CvIOec1brUcK6y+VMfbI0skRfx+3RuJ1hu1Faft45fFurHsjNuolQcuHK47F?=
+ =?us-ascii?Q?9yNnfLrCiyX0aSE0OrMV0CR+0NDO+c1nzV/9WuwwXvUFQ53fe9jdvzEmgft2?=
+ =?us-ascii?Q?YpUZ9XdERVYz27Df/ctIDIdt/5wRvZeXvZEYIO/mJF2vyqjUMVfcVmOZcZgO?=
+ =?us-ascii?Q?EUu0IlYo3vyULrlddYZWuDKOBc2pvvHJJNlblcOX8O6NWJv0?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a15d49df-9717-4f83-750c-08df0f897359
+X-MS-Exchange-CrossTenant-AuthSource: CHBPR12MB731189.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2026 22:18:33.0913
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tOcwI9WOc7rme2P/95uDNbTYQSUUGV512F92iOcPIekgiYmCZsrw0oFwfPO86YQY
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6600
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260910_143743_324122_8C4D74CD 
-X-CRM114-Status: GOOD (  10.41  )
+X-CRM114-CacheID: sfid-20260910_151846_274295_48FAE51D 
+X-CRM114-Status: GOOD (  14.06  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,49 +152,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Thu, Sep 10, 2026 at 09:27:58PM +0000, David Matlack wrote:
+> Each ABI is now extensible with a set of structured featured flags that
+> are exposed to userspace. Userspace can inspect the flags that the
+> kernel supports and confirm the next kernel also supports them.
 
-On Tue, 28 Jul 2026 22:09:54 +0000, David Matlack wrote:
-> NOTE: I am sending v8 out a little earlier than I normally would since I
-> will be AFK from July 29th (tomorrow) through August 6th and would like
-> to post the changes made in response to v7 feedback before then. I will
-> respond to any review feedback on v8 on August 7th or shortly after.
-> 
-> This series can be found on GitHub:
-> 
-> [...]
+I'm fine with that bit, it is really just a different way to encode an
+ABI ID #. If ABI 5 is spelled b11111 instead it doesn't materially
+change how things work.
 
-Applied,
+It was always the case you can use the same struct extension techinque
+with a version number. A version can't handle 'holes' in the feature
+mask, but I haven't thought that was a meaningful use case.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git/log/?h=lu-pci-preservation
+"if (id > 10)" instead "if (id & FEAT)" isn't a big coding difference.
 
-Thanks.
+My concern is the implied position that the kernel must make full use
+of this to maximize compatability or bust. That's what has always
+concerned me about all these proposals since the start.
 
-[01/12] PCI: liveupdate: Set up FLB handler for the PCI core
-        commit: acff3a35a49097424762f255afdaf2a122e926a3
-[02/12] PCI: liveupdate: Track outgoing preserved PCI devices
-        commit: ced0d433a98ccc33495a985580bfefb62d73b16c
-[03/12] PCI: liveupdate: Track incoming preserved PCI devices
-        commit: d96e637021905ee22ef75f3608b46287b3d44508
-[04/12] PCI: liveupdate: Document driver binding responsibilities
-        commit: 4d9305a6938a66ccc1154dc5fa5a8a9ac56eb549
-[05/12] PCI: liveupdate: Preserve bus numbers during Live Update
-        commit: 8db5cb4011d0ebde5fbadf1236dfcb23bb8ce007
-[06/12] PCI: liveupdate: Auto-preserve upstream bridges across Live Update
-        commit: a7709b31ea29cb7d65b75beb844e0b92a20d4ab0
-[07/12] PCI: Refactor matching logic for pci_dev_acs_ops
-        commit: d2cc005d11de82f352e1f30f7b9aa2a4c463dec0
-[08/12] PCI: liveupdate: Adopt ACS controls in incoming preserved devices
-        commit: bd5970669fa8a2c1bc04c3fa516a0667a090c604
-[09/12] PCI: liveupdate: Adopt ARI Forwarding Enable on preserved bridges
-        commit: 48928296f529d15ecf66c263f3cc5fc657894e26
-[10/12] PCI: liveupdate: Freeze preservation status during shutdown
-        commit: 09907e211d2d63cc74f5a00e5949866f1078da76
-[11/12] PCI: liveupdate: Do not disable bus mastering on preserved devices during kexec
-        commit: 7f44eb94b1a85d2827610726e43de5554795cbdc
-[12/12] Documentation: PCI: Add documentation for Live Update
-        commit: c08eff447b966b21511c997272612e9665b0bd6e
+I do not want to have arguments upstream about not changing things
+because we didn't do a perfect job preserving luo compatability with
+upgrade and downgrade for arbitary kernel versions. That has always
+been my position and worry.
 
-Best regards,
--- 
-Pasha Tatashin <pasha.tatashin@soleen.com>
+So, change the simple version to a u64 features[] tuple (be sure to
+use an array, we will need alot of them!!) and I'm fine. But I'm not
+going to promise that every upstream kernel will strictly only have an
+increasing string of 1's. You are going to get some that look like
+b1110000 and still wont work with old kernels.
+
+Sean's initial email was asking for strict never-break ABI
+compatability rules on top, and that is what I've been reacting to.
+
+Jason
 
