@@ -4,87 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 16873C79FB7
-	for <kexec@archiver.kernel.org>; Thu, 10 Sep 2026 00:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5907CC79FB9
+	for <kexec@archiver.kernel.org>; Thu, 10 Sep 2026 08:31:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xgzlS1uxnCbzGMH5pUkXS6DY1hZkFu32UCS9PdpFsuk=; b=C9LAsmw/Yuc5Rb4Ucqv9w1Z23H
-	VdgeQjW9eMkETiCx3bPkudWvDN953sQhoy35g6HxfEHdvZN5QF7D2zB2cUPSMIW7OAsGxgXM9aEuB
-	B1ySGf3uhS6DQJsOZGDepCFWYQa9wuCo0Z7Jej43bCsBi2Bn7z48MwBz5RqS/oWQe25T3WhF6Qn2i
-	aXFFg3PDvSz3OOu7lFnXaRvmsqE2EfjrmeIVIOCFy0IyQutxOr3TGCsHXG2fvsDYdnxpgMGcMi8vk
-	RaHvtWuS9vMjku9x1WowIYnbdh8amJZ39SG5xDrJl+iECl9u51BzodE7z07y5RgrqxnrzqjXCNQjM
-	q82JLWYw==;
+	bh=9cR2txGyC7hZ49ejFrxQhSQyUnrI0Q1sWnkbjpwbCtA=; b=oRFoJx0EbYXAi2EP1I47RbZuVa
+	+HuC7tFUPPPVfJDO+TPbQ+M0T8XDXC0xc99oRRF2g2sVmJ+XHxejiMT3f1Qg2bq9vNfH0ceCMH5/8
+	W4uINA3tIu7zVQzwFoW50xN/OxoAZlE9DYXgtoe8Po1Bl5Nb4nRBQk9Dlr2oWQcHJBn6S2N433ZO7
+	AxRQwVzWugBWWrp4lBMN07xeW/Dy56NP32X33JuxMHUYGJkdNUR/kv7jSQml7VwrW+XhcsMeBaJ/Z
+	Rqfeg6hBhVlq/+xX8SrYQyc7CkgkjpC98673XZOM1PAyv8AVHpS+NuCmd7FJT8ZKOWp+loYVxZaME
+	5lWGaxFw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x4T7d-0000000D9XZ-15Y7;
-	Thu, 10 Sep 2026 00:58:37 +0000
-Received: from mail-pl1-x646.google.com ([2607:f8b0:4864:20::646])
+	id 1x4aCA-0000000Dkfl-1L97;
+	Thu, 10 Sep 2026 08:31:46 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x4T7X-0000000D9Wl-0PZ3
+	id 1x4aC8-0000000DkfY-2NDJ
 	for kexec@lists.infradead.org;
-	Thu, 10 Sep 2026 00:58:32 +0000
-Received: by mail-pl1-x646.google.com with SMTP id d9443c01a7336-2cee1ec30f2so78820955ad.3
-        for <kexec@lists.infradead.org>; Wed, 09 Sep 2026 17:58:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789001910; x=1789606710; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=xgzlS1uxnCbzGMH5pUkXS6DY1hZkFu32UCS9PdpFsuk=;
-        b=IlxvGvnS4+Qcq4ME/V6q19fMeqpQH4DeFE8e3wPKdoW0n7GA550iKxthGpZEBW5scc
-         av2cTQjd7FHZGl3LyzsPUL8p96iOPqtsGE732z008IMTwcCOrx9wsj8cH671SrcH7GZs
-         80Fqvur0aIwtTFfzKMnys1SBNGe6v1iiw8Gcna59QuLwudXjUWICnY5aNOheonv0Z0bc
-         aQrnzKXKI5OfVEC8jWub4l7W8R/F65REeWE9H/3CfonfdLZaylvstQ/2xZAC44QZFjlT
-         0TsTCNbBjg6OrH2cWpIguuuMq4uyH7hrtfr3BihbrmkvXqE8qfjjt5J09ISH0ZJB0rRl
-         NOyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789001910; x=1789606710;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=xgzlS1uxnCbzGMH5pUkXS6DY1hZkFu32UCS9PdpFsuk=;
-        b=RC2yC50qUoq+8Em+NVV2fPk3f4BrnXBlxF3cumZXxN9e4N841yWiBlGxNtOOS0sr2o
-         evEI58HeE7PntVU9+3B8Snc3ibLg3zCIf+bv92Nsf0/sRfbrB2I+WuhPtFkiUYvCXGB0
-         auwE4cdSmdrw82xz76EfRJt6TfijyPfb0M0Bn87anOMivGuNd9RaSuxw8a6otLQScd0s
-         mCCdPyGVCbK9f8B+UOLSc0WOXa9IXdluKkyhFrPJKmvCX16PJ5dAjYrcZjjiqkKtPP1d
-         b6SIoaYsVdZLxbYD+STI4Knejl8Spgm7G3LlboIwDSBq5xNQR1xa512n0WLv69KUCcSQ
-         wX+Q==
-X-Forwarded-Encrypted: i=1; AKwUvBzCxPu1n3o1aUxqjI68cb95x6KVpCLkbzmDboPs+LvatyTEgQU8LR7nu/15QUpHWi07W6WNbg==@lists.infradead.org
-X-Gm-Message-State: AFuF++nlUD9XM2xn8AEq8TDcif9zKOJCMBQfWH95PiqJKpHX2epmGWBV
-	MO1F6mHLauP+/HJqheymcG6AxCvzcngOfU1L/xaZH3QWm0t4qTsX8/2uWEQgLdIlsEYkQJoBkOC
-	B0HpcWA==
-X-Received: from plsk18.prod.google.com ([2002:a17:902:ba92:b0:2d2:c22c:7b8a])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:cf10:b0:2d9:3636:d01a
- with SMTP id d9443c01a7336-2db126669d3mr557854145ad.15.1789001909390; Wed, 09
- Sep 2026 17:58:29 -0700 (PDT)
-Date: Wed, 9 Sep 2026 17:58:28 -0700
-In-Reply-To: <20260905012403.GX4157646@nvidia.com>
-Mime-Version: 1.0
-References: <20260903023452.721732-1-loganodell@google.com>
- <20260904160009.GV4157646@nvidia.com> <aptFFYqcSiBdMLE8@google.com> <20260905012403.GX4157646@nvidia.com>
-Message-ID: <aqIAtOoew-_6jw29@google.com>
-Subject: Re: [RFC PATCH 0/3] liveupdate: Move to feature flags for LUO and
- memfd ABI compatibility
-From: Sean Christopherson <seanjc@google.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: David Matlack <dmatlack@google.com>, Logan Odell <loganodell@google.com>, arnd@arndb.de, 
-	pasha.tatashin@soleen.com, rppt@kernel.org, pratyush@kernel.org, 
-	graf@amazon.com, akpm@linux-foundation.org, pbonzini@redhat.com, 
-	maz@kernel.org, oupton@kernel.org, bhelgaas@google.com, alex@shazbot.org, 
-	kevin.tian@intel.com, dwmw2@infradead.org, baolu.lu@linux.intel.com, 
-	joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, 
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-mm@kvack.org, kvm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-pci@vger.kernel.org, iommu@lists.linux.dev
-Content-Type: text/plain; charset="us-ascii"
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260909_175831_144059_F0B8542C 
-X-CRM114-Status: GOOD (  24.97  )
+	Thu, 10 Sep 2026 08:31:44 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id E44C76020A;
+	Thu, 10 Sep 2026 08:31:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16D671F000FF;
+	Thu, 10 Sep 2026 08:31:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789029103;
+	bh=9cR2txGyC7hZ49ejFrxQhSQyUnrI0Q1sWnkbjpwbCtA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Es9kxPtS55Hy7OsFUILeQFymIS5K0P9YigfU3e1Yv2z8+OhRki9yMVMVuOuJ9Ks/j
+	 m5kG5FgQzpPNXhlBmdDwPdgleGvgw4qtC3Bhovupoq5NPFPDf+nlNhh2BfhG+D7pda
+	 FC9EuOnbg32glBn8w6TGAQxO5Am8mlUn/w/guQKoShjZ77nkslbO7zMiTgscQBPr4L
+	 OxT8o8nu5b/YJ0Mm6A1YXz6Ra3+Pge4OhJVsSJ5CnxAr3WPNKbzTSy+K/MhdLkbYt3
+	 oih3fntLu+DOoEWgIslKeMfPAS0wRCmFXPaUANmRBp1Ead7Qi/PzXkb/g7jWz2F0Nr
+	 sEcf1990GkizQ==
+Date: Thu, 10 Sep 2026 10:31:38 +0200
+From: Joel Granados <joel.granados@kernel.org>
+To: Zack Rusin <zack.rusin@broadcom.com>
+Cc: Borislav Petkov <bp@alien8.de>, Ajay Kaher <ajay.kaher@broadcom.com>, 
+	Alexey Makhalov <alexey.makhalov@broadcom.com>, x86@kernel.org, Petr Mladek <pmladek@suse.com>, 
+	Baoquan He <baoquan.he@linux.dev>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"H . Peter Anvin" <hpa@zytor.com>, virtualization@lists.linux.dev, 
+	bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, 
+	John Ogness <john.ogness@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Kees Cook <kees@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Dave Young <ruirui.yang@linux.dev>, Jonathan Corbet <corbet@lwn.net>, Bo Gan <bo.gan@broadcom.com>, 
+	Brennan Lamoreaux <brennan.lamoreaux@broadcom.com>, kexec@lists.infradead.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v1 2/4] x86/vmware: Add the vmware_record_panic_msg sysctl
+Message-ID: <4e73yd2ofpdzl6rptzvd74no3hnyfblknoq7wzxlw7f3zjbz7c@srfabx6lsusj>
+References: <cover.1788414671.git.zack.rusin@broadcom.com>
+ <03e5c9855e9578b00abf8da69764f1b468597218.1788414671.git.zack.rusin@broadcom.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xiixfssqgqvtj5o7"
+Content-Disposition: inline
+In-Reply-To: <03e5c9855e9578b00abf8da69764f1b468597218.1788414671.git.zack.rusin@broadcom.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,39 +80,156 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Sep 04, 2026, Jason Gunthorpe wrote:
-> On Fri, Sep 04, 2026 at 10:24:21PM +0000, David Matlack wrote:
-> 
-> > The proposal here (which is inspired by the KVM UAPI) is to ensure every
-> > LUO ABI struct has 2 properties:
-> > 
-> >  1. A field to encode options/features (e.g. u64 flags).
-> >  2. A way way to grow without breaking backward compatibility (e.g. so
-> >     we can add new fields).
-> > 
-> > Each flag can mean whatever it needs to. e.g. It can indicate the
-> > precence of one or more fields (i.e. new fields in the struct), or it
-> > can mean a field now has a different meaning (i.e. union in the struct).
-> > 
-> > This would enable adding support for new features without breaking
-> > backward compatibility. Downstream users would have to ensure their
-> > kernel does not start using a new feature while it can still rollback to
-> > a version that does not support the new feature.
-> 
-> This was never the biggest problem. The main issue was the functional
-> behaviors of the kernel that cannot be represented simply as data in a
-> struct with some flag bits.
-> 
-> Like for instance kernel A supports memfd folio sizes far larger than
-> kernel B because we fixed MAX_ORDER. You can't fix that just with
-> simplistic flags.
 
-Can you elaborate on why the folio sizes matter?  Honest question, because I don't
-understand why the serialization format wouldn't express things as "N contiguous
-pages starting at PFN X".  Then the implementation would rebuild its folios as
-appropriate.
+--xiixfssqgqvtj5o7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I could see things like HugeTLB not working if someone booted the kernel with
-support for only 1GiB pages and then tried to feed it payload with sub-1GiB ranges.
-But to me, those sorts of things fall into the "well yeah, don't do that" category.
+On Tue, Sep 08, 2026 at 02:07:14PM -0400, Zack Rusin wrote:
+> Full panic text is useful on ordinary guests. Encrypted guests should
+> export it only when an administrator opts in. Reporting a crash does not
+> require transferring the log.
+>=20
+> Enable panic recording by default for ordinary VMware guests and disable
+> it when guest memory encryption is active. Expose the policy as the
+> boolean kernel.vmware_record_panic_msg sysctl and document that it
+> controls only the vmware.log transfer.
+>=20
+> Register the sysctl only after the panic buffer and dumper are ready, and
+> only when sysctl support is built. A registration failure leaves the
+> internal default in force.
+>=20
+> Signed-off-by: Zack Rusin <zack.rusin@broadcom.com>
+> ---
+>  Documentation/admin-guide/sysctl/kernel.rst | 14 +++++++++++++
+>  arch/x86/kernel/cpu/vmware.c                | 23 +++++++++++++++++++++
+>  2 files changed, 37 insertions(+)
+>=20
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/=
+admin-guide/sysctl/kernel.rst
+> index b6328cd0f43e..4577e935ddcf 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -1690,6 +1690,20 @@ entry will default to 2 instead of 0.
+>  =3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+> =20
+> +vmware_record_panic_msg
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Controls whether panic kmsg data is written to the host's ``vmware.log``.
+> +This setting does not control the separate VMware guest-crash event.
+> +
+> +=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +0 Do not write panic kmsg data to ``vmware.log``. This is the
+> +  default for encrypted guests.
+> +1 Write panic kmsg data to ``vmware.log``. This is the default for
+> +  ordinary guests.
+> +=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+This seems like it can be represented in a boolean value. Any reason why
+you did not use proc_dobool for your handler? Would it make sense to
+have vmware_record_panic_msg as a boolean?
+
+Best
+
+> +
+> +
+>  warn_limit
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+> diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
+> index bf59653d6e07..3848811550e9 100644
+> --- a/arch/x86/kernel/cpu/vmware.c
+> +++ b/arch/x86/kernel/cpu/vmware.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/efi.h>
+>  #include <linux/reboot.h>
+>  #include <linux/static_call.h>
+> +#include <linux/sysctl.h>
+>  #include <linux/wordpart.h>
+>  #include <linux/sched/cputime.h>
+>  #include <asm/div64.h>
+> @@ -255,6 +256,19 @@ static int vmware_log_rpc(const char *buffer, size_t=
+ length)
+>  }
+> =20
+>  static struct page *vmware_panic_page;
+> +static int vmware_record_panic_msg;
+> +
+> +static const struct ctl_table vmware_panic_sysctls[] =3D {
+> +	{
+> +		.procname	=3D "vmware_record_panic_msg",
+> +		.data		=3D &vmware_record_panic_msg,
+> +		.maxlen		=3D sizeof(vmware_record_panic_msg),
+> +		.mode		=3D 0644,
+> +		.proc_handler	=3D proc_dointvec_minmax,
+> +		.extra1		=3D SYSCTL_ZERO,
+> +		.extra2		=3D SYSCTL_ONE,
+> +	},
+> +};
+> =20
+>  static void vmware_panic_log_dump(struct kmsg_dumper *dumper,
+>  				  struct kmsg_dump_detail *detail)
+> @@ -263,6 +277,9 @@ static void vmware_panic_log_dump(struct kmsg_dumper =
+*dumper,
+>  	char *buffer =3D page_address(vmware_panic_page);
+>  	size_t length =3D 0;
+> =20
+> +	if (!READ_ONCE(vmware_record_panic_msg))
+> +		return;
+> +
+>  	memcpy(buffer, VMWARE_LOG_PREFIX, VMWARE_LOG_PREFIX_LEN);
+>  	kmsg_dump_rewind(&iter);
+>  	(void)kmsg_dump_get_buffer(&iter, true,
+> @@ -283,6 +300,9 @@ static int __init vmware_panic_log_init(void)
+>  	if (!hypervisor_is_type(X86_HYPER_VMWARE))
+>  		return 0;
+> =20
+> +	vmware_record_panic_msg =3D
+> +		!cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT);
+> +
+>  	vmware_panic_page =3D alloc_page(GFP_KERNEL);
+>  	if (!vmware_panic_page) {
+>  		pr_err("failed to allocate panic log buffer\n");
+> @@ -295,6 +315,9 @@ static int __init vmware_panic_log_init(void)
+>  		__free_page(vmware_panic_page);
+>  		vmware_panic_page =3D NULL;
+>  	}
+> +	if (vmware_panic_page && IS_ENABLED(CONFIG_SYSCTL) &&
+> +	    !register_sysctl("kernel", vmware_panic_sysctls))
+> +		pr_err("failed to register panic log sysctl\n");
+> =20
+>  	return 0;
+>  }
+> --=20
+> 2.53.0
+>=20
+
+--xiixfssqgqvtj5o7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmqiaukACgkQupfNUreW
+QU+hBwv7BUPdw+1A6g/8FaJQhp+DUve6X7M2spaDjh1f9BHHbZb/KPAOVO5m4AtF
+/aowgx9K9H/WzUdWN/dowHicF95lzhLY3uRo1r8KjkOR/ua4ae6IhTXNqYz2s73T
+38wmYvOE1s6s2Ppee9Q9XEUfWLssbSiO9SGUwL6V1pJLFqO2YIC4hqwxiTQa9CrJ
+0n7SuzrUkNdromDUugsmDcCkAI35dHC3YsAJCmG4qiEPP/TJbhoK5DNHxAKend77
+vtDmeOZ2SQx3bp1t6tfjANJUUVzLV7RemZ3mTqE/M6bK22OkNpUmVBR97yJFGx3F
+lVhq18Vfmgo2kIuf1wYVkbooD0WZBYIbGWURjAG5VDb0F+QCcRCcY8altL4JoUfZ
+87+jFw7ZW6pSmkoPwbfHv6KI+hVIEOTJh7UuSIOyGHLThtOTVncw45G79kcC7Rpi
+R2KXavaDOLV/8+uuJyAmJfZlaJ0QIuU+9uxvhvsYVyDF5WszAkji43yJ8Mu86Zt5
+waTRn0nA
+=IjZN
+-----END PGP SIGNATURE-----
+
+--xiixfssqgqvtj5o7--
 
