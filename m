@@ -4,71 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 26D32C88E4A
-	for <kexec@archiver.kernel.org>; Fri, 11 Sep 2026 10:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A05D8C88E50
+	for <kexec@archiver.kernel.org>; Fri, 11 Sep 2026 13:44:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
-	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=/uqwzRJTgHPHPNS19expObzWKV7+uMZqV0B7nMbLp50=; b=ZWRrITXusl0dTp9Olsvf/UO9d1
-	5FHdhw20jpgidn7ZAK/fSmMTXFITUAxnVAxOcjQDfH+mWc6knB3bDgvFU5irtFb8ojImgfnUeMFTH
-	EXv6KlLSqrf9d7Xm9yfyigMHVGncoLFrco9T7/AScNAYqRhPiJ1RwFr6Ri5ZJEYTX49PGm5aTPLMe
-	5T01oS5aUQLx/p7upFqzoM8LiFcEpE34PrHHQw53PRDefawrmIfedmAAnEgnvYcEowOTGaHpedHD+
-	ine9XHO8ZkKrxO5Y6Fx5hHfEVVdQOaZUKbqdbOlpOaf5pv6sjQPOPLFVe6n3s3fTvmb8TQ0ccOJoJ
-	P91nTanw==;
+	bh=35qTFGciq12kEJU+EMJ4woELZzEj6I4YMtoPAd4aNAQ=; b=t5ZzEP3+S4tf1JPKINj26Z8kpm
+	QHtt6seR7mDnr3Qa6n7GT6V3lrYtZTL266dfxa1voeJrONcGRuA1yX9Gwm4zHoa34X80jkhCVkBh0
+	/4m+J52FB7UsYF1FUIyVqUp7QxhURavA5pNSCfgbraciPxwok8+nlh25nxmK5QIC9OyIxIQ1ypV3H
+	2VZBEMr6EP5soCRBG7x1q0Vbi/y8NCIFoc7OMXIRvtk0z6TvxA5wGrtQ74f8jdq6g9We6RXhv/tv0
+	s2mK8BwpNFv6Jyf9C7OcBg80JLRdx+X5CKvkNrVz56Ms46bpb4s4cx0GsjTkRIXOgcYcHIGvDVMyC
+	aXHE4syA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x4yU0-0000000GNpF-0fnr;
-	Fri, 11 Sep 2026 10:27:48 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+	id 1x51Yl-0000000GmcD-1MeK;
+	Fri, 11 Sep 2026 13:44:55 +0000
+Received: from mail-pg1-x547.google.com ([2607:f8b0:4864:20::547])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x4yTz-0000000GNom-0Z9V;
-	Fri, 11 Sep 2026 10:27:47 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=/uqwzRJTgHPHPNS19expObzWKV7+uMZqV0B7nMbLp50=; b=awBDxQONGsVuBjfiZW9ON4mv6F
-	LbIeWGC9Sa8HztQtmcFMntbWaM8gHVQdZ2/PUELcpbY9289SkCm+LC+n7tpPczl35MIgqI/b9Aa8H
-	lXudemm+DWmpAjdkMH/HnmknMDPuq2+qwiPH+iUqZ3IfRbnz8Ae801grYNbOHSPigEO2GPvNs1K5q
-	ZTVW9vJGR9UctsDszUr/nqI+DlO92es2lmPKQTmL4uw2urE/MuExs2nQ1507wG0kCCvuxI5VsRPY/
-	fN/uGoRinATuRpjYVdFE7krDH7uB3bNBRdz/kvEcxcfpRhgSV2/ojiASCH3CgeApFOr5vGEZ4r231
-	zls1gNMg==;
-Received: from [2001:8b0:10b:5:a10:bfc:a858:f6d3] (helo=u09cd745991455d.ant.amazon.com)
-	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x4yTv-0000000AyTl-08CV;
-	Fri, 11 Sep 2026 10:27:43 +0000
-Message-ID: <2f1316389d0555418b5793d4eaf7ff3e81d5fe94.camel@infradead.org>
+	id 1x51Yi-0000000GmZj-3aiJ
+	for kexec@lists.infradead.org;
+	Fri, 11 Sep 2026 13:44:53 +0000
+Received: by mail-pg1-x547.google.com with SMTP id 41be03b00d2f7-cb6cf425e86so1189391a12.1
+        for <kexec@lists.infradead.org>; Fri, 11 Sep 2026 06:44:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1789134291; x=1789739091; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=35qTFGciq12kEJU+EMJ4woELZzEj6I4YMtoPAd4aNAQ=;
+        b=OwvzWeWs4bAfAC2UbV3pRD9EkBvM4zmQsCQodxTxNeL9716y16NQKjiPFR2YKGuBus
+         XEu1gq9/lTNY3T1ndpYYtT0OR1Dp8HY1xjLeQnP8KhJGGPYpLTk5tmRlGxA5w+yS0BVA
+         JX7tRiXffPG2I/mCuo+NA3pnhU9QFlwop2Gbop8w2/r7nHLMLE11WMsh3HYc6B6pBBZX
+         JsGpv4qwiQ3+2AWoNiHBHtc3v3cf9eLDRZFL05tsyeTqAc70hcA7LVjXQ5FyYslUH9GE
+         g853OLEfo4PojMZK1KrfJBjgN67EGYty50OGbWgbrsAgDfLE1oenCWJf+iMYh/4p8Nt5
+         yvTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789134291; x=1789739091;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=35qTFGciq12kEJU+EMJ4woELZzEj6I4YMtoPAd4aNAQ=;
+        b=jYJNp1t55EK+eBuADq5SeLd9ZTyPIzNJ6xvq8K/uPJDhA+mSMzsU4R9Pl5153yZaRL
+         6axue8JBVvklKSVW9c4rzsxZaUZt/4t1mQui/HuyEUd4Ke2SRkkeeguZsWEBKxxDX2M/
+         GjWhztjjcaF6uQcONQdl/LlKHbrNsMbrkngnXEAtlaCp3T3ZsASqCsaIoVUnnzG4+S6p
+         tRB2IAbA41rAsOy/NlF1A/teaeAk4PlJ+ovvIcmOyDzixsIu/2KJrFBuU/X6h+srcqKa
+         kyvLzoE1LP4uVu8wxtGTkzTkrie70YzAdhgSeRZcrfHLzeBwyLFMnGR2j69IL7GRx51m
+         xUZQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzVcdeJnhMceKAQ2EoL8HWIeIYOTfGOtjHERu676j2ozbmZbMLe8uZ/7fp5ewGeZq4QRqJeGw==@lists.infradead.org
+X-Gm-Message-State: AFuF++k8mYLru2Rkj79y3xmRxFDIOVEIyZISxLDQDFmY+JHoGXpuVtSb
+	uI+BRDQSUkvMCIMkHxjHiI5Wsss4mwoFO2fRQGxwFW+ZBBohWbGd2BPhuzsJLA1AmK+z5yPz7is
+	O0et4DA==
+X-Received: from pgjj10.prod.google.com ([2002:a63:230a:0:b0:cc4:5907:21e9])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:b08d:b0:3c6:61b9:917c
+ with SMTP id adf61e73a8af0-3daed1fd3cfmr8633653637.11.1789134291123; Fri, 11
+ Sep 2026 06:44:51 -0700 (PDT)
+Date: Fri, 11 Sep 2026 06:44:50 -0700
+In-Reply-To: <20260910225728.GB857650@nvidia.com>
+Mime-Version: 1.0
+References: <aptFFYqcSiBdMLE8@google.com> <20260905012403.GX4157646@nvidia.com>
+ <aqIAtOoew-_6jw29@google.com> <20260910143448.GD3968357@nvidia.com>
+ <aqLOWkuVKccR-I7W@google.com> <20260910171210.GF3968357@nvidia.com>
+ <aqMgjXfTJ8u3n7Kj@google.com> <20260910221832.GH3968357@nvidia.com>
+ <aqMyXE-fD-UN6w5L@google.com> <20260910225728.GB857650@nvidia.com>
+Message-ID: <aqQF0gz3Q2weDyEd@google.com>
 Subject: Re: [RFC PATCH 0/3] liveupdate: Move to feature flags for LUO and
  memfd ABI compatibility
-From: David Woodhouse <dwmw2@infradead.org>
-To: Jason Gunthorpe <jgg@nvidia.com>, Sean Christopherson <seanjc@google.com>
-Cc: David Matlack <dmatlack@google.com>, Logan Odell
- <loganodell@google.com>, 	arnd@arndb.de, pasha.tatashin@soleen.com,
- rppt@kernel.org, pratyush@kernel.org, 	graf@amazon.com,
- akpm@linux-foundation.org, pbonzini@redhat.com, maz@kernel.org, 
-	oupton@kernel.org, bhelgaas@google.com, alex@shazbot.org,
- kevin.tian@intel.com, 	baolu.lu@linux.intel.com, joro@8bytes.org,
- will@kernel.org, robin.murphy@arm.com, 	linux-arch@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	kexec@lists.infradead.org,
- linux-mm@kvack.org, kvm@vger.kernel.org, 
+From: Sean Christopherson <seanjc@google.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: David Matlack <dmatlack@google.com>, Logan Odell <loganodell@google.com>, arnd@arndb.de, 
+	pasha.tatashin@soleen.com, rppt@kernel.org, pratyush@kernel.org, 
+	graf@amazon.com, akpm@linux-foundation.org, pbonzini@redhat.com, 
+	maz@kernel.org, oupton@kernel.org, bhelgaas@google.com, alex@shazbot.org, 
+	kevin.tian@intel.com, dwmw2@infradead.org, baolu.lu@linux.intel.com, 
+	joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, 
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kexec@lists.infradead.org, linux-mm@kvack.org, kvm@vger.kernel.org, 
 	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
 	linux-pci@vger.kernel.org, iommu@lists.linux.dev
-Date: Fri, 11 Sep 2026 11:27:12 +0100
-In-Reply-To: <20260910225728.GB857650@nvidia.com>
-References: <20260904160009.GV4157646@nvidia.com>
-	 <aptFFYqcSiBdMLE8@google.com> <20260905012403.GX4157646@nvidia.com>
-	 <aqIAtOoew-_6jw29@google.com> <20260910143448.GD3968357@nvidia.com>
-	 <aqLOWkuVKccR-I7W@google.com> <20260910171210.GF3968357@nvidia.com>
-	 <aqMgjXfTJ8u3n7Kj@google.com> <20260910221832.GH3968357@nvidia.com>
-	 <aqMyXE-fD-UN6w5L@google.com> <20260910225728.GB857650@nvidia.com>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-VIsjdpm5lmlGU2eWiQEf"
-User-Agent: Evolution 3.60.3-0ubuntu1~ppa10~24.04 
-MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="us-ascii"
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260911_064452_899545_463E92EA 
+X-CRM114-Status: GOOD (  18.77  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,181 +102,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
---=-VIsjdpm5lmlGU2eWiQEf
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 2026-09-10 at 19:57 -0300, Jason Gunthorpe wrote:
+On Thu, Sep 10, 2026, Jason Gunthorpe wrote:
 > On Thu, Sep 10, 2026 at 03:42:36PM -0700, Sean Christopherson wrote:
 > > On Thu, Sep 10, 2026, Jason Gunthorpe wrote:
-> > > Sean's initial email was asking for strict never-break ABI compatabil=
-ity
+> > > Sean's initial email was asking for strict never-break ABI compatability
 > > > rules on top, and that is what I've been reacting to.
-> >=20
-> > No, I was never asking for that.=C2=A0 I think we just have a different=
- interpretation
+> > 
+> > No, I was never asking for that.  I think we just have a different interpretation
 > > of ABI, or rather are talking about different pieces of ABI.
-> >=20
-> > I am still asking for never-break serialization format compatibility, i=
-.e. the
-> > more literal save/restore ABI.=C2=A0 I'm not asking for full backwards/=
-forwards
-> > compatibility across all kernels version, i.e. the higher level "kernel=
-" ABI.
-> >=20
-> > To phrase things differently: I am a-ok if kernels are inherently incom=
-patible
-> > because they fundamentally operate differently and/or support different=
- features.
-> > I am not ok if we end up with incompatible kernels because the save/res=
-tore
-> > interfaces and payloads are poorly designed, lack abstraction, etc.=C2=
-=A0=20
->=20
+> > 
+> > I am still asking for never-break serialization format compatibility, i.e. the
+> > more literal save/restore ABI.  I'm not asking for full backwards/forwards
+> > compatibility across all kernels version, i.e. the higher level "kernel" ABI.
+> > 
+> > To phrase things differently: I am a-ok if kernels are inherently incompatible
+> > because they fundamentally operate differently and/or support different features.
+> > I am not ok if we end up with incompatible kernels because the save/restore
+> > interfaces and payloads are poorly designed, lack abstraction, etc.  
+> 
 > I can more agree with this, it is mostly what I thought we'd end up
 > doing anyhow with version numbers and growing the structs not
 > replacing them.
->=20
+> 
 > So you still end up with a version label (string I guess?) because we
-> can break it from time to time, just the version should have the
-> feature mechanism layered under it? I'm fine with that
+> can break it from time to time, 
+   
+Why bother with a label/string?  I don't understand what it buys us; I see only
+pain.  Make the features discoverable and punt on all of the "is this pile of
+insanity my company has created compatible with this other pile of insanity?" to
+layers above the kernel.
 
-Seems reasonable. I'd note that downgrade support *is* important though.
+IMO, trying to capture compatibility in a version string is doomed to fail.  To
+be useful, the version would have to be extremely sensitive to changes, otherwise
+userspace will have to do its own compatibility analysis/checks anyways.  And at
+that point, a verson string will be too restrictive, e.g. will mismatch due to
+changes in features the deployment isn't using.
 
-So where possible, those new features which are inherently incompatible
-should be opt-out. That way the admin can disable them when first
-upgrading to a new kernel version, and enable them only in a
-*subsequent* update, once that new kernel version has actually rolled
-out successfully.
-
-Again, it's OK if we sometimes can't manage that, but not if it happens
-just because of poor design, as Sean said above.
-
-The thing that *really* concerns me here though, is latency. When we
-pause guests and kexec underneath them, every *millisecond* is
-perceived as steal time. I worry that we're designing handover
-protocols to look *pretty*, and not necessarily go *fast* enough.
-
-I'd really love to see these patch series come in with benchmarks.
-
-
-
---=-VIsjdpm5lmlGU2eWiQEf
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCE8Ew
-ggWvMIIEl6ADAgECAhANkOKMSmGXhF5eMl0rsRhvMA0GCSqGSIb3DQEBDAUAMGUxCzAJBgNVBAYT
-AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
-BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBHMjAeFw0yNDAzMTMwMDAwMDBaFw0zNDAz
-MTIyMzU5NTlaMGIxCzAJBgNVBAYTAlVTMRcwFQYDVQQKEw5EaWdpQ2VydCwgSW5jLjE6MDgGA1UE
-AxMxRGlnaUNlcnQgQXNzdXJlZCBHMiBTTUlNRSBSU0E0MDk2IFNIQTM4NCAyMDI0IENBMTCCAiIw
-DQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAOfSIeC0vv1xPQ+dgSxbIIrkaru6skAWJYaGFzmv
-q4Kq+2wU2jxhcWlJg/JeP5jEkq/LM3pn5aaLao79j+XRmS7J1ZpJKUODJVoM4s9MQJhTMvo4qS5Z
-S64g6QR7Obkz3I1Lr3aWeSBmDDEyzue+NKtuWZ1Cxy3RdXo/w5HgRc3l2AercOM3Gt1XonTzEtTb
-Z/Hwc0Sn9Gz8RmGRK6Ka4hVDl8q/2l110KaV233Kh5etP0csXS8MIMdVRfRu3sc5hp13DG7lCKzK
-72a2GEpI8Wpl26G6I1/LMzz/98T+FqjTqxsdquk7Cj7m2vKGLW1BorpQH7WFGPdJQXJe1hfbfiZA
-CcVdCtl4nAacFacmsiArZBfX7AQGL7isvHUwwYFEtcApyGW4p2Lt+t8nvU0CANA6BHOpOz1xOP8W
-mAESbUriIjyuTUf3fJ9oDNCurVqhASMJCDaWI3lYX/QAoiAzt6akqbbZxo2ujW7mGGqc0KxqE2cs
-h2T79v7pC8aUtHBfwNrTR19GnZVxE0eQ7ViIQhR6mpSaUQFA9sG+cmD2G8TnCgYsLa0q8De6F61a
-CBevQGHNzrbZ3JAMneveYg/Jy1XxQHDRcvrMfWKe0jjcWbdKYlaGVPm5V1ILwYz7Yv5ewo3NUrxI
-GJiywe9qPhuJSDZs7VehTuI0FxGIsgKzVjgbAgMBAAGjggFcMIIBWDASBgNVHRMBAf8ECDAGAQH/
-AgEAMB0GA1UdDgQWBBT3m6JO05fF9DQPQw6Bhc6RkzKv+TAfBgNVHSMEGDAWgBTOw0q5mVXyuNtg
-v6l+vVa1lzan1jAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
-MHkGCCsGAQUFBwEBBG0wazAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29tMEMG
-CCsGAQUFBzAChjdodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vRGlnaUNlcnRBc3N1cmVkSURS
-b290RzIuY3J0MEUGA1UdHwQ+MDwwOqA4oDaGNGh0dHA6Ly9jcmwzLmRpZ2ljZXJ0LmNvbS9EaWdp
-Q2VydEFzc3VyZWRJRFJvb3RHMi5jcmwwEQYDVR0gBAowCDAGBgRVHSAAMA0GCSqGSIb3DQEBDAUA
-A4IBAQA+b8Uw53sDspdZgukU+qzLyyHkcjlxGGhHlP+zrmDLKm1wEFvCRS2pili3Hy67i8N4N5NU
-vw5Rg6kv3lxb9S9Rktxk43k+tvm68pl7OxQE55ZjVY87P0lUPGwEqOOwLLyH02ZQcsfq5p5LrOH9
-0JvmvZ1yy73HS+VpDAqOlytE0NSvTIRqFFkKQGQwfjvtql9YflujuNNvJztjBaHKYZsnNSg+J38o
-jYq4TP3pSg3UdVH0PncVjPQyqxC9xef5Xae92Kbkzol3x7Nel3A1bwAkalrDMspvTHvey6LfiBks
-FIqviTnoy7fgjaRAJgHS+RXx/cmuRd3rUAclSVVrYu8RMIIHAzCCBOugAwIBAgIQAzUotrsybJHx
-HTjKOIVdIDANBgkqhkiG9w0BAQsFADBiMQswCQYDVQQGEwJVUzEXMBUGA1UEChMORGlnaUNlcnQs
-IEluYy4xOjA4BgNVBAMTMURpZ2lDZXJ0IEFzc3VyZWQgRzIgU01JTUUgUlNBNDA5NiBTSEEzODQg
-MjAyNCBDQTEwHhcNMjYwNzE4MDAwMDAwWhcNMjgwMTA0MjM1OTU5WjAeMRwwGgYDVQQDDBNkd213
-MkBpbmZyYWRlYWQub3JnMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA2pYux73kdbYX
-sWF8f1u6DJP91qcqaZetsyfPkZk0B+MmXmAEv0kVes5n15V2mbDThOnpoPFly0UugQO9JYqLfrtD
-tKD5yL58fgrDB9Dw+LQikgrHafl6YSCds5AvUu/8hw2J6noKrcOLJpKlKn9Fl/4IB9Q3JIdLx5aa
-EtTqMalIPqHFOlgrJ7s+aua8xbB8YQ9ahqYBXWRJNv3P/2b1DYtdrz1oqZPE3CcB8Pc6Gf2a1Tcm
-6TAgtEx7Cf1BFcrsrMz7TWHmGQITieNb2r9UYWSc2Gp+GtYFNJCgT0JJXKUBIauPMKBLteYrL8Fo
-ff/uY44dC/mDWjdCP/5x0qelPQjlBvWdHL5zvBTOj06rJ0m3HNI/hnIcDh0Qu2j9reb9rLVcdym6
-bWmBM4uDEB8Zv9Ph0KTBFSy1IosyakuD1j1Os30EzjGfbi0EUXIvnOcYbTBAbM5UAzrxEHMhBvoX
-Pvnx+OyvjJmc9tWxTX6AcSz+m40esbT17URBeZS18afgieiikm5TynlUYP1LciR3hSgGVzvGXnKO
-02VDFR5itGWdRKZ2W5wIShNfWfhSa0D0K5UdIDt5Qc7sjzwK1Yb1sY5Tu0uA5mhIS82q1ov83uxB
-sFkriNnhGv/M1NCDVLBiOMsHu73qUM+yKmgKLwF9Hfn9WI25glbAMI4S5r3hYzcCAwEAAaOCAfcw
-ggHzMB8GA1UdIwQYMBaAFPebok7Tl8X0NA9DDoGFzpGTMq/5MB0GA1UdDgQWBBRcYhqbcGzn1jrT
-JOZaB8O7qllDpzAwBgNVHREEKTAngRNkd213MkBpbmZyYWRlYWQub3JngRBkYXZpZEB3b29kaG91
-LnNlMBQGA1UdIAQNMAswCQYHZ4EMAQUBAjAOBgNVHQ8BAf8EBAMCBeAwHQYDVR0lBBYwFAYIKwYB
-BQUHAwIGCCsGAQUFBwMEMIGpBgNVHR8EgaEwgZ4wTaBLoEmGR2h0dHA6Ly9jcmwzLmRpZ2ljZXJ0
-LmNvbS9EaWdpQ2VydEFzc3VyZWRHMlNNSU1FUlNBNDA5NlNIQTM4NDIwMjRDQTEuY3JsME2gS6BJ
-hkdodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vRGlnaUNlcnRBc3N1cmVkRzJTTUlNRVJTQTQwOTZT
-SEEzODQyMDI0Q0ExLmNybDCBjQYIKwYBBQUHAQEEgYAwfjAkBggrBgEFBQcwAYYYaHR0cDovL29j
-c3AuZGlnaWNlcnQuY29tMFYGCCsGAQUFBzAChkpodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20v
-RGlnaUNlcnRBc3N1cmVkRzJTTUlNRVJTQTQwOTZTSEEzODQyMDI0Q0ExLmNydDANBgkqhkiG9w0B
-AQsFAAOCAgEAocabrh1cPd5s3vY5rnlBVQSTc7zs2ZWs67dAIltR+05WELrYClVzzUhMs/LOJPlr
-EUo45UDDomXq38DxFepaPd9+iNLjXfn33EX/IG44j04lU/oF/Rg9VeQILkYLbCZ/x9wOjNHZc4SN
-ydY7Dhvf/sT5aBz88u7D5+azZJ7Qf1U57wYseCH1Mt0nDrtr5y19IJ8D9xJJ33RFL6vfpHZBBAQ8
-+3RqkKNxLoV2aFvQhxdhjNLDqTv3LjUIdicwPraN7JkxEu7CV2Lka7eRqJgkWL7SK0YmBjGpRafs
-+icP/ON5RCCKTTb6VlX8eTG2sJJfsFhvJNCCt6xexbWzWtIrfP7NvPBvwBB737AyEGBZkS5aNizT
-McURJGTv9UKvBh1LF/+tNhYtLvPCN7oecGzhCHht9jcwSkygTo3Y6YlK3QgOu+ncmiBbfeuwlLZ1
-LxbYvG6hgNqXv7u6YyADbYajAQJXJ2OQen39pm3Q/AQSyLYG+B8lDglWsM8tYXPlEdrYJcksGK6F
-nqIX6Bumn43rBooLJdiZp4WmfWdL2pxe+LxRDjprmqu1WprixDxULSTOKJZoqTlugs6y3Bc+if+s
-gHnBBtz9WQ6MtPHkh7zONDAFIKcBmv8OqPQCx0F3Wv3OEybwMpXx0OsKgK8wLldaX1pXcMuyDgTL
-Sqs0AV0OHUgwggcDMIIE66ADAgECAhADNSi2uzJskfEdOMo4hV0gMA0GCSqGSIb3DQEBCwUAMGIx
-CzAJBgNVBAYTAlVTMRcwFQYDVQQKEw5EaWdpQ2VydCwgSW5jLjE6MDgGA1UEAxMxRGlnaUNlcnQg
-QXNzdXJlZCBHMiBTTUlNRSBSU0E0MDk2IFNIQTM4NCAyMDI0IENBMTAeFw0yNjA3MTgwMDAwMDBa
-Fw0yODAxMDQyMzU5NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqG
-SIb3DQEBAQUAA4ICDwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZe
-YAS/SRV6zmfXlXaZsNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2z
-kC9S7/yHDYnqegqtw4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qG
-pgFdZEk2/c//ZvUNi12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41va
-v1RhZJzYan4a1gU0kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0c
-vnO8FM6PTqsnSbcc0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PW
-PU6zfQTOMZ9uLQRRci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXt
-REF5lLXxp+CJ6KKSblPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQr
-lR0gO3lBzuyPPArVhvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7Iq
-aAovAX0d+f1YjbmCVsAwjhLmveFjNwIDAQABo4IB9zCCAfMwHwYDVR0jBBgwFoAU95uiTtOXxfQ0
-D0MOgYXOkZMyr/kwHQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3
-bXcyQGluZnJhZGVhZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEC
-MA4GA1UdDwEB/wQEAwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwgakGA1UdHwSB
-oTCBnjBNoEugSYZHaHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0QXNzdXJlZEcyU01J
-TUVSU0E0MDk2U0hBMzg0MjAyNENBMS5jcmwwTaBLoEmGR2h0dHA6Ly9jcmw0LmRpZ2ljZXJ0LmNv
-bS9EaWdpQ2VydEFzc3VyZWRHMlNNSU1FUlNBNDA5NlNIQTM4NDIwMjRDQTEuY3JsMIGNBggrBgEF
-BQcBAQSBgDB+MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wVgYIKwYBBQUH
-MAKGSmh0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRHMlNNSU1FUlNB
-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
-7LVegH1aoogU39HiVN3Dp10AAAAAAAA=
-
-
---=-VIsjdpm5lmlGU2eWiQEf--
+> just the version should have the feature mechanism layered under it? I'm fine
+> with that
+> 
+> Jason
 
