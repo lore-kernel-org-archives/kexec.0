@@ -4,73 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 286F2C88E53
-	for <kexec@archiver.kernel.org>; Fri, 11 Sep 2026 18:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DB7E6C88E4D
+	for <kexec@archiver.kernel.org>; Fri, 11 Sep 2026 18:32:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=wNS06P8dgAVGWElToa1LxbVILkDrDt7tgcn+fOWtX1k=; b=NVc56mUQ3jmTAgv1zLSTjlyeSD
-	fdhXpWofIn7duZ+KLEKyfAalt8AAU2irOoLqBKcYgCn4C14q15QAWNn/WCisrhNUP3HH4tsGiOv1Q
-	NN3nP/pcN6ZgKEkCIHkGr1VwEgDdKzm4j1kjsTVS9t5DQ8I5yneyPyKjV9J/g6ubvjUDLiYT/w1vW
-	jb450Il3/75GU+1bFGPvR4DuJaFYuuUnljUgf8LCQ7TVx1l8RN7dcTl3ouj8UFomwXRdeuJyHOyiS
-	8254TTrVbQ5gvzmkDVkOGWYeQEMY787/eYJvjhN0qLLv1vAJKW539gnbKf4JgyZoqghpWLSAPlRHY
-	oRQ7VuaA==;
+	bh=647PeDACYFGwHy56KY6C8DNyZ6c/Uo5FYVw3HHMYVSA=; b=dorMKIQRWCvCg+OaAL7oe+Q2Zx
+	Rc4IysNFWvkVLz4z+1EXdRLHwdEdLBb6PBoybhfA9aGG5Gu1NdEs+9raK9zhiki0pcj2yWPdmTEY2
+	5OnGXvVGagPmtwJMpDBAT6QubYmR34kafRxm8VFh9+nEzoLpupLIR13zBizY0FzJsxBlk/yQmPogF
+	4yZfLfKLJIbwnDkinDm33M9ZWdz2Y5DUo3zZfWUdX1p8mR59CocOYdH2OW6jueGIMb2Ss6M3diQ2V
+	wkYuX1o8UlEUItPa8Q3Ajuz80EDWwr4UeVNPBXX80IJE7ve3irAqEul5qPcZgcz8Lwjlg3Dtbk/gw
+	7k2S+TRw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x5615-0000000HRrw-4AWr;
-	Fri, 11 Sep 2026 18:30:27 +0000
-Received: from mail-pj1-x1031.google.com ([2607:f8b0:4864:20::1031])
+	id 1x562g-0000000HRzw-0zN3;
+	Fri, 11 Sep 2026 18:32:06 +0000
+Received: from mail-pg1-x534.google.com ([2607:f8b0:4864:20::534])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x5614-0000000HRrN-1JRg
+	id 1x562e-0000000HRzZ-1aYX
 	for kexec@lists.infradead.org;
-	Fri, 11 Sep 2026 18:30:27 +0000
-Received: by mail-pj1-x1031.google.com with SMTP id 98e67ed59e1d1-39b24d114d4so1576060a91.3
-        for <kexec@lists.infradead.org>; Fri, 11 Sep 2026 11:30:26 -0700 (PDT)
+	Fri, 11 Sep 2026 18:32:05 +0000
+Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-cc4aa02a269so1140899a12.2
+        for <kexec@lists.infradead.org>; Fri, 11 Sep 2026 11:32:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789151425; x=1789756225; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1789151523; x=1789756323; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=wNS06P8dgAVGWElToa1LxbVILkDrDt7tgcn+fOWtX1k=;
-        b=GLrIb2bVfxUg0IiP85PUYJV+K3MusJPGqSZcqF3fo66Fz8jipELVuj4bC67175My2I
-         5pgO7mNDE/aJJ5SpaTh6F7zw9FAZypJqT1yxGsTrvqqIv5hoQXe3DR2Pv3qL/jUHD5HH
-         vqEMDDdqmfn32tWPucdlbKNFKrYKDc3YN2qcBPvC4g1xOnsBxOiWSuiE9FN63TR25a/t
-         YuTDM/xSRSszmExEAmn6X/Q97RuHvq/OGwsitx8zLeORuY4jFvgAauGQmFDA4vpmdpSg
-         Yzbm+5EFCPgUPf+UPjGVOiq+azuyOfdfreOyt8qVBAnvfBW3cTVP+itjv8KysbvS5qzg
-         rc9Q==
+        bh=647PeDACYFGwHy56KY6C8DNyZ6c/Uo5FYVw3HHMYVSA=;
+        b=qonKHT2B7qWeESWwsfOJxBD9yJ0V28AzsPGR9N2B6HOFo7rN0hgIicRDdCaz+98t5r
+         lPjdsraldwYhzygdvkT/c2AP+wN8yPwjO+fvWm+CQ1cmQWROn2hNm6H+w8SBMOFb7yUZ
+         U3ZN6XE5ad63pFkJpMsKUkOePVk11Se5Vu/TFZRACDijLpUwtZvarY6mdQrqTf6v8Kb5
+         a8cpnIUHalbKMzYeMAdPISvwri5t/2wizN4ZxLVvS1rhfa5tzS+85STYuJgE0mtc3USG
+         m/dCC/m5Ws8c3YOXJSQAVEw9z08+qZVQsEw2OsFIM8Eac3HcrYoUoPcarJbh8H+PJT6t
+         F0sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789151425; x=1789756225;
+        d=1e100.net; s=20251104; t=1789151523; x=1789756323;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=wNS06P8dgAVGWElToa1LxbVILkDrDt7tgcn+fOWtX1k=;
-        b=mVLvDLhjXmXFYs/ArMMi3EoZKXkp8YlqRdhZ5PSGCyMd+dG+rCgSdou7Abb9YYoVsm
-         5Ub0W8hzgTV2nWWqSQQf+i4JPxg9WGmw44eNgl6Klf6USOfZGM2VD6sUE9EgY5sgfQYT
-         uspTEifQQBVfluXe5Osc4eop9n3F/ianVsYvo+yvAWjjg/IbJwl96/V72AY0YWfU2YOb
-         N7pVEkPY+AIm7Fd7lwjeTQXGWYPF5Q/jBiwRsRww5yQsw1YwyTw5DLA6GHhJrhcvEv1B
-         MnSLpJMP7VtMrrL0LOmPi+Hd4biqAuqQJVAnX3E5Kw0O54Ozj2cc+W3Mbp2WRf4Drg7j
-         QcxA==
-X-Gm-Message-State: AFuF++kyqlLTgEKqfmosAruZaXd/WsWXGiIUq5DD44SRM9QciuB9hGpK
-	vph/O22ZY9FmpaOB94OAeKnXE2m4RXpEDhFZF8zZ0bCUWxPmMQyFnq3TAT1K1CrrwA==
-X-Gm-Gg: AYBFou1uHGxHMFdAaY5UYbnXMRB9NcfHSKd9kGomSR9201R01QTvoYp8gpg0AQLkibR
-	X4gZTGulEBXTTSaTbQYmjT7j9LPs2wAMDhm5ibhzfzU0+lMfQqE/CeevS265ida1UttfCHw7o8s
-	EzqLegXoQkFLt0WU8PWycgivScNlrUTTs7VwzeNdNBihnjqXFIz+EJfcnIc+3sa/wBTSbseUoVe
-	xnkAACzs9smb1wNRqg2U0Ji5vDA2th9UB33kSWRx4ZIjCDm+X2i0hHn7sFXozUaP6Hx55/YVIgH
-	XzfJ2iiELBGB//cYsgmkQbjVFnn2ui1t/SMFb/mdZJMD4dVrkR2MWDUolmnbU40SSv2qnJD6Mqz
-	QKymj0ICaSLm2xBsTdeeDPqEPKiumlHc+T0Qo1s7vOgWhJUpeteLtZkxluqmY6Xn34yg/NR+PPt
-	65gcc9JZS9eqUSE4VU1WbZfNN1RUnTlQeCH9goIuRJl1vA3Kl22+b3oU5jAVhR+azfFu4gBSTGL
-	AZJsUelqFDEeoTfQvl+iOjcGMgQTcjIzcB0+IiZ
-X-Received: by 2002:a17:90b:53d0:b0:38e:bfe:81e9 with SMTP id 98e67ed59e1d1-39d9bc1b0demr8040768a91.1.1789151424426;
-        Fri, 11 Sep 2026 11:30:24 -0700 (PDT)
+        bh=647PeDACYFGwHy56KY6C8DNyZ6c/Uo5FYVw3HHMYVSA=;
+        b=IpGXOkEiYw501bL4FKKb00rtnFr1VGUwUg/Sr+2qWvDi8sM+OEf6IguccMpHMSeoaW
+         qhypB8ZXzVweJ0unPh8szpBKNbwmoYeawH2ffVDgF2/woZIdIb9x4CgYSGIH0HxgAc6Z
+         EgTk/2pbLdE0lQM2jjaSK8xVN5zRKAftif+3xLwrwiS6x+M37EAr3xKY/rT6lxbPyk4Y
+         ciLVC12HnNC/5egCJygoidM7RcGIqtgGPzoxzZ805LoE7v7wH3/fma63Ow3ATq/XUllr
+         bBtptuHBzf55jFjGvsYm6mXjqKqAcX8P0fHtaCKsjGMcYn1l1zutkW/0wMi/hgRXHv4Z
+         eUyw==
+X-Gm-Message-State: AFuF++lXFQsT5rZz0WkjxkSE8tZQhumlTBJZudYSMqhaC3Pq2D+gfO5G
+	qTKBtV+6hf3zkVH3veIt87TmlALiI9Nqm9vNXVFsUREX7pU2DlUu6LZpPphCzgIt4Q07biZxKxb
+	0McqhRq7Z
+X-Gm-Gg: AYBFou192Wzdw0qQC8cOmGWDw8m2KreF2buqsWWfC/FufhOAdbOciHasB/xQikKqWV0
+	TdsDRLdx5V6ZkCCXPi1NxCiMAnBhLy67v4F1agt7VWetXiRvK1F6F1vNPhlVlDmA4btvdkZpYHH
+	NoOAT50aqGq3Ym1GCYtc5X90mMCq3NHjAl/Xa+G8+/5M65CPThYQHs+Oir6WDymfj8kpM+Wbcqo
+	yYokBxwrEYYOm61qDecYt/CjDD/0D7ZNg55NtVaCPguowT7kCG5JuOV0w0HLh8pb6xZJoXA5ld6
+	jWBbcFpbZVPuPoL4qR5fhdticqkSrA6mcVeJY2zQQ96tX11Xq+SRPqTOXFbHeomBTQhAge75CYT
+	l+l+1lSh5VX1yhbqpT5ijeJKbfqubEEBmCxgxQwdqiFQH6uov5tPiLmfzcYGj+tnxMNCML0VRMt
+	mgWmBFIvZ85z22m+AfLoGvEmbyn3JiBoku+y0VJB3vQDB2Opta0Edn7ufxVph5LeOPXzmjPGJ7e
+	+9xjXPeRE+1nu+EwvJZ7aIRxSV+Yo/jO8ch7Dgkvv/cAc9Fj24=
+X-Received: by 2002:a05:6a20:4308:b0:3c4:3767:adb2 with SMTP id adf61e73a8af0-3daed46ab05mr10698355637.1.1789151522711;
+        Fri, 11 Sep 2026 11:32:02 -0700 (PDT)
 Received: from google.com (192.150.203.35.bc.googleusercontent.com. [35.203.150.192])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39d99531b16sm6613109a91.14.2026.09.11.11.30.23
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cc4c657156bsm1621771a12.21.2026.09.11.11.32.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2026 11:30:23 -0700 (PDT)
-Date: Fri, 11 Sep 2026 18:30:19 +0000
+        Fri, 11 Sep 2026 11:32:01 -0700 (PDT)
+Date: Fri, 11 Sep 2026 18:31:51 +0000
 From: David Matlack <dmatlack@google.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
@@ -94,18 +95,18 @@ Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
 	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v8 05/12] PCI: liveupdate: Preserve bus numbers during
- Live Update
-Message-ID: <aqRIJs1SdJwoV_cf@google.com>
-References: <20260728221007.2098560-6-dmatlack@google.com>
- <20260910235104.GA367522@bhelgaas>
+Subject: Re: [PATCH v8 08/12] PCI: liveupdate: Adopt ACS controls in incoming
+ preserved devices
+Message-ID: <aqRJF8OME7hn7CJr@google.com>
+References: <20260728221007.2098560-9-dmatlack@google.com>
+ <20260910235149.GA364189@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260910235104.GA367522@bhelgaas>
+In-Reply-To: <20260910235149.GA364189@bhelgaas>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260911_113026_358883_98B8E322 
-X-CRM114-Status: GOOD (  30.37  )
+X-CRM114-CacheID: sfid-20260911_113204_424268_28527EF5 
+X-CRM114-Status: GOOD (  16.78  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -121,71 +122,40 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On 2026-09-10 06:51 PM, Bjorn Helgaas wrote:
-> On Tue, Jul 28, 2026 at 10:09:59PM +0000, David Matlack wrote:
-> > During a Live Update, preserved devices must be allowed to continue
-> > performing memory transactions so the kernel cannot change the fabric
-> > topology, including bus numbers, since that would require disabling and
-> > flushing any memory transactions first.
-> > 
-> > To keep bus numbers constant, always preserve the secondary and
-> > subordinate bus numbers assigned to bridges during scanning, instead of
-> > assigning new ones, if any PCI devices were preserved. Note that the
-> > kernel preserves bus numbers even on bridges without any downstream
-> > endpoints that were preserved. This avoids accidentally assigning a
-> > bridge a new window that overlaps with a preserved device that is
-> > downstream of a different bridge.
-> 
-> > +bool pci_liveupdate_preserve_bus_numbers(struct pci_bus *bus, struct pci_dev *dev)
-> > +{
-> > +	struct pci_dev *parent = bus->self;
-> > +
-> > +	if (dev->liveupdate.preserve_bus_numbers)
-> > +		return true;
-> > +
-> > +	if (parent && parent->liveupdate.preserve_bus_numbers) {
-> > +		/*
-> > +		 * Preserve bus numbers if the parent bridge is required to
-> > +		 * preserve bus numbers. Otherwise the PCI core could expand
-> > +		 * this bridge's reservation beyond its parent (which cannot
-> > +		 * expand).
-> > +		 */
-> > +		dev->liveupdate.preserve_bus_numbers = true;
-> > +	} else {
-> > +		/*
-> > +		 * Otherwise preserve bus numbers if there are any incoming
-> > +		 * preserved devices. This ensures that the PCI core does not
-> > +		 * allocate a bus number to a non-preserved device that
-> > +		 * conflicts with the bus number already assigned to a preserved
-> > +		 * device.
-> > +		 *
-> > +		 * This is slightly more restrictive than it needs to be. For
-> > +		 * example, each host bridges have their own range of bus
-> > +		 * numbers that won't conflict with other host bridges. But the
-> > +		 * previous kernel should have assigned a sane bus topology and
-> > +		 * it is simpler to just adopt that entire topology.
-> 
-> s/each ... bridges have their/each ... bridge has its/
-> 
-> It's true there should be no bus number conflicts between host
-> bridges, but it does require the domain as well.
-> 
-> > +		 */
-> > +		dev->liveupdate.preserve_bus_numbers =
-> > +			pci_has_incoming_preserved_devices();
-> > +	}
-> > +
-> > +	return dev->liveupdate.preserve_bus_numbers;
-> 
-> I'm not sure why you don't just return
-> pci_has_incoming_preserved_devices() in all cases, which is what the
-> commit log suggests this patch does.  What's gained by all the logic
-> here?  It's not like devices will be hot-added during the kexec.
 
-To protect against pci_has_incoming_preserved_devices() flipping from
-true to false while the PCI core is in the middle of a scan. It is not
-likely to ever happen given most host bridge scanning should happen
-during early boot, but theoretically possible with the way the PCI core
-code is structured. I did not see way to structurally ensure these 2
-things cannot race. A lot of the host bridge scanning happens without
-taking the rescan lock, for example.
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index 77b17b13ee61..22001bdf4c97 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -34,6 +34,8 @@
+> >  #include <linux/aer.h>
+> >  #include <linux/bitfield.h>
+> >  #include <linux/suspend.h>
+> > +
+> > +#include "liveupdate.h"
+> >  #include "pci.h"
+> >  
+> >  DEFINE_MUTEX(pci_slot_mutex);
+> > @@ -1008,6 +1010,9 @@ void pci_enable_acs(struct pci_dev *dev)
+> >  	bool enable_acs = false;
+> >  	int pos;
+> >  
+> > +	if (!pci_liveupdate_enable_adopted_acs_controls(dev))
+> > +		return;
+> 
+> Ugh.  The asymmetry between pci_save_state(), which does nothing
+> ACS-related, and pci_restore_state(), which enables it, is sort of
+> sketchy to begin with.
+> 
+> The command-line parsing in this path feels like kind of a wart (not
+> that you're touching it).
+> 
+> It just seems like this path is already hard to analyze, and
+> liveupdate is making it harder.
+> 
+> If we could save/restore the ACS state around the reset, wouldn't that
+> solve this without any liveupdate specials here?
+
+Yeah that would simplify the liveupdate support greatly. Let me work on
+that for v9.
 
