@@ -4,109 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DB7E6C88E4D
-	for <kexec@archiver.kernel.org>; Fri, 11 Sep 2026 18:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E3E24C88E4D
+	for <kexec@archiver.kernel.org>; Fri, 11 Sep 2026 20:59:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
+	Message-ID:Date:MIME-Version:References:In-Reply-To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=647PeDACYFGwHy56KY6C8DNyZ6c/Uo5FYVw3HHMYVSA=; b=dorMKIQRWCvCg+OaAL7oe+Q2Zx
-	Rc4IysNFWvkVLz4z+1EXdRLHwdEdLBb6PBoybhfA9aGG5Gu1NdEs+9raK9zhiki0pcj2yWPdmTEY2
-	5OnGXvVGagPmtwJMpDBAT6QubYmR34kafRxm8VFh9+nEzoLpupLIR13zBizY0FzJsxBlk/yQmPogF
-	4yZfLfKLJIbwnDkinDm33M9ZWdz2Y5DUo3zZfWUdX1p8mR59CocOYdH2OW6jueGIMb2Ss6M3diQ2V
-	wkYuX1o8UlEUItPa8Q3Ajuz80EDWwr4UeVNPBXX80IJE7ve3irAqEul5qPcZgcz8Lwjlg3Dtbk/gw
-	7k2S+TRw==;
+	bh=9mIQ6jM8juF2PvO8eUkaKKIYpJrRvH5Gc2fB112shtA=; b=CIj3abMGJK1Fq3ID9B2hz1ZQK6
+	1qOd0TYbYIKfChWoJ+YBHAVX1oK+rogf1Jq0DozmqRYoJiWYtdV4fD9B05RxTfufsyjiMrLEqf1Y7
+	5W3Or4H0kCAvPVCJPXjEDx7ckUwWCX+40zfcutMumXlh5fZjPY8VMlsQerIMgZY9c+nzslOQzNYKJ
+	VzDFPl1NQNAUK7e2BWXGlbRRDgLln+qJnarqziISUtgLUjahlTzPgs8iCjNFyRBhBIs4GF+b9MzG2
+	Ju7kN0vKOkIjxKABNOKpFtM7aVmEqwl200sp0YdhZDndzYD2rHMEUuvNmFDBKinlVjrSRQzTo5cv9
+	Duo8uQpA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x562g-0000000HRzw-0zN3;
-	Fri, 11 Sep 2026 18:32:06 +0000
-Received: from mail-pg1-x534.google.com ([2607:f8b0:4864:20::534])
+	id 1x58L5-000000008Em-1ZOx;
+	Fri, 11 Sep 2026 20:59:15 +0000
+Received: from mail-qv1-xf2c.google.com ([2607:f8b0:4864:20::f2c])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x562e-0000000HRzZ-1aYX
+	id 1x58L3-000000008DS-0rso
 	for kexec@lists.infradead.org;
-	Fri, 11 Sep 2026 18:32:05 +0000
-Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-cc4aa02a269so1140899a12.2
-        for <kexec@lists.infradead.org>; Fri, 11 Sep 2026 11:32:04 -0700 (PDT)
+	Fri, 11 Sep 2026 20:59:14 +0000
+Received: by mail-qv1-xf2c.google.com with SMTP id 6a1803df08f44-90e970f710cso14204466d6.3
+        for <kexec@lists.infradead.org>; Fri, 11 Sep 2026 13:59:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789160352; cv=none;
+        d=google.com; s=arc-20260327;
+        b=RZ83+iT8v90OdlQmEiNXFUaI3Geo91x2+osmsXdbO34SxlJbQORT5udvJAx3Igyg89
+         xh0h4vuldxlwuUH/gx5j4/D/J94lY3mLJ93m3Rmkvjc+WgFA6N7hcMRAQ8lJIC3028Y5
+         gAmDkEOpi04J7C62QScSCa21JhxXlifkh06BiDVf/wrpGITtiJybWs2aaz59IH8lneYc
+         c2ndDKBXIEAM54jHFmhGZJcI29Jmi3384MIwRfAiYP5cE1hQwVKKVcP/EhG2L4tp/MHt
+         OrFwxHqSmnvWcEhPKZdQU9UMTBV1tKVYsO8Gheilu7MjpglYfV7EVFvvTWWFYvoyNq+r
+         7/tg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:dkim-signature;
+        bh=9mIQ6jM8juF2PvO8eUkaKKIYpJrRvH5Gc2fB112shtA=;
+        fh=G8OgDvSzapJeegs+SudNoUS0d5GikXgRW+fYgoi7rcU=;
+        b=JCYJgjZD4yjNTv3Y4JGoL/a8FE4nbDL9PzW8M7tuDv7/+qTuSMN3OTK0SZGySnWSl3
+         sHid74bcDZ0xiLmarVOFoHMJV4fU34j3ud3S9WSaaI3yAfUJwyWTxQTOiiUYmTNBa2cm
+         Emzc/1dEZlb/3wWxNN5DT2/15uOHupCksliLT4/vV1WSuHumAgFSwkDJa4SpQPhQFhdx
+         oMZkq5LSSlzLV4yNYlLyQ435V2/V54rbhYoUjLIqtMukaaclVDqMHfwhnObqtfWtsYEs
+         Eh3KHGbyQ3lewc93+IkeFtcdMDq+fqyZ5iryP3pw/EUIMhYOquqvw6BXn235Ny8nwjq8
+         vAog==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789151523; x=1789756323; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=647PeDACYFGwHy56KY6C8DNyZ6c/Uo5FYVw3HHMYVSA=;
-        b=qonKHT2B7qWeESWwsfOJxBD9yJ0V28AzsPGR9N2B6HOFo7rN0hgIicRDdCaz+98t5r
-         lPjdsraldwYhzygdvkT/c2AP+wN8yPwjO+fvWm+CQ1cmQWROn2hNm6H+w8SBMOFb7yUZ
-         U3ZN6XE5ad63pFkJpMsKUkOePVk11Se5Vu/TFZRACDijLpUwtZvarY6mdQrqTf6v8Kb5
-         a8cpnIUHalbKMzYeMAdPISvwri5t/2wizN4ZxLVvS1rhfa5tzS+85STYuJgE0mtc3USG
-         m/dCC/m5Ws8c3YOXJSQAVEw9z08+qZVQsEw2OsFIM8Eac3HcrYoUoPcarJbh8H+PJT6t
-         F0sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789151523; x=1789756323;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20251104; t=1789160352; x=1789765152; darn=lists.infradead.org;
+        h=content-type:cc:to:subject:message-id:date:mime-version:references
+         :in-reply-to:from:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=647PeDACYFGwHy56KY6C8DNyZ6c/Uo5FYVw3HHMYVSA=;
-        b=IpGXOkEiYw501bL4FKKb00rtnFr1VGUwUg/Sr+2qWvDi8sM+OEf6IguccMpHMSeoaW
-         qhypB8ZXzVweJ0unPh8szpBKNbwmoYeawH2ffVDgF2/woZIdIb9x4CgYSGIH0HxgAc6Z
-         EgTk/2pbLdE0lQM2jjaSK8xVN5zRKAftif+3xLwrwiS6x+M37EAr3xKY/rT6lxbPyk4Y
-         ciLVC12HnNC/5egCJygoidM7RcGIqtgGPzoxzZ805LoE7v7wH3/fma63Ow3ATq/XUllr
-         bBtptuHBzf55jFjGvsYm6mXjqKqAcX8P0fHtaCKsjGMcYn1l1zutkW/0wMi/hgRXHv4Z
-         eUyw==
-X-Gm-Message-State: AFuF++lXFQsT5rZz0WkjxkSE8tZQhumlTBJZudYSMqhaC3Pq2D+gfO5G
-	qTKBtV+6hf3zkVH3veIt87TmlALiI9Nqm9vNXVFsUREX7pU2DlUu6LZpPphCzgIt4Q07biZxKxb
-	0McqhRq7Z
-X-Gm-Gg: AYBFou192Wzdw0qQC8cOmGWDw8m2KreF2buqsWWfC/FufhOAdbOciHasB/xQikKqWV0
-	TdsDRLdx5V6ZkCCXPi1NxCiMAnBhLy67v4F1agt7VWetXiRvK1F6F1vNPhlVlDmA4btvdkZpYHH
-	NoOAT50aqGq3Ym1GCYtc5X90mMCq3NHjAl/Xa+G8+/5M65CPThYQHs+Oir6WDymfj8kpM+Wbcqo
-	yYokBxwrEYYOm61qDecYt/CjDD/0D7ZNg55NtVaCPguowT7kCG5JuOV0w0HLh8pb6xZJoXA5ld6
-	jWBbcFpbZVPuPoL4qR5fhdticqkSrA6mcVeJY2zQQ96tX11Xq+SRPqTOXFbHeomBTQhAge75CYT
-	l+l+1lSh5VX1yhbqpT5ijeJKbfqubEEBmCxgxQwdqiFQH6uov5tPiLmfzcYGj+tnxMNCML0VRMt
-	mgWmBFIvZ85z22m+AfLoGvEmbyn3JiBoku+y0VJB3vQDB2Opta0Edn7ufxVph5LeOPXzmjPGJ7e
-	+9xjXPeRE+1nu+EwvJZ7aIRxSV+Yo/jO8ch7Dgkvv/cAc9Fj24=
-X-Received: by 2002:a05:6a20:4308:b0:3c4:3767:adb2 with SMTP id adf61e73a8af0-3daed46ab05mr10698355637.1.1789151522711;
-        Fri, 11 Sep 2026 11:32:02 -0700 (PDT)
-Received: from google.com (192.150.203.35.bc.googleusercontent.com. [35.203.150.192])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cc4c657156bsm1621771a12.21.2026.09.11.11.32.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2026 11:32:01 -0700 (PDT)
-Date: Fri, 11 Sep 2026 18:31:51 +0000
-From: David Matlack <dmatlack@google.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-pci@vger.kernel.org,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Alexander Graf <graf@amazon.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
-	Josh Hilke <jrhilke@google.com>,
-	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pranjal Shrivastava <praan@google.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
-	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v8 08/12] PCI: liveupdate: Adopt ACS controls in incoming
- preserved devices
-Message-ID: <aqRJF8OME7hn7CJr@google.com>
-References: <20260728221007.2098560-9-dmatlack@google.com>
- <20260910235149.GA364189@bhelgaas>
+        bh=9mIQ6jM8juF2PvO8eUkaKKIYpJrRvH5Gc2fB112shtA=;
+        b=C48Dw7fJKe/4oX3zH/S7R9zHwJ9ZyOxMqr2+bSTl+tqInaOLOa/pdlIzfeNBvJ4600
+         o2Lk+N0FxrGDZz8uSaxpmkwEUBig4Q8BNvLpyV+w09SZ93C8zbq8iloF7HmltopcCsZG
+         iED/U4sKgwgKKGnqXywTrYvJXKJZZ2DBGhJEH2qOhR2FqFssLWzIJwHf0srvKJhNW6lA
+         j8hY4c401TbUJp71jwQ6kKnfxU5lAQ/m3pkwDzYkB21K5gfjYzb9Kt4JKNcg2jintvtJ
+         7dKOtYBHX+PhGjXkvt2Mqdf8gmQROSvppzlJKuXAR/hug+eqVhjWcvW4yzHMGF8ZbdIr
+         WClQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789160352; x=1789765152;
+        h=content-type:cc:to:subject:message-id:date:mime-version:references
+         :in-reply-to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=9mIQ6jM8juF2PvO8eUkaKKIYpJrRvH5Gc2fB112shtA=;
+        b=HbNyJHBIoqXpUVJzLmg9xQJrB0a/U7Zqv8GPER+ThgP32aOmvO0JP1teAON9vTTwMA
+         S5MqLgVxl54jJjUz/3EAtF/TMDgZoSaYRCCMppgDu6CEF0mc32d+DlELxch+UCVmgy5w
+         QZi2ux8bGuADuWwzFoNIafnrHfB08y4Gzag25+k2YMADGz1jIbqGZ1vA+7rRSYjpgPtz
+         vw3W9nYqtvyEV/HNkY8KHZzIe+cH7HWhf0ZTuQk9xm7t9nrJx2/ZWspbtmG1fqjBflKb
+         rHpYUNHPY2sY7Z61w4XEUjAlNm6WHxex2/fAXOM9SvrqFdYapPvY5CxolTGtczst8r7F
+         mCwg==
+X-Gm-Message-State: AFuF++kJ/vhXnR3O2MyoRdIlPes1UHtygmrt839loH7WD3yeaaH8OgM2
+	x4f/owzlhva5L++/qbeNvw9BB4IRa/Gvlm3KZT4pk1sw4vUL0YvKx9qL2wlOuCEZSQElB96baHQ
+	0Ps3rlTNZOFwf6vntYhoFk2MHM+T8k7S4VRl0kKqg
+X-Gm-Gg: AYBFou1gnO9Mx6OGkpSs7gP0DlDdwS2L5oqEiPJmBbziEx+WFZgELatlOFZ4fqNqx3s
+	lp5kaEMMlYsTM33z52113mPTAHaupYuHr2lyCzESu0yc3tYSSRjx86RC9YjUy4mKy/iheKJY4nW
+	Sjkgq0aMTkVdma0ykpTt0hyzJzjZ5xPjkAqJtdGIKXQF01PNks3XyYhGi5cstBSy4sPXgO4q5JI
+	WVU+BQXmZbphukZsFdRpW9gxuIRTuHjGjlYPbZ1iAUJh6YCEWOi0QoBQhP9ZjtIprqVUDeifgw0
+	Rdnz6bD58x5XZ+BZ1GMuDo6PJvlPvm4jqHd8W5M1SM4vYW5XhELJCPJpqVF/zlM68Ss+P9gO96M
+	fxJlNQI5yNpIND+p8SsH3keOkMPrwHtsPC3xLJPXNRA==
+X-Received: by 2002:ad4:5f8f:0:b0:910:4c56:76d8 with SMTP id
+ 6a1803df08f44-9121207d6d2mr79542346d6.1.1789160350811; Fri, 11 Sep 2026
+ 13:59:10 -0700 (PDT)
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 11 Sep 2026 13:59:09 -0700
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 11 Sep 2026 13:59:09 -0700
+From: Ackerley Tng <ackerleytng@google.com>
+In-Reply-To: <aqRFSiicubfsw3N6@google.com>
+References: <20260901180713.4185641-1-dmatlack@google.com> <CAEvNRgEs82CVTL_CUn=Ovrwvt86U1dxzr8psWGu=nk98ZH6Esw@mail.gmail.com>
+ <aqRFSiicubfsw3N6@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260910235149.GA364189@bhelgaas>
+Date: Fri, 11 Sep 2026 13:59:09 -0700
+X-Gm-Features: AcwNN1VXiGYQy4JW0rBuiz4KjYly49Wx8Xl5G5ezJF-9TY2IawBLiOKUcfGow4s
+Message-ID: <CAEvNRgFCrcyk6F0vJ11pgj2EDSUAXj6Zw-oEdZpfj2SrH1Cv9g@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/5] liveupdate: LIVEUPDATE_SESSION_RETRIEVE_INTO_FD
+To: David Matlack <dmatlack@google.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <shuah@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260911_113204_424268_28527EF5 
-X-CRM114-Status: GOOD (  16.78  )
+X-CRM114-CacheID: sfid-20260911_135913_267518_FFD2F6F6 
+X-CRM114-Status: GOOD (  41.42  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -121,41 +123,146 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-09-10 06:51 PM, Bjorn Helgaas wrote:
+David Matlack <dmatlack@google.com> writes:
 
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 77b17b13ee61..22001bdf4c97 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -34,6 +34,8 @@
-> >  #include <linux/aer.h>
-> >  #include <linux/bitfield.h>
-> >  #include <linux/suspend.h>
-> > +
-> > +#include "liveupdate.h"
-> >  #include "pci.h"
-> >  
-> >  DEFINE_MUTEX(pci_slot_mutex);
-> > @@ -1008,6 +1010,9 @@ void pci_enable_acs(struct pci_dev *dev)
-> >  	bool enable_acs = false;
-> >  	int pos;
-> >  
-> > +	if (!pci_liveupdate_enable_adopted_acs_controls(dev))
-> > +		return;
-> 
-> Ugh.  The asymmetry between pci_save_state(), which does nothing
-> ACS-related, and pci_restore_state(), which enables it, is sort of
-> sketchy to begin with.
-> 
-> The command-line parsing in this path feels like kind of a wart (not
-> that you're touching it).
-> 
-> It just seems like this path is already hard to analyze, and
-> liveupdate is making it harder.
-> 
-> If we could save/restore the ACS state around the reset, wouldn't that
-> solve this without any liveupdate specials here?
+> On 2026-09-11 11:04 AM, Ackerley Tng wrote:
+>> David Matlack <dmatlack@google.com> writes:
+>>
+>> > This series adds support for LIVEUPDATE_SESSION_RETRIEVE_INTO_FD, a new
+>> > UAPI to enable preserved files to be restored into a userspace-provided
+>> > file instead of a kernel-allocated file, and uses this to support
+>> > preserving tmpfs files in-place without any changes to the LUO ABI.
+>> >
+>>
+>> I'm interested in the idea of retrieving folios into an fd for a
+>> different reason, I'm exploring handling over ownership physical memory
+>> to a guest_memfd.
+>>
+>> > The Live Update Orchestrator (LUO) API currently explicitly returns a
+>> > new struct file for every preserved file during retrieve() (e.g. via
+>> > memfd_alloc_file()). This then forces userspace to use anonymous memfds
+>> > for all in-memory files it wants to preserve. This works reasonably well
+>> > for VM guest memory but does not work well for other types of files that
+>> > userspace may want to preserve (e.g. in-memory logs, binaries,
+>> > configuration files, etc.).
+>> >
+>>
+>> Does this assume that VM guest memory is usually provided using
+>> anonymous memfds?
+>>
+>> More generally, is the problem that there isn't a simple way to
+>> implement retrieval into anything other than anonymous memfds?
+>
+> Roughly, yes.
+>
+>> > Preserving entire tmpfs mounts in-place would require a large amount of
+>> > kernel support and would effectively make tmpfs an ABI, which is a
+>> > non-starter (or so I hear). Instead, we can delegate the reconstruction
+>> > of the tmpfs mounts (directory structure, permissions, etc.) post-kexec
+>> > to userspace. The kernel just needs to preserve the contents of tmpfs
+>> > files and provide userspace a mechanism to restore those contents back
+>> > into a specific file on the filesystem after the kexec. Hence,
+>> > LIVEUPDATE_SESSION_RETRIEVE_INTO_FD.
+>> >
+>>
+>> Suppose pre-kexec, the data was in a tmpfs file (and fd), how would the
+>> preservation work? Would the user have to
+>>
+>> 1. Transfer the data from tmpfs fd -> anonymous fd
+>> 2. Preserve from anonymous fd
+>> 3. kexec
+>> 4. Set up the tmpfs fd
+>> 5. Retrieve into the tmpfs fd
+>
+> No, the proposal in this series is to support:
+>
+> 1. ioctl(LIVEUPDATE_SESSION_PRESERVE_FD, {TOKEN, tmpfs_fd})
+> 2. kexec
+> 3. tmpfs_fd = open(..., O_CREAT)
+> 4. ioctl(LIVEUPDATE_SESSION_RETRIEVE_INTO_FD, {TOKEN, tmpfs_fd})
+>
+> No transfering to or from an anonymous fd is required.
+>
 
-Yeah that would simplify the liveupdate support greatly. Let me work on
-that for v9.
+Cool that preserving a tmpfs_fd is supported. How is that done without
+preserving the rest of the tmpfs stuff?
+
+Why is it possible to preserve the fd without the rest of the tmpfs
+stuff but not retrieve without the rest of the tmpfs stuff?
+
+Is retrieving into an fd a bit too much of a shortcut? Would preserving
+the rest of the tmpfs eventually be required, and hence retrieval of the
+rest of tmpfs should also be eventually supported symmetrically?
+
+>> > An alternative approach to restoring data to a named file would be
+>> > supporting a zero-copy sendfile() that can be used to convert named
+>> > tmpfs files to/from memfds across the kexec. But this poses significant
+>> > challenges on the *preserve* side since the preserved file might still
+>> > be actively in use. The benefit of the retrieve-into approach introduced
+>> > in this series is that it does not require dealing with two different
+>> > files. There is only ever one file that owns the preserved memory.
+>> >
+>>
+>> Would it be more symmetric if the process is
+>>
+>> 1. Transfer the data from tmpfs fd -> anonymous fd
+>> 2. Preserve from anonymous fd
+>> 3. kexec
+>> 4. Retrieve into anonymous fd
+>> 5. Transfer the data from anonymous fd -> tmpfs fd
+>>
+>> As to the exact details of "transfer", I think the best we could do
+>> would be some kind of move from one fd's page cache to the other fd's
+>> page cache?
+>>
+>> Is the goal of the transfer to avoid any memcpy and fully transfer
+>> ownership (so, not just by increasing folio refcounts?)
+>
+> Yes this is the alternative proposal that has been proposed and
+> discussed a little bit off list, with sendfile() and copy_file_range()
+> being the possible mechanisms to do the "transfer". I think there are a
+> few fundamental problems with that approach on the pre-kexec side.
+>
+>  1. iommufd requires that fds mapped into it are preserved. If the file
+>     mapped into iommufd is tmpfs, but then we transfer that file to memfd
+>     for preservation, iommufd will fail to preserve because the tmpfs file
+>     is not preserved.
+>
+>  2. Even if you only use this feature for files not mapped into an
+>     iommufd, transfering the contents in a zero-copy way seems
+>     challenging. What do you do if the tmpfs file is still in use when
+>     you want to transfer it?
+>
+
+When you say in-use, I suppose you mean folio is in-use by some IO and
+is mapped in IO page tables, and that the IO must continue while the
+folio is transferred?
+
+Are you expecting guests (as in stage 2 mappings) to continue to be
+functional while the folio is transferred?
+
+I'll have to think a bit more, I was initially thinking of just
+transferring folios where I could unmap from everywhere (processes,
+stage 2, IO page tables) for the transfer.
+
+>> > By leaving file and metadata allocation purely in the purview of
+>> > userspace, programs can create the target files where they want, with
+>> > the names and security permissions they desire, before directing the
+>> > kernel to restore the preserved folios into them.
+>> >
+>> > Currently, only tmpfs shmem files are allowed as valid target receptors.
+>> > Attempting to target populated files, or anything other than an empty
+>> > shmem file, will trigger -EINVAL. HugeTLBfs files could be supported in
+>> > the future.
+>> >
+>>
+>> Is this basically that at some point, all in-memory filesystems' fds can
+>> support transfers?
+>
+> Yes, theoretically.
+>
+>>
+>> >
+>> > [...snip...]
+>> >
 
