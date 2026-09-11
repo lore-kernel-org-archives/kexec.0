@@ -4,108 +4,123 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CE6ADC88E4D
-	for <kexec@archiver.kernel.org>; Fri, 11 Sep 2026 17:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8117EC88E53
+	for <kexec@archiver.kernel.org>; Fri, 11 Sep 2026 17:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=mwDk3fh+JvGyN78BSU6J48zvCwmsI7FUHYkydOLS1VI=; b=gxbYPihW8fdZgPIw3TEE3cdfWM
-	eAjrlAKaZON/SOVIFHqfqG4qmw69VKLfn5P5jRemkV8Jd+ilE5FmvEEdk5dT1wy85UIaWKpXgHRze
-	/DeWDLJNtot3D8s3kZ826NwhfXA72BkiMRIPU4jsZKFi6lUPfSxjz3Uv4UUUxsBNgMB2m5KPfw17o
-	Mc3cbHm2Ixqp8sHWSBSN8wXW0D+oAkC7rQbxIuLOX4bsK0NvQWX3fb0wH0prAlbsy4s2gxVQr4lf1
-	IcDIJc3SuWUmmhOr+yBNjqxeUxXTXeEBpOXCcT50bgoDFYwXXRlDnBv1HY6ENiOrVlwsg1smYi4j9
-	7gflm0tA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=2gLJ161dkwsq964nEcXmxhgBhqu8XXJwXX0byV6GR0o=; b=fQC85hsC6MxdHxlaYd2XK5zct3
+	pzvaSNn1PmLVDCYljlR7jnlnCVYm2/XEocff/WmNnHaag/n2lFKlq+Nr3+U1r01UPcvFgmo7oAaHg
+	Vw1Ytm8M3spUK2FqatISCjcSv3Id+IPhFqdp6OshN8Robx++Wa5OppzjYq1iPn4k8cu+SuffBWAvf
+	fYHQLRfZbzKwK6gY/mTbJMApTCwLdkLv2s1FH2nqhg53LGCh3JN9US1Y5nC+9jGJ1XXxUzEv7gT9j
+	BM2HHoOqrygwHiW5X2PTglDE7Dd9jllD+qEXmJU01gmAsUg6d5A2p4tcqISL2KdfUioZfV9d+y/bR
+	QrToLnZQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x54bw-0000000HHrH-3n2y;
-	Fri, 11 Sep 2026 17:00:24 +0000
-Received: from mail-oa1-x2c.google.com ([2001:4860:4864:20::2c])
+	id 1x54ro-0000000HJpj-3kSE;
+	Fri, 11 Sep 2026 17:16:48 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x54bq-0000000HHoi-3rNa
+	id 1x54rm-0000000HJop-0VWx
 	for kexec@lists.infradead.org;
-	Fri, 11 Sep 2026 17:00:23 +0000
-Received: by mail-oa1-x2c.google.com with SMTP id 586e51a60fabf-475920b9ca2so422744fac.1
-        for <kexec@lists.infradead.org>; Fri, 11 Sep 2026 10:00:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789146018; x=1789750818; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=mwDk3fh+JvGyN78BSU6J48zvCwmsI7FUHYkydOLS1VI=;
-        b=RhtfDTD1uS07WYx7WAwBPrm/Ruc5Q/y8RSM+OUqxnpNc3jp2N2vsQMDrG3ZmlqjZ1p
-         oqnPg1IJ7wcfpQzKS2HMjt3YGwJXqUwwtXB7ynLIVOPQyxELxucqzgHJVD0i+DGVh2Ny
-         0ZvuuvmN/SuwafS3MQS3I52IFwf8w6hKvl6LFKXZAIR8xoT4zpGd11lpDfYD4tGsyPTA
-         LrLL2H9CWz07dsoHThFaIbOlhtbdTbnAGhKOfEaux+LXCc9I0gy6ENHUbfYngyZ1aDVw
-         dL0Zz2EYx94tam3fZqpvanjq+deRQDpJCP2dhyIf2OYgCXV11+uy+l5VMyCCSDbCzXYr
-         320A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789146018; x=1789750818;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=mwDk3fh+JvGyN78BSU6J48zvCwmsI7FUHYkydOLS1VI=;
-        b=j/tggqCycCAG7MxFCvL+C1iqUM4moUvykMfiq3nshY/bV2Z9sReMEgcaE6KOZtM1Y4
-         6EPOX0eFDlpUc62T1mwgy/Lcx961qddaXTysEVT5/ujTD/Ct6ci5qtzaEJBafhvmi4gq
-         6PR9usf7+t4rRwxt+FY8XS4B/RIYJRqlImrf9dAEIJ0DrOpXhrnLf4g7Wad9w/adkNZ4
-         mXPhqNbPRlDhocLHGaVphuqnwyhoSIHpciHaCvW5WPeFs7/XIHXm1MUpjf2L9QamXS1e
-         RooEiDaxAzW7wsCc0nbvH3P5rEUuCnEM6igFSol5qI2TtpqtzM2Ttl/SlewHbrN3L8I3
-         7Qvg==
-X-Gm-Message-State: AFuF++ko18YuvdyXoDnlGDdyNSxgbd1z5TR0ortXPm8cKAs/+uBRGXnv
-	57QLH9km/6NqlJuROLJMaIlbuzU+RjP/IM7Io7yrpjcapvRl5Szq08TpVtsf3HHFew==
-X-Gm-Gg: AYBFou0KcmOsR8hzyp9eDMfpe6ld1gsAOivLf0u2/IXawOpEy9Stva0FDTUzaSUIP67
-	n8P8K9Fa1oAQbef4tP8ieGXcKlWUQscKDAFjvV3qNIJnzHCYYptZCxeJ1jjUWzMHNpJ4BRHkT3q
-	h+kfZ8xTERJcXeaEx5ykrvR1knoq9pajNHstHjn5W/CtNpdghkY7qr1sPSjbTLNNyutqguXGgal
-	0oziMLsFgLeJcmaXFGoZ1ugcq/mFV/RKL10RhhR2dcdFmqmRulxOzTsBcxdKVOyiSo/c/7qLEc9
-	+UkNjg4WhmlGmwEs/2J49wH5L6HKkU2Idgi06OCwzKQ74Yd/iMJU7WTq/QzGzHNup7z8JlEDCHs
-	4RN+2fXgBSgDjq+nNW2Y3X+3VpbffSbJGOPGppQNIROg4hZx0/G3H+dKm+HYOv2CuekDexru+jQ
-	vXEXicExP7jKYpGcECmKfWgU2rQhfTrSfG5ce/+Er9s42N/b6E4Ybo4Uts8SiJOzYHQKwN7Hcd9
-	oqUZJeBQyDRnRpC2srUCrzq+PrR6OsIk7fAywpV
-X-Received: by 2002:a05:6870:7183:b0:475:a112:1275 with SMTP id 586e51a60fabf-47debded110mr3337322fac.34.1789146016740;
-        Fri, 11 Sep 2026 10:00:16 -0700 (PDT)
-Received: from google.com (192.150.203.35.bc.googleusercontent.com. [35.203.150.192])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-47df8bd0284sm2467114fac.9.2026.09.11.10.00.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2026 10:00:14 -0700 (PDT)
-Date: Fri, 11 Sep 2026 17:00:10 +0000
-From: David Matlack <dmatlack@google.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-pci@vger.kernel.org,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Alexander Graf <graf@amazon.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
-	Josh Hilke <jrhilke@google.com>,
-	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pranjal Shrivastava <praan@google.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
-	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v8 06/12] PCI: liveupdate: Auto-preserve upstream bridges
- across Live Update
-Message-ID: <aqQzmvgILmU8F4TR@google.com>
-References: <20260728221007.2098560-7-dmatlack@google.com>
- <20260910235126.GA367952@bhelgaas>
+	Fri, 11 Sep 2026 17:16:47 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1789147005;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=2gLJ161dkwsq964nEcXmxhgBhqu8XXJwXX0byV6GR0o=;
+	b=Jegzyb6w1GOcwCA2AdjYkBa4u/Wnuzmo6D8KOb7fTvyDaBRKIKoF5h4LbjhGpVp/p0cvxa
+	SAVkRzJS90PIeF/4T12HWT/rCvgaWWjhResUmsYuSXsyMs7WZkTMELhTa0RZTcS9/4sAQI
+	DCYPX4LssLJdhMmBGisTXWb6M11k1NY=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-648-Rj-cvUwGMAyGPQnZAnD2Fw-1; Fri,
+ 11 Sep 2026 13:16:39 -0400
+X-MC-Unique: Rj-cvUwGMAyGPQnZAnD2Fw-1
+X-Mimecast-MFC-AGG-ID: Rj-cvUwGMAyGPQnZAnD2Fw_1789146996
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3F1851801366;
+	Fri, 11 Sep 2026 17:16:35 +0000 (UTC)
+Received: from [100.90.56.12] (headnet05.pony-001.prod.iad2.dc.redhat.com [10.2.32.117])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 21D561956095;
+	Fri, 11 Sep 2026 17:16:26 +0000 (UTC)
+Message-ID: <a3c2d0f6-a7b5-4344-b837-434aeac5dbc0@redhat.com>
+Date: Fri, 11 Sep 2026 19:16:23 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260910235126.GA367952@bhelgaas>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/3] liveupdate: Move to feature flags for LUO and
+ memfd ABI compatibility
+To: Jason Gunthorpe <jgg@nvidia.com>, Sean Christopherson <seanjc@google.com>
+Cc: David Matlack <dmatlack@google.com>, Logan Odell <loganodell@google.com>,
+ arnd@arndb.de, pasha.tatashin@soleen.com, rppt@kernel.org,
+ pratyush@kernel.org, graf@amazon.com, akpm@linux-foundation.org,
+ maz@kernel.org, oupton@kernel.org, bhelgaas@google.com, alex@shazbot.org,
+ kevin.tian@intel.com, dwmw2@infradead.org, baolu.lu@linux.intel.com,
+ joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
+ linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, linux-mm@kvack.org, kvm@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ linux-pci@vger.kernel.org, iommu@lists.linux.dev
+References: <20260903023452.721732-1-loganodell@google.com>
+ <20260904160009.GV4157646@nvidia.com> <aptFFYqcSiBdMLE8@google.com>
+ <20260905012403.GX4157646@nvidia.com> <aqIAtOoew-_6jw29@google.com>
+ <20260910143448.GD3968357@nvidia.com> <aqLOWkuVKccR-I7W@google.com>
+ <20260910171210.GF3968357@nvidia.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <20260910171210.GF3968357@nvidia.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Mimecast-MFC-PROC-ID: 1DSufG3-9iXTzPRQCOwj5U-lLUnjJW4MWmaHVeWQdus_1789146996
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260911_100020_180549_D0313838 
-X-CRM114-Status: GOOD (  20.16  )
+X-CRM114-CacheID: sfid-20260911_101646_242035_D4A138B4 
+X-CRM114-Status: GOOD (  16.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -120,42 +135,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-09-10 06:51 PM, Bjorn Helgaas wrote:
-> On Tue, Jul 28, 2026 at 10:10:00PM +0000, David Matlack wrote:
-> > When a PCI device is preserved across a Live Update, all of its upstream
-> > bridges up to the root port must also be preserved. This enables the PCI
-> > core and any drivers bound to the bridges to manage bridges correctly
-> > across a Live Update.
-> > 
-> > Notably, this will be used in subsequent commits to ensure that
-> > preserved devices can continue performing memory transactions without a
-> > disruption or change in routing.
-> > 
-> > To preserve bridges, the PCI core tracks the number of downstream
-> > devices preserved under each bridge using a reference count in struct
-> > pci_dev_ser. This allows a bridge to remain preserved until all its
-> > downstream preserved devices are unpreserved or finish their
-> > participation in the Live Update.
+On 9/10/26 19:12, Jason Gunthorpe wrote:
+> Keep in mind the actual goal here. Someone has kernel A and they need
+> to blind kexec into kernel B and NOT have the machine explode, or all
+> the VMs sitting on it lost.
 > 
-> This seems to hint that we're going to allow bridge reconfiguration in
-> some cases, e.g., for hot-adds.  The simplest case is "leave config of
-> all bridges the same", and I thought that was what the previous patch
-> commit log said.
-> 
-> What's the benefit added by this patch?
+> Meaning you must have a way to determine before the kexec if kernel A
+> is producing something B will *accept*. Accept is not "parse and fail
+> with EOPNOTSUPP" like most uapi schems. Aceept means bring in and
+> actually fully support and use.
+>
+> So how do you solve this problem? You MUST declare in some kind of
+> manifest exactly what ABIs are supported, in some way.
 
-It is used in the following patches:
+You still have to pass out of band what B will accept.  Passing a string 
+or a bitvector doesn't change much.
 
- PCI: liveupdate: Adopt ACS controls in incoming preserved devices
- PCI: liveupdate: Adopt ARI Forwarding Enable on preserved bridges
- PCI: liveupdate: Do not disable bus mastering on preserved devices during kexec
+The problem, again is that memfd is the easy case.  KVM would bump the 
+version number on every other release, as even a new serialized MSR will 
+be an incompatibility.
 
-to preserve certain configuration on bridges that have downstream
-endpoints that are being preserved. To support P2PDMA we will also have
-to preserve bridge memory windows (future series).
+Rather, forwards kexec *must* work (again, that's nothing but a variant 
+of "we don't break userspace") and for backwards kexec, well, you must 
+know what you're doing.  QEMU has been doing backwards live migration 
+forever, and QEMU is a gnarly C program that has grown by accretion as 
+we were learning all this stuff, so it's not impossible at all.
 
-If we are ok with applying those policies to all bridges on the system
-whenever one or more endpoints anywhere on the system are being
-preserved, then I agree we don't need this patch. But I thought it would
-be cleaner to track things per-device.
+> Yeah, CSP broadly has to do exactly this across a wide range of
+> topics. It is a further reason why this feature is not exactly usable
+> by a "mainstream" user :\
+It's not easy, but you aren't even trying to do it right in the kernel. 
+You are starting from *a* solution and saying that it makes the feature 
+hard to use.
+
+And I'm not saying to dismiss your work or ability, quite the contrary 
+in fact!  It's just that you're solving for the wrong complexity, and 
+only partially so because (if I'm not wrong) there's still the question 
+of how to bring the manifest of kernel B into kernel A.
+
+Paolo
+
 
