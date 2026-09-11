@@ -4,94 +4,140 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 15A4BC88E53
-	for <kexec@archiver.kernel.org>; Fri, 11 Sep 2026 18:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 12B43C88E59
+	for <kexec@archiver.kernel.org>; Fri, 11 Sep 2026 18:26:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=UoB/yhujSeic4Z83ePKaRXKf1DWcrbuqnOKvr88NN90=; b=HVcjDAOx0NgfPTes49Pq49VN0D
-	TGtJelBTxzGKxR26/PKjH/0kOIVSfqE9ABVVJO+silJojbdOKpDxedhEfLUXDGpM2+l6qo+ekO/A3
-	mzz29ud5k4ZH2VbzwFvnWQlhvUDdQhtDCRi9tl6l0iRzOaB7FZJg8BUzXj2+FI4t2zZPvx4obcQMX
-	0HX07xqcPdxFfZCMnF+vyHk5TUDv4U3HkBmP100ZGv6FFrY6U5fC0Kkml2mrOcrw2/b9Hr2rUikhV
-	3+p/UVOLLjgnuxilS9+gNlKqIttZUD03YuPWLdBbrCEpdUgqz9RlGfwf0RztvN8h72qDLUrIbyZJZ
-	PObRKlIQ==;
+	bh=LMRtlUR7sTdG76/BNIXgqLjAi2QN6gfhfMxJdpzKhxA=; b=O62GCOxJ1jhYpn+95N/U/Jb8z9
+	7d2B6XHeBeQRzzWDVAKclFT+60q7OcO/pPTyKU4nxuY1j0fm3+dDUAkBxOeN4BPoXpOQWISTj6MMm
+	8oUJnePL+gpJRjSedyO3AUqKVa3tldVI0EaQzVs3BWmprWZbyQUIpl3dQob4yL8Ngq5HOCruPJ0AQ
+	zW18fJsgBOG7S+6BRh0htghNRpPv3f08EUTHQineKh8Ktpt/nh4n/FSyf5yNBP30UmImnI1K5Mwjm
+	Y2CJafoQHzKonmOpbfx+Dm+cOrtpE0UU5kMTOGcgXNgLrG0/0RFcUlL+xeE8ZkuNsR75MJZJ6GqnZ
+	UfsHIf1Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x55ms-0000000HQO6-35SS;
-	Fri, 11 Sep 2026 18:15:46 +0000
-Received: from mail-pg1-x534.google.com ([2607:f8b0:4864:20::534])
+	id 1x55xC-0000000HRRE-243M;
+	Fri, 11 Sep 2026 18:26:26 +0000
+Received: from mail-westusazon11012046.outbound.protection.outlook.com ([52.101.43.46] helo=SJ2PR03CU001.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x55mq-0000000HQNW-12Fo
-	for kexec@lists.infradead.org;
-	Fri, 11 Sep 2026 18:15:45 +0000
-Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-cc4d64bcea5so344465a12.1
-        for <kexec@lists.infradead.org>; Fri, 11 Sep 2026 11:15:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789150543; x=1789755343; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=UoB/yhujSeic4Z83ePKaRXKf1DWcrbuqnOKvr88NN90=;
-        b=P8dTcbHE6hHQlFYHUnI/T4nfImuEYDW5eOKSIzUMXm5sUHM9UflDlvB+5ZL66dEg65
-         FTLZZx+qygstCRbH0uzo49x7rAGJXC2VmhW7JrgWzA7ZLlFY+r3Fcfzso730Taxk7f3k
-         xx+6x72GBGD4nAxa8Tl95pqECGaoI1CSJNFR/DRzLFDK8GfnG6CyIEdw7HiJcc0NCL5u
-         Httm7AwOWNVVkhfcafj0KUsGgEQCjbcGDAJmB4C31TJF1x3z8G1Nln+bn/LX5tlbSMn+
-         wNH2FuNF+Ei+FvckOLKzgCqWAJRcCP974icC65ESkw2edZbAaW84qaED2HKp5Fbr0Rha
-         Qvcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789150543; x=1789755343;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=UoB/yhujSeic4Z83ePKaRXKf1DWcrbuqnOKvr88NN90=;
-        b=L0itVnlsbYlWDO5WazKJ3Ueim4KowzBlPFiSU/Pa70uvGIh369rezubehyT99OIvxi
-         gn6OSoa40iiAkAp2MkD1xER0Farh9guOzacMHnxXOUYRNCCdZBOU7csKD18mX35/9OYW
-         8kz3Jvbq6Fwv4NJJSbOn1dCxhp04d7PZ/dla7/C7g8Tw+MxiBTh+ydph7097FzlotjoL
-         Dn34MTU/BcW2QHEKTr+ltIFi16FiMWTJkJiiqQthxW/sczOYqeJwkXGb+vUGxszukF7W
-         N14d44o/vzygmYiV+ITOMhKpwAKyaDT9hKhPCdsY1tghono7y0BWwSZ7wR63akkqkxMu
-         z5Aw==
-X-Gm-Message-State: AFuF++l/ATXpuyzyBNEovw5k34MlHK2iRlkjPztIO34OC9jQztBZ+VA8
-	ouwjq9VWoRbsD9byy0kea2fj3cszqr4xRSDFRM06EhiT+1QgkGsvDFZNQcDJb2pL/g==
-X-Gm-Gg: AYBFou0Fm9Gn7C7pzYmZa3uSPyfmgVNpmRZOlTrIkED3t0SVm7gHUtEMcOUuxEBX60A
-	2ZSCplfiGQojJRa6+n7Fwmh2X8We61hQfwdKWJiEmRG6vcD/eD6x9DB68PkeNpn9jG82nU3efkp
-	RCJHF2iunV5zOMuRoj/vPmAYXlnBZQIgtUdTlpHeJtSjFT1zNYD6iNEygG4ojBY3sFeqE2FMddv
-	OlJdZydsPV410WoXA7ltuzd3htjBz6m0B+Smns4BBjkbA1NtxRpBTp4Jk7pzWgGA/m8+vBIgVjv
-	c8RqNTXhhyEsojxZNtwjxpSc8Lyeq4GZD5ZvVtzr9CW6fyz3qvxnN4sWE1+1GvBBhv2qY6FASwl
-	q/DAtP7Jh5nNFeSD6O2AmMtwic/fBZQcBIs5iz0M9qPBPYa+wKBaRkV+IkVtXmbMZMMOlj03A34
-	lU7+yYz7iM6TLcDg/g7KF8aIjgTwbGWrjX2lzKcPuPnRxRf0DET87gEqMXmLPT79snA6Mm7pNkd
-	dLXnEH+kyirY92iStYv2So7EGdhtifdZ04+ZYz3
-X-Received: by 2002:a05:6a20:3ca8:b0:3da:bb98:b1f9 with SMTP id adf61e73a8af0-3daed4bba1dmr10454732637.9.1789150542427;
-        Fri, 11 Sep 2026 11:15:42 -0700 (PDT)
-Received: from google.com (192.150.203.35.bc.googleusercontent.com. [35.203.150.192])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cc4c6550e06sm1594193a12.14.2026.09.11.11.15.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2026 11:15:41 -0700 (PDT)
-Date: Fri, 11 Sep 2026 18:15:38 +0000
-From: David Matlack <dmatlack@google.com>
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <shuah@kernel.org>
-Subject: Re: [RFC PATCH 0/5] liveupdate: LIVEUPDATE_SESSION_RETRIEVE_INTO_FD
-Message-ID: <aqRFSiicubfsw3N6@google.com>
-References: <20260901180713.4185641-1-dmatlack@google.com>
- <CAEvNRgEs82CVTL_CUn=Ovrwvt86U1dxzr8psWGu=nk98ZH6Esw@mail.gmail.com>
-MIME-Version: 1.0
+	id 1x55x9-0000000HRQG-0Xxf;
+	Fri, 11 Sep 2026 18:26:24 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EkfVsPBbQip6rpJChrreAmrkwdUe1fdtSI2CMcryfEPtthJ00toP1Zh30WctfmCEU5ZOK2XjJPo3XSi5+XqJoGY2l2Zr5hU55MQ29YeCpSFTN9gF8crpvy/eEYBNXVRym7RifAsU5EG8pgBoJ2tYPjlW/vEBv0WfVpVYIJivrP9uu9fU1wgiefGn/H0ZKCQK6x9Mv7HXjm9P3fArb6xbbomvSicOSKQZ2q5j/TFlyRRk+ZGmWKXtb+9TNdRmKxL7kyf1aiDvuJcNrdN1PdqWbGbOJeGTcwHq9m+y/07pnOF9vFBMKNbDkmw0DMpTR8Y4MOR8MB3UObFSi9dAetXIHQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LMRtlUR7sTdG76/BNIXgqLjAi2QN6gfhfMxJdpzKhxA=;
+ b=OT/ycauYXu4LUvWXgn0/tRpX9K8O2m+ofxXm0qqGEZVsionY2y4WlgbW+NH7uSKs9qJQoLHqx390WcmHs6xccPsDJlp7dexyDc8xvfJFZ1LSBElbpzpJa/0eV6Wr1KRocxYTHEQWijMwI6h9eDa/NHOyvMaVawM01OFQ1G0DdNp9XxBilhPx3SWVl1aj06qwroumGIN6OEfiM11ebBbmsBQxpXtz8JZMrYQ9L/ON6pjkO5mPwe9BuiOLkyyou/7Gz7aqwU7HuAt4GWw90Tn1XGODiEufs9dI0RYdCLGAYlvn6Ai+k+8ggB42TN8Q5Uns6oDkMe8/1i4VklGVq2larA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LMRtlUR7sTdG76/BNIXgqLjAi2QN6gfhfMxJdpzKhxA=;
+ b=Dt95SPf4qj4IgwYKyKRnLtoEJU8HxZ9AidymuxIxWDhyORKD3oZbq4lnI2O9AJTCFwqLL+4qFLr4fLs17wA/f6u/I7LdOZJoHFzseaOLtygdqNP4ZNne6gIUjF1SD+BdaR9IWbKTJNUX3LfpmmL1jwAwtbJuxnWf4/NNIpSGUYVDXDWge/nDVELCwqcQJaAe1HyXcZvw7ucR3nduPIo6a1TP4d8eZ5z80w+NGx+yTCbNSUG0Sa3CrxEuM6Y2zqizm+Cu8kNvGynKBfi44AL2eibHy2kmc6UmlGH1Iin7CrTB49BGcdVtYP0T/yArfYP+2gXru4PAS2Qjt5YUZw5Zng==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CHBPR12MB731189.namprd12.prod.outlook.com
+ (2603:10b6:610:33d::12) by BL3PR12MB6401.namprd12.prod.outlook.com
+ (2603:10b6:208:3b1::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.10; Fri, 11 Sep
+ 2026 18:26:13 +0000
+Received: from CHBPR12MB731189.namprd12.prod.outlook.com
+ ([fe80::b0e5:123d:fe06:e10d]) by CHBPR12MB731189.namprd12.prod.outlook.com
+ ([fe80::b0e5:123d:fe06:e10d%6]) with mapi id 15.21.0406.007; Fri, 11 Sep 2026
+ 18:26:13 +0000
+Date: Fri, 11 Sep 2026 15:26:12 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	David Matlack <dmatlack@google.com>,
+	Logan Odell <loganodell@google.com>, arnd@arndb.de,
+	pasha.tatashin@soleen.com, rppt@kernel.org, pratyush@kernel.org,
+	graf@amazon.com, akpm@linux-foundation.org, maz@kernel.org,
+	oupton@kernel.org, bhelgaas@google.com, alex@shazbot.org,
+	kevin.tian@intel.com, dwmw2@infradead.org, baolu.lu@linux.intel.com,
+	joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org, linux-mm@kvack.org, kvm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-pci@vger.kernel.org, iommu@lists.linux.dev
+Subject: Re: [RFC PATCH 0/3] liveupdate: Move to feature flags for LUO and
+ memfd ABI compatibility
+Message-ID: <20260911182612.GK3968357@nvidia.com>
+References: <20260903023452.721732-1-loganodell@google.com>
+ <20260904160009.GV4157646@nvidia.com>
+ <aptFFYqcSiBdMLE8@google.com>
+ <20260905012403.GX4157646@nvidia.com>
+ <aqIAtOoew-_6jw29@google.com>
+ <20260910143448.GD3968357@nvidia.com>
+ <aqLOWkuVKccR-I7W@google.com>
+ <20260910171210.GF3968357@nvidia.com>
+ <a3c2d0f6-a7b5-4344-b837-434aeac5dbc0@redhat.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEvNRgEs82CVTL_CUn=Ovrwvt86U1dxzr8psWGu=nk98ZH6Esw@mail.gmail.com>
+In-Reply-To: <a3c2d0f6-a7b5-4344-b837-434aeac5dbc0@redhat.com>
+X-ClientProxiedBy: YT4PR01CA0122.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:d5::13) To CHBPR12MB731189.namprd12.prod.outlook.com
+ (2603:10b6:610:33d::12)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CHBPR12MB731189:EE_|BL3PR12MB6401:EE_
+X-MS-Office365-Filtering-Correlation-Id: b5d33c9a-8abf-494a-227c-08df103228f3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|23010399003|376014|7416014|366016|18002099003|22082099003|3023799007|10067099003|5023799004|11063799006|4143699003|56012099006;
+X-Microsoft-Antispam-Message-Info: Fd58NVEkaYYab7sm/5nz/kjdl/HOVcpsGGNZyUJT/MIVL0RkQEmpmmQUVRdwRTPOR8cZkVGLQ5JAeyIpp1T/A6ZZY6qxYu9kdA6TdNAAJiko+sSQAhLi1xBBDL4VJc/uXudWvMVgwdIywyBCkp1VpASaH6oGNEBO93jJBOOY0abg/rczSr0k3b/3vY8OVEedQkKvr6J7KqHFxmWlGhzyMmhtuj6hDKJHun8H963iX/H2uzL4nLr1X0ZPgtxhJPKvCkYVCajl6dLtYrE6Ncws9sYk2MzeeqQcNH8IEQhAdz068OztosQjn0vl5jkjz5M8+TdVD5+aGOyudb0xk2YuYh+kJTt8gbAR8abAoJrDck5GRCPilNEmN3liNpJDIJ/XiknQ8reBWs6kxXgRDvvHMHeGO61pTOyWPx04LFD3P/bjGpBIlfxm6/OS45aAUN0o+9DVXZRJAj8O8m0iKmj5xqCxy2t7F/z4g5UiU4rHe3lDtVA6DrMq3AEwAklWlQbTb/kpg8pYdrcnLyQ0fAeRe8PPX8OIjUqQrGfLszu4DwDy8w799waUFaXmWsPFZMWu2kULnoBfNOKqUxA8XD58r95n4vodyQIQRHEsHCKskeqwr8YmatABgqvlWCHWWURUK258f4YJC9pTVt3Ugp1BmwDD5NveKeAHyFpyGji0Tpg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CHBPR12MB731189.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(376014)(7416014)(366016)(18002099003)(22082099003)(3023799007)(10067099003)(5023799004)(11063799006)(4143699003)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?N7REO+16Fir73RvcGyKMFm7GqOJZe2m3rzU1/aocxo6KCaFYcpuhdlQaokrF?=
+ =?us-ascii?Q?E/ozWD+yRlqxP0XMcP+CFy3a3X0Zle1AHtEuynfPMwOG/CeV5hT9i3TWkA3A?=
+ =?us-ascii?Q?rC7igiGVMcCtH6gkVxi6hRPUgqy2qmo94PuvOfX91w2kgwBHa2x917WoxYpt?=
+ =?us-ascii?Q?vREx6WZYkimEEClDWYXLWBnjwmBsBD+Grq3iipi2h640qal7S2TscBJX4g5m?=
+ =?us-ascii?Q?Bq03bx2Htwt39K2MkUaNOSzsRpMFUWsg6lo3QCjnseywXmoJQVAj5ABWG289?=
+ =?us-ascii?Q?VLk+4zCKhvU2zRItL+gcQSASdM5JK0nVUg9Cm3u9twkkCTveP1Rp1LgB7hJA?=
+ =?us-ascii?Q?kLLYtYysy51Ktw2ZDlPbKbQpsCVHe63/3dbpaMLxKuUcSZwclEWUU7G0C7Fq?=
+ =?us-ascii?Q?LrlrbjMgMEKA0RW3cQy1sHmjPfeTVm78zTiTCGoMidoEKupkAW2pVp/hsfJi?=
+ =?us-ascii?Q?oLZ9rHgEc9LzI7Ef5+/6tZhInJK7y2JkN1NGw3LzO/7iiWD2+E5m5gDdqAgg?=
+ =?us-ascii?Q?QAq70YnpaCikJ2EvPeS5Vv6qky/YIMUfz6G+cuoJ7G4FaJwAbqs3q/QnK8K3?=
+ =?us-ascii?Q?ChOILjKTbW/r1OLCUnuuCHv1LGYPD/5fqkZwCR88AppYhts7iBWXsWVgm8R5?=
+ =?us-ascii?Q?jwFVxXqOb8/ABY6NshfqsQML6aWMd2JIc07zRflUCEZme2/n9uCAFU0MGa/S?=
+ =?us-ascii?Q?4Mc2yO5XQKqSFqWKdyQm/72NYvTLEq8O6VL3oHhjMVxy+fsGsrtdKBHxqEIx?=
+ =?us-ascii?Q?88GzCHHxX2Xi9dXkz1bA32AR7ErQoq5S24gtnQe+xrTDSNODBqk9gQq/08V8?=
+ =?us-ascii?Q?3kg4UpV4NebcFzesPzl+aZz8i4TAfTIwJKVNm1p1VNo/tfzxdda+Ccp3MkVT?=
+ =?us-ascii?Q?dEcRpLViH4z2JS7gSDpVbEn031hMYAswM7SZYZ8PIJgIWsS8SM+Za8Mr2smr?=
+ =?us-ascii?Q?EGvA4oXbXm5ZVsmWeixT1SBnStlmZm9rqn4WPxn5BAmt20S6ohJ3KRRooGsx?=
+ =?us-ascii?Q?rJB1S/1OcYeyOhiq2y3HlJ1ARe3f+n3Ag0PQuRFDuUyq8wlcpbmbf668l0c2?=
+ =?us-ascii?Q?Erk4lQQ10IXPwcBF7axY8Epw2fcw36hd2p8mtF8JC6x6TQU3cWNJE9pIVdg2?=
+ =?us-ascii?Q?Ao0RP1Gvg+asyUldyEJODnzmPa+MGC9njJ/49g8uA68vWYHsVswymTfNypwR?=
+ =?us-ascii?Q?KuiGrbtvspr9nbYGiMxfhiJRQ2q3e3J4Z2H9bXX6XiSfmAB10CS6r0/k0WQq?=
+ =?us-ascii?Q?hHPHZiCCBWFv6aCsP9Jh2D4tQ9HAKfYOzfxqwby+0ou1ee4P8j8QULhpnItj?=
+ =?us-ascii?Q?e+XAG5xXV+c1HEVBaqfbRF0qqGanG7VRuRevjhD7i21uuhYSJwFpct0WGS+i?=
+ =?us-ascii?Q?5pViM7blszTrkdrwAC4sOTVM9QcvWLy8SMlkgp6li+eyXZG7FlAHdRtXeY/W?=
+ =?us-ascii?Q?6Czyas/DgGY246FGFO9xXUOG4Lpfq7rfPMR6ixcnLVA+Ud4nulqPMfLbYlc9?=
+ =?us-ascii?Q?qcBDF6TC8VJwLMYqkhqAiMpCxNJrifW/EQo9X/CdhGi9VbMzYemEqlivSKau?=
+ =?us-ascii?Q?ktlo+UOmFmp62oKmTeD7+VCybCAOOl/2q6gckrmmyMkHQW3v+QPy4ImW0bph?=
+ =?us-ascii?Q?orSlAmSInz9AjCv5X0jQHBoMnLwy9RGZFCinTac6K3HJ66sPxpIi5T+ihlg3?=
+ =?us-ascii?Q?NqJfQOT5HuxrupoIUcJGJgkQrkhb8u85rE4DcuYcrqcr80m3?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b5d33c9a-8abf-494a-227c-08df103228f3
+X-MS-Exchange-CrossTenant-AuthSource: CHBPR12MB731189.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2026 18:26:13.2562
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /SU46+jkJoGaKXtrsG/TdpjfkeuedhcIZtSchcwh7yB7bCwKBycw51AAmYcf5CST
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6401
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260911_111544_316750_14418AE2 
-X-CRM114-Status: GOOD (  41.96  )
+X-CRM114-CacheID: sfid-20260911_112623_206665_B0E83CDA 
+X-CRM114-Status: GOOD (  21.95  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,121 +152,62 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-09-11 11:04 AM, Ackerley Tng wrote:
-> David Matlack <dmatlack@google.com> writes:
-> 
-> > This series adds support for LIVEUPDATE_SESSION_RETRIEVE_INTO_FD, a new
-> > UAPI to enable preserved files to be restored into a userspace-provided
-> > file instead of a kernel-allocated file, and uses this to support
-> > preserving tmpfs files in-place without any changes to the LUO ABI.
-> >
-> 
-> I'm interested in the idea of retrieving folios into an fd for a
-> different reason, I'm exploring handling over ownership physical memory
-> to a guest_memfd.
-> 
-> > The Live Update Orchestrator (LUO) API currently explicitly returns a
-> > new struct file for every preserved file during retrieve() (e.g. via
-> > memfd_alloc_file()). This then forces userspace to use anonymous memfds
-> > for all in-memory files it wants to preserve. This works reasonably well
-> > for VM guest memory but does not work well for other types of files that
-> > userspace may want to preserve (e.g. in-memory logs, binaries,
-> > configuration files, etc.).
-> >
-> 
-> Does this assume that VM guest memory is usually provided using
-> anonymous memfds?
-> 
-> More generally, is the problem that there isn't a simple way to
-> implement retrieval into anything other than anonymous memfds?
+On Fri, Sep 11, 2026 at 07:16:23PM +0200, Paolo Bonzini wrote:
 
-Roughly, yes.
+> Rather, forwards kexec *must* work (again, that's nothing but a variant of
+> "we don't break userspace") and for backwards kexec, well, you must know
+> what you're doing.
 
-> > Preserving entire tmpfs mounts in-place would require a large amount of
-> > kernel support and would effectively make tmpfs an ABI, which is a
-> > non-starter (or so I hear). Instead, we can delegate the reconstruction
-> > of the tmpfs mounts (directory structure, permissions, etc.) post-kexec
-> > to userspace. The kernel just needs to preserve the contents of tmpfs
-> > files and provide userspace a mechanism to restore those contents back
-> > into a specific file on the filesystem after the kexec. Hence,
-> > LIVEUPDATE_SESSION_RETRIEVE_INTO_FD.
-> >
-> 
-> Suppose pre-kexec, the data was in a tmpfs file (and fd), how would the
-> preservation work? Would the user have to
-> 
-> 1. Transfer the data from tmpfs fd -> anonymous fd
-> 2. Preserve from anonymous fd
-> 3. kexec
-> 4. Set up the tmpfs fd
-> 5. Retrieve into the tmpfs fd
+Again, I strongly disagree with this MUST. This is not a variant of
+"we don't break userspace". It is internal kabi and the kernel gets to
+decide which versions it supports. There are no promises here. It is
+not a breaking change to say we won't support A->B.
 
-No, the proposal in this series is to support:
+Community needs to agree on what these parameters are. I've been clear
+my stake in the ground is same stable version only as a starting point.
 
-1. ioctl(LIVEUPDATE_SESSION_PRESERVE_FD, {TOKEN, tmpfs_fd})
-2. kexec
-3. tmpfs_fd = open(..., O_CREAT)
-4. ioctl(LIVEUPDATE_SESSION_RETRIEVE_INTO_FD, {TOKEN, tmpfs_fd})
+This is typical in the industry, nobody does live update where you can
+jump ahead multiple years of versions. Sequential releases only is
+very normal.
 
-No transfering to or from an anonymous fd is required.
+> QEMU has been doing backwards live migration forever, and QEMU is a
+> gnarly C program that has grown by accretion as we were learning all
+> this stuff, so it's not impossible at all.
 
-> > An alternative approach to restoring data to a named file would be
-> > supporting a zero-copy sendfile() that can be used to convert named
-> > tmpfs files to/from memfds across the kexec. But this poses significant
-> > challenges on the *preserve* side since the preserved file might still
-> > be actively in use. The benefit of the retrieve-into approach introduced
-> > in this series is that it does not require dealing with two different
-> > files. There is only ever one file that owns the preserved memory.
-> >
-> 
-> Would it be more symmetric if the process is
-> 
-> 1. Transfer the data from tmpfs fd -> anonymous fd
-> 2. Preserve from anonymous fd
-> 3. kexec
-> 4. Retrieve into anonymous fd
-> 5. Transfer the data from anonymous fd -> tmpfs fd
-> 
-> As to the exact details of "transfer", I think the best we could do
-> would be some kind of move from one fd's page cache to the other fd's
-> page cache?
-> 
-> Is the goal of the transfer to avoid any memcpy and fully transfer
-> ownership (so, not just by increasing folio refcounts?)
+I agree it is not impossible, you can always make things harder and
+more complicated to keep it working. I don't want the kernel to turn
+into a "gnarly C program" because we over engineered this.
 
-Yes this is the alternative proposal that has been proposed and
-discussed a little bit off list, with sendfile() and copy_file_range()
-being the possible mechanisms to do the "transfer". I think there are a
-few fundamental problems with that approach on the pre-kexec side.
+> It's not easy, but you aren't even trying to do it right in the kernel. You
 
- 1. iommufd requires that fds mapped into it are preserved. If the file
-    mapped into iommufd is tmpfs, but then we transfer that file to memfd
-    for preservation, iommufd will fail to preserve because the tmpfs file
-    is not preserved.
+Right, I've been pretty clear about this, I want to start with
+same-stable-version only and if that works out then consider if we
+want to do more.
 
- 2. Even if you only use this feature for files not mapped into an
-    iommufd, transfering the contents in a zero-copy way seems
-    challenging. What do you do if the tmpfs file is still in use when
-    you want to transfer it?
+I am not doing this for any sort of technical reason. Not because it
+is impossible, but because it is HARD. I do not want to force anyone
+to take on hard and difficult projects like this for a niche feature
+only a few CSPs are likely to use. If we take this approach LUO will
+fail because maintainers will be scared to take on this extra work and
+simply won't merge LUO patches.
 
-> > By leaving file and metadata allocation purely in the purview of
-> > userspace, programs can create the target files where they want, with
-> > the names and security permissions they desire, before directing the
-> > kernel to restore the preserved folios into them.
-> >
-> > Currently, only tmpfs shmem files are allowed as valid target receptors.
-> > Attempting to target populated files, or anything other than an empty
-> > shmem file, will trigger -EINVAL. HugeTLBfs files could be supported in
-> > the future.
-> >
-> 
-> Is this basically that at some point, all in-memory filesystems' fds can
-> support transfers?
+There needs to be some balance that we can try this out and see if a
+broader use case develops before we commit to doing the hardest
+possible version of it.
 
-Yes, theoretically.
+A niche feature only for CSPs like live update must not become a boat
+anchor on kernel progress!
 
-> 
-> >
-> > [...snip...]
-> >
+> fact!  It's just that you're solving for the wrong complexity, and only
+> partially so because (if I'm not wrong) there's still the question of how to
+> bring the manifest of kernel B into kernel A.
+
+There is a proposal to encode information into ELF sections. Feature
+flags should flow through there just fine, I think.
+
+I have not seen a proposal to re-inject this information back into the
+A kernel as a 'restriction' so it fails luo instead of producing
+something unsupported.
+
+Jason
 
