@@ -4,141 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4B5CBC88E58
-	for <kexec@archiver.kernel.org>; Fri, 11 Sep 2026 14:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 61E09C88E59
+	for <kexec@archiver.kernel.org>; Fri, 11 Sep 2026 16:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6JWgc0q+12jv5kIAv32LIGY1YmVkec7CyzTR2C4Uiww=; b=bfl/HvritnGYnN36J8SWKuM3bk
-	yW8sS+krs6VBZw9lH9Om4btG0cmvdZbde8pZ0jzTEnX4TcY5tBOsQpuaYMseKAPrmqrXqX9tVlOmV
-	Z2X8AO+X71kHg9IbMwPmItUaFiBBm1uagTt+J6BqUuJJ1EyQcnl8GLxGpVftVXRqqCc7jzYQIv9r/
-	yB2CyUp3Re+kQ0oLGhYFpAJ78T0gzkIOQ/YJGg0rs9adW62Rqnbo72MC7+oP8ES15q56a+Z07SmMQ
-	5ybCWWxW8qF52Q2TRm6V0CX7XQuM61ZggT/D+QLPo0rMGveDnu8VR0y+yr2Jh7rF1UlkUd9BXhvXu
-	XjBFXTrQ==;
+	bh=sNNu1TO589CWD7onDuXMEv1eJ3q2rtxkDJ3Q314d4zo=; b=RhuzAExyKZoI3v8b4a4gOARExn
+	UQeXvklfPlM5pRtyVJ19L5LFzmf2zLdUBfKZioJbraZrrHftY2wBLQ2dvR5tYPwnMWGmegzR5M/Cv
+	oS7pumsMpX3p8uRVTp/OfYa1PB8PzxxmeEBacTy6XQfWJ4yvJG6rStYpr7NW5ZWfes7rGTXF+AiXN
+	brDSBHkkbwvCCr2+xRsx8NT711QxANgPx4oFJ2iQbYVOR3Q1HDD0ICbeESLCGAEOCF9JsHNWAPxBS
+	uZtDr5r3c1iPDjRnX7Xop4C7cCcsDPS0HuppClUUUH/X7ueN/j67PI8l3gTAzKcxWvpHJac459WGw
+	uyoy/HhQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x52Hl-0000000Guyd-4Bvc;
-	Fri, 11 Sep 2026 14:31:26 +0000
-Received: from mail-westus2azon11010063.outbound.protection.outlook.com ([52.101.46.63] helo=CO1PR03CU002.outbound.protection.outlook.com)
+	id 1x54MM-0000000HFSv-1hGX;
+	Fri, 11 Sep 2026 16:44:18 +0000
+Received: from mail-pl1-x635.google.com ([2607:f8b0:4864:20::635])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x52HX-0000000GuvU-1eO4;
-	Fri, 11 Sep 2026 14:31:21 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JatsJRqu1DoHoOvTrc8FauQKfwRXHbMCKMglcFr7kTTZgUkOtgQ0z1ZyXCWYV3oeGb5V/PwqlVE8ShlCazZcMoz30r+2dmC2pslOpAGzZrJP8WE5rRExP82KRgK9rueFGRD7aNx6/KjZ7YsOWZ6qzJW4g5ag+lWnG60EhncqtwAa5kyhWE2f6ZUpQMLhJetGRucshxdXMCdJz0ZyF5mmFTnbN6gMT7eAC8ERyksRoSjn8ulcn+lm9BEXkNQRFsJ2Dxm9+YLP8N6+EGmh1M5dnM9L/6cuQUnFAtm2cB3BopudozRS2SdnuWt7CyonKI4bIrNiC+vYFPKlhz5d5rKzSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6JWgc0q+12jv5kIAv32LIGY1YmVkec7CyzTR2C4Uiww=;
- b=v8ITyOfPqPPRpPbroVLIZ7h1mKvepjv9kKDxObeBnqnqP/LA9L1QJUY4tRna0qb2dhcAoFbRKqrMVXam5xCG6aUxvaNN1cJCxZ0HyLD20Nfxs8J0eSBFXheaP2Qw9uxD+tXs6OHHzwYtXl0EMiKArzySarPYVBTA4V0mG0mgW/qoiBiBOkfMkjsNvXE4Vu89MRJtMK328C7n1StcKH56a50yZZd2+172ZkPe3/JAhUKGKGxBNE92VoaVQp/k0xryQEoyYjD8SyITLIq4h00HMZsojNu26zkptt3BzneawKNQfhIE6IQdDW970v2pBMV6nHJATT3yTj5CmSYipH3t+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6JWgc0q+12jv5kIAv32LIGY1YmVkec7CyzTR2C4Uiww=;
- b=D1rBB3ggJiSYfIrSwUwUiQBSGXKNiDSNqdbUAp6Mfgsl8JOcrC4Z7s+sl7TdyjY8jiB0230W2AFgUML5z5JxEdBzDIzUmPi8xLsUemyG6WfDdiMOXJ0YyXlwufOOoqHt1D3dVV1JyWR6yvKzt6rLDek5tFOHJaRcCf1owkTLfxpk9g73MHICgef6YSUVnMd9yf4XXR1smCUV2RrzBgRm2Jq1+JZhMRmguXM5wF012cZWaSmZbScTSVA6yhilCeo9nPP9bWFJ2YVQC6RFWHoIOibBFH8evAkNt8Jbag96A3sO2f0B2V0hGICTw5Rn6vzT5pGVHmmt+MSPni0amHl9Aw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CHBPR12MB731189.namprd12.prod.outlook.com
- (2603:10b6:610:33d::12) by DS7PR12MB8252.namprd12.prod.outlook.com
- (2603:10b6:8:ee::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.9; Fri, 11 Sep
- 2026 14:30:56 +0000
-Received: from CHBPR12MB731189.namprd12.prod.outlook.com
- ([fe80::b0e5:123d:fe06:e10d]) by CHBPR12MB731189.namprd12.prod.outlook.com
- ([fe80::b0e5:123d:fe06:e10d%6]) with mapi id 15.21.0406.007; Fri, 11 Sep 2026
- 14:30:56 +0000
-Date: Fri, 11 Sep 2026 11:30:55 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: David Matlack <dmatlack@google.com>,
-	Logan Odell <loganodell@google.com>, arnd@arndb.de,
-	pasha.tatashin@soleen.com, rppt@kernel.org, pratyush@kernel.org,
-	graf@amazon.com, akpm@linux-foundation.org, pbonzini@redhat.com,
-	maz@kernel.org, oupton@kernel.org, bhelgaas@google.com,
-	alex@shazbot.org, kevin.tian@intel.com, dwmw2@infradead.org,
-	baolu.lu@linux.intel.com, joro@8bytes.org, will@kernel.org,
-	robin.murphy@arm.com, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-mm@kvack.org, kvm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-pci@vger.kernel.org, iommu@lists.linux.dev
-Subject: Re: [RFC PATCH 0/3] liveupdate: Move to feature flags for LUO and
- memfd ABI compatibility
-Message-ID: <20260911143055.GI3968357@nvidia.com>
-References: <20260905012403.GX4157646@nvidia.com>
- <aqIAtOoew-_6jw29@google.com>
- <20260910143448.GD3968357@nvidia.com>
- <aqLOWkuVKccR-I7W@google.com>
- <20260910171210.GF3968357@nvidia.com>
- <aqMgjXfTJ8u3n7Kj@google.com>
- <20260910221832.GH3968357@nvidia.com>
- <aqMyXE-fD-UN6w5L@google.com>
- <20260910225728.GB857650@nvidia.com>
- <aqQF0gz3Q2weDyEd@google.com>
+	id 1x54MI-0000000HFSE-48gR
+	for kexec@lists.infradead.org;
+	Fri, 11 Sep 2026 16:44:16 +0000
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-2d9520b9155so11560275ad.3
+        for <kexec@lists.infradead.org>; Fri, 11 Sep 2026 09:44:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1789145054; x=1789749854; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=sNNu1TO589CWD7onDuXMEv1eJ3q2rtxkDJ3Q314d4zo=;
+        b=j0HKFndX+UYy0eSguiLL5Kx8Dxq9kTXTh1xnlOz05y0cNDKG+0GUtCcpnsMPdJGst0
+         YMd+zCsJgi8VuQxOC+lxoNzcu/dNWxTj4iWpvzIIVqZNfsoACFKEFZRauL4GYqmaYYBI
+         mHi3v/6WMOdfHV2J1YndIGLlhoutdj/CkGwe7SlS8lr85PosfsffARlDECV47d3gBbNR
+         5EYNcZL6v3GXPxRcqt3XOfe9TIIJ+9rH0lFGnK38ld4P2rnbOrxp1S7E+FEQ7ksS/Rgv
+         QJeVG2ypUnpMygZ5o5WYD+Bx94dxcR39DERvi4YARrybN1kzF16GlO7k4y2f4uLrlDXy
+         7QuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789145054; x=1789749854;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=sNNu1TO589CWD7onDuXMEv1eJ3q2rtxkDJ3Q314d4zo=;
+        b=n6X/yauFzZFVdPxF/yJFEVIUa/PjMTOvGIwvzZ1BRpLj6RgM4FDXi0AhdNEiJP2yq6
+         7RLDjdtEv/IMz0q8+P8MFvho05C9YcoY9WLgsf+MBCeJxBRp4TtVoqp33pctsDXqBx5W
+         /RG2nueaZodQNYDUXZOShxH5mvDbcjfQB7tX+Doh0FWvcVrWPJgg6bM9DWduOo8w1YfV
+         8XR9BHwM5ajU6o5PyI0v2SwBiuc16zWNeGqSYwTpT8wCvG85zy/MOoiJiRWGdAXrRzUB
+         r0P2IIfDvTUTPeGsSXitJZiWLKx1yes1ZNsjUoGP0mz28dPJsmVMB4PPRhqHilm5KE7o
+         C2cw==
+X-Gm-Message-State: AFuF++nGkUrgFnNs17rDPICM0xZzfjhfpATnoiE/FJ6G5NAdUXc9Mk8M
+	XYd7IgZ+KfwJcHeHHpQIRzYyVqbKH4OKRh2QTElodGM9WKz6/6qKJLrf4l3KQlf9AwXgmfTfAuA
+	NWqEX1f+I
+X-Gm-Gg: AYBFou2/hdrChKbea5pMdYmcfSM1mGVoA7WmHUgxwJoT4AZ6fgeHJjqR6cdZtF/nFS8
+	lylJOLwqPHlOCzeAc9NlNVmNQ9VtYr7jbCrCnLiQNT5fiED90CkF/BQQ3HTIhh1N5AIeNxW9CcE
+	Br+MzuOgraZI2lXI7YUoYoO2pM8YOp4T1PfT5CfwUbHd/37LR4q4ItJpxMGppUMHIb/qTZ/o1AV
+	mq9az2mbnswyN40N8zBeFW6Ew2f5v6JDlqiGCnc+8zvXXX3oVNz4yYdV4ln2WZj8v0fhDD//9Oz
+	esPcd3Ra4ZzvdHJcIiHaEmr5NNO19ZYu8eRTh5u6UVz7p4psGNLksr2dglg2ZJvX/Cy4HPnEPGH
+	7A9P0yMbTn+s7/5wqz4Cgddg0JpR+HSNqY5WaIB4A5+N+z0HeuBmypTX2z5fLXG58DpTEWWwi5A
+	mlO0ZY+D5P9wv0HKAmIFfRYmDlYLeuOeUWeeZI101g9OUW7KhKbtH8DuuEnk3Zq/pLx7PKGlBs2
+	XVCQqgjz5H6teawUAou9E/8xJpuNdANcDoNkAkx
+X-Received: by 2002:a17:902:f546:b0:2dd:40cb:a04c with SMTP id d9443c01a7336-2dd40cba291mr28022885ad.19.1789145053219;
+        Fri, 11 Sep 2026 09:44:13 -0700 (PDT)
+Received: from google.com (192.150.203.35.bc.googleusercontent.com. [35.203.150.192])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2dd2cca263fsm14640505ad.6.2026.09.11.09.44.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Sep 2026 09:44:12 -0700 (PDT)
+Date: Fri, 11 Sep 2026 16:44:02 +0000
+From: David Matlack <dmatlack@google.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Alexander Graf <graf@amazon.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
+	Josh Hilke <jrhilke@google.com>,
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pranjal Shrivastava <praan@google.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v8 01/12] PCI: liveupdate: Set up FLB handler for the PCI
+ core
+Message-ID: <aqQv0jJdT4xq6VWu@google.com>
+References: <20260728221007.2098560-2-dmatlack@google.com>
+ <20260910234824.GA366888@bhelgaas>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aqQF0gz3Q2weDyEd@google.com>
-X-ClientProxiedBy: YT4PR01CA0209.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:ad::6) To CHBPR12MB731189.namprd12.prod.outlook.com
- (2603:10b6:610:33d::12)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CHBPR12MB731189:EE_|DS7PR12MB8252:EE_
-X-MS-Office365-Filtering-Correlation-Id: a6b36284-652c-4b5a-e818-08df10114ac4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024|23010399003|10067099003|18002099003|22082099003|56012099006|4143699003|11063799006;
-X-Microsoft-Antispam-Message-Info: SXp8vPtbTfaMZVLqOqy3IAF0OFu3bMCVGn6CpsMkK/4RtsuMjPTr9zH+dhhmblSe/5E2N4nSJCKno7QmigSF/kc43w+9TZPA9pLOP14LYd2lf3JMHGXfaasbgOtq+yoY5/NsO6jrVAeT8+9UsTCiay0jiynEvQ8vG3pylW//pNojBLyBJdz7ioUKnLVnB1cqPBPjjUdr22DkzXzc/p5+sYqcjjEj1ZIYTzxS7WdR8JskY6/A/j+Z/dp6b0RpERjXkR8VSGy8FbRqkw+NrUs4RMaCZ8hZ9fuj9Wif5TuW/m7tuvAuviaWwRpE6s6rKXGQiO3aRyTjBG1xWWekmp8xW5hVghi2gN8frfQJJ1mZda45MUx3fJZBrOWX0KGOb6XGW913tLpxlLIn4X42sormcXBPNc/vaThGePKkACOXoRBHHFTINJIdRqxXYGDW0R/Xs4GPuH+XcMtpeVCE9wd6pCfVysKVeTiN+I6a9AYbrSvqT9biSk+RrfRVeDY5Du6gAZqH52GLfPjBkp9CTHjr+r+toWwo8RSo3AIO0mwam+Id9sgHvCF5b5eyXwq6dpJo7RYPWtrntrwxU9jf5K6gnHHJ1rPZ1/HjKJWqX4bZSbbLzSqe0OS9xp56hLohcoIszK3ffL1yC2WlTtuJF3f65oQLp0CAjoop8vVeb3DrK6s=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CHBPR12MB731189.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(23010399003)(10067099003)(18002099003)(22082099003)(56012099006)(4143699003)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ghB2DcEsdWgi62cVM61E9/HCSdw1IZLsmUrF8vvQo8mSPNVs9tjTqbxYY4XP?=
- =?us-ascii?Q?VFI3YjSpwQGKVN7itFHcnQjFmiHcdKp/GRrkL4A/uK/VBrQg3sc2EBIDW8qV?=
- =?us-ascii?Q?J6NYE0/vDdvczHaBraxmXICk0/eX+Sycjkn6dWpekYklN4+WUhRPoFdhCVUO?=
- =?us-ascii?Q?+reoDNZCfzCsUxHtF2X91YskRAFVcvcN5roaUXZYPaG9RPmXaomauGQgPNXs?=
- =?us-ascii?Q?JZVPsist2AE6oCXx6OkM/764f+zEPPPWD6X5PURagxPT85eDEXlx3FwdKyQ+?=
- =?us-ascii?Q?sBBxFnyWvxwNSbx3F/jAd7/M81lBF3Lbvxtb25b6ra3oaNClJQmxYjoUPDbh?=
- =?us-ascii?Q?B+g2ru9uTy34dahO2DoEuO8BNU/P4PiOQ22zIZzP6BfeWVtrDSwSV38waXb8?=
- =?us-ascii?Q?fNbh+xWX1UJ1ERJradrhGmGst4mZWyzV6XUmysU+xPJjgiBROAf67n2Gv31E?=
- =?us-ascii?Q?10+pl/WYLU6r6ydm5ymd8MGq1IwedO4i77ivihcgxeJJEgvNWPJ371Xd3Dln?=
- =?us-ascii?Q?xtABfJ8USf8C1/YDOUPwWucArc6uEyMvbF4TjGen//bv+JfNlsyUXfrZ95Ne?=
- =?us-ascii?Q?S/YwX4Q+uWITjM7jmtUEtEsmoBKCmWGeaNL/ZErtFwzSwY/dZQda9EbAg/sd?=
- =?us-ascii?Q?0+sdhWZ4Cne6NcdjsLixnEKUNqpNALIrcV/5CJc7mlXorptfuCxWhNaBeh5L?=
- =?us-ascii?Q?ZMkhBRiP+Xe+PGffgoAcvRjCWQq650TNbgYEjrVRyhtFxvRzLMA+rPUJ6dKL?=
- =?us-ascii?Q?M25uBDpJnwatwxt9T6gbPT/DPKnDg5oQVmTeA6L/DSMj0+qnVOlToEWO1UHp?=
- =?us-ascii?Q?88fdz5s166tEm6ckyKmfrikSaom6NsZsjjfcAZBg33QhIv4Ll5as7kyf4E7X?=
- =?us-ascii?Q?mvKnwSWNEZCRoCLBoerJJbpxjd/OvrHvP2oFcNBuy+Lzy/CPPLK52wzILGD9?=
- =?us-ascii?Q?YLp7w586tOPux7TqBWteTsqr8fokN0hAFtsJWyNGb9aeIk26pyiIhPxBXFrk?=
- =?us-ascii?Q?HI2RBhSvV6B9i8xUGTw29+FE6kqSV8mmBEmgy/3GwOxFV5f9jmqK0aNRRIWF?=
- =?us-ascii?Q?yFrBAy6uvtW/jt89xHVOAmoT/skHAuBBCQ/VvZGYTCM0o/6vXvhsGmoNURaS?=
- =?us-ascii?Q?4/mlpNETDtZeYinnj7ZrKhpbSsytxxoJUqgLb/yXjNSgMmTIAYF8HeMuGlwI?=
- =?us-ascii?Q?p2Cfwu6NXmg8I6T+lRb7nVMBRfIJvRNKQosQULqS0rxnY8FinrwFPsOxxeWJ?=
- =?us-ascii?Q?+MMaSLIPdbgp6UJ1dHcbQWvzNv1rgxLH2IPsUvOBApIuA3hIbAT3wuwfYWja?=
- =?us-ascii?Q?Sm+O4nC76wV2azqgTikZtGz/S8CXU7TR3SIkqqQCwicRDwjMWYML5lI1f5Tf?=
- =?us-ascii?Q?mYwuVBBlUSL5OtTTJ+pVekR68FgBQwRLLMwvH0HRLL0hwb4lyQ+Mnwn2lpm9?=
- =?us-ascii?Q?x/TyXt98o6uhIskuUfsowxyBKbpFC2tL6bj0aYRMGvxastydhCJXj5RwMhpS?=
- =?us-ascii?Q?1t8tS/ncXwVldlJKNERbAfKtkqOFbwoBhJ2o61mxgpjmk497R0k+WzUUFVqV?=
- =?us-ascii?Q?cmWYzQUgTVgo4wfvOWBtvxLtlL6rwp60q12Ifh/JAhvRhVtABKPJqwCxC2xd?=
- =?us-ascii?Q?Y1ZR6U22XEqFH/BHUGtTtsh4whUIMIm0ZGVL7kihMiU2tTROuJtQOjwoe8oY?=
- =?us-ascii?Q?UgMu2qwgq3SggZlyFY+GcHk+Wo2xnu51BPUPjT6j4Um/YwQG?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6b36284-652c-4b5a-e818-08df10114ac4
-X-MS-Exchange-CrossTenant-AuthSource: CHBPR12MB731189.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2026 14:30:56.5809
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fepAJgBwHzlnlaplDdx21RzSTHuRRaAOoEUjIOR801XfaDEqdtz6pCjdlrZMAWCB
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8252
+In-Reply-To: <20260910234824.GA366888@bhelgaas>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260911_073112_972145_B931AC8A 
-X-CRM114-Status: GOOD (  20.85  )
+X-CRM114-CacheID: sfid-20260911_094415_034629_13F5EB8D 
+X-CRM114-Status: GOOD (  46.26  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -153,51 +121,152 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Sep 11, 2026 at 06:44:50AM -0700, Sean Christopherson wrote:
-> On Thu, Sep 10, 2026, Jason Gunthorpe wrote:
-> > On Thu, Sep 10, 2026 at 03:42:36PM -0700, Sean Christopherson wrote:
-> > > On Thu, Sep 10, 2026, Jason Gunthorpe wrote:
-> > > > Sean's initial email was asking for strict never-break ABI compatability
-> > > > rules on top, and that is what I've been reacting to.
-> > > 
-> > > No, I was never asking for that.  I think we just have a different interpretation
-> > > of ABI, or rather are talking about different pieces of ABI.
-> > > 
-> > > I am still asking for never-break serialization format compatibility, i.e. the
-> > > more literal save/restore ABI.  I'm not asking for full backwards/forwards
-> > > compatibility across all kernels version, i.e. the higher level "kernel" ABI.
-> > > 
-> > > To phrase things differently: I am a-ok if kernels are inherently incompatible
-> > > because they fundamentally operate differently and/or support different features.
-> > > I am not ok if we end up with incompatible kernels because the save/restore
-> > > interfaces and payloads are poorly designed, lack abstraction, etc.  
+On 2026-09-10 06:48 PM, Bjorn Helgaas wrote:
+> On Tue, Jul 28, 2026 at 10:09:55PM +0000, David Matlack wrote:
+> > Set up a File-Lifecycle-Bound (FLB) handler for the PCI core to enable
+> > it to participate in the preservation of PCI devices across Live Update.
+> > Essentially, this commit enables the PCI core to allocate a struct
+> > (struct pci_ser) and preserve it across a Live Update whenever at least
+> > one device is preserved.
+> 
+> I assume pci_ser is the state the PCI core needs to preserve across
+> kexec so the new kernel's enumeration doesn't interrupt the device
+> operation.  And that whatever state the endpoint drivers need to
+> adopt/inherit the device in the new kernel is managed without any help
+> from the PCI core?
+
+Yes.
+
+> > Preserving PCI devices across Live Update is built on top of the Live
+> > Update Orchestrator's (LUO) support for file preservation. Drivers are
+> > expected to expose a file to userspace to represent a single PCI device
+> > and support preservation of that file. This is intended primarily to
+> > support preservation of PCI devices bound to VFIO drivers.
+> 
+> Where do drivers expose this file?  sysfs?  I guess it's a file per
+> preserved device?  Thinking like a driver writer, I'm expecting a hint
+> about how to expose this file (should also be in the file doc somehere
+> if it's not already).
+
+There is no requirement about how drivers do this from the PCI core
+perspective. For all intents and purposes, the VFIO PCI variant drivers
+are the only drivers that are going to be supported in the next 1-2
+years. They expose a misc character device for each file.
+
+> 
+> > This commit enables drivers to register their liveupdate_file_handler
+> > with the PCI core so that the PCI core can do its own tracking and
+> > enforcement of which devices are preserved.
 > > 
-> > I can more agree with this, it is mostly what I thought we'd end up
-> > doing anyhow with version numbers and growing the structs not
-> > replacing them.
-> > 
-> > So you still end up with a version label (string I guess?) because we
-> > can break it from time to time, 
->    
-> Why bother with a label/string?  I don't understand what it buys us; I see only
-> pain.  Make the features discoverable and punt on all of the "is this pile of
-> insanity my company has created compatible with this other pile of insanity?" to
-> layers above the kernel.
+> >   pci_liveupdate_register_flb(driver_file_handler);
+> >   pci_liveupdate_unregister_flb(driver_file_handler);
+> 
+> So a driver calls pci_liveupdate_register_flb() once, then
+> pci_liveupdate_preserve() once for each device it wants preserved?
 
-It is one layer above, the serialization ends up with 10 memfds a
-couple iommus, kvm, pci device, etc, etch. Each one starts with a
-string label saying what it even is - to dispatch it to the proper
-de-serialization code, then some detail about where it is (eg a handle
-to recover a FD later) and then the actual object serialization
-data itself.
+Yes
 
-So the features are fine to handle the ABI within the object and a
-memfd-v1, memfd-v2 is fine to handle labeling the object within the
-stream and gives us an option to reboot the ABI if some reason comes
-up someday.
+> > When the first file (with a handler registered with the PCI core) is
+> > preserved, the PCI core will be notified to allocate its tracking struct
+> > (pci_ser).
+> 
+> The passive voice here makes the actors a bit obscure.  I guess a
+> LIVEUPDATE_SESSION_PRESERVE_FD ioctl on some per-device file kicks
+> this off?
 
-If features are a perfect success then we will never need to go beyond
-memfd-v1. I'm just saying we should have the option and plan for it.
+Yes. (And I will reduce the passive voice in the next version.)
 
-Jason
+> I guess the pci_ser allocation is in
+> pci_liveupdate_flb_ops.preserve(), i.e., pci_flb_preserve()?
+
+Yes.
+
+> So the PCI core tracker (pci_ser) isn't actually allocated at the time
+> of pci_liveupdate_register_flb(); it's allocated on the first
+> LIVEUPDATE_SESSION_PRESERVE_FD ioctl for a driver that has called
+> pci_liveupdate_register_flb()?
+
+Yes. The first device that gets preserved triggers the allocation of
+struct pci_ser. And the last device that gets unpreserved (preservation
+cancelled) triggers the freeing of struct pci_ser.
+
+> IIUC the call tree for that ioctl looks something like this:
+> 
+>   <driver>
+>     pci_liveupdate_register_flb
+>       liveupdate_register_flb(fh, &pci_liveupdate_flb)
+> 
+>   luo_session_ioctl
+>     op = &luo_session_ioctl_ops[...]
+>     op->execute                               # eg luo_session_preserve_fd()
+>       luo_session_preserve_fd
+>         luo_preserve_file
+>           luo_flb_file_preserve
+>             luo_flb_file_preserve_one
+>               if (outgoing_count == 0)        # only for first FLB device
+>                 flb->ops->preserve            # eg pci_flb_preserve()
+>                   pci_flb_preserve
+>                     ser = kho_alloc_preserve  <-- alloc pci_ser
+>                 outgoing.count = 1
+>           fh->ops->preserve                   # something not included here
+> 
+>   pci_liveupdate_preserve
+>     pci_liveupdate_preserve_device
+>       dev_ser = pci_flb_alloc_dev_ser  <-- alloc per-dev PCI core serialized state
+>       dev_ser->bdf = pci_dev_id(dev)
+> 
+> Seems like kind of an awkward way to allocate pci_ser.  Couldn't it be
+> allocated on the first call to pci_liveupdate_register_flb()?  That
+> would be a lot easier for driver writers to trace through.
+
+I agree the LUO FLB API is a bit awkward, but this is how it works.
+
+If we allocated it during pci_liveupdate_register_flb() we would then
+need to stash it in a global variable to hand-off the LUO later. Despite
+the awkwardness of FLBs, it is useful to avoid globals and have LUO
+management the lifetime.
+
+> > When the last file is unpreserved (i.e. preservation
+> > cancelled) the PCI core will be notified to free struct pci_ser.
+> 
+> There's a lot going on behind "PCI core will be notified".  I assume
+> these refer to the first-time behavior of luo_flb_file_preserve_one()
+> and last-time behavior of liveupdate_flb_put_outgoing(), which is
+> honestly kind of hard to suss out.
+> 
+> This series doesn't include a caller of pci_liveupdate_preserve() (or
+> pci_liveupdate_register_flb()), so I can't figure out the ordering.
+> Obviously pci_liveupdate_register_flb() must be first.
+
+In every version of this patch series I have sent I included a link to
+the vfio-pci driver changes that build on top of this, rebased that
+series on top of this one, uploaded it to my GitHub, and included a link
+in the cover letter. Here is the relevant section from the v8 cover
+letter:
+
+. This series was tested in conjunction with v5 of the VFIO PCI driver
+. series:
+.
+.   https://lore.kernel.org/kvm/20260714151505.3466855-1-vipinsh@google.com/
+.
+. The full set of patches used for testing can be found on GitHub.
+.
+.   https://github.com/dmatlack/linux/tree/liveupdate/pci/base/v8-with-vfio
+
+
+> I first thought pci_liveupdate_preserve() would be called via the
+> fh->ops->preserve() in the luo_session_preserve_fd() ioctl path, but
+> it's not.  pci_liveupdate_preserve() is intended for the driver to
+> call it directly.  But it looks like it has to be called *after* the
+> ioctl?  Obviously I'm confused :)
+
+It is called by the driver during it's fh->ops->preserve() callback. In
+other words, it is called during the ioctl by the driver.
+
+LUO just knows that a file has been preserved and what preserve()
+callback it needs to run to preserve that file. It is has no idea which
+files correspond to devices or which devices. The file could be a memfd
+for all LUO knows. That's why the driver has to call into the PCI core
+via pci_liveupdate_preserve() to let it know that a device is being
+preserved, and which.
 
