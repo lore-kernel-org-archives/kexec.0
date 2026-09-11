@@ -4,98 +4,141 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1FCF5C88E50
-	for <kexec@archiver.kernel.org>; Fri, 11 Sep 2026 14:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4B5CBC88E58
+	for <kexec@archiver.kernel.org>; Fri, 11 Sep 2026 14:31:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=j8iAGS+LrziyuSXfPFtCeSqyPsUTS5ysL/fyj1uAcHQ=; b=3Q+2nSUbtWicjMoD7UO9WDAuOe
-	sdm6y5sjOn2BdtLrlGzE+mEjLs/JwfzA/wlnSEnhFd4Y6QYKIuIeMqTg13kD9Q4vKGv0tQ7gRtoaE
-	PdRK1x0NRRVfFMi1r9vkIUtJAYIeuU7QtOgAb/z29EXmoOikJ0cOM8wROrqkvVrfqr7qt0/WFGb4B
-	xX44cT0d0DLLKDrEWO/4mfn12jSoJFFaNVTzruEVEAd3HWeo8BpC6kbisC4ZDYZaFjZMcKJmNSmLx
-	qaJ97hR8Af863oyr6/3dugxE/vcPc/PG8dkdtItYsj1rnB5fQhRlDQEz1Q711ByRTv99UlEUTfjC0
-	GEOlY4Yw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=6JWgc0q+12jv5kIAv32LIGY1YmVkec7CyzTR2C4Uiww=; b=bfl/HvritnGYnN36J8SWKuM3bk
+	yW8sS+krs6VBZw9lH9Om4btG0cmvdZbde8pZ0jzTEnX4TcY5tBOsQpuaYMseKAPrmqrXqX9tVlOmV
+	Z2X8AO+X71kHg9IbMwPmItUaFiBBm1uagTt+J6BqUuJJ1EyQcnl8GLxGpVftVXRqqCc7jzYQIv9r/
+	yB2CyUp3Re+kQ0oLGhYFpAJ78T0gzkIOQ/YJGg0rs9adW62Rqnbo72MC7+oP8ES15q56a+Z07SmMQ
+	5ybCWWxW8qF52Q2TRm6V0CX7XQuM61ZggT/D+QLPo0rMGveDnu8VR0y+yr2Jh7rF1UlkUd9BXhvXu
+	XjBFXTrQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x52Ao-0000000Gu5U-3kNZ;
-	Fri, 11 Sep 2026 14:24:14 +0000
-Received: from mail-qv1-xf2c.google.com ([2607:f8b0:4864:20::f2c])
+	id 1x52Hl-0000000Guyd-4Bvc;
+	Fri, 11 Sep 2026 14:31:26 +0000
+Received: from mail-westus2azon11010063.outbound.protection.outlook.com ([52.101.46.63] helo=CO1PR03CU002.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x52Al-0000000Gu4z-01Np
-	for kexec@lists.infradead.org;
-	Fri, 11 Sep 2026 14:24:12 +0000
-Received: by mail-qv1-xf2c.google.com with SMTP id 6a1803df08f44-90cc107c451so5826836d6.0
-        for <kexec@lists.infradead.org>; Fri, 11 Sep 2026 07:24:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789136649; x=1789741449; darn=lists.infradead.org;
-        h=cc:to:message-id:content-transfer-encoding:content-type
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=j8iAGS+LrziyuSXfPFtCeSqyPsUTS5ysL/fyj1uAcHQ=;
-        b=hrmA+rPMPHbJohMyDfELMrOHVoacp+2tcGhhJ5SRKeAVA1RxuMkMXTIEGfXqiDuaS1
-         YNs7XjsSIeQGvAMGgje1jLJQi/mb3s1vFIlcqplYSu8lNPMb12L0kGesgPz1NQ+8AKpn
-         X8QodiPAgF+wRAKlEPKSaZ+ouhNXP6msLcMJpkINECAGZ3JHenCsknmy5vpnQ+Xy1nyO
-         BtU01WGKBoEkquG6qrAiZToeGyEwIsfWXiR995Bv4ImfcvuKgihJRuNxPmtNdQ70FGNs
-         M0csbDU5RqVA+og2lyARJ8pesqsGPNHf5r5ftd6S+oymoXiAc5SAwHrVfjKjFwCeSA5m
-         9EMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789136649; x=1789741449;
-        h=cc:to:message-id:content-transfer-encoding:content-type
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=j8iAGS+LrziyuSXfPFtCeSqyPsUTS5ysL/fyj1uAcHQ=;
-        b=Z1dOVQR3mKDanNJPYLXApVfEWmxxUxO7Bv6gPlX+SwkCMn2OMhqi5HXI59BgEtOD4F
-         FwhKRLYrRUWs7vsYFlJYCuQ2KWHUAVMTJAwhExtHKdhYfuBh21dqJD2UOap9e/7svwoK
-         5UocDmvpncJi/1B6tM0ApeRYgr2nwD6oSL3T5WoeYpIXWY2Zz9smZebMF1smVU/uAaWj
-         34S9rsqDVpHkTVL3PYz2PzvHL2b/FsF6dgutg+/rZL9Taw/KRMkj+fKC03LX4kG14qvu
-         rS6ZdiQ0KAxNuJkiQA/e2ktxHOuOYgCmKxg41kHAnlpaEO/ofTH8b5pbsM5v3/WhT/Mk
-         JXVw==
-X-Gm-Message-State: AFuF++n0q1/Lnxuedga+oK8cZzWdoR3GkCgIXdXb9WQxlbNt2KYJ4ZNt
-	L4BoTl5nBfChNFRiOj7M2u8VtSdPW1XDEaI74cjRQWdqmkSC+QmoMJvD
-X-Gm-Gg: AYBFou1mrYqSqxEWitIcbdWAPU87pRHSH4vTqH5HNVutxDLEqjGm5Ao+9dWmzLHdpEm
-	jpKqsxNZQ5OGKtjvon8ZOi5sRKvedIUuHYo88d24mjFFojqKLoRqdWHdlErca0TjP+IUpYq07Jx
-	Not9JQjNtLmZPBJAvZlSHkcyv9lQ/0lQh5yRq+kOeTgTQmGfBwElx4a5oqSf9o3qTj1GH1a254Y
-	JevtmcNQ1YFRWsbqChVpo8v5zmdOqKmGVRT/vZynkyNlRtRLGXUdDEnBTFee+LKYNfYckpAEFRa
-	fgF68RZAStzP9UZkpLSBbwYe8iV3p8buSKXdW+wit3brSDwAE+yaF7joOxgqDmsE7MgQPKj+oZs
-	tSz3HNlMkd2h9ENMluJnbN6ZscxG1sHq9pvx3BrHSnTwnBLmbRL47tOR9WJCcx3ir/LwcsenzLe
-	m2CksribxYgz5aGFUOlUUFLxVgwxnq8rGicWNIGw8Lqc3ekIdRidUR1UKgwOxqU4Mz8zgTgcrXj
-	uL+7NpJBale7/3JGt+tS5SxqQ==
-X-Received: by 2002:a05:622a:30c:b0:51b:cdc2:fb99 with SMTP id d75a77b69052e-530c852ef36mr68458841cf.24.1789136645044;
-        Fri, 11 Sep 2026 07:24:05 -0700 (PDT)
-Received: from [127.0.0.1] ([2600:4040:9121:7700:c0dd:db49:1679:88fa])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-530ca30855csm21275951cf.1.2026.09.11.07.24.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2026 07:24:04 -0700 (PDT)
-From: Serapheim Dimitropoulos <serapheimd@gmail.com>
-Date: Fri, 11 Sep 2026 10:23:51 -0400
-Subject: [PATCH kexec-tools] util_lib/elf_info: bound VMCOREINFO string
- comparisons
+	id 1x52HX-0000000GuvU-1eO4;
+	Fri, 11 Sep 2026 14:31:21 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JatsJRqu1DoHoOvTrc8FauQKfwRXHbMCKMglcFr7kTTZgUkOtgQ0z1ZyXCWYV3oeGb5V/PwqlVE8ShlCazZcMoz30r+2dmC2pslOpAGzZrJP8WE5rRExP82KRgK9rueFGRD7aNx6/KjZ7YsOWZ6qzJW4g5ag+lWnG60EhncqtwAa5kyhWE2f6ZUpQMLhJetGRucshxdXMCdJz0ZyF5mmFTnbN6gMT7eAC8ERyksRoSjn8ulcn+lm9BEXkNQRFsJ2Dxm9+YLP8N6+EGmh1M5dnM9L/6cuQUnFAtm2cB3BopudozRS2SdnuWt7CyonKI4bIrNiC+vYFPKlhz5d5rKzSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6JWgc0q+12jv5kIAv32LIGY1YmVkec7CyzTR2C4Uiww=;
+ b=v8ITyOfPqPPRpPbroVLIZ7h1mKvepjv9kKDxObeBnqnqP/LA9L1QJUY4tRna0qb2dhcAoFbRKqrMVXam5xCG6aUxvaNN1cJCxZ0HyLD20Nfxs8J0eSBFXheaP2Qw9uxD+tXs6OHHzwYtXl0EMiKArzySarPYVBTA4V0mG0mgW/qoiBiBOkfMkjsNvXE4Vu89MRJtMK328C7n1StcKH56a50yZZd2+172ZkPe3/JAhUKGKGxBNE92VoaVQp/k0xryQEoyYjD8SyITLIq4h00HMZsojNu26zkptt3BzneawKNQfhIE6IQdDW970v2pBMV6nHJATT3yTj5CmSYipH3t+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6JWgc0q+12jv5kIAv32LIGY1YmVkec7CyzTR2C4Uiww=;
+ b=D1rBB3ggJiSYfIrSwUwUiQBSGXKNiDSNqdbUAp6Mfgsl8JOcrC4Z7s+sl7TdyjY8jiB0230W2AFgUML5z5JxEdBzDIzUmPi8xLsUemyG6WfDdiMOXJ0YyXlwufOOoqHt1D3dVV1JyWR6yvKzt6rLDek5tFOHJaRcCf1owkTLfxpk9g73MHICgef6YSUVnMd9yf4XXR1smCUV2RrzBgRm2Jq1+JZhMRmguXM5wF012cZWaSmZbScTSVA6yhilCeo9nPP9bWFJ2YVQC6RFWHoIOibBFH8evAkNt8Jbag96A3sO2f0B2V0hGICTw5Rn6vzT5pGVHmmt+MSPni0amHl9Aw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CHBPR12MB731189.namprd12.prod.outlook.com
+ (2603:10b6:610:33d::12) by DS7PR12MB8252.namprd12.prod.outlook.com
+ (2603:10b6:8:ee::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.9; Fri, 11 Sep
+ 2026 14:30:56 +0000
+Received: from CHBPR12MB731189.namprd12.prod.outlook.com
+ ([fe80::b0e5:123d:fe06:e10d]) by CHBPR12MB731189.namprd12.prod.outlook.com
+ ([fe80::b0e5:123d:fe06:e10d%6]) with mapi id 15.21.0406.007; Fri, 11 Sep 2026
+ 14:30:56 +0000
+Date: Fri, 11 Sep 2026 11:30:55 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: David Matlack <dmatlack@google.com>,
+	Logan Odell <loganodell@google.com>, arnd@arndb.de,
+	pasha.tatashin@soleen.com, rppt@kernel.org, pratyush@kernel.org,
+	graf@amazon.com, akpm@linux-foundation.org, pbonzini@redhat.com,
+	maz@kernel.org, oupton@kernel.org, bhelgaas@google.com,
+	alex@shazbot.org, kevin.tian@intel.com, dwmw2@infradead.org,
+	baolu.lu@linux.intel.com, joro@8bytes.org, will@kernel.org,
+	robin.murphy@arm.com, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	linux-mm@kvack.org, kvm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-pci@vger.kernel.org, iommu@lists.linux.dev
+Subject: Re: [RFC PATCH 0/3] liveupdate: Move to feature flags for LUO and
+ memfd ABI compatibility
+Message-ID: <20260911143055.GI3968357@nvidia.com>
+References: <20260905012403.GX4157646@nvidia.com>
+ <aqIAtOoew-_6jw29@google.com>
+ <20260910143448.GD3968357@nvidia.com>
+ <aqLOWkuVKccR-I7W@google.com>
+ <20260910171210.GF3968357@nvidia.com>
+ <aqMgjXfTJ8u3n7Kj@google.com>
+ <20260910221832.GH3968357@nvidia.com>
+ <aqMyXE-fD-UN6w5L@google.com>
+ <20260910225728.GB857650@nvidia.com>
+ <aqQF0gz3Q2weDyEd@google.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aqQF0gz3Q2weDyEd@google.com>
+X-ClientProxiedBy: YT4PR01CA0209.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:ad::6) To CHBPR12MB731189.namprd12.prod.outlook.com
+ (2603:10b6:610:33d::12)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260911-codex-vmcoreinfo-bounds-mailtest-v1-1-32c9fe102018@coreweave.com>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x2NQQqDMBAAvyJ77kKSitZ+pXjQZG2XarZkUwmIf
- 2/ocWCYOUApMSncmwMS7awssYK9NOBfU3wScqgMzrjODNail0AF981LIo6L4CzfGBS3iddMmrG
- KQ98507fXG9TMJ9HC5b94wJsKecwiq8J4nj8eB555fwAAAA==
-X-Change-ID: 20260911-codex-vmcoreinfo-bounds-mailtest-026976207438
-To: kexec@lists.infradead.org
-Cc: Simon Horman <horms@kernel.org>, Bhupesh Sharma <bhsharma@redhat.com>, 
- Pingfan Liu <piliu@redhat.com>, Philipp Rudo <prudo@redhat.com>, 
- Serapheim Dimitropoulos <sdimitropoulos@coreweave.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1789136644; l=10643;
- i=sdimitropoulos@coreweave.com; s=20260302; h=from:subject:message-id;
- bh=qHc04VzAGdVEQdYQL7LZkXqHXJep9QTRKcjzHWYLNAM=;
- b=zhXqLuap2XQmoBdjRMsDx/jhh5vWevN5i6me/cSHVPkEjWiqirUYISik7p7ul7EYursOOc9bi
- 94qpyMRzKMaABFfMKOPmx9lYlg8to8naoH7PX6ZjsJCQHf+AvHci/tT
-X-Developer-Key: i=sdimitropoulos@coreweave.com; a=ed25519;
- pk=Qysvg7jaTIU0posaYFtqa5SKJlFwqzil4X0U1p1zo/g=
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CHBPR12MB731189:EE_|DS7PR12MB8252:EE_
+X-MS-Office365-Filtering-Correlation-Id: a6b36284-652c-4b5a-e818-08df10114ac4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024|23010399003|10067099003|18002099003|22082099003|56012099006|4143699003|11063799006;
+X-Microsoft-Antispam-Message-Info: SXp8vPtbTfaMZVLqOqy3IAF0OFu3bMCVGn6CpsMkK/4RtsuMjPTr9zH+dhhmblSe/5E2N4nSJCKno7QmigSF/kc43w+9TZPA9pLOP14LYd2lf3JMHGXfaasbgOtq+yoY5/NsO6jrVAeT8+9UsTCiay0jiynEvQ8vG3pylW//pNojBLyBJdz7ioUKnLVnB1cqPBPjjUdr22DkzXzc/p5+sYqcjjEj1ZIYTzxS7WdR8JskY6/A/j+Z/dp6b0RpERjXkR8VSGy8FbRqkw+NrUs4RMaCZ8hZ9fuj9Wif5TuW/m7tuvAuviaWwRpE6s6rKXGQiO3aRyTjBG1xWWekmp8xW5hVghi2gN8frfQJJ1mZda45MUx3fJZBrOWX0KGOb6XGW913tLpxlLIn4X42sormcXBPNc/vaThGePKkACOXoRBHHFTINJIdRqxXYGDW0R/Xs4GPuH+XcMtpeVCE9wd6pCfVysKVeTiN+I6a9AYbrSvqT9biSk+RrfRVeDY5Du6gAZqH52GLfPjBkp9CTHjr+r+toWwo8RSo3AIO0mwam+Id9sgHvCF5b5eyXwq6dpJo7RYPWtrntrwxU9jf5K6gnHHJ1rPZ1/HjKJWqX4bZSbbLzSqe0OS9xp56hLohcoIszK3ffL1yC2WlTtuJF3f65oQLp0CAjoop8vVeb3DrK6s=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CHBPR12MB731189.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(23010399003)(10067099003)(18002099003)(22082099003)(56012099006)(4143699003)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ghB2DcEsdWgi62cVM61E9/HCSdw1IZLsmUrF8vvQo8mSPNVs9tjTqbxYY4XP?=
+ =?us-ascii?Q?VFI3YjSpwQGKVN7itFHcnQjFmiHcdKp/GRrkL4A/uK/VBrQg3sc2EBIDW8qV?=
+ =?us-ascii?Q?J6NYE0/vDdvczHaBraxmXICk0/eX+Sycjkn6dWpekYklN4+WUhRPoFdhCVUO?=
+ =?us-ascii?Q?+reoDNZCfzCsUxHtF2X91YskRAFVcvcN5roaUXZYPaG9RPmXaomauGQgPNXs?=
+ =?us-ascii?Q?JZVPsist2AE6oCXx6OkM/764f+zEPPPWD6X5PURagxPT85eDEXlx3FwdKyQ+?=
+ =?us-ascii?Q?sBBxFnyWvxwNSbx3F/jAd7/M81lBF3Lbvxtb25b6ra3oaNClJQmxYjoUPDbh?=
+ =?us-ascii?Q?B+g2ru9uTy34dahO2DoEuO8BNU/P4PiOQ22zIZzP6BfeWVtrDSwSV38waXb8?=
+ =?us-ascii?Q?fNbh+xWX1UJ1ERJradrhGmGst4mZWyzV6XUmysU+xPJjgiBROAf67n2Gv31E?=
+ =?us-ascii?Q?10+pl/WYLU6r6ydm5ymd8MGq1IwedO4i77ivihcgxeJJEgvNWPJ371Xd3Dln?=
+ =?us-ascii?Q?xtABfJ8USf8C1/YDOUPwWucArc6uEyMvbF4TjGen//bv+JfNlsyUXfrZ95Ne?=
+ =?us-ascii?Q?S/YwX4Q+uWITjM7jmtUEtEsmoBKCmWGeaNL/ZErtFwzSwY/dZQda9EbAg/sd?=
+ =?us-ascii?Q?0+sdhWZ4Cne6NcdjsLixnEKUNqpNALIrcV/5CJc7mlXorptfuCxWhNaBeh5L?=
+ =?us-ascii?Q?ZMkhBRiP+Xe+PGffgoAcvRjCWQq650TNbgYEjrVRyhtFxvRzLMA+rPUJ6dKL?=
+ =?us-ascii?Q?M25uBDpJnwatwxt9T6gbPT/DPKnDg5oQVmTeA6L/DSMj0+qnVOlToEWO1UHp?=
+ =?us-ascii?Q?88fdz5s166tEm6ckyKmfrikSaom6NsZsjjfcAZBg33QhIv4Ll5as7kyf4E7X?=
+ =?us-ascii?Q?mvKnwSWNEZCRoCLBoerJJbpxjd/OvrHvP2oFcNBuy+Lzy/CPPLK52wzILGD9?=
+ =?us-ascii?Q?YLp7w586tOPux7TqBWteTsqr8fokN0hAFtsJWyNGb9aeIk26pyiIhPxBXFrk?=
+ =?us-ascii?Q?HI2RBhSvV6B9i8xUGTw29+FE6kqSV8mmBEmgy/3GwOxFV5f9jmqK0aNRRIWF?=
+ =?us-ascii?Q?yFrBAy6uvtW/jt89xHVOAmoT/skHAuBBCQ/VvZGYTCM0o/6vXvhsGmoNURaS?=
+ =?us-ascii?Q?4/mlpNETDtZeYinnj7ZrKhpbSsytxxoJUqgLb/yXjNSgMmTIAYF8HeMuGlwI?=
+ =?us-ascii?Q?p2Cfwu6NXmg8I6T+lRb7nVMBRfIJvRNKQosQULqS0rxnY8FinrwFPsOxxeWJ?=
+ =?us-ascii?Q?+MMaSLIPdbgp6UJ1dHcbQWvzNv1rgxLH2IPsUvOBApIuA3hIbAT3wuwfYWja?=
+ =?us-ascii?Q?Sm+O4nC76wV2azqgTikZtGz/S8CXU7TR3SIkqqQCwicRDwjMWYML5lI1f5Tf?=
+ =?us-ascii?Q?mYwuVBBlUSL5OtTTJ+pVekR68FgBQwRLLMwvH0HRLL0hwb4lyQ+Mnwn2lpm9?=
+ =?us-ascii?Q?x/TyXt98o6uhIskuUfsowxyBKbpFC2tL6bj0aYRMGvxastydhCJXj5RwMhpS?=
+ =?us-ascii?Q?1t8tS/ncXwVldlJKNERbAfKtkqOFbwoBhJ2o61mxgpjmk497R0k+WzUUFVqV?=
+ =?us-ascii?Q?cmWYzQUgTVgo4wfvOWBtvxLtlL6rwp60q12Ifh/JAhvRhVtABKPJqwCxC2xd?=
+ =?us-ascii?Q?Y1ZR6U22XEqFH/BHUGtTtsh4whUIMIm0ZGVL7kihMiU2tTROuJtQOjwoe8oY?=
+ =?us-ascii?Q?UgMu2qwgq3SggZlyFY+GcHk+Wo2xnu51BPUPjT6j4Um/YwQG?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a6b36284-652c-4b5a-e818-08df10114ac4
+X-MS-Exchange-CrossTenant-AuthSource: CHBPR12MB731189.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2026 14:30:56.5809
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fepAJgBwHzlnlaplDdx21RzSTHuRRaAOoEUjIOR801XfaDEqdtz6pCjdlrZMAWCB
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8252
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260911_072411_087644_98416E09 
-X-CRM114-Status: GOOD (  15.47  )
+X-CRM114-CacheID: sfid-20260911_073112_972145_B931AC8A 
+X-CRM114-Status: GOOD (  20.85  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -110,303 +153,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Serapheim Dimitropoulos <sdimitropoulos@coreweave.com>
+On Fri, Sep 11, 2026 at 06:44:50AM -0700, Sean Christopherson wrote:
+> On Thu, Sep 10, 2026, Jason Gunthorpe wrote:
+> > On Thu, Sep 10, 2026 at 03:42:36PM -0700, Sean Christopherson wrote:
+> > > On Thu, Sep 10, 2026, Jason Gunthorpe wrote:
+> > > > Sean's initial email was asking for strict never-break ABI compatability
+> > > > rules on top, and that is what I've been reacting to.
+> > > 
+> > > No, I was never asking for that.  I think we just have a different interpretation
+> > > of ABI, or rather are talking about different pieces of ABI.
+> > > 
+> > > I am still asking for never-break serialization format compatibility, i.e. the
+> > > more literal save/restore ABI.  I'm not asking for full backwards/forwards
+> > > compatibility across all kernels version, i.e. the higher level "kernel" ABI.
+> > > 
+> > > To phrase things differently: I am a-ok if kernels are inherently incompatible
+> > > because they fundamentally operate differently and/or support different features.
+> > > I am not ok if we end up with incompatible kernels because the save/restore
+> > > interfaces and payloads are poorly designed, lack abstraction, etc.  
+> > 
+> > I can more agree with this, it is mostly what I thought we'd end up
+> > doing anyhow with version numbers and growing the structs not
+> > replacing them.
+> > 
+> > So you still end up with a version label (string I guess?) because we
+> > can break it from time to time, 
+>    
+> Why bother with a label/string?  I don't understand what it buys us; I see only
+> pain.  Make the features discoverable and punt on all of the "is this pile of
+> insanity my company has created compatible with this other pile of insanity?" to
+> layers above the kernel.
 
-scan_vmcoreinfo() terminates each VMCOREINFO line before matching
-known field prefixes. Most fields nevertheless use memcmp() with the
-full prefix length, so a short line near the end of the note can make
-the comparison read beyond the allocated note buffer. AddressSanitizer
-reports a 24-byte read immediately past the allocation in this case.
+It is one layer above, the serialization ends up with 10 memfds a
+couple iommus, kvm, pci device, etc, etch. Each one starts with a
+string label saying what it even is - to dispatch it to the proper
+de-serialization code, then some detail about where it is (eg a handle
+to recover a FD later) and then the actual object serialization
+data itself.
 
-Use strncmp() for the terminated VMCOREINFO lines and in the arm64
-VMCOREINFO hook. Check the ELF note name length before comparing it,
-and ignore an empty VMCOREINFO descriptor.
+So the features are fine to handle the ABI within the object and a
+memfd-v1, memfd-v2 is fine to handle labeling the object within the
+stream and gives us an option to reboot the ABI if some reason comes
+up someday.
 
-Fixes: f4ce0706d957 ("util_lib: Add functionality to read elf notes")
-Signed-off-by: Serapheim Dimitropoulos <sdimitropoulos@coreweave.com>
----
-AddressSanitizer found this while running vmcore-dmesg against a minimal
-arm64 ELF core. A two-byte VMCOREINFO descriptor containing "X\n" makes
-scan_vmcoreinfo() request a 24-byte comparison from the final four bytes
-of the 28-byte PT_NOTE allocation. ASan reports the read at
-scan_vmcoreinfo(), with the allocation originating in scan_notes().
+If features are a perfect success then we will never need to go beyond
+memfd-v1. I'm just saying we should have the option and plan for it.
 
-Before this patch the reproducer aborts with:
-
-  ERROR: AddressSanitizer: heap-buffer-overflow
-  READ of size 24
-  0 bytes after 28-byte region
-
-After the patch, the reproducer completes without a sanitizer report.
-Empty VMCOREINFO descriptors and undersized note names were also tested.
-A valid synthetic legacy vmcore exits successfully and produces the
-expected output byte-for-byte.
-
-The patch was tested on arm64 Ubuntu 24.04 with AddressSanitizer and with
-make distcheck.
----
- kexec/arch/arm64/kexec-arm64.c |  2 +-
- util_lib/elf_info.c            | 78 +++++++++++++++++++++++-------------------
- 2 files changed, 43 insertions(+), 37 deletions(-)
-
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 58256cf..d401550 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -976,7 +976,7 @@ static void arm64_scan_vmcoreinfo(char *pos)
- 	const char *str;
- 
- 	str = "NUMBER(VA_BITS)=";
--	if (memcmp(str, pos, strlen(str)) == 0)
-+	if (strncmp(str, pos, strlen(str)) == 0)
- 		va_bits = strtoul(pos + strlen(str), NULL, 10);
- }
- 
-diff --git a/util_lib/elf_info.c b/util_lib/elf_info.c
-index d6e5ffc..cfbbea3 100644
---- a/util_lib/elf_info.c
-+++ b/util_lib/elf_info.c
-@@ -349,12 +349,16 @@ void (*arch_scan_vmcoreinfo)(char *pos);
- 
- void scan_vmcoreinfo(char *start, size_t size)
- {
--	char *last = start + size - 1;
-+	char *last;
- 	char *pos, *eol;
- 	char temp_buf[1024];
- 	bool last_line = false;
- 	char *str;
- 
-+	if (!size)
-+		return;
-+	last = start + size - 1;
-+
- #define SYMBOL(sym) {					\
- 	.str = "SYMBOL(" #sym  ")=",			\
- 	.name = #sym,					\
-@@ -426,170 +430,170 @@ void scan_vmcoreinfo(char *start, size_t size)
- 		}
- 
- 		str = "SIZE(printk_ringbuffer)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			printk_ringbuffer_sz = strtoull(pos + strlen(str),
- 							NULL, 10);
- 
- 		str = "SIZE(prb_desc)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			prb_desc_sz = strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "SIZE(printk_info)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			printk_info_sz = strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(printk_ringbuffer.desc_ring)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			printk_ringbuffer_desc_ring_offset =
- 				strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(printk_ringbuffer.text_data_ring)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			printk_ringbuffer_text_data_ring_offset =
- 				strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(prb_desc_ring.count_bits)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			prb_desc_ring_count_bits_offset =
- 				strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(prb_desc_ring.descs)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			prb_desc_ring_descs_offset =
- 				strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(prb_desc_ring.infos)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			prb_desc_ring_infos_offset =
- 				strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(prb_data_ring.size_bits)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			prb_data_ring_size_bits_offset =
- 				strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(prb_data_ring.data)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			prb_data_ring_data_offset =
- 				strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(prb_desc_ring.head_id)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			prb_desc_ring_head_id_offset =
- 				strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(prb_desc_ring.tail_id)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			prb_desc_ring_tail_id_offset =
- 				strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(atomic_long_t.counter)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			atomic_long_t_counter_offset =
- 				strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(prb_desc.state_var)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			prb_desc_state_var_offset =
- 				strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(prb_desc.info)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			prb_desc_info_offset =
- 				strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(prb_desc.text_blk_lpos)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			prb_desc_text_blk_lpos_offset =
- 				strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(prb_data_blk_lpos.begin)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			prb_data_blk_lpos_begin_offset =
- 				strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(prb_data_blk_lpos.next)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			prb_data_blk_lpos_next_offset =
- 				strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(printk_info.seq)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			printk_info_seq_offset =
- 				strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(printk_info.caller_id)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			printk_info_caller_id_offset =
- 				strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(printk_info.ts_nsec)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			printk_info_ts_nsec_offset =
- 				strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(printk_info.level)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			printk_info_level_offset =
- 				strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(printk_info.text_len)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			printk_info_text_len_offset =
- 				strtoull(pos + strlen(str), NULL, 10);
- 
- 		/* Check for "SIZE(printk_log)" or older "SIZE(log)=" */
- 		str = "SIZE(log)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			log_sz = strtoull(pos + strlen(str), NULL, 10);
- 
- 		str = "SIZE(printk_log)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			log_sz = strtoull(pos + strlen(str), NULL, 10);
- 
- 		/* Check for struct printk_log (or older log) field offsets */
- 		str = "OFFSET(log.ts_nsec)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			log_offset_ts_nsec = strtoull(pos + strlen(str), NULL,
- 							10);
- 		str = "OFFSET(printk_log.ts_nsec)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			log_offset_ts_nsec = strtoull(pos + strlen(str), NULL,
- 							10);
- 
- 		str = "OFFSET(log.len)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			log_offset_len = strtoul(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(printk_log.len)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			log_offset_len = strtoul(pos + strlen(str), NULL, 10);
- 
- 		str = "OFFSET(log.text_len)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			log_offset_text_len = strtoul(pos + strlen(str), NULL,
- 							10);
- 		str = "OFFSET(printk_log.text_len)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			log_offset_text_len = strtoul(pos + strlen(str), NULL,
- 							10);
- 
- 		/* Check for PHYS_OFFSET number */
- 		str = "NUMBER(PHYS_OFFSET)=";
--		if (memcmp(str, pos, strlen(str)) == 0) {
-+		if (strncmp(str, pos, strlen(str)) == 0) {
- 			if (parse_phys_offset(str, pos) != 0)
- 				break;
- 		}
- 
- 		/* Check for PHYS_OFFSET number on some arch it called phys_ram_base*/
- 		str = "NUMBER(phys_ram_base)=";
--		if (memcmp(str, pos, strlen(str)) == 0) {
-+		if (strncmp(str, pos, strlen(str)) == 0) {
- 			if (parse_phys_offset(str, pos) != 0)
- 				break;
- 		}
- 
- 		str = "NUMBER(PAGE_OFFSET)=";
--		if (memcmp(str, pos, strlen(str)) == 0)
-+		if (strncmp(str, pos, strlen(str)) == 0)
- 			page_offset = strtoull(pos + strlen(str), NULL, 16);
- 
- 		if (arch_scan_vmcoreinfo != NULL)
-@@ -644,7 +648,9 @@ static int scan_notes(int fd, loff_t start, loff_t lsize)
- 		if (next > (last + 1))
- 			break;
- 
--		if ((memcmp(n_name, "VMCOREINFO", 11) != 0) || (n_type != 0))
-+		if (n_namesz < sizeof("VMCOREINFO") ||
-+		    memcmp(n_name, "VMCOREINFO", sizeof("VMCOREINFO")) != 0 ||
-+		    n_type != 0)
- 			continue;
- 		scan_vmcoreinfo(n_desc, n_descsz);
- 	}
-
----
-base-commit: 43c5cba85ad23cc69c423527d9587c59b89fa437
-change-id: 20260911-codex-vmcoreinfo-bounds-mailtest-026976207438
-
-Best regards,
--- 
-Serapheim Dimitropoulos <sdimitropoulos@coreweave.com>
-
+Jason
 
