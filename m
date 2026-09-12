@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 48B56C88E50
-	for <kexec@archiver.kernel.org>; Sat, 12 Sep 2026 00:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4BC54C88E53
+	for <kexec@archiver.kernel.org>; Sat, 12 Sep 2026 00:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
 	From:Date:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=xiuIRiowYt2QtdLYHsl7tLXoFhCauD0YUSLvMMWFh1M=; b=thGY8ybfkhbNhALGzdLx8J+MCi
-	udBm/NCrU5pamgJdGnbKV2yAa5JvvqZIUmG5M/PcT+zmhYs19K/7PyKT5NgTP+/RoSPT+mBM1HTLb
-	hZcbxxmamDkunAKyGMyOb2Y/FkAYo9PhB55lV7gMHrOEEdE50Fiejb7218LtK5bHmAa5uQMpsb27b
-	+CgKJWjiclzGPn3K/tTc2+e9sg4f/TUS6f2bCa1hNamORXJ0cMCSd+oV1TsAR2avQ9jTQRYu0mHG5
-	L24HoytRmh2KcOGAtRpwXTMJ+9yBH865rmlg4b4jHQ6jjImBgome2VHp323xQExg8aewmaR5imftr
-	MFxG9z4Q==;
+	bh=aeEci5P1b+e9AzS3vfvXgxtWGJiKaLBPZ93ZnexIH9U=; b=zGXS56EyX89COHZmhGPs5QsDBk
+	Qhli3EzKdkE7RCAlldMaaFkqYR2gxualvRrDE70TL0L3PwCaTNNUS99G+vUFUtBBpn5A8nkVEABEr
+	Wc75NLPpLXhdlZR5um3aBNwafarZ+BSg5dAFTp2LMjhUM5giEbFfwqruTBbY0rj29rpog6MtIAXh2
+	NXE543EeFnF33mIyzKZLlqdxbtxjpf98ZSENcZBe/CbdMnzMkyVlG2D0qB9q1NQI3KDmVQLAwUzcZ
+	IXpnk7qgO4pIMz5wlArXuUVyzFBdsUZdhpDNSqbbvNPYpGaHuhk1MUd5/cADxFqPRKhjhzeNsckei
+	pp+vPAQg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x5Bwv-00000000SdF-1OcN;
-	Sat, 12 Sep 2026 00:50:33 +0000
-Received: from mgamail.intel.com ([198.175.65.11])
+	id 1x5Bwu-00000000Sbg-0oB3;
+	Sat, 12 Sep 2026 00:50:32 +0000
+Received: from mgamail.intel.com ([192.198.163.8])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x5Bws-00000000Sas-2aZ0
+	id 1x5Bwr-00000000SaN-2SEc
 	for kexec@lists.infradead.org;
-	Sat, 12 Sep 2026 00:50:31 +0000
+	Sat, 12 Sep 2026 00:50:30 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789174231; x=1820710231;
+  t=1789174229; x=1820710229;
   h=date:from:to:cc:subject:message-id;
-  bh=r2q+sQfdKdGj9XR6Ak52RTAoEHs0s3J5deZExfL7fOI=;
-  b=ENEiXQBhc/2iuyXlItKbbWZ7p1MV/7OeWMKFXiQ8jpjz6biFfB5aC+am
-   3eBLdjJjkhkKWdKudXOSYqMqOXfBhTyj0x6HnbEplnHkmm71/Q9ad/RTL
-   xhyicLvuWAsyVjsdDcpeEi+omVbFmLTNw3VYqRY5XaZpFnCTRPhQMaOw4
-   Ev3L0+04U2Dxhz8G54mDY9ibj0HmORLKq86sEPLCsPVu5fAqiOU2ARNrY
-   FRECT3XTzOxewkkAQ/+TKcO0v9gTyx33upTGJKEr+S17qQDI43sbMOhrb
-   K6xygR3wxAu0cghG3tUnhsUvRrZr5ckeS0q03yC4YcHugBHy6QUsS/AmN
+  bh=Mr7MrwBToz//taiPf74KuTA0XvFZB6qJzZs+eyCVT5Y=;
+  b=GJqhc3IJfaD5GZyqd3p0gBGG9YmYXhKvYiQ2hs6obL+Q3inN4pEoWu7Y
+   o39KDO50ObxWZvOQEeBCS/0OSr7QutHPuK/WCJL+uyEWGz8XC6wlkpNms
+   rLdelB9o3WVHxHvEHhTSN72g+8HQ+j+lgcZfAf2DhSSjNait934F0J6Ve
+   hhU1wdbGhvIVQnZxmVeUPux9HI5Ngq08hL3ROb6g+/37B+5p2WA2BAcT9
+   AiBV4SgN6sDa/qEh2X6XzqO5VEu7OD6EDkPv+p66JgfO1pR0f/4SKEeeL
+   KuqbDG49PE2tWnxzcTq3UoZy9SBAjdRblHGe7VCVsz/3Ym8di+KJSTRoC
    A==;
-X-CSE-ConnectionGUID: a2Rh4Tk2S5WEOqyvlOpE6g==
-X-CSE-MsgGUID: I3LI2Wb2Th2ys6syIkH0ow==
-X-IronPort-AV: E=McAfee;i="6800,10657,11902"; a="99967051"
+X-CSE-ConnectionGUID: rC0x7YbWQPq2xxuoj0XhRw==
+X-CSE-MsgGUID: S8aGQqNpS0iJS1ONpSidmQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11902"; a="107148983"
 X-IronPort-AV: E=Sophos;i="6.27,98,1787036400"; 
-   d="scan'208";a="99967051"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2026 17:50:28 -0700
-X-CSE-ConnectionGUID: eIe057qjT/SHSwB7y+TkBQ==
-X-CSE-MsgGUID: nST68/cfRMuT9G3/9pVGIw==
+   d="scan'208";a="107148983"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2026 17:50:28 -0700
+X-CSE-ConnectionGUID: dl/jyjGdSmiXIuI4ssO6Sw==
+X-CSE-MsgGUID: K66vsUjXTkaeaFiu/sEzXw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,98,1787036400"; 
-   d="scan'208";a="265871446"
+   d="scan'208";a="270674968"
 Received: from lkp-server02.sh.intel.com (HELO 0a3643a6ed9d) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 11 Sep 2026 17:50:26 -0700
+  by orviesa010.jf.intel.com with ESMTP; 11 Sep 2026 17:50:26 -0700
 Received: from kbuild by 0a3643a6ed9d with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1x5Bwm-000000002Q2-183V;
+	id 1x5Bwm-000000002Q0-0pzV;
 	Sat, 12 Sep 2026 00:50:24 +0000
-Date: Sat, 12 Sep 2026 08:50:08 +0800
+Date: Sat, 12 Sep 2026 08:49:43 +0800
 From: kernel test robot <lkp@intel.com>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>
 Cc: Pratyush Yadav <pratyush@kernel.org>,
  Mike Rapoport <rppt@kernel.org>, kexec@lists.infradead.org
-Subject: [liveupdate:next] BUILD SUCCESS
- 0e60a16f4a097d01ddccfd11c3cce6b020cbaa06
-Message-ID: <202609120804.N0muEhLq-lkp@intel.com>
+Subject: [liveupdate:lu-pci-preservation] BUILD SUCCESS
+ 84f928af8d1d3076a23047feaa45eb257d93144e
+Message-ID: <202609120839.LFXBNfdL-lkp@intel.com>
 User-Agent: s-nail v14.9.25
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260911_175030_714043_10D90F51 
-X-CRM114-Status: UNSURE (   4.34  )
+X-CRM114-CacheID: sfid-20260911_175029_648746_FB8670DF 
+X-CRM114-Status: UNSURE (   4.55  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -84,12 +84,12 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git next
-branch HEAD: 0e60a16f4a097d01ddccfd11c3cce6b020cbaa06  Merge branch 'lu-pci-preservation' into next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git lu-pci-preservation
+branch HEAD: 84f928af8d1d3076a23047feaa45eb257d93144e  Merge patch series "PCI: liveupdate: PCI core support for Live Update"
 
 elapsed time: 1512m
 
-configs tested: 248
+configs tested: 254
 configs skipped: 3
 
 The following configs have been built successfully.
@@ -146,11 +146,17 @@ i386                             allmodconfig    clang-22
 i386                              allnoconfig    gcc-16.1.0
 i386                             allyesconfig    clang-22
 i386        buildonly-randconfig-001-20260911    clang-22
+i386        buildonly-randconfig-001-20260912    gcc-14
 i386        buildonly-randconfig-002-20260911    clang-22
+i386        buildonly-randconfig-002-20260912    gcc-14
 i386        buildonly-randconfig-003-20260911    clang-22
+i386        buildonly-randconfig-003-20260912    gcc-14
 i386        buildonly-randconfig-004-20260911    clang-22
+i386        buildonly-randconfig-004-20260912    gcc-14
 i386        buildonly-randconfig-005-20260911    clang-22
+i386        buildonly-randconfig-005-20260912    gcc-14
 i386        buildonly-randconfig-006-20260911    clang-22
+i386        buildonly-randconfig-006-20260912    gcc-14
 i386                                defconfig    gcc-16.1.0
 i386                  randconfig-001-20260911    clang-22
 i386                  randconfig-002-20260911    clang-22
