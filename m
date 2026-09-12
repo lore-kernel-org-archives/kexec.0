@@ -4,108 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8320DC88E53
-	for <kexec@archiver.kernel.org>; Fri, 11 Sep 2026 21:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 48B56C88E50
+	for <kexec@archiver.kernel.org>; Sat, 12 Sep 2026 00:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=c6HV8uHNfHnA3I2z6iazz6poKohSe+yKAEsfT8M/ffc=; b=UoP2xEf+efWwXExRZOWAcfjhhY
-	/spe3Ouq+cDfRez0PTQarySCXKNcukr0wAD+P+3zNf7+rdhzktsnPZadEQf3dr2eY0aHdGnZhHb0n
-	M+dRyNXFellhW2tAxj+0mFYlVxPtMPDw4OuScgAi/gCF9VQorBuAN8m49ybBfsdZOTWbbTrVEWijT
-	WO4wReD5Mghrid5+DN3ZFs0oXZv0s6eVAoeYoeOF6e2712Wl/cBPAdJC2G4d/2Nhj/Eeya+dJhEN1
-	LAZ5ahqH5ox9eIqquGB6C9+6+xK4GUuXBtaMrpfn1+078U64vJQRXFV48Iv+VTnW5609UoQjhKPJ+
-	l5Th0IrQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
+	From:Date:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=xiuIRiowYt2QtdLYHsl7tLXoFhCauD0YUSLvMMWFh1M=; b=thGY8ybfkhbNhALGzdLx8J+MCi
+	udBm/NCrU5pamgJdGnbKV2yAa5JvvqZIUmG5M/PcT+zmhYs19K/7PyKT5NgTP+/RoSPT+mBM1HTLb
+	hZcbxxmamDkunAKyGMyOb2Y/FkAYo9PhB55lV7gMHrOEEdE50Fiejb7218LtK5bHmAa5uQMpsb27b
+	+CgKJWjiclzGPn3K/tTc2+e9sg4f/TUS6f2bCa1hNamORXJ0cMCSd+oV1TsAR2avQ9jTQRYu0mHG5
+	L24HoytRmh2KcOGAtRpwXTMJ+9yBH865rmlg4b4jHQ6jjImBgome2VHp323xQExg8aewmaR5imftr
+	MFxG9z4Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x58Wm-000000009Ew-0bGw;
-	Fri, 11 Sep 2026 21:11:20 +0000
-Received: from mail-pz2-x10.google.com ([2607:f8b0:4864:3b::10])
+	id 1x5Bwv-00000000SdF-1OcN;
+	Sat, 12 Sep 2026 00:50:33 +0000
+Received: from mgamail.intel.com ([198.175.65.11])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x58Wk-000000009Ec-0NAz
+	id 1x5Bws-00000000Sas-2aZ0
 	for kexec@lists.infradead.org;
-	Fri, 11 Sep 2026 21:11:19 +0000
-Received: by mail-pz2-x10.google.com with SMTP id d2e1a72fcca58-85469e25187so289775b3a.2
-        for <kexec@lists.infradead.org>; Fri, 11 Sep 2026 14:11:17 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789161077; cv=none;
-        d=google.com; s=arc-20260327;
-        b=k9CofNrSMC6oubW7Nez7eL+rKa6vPBxL7kgRvBTDB3S9cP88b7616kUMYy/jV0CjEs
-         Z5lOCIdmSjmTncmycb9t4PXaVDpv8dSXBub298aalyVvQygCHKRTlq+CKgv01oW89Emb
-         KFgW0zLTEkF/pB+IsPyofYhS+K9Xfv3VvtKmbv/fHg+G4sKJjwjUegHGII5Ihw/2NBh5
-         qLzZn7of41gsAPWLJ1XE5RAYeDs9VOue4mpvqIpsPjSzHyn1qaTk+uemAvuirUxXZ4Dw
-         5yP0owDmZbSJsE2ZLfNQdj04Pb6t3bDcsrxHkpJRyCPmo/74ZHWyWa1vwWBajFQP5GlZ
-         ArWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=c6HV8uHNfHnA3I2z6iazz6poKohSe+yKAEsfT8M/ffc=;
-        fh=jL+1W+b4SklXljBdpRK8a3qT9qLDon9+WM9pnqH6ltI=;
-        b=c4FRv568CoWOmUrysNnLKLaROYiauOwDl3x5QSuh4BJ/dEuwlTOQaZeMmA3swUxL3W
-         T5aEJyjNHnNg5noQF7EpnZgFoRDItSDtjL4mFj5IuYaUbv8Vpnl2mMkm6zM3+Q2knq/s
-         ArRnGwPKNJqql5Na/VQ8wryB2jCA+g+RBwOWItpuC+jCWG7xt4vgC6dzr+Es9VL/oJTi
-         W1cl7sn0XlH+CQhNL6BaU12T1GD4Na0WTJ8DcuwXusY0fgl8eID+xI0ydt/pxilCOmQE
-         tXkwszUh/H7eqQGmnrd8Lq2uC039kjM5u0HcbU39RshmOHjbv50HPEnjMTSFF87WFepu
-         DzIA==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789161077; x=1789765877; darn=lists.infradead.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=c6HV8uHNfHnA3I2z6iazz6poKohSe+yKAEsfT8M/ffc=;
-        b=PwCTjZDYvvy/UQ6llGHzTaOTq/tpe0QXdVNT3IZslouVuganoCzYnEe3N+xtV2uxul
-         T/3nLDmoX5cbRdk9jiok27Iq4HagkydYR0HlCcN7xVmSYFtpg2HNqnz5ntwL+ON7bZSq
-         gandHqzTjOR0uu1mYSKnz8oVTbXrEaw78ixZzoV0GiaLnHennCM4qkWpnBV59XowF5Je
-         3T4epuxNVSb3Mb2LeHRgXUIj7Oud84IVR6yrUaLaUdVP9YlEUcdFJX0E0SvYXzOlyJUb
-         enWQ2a7u6D+/wkLxCnol5ToMksE8VKpL8b+k+e/0nQVv7sFrPieb5oh3TBbSRc6UrIKj
-         GByQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789161077; x=1789765877;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=c6HV8uHNfHnA3I2z6iazz6poKohSe+yKAEsfT8M/ffc=;
-        b=iHmIhSlzM9XW3tFJdMXaRxG81QlmxJ0ECqVS+kvEapb12YIP7DlKDaSlOU/r0V1NNG
-         bmOxDMcXyi2bwMDOsz9YBIys8YVOCjJLMqAMGgeqZ1qwpxC14xyrFdD1yohvqqYWzuK1
-         sYmulQVBh4/Jwta5vXJspljxORd4lLtm3FsA/VE7ggVv7hr2yIlWAVzsNYrhaxAyWzg2
-         GeAdVSdH2R6LnXKQHnjyhCufmadOfpl1rMzGFpgfI16M4LBWqmvwYxyvPWZzOOrylVE9
-         xI6im8nQw4cp0s+GtRPykMPss5Njjgo8ZXQ4YU1cOmeI7Elqm5SmOyCKn8fS7BvqeVsy
-         s6RQ==
-X-Gm-Message-State: AFuF++kcyS+aeuukyTCaY9tHgw+8zrIYuEqCN/Z0nx94G/GCph6isCWy
-	KWzxaklYKV0V3fak5VsLjJkprFxjYRMPsfri7t4QkgsJ5F+Pi9PNuuTk4BXsomRnm/HZaJCSHUH
-	f9yVnY3Jpdt7WFFeVmnxu3a7/0w+C7PcZsWmfcEgk
-X-Gm-Gg: AYBFou3j6KEepDt1erNs3nDLxT6bEqDOL2M6FYiMcf6ahavqf4n1DwIDEx4v+1Ik1z1
-	xsQSS04kwB4WKVc17ve4aprQ02xvNKvck59HLEjoGw4jo9usRVIxaah8b75QIJ4ALCcdSkEIKZY
-	bO/2QftsrU9SPcU+YoTtZq7WArIbMoZSbgxtTM6w3xBGOTCKWlI9ZH1keP3AcLs64HNDo+p7kCd
-	jbyxuQBYNPKSIutG3CekzXQHBNdr0RkWY5aNbNvpmgxIGUGmQAzV3T4A0DMdAtYmK5HQKVfZJrD
-	BeOXidPzfsORa+rRmAUQfmt4V7WJLhRoX0e+X81jwhky/RLCBjMFivRL
-X-Received: by 2002:a05:6a21:a95:b0:3da:6bdd:2c74 with SMTP id
- adf61e73a8af0-3daed306372mr12662047637.10.1789161076494; Fri, 11 Sep 2026
- 14:11:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <20260901180713.4185641-1-dmatlack@google.com> <CAEvNRgEs82CVTL_CUn=Ovrwvt86U1dxzr8psWGu=nk98ZH6Esw@mail.gmail.com>
- <aqRFSiicubfsw3N6@google.com> <CAEvNRgFCrcyk6F0vJ11pgj2EDSUAXj6Zw-oEdZpfj2SrH1Cv9g@mail.gmail.com>
-In-Reply-To: <CAEvNRgFCrcyk6F0vJ11pgj2EDSUAXj6Zw-oEdZpfj2SrH1Cv9g@mail.gmail.com>
-From: David Matlack <dmatlack@google.com>
-Date: Fri, 11 Sep 2026 14:10:45 -0700
-X-Gm-Features: AcwNN1VPqi3zVmYZAELfBj-CBxTUTXJC8KC_tY6rHii958hpSbyM_Grda2-osHc
-Message-ID: <CALzav=cKG9hXskFgQfub3Jg5O-rKUWBe8TBcPdJz+tBKzenFrg@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/5] liveupdate: LIVEUPDATE_SESSION_RETRIEVE_INTO_FD
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <shuah@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	Sat, 12 Sep 2026 00:50:31 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789174231; x=1820710231;
+  h=date:from:to:cc:subject:message-id;
+  bh=r2q+sQfdKdGj9XR6Ak52RTAoEHs0s3J5deZExfL7fOI=;
+  b=ENEiXQBhc/2iuyXlItKbbWZ7p1MV/7OeWMKFXiQ8jpjz6biFfB5aC+am
+   3eBLdjJjkhkKWdKudXOSYqMqOXfBhTyj0x6HnbEplnHkmm71/Q9ad/RTL
+   xhyicLvuWAsyVjsdDcpeEi+omVbFmLTNw3VYqRY5XaZpFnCTRPhQMaOw4
+   Ev3L0+04U2Dxhz8G54mDY9ibj0HmORLKq86sEPLCsPVu5fAqiOU2ARNrY
+   FRECT3XTzOxewkkAQ/+TKcO0v9gTyx33upTGJKEr+S17qQDI43sbMOhrb
+   K6xygR3wxAu0cghG3tUnhsUvRrZr5ckeS0q03yC4YcHugBHy6QUsS/AmN
+   A==;
+X-CSE-ConnectionGUID: a2Rh4Tk2S5WEOqyvlOpE6g==
+X-CSE-MsgGUID: I3LI2Wb2Th2ys6syIkH0ow==
+X-IronPort-AV: E=McAfee;i="6800,10657,11902"; a="99967051"
+X-IronPort-AV: E=Sophos;i="6.27,98,1787036400"; 
+   d="scan'208";a="99967051"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2026 17:50:28 -0700
+X-CSE-ConnectionGUID: eIe057qjT/SHSwB7y+TkBQ==
+X-CSE-MsgGUID: nST68/cfRMuT9G3/9pVGIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,98,1787036400"; 
+   d="scan'208";a="265871446"
+Received: from lkp-server02.sh.intel.com (HELO 0a3643a6ed9d) ([10.239.97.151])
+  by fmviesa009.fm.intel.com with ESMTP; 11 Sep 2026 17:50:26 -0700
+Received: from kbuild by 0a3643a6ed9d with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1x5Bwm-000000002Q2-183V;
+	Sat, 12 Sep 2026 00:50:24 +0000
+Date: Sat, 12 Sep 2026 08:50:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, kexec@lists.infradead.org
+Subject: [liveupdate:next] BUILD SUCCESS
+ 0e60a16f4a097d01ddccfd11c3cce6b020cbaa06
+Message-ID: <202609120804.N0muEhLq-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260911_141118_163320_AB33B1BB 
-X-CRM114-Status: GOOD (  56.27  )
+X-CRM114-CacheID: sfid-20260911_175030_714043_10D90F51 
+X-CRM114-Status: UNSURE (   4.34  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -120,196 +84,268 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Sep 11, 2026 at 1:59=E2=80=AFPM Ackerley Tng <ackerleytng@google.co=
-m> wrote:
->
-> David Matlack <dmatlack@google.com> writes:
->
-> > On 2026-09-11 11:04 AM, Ackerley Tng wrote:
-> >> David Matlack <dmatlack@google.com> writes:
-> >>
-> >> > This series adds support for LIVEUPDATE_SESSION_RETRIEVE_INTO_FD, a =
-new
-> >> > UAPI to enable preserved files to be restored into a userspace-provi=
-ded
-> >> > file instead of a kernel-allocated file, and uses this to support
-> >> > preserving tmpfs files in-place without any changes to the LUO ABI.
-> >> >
-> >>
-> >> I'm interested in the idea of retrieving folios into an fd for a
-> >> different reason, I'm exploring handling over ownership physical memor=
-y
-> >> to a guest_memfd.
-> >>
-> >> > The Live Update Orchestrator (LUO) API currently explicitly returns =
-a
-> >> > new struct file for every preserved file during retrieve() (e.g. via
-> >> > memfd_alloc_file()). This then forces userspace to use anonymous mem=
-fds
-> >> > for all in-memory files it wants to preserve. This works reasonably =
-well
-> >> > for VM guest memory but does not work well for other types of files =
-that
-> >> > userspace may want to preserve (e.g. in-memory logs, binaries,
-> >> > configuration files, etc.).
-> >> >
-> >>
-> >> Does this assume that VM guest memory is usually provided using
-> >> anonymous memfds?
-> >>
-> >> More generally, is the problem that there isn't a simple way to
-> >> implement retrieval into anything other than anonymous memfds?
-> >
-> > Roughly, yes.
-> >
-> >> > Preserving entire tmpfs mounts in-place would require a large amount=
- of
-> >> > kernel support and would effectively make tmpfs an ABI, which is a
-> >> > non-starter (or so I hear). Instead, we can delegate the reconstruct=
-ion
-> >> > of the tmpfs mounts (directory structure, permissions, etc.) post-ke=
-xec
-> >> > to userspace. The kernel just needs to preserve the contents of tmpf=
-s
-> >> > files and provide userspace a mechanism to restore those contents ba=
-ck
-> >> > into a specific file on the filesystem after the kexec. Hence,
-> >> > LIVEUPDATE_SESSION_RETRIEVE_INTO_FD.
-> >> >
-> >>
-> >> Suppose pre-kexec, the data was in a tmpfs file (and fd), how would th=
-e
-> >> preservation work? Would the user have to
-> >>
-> >> 1. Transfer the data from tmpfs fd -> anonymous fd
-> >> 2. Preserve from anonymous fd
-> >> 3. kexec
-> >> 4. Set up the tmpfs fd
-> >> 5. Retrieve into the tmpfs fd
-> >
-> > No, the proposal in this series is to support:
-> >
-> > 1. ioctl(LIVEUPDATE_SESSION_PRESERVE_FD, {TOKEN, tmpfs_fd})
-> > 2. kexec
-> > 3. tmpfs_fd =3D open(..., O_CREAT)
-> > 4. ioctl(LIVEUPDATE_SESSION_RETRIEVE_INTO_FD, {TOKEN, tmpfs_fd})
-> >
-> > No transfering to or from an anonymous fd is required.
-> >
->
-> Cool that preserving a tmpfs_fd is supported. How is that done without
-> preserving the rest of the tmpfs stuff?
->
-> Why is it possible to preserve the fd without the rest of the tmpfs
-> stuff but not retrieve without the rest of the tmpfs stuff?
->
-> Is retrieving into an fd a bit too much of a shortcut? Would preserving
-> the rest of the tmpfs eventually be required, and hence retrieval of the
-> rest of tmpfs should also be eventually supported symmetrically?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git next
+branch HEAD: 0e60a16f4a097d01ddccfd11c3cce6b020cbaa06  Merge branch 'lu-pci-preservation' into next
 
-The idea is that the kernel is responsible for preserving the
-_contents_ of the tmpfs file in place. Userspace is responsible for
-setting up a new tmpfs mount, configuring permissions, etc. after
-kexec and telling the kernel which file should receive those preserved
-contents. Userspace set up these mounts before kexec, so it is
-responsible for setting them up after kexec as well. I see no issue
-with that.
+elapsed time: 1512m
 
-There is some nuance that this series doesn't handle though (it is RFC
-after all). Pratyush brought up offline that the tmpfs mount might
-have allocation policies attached to it. The
-LIVEUPDATE_SESSION_RETRIEVE_INTO_FD handler needs to confirm the
-preserved contents do not violate the allocation policies of the mount
-it is retrieving into. But that seems easily solvable to me.
+configs tested: 248
+configs skipped: 3
 
->
-> >> > An alternative approach to restoring data to a named file would be
-> >> > supporting a zero-copy sendfile() that can be used to convert named
-> >> > tmpfs files to/from memfds across the kexec. But this poses signific=
-ant
-> >> > challenges on the *preserve* side since the preserved file might sti=
-ll
-> >> > be actively in use. The benefit of the retrieve-into approach introd=
-uced
-> >> > in this series is that it does not require dealing with two differen=
-t
-> >> > files. There is only ever one file that owns the preserved memory.
-> >> >
-> >>
-> >> Would it be more symmetric if the process is
-> >>
-> >> 1. Transfer the data from tmpfs fd -> anonymous fd
-> >> 2. Preserve from anonymous fd
-> >> 3. kexec
-> >> 4. Retrieve into anonymous fd
-> >> 5. Transfer the data from anonymous fd -> tmpfs fd
-> >>
-> >> As to the exact details of "transfer", I think the best we could do
-> >> would be some kind of move from one fd's page cache to the other fd's
-> >> page cache?
-> >>
-> >> Is the goal of the transfer to avoid any memcpy and fully transfer
-> >> ownership (so, not just by increasing folio refcounts?)
-> >
-> > Yes this is the alternative proposal that has been proposed and
-> > discussed a little bit off list, with sendfile() and copy_file_range()
-> > being the possible mechanisms to do the "transfer". I think there are a
-> > few fundamental problems with that approach on the pre-kexec side.
-> >
-> >  1. iommufd requires that fds mapped into it are preserved. If the file
-> >     mapped into iommufd is tmpfs, but then we transfer that file to mem=
-fd
-> >     for preservation, iommufd will fail to preserve because the tmpfs f=
-ile
-> >     is not preserved.
-> >
-> >  2. Even if you only use this feature for files not mapped into an
-> >     iommufd, transfering the contents in a zero-copy way seems
-> >     challenging. What do you do if the tmpfs file is still in use when
-> >     you want to transfer it?
-> >
->
-> When you say in-use, I suppose you mean folio is in-use by some IO and
-> is mapped in IO page tables, and that the IO must continue while the
-> folio is transferred?
->
-> Are you expecting guests (as in stage 2 mappings) to continue to be
-> functional while the folio is transferred?
->
-> I'll have to think a bit more, I was initially thinking of just
-> transferring folios where I could unmap from everywhere (processes,
-> stage 2, IO page tables) for the transfer.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I was imagining a userspace process may have the tmpfs file mmap()'d
-and is accessing the memory. I guess you can argue that userspace
-should stop doing that during LU. But I think the iommufd use-case
-shows that that is not really possible. The whole point is to preserve
-the memory mapped into the iommufd throughout the Live Update.
+tested configs:
+alpha                             allnoconfig    gcc-16.1.0
+alpha                            allyesconfig    gcc-16.1.0
+alpha                               defconfig    gcc-16.1.0
+arc                              allmodconfig    clang-24
+arc                               allnoconfig    gcc-16.1.0
+arc                              allyesconfig    clang-24
+arc                          axs103_defconfig    gcc-16.1.0
+arc                                 defconfig    gcc-16.1.0
+arc                   randconfig-001-20260911    clang-24
+arc                   randconfig-001-20260912    clang-17
+arc                   randconfig-002-20260911    clang-24
+arc                   randconfig-002-20260912    clang-17
+arm                               allnoconfig    gcc-16.1.0
+arm                              allyesconfig    clang-24
+arm                       aspeed_g5_defconfig    gcc-16.1.0
+arm                        clps711x_defconfig    gcc-16.1.0
+arm                                 defconfig    gcc-16.1.0
+arm                          pxa3xx_defconfig    gcc-16.1.0
+arm                   randconfig-001-20260911    clang-24
+arm                   randconfig-001-20260912    clang-17
+arm                   randconfig-002-20260911    clang-24
+arm                   randconfig-002-20260912    clang-17
+arm                   randconfig-003-20260911    clang-24
+arm                   randconfig-003-20260912    clang-17
+arm                   randconfig-004-20260911    clang-24
+arm                   randconfig-004-20260912    clang-17
+arm                           sama7_defconfig    gcc-16.1.0
+arm64                            allmodconfig    clang-24
+arm64                             allnoconfig    gcc-16.1.0
+arm64                               defconfig    gcc-16.1.0
+arm64                 randconfig-001-20260911    gcc-16.1.0
+arm64                 randconfig-002-20260911    gcc-16.1.0
+arm64                 randconfig-003-20260911    gcc-16.1.0
+arm64                 randconfig-004-20260911    gcc-16.1.0
+csky                             allmodconfig    gcc-16.1.0
+csky                              allnoconfig    gcc-16.1.0
+csky                                defconfig    gcc-16.1.0
+csky                  randconfig-001-20260911    gcc-16.1.0
+csky                  randconfig-002-20260911    gcc-16.1.0
+hexagon                          allmodconfig    gcc-16.1.0
+hexagon                           allnoconfig    gcc-16.1.0
+hexagon                             defconfig    gcc-16.1.0
+hexagon               randconfig-001-20260911    gcc-12.5.0
+hexagon               randconfig-001-20260912    clang-24
+hexagon               randconfig-002-20260911    gcc-12.5.0
+hexagon               randconfig-002-20260912    clang-24
+i386                             allmodconfig    clang-22
+i386                              allnoconfig    gcc-16.1.0
+i386                             allyesconfig    clang-22
+i386        buildonly-randconfig-001-20260911    clang-22
+i386        buildonly-randconfig-002-20260911    clang-22
+i386        buildonly-randconfig-003-20260911    clang-22
+i386        buildonly-randconfig-004-20260911    clang-22
+i386        buildonly-randconfig-005-20260911    clang-22
+i386        buildonly-randconfig-006-20260911    clang-22
+i386                                defconfig    gcc-16.1.0
+i386                  randconfig-001-20260911    clang-22
+i386                  randconfig-002-20260911    clang-22
+i386                  randconfig-003-20260911    clang-22
+i386                  randconfig-004-20260911    clang-22
+i386                  randconfig-005-20260911    clang-22
+i386                  randconfig-006-20260911    clang-22
+i386                  randconfig-007-20260911    clang-22
+i386                  randconfig-011-20260911    clang-22
+i386                  randconfig-011-20260912    gcc-14
+i386                  randconfig-012-20260911    clang-22
+i386                  randconfig-012-20260912    gcc-14
+i386                  randconfig-013-20260911    clang-22
+i386                  randconfig-013-20260912    gcc-14
+i386                  randconfig-014-20260911    clang-22
+i386                  randconfig-014-20260912    gcc-14
+i386                  randconfig-015-20260911    clang-22
+i386                  randconfig-015-20260912    gcc-14
+i386                  randconfig-016-20260911    clang-22
+i386                  randconfig-016-20260912    gcc-14
+i386                  randconfig-017-20260911    clang-22
+i386                  randconfig-017-20260912    gcc-14
+loongarch                        allmodconfig    clang-24
+loongarch                         allnoconfig    gcc-16.1.0
+loongarch                           defconfig    clang-24
+loongarch             randconfig-001-20260911    gcc-12.5.0
+loongarch             randconfig-001-20260912    clang-24
+loongarch             randconfig-002-20260911    gcc-12.5.0
+loongarch             randconfig-002-20260912    clang-24
+m68k                             allmodconfig    gcc-16.1.0
+m68k                              allnoconfig    gcc-16.1.0
+m68k                             allyesconfig    clang-24
+m68k                                defconfig    clang-24
+m68k                       m5235evb_defconfig    gcc-16.1.0
+m68k                       m5275evb_defconfig    gcc-16.1.0
+microblaze                        allnoconfig    gcc-16.1.0
+microblaze                       allyesconfig    gcc-16.1.0
+microblaze                          defconfig    clang-24
+microblaze                      mmu_defconfig    clang-24
+mips                             allmodconfig    gcc-16.1.0
+mips                              allnoconfig    gcc-16.1.0
+mips                             allyesconfig    gcc-16.1.0
+mips                     decstation_defconfig    clang-24
+mips                     decstation_defconfig    gcc-16.1.0
+mips                      fuloong2e_defconfig    gcc-16.1.0
+mips                           gcw0_defconfig    clang-24
+mips                           jazz_defconfig    clang-24
+mips                      loongson1_defconfig    gcc-16.1.0
+mips                      loongson3_defconfig    gcc-16.1.0
+mips                       rbtx49xx_defconfig    gcc-16.1.0
+nios2                            allmodconfig    clang-20
+nios2                             allnoconfig    clang-24
+nios2                               defconfig    clang-24
+nios2                 randconfig-001-20260911    gcc-12.5.0
+nios2                 randconfig-001-20260912    clang-24
+nios2                 randconfig-002-20260911    gcc-12.5.0
+nios2                 randconfig-002-20260912    clang-24
+openrisc                         allmodconfig    clang-20
+openrisc                          allnoconfig    clang-24
+openrisc                            defconfig    gcc-16.1.0
+parisc                           allmodconfig    gcc-16.1.0
+parisc                            allnoconfig    clang-24
+parisc                           allyesconfig    clang-17
+parisc                              defconfig    gcc-16.1.0
+parisc                randconfig-001-20260911    gcc-8.5.0
+parisc                randconfig-001-20260912    clang-24
+parisc                randconfig-002-20260911    gcc-8.5.0
+parisc                randconfig-002-20260912    clang-24
+parisc64                         alldefconfig    gcc-16.1.0
+parisc64                            defconfig    clang-24
+powerpc                          allmodconfig    gcc-16.1.0
+powerpc                           allnoconfig    clang-24
+powerpc                    amigaone_defconfig    gcc-16.1.0
+powerpc                        icon_defconfig    clang-24
+powerpc                   lite5200b_defconfig    gcc-16.1.0
+powerpc                     mpc5200_defconfig    clang-24
+powerpc                     rainier_defconfig    clang-24
+powerpc               randconfig-001-20260911    gcc-8.5.0
+powerpc               randconfig-001-20260912    clang-24
+powerpc               randconfig-002-20260911    gcc-8.5.0
+powerpc               randconfig-002-20260912    clang-24
+powerpc                  storcenter_defconfig    gcc-16.1.0
+powerpc                      tqm8xx_defconfig    gcc-16.1.0
+powerpc64             randconfig-001-20260911    gcc-8.5.0
+powerpc64             randconfig-001-20260912    clang-24
+powerpc64             randconfig-002-20260911    gcc-8.5.0
+powerpc64             randconfig-002-20260912    clang-24
+riscv                            allmodconfig    clang-24
+riscv                             allnoconfig    clang-24
+riscv                            allyesconfig    clang-24
+riscv                               defconfig    gcc-16.1.0
+riscv                 randconfig-001-20260911    gcc-16.1.0
+riscv                 randconfig-001-20260912    gcc-11.5.0
+riscv                 randconfig-002-20260911    gcc-16.1.0
+riscv                 randconfig-002-20260912    gcc-11.5.0
+s390                             allmodconfig    clang-17
+s390                              allnoconfig    clang-24
+s390                             allyesconfig    gcc-16.1.0
+s390                          debug_defconfig    gcc-16.1.0
+s390                                defconfig    gcc-16.1.0
+s390                  randconfig-001-20260911    gcc-16.1.0
+s390                  randconfig-001-20260912    gcc-11.5.0
+s390                  randconfig-002-20260911    gcc-16.1.0
+s390                  randconfig-002-20260912    gcc-11.5.0
+sh                               allmodconfig    gcc-16.1.0
+sh                                allnoconfig    clang-24
+sh                               allyesconfig    clang-17
+sh                                  defconfig    gcc-14
+sh                    randconfig-001-20260911    gcc-16.1.0
+sh                    randconfig-001-20260912    gcc-11.5.0
+sh                    randconfig-002-20260911    gcc-16.1.0
+sh                    randconfig-002-20260912    gcc-11.5.0
+sh                      rts7751r2d1_defconfig    gcc-16.1.0
+sh                   rts7751r2dplus_defconfig    gcc-16.1.0
+sh                           se7206_defconfig    gcc-16.1.0
+sh                           se7722_defconfig    gcc-16.1.0
+sh                             shx3_defconfig    gcc-16.1.0
+sparc                             allnoconfig    clang-24
+sparc                               defconfig    gcc-16.1.0
+sparc                 randconfig-001-20260911    gcc-13.4.0
+sparc                 randconfig-001-20260912    gcc-14.3.0
+sparc                 randconfig-002-20260911    gcc-13.4.0
+sparc                 randconfig-002-20260912    gcc-14.3.0
+sparc64                          allmodconfig    clang-20
+sparc64                             defconfig    gcc-14
+sparc64               randconfig-001-20260911    gcc-13.4.0
+sparc64               randconfig-001-20260912    gcc-14.3.0
+sparc64               randconfig-002-20260911    gcc-13.4.0
+sparc64               randconfig-002-20260912    gcc-14.3.0
+um                               allmodconfig    clang-17
+um                                allnoconfig    clang-24
+um                               allyesconfig    gcc-16.1.0
+um                                  defconfig    gcc-14
+um                             i386_defconfig    gcc-14
+um                    randconfig-001-20260911    gcc-13.4.0
+um                    randconfig-001-20260912    gcc-14.3.0
+um                    randconfig-002-20260911    gcc-13.4.0
+um                    randconfig-002-20260912    gcc-14.3.0
+um                           x86_64_defconfig    gcc-14
+x86_64                           allmodconfig    clang-22
+x86_64                            allnoconfig    clang-24
+x86_64                           allyesconfig    clang-22
+x86_64      buildonly-randconfig-001-20260911    gcc-14
+x86_64      buildonly-randconfig-001-20260912    gcc-14
+x86_64      buildonly-randconfig-002-20260911    gcc-14
+x86_64      buildonly-randconfig-002-20260912    gcc-14
+x86_64      buildonly-randconfig-003-20260911    gcc-14
+x86_64      buildonly-randconfig-003-20260912    gcc-14
+x86_64      buildonly-randconfig-004-20260911    gcc-14
+x86_64      buildonly-randconfig-004-20260912    gcc-14
+x86_64      buildonly-randconfig-005-20260911    gcc-14
+x86_64      buildonly-randconfig-005-20260912    gcc-14
+x86_64      buildonly-randconfig-006-20260911    gcc-14
+x86_64      buildonly-randconfig-006-20260912    gcc-14
+x86_64                              defconfig    gcc-14
+x86_64                                  kexec    clang-22
+x86_64                randconfig-001-20260911    clang-22
+x86_64                randconfig-002-20260911    clang-22
+x86_64                randconfig-003-20260911    clang-22
+x86_64                randconfig-004-20260911    clang-22
+x86_64                randconfig-005-20260911    clang-22
+x86_64                randconfig-006-20260911    clang-22
+x86_64                randconfig-011-20260911    gcc-14
+x86_64                randconfig-012-20260911    gcc-14
+x86_64                randconfig-013-20260911    gcc-14
+x86_64                randconfig-014-20260911    gcc-14
+x86_64                randconfig-015-20260911    gcc-14
+x86_64                randconfig-016-20260911    gcc-14
+x86_64                randconfig-071-20260911    gcc-14
+x86_64                randconfig-071-20260912    gcc-14
+x86_64                randconfig-072-20260911    gcc-14
+x86_64                randconfig-072-20260912    gcc-14
+x86_64                randconfig-073-20260911    gcc-14
+x86_64                randconfig-073-20260912    gcc-14
+x86_64                randconfig-074-20260911    gcc-14
+x86_64                randconfig-074-20260912    gcc-14
+x86_64                randconfig-075-20260911    gcc-14
+x86_64                randconfig-075-20260912    gcc-14
+x86_64                randconfig-076-20260911    gcc-14
+x86_64                randconfig-076-20260912    gcc-14
+x86_64                               rhel-9.4    clang-22
+x86_64                           rhel-9.4-bpf    gcc-14
+x86_64                          rhel-9.4-func    clang-22
+x86_64                    rhel-9.4-kselftests    clang-22
+x86_64                         rhel-9.4-kunit    gcc-14
+x86_64                           rhel-9.4-ltp    gcc-14
+x86_64                          rhel-9.4-rust    clang-22
+xtensa                            allnoconfig    clang-24
+xtensa                           allyesconfig    clang-20
+xtensa                randconfig-001-20260911    gcc-13.4.0
+xtensa                randconfig-001-20260912    gcc-14.3.0
+xtensa                randconfig-002-20260911    gcc-13.4.0
+xtensa                randconfig-002-20260912    gcc-14.3.0
 
->
-> >> > By leaving file and metadata allocation purely in the purview of
-> >> > userspace, programs can create the target files where they want, wit=
-h
-> >> > the names and security permissions they desire, before directing the
-> >> > kernel to restore the preserved folios into them.
-> >> >
-> >> > Currently, only tmpfs shmem files are allowed as valid target recept=
-ors.
-> >> > Attempting to target populated files, or anything other than an empt=
-y
-> >> > shmem file, will trigger -EINVAL. HugeTLBfs files could be supported=
- in
-> >> > the future.
-> >> >
-> >>
-> >> Is this basically that at some point, all in-memory filesystems' fds c=
-an
-> >> support transfers?
-> >
-> > Yes, theoretically.
-> >
-> >>
-> >> >
-> >> > [...snip...]
-> >> >
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
