@@ -4,69 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 199AFC79FB6
-	for <kexec@archiver.kernel.org>; Sat, 12 Sep 2026 10:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1A87AC88E56
+	for <kexec@archiver.kernel.org>; Sat, 12 Sep 2026 17:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=IahBN7S9tUIFeWRuphP+Us/5cL/r7Hrj0lCqfy0ubeg=; b=kE7nH5FVtYP2cXScn5jHH3jEob
-	F82KQqE6D/AGbcuRjMwW75PrvoIo1NPwoYCtn++oYNxC95JJUwf9ufJbxCM7/GipvarUXf+aGJXmm
-	CzRVLTltIB1IHjikKlCTU3gVHMUtWsvyedRMXEppFDowTG0dRFz1jUUG4uOwXBVe7OI+T0MWqKymq
-	rIrgMMISEjBGJLOjMmdkYAWELl+q8Mh5Tx7jTh9YkXzA2pdOaNa7cwWSXDl51O0FlB/PBuXA6mfwK
-	c0vpKJME4z0PXmmxY44/TPUyqwEorQ0bQw0dZ6ocpKpPOyTEd7fw1mI4J1pVYx3T6Zc0Y0EDTtp8o
-	kSkQByuA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=pBslPyab51IM3cN1q+WywRAJYOzHWq5eKWBrdVKUM1w=; b=y0vM0lgONgcmfJtTAZxsqVGDbq
+	LE/sFHQIzPtxPlTeCuwNzqPgF6+szbIu1uTpwo0+B2txloDdxmQdKlzZZY1B2aRQUh6Eq+C/UjSyO
+	mU5UX0sSw7ltihYexFM3+iF8hVFfXUjtCboBV6XOB9vSRQ9gyEJyOHi0fXkNpPAlH2Mefwk789Xv9
+	Jh/glP31JGHDDIOv8XFFxSCYl7W46YhTqjzdWiH3Qp+rdAJ//Eu22atTX18FJiKWyov0FFcqrmZ0h
+	C188c++pisHnG/gpaaLZCSCDJbGiRJxh9AoTvnmSbND5B/syj8dEn3MYpc2wUfgCE+SRmsjOAQQds
+	1JeUsz5w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x5L5M-00000000myz-0xZ3;
-	Sat, 12 Sep 2026 10:35:52 +0000
-Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
+	id 1x5RaD-000000012hf-4C3Z;
+	Sat, 12 Sep 2026 17:32:10 +0000
+Received: from mail-pj2-x11.google.com ([2607:f8b0:4864:39::11])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x5L5F-00000000mxt-1HU4
+	id 1x5RaA-000000012h8-3yGp
 	for kexec@lists.infradead.org;
-	Sat, 12 Sep 2026 10:35:46 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=Cc:To:Subject:From:Reply-To:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=IahBN7S9tUIFeWRuphP+Us/5cL/r7Hrj0lCqfy0ubeg=; t=1789209345; x=1790418945; 
-	b=jeff+Tk+TseS6+nYaug0qU8tKfM0HgxSNBvXZWqFc1jyfGlSkt1Bb4dV+ilAxp65/oN1FUUEPP2
-	uFvFRf83r8Ekeg59Dk+zHdSpMHBYQ5I+qI8KJbOBwA7grnnhIno6o1XdiD8XuVXPma7x4QQChb3hm
-	ZVeYBFN1PJyqTkJumYA3ygove9yOlZNggCBCQDEKN690oi14mL10zbRRd4oZoDF8d1vgxSXkrW4y3
-	zOtXcTeiP8oLbs4mSAEfT9zJXYWveR0wbosLcyQQOL7uR8mruCZqT8cIRjZsoapkC1pPkMQvkv6SS
-	c3jhssJCxl8Vm+sEklktKuHeBg7j8xlM+bSQ==;
-From: Andreas Kemnade <andreas@kemnade.info>
-Date: Sat, 12 Sep 2026 12:35:14 +0200
-Subject: [PATCH kexec-tools v2] arm-zImage: prepare for more malloc
- requirements of zstd
+	Sat, 12 Sep 2026 17:32:08 +0000
+Received: by mail-pj2-x11.google.com with SMTP id d9443c01a7336-2d747ee1f38so9756155ad.2
+        for <kexec@lists.infradead.org>; Sat, 12 Sep 2026 10:32:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1789234325; x=1789839125; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=pBslPyab51IM3cN1q+WywRAJYOzHWq5eKWBrdVKUM1w=;
+        b=aWzZUxV41RkCuEfDQjRzp+MCRrQFybw9YriXzXn8KVO4m6UzQ5tPSD/iyorwcwa1Jv
+         gWrpFPzzuAxUshqzWeCJBCRmBymbBVm5itNyJatg1vLUSsFwqeN4EbbWPbiKn2s9UV0n
+         MgQK8i/wCev3rUh1ifb3ZJD91CLNBJAXmotokoiXdLV4Tfe43r8T490WsrqHITGaCIx1
+         p7lhzicZ87RD39Hn0bf+myEg5iQ4Z02+11vLC0ixMG73TQqy3VGTDZWYgos+1jf2R4WN
+         zsR/aWt3SeTWvxL3kJ8DAJ6x6u/FCLfoxA1foC4K5tmNrHaenGMJLjwNvXdw2u+YAlUw
+         FV1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789234325; x=1789839125;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=pBslPyab51IM3cN1q+WywRAJYOzHWq5eKWBrdVKUM1w=;
+        b=otH15iceT1nMBNj+Z1TziQz6LUmrfLnwWf/oFU1E7bKq+2zMPYTf2G0N8stYg/NsON
+         MmU+OJzyIdpuvXE+pDUEPIwQRRxKCHorx+TNEBwcyyt35FD6c6XvtioOYVtGSr74o04T
+         xugKzgoAtF/T+dLoBOvtottraKZxm+kCJZeaqyxTdfUXqv4fADiodtHxa4LEETmeFQPI
+         XTdCnR4S0yJT5QRqf93er2tSyklrNlq/n1gnoLNIyXoFfrb2WYJMCJqo49PUPicE+Jd9
+         /mdN7isfgx7Oq6V3t+lExq3Eu54OU/KNvWLn7mwnH9CfgkpIF4Rq+/bAP/HzbRZrMqts
+         ZJ6Q==
+X-Gm-Message-State: AFuF++l3z3/PiCiLDfS1d9diNEhTMBGeTz/4tQdHnip3i4D04+j2rO64
+	EURG4GGia7vQBFtElm40ayQCiSmtaPJIFxE+YuAq1lY5rlSkh0SqWWrwH1hDpFEH6g==
+X-Gm-Gg: AYBFou3ey3s4Dw+AfaLUtYS1/eWnd2FDNABFGCT/m0tvq74Doa77vUdWqzagK2y+C0C
+	MqlwRWcA9XI1qw6W0VmZMciGykM3iUE0zvebpIRNeq7hcB/f93eaxfP+mMsSQns/kNJXtJD3n5v
+	/sM+JSnpr3TioP0TXvraQIK9VVs2/PUR+OWco59dXh5W+eNPdZgQXoHN5Ga+BPwgGKRmLli+SvB
+	cAouFQy4ZAY9T44ufFxpfCUioCPyMW3k1Xxb1QlNFXFlGCW3ibGsPOeSEqb6uO8BSAVmaQiGQzC
+	fAHuEHRQNKoQgcmte8VxUi4pXsjU06TaCY9xta91aNTVOXs3N5cIbRIQOzblA5HIDzg4S0KJRAS
+	E4i9FUCpO16PQytAqiuH7Ts2qNgAbgCwpCJcJ3QSXuHVANgpxluhH2v98n/66UeO849Fy455950
+	62bUoPA9w/+dpBKNgxgAtVv+dfQxIFK1TBLcu3wlJIQRwIaHI4N3v+FhLRq2eyPt0FVsrK0WCbK
+	Hzdg5hBqyzdRkIUjDKhqTT0kzX3relAZ3MIhGYQ
+X-Received: by 2002:a17:902:e881:b0:2d8:d4cc:be64 with SMTP id d9443c01a7336-2dd2a35a58cmr165076475ad.17.1789234324159;
+        Sat, 12 Sep 2026 10:32:04 -0700 (PDT)
+Received: from google.com (192.150.203.35.bc.googleusercontent.com. [35.203.150.192])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2dd2cfc5c7bsm25731245ad.51.2026.09.12.10.32.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Sep 2026 10:32:02 -0700 (PDT)
+Date: Sat, 12 Sep 2026 17:31:58 +0000
+From: David Matlack <dmatlack@google.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Alexander Graf <graf@amazon.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
+	Josh Hilke <jrhilke@google.com>,
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pranjal Shrivastava <praan@google.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v8 05/12] PCI: liveupdate: Preserve bus numbers during
+ Live Update
+Message-ID: <aqWMjrea2MMMZHxr@google.com>
+References: <20260728221007.2098560-6-dmatlack@google.com>
+ <20260910235104.GA367522@bhelgaas>
+ <aqRIJs1SdJwoV_cf@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260912-malloc-fix-v2-1-eb0c3ca681cd@kemnade.info>
-X-B4-Tracking: v=1; b=H4sIAOEqpWoC/yWNSw6DIBRFt9K8cTGAqNBR99E4QHxWqkID1tgY9
- 160w/s9G0QMFiPcLhsEXGy03iXBrxcwvXZPJLZNGjjlJVWMk0mPozeksyvJmWZ5UQnTSAFp8A6
- Y7PPsAQOuaMjs/Rih/ofx07zQzMfdUe9tnH34nuiFnaOTIrmiSpS0ykqphCwII9q1AXW8Dzg53
- WJmXeeh3vf9B7zT1I7AAAAA
-X-Change-ID: 20260912-malloc-fix-31a13574cb84
-To: Simon Horman <horms@kernel.org>, Baoquan He <baoquan.he@linux.dev>, 
- "Russell King (Oracle)" <linux@armlinux.org.uk>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Pratyush Yadav <pratyush@kernel.org>, j.neuschaefer@gmx.net
-Cc: Andreas Kemnade <andreas@kemnade.info>, kexec@lists.infradead.org, 
- Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>
-X-Mailer: b4 0.16.1-dev-17221
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3045; i=andreas@kemnade.info;
- h=from:subject:message-id; bh=+Z95fLrLDTT/ZzQeSm/QPfOmG6gs95Gid8H3majLT+U=;
- b=owGbwMvMwCUm/rzkS6lq2x3G02pJDFlLtR6Jx+w8n5k2mbkq4NhWsQuNfWlcWmeni7M8Yq5ep
- 3+Mi+l0RykLgxgXg6yYIssvawW3TyrPcoOnRtjDzGFlAhnCwMUpABNZs5bhf9pnVqVli++Uz17A
- Ixu59829pIcdP1c8q+78e39HtgDjAl6Gf8ZWf6wrEn3bGzyE9r23UUhjk12d+dv5rvdmpe/2ed7
- h/AA=
-X-Developer-Key: i=andreas@kemnade.info; a=openpgp;
- fpr=EEC0DB858E66C0DA70620AC07DBD6AC74DE29324
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aqRIJs1SdJwoV_cf@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260912_033545_358758_E3D17107 
-X-CRM114-Status: GOOD (  13.10  )
+X-CRM114-CacheID: sfid-20260912_103207_022382_6E1FAEA0 
+X-CRM114-Status: GOOD (  36.30  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,92 +121,124 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-As there are plans for zstd in zImage for ARM, which requires more malloc
-size fo, decompression, look at the header for the required size.
+On 2026-09-11 06:30 PM, David Matlack wrote:
+> On 2026-09-10 06:51 PM, Bjorn Helgaas wrote:
+> > On Tue, Jul 28, 2026 at 10:09:59PM +0000, David Matlack wrote:
 
-References:
-https://lore.kernel.org/lkml/ZFDMRst2O+RJUYuu@shell.armlinux.org.uk/#t
-https://lore.kernel.org/lkml/20260828-zstd2-v2-0-4d9ce7150877@kemnade.info/
+> > > +bool pci_liveupdate_preserve_bus_numbers(struct pci_bus *bus, struct pci_dev *dev)
+> > > +{
+> > > +	struct pci_dev *parent = bus->self;
+> > > +
+> > > +	if (dev->liveupdate.preserve_bus_numbers)
+> > > +		return true;
+> > > +
+> > > +	if (parent && parent->liveupdate.preserve_bus_numbers) {
+> > > +		/*
+> > > +		 * Preserve bus numbers if the parent bridge is required to
+> > > +		 * preserve bus numbers. Otherwise the PCI core could expand
+> > > +		 * this bridge's reservation beyond its parent (which cannot
+> > > +		 * expand).
+> > > +		 */
+> > > +		dev->liveupdate.preserve_bus_numbers = true;
+> > > +	} else {
+> > > +		/*
+> > > +		 * Otherwise preserve bus numbers if there are any incoming
+> > > +		 * preserved devices. This ensures that the PCI core does not
+> > > +		 * allocate a bus number to a non-preserved device that
+> > > +		 * conflicts with the bus number already assigned to a preserved
+> > > +		 * device.
+> > > +		 *
+> > > +		 * This is slightly more restrictive than it needs to be. For
+> > > +		 * example, each host bridges have their own range of bus
+> > > +		 * numbers that won't conflict with other host bridges. But the
+> > > +		 * previous kernel should have assigned a sane bus topology and
+> > > +		 * it is simpler to just adopt that entire topology.
+> > > +		 */
+> > > +		dev->liveupdate.preserve_bus_numbers =
+> > > +			pci_has_incoming_preserved_devices();
+> > > +	}
+> > > +
+> > > +	return dev->liveupdate.preserve_bus_numbers;
+> > 
+> > I'm not sure why you don't just return
+> > pci_has_incoming_preserved_devices() in all cases, which is what the
+> > commit log suggests this patch does.  What's gained by all the logic
+> > here?  It's not like devices will be hot-added during the kexec.
+> 
+> To protect against pci_has_incoming_preserved_devices() flipping from
+> true to false while the PCI core is in the middle of a scan. It is not
+> likely to ever happen given most host bridge scanning should happen
+> during early boot, but theoretically possible with the way the PCI core
+> code is structured. I did not see way to structurally ensure these 2
+> things cannot race. A lot of the host bridge scanning happens without
+> taking the rescan lock, for example.
 
-Suggested-by: Russell King (Oracle) <linux@armlinux.org.uk>
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-To: kexec@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-To: Baoquan He <baoquan.he@linux.dev>
-To: Mike Rapoport <rppt@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: Pratyush Yadav <pratyush@kernel.org>
-To: Simon Horman <horms@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: j.neuschaefer@gmx.net
----
-Changes in v2:
-- extract malloc size from zImage header
-- Link to v1: https://patch.msgid.link/20260829094607.689485-1-andreas@kemnade.info
----
- kexec/arch/arm/kexec-zImage-arm.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+After working on this more, I do see a way to simplify the logic in
+pci_liveupdate_preserve_bus_numbers().
 
-diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
-index 8b474dd..1e682db 100644
---- a/kexec/arch/arm/kexec-zImage-arm.c
-+++ b/kexec/arch/arm/kexec-zImage-arm.c
-@@ -131,6 +131,8 @@ struct zimage_tag {
- 		struct zimage_krnl_size {
- 			uint32_t size_ptr;
- 			uint32_t bss_size;
-+			uint32_t text_offset;
-+			uint32_t malloc_size;
- 		} krnl_size;
- 	} u;
- };
-@@ -663,18 +665,21 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 
- 	/*
- 	 * The zImage length does not include its stack (4k) or its
--	 * malloc space (64k).  Include this.
-+	 * malloc space (128k).  Include this.
- 	 */
--	len += 0x11000;
-+	len += 0x1000;
- 
--	dbgprintf("zImage requires 0x%08llx bytes\n", (unsigned long long)len);
- 
- 	if (tag) {
- 		uint32_t *p = (void *)buf + le32_to_cpu(tag->u.krnl_size.size_ptr);
- 		uint32_t edata_size = le32_to_cpu(get_unaligned(p));
- 		uint32_t bss_size = le32_to_cpu(tag->u.krnl_size.bss_size);
-+		uint32_t malloc_size = tag->hdr.size >= 6 ? tag->u.krnl_size.malloc_size : 65536;
- 		uint32_t kernel_size = edata_size + bss_size;
- 
-+		len += malloc_size;
-+		dbgprintf("malloc size: 0x%lx\n", (unsigned long)malloc_size);
-+
- 		dbgprintf("Decompressed kernel sizes:\n");
- 		dbgprintf(" text+data 0x%08lx bss 0x%08lx total 0x%08lx\n",
- 			  (unsigned long)edata_size,
-@@ -699,8 +704,13 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 				(unsigned long)kernel_size);
- 			kexec_arm_image_size = kernel_size;
- 		}
-+	} else {
-+		/* add default malloc size */
-+		len += 0x10000;
- 	}
- 
-+	dbgprintf("zImage requires 0x%08llx bytes\n", (unsigned long long)len);
-+
- 	/*
- 	 * If the user didn't specify the size of the image, and we don't
- 	 * have the extension tables, assume the maximum kernel compression
+pci_liveupdate_preserve_bus_numbers() is used in 2 places during
+scanning. First to decide if the PCI core should preserve bus numbers or
+is free to allocate new ones, and second to decide if the PCI core is
+allowed to assign bus numbers to bridges that are missing bus numbers.
 
----
-base-commit: 43c5cba85ad23cc69c423527d9587c59b89fa437
-change-id: 20260912-malloc-fix-31a13574cb84
+The latter case should never happen during initial scanning unless a
+bridge was somehow reset during the kexec, but could legitimately happen
+if a bridge is later hot-plugged and I did not want Live Update to
+unnecessarily break that scenario. But then that creates this problem
+where pci_has_incoming_preserved_devices() can suddenly flip from true
+to false at any time and I needed all the complex logic to keep it
+consistent for a given scan.
 
-Best regards,
---  
-Andreas Kemnade <andreas@kemnade.info>
+Instead we can split the handling of these cases:
 
+ 1. When the PCI core needs to decide if it should preserve bus numbers
+    due to Live Update, pci_liveupdate_preserve_bus_numbers() can return
+    true forever if any device was preserved by the previous kernel,
+    which simplifies the logic.
+
+ 2. Then to handle the case of a bridge is enumerated that does not have
+    bus numbers assigned, we can handle that separately. If we reorder this
+    with the next commit so the PCI core knows exactly which bridges have
+    preserved downstream endpoints, then it is possible to determine if it
+    is safe for the PCI core to allow bus numbers to be assigned to an
+    unconfigured bridge.
+
+After re-ordering, we can end up with something like this:
+
+  bool pci_liveupdate_preserve_bus_numbers(void)
+  {
+  	return pci_liveupdate.had_incoming;
+  }
+
+  bool pci_liveupdate_refuse_bus_numbers(struct pci_bus *bus, struct pci_dev *dev)
+  {
+  	struct pci_dev *bridge;
+
+  	for_each_pci_bridge(bridge, bus) {
+  		if (!bridge->liveupdate.was_incoming || bridge->subordinate)
+  			continue;
+
+  		pci_err(dev, "Not assigning bus numbers, preserved bridge %s lost its bus number configuration\n",
+  			pci_name(bridge));
+  		return true;
+  	}
+
+  	return false;
+  }
+
+The net effect on pci_scan_bridge_extend() is:
+
+  bool preserve_bus_numbers = !pcibios_assign_all_busses() ||
+  			    pci_liveupdate_preserve_bus_numbers();
+  ...
+  	if (pci_liveupdate_refuse_bus_numbers(bus, dev))
+  		goto out;
+
+We could further scope pci_liveupdate_preserve_bus_numbers() to only
+return true for host bridges with preserved endpoints downstream, but
+that doesn't seem worth the extra complexity. It also seems nice to keep
+the pci_liveupdate_preserve_bus_numbers() policy global to match how the
+existing pcibios_assign_all_busses() policy is global.
+
+Does that look reasonable?
 
