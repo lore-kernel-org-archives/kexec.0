@@ -4,72 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 65BE3C88E64
-	for <kexec@archiver.kernel.org>; Mon, 14 Sep 2026 02:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4BAC9C88E67
+	for <kexec@archiver.kernel.org>; Mon, 14 Sep 2026 05:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
-	From:MIME-Version:Content-ID:Content-Description:Resent-Date:Resent-From:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
+	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=AXLI3k9/pMTK/BtsjTVMEyDksi2gFy8I9idpjBEt+8w=; b=bN0Kth/ZubW+B2P+K0q46ehO9X
-	BNM7zlRNlt2DxKwmBmZIW3Gd4tJiELrDXr9162U8UGjQK6FXoui423unR8ZI0AdeDLiLU29/pOIXN
-	CByjZw78J3IqKS1GzCKlcKsaK6EsOV28SYQzD+bWd/7IhdpN5kkn1PbCWouTgtyKaiQTrqZgCBJ93
-	x7Ln3zGl4bAwToTFPWQ3n3cAS0PdxjT274w8mIcncDW2SbWU6SozJRba2kqDbcl0H/lmnbPP6J5S9
-	7P8E3ZGsqqK9xCTlaIXq2QNkZK+fKGkphf3U3UgyQhYzx3AEtIeppUaaGk83TcALB/7apuwqiQPAm
-	eOkCuU/g==;
+	bh=o779dzepK0mFhzpZscdSpSvYUsF1kQ6qSiTkadkPzf4=; b=bn9BXlcgPvMtRVYrf5gxJfVV0D
+	AK32gRlSUWMMonNkhU+aa/ax3lzY1iXG3EUp4U9SMtxg546GlpJZHNeFqhxNftjDdG0eSsCy02Hi2
+	+6+II/1pE8td+RWCwxNsf7p+NdAbSTQX8x+YMHlWnT4mmn3ZjlIMYC9MsjS3uVkLC60o4wvZzo+8z
+	MRxBlPnNogVXCrQKvIaGiEhi7hIcbo/Ljag8mRlvHcabwUWul4toPSStdg1+yPF+tWbg1YL50VyRI
+	LiNip7ypz+Wb1CvqwxwlNoKQcyheMWKkhneWz9QaKC4p24X2Zv2cM3OR4fzLqcLxqyvdRt+PSoGT1
+	1gRIH1Hg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x5wjj-00000002C96-3KfH;
-	Mon, 14 Sep 2026 02:48:03 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1x5z7E-00000002MUe-32Cw;
+	Mon, 14 Sep 2026 05:20:28 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x5wji-00000002C8x-1gsz
-	for kexec@lists.infradead.org;
-	Mon, 14 Sep 2026 02:48:02 +0000
+	id 1x5z7E-00000002MUN-0ltm;
+	Mon, 14 Sep 2026 05:20:28 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id B302B413B8;
-	Mon, 14 Sep 2026 02:48:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 087EF1F000FF;
-	Mon, 14 Sep 2026 02:47:59 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 140CD40278;
+	Mon, 14 Sep 2026 05:20:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 998861F000FF;
+	Mon, 14 Sep 2026 05:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789354081;
-	bh=AXLI3k9/pMTK/BtsjTVMEyDksi2gFy8I9idpjBEt+8w=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=aUYWUEkwRAc/MPD1E8wD6u4bTIsbzSq0kvntl9FVDaEATIYAy4I4sIHXFRhg9t4Yz
-	 04T63Uk3AKoDRg5NkaKSEjHUhOI2lbC8ikAkEKvl4oLWjLlij9tg1sMybkHau92g4w
-	 i3lIV7y5nDKFszslBx9YR0befexyZn9Vr1fRxtdL1d8YPb2I927c60O5OWDxlgwQWC
-	 iLso1LRAbVRq0e23KFOTaH+/kqOtLqBi3rSyUQuZVP+dNpzy+Hg3aD3BwD7OI5jIoU
-	 CW38fNAoU1X6qNgr88GSJx29l8IxFbmBXdbF6TD/ns1HI3wJQltPrXO1+RIlLwDk4I
-	 VHxM1iKtfDtGA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 16/16] mm/page-flags: remove PG_private
-To: "Qi Zheng" <qi.zheng@linux.dev>, "Lorenzo Stoakes" <ljs@kernel.org>, "Shakeel
- Butt" <shakeel.butt@linux.dev>, "Johannes Weiner" <hannes@cmpxchg.org>, "Kairui
- Song" <kasong@tencent.com>, "Alistair Popple" <apopple@nvidia.com>, "Ryan
- Roberts" <ryan.roberts@arm.com>, "Gregory Price" <gourry@gourry.net>, "Baolin
- Wang" <baolin.wang@linux.alibaba.com>, "David Hildenbrand" <david@kernel.org>,
- =?utf-8?b?TWF0dGhldyBXaWxjb3ggKE9yYWNsZSk=?= <willy@infradead.org>, "Dev
- Jain" <dev.jain@arm.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Vlastimil
- Babka" <vbabka@kernel.org>, "Suren Baghdasaryan" <surenb@google.com>, "Liam
- R. Howlett" <liam@infradead.org>, "Michal Hocko" <mhocko@suse.com>, "Lance
- Yang" <lance.yang@linux.dev>, "Ying Huang" <ying.huang@linux.alibaba.com>, "Zi
- Yan" <ziy@nvidia.com>, "Muchun Song" <muchun.song@linux.dev>, "Mike
- Rapoport" <rppt@kernel.org>, "Barry Song" <baohua@kernel.org>, "Nico Pache" <nico.pache@linux.dev>, "Usama
- Arif" <usama.arif@linux.dev>
-Cc: "Steven Rostedt" <rostedt@goodmis.org>, "Jan Kara" <jack@suse.cz>, "Baoquan
- He" <baoquan.he@linux.dev>, linux-mm@kvack.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Masami
- Hiramatsu" <mhiramat@kernel.org>, linux-fsdevel@vger.kernel.org, "Pratyush
- Yadav" <pratyush@kernel.org>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Mathieu
- Desnoyers" <mathieu.desnoyers@efficios.com>, "Dave Young" <ruirui.yang@linux.dev>, "Jonathan
- Corbet" <corbet@lwn.net>, "Shuah Khan" <skhan@linuxfoundation.org>, linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-In-Reply-To: <20260913-remove-pg_private-v4-16-848550f7574e@nvidia.com>
-References: <20260913-remove-pg_private-v4-0-848550f7574e@nvidia.com>
- <20260913-remove-pg_private-v4-16-848550f7574e@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 14 Sep 2026 02:47:59 +0000
-Message-Id: <20260914024800.087EF1F000FF@smtp.kernel.org>
+	s=k20260515; t=1789363226;
+	bh=o779dzepK0mFhzpZscdSpSvYUsF1kQ6qSiTkadkPzf4=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date;
+	b=CkTExBz8pPEMBf1jk73HqRy9cRVhv5/C+/iPCXbOYp6XW7Lzx+sQ1dPL4vfhzGUKD
+	 1Qo4YLuCVLvhPKTxzUqjNbUy1Uvh7gG1I3nHUUqHzs/WEJuNkr9qBqahooT/6T5ZVm
+	 oR6CnuJc3DGdo2E3oDlVtXriiCz3rzEwiOys5VH0cgx+ZEDK5FyJNz90827TMmdf6G
+	 W2CcXEXQKcYkcl5oqdBHkuIsqpx+QgJgJl5qBheg0r2tbsTh9PXCq9NF/SX2bSEv/+
+	 2xV2YnJfUQF8bV7GrpUBqRvCECLrzr3MeGPvYWJKa4h381dPopjrSfvVE5ZktcPrKV
+	 K+Ef5ba1feaow==
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v6 01/10] mm: memblock: add missing HugeTLB flag name
+From: Mike Rapoport <rppt@kernel.org>
+To: Wandun Chen <chenwandun1@gmail.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org, 
+ pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, tglx@kernel.org, 
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+ robh@kernel.org, saravanak@kernel.org, akpm@linux-foundation.org, 
+ baoquan.he@linux.dev, rppt@kernel.org, pasha.tatashin@soleen.com, 
+ pratyush@kernel.org, m.szyprowski@samsung.com, mark.rutland@arm.com, 
+ kernel@xen0n.name, alex@ghiti.fr, hpa@zytor.com, ruirui.yang@linux.dev, 
+ robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+ linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
+ kexec@lists.infradead.org, linux-mm@kvack.org, iommu@lists.linux.dev
+In-Reply-To: <20260902073116.802752-2-chenwandun1@gmail.com>
+References: <20260902073116.802752-1-chenwandun1@gmail.com>
+ <20260902073116.802752-2-chenwandun1@gmail.com>
+Date: Mon, 14 Sep 2026 08:20:16 +0300
+Message-Id: <178936321614.3691424.10386784926753862087.b4-review@b4>
+X-Mailer: b4 0.17-dev
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,74 +75,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] Silent memory leak of folio private data due to missing check for =
-leaked `folio->private` data when a head page is freed.
---
+Hi,
 
-commit ebe4dd474a496c46897e3f790e03a43cc0508eaf
-Author: Zi Yan <ziy@nvidia.com>
+> Commit 7d163a75f821 ("memblock: make HugeTLB bootmem allocation work
+> with KHO") added MEMBLOCK_RSRV_HUGETLB but did not add the corresponding
+> entry to flagname[]. As a result, memblock debugfs cannot report the
+> flag by name.
+> 
+> Add the missing RSV_HUGETLB entry.
+> 
+> Fixes: 7d163a75f821 ("memblock: make HugeTLB bootmem allocation work with KHO")
+> Signed-off-by: Meijing Zhao <zhaomeijing@lixiang.com>
+> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
+> Link: https://lore.kernel.org/lkml/20260821020910.3428585-2-zhaomeijing100@gmail.com/
 
-mm/page-flags: remove PG_private
+Can you please send this as a separate patch, I'll pick it to the
+memblock tree.
 
-folio->private !=3D NULL indicates a folio carries private data, replacing
-PG_private. All PG_private users are converted. Remove PG_private and
-reserve the space as PG_folio for future use. Unused PG_private functions
-are removed too.
+-- 
+Sincerely yours,
+Mike.
 
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index 08988877331ba..10f4ad075ea48 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-
-[ ... ]
-
-> @@ -105,7 +101,7 @@ enum pageflags {
->  	PG_owner_2,		/* Owner use. If pagecache, fs may use */
->  	PG_arch_1,
->  	PG_reserved,
-> -	PG_private,		/* If pagecache, has fs-private data */
-> +	PG_folio,		/* Do not use: reserved for folio identification */
-
-[Severity: High]
-With the removal of PG_private, does the free path for head pages fail to
-validate whether private data is leaked?
-
-Previously, the memory management subsystem checked for PG_private during p=
-age
-freeing (via PAGE_FLAGS_CHECK_AT_FREE) to catch filesystem leaks, and issue=
-d a
-bad_page() warning if it was still set.=20
-
-While tail pages are explicitly checked for leaked private data in the free
-path:
-
-	if (tail_page->private) {
-		bad_page(tail_page, "nonzero private");
-		...
-
-The head page's private field appears to be unconditionally zeroed without
-validation in __free_pages_prepare() in mm/page_alloc.c:
-
-	page_cpupid_reset_last(page);
-	page->flags.f &=3D ~PAGE_FLAGS_CHECK_AT_PREP;
-	page->private =3D 0;
-	reset_page_owner(page, order);
-
-Can this silently mask bugs where filesystems leak private data (like an
-un-detached buffer_head)? Should we add a check for page->private !=3D NULL
-for head pages before unconditionally zeroing it?
-
->  	PG_private_2,		/* If pagecache, has fs aux data */
->  	PG_reclaim,		/* To be reclaimed asap */
->  	PG_swapbacked,		/* Page is backed by RAM/swap */
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260913-remove-pg_=
-private-v4-0-848550f7574e@nvidia.com?part=3D16
 
