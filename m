@@ -4,65 +4,126 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CB690C88E66
-	for <kexec@archiver.kernel.org>; Mon, 14 Sep 2026 12:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E1070C88E64
+	for <kexec@archiver.kernel.org>; Mon, 14 Sep 2026 13:37:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=2tDaQC5rOBMjovUfpSgyJBpDCsNvHvjcik21L72/Adk=; b=HVri/zkXLuNatC0r30yibT3cNL
-	Halamufr8gxubrq1pPtPzQ32wkA0pYzdfQ1jAyfTQRMXBctpqvyQruEgbNw8myQfoqs1XUYdFA4Xn
-	lVYmwyCE7Lp1/ewVI96pJCEtKNmk6AtjHHcddmbZRtkPrcIpAkXOJXNUNEnOaHevNM4uPLUAmkXo2
-	5B3L7Pb7zZJ7LMG18q+EAv8CQQVl1y7uBwQjmpJZNm3Ct8luz5gFxo/wvquYZnmzI/nZtSGzHzEFW
-	+IdPtxd3Zu9yigI04niN9Y4J7wDDJQAeUoXFIeYbPf0oMw0dx2VeCitE9JEJS26ojLM26CCafSCi+
-	/1qPUVyw==;
+	bh=teIDwwfXFah8NBFRWQRZ+eTRmrLAr0rfuoGSkmAAKdA=; b=HoLG0XEoQ41CQzaw84xJGUxA+Q
+	3YR4GCOOPv/u3NcexsNnxs2RhcYERShkrOjj2LHImLhtPYGdwRFTN/dGutHl1og/Cyugq5nMGdSx6
+	0X6ImqQuS4T1BfOnDcqNeVNqZuPp1FX/lhmqnr37ByUh5xrrO+5uFuf5UxiW0bb86wDae6x13DcsS
+	S37qtz1IhlCv2yKyafZCHI1BrOtpa8gwx7mNP3EMoMm4ZtgeIxpbNehUMWhiVzG+TkFwNGT45kq8t
+	lylh47IT38AWmRzgAeHWq34y1+LdjZkmWtxNpqqIrcXdmY03dFjQ0m9ILFyVBgJVbErTf1cbHTfxE
+	SePQRO/Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x65YZ-00000003VAA-1WyT;
-	Mon, 14 Sep 2026 12:13:07 +0000
-Received: from mx1.mythic-beasts.com ([2a00:1098:0:86:1000:0:2:1])
+	id 1x66sY-00000003ntV-1HoG;
+	Mon, 14 Sep 2026 13:37:50 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x65YW-00000003V9U-3kdN
+	id 1x66sW-00000003nt6-0814
 	for kexec@lists.infradead.org;
-	Mon, 14 Sep 2026 12:13:06 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=tom-fitzhenry.me.uk; s=mythic-beasts-k1; h=From:To:Subject:Date;
-	bh=2tDaQC5rOBMjovUfpSgyJBpDCsNvHvjcik21L72/Adk=; b=jm7f/oCVxiIfetYVHDNgcnxH9o
-	tXOkWuRYmy8FuLg2dTrXhG+BhgNhd3W1obqYE08mSW9aJ6hvs3loOIs4TLbMeMoIJO/QTbaMSuSxh
-	q/tkAA7FcT7Ejb9Rqx+0CzMixxPLpWj8TmbeF05uxFLBv7xhvmSxckzQxD3s1xpFl4Xf8d0jv79XA
-	YGdH/0geVEaHaw6v0ELqOngFqzKjLn5wN63yuoEpZ8wiw8Ct1DNveH0aJfJzqSCDCmBEcZhNP/bFV
-	vZmqiPUuy9nNlb3BI0p9BK+WrnY6qMhPulCSMsrK7dR/9X5Wv/RzEjQcWQe48/+P1XVbVM/pdGNFw
-	qmKDuymQ==;
-Received: by mailhub-cam-d.mythic-beasts.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <tom@tom-fitzhenry.me.uk>)
-	id 1x65YP-008v4s-04;
-	Mon, 14 Sep 2026 13:12:57 +0100
-Message-ID: <46e6b39b-062e-44c4-a1d4-b74aa24e170e@tom-fitzhenry.me.uk>
-Date: Mon, 14 Sep 2026 22:12:27 +1000
+	Mon, 14 Sep 2026 13:37:48 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 7ACEB601DE;
+	Mon, 14 Sep 2026 13:37:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F7921F000FF;
+	Mon, 14 Sep 2026 13:37:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789393067;
+	bh=teIDwwfXFah8NBFRWQRZ+eTRmrLAr0rfuoGSkmAAKdA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=dzWThbVGDiP+7Kh8Mlz1jnGM9uDygrrjPE0PznQPTZeVLeOHQQlSlJWZOsJOs45GF
+	 0M3ZJK/UHFqpgFIn641k4+JS6FomgiWbSlwEFgmxqW/sLcDbLuBDYrd48YgMxV3hnT
+	 fW+WwewWkWuc2f2sdLu2PHIMXhJpCUJcwYUqSmDF6X5/LpE4P1c2tiVnBGZPtJeFLo
+	 QOHoDP0xqfahJpUiBNiYyltu61DX+V61cCJKBC9t9vQPXCsNCUWimBhiHPG4u7vq4E
+	 A3a1S/3q5lxM9EP8DPj5nGEAVcSD+fgtwFCeLDku8ld4Bn1g4GLsxWZVJMPFL3CO0Z
+	 doE/NDERw9ycQ==
+Message-ID: <76d8c9ee-b994-47a9-b5f3-87d257194eea@kernel.org>
+Date: Mon, 14 Sep 2026 15:37:33 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH kexec-tools v2] arm-zImage: prepare for more malloc
- requirements of zstd
-To: Andreas Kemnade <andreas@kemnade.info>, Simon Horman <horms@kernel.org>,
- Baoquan He <baoquan.he@linux.dev>,
- "Russell King (Oracle)" <linux@armlinux.org.uk>,
- Andrew Morton <akpm@linux-foundation.org>,
- Pratyush Yadav <pratyush@kernel.org>, j.neuschaefer@gmx.net
-Cc: kexec@lists.infradead.org, Mike Rapoport <rppt@kernel.org>,
- Pasha Tatashin <pasha.tatashin@soleen.com>
-References: <20260912-malloc-fix-v2-1-eb0c3ca681cd@kemnade.info>
+Subject: Re: [PATCH v4 16/16] mm/page-flags: remove PG_private
+To: sashiko-reviews@lists.linux.dev, Qi Zheng <qi.zheng@linux.dev>,
+ Lorenzo Stoakes <ljs@kernel.org>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Johannes Weiner <hannes@cmpxchg.org>, Kairui Song <kasong@tencent.com>,
+ Alistair Popple <apopple@nvidia.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Gregory Price <gourry@gourry.net>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Dev Jain
+ <dev.jain@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ "Liam R. Howlett" <liam@infradead.org>, Michal Hocko <mhocko@suse.com>,
+ Lance Yang <lance.yang@linux.dev>, Ying Huang
+ <ying.huang@linux.alibaba.com>, Zi Yan <ziy@nvidia.com>,
+ Muchun Song <muchun.song@linux.dev>, Mike Rapoport <rppt@kernel.org>,
+ Barry Song <baohua@kernel.org>, Nico Pache <nico.pache@linux.dev>,
+ Usama Arif <usama.arif@linux.dev>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Jan Kara <jack@suse.cz>,
+ Baoquan He <baoquan.he@linux.dev>, linux-mm@kvack.org,
+ kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>, linux-fsdevel@vger.kernel.org,
+ Pratyush Yadav <pratyush@kernel.org>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Dave Young <ruirui.yang@linux.dev>, Jonathan Corbet <corbet@lwn.net>,
+ Shuah Khan <skhan@linuxfoundation.org>, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+References: <20260913-remove-pg_private-v4-0-848550f7574e@nvidia.com>
+ <20260913-remove-pg_private-v4-16-848550f7574e@nvidia.com>
+ <20260914024800.087EF1F000FF@smtp.kernel.org>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
-From: Tom Fitzhenry <tom@tom-fitzhenry.me.uk>
-In-Reply-To: <20260912-malloc-fix-v2-1-eb0c3ca681cd@kemnade.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260914024800.087EF1F000FF@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-BlackCat-Spam-Score: 0
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260914_051305_480884_A24D1B4D 
-X-CRM114-Status: GOOD (  14.49  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,90 +138,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Andreas,
+On 9/14/26 04:47, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [High] Silent memory leak of folio private data due to missing check for leaked `folio->private` data when a head page is freed.
+> --
+> 
+> commit ebe4dd474a496c46897e3f790e03a43cc0508eaf
+> Author: Zi Yan <ziy@nvidia.com>
+> 
+> mm/page-flags: remove PG_private
+> 
+> folio->private != NULL indicates a folio carries private data, replacing
+> PG_private. All PG_private users are converted. Remove PG_private and
+> reserve the space as PG_folio for future use. Unused PG_private functions
+> are removed too.
+> 
+>> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+>> index 08988877331ba..10f4ad075ea48 100644
+>> --- a/include/linux/page-flags.h
+>> +++ b/include/linux/page-flags.h
+> 
+> [ ... ]
+> 
+>> @@ -105,7 +101,7 @@ enum pageflags {
+>>  	PG_owner_2,		/* Owner use. If pagecache, fs may use */
+>>  	PG_arch_1,
+>>  	PG_reserved,
+>> -	PG_private,		/* If pagecache, has fs-private data */
+>> +	PG_folio,		/* Do not use: reserved for folio identification */
+> 
+> [Severity: High]
 
-I'm glad to see improvements to kexec-tools on arm.
+"High" lol
 
-For context, I recently posted "arm: use the zImage tag's real 
-TEXT_OFFSET for kernel placement"[0] to add support for text_offset.
+-- 
+Cheers,
 
-I hadn't seen your v1 at the time, and will happily rebase my patch 
-after your patch is merged. (Or, feel free to add support for 
-text_offset, instead.)
-
-I'll leave some comments, since I have a tiny bit of state on this code.
-
-On 9/12/26 20:35, Andreas Kemnade wrote:
-> @@ -663,18 +665,21 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
->   
->   	/*
->   	 * The zImage length does not include its stack (4k) or its
-> -	 * malloc space (64k).  Include this.
-> +	 * malloc space (128k).  Include this.
-
-This line no longer adds the malloc space (and nor is it necessarily 
-128k), so maybe remove the mention of malloc space in this comment.
-
->   	 */
-> -	len += 0x11000;
-> +	len += 0x1000;
->   
-> -	dbgprintf("zImage requires 0x%08llx bytes\n", (unsigned long long)len);
->   
->   	if (tag) {
->   		uint32_t *p = (void *)buf + le32_to_cpu(tag->u.krnl_size.size_ptr);
->   		uint32_t edata_size = le32_to_cpu(get_unaligned(p));
->   		uint32_t bss_size = le32_to_cpu(tag->u.krnl_size.bss_size);
-> +		uint32_t malloc_size = tag->hdr.size >= 6 ? tag->u.krnl_size.malloc_size : 65536;
-
-There is support for big endian arm[1], so use le32_to_cpu to convert, 
-similar to the other fields.
-
-Also, consider replacing "65536" with "0x10000" to be consistent with 
-the else-clause in your patch below.
-
->   		uint32_t kernel_size = edata_size + bss_size;
->   
-> +		len += malloc_size;
-> +		dbgprintf("malloc size: 0x%lx\n", (unsigned long)malloc_size);
-> +
->   		dbgprintf("Decompressed kernel sizes:\n");
->   		dbgprintf(" text+data 0x%08lx bss 0x%08lx total 0x%08lx\n",
->   			  (unsigned long)edata_size,
-> @@ -699,8 +704,13 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
->   				(unsigned long)kernel_size);
->   			kexec_arm_image_size = kernel_size;
->   		}
-> +	} else {
-> +		/* add default malloc size */
-> +		len += 0x10000;
-
-It's a bit awkward that this fallback case is far from the happy-case 
-where the header defines a malloc size.
-
-Consider adding a "if (tag && le32_to_cpu(tag->hdr.size) >= 6)" block 
-before the "if (tag)" block to handle this.
-
-This allows us to remove the two fallback cases (!tag, and 
-tag&&tag->hdr.size >=6), in favour of just one fallback case.
-
-Something like:
-
-```
-if (tag && le32_to_cpu(tag->hdr.size) >= 6)
-	len += le32_to_cpu(tag->u.krnl_size.malloc_size);
-else
-	len += 0x10000;
-
-if (tag) {
-[...]
-```
-
-Regards,
-Tom Fitzhenry
-
-0. https://lists.infradead.org/pipermail/kexec/2026-August/038363.html
-1. 
-https://github.com/torvalds/linux/blob/704340f1cd0dcef829eb62f5b48ae95a2ce17bdf/arch/arm/mm/Kconfig#L780
-
+David
 
