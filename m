@@ -4,109 +4,155 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1A87AC88E56
-	for <kexec@archiver.kernel.org>; Sat, 12 Sep 2026 17:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B03CFC88E6A
+	for <kexec@archiver.kernel.org>; Mon, 14 Sep 2026 02:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Cc:To:
+	In-Reply-To:References:Message-Id:Content-Transfer-Encoding:Content-Type:
+	Subject:Date:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=pBslPyab51IM3cN1q+WywRAJYOzHWq5eKWBrdVKUM1w=; b=y0vM0lgONgcmfJtTAZxsqVGDbq
-	LE/sFHQIzPtxPlTeCuwNzqPgF6+szbIu1uTpwo0+B2txloDdxmQdKlzZZY1B2aRQUh6Eq+C/UjSyO
-	mU5UX0sSw7ltihYexFM3+iF8hVFfXUjtCboBV6XOB9vSRQ9gyEJyOHi0fXkNpPAlH2Mefwk789Xv9
-	Jh/glP31JGHDDIOv8XFFxSCYl7W46YhTqjzdWiH3Qp+rdAJ//Eu22atTX18FJiKWyov0FFcqrmZ0h
-	C188c++pisHnG/gpaaLZCSCDJbGiRJxh9AoTvnmSbND5B/syj8dEn3MYpc2wUfgCE+SRmsjOAQQds
-	1JeUsz5w==;
+	bh=rN1+a+WbXXMcnQSTG/PwdTVyIvCPX0jjoxiMDHWAUIs=; b=EOYELw4dnLIAwH1YLbrL6ywUl1
+	PDZ+dAQ3kZNlVY1vPIwRC+aAnvvOupnaS4RsZkP5L69h6KLbJ7kyGDHq9yHheZ8SEU/cF+6yoDzTu
+	jOVnahoJgcIW1Nu5gq2kSf5ZS2hU941zslcNoDxbHsDIFn010lLLZWdMY8Mawlep88RUdwHVjlM8I
+	A2vhHz1QAZsCxi9RUu2FCfem+T5gWLXsCEmVQcpuBxDTLFPV/M1lcm2mie9YKged3QmT8xUAqKHv6
+	ZiAX1jCOS4ip7WTBwPUB6oYK+Yn/WzXTWe5tE5uEA6BK3DcOBl+Y7V3+rwJm3G/0hXFdtO4s2jv5J
+	Y+qqjJOA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x5RaD-000000012hf-4C3Z;
-	Sat, 12 Sep 2026 17:32:10 +0000
-Received: from mail-pj2-x11.google.com ([2607:f8b0:4864:39::11])
+	id 1x5wNA-00000002Awd-1pHv;
+	Mon, 14 Sep 2026 02:24:44 +0000
+Received: from mail-westus2azon11010017.outbound.protection.outlook.com ([52.101.46.17] helo=CO1PR03CU002.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x5RaA-000000012h8-3yGp
+	id 1x5wN5-00000002AtM-0sLY
 	for kexec@lists.infradead.org;
-	Sat, 12 Sep 2026 17:32:08 +0000
-Received: by mail-pj2-x11.google.com with SMTP id d9443c01a7336-2d747ee1f38so9756155ad.2
-        for <kexec@lists.infradead.org>; Sat, 12 Sep 2026 10:32:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789234325; x=1789839125; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=pBslPyab51IM3cN1q+WywRAJYOzHWq5eKWBrdVKUM1w=;
-        b=aWzZUxV41RkCuEfDQjRzp+MCRrQFybw9YriXzXn8KVO4m6UzQ5tPSD/iyorwcwa1Jv
-         gWrpFPzzuAxUshqzWeCJBCRmBymbBVm5itNyJatg1vLUSsFwqeN4EbbWPbiKn2s9UV0n
-         MgQK8i/wCev3rUh1ifb3ZJD91CLNBJAXmotokoiXdLV4Tfe43r8T490WsrqHITGaCIx1
-         p7lhzicZ87RD39Hn0bf+myEg5iQ4Z02+11vLC0ixMG73TQqy3VGTDZWYgos+1jf2R4WN
-         zsR/aWt3SeTWvxL3kJ8DAJ6x6u/FCLfoxA1foC4K5tmNrHaenGMJLjwNvXdw2u+YAlUw
-         FV1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789234325; x=1789839125;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=pBslPyab51IM3cN1q+WywRAJYOzHWq5eKWBrdVKUM1w=;
-        b=otH15iceT1nMBNj+Z1TziQz6LUmrfLnwWf/oFU1E7bKq+2zMPYTf2G0N8stYg/NsON
-         MmU+OJzyIdpuvXE+pDUEPIwQRRxKCHorx+TNEBwcyyt35FD6c6XvtioOYVtGSr74o04T
-         xugKzgoAtF/T+dLoBOvtottraKZxm+kCJZeaqyxTdfUXqv4fADiodtHxa4LEETmeFQPI
-         XTdCnR4S0yJT5QRqf93er2tSyklrNlq/n1gnoLNIyXoFfrb2WYJMCJqo49PUPicE+Jd9
-         /mdN7isfgx7Oq6V3t+lExq3Eu54OU/KNvWLn7mwnH9CfgkpIF4Rq+/bAP/HzbRZrMqts
-         ZJ6Q==
-X-Gm-Message-State: AFuF++l3z3/PiCiLDfS1d9diNEhTMBGeTz/4tQdHnip3i4D04+j2rO64
-	EURG4GGia7vQBFtElm40ayQCiSmtaPJIFxE+YuAq1lY5rlSkh0SqWWrwH1hDpFEH6g==
-X-Gm-Gg: AYBFou3ey3s4Dw+AfaLUtYS1/eWnd2FDNABFGCT/m0tvq74Doa77vUdWqzagK2y+C0C
-	MqlwRWcA9XI1qw6W0VmZMciGykM3iUE0zvebpIRNeq7hcB/f93eaxfP+mMsSQns/kNJXtJD3n5v
-	/sM+JSnpr3TioP0TXvraQIK9VVs2/PUR+OWco59dXh5W+eNPdZgQXoHN5Ga+BPwgGKRmLli+SvB
-	cAouFQy4ZAY9T44ufFxpfCUioCPyMW3k1Xxb1QlNFXFlGCW3ibGsPOeSEqb6uO8BSAVmaQiGQzC
-	fAHuEHRQNKoQgcmte8VxUi4pXsjU06TaCY9xta91aNTVOXs3N5cIbRIQOzblA5HIDzg4S0KJRAS
-	E4i9FUCpO16PQytAqiuH7Ts2qNgAbgCwpCJcJ3QSXuHVANgpxluhH2v98n/66UeO849Fy455950
-	62bUoPA9w/+dpBKNgxgAtVv+dfQxIFK1TBLcu3wlJIQRwIaHI4N3v+FhLRq2eyPt0FVsrK0WCbK
-	Hzdg5hBqyzdRkIUjDKhqTT0kzX3relAZ3MIhGYQ
-X-Received: by 2002:a17:902:e881:b0:2d8:d4cc:be64 with SMTP id d9443c01a7336-2dd2a35a58cmr165076475ad.17.1789234324159;
-        Sat, 12 Sep 2026 10:32:04 -0700 (PDT)
-Received: from google.com (192.150.203.35.bc.googleusercontent.com. [35.203.150.192])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2dd2cfc5c7bsm25731245ad.51.2026.09.12.10.32.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Sep 2026 10:32:02 -0700 (PDT)
-Date: Sat, 12 Sep 2026 17:31:58 +0000
-From: David Matlack <dmatlack@google.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-pci@vger.kernel.org,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Alexander Graf <graf@amazon.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
-	Josh Hilke <jrhilke@google.com>,
-	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pranjal Shrivastava <praan@google.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
-	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v8 05/12] PCI: liveupdate: Preserve bus numbers during
- Live Update
-Message-ID: <aqWMjrea2MMMZHxr@google.com>
-References: <20260728221007.2098560-6-dmatlack@google.com>
- <20260910235104.GA367522@bhelgaas>
- <aqRIJs1SdJwoV_cf@google.com>
+	Mon, 14 Sep 2026 02:24:40 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qnYWwJSbl9iCnp8O1wWePNMrJRBPqweLglChZ0rec+n49BxOjT6hXNskgsJdjQpG7/KYtkEE7Zn3thKmKw+oRD73c681YrBgR6GP0v/MzhYAatRq8Ppd1LscnVDHewZMuMvu8F7AyKvuUdIHacbRHFZk875qRIUwUZBDszE/nr/53gXXt4O/qguk/0z7qj1f35ezjBtfi8aD9S66KMz37MXD5K9mxA+I5N+V79+DlSTwTKbp8W+lvuaT7UuWclwXs9VVBeh4voxB3G4rossaiRnGBkvQVabbFJX2o8QXmX8+o74XQjqS64DCYpcu7mTuYXTM795ToYF+HQ9V9bj9Ig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rN1+a+WbXXMcnQSTG/PwdTVyIvCPX0jjoxiMDHWAUIs=;
+ b=j1Rvs3MIp+K56Tb5UF8pcTgdYy01Y1GEOBJzRXrCx5KLyxHJBKptn+RHgWbCnxBB1yXcEfldlAEaA5DN0bqhT+UZuXzs7NBP3DNlQic9C3rZlpBxjsKEG4FnaUNUDBpD5f6rkLE93QagqHYhCg1iT8nXG4wM7czhPSGPQzCaQLgYpfezyMFf768s3dprfhjMztiQZIbBKna9oUcNYHS+4j4tvMdZK39klJ+0oG4p+V/wLaap7RBGFFBWCbMoFI5cn76xlYTQHPowSvwVW604ymjdZb7q+vq6gjvsgCx4Xe5yl5jNTpzaoTP5Oyj6EhG1GMaxKKW0W0QP0Qo2PtLgfw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rN1+a+WbXXMcnQSTG/PwdTVyIvCPX0jjoxiMDHWAUIs=;
+ b=qoSQdr28E48G3GnJVrdEWlEkcb1LINA76FKQDoDZduly8G+67ecTntoSAOA0JoPpikan+Z5RWLQBitOdGOybktFa8DJHeQFpkLLEElSJDPooMIEdVnS5MJmphXgdKV0p/16YKyRFjITRT8kMWmxA7QlNCkjYUO3J0IKQnAJxoooxQ0LTxY4Kqx5tEooW3MOB7PMKqTAaL1cthhzb6adTsZiu+sRSWbjz8QVYDSWYcRi1v4q/UxhhkHocle/hyjyPFRn81VeEX/xgMLbzJHC0JPW3caIfKxVPwfOCdrLe0+klZoYbCjNEweqJMDtxg5A4PCFiuDSzWphtahftVbJ0dA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
+ by DS0PR12MB6486.namprd12.prod.outlook.com (2603:10b6:8:c5::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.12; Mon, 14 Sep
+ 2026 02:24:31 +0000
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16%5]) with mapi id 15.21.0406.007; Mon, 14 Sep 2026
+ 02:24:31 +0000
+From: Zi Yan <ziy@nvidia.com>
+Date: Sun, 13 Sep 2026 22:24:14 -0400
+Subject: [PATCH v4 16/16] mm/page-flags: remove PG_private
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260913-remove-pg_private-v4-16-848550f7574e@nvidia.com>
+References: <20260913-remove-pg_private-v4-0-848550f7574e@nvidia.com>
+In-Reply-To: <20260913-remove-pg_private-v4-0-848550f7574e@nvidia.com>
+To: David Hildenbrand <david@kernel.org>, 
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Muchun Song <muchun.song@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+ Michal Hocko <mhocko@suse.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, 
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+ Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
+ Gregory Price <gourry@gourry.net>, 
+ Ying Huang <ying.huang@linux.alibaba.com>, 
+ Alistair Popple <apopple@nvidia.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+ Kairui Song <kasong@tencent.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ Zi Yan <ziy@nvidia.com>, Baoquan He <baoquan.he@linux.dev>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+ Jan Kara <jack@suse.cz>, Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Dave Young <ruirui.yang@linux.dev>, 
+ Shuah Khan <skhan@linuxfoundation.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+X-Mailer: b4 0.16.0
+X-ClientProxiedBy: YQBPR0101CA0083.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:4::16) To IA0PR12MB8374.namprd12.prod.outlook.com
+ (2603:10b6:208:40e::7)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aqRIJs1SdJwoV_cf@google.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|DS0PR12MB6486:EE_
+X-MS-Office365-Filtering-Correlation-Id: 30c58b29-3f79-4729-a59c-08df12074f21
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|7416014|366016|376014|1800799024|6133799003|22082099003|18002099003|921020|10067099003|56012099006|11063799006|5023799004;
+X-Microsoft-Antispam-Message-Info: 2dfEYJ61jJkyc61FyZejhtGZoce7Dq79QvLrSw1OWVjyshKApmvePFW4W2CoK4XWwuFF/6VLcPrpTVZ0aAIy1HVt96MaHpGL0i9WuxqKoBeormyPcnT2P7cQVRkbprPxkZSuG2/0pHhQryzLuqYXJxpdr+6C0mhgWmjk4z3P4/64cGuH+2EmPYp8lavgRO/M4mR314LzYc7nU0CkXu7k4zZ9aLaGrs2W6PXZuAoLGQ3FflE8K4oQnHoeiYRi5Qey2b2GBk4MYeucYbY5yWIJt88sW2LuG/Cs4g+QscfUw/4aPLAIdKlAr+dgvIMD7tYj2tUtOCIJWIoSrz91WfUYZXQus8lEt16aU7v9KrZxPeYwiSuAJ1nv3oW3W/zmOnV2DCjxlFSPEHKAVQP3qihOYiJi7uUgCqVXwZVb6QKaPYQ5vAFCMRAkyMsWNRgEgpHqZ2IXVpsp7c2ufKLbV/dchC/Vp3owH7LwcWNBXOrsl/+GwWVQihvYJpUyjZiW8e3QXTWl5wCxnMiv2wANXmIDhS+LaV6FK0Cc8Kenxluh6mdlMtwM720SzROkLMYIDM8OevrGAjhfLDmOLXT1OZsQxGgIHQJCiJpt6CvY6bujVvZl9wRV2EijRkmG60ScGjMLWMFhcT73hhPYvYmOnteeoZ6zqZ/9dOXzUShO2xW/2GrCcAmGIF7MCQxjUyjCVQwCHeUkcUWTn0bTvtMfvCzR1w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(366016)(376014)(1800799024)(6133799003)(22082099003)(18002099003)(921020)(10067099003)(56012099006)(11063799006)(5023799004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SSt2Q0UwelNKVDVreDdmenphVWU0RnE1dG11Z3lPaUxZNmh2WTFkMmNweCtZ?=
+ =?utf-8?B?WXdBVXFQWmNDSm1VMEpXVlVEaGRhdC8wclphcy9BRUg3YWU5WkRibHNqYzds?=
+ =?utf-8?B?ZzgrbUU1UWVhNlJJSmhBSlVScjYwa3o4VmdSeHAvNEZjV2xSUG9IcjJ3SCtS?=
+ =?utf-8?B?Z3pnTThGM1ppc2Z0NmF1cy93Y0VQSGVZQ1IvdmVjUVd4cTJDQXZ4elM4T2sz?=
+ =?utf-8?B?N3lWL0YwajFwY0ViNDVXZERpZFU5UnJXSk5IRXI3UjVGV0VIZ3Zhd0VhNHIx?=
+ =?utf-8?B?Nm1zYTBTUk9XTmZSR2hTSXJLSktYTUpXZkNFK0pndzQyWnkrRTIwOGcwb1pO?=
+ =?utf-8?B?dlNjMTdMVEl4LzBmMGRpemMzN2JDVUZXcHRQNFVEcDdZTjZIWFRPQW5lSysx?=
+ =?utf-8?B?eDFpeGhtUjdkMGRpOTRpUVM3Nk5weXNFNXRjanRCbzRJWWMxNjZqZHlBdzkv?=
+ =?utf-8?B?OUVnNVpmb1ZDTjFvNFRkZUp5Q3hIcGNHZERXMEs1V29WSE5FSS9RQTNUdEFS?=
+ =?utf-8?B?NC9EamJlbWJmZUI5aWdxUW0rbkQ0WkhuN2JkSjNYZkxaNm0xWnc3VURYYXZi?=
+ =?utf-8?B?TmhKeU0vNjV0QWRDL3JOeWptdGtDYnk4N0FNdktxNVFXWFd2VW93ZWdiaWwr?=
+ =?utf-8?B?YVpNM3BaTjdQNHEyOVlFMllHNkpFTVRaRFBqSHJMTGlzeHROZi9ZQ0o0Wldu?=
+ =?utf-8?B?VGEvU0lycFVld3dWbG5EV0JBaGJ4YWFMemlUamZVdDJIbFRZZ1YwalVRUVRq?=
+ =?utf-8?B?cS9OazFrYmxRNUoxQ2pZWGxqSmZGWUoxc2ltdVYvbk1sWklLYkRmYzNPcU9N?=
+ =?utf-8?B?Q1hTWVJRWHlWL1dzN0dzUWJLZmlZOWFyQVBkcG8wT0szM21EWlZQYURnTkpY?=
+ =?utf-8?B?aEFISFR4cng3SnUxcVBWckRmUkgzUzJnYXNCT1lLRzREWG5RcHoybVJiTVZ2?=
+ =?utf-8?B?QUxkWnY0TXo3RnFhcGRoeHR1b2E2NXRzRUVhYnArSDJMcXRnNGpyT2c4YjZ1?=
+ =?utf-8?B?YWV1a2hJbS95K0ZTWU9tUWErTnBOWEhsbVJ2b3ZTdXdYTmFsZWhwNC9yTSth?=
+ =?utf-8?B?YS8xVDdOWXJhUlByMC9UKzBJZHYzL0dNTFh3b1FYSGpydUtsYVJqL1R2QUEy?=
+ =?utf-8?B?S0lrdVhKU2VpUUdjenU0dUVxU2NTZkxuOEplUEJ0bHdMSGJHSHVqR1lxajAz?=
+ =?utf-8?B?QXhqUDdtRUtCZHhlTHZuNTduSG1Gei8zY2E4cmo4UFFsTEE3OEdmMFpjMTd3?=
+ =?utf-8?B?Z3lrMTdzb29uZ1B0VTFDQWNMbWJacTdXUlErV0ZpTkFGZWdVZHc0VnpwT0cy?=
+ =?utf-8?B?Z09JZnRrZ2Q1UWhZS3pVOC8zb0FJVE8yQ0g1WDBVL1FoTjUvQmgyQ0lyRnd3?=
+ =?utf-8?B?cDVnV1lhZWVrZ01FSlFzaEt2R2tBeWJwWXQ4ckRPY1R4YTAwUXBKcmgrT1ZR?=
+ =?utf-8?B?aThtRmhBWUdPdjgxdVp4TmJkVEM4SUhsc3RpOUtiZ1hyUXNpYUlaelE4bGNK?=
+ =?utf-8?B?VzFPS2I3ejFQS1FvNGZCb2VFY0ZhNEhwY3pKWEdIdWZpQW1PcXJ5SVF6Y0Nk?=
+ =?utf-8?B?RG1wS3JQMTNBbjdLOFRzQmNkamZSbVFUWnZVSDM5SE5ucWxTUDViZzNBdStE?=
+ =?utf-8?B?R3ZJdlJGUExxY1FEcE0wVytYNkhERjZoL1diUkhQblc3K2RRL2pSVnRiRUlD?=
+ =?utf-8?B?ci8wSEJpUnZZR3RYSW1qeGUzYWRCTXZGdG8ySCtMT1pLRTVWZTJxL1g4eWQ1?=
+ =?utf-8?B?Z1FaQis4QmV5TFZraDFmbUI2M3o0TDE1Q3RCakRjRnhvTDVlVG1BajV2V3Jx?=
+ =?utf-8?B?YXAwcnA2QjZzNXdyalYwWVVvVDJvOHFraldqU1o5b0hQeUE4SlRoTitwK29N?=
+ =?utf-8?B?TVJ0TUg3bTFlSHpCc0NUMExqb0JNMlQ1MnNQTXJlMGttUlNTMStOUXAwTEl5?=
+ =?utf-8?B?RXFPcWhTdGtjTkI3L04yME5lTFpSM1NZRkpuK1pyQkxWNW9EOUlaQ1ZZRHNU?=
+ =?utf-8?B?OFQ2dFA5b3lMSDBZSHZBL054NmNlS0JaNjMxUVB2RlhtbHFmNTZoVjFEV09W?=
+ =?utf-8?B?blFucnZtSENVTzZLdmt4a3Y3NitMb3dhMDJiVkFrMGtCZGlQRnc1N2dqaFhM?=
+ =?utf-8?B?Nkt0SVNpcTE3eTZ1bmpoeElpZ1ozK1VXK2E5dkozMHdGdkNDN21rREVFMk1F?=
+ =?utf-8?B?MDN0WXFyRTNsWHJwOFBkRlhLbUp4YmlVczZkM1g2V0Rkdk1uQ2hnb0JZRzlh?=
+ =?utf-8?B?RVVMQlNwTzdLRmlYQk1TbW9XY2czaHZFcThqblpYM05XY0E4eDBYeDlVNTd6?=
+ =?utf-8?Q?q2wq2jEb4D/jcp3Bbk?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 30c58b29-3f79-4729-a59c-08df12074f21
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Sep 2026 02:24:31.2611
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1cV/qG4beDPnCKyYZaiHFdlLYF93aWukeu6iKxzuDP6p1pfK9036LGKUfqt84Y3F
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6486
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260912_103207_022382_6E1FAEA0 
-X-CRM114-Status: GOOD (  36.30  )
+X-CRM114-CacheID: sfid-20260913_192439_260137_789AC26E 
+X-CRM114-Status: GOOD (  17.02  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -121,124 +167,122 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-09-11 06:30 PM, David Matlack wrote:
-> On 2026-09-10 06:51 PM, Bjorn Helgaas wrote:
-> > On Tue, Jul 28, 2026 at 10:09:59PM +0000, David Matlack wrote:
+folio->private != NULL indicates a folio carries private data, replacing
+PG_private. All PG_private users are converted. Remove PG_private and
+reserve the space as PG_folio for future use. Unused PG_private functions
+are removed too.
 
-> > > +bool pci_liveupdate_preserve_bus_numbers(struct pci_bus *bus, struct pci_dev *dev)
-> > > +{
-> > > +	struct pci_dev *parent = bus->self;
-> > > +
-> > > +	if (dev->liveupdate.preserve_bus_numbers)
-> > > +		return true;
-> > > +
-> > > +	if (parent && parent->liveupdate.preserve_bus_numbers) {
-> > > +		/*
-> > > +		 * Preserve bus numbers if the parent bridge is required to
-> > > +		 * preserve bus numbers. Otherwise the PCI core could expand
-> > > +		 * this bridge's reservation beyond its parent (which cannot
-> > > +		 * expand).
-> > > +		 */
-> > > +		dev->liveupdate.preserve_bus_numbers = true;
-> > > +	} else {
-> > > +		/*
-> > > +		 * Otherwise preserve bus numbers if there are any incoming
-> > > +		 * preserved devices. This ensures that the PCI core does not
-> > > +		 * allocate a bus number to a non-preserved device that
-> > > +		 * conflicts with the bus number already assigned to a preserved
-> > > +		 * device.
-> > > +		 *
-> > > +		 * This is slightly more restrictive than it needs to be. For
-> > > +		 * example, each host bridges have their own range of bus
-> > > +		 * numbers that won't conflict with other host bridges. But the
-> > > +		 * previous kernel should have assigned a sane bus topology and
-> > > +		 * it is simpler to just adopt that entire topology.
-> > > +		 */
-> > > +		dev->liveupdate.preserve_bus_numbers =
-> > > +			pci_has_incoming_preserved_devices();
-> > > +	}
-> > > +
-> > > +	return dev->liveupdate.preserve_bus_numbers;
-> > 
-> > I'm not sure why you don't just return
-> > pci_has_incoming_preserved_devices() in all cases, which is what the
-> > commit log suggests this patch does.  What's gained by all the logic
-> > here?  It's not like devices will be hot-added during the kexec.
-> 
-> To protect against pci_has_incoming_preserved_devices() flipping from
-> true to false while the PCI core is in the middle of a scan. It is not
-> likely to ever happen given most host bridge scanning should happen
-> during early boot, but theoretically possible with the way the PCI core
-> code is structured. I did not see way to structurally ensure these 2
-> things cannot race. A lot of the host bridge scanning happens without
-> taking the rescan lock, for example.
+Assisted-by: LLM
+Signed-off-by: Zi Yan <ziy@nvidia.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+To: Baoquan He <baoquan.he@linux.dev>
+To: Mike Rapoport <rppt@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: Pratyush Yadav <pratyush@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To: Jan Kara <jack@suse.cz>
+To: David Hildenbrand <david@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Dave Young <ruirui.yang@linux.dev>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Lorenzo Stoakes <ljs@kernel.org>
+Cc: "Liam R. Howlett" <liam@infradead.org>
+Cc: Vlastimil Babka <vbabka@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: kexec@lists.infradead.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-trace-kernel@vger.kernel.org
+---
+ include/linux/page-flags.h     | 19 ++-----------------
+ include/trace/events/mmflags.h |  2 +-
+ kernel/vmcore_info.c           |  1 -
+ 3 files changed, 3 insertions(+), 19 deletions(-)
 
-After working on this more, I do see a way to simplify the logic in
-pci_liveupdate_preserve_bus_numbers().
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index 08988877331ba..10f4ad075ea48 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -44,10 +44,6 @@
+  * Consequently, PG_reserved for a page mapped into user space can indicate
+  * the zero page, the vDSO, MMIO pages or device memory.
+  *
+- * The PG_private bitflag is set on pagecache pages if they contain filesystem
+- * specific data (which is normally at page->private). It can be used by
+- * private allocations for its own usage.
+- *
+  * During initiation of disk I/O, PG_locked is set. This bit is set before I/O
+  * and cleared when writeback _starts_ or when read _completes_. PG_writeback
+  * is set before writeback starts and cleared when it finishes.
+@@ -105,7 +101,7 @@ enum pageflags {
+ 	PG_owner_2,		/* Owner use. If pagecache, fs may use */
+ 	PG_arch_1,
+ 	PG_reserved,
+-	PG_private,		/* If pagecache, has fs-private data */
++	PG_folio,		/* Do not use: reserved for folio identification */
+ 	PG_private_2,		/* If pagecache, has fs aux data */
+ 	PG_reclaim,		/* To be reclaimed asap */
+ 	PG_swapbacked,		/* Page is backed by RAM/swap */
+@@ -575,7 +571,7 @@ FOLIO_FLAG(swapbacked, FOLIO_HEAD_PAGE)
+ /*
+  * Private page markings that may be used by the filesystem that owns the page
+  * for its own purposes.
+- * - PG_private and PG_private_2 cause release_folio() and co to be invoked
++ * - folio->private and PG_private_2 cause release_folio() and co to be invoked
+  */
+ 
+ static __always_inline bool folio_test_private(const struct folio *folio)
+@@ -583,17 +579,6 @@ static __always_inline bool folio_test_private(const struct folio *folio)
+ 	return folio->private;
+ }
+ 
+-static __always_inline int PagePrivate(const struct page *page)
+-{
+-	return !!page->private;
+-}
+-
+-/* no-ops during transition */
+-static __always_inline void folio_set_private(struct folio *folio) { }
+-static __always_inline void folio_clear_private(struct folio *folio) { }
+-static __always_inline void SetPagePrivate(struct page *page) { }
+-static __always_inline void ClearPagePrivate(struct page *page) { }
+-
+ FOLIO_FLAG(private_2, FOLIO_HEAD_PAGE)
+ 
+ /* owner_2 can be set on tail pages for anon memory */
+diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
+index ef9aa388b84f7..3c153b3ad8450 100644
+--- a/include/trace/events/mmflags.h
++++ b/include/trace/events/mmflags.h
+@@ -144,7 +144,7 @@ TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
+ 	DEF_PAGEFLAG_NAME(owner_2),					\
+ 	DEF_PAGEFLAG_NAME(arch_1),					\
+ 	DEF_PAGEFLAG_NAME(reserved),					\
+-	DEF_PAGEFLAG_NAME(private),					\
++	DEF_PAGEFLAG_NAME(folio),					\
+ 	DEF_PAGEFLAG_NAME(private_2),					\
+ 	DEF_PAGEFLAG_NAME(writeback),					\
+ 	DEF_PAGEFLAG_NAME(head),					\
+diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
+index 8614430ca212a..5a417f8a922ab 100644
+--- a/kernel/vmcore_info.c
++++ b/kernel/vmcore_info.c
+@@ -216,7 +216,6 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_LENGTH(free_area.free_list, MIGRATE_TYPES);
+ 	VMCOREINFO_NUMBER(NR_FREE_PAGES);
+ 	VMCOREINFO_NUMBER(PG_lru);
+-	VMCOREINFO_NUMBER(PG_private);
+ 	VMCOREINFO_NUMBER(PG_swapcache);
+ 	VMCOREINFO_NUMBER(PG_swapbacked);
+ #define PAGE_SLAB_MAPCOUNT_VALUE	(PGTY_slab << 24)
 
-pci_liveupdate_preserve_bus_numbers() is used in 2 places during
-scanning. First to decide if the PCI core should preserve bus numbers or
-is free to allocate new ones, and second to decide if the PCI core is
-allowed to assign bus numbers to bridges that are missing bus numbers.
+-- 
+2.53.0
 
-The latter case should never happen during initial scanning unless a
-bridge was somehow reset during the kexec, but could legitimately happen
-if a bridge is later hot-plugged and I did not want Live Update to
-unnecessarily break that scenario. But then that creates this problem
-where pci_has_incoming_preserved_devices() can suddenly flip from true
-to false at any time and I needed all the complex logic to keep it
-consistent for a given scan.
-
-Instead we can split the handling of these cases:
-
- 1. When the PCI core needs to decide if it should preserve bus numbers
-    due to Live Update, pci_liveupdate_preserve_bus_numbers() can return
-    true forever if any device was preserved by the previous kernel,
-    which simplifies the logic.
-
- 2. Then to handle the case of a bridge is enumerated that does not have
-    bus numbers assigned, we can handle that separately. If we reorder this
-    with the next commit so the PCI core knows exactly which bridges have
-    preserved downstream endpoints, then it is possible to determine if it
-    is safe for the PCI core to allow bus numbers to be assigned to an
-    unconfigured bridge.
-
-After re-ordering, we can end up with something like this:
-
-  bool pci_liveupdate_preserve_bus_numbers(void)
-  {
-  	return pci_liveupdate.had_incoming;
-  }
-
-  bool pci_liveupdate_refuse_bus_numbers(struct pci_bus *bus, struct pci_dev *dev)
-  {
-  	struct pci_dev *bridge;
-
-  	for_each_pci_bridge(bridge, bus) {
-  		if (!bridge->liveupdate.was_incoming || bridge->subordinate)
-  			continue;
-
-  		pci_err(dev, "Not assigning bus numbers, preserved bridge %s lost its bus number configuration\n",
-  			pci_name(bridge));
-  		return true;
-  	}
-
-  	return false;
-  }
-
-The net effect on pci_scan_bridge_extend() is:
-
-  bool preserve_bus_numbers = !pcibios_assign_all_busses() ||
-  			    pci_liveupdate_preserve_bus_numbers();
-  ...
-  	if (pci_liveupdate_refuse_bus_numbers(bus, dev))
-  		goto out;
-
-We could further scope pci_liveupdate_preserve_bus_numbers() to only
-return true for host bridges with preserved endpoints downstream, but
-that doesn't seem worth the extra complexity. It also seems nice to keep
-the pci_liveupdate_preserve_bus_numbers() policy global to match how the
-existing pcibios_assign_all_busses() policy is global.
-
-Does that look reasonable?
 
