@@ -4,123 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AA7A5C88E70
-	for <kexec@archiver.kernel.org>; Mon, 14 Sep 2026 13:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 639EEC88E73
+	for <kexec@archiver.kernel.org>; Mon, 14 Sep 2026 16:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=9BCqD8kAZuJn9pHsxZwwfpeEhm7EpPULp00Tm/xS4r8=; b=pAnbLC0Qzn4bI8l/z6Y5uGzY9X
-	gZXaVcXZuV4rHgsVobw4zbFBAvyMxhs2IQsdQ/JeZUnUnf2vccVxuL9Wm6IikUoR0+tgy28L4QUEl
-	vKpFF02fXtfIj2Q8N3nSh47cW3aunfV+Cos8UhypE3VUAR4J5gJBwzvwpwVXR08HvywXhwQtuaJQS
-	+WOYt0mHSzwxJQqQ7bYOPqMrqUF60RaFQwWnH91JfND16PvUHyW47zgOEt2bzt/Bwsz96SnOWJR8L
-	4g9DUu9qCkaW/x1gF1xsKV4g3Wj5+rvC9idZnJg027VSN6hu/5ZwwDy4eJOm3pl5ObEJq5vLr1sxe
-	goc86img==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=vaEn4gJaLG6//UlaQV046R50HUoC/N5LfAqjMif4QV0=; b=k+sFz4D269TWADDMevVFjJnYrM
+	90oaRxVIeb9lvdayr98kfaXKT19SPDGtxof/u6VGyxD6qqCXMhgkELopYKBhpjdFU6LC19sbNjM1/
+	N7umDw/h6KcpSQ7cL/cDqyeZObk6o/mXF7MGvaWQlRkyxOhbnl3KGap2D3MPprVaF0KAl0ICBj+CE
+	Nx/3hnYTJsrwNkXD5L54vQ6HheUDLjJ4XZdS/An+2wlJiKJWlj4etzNnf887VETlG9xhEXJ5Wf4b6
+	X+Exn9OsKxyHwM5CKLr5P07Cb+uuqbvMvs6sdtocW57Xiv2D1jW77MHlmpo8jlEd54y66J8PGsHyN
+	12yKa7lA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x66tq-00000003oEN-37PV;
-	Mon, 14 Sep 2026 13:39:10 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1x69on-00000004K8E-1DDR;
+	Mon, 14 Sep 2026 16:46:09 +0000
+Received: from mail-pz2-x10.google.com ([2607:f8b0:4864:3b::10])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x66tp-00000003oEF-2EgA
+	id 1x69ol-00000004K7m-17xG
 	for kexec@lists.infradead.org;
-	Mon, 14 Sep 2026 13:39:09 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id EEBEA60120;
-	Mon, 14 Sep 2026 13:39:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F0AC1F000FF;
-	Mon, 14 Sep 2026 13:38:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789393148;
-	bh=9BCqD8kAZuJn9pHsxZwwfpeEhm7EpPULp00Tm/xS4r8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=QbM1o6vTrDEZV6964roF4n6AhcrTROnyGsSuuU07RFZAt5GA0529PbdCzvBeerMPP
-	 dSXsFcCmoiGOIJ9z0rdabhNGzfShcpecqZa792W8o53k1tNCcxbKMYTIn76NlPYivS
-	 o6lNDIpaoY4pSXfq84dX3tgv4rzDYcq/oivh1LMOc+h5jcsT6fxNz/kcQ9s6wAEREs
-	 c6ehcEF/Vx42vqZaLgOSZ9pL/yopB6aAiEYwqR0LdkCDaakbCzQpTp33BHJxMppKGm
-	 9guiCSmyCYsCh4oinrfdMK2WTTZgm5S+2CSEaxCKN4lZYkmGVMLt1tLKR5UkN5r4hT
-	 uZV8w+oGxTQqg==
-Message-ID: <a4132624-c602-4d93-86fb-7d9369646223@kernel.org>
-Date: Mon, 14 Sep 2026 15:38:55 +0200
+	Mon, 14 Sep 2026 16:46:08 +0000
+Received: by mail-pz2-x10.google.com with SMTP id d2e1a72fcca58-86868f7707dso798592b3a.2
+        for <kexec@lists.infradead.org>; Mon, 14 Sep 2026 09:46:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1789404364; x=1790009164; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=vaEn4gJaLG6//UlaQV046R50HUoC/N5LfAqjMif4QV0=;
+        b=eTSoOulIZ27mhhzv/9zSmZgKyPXC4qTjJv1Q8GImIHuNdMisQlN5RvNfedwaR2abmn
+         GtF1iCOYk9PqSFcNqOWp8T+BFoZ8Zn3TnkQWLW0j4iFMqCL3rDQ6f2SHzcbi9kz4P7Qg
+         9suh+qeYapsV4cZ2N4X33q9A7IAYVo3NmTJREV0lrGFYM5yxRIBq0qIYIDwgblbFA0oY
+         C+AfMmg3lYi7pXMksCfH6g/iFXJ3kvhaB/WXLPi2+mppr4VkuiAgWRAB2focxZIAmmn7
+         dT2UWkbOYicldFQUPA4ff/MX3jscK0jEI+uVSak/po6rYcRd2XCCGwmI4X2AgDWBlMy0
+         L/BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789404364; x=1790009164;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=vaEn4gJaLG6//UlaQV046R50HUoC/N5LfAqjMif4QV0=;
+        b=KVhYFuLnrSzhsSPzSRVXqoSO3XhKYNFcR+Pcb0szZiFZ/hcyz41Fwhmf6grAbiHuL9
+         oRtVfaKQFnMaw9xciukh/Fx4DH+GhcuExcwNLEuGOXpUHgDVUC4l9IEI0Hxnn8dwxuHk
+         TuUptBDJJWWpEQxLun0C7/wtCcSgwqKzg1ibbsHP7Gt0M7MIIwFzkkQPGTpNMEFq8yYa
+         qJDerEWmThKhWPrCOSTNZF2+vE9yZSvLmRFweWxD/KHt4Iu1fICEMT3yxQGhtY4UcjkA
+         vn744pZs1085xhZzZ0ecWTRrKE2GmtG37edvyNDBH+i6OlXpMtZydDzL5hIqg3wrq7yx
+         +0pw==
+X-Gm-Message-State: AFuF++ncFaARXSQoAD8hw/0qPDB8KWBjWaqc+/OuqWI4AgjrXEAOq1wq
+	/9Pkw0ogVidyw4WPjYaw2Z7oZ0AGfHyaLE+rQ+MCSfdcMKRGRKJjL/7aAewdAmwDww==
+X-Gm-Gg: AYBFou060XGFG3h2SiF8+yMqKLsDkFVYpBO00tm32PY8LNY65j0TawcpP2sJcT130G/
+	6t2UQyVMa7Fy47Jfq0Hbuf9QBpJGyeRt96qtOrZPOBeb8/KSUU5xjtF2epJ0paIQHOokNGvOMZb
+	SLXkBYuGHkaPzJx4D+wxg7x3/BbOrD377p7xbIjCoV3/U2DUoUdD9lY5PkzXn6fNYuYKOngz6Hr
+	AY+Vxywv6gTgFvgEZcQFN/yKE6IDtfmY3Pu4a26IRQB/BwJdj3G/1rqtuVuqh0SKMGbUgaOFksD
+	bmvY4DhWl+sDWANAiP1DZk6q3DzNEoAyoxC5TX5M6yvbG6mq0ocQErWjC81fwNZ+RM22dOMWcM3
+	sBLiFcYvqmoXjYgexRZxSO3fbLlm4aIBSYWc7Cp3o+huF2XAy+eDZLvQhkSu+xrlA+pMF1qQHwk
+	NcrRUXWWLvNfPvLj252ujd72QAdamSqSH3hZbqlh+xo3piozWcvZOpLu5WszkcqeFdQ0kzDk+SY
+	6d86PkB/jRX0Mfl0CtZz1dUxcZvt0RZAOY8VIwW
+X-Received: by 2002:a05:6a00:2992:b0:857:7337:5db9 with SMTP id d2e1a72fcca58-86f860d2bdfmr7633241b3a.23.1789404363216;
+        Mon, 14 Sep 2026 09:46:03 -0700 (PDT)
+Received: from google.com (132.200.185.35.bc.googleusercontent.com. [35.185.200.132])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-86b21f0597dsm4930607b3a.0.2026.09.14.09.46.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Sep 2026 09:46:02 -0700 (PDT)
+Date: Mon, 14 Sep 2026 16:45:58 +0000
+From: David Matlack <dmatlack@google.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Alexander Graf <graf@amazon.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
+	Josh Hilke <jrhilke@google.com>,
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pranjal Shrivastava <praan@google.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v8 08/12] PCI: liveupdate: Adopt ACS controls in incoming
+ preserved devices
+Message-ID: <aqgkxmXlhfqsdfAa@google.com>
+References: <20260728221007.2098560-9-dmatlack@google.com>
+ <20260910235149.GA364189@bhelgaas>
+ <aqRJF8OME7hn7CJr@google.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 16/16] mm/page-flags: remove PG_private
-To: Zi Yan <ziy@nvidia.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Muchun Song <muchun.song@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>,
- Gregory Price <gourry@gourry.net>, Ying Huang
- <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Kairui Song <kasong@tencent.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Baoquan He <baoquan.he@linux.dev>, Pasha Tatashin
- <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Jan Kara <jack@suse.cz>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Dave Young <ruirui.yang@linux.dev>,
- Shuah Khan <skhan@linuxfoundation.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- kexec@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20260913-remove-pg_private-v4-0-848550f7574e@nvidia.com>
- <20260913-remove-pg_private-v4-16-848550f7574e@nvidia.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260913-remove-pg_private-v4-16-848550f7574e@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aqRJF8OME7hn7CJr@google.com>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260914_094607_484377_839CF555 
+X-CRM114-Status: GOOD (  35.36  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -135,45 +121,227 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 9/14/26 04:24, Zi Yan wrote:
-> folio->private != NULL indicates a folio carries private data, replacing
-> PG_private. All PG_private users are converted. Remove PG_private and
-> reserve the space as PG_folio for future use. Unused PG_private functions
-> are removed too.
+On 2026-09-11 06:31 PM, David Matlack wrote:
+> On 2026-09-10 06:51 PM, Bjorn Helgaas wrote:
 > 
-> Assisted-by: LLM
-> Signed-off-by: Zi Yan <ziy@nvidia.com>
-> To: Andrew Morton <akpm@linux-foundation.org>
-> To: Baoquan He <baoquan.he@linux.dev>
-> To: Mike Rapoport <rppt@kernel.org>
-> To: Pasha Tatashin <pasha.tatashin@soleen.com>
-> To: Pratyush Yadav <pratyush@kernel.org>
-> To: Jonathan Corbet <corbet@lwn.net>
-> To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> To: Jan Kara <jack@suse.cz>
-> To: David Hildenbrand <david@kernel.org>
-> To: Steven Rostedt <rostedt@goodmis.org>
-> To: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Dave Young <ruirui.yang@linux.dev>
-> Cc: Shuah Khan <skhan@linuxfoundation.org>
-> Cc: Lorenzo Stoakes <ljs@kernel.org>
-> Cc: "Liam R. Howlett" <liam@infradead.org>
-> Cc: Vlastimil Babka <vbabka@kernel.org>
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: kexec@lists.infradead.org
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-trace-kernel@vger.kernel.org
-> ---
+> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > index 77b17b13ee61..22001bdf4c97 100644
+> > > --- a/drivers/pci/pci.c
+> > > +++ b/drivers/pci/pci.c
+> > > @@ -34,6 +34,8 @@
+> > >  #include <linux/aer.h>
+> > >  #include <linux/bitfield.h>
+> > >  #include <linux/suspend.h>
+> > > +
+> > > +#include "liveupdate.h"
+> > >  #include "pci.h"
+> > >  
+> > >  DEFINE_MUTEX(pci_slot_mutex);
+> > > @@ -1008,6 +1010,9 @@ void pci_enable_acs(struct pci_dev *dev)
+> > >  	bool enable_acs = false;
+> > >  	int pos;
+> > >  
+> > > +	if (!pci_liveupdate_enable_adopted_acs_controls(dev))
+> > > +		return;
+> > 
+> > Ugh.  The asymmetry between pci_save_state(), which does nothing
+> > ACS-related, and pci_restore_state(), which enables it, is sort of
+> > sketchy to begin with.
+> > 
+> > The command-line parsing in this path feels like kind of a wart (not
+> > that you're touching it).
+> > 
+> > It just seems like this path is already hard to analyze, and
+> > liveupdate is making it harder.
+> > 
+> > If we could save/restore the ACS state around the reset, wouldn't that
+> > solve this without any liveupdate specials here?
+> 
+> Yeah that would simplify the liveupdate support greatly. Let me work on
+> that for v9.
 
-Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+Here's the patch I have prepped for v9 to save/restore ACS controls
+around reset:
 
--- 
-Cheers,
+From 0c69424454de0c569aca67bc69f496db915a9bcf Mon Sep 17 00:00:00 2001
+From: David Matlack <dmatlack@google.com>
+Date: Fri, 11 Sep 2026 20:05:04 +0000
+Subject: [PATCH] PCI: Save and restore the ACS Control register
 
-David
+Save the ACS Control register in pci_save_state() and write it back
+in pci_restore_state(), instead of recomputing the ACS controls from
+scratch with pci_enable_acs().
+
+This makes ACS symmetric with the rest of a device's saved state. Today
+pci_save_state() ignores ACS entirely and pci_restore_state() re-enables
+the ACS controls from the kernel's current ACS policy. As a result, a
+device can come out of a reset with different ACS controls than it went
+in with, e.g. any controls programmed outside of pci_enable_acs() are
+silently dropped.
+
+pci_enable_acs() runs when a driver binds to a device
+(pci_dma_configure()), i.e. after pci_bus_add_device() has already saved
+the device's state. Refresh the saved ACS Control register there as
+well, otherwise a subsequent reset would revert ACS back to the
+configuration left behind by firmware.
+
+Devices that rely on device-specific quirks to enable an ACS equivalent
+keep that configuration outside of the ACS Control register, so keep
+configuring ACS from scratch for them. Do the same for devices that have
+no saved ACS state at all.
+
+Assisted-by: Claude:claude-opus-5
+Signed-off-by: David Matlack <dmatlack@google.com>
+---
+ drivers/pci/pci.c    | 66 +++++++++++++++++++++++++++++++++++++++++++-
+ drivers/pci/pci.h    |  5 ++++
+ drivers/pci/quirks.c |  7 +++++
+ 3 files changed, 77 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index b2879a6be5f8..dd25c01736b4 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1021,6 +1021,55 @@ static void pci_std_enable_acs(struct pci_dev *dev, struct pci_acs *caps)
+ 		caps->ctrl |= (dev->acs_capabilities & PCI_ACS_TB);
+ }
+ 
++/**
++ * pci_save_acs_state - save the ACS Control register
++ * @dev: the PCI device
++ *
++ * Record the ACS controls currently programmed in hardware so that
++ * pci_restore_acs_state() can reapply them after a reset.
++ */
++static void pci_save_acs_state(struct pci_dev *dev)
++{
++	struct pci_cap_saved_state *save_state;
++
++	if (!dev->acs_cap)
++		return;
++
++	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ACS);
++	if (!save_state)
++		return;
++
++	pci_read_config_word(dev, dev->acs_cap + PCI_ACS_CTRL,
++			     (u16 *)&save_state->cap.data[0]);
++}
++
++/**
++ * pci_restore_acs_state - restore the ACS Control register
++ * @dev: the PCI device
++ */
++static void pci_restore_acs_state(struct pci_dev *dev)
++{
++	struct pci_cap_saved_state *save_state = NULL;
++
++	if (dev->acs_cap && !pci_need_dev_specific_enable_acs(dev))
++		save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ACS);
++
++	/*
++	 * Devices that rely on device-specific quirks to enable an ACS
++	 * equivalent keep that configuration outside of the ACS Control
++	 * register, so there is nothing useful to restore for them. Configure
++	 * ACS from scratch instead, which also covers devices that have no
++	 * saved ACS state at all.
++	 */
++	if (!save_state) {
++		pci_enable_acs(dev);
++		return;
++	}
++
++	pci_write_config_word(dev, dev->acs_cap + PCI_ACS_CTRL,
++			      *(u16 *)&save_state->cap.data[0]);
++}
++
+ /**
+  * pci_enable_acs - enable ACS if hardware support it
+  * @dev: the PCI device
+@@ -1057,6 +1106,15 @@ void pci_enable_acs(struct pci_dev *dev)
+ 	__pci_config_acs(dev, &caps, config_acs_param, 0, 0);
+ 
+ 	pci_write_config_word(dev, pos + PCI_ACS_CTRL, caps.ctrl);
++
++	/*
++	 * pci_enable_acs() runs when a driver binds to the device, i.e. after
++	 * pci_bus_add_device() has already saved the device's state. Refresh
++	 * the saved ACS Control register so that a subsequent reset restores
++	 * the controls programmed here rather than the ones left behind by
++	 * firmware.
++	 */
++	pci_save_acs_state(dev);
+ }
+ 
+ /**
+@@ -1800,6 +1858,7 @@ int pci_save_state(struct pci_dev *dev)
+ 	pci_save_aer_state(dev);
+ 	pci_save_ptm_state(dev);
+ 	pci_save_tph_state(dev);
++	pci_save_acs_state(dev);
+ 	return pci_save_vc_state(dev);
+ }
+ EXPORT_SYMBOL(pci_save_state);
+@@ -1877,7 +1936,7 @@ void pci_restore_state(struct pci_dev *dev)
+ 	pci_restore_msi_state(dev);
+ 
+ 	/* Restore ACS and IOV configuration state */
+-	pci_enable_acs(dev);
++	pci_restore_acs_state(dev);
+ 	pci_restore_iov_state(dev);
+ 
+ 	dev->state_saved = false;
+@@ -3532,6 +3591,11 @@ void pci_allocate_cap_save_buffers(struct pci_dev *dev)
+ 	if (error)
+ 		pci_err(dev, "unable to allocate suspend buffer for LTR\n");
+ 
++	error = pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ACS,
++					    sizeof(u16));
++	if (error)
++		pci_err(dev, "unable to allocate suspend buffer for ACS\n");
++
+ 	pci_allocate_vc_save_buffers(dev);
+ }
+ 
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index ba3c3fddddc2..037c1674f164 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -1095,6 +1095,7 @@ void pci_acs_init(struct pci_dev *dev);
+ void pci_enable_acs(struct pci_dev *dev);
+ #ifdef CONFIG_PCI_QUIRKS
+ int pci_dev_specific_acs_enabled(struct pci_dev *dev, u16 acs_flags);
++bool pci_need_dev_specific_enable_acs(struct pci_dev *dev);
+ int pci_dev_specific_enable_acs(struct pci_dev *dev);
+ int pci_dev_specific_disable_acs_redir(struct pci_dev *dev);
+ void pci_disable_broken_acs_cap(struct pci_dev *pdev);
+@@ -1105,6 +1106,10 @@ static inline int pci_dev_specific_acs_enabled(struct pci_dev *dev,
+ {
+ 	return -ENOTTY;
+ }
++static inline bool pci_need_dev_specific_enable_acs(struct pci_dev *dev)
++{
++	return false;
++}
+ static inline int pci_dev_specific_enable_acs(struct pci_dev *dev)
+ {
+ 	return -ENOTTY;
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 7aee30734303..e500c202d2ec 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5476,6 +5476,13 @@ static const struct pci_dev_acs_ops *pci_dev_acs_ops_get(struct pci_dev *dev)
+ 	return NULL;
+ }
+ 
++bool pci_need_dev_specific_enable_acs(struct pci_dev *dev)
++{
++	const struct pci_dev_acs_ops *p = pci_dev_acs_ops_get(dev);
++
++	return p && p->enable_acs;
++}
++
+ int pci_dev_specific_enable_acs(struct pci_dev *dev)
+ {
+ 	const struct pci_dev_acs_ops *p = pci_dev_acs_ops_get(dev);
 
