@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AA10AC982C9
-	for <kexec@archiver.kernel.org>; Tue, 15 Sep 2026 11:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BD4C9C982C5
+	for <kexec@archiver.kernel.org>; Tue, 15 Sep 2026 11:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=mjqLYqkFC5yCbrRzMMvOpmvK8b+wb1Az5sELRN6Iqmw=; b=4gIMMI2aLhqUTdDyGgjUrpHIjM
-	DCx0HzEtyQvGgBRid0ADAMshZkpohxjkEsYAFM1yl6t0IMXJlSSUYAbrbvM1jd/jUaRua5zN7smjv
-	+ZL5ODznYgL8Txpact2xkQT780Od16Z41GlP9NeO/wr4UaIY8zuAliH8k2GFJX0lONVy1nulwfDtQ
-	oE95kxg3je2balFs5vH7dbGM1btHxq5YyogTSQMpsyPkjzW/YtJtoGG04SGWpELI9aiw62QQP31Vi
-	LoEpkU+iCaCMYhJ5A5TmRGPFSxd2V+gweiAdmT50lLdrrMArZbpP8ZczF18cWT501kzMDuK0gTzfO
-	D7Pk0QKQ==;
+	bh=43PF/RCUOZQkJsOOgjTj3NZfqo5RZrpEBnO0+rNiFJE=; b=wJfUt20zCuP/1NbZ1EJKNfnyCB
+	gUoTqS180PZ/0Mr4bD4Oy/XoiwBQ2OQIPjsYiNaSb1veeeqOEtL4PSztFspAMx5C6cqpMJO9e2+i4
+	BarABVGBMZUGuWXFgfsAkJs9SV6hRCG4Mxbihst+zazOnFAi2Sg0UBHLcZ/bcYrD6FkswpNMV33zY
+	bpjEun0/U2tYkvENnNmrmGcvjnd8/gZJFGzyGLuHIYSgVw/fJReByiF+ureavR2wzicocz/ehMTb0
+	gDAmTUxjPXoJWI8w39nljUYPK2fyf5RQchD/bdLtPpXhMlXPIZPMq6w3Jp9D9pkm78dcVzxO1F2ZU
+	FbMa/zdQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6RTl-00000006Eml-0W34;
-	Tue, 15 Sep 2026 11:37:37 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1x6RTs-00000006Eza-0LE5;
+	Tue, 15 Sep 2026 11:37:44 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6RTa-00000006ERV-2m7I;
-	Tue, 15 Sep 2026 11:37:28 +0000
+	id 1x6RTi-00000006EfJ-0c7W;
+	Tue, 15 Sep 2026 11:37:35 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id B699B602C5;
+	by sea.source.kernel.org (Postfix) with ESMTP id 8DCDA43410;
+	Tue, 15 Sep 2026 11:37:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 022161F000FF;
 	Tue, 15 Sep 2026 11:37:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EE621F00893;
-	Tue, 15 Sep 2026 11:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789472245;
-	bh=mjqLYqkFC5yCbrRzMMvOpmvK8b+wb1Az5sELRN6Iqmw=;
+	s=k20260515; t=1789472253;
+	bh=43PF/RCUOZQkJsOOgjTj3NZfqo5RZrpEBnO0+rNiFJE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=fNFTQOJL+iGGO+zzzm7cDe+/taoDcFY7fewDCdDuBMLNk844/5YTOXExel7EKsF9S
-	 oLRnzjguOrHBG/PK7ZC549dR4lB6cSOioaIssgENRRB/BPi7+UG74t/yS8GmkCNH9C
-	 SYkWW/2u8YiYHbyNYlVSLFpnBvaUvCIp4Mwu/abM5lLuo8GHPpD/0L9dCr6/bh0kxz
-	 Ano4WmSOQb609KJxhLhb4QylzFqFY4npF26OT03shrB8BqGetnHALS1L68dHSQxDHf
-	 lkgeVcI6ujFF+0WS99WYyuepbVTQzAmtrQq19Z8PUhZtIGApiugszVbmJFY6aacriE
-	 TeUsi9M9eNUTQ==
+	b=KqnWgCCBBHbflkUyPO4GlX+NqrkQFoLbpdeV95+70PxGxWdRlCZK2hEFg7AKpGM8d
+	 P+sDlo6n6p/oD4DHtw5k4ao1CCny987weMHVwVi57TIzGmedW26EG1RySUo7EUC3wL
+	 govHdLEbUVf9mmDt8elYfT7Db4xTVjDVamv4EuP8wsrMfCbgWeOAVYswLv5gav0BOT
+	 MlginGpeWoN48Ny0LTtfFlqXOFFO5u4nlES7nGcrAPFHjrQQttsk0uwSQM7UkTulFT
+	 MHFUk3iByhyEoh4VP3/GmREzjD3XQ75V+DK8eWFkJXVQmcZAGfPHvBT+mosXjqMwpA
+	 YKgxCV7My/uOw==
 From: Christian Brauner <brauner@kernel.org>
-Date: Tue, 15 Sep 2026 13:31:33 +0200
-Subject: [PATCH RFC POC 47/50] iio: buffer: install the buffer descriptor
- when the ioctl returns
+Date: Tue, 15 Sep 2026 13:31:34 +0200
+Subject: [PATCH RFC POC 48/50] misc: fastrpc: install the dma-buf
+ descriptor when the ioctl returns
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260915-work-fd-reserve-unify-folded-v1-47-4d5217d6b246@kernel.org>
+Message-Id: <20260915-work-fd-reserve-unify-folded-v1-48-4d5217d6b246@kernel.org>
 References: <20260915-work-fd-reserve-unify-folded-v1-0-4d5217d6b246@kernel.org>
 In-Reply-To: <20260915-work-fd-reserve-unify-folded-v1-0-4d5217d6b246@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
@@ -71,12 +71,12 @@ Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jann Horn <jannh@google.com>,
  kexec@lists.infradead.org, linux-hyperv@vger.kernel.org, 
  "Christian Brauner (Amutable)" <brauner@kernel.org>
 X-Mailer: b4 0.17-dev-db0b7
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1959; i=brauner@kernel.org;
- h=from:subject:message-id; bh=RM8/Ryi0JBjisB2tI5DXR2rE8sCF/AliS5Zp4F8Qhf4=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSt1KkPFJZ6IZfMtyJ0UsaFFiuPoGWsPxtn3v1o+e3z3
- stfX0943lHKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjCR6LMM/yNudM+8naelq7Sn
- g+X00Zpv+usvL13mfINZZtGLrdYV3KkMfzjPLfxTceTH7fV1ATe3FQTfd1Vd7vTqOWPz3spdkTu
- WLmIFAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1831; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=cqNOp0aS6I05gELpjlHXd0owI5nLbJqswEU8UWMTx0A=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSt1KkPYaw+MXnFd73DKesXPFlfMXNFNsPLRZf+RF2XY
+ bp6P+0Kb0cpC4MYF4OsmCKLQ7tJuNxynorNRpkaMHNYmUCGMHBxCsBETGQYGSZ8vdT+NFe0bk0l
+ +55pTDcfSvjMedPirtK/tvj3rIZKzuUM/8x33i1095DRM+a7Hu9qcGFp07anFQ2bOM4tOR05Zb0
+ HOzMA
 X-Developer-Key: i=brauner@kernel.org; a=openpgp;
  fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 X-BeenThere: kexec@lists.infradead.org
@@ -97,57 +97,58 @@ Rely on the fd exit path machinery.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- drivers/iio/industrialio-buffer.c | 26 +++++++++-----------------
- 1 file changed, 9 insertions(+), 17 deletions(-)
+ drivers/misc/fastrpc.c | 19 +++++++------------
+ 1 file changed, 7 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
-index 2c9ec93dff47..9fb15bf82d0a 100644
---- a/drivers/iio/industrialio-buffer.c
-+++ b/drivers/iio/industrialio-buffer.c
-@@ -2041,7 +2041,7 @@ static long iio_device_buffer_getfd(struct iio_dev *indio_dev, unsigned long arg
- 	int __user *ival = (int __user *)arg;
- 	struct iio_dev_buffer_pair *ib;
- 	struct iio_buffer *buffer;
--	int fd, idx, ret;
-+	int idx, ret, fdno;
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index 90fd669636ec..24b84019bbd7 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -7,6 +7,7 @@
+ #include <linux/dma-buf.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/dma-resv.h>
++#include <linux/file.h>
+ #include <linux/idr.h>
+ #include <linux/list.h>
+ #include <linux/miscdevice.h>
+@@ -1804,6 +1805,7 @@ static int fastrpc_dmabuf_alloc(struct fastrpc_user *fl, char __user *argp)
+ 	DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
+ 	struct fastrpc_buf *buf = NULL;
+ 	int err;
++	const struct fd_slot *fd;
  
- 	if (copy_from_user(&idx, ival, sizeof(idx)))
+ 	if (copy_from_user(&bp, argp, sizeof(bp)))
  		return -EFAULT;
-@@ -2067,26 +2067,18 @@ static long iio_device_buffer_getfd(struct iio_dev *indio_dev, unsigned long arg
- 	ib->indio_dev = indio_dev;
- 	ib->buffer = buffer;
- 
--	fd = anon_inode_getfd("iio:buffer", &iio_buffer_chrdev_fileops,
--			      ib, O_RDWR | O_CLOEXEC);
--	if (fd < 0) {
--		ret = fd;
-+	FD_PREPARE(fdf, O_RDWR | O_CLOEXEC,
-+		   anon_inode_getfile("iio:buffer", &iio_buffer_chrdev_fileops,
-+				      ib, O_RDWR | O_CLOEXEC));
-+	if (IS_ERR(fdf)) {
-+		ret = PTR_ERR(fdf);
- 		goto error_free_ib;
+@@ -1822,23 +1824,16 @@ static int fastrpc_dmabuf_alloc(struct fastrpc_user *fl, char __user *argp)
+ 		return err;
  	}
  
--	if (copy_to_user(ival, &fd, sizeof(fd))) {
+-	bp.fd = dma_buf_fd(buf->dmabuf, O_ACCMODE);
+-	if (bp.fd < 0) {
++	fd = fd_prepare(O_ACCMODE);
++	if (IS_ERR(fd)) {
+ 		dma_buf_put(buf->dmabuf);
+ 		return -EINVAL;
+ 	}
++	bp.fd = fd_stage(fd, buf->dmabuf->file);
+ 
+-	if (copy_to_user(argp, &bp, sizeof(bp))) {
 -		/*
--		 * "Leak" the fd, as there's not much we can do about this
--		 * anyway. 'fd' might have been closed already, as
--		 * anon_inode_getfd() called fd_install() on it, which made
--		 * it reachable by userland.
--		 *
--		 * Instead of allowing a malicious user to play tricks with
--		 * us, rely on the process exit path to do any necessary
--		 * cleanup, as in releasing the file, if still needed.
+-		 * The usercopy failed, but we can't do much about it, as
+-		 * dma_buf_fd() already called fd_install() and made the
+-		 * file descriptor accessible for the current process. It
+-		 * might already be closed and dmabuf no longer valid when
+-		 * we reach this point. Therefore "leak" the fd and rely on
+-		 * the process exit path to do any required cleanup.
 -		 */
-+	fdno = fd_prepare_fd(fdf);
 +	/* The staged file is dropped with its descriptor if this faults. */
-+	if (copy_to_user(ival, &fdno, sizeof(fdno)))
++	if (copy_to_user(argp, &bp, sizeof(bp)))
  		return -EFAULT;
 -	}
  
  	return 0;
- 
+ }
 
 -- 
 2.53.0
