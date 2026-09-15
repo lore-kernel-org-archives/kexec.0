@@ -4,68 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 25570C88E53
-	for <kexec@archiver.kernel.org>; Tue, 15 Sep 2026 14:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 26061C88E7F
+	for <kexec@archiver.kernel.org>; Tue, 15 Sep 2026 14:34:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
-	From:MIME-Version:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=41P4RsZFtpH5NGFfQV+UZfxuwGC9lxZAIr1dw8RbTR4=; b=DYz5xsuRumeJZaIW0uJj/mPH6y
-	WB5IAGb/3Qb3axfrNd7XjkkUGhugrKlaxvcxKlBSi3MhvC5vutNym2PZbQhviUp4If2S6T83qmZg1
-	5/w6b+Rzk83GIUnPa1fSnWMjYj328Xq0jCSmar9VX73qAB/l+59fxHyKL93rN40XEmxHiCpQe7ZYf
-	FU7sWWfuz0xsba6L8eBchWysyOKP53MbxdYrFmrvrvL8qUjwj+mpQ/SNnaqa9RulGnzuLpZHPZkYz
-	r1eMRyJO/N72WNYH+fxLTmZY6wxHM19+7X3ISarjgbcyiz8i1lfnYdtMnEGuZvC5IvbeU6enNSoMe
-	YoNQWMKQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=lDBTit4NoXLRMGpd4sVgLpWCd4j9Sa9yMZ+BGUjsUHM=; b=HoWnNGKK9dPmQT5N9KG9zYAP30
+	eno3PjGR2P9c1BERqrpQQJ1wqIUdNpGmTBpL/4QIIfTSvQGpbS7Gb3jwyKdSpP5S8mN3v2NsSpn+G
+	3Y6ZakeUNkJU4+Cy8je6STk9k3UM+ato/CISjcPggIjB43ITaGefLWCc6O0F9l5JczL7oi0zp8jyx
+	ObOA3lk5HfOs+Pg2UZqNshvXYss86YHyArJyR8G0zG5bXbIcpkHXx3Mzl0eJEUfiNZ05bPCCpoCxz
+	kj0tP+cujgu2vby46EnCSgwUK2I9cTxTuIsEWI4Vog4S+iRMO2jm4sHwQRPPobVHhxk3wL4zl27El
+	Za4b9w0g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6U6U-00000006vfD-3qED;
-	Tue, 15 Sep 2026 14:25:46 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1x6UFK-00000006xGg-40D9;
+	Tue, 15 Sep 2026 14:34:54 +0000
+Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6U6T-00000006veP-003F
+	id 1x6UFH-00000006xFj-2H8s
 	for kexec@lists.infradead.org;
-	Tue, 15 Sep 2026 14:25:45 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 6F101600C8;
-	Tue, 15 Sep 2026 14:25:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5154C1F0089E;
-	Tue, 15 Sep 2026 14:25:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789482344;
-	bh=41P4RsZFtpH5NGFfQV+UZfxuwGC9lxZAIr1dw8RbTR4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=XpOWlEX6GlUhNRuKshbD4eV+VEWBxo/aZrSmcGDmlWldOIv2oE0bi2PvRXl6eBz4P
-	 RDmTK0sJjLksTMFuzt/fanlQTp8CDwd2ASUZcxjD/mPd5LSu6/vz+2kf3z+RKdoR4Y
-	 54d8u34R+rtJn7lOtpEg9sezQx4Fuw88RI/i+JGwTrYovq9jfevfBhs+nfQ+ARliu+
-	 bnwHo5WZKnXl9omRdCilRPgX4vGWWWL8czheQi9hZ7UGe570w/e7MBIC5hu5h5OuDi
-	 OBpOv3iOs3URkcWqtnKKa+I3OAdzpd7wzPITmwFaT5iKV/8N33zzqTPaKd6nio9Zit
-	 SCuNzx4N2FHUw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 9/9] mm/memory-failure: keep inherited poisoned
- frames out of the buddy allocator
-To: "Zi Yan" <ziy@nvidia.com>, hannes@cmpxchg.or, "Danilo Krummrich" <dakr@kernel.org>, "Oscar
- Salvador" <osalvador@suse.de>, "Vlastimil Babka" <vbabka@kernel.org>, "Thomas
- Gleixner" <tglx@kernel.org>, shakeel.butt@linux.dev, "Ard Biesheuvel" <ardb@kernel.org>, "Michal
- Hocko" <mhocko@suse.com>, "Dave Hansen" <dave.hansen@linux.intel.com>, "H.
- Peter Anvin" <hpa@zytor.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Borislav
- Petkov" <bp@alien8.de>, "Ingo Molnar" <mingo@redhat.com>, x86@kernel.org, "Miaohe
- Lin" <linmiaohe@huawei.com>, kas@kernel.org, "Mike Rapoport" <rppt@kernel.org>, "Naoya
- Horiguchi" <nao.horiguchi@gmail.com>, "Brendan Jackman" <brendan.jackman@linux.dev>, "Lorenzo
- Stoakes" <ljs@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Johannes
- Weiner" <hannes@cmpxchg.org>, "Ilias Apalodimas" <ilias.apalodimas@linaro.org>, "David
- Hildenbrand" <david@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, "Rafael
- J. Wysocki" <rafael@kernel.org>, "Breno Leitao" <leitao@debian.org>, "Suren
- Baghdasaryan" <surenb@google.com>
-Cc: kexec@lists.infradead.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, riel@surriel.com, harry@kernel.org, driver-core@lists.linux.dev, kernel-team@meta.com, linux-mm@kvack.org, rmikey@meta.com
-In-Reply-To: <20260915-hwpoison-kho-v5-9-3bc7a57bd503@debian.org>
+	Tue, 15 Sep 2026 14:34:52 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=lDBTit4NoXLRMGpd4sVgLpWCd4j9Sa9yMZ+BGUjsUHM=; b=rxIZo+ME/rnXqtE9cMmhwEEDF8
+	herFmWck0rdzUOYTwXmZp0pi2WTQkMtFZNmZgCe0aEf9jVCe0Fu1nbdZWoIal6/iUa2akZj1+HXbC
+	+GLyz8VgoecklgzBC+RQ0T30hnVb2tPPJHlVdbwNN12DbSHBCszNGMMRvZDagv7QXAylN+YTwSUpT
+	EKdKzj8I1gZugRwDY3wWMw3szm63xr/sJAZZ9dyFVm//APAxrwVmHwFgeCM7y89NHhxaUXsVXvy/7
+	0aLs3fr2d8hoF0rhzA/vk7+SaxeIokLEUqWp9SqGvSmnLn5m+JK1SaAXp6Ycl37ZbKo9tDy/xHHr/
+	i7HszdgA==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1x6UEZ-004Scw-23;
+	Tue, 15 Sep 2026 14:34:07 +0000
+Date: Tue, 15 Sep 2026 07:33:59 -0700
+From: Breno Leitao <leitao@debian.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: David Hildenbrand <david@kernel.org>, 
+	Naoya Horiguchi <nao.horiguchi@gmail.com>, kas@kernel.org, Zi Yan <ziy@nvidia.com>, hannes@cmpxchg.or, 
+	shakeel.butt@linux.dev, "Liam R. Howlett" <liam@infradead.org>, 
+	Miaohe Lin <linmiaohe@huawei.com>, Brendan Jackman <brendan.jackman@linux.dev>, 
+	Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, x86@kernel.org, Lorenzo Stoakes <ljs@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Oscar Salvador <osalvador@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Mike Rapoport <rppt@kernel.org>, kernel-team@meta.com, kexec@lists.infradead.org, 
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
+	linux-mm@kvack.org, rmikey@meta.com, driver-core@lists.linux.dev, riel@surriel.com, 
+	harry@kernel.org
+Subject: Re: [PATCH v5 5/9] mm/memory-failure: efi: record hardware-poisoned
+ frames into the poisoned-memory table
+Message-ID: <aqlVkbx8j5cQ3eNX@gmail.com>
 References: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
- <20260915-hwpoison-kho-v5-9-3bc7a57bd503@debian.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 15 Sep 2026 14:25:41 +0000
-Message-Id: <20260915142542.5154C1F0089E@smtp.kernel.org>
+ <20260915-hwpoison-kho-v5-5-3bc7a57bd503@debian.org>
+ <20260915133629.700EE1F000FF@smtp.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260915133629.700EE1F000FF@smtp.kernel.org>
+X-Debian-User: leitao
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260915_073451_734862_BA747805 
+X-CRM114-Status: GOOD (  35.48  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,106 +87,123 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] mm: panic when accepting clean pages sharing an unaccepted unit wi=
-th poisoned pages
-- [Medium] mm: lost memory failure stats due to lockless update in hwpoison=
-_boot_page()
---
+On Tue, Sep 15, 2026 at 01:36:29PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
+> - [Critical] efi: memblock_add() with PAGE_ALIGN_DOWN forces adjacent MMIO into system RAM
+> - [High] efi: ABI breakage in linux_efi_poisoned_memory due to native word size
+> - [Medium] mm: hard memory failures on soft-offlined pages are omitted from EFI table
+> --
+> 
+> commit e69689c81050c18119d69206dc9a7cb1e2fa4eeb
+> Author: Breno Leitao <leitao@debian.org>
+> 
+> mm/memory-failure: efi: record hardware-poisoned frames into the poisoned-memory table
+> 
+> This commit hooks memory_failure() hard offline reports into the EFI
+> poisoned memory table so that they persist across kexec. Soft-offlined
+> pages are deliberately excluded to prevent predictive offlining from
+> becoming a permanent loss.
+> 
+> > diff --git a/drivers/firmware/efi/poison.c b/drivers/firmware/efi/poison.c
+> > index 3f12db3dc9b84..847592862f01d 100644
+> > --- a/drivers/firmware/efi/poison.c
+> > +++ b/drivers/firmware/efi/poison.c
+> > @@ -91,3 +91,30 @@ void __init efi_poisoned_memory_reserve(void)
+> >  	memblock_add(start, end - start);
+> >  	memblock_reserve(start, end - start);
+> 
+> [Severity: Critical]
+> Does this forcefully override the firmware's memory map for adjacent 4KB
+> chunks on larger page architectures? 
+> 
+> On architectures like ARM64 where the kernel page size can be 16KB or
+> 64KB, EFI memory descriptors remain 4KB. If the EFI poisoned memory table
+> occupies a 4KB region within a 64KB page, rounding down to the kernel
+> page boundary expands the range.
+> 
+> This could force adjacent 4KB EFI regions containing firmware MMIO or
+> reserved non-RAM regions into system RAM via memblock_add(). If the
+> kernel later maps these regions with Write-Back caching attributes in the
+> direct map, could this cause fatal Machine Check Exceptions or SError
+> panics during speculative CPU accesses?
 
-commit 92cea9db628cbe8f9651b225628684a39c80ddd4
-Author: Breno Leitao <leitao@debian.org>
-Subject: mm/memory-failure: keep inherited poisoned frames out of the buddy=
- allocator
+arm64 already rounds every EFI descriptor outward via
+memrange_efi_to_native(), so it adds no new class of over-mapping, and
+reserve_regions() adds and reserves this WB ACPI-reclaim table anyway
+moments later.
 
-This commit intercepts inherited poisoned pages before they enter the buddy
-allocator. It processes memory blocks by checking for poisoned pages, flagg=
-ing
-them, and passing the remaining clean pages through the allocator. This
-prevents unaccepted memory blocks with poisoned frames from being mistakenly
-re-merged.
+So, it doesn't seem relevant?!
 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index b07b5f4751cb9..cca67a2702a42 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-[ ... ]
-> @@ -1597,6 +1597,25 @@ static void __meminit accept_and_free_block(struct=
- page *page,
->  	__free_pages_ok(page, order, FPI_TO_TAIL);
->  }
-> =20
-> +static void __meminit free_poisoned_block(struct page *page, unsigned in=
-t order,
-> +					  enum meminit_context context)
-> +{
-> +	unsigned long i, nr_pages =3D 1UL << order;
-> +
-> +	for (i =3D 0; i < nr_pages; i++) {
-> +		struct page *p =3D page + i;
-> +		phys_addr_t phys =3D page_to_phys(p);
-> +
-> +		if (range_contains_poisoned_memory(phys, PAGE_SIZE)) {
-> +			hwpoison_boot_page(p, context);
+> > diff --git a/include/linux/efi.h b/include/linux/efi.h index
+> > dd3263456dd4a..56402fdccd114 100644 --- a/include/linux/efi.h +++
+> > b/include/linux/efi.h @@ -1288,8 +1288,10 @@ struct
+> > linux_efi_poisoned_memory {
+> 
+> [Severity: High] Does the linux_efi_poisoned_memory ABI structure
+> break on architectures where the native word size differs from the
+> firmware? 
+> 
+> The struct uses an unsigned long flexible array for the bitmap, which
+> alters the element size depending on the kernel bitness (4 bytes on
+> 32-bit and 8 bytes on 64-bit). efi_poison_geometry_valid() rejects
+> tables where the size is not a multiple of sizeof(unsigned long). 
+> 
+> If a 32-bit EFI firmware generates this table, it will use 4-byte
+> alignment and a 32-bit word array. Because CONFIG_EFI_POISONED_MEMORY
+> is 64-bit only, the 64-bit kernel will evaluate sizeof(unsigned long)
+> as 8 and reject perfectly valid 32-bit firmware tables as malformed. 
+> 
+> Since bit array layouts also differ across word sizes on big-endian
+> architectures, should this firmware-to-kernel ABI boundary use
+> fixed-size types like u32 or u64 instead?
 
-[Severity: Medium]
-Is this call to hwpoison_boot_page() safe from data races during memory
-hotplug?
+That is not the case, because this feature depends on 64-bits and
+!BIG_ENDIAN.
 
-When called during hotplug (where context =3D=3D MEMINIT_HOTPLUG),
-hwpoison_boot_page() calls update_per_node_mf_stats() which performs
-non-atomic read-modify-write operations on the node stats:
+In fact, CONFIG_EFI is depends on OF && !CPU_BIG_ENDIAN
+> > diff --git a/mm/memory-failure.c b/mm/memory-failure.c index
+> > a2ca8df501cae..d9b8be696aac3 100644 --- a/mm/memory-failure.c +++
+> > b/mm/memory-failure.c
+> [ ... ]
+> > @@ -1326,6 +1327,8 @@ static int action_result(unsigned long pfn,
+> > enum mf_action_page_type type, if (type != MF_MSG_ALREADY_POISONED
+> > && type != MF_MSG_PFN_MAP) { num_poisoned_pages_inc(pfn);
+> > update_per_node_mf_stats(pfn, result); +		/* Only hard
+> > offlines are carried over to the next kernel. */
+> > +		efi_hwpoison_record_pfn(pfn); }
+> 
+> [Severity: Medium] Does placing efi_hwpoison_record_pfn() inside this
+> conditional block unintentionally skip recording hard errors on
+> previously soft-offlined pages? 
+> 
+> Soft-offline marks a page with PageHWPoison but intentionally does not
+> record it in the EFI table to avoid permanent loss for predictive
+> errors. 
+> 
+> If a genuine hard, uncorrectable error later occurs on that same page,
+> memory_failure() will see the existing PageHWPoison flag and pass
+> MF_MSG_ALREADY_POISONED to action_result(). 
+> 
+> By coupling the EFI recording to the meminfo stat increments, genuine
+> hard errors on soft-offlined pages are omitted from the EFI table.
+> Could this allow the next kernel to map and crash on physically broken
+> RAM?
 
-mm/memory-failure.c:update_per_node_mf_stats() {
-    ...
-    ++mf_stats->recovered;
-    ...
-}
+Yes, this one is real, thanks.
 
-Since hwpoison_boot_page() does not acquire mf_mutex, could a concurrent
-memory_failure() execution on the same NUMA node corrupt the recovered and
-total counters?
+soft_offline_page() reaches num_poisoned_pages_inc() through
+page_handle_poison() and never calls action_result(), so the hook does
+not need the MF_MSG_ALREADY_POISONED guard to keep soft offlines out of
+the table. That guard is there for the stats, and coupling to it drops a
+hard error on a page that was soft-offlined earlier.
 
-> +			continue;
-> +		}
-> +
-> +		/* this part of the block is not poisoned */
-> +		accept_and_free_block(p, 0);
+The frame is not lost for good -- the next kernel hands it out, the error
+comes back and is recorded then -- but that is one machine check per
+kexec that this series exists to avoid.
 
-[Severity: High]
-Can this sequence cause a kernel panic when accepting clean pages that share
-an unaccepted memory unit with poisoned pages?
-
-When a clean page belongs to an unaccepted memory region,
-accept_and_free_block() invokes accept_memory(). However, accept_memory()
-operates at the unit_size granularity (typically 2MB) and rounds down the
-start address to this boundary before calling arch_accept_memory():
-
-drivers/firmware/efi/unaccepted_memory.c:accept_memory() {
-    ...
-    arch_accept_memory(phys_start, phys_end);
-    ...
-}
-
-Because the clean page and the poisoned page share the same unaccepted
-unit_size block, won't arch_accept_memory() be inadvertently executed on the
-poisoned page as well?
-
-If arch_accept_memory() attempts to accept physically poisoned memory (such
-as via TDX TDG.MEM.PAGE.ACCEPT), could this trigger an unrecoverable Machine
-Check Exception?
-
-> +	}
-> +}
-> +
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260915-hwpoison-k=
-ho-v5-0-3bc7a57bd503@debian.org?part=3D9
+I will move the call out of the stats guard in v6, keeping MF_MSG_PFN_MAP
+excluded since that path is not System RAM
 
