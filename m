@@ -4,80 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 91F91C88E75
-	for <kexec@archiver.kernel.org>; Tue, 15 Sep 2026 13:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 94121C88E75
+	for <kexec@archiver.kernel.org>; Tue, 15 Sep 2026 13:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=tZSU09jDCsIk/tpoX25HEUkW1egfskgNv1nvZG1Ds40=; b=0Sie+ZbiE5NI5iEH5vL7liN902
-	bHNaY4wm8fiJeQG5UR5KuLT7/rNowKZzaRZGHYzWvLxNUzfK2Jkjl+5WGRIgENzojxyi+4QXQ1Rfc
-	xKtplXvUn/jvSSCo1XJawqLixjRoKXptxp6WXwScH5HBgMQs1qzj/elpm6SL6kyXRgv4XQs2Jqrmg
-	vJ+IfKJBBeSOmVqKFgnljEHGq6xcAXDXZAdptvvxYUDuZ2JzUJfZiHlgMDaB/Em4oTfGz94wJiLah
-	hEXc3uyi7asEayhlWXtwd+Uc8k5nxra372n88DeO01N5IKpEdhpiI0ffhZHPaoQ7euoHAkLOrzWBQ
-	i+3v6n1Q==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
+	From:MIME-Version:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=OiVbNpqvcTpST0O0QqLXW+ZXyZ4rqHD9AsZUlFhTaN8=; b=i70TxYhAU/Pob0PQV7FY9eCA6s
+	m4ZEipe8cUuM+8W5WdC94fPfMK5oMiGT02CsWFLwe4lbHaa7Jp5XkVXW7y8okgIOLu/CWjPyJyKpQ
+	8nxsxjlonRP4C5ZsMpbLz9Pzb7LhDgu6/0Jo8tle8WVT8IKvg/0kkN/oqIkFkQH64OsGlLEv/4lkI
+	7BQbJdDC4MZyHF5wKxBTwq6w2SO3KFljumYam8Voy07XGoTBxxE5lIEc61I5nS4fbV0RqciGwySJi
+	FhWxVTbJ7o3vxfpOHd1hNfwwPKZffzE09poLLKfW8+pDqCmCXxdibrkQ0ctOrzoVSt53DwDr0mXdY
+	kmA3eRlg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6TNX-00000006lg8-21gz;
-	Tue, 15 Sep 2026 13:39:19 +0000
-Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
+	id 1x6TTi-00000006mq9-1QoY;
+	Tue, 15 Sep 2026 13:45:42 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6TNU-00000006lej-464Z
+	id 1x6TTe-00000006mog-2Hsw
 	for kexec@lists.infradead.org;
-	Tue, 15 Sep 2026 13:39:18 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Reply-To:Content-ID:Content-Description;
-	bh=tZSU09jDCsIk/tpoX25HEUkW1egfskgNv1nvZG1Ds40=; b=BANf+DRv0G7ET6nd+Q02kEYT2c
-	vD0Mdmy0esC2oiO1N8yesVKAZLUPkTsnz8o42k+YjQG4Z+8iuYgTcrL0MNA6PbeaKganDKnzH1Y6o
-	dz1s24SikbwO6UvoBwIl5MOsySvfek4zhd34ghQRFqhlMs76eRAiXy7gCoWV3PKofIQOYDmDdmZ+z
-	8umNKp9aZ7sYSbOGScmRPisgvY7fTzJF4LhfQfgaYtHzp+aE8umHMErYILFzLYv+cC6N8zV0soirE
-	MzgEa0+BS6oIJQ04ge7Wt0Df7pee81AIR4q7tocqaLjyrupAkjIJjTRtDxCT86XCyk5TrACr2je2b
-	QoiL60yw==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1x6TN9-004QnQ-0c;
-	Tue, 15 Sep 2026 13:38:55 +0000
-Date: Tue, 15 Sep 2026 06:38:47 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Harry Yoo <harry@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Kiryl Shutsemau (Meta)" <kas@kernel.org>, kexec@lists.infradead.org, David Hildenbrand <david@kernel.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, 
-	Brendan Jackman <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	rmikey@meta.com, riel@surriel.com, kernel-team@meta.com
-Subject: Re: [PATCH v4 2/5] mm/memory-failure: libstub: install the
- poisoned-memory EFI table
-Message-ID: <aqlI264D-PxJzPWb@gmail.com>
-References: <20260909-hwpoison-kho-v4-0-359313564495@debian.org>
- <20260909-hwpoison-kho-v4-2-359313564495@debian.org>
- <2c9a7bef-3189-4f78-a6cb-61d2f7afd643@app.fastmail.com>
- <aqKhgPKzRf0e22s3@gmail.com>
- <aqkIdVhoG2wwVBtb@gmail.com>
- <aqkyT0Ui9h5KWuzn@thinkstation>
- <aqk4NUnq92ftuUuJ@gmail.com>
- <aqlFnuIIECOyaweo@thinkstation>
-MIME-Version: 1.0
+	Tue, 15 Sep 2026 13:45:41 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id E593340255;
+	Tue, 15 Sep 2026 13:45:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3FC91F00899;
+	Tue, 15 Sep 2026 13:45:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789479937;
+	bh=OiVbNpqvcTpST0O0QqLXW+ZXyZ4rqHD9AsZUlFhTaN8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Hi5BOtIEVU4s+3yGSkPz0/SAa3xuZHvLVpvUfNAH5splg6V68ueCIPFYP3/mpMulN
+	 u8P69p91iUJ0DvXufSdZIKn2jcj8/nL90UaX8qWkXmwhffYxBPcX8v6xabJdCHM9uS
+	 z0APFIvOBx9ALorAcSTdPK39S6JJt/J+ryBC6YOeWFlhtPrN383awNLaA4SMyFizpA
+	 wG92L0Er3GzqiyFFLxmr4DbvFLuVKocAtwi+g/N7XmJ66fdv9ER3gV7xBJROmIeGXh
+	 yELnMJVm02pPNLmgfAN6ykp/nJhDspGneThMYtTcbY6FFghJT0/8X1s3mAGVJErlu4
+	 R0Rnq9hJzvg2Q==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v5 6/9] mm/memory-failure: efi: answer whether a range
+ is poisoned
+To: "Andrew Morton" <akpm@linux-foundation.org>, hannes@cmpxchg.or, "Borislav
+ Petkov" <bp@alien8.de>, "Danilo Krummrich" <dakr@kernel.org>, "Brendan
+ Jackman" <brendan.jackman@linux.dev>, x86@kernel.org, kas@kernel.org, "Suren
+ Baghdasaryan" <surenb@google.com>, "Zi Yan" <ziy@nvidia.com>, "Liam R.
+ Howlett" <liam@infradead.org>, "Vlastimil Babka" <vbabka@kernel.org>, "Thomas
+ Gleixner" <tglx@kernel.org>, "Oscar Salvador" <osalvador@suse.de>, "Rafael
+ J. Wysocki" <rafael@kernel.org>, shakeel.butt@linux.dev, "Johannes Weiner" <hannes@cmpxchg.org>, "David
+ Hildenbrand" <david@kernel.org>, "Ilias Apalodimas" <ilias.apalodimas@linaro.org>, "Miaohe
+ Lin" <linmiaohe@huawei.com>, "Ard Biesheuvel" <ardb@kernel.org>, "Breno
+ Leitao" <leitao@debian.org>, "Michal Hocko" <mhocko@suse.com>, "Naoya
+ Horiguchi" <nao.horiguchi@gmail.com>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Mike
+ Rapoport" <rppt@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "Lorenzo
+ Stoakes" <ljs@kernel.org>, "Dave Hansen" <dave.hansen@linux.intel.com>, "Ingo
+ Molnar" <mingo@redhat.com>
+Cc: linux-mm@kvack.org, kexec@lists.infradead.org, linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, harry@kernel.org, rmikey@meta.com, kernel-team@meta.com, driver-core@lists.linux.dev, riel@surriel.com
+In-Reply-To: <20260915-hwpoison-kho-v5-6-3bc7a57bd503@debian.org>
+References: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
+ <20260915-hwpoison-kho-v5-6-3bc7a57bd503@debian.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aqlFnuIIECOyaweo@thinkstation>
-X-Debian-User: leitao
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260915_063917_020499_3E87B209 
-X-CRM114-Status: GOOD (  18.46  )
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 15 Sep 2026 13:45:35 +0000
+Message-Id: <20260915134535.C3FC91F00899@smtp.kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,39 +78,22 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Sep 15, 2026 at 02:31:38PM +0100, Harry Yoo wrote:
-> On Tue, Sep 15, 2026 at 05:39:44AM -0700, Breno Leitao wrote:
-> > > Also, I wonder if some architectures have a scattered set of pfn
-> > > ranges so that the span from the start pfn to the end pfn being much
-> > > larger than the actual physical memory size.
-> > >
-> > > If so it might make more sense to have a bitmap for each pfn range.
-> >
-> > Agreed, having a ->next in linux_efi_poisoned_memory is a good idea that
-> > we can lean on depending on whatever problem comes up down the road.
-> >
-> > Very good point — let's keep this linux_efi_poisoned_memory chain idea in
-> > mind for whenever we need to expand it.
->
-> You mean 1) keeping the structure as-is for now (and expand later with
-> new EFI table version) or 2) adjusting the structure in the future
-> revision of this patchset?
+> The bitmap an earlier kernel filled in gets in this one through EFI,
+> but nothing reads it back yet.
+>=20
+> Introduce range_contains_poisoned_memory(), which the page allocator
+> will use to ask about a block before handing it out.
+>=20
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-I'd say option (1): keep the structure as it is for now, and only adjust
-it once/if we actually decide to implement the hot-add use case.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-That's exactly why I added the "u32 version" field to
-struct linux_efi_poisoned_memory, so, it can be expanded later.
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260915-hwpoison-k=
+ho-v5-0-3bc7a57bd503@debian.org?part=3D6
 
-Version 1 (this patchset) covers the common, basic approach. If down the
-road someone sees value in extending it to other use cases (such as
-hot-plug), we can bump it to v2 and add a ->next field then.
-
-What do you think?
-
-Thanks for the review,
---breno
 
