@@ -4,90 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C1645C88E53
-	for <kexec@archiver.kernel.org>; Tue, 15 Sep 2026 09:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BF924C88E7B
+	for <kexec@archiver.kernel.org>; Tue, 15 Sep 2026 11:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xj97Gm+bFVDZhjwESgxXGsr/TcYPbbFLUTQH8EasuOs=; b=DvC1Bi6B8fs2ije3avKARdA18G
-	9nPEZ0uLCC+hsJHb0oS8usGd8Cb5nS6qYFrcOv5o4YxSKy1/8Cjtt35urocKjcStJyX/TG61Gbcvs
-	TBTeuCo1n9R+kG1keikMPRBRf9Q1hHePIj0eag1SYrQrDk7oxg18rw0C8FLo5JCGEPXO9798aAay/
-	k38S//eBPnuj+iPDtNDl8Dm7soFn+3ebjLjdP+51EVdO7YmKy/X2kI/J0sOJHjEK7dtrsomwaPAwf
-	WuhKblkOtGKgERIijym4SwGcH5wmo9w6ItIFkVeYmguX2jHLnE8SR4DKFg2vnAVnmivSfd5qFbYar
-	waLTu3jA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Message-Id:Date:Subject:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=CAJtKPFKPGeuK6/4FcUJJhXpcyxiLyxrGeWoP03hjX8=; b=0mnEgd1oVxR6qH
+	gtS2EGiZq3y2kC+rtVctyuRq3A1xTi4aTfqQJv1ktrt4ROFix//Y4dotuDEhQL9OMC/rIUQ1Rxjck
+	TrqhGdexn/Ph6CfvEDv1LrQuByjjCUX3V9OgcXawMGSdKZTUCkAvUhnVV6zVL56gFSGJ3GAkR/356
+	CyzPWeh+N33ClfIPXfkhgURhJkvI8iNgu6t5EoonfGlIPvUWHZkhkSULnJ9krHqnxN5lIUZGvEnSQ
+	3sn4Rin/P3d6SNZS8Rd8xEY1MUeveo5OzB2W3fn2T7O3+43duA42lQsAcHhws7nhsKbhV+Y36EVar
+	pQFev3c1ZoyT4IBxQR7w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6P5a-00000005jUK-2TxA;
-	Tue, 15 Sep 2026 09:04:30 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1x6RNj-000000067Ao-1xwW;
+	Tue, 15 Sep 2026 11:31:23 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6P5U-00000005jUA-1YON
-	for kexec@bombadil.infradead.org;
-	Tue, 15 Sep 2026 09:04:24 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=xj97Gm+bFVDZhjwESgxXGsr/TcYPbbFLUTQH8EasuOs=; b=ONO90DiDxTHtIgUgWFtThPVUIL
-	BXAlSt4ayxoDAhEG5tpM7bBXuHJBdmmjYOEAE20w03J/05fkhei7QmmCRaB5Jr4DwFImxIVu40/6D
-	JTYUUeCPnlv5G42UyEoAw5byK43Cc2f/GER3WxoxxnuygD7Kdt6PZv/orS4zxQP8yl7Et/GfkBxKi
-	mj4YMLVX4kxYcX6duq2ScZy14ck0oCBSqPE8k6muFBbO29U9GuUHMUV4MFwFXX7z5FRNWT44GLZkz
-	+snNoZHw5kZrOoEZB2OCkG0NeJKlRQH8V9I51FsvyENoDv+hJhDAdPWHenFqVflDEqtlLB+Dyw7yr
-	/5ykPHyQ==;
-Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
-	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
-	id 1x6P5R-00000006TPL-1ou1
-	for kexec@lists.infradead.org;
-	Tue, 15 Sep 2026 09:04:23 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=xj97Gm+bFVDZhjwESgxXGsr/TcYPbbFLUTQH8EasuOs=; b=lRl6heYdFmWobjqmP6MVFkL3cc
-	hrfWmOjJy7y8JC4vaFY0trfhscwmnfFCx1TYA24UxzrPt41+U6Va+vFZDeo0p8FcrkDmBpzjqVsgk
-	JPSe9jy/AB4dPNiYIpvuvQxdT30cSTNu7IIhDxsViLxrY5mk/yPbs+ARWqEFH2WX3MI9gNbnBwrqb
-	ytBsRGkqSb7XmPuwpl/2f6Mr7KW5Uo2R/ImOZsT+mPaFhkFGTH2UfO/Dd+a9OIIJ30Hcc4lFqiRhc
-	vl/N2nSH9zs66d5eQQM/R4y4PtD/9V0nDRpXZEkq7o/gZMcDF6vJOmqeMv6iu2rs80VEGFFXzMAsF
-	oKG4ogTQ==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1x6P51-004HQC-0I;
-	Tue, 15 Sep 2026 09:03:55 +0000
-Date: Tue, 15 Sep 2026 02:03:48 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
-	Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Kiryl Shutsemau (Meta)" <kas@kernel.org>, 
-	kexec@lists.infradead.org, David Hildenbrand <david@kernel.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, 
-	Brendan Jackman <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	rmikey@meta.com, riel@surriel.com, harry@kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v4 2/5] mm/memory-failure: libstub: install the
- poisoned-memory EFI table
-Message-ID: <aqkIdVhoG2wwVBtb@gmail.com>
-References: <20260909-hwpoison-kho-v4-0-359313564495@debian.org>
- <20260909-hwpoison-kho-v4-2-359313564495@debian.org>
- <2c9a7bef-3189-4f78-a6cb-61d2f7afd643@app.fastmail.com>
- <aqKhgPKzRf0e22s3@gmail.com>
+	id 1x6RNi-000000067AY-2DIT;
+	Tue, 15 Sep 2026 11:31:22 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 1D6A840952;
+	Tue, 15 Sep 2026 11:31:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE7091F000FF;
+	Tue, 15 Sep 2026 11:31:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789471881;
+	bh=CAJtKPFKPGeuK6/4FcUJJhXpcyxiLyxrGeWoP03hjX8=;
+	h=From:Subject:Date:To:Cc;
+	b=E7tiikKzEgWbcjup28lG7XRiPSUJnQOmsnywq0ncyYHyQqJnTKt0FKdhc261bi9OH
+	 0SlILqTj5qE3J8OEyDI9zqLYPy8psNZLLrF7QOW4W4UQnh0hGPOhQASSGdWdu6CXlB
+	 AinpX1RK+sPUhsT5EBGslz/xjWU79vTK2oG+qEZWWfaWT7bIGAFoh926ly17QWcoIQ
+	 QJCJXpfCSDC9mQet/UenNMcEEu3ND/zogF3V4a6m5lxpAeKrS/RkcQCtt28J4Htm15
+	 ioCbMP38XAAhzbjEh1DggCyILiXq6YLqnQmybNy4sunfucifPnv8TR98hWLnUmAKl0
+	 e5z5SrdGFsCyg==
+From: Christian Brauner <brauner@kernel.org>
+Subject: [PATCH RFC POC 00/50] file: handle files on syscall exit
+Date: Tue, 15 Sep 2026 13:30:46 +0200
+Message-Id: <20260915-work-fd-reserve-unify-folded-v1-0-4d5217d6b246@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aqKhgPKzRf0e22s3@gmail.com>
-X-Debian-User: leitao
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260915_100421_592802_39F66024 
-X-CRM114-Status: GOOD (  12.01  )
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/y2Nyw6CMBBFf4XM2ml4iBG3JG41bo0LykylalrTC
+ moI/24LLu/MveeM4Nlp9rBLRnA8aK+tCSFbJdB2jbkyagoZ8jTfpFVW4tu6OypCx2E5MPZGqy8
+ q+yAmlNuKiqxcy4JSCIinY6U/M/4Mp32dHA81XJaH7+WN21eEx6psPKN0jWm7eIoaoUj8NWLWi
+ EUjYhem6QdT5RjovQAAAA==
+X-Change-ID: 20260915-work-fd-reserve-unify-folded-b89d3154b3d0
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jann Horn <jannh@google.com>, 
+ Jan Kara <jack@suse.cz>, Ingo Molnar <mingo@redhat.com>, 
+ Peter Zijlstra <peterz@infradead.org>, linux-fsdevel@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+ Oleg Nesterov <oleg@redhat.com>, linux-alpha@vger.kernel.org, 
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+ linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
+ linux-um@lists.infradead.org, Jens Axboe <axboe@kernel.dk>, 
+ io-uring@vger.kernel.org, netdev@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, linux-gpio@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ bpf@vger.kernel.org, David Airlie <airlied@redhat.com>, 
+ virtualization@lists.linux.dev, kvm@vger.kernel.org, 
+ kexec@lists.infradead.org, linux-hyperv@vger.kernel.org, 
+ "Christian Brauner (Amutable)" <brauner@kernel.org>
+X-Mailer: b4 0.17-dev-db0b7
+X-Developer-Signature: v=1; a=openpgp-sha256; l=11212; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=tghJXnBoCORuUllyVM5kOenrKYvUcLA4//tYvMQ3Gwc=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSt1KmZfVvdXbIn41vJt/oHZ9cvPhHnHXlduWLl4TSB5
+ BsG1wzUO0pZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACYSP4+R4aD04rbPT/bfPqP8
+ 9uSeOZ+ErR6x+W14vnzltXsvZhzbPcWOkeGY1wMZvuPZ2+W5eQ7v+q00SZHnk3fSzCfWYt9Z60S
+ 6GPkA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp;
+ fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,31 +95,216 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Sep 10, 2026 at 06:11:53AM -0700, Breno Leitao wrote:
-> So I'd say we have two options:
->
-> 1) Keep it similar to unaccepted memory, with 2M granularity.
->    - Pro : Similar mental model as unnacepted memory
->    - Cons: 2 MB might be a bit wasteful
->
-> 2) Move to a linked list like the RFC, keeping it outside of the EFI
->    table.
->    - Pro: Reduce the memory granularities to page instead of 2M blocs.
->    - Cons: Another way of passing memory information between kexec
->      kernels.
->
-> Any any other option or strong preference?
+Hey,
 
-Since nobody voiced a strong preference, I will stick with option (1),
-the bitmap, for these reasons:
+The idea in this series is old-ish and really never let go of me and so
+I wanted to at least dump it onto the list once even if it's just for
+illustrative purposes.
 
-1) It follows the same mental model as unaccepted memory, which people
-   are already familiar with.
+I still had parts of an implementation laying around that I started
+montsh ago alongside FD_PREPARE()/FD_ADD(). I sat down and finished it.
 
-2) It is simpler to query at boot time, especially as the number of
-   poisoned memory regions grows. Walking a bitmap is easier than
-   walking a linked list when freeing memory back to the buddy
-   allocator.
+We've spoken about this idea a few times over the years that we could
+reserve fds and files on a task and then install or a clean them up on
+syscall success or error and get rid of most of the complicated cleanup
+dance that we have in a lot of code. In particular drm. It last came up
+during the Rust file descriptor reservation discussion quite some time
+ago.
 
---breno
+TL;DR, this lets arch code handle fd install and cleanup. fd_prepare()
+allocates a descriptor like get_unused_fd_flags() does and records it in
+a slot on the task. fd_stage() attaches the file to that slot and
+returns the number.
+
+When the syscall returns success the exit path installs every staged
+file. When it returns an error it drops the descriptors and the files.
+
+So a caller reserves, hands the number to userspace whenever it wants,
+creates the file, stages it and returns errors without unwinding
+anything.
+
+fd_prepare() returns the slot itself, as a const pointer. The
+preexisting fd_prepare_fd() and fd_prepare_file() give access to the fd
+and file.
+
+get_unused_fd_flags() and fd_install() don't change. A descriptor is
+only reserved where a caller asks for it. And open(), dup() and all
+other syscalls that maximize speed simply use FD_ADD().
+
+The task keeps two slots inline. For SCM_RIGHTS and multi-descriptor
+ioctls a spill array is added. It stick with the task.
+
+Reservations belong to the thread and the syscall that made them. A
+child of fork() starts without any. A thread can't unshare its fdtagble
+with outstanding reservations. Kernel threads never return to userspace
+so nothing would commit. Anything left at exit is a bug and gets warned
+about and dropped.
+
+Christian
+
+Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
+---
+Christian Brauner (50):
+      file: install files on syscall exit
+      entry: commit fds on syscall exit
+      alpha: commit fds on syscall exit
+      ARC: commit fds on syscall exit
+      ARM: commit fds on syscall exit
+      arm64: commit fds on syscall exit
+      csky: commit fds on syscall exit
+      hexagon: commit fds on syscall exit
+      m68k: commit fds on syscall exit
+      microblaze: commit fds on syscall exit
+      MIPS: commit fds on syscall exit
+      nios2: commit fds on syscall exit
+      openrisc: commit fds on syscall exit
+      parisc: commit fds on syscall exit
+      sh: commit fds on syscall exit
+      sparc: commit fds on syscall exit
+      um: commit fds on syscall exit
+      xtensa: commit fds on syscall exit
+      file: require the syscall exit hook from every architecture
+      file: warn when the descriptor table is unshared with slots
+      io_uring: commit fds per request
+      net: install SCM_RIGHTS descriptors when recvmsg() returns
+      file: open-code receive_fd()'s immediate install
+      file: make FD_ADD() a standalone immediate install
+      file: reimplement FD_PREPARE() on the deferred fd_prepare() path
+      dma-buf: stop unwinding sync file descriptors by hand
+      drm/amdkfd: stop collecting CRIU dma-buf descriptors for a final install
+      drm/msm: install the out-fence descriptor when the ioctl returns
+      drm/virtio: install the out-fence descriptor when the ioctl returns
+      drm/vmwgfx: install the out-fence descriptor when the ioctl returns
+      vfio: install the migration data descriptor when the ioctl returns
+      liveupdate: install the session descriptors when the ioctl returns
+      io_uring/zcrx: install the exported descriptor when the request returns
+      sctp: install the peeloff descriptor when the syscall returns
+      ALSA: compress: install the task descriptors when the ioctl returns
+      nitro_enclaves: install the enclave descriptor when the ioctl returns
+      tpm: vtpm_proxy: install the server descriptor when the ioctl returns
+      perf: stop putting the event descriptor back on failure
+      seccomp: stop putting the listener descriptor back on failure
+      KVM: stop putting descriptors back on failure
+      KVM: guest_memfd: stop putting the descriptor back on failure
+      drm: stop unwinding descriptors by hand
+      drm/amdgpu: stop unwinding the fence descriptor by hand
+      drm/etnaviv: install the out-fence descriptor when the ioctl returns
+      accel/habanalabs: stop putting the dma-buf descriptor back on failure
+      xen/gntdev-dmabuf: stop putting the descriptor back on failure
+      iio: buffer: install the buffer descriptor when the ioctl returns
+      misc: fastrpc: install the dma-buf descriptor when the ioctl returns
+      iommufd: stop putting descriptors back on failure
+      Drivers: hv: mshv: stop putting descriptors back on failure
+
+ arch/alpha/include/asm/thread_info.h         |   2 +
+ arch/alpha/kernel/entry.S                    |  24 ++-
+ arch/alpha/kernel/ptrace.c                   |   3 +
+ arch/arc/include/asm/thread_info.h           |   2 +
+ arch/arc/kernel/entry.S                      |   5 +
+ arch/arc/kernel/ptrace.c                     |   4 +
+ arch/arm/include/asm/thread_info.h           |   2 +
+ arch/arm/kernel/entry-common.S               |   2 +
+ arch/arm/kernel/ptrace.c                     |   4 +
+ arch/arm64/include/asm/thread_info.h         |   4 +-
+ arch/arm64/kernel/ptrace.c                   |   4 +
+ arch/csky/include/asm/thread_info.h          |   2 +
+ arch/csky/kernel/entry.S                     |   9 +
+ arch/csky/kernel/ptrace.c                    |   4 +
+ arch/hexagon/include/asm/thread_info.h       |   2 +
+ arch/hexagon/kernel/traps.c                  |   4 +
+ arch/m68k/68000/entry.S                      |  10 ++
+ arch/m68k/coldfire/entry.S                   |  12 ++
+ arch/m68k/include/asm/thread_info.h          |   2 +
+ arch/m68k/kernel/entry.S                     |   2 +
+ arch/m68k/kernel/ptrace.c                    |   3 +
+ arch/microblaze/include/asm/thread_info.h    |   5 +-
+ arch/microblaze/kernel/ptrace.c              |   4 +
+ arch/mips/include/asm/thread_info.h          |   5 +-
+ arch/mips/kernel/ptrace.c                    |   4 +
+ arch/nios2/include/asm/thread_info.h         |   2 +
+ arch/nios2/kernel/entry.S                    |   5 +
+ arch/nios2/kernel/ptrace.c                   |   3 +
+ arch/openrisc/include/asm/thread_info.h      |   5 +-
+ arch/openrisc/kernel/entry.S                 |   5 +-
+ arch/openrisc/kernel/ptrace.c                |   4 +
+ arch/parisc/include/asm/thread_info.h        |   2 +
+ arch/parisc/kernel/entry.S                   |  12 ++
+ arch/parisc/kernel/ptrace.c                  |   4 +
+ arch/powerpc/platforms/cell/spufs/inode.c    |  12 +-
+ arch/sh/include/asm/thread_info.h            |  10 +-
+ arch/sh/kernel/entry-common.S                |   8 +-
+ arch/sh/kernel/ptrace_32.c                   |   4 +
+ arch/sparc/include/asm/thread_info_32.h      |   2 +
+ arch/sparc/include/asm/thread_info_64.h      |   9 +-
+ arch/sparc/kernel/entry.S                    |   2 +-
+ arch/sparc/kernel/ptrace_32.c                |   4 +
+ arch/sparc/kernel/ptrace_64.c                |   4 +
+ arch/sparc/kernel/syscalls.S                 |   4 +-
+ arch/um/include/asm/thread_info.h            |   2 +
+ arch/um/kernel/ptrace.c                      |   4 +
+ arch/xtensa/include/asm/thread_info.h        |   2 +
+ arch/xtensa/kernel/entry.S                   |   5 +
+ arch/xtensa/kernel/ptrace.c                  |   4 +
+ drivers/accel/habanalabs/common/memory.c     |  13 +-
+ drivers/char/tpm/tpm_vtpm_proxy.c            |  30 +---
+ drivers/dma-buf/dma-buf.c                    |  33 ++--
+ drivers/dma-buf/sw_sync.c                    |  40 ++---
+ drivers/dma-buf/sync_file.c                  |  52 ++----
+ drivers/gpio/gpiolib-cdev.c                  |  18 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c       |  16 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_chardev.c     |  67 ++------
+ drivers/gpu/drm/drm_lease.c                  |  20 +--
+ drivers/gpu/drm/drm_prime.c                  |  13 +-
+ drivers/gpu/drm/drm_syncobj.c                |  44 ++---
+ drivers/gpu/drm/etnaviv/etnaviv_gem_submit.c |  14 +-
+ drivers/gpu/drm/msm/msm_gem_submit.c         |  22 +--
+ drivers/gpu/drm/msm/msm_gem_vma.c            |  22 +--
+ drivers/gpu/drm/msm/msm_perfcntr.c           |   6 +-
+ drivers/gpu/drm/virtio/virtgpu_submit.c      |  32 ++--
+ drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c      |  29 ++--
+ drivers/hv/mshv_root_main.c                  |  27 +--
+ drivers/hv/mshv_vtl_main.c                   |  20 +--
+ drivers/iio/industrialio-buffer.c            |  26 +--
+ drivers/iommu/iommufd/eventq.c               |  39 ++---
+ drivers/media/mc/mc-request.c                |   6 +-
+ drivers/misc/fastrpc.c                       |  19 +--
+ drivers/misc/ntsync.c                        |   6 +-
+ drivers/vfio/vfio_main.c                     |  25 +--
+ drivers/virt/nitro_enclaves/ne_misc_dev.c    |  33 ++--
+ drivers/xen/gntdev-dmabuf.c                  |  14 +-
+ fs/eventfd.c                                 |   6 +-
+ fs/eventpoll.c                               |   6 +-
+ fs/exec.c                                    |   3 +
+ fs/file.c                                    | 245 +++++++++++++++++++++++++--
+ fs/namespace.c                               |  12 +-
+ fs/nsfs.c                                    |   6 +-
+ fs/xfs/xfs_handle.c                          |   6 +-
+ include/linux/entry-common.h                 |   8 +-
+ include/linux/file.h                         | 160 +++++------------
+ include/linux/sched.h                        |  21 +++
+ include/linux/thread_info.h                  |   2 +
+ io_uring/io_uring.c                          |  27 +++
+ io_uring/mock_file.c                         |   5 +-
+ io_uring/zcrx.c                              |  25 +--
+ kernel/bpf/bpf_iter.c                        |   6 +-
+ kernel/bpf/token.c                           |   6 +-
+ kernel/events/core.c                         |  31 ++--
+ kernel/exit.c                                |   1 +
+ kernel/fork.c                                |   3 +
+ kernel/liveupdate/luo_core.c                 |  48 ++----
+ kernel/liveupdate/luo_session.c              |  24 +--
+ kernel/seccomp.c                             |  13 +-
+ mm/userfaultfd.c                             |   6 +-
+ net/core/scm.c                               |  13 +-
+ net/handshake/netlink.c                      |  20 ++-
+ net/kcm/kcmsock.c                            |   5 +-
+ net/sctp/socket.c                            |  78 ++++-----
+ sound/core/compress_offload.c                |  24 ++-
+ virt/kvm/guest_memfd.c                       |  20 +--
+ virt/kvm/kvm_main.c                          |  65 +++----
+ 106 files changed, 962 insertions(+), 861 deletions(-)
+---
+base-commit: cee9395acd8043be0644b25c34bfa86623f2b935
+change-id: 20260915-work-fd-reserve-unify-folded-b89d3154b3d0
+
 
