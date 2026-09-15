@@ -4,68 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 84324C88E75
-	for <kexec@archiver.kernel.org>; Tue, 15 Sep 2026 13:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 755C0C88E53
+	for <kexec@archiver.kernel.org>; Tue, 15 Sep 2026 13:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:
 	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
 	From:MIME-Version:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=VzikfrdXoe4OKdqIVI5MhWMg7/FGoAHvmjSaSoohyws=; b=KJoveC9pyr8fVr48Db6f4+FPJX
-	SoPE1NnUgEIMk17mPdSM35Wd34w3yxDuE0cgJtPf1AM8/ateprz6+ELq7QTjlAIaFUHpV/md1tABd
-	ORPQsDl+Kf775pKBn+yvw4VLnUOq4Ma6yH5T4ouXs45SAke7oPvXt2KzE/pRXc79rUh6McBRo6YYc
-	iHIUB8WLFn7mi4TsEnbLzGRMJ8raS1uTsRWVMc7Mf34bDux2ZhXyJ9dBjeAcarOgW+oCJqEMlIxyl
-	0MH9j4zn+hpS0o5AJgUQlVBdJV9IBFY/knN6dSNYjPBUpAG7kimOy43dMtN76x+vSvM2d0Bz/SuF/
-	yVu6od5w==;
+	bh=kk0XHrASJtDcqcoYjyv1OoIDFhfagge458V6XsyOmPk=; b=lG4646Dl1JR8/HSJMsZwyvAKbJ
+	kuTZUY71jD1HvdrPFjKY7xHRSo4CVzXIVQCU12Nn+hj+zbrCNSK/Ij/KQuCBc8+79KW5+IV1FvSIo
+	kj3plToLi7lhLinVyZZSGXtqWXPp5q2XTuxpaMRg/dUY2eRJJEMSjRYNnzhMFHTVFODB9WDQJOsW/
+	swL99eESgMHtMnLsznEtfDOLo0Vsw91DIUtKENSpP0VvywM72nB9nsK1UAW75+AAe27WwoiVQRF8N
+	BtAbzYDWxFpGx+Ho7OnjdLtQ9APAbAN18o9jwfmFy7tvi+qod1TZh2AMrnKtZmi5A5K5wiR9Q9eCp
+	esuX4Owg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6T0X-00000006gFi-261X;
-	Tue, 15 Sep 2026 13:15:33 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1x6T96-00000006inJ-3JJV;
+	Tue, 15 Sep 2026 13:24:24 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6T0W-00000006gFa-05UY
+	id 1x6T95-00000006imn-33Ul
 	for kexec@lists.infradead.org;
-	Tue, 15 Sep 2026 13:15:32 +0000
+	Tue, 15 Sep 2026 13:24:23 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 18138600D1;
-	Tue, 15 Sep 2026 13:15:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFB261F0089A;
-	Tue, 15 Sep 2026 13:15:27 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id E22F7600D1;
+	Tue, 15 Sep 2026 13:24:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A5371F00899;
+	Tue, 15 Sep 2026 13:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789478130;
-	bh=VzikfrdXoe4OKdqIVI5MhWMg7/FGoAHvmjSaSoohyws=;
+	s=k20260515; t=1789478662;
+	bh=kk0XHrASJtDcqcoYjyv1OoIDFhfagge458V6XsyOmPk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=V4EdpEhkDelvZkC/X/3bK3vl9pG/mNCj4Y9fnQXsUyUjfO/C0WIiHtAE7wUFnpIJl
-	 hf0m/zLPCJxaZOLx5gA1XcJJcyM0/Uwj48vUqKR2OOSz37Capy4w5XMFn4On3XQ+Qf
-	 KJpsPuIDKAOrTGf4xYES5OyMcVKeiupxsGAG72zhWHFQTMAf7voR40D27dtYgU3ApH
-	 8lKtecKBw1KA6sqz/3HTKKHhPKKiHHj46fRvgiZoudqwdy24NRL7Gtou8rddlFICmZ
-	 SZ2KeUkDOqE1SfCUntS3mJ5Sx3OL7g5dd9LgQ4Mx2s5CqVa8s6KdFslIYwtccHAxlo
-	 ocVNOhI1yr1Xg==
+	b=clJ0vaxp3sZXKwdBpf8y7D4hViqM4nFJmYSCrnv83plK3mCCe1Vo5znC49uX5JNHp
+	 6wrATjKzdnxnx3VpdI1iP7I6QMX7RQAwtLdtLnna1m+FdWYHgCtbX4LUcMSkd5rKqM
+	 vku4yNaOwmyZlw88cwMp1mr/E5vrxzrwO6eqRPMKYdn976UFdvVX7nvi8OB3baQ9Re
+	 9ovAl0QjkuXwklvSyFLaHZdl/yNn6+scd83y/4dwu22IQuhTLRWuPGPOPyQKH4CV5d
+	 iJzdHcs7SQMO+Jwp3IPkfx1iVIY2Z5TlFHKYC20wxoA75OJUkwf5p786a7f7mYPXnh
+	 5HlyU+wH7Cf9g==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 3/9] mm/memory-failure: libstub: install the
- poisoned-memory EFI table
-To: "Suren Baghdasaryan" <surenb@google.com>, "Johannes Weiner" <hannes@cmpxchg.org>, "Mike
- Rapoport" <rppt@kernel.org>, "Brendan Jackman" <brendan.jackman@linux.dev>, "Ilias
- Apalodimas" <ilias.apalodimas@linaro.org>, "Zi Yan" <ziy@nvidia.com>, "Miaohe
- Lin" <linmiaohe@huawei.com>, "H. Peter Anvin" <hpa@zytor.com>, shakeel.butt@linux.dev, kas@kernel.org, "Ard
- Biesheuvel" <ardb@kernel.org>, "Andrew Morton" <akpm@linux-foundation.org>, "Rafael
- J. Wysocki" <rafael@kernel.org>, x86@kernel.org, hannes@cmpxchg.or, "Thomas
- Gleixner" <tglx@kernel.org>, "Naoya Horiguchi" <nao.horiguchi@gmail.com>, "Ingo
- Molnar" <mingo@redhat.com>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Danilo
- Krummrich" <dakr@kernel.org>, "Lorenzo Stoakes" <ljs@kernel.org>, "Michal
- Hocko" <mhocko@suse.com>, "Vlastimil Babka" <vbabka@kernel.org>, "Liam R.
- Howlett" <liam@infradead.org>, "Borislav Petkov" <bp@alien8.de>, "Dave
- Hansen" <dave.hansen@linux.intel.com>, "Oscar Salvador" <osalvador@suse.de>, "David
- Hildenbrand" <david@kernel.org>, "Breno Leitao" <leitao@debian.org>
-Cc: kernel-team@meta.com, driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, rmikey@meta.com, riel@surriel.com, harry@kernel.org, kexec@lists.infradead.org, linux-efi@vger.kernel.org, linux-mm@kvack.org
-In-Reply-To: <20260915-hwpoison-kho-v5-3-3bc7a57bd503@debian.org>
+Subject: Re: [PATCH v5 4/9] mm/memory-failure: efi: adopt the inherited
+ poisoned-memory table
+To: "Breno Leitao" <leitao@debian.org>, "David Hildenbrand" <david@kernel.org>, "Mike
+ Rapoport" <rppt@kernel.org>, "Oscar Salvador" <osalvador@suse.de>, "Ingo
+ Molnar" <mingo@redhat.com>, "Dave Hansen" <dave.hansen@linux.intel.com>, hannes@cmpxchg.or, "Ard
+ Biesheuvel" <ardb@kernel.org>, shakeel.butt@linux.dev, "Borislav Petkov" <bp@alien8.de>, "Ilias
+ Apalodimas" <ilias.apalodimas@linaro.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Liam
+ R. Howlett" <liam@infradead.org>, "Vlastimil Babka" <vbabka@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Naoya Horiguchi" <nao.horiguchi@gmail.com>, "Andrew
+ Morton" <akpm@linux-foundation.org>, "Thomas Gleixner" <tglx@kernel.org>, x86@kernel.org, "Michal
+ Hocko" <mhocko@suse.com>, "Brendan Jackman" <brendan.jackman@linux.dev>, "Rafael
+ J. Wysocki" <rafael@kernel.org>, "Zi Yan" <ziy@nvidia.com>, "H. Peter Anvin" <hpa@zytor.com>, "Suren
+ Baghdasaryan" <surenb@google.com>, "Lorenzo Stoakes" <ljs@kernel.org>, kas@kernel.org, "Miaohe
+ Lin" <linmiaohe@huawei.com>, "Danilo Krummrich" <dakr@kernel.org>
+Cc: linux-mm@kvack.org, linux-efi@vger.kernel.org, rmikey@meta.com, harry@kernel.org, riel@surriel.com, driver-core@lists.linux.dev, kernel-team@meta.com, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+In-Reply-To: <20260915-hwpoison-kho-v5-4-3bc7a57bd503@debian.org>
 References: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
- <20260915-hwpoison-kho-v5-3-3bc7a57bd503@debian.org>
+ <20260915-hwpoison-kho-v5-4-3bc7a57bd503@debian.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 15 Sep 2026 13:15:27 +0000
-Message-Id: <20260915131527.AFB261F0089A@smtp.kernel.org>
+Date: Tue, 15 Sep 2026 13:24:19 +0000
+Message-Id: <20260915132420.7A5371F00899@smtp.kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,81 +80,85 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] mm: efi: integer overflow in poisoned memory bitmap allocation on =
-32-bit
+- [High] efi: ABI incompatibility in poisoned-memory table due to unsigned =
+long
+- [High] efi: ABI incompatibility in poisoned-memory table due to PAGE_SIZE=
+ check
 --
 
-commit 591eef51f672049b14b50a75d67dac823925a19a
+commit 213ea31d156bf79dbf85ad9fc8678fe09bddbde2
 Author: Breno Leitao <leitao@debian.org>
 
-mm/memory-failure: libstub: install the poisoned-memory EFI table
+mm/memory-failure: efi: adopt the inherited poisoned-memory table
 
-This commit introduces a new poisoned-memory EFI table installed by the stu=
-b.
-It sizes a bitmap based on the UEFI memory map to describe the RAM span and
-allocates it as EFI_ACPI_RECLAIM_MEMORY so the next kernel does not take it
-as free RAM.
+This commit takes the inherited EFI poisoned-memory table into use by parsi=
+ng
+it in efi_config_parse_tables(). It validates the table header and hands its
+pages to memblock so everything afterwards can reach it with phys_to_virt().
 
-> diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/fir=
-mware/efi/libstub/efi-stub-helper.c
-> index 48f93f7758e9e..9c66e06c972c5 100644
-> --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-> +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-
+> diff --git a/drivers/firmware/efi/poison.c b/drivers/firmware/efi/poison.c
+> new file mode 100644
+> index 0000000000000..3f12db3dc9b84
+> --- /dev/null
+> +++ b/drivers/firmware/efi/poison.c
+> @@ -0,0 +1,93 @@
 [ ... ]
-
-> +static struct linux_efi_poisoned_memory *efi_poison_alloc(u64 phys_base,
-> +							  u64 bitmap_size)
+> +static bool __init
+> +efi_poison_geometry_valid(const struct linux_efi_poisoned_memory *pm)
 > +{
-> +	struct linux_efi_poisoned_memory *pm;
-> +	efi_status_t status;
+> +	u64 nbits, end;
 > +
-> +	status =3D efi_bs_call(allocate_pool, EFI_ACPI_RECLAIM_MEMORY,
-> +			     sizeof(*pm) + bitmap_size, (void **)&pm);
+> +	/* Whole words, and a bit count that can be taken without wrapping. */
+> +	if (!pm->size || !IS_ALIGNED(pm->size, sizeof(unsigned long)) ||
+> +	    check_mul_overflow(pm->size, (u64)BITS_PER_BYTE, &nbits))
+> +		return false;
 
 [Severity: High]
-Could this allocation size wrap around on 32-bit EFI architectures if the
-memory map is extremely sparse?
+Does this validation logic break binary compatibility across different kern=
+el
+bitnesses by relying on unsigned long?
 
-In efi_get_ram_range(), ram_top is determined from EFI memory map
-descriptors. If a descriptor is placed at a very high physical address,
-bitmap_size could be large enough to wrap around 32-bit arithmetic.
+The ABI structure definition for linux_efi_poisoned_memory uses a
+variable-width type for the bitmap (unsigned long bitmap[]) rather than a
+fixed-width type like u64. If a 32-bit kernel (or 32-bit EFI environment)
+creates the table with a size that is a multiple of 4 (but not 8) and
+passes it via kexec to a 64-bit kernel, this validation will fail since
+sizeof(unsigned long) is 8.
 
-On 32-bit EFI, the allocation size passed to allocate_pool (which takes
-a 32-bit UINTN) is implicitly truncated. For example, if bitmap_size modulo
-2^32 is very large (e.g., 0xFFFFFFF0), sizeof(*pm) + bitmap_size could
-truncate to a tiny allocation (e.g., 8 bytes).
+The 64-bit consumer kernel will reject the valid poisoned-memory table,
+losing hardware memory poison information. Accessing the unpoisoned memory
+subsequently triggers a Machine Check Exception (MCE), crashing the system.
 
-> +	if (status !=3D EFI_SUCCESS)
-> +		return NULL;
 > +
-> +	pm->version =3D 1;
-> +	pm->unit_size =3D EFI_POISON_UNIT_SIZE;
-> +	pm->phys_base =3D phys_base;
-> +	pm->size =3D bitmap_size;
-> +	memset(pm->bitmap, 0, bitmap_size);
+> +	/* And a footprint that can be page aligned without wrapping either. */
+> +	if (check_add_overflow(efi.poisoned_memory, sizeof(*pm) + pm->size,
+> +			       &end) || end > PHYS_ADDR_MAX - PAGE_SIZE)
+> +		return false;
+> +
+> +	if (pm->unit_size < PAGE_SIZE || !is_power_of_2(pm->unit_size))
+> +		return false;
 
 [Severity: High]
-If the allocation size wrapped around, could this memset cause a heap
-buffer overflow?
+Can this logic break kexec chains by tying the acceptance of an external ABI
+table to the consumer's local compile-time PAGE_SIZE?
 
-The 64-bit bitmap_size is passed to memset, which takes a 32-bit size_t on
-32-bit architectures. This independently truncates bitmap_size (e.g., to
-0xFFFFFFF0). Since the prior allocation could have wrapped to a very small
-size, this would write gigabytes of zeroes into a tiny allocation, causing
-boot-time memory corruption.
+If a kernel configured with a smaller PAGE_SIZE (e.g., 4KB) sets
+pm->unit_size to 4096 and kexecs into a kernel configured with a larger
+PAGE_SIZE (e.g., 64KB), the new kernel evaluates 4096 < 65536 and entirely
+rejects the table.
 
-Would it be safer to check if bitmap_size exceeds the maximum allocation
-size for the architecture, or use a safe addition helper before allocating?
+Discarding all hardware memory poison records can result in MCEs and system
+crashes when the supposedly good memory is allocated and accessed. Should
+the consumer instead accept the table and safely round up poisoned ranges to
+its native page granularity?
 
 > +
-> +	return pm;
+> +	return IS_ALIGNED(pm->phys_base, pm->unit_size);
 > +}
-> +
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260915-hwpoison-k=
-ho-v5-0-3bc7a57bd503@debian.org?part=3D3
+ho-v5-0-3bc7a57bd503@debian.org?part=3D4
 
