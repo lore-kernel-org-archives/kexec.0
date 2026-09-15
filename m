@@ -4,93 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 161D4C88E7F
-	for <kexec@archiver.kernel.org>; Tue, 15 Sep 2026 12:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4CB5FC88E7B
+	for <kexec@archiver.kernel.org>; Tue, 15 Sep 2026 12:49:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Pqqx6qyZK7hDaGMfpM7ctme4msTknL0M/1U1XtnHr1M=; b=hObGnBj4Z88yB8t5gF4qzVBcok
-	CfwSW3kZekl8OC/l7p7unykfmlON1R8QOQiEHBB90bW0Jiz0g/JtFxdI8CWbIhVqx+CuKgwjnHFZO
-	/0Hlrl6Ex3v2e7HLf/8UvLwz8Dcrwy8N1gp7s/iVLSbmaqD0Ovb13D7dOhwKBXXAv/4xDgpGVcEcE
-	qpToarAibG5fjsuuw7CbbEdXWdNXH0x4SZZD7M3hFLIz2OMEMVmhcIFQ17ybIYxcISbPprT+K1dBn
-	6zGLhDgCp75WCuiiUt8M8kYRerBvsUJHY0gWjAPwys6lKbYqnaFpmwJpAUh+6H/rDi5GBFkToXtmb
-	wQTvbDmg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=mP8qopDle1Sc4k8F6w5GND/XUp1RUEWcrZG95tdjUPs=; b=N/1LxpMvPzvlfP3+1gq7iPXSrq
+	NNIRY/+nw7SYrL5v8mHz1jqTU0fCcJZ92UE5l/gtfmqH3a4T13gNPZeOoSYDL2iTBktwyczdR1jya
+	kxfJk8IZI3RFQSySKU+qHDGbUgFq+7xnsoKtsFNuSmUsbfpzxFVDgqbjXkjK9PjmghBCVXQBlmrr9
+	e56uAo1447+tnml7nVLsaOBU6yOXKpKwqa6fM1JCkOxfb1+xE0twECCfm7osMjjQkDu5ZEHTVWSx6
+	xgKG4OdnGExDQ5+Uqx+zUA9a4N9OjhJKdeDnE37cDa9SUDegB5I7WAwDvYAwzboFljdZK/LaLgxiN
+	zKlFFFtQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6SSO-00000006ZJv-1Ikt;
-	Tue, 15 Sep 2026 12:40:16 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1x6Sbg-00000006bT5-1GPo;
+	Tue, 15 Sep 2026 12:49:52 +0000
+Received: from mail-pj2-x01.google.com ([2607:f8b0:4864:39::1])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6SSI-00000006Z8L-3sjD
-	for kexec@bombadil.infradead.org;
-	Tue, 15 Sep 2026 12:40:10 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=Pqqx6qyZK7hDaGMfpM7ctme4msTknL0M/1U1XtnHr1M=; b=bUmgrfBWfLziT8CtR4wipdrnlQ
-	kMiyijaoe9ugkN4z+LZkgvJxnTFjaxI8jgxtGw4p6tux5QPOL3wzJGjGcAjSqoe7LhYLwiHz19otV
-	nT40gpQ9ksQo6lehovoUBwLE3o5qZB0zUELSelrt+eG55iUgB3O/PqV5EknY3lzEjfriwOzeolNWC
-	GS8ECdMjflRcatdNREaAw0rSMRyp8wxyKCcyvcwSSg8uXLHwYvN+hauyWVKmBnuNj5VX0dpCZwq3R
-	xF330a9TczNxRE17XAo34Wjc0niAq+aICkxji8Rt7AQAXQYgqyFAlnX0XGH9Lj0UtixT7IMcTbF8C
-	UtKPQocA==;
-Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
-	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
-	id 1x6SSF-00000006keA-3G4K
+	id 1x6Sbd-00000006bRq-0CV6
 	for kexec@lists.infradead.org;
-	Tue, 15 Sep 2026 12:40:09 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Reply-To:Content-ID:Content-Description;
-	bh=Pqqx6qyZK7hDaGMfpM7ctme4msTknL0M/1U1XtnHr1M=; b=huBfHert8ebhJsOV5HNhXjIL6i
-	5hoDBf8pBN819FnWMjS07l+DapxPI5DgQs5AX8qKYVKDdOhXqpOC2FMR9E4k1ERdGl9gLRYa6uS7L
-	29ZMZlV8O/OgrMSMPHHLn//ZifgJXlrn097+s/IzxtyrQ/x+0cTTCUE+CBjBIlTxVONVha3ghSzyU
-	WbWX347JicsNYVyxS7O5iHBc5fdrfrnAA5+tFHy+mlF8v8LVSeJkNUDmq0F40jC7sd6Hp6tqBv7dB
-	v/o0rxqmBw4kUMlPPOg5fHOhqQBLMlVAvYlYUIRvN2RhVwgBX90/49Nyn7l9HOVPICSYQFAbnlWwJ
-	7dSC0UUg==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1x6SS0-004Oba-0j;
-	Tue, 15 Sep 2026 12:39:52 +0000
-Date: Tue, 15 Sep 2026 05:39:44 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Harry Yoo <harry@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Kiryl Shutsemau (Meta)" <kas@kernel.org>, kexec@lists.infradead.org, David Hildenbrand <david@kernel.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, 
-	Brendan Jackman <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	rmikey@meta.com, riel@surriel.com, kernel-team@meta.com
-Subject: Re: [PATCH v4 2/5] mm/memory-failure: libstub: install the
- poisoned-memory EFI table
-Message-ID: <aqk4NUnq92ftuUuJ@gmail.com>
-References: <20260909-hwpoison-kho-v4-0-359313564495@debian.org>
- <20260909-hwpoison-kho-v4-2-359313564495@debian.org>
- <2c9a7bef-3189-4f78-a6cb-61d2f7afd643@app.fastmail.com>
- <aqKhgPKzRf0e22s3@gmail.com>
- <aqkIdVhoG2wwVBtb@gmail.com>
- <aqkyT0Ui9h5KWuzn@thinkstation>
+	Tue, 15 Sep 2026 12:49:50 +0000
+Received: by mail-pj2-x01.google.com with SMTP id d9443c01a7336-2dae660f31bso31695155ad.1
+        for <kexec@lists.infradead.org>; Tue, 15 Sep 2026 05:49:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789476587; x=1790081387; darn=lists.infradead.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=mP8qopDle1Sc4k8F6w5GND/XUp1RUEWcrZG95tdjUPs=;
+        b=M3ywVOe+TADQyZY+fVMlixNJFD0+M6ZssEjauOFGcytYu/Ve0wNxH8o2cnQbgVd6+h
+         VeGSpUzBAcCP/Kp01nHBfEhoQ4SvtrolE7Z7kHf2Uw8vRu8NdMfQGnDh+jyGZ2qC6moj
+         y8aMSKq+ZiBHS2R1vLRAeqiPnFfIP5PB3OHRNeo5N3dBAsJb4FgtKFziqlZDfnMJJpJS
+         Wy03UbrfPUkj/ZegypepypCXToggrkg676Yl6uNCqgJ+cKpUpeU8X+dHhee+zzgFPvAo
+         3ZrNKIhWUKD7DQKHu6SJQCEzhk2dYUOgTxtWkj24Ov1UADRxO/EfmNMqFE03JLFN7Sfs
+         NiyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789476587; x=1790081387;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=mP8qopDle1Sc4k8F6w5GND/XUp1RUEWcrZG95tdjUPs=;
+        b=Y2iTC3mIvb/n9l1rqui4eLGw97ydQE67LOilM07IkppjkNIHGXdGwY92Qr82VoWuGO
+         9Puwqj/Lkq3ukMAa6VfATnxLtkAubQTN6w7sbS8YCzkzhxIAb6fire6jMOWn/FtHqIhI
+         xaO+x1imwYfw7zhHee3hwPbtoduU12Qotwv0c/mcVFvCu2St1dYdCEpTNNaZ3/ngyJob
+         I5tF3oKHXM3j0XIWbEZtiNIBKRcsZIMD4gCyzC8SnFWlMsBtrxfIDiAMZER6W8WOYKQX
+         m31Oa9Bxs0r7+Wit5qpYYUHN/5Rnclg9dwQf6glK+8LyXVojfwYFZgKzE2Npii+W5McZ
+         odUA==
+X-Forwarded-Encrypted: i=1; AKwUvBwqQwjCg4qT41O3uXrJL/KxpkrR7gsNaKIcwKVuNzeahyPY3TfVQF44QyvW4UeFjAmmyBfG0A==@lists.infradead.org
+X-Gm-Message-State: AFuF++nPp4cGKrjJ8r1wZEJ78qgaV+kpQGc4livwzjI5fSRdIi/owURA
+	PPEJ2r+h+UpywNOXKr+3V69+yKLCSlj1GQnT7pyt3yzn6Nq8JDB0npcC
+X-Gm-Gg: AYBFou2GoU8iIAFC8xGgktglqombJVp0iepWDNxyghEdb7nK9BRCrzzSnrJNQuNvuc3
+	Z3rl9OWQbWxvVAI/Gdc7UtJyIBb7XFwbbXMzYodV5ENCsxitlPSkvt3319xw8Mhg3I9KwNSpguh
+	XqwNUIenGKW3dUx3++5OOb51O+LCc6bsuKxb5Yofxa51v0xuzLkYYJDXm6wpcTqjKlQLOH5Tb5X
+	EOxziiErFfKrQG8gdPakQgKNa66VZZ6lxCt+Gun4usdmFvKxs3Y1pmqbRasInfxz11mVhgVQeoi
+	xTZvh039sLqhSW0nf4xlitZRFfkNxyzwG5HgJSClRMOw0yBd7MrtQJ6LnZ2/7YXdEY4O36u4pjZ
+	oItPm+Vo4GmVSUsmzlGoM+D8u/QdB80oMd1sGXrXihE+DrirVt+Oswjt+PEmWWgBjdx/q0Eu8TV
+	AorfKnVqCwilkol3Zum9dv9NSKGW3GpjCcVu4ZXakgWE72HmNg4oqv5mmUQ82AIA8p9a4viAYvc
+	AMK508=
+X-Received: by 2002:a17:903:1a0b:b0:2d8:d4cc:be64 with SMTP id d9443c01a7336-2dd6c7134b4mr167097285ad.17.1789476587316;
+        Tue, 15 Sep 2026 05:49:47 -0700 (PDT)
+Received: from [10.125.112.20] ([122.11.210.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2dd6f8ebbdfsm26424855ad.38.2026.09.15.05.49.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Sep 2026 05:49:46 -0700 (PDT)
+Message-ID: <86a09d26-2de8-4590-b135-31564e2c7049@gmail.com>
+Date: Tue, 15 Sep 2026 20:49:32 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aqkyT0Ui9h5KWuzn@thinkstation>
-X-Debian-User: leitao
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 01/10] mm: memblock: add missing HugeTLB flag name
+To: Mike Rapoport <rppt@kernel.org>
+Cc: catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
+ pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, tglx@kernel.org,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+ robh@kernel.org, saravanak@kernel.org, akpm@linux-foundation.org,
+ baoquan.he@linux.dev, pasha.tatashin@soleen.com, pratyush@kernel.org,
+ m.szyprowski@samsung.com, mark.rutland@arm.com, kernel@xen0n.name,
+ alex@ghiti.fr, hpa@zytor.com, ruirui.yang@linux.dev, robin.murphy@arm.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ devicetree@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org,
+ iommu@lists.linux.dev
+References: <20260902073116.802752-1-chenwandun1@gmail.com>
+ <20260902073116.802752-2-chenwandun1@gmail.com>
+ <178936321614.3691424.10386784926753862087.b4-review@b4>
+Content-Language: en-US
+From: Wandun <chenwandun1@gmail.com>
+In-Reply-To: <178936321614.3691424.10386784926753862087.b4-review@b4>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260915_134007_908568_9D3CF169 
-X-CRM114-Status: GOOD (  26.53  )
+X-CRM114-CacheID: sfid-20260915_054949_100143_970A53FC 
+X-CRM114-Status: GOOD (  10.75  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,54 +114,31 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Harry,
 
-Thanks a lot for the feedback.
 
-On Tue, Sep 15, 2026 at 01:12:54PM +0100, Harry Yoo wrote:
-> On Tue, Sep 15, 2026 at 02:03:48AM -0700, Breno Leitao wrote:
-> > On Thu, Sep 10, 2026 at 06:11:53AM -0700, Breno Leitao wrote:
-> > > So I'd say we have two options:
-> > >
-> > > 1) Keep it similar to unaccepted memory, with 2M granularity.
-> > >    - Pro : Similar mental model as unnacepted memory
-> > >    - Cons: 2 MB might be a bit wasteful
-> > >
-> > > 2) Move to a linked list like the RFC, keeping it outside of the EFI
-> > >    table.
-> > >    - Pro: Reduce the memory granularities to page instead of 2M blocs.
-> > >    - Cons: Another way of passing memory information between kexec
-> > >      kernels.
-> > >
-> > > Any any other option or strong preference?
-> >
-> > Since nobody voiced a strong preference, I will stick with option (1),
-> > the bitmap, for these reasons:
->
-> Not sure if this was discussed already, but perhaps we need to have
-> a chain of struct linux_efi_poisoned_memory rather than a single
-> bitmap, to easily add support for hot-added memory later?
+On 9/14/26 13:20, Mike Rapoport wrote:
+> Hi,
+> 
+>> Commit 7d163a75f821 ("memblock: make HugeTLB bootmem allocation work
+>> with KHO") added MEMBLOCK_RSRV_HUGETLB but did not add the corresponding
+>> entry to flagname[]. As a result, memblock debugfs cannot report the
+>> flag by name.
+>>
+>> Add the missing RSV_HUGETLB entry.
+>>
+>> Fixes: 7d163a75f821 ("memblock: make HugeTLB bootmem allocation work with KHO")
+>> Signed-off-by: Meijing Zhao <zhaomeijing@lixiang.com>
+>> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
+>> Link: https://lore.kernel.org/lkml/20260821020910.3428585-2-zhaomeijing100@gmail.com/
+> 
+> Can you please send this as a separate patch, I'll pick it to the
+> memblock tree.
 
-Agreed, that's a good point. We could extend linux_efi_poisoned_memory
-with a ->next pointer, so that if we ever add hot-plug support later, we
-can link in another linux_efi_poisoned_memory. 
+A separate patch has been sent.
+https://lore.kernel.org/lkml/20260915124641.2498280-1-chenwandun1@gmail.com/
 
-That said, I'm not sure hot-plug memory is really relevant here. Hot-plug
-is mostly used in VMs, while this feature is more host-side, so it doesn't
-seem like a great fit. Maybe it would only matter for servers where
-physical memory can be added while running (do those still exist? I
-recall IBM offered that feature at some point, but I'm not sure there are
-real customers for it).
+Best regards,
+Wandun
+> 
 
-> Also, I wonder if some architectures have a scattered set of pfn
-> ranges so that the span from the start pfn to the end pfn being much
-> larger than the actual physical memory size.
->
-> If so it might make more sense to have a bitmap for each pfn range.
-
-Agreed, having a ->next in linux_efi_poisoned_memory is a good idea that
-we can lean on depending on whatever problem comes up down the road.
-
-Very good point — let's keep this linux_efi_poisoned_memory chain idea in
-mind for whenever we need to expand it.
 
