@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EE6ECC88E53
-	for <kexec@archiver.kernel.org>; Tue, 15 Sep 2026 11:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 96ED9C88E75
+	for <kexec@archiver.kernel.org>; Tue, 15 Sep 2026 11:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xKFkiCa0hlTe3sMnpSzoSnXToiZbVbh61g+KJO9ieuc=; b=Z8o9BCS+h9jQFz7Ti60U6P7H4+
-	GouPNh6kCj0T96cl6SYhvMSCvgty5PAURubiCc22LX0s1YuND+Nu0Yd1Ba5EPgiHx+SeR0fvxvYH4
-	jaqu+gjM1QbDOY+qi/H5Q2W+DlLRcMAJifGu+s9wWa/XccN6BtMrY6imZfkQVFfrIgu0bUOhtCu+4
-	6p93mJxqncaN9B4KaRIZyuVkJezCewEodH0LliwCHkzSn0Ar8D51cxtaBBESssnqAqMynSRquBFpN
-	yfwKfAM2xWPjc7CXOT+uHrGWQHPG3d9d4f5RA39Ior5Us0omSYO1YXc1qJphJqZ1q1lxRlmUGGkCd
-	9JJnCO+w==;
+	bh=BqXm1gwNkPuV8t/s5aBHvxXoZQi1gmoyMrWOmcTh+e0=; b=vsHZShiO6FVyXNBA8h6vfMdm3p
+	lEBnygdjgwJa0cpSoKuSJBr9Q8mPxS2F1UhhrEsK8wkcbffeBy1YryLIbOHsQsPjoXND2EpOsaUOG
+	Qy5l29ymFqWgg1LGbhIr5O185esvOUdaBUn8WsUUMFrY0hcFlfkHVzsnRBifA8IaH8JM5bipvnzUi
+	kBDL5JVO92xaOVNImiRwhVrCeHcALSEhCFbpmnEbg0OJOimFiCzDjWO0+pSj4Zl+jy6t3BEwkPvZz
+	7uufGVHD+67yH/QbonAU5FGFashqYAMTo9/n41ygjBvs0fJn73gWB3ruv6NZAcCr7d+5BHzQgBJp2
+	bd9xxF9w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6RTf-00000006Ean-3NKF;
-	Tue, 15 Sep 2026 11:37:31 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1x6RTi-00000006EfG-04Z3;
+	Tue, 15 Sep 2026 11:37:34 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6RTK-00000006DpU-1hSd;
-	Tue, 15 Sep 2026 11:37:10 +0000
+	id 1x6RTS-00000006E7I-0cmP;
+	Tue, 15 Sep 2026 11:37:18 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id CD294602C4;
+	by sea.source.kernel.org (Postfix) with ESMTP id ABFD44184D;
+	Tue, 15 Sep 2026 11:37:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A48B1F0089B;
 	Tue, 15 Sep 2026 11:37:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D6561F000FF;
-	Tue, 15 Sep 2026 11:37:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789472229;
-	bh=xKFkiCa0hlTe3sMnpSzoSnXToiZbVbh61g+KJO9ieuc=;
+	s=k20260515; t=1789472237;
+	bh=BqXm1gwNkPuV8t/s5aBHvxXoZQi1gmoyMrWOmcTh+e0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=oOCbPxoTA5tRVDE1SDW2p9tC0NlFv3Be5GpoNWhYmURnweQxEsEdX5T61GQni5xDr
-	 dB8oKq6yW0o0+gkex/ln8ORrTi4m/ksGAeRyzNp36yZlNMlPyIA0cXetpfDQyX5Jlw
-	 kUeKik4FTXQWhScuFLMluxrSG6c9A9ZCbrTYp9zYSiEAOHtRRYECmeCyootOfrgsFF
-	 4aVzqXKYOQKlcIlDUd5HFPC99RpSLMKbQX+NeTk8Ib6ernTnIZhKKs5s66GAw9HT8a
-	 aS1v8S5YrjxrTs7D5UvVddV+Ou7n/rKAkdnUoUpvZBcB6uDYitfeHcIW+Z9u4N80Fg
-	 U5N4JdROMjYmQ==
+	b=a6dDn4u7UHWeS4oTPwJxZY/4MEQxfhe+w1dKAeLobwNA3kw8GA3R9jRM2UR2mitay
+	 53rP31LX9IqiX4KyqJPeG5/A7Wk+vS/URJ+UIVi9s1V2CPS0HR+hZ4KD6LOwLi84oS
+	 QHwPtObpcQ5V14Eq0QEfaz7SuQthG9rIDnYNoZNXfjPTl3loRHMdpOz24R20W3G90W
+	 UlZUihfBsJUGHcwdaoYH/9Wk5PPbgvkC3G4N/+PjxTb+vMzH1dM6mnf2s5E522jH4C
+	 ipwBTphCPJfK0gAPAR1mBJJ0lQjIBDvfQG7LHcMtNeNhxBkuWpXGTndvfVHeezP+yl
+	 SKtsU9/kk2SGQ==
 From: Christian Brauner <brauner@kernel.org>
-Date: Tue, 15 Sep 2026 13:31:31 +0200
-Subject: [PATCH RFC POC 45/50] accel/habanalabs: stop putting the dma-buf
+Date: Tue, 15 Sep 2026 13:31:32 +0200
+Subject: [PATCH RFC POC 46/50] xen/gntdev-dmabuf: stop putting the
  descriptor back on failure
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260915-work-fd-reserve-unify-folded-v1-45-4d5217d6b246@kernel.org>
+Message-Id: <20260915-work-fd-reserve-unify-folded-v1-46-4d5217d6b246@kernel.org>
 References: <20260915-work-fd-reserve-unify-folded-v1-0-4d5217d6b246@kernel.org>
 In-Reply-To: <20260915-work-fd-reserve-unify-folded-v1-0-4d5217d6b246@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
@@ -71,12 +71,12 @@ Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jann Horn <jannh@google.com>,
  kexec@lists.infradead.org, linux-hyperv@vger.kernel.org, 
  "Christian Brauner (Amutable)" <brauner@kernel.org>
 X-Mailer: b4 0.17-dev-db0b7
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1297; i=brauner@kernel.org;
- h=from:subject:message-id; bh=ydrjF0IvCagPMk+8W3Lo5F+Om/GvHyzFN7KTNwOeZ+c=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSt1Kn/suYdZ5X5676SLT84zbaJW7EmM036Hiq6ZOOqB
- ZPZLiWKdJSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAExEfjfD/8KDx3tMQu5s8Nvq
- pTQrXEN8zcGDu7l3Sq29EHzMOo0/S5yR4VJD+//LnadWytZe1frxs+H8kb1LmHzvH1hrULDM+7H
- 3NRYA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1632; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=njDuxDGw0hmgU8wKPypyXyk5GfJpiYpSpC9eP8wkYpU=;
+ b=kA0DAAoWkcYbwGV43KIByyZiAGqpLH/I6D6Uv1WDf9ilssavQSoU/hfbYczV5DbAAkrVEcQbC
+ Yh1BAAWCgAdFiEEQIc0Vx6nDHizMmkokcYbwGV43KIFAmqpLH8ACgkQkcYbwGV43KLDpAD/YSHF
+ Q2prY93oobCwIjSF/SfO7Zal68tdHzxKNHmWJJEA/R/JD6+ZeSXqBuxwWtOWojlugYUiab/9tAe
+ INmLXFesK
 X-Developer-Key: i=brauner@kernel.org; a=openpgp;
  fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 X-BeenThere: kexec@lists.infradead.org
@@ -97,41 +97,49 @@ Rely on the fd exit path machinery.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- drivers/accel/habanalabs/common/memory.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/xen/gntdev-dmabuf.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/accel/habanalabs/common/memory.c b/drivers/accel/habanalabs/common/memory.c
-index 361cff577381..1559442cd56f 100644
---- a/drivers/accel/habanalabs/common/memory.c
-+++ b/drivers/accel/habanalabs/common/memory.c
-@@ -1861,11 +1861,13 @@ static int export_dmabuf(struct hl_ctx *ctx,
+diff --git a/drivers/xen/gntdev-dmabuf.c b/drivers/xen/gntdev-dmabuf.c
+index 83b0df460894..a3ecc7c83974 100644
+--- a/drivers/xen/gntdev-dmabuf.c
++++ b/drivers/xen/gntdev-dmabuf.c
+@@ -357,10 +357,10 @@ static int dmabuf_exp_from_pages(struct gntdev_dmabuf_export_args *args)
  {
  	DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
- 	struct hl_device *hdev = ctx->hdev;
--	CLASS(get_unused_fd, fd)(flags);
-+	const struct fd_slot *fd = fd_prepare(flags);
+ 	struct gntdev_dmabuf *gntdev_dmabuf __free(kfree) = NULL;
+-	CLASS(get_unused_fd, ret)(O_CLOEXEC);
++	const struct fd_slot *fd = fd_prepare(O_CLOEXEC);
  
--	if (fd < 0) {
--		dev_err(hdev->dev, "failed to get a file descriptor for a dma-buf, %d\n", fd);
--		return fd;
-+	if (IS_ERR(fd)) {
-+		int rc = PTR_ERR(fd);
-+
-+		dev_err(hdev->dev, "failed to get a file descriptor for a dma-buf, %d\n", rc);
-+		return rc;
- 	}
+-	if (ret < 0)
+-		return ret;
++	if (IS_ERR(fd))
++		return PTR_ERR(fd);
  
- 	exp_info.ops = &habanalabs_dmabuf_ops;
-@@ -1889,8 +1891,7 @@ static int export_dmabuf(struct hl_ctx *ctx,
- 	 */
- 	get_file(ctx->hpriv->file_priv->filp);
+ 	gntdev_dmabuf = kzalloc_obj(*gntdev_dmabuf);
+ 	if (!gntdev_dmabuf)
+@@ -388,17 +388,17 @@ static int dmabuf_exp_from_pages(struct gntdev_dmabuf_export_args *args)
+ 	if (IS_ERR(gntdev_dmabuf->dmabuf))
+ 		return PTR_ERR(gntdev_dmabuf->dmabuf);
  
--	*dmabuf_fd = fd;
--	fd_install(take_fd(fd), hl_dmabuf->dmabuf->file);
-+	*dmabuf_fd = fd_stage(fd, hl_dmabuf->dmabuf->file);
+-	gntdev_dmabuf->fd = ret;
+-	args->fd = ret;
++	gntdev_dmabuf->fd = fd_prepare_fd(fd);
++	args->fd = fd_prepare_fd(fd);
  
+-	pr_debug("Exporting DMA buffer with fd %d\n", ret);
++	pr_debug("Exporting DMA buffer with fd %d\n", fd_prepare_fd(fd));
+ 
+ 	get_file(gntdev_dmabuf->priv->filp);
+ 	mutex_lock(&args->dmabuf_priv->lock);
+ 	list_add(&gntdev_dmabuf->next, &args->dmabuf_priv->exp_list);
+ 	mutex_unlock(&args->dmabuf_priv->lock);
+ 
+-	fd_install(take_fd(ret), no_free_ptr(gntdev_dmabuf)->dmabuf->file);
++	fd_stage(fd, no_free_ptr(gntdev_dmabuf)->dmabuf->file);
  	return 0;
  }
+ 
 
 -- 
 2.53.0
