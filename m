@@ -4,60 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CE46BC88E7B
-	for <kexec@archiver.kernel.org>; Tue, 15 Sep 2026 11:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 35B16C982C4
+	for <kexec@archiver.kernel.org>; Tue, 15 Sep 2026 11:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:
 	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
 	From:MIME-Version:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=z5q8YTazTS0g58MAO23KPqH00t77+r0Qm1szy+uSGx8=; b=24IZGmM/dqTnbc5UQMe/KEj9FX
-	Vzhm7+01rXDLHno0pHLVuoSqkHTkUpgQmAsxrczz4W3fKEiO3XMO34ZA/xka5Bo5YiaRwftwah2VG
-	OAaulWdNFFa3XSfKbefF6l0epi2rDe6btaBCt3iWa9H1g+t4A2G72pg1pc9dQJVnzRR/j4x8qkp14
-	VpczfEK/HrZffuzO2TqAWR6mge4IR9xQ7TyfKEPFJzNQDi20JsliJWedlRLVTwQWh263bgQXLQSqu
-	ZSPJMiFJxPET3SqmnhPv3dXkVTofrRdhTpCjaUx0E5v2s4tc9TvGbAu4ZihieMttZbPBBES86Evyi
-	OZNuVAcw==;
+	bh=HMMRMhob7IkIe9e9mAPaP9M7mjfa9q2jKMemMrIPs6c=; b=RNfs33MpSrpZMyS2ZLmCb5CEgV
+	l2XexZ9A/w70ldSehF15mUOoGEyTSN2driZ5OXSb+sJ97sWmUJK8FxdnIDtuC/1MpevTdKh3ghSyA
+	uiZKECZ2jmWUTbYrqqIBrhpxfRFvOUAk/btKrCxHK3E2Rsnq9BZKcetfmnktNbedRQQZLH+PikYI4
+	BWRsY+jwFaSaAnXxIKQN/TA8JiLPeqhcEduIQ4WMx/4CHGtvhhAnBCTsQ2i8UF9Flb1qnI8oHFyjg
+	mGGRKkspnPcO4yOdt6No0YkSZWXssABRCQkUBeoJbrbBhu+ylD0T8/ULVmXquXHEN/M8xLpzxIy1/
+	jNaVyV6A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6Rki-00000006K5Z-2jj0;
-	Tue, 15 Sep 2026 11:55:08 +0000
+	id 1x6Rko-00000006KBX-0JDN;
+	Tue, 15 Sep 2026 11:55:14 +0000
 Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6Rkg-00000006K4h-14v3;
-	Tue, 15 Sep 2026 11:55:06 +0000
+	id 1x6Rki-00000006K6v-2Q5s;
+	Tue, 15 Sep 2026 11:55:08 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 05F6A44503;
+	by sea.source.kernel.org (Postfix) with ESMTP id 5203943E12;
+	Tue, 15 Sep 2026 11:55:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CE761F000FF;
 	Tue, 15 Sep 2026 11:55:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 148F91F00893;
-	Tue, 15 Sep 2026 11:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789473305;
-	bh=z5q8YTazTS0g58MAO23KPqH00t77+r0Qm1szy+uSGx8=;
+	s=k20260515; t=1789473308;
+	bh=HMMRMhob7IkIe9e9mAPaP9M7mjfa9q2jKMemMrIPs6c=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ZuWOcXAxSUf8U369yMDLM5CrTH3NJo6vFF48Zf7qsB7e9dLLAU7rmbvFKGtSwEN54
-	 mrXyu8/sUo7qSyMhvbEGo+56h3zo92SZrUdXQDVHKmZsSL1yip9FieQwDFx3xFr6W4
-	 tBOqKBhe78D3RbDLNy/MZGAQn79PhMCfv5ZbZLoxyQiJCVFGpeYe2T3W8SPiGli1OE
-	 NJ9s1R/i1hoZ9yPqcd3D1GgTWMiPLPMS4hdNI6X7OCZH/p2PAhMdHWisK0u0w1/QXC
-	 YOxwO8oP0q6Czx2WnOyHnYHMCetkSnm/+kFJHxdJpz1jYA9qFglwCwZ6hc4JzfujT3
-	 h2LUQd6qFe6SA==
+	b=PsQySeqWE8JCmadPFY/hnc/12dyVnuAieOOYame4n2RSKPpHPzZEwa9aNXFW6Bh0w
+	 jCKKPfvbQGd4w+kjCdDB1cDWPrLj1jH+ib+NTLKYU1wTD4r5SSCiyK6Bkhm0GPcOD/
+	 n8VVrYov9a2DUD0P51p6sbyyDt7TrPEsZSbloBTRZV4lFnVfvS/4uwmg4s0o9mGPwE
+	 J86aQbIHSTHc2gNUMi95Os/taOUoLSS+QNmmmSrckOC7X/ql9/XqZQkG5NLta2glDR
+	 Mp2J42KjxHOY8m6wiQeHzVa1+u/idZU1hpvfr6kocKyTTL+rDtt1yEldFXNOgmmj2l
+	 +dfiOWdDv0iJA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC POC 01/50] file: install files on syscall exit
-To: "Linus Torvalds" <torvalds@linux-foundation.org>, "Christian Brauner" <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org, kvm@vger.kernel.org, bpf@vger.kernel.org, io-uring@vger.kernel.org, linux-alpha@vger.kernel.org, kexec@lists.infradead.org, "Jens
- Axboe" <axboe@kernel.dk>, "Michael S. Tsirkin" <mst@redhat.com>, dri-devel@lists.freedesktop.org, sparclinux@vger.kernel.org, linux-parisc@vger.kernel.org, linux-mm@kvack.org, linux-openrisc@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-hexagon@vger.kernel.org, "Jann
- Horn" <jannh@google.com>, "Ingo Molnar" <mingo@redhat.com>, "Oleg Nesterov" <oleg@redhat.com>, "David
- Airlie" <airlied@redhat.com>, "Eugenio Perez" <eperezma@redhat.com>, linux-csky@vger.kernel.org, "Alexander
- Viro" <viro@zeniv.linux.org.uk>, linux-mips@vger.kernel.org, linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, "Peter
- Zijlstra" <peterz@infradead.org>, virtualization@lists.linux.dev, "Jan Kara" <jack@suse.cz>, linux-hyperv@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- =?utf-8?b?Q2hyaXN0aWFuIEJyYXVuZXIgKEFtdXRhYmxlKQ==?= <brauner@kernel.org>
-In-Reply-To: <20260915-work-fd-reserve-unify-folded-v1-1-4d5217d6b246@kernel.org>
+Subject: Re: [PATCH RFC POC 17/50] um: commit fds on syscall exit
+To: "Christian Brauner" <brauner@kernel.org>, "Linus Torvalds" <torvalds@linux-foundation.org>
+Cc: io-uring@vger.kernel.org, linux-mm@kvack.org, "Ingo Molnar" <mingo@redhat.com>, linux-hexagon@vger.kernel.org, virtualization@lists.linux.dev, "Alexander
+ Viro" <viro@zeniv.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, "Jann
+ Horn" <jannh@google.com>, linux-fsdevel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-snps-arc@lists.infradead.org, linux-m68k@lists.linux-m68k.org, "Jens
+ Axboe" <axboe@kernel.dk>, linux-parisc@vger.kernel.org, linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, linux-um@lists.infradead.org, linux-hyperv@vger.kernel.org, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, "Michael
+ S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org, "Eugenio Perez" <eperezma@redhat.com>,
+ =?utf-8?b?Q2hyaXN0aWFuIEJyYXVuZXIgKEFtdXRhYmxlKQ==?= <brauner@kernel.org>, "Oleg
+ Nesterov" <oleg@redhat.com>, linux-csky@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-alpha@vger.kernel.org, linux-sh@vger.kernel.org, "Jan
+ Kara" <jack@suse.cz>, kvm@vger.kernel.org, bpf@vger.kernel.org, sparclinux@vger.kernel.org, "Peter
+ Zijlstra" <peterz@infradead.org>, "David Airlie" <airlied@redhat.com>
+In-Reply-To: <20260915-work-fd-reserve-unify-folded-v1-17-4d5217d6b246@kernel.org>
 References: <20260915-work-fd-reserve-unify-folded-v1-0-4d5217d6b246@kernel.org>
- <20260915-work-fd-reserve-unify-folded-v1-1-4d5217d6b246@kernel.org>
+ <20260915-work-fd-reserve-unify-folded-v1-17-4d5217d6b246@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 15 Sep 2026 11:55:03 +0000
-Message-Id: <20260915115504.148F91F00893@smtp.kernel.org>
+Date: Tue, 15 Sep 2026 11:55:06 +0000
+Message-Id: <20260915115506.6CE761F000FF@smtp.kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,25 +75,9 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> So we've spoken about this idea quite a few times over the years that
-> we could reserve fds and files on a task and then install or a clean
-> them up on syscall success or error and get rid of most of the
-> complicated cleanup dance that we have.
->=20
-> My original approach to this had been to implement FD_PREPARE() based on
-> cleanup guards and use scopes to make this happen. The other idea was
-> what I'm illustrating here. It is overall equally robust and makes the
-> install fd and file pattern work even if it there's a ton of cleanup or
-> setup work happening in the middle. This is particular evident in the
-> conversions of various dma/drm code later in the series.
->=20
-> So this lets the syscall path do the install. fd_prepare() allocates a
-> descriptor like get_unused_fd_flags() does and records it in a slot on
-> the task. fd_stage() attaches the file to that slot and returns the
-> [ ... ]
-> fdtagble with outstanding reservations. Kernel threads never return to
-> userspace so nothing would commit. Anything left at exit is a bug and
-> gets warned about and dropped.
+> Add TIF_FD_SLOTS. handle_syscall() calls syscall_trace_leave() after
+> every system call, so test the flag there and commit the reservations
+> before audit and the ptrace exit stop.
 >=20
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -99,6 +85,6 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260915-work-fd-re=
-serve-unify-folded-v1-0-4d5217d6b246@kernel.org?part=3D1
+serve-unify-folded-v1-0-4d5217d6b246@kernel.org?part=3D17
 
 
