@@ -4,77 +4,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A41ABC88E5C
-	for <kexec@archiver.kernel.org>; Wed, 16 Sep 2026 09:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2A476C88E77
+	for <kexec@archiver.kernel.org>; Wed, 16 Sep 2026 09:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=lQusxUCZOg61iBhz+gh2H7namnoGRC3noT9Nzn5HIqQ=; b=iz/5FpiKwA1VKKJ9QBJxLc2Y7V
-	7R8zHLXcUjZram8Bk7338vSnnu/AqL6rZJTG48rzlNLTkB8J8MUxL5cDHmx/SmOeEFb315ppYcgTL
-	4vKcfjX8tS4ZtVETmCDjSuJNSh0YhxZA5cooN92NN+mPTsL1q/xT2dnkQIzBY073988fCAZSL5jxF
-	MPyhnchr54DF/A5y/SKcfXC3SC7dQ7JItooTeY0hFXkaHQDOjcUbDwt0zHiW3wY2P/jxdKZjs+HD2
-	8rBL/JdAmSzmyzO34/J5aVXVkQldQNdb94AKf+7eLYHX8qZIzvrlxNQxFHEEdpgI/BfR7OPPIvFL2
-	Hm/XWn2A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=79YAdtaHEv3S3nDvYc6X9C5ar06F3FncZEtUncQdJQ4=; b=tNMMYNoFRD12OQrEq8PDFfqGBJ
+	7PPf3SkfkL4r63QZ5YYMQmQ6U3kpWUil22fhCodpAGnVoLzVizOXwT76+clM2Yg2767h0haTIeXEx
+	3drm518nklGQ97u7TYIfwdL0YGvLik0rI475MbMcPZN2WwADpAibxiPCnfrqRKn+JtyP2LQuZIy31
+	24g2jcC/5hkLbytLzswv2smsU+mQvu61rZRDjrTPBNUYXesLvPujRXksb2KH7IJst0f/hIcC9zD2M
+	REaxR5Y+qQw+xJxluS3dq1F3yYUCb5iGZ7nMULlryPL1K78tvowoJH6P6u/V5N25uTzW56aWTzrHA
+	S8OFYrJQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6m3J-00000008r5P-3QsN;
-	Wed, 16 Sep 2026 09:35:41 +0000
-Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
+	id 1x6mHb-00000008tXr-3LLp;
+	Wed, 16 Sep 2026 09:50:27 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6m3F-00000008r4W-0LNc
+	id 1x6mHY-00000008tWd-2LjY
+	for kexec@bombadil.infradead.org;
+	Wed, 16 Sep 2026 09:50:24 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=79YAdtaHEv3S3nDvYc6X9C5ar06F3FncZEtUncQdJQ4=; b=JyhXmZnstFz21f1LXmFMpmKmaS
+	CHqtsTTJ3ilLCVk8YI9cYOH35Q8hNgA7nvBMKtm9RX3gZOQTNkecEFHFvxj3VgjFHxCN6VZJ+BTXL
+	cY3P7al9SwVGkrCtY1om9peZ3KF0Zj2NQNGnwm6aTgnxjUekQuFloQ6PmsbEZw+IWVjLWloHIFhL4
+	yH4PYHAKRbPnyBBSFut88xkqhLudemTiwDYi6WUQftoMqHtnD7+4k5YyWzywfLO79jCHgmP1Jql/s
+	lP8bIARV8ZCu4w+2ss+UGD3uHTvUQqRnz+oatxNedl9IkAEiBAOK/YFetp9kgxK8Fvc+ZAHgbrCra
+	TuhJEgwA==;
+Received: from mail-wm2-x11.google.com ([2a00:1450:4864:31::11])
+	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1x6mHU-00000007i8v-3GFo
 	for kexec@lists.infradead.org;
-	Wed, 16 Sep 2026 09:35:38 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=lQusxUCZOg61iBhz+gh2H7namnoGRC3noT9Nzn5HIqQ=; b=FG+PhcCJdohk4nnU98iT/zoR5N
-	BCgB6P043DOhKlGyArs7g31LKrnMGQt2zWbGrRVZDTebMTiVX0hrOpMLGDYK9SjK4Nbhr1XO9Z/oe
-	9kYRquCRmoHMSfDt5RL9ZF+HqohR7f9iO3YfQb2nxLasS8aJC+6WBFFBZVtfu5594dMAJdGAlSEor
-	T//McaeWE/JqURKCLjDalwcD9SxGNYRZ1Ndf6cU2qsZSXzppknaqswzTmRM1m9nMELechoHJ3sF6b
-	SPpSFa5JtX7hBI+K/IGPBKSM0MEmySJV5UgazfmjiDgO8UjZf6aP6k+M7p32sRjJG2WLJIf/ZesHH
-	AEqfN1nw==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1x6m2s-0054bo-2i;
-	Wed, 16 Sep 2026 09:35:15 +0000
-Date: Wed, 16 Sep 2026 02:35:06 -0700
-From: Breno Leitao <leitao@debian.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, kas@kernel.org, 
-	kexec@lists.infradead.org, Lorenzo Stoakes <ljs@kernel.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Brendan Jackman <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
-	Oscar Salvador <osalvador@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, hannes@cmpxchg.or, 
-	shakeel.butt@linux.dev, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, rmikey@meta.com, riel@surriel.com, harry@kernel.org, 
-	linux-cxl@vger.kernel.org, driver-core@lists.linux.dev, kernel-team@meta.com
-Subject: Re: [PATCH v5 7/9] drivers/base/memory: count inherited poisoned
- frames into the block
-Message-ID: <aqpczrtIwSG948iv@gmail.com>
-References: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
- <20260915-hwpoison-kho-v5-7-3bc7a57bd503@debian.org>
- <de41b78a-8471-4832-be0c-35d410a4499a@kernel.org>
+	Wed, 16 Sep 2026 09:50:23 +0000
+Received: by mail-wm2-x11.google.com with SMTP id 5b1f17b1804b1-49e8185e037so3877855e9.3
+        for <kexec@lists.infradead.org>; Wed, 16 Sep 2026 02:50:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789552219; x=1790157019; darn=lists.infradead.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=79YAdtaHEv3S3nDvYc6X9C5ar06F3FncZEtUncQdJQ4=;
+        b=YG8IDu1hpzeRLp17FHzRQhSgPoc14fmyUrHOWLvQmNou39MjUIsKQ6Gs+TVGl1s4Gi
+         eQ+QjmC8Lun7yXfPZn/cmsTIUDhXFVaMGAuBBsFfDVvg8hRyB3/gb4wKK2iZryoH6J/j
+         8jouLiHOwQjzAkMkZud4zpjZ73U664++80qnGNdeJ7RTZE9NfVmavAmV47oWLafecf4q
+         QLZcjQ8JV5nV0JDpkrKNapX1La+SKFhaWkeAekpTi46zXrPv90shxGHIkfHMDp/eFV9N
+         AG5BgfVm6/KWZR46/ISmicLqzexuA1X0hKKksIL/XXIcbH0lbDTtMRgQiPigB8Gp6CMy
+         QM2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789552219; x=1790157019;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=79YAdtaHEv3S3nDvYc6X9C5ar06F3FncZEtUncQdJQ4=;
+        b=Wr5I1mxDhZ61moFyTstXAWEiNOKNF7hVdLOSrnj/agQIXO54N0zw6Afjm7wpVr5UQS
+         g9+x55KhNlv7C1snJzPhREIPIZL4XLN3+o7SGpyalm3zXHTGH7qvaiC+DEpr15Vpzp46
+         H3fyF9pkOQLmd5aAGVycpNUU1Xy/weyfbxhivY1JoamujfJQXtfc8gix8UrvbaykCtc5
+         g5/+k/1rD9DDHd/T+lnsyr5XYxAW0WICbHZq5rchd5MByd2wg84GjzInFkJKeJ2jsXju
+         Sw3O2o0uxjfYoIQ+UBpmQ1zXSKa/jPPfVNw9wDBavr+kB3V5KulBP1OxQSXpbur+h/GK
+         RPgA==
+X-Forwarded-Encrypted: i=1; AKwUvBzkcM0TxZdf0evTI4ZQMgJWyKSGI1E22xQGYQR8EJbkNCb0meia08AhBCSq21Hf2oKhO82yug==@lists.infradead.org
+X-Gm-Message-State: AFuF++lgGIGqdEX1KO9UeM0Cb7ArFXt07xPoX/6p5FEimtKmmpC5zzRo
+	yV8eSs3AL43Rz0FJFyNXrgCMfnHvNMF7obtcjjKsaiahebFSyapgXkMD
+X-Gm-Gg: AYBFou0wBKF6MxTdS9UTlun+6zb12A4xYOK3jBLihMO6bk2j/t/XotDD96pimQKaVP2
+	yBdHkm6JIGQx8ccZ0BxuAsa0fiu8mPVQLVc+//lqICzFZyQyZh8gNmSM3WuAF58K4kiHx5W3/ef
+	zwQDMrZ4NAbxKhcipJdUXiq5Hz02N/dIvEOTVN8TVV7DN5p86P+XD+2olMujtq+gD4dpVEs/9lj
+	FcYBZEYfzuKzxeOhRTRU+qo9rdE5V41svZ6YPriEtsNgxw1DqTGUgRac5Gt9Gy/8yPn8+s1BuKU
+	FhitzKbjuydO+H1Uf+k7UNeGk0H7bMu6oT6y6Ao2d9ekfQj8M/1uMVnCLMsgyIldgq2al0XBhqc
+	wpGVBC4zZ6Degtf1+NFhHgAv8bzqDvvE8ItIoiTvl1KuNtsDAKK8jg84r5TOXLEwCnr8PU9AY4z
+	PUj0qnd0Mnj09SospcMKrOibU1l+xLTBCFxRYjZ+bgYaukORF1nyn1/+38gx68fFcaT6C3eMEXw
+	W4HSHoYo803n9VHHzr+wuYwwIvVEO9P9vbACCDJhIEQVOQ=
+X-Received: by 2002:a05:600c:4ec6:b0:49c:fea3:8633 with SMTP id 5b1f17b1804b1-49eb732aec0mr19444455e9.24.1789552219000;
+        Wed, 16 Sep 2026 02:50:19 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49e83b02245sm84055225e9.10.2026.09.16.02.50.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Sep 2026 02:50:18 -0700 (PDT)
+Date: Wed, 16 Sep 2026 10:50:17 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jann Horn <jannh@google.com>, Christian Brauner <brauner@kernel.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Ingo
+ Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Oleg Nesterov <oleg@redhat.com>,
+ linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-um@lists.infradead.org, Jens Axboe
+ <axboe@kernel.dk>, io-uring@vger.kernel.org, netdev@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ bpf@vger.kernel.org, David Airlie <airlied@redhat.com>,
+ virtualization@lists.linux.dev, kvm@vger.kernel.org,
+ kexec@lists.infradead.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH RFC POC 00/50] file: handle files on syscall exit
+Message-ID: <20260916105017.13ea5e36@pumpkin>
+In-Reply-To: <CAHk-=wi3Kkqgfg6zUTHpQoZNL2VOB4vYqpi6RX0WNO++29UtyQ@mail.gmail.com>
+References: <20260915-work-fd-reserve-unify-folded-v1-0-4d5217d6b246@kernel.org>
+	<CAG48ez1RsdT=O=-0city3vjgWhDvY424KtTmrCJntWy5ds3HBQ@mail.gmail.com>
+	<CAHk-=wi3Kkqgfg6zUTHpQoZNL2VOB4vYqpi6RX0WNO++29UtyQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <de41b78a-8471-4832-be0c-35d410a4499a@kernel.org>
-X-Debian-User: leitao
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260916_023537_277734_07CDC564 
-X-CRM114-Status: GOOD (  19.75  )
+X-CRM114-CacheID: sfid-20260916_105020_873965_823CED88 
+X-CRM114-Status: GOOD (  27.89  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,59 +133,61 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello David,
+On Tue, 15 Sep 2026 12:08:57 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-First of all, thanks for your time looking at this patchset.
-
-On Wed, Sep 16, 2026 at 08:48:56AM +0200, David Hildenbrand (Arm) wrote:
-> On 9/15/26 14:53, Breno Leitao wrote:
-> > +static void memblk_nr_poison_init(struct memory_block *mem)
-> > +{
-> > +	unsigned long pfn = section_nr_to_pfn(mem->start_section_nr);
-> > +	unsigned long nr_pages = PAGES_PER_SECTION * sections_per_block;
-> > +	unsigned long i, nr_poison = 0;
-> > +
-> > +	/* A hotplugged block is created before its pages are online. */
-> > +	if (mem->state != MEM_ONLINE)
-> > +		return;
-> > +
-> > +	if (!range_contains_poisoned_memory(PFN_PHYS(pfn),
-> > +					    nr_pages << PAGE_SHIFT))
-> > +		return;
-> > +
-> > +	for (i = 0; i < nr_pages; i++) {
-> > +		struct page *page = pfn_to_online_page(pfn + i);
-> > +
-> > +		if (page && PageHWPoison(page))
-> > +			nr_poison++;
-> > +	}
+> On Tue, 15 Sept 2026 at 10:52, Jann Horn <jannh@google.com> wrote:
+> >
+> > Is this mainly about stuff like "we installed a file descriptor and
+> > then the following put_user() failed"? Because if so, I think a nicer
+> > fix would be to have a policy of "if userspace provides unwritable
+> > memory to a syscall, just keep going and pretend the access worked",
+> > and maybe have a sysctl that kills the process when this happens to
+> > emphasize that userspace should not be doing this.  
 > 
-> That just slows down boot unnecessarily on 99.9999999999999999999% of all
-> systems out there.
+> We've done that before, where we just ignore put_user() errors and the
+> user gets whatever the user gets.
+> 
+> It is maybe not optimal, but it's fine. You can find quite a lot of
+> unchecked put_user() calls with a pattern like
+> 
+>         git grep '^[[:space:]]*put_user(.*);'
+> 
+> and some of them are in core code - see the two in kernel/fork.c, for example.
+> 
+> One of them says "if userspace has not set up a proper pointer then
+> tough luck". The other one doesn't even bother with a comment.
 
-hmmm, I am not sure I see it that way.
+I think the code should try to return EFAULT (IIRC that is too hard
+in one of the exec cases).
+Otherwise very unexpected things might happen if the memory is just
+readonly.
+If you ignore the error and the pointer is invalid the application will
+get a SIGSEGV and (usually) die.
+But winding back kernel data because a user copy failed is likely to
+be problematic/difficult and at best have error path code that isn't
+really tested.
 
-The loop only runs for a block the bitmap marks. On a machine with nothing
-recorded the bitmap is all zeros, the range_contains_poisoned_memory() check
-right above it returns false, and the loop never executes.
+As well as writing fd numbers to userspace, some sockopt code tries to
+wind back if the write to optlen fails (which has been read earlier).
 
-What every boot does pay is that check, once per block. The stub installs
-the table whether or not anything was ever recorded in it, so this is not a
-NULL test: it is two 64-bit divisions by the unit size plus a
-find_next_bit() over the single word a 128M block covers at one bit per 2M.
+I've forgotten which Unix converted EFAULT to SIGSEGV in the system
+call exit code - I'm sure one of the ones I've used did.
 
-The real cost (that "for loop above"), comes when you kexec (not on cold
-boot -- given the bitmap is empty), and you are trying to init
-a memory block that has poisoned pages into it. Which seems the right
-trade-off, no?
+David
 
-That said, can we do better? Yes. The silly win is to let the table say
-whether anything was ever recorded in it, something like a
-linux_efi_poisoned_memory->empty that the first recorded frame clears,
-and return on that before the bitmap is reached at all.
+> 
+> The scheduler has two cases too, although one of them is admittedly
+> for another error case.
+> 
+> So yes, saying "if you pass bogus arguments, you get what you get" is
+> a valid model. It's perhaps not the *preferred* model, but it's not
+> wrong.
+> 
+> It *would* be wrong to take code that already has error handling and
+> remove the error handling, though.
+> 
+>                   Linus
+> 
 
-Is this what you are looking for, or something more drastic?
-
-Thanks for your review,
---breno
 
