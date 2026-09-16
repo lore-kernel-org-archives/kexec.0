@@ -4,123 +4,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 29E1DC982C9
-	for <kexec@archiver.kernel.org>; Wed, 16 Sep 2026 14:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 77965C982C4
+	for <kexec@archiver.kernel.org>; Wed, 16 Sep 2026 14:59:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=s9b/9Hwh5vUHfr3h3yI1jv7U58Y0A9HgrBxLkX3sPvA=; b=UZtlh15bg0isibYf/DPD9OAVjK
-	G1a3jcOKTzG0QKXHj3EAqxbAPSE2J3X+02odgf4pTrqUteU0bng0ODTNDG/gNN92XeJ4G46KOZnty
-	BqXqHv2bwUdUF4rnR7Oz58ry/NM3g3c0OT2KQsubXLpIZFmb/QKnFBOi3D4jodpHefyHOjxMs8AKJ
-	rssSyF0o4jZyO3qd+p02ibiKiy68QEN1LLODFk+rVqwyYVeqsRjTkLW4/fwu7f4aK3Q/WOVbhBXle
-	qHwHn0MYotqWPYMOKS+Chdx7GZ9yNd9Ljh0IgLL4ViPrAHMKTDkQzvBmyS5+GifkELWfdav63a02d
-	mzprrmVQ==;
+	bh=7B8AGM6usS6/DkOynGbVPS6pps2aTMeSLXoc/PLBLeU=; b=OLW7FAqfXKR6bfVsJBx81IQC6K
+	85zGQoZ0W2RRW+QLhmp/t2KkpM+Kn5j2F7z5Hq7leR1rW5N190D18VuqHspX6SO0G5g8vAyq+8Gw3
+	eW1eUjfgQtHKVzAaB5AmhY75iys8ooGKrkYOapwSBrgs6+95AbRrT9DjLkCRtqmxoda4/N3sdqc3t
+	nNos3LSD6SnviJvRe3jmMdRR2LPgyrJB1rgUWYdiPRf6mNLnMf2/KDjI6PRh/ZV/6hFigLhP/W0vJ
+	AiMo3HI0qMA5sWidiVaySvevfvt9X7r75V+GkUwjzBTf9yDnAMGGtgfKmaJtaO2YxIcGxbQurkbOA
+	h+wwOsQg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6qzH-00000009TUe-3BY1;
-	Wed, 16 Sep 2026 14:51:51 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1x6r6B-00000009U7B-0hW1;
+	Wed, 16 Sep 2026 14:58:59 +0000
+Received: from mail-ej2-x10.google.com ([2a00:1450:4864:34::10])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6qzF-00000009TUR-49wt
+	id 1x6r67-00000009U6l-1SYa
 	for kexec@lists.infradead.org;
-	Wed, 16 Sep 2026 14:51:50 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id B742540367;
-	Wed, 16 Sep 2026 14:51:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1141A1F00898;
-	Wed, 16 Sep 2026 14:51:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789570309;
-	bh=s9b/9Hwh5vUHfr3h3yI1jv7U58Y0A9HgrBxLkX3sPvA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=DJmX77mgdbs6Q8GAXeo0braYp2Bik3mxuTOg0XuCWiVphbHAn0kd2P/Gl+uG+6WHV
-	 Nj7WIlnKvMiHz2i5VCCjR0CKoRaRenUKdVTz4v8buhxLZCDYs7IWCtsnkMkJY5qML5
-	 abKuZvlhV5VK8XsDgdsDHh2VJyTT/NPOcB+cu8l4dl4wTx3cP9yEipHHWuu3Sstsgs
-	 w2BFWBemQKvOXthe2X/HXPSb4U4WjkI1WB1QXgotSE6z7uqoNYpuGUaxbqDGsHaugi
-	 qFBqz/j/wpD9Z4FAxE0BIjGvJbIomrHP3AiW+U8sR6kKKimRJUHOhADx5jFJ6fVP0H
-	 hUGLHYw9SMtJQ==
-Message-ID: <b8ad366a-a019-4462-9dce-f687f60ee7f2@kernel.org>
-Date: Wed, 16 Sep 2026 16:51:40 +0200
+	Wed, 16 Sep 2026 14:58:56 +0000
+Received: by mail-ej2-x10.google.com with SMTP id a640c23a62f3a-c264788fd58so178170766b.1
+        for <kexec@lists.infradead.org>; Wed, 16 Sep 2026 07:58:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789570732; cv=none;
+        d=google.com; s=arc-20260327;
+        b=nzByuNaR2WFsDgqU2FvqfpXaTNkDCE0VljWmOvm68eL+bQzMsLGU6bxdstH7Ah0Da1
+         lrEfQgfTjXtE2cUoGroapafuO72LhSlZWiwoEFNOsuQWzd3ERR4BYoYfuKLYyYEG2sMj
+         rZL44+gxb2ZpZbwomc9sBwZ/CNZ1naBMItS5m50/Pm0UuMjIlBnsldGB70xFiTDndNk7
+         +Yke5Tlhjp6RtREZGaWoShBclCb1lnn+8ScaXxhkQ5++A13XYbsa4Uv7QapTj8ntdRF/
+         vzlmaZTfdLy17EZmbIn0G0c64OS0s3ONQLCHvIUloGcqpBkv+xwd0G5JWYNou7x+JG/O
+         4L7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=7B8AGM6usS6/DkOynGbVPS6pps2aTMeSLXoc/PLBLeU=;
+        fh=qrurRsB6tpOKG7UgO4S4127AKWFozT3W5QrkFxhFbC4=;
+        b=bj7Pe86LHXHY/R4WNs2ZOYpKdF/6eVICKxpSk+o7sDKC0nuLMaFjo1MqUmS98I8coN
+         iAm9UMScIfgit2+XJoXBALYE8kiVjutLuC8lBzHPdinXKmgxX0uvvwGOIaMwsVND4aMO
+         FwZku0MmczlN4neA5y5j3414T6BuGrC3pbMTlxdi35LAHHl97wEQptmRfs7B5AUdRmiP
+         P4WF+QMkvqYi1qTnvSmrElJ6ktsNMVRyl346mGdmHui84B+W/AK8hwv6kCrtboOneThc
+         xUrQAE5ILmWA1r2H5OYTXCAFXfZB2Zshnb0bA4kL+YPvDGolXvpomiAzCe/xyVLh6aF9
+         Jr4A==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1789570732; x=1790175532; darn=lists.infradead.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=7B8AGM6usS6/DkOynGbVPS6pps2aTMeSLXoc/PLBLeU=;
+        b=D7MvrXjfuS1RrVaw5bR5+S14KsOolrKqeDsEiA6cziv7P/xaip7IJfpn7rdauyzw72
+         AuE52HIwc8JbSWpmjCrOxlMP5H4H2+XCCH5nJSjGG4fLF3Q/dmkDZhLDuSCd6s9xtYw7
+         cBcBHSzLmp4IVHsIlpOuMiS4qJik1wFxNceJl0o5gEJhrE786Gw+O3XC34FxIgSj31Xh
+         Aua4h9y3my10jDH50YK5i2yows4atEMmTUQ96nhcUB6cjuRCMDGSCTbyR8VXSirX+PVt
+         s+/Qjf3vEkh2oRBfEI/BhTVnaao6mNMlSwHkonskgdAUBz7k/dG4GOAe/o3gpDtRL+pB
+         J5Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789570732; x=1790175532;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=7B8AGM6usS6/DkOynGbVPS6pps2aTMeSLXoc/PLBLeU=;
+        b=QKfYD/ZmkyKEyvRdLzodIJbVwMNQ6MZB9j5QDgByKY7kMYXRR96C5fqRJCl7nRRluC
+         4V7mcf+nnnR076vC2cexcY1izOz88V1iWVcDwuspGoWKdeP7S/CQ8luB85UMjugKDRXO
+         NgOjDJOwEp7lI4xV1jEfuz7NY1aB2UXfM+/OCtc77pe/PvnwHcZZO2xWgd9hSEB2kk7N
+         SSTz3QxewPPsOfoxhWFAmKhujiebvMfKYTA8KEUEZgcILYYs0t8wZWm87PPdpvpg9qEd
+         /bUGa/abCGIjfdto5BeVG1JskzoLqGK2sNH8Oyvyr4GOSDSzXc6G4CbYc2UXOIZD0R1P
+         6FbQ==
+X-Gm-Message-State: AFuF++nTlutQIgREsCq62VxlqxqN+pn4dQ4ul7LLVDyyzPwb6UyZm5yn
+	cA3aA3hvZFTV1r0pgpLqwTC1BSjfVLmYas/zFEM2PoyihDI0W0bjYNvbomQiWFfOfOIP6gP0Lli
+	zbGxN0C+pmGm4cMzSuZWJlkY1cvs3bHdzWMcYLv8o
+X-Gm-Gg: AYBFou1hr743DDCJaQ7UGjfYRR9yzEmfJq8sQOJIBLm84JN8YpWlvfAzfUcKgWMtbQF
+	2IKbewq24kEa00wTXZVj/Q2E7izzw90CViQ9pVqgzFxn6QsAQNI4zODY54YzhTbX6/zOQ9zMUty
+	+BW9kGUUDG12H6UrUNkc4zUs14EvLlgDdraaZ39ZGM4FpjxvJLIiNKV1u4ki7P0gVmhjnlNMes9
+	YGAe+n2ygBG+wRkOhls4HYRUX4ef734fyaH9O/XNABepvBUD9b4VVlzeFz+M4s9LEC4gCo9hWEC
+	q5V8ul6kOHW7PF2ZFg8nKAyDoYz9tUp1HdeNl/RLrD5HUSwsXCA5CLY=
+X-Received: by 2002:a17:907:c49a:b0:c28:fb3f:fe20 with SMTP id
+ a640c23a62f3a-c29e52c71e0mr199279166b.30.1789570731516; Wed, 16 Sep 2026
+ 07:58:51 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 7/9] drivers/base/memory: count inherited poisoned
- frames into the block
-To: Breno Leitao <leitao@debian.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi
- <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>,
- kas@kernel.org, kexec@lists.infradead.org, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Brendan Jackman
- <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>,
- Zi Yan <ziy@nvidia.com>, Oscar Salvador <osalvador@suse.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- hannes@cmpxchg.or, shakeel.butt@linux.dev, linux-efi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, rmikey@meta.com,
- riel@surriel.com, harry@kernel.org, linux-cxl@vger.kernel.org,
- driver-core@lists.linux.dev, kernel-team@meta.com
-References: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
- <20260915-hwpoison-kho-v5-7-3bc7a57bd503@debian.org>
- <de41b78a-8471-4832-be0c-35d410a4499a@kernel.org>
- <aqpczrtIwSG948iv@gmail.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <aqpczrtIwSG948iv@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20260728221007.2098560-1-dmatlack@google.com> <20260728221007.2098560-3-dmatlack@google.com>
+ <9211b2b6-9fca-4ef7-a141-84636d56e67e@linux.dev>
+In-Reply-To: <9211b2b6-9fca-4ef7-a141-84636d56e67e@linux.dev>
+From: David Matlack <dmatlack@google.com>
+Date: Wed, 16 Sep 2026 07:58:23 -0700
+X-Gm-Features: AcwNN1V694h9Klbei55CjXCXrLccfSPzJ9ZF9qWXraB-n35v9TC4KupB_2aeuGo
+Message-ID: <CALzav=dJUiZe+Hxck9X+kKVXoRn-Ks2WxV7B5i0RHRFGy7-Mpw@mail.gmail.com>
+Subject: Re: [PATCH v8 02/12] PCI: liveupdate: Track outgoing preserved PCI devices
+To: Zhu Yanjun <yanjun.zhu@linux.dev>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, 
+	Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
+	Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
+	David Rientjes <rientjes@google.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, 
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>, 
+	Parav Pandit <parav@nvidia.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Pranjal Shrivastava <praan@google.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Vipin Sharma <vipinsh@google.com>, 
+	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260916_075855_480294_779B20BB 
+X-CRM114-Status: GOOD (  19.92  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -135,73 +127,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 9/16/26 11:35, Breno Leitao wrote:
-> Hello David,
-> 
-> First of all, thanks for your time looking at this patchset.
-> 
-> On Wed, Sep 16, 2026 at 08:48:56AM +0200, David Hildenbrand (Arm) wrote:
->> On 9/15/26 14:53, Breno Leitao wrote:
->>> +static void memblk_nr_poison_init(struct memory_block *mem)
->>> +{
->>> +	unsigned long pfn = section_nr_to_pfn(mem->start_section_nr);
->>> +	unsigned long nr_pages = PAGES_PER_SECTION * sections_per_block;
->>> +	unsigned long i, nr_poison = 0;
->>> +
->>> +	/* A hotplugged block is created before its pages are online. */
->>> +	if (mem->state != MEM_ONLINE)
->>> +		return;
->>> +
->>> +	if (!range_contains_poisoned_memory(PFN_PHYS(pfn),
->>> +					    nr_pages << PAGE_SHIFT))
->>> +		return;
->>> +
->>> +	for (i = 0; i < nr_pages; i++) {
->>> +		struct page *page = pfn_to_online_page(pfn + i);
->>> +
->>> +		if (page && PageHWPoison(page))
->>> +			nr_poison++;
->>> +	}
->>
->> That just slows down boot unnecessarily on 99.9999999999999999999% of all
->> systems out there.
-> 
-> hmmm, I am not sure I see it that way.
-> 
-> The loop only runs for a block the bitmap marks. On a machine with nothing
-> recorded the bitmap is all zeros, the range_contains_poisoned_memory() check
-> right above it returns false, and the loop never executes.
-> 
-> What every boot does pay is that check, once per block. The stub installs
-> the table whether or not anything was ever recorded in it, so this is not a
-> NULL test: it is two 64-bit divisions by the unit size plus a
-> find_next_bit() over the single word a 128M block covers at one bit per 2M.
-> 
-> The real cost (that "for loop above"), comes when you kexec (not on cold
-> boot -- given the bitmap is empty), and you are trying to init
-> a memory block that has poisoned pages into it. Which seems the right
-> trade-off, no?
-> 
-> That said, can we do better? Yes. The silly win is to let the table say
-> whether anything was ever recorded in it, something like a
-> linux_efi_poisoned_memory->empty that the first recorded frame clears,
-> and return on that before the bitmap is reached at all.
-> 
-> Is this what you are looking for, or something more drastic?
+On Tue, Sep 15, 2026 at 8:10=E2=80=AFPM Zhu Yanjun <yanjun.zhu@linux.dev> w=
+rote:
+>
+> =E5=9C=A8 2026/7/28 15:09, David Matlack =E5=86=99=E9=81=93:
+> > Add APIs to allow drivers to notify the PCI core of which devices are
+> > being preserved across a Live Update for the next kernel, i.e.
+> > "outgoing" devices.
+> >
+> > Drivers must notify the PCI core when devices are preserved so that the
+> > PCI core can update its FLB data (struct pci_ser) and track the list of
+> > outgoing devices. pci_liveupdate_preserve() notifies the PCI core that =
+a
+> > device must be preserved across Live Update. pci_liveupdate_unpreserve(=
+)
+> > reverses this (cancels the preservation of the device).
+>
+> Hi David,
+>
+> I have a question about the pci_liveupdate_preserve() and
+> pci_liveupdate_unpreserve() APIs.
+>
+> Is it supported to call these APIs multiple times for the same PCI
+> device? For example, a driver could do:
+>
+> pci_liveupdate_preserve(pdev) -- > pci_liveupdate_unpreserve(pdev) -- >
+> perform some operations -- > pci_liveupdate_preserve(pdev) again, before
+> the actual Live Update starts.
+>
+>  From the implementation, it looks like an unpreserved pci_dev_ser entry
+> can be reused, so I wanted to confirm whether this preserve -- >
+> unpreserve -- > preserve sequence is an intended and supported usage.
 
-Ah, that magical "range_contains_poisoned_memory" does a bitmap scan?
-
-I'm sorry, but that is absolutely confusing.
-
-There is no way someone will figure out that range_contains_poisoned_memory()
-queries some efi specific bitmap that won't even be able to represent any memory
-outside of it's range.
-
-I don't really have time to give a better solution, but starting with the
-naming, range_contains_poisoned_memory() is just absolutely misleading.
-
--- 
-Cheers,
-
-David
+Yes that is a completely supported use-case. A device can be preserved
+and unpreserved any number of times up until pci_device_shutdown(),
+where the preservation status of the device is frozen (see patch 10).
 
