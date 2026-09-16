@@ -4,75 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6160EC88E77
-	for <kexec@archiver.kernel.org>; Wed, 16 Sep 2026 03:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CADA7C88E5C
+	for <kexec@archiver.kernel.org>; Wed, 16 Sep 2026 05:49:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=GHHetD7z2LKY658fw/GAuF9X+vsebDmUpxUUa3RkYoM=; b=P/ST+a5icPXxkMrlyzAYLbS5+B
-	A71MqQvLdqSDKEtZ4DkyvklhZuXQ8iDhTlaDMHa6jVx7eBC9/cSKTLqAeceZbhRn/YHXU+DCjq4O1
-	Sm/CEaYMSIgd/WOSFSKJItKBtgWE8dnMRMKUyV3yNTvZBfYxIGp87SHRl8mgfG9GtVnjX3v4XMjX2
-	BfWpxoCXQaLP3on+G8mZx+wha26ZIK3jQprv0/oRTcZx1sj+9kiSuciK6c7dVW4yX4nTNKkyToL1R
-	1/G0YG7iBuBMyT4ApDUS3B6uDE30zC9BbAC4Ub3FlQ4YX8Og2DV8Tv+Jvh5MmJrsAu7ErQl4qkl2+
-	SFmxV/lg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
+	From:Date:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=h+8SW48TY2oUvjylQfHMb9NhEZNWJeGiSUCT7oXamKo=; b=nTS8HuDc4fNqaZqsIikQmwxHoV
+	mM/cjTAB5pIPvUU1JKmc1zOgCvmvAV4AhltRofVosEtP0fidTkyuYvIFIi4k5CDyvtv3yV+Lu3P0f
+	Xh9rREMRXx8rfbCkJxtXcUj60fJ0KS9p7/8Z0H3QgnBVfHQ6s63rGbrfk5MDkLebk8Rq+dTO3/uDm
+	VoYVvoOS6Fm0+sc2yPOCw0j4LyPjZa7ic4v607T0XQeN/OOZJKGLmprL37ExHXmCMe/MuezzlbExK
+	QQBudV0kevhhxuFTonESApiWuXdJr33ZR9WxzA5pnQhBCDuuSXDVpSIyH36Didyq56NPYK+1re4UK
+	ZEMa+Abg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6gNX-00000008F7B-1ywG;
-	Wed, 16 Sep 2026 03:32:11 +0000
-Received: from out-190.mta0.migadu.com ([2001:41d0:1004:224b::be] helo=mta0.migadu.com)
+	id 1x6iVz-00000008Pj4-0GU7;
+	Wed, 16 Sep 2026 05:49:03 +0000
+Received: from mgamail.intel.com ([198.175.65.14])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6gNK-00000008F5M-14gS
+	id 1x6iVv-00000008PiU-2CSa
 	for kexec@lists.infradead.org;
-	Wed, 16 Sep 2026 03:32:07 +0000
-X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=/gKDc1UJUEW3gZkDgmnO4FI9/og2soBWPviRlsd2j9E=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1789529516; v=1; x=1790134316;
- b=LwWPvvaeOVIcO+QfTmpcnPfm4GG+j31VryVD+rtm579dAsPPrwrq2KsAqD0sQuVdPjJI7Ty5
- uvCli8zJ7Tm/JoeU5gFrW2h54M0MLpJZQpTaE43NaBbjwkMwjKdHpAOVafvQPxXs4TTTTujCZec
- Bauja0qz4PkkxVOvJBt7A7tM=
-X-Envelope-To: kexec@lists.infradead.org
-Received: by smtp.migadu.com with ESMTPS id 0f83172af188618d;
-	Wed, 16 Sep 2026 03:31:56 +0000
-X-Mizu-Trace-ID: 0f83172af188618d
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <e099cbaf-3185-4c39-ae36-7f0e074ebff7@linux.dev>
-Date: Tue, 15 Sep 2026 20:31:45 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 03/12] PCI: liveupdate: Track incoming preserved PCI
- devices
-To: David Matlack <dmatlack@google.com>, kexec@lists.infradead.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-pci@vger.kernel.org
-Cc: Adithya Jayachandran <ajayachandra@nvidia.com>,
- Alexander Graf <graf@amazon.com>, Alex Williamson <alex@shazbot.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
- David Rientjes <rientjes@google.com>,
- Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>,
- Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>,
- Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
- Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pranjal Shrivastava <praan@google.com>, Pratyush Yadav
- <pratyush@kernel.org>, Saeed Mahameed <saeedm@nvidia.com>,
- Samiullah Khawaja <skhawaja@google.com>,
- Shuah Khan <skhan@linuxfoundation.org>, Vipin Sharma <vipinsh@google.com>,
- William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
- "yanjun.zhu@linux.dev" <yanjun.zhu@linux.dev>
-References: <20260728221007.2098560-1-dmatlack@google.com>
- <20260728221007.2098560-4-dmatlack@google.com>
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <20260728221007.2098560-4-dmatlack@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+	Wed, 16 Sep 2026 05:49:01 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789537739; x=1821073739;
+  h=date:from:to:cc:subject:message-id;
+  bh=vJcRCG5qrxPpzFvscyEwfIra6p7zzgvc/lf7fxWUTDU=;
+  b=ntRc7m+sXXbqfZmTb0qReIDiFWCLbdCSTXmHXfuogoftw5GMJBAfO4T+
+   RmS8b0lOKK9evNZBfh8H6v9su86OWV9vuEuNGOsPsUsA4wd3qNqKBV4VK
+   5a6wtEgaXvdkmNBwAt82fUII2KkowVu01pM3usVI32PAsdjZkekZUspEz
+   wKT4D/bzssHyepCjZj4pbb7e0Jt5nt2i+aiRpribM/D72XuBR/WK/cwJ5
+   vR3C4N3O5MJ2+Wrl7WOAG7Sb/nh0OrWBbr4WSOJhaqbO3g1Uerwj2KJ4Q
+   6HF+xauNkT+H4shBnx+izpK4tuRcr4143VBZ0jDIu7e/sz3PbuH8zffOh
+   g==;
+X-CSE-ConnectionGUID: l8q5QG54RnypRQ7fqPbiZQ==
+X-CSE-MsgGUID: 2wLnhhJURGa4Q4YzHO3JZw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="93779356"
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="93779356"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 22:48:58 -0700
+X-CSE-ConnectionGUID: NoDOgZkxR0WRpOtkFB1V8Q==
+X-CSE-MsgGUID: G8vyJfD1S9e/dQID3OZQkg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="276759651"
+Received: from lkp-server01.sh.intel.com (HELO 462990a40a85) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 15 Sep 2026 22:48:57 -0700
+Received: from kbuild by 462990a40a85 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1x6iVq-000000005YZ-0oTn;
+	Wed, 16 Sep 2026 05:48:54 +0000
+Date: Wed, 16 Sep 2026 13:48:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org
+Subject: [liveupdate:kexec-next] BUILD SUCCESS
+ 4d17a004cfd5489f88ad0a7a151dea11a533338b
+Message-ID: <202609161333.MJBxt0OP-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260915_203159_980019_C920EED1 
-X-CRM114-Status: GOOD (  51.56  )
+X-CRM114-CacheID: sfid-20260915_224859_648796_5F6F4FC7 
+X-CRM114-Status: UNSURE (   3.84  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,465 +84,356 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-在 2026/7/28 15:09, David Matlack 写道:
-> During PCI enumeration, the previous kernel might have passed state about
-> devices that were preserved across kexec. The PCI core needs to fetch
-> this state to identify which devices are "incoming" and require special
-> handling.
-> 
-> Add pci_liveupdate_setup_device() which is called during device setup
-> to fetch the serialized state (struct pci_ser) from the Live Update
-> Orchestrator. The first time this happens, pci_flb_retrieve() will run
-> and convert the array of pci_dev_ser structs into an xarray so that it
-> can be looked up efficiently.
-> 
-> If a device is found in the xarray, the PCI core stores a pointer to its
-> state in dev->liveupdate_incoming until pci_liveupdate_finish() is
-> called by the driver. This pointer allows the PCI core and drivers to
-> apply Live Update-specific logic to incoming devices in subsequent
-> commits.
-> 
-> Drivers can check if a device is an incoming preserved device (e.g.
-> during probe) by calling pci_liveupdate_is_incoming().
-> 
-> CONFIG_64BIT is now required to enable CONFIG_PCI_LIVEUPDATE so that the
-> domain and bdf can be guaranteed to fit in an unsigned long and be used
-> as the xarray key.
-> 
-> Reviewed-by: Pranjal Shrivastava <praan@google.com>
-> Signed-off-by: David Matlack <dmatlack@google.com>
-> ---
->   MAINTAINERS                    |   1 +
->   drivers/pci/Kconfig            |   2 +-
->   drivers/pci/liveupdate.c       | 256 ++++++++++++++++++++++++++++++++-
->   drivers/pci/liveupdate.h       |   5 +
->   drivers/pci/probe.c            |   3 +
->   include/linux/pci_liveupdate.h |  13 ++
->   6 files changed, 277 insertions(+), 3 deletions(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 9cc7b9291ace..08a724b860dc 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -20834,6 +20834,7 @@ L:	linux-pci@vger.kernel.org
->   S:	Maintained
->   T:	git git://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git
->   F:	drivers/pci/liveupdate.c
-> +F:	drivers/pci/liveupdate.h
->   F:	include/linux/kho/abi/pci.h
->   F:	include/linux/pci_liveupdate.h
->   
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index 3781e2b5f095..8af20f558086 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -273,7 +273,7 @@ config VGA_ARB_MAX_GPUS
->   
->   config PCI_LIVEUPDATE
->   	bool "PCI Live Update Support"
-> -	depends on PCI && LIVEUPDATE
-> +	depends on PCI && LIVEUPDATE && 64BIT
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git kexec-next
+branch HEAD: 4d17a004cfd5489f88ad0a7a151dea11a533338b  Merge branch 'kexec-7.4' into kexec-next
 
-One question about adding 64BIT to the dependency:
+elapsed time: m
 
-As I understand it, enabling CONFIG_64BIT essentially means that we are 
-building a 64-bit kernel, and a 32-bit architecture cannot normally 
-enable CONFIG_64BIT.
+configs tested: 336
+configs skipped: 6
 
-If that is the case, would depends on 64BIT be necessary here? Or is PCI 
-Live Update already inherently restricted to 64-bit architectures by the 
-existing LIVEUPDATE/architecture configuration, so that this dependency 
-would be redundant?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-If this problem has already discussed, I am very sorry about this.
+tested configs:
+alpha                             allnoconfig    gcc-16.1.0
+alpha                            allyesconfig    gcc-16.1.0
+alpha                               defconfig    gcc-16.1.0
+alpha                randconfig-r061-20260914    gcc-16.1.0
+alpha                randconfig-r073-20260915    gcc-14.3.0
+arc                              allmodconfig    clang-24
+arc                               allnoconfig    gcc-16.1.0
+arc                              allyesconfig    clang-24
+arc                                 defconfig    gcc-16.1.0
+arc                 nsimosci_hs_smp_defconfig    clang-20
+arc                   randconfig-001-20260916    clang-24
+arc                   randconfig-002-20260916    clang-24
+arc                  randconfig-r054-20260914    gcc-8.5.0
+arc                  randconfig-r132-20260915    gcc-12.5.0 sparse
+arm                               allnoconfig    gcc-16.1.0
+arm                              allyesconfig    clang-24
+arm                                 defconfig    gcc-16.1.0
+arm                           h3600_defconfig    gcc-16.1.0
+arm                            mps2_defconfig    clang-24
+arm                       multi_v4t_defconfig    clang-24
+arm                         nhk8815_defconfig    clang-24
+arm                   randconfig-001-20260916    clang-24
+arm                   randconfig-002-20260916    clang-24
+arm                   randconfig-003-20260916    clang-24
+arm                   randconfig-004-20260916    clang-24
+arm                  randconfig-r053-20260914    clang-17
+arm                  randconfig-r061-20260915    clang-22
+arm                  randconfig-r111-20260916    clang-22 sparse
+arm                  randconfig-r133-20260916    gcc-16.1.0 sparse
+arm                           tegra_defconfig    clang-20
+arm64                            allmodconfig    clang-24
+arm64                             allnoconfig    gcc-16.1.0
+arm64                               defconfig    gcc-16.1.0
+arm64                 randconfig-001-20260916    gcc-16.1.0
+arm64                 randconfig-002-20260916    gcc-16.1.0
+arm64                 randconfig-003-20260916    gcc-16.1.0
+arm64                 randconfig-004-20260916    gcc-16.1.0
+arm64                randconfig-r052-20260914    gcc-8.5.0
+arm64                randconfig-r064-20260915    clang-22
+csky                             allmodconfig    gcc-16.1.0
+csky                              allnoconfig    gcc-16.1.0
+csky                                defconfig    gcc-16.1.0
+csky                  randconfig-001-20260916    gcc-16.1.0
+csky                  randconfig-002-20260916    gcc-16.1.0
+csky                 randconfig-r052-20260914    clang-17
+csky                 randconfig-r054-20260914    gcc-14
+csky                 randconfig-r063-20260914    gcc-16.1.0
+csky                 randconfig-r073-20260914    gcc-11.5.0
+csky                 randconfig-r111-20260916    clang-24 sparse
+csky                 randconfig-r121-20260916    clang-22 sparse
+hexagon                          allmodconfig    gcc-16.1.0
+hexagon                           allnoconfig    gcc-16.1.0
+hexagon                             defconfig    gcc-16.1.0
+hexagon               randconfig-001-20260916    gcc-16.1.0
+hexagon               randconfig-002-20260916    gcc-16.1.0
+hexagon              randconfig-r061-20260914    clang-22
+hexagon              randconfig-r071-20260914    clang-24
+i386                              allnoconfig    gcc-16.1.0
+i386        buildonly-randconfig-001-20260916    clang-22
+i386        buildonly-randconfig-002-20260916    clang-22
+i386        buildonly-randconfig-003-20260916    clang-22
+i386        buildonly-randconfig-004-20260916    clang-22
+i386        buildonly-randconfig-005-20260916    clang-22
+i386        buildonly-randconfig-006-20260916    clang-22
+i386                                defconfig    gcc-16.1.0
+i386                  randconfig-001-20260916    gcc-14
+i386                  randconfig-002-20260916    gcc-14
+i386                  randconfig-003-20260916    gcc-14
+i386                  randconfig-004-20260916    gcc-14
+i386                  randconfig-005-20260916    gcc-14
+i386                  randconfig-006-20260916    gcc-14
+i386                  randconfig-007-20260916    gcc-14
+i386                  randconfig-011-20260916    clang-22
+i386                  randconfig-012-20260916    clang-22
+i386                  randconfig-013-20260916    clang-22
+i386                  randconfig-014-20260916    clang-22
+i386                  randconfig-015-20260916    clang-22
+i386                  randconfig-016-20260916    clang-22
+i386                  randconfig-017-20260916    clang-22
+i386                  randconfig-051-20260914    clang-22
+i386                  randconfig-051-20260915    clang-22
+i386                  randconfig-052-20260914    clang-22
+i386                  randconfig-052-20260915    clang-22
+i386                  randconfig-053-20260914    clang-22
+i386                  randconfig-053-20260915    clang-22
+i386                  randconfig-054-20260914    clang-22
+i386                  randconfig-054-20260915    clang-22
+i386                  randconfig-061-20260915    gcc-14 sparse
+i386                  randconfig-062-20260915    gcc-14 sparse
+i386                  randconfig-063-20260915    gcc-14 sparse
+i386                  randconfig-141-20260914    gcc-14
+i386                  randconfig-141-20260915    clang-22
+i386                 randconfig-r054-20260914    clang-22
+i386                 randconfig-r062-20260914    gcc-14
+i386                 randconfig-r072-20260914    clang-22
+i386                 randconfig-r131-20260916    gcc-16.1.0 sparse
+loongarch                        allmodconfig    clang-24
+loongarch                         allnoconfig    gcc-16.1.0
+loongarch                           defconfig    clang-24
+loongarch             randconfig-001-20260916    gcc-16.1.0
+loongarch             randconfig-002-20260916    gcc-16.1.0
+loongarch            randconfig-r051-20260914    gcc-15.2.0
+loongarch            randconfig-r054-20260915    clang-22
+loongarch            randconfig-r062-20260914    gcc-16.1.0
+loongarch            randconfig-r063-20260914    gcc-14
+loongarch            randconfig-r071-20260914    clang-19
+loongarch            randconfig-r072-20260914    clang-24
+loongarch            randconfig-r073-20260914    clang-22
+loongarch            randconfig-r111-20260916    gcc-12.5.0 sparse
+loongarch            randconfig-r121-20260916    gcc-12.5.0 sparse
+m68k                             allmodconfig    gcc-16.1.0
+m68k                              allnoconfig    gcc-16.1.0
+m68k                             allyesconfig    clang-24
+m68k                                defconfig    clang-24
+m68k                       m5329evb_defconfig    clang-20
+m68k                 randconfig-r063-20260914    gcc-14
+m68k                 randconfig-r071-20260914    gcc-14.3.0
+m68k                 randconfig-r072-20260914    gcc-8.5.0
+microblaze                        allnoconfig    gcc-16.1.0
+microblaze                       allyesconfig    gcc-16.1.0
+microblaze                          defconfig    clang-24
+microblaze           randconfig-r053-20260915    clang-22
+microblaze           randconfig-r122-20260916    clang-22 sparse
+microblaze           randconfig-r134-20260915    gcc-12.5.0 sparse
+mips                             allmodconfig    gcc-16.1.0
+mips                              allnoconfig    gcc-16.1.0
+mips                             allyesconfig    gcc-16.1.0
+mips                           ip22_defconfig    gcc-16.1.0
+mips                 randconfig-r051-20260914    clang-22
+mips                 randconfig-r064-20260914    gcc-16.1.0
+mips                 randconfig-r113-20260916    clang-24 sparse
+mips                 randconfig-r123-20260916    gcc-12.5.0 sparse
+mips                           rs90_defconfig    gcc-16.1.0
+mips                        vocore2_defconfig    clang-20
+nios2                            allmodconfig    clang-20
+nios2                             allnoconfig    clang-24
+nios2                               defconfig    clang-24
+nios2                 randconfig-001-20260916    gcc-16.1.0
+nios2                 randconfig-002-20260916    gcc-16.1.0
+nios2                randconfig-r053-20260914    clang-22
+nios2                randconfig-r053-20260914    gcc-15.2.0
+nios2                randconfig-r062-20260914    gcc-16.1.0
+nios2                randconfig-r064-20260914    gcc-14
+nios2                randconfig-r073-20260914    gcc-11.5.0
+openrisc                         alldefconfig    clang-24
+openrisc                         allmodconfig    clang-20
+openrisc                          allnoconfig    clang-24
+openrisc                            defconfig    gcc-16.1.0
+openrisc             randconfig-r133-20260915    gcc-12.5.0 sparse
+openrisc             randconfig-r134-20260916    gcc-16.1.0 sparse
+parisc                           allmodconfig    gcc-16.1.0
+parisc                            allnoconfig    clang-24
+parisc                           allyesconfig    clang-17
+parisc                              defconfig    gcc-16.1.0
+parisc                randconfig-001-20260915    gcc-8.5.0
+parisc                randconfig-001-20260916    clang-24
+parisc                randconfig-002-20260915    gcc-8.5.0
+parisc                randconfig-002-20260916    clang-24
+parisc               randconfig-r071-20260914    gcc-13.4.0
+parisc               randconfig-r072-20260915    gcc-8.5.0
+parisc               randconfig-r122-20260916    gcc-12.5.0 sparse
+parisc               randconfig-r123-20260916    clang-22 sparse
+parisc               randconfig-r132-20260916    gcc-11.5.0 sparse
+parisc64                         alldefconfig    clang-20
+parisc64                            defconfig    clang-24
+powerpc                          allmodconfig    gcc-16.1.0
+powerpc                           allnoconfig    clang-24
+powerpc                        cell_defconfig    gcc-16.1.0
+powerpc                   currituck_defconfig    clang-20
+powerpc                 linkstation_defconfig    gcc-16.1.0
+powerpc                     mpc512x_defconfig    clang-20
+powerpc                 mpc836x_rdk_defconfig    clang-24
+powerpc               randconfig-001-20260915    gcc-8.5.0
+powerpc               randconfig-001-20260916    clang-24
+powerpc               randconfig-002-20260915    gcc-8.5.0
+powerpc               randconfig-002-20260916    clang-24
+powerpc              randconfig-r054-20260914    gcc-15.2.0
+powerpc              randconfig-r063-20260914    clang-22
+powerpc              randconfig-r113-20260916    gcc-12.5.0 sparse
+powerpc              randconfig-r122-20260916    clang-24 sparse
+powerpc                         wii_defconfig    gcc-16.1.0
+powerpc64             randconfig-001-20260915    gcc-8.5.0
+powerpc64             randconfig-001-20260916    clang-24
+powerpc64             randconfig-002-20260915    gcc-8.5.0
+powerpc64             randconfig-002-20260916    clang-24
+powerpc64            randconfig-r051-20260914    gcc-8.5.0
+powerpc64            randconfig-r053-20260914    gcc-8.5.0
+powerpc64            randconfig-r112-20260916    clang-22 sparse
+powerpc64            randconfig-r112-20260916    gcc-12.5.0 sparse
+riscv                            allmodconfig    clang-24
+riscv                             allnoconfig    clang-24
+riscv                            allyesconfig    clang-24
+riscv                               defconfig    gcc-16.1.0
+riscv             nommu_k210_sdcard_defconfig    clang-24
+riscv                 randconfig-001-20260916    gcc-16.1.0
+riscv                 randconfig-002-20260916    gcc-16.1.0
+s390                             allmodconfig    clang-17
+s390                              allnoconfig    clang-24
+s390                             allyesconfig    gcc-16.1.0
+s390                                defconfig    gcc-16.1.0
+s390                  randconfig-001-20260916    gcc-16.1.0
+s390                  randconfig-002-20260916    gcc-16.1.0
+s390                 randconfig-r063-20260915    clang-22
+s390                 randconfig-r064-20260914    gcc-14
+s390                 randconfig-r133-20260916    gcc-11.5.0 sparse
+sh                               allmodconfig    gcc-16.1.0
+sh                                allnoconfig    clang-24
+sh                               allyesconfig    clang-17
+sh                                  defconfig    gcc-14
+sh                          lboxre2_defconfig    gcc-16.1.0
+sh                    randconfig-001-20260916    gcc-16.1.0
+sh                    randconfig-002-20260916    gcc-16.1.0
+sh                   randconfig-r051-20260914    clang-17
+sh                   randconfig-r051-20260915    clang-22
+sh                   randconfig-r052-20260914    gcc-14
+sh                   randconfig-r054-20260914    clang-17
+sh                   randconfig-r123-20260916    clang-24 sparse
+sh                          sdk7786_defconfig    clang-20
+sh                           se7751_defconfig    gcc-16.1.0
+sparc                             allnoconfig    clang-24
+sparc                               defconfig    gcc-16.1.0
+sparc                 randconfig-001-20260915    gcc-13.4.0
+sparc                 randconfig-001-20260916    gcc-14.3.0
+sparc                 randconfig-002-20260915    gcc-13.4.0
+sparc                 randconfig-002-20260916    gcc-14.3.0
+sparc                randconfig-r052-20260914    gcc-15.2.0
+sparc                randconfig-r062-20260914    gcc-14
+sparc                randconfig-r064-20260914    gcc-16.1.0
+sparc                randconfig-r073-20260914    gcc-15.2.0
+sparc64                          allmodconfig    clang-20
+sparc64                             defconfig    gcc-14
+sparc64               randconfig-001-20260915    gcc-13.4.0
+sparc64               randconfig-001-20260916    gcc-14.3.0
+sparc64               randconfig-002-20260915    gcc-13.4.0
+sparc64               randconfig-002-20260916    gcc-14.3.0
+sparc64              randconfig-r052-20260914    clang-22
+sparc64              randconfig-r064-20260914    clang-22
+sparc64              randconfig-r072-20260914    clang-24
+sparc64              randconfig-r073-20260914    clang-24
+sparc64              randconfig-r112-20260916    clang-24 sparse
+sparc64              randconfig-r134-20260916    gcc-11.5.0 sparse
+um                               allmodconfig    clang-17
+um                                allnoconfig    clang-24
+um                               allyesconfig    gcc-16.1.0
+um                                  defconfig    gcc-14
+um                             i386_defconfig    gcc-14
+um                    randconfig-001-20260915    gcc-13.4.0
+um                    randconfig-001-20260916    gcc-14.3.0
+um                    randconfig-002-20260915    gcc-13.4.0
+um                    randconfig-002-20260916    gcc-14.3.0
+um                   randconfig-r053-20260914    gcc-14
+um                   randconfig-r121-20260916    clang-24 sparse
+um                   randconfig-r131-20260915    gcc-12.5.0 sparse
+um                   randconfig-r132-20260916    gcc-16.1.0 sparse
+um                           x86_64_defconfig    gcc-14
+x86_64                            allnoconfig    clang-24
+x86_64      buildonly-randconfig-001-20260915    clang-22
+x86_64      buildonly-randconfig-002-20260915    clang-22
+x86_64      buildonly-randconfig-003-20260915    clang-22
+x86_64      buildonly-randconfig-004-20260915    clang-22
+x86_64      buildonly-randconfig-005-20260915    clang-22
+x86_64      buildonly-randconfig-006-20260915    clang-22
+x86_64                              defconfig    gcc-14
+x86_64                                  kexec    clang-22
+x86_64                randconfig-001-20260915    clang-22
+x86_64                randconfig-001-20260916    clang-22
+x86_64                randconfig-002-20260915    clang-22
+x86_64                randconfig-002-20260916    clang-22
+x86_64                randconfig-003-20260915    clang-22
+x86_64                randconfig-003-20260916    clang-22
+x86_64                randconfig-004-20260915    clang-22
+x86_64                randconfig-004-20260916    clang-22
+x86_64                randconfig-005-20260915    clang-22
+x86_64                randconfig-005-20260916    clang-22
+x86_64                randconfig-006-20260915    clang-22
+x86_64                randconfig-006-20260916    clang-22
+x86_64                randconfig-011-20260915    gcc-14
+x86_64                randconfig-011-20260916    gcc-14
+x86_64                randconfig-012-20260915    gcc-14
+x86_64                randconfig-012-20260916    gcc-14
+x86_64                randconfig-013-20260915    gcc-14
+x86_64                randconfig-013-20260916    gcc-14
+x86_64                randconfig-014-20260915    gcc-14
+x86_64                randconfig-014-20260916    gcc-14
+x86_64                randconfig-015-20260915    gcc-14
+x86_64                randconfig-015-20260916    gcc-14
+x86_64                randconfig-016-20260915    gcc-14
+x86_64                randconfig-016-20260916    gcc-14
+x86_64                randconfig-071-20260916    gcc-14
+x86_64                randconfig-072-20260916    gcc-14
+x86_64                randconfig-073-20260916    gcc-14
+x86_64                randconfig-074-20260916    gcc-14
+x86_64                randconfig-075-20260916    gcc-14
+x86_64                randconfig-076-20260916    gcc-14
+x86_64                randconfig-101-20260914    gcc-14
+x86_64                randconfig-101-20260915    clang-22
+x86_64                randconfig-102-20260914    gcc-14
+x86_64                randconfig-102-20260915    clang-22
+x86_64                randconfig-103-20260914    gcc-14
+x86_64                randconfig-103-20260915    clang-22
+x86_64                randconfig-104-20260914    gcc-14
+x86_64                randconfig-104-20260915    clang-22
+x86_64                randconfig-121-20260915    gcc-14 sparse
+x86_64                randconfig-122-20260915    gcc-14 sparse
+x86_64                randconfig-123-20260915    gcc-14 sparse
+x86_64                randconfig-161-20260914    clang-22
+x86_64                randconfig-161-20260915    clang-22
+x86_64               randconfig-r051-20260914    gcc-14
+x86_64               randconfig-r052-20260915    clang-22
+x86_64               randconfig-r061-20260914    gcc-14
+x86_64               randconfig-r062-20260914    clang-22
+x86_64               randconfig-r062-20260915    clang-22
+x86_64               randconfig-r063-20260914    gcc-16.1.0
+x86_64               randconfig-r071-20260915    clang-22
+x86_64               randconfig-r113-20260916    clang-22 sparse
+x86_64                               rhel-9.4    clang-22
+x86_64                           rhel-9.4-bpf    clang-22
+x86_64                           rhel-9.4-bpf    gcc-14
+x86_64                          rhel-9.4-func    clang-22
+x86_64                    rhel-9.4-kselftests    clang-22
+x86_64                         rhel-9.4-kunit    clang-22
+x86_64                         rhel-9.4-kunit    gcc-14
+x86_64                           rhel-9.4-ltp    clang-22
+x86_64                           rhel-9.4-ltp    gcc-14
+x86_64                          rhel-9.4-rust    clang-22
+x86_64                          rhel-9.4-rust    clang-22
+xtensa                            allnoconfig    clang-24
+xtensa                           allyesconfig    clang-20
+xtensa                          iss_defconfig    clang-24
+xtensa                randconfig-001-20260915    gcc-13.4.0
+xtensa                randconfig-001-20260916    gcc-14.3.0
+xtensa                randconfig-002-20260915    gcc-13.4.0
+xtensa                randconfig-002-20260916    gcc-14.3.0
+xtensa               randconfig-r061-20260914    gcc-16.1.0
+xtensa               randconfig-r131-20260916    gcc-11.5.0 sparse
+xtensa                    smp_lx200_defconfig    clang-24
 
-Yanjun Zhu
-
->   	help
->   	  Enable PCI core support for preserving PCI devices across Live
->   	  Update. This, in combination with support in a device's driver,
-> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-> index b003b7069cdb..5ce5f8b36902 100644
-> --- a/drivers/pci/liveupdate.c
-> +++ b/drivers/pci/liveupdate.c
-> @@ -49,6 +49,20 @@
->    * This allows the PCI core to keep its FLB data (struct pci_ser) up to date
->    * with the list of **outgoing** preserved devices for the next kernel.
->    *
-> + * After kexec, whenever a device is enumerated, the PCI core will check if it
-> + * is an **incoming** preserved device (i.e. preserved by the previous kernel)
-> + * by checking the incoming FLB data (struct pci_ser).
-> + *
-> + * Drivers must notify the PCI core when an **incoming** device is done
-> + * participating in the incoming Live Update with the following API:
-> + *
-> + *  * ``pci_liveupdate_finish(pci_dev)``
-> + *
-> + * The PCI core does not enforce any ordering of ``pci_liveupdate_finish()`` and
-> + * ``pci_liveupdate_preserve()``. i.e. A PCI device can be **outgoing**
-> + * (preserved for next kernel) and **incoming** (preserved by previous kernel)
-> + * at the same time.
-> + *
->    * Restrictions
->    * ============
->    *
-> @@ -100,6 +114,26 @@ struct pci_flb_outgoing {
->   	struct kho_block_set block_set;
->   };
->   
-> +/**
-> + * struct pci_flb_incoming - Incoming PCI FLB object
-> + * @ser: The incoming struct pci_ser from the previous kernel.
-> + * @xa: Xarray used to quickly lookup devices in @ser.
-> + * @block_set: The KHO block set holding the incoming devices.
-> + *
-> + * This structure holds the runtime state for the incoming PCI Live Update
-> + * state. It wraps the serialized pci_ser, the block_set used to restore
-> + * the serialized entries, and an xarray for fast lookups.
-> + */
-> +struct pci_flb_incoming {
-> +	struct pci_ser *ser;
-> +	struct xarray xa;
-> +	struct kho_block_set block_set;
-> +};
-> +
-> +static unsigned long pci_ser_xa_key(u32 domain, u16 bdf)
-> +{
-> +	return (unsigned long)domain << 16 | bdf;
-> +}
->   static int pci_flb_preserve(struct liveupdate_flb_op_args *args)
->   {
->   	struct pci_flb_outgoing *outgoing __free(kfree) = NULL;
-> @@ -140,15 +174,91 @@ static void pci_flb_unpreserve(struct liveupdate_flb_op_args *args)
->   
->   static int pci_flb_retrieve(struct liveupdate_flb_op_args *args)
->   {
-> +	struct pci_ser *ser = phys_to_virt(args->data);
-> +	struct pci_flb_incoming *incoming;
-> +	struct pci_dev_ser *dev_ser;
-> +	struct kho_block_set_it it;
-> +	int ret;
-> +
->   	pr_debug("Retrieving struct pci_ser (0x%llx)\n", args->data);
-> -	args->obj = phys_to_virt(args->data);
-> +
-> +	if (ser->version != PCI_LUO_FLB_VERSION) {
-> +		pr_err("Incoming PCI FLB version (v%d) is incompatible with this kernel (v%d)\n",
-> +		       ser->version, PCI_LUO_FLB_VERSION);
-> +		ret = -EINVAL;
-> +		goto err_restore_free;
-> +	}
-> +
-> +	incoming = kzalloc_obj(*incoming);
-> +	if (!incoming) {
-> +		ret = -ENOMEM;
-> +		goto err_restore_free;
-> +	}
-> +
-> +	incoming->ser = ser;
-> +	xa_init(&incoming->xa);
-> +
-> +	kho_block_set_init(&incoming->block_set, sizeof(struct pci_dev_ser));
-> +	ret = kho_block_set_restore(&incoming->block_set, ser->devices);
-> +	if (ret)
-> +		goto err_free_incoming;
-> +
-> +	kho_block_set_it_init(&it, &incoming->block_set);
-> +	while ((dev_ser = kho_block_set_it_read_entry(&it))) {
-> +		unsigned long key;
-> +
-> +		if (!dev_ser->refcount)
-> +			continue;
-> +
-> +		key = pci_ser_xa_key(dev_ser->domain, dev_ser->bdf);
-> +		ret = xa_insert(&incoming->xa, key, dev_ser, GFP_KERNEL);
-> +		if (ret)
-> +			goto err_block_set_destroy;
-> +	}
-> +
-> +	args->obj = incoming;
->   	return 0;
-> +
-> +err_block_set_destroy:
-> +	kho_block_set_destroy(&incoming->block_set);
-> +err_free_incoming:
-> +	xa_destroy(&incoming->xa);
-> +	kfree(incoming);
-> +err_restore_free:
-> +	kho_restore_free(ser);
-> +	return ret;
-> +}
-> +
-> +static void pci_check_all_devices_finished(struct pci_flb_incoming *incoming)
-> +{
-> +	struct pci_dev *dev = NULL;
-> +
-> +	if (READ_ONCE(incoming->ser->nr_devices) == 0)
-> +		return;
-> +
-> +	for_each_pci_dev(dev) {
-> +		if (READ_ONCE(dev->liveupdate.incoming))
-> +			pci_emerg(dev, "Preserved device was never finished!\n");
-> +	}
-> +
-> +	/*
-> +	 * This should only happen if a driver violated the contract to call
-> +	 * pci_liveupdate_finish() (something is extremely broken).
-> +	 */
-> +	panic("Some preserved devices were never finished!\n");
->   }
->   
->   static void pci_flb_finish(struct liveupdate_flb_op_args *args)
->   {
-> +	struct pci_flb_incoming *incoming = args->obj;
-> +
->   	pr_debug("Finished struct pci_ser (0x%llx)\n", args->data);
-> -	kho_restore_free(args->obj);
-> +	pci_check_all_devices_finished(incoming);
-> +
-> +	xa_destroy(&incoming->xa);
-> +	kho_block_set_destroy(&incoming->block_set);
-> +	kho_restore_free(incoming->ser);
-> +	kfree(incoming);
->   }
->   
->   static struct liveupdate_flb_ops pci_liveupdate_flb_ops = {
-> @@ -325,6 +435,75 @@ void pci_liveupdate_unpreserve(struct pci_dev *dev)
->   }
->   EXPORT_SYMBOL_GPL(pci_liveupdate_unpreserve);
->   
-> +static struct pci_flb_incoming *pci_liveupdate_flb_get_incoming(void)
-> +{
-> +	struct pci_flb_incoming *incoming = NULL;
-> +	int ret;
-> +
-> +	ret = liveupdate_flb_get_incoming(&pci_liveupdate_flb, (void **)&incoming);
-> +
-> +	/* Live Update is not enabled. */
-> +	if (ret == -EOPNOTSUPP)
-> +		return NULL;
-> +
-> +	/* Live Update is enabled, but there is no incoming FLB data. */
-> +	if (ret == -ENODATA)
-> +		return NULL;
-> +
-> +	/*
-> +	 * Live Update is enabled and there is incoming FLB data, but none of it
-> +	 * matches pci_liveupdate_flb.compatible.
-> +	 */
-> +	if (ret == -ENOENT)
-> +		return NULL;
-> +
-> +	/*
-> +	 * There is incoming FLB data that matches pci_liveupdate_flb.compatible
-> +	 * but retrieve failed (pci_flb_retrieve() returned an error or LUO
-> +	 * failed to acquire a reference to pci_liveupdate_flb_ops.owner).
-> +	 */
-> +	if (ret)
-> +		panic("Failed to retrieve incoming FLB data (%d)\n", ret);
-> +
-> +	return incoming;
-> +}
-> +
-> +static void pci_liveupdate_flb_put_incoming(void)
-> +{
-> +	liveupdate_flb_put_incoming(&pci_liveupdate_flb);
-> +}
-> +
-> +void pci_liveupdate_setup_device(struct pci_dev *dev)
-> +{
-> +	struct pci_flb_incoming *incoming;
-> +	struct pci_dev_ser *dev_ser;
-> +	unsigned long key;
-> +
-> +	guard(rwsem_write)(&pci_liveupdate.rwsem);
-> +
-> +	incoming = pci_liveupdate_flb_get_incoming();
-> +	if (!incoming)
-> +		return;
-> +
-> +	key = pci_ser_xa_key(pci_domain_nr(dev->bus), pci_dev_id(dev));
-> +	dev_ser = xa_load(&incoming->xa, key);
-> +
-> +	/*
-> +	 * This device was not preserved across Live Update, or it was preserved
-> +	 * but has already been probed and gone through pci_liveupdate_finish(),
-> +	 * e.g. due to removing and re-adding the device. Either way, it's not
-> +	 * treated as incoming-preserved.
-> +	 */
-> +	if (!dev_ser || !dev_ser->refcount) {
-> +		pci_liveupdate_flb_put_incoming();
-> +		return;
-> +	}
-> +
-> +	pci_info(dev, "Device was preserved by previous kernel across Live Update\n");
-> +	dev->liveupdate.incoming = dev_ser;
-> +	pci_liveupdate_flb_put_incoming();
-> +}
-> +
->   void pci_liveupdate_cleanup_device(struct pci_dev *dev)
->   {
->   	/*
-> @@ -336,7 +515,80 @@ void pci_liveupdate_cleanup_device(struct pci_dev *dev)
->   	 */
->   	if (READ_ONCE(dev->liveupdate.outgoing))
->   		pci_WARN(dev, 1, "Destroying outgoing-preserved device!\n");
-> +
-> +	if (READ_ONCE(dev->liveupdate.incoming))
-> +		pci_WARN(dev, 1, "Destroying incoming-preserved device!\n");
-> +}
-> +
-> +static void pci_liveupdate_finish_device(struct pci_ser *ser, struct pci_dev *dev)
-> +{
-> +	if (!dev->liveupdate.incoming) {
-> +		pci_warn(dev, "Cannot finish preserving an unpreserved device\n");
-> +		return;
-> +	}
-> +
-> +	if (dev->liveupdate.incoming->refcount != 1) {
-> +		pci_WARN(dev, 1, "Preserved device has a corrupted refcount!\n");
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * Drop the refcount so this device does not get treated as an incoming
-> +	 * device again, e.g. in case pci_liveupdate_setup_device() gets called
-> +	 * again because the device is hot-plugged.
-> +	 */
-> +	dev->liveupdate.incoming->refcount = 0;
-> +
-> +	pci_info(dev, "Device is finished participating in Live Update\n");
-> +	dev->liveupdate.incoming = NULL;
-> +	ser->nr_devices--;
-> +}
-> +
-> +/**
-> + * pci_liveupdate_finish() - Finish the preservation of a PCI device
-> + * @dev: The PCI device
-> + *
-> + * pci_liveupdate_finish() notifies the PCI core that a PCI device that was
-> + * preserved across the previous Live Update has finished participating in Live
-> + * Update. Drivers must call pci_liveupdate_finish() from their struct
-> + * liveupdate_file_handler finish() callback to ensure the incoming struct
-> + * pci_ser is allocated.
-> + */
-> +void pci_liveupdate_finish(struct pci_dev *dev)
-> +{
-> +	struct pci_flb_incoming *incoming;
-> +
-> +	guard(rwsem_write)(&pci_liveupdate.rwsem);
-> +
-> +	incoming = pci_liveupdate_flb_get_incoming();
-> +	if (!incoming) {
-> +		pci_warn(dev, "Cannot finish preserving device without incoming FLB\n");
-> +		return;
-> +	}
-> +
-> +	pci_liveupdate_finish_device(incoming->ser, dev);
-> +	pci_liveupdate_flb_put_incoming();
-> +}
-> +EXPORT_SYMBOL_GPL(pci_liveupdate_finish);
-> +
-> +/**
-> + * pci_liveupdate_is_incoming() - Check if a device is incoming-preserved
-> + * @dev: The PCI device to check
-> + *
-> + * Check if a device was preserved across Live Update by the previous kernel,
-> + * i.e. the device is incoming-preserved. Note that a device is only considered
-> + * incoming-preserved prior to pci_liveupdate_finish(). It is up to drivers to
-> + * synchronize usage of pci_liveupdate_is_incoming() with their own call to
-> + * pci_liveupdate_finish() to avoid acting on stale data.
-> + *
-> + * Returns: True if the device is incoming-preserved, false otherwise.
-> + */
-> +bool pci_liveupdate_is_incoming(struct pci_dev *dev)
-> +{
-> +	guard(rwsem_read)(&pci_liveupdate.rwsem);
-> +	return dev->liveupdate.incoming;
->   }
-> +EXPORT_SYMBOL_GPL(pci_liveupdate_is_incoming);
->   
->   /**
->    * pci_liveupdate_register_flb() - Register a file handler with the PCI core
-> diff --git a/drivers/pci/liveupdate.h b/drivers/pci/liveupdate.h
-> index b2335581f8d0..eaaa3559fd77 100644
-> --- a/drivers/pci/liveupdate.h
-> +++ b/drivers/pci/liveupdate.h
-> @@ -11,8 +11,13 @@
->   #include <linux/pci.h>
->   
->   #ifdef CONFIG_PCI_LIVEUPDATE
-> +void pci_liveupdate_setup_device(struct pci_dev *dev);
->   void pci_liveupdate_cleanup_device(struct pci_dev *dev);
->   #else
-> +static inline void pci_liveupdate_setup_device(struct pci_dev *dev)
-> +{
-> +}
-> +
->   static inline void pci_liveupdate_cleanup_device(struct pci_dev *dev)
->   {
->   }
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 14b66acbdb15..5dc9d86e3597 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2065,6 +2065,8 @@ int pci_setup_device(struct pci_dev *dev)
->   	if (pci_early_dump)
->   		early_dump_pci_device(dev);
->   
-> +	pci_liveupdate_setup_device(dev);
-> +
->   	/* Need to have dev->class ready */
->   	dev->cfg_size = pci_cfg_space_size(dev);
->   
-> @@ -2188,6 +2190,7 @@ int pci_setup_device(struct pci_dev *dev)
->   	default:				    /* unknown header */
->   		pci_err(dev, "unknown header type %02x, ignoring device\n",
->   			dev->hdr_type);
-> +		pci_liveupdate_cleanup_device(dev);
->   		pci_release_of_node(dev);
->   		return -EIO;
->   
-> diff --git a/include/linux/pci_liveupdate.h b/include/linux/pci_liveupdate.h
-> index 894052ad6961..710026ada2d5 100644
-> --- a/include/linux/pci_liveupdate.h
-> +++ b/include/linux/pci_liveupdate.h
-> @@ -16,9 +16,11 @@
->   /**
->    * struct pci_liveupdate - PCI Live Update state for a struct pci_dev
->    * @outgoing: State preserved for the next kernel.
-> + * @incoming: State preserved by the previous kernel.
->    */
->   struct pci_liveupdate {
->   	struct pci_dev_ser *outgoing;
-> +	struct pci_dev_ser *incoming;
->   };
->   
->   struct pci_dev;
-> @@ -28,6 +30,8 @@ int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh);
->   void pci_liveupdate_unregister_flb(struct liveupdate_file_handler *fh);
->   int pci_liveupdate_preserve(struct pci_dev *dev);
->   void pci_liveupdate_unpreserve(struct pci_dev *dev);
-> +void pci_liveupdate_finish(struct pci_dev *dev);
-> +bool pci_liveupdate_is_incoming(struct pci_dev *dev);
->   #else
->   static inline int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh)
->   {
-> @@ -46,6 +50,15 @@ static inline int pci_liveupdate_preserve(struct pci_dev *dev)
->   static inline void pci_liveupdate_unpreserve(struct pci_dev *dev)
->   {
->   }
-> +
-> +static inline void pci_liveupdate_finish(struct pci_dev *dev)
-> +{
-> +}
-> +
-> +static inline bool pci_liveupdate_is_incoming(struct pci_dev *dev)
-> +{
-> +	return false;
-> +}
->   #endif
->   
->   #endif /* LINUX_PCI_LIVEUPDATE_H */
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
