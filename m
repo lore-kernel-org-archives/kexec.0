@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B544AC982C1
-	for <kexec@archiver.kernel.org>; Thu, 17 Sep 2026 00:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 73822C982CC
+	for <kexec@archiver.kernel.org>; Thu, 17 Sep 2026 00:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-	List-Owner; bh=+yFcjzj37ujFduHmXiBvfG9JBS833j3YXgLJ04CFxHE=; b=MWlVIaH2okOQi5
-	O59Z3mQX2W5yRaLHJJYklWnB/HvxLjlLyYd69ppEkE5UICLBHq37P/zk5qs+c7f8EgoZa3s+LroS4
-	iNaWQ21mDTphhJOQGSaDSajzAOmxh1yHpnV52MEvK5M+XuBFflmAJ//pk9neQ/c+tp1Bn2UY9jfYu
-	hjlFXQ2IpoaDkCt/rQk5Nhf0cIlOcmQUiHljNM4bAefgXNvZfQHmz+FlgCUIecdgrr3rto1/eJwll
-	xxaajpNecptYt44uL5EFqf0XC1BdNbaRLFWvnPEYVUYaUf+GcShvz7NDs/+bD3scRTDjwHTYhBM7r
-	T7jgNVTFylfBOlnc6R/Q==;
+	List-Owner; bh=/I018ClHfzUNPJt0+qMbQoq+P+RBASppZEIurBOx0D0=; b=eagt5jftpZlcNV
+	WmUzTK4YM12PQsV6rwi5VjGrIJaIBX+gCN2b3fECj0fTUYbQtAnmxni+WnfRJTqKKRDbkaLxIef8p
+	Y9W+kJKuRXpmiyV3Ws3vDdByddSAGAKGSyoaHivfLEY+nCL91Wq3vG9lnAtaQOKDReWbYwPVvKT//
+	dT1WcBNoi5/ir0b4UtS43xqQQ5i/3U3ep7XKJ2aDfv5JU0EdOzV8eq29dXSlp8uiE6rpfec7cUj0h
+	tQ2I1ZJMJTbN7+FLiB/pPJu7UxBPzB2PvwVlB77PDSXigtZ9fGD05NytbpPz2Rk7ANktuLzuT8afL
+	1aozTICssBFUvfkLkz5g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6zex-0000000AJEn-1KAD;
-	Thu, 17 Sep 2026 00:07:27 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1x6zpz-0000000AJvT-0sGT;
+	Thu, 17 Sep 2026 00:18:51 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6zew-0000000AJE3-0S7N
+	id 1x6zpx-0000000AJvF-2cO4
 	for kexec@lists.infradead.org;
-	Thu, 17 Sep 2026 00:07:26 +0000
+	Thu, 17 Sep 2026 00:18:50 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 1BB6E601EF;
-	Thu, 17 Sep 2026 00:07:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C5DF1F000FF;
-	Thu, 17 Sep 2026 00:07:24 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 3A40440F10;
+	Thu, 17 Sep 2026 00:18:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6E5E1F000FF;
+	Thu, 17 Sep 2026 00:18:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789603644;
-	bh=+yFcjzj37ujFduHmXiBvfG9JBS833j3YXgLJ04CFxHE=;
+	s=k20260515; t=1789604329;
+	bh=/I018ClHfzUNPJt0+qMbQoq+P+RBASppZEIurBOx0D0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To;
-	b=UjbTsEtVaPtsiaZUuZNq+T2sPIquKhVFlF6WCE1Nit+LYL5byUhUnUswsWKHVH8wK
-	 7qMsN9mQuJsHdDVnrFzUsqc9srPE2TyNRfy5sfQGHZd2IhIXBj2X/t95jvsRKjbxes
-	 lW4C1s7A5Nc0siyJhxlMktOEclBcFv0GC8ZCkpoYvvrYb+6YZUqa5gzAF92LNEhiWG
-	 fbkCpan3pHHSqNMPeNzv/+c7N/vuVGzf8tIrVMWvAFsKjZw1wSbvxtDjUqQoHSjPIh
-	 af2nNUqh3M0izEpdLd5+JAe9EJ8BchGBTY8vR4TP4CD1d2d1+4+nNv6FNem2o7XMVr
-	 6IuBrI0whhNvw==
-Date: Wed, 16 Sep 2026 19:07:23 -0500
+	b=hTCcc2OpdJ9QTJ/43CxwpgjFBxFkI1cBuFOCVvg+DW5lqQhReL4g6HpYm8MA+Yd+s
+	 cEtp/gYcnSUCGp5wIg8UPM53pGwTfoPcpJRGcQQhWUlDWh2mDLElt8OzdzQzRaToHm
+	 1WyHFD0e2UTg0HfnN6aX3wx5uL8+aUjuxmypfEz9bjjjRFX4J0v7Hv2ZS0P9OD7CJz
+	 i4SQqmEylvwEMl9RubLczb7y5qvyXOJLBmta4HxuXXhlP8A0tpNQL00gzGAIw52HOv
+	 UcyiTOvMxjRzAkCubtbbwYMqr6Ras8/HJf6uPvXYP5hDxatNQMRSFkQQG3nbiv4bgz
+	 AtstkzNaGBXEA==
+Date: Wed, 16 Sep 2026 19:18:47 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: David Matlack <dmatlack@google.com>
 Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
@@ -68,11 +68,11 @@ Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
 	Yi Liu <yi.l.liu@intel.com>
 Subject: Re: [PATCH v8 06/12] PCI: liveupdate: Auto-preserve upstream bridges
  across Live Update
-Message-ID: <20260917000723.GA992337@bhelgaas>
+Message-ID: <20260917001847.GA993118@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260728221007.2098560-7-dmatlack@google.com>
+In-Reply-To: <aqQzmvgILmU8F4TR@google.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,87 +87,62 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jul 28, 2026 at 10:10:00PM +0000, David Matlack wrote:
-> When a PCI device is preserved across a Live Update, all of its upstream
-> bridges up to the root port must also be preserved. This enables the PCI
-> core and any drivers bound to the bridges to manage bridges correctly
-> across a Live Update.
+On Fri, Sep 11, 2026 at 05:00:10PM +0000, David Matlack wrote:
+> On 2026-09-10 06:51 PM, Bjorn Helgaas wrote:
+> > On Tue, Jul 28, 2026 at 10:10:00PM +0000, David Matlack wrote:
+> > > When a PCI device is preserved across a Live Update, all of its upstream
+> > > bridges up to the root port must also be preserved. This enables the PCI
+> > > core and any drivers bound to the bridges to manage bridges correctly
+> > > across a Live Update.
+> > > 
+> > > Notably, this will be used in subsequent commits to ensure that
+> > > preserved devices can continue performing memory transactions without a
+> > > disruption or change in routing.
+> > > 
+> > > To preserve bridges, the PCI core tracks the number of downstream
+> > > devices preserved under each bridge using a reference count in struct
+> > > pci_dev_ser. This allows a bridge to remain preserved until all its
+> > > downstream preserved devices are unpreserved or finish their
+> > > participation in the Live Update.
+> > 
+> > This seems to hint that we're going to allow bridge reconfiguration in
+> > some cases, e.g., for hot-adds.  The simplest case is "leave config of
+> > all bridges the same", and I thought that was what the previous patch
+> > commit log said.
+> > 
+> > What's the benefit added by this patch?
 > 
-> Notably, this will be used in subsequent commits to ensure that
-> preserved devices can continue performing memory transactions without a
-> disruption or change in routing.
+> It is used in the following patches:
 > 
-> To preserve bridges, the PCI core tracks the number of downstream
-> devices preserved under each bridge using a reference count in struct
-> pci_dev_ser. This allows a bridge to remain preserved until all its
-> downstream preserved devices are unpreserved or finish their
-> participation in the Live Update.
-> ...
+>  PCI: liveupdate: Adopt ACS controls in incoming preserved devices
+>  PCI: liveupdate: Adopt ARI Forwarding Enable on preserved bridges
+>  PCI: liveupdate: Do not disable bus mastering on preserved devices during kexec
+> 
+> to preserve certain configuration on bridges that have downstream
+> endpoints that are being preserved. To support P2PDMA we will also have
+> to preserve bridge memory windows (future series).
+> 
+> If we are ok with applying those policies to all bridges on the system
+> whenever one or more endpoints anywhere on the system are being
+> preserved, then I agree we don't need this patch. But I thought it would
+> be cleaner to track things per-device.
 
-> +static int pci_liveupdate_unpreserve_device(struct pci_flb_outgoing *outgoing,
-> +					    struct pci_dev *dev)
->  {
->  	struct pci_dev_ser *dev_ser = dev->liveupdate.outgoing;
->  
->  	if (!dev_ser) {
->  		pci_warn(dev, "Cannot unpreserve device that is not preserved\n");
-> -		return;
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (!dev_ser->refcount) {
-> +		pci_WARN(dev, 1, "Preserved device has a 0 refcount!\n");
-> +		return -EINVAL;
->  	}
->  
-> +	if (--dev_ser->refcount)
-> +		return 0;
+Yes, I agree tracking it per-device is good.  I was looking for a
+traversal upstream to increment refcounts on bridges, and I guess that
+happens via for_each_pci_dev_in_path() in pci_liveupdate_preserve().
 
-I guess this is a nit: I was looking for a dev_ser->refcount++ in this
-patch to correspond with this decrement.  I *guess* the
-"dev_ser->refcount = 1" in pci_liveupdate_preserve_device() starts
-that, and the "dev->liveupdate.outgoing->refcount++" there is an
-increment of the same refcount?  The connections there don't seem
-quite obvious to me.
+The actual refcount still confuses me a bit (see
+https://lore.kernel.org/all/20260917000723.GA992337@bhelgaas).  Maybe
+it would help if pci_liveupdate_preserve_device() alloc the dev_ser
+*first* (right after all the bail-out checks)?  I wonder if the
+refcount increment could then happen in exactly one place, separated
+from the one-time dev_ser housekeeping?  E.g., something like:
 
-But I guess "dev_ser->refcount = 1" was added by a different patch, so
-probably *not* the same?
+  if (!dev->liveupdate.outgoing) {
+    dev_ser = pci_flb_alloc_dev_ser(outgoing);
+    ...
+    dev->liveupdate.outgoing = dev_ser;
+  }
 
->  	pci_info(dev, "Device will no longer be preserved across next Live Update\n");
->  	outgoing->ser->nr_devices--;
->  	memset(dev_ser, 0, sizeof(*dev_ser));
->  	dev->liveupdate.outgoing = NULL;
-> +	return 0;
-> +}
-
-> @@ -385,13 +418,23 @@ static int pci_liveupdate_preserve_device(struct pci_flb_outgoing *outgoing,
->  	}
->  
->  	if (dev->liveupdate.outgoing) {
-> -		pci_warn(dev, "Device is already preserved\n");
-> -		return -EBUSY;
-> -	}
-> +		if (!dev->liveupdate.outgoing->refcount) {
-> +			pci_WARN(dev, 1, "Preserved device with 0 refcount!\n");
-> +			return -EINVAL;
-> +		}
->  
-> -	if (!pci_is_root_bus(dev->bus)) {
-> -		pci_warn(dev, "Cannot preserve devices behind bridges\n");
-> -		return -EINVAL;
-> +		/*
-> +		 * Endpoint devices should not be preserved more than once.
-> +		 * Bridges are preserved once for every downstream device that
-> +		 * is preserved.
-> +		 */
-> +		if (!dev->subordinate) {
-> +			pci_warn(dev, "Device is already preserved\n");
-> +			return -EBUSY;
-> +		}
-> +
-> +		dev->liveupdate.outgoing->refcount++;
-> +		return 0;
->  	}
->  
->  	dev_ser = pci_flb_alloc_dev_ser(outgoing);
+  dev->liveupdate.outgoing->refcount++;
 
