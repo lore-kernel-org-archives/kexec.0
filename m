@@ -4,67 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AD19AC982D0
-	for <kexec@archiver.kernel.org>; Thu, 17 Sep 2026 21:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B6054C982D2
+	for <kexec@archiver.kernel.org>; Thu, 17 Sep 2026 21:56:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=5NhZ/y4a+dkUa7WaLlbHkeAQBTwZUNqbVt6sm8GoTkU=; b=5ClNMtK7GISFj9ojJMyZqAqkEf
-	anonrnGl+I/7kUaTSqgcUnhjbLeyynFTdYP2ggTdgZfAU0UalWtHwFg8+iwCgrNYf9NKpX0sQFruJ
-	wtDjxJgJdwQSQYxsIz1gPY0b9ZUrJlho7zV0IjNqmhBJFHZ4MEtDY9nkZYks+8PJfSKgFqHF5InQ+
-	AnfmxxczDDNCh74IPQ9VaNr5amBtkcY/bWiRQUYO/vFfFGsLoomKY/JC2PQX0XCkaFxqg96s4LhLr
-	kBXgvyQIJLcohxbjJt2hedzwPMKDYV6mYSsgxWrwLJHc7DK9VJLn9c555rQxK9FBqpT+VjkTIlbo7
-	h1gXYyNA==;
+	bh=kuBtV4+7ALBPAyy2nomafqxqzWcbcsqKb3dSOrzTp7c=; b=DKVj+4HNhUdzahSqGZBC7qyYZe
+	Ao18AuhER9z5TFn5jgq7XIZGkv+pIekhZOj4zCx0XkZuG27MLh9GQDI8xAyPww6pz0Llfg2HXPSTT
+	nTFlU8USuUU703hmWRWfefJ/+mxRroDDRM09gobsZb+aRiEKwkLLGz/BBOz42LWpm9XwqD+RmzM73
+	agoK46UXVFUJlvh7rOYSxpTnTnVVkiAeY9h0Z2zz1eQgCtQL90kVLwgp0bsZGQpR2bklJ+hNEloRt
+	Aq83GI2KuD9SyvoavAHRhu76VHYO1jRRFbMmax0IzmPYfIVs3WnsZQwY+o68fD5ckCvPzbn6v3zl5
+	Q6evRM3Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7K5e-0000000CbwV-2Hi8;
-	Thu, 17 Sep 2026 21:56:22 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1x7K6E-0000000Cc7w-02OI;
+	Thu, 17 Sep 2026 21:56:58 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7K5c-0000000CbwG-2FQX;
-	Thu, 17 Sep 2026 21:56:20 +0000
+	id 1x7K6C-0000000Cc74-3xHO;
+	Thu, 17 Sep 2026 21:56:57 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id E768B43AB3;
-	Thu, 17 Sep 2026 21:56:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93FA41F000FF;
-	Thu, 17 Sep 2026 21:56:19 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 016B060202;
+	Thu, 17 Sep 2026 21:56:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 681611F000FF;
+	Thu, 17 Sep 2026 21:56:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789682179;
-	bh=5NhZ/y4a+dkUa7WaLlbHkeAQBTwZUNqbVt6sm8GoTkU=;
+	s=k20260515; t=1789682215;
+	bh=kuBtV4+7ALBPAyy2nomafqxqzWcbcsqKb3dSOrzTp7c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=L1Mdag9kmnPe+L2tPYHLcz67jASLAJHRTXbLRL6FwDWypq3Me5VmVOJNpahpirJUr
-	 gEsrTsb4nt+eg05Kke9kTilWmPAyVnbXAZ2QqEIckXNOxU8Nc03uHomC6TOH25W/2K
-	 z5l+kA7XR1hsKOVXM9nOrECRGVVSTOZ0fYqJJ4d/qsSPlA92WfCU5Jhz5VgBRKk640
-	 b+F2H3fiHFKhDUNxqU1GLBt2Ks6ayctuMUVHHspuUBp72wI7bAIxxIjtCNIMAhHGB1
-	 kVbr6OldOAOOfF9euNAChU/YRakT3Vou1QLZTXALxAI02xOX2wLGmDaBhTwt/LCZFD
-	 fiZ6QpTX8Oq4A==
-Date: Thu, 17 Sep 2026 16:56:18 -0500
+	b=bE+Lz4BpzH5TSV1jWou2OBtlqHsC//L3WyTj9bXi6va6c8nZfLJ4ol68JuU+o3r2M
+	 TAu2icEvroIVO5OuYcPgJYCAhNQXTzOAIclO3FED1OglGnXQvoVgXQi9NkcPaNCm7C
+	 NxCHhu8wntvOtj4LO509qvBQvss+eZM34/jEYGD2HXc7uGKovRY4ujMtUk30a4EgKF
+	 zPD0eqlpLObbbLfAP2BCbHPLwLZz0rgjBIedFlBVM78LXQPEzVbz5SKMMk3kZSKLLI
+	 Ww16aNzudepZDNF3jG6O0DxZCUHUXGJHhXcE+1AZc6MCWnHl/xvccdOs6+sET6/9Sd
+	 Dca8d8QUwinxQ==
+Date: Thu, 17 Sep 2026 16:56:53 -0500
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Wandun Chen <chenwandun1@gmail.com>
-Cc: chenhuacai@kernel.org, linux-kernel@vger.kernel.org, rppt@kernel.org,
-	m.szyprowski@samsung.com, x86@kernel.org, bp@alien8.de,
-	iommu@lists.linux.dev, saravanak@kernel.org, pratyush@kernel.org,
-	robin.murphy@arm.com, loongarch@lists.linux.dev,
-	aou@eecs.berkeley.edu, palmer@dabbelt.com, will@kernel.org,
-	akpm@linux-foundation.org, pasha.tatashin@soleen.com,
-	mingo@redhat.com, pjw@kernel.org, kexec@lists.infradead.org,
-	hpa@zytor.com, catalin.marinas@arm.com, devicetree@vger.kernel.org,
-	baoquan.he@linux.dev, ruirui.yang@linux.dev, mark.rutland@arm.com,
-	kernel@xen0n.name, linux-arm-kernel@lists.infradead.org,
-	alex@ghiti.fr, linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-	tglx@kernel.org, dave.hansen@linux.intel.com
-Subject: Re: [PATCH v6 07/10] of: reserved_mem: add dumpable flag to opt-in
- vmcore
-Message-ID: <178968217748.3989713.7328577485527762154.robh@kernel.org>
+Cc: m.szyprowski@samsung.com, hpa@zytor.com, chenhuacai@kernel.org,
+	pasha.tatashin@soleen.com, devicetree@vger.kernel.org,
+	linux-mm@kvack.org, tglx@kernel.org, robin.murphy@arm.com,
+	kernel@xen0n.name, mingo@redhat.com, saravanak@kernel.org,
+	loongarch@lists.linux.dev, dave.hansen@linux.intel.com,
+	will@kernel.org, akpm@linux-foundation.org, rppt@kernel.org,
+	iommu@lists.linux.dev, mark.rutland@arm.com, alex@ghiti.fr,
+	linux-riscv@lists.infradead.org, pjw@kernel.org,
+	linux-kernel@vger.kernel.org, baoquan.he@linux.dev,
+	aou@eecs.berkeley.edu, kexec@lists.infradead.org,
+	pratyush@kernel.org, linux-arm-kernel@lists.infradead.org,
+	ruirui.yang@linux.dev, catalin.marinas@arm.com, bp@alien8.de,
+	palmer@dabbelt.com, x86@kernel.org
+Subject: Re: [PATCH v6 08/10] of: reserved_mem: mark /reserved-memory entries
+ with MEMBLOCK_NODUMP
+Message-ID: <178968221332.3991643.14928206071521736133.robh@kernel.org>
 References: <20260902073116.802752-1-chenwandun1@gmail.com>
- <20260902073116.802752-8-chenwandun1@gmail.com>
+ <20260902073116.802752-9-chenwandun1@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260902073116.802752-8-chenwandun1@gmail.com>
+In-Reply-To: <20260902073116.802752-9-chenwandun1@gmail.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,33 +81,24 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
-On Wed, 02 Sep 2026 15:31:13 +0800, Wandun Chen wrote:
+On Wed, 02 Sep 2026 15:31:14 +0800, Wandun Chen wrote:
 > From: Wandun Chen <chenwandun@lixiang.com>
 > 
-> Add a 'dumpable' flag to struct reserved_mem to decide whether a
-> reserved area should be included in the kdump vmcore. Non-dumpable
-> regions are later marked MEMBLOCK_NODUMP;the filtering itself happens
-> in memblock, keeping the arch kdump code independent of the DT API.
+> Mark non-dumpable reserved-memory regions with MEMBLOCK_NODUMP so
+> kdump can omit them from the vmcore.
 > 
-> Most reserved regions are owned by devices and do not contain data
-> useful for kernel crash analysis, so dumpable default to false.
-> Reusable CMA regions are different: their pages are handed back to the
-> buddy allocator and may contain key data for crash analysis, so set
-> dumpable to true in rmem_cma_setup().
+> The marking is guarded by CONFIG_CRASH_DUMP so non-kdump kernels do not
+> pay the cost of splitting memblock.memory entries at NODUMP boundaries.
 > 
-> The dumpable flag is also used to check /memreserve/ entries for overlap
-> with other dumpable regions.
-> 
-> Suggested-by: Rob Herring <robh@kernel.org>
 > Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
 > Tested-by: Meijing Zhao <zhaomeijing@lixiang.com>
-> Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > ---
->  include/linux/of_reserved_mem.h | 1 +
->  kernel/dma/contiguous.c         | 1 +
->  2 files changed, 2 insertions(+)
+>  drivers/of/fdt.c             |  1 +
+>  drivers/of/of_private.h      |  1 +
+>  drivers/of/of_reserved_mem.c | 15 +++++++++++++++
+>  3 files changed, 17 insertions(+)
 > 
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
 
