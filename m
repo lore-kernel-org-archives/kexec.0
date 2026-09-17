@@ -4,92 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D49BCC982D7
-	for <kexec@archiver.kernel.org>; Thu, 17 Sep 2026 16:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id ADB57C88E72
+	for <kexec@archiver.kernel.org>; Thu, 17 Sep 2026 16:41:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
-	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
-	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=exa5f/DcwNCR5E0w8unUqAO11f1n98HF5VNU5M/lSuA=; b=V9dadF5NQoIxWfyF1yOz+U6Hll
-	eDMJIv2QNv06Rj9PjYbHE+SKnd3y88ZM9oXLNks4jzeoD1YfSHML2fh1TfzGeIDdvSVvx/Bk1oyoi
-	UMCussXLMp6V6AQEKUTOmGBAUGb2oLGNfX98MLpZaz56YMegZh72EqwJdF/8DQAgDl29X1DZfY8bj
-	zXouPuF+cupndThpoRqR3eNDuXranFh5NBQgOR9/2B1gugnMnJOdKR6I5fjqVRwlpv+vSVaaa+6cz
-	KeakO2hBAusD1L2HobqSdc3FRTLuGlG0MAmCZ+l32Llimh8ZRFJ9I37EzT5mCQDu1WQGStXm6MdmO
-	eg2mRnEQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
+	From:MIME-Version:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=XMjDv8CpcRrCSJyVd2NGEOOV+eyxF8EAwstFN3OJlJY=; b=0XMGDjddejRvGlTYfTHKWkMLZq
+	umi/D7cXzRp4aiQL9RTP57JUoaCDl/mvaGQAyKoprMl7SfCPTe4H+tOje0v3ol+u6SL51huSkWi9W
+	lRct5NQIax7cQruPBxkrai3ejzivZD1X9MTg0KJ/u1JDCtA0xCj3N5NMs+fHpISvkklPq6FFhtlLK
+	0HwAngz81tS8Jz/cmUmyQ358JmV57HTpoMpKbPr3gRko0sekN5/h53vqer2oH6IuEm3Xws3fNgk50
+	zdWXRmQqJh4aRscOk56a7s9JAHVsEE/QBND4Rd436iqEM18n988187oa/bOLDzKzI05amWaMR2buy
+	AbbCztEQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7F8C-0000000Bwpz-2qQe;
-	Thu, 17 Sep 2026 16:38:40 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1x7FAT-0000000BxVY-1uWZ;
+	Thu, 17 Sep 2026 16:41:01 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7F88-0000000Bwmm-3txv
+	id 1x7FAS-0000000BxUD-0st9
 	for kexec@lists.infradead.org;
-	Thu, 17 Sep 2026 16:38:38 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1789663116;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=exa5f/DcwNCR5E0w8unUqAO11f1n98HF5VNU5M/lSuA=;
-	b=g+vrGBVK1BRN3Gep6INbhf16lq2oDWXfzHgVn51517UXaz1n606GCIAFEcvjs362XcB+WG
-	oRQ3c0+g3HLF3v3ZYnBZ1hmC028oaTALXp5wS/90hpoGHUH5tIGtYGfRbBvwHrWH6JkR/k
-	YmfUW2MEsL1iZ2ZLGU6mi0FGSKIe+7g=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-627-kkknJbLZP_Gzu6UXMZrJpQ-1; Thu,
- 17 Sep 2026 12:38:30 -0400
-X-MC-Unique: kkknJbLZP_Gzu6UXMZrJpQ-1
-X-Mimecast-MFC-AGG-ID: kkknJbLZP_Gzu6UXMZrJpQ_1789663108
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4414C18F0F01;
-	Thu, 17 Sep 2026 16:38:28 +0000 (UTC)
-Received: from djeffery-thinkpadp1gen3.rmtusga.csb (headnet03.pony-001.prod.iad2.dc.redhat.com [10.2.32.114])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0123F1800352;
-	Thu, 17 Sep 2026 16:38:24 +0000 (UTC)
-From: David Jeffery <djeffery@redhat.com>
-To: driver-core@lists.linux.dev,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	Tarun Sahu <tarunsahu@google.com>,
-	Stuart Hayes <stuart.w.hayes@gmail.com>,
-	Laurence Oberman <loberman@redhat.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	kexec@lists.infradead.org,
-	"Ewan Milne" <emilne@redhat.com>,
-	"John Meneghini" <jmeneghi@redhat.com>,
-	"Lombardi, Maurizio" <mlombard@redhat.com>,
-	"Bart Van Assche" <bvanassche@acm.org>,
-	"John Garry" <john.g.garry@oracle.com>,
-	"Jeremy Allison" <jallison@ciq.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	"Pasha Tatashin" <tatashin@google.com>,
-	David Jeffery <djeffery@redhat.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH 9/9] scsi: Enable async shutdown support
-Date: Thu, 17 Sep 2026 12:37:44 -0400
-Message-ID: <20260917163744.191748-10-djeffery@redhat.com>
-In-Reply-To: <20260917163744.191748-1-djeffery@redhat.com>
+	Thu, 17 Sep 2026 16:41:00 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id F0D4642006;
+	Thu, 17 Sep 2026 16:40:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F0E01F00893;
+	Thu, 17 Sep 2026 16:40:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789663259;
+	bh=XMjDv8CpcRrCSJyVd2NGEOOV+eyxF8EAwstFN3OJlJY=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Eoj1iJehmTUI+pYMU2YQiTzGwVf2Ghrp3dVDRhASfh1ESKqEES/TarfmI4P6fsvky
+	 e44Qo2d0uhFAmIsyjcZWAD46AQt+UquhRdROS+M1SB7OrjFhBZEyEnUf+8NcpWVl89
+	 CpenrUCAZ8ug73kapz5VEzPobPHuCXXUYmiFnqoC94G6nkfNDAnlb9uMgq3IvdFsWM
+	 N2vWKcrmRxF7kzNA5rPhKihJ8onxPH3xHUr0I7/9Klowr4sGYvKziC9O+CUOI7Qh2r
+	 1OtJXYFvrCgQFiYA8TxN1daEnvIe0KzInP3ox7S0lQmka1pL4i/csSd0+D37AfCORP
+	 8QJZ85E+fvFdQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 4/9] driver core: separate function to shutdown one
+ device
+To: "Rafael J. Wysocki" <rafael@kernel.org>, driver-core@lists.linux.dev, "Danilo
+ Krummrich" <dakr@kernel.org>, "David Jeffery" <djeffery@redhat.com>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, "Laurence Oberman" <loberman@redhat.com>, "Pasha
+ Tatashin" <pasha.tatashin@soleen.com>, Maurizio <mlombard@redhat.com>, linux-scsi@vger.kernel.org, "Bjorn
+ Helgaas" <helgaas@kernel.org>, kexec@lists.infradead.org, "Stuart Hayes" <stuart.w.hayes@gmail.com>, "John
+ Meneghini" <jmeneghi@redhat.com>, "Tarun Sahu" <tarunsahu@google.com>, "Ewan
+ Milne" <emilne@redhat.com>, "Bart Van Assche" <bvanassche@acm.org>, "John
+ Garry" <john.g.garry@oracle.com>, "Jeremy Allison" <jallison@ciq.com>, "Martin
+ K . Petersen" <martin.petersen@oracle.com>, "Pasha Tatashin" <tatashin@google.com>, linux-pci@vger.kernel.org
+In-Reply-To: <20260917163744.191748-5-djeffery@redhat.com>
 References: <20260917163744.191748-1-djeffery@redhat.com>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: rL_E6ui1LT-qqJFfbIgph0Pzf7xVyvij86vJ8y6PqPg_1789663108
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260917_093837_038716_FFB1CBBB 
-X-CRM114-Status: GOOD (  10.13  )
+ <20260917163744.191748-5-djeffery@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 17 Sep 2026 16:40:58 +0000
+Message-Id: <20260917164059.1F0E01F00893@smtp.kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,72 +73,21 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Like scsi's async suspend support, allow scsi devices to be shut down
-asynchronously to reduce system shutdown time.
+> Make a separate function for the part of device_shutdown() that does the
+> shutown for a single device.  This is in preparation for making device
+> shutdown asynchronous.
+>=20
+> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+> Signed-off-by: David Jeffery <djeffery@redhat.com>
 
-Signed-off-by: David Jeffery <djeffery@redhat.com>
-Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-Tested-by: Laurence Oberman <loberman@redhat.com>
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: John Garry <john.g.garry@oracle.com>
----
- drivers/scsi/hosts.c      | 2 ++
- drivers/scsi/scsi_sysfs.c | 3 +++
- 2 files changed, 5 insertions(+)
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-diff --git a/drivers/scsi/hosts.c b/drivers/scsi/hosts.c
-index e72055c1ebbb..75592f41ef39 100644
---- a/drivers/scsi/hosts.c
-+++ b/drivers/scsi/hosts.c
-@@ -272,6 +272,7 @@ int scsi_add_host_with_dma(struct Scsi_Host *shost, struct device *dev,
- 	pm_runtime_set_active(&shost->shost_gendev);
- 	pm_runtime_enable(&shost->shost_gendev);
- 	device_enable_async_suspend(&shost->shost_gendev);
-+	dev_set_async_shutdown(&shost->shost_gendev);
- 
- 	error = device_add(&shost->shost_gendev);
- 	if (error)
-@@ -282,6 +283,7 @@ int scsi_add_host_with_dma(struct Scsi_Host *shost, struct device *dev,
- 	get_device(shost->shost_gendev.parent);
- 
- 	device_enable_async_suspend(&shost->shost_dev);
-+	dev_set_async_shutdown(&shost->shost_dev);
- 
- 	get_device(&shost->shost_gendev);
- 	error = device_add(&shost->shost_dev);
-diff --git a/drivers/scsi/scsi_sysfs.c b/drivers/scsi/scsi_sysfs.c
-index 9480432f650b..52e1e38dc027 100644
---- a/drivers/scsi/scsi_sysfs.c
-+++ b/drivers/scsi/scsi_sysfs.c
-@@ -1387,6 +1387,7 @@ static int scsi_target_add(struct scsi_target *starget)
- 	pm_runtime_set_active(&starget->dev);
- 	pm_runtime_enable(&starget->dev);
- 	device_enable_async_suspend(&starget->dev);
-+	dev_set_async_shutdown(&starget->dev);
- 
- 	return 0;
- }
-@@ -1413,6 +1414,7 @@ int scsi_sysfs_add_sdev(struct scsi_device *sdev)
- 	transport_configure_device(&starget->dev);
- 
- 	device_enable_async_suspend(&sdev->sdev_gendev);
-+	dev_set_async_shutdown(&sdev->sdev_gendev);
- 	scsi_autopm_get_target(starget);
- 	pm_runtime_set_active(&sdev->sdev_gendev);
- 	if (!sdev->rpm_autosuspend)
-@@ -1432,6 +1434,7 @@ int scsi_sysfs_add_sdev(struct scsi_device *sdev)
- 	}
- 
- 	device_enable_async_suspend(&sdev->sdev_dev);
-+	dev_set_async_shutdown(&sdev->sdev_dev);
- 	error = device_add(&sdev->sdev_dev);
- 	if (error) {
- 		sdev_printk(KERN_INFO, sdev,
--- 
-2.55.0
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260917163744.1917=
+48-1-djeffery@redhat.com?part=3D4
 
 
