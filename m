@@ -4,87 +4,117 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 07F75C982D0
-	for <kexec@archiver.kernel.org>; Thu, 17 Sep 2026 09:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2789CC88E72
+	for <kexec@archiver.kernel.org>; Thu, 17 Sep 2026 10:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Type:MIME-Version:References:Message-ID:Subject:To:From:Date:Reply-To
-	:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=jxbi13ouQTHyRdtBDlCDYfBDO36J/sfcBmF9VRStXnQ=; b=FNz/q79pKOr4eXwx0i83ojL8OG
-	IKu2UXE6WJl/E5MpgtgOArPC4Ln/PnhqJ3jKEOjHN9fPDyhwHNILLA0dxKJgXTua0Wot9oIW3QI0r
-	yJJ4ayDx3oqsHZS2jZqlS6YfXDWOk3wnBsb1I7G0hmVsmpLMZimqMPi+NyR/OyjCVK85CQz4OQkE2
-	d31a0Fbcdc5SuxIrY/Z4WAZOSLoR1tq91+CH9N3r/mxn4WQHrHYUp9l+JKpx+NylhXHHn+a/ZA0QQ
-	jOgVFTDisdM1fv6sVGjTCy8sZk28LlWKIqgIiUm61cteLZKZWJTJBZpRQUWkEg2zpLy+UqOCLGBCw
-	94wY25og==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=XN7HVKJtZSz9og9g+wQh8pvmMxNLYZqB67Fm0+hPgCU=; b=c1SzbDANosGw+OGWkVjHLPW0Q/
+	6QTB8+8YamSERr0Mo+LkSLpRgjSY4H/IcirFeKC/eIOr7ZKindEoOSbeOImQ/Vql9g2gFRTEg7qP5
+	oLfi1xegjHX31L/8zVTn0UbLsanBAmhvQbD0OVBwVaMsRK9P1blTItrkXBmGcx7UaKkX1aZ3SYo5c
+	avY0E/6rjXZ9i7tYf/oHEHHlSfDnOSot6R6oemYZDXigZbO/i9S0sWpsmV+Nq1eivSWCqSIBXsyN/
+	TCUNERjMhbRE9nKWphNsRLBn/ETWCgT9P3yuVy6mqUltLBUoQo969ukJG5M7VJbohq/E+lkXVbfDw
+	Ves9ODHw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x785G-0000000AxF1-3YZm;
-	Thu, 17 Sep 2026 09:07:10 +0000
-Received: from mail-wm1-x32b.google.com ([2a00:1450:4864:20::32b])
+	id 1x79Nu-0000000B6kQ-0n20;
+	Thu, 17 Sep 2026 10:30:30 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x785E-0000000AxE7-2Jhp
+	id 1x79Np-0000000B6k6-0mdG
 	for kexec@lists.infradead.org;
-	Thu, 17 Sep 2026 09:07:09 +0000
-Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-4980fe6b3beso2360275e9.0
-        for <kexec@lists.infradead.org>; Thu, 17 Sep 2026 02:07:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1789636026; x=1790240826; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=jxbi13ouQTHyRdtBDlCDYfBDO36J/sfcBmF9VRStXnQ=;
-        b=JAj8CGgFiKh91lKlUgm2H7TX48GfbPmZN4tCEila15G25lJ+77ML4BLLEm9+ZWiZGU
-         bYphb+XJ4IckJtOcIC0tsxTym4ciMmZgKbtKnNaezdH2L+PNZGoMZwgsVK1fYP08yCsz
-         1IWtITkowm/fhtfChu42Fh9kQx5rWz1kHeEzLBTS3BvrbEXKH2Kk95ORU+P1vFatC4Ux
-         tfWYSzzO1sF3Z8/211d42Wlexfdp61w+QmeCer0BSny8eM5Tro9FzTzyi8HKKoOgOyoH
-         D/xpPaB6hz/HYe2jBp/mRlaFqlx/KLPqiqcyOUKpbjc5uRPoQUVKDBmXEyMKe/Ni3CKD
-         Q3fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789636026; x=1790240826;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=jxbi13ouQTHyRdtBDlCDYfBDO36J/sfcBmF9VRStXnQ=;
-        b=aQMv6TrHrP6ogtFb0yHDjHFiEoPnMfmmh/T3inXniQ2i6XTq/xWXjdkN4ZibJ4U2r1
-         ahBXMw5rzC7SaCJQTW75M2YM90t8+CqEIssyVDj7fA5AGNmT4qJ2ZSLad4B6TZPmcTEJ
-         d/dBS/q3H3HCC/z0u1qrlhZhKUJBJCXhaoPTqWkSzA2DZtKW7Pk9ZDvDOvmEA79bmsem
-         +xhlbWkHZcMURNh22aQ58RbdiRVmqyuB1n4QZvr46rT5sb41P3bYLc1cHW4Qew6Olktr
-         E+QMXNKLvWAHPOhV8jUankh8PMej9h7VkDe9OW01nSn9KvzhiYAeL4uFwm4FW/g8OI3d
-         2cpg==
-X-Forwarded-Encrypted: i=1; AKwUvBy9vd3tYSdUFZbG6A3if+lDXEGftWPLr3FUdu/A7obntIhj5BFQIS4Rtb4MQB4rVr/HF6XuAw==@lists.infradead.org
-X-Gm-Message-State: AFuF++lQQQBYxs52fJRpVl3BrbEFZqKdRa6Nhyz50Z+kJHyxxE1LcCnI
-	5ZCpOMlTU2D4yhVoPSunHGDqhQwOuzi5RsP0lsjEFEQQRQo7YIIf7DTs8SkLgTVbarE=
-X-Gm-Gg: AYBFou17MVA/V3SB6ufVp8Ok0uLmIvtlZtnohmLBCixb68NpTLdgzIqCCoCglsHdxGM
-	Re4VCZybQHe8R8h0ShYdjnoFqJH/ysexuz6Svn6k2TfOpPTK6+4ErOh0k2NrvK4aVzFPr+GixYr
-	ASPqhKSblb0mvZv02s+zuHFyfKT+xF3n42OtFHZQJy8NNAGiqaQxXacQX5yRdoc/4SmLDmPU4Hu
-	PGWqqOj+G5XeW9hA/WMtMCAEvXiogIVvAxN1Lslrv5USowo+7WJn2Dw0kluP68yVUTcnWjcwedZ
-	egZkCvDp5juzFbWTOVtsoOAYTF9CouH9z/FHxGW8uK/xuYoZbGisVy+qWfQrKujgy15f9kfk24x
-	gOnquHN+Uig982W0FppMcRcjjr1WFAmLvyGH7/goYxnFxrHipeAl/ONBuUAQ8aT9M9JaJ13GK2x
-	YximxSllSvKN+EuPAq5o29zhbprGbq+4q2biXk1MapvfNfP18hSUf7ncaJcquGZkqad3PkQ16E
-X-Received: by 2002:a05:600c:e555:20b0:49d:27ee:79c9 with SMTP id 5b1f17b1804b1-49fbd1c4afamr25264695e9.8.1789636025806;
-        Thu, 17 Sep 2026 02:07:05 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4870bf1fad3sm12476177f8f.12.2026.09.17.02.07.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Sep 2026 02:07:05 -0700 (PDT)
-Date: Thu, 17 Sep 2026 11:07:02 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Zack Rusin <zack.rusin@broadcom.com>
-Subject: Re: [PATCH v1 4/4] x86/vmware: Run panic diagnostics before kdump by
- default
-Message-ID: <aquttpMVKX8e6zGB@pathway.suse.cz>
-References: <cover.1788414671.git.zack.rusin@broadcom.com>
- <7487011dfb95aadda9515b22a5852680df1982c5.1788414671.git.zack.rusin@broadcom.com>
+	Thu, 17 Sep 2026 10:30:26 +0000
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68HA1WAt2205751;
+	Thu, 17 Sep 2026 10:30:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=XN7HVK
+	JtZSz9og9g+wQh8pvmMxNLYZqB67Fm0+hPgCU=; b=UB9Mez9wgVSbLLKt3nltTd
+	vtWJrzs/AuV45Uzot7sxzc1qmKE+lAdXWb6/26MjpQ2MzFMQYUFwNiCcrmnwFbQM
+	OdmTnlT97yhxQ3H++Hsy5tLzCAmoIZv9eAm88A8AeRT2SlletdMjMNXJ8yl52Xi1
+	HSxzQ4jqR0uguGl6A2Y4E5exPMKTv7DBrnIbJSR6/BWdD03fY7cvMYy/SSFD7QHp
+	avn1SZmOx7Wdn0OQoZT/uWrDUOsAw1ba3ZqzOmslUig7AOYS1tKLCTcOSTN0vxSK
+	rL1NPHU9r2fsc25hFWkn9mR0MxKoauyMW76MlrcEEOzPO1wYKmu8NO+8HocspmRw
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gmxf59sxr-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Thu, 17 Sep 2026 10:30:06 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68H9aHRR2962374;
+	Thu, 17 Sep 2026 10:30:05 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4gra3ys076-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Sep 2026 10:30:05 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68HAU3uk27066644
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 17 Sep 2026 10:30:04 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CF06120043;
+	Thu, 17 Sep 2026 10:30:03 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7B06D20040;
+	Thu, 17 Sep 2026 10:30:01 +0000 (GMT)
+Received: from [9.123.14.142] (unknown [9.123.14.142])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 17 Sep 2026 10:30:01 +0000 (GMT)
+Message-ID: <0969ede4-f617-4e24-b32e-c5e30a96880e@linux.ibm.com>
+Date: Thu, 17 Sep 2026 16:00:00 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7487011dfb95aadda9515b22a5852680df1982c5.1788414671.git.zack.rusin@broadcom.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] liveupdate: kho: calculate per-node scratch sizes
+ before allocation
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: George Guo <dongtai.guo@linux.dev>, rppt@kernel.org,
+        pasha.tatashin@soleen.com, pratyush@kernel.org
+Cc: graf@amazon.com, changyuanl@google.com, akpm@linux-foundation.org,
+        chenhuacai@kernel.org, liukexin@kylinos.cn, guodongtai@kylinos.cn,
+        kexec@lists.infradead.org, linux-mm@kvack.org,
+        loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20260904025101.9959-1-dongtai.guo@linux.dev>
+ <616daf17-4598-4a30-8574-16480dfc23cb@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <616daf17-4598-4a30-8574-16480dfc23cb@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-GUID: 9kBhWDxzKEIXlqR8yCNcou2mv5J-iLVE
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTE3MDEzOCBTYWx0ZWRfX4nKOPkxkEHZH
+ cbCPACV+Q8ZXOWnkBfLFBFAxfYGC1ICYywpk1xHZ/vR2wqH24j28Z0hv59KXNH1ertcNpZrOoAP
+ RkbmX9iLganfS9LSwe6XEBF1JghRDjU=
+X-Authority-Analysis: v=2.4 cv=cvgOAF4i c=1 sm=1 tr=0 ts=6aabc12f cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=cCf1g51oGTkv6yQ4Xg8A:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: 7mAPHVSLg7bMiEO_a2HtaZ1DTH2y0rqY
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTE3MDEzOCBTYWx0ZWRfX0dWwNtLff6Nh
+ om5qwwSOmvYF+uPvh6/PaymH9q1jXDuH+lhv2Nj53RPQD7rdRzsUyd1gPXc969endwNVdYP9MoH
+ qRk+kAIWZItfE4mkjTIP3rqbY0EP9jjimL5rCNIR2/FzURYQxPddaBMmTqi9wKwcpGgIfFxB/oa
+ 126tMjZeRxzYkQn92G4VtAzYneIuki5Bi8FSedBsVNrP+MMfgiL5oKK6WgP4qCLM+xz8yhpd/XT
+ ebOMfU0Q4szU/8gLUbBKFzdM/rKC6pFz/lADmhFUHRnRNQuWvEcQxK6wyyAoo/U8vQNsCovNUdg
+ iLK8mmYCK+1D+jqofmDho1GiWqbE00z8ZFaGjTxo73mEIG5BCSwD5un0/skSzzFdODU8/3q6+sG
+ K7gOvmqOZrXjZwZ8iPmr4/0pXwKjFFXLh1cmyyniGzfAXyheqUmqJx5/gzB0w2SJ26vcYHDBKKK
+ FzkHdK8lP3zsXbuwTLA==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-17_02,2026-09-16_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
+ suspectscore=0 bulkscore=0 impostorscore=0 phishscore=0 spamscore=0
+ adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2609040000
+ definitions=main-2609170138
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260917_020708_612945_ECFC72B3 
-X-CRM114-Status: GOOD (  18.58  )
+X-CRM114-CacheID: sfid-20260917_033025_234950_EB1957D8 
+X-CRM114-Status: GOOD (  34.70  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,72 +126,200 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: linux-doc@vger.kernel.org, Kees Cook <kees@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Young <ruirui.yang@linux.dev>, Bo Gan <bo.gan@broadcom.com>, "H . Peter Anvin" <hpa@zytor.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, Jonathan Corbet <corbet@lwn.net>, Brennan Lamoreaux <brennan.lamoreaux@broadcom.com>, x86@kernel.org, Joel Granados <joel.granados@kernel.org>, Alexey Makhalov <alexey.makhalov@broadcom.com>, Ingo Molnar <mingo@redhat.com>, bcm-kernel-feedback-list@broadcom.com, Ajay Kaher <ajay.kaher@broadcom.com>, Baoquan He <baoquan.he@linux.dev>, John Ogness <john.ogness@linutronix.de>, virtualization@lists.linux.dev, Steven Rostedt <rostedt@goodmis.org>, Borislav Petkov <bp@alien8.de>, Mike Rapoport <rppt@kernel.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Sergey Senozhatsky <senozhatsky@chromium.org>, Thomas Gleixner <tglx@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Pratyush Yadav <pratyush@kernel.org>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Adding Guilherme G. Piccoli into Cc.
+Hello George,
 
-On Tue 2026-09-08 14:07:16, Zack Rusin wrote:
-> The core panic path enters a loaded crash kernel before running kmsg
-> dumpers, so the VMware logger cannot preserve the panic in the host log.
-> Set crash_kexec_post_notifiers during VMware platform setup. setup_arch()
-> runs before ordinary core parameters are parsed, so an explicit
-> crash_kexec_post_notifiers=0 still overrides this default. The 0644
-> parameter also remains writable at runtime.
-> 
-> VMware exposes no capability bit for this behavior, so the default changes
-> for every VMware guest. Running the logger first adds work to the panic
-> path and can reduce kdump reliability.
+On 12/09/26 12:03, Sourabh Jain wrote:
+> Hello George,
+>
+> On 04/09/26 08:21, George Guo wrote:
+>> From: George Guo <guodongtai@kylinos.cn>
+>>
+>> The default percentage-based policy sizes scratch areas from the current
+>> kernel's MEMBLOCK_RSRV_KERN footprint. This is a reasonable heuristic 
+>> for
+>> predicting the early memory demand of the next kernel.
+>>
+>> scratch_size_update() calculates the lowmem and global sizes before 
+>> either
+>> area is allocated. However, kho_reserve_scratch() calculates each 
+>> per-node
+>> size only after allocating the lowmem and global areas. Since memblock
+>> allocations are marked MEMBLOCK_RSRV_KERN, the per-node calculation
+>> includes those newly allocated scratch areas and scales them again.
+>
+> I may be missing something here, but doesn't 
+> memblock_reserved_kern_size()
+> check the node ID of the region before checking the region flag 
+> (MEMBLOCK_RSRV_KERN)?
+>
+> Code snippet from memblock_reserved_kern_size()
+> ```
+> if (nid == memblock_get_region_node(r) || !numa_valid_node(nid))
+>     if (r->flags & MEMBLOCK_RSRV_KERN)
+>         total += size;
+> ```
+>
+> For a valid nid, my understanding is that the global and lowmem scratch
+> areas should not be counted because they are allocated with NUMA_NO_NODE
+> (-1). So, ideally, these regions should be excluded when calculating the
+> reserved memory for a specific node ID.
+>
+> Based on this, I am not sure that marking the lowmem and global areas as
+> MEMBLOCK_RSRV_KERN is what causes the per-node size calculation to be
+> inflated. I am looking into the code further to better understand the
+> actual cause of the issue that this patch is trying to address.
 
-AFAIK, the quality of the notifiers is varying. Running all notifiers
-might reduce the kdump reliability even more.
+I added some prints in kho_reserve_scratch() and found that the per-node 
+size
+calculation is not impacted by the lowmem and global scratch memory 
+allocations.
 
-I do not like much the hack with crash_kexec_post_notifiers. It is
-an all or nothing option.
+KHO: Before low and global scratch allocations
+KHO: low size = 899 KB
+KHO: global size = 137 MB
+KHO: Per node 2 = 80 MB
 
-Also it was introduced as a quick hack so that users could decide
-what is more important for them. But it is not longer a "user"
-decision when some platforms enforce the ordering because they
-depend on the notifier.
+KHO: After low and global scratch allocations
+KHO: low size = 312195 KB
+KHO: global size = 441 MB
+KHO: Per node 2 = 80 MB
 
-panic() is problematic and it is about compromises. And we need
-to balance what is important, what is safe, and what is optional.
-This is why I suggested to introduce more notifiers some time ago,
-see https://lore.kernel.org/lkml/YfPxvzSzDLjO5ldp@alley/
+KHO: After per node allocation
+KHO: low size = 394115 KB
+KHO: global size = 521 MB
+KHO: Per node 2 = 240 MB
 
-Guillermo implemented this, see
-https://lore.kernel.org/all/20220427224924.592546-1-gpiccoli@igalia.com/
-But it has stalled because it touched too many subsystems and it was
-hard to get an agreement.
+I only had one NUMA node (nid=2), and the per-NUMA
+allocation before and after the lowmem and global scratch
+memory allocations remained the same at 80 MB.
 
-Maybe, we should start with something simple, and introduce
-one more panic notifier as a start. It might be called either:
+The experiment was done on the PowerPC architecture.
 
-  + "panic_hypervisor_list" because "crash_kexec_post_notifiers = true"
-    seems to be primary set on hypervisors.
+I am wondering how the per-NUMA allocation in your setup is
+getting inflated due to the lowmem and global scratch memory
+reservations.
 
-But I would rather make it more generic and call it
+Feel free to use the change below to print the similar states
+in your setup.
 
-  + panic_pre_crash_kexec or panic_pre_kdump because there might be
-    more notifiers which are either 100% safe and useful or are worth
-    the risk before calling crash dump.
+index 9260e601c..b5bd9617b 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -670,6 +670,24 @@ static phys_addr_t __init scratch_size_node(int nid)
+         return round_up(size, SCRATCH_ALIGNMENT_BYTES);
+  }
 
-We could put there x86/vmware notifiers as a start. And we could later
-move there other important notifiers.
++static void __init scratch_size_print(char *s)
++{
++       int nid;
++       phys_addr_t size;
++
++       pr_info("%s\n", s);
++       size = memblock_reserved_kern_size(ARCH_LOW_ADDRESS_LIMIT, 
+NUMA_NO_NODE);
++       pr_info("low size = %llu KB\n", (unsigned long long)(size >> 10));
++
++       size = memblock_reserved_kern_size(MEMBLOCK_ALLOC_ANYWHERE, 
+NUMA_NO_NODE);
++       pr_info("global size = %llu MB\n", (unsigned long long)(size >> 
+20));
++
++       for_each_node_state(nid, N_MEMORY) {
++               size = scratch_size_node(nid);
++               pr_info("Per node %d = %llu MB\n", nid, (unsigned long 
+long)(size >> 20));
++       }
++}
++
+  /**
+   * kho_reserve_scratch - Reserve a contiguous chunk of memory for kexec
+   *
+@@ -698,6 +716,7 @@ static void __init kho_reserve_scratch(void)
+                 goto err_disable_kho;
+         }
 
-How does that sound, please?
++       scratch_size_print("Before low and global scratch allocations");
+         /*
+          * reserve scratch area in low memory for lowmem allocations in the
+          * next kernel
+@@ -730,6 +749,8 @@ static void __init kho_reserve_scratch(void)
+          * Loop over nodes that have both memory and are online. Skip
+          * memoryless nodes, as we can not allocate scratch areas there.
+          */
++
++       scratch_size_print("After low and global scratch allocations");
+         for_each_node_state(nid, N_MEMORY) {
+                 size = scratch_size_node(nid);
+                 addr = memblock_alloc_range_nid(size, 
+SCRATCH_ALIGNMENT_BYTES,
+@@ -744,6 +765,7 @@ static void __init kho_reserve_scratch(void)
+                 kho_scratch[i].size = size;
+                 i++;
+         }
++       scratch_size_print("After per node allocation");
 
-> A full log transfer uses 1027 low-bandwidth hypercalls; three checkpoint
-> attempts are bounded at 3077. In vmcall tests, a maximum-size transfer
-> took at most 7.47 ms; three complete transfers comprising 3081 calls took
-> at most 21.58 ms.
-> 
-> The crash report remains suppressed while a crash kernel is loaded because
-> the host may terminate the VM inside that call. A future report from the
-> crash kernel or kdump userspace can restore the event after saving the
-> vmcore.
+         return;
 
-Best Regards,
-Petr
+
+>
+> With that said, I wonder if this fix might be more of a stop-gap 
+> solution.
+> As mentioned above, since NUMA_NO_NODE (-1) is used for the lowmem and
+> global allocations, my understanding is that these areas ideally should
+> not be included when calculating the size for a specific node ID.
+>
+> I could be missing something in my understanding, so I would appreciate
+> your thoughts on these observations.
+>
+> - Sourabh Jain
+>
+>> Fixes: 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation 
+>> helpers")
+>> Reported-by: Kexin Liu <liukexin@kylinos.cn>
+>> Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
+>> Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
+>> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+>> ---
+>>   kernel/liveupdate/kexec_handover.c | 13 ++++++++++++-
+>>   1 file changed, 12 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/kernel/liveupdate/kexec_handover.c 
+>> b/kernel/liveupdate/kexec_handover.c
+>> index 7c4d86daf86d..39f489a258d9 100644
+>> --- a/kernel/liveupdate/kexec_handover.c
+>> +++ b/kernel/liveupdate/kexec_handover.c
+>> @@ -847,6 +847,17 @@ static void __init kho_reserve_scratch(void)
+>>           goto err_disable_kho;
+>>       }
+>>   +    /*
+>> +     * Calculate the per-node sizes before reserving any scratch areas.
+>> +     * memblock allocations are marked MEMBLOCK_RSRV_KERN, so 
+>> calculating
+>> +     * them later would count the lowmem and global scratch areas as 
+>> kernel
+>> +     * allocations and scale them again.
+>> +     */
+>> +    i = 2;
+>> +    for_each_node_state(nid, N_MEMORY)
+>> +        kho_scratch[i++].size = scratch_size_node(nid);
+>> +    i = 0;
+>> +
+>>       /*
+>>        * reserve scratch area in low memory for lowmem allocations in 
+>> the
+>>        * next kernel
+>> @@ -880,7 +891,7 @@ static void __init kho_reserve_scratch(void)
+>>        * memoryless nodes, as we can not allocate scratch areas there.
+>>        */
+>>       for_each_node_state(nid, N_MEMORY) {
+>> -        size = scratch_size_node(nid);
+>> +        size = kho_scratch[i].size;
+>>           addr = memblock_alloc_range_nid(size, SCRATCH_ALIGNMENT_BYTES,
+>>                           0, MEMBLOCK_ALLOC_ACCESSIBLE,
+>>                           nid, true);
+>
+
 
