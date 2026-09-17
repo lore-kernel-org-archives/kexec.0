@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C54FFC88E72
-	for <kexec@archiver.kernel.org>; Thu, 17 Sep 2026 20:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90288C982D0
+	for <kexec@archiver.kernel.org>; Thu, 17 Sep 2026 21:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-	List-Owner; bh=FVPFyILB0p9mKi052GhepayT1vMbxqjB1Nhk/upvblM=; b=p5vaaysRFCQeOp
-	JYsFzKnvrE5jXO3cmkHg64VbUwO/jWgHiMFOBeAvjRxQWiWuC7WpeP2usmX8S8XA1uBa+sYigU/n0
-	zK/f0uO7152Gy1VK4DyEASK50k2ZNOlKYGVCKHad4MKY03necLwA/BeGIN3hm3CS8d68Ybo9lqAli
-	zoBVmRV5vQNgnaK4nT9nEUFZ7JY4NxeKoa0ovrAUDcyRAh9qRzmaBvxJBuZKQNYJ7ntNRtlFwW5cq
-	qJhg+KICZVu8rGad26q8JLpm2QAGGYOnHIyQSNHw+6CsPvPARJrqTpoAR+Sk6XojayyCSiuZmgu5g
-	z6wFuAsnzSdltrUWpIdw==;
+	List-Owner; bh=k/6t/GikBHxugOsJ+dBD227K5m8z7pCCXMsSTk25Xz0=; b=IRV8TopzO7Ku/l
+	4IqV+Ercs+XUvpHT6PLxrrC9IEOG7hanHZVkbSnMqyzRziJt/HQlIhJQ+aNjxvscTlzZjjosy4cf1
+	CcTqsCt61jDb8GdpZDfzvIIBDRjL5nS2QKNH+5aRLBmB9IwtIHmgxDRGc5u/NkuhP0nW9ncMEwmjy
+	A1bgScfpsDt9bgI+CFGk2wwCdiXbOhfOWfFS02UssjDU0Pp+O7t40YEFHPFnjGsE9A9qeWBMrzoB2
+	3vUZB456m3dFh7O86X9gSOa94NZ3Oftk7vOgNRPwzRczjCCFr9KeHTq1xuWmJ6prnZUGP2odWHcmt
+	TL1BE/gdLFGbUilzuQig==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7IaI-0000000CPu0-3geR;
-	Thu, 17 Sep 2026 20:19:54 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1x7Jp6-0000000CZWz-0PIn;
+	Thu, 17 Sep 2026 21:39:16 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7IaH-0000000CPtq-40NR
+	id 1x7Jp4-0000000CZWm-2LI5
 	for kexec@lists.infradead.org;
-	Thu, 17 Sep 2026 20:19:53 +0000
+	Thu, 17 Sep 2026 21:39:14 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 5DA3442A50;
-	Thu, 17 Sep 2026 20:19:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 177331F000FF;
-	Thu, 17 Sep 2026 20:19:53 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id A7C0E600AA;
+	Thu, 17 Sep 2026 21:39:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 380321F000FF;
+	Thu, 17 Sep 2026 21:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789676393;
-	bh=FVPFyILB0p9mKi052GhepayT1vMbxqjB1Nhk/upvblM=;
+	s=k20260515; t=1789681153;
+	bh=k/6t/GikBHxugOsJ+dBD227K5m8z7pCCXMsSTk25Xz0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To;
-	b=fPn5Yy6FfiqKTmfjU5oYceM12GCmiYpT11w/2EyEPdKZGB9CPcBNkVv2+BwFLzu6X
-	 xSgkGQj5+WhLzGvcmRurhfvuOQGHvSLSKl4teDAJZ6QR/QG7VnV959jPcTz+HVEaZK
-	 CuD8XS5L28gUkvAbrICdalmnnCwxmYFcPuyhzJDJRcJ2dL8dpzKDBT7Z38/9T65arE
-	 LY8nGXBX//YUlL/TndeGkCuR1dbAH8rbGwzFuTEWxVYd14ZqNgn+y/iXdiTaJOcVDu
-	 NcVTytHagvF9lKoqQdw5+GoOIioEKAtSHIhUTx/SJFFATlpqz1u3d3zNwsKQDDY+v+
-	 SECBXMxIYkoGg==
-Date: Thu, 17 Sep 2026 15:19:52 -0500
+	b=NbP9X+YWncmvMuxndz4qUfEghuzl86DRrMSTCxqgT/YNwqK/HEnvZtwSFt79RSKAK
+	 xoErzHMOyrD3sCRiN/7HDD4gzJ7HDZJ6Kimrxvr0BjM8PyIHBctpgeH9KHhKEt34JG
+	 GlTH6h9ByjAKjWlV/DFUNBx4Wzg2gvuig+LpFnErUDT8KdHEYxgLlcZs9DVO3T4SAN
+	 0uraRJMyAV+5iSTuKw1NVEtMYB+KsND+3M7ehE1re7WmFPKb7HRgVHBt2aTu1qI6pE
+	 EQDusijHmss/+c8YE7OMIOtuNIDYMqiVSyDNNoRa5DRMO4pMBHuNaFpoYWUORcPohc
+	 KcBh2J4m4WNSw==
+Date: Thu, 17 Sep 2026 16:39:12 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: David Matlack <dmatlack@google.com>
 Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
@@ -66,13 +66,13 @@ Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
 	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v8 11/12] PCI: liveupdate: Do not disable bus mastering
- on preserved devices during kexec
-Message-ID: <20260917201952.GA1049400@bhelgaas>
+Subject: Re: [PATCH v8 12/12] Documentation: PCI: Add documentation for Live
+ Update
+Message-ID: <20260917213912.GA1049556@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260728221007.2098560-12-dmatlack@google.com>
+In-Reply-To: <20260728221007.2098560-13-dmatlack@google.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,108 +87,153 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jul 28, 2026 at 10:10:05PM +0000, David Matlack wrote:
-> Do not disable bus mastering on outgoing preserved devices during
-> pci_device_shutdown() for kexec.
+On Tue, Jul 28, 2026 at 10:10:06PM +0000, David Matlack wrote:
+> Add documentation files for the PCI subsystem's participation in Live
+> Update.
 > 
-> Preserved devices must be allowed to perform memory transactions during
-> a Live Update to ensure continuous operation.  Clearing the bus
-> mastering bit would prevent these devices from issuing any memory
-> requests while the new kernel boots.
-> 
-> Because bridges upstream of preserved endpoint devices are also
-> automatically preserved, this change also avoids clearing bus mastering
-> on them. This is critical because clearing bus mastering on an upstream
-> bridge prevents the bridge from forwarding memory requests upstream (i.e.
-> it would prevent the endpoint device from accessing system RAM and doing
-> peer-to-peer transactions with devices not downstream of the bridge).
+> These documentation files are generated from the kernel-doc comments
+> in the PCI Live Update source code. They describe the File-Lifecycle
+> Bound (FLB) API, the device tracking API, and the specific policies
+
+Most uses fully hyphenate this: "File-Lifecycle-Bound" data, object,
+etc.
+
+> applied to preserved devices (such as bus number inheritance and bus
+> mastering preservation).
 > 
 > Reviewed-by: Pranjal Shrivastava <praan@google.com>
-> Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 > Signed-off-by: David Matlack <dmatlack@google.com>
 
 Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
 
 > ---
->  drivers/pci/liveupdate.c | 11 +++++++++++
->  drivers/pci/liveupdate.h |  6 ++++++
->  drivers/pci/pci-driver.c |  7 +++++--
->  3 files changed, 22 insertions(+), 2 deletions(-)
+>  Documentation/PCI/index.rst           |  1 +
+>  Documentation/PCI/liveupdate.rst      | 35 +++++++++++++++++++++++++++
+>  Documentation/core-api/liveupdate.rst |  1 +
+>  MAINTAINERS                           |  1 +
+>  4 files changed, 38 insertions(+)
+>  create mode 100644 Documentation/PCI/liveupdate.rst
 > 
-> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-> index 65bcecb1b64e..32b73ebf71f7 100644
-> --- a/drivers/pci/liveupdate.c
-> +++ b/drivers/pci/liveupdate.c
-> @@ -132,6 +132,10 @@
->   *  * The PCI core adopts ARI Forwarding Enable on all bridges with downstream
->   *    preserved devices to ensure that all preserved devices on the bridge's
->   *    secondary bus are addressable after the Live Update.
-> + *
-> + *  * The PCI core does not disable bus mastering on outgoing preserved devices
-> + *    during kexec. This allows preserved devices to issue memory transactions
-> + *    throughout the Live Update.
->   */
->  
->  #define pr_fmt(fmt) "PCI: liveupdate: " fmt
-> @@ -879,6 +883,13 @@ int pci_liveupdate_adopt_ari(struct pci_dev *dev)
->  	return 0;
->  }
->  
-> +bool pci_liveupdate_is_outgoing(struct pci_dev *dev)
-> +{
-> +	guard(rwsem_read)(&pci_liveupdate.rwsem);
-> +	pci_WARN_ONCE(dev, !dev->liveupdate.frozen, "Preservation status is unstable!\n");
-> +	return dev->liveupdate.outgoing;
-> +}
+> diff --git a/Documentation/PCI/index.rst b/Documentation/PCI/index.rst
+> index 5d720d2a415e..23fb737ac969 100644
+> --- a/Documentation/PCI/index.rst
+> +++ b/Documentation/PCI/index.rst
+> @@ -20,3 +20,4 @@ PCI Bus Subsystem
+>     controller/index
+>     boot-interrupts
+>     tph
+> +   liveupdate
+> diff --git a/Documentation/PCI/liveupdate.rst b/Documentation/PCI/liveupdate.rst
+> new file mode 100644
+> index 000000000000..96b1d7f5df3a
+> --- /dev/null
+> +++ b/Documentation/PCI/liveupdate.rst
+> @@ -0,0 +1,35 @@
+> +.. SPDX-License-Identifier: GPL-2.0-or-later
 > +
->  /**
->   * pci_liveupdate_is_incoming() - Check if a device is incoming-preserved
->   * @dev: The PCI device to check
-> diff --git a/drivers/pci/liveupdate.h b/drivers/pci/liveupdate.h
-> index 49d07fd02132..9c31fb60207d 100644
-> --- a/drivers/pci/liveupdate.h
-> +++ b/drivers/pci/liveupdate.h
-> @@ -20,6 +20,7 @@ void pci_liveupdate_scan_bridge_end(struct pci_dev *dev);
->  void pci_liveupdate_cache_adopted_acs_controls(struct pci_dev *dev);
->  int pci_liveupdate_enable_adopted_acs_controls(struct pci_dev *dev);
->  int pci_liveupdate_adopt_ari(struct pci_dev *dev);
-> +bool pci_liveupdate_is_outgoing(struct pci_dev *dev);
->  #else
->  static inline void pci_liveupdate_setup_device(struct pci_dev *dev)
->  {
-> @@ -55,6 +56,11 @@ static inline int pci_liveupdate_adopt_ari(struct pci_dev *dev)
->  {
->  	return -EINVAL;
->  }
+> +===========================
+> +PCI Support for Live Update
+> +===========================
 > +
-> +static inline bool pci_liveupdate_is_outgoing(struct pci_dev *dev)
-> +{
-> +	return false;
-> +}
->  #endif
+> +.. kernel-doc:: drivers/pci/liveupdate.c
+> +   :doc: PCI Live Update
+> +
+> +Driver API
+> +==========
+> +
+> +.. kernel-doc:: drivers/pci/liveupdate.c
+> +   :export:
+> +
+> +Internal API
+> +============
+> +
+> +.. kernel-doc:: drivers/pci/liveupdate.c
+> +   :internal:
+> +
+> +Live Update ABI
+> +===============
+> +
+> +.. kernel-doc:: include/linux/kho/abi/pci.h
+> +   :doc: PCI File-Lifecycle Bound (FLB) Live Update ABI
+
+Ditto (and in include/linux/kho/abi/pci.h itself).
+
+Trying to understand the FLB concept, I found
+kernel/liveupdate/luo_flb.c.  I know that's already merged so this
+isn't really the place to ask about it.  But FWIW here are some
+questions from this naive reader:
+
+   File-Lifecycle-Bound (FLB) objects provide a mechanism for managing
+   global state that is shared across multiple live-updatable files.
+   The lifecycle of this shared state is tied to the preservation of
+   the files that depend on it.
+
+I understand "global state", but I don't know whether "global" is
+relevant here.
+
+I don't know what "shared across live-updatable files" means.  Is the
+sharing a fundamental aspect or just a typical use case reflecting the
+level the data is for (e.g., bus vs device)?
+
+I'm imagining a *kernel* being "live-updated", i.e., a kernel being
+updated while things around it (devices, some user-space things) stay
+alive, so I guess "live-updatable files" would be preserved across a
+kexec?  I don't think of devices as being "live-updated" since they
+themselves aren't being updated; in fact, the whole point is that they
+*aren't* updated.
+
+Do these FLB objects appear in a filesystem?  Or are they merely blobs
+of data that are preserved across kexec?  I suppose there must be a
+mechanism for the new kernel to identify and request one of the
+several FLB objects saved by the pre-kexec kernel?
+
+What does "lifecycle is tied to preservation of files" mean?  I
+expected to learn about the beginning and end of the object lifetime.
+
+   An FLB represents a global resource, such as the IOMMU core state,
+   that is required by multiple file descriptors (e.g., all VFIO fds).
+
+I have the impression that the important thing about FLB is the
+lifetime of some data, e.g., something that lasts longer than the
+kernel that produced it.
+
+   The preservation of the FLB's state is triggered when the *first*
+   file depending on it is preserved. The cleanup of this state
+   (unpreserve or finish) is triggered when the *last* file depending
+   on it is unpreserved or finished.
+
+Maybe this means .unpreserve() (in pre-kexec kernel) or .finish() (in
+new post-kexec kernel) is the end of an FLB object lifetime?
+
+> +.. kernel-doc:: include/linux/kho/abi/pci.h
+> +   :internal:
+> +
+> +See Also
+> +========
+> +
+> + * :doc:`/core-api/liveupdate`
+> + * :doc:`/core-api/kho/index`
+> diff --git a/Documentation/core-api/liveupdate.rst b/Documentation/core-api/liveupdate.rst
+> index b3c689e633c1..2bce2644eba2 100644
+> --- a/Documentation/core-api/liveupdate.rst
+> +++ b/Documentation/core-api/liveupdate.rst
+> @@ -74,3 +74,4 @@ See Also
 >  
->  #endif /* DRIVERS_PCI_LIVEUPDATE_H */
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 51616e4327d3..47cb3dcaa927 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -546,11 +546,14 @@ static void pci_device_shutdown(struct device *dev)
->  	/*
->  	 * If this is a kexec reboot, turn off Bus Master bit on the
->  	 * device to tell it to not continue to do DMA. Don't touch
-> -	 * devices in D3cold or unknown states.
-> +	 * devices being preserved for Live Update or in D3cold or
-> +	 * unknown states.
-> +	 *
->  	 * If it is not a kexec reboot, firmware will hit the PCI
->  	 * devices with big hammer and stop their DMA any way.
->  	 */
-> -	if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
-> +	if (kexec_in_progress && !pci_liveupdate_is_outgoing(pci_dev) &&
-> +	    pci_dev->current_state <= PCI_D3hot)
->  		pci_clear_master(pci_dev);
->  }
->  
+>  - :doc:`Live Update uAPI </userspace-api/liveupdate>`
+>  - :doc:`/core-api/kho/index`
+> +- :doc:`PCI </PCI/liveupdate>`
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 08a724b860dc..347c435ca404 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -20833,6 +20833,7 @@ L:	kexec@lists.infradead.org
+>  L:	linux-pci@vger.kernel.org
+>  S:	Maintained
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git
+> +F:	Documentation/PCI/liveupdate.rst
+>  F:	drivers/pci/liveupdate.c
+>  F:	drivers/pci/liveupdate.h
+>  F:	include/linux/kho/abi/pci.h
 > -- 
 > 2.55.0.487.gaf234c4eb3-goog
 > 
