@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A5CC3C982DD
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AC256C982E0
 	for <kexec@archiver.kernel.org>; Fri, 18 Sep 2026 20:07:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,62 +12,62 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=VDTO4eHKdMRuuk9UsFB+WlCX7AwxRYK2xSqBvBKhZIs=; b=ThAe9APLHklAFQkKERQeiYd0No
-	P/beZ5SOrjZUSxbiXj/sNGZnOL9zF11dpt6j0ubutttFrFrJF6PREnaD1yzAIWz3R9KhgeWzQ3kJ8
-	FmWsKYbdEroDF03pMyr1KajhK5niKNjip1rU0zID1+TnNYiT7ELQWIWbgnfVSlrtswoXPAQepOdOo
-	tIhpTcjc0I2BAhmOONiGI/P401jX0S83y69t9QTdP1Se2+FsldQ/KD2ojUg6Rk6hy712D3Avb+nNk
-	Nwq3gyeG2qopPJCw40jz9yUaPatSD7VCWqNwYxora1FX5Pi4zt4GT1/NJvdvC/aoJxrMH7Rob4oqm
-	0BE4T+Qg==;
+	bh=NNhCAqWpdqP/8unoyYkwhtURYEVhgOr7+m0jRabjXBA=; b=SuE5altw4pXab78UXQhquiGDtU
+	CfrV9YIDXCpd/vOGJjyRuKz+rXU+AHWYwDZg6Uzi8CiBjUZAHry5GbrsNf+21A3RKtTw2T8fmVRAs
+	F9cD9moIbCrXajXf04KLC3M9dw1wlmnfa5y5fLJ/Thip6v0jrd/rRZgj7E4tdewnm/JDoYs8aVUOd
+	brT5rISksApqfV7AYNWwM6HwWsYWfHRLae9o0N7C8CZkKSQeSxdiEW3KVLtHpDC3PFEa27BD/TozE
+	gMLZZOpi93vw/vHgJoJFCJSgOPuGZvFCTQqYs14dUdk+GxBdtMNbwUvWA6iYaRGGEIwscgFpHsgzU
+	yENJiPqQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7erV-0000000FTSl-37iJ;
+	id 1x7erV-0000000FTSt-3UVF;
 	Fri, 18 Sep 2026 20:07:09 +0000
-Received: from mail-pl1-x646.google.com ([2607:f8b0:4864:20::646])
+Received: from mail-pl1-x645.google.com ([2607:f8b0:4864:20::645])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7erN-0000000FTKf-35iw
+	id 1x7erO-0000000FTLH-2hye
 	for kexec@lists.infradead.org;
-	Fri, 18 Sep 2026 20:07:03 +0000
-Received: by mail-pl1-x646.google.com with SMTP id d9443c01a7336-2ce7dff6253so24319845ad.1
-        for <kexec@lists.infradead.org>; Fri, 18 Sep 2026 13:06:58 -0700 (PDT)
+	Fri, 18 Sep 2026 20:07:04 +0000
+Received: by mail-pl1-x645.google.com with SMTP id d9443c01a7336-2d6df0a1e18so19896445ad.1
+        for <kexec@lists.infradead.org>; Fri, 18 Sep 2026 13:07:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789762018; x=1790366818; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1789762020; x=1790366820; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=VDTO4eHKdMRuuk9UsFB+WlCX7AwxRYK2xSqBvBKhZIs=;
-        b=bo4jHzTnoT+RCktF97LBdEV9trYIqDqz4lwaNH4o2K7Z4gR7gf9/OTQevBCF85bH/y
-         dBKfCJd41BYw2S1IK0s6yk7rZsr4iNPOO9SRxOfqkzLZEjaqo3259JqOkpfYf6zx/bcs
-         OO65VxrRvrzJ2qXp/7boTQ3X4uu7tpbURf8vNjhJ6HRjlzN6WowiGWKUBhJnscwKNANP
-         HRl5ZXebXt4xaRkCAZZ6oHCUm7SiUe8rLBa7ubcpbMye6EP6PwgQlIz9XDff1zPUCn9z
-         E9Tsz/6ZOHFgj5Hg0kMOeiEyBuFSC1zlBAUdE7NxUwAjo2ljXYL71+/0hKwtktgezVJ5
-         7yiw==
+        bh=NNhCAqWpdqP/8unoyYkwhtURYEVhgOr7+m0jRabjXBA=;
+        b=dc5L6dTMaM+X/kcmoErpIh5lXXLiwXotLM/x1Zwdllr7PY2b5YRj6O6yHgIqy1LfOU
+         84OLyKkvzxW8Ajx3sbUKazInI8G6p7ltpw4BuWHG1+zCY2+SOMhryZN/T+7J93rfqQjf
+         qf/av217Ln1M6Ji5SvyS/WBh4hwP+BBjsW3pkNhO1SNBMeOmVqDTvBwLgEMRNbnvIJaF
+         uQ8sRjgZtOpubOxN6H4eUVzSZdaeQaQi3koWomAN41x8JOJGmox/awdR/dcmWHGrL7+D
+         RmMoIcoa+HXDmviFns5YF2oCNwKnNHNWNdsQXOC0updgPGHYJ7scF6yPKxJXiskU7Aos
+         xWdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789762018; x=1790366818;
+        d=1e100.net; s=20260707; t=1789762020; x=1790366820;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=VDTO4eHKdMRuuk9UsFB+WlCX7AwxRYK2xSqBvBKhZIs=;
-        b=a/7p0LTkjPA0go+xK0igPAHTZ+/rH1db24fPTz6b5jWUmn4FWSalNsb/3LVLpdWJte
-         CtZe8mLGgceKpa6mqb8m0OL+yWHDvK7yqXrSQlR1emt+bl+uCSBbFZeGbpLqyM6ryrgz
-         FDiKApObBWUqJqn6EqgrLFJL4HPqfwV2nsxNkIx+uUXlP5qwsvJ4hA9moH12L/SQk9ra
-         sY7npkBaoaZIE/GuuEqeU8yA4mTo3rqRi6TEO9UAfSW04ENuVzCfjFCN3vwgPQuSQiAJ
-         EMPkLabbpeOiFW/XECU8iQTdvUC3TH7hwo52KRRueySTvgip2fLKJopiei+7Slo64EPd
-         OdVA==
-X-Gm-Message-State: AFuF++mibf0B9fi5/XKSzzMsXNXTjBXn90HuZl+ZcMPeSGdjRpy/W1gB
-	G2gYHAlHZHYI6YkqvcLcGiJz+2kDg3DZNEj+CVR5UrQLhKmgQ8tnzs2vepF5iGooGaNFBR+pmT5
-	Ikb31u+n7o+4fx2BWORw5IVZv8VSXVquP0XbpKOn7szSwM3Src/fAEh8xDFcD8iXWfNCTKt+S+i
-	SFlX7aTsVzl3VSOoAYFOjALLo8hcscjt681HZEoC6X2hs+TvSgbOs=
-X-Received: from plmk4.prod.google.com ([2002:a17:903:1804:b0:2dd:be98:5b81])
+        bh=NNhCAqWpdqP/8unoyYkwhtURYEVhgOr7+m0jRabjXBA=;
+        b=dsedFc8MbRkmmh1bOuG5UsgdJiBGxklzQkcp+6ilKwltEzPDMYjYV2n1OBsvimJGRa
+         p/XXEIF/Iy1Vt8nqB1WJpznAui4UaELZ1EYpNJAqxUtnuIXxXR4iC4slKzatNyz6R3T8
+         XM25IEmjjc7+7Prv4i5Wxie9RULy/2ma3RGKzyDTfWE9xOM8qSFjKrT5ufwFBqpNRVSn
+         F3YvMI0urH91id6zWFoZh5O7etdukd/jXtVBDpWhW6oPGnwdR19BVdjqxpBv86IsD9g5
+         UOIRA6/GPaCmrjt7cyNrWpz4jHAa9QlvZy8Xb0fHStpUqvYEyPCpw9uDLxpCB3VUFY0E
+         mR3A==
+X-Gm-Message-State: AFuF++mFeva+gMe4lS3ITESEymRJcGcu3pZ/ZVUEFkxD3gfxSQLz5Ee7
+	JerNl0XkhI02uWdxj8aLGzpp2NzsQUTgsb49GrHZAjI7xoQYmikS3syszHNDWPPcBV86mtMnHX6
+	1ugaBioo6+38+mTSSsG/d9mVCRM79CeBom5TJPxL+0bAS4ziyNJLy8lgaoPcNgUTE5lMF+R3TtK
+	p3jxpryFfNIKz2n4tU3/XUccWf8JjD4gHPtWjX652zrtrfhcgzsc4=
+X-Received: from plec5.prod.google.com ([2002:a17:902:f305:b0:2dd:2f59:daa8])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:ef48:b0:2cf:7db9:e13e with SMTP id d9443c01a7336-2ddb20fe772mr43004845ad.3.1789762017240;
- Fri, 18 Sep 2026 13:06:57 -0700 (PDT)
-Date: Fri, 18 Sep 2026 20:06:30 +0000
+ 2002:a17:903:9cf:b0:2dd:c053:e662 with SMTP id d9443c01a7336-2ddc053e6aemr12608265ad.40.1789762019617;
+ Fri, 18 Sep 2026 13:06:59 -0700 (PDT)
+Date: Fri, 18 Sep 2026 20:06:33 +0000
 In-Reply-To: <20260918200640.887030-1-dmatlack@google.com>
 Mime-Version: 1.0
 References: <20260918200640.887030-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260918200640.887030-5-dmatlack@google.com>
-Subject: [PATCH v9 04/13] PCI: liveupdate: Document driver binding responsibilities
+Message-ID: <20260918200640.887030-8-dmatlack@google.com>
+Subject: [PATCH v9 07/13] PCI: Refactor matching logic for pci_dev_acs_ops
 From: David Matlack <dmatlack@google.com>
 To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org
@@ -84,8 +84,8 @@ Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.
 	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260918_130701_785499_D30397A3 
-X-CRM114-Status: GOOD (  12.21  )
+X-CRM114-CacheID: sfid-20260918_130702_702163_5310FA00 
+X-CRM114-Status: GOOD (  15.49  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,44 +100,135 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Document how driver binding works during a Live Update and what the PCI
-core expects of drivers and users. Note that this is only a description
-of the current division of responsibilities. These can change in the
-future if we decide.
+Refactor the logic to match devices to pci_dev_acs_ops by factoring out
+the device matching loop into its own routine, pci_dev_acs_ops_get().
+This eliminates duplicate code between pci_dev_specific_enable_acs() and
+pci_dev_specific_disable_acs_redir(), and will also be used in a
+subsequent commit to check if a device requires device-specific
+enable_acs() during a Live Update.
 
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+No functional change intended.
+
 Reviewed-by: Pranjal Shrivastava <praan@google.com>
-Reviewed-by: Samiullah Khawaja <skhawaja@google.com>
+Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: David Matlack <dmatlack@google.com>
 ---
- drivers/pci/liveupdate.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/pci/quirks.c | 51 ++++++++++++++++++--------------------------
+ 1 file changed, 21 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-index 00776260ad6f..ec8db86ed66d 100644
---- a/drivers/pci/liveupdate.c
-+++ b/drivers/pci/liveupdate.c
-@@ -123,6 +123,20 @@
-  *
-  *  * The device cannot be a Virtual Function (VF).
-  *  * The device cannot be behind a PCI-to-PCI bridge.
-+ *
-+ * Driver Binding
-+ * ==============
-+ *
-+ * In the outgoing kernel, the driver must ensure that it does not release a
-+ * device between pci_liveupdate_preserve() and pci_liveupdate_unpreserve().
-+ *
-+ * In the incoming kernel, the driver must ensure that it does not release a
-+ * preserved device between probe() and pci_liveupdate_finish().
-+ *
-+ * It is the user's responsibility to ensure that incoming preserved devices are
-+ * bound to the correct driver. The PCI core does not protect against a device
-+ * getting preserved by driver A in the outgoing kernel and then getting bound
-+ * to driver B in the incoming kernel.
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index de9bbccda21f..7aee30734303 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5377,9 +5377,6 @@ static void pci_quirk_enable_intel_rp_mpc_acs(struct pci_dev *dev)
   */
+ static int pci_quirk_enable_intel_pch_acs(struct pci_dev *dev)
+ {
+-	if (!pci_quirk_intel_pch_acs_match(dev))
+-		return -ENOTTY;
+-
+ 	if (pci_quirk_enable_intel_lpc_acs(dev)) {
+ 		pci_warn(dev, "Failed to enable Intel PCH ACS quirk\n");
+ 		return 0;
+@@ -5399,9 +5396,6 @@ static int pci_quirk_enable_intel_spt_pch_acs(struct pci_dev *dev)
+ 	int pos;
+ 	u32 cap, ctrl;
  
- #define pr_fmt(fmt) "PCI: liveupdate: " fmt
+-	if (!pci_quirk_intel_spt_pch_acs_match(dev))
+-		return -ENOTTY;
+-
+ 	pos = dev->acs_cap;
+ 	if (!pos)
+ 		return -ENOTTY;
+@@ -5429,9 +5423,6 @@ static int pci_quirk_disable_intel_spt_pch_acs_redir(struct pci_dev *dev)
+ 	int pos;
+ 	u32 cap, ctrl;
+ 
+-	if (!pci_quirk_intel_spt_pch_acs_match(dev))
+-		return -ENOTTY;
+-
+ 	pos = dev->acs_cap;
+ 	if (!pos)
+ 		return -ENOTTY;
+@@ -5451,56 +5442,56 @@ static int pci_quirk_disable_intel_spt_pch_acs_redir(struct pci_dev *dev)
+ static const struct pci_dev_acs_ops {
+ 	u16 vendor;
+ 	u16 device;
++	bool (*match)(struct pci_dev *dev);
+ 	int (*enable_acs)(struct pci_dev *dev);
+ 	int (*disable_acs_redir)(struct pci_dev *dev);
+ } pci_dev_acs_ops[] = {
+ 	{ PCI_VENDOR_ID_INTEL, PCI_ANY_ID,
++	    .match = pci_quirk_intel_pch_acs_match,
+ 	    .enable_acs = pci_quirk_enable_intel_pch_acs,
+ 	},
+ 	{ PCI_VENDOR_ID_INTEL, PCI_ANY_ID,
++	    .match = pci_quirk_intel_spt_pch_acs_match,
+ 	    .enable_acs = pci_quirk_enable_intel_spt_pch_acs,
+ 	    .disable_acs_redir = pci_quirk_disable_intel_spt_pch_acs_redir,
+ 	},
+ };
+ 
+-int pci_dev_specific_enable_acs(struct pci_dev *dev)
++static const struct pci_dev_acs_ops *pci_dev_acs_ops_get(struct pci_dev *dev)
+ {
+ 	const struct pci_dev_acs_ops *p;
+-	int i, ret;
++	int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(pci_dev_acs_ops); i++) {
+ 		p = &pci_dev_acs_ops[i];
+ 		if ((p->vendor == dev->vendor ||
+ 		     p->vendor == (u16)PCI_ANY_ID) &&
+ 		    (p->device == dev->device ||
+-		     p->device == (u16)PCI_ANY_ID) &&
+-		    p->enable_acs) {
+-			ret = p->enable_acs(dev);
+-			if (ret >= 0)
+-				return ret;
++		     p->device == (u16)PCI_ANY_ID)) {
++			if (!p->match || p->match(dev))
++				return p;
+ 		}
+ 	}
+ 
++	return NULL;
++}
++
++int pci_dev_specific_enable_acs(struct pci_dev *dev)
++{
++	const struct pci_dev_acs_ops *p = pci_dev_acs_ops_get(dev);
++
++	if (p && p->enable_acs)
++		return p->enable_acs(dev);
++
+ 	return -ENOTTY;
+ }
+ 
+ int pci_dev_specific_disable_acs_redir(struct pci_dev *dev)
+ {
+-	const struct pci_dev_acs_ops *p;
+-	int i, ret;
++	const struct pci_dev_acs_ops *p = pci_dev_acs_ops_get(dev);
+ 
+-	for (i = 0; i < ARRAY_SIZE(pci_dev_acs_ops); i++) {
+-		p = &pci_dev_acs_ops[i];
+-		if ((p->vendor == dev->vendor ||
+-		     p->vendor == (u16)PCI_ANY_ID) &&
+-		    (p->device == dev->device ||
+-		     p->device == (u16)PCI_ANY_ID) &&
+-		    p->disable_acs_redir) {
+-			ret = p->disable_acs_redir(dev);
+-			if (ret >= 0)
+-				return ret;
+-		}
+-	}
++	if (p && p->disable_acs_redir)
++		return p->disable_acs_redir(dev);
+ 
+ 	return -ENOTTY;
+ }
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
