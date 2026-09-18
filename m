@@ -4,77 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C05BAC982D2
-	for <kexec@archiver.kernel.org>; Fri, 18 Sep 2026 00:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 38313C982D0
+	for <kexec@archiver.kernel.org>; Fri, 18 Sep 2026 00:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=yxuYFkClNtObVJTirGhxvNI3z/6AMlB4AtngbQawpYk=; b=Ew4LTzosmLsEiTmv4FREjOXl2L
-	3115QgLhp2pXTLs230NN1lz8/73HSgm7zYmf/9zI0ivK9T4jOyOFpX1uzSZ9B/WlzZ4kdHSK6PdBL
-	UpenOM84eDdRgY/RJHyXfzwKbtk0cirRr/TLUKSM37We6UudC2shiXQ/r04DKtch0wiub9/9iYc/3
-	tULkoYCkD2mG/fRjcJgmI3xcIAUucm5fEBH44OI0OliR1xob3Np+Ai75HpJXrMktkUwv3ggc5/y97
-	0Hr24crI1KNFEXUrPXEjlj0nma0+WJ9NXiv9ndcjPzmyfQhg5bznfrj0O99tdAY4uyQ2soRr9OWu0
-	NHMaQDQA==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
+	From:MIME-Version:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=OjEB8YoSvr2E8wX9cD7isVumdC5ySqRIBYWNH1Q63aQ=; b=yfMA2Jclk6Cx98jgeJhnQS/fSs
+	tiOoFQu8liSQNfAeXumDhFaAKJHpkdNjYpPjRVADYd1zMvZoIwof5A0dqDs584Jk7jxV8IvP1hUGv
+	m/8cEte6RBrUIBbX55p5m2KG8jJBWHURAzl3GqHi6yxb3U1H11qwnAv3nYYEmZ0pjdVOEXuv+tYwl
+	ffPloqGCcOlOgVO5xn8iOVU+mqBi9KUawsCOegJjOnECDsn8bn1kbZObNH4nVBcadu73u9U5i19AP
+	adbHWbqf40uQ1EL9M67Tqm0srR4JIzMQde/U8V+f3MeAv+dRBTtP/xNwd/UIJxF5w3afbX8HX06LY
+	cLHIwkww==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7MNM-0000000D19E-0Ggi;
-	Fri, 18 Sep 2026 00:22:48 +0000
-Received: from mail-ed1-x548.google.com ([2a00:1450:4864:20::548])
+	id 1x7MT0-0000000D1rv-0SJA;
+	Fri, 18 Sep 2026 00:28:38 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7MNJ-0000000D18I-3CRy
+	id 1x7MSy-0000000D1rK-47Z3
 	for kexec@lists.infradead.org;
-	Fri, 18 Sep 2026 00:22:46 +0000
-Received: by mail-ed1-x548.google.com with SMTP id 4fb4d7f45d1cf-6a9cdcbe249so146347a12.2
-        for <kexec@lists.infradead.org>; Thu, 17 Sep 2026 17:22:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789690962; x=1790295762; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=yxuYFkClNtObVJTirGhxvNI3z/6AMlB4AtngbQawpYk=;
-        b=lfxmGeexdTOqNPkBUSh31azRjgYJY2pL4vfiuhR4TVxj72OGgx2cw0NaVz0Ee0KYFu
-         XPTWPKHJWHEcYJ3Xz83k7ANCsO5uDRzYh18c1G1+LGvQISaDcfu3jVa9ItxhFQLPwPXk
-         5b2k/zUSzHpeLeZ/KZKDu4gSzW2GipWljW9+Jk28vxwq5QYmx0uQ6ohtk7yVzKJNpTyC
-         f7/+efP/4TQvXJDKv3B9y0+36zU+M/bNd1Y1189mMehw2KiiYzfeRSP4Gh1gM7y8678C
-         iG5OzmW/B64M7hRXZxEfVk48PwpQzeKZ/xFt1GielZ8WeW+bkTSUl2h934CBqdM3suK/
-         WI9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789690962; x=1790295762;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=yxuYFkClNtObVJTirGhxvNI3z/6AMlB4AtngbQawpYk=;
-        b=CQ+LsXFTq7YL/kmiceyrJTb/Za15fX4BOr4VQAVgmnz3nmpGsEadLqNwyI1/iRwzh8
-         Q/6mB7i3DLhAC8M3zZyUan667ZeZlAGfVRJIqIDGVO6WM++dLHT7HDhGDSbq1bOYr6YI
-         3XY7X4fVTSIg6oXlGw4QABD0Imq60NfLp7MR92rgv1CoEkR3WkhythX+GyuUTdMgHTTZ
-         B9UAdKkEgi/NeXagymwROTH6BuY4tT0lh4Oh838lA/VqHbFtnEFeakveNf29NqdzPalD
-         SdUq0qxsa6F1nPcO9KyXa9KSdvhiRYBQSyEUyhSROMDFZil+n7HZQ+an0fxfqTdQ7fej
-         mPQQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxLGBfXgI56XEovoQvROgsbXrEdEAp6rphOZA6MLS2BnQJi0Hb6OROdGxOCEUDzYGFTfBzI5g==@lists.infradead.org
-X-Gm-Message-State: AFuF++msLdBTFmCL8DdqaAcDASVGsjvtHr+N37cDZDQzxxXFoAoiGDrp
-	vh+F3HgzDOCsii7/7nGLnX0dtOyZP22yXY3eOSqxLPjHSDki1ZUfIBB0UDdaq+/YdV/KgDL0369
-	ZHgOGI9rlFqv7mi4+cQ==
-X-Received: from ejsg22.prod.google.com ([2002:a17:906:69d6:b0:c29:ece4:d406])
- (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:907:3f87:b0:c26:19e3:e98e with SMTP id a640c23a62f3a-c2a1582bdfbmr81796266b.46.1789690961563;
- Thu, 17 Sep 2026 17:22:41 -0700 (PDT)
-Date: Fri, 18 Sep 2026 00:22:38 +0000
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260918002239.4024231-1-tarunsahu@google.com>
-Subject: [PATCH v2 1/2] memblock: drop for_each_memblock_type() and open code
- its users
-From: Tarun Sahu <tarunsahu@google.com>
-To: Andrew Morton <akpm@linux-foundation.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	dmatlack@google.com, Mike Rapoport <rppt@kernel.org>, kexec@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, dev.jain@arm.com, 
-	Pratyush Yadav <pratyush@kernel.org>, linux-mm@kvack.org, Tarun Sahu <tarunsahu@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260917_172245_815940_7B0FAD43 
-X-CRM114-Status: GOOD (  11.49  )
+	Fri, 18 Sep 2026 00:28:37 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id E8FC6601FF;
+	Fri, 18 Sep 2026 00:28:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BCF71F00898;
+	Fri, 18 Sep 2026 00:28:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789691315;
+	bh=OjEB8YoSvr2E8wX9cD7isVumdC5ySqRIBYWNH1Q63aQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=NGLKgzwSwrIvn0iCT+qFyEn8qxZ/uTuu+fXrTh3zKpK5AZt9AvxAH+dw6o5ejPH/z
+	 3dMXhPmDyMvjetdJHJhHMHHnx6Ig3uXk5NV9Spo9luo2PJwSGKFuT797OkbSjTAONn
+	 C0myLUPUVv/sFeYO8D9VgGhhs0lDiX1KaTGUPGLobwwaoujqlI3tkM5UJWdxKb05gA
+	 Mo5eEA2rdlnqSg6wMSMwS+5ZANvMb/kKJ3Nk8krN77jCrFzzV8J8eHjl3azqPgGXEz
+	 miQyiBHQZpvDDEvXuZmlRDeO2PPfsWQi9mB8rOT+NxRXNYgaGiWXwfXveYEXUepkf3
+	 G4a9Wv70HEZ5w==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 1/2] memblock: drop for_each_memblock_type() and open
+ code its users
+To: "Andrew Morton" <akpm@linux-foundation.org>, "Mike Rapoport" <rppt@kernel.org>, dmatlack@google.com, "Pasha
+ Tatashin" <pasha.tatashin@soleen.com>, "Tarun Sahu" <tarunsahu@google.com>
+Cc: linux-kernel@vger.kernel.org, dev.jain@arm.com, "Pratyush Yadav" <pratyush@kernel.org>, linux-mm@kvack.org, kexec@lists.infradead.org
+In-Reply-To: <20260918002239.4024231-1-tarunsahu@google.com>
+References: <20260918002239.4024231-1-tarunsahu@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 18 Sep 2026 00:28:34 +0000
+Message-Id: <20260918002835.4BCF71F00898@smtp.kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,72 +65,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-for_each_memblock_type() always starts the iteration at index 0 and its
-body is a trivial 'for' loop, so it hides very little. It also gets in
-the way of iterating from an arbitrary index, which the next patch
-needs.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] mm: commit message and implementation mismatch regarding variable s=
+cope
+--
 
-Remove the macro and open code its three users: memblock_add_range(),
-memblock_isolate_range() and memblock_dump(). While at it, move the
-region pointer into the loop body scope.
+commit c0dca5a3d7239e89d9dccb549819f0c9f7139656
+Author: Tarun Sahu <tarunsahu@google.com>
 
-No functional change.
+memblock: drop for_each_memblock_type() and open code its users
+   =20
+Remove the for_each_memblock_type() macro and open code its users to
+allow iterating from an arbitrary index. The three users modified are
+memblock_add_range(), memblock_isolate_range(), and memblock_dump().
 
-Signed-off-by: Tarun Sahu <tarunsahu@google.com>
----
- mm/memblock.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+> Remove the macro and open code its three users: memblock_add_range(),
+> memblock_isolate_range() and memblock_dump(). While at it, move the
+> region pointer into the loop body scope.
 
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 9ce86349a29f..5aae75d34dec 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -155,11 +155,6 @@ struct memblock_type physmem = {
-  */
- static __refdata struct memblock_type *memblock_memory = &memblock.memory;
- 
--#define for_each_memblock_type(i, memblock_type, rgn)			\
--	for (i = 0, rgn = &memblock_type->regions[0];			\
--	     i < memblock_type->cnt;					\
--	     i++, rgn = &memblock_type->regions[i])
--
- #define memblock_dbg(fmt, ...)						\
- 	do {								\
- 		if (memblock_debug)					\
-@@ -651,7 +646,8 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
- 	base = obase;
- 	nr_new = 0;
- 
--	for_each_memblock_type(idx, type, rgn) {
-+	for (idx = 0; idx < type->cnt; idx++) {
-+		rgn = &type->regions[idx];
- 		phys_addr_t rbase = rgn->base;
- 		phys_addr_t rend = rbase + rgn->size;
- 
-@@ -827,7 +823,8 @@ static int __init_memblock memblock_isolate_range(struct memblock_type *type,
- 		if (memblock_double_array(type, base, size) < 0)
- 			return -ENOMEM;
- 
--	for_each_memblock_type(idx, type, rgn) {
-+	for (idx = 0; idx < type->cnt; idx++) {
-+		rgn = &type->regions[idx];
- 		phys_addr_t rbase = rgn->base;
- 		phys_addr_t rend = rbase + rgn->size;
- 
-@@ -2198,7 +2195,8 @@ static void __init_memblock memblock_dump(struct memblock_type *type)
- 
- 	pr_info(" %s.cnt  = 0x%lx\n", type->name, type->cnt);
- 
--	for_each_memblock_type(idx, type, rgn) {
-+	for (idx = 0; idx < type->cnt; idx++) {
-+		rgn = &type->regions[idx];
- 		char nid_buf[32] = "";
- 
- 		base = rgn->base;
--- 
-2.55.0.1082.g2b9226bbc0-goog
+[Severity: Low]
+This isn't a bug, but the commit message mentions moving the region pointer
+into the loop body scope.
 
+Looking at memblock_add_range(), memblock_isolate_range(), and
+memblock_dump() in mm/memblock.c, the declaration for=20
+struct memblock_region *rgn remains at the top-level function scope rather
+than being moved inside the newly open-coded for loops.
+
+Did this patch miss moving the declaration of the rgn pointer into the
+loop blocks as intended?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260918002239.4024=
+231-1-tarunsahu@google.com?part=3D1
 
