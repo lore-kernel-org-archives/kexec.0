@@ -4,56 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B3693C98310
-	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3C36DC982F7
+	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:
 	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
 	From:MIME-Version:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=iiUFRlHhVLGHO4P1JeUzTqnMBZGqjCg6ljFaVKDtmKU=; b=rhmcZ3JHbY+g4BeFYZpglIox7R
-	LXDtkxpfzpLq3FA2/sMVakIhWT6jHtzIUbSOo0/Zn8NLDlUaCX8k8dar6RN/ywc5g1fCvPB2Eo5Jc
-	VefNoOczF4sX2+v1rdzOndzKaH7IXgBzwqq2Iz9ke2FRZyudHHok6fPNODvn0bi1ajEg7FgVkgtD7
-	1q6zXcTRLBCzKSX3t6Ke11m4C3v9SxYcxlhTN6F1Cl2WqPcUokT6Vt83Uc53Rd8w8lTej5FPanI93
-	WioIGdznCXzcAUNQtwJFe+b9wPAg8vzghNQVmmoJgiVpu2yH5dcCf886OlvJHzUNmFNzWxH0QY3Ea
-	4cpY+iBQ==;
+	bh=VuJOT4kdOpRvZM5empbp0YF0BApQR/2NER1H6HyuVXU=; b=i6AQpaUozjJiBrVKoPKNeDgX2Y
+	YFDvONOdABnLpA2vZIH1sM/qoZYFj5Glj0gBl/lYpDTo/Cb62/UqQBdqzdD1ShUZOW5yLXzgp0XVL
+	A91D9VDHPojVGMRoEDY+1uM3XyH9mSex4WXCY0WtxGlN6WfKon0SbnuzaKhD7SJutMhGNF9/fuV5d
+	vlnCvw3qinMY9rRD2euP+cAv0K27xipQf+udeqwdNxKyXj76PheTTZgm4aS20xRxcmlX98sVgiNLy
+	ctjSUloX14fZ9lUfMsc2oIyniPGID6+mXF9ookndiIGwvywcnbyL+7vfqq5poJKJHfT/8Xwkv8YSX
+	738FUB2g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8O4X-00000000Ml0-3WFA;
-	Sun, 20 Sep 2026 20:23:37 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1x8O4c-00000000Mv7-2B0N;
+	Sun, 20 Sep 2026 20:23:42 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7Vcp-0000000E4go-1SEV;
-	Fri, 18 Sep 2026 10:15:23 +0000
+	id 1x7VeI-0000000E50G-3nEz;
+	Fri, 18 Sep 2026 10:16:55 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id C2E2F41B02;
-	Fri, 18 Sep 2026 10:15:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D48821F000FF;
-	Fri, 18 Sep 2026 10:15:18 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 2DCF560A5F;
+	Fri, 18 Sep 2026 10:16:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FC741F000FF;
+	Fri, 18 Sep 2026 10:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789726522;
-	bh=iiUFRlHhVLGHO4P1JeUzTqnMBZGqjCg6ljFaVKDtmKU=;
+	s=k20260515; t=1789726613;
+	bh=VuJOT4kdOpRvZM5empbp0YF0BApQR/2NER1H6HyuVXU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CYMe2VxQKqjM48Qh1JiWT2P3UEJVuCac8ysLzJ+dZag32Ft9bAVcpGOMZ4HScYKSA
-	 LrzLpuhoEMI3GtAYTsLW4jh/gRtnUoW+N9rRyYlYOyTXKJIrjz1QkFNSAmTri9KxtQ
-	 YgAizPYMs6Pk+zAZ7x1uzNN3yUFr4LYNxPNrUJBDLylaSStamwvu6mgyHmTx6JLyky
-	 SPUYmfalqSRbW2mY7QLXGTOAMq7KZrFu0mnGpoTqq6Cjx1Umnw5Hk54MIt5dBLGeyO
-	 rCce++XRc1mltvKKrrut+TtgQ5n+bH85UTxblml2GEicEU8TJBSTEJtZaIOC4yTjcM
-	 xr7wJo3WI5ZMg==
+	b=i9JXfNnKptQjjq63WxDdIuBBUCCL146Poh1RSC+XdoWWB0Fy9dhH0a6kLZUmX1w+W
+	 qF3REZ2mxGCNIiOaSwVwjNNaV6NjoRH0sNjvZWq3XRPs6dKW4AZDk1Yede6r8fqzyx
+	 o80qLR6AMuSO9xrYinfK9dWCY6zzP/z7rF1NstRvN9oRwP7A4igRkbL4/CMivPIyT9
+	 wnnCcsZ+tEz1MqTHyJ+d9y56CfkfVre+2Dy56b5WhLwcyAKGultFUGWzcdJ07WiKeU
+	 rZjGFcwvdwgNrDGSmopMB7dJJ/e/9den7VyfEVj7fDrOGtONqMyz83JtmkWwNL2swS
+	 Lx0epawLg3Kpw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 04/17] arm64: kexec_file: Fix CMA page leaks in
- segment placement retry loops
-To: ruanjinjie@huawei.com, graf@amazon.com, gshan@redhat.com, pasha.tatashin@soleen.com, catalin.marinas@arm.com, tglx@kernel.org, pratyush@kernel.org, ruirui.yang@linux.dev, linux-arm-kernel@lists.infradead.org, bgwin@google.com, palmer@rivosinc.com, mpe@ellerman.id.au, hbathini@linux.ibm.com, hpa@zytor.com, sourabhjain@linux.ibm.com, robh@kernel.org, adityag@linux.ibm.com, zhangtianyang@loongson.cn, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, guodongtai@kylinos.cn, linux-kernel@vger.kernel.org, linux-mm@kvack.org, me@linux.beauty, x86@kernel.org, ritesh.list@gmail.com, eric.devolder@oracle.com, "Jinjie
- Ruan" <ruanjinjie@huawei.com>, blum@kernel.org, coxu@redhat.com, rafael@kernel.org, jbouron@amazon.com, rppt@kernel.org, tangyouling@kylinos.cn, maqianga@uniontech.com, sshegde@linux.ibm.com, kernel@xen0n.name, dakr@kernel.org, thuth@redhat.com, seanjc@google.com, npiggin@gmail.com, vishal.l.verma@intel.com, chao.gao@intel.com, liukexin@kylinos.cn, piliu@redhat.com, linuxppc-dev@lists.ozlabs.org, takahiro.akashi@linaro.org, kees@kernel.org, baoquan.he@linux.dev, james.morse@arm.com, yeoreum.yun@arm.com, dave.hansen@linux.intel.com, driver-core@lists.linux.dev, ardb@kernel.org, gregkh@linuxfoundation.org, leitao@debian.org, chenhuacai@kernel.org, kas@kernel.org, loongarch@lists.linux.dev, mclapinski@google.com, bp@alien8.de, lizhengyu3@huawei.com, mingo@redhat.com, will@kernel.org, mark.rutland@arm.com, maddy@linux.ibm.com, chleroy@kernel.org
+Subject: Re: [PATCH v5 05/17] arm64: kexec_file: Fix elf_headers memory leak
+ in retry loop
+To: maqianga@uniontech.com, dave.hansen@linux.intel.com, dakr@kernel.org, pratyush@kernel.org, vishal.l.verma@intel.com, mark.rutland@arm.com, hbathini@linux.ibm.com, linuxppc-dev@lists.ozlabs.org, kernel@xen0n.name, mpe@ellerman.id.au, sourabhjain@linux.ibm.com, eric.devolder@oracle.com, linux-fsdevel@vger.kernel.org, gshan@redhat.com, x86@kernel.org, hpa@zytor.com, lizhengyu3@huawei.com, kees@kernel.org, adityag@linux.ibm.com, ruirui.yang@linux.dev, yeoreum.yun@arm.com, chao.gao@intel.com, ardb@kernel.org, piliu@redhat.com, graf@amazon.com, james.morse@arm.com, zhangtianyang@loongson.cn, tglx@kernel.org, will@kernel.org, rppt@kernel.org, rafael@kernel.org, pasha.tatashin@soleen.com, thuth@redhat.com, akpm@linux-foundation.org, blum@kernel.org, palmer@rivosinc.com, coxu@redhat.com, linux-arm-kernel@lists.infradead.org, chenhuacai@kernel.org, robh@kernel.org, seanjc@google.com, linux-kernel@vger.kernel.org, bp@alien8.de, takahiro.akashi@linaro.org, bgwin@google.com, maddy@linux.ibm.c
+ om, linux-mm@kvack.org, liukexin@kylinos.cn, catalin.marinas@arm.com, chleroy@kernel.org, mingo@redhat.com, ruanjinjie@huawei.com, tangyouling@kylinos.cn, jbouron@amazon.com, ritesh.list@gmail.com, sshegde@linux.ibm.com, "Jinjie
+ Ruan" <ruanjinjie@huawei.com>, gregkh@linuxfoundation.org, leitao@debian.org, me@linux.beauty, baoquan.he@linux.dev, loongarch@lists.linux.dev, npiggin@gmail.com, kas@kernel.org, mclapinski@google.com, guodongtai@kylinos.cn, driver-core@lists.linux.dev
 Cc: kexec@lists.infradead.org
-In-Reply-To: <20260918100442.3841135-5-ruanjinjie@huawei.com>
+In-Reply-To: <20260918100442.3841135-6-ruanjinjie@huawei.com>
 References: <20260918100442.3841135-1-ruanjinjie@huawei.com>
- <20260918100442.3841135-5-ruanjinjie@huawei.com>
+ <20260918100442.3841135-6-ruanjinjie@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 18 Sep 2026 10:15:18 +0000
-Message-Id: <20260918101518.D48821F000FF@smtp.kernel.org>
+Date: Fri, 18 Sep 2026 10:16:50 +0000
+Message-Id: <20260918101650.9FC741F000FF@smtp.kernel.org>
 X-Mailman-Approved-At: Sun, 20 Sep 2026 13:23:20 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -70,34 +71,34 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> During kexec image placement retry loops, any midway failure causes
-> the loader to truncate `image->nr_segments` back to its initial state
-> to purge the failed segments.
+> If load_other_segments() fails after image->elf_headers is assigned,
+> the memory lifecycle is safely managed by the global kimage object
+> and will be freed in arch_kimage_file_post_load_cleanup().
 >=20
-> However, this truncation introduces a memory leak. The CMA pages
-> allocated via kexec_add_buffer() during the failed attempt are tracked
-> in the `image->segment_cma` array. Because the subsequent cleanup paths
-> only iterate up to the truncated `nr_segments` boundary, these allocated
-> CMA pages outside the new boundary are permanently leaked.
+> However, during a retry loop in image_load(), a subsequent iteration
+> will allocate a new buffer and overwrite image->elf_headers. This
+> permanently leaks the stale memory from the previous iteration before
+> the global cleanup can track it.
 >=20
-> Fix this by explicitly releasing the associated CMA buffers in
-> the failure paths before `image->nr_segments` is reduced.
+> Fix this by explicitly freeing the stale `image->elf_headers` buffer
+> before assigning the newly allocated headers.
 >=20
 > Cc: Catalin Marinas <catalin.marinas@arm.com>
 > Cc: Will Deacon <will@kernel.org>
+> Cc: Thomas Huth <thuth@redhat.com>
 > Cc: Breno Leitao <leitao@debian.org>
-> Cc: Pratyush Yadav <pratyush@kernel.org>
 > Cc: Andrew Morton <akpm@linux-foundation.org>
 > Cc: Yeoreum Yun <yeoreum.yun@arm.com>
 > Cc: Baoquan He <bhe@redhat.com>
 > Cc: stable@vger.kernel.org
-> Fixes: 07d24902977e4 ("kexec: enable CMA based contiguous allocation")
+> Fixes: 108aa503657e ("arm64: kexec_file: try more regions if loading segm=
+ents fails")
 > Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260918100442.3841=
-135-1-ruanjinjie@huawei.com?part=3D4
+135-1-ruanjinjie@huawei.com?part=3D5
 
 
