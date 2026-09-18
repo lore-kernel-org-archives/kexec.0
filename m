@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 12BFBC982E2
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 12C55C982E6
 	for <kexec@archiver.kernel.org>; Fri, 18 Sep 2026 20:07:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,62 +12,63 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=8ZYph3SzF8DNc3MuGEDpVyyWuyM4ge/DoPLpl5bxHLs=; b=WDryZ86ZYDw8LUkwSD6f8RkAU3
-	zwy85Wx9QFzYraGJ3xVAZ2sj/NJOHO01k1MMY7mTPo6enOETHM2O6d4JX/2lhXgFSpfIPJeas3UDf
-	00/9syycxYcnSE1Wfen469IWh0Q9FH6VutDT0aIQS0TziAh2yb2qbChYuZHXsgb/Qk9uuD1qayOeL
-	WlyrmRQKfezNA5VDroXno0yReSr47S/UZ14hC1Pq3g8W7ke9RyZM1fq34U5pqfvIJ+qK/aJiBsorh
-	bE+p0WJAKNdOXDkb40HzOZhEcOu4C50qT9tSwLeP2ux0eVmGHDDNwpi82uJCBwQE6FIZeDMBCOcpr
-	1T6brPKQ==;
+	bh=YSbW92ll6VraodQnupXl7opG78OubPyViHFwv8TLCbk=; b=Yr05GVY73ZZjC7sZZorur3bMqA
+	DffpymsJSqtzG9B1IPqiwhnZAQ/PHTXPTqOKoFsiZ7is/keXHKdquPjS9xtwK1hy4/hB4xKURBibA
+	tIKjzvb06bHPOOtPxWrk61qS/ns/da3V2uF32GzZReu0G+wcRROET/Vw2ZjN6WS1NeJfPoIp4S86c
+	ZrlXY4YYpvaxlg7IaPfJOCfVRw+Y8LRTQ6N29drtn2+sGBYbqGdO1Ochy2B9aAKutAL42Q0MI7/Xq
+	gPC+48oydDxlmdkjFEa/gfaVpNSaXHHSBVlJCwkr/dfm7UpVlog8VciB/hulxKWO48Zofcak9q6ic
+	GsDBOgXA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7erW-0000000FTTZ-09JZ;
-	Fri, 18 Sep 2026 20:07:10 +0000
-Received: from mail-pl1-x647.google.com ([2607:f8b0:4864:20::647])
+	id 1x7erV-0000000FTTG-3ucD;
+	Fri, 18 Sep 2026 20:07:09 +0000
+Received: from mail-pl1-x648.google.com ([2607:f8b0:4864:20::648])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7erO-0000000FTLJ-2p61
+	id 1x7erN-0000000FTKz-3CBi
 	for kexec@lists.infradead.org;
-	Fri, 18 Sep 2026 20:07:06 +0000
-Received: by mail-pl1-x647.google.com with SMTP id d9443c01a7336-2d94a158dc8so20609895ad.2
-        for <kexec@lists.infradead.org>; Fri, 18 Sep 2026 13:07:01 -0700 (PDT)
+	Fri, 18 Sep 2026 20:07:03 +0000
+Received: by mail-pl1-x648.google.com with SMTP id d9443c01a7336-2db3d832827so14515865ad.2
+        for <kexec@lists.infradead.org>; Fri, 18 Sep 2026 13:06:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789762021; x=1790366821; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1789762018; x=1790366818; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=8ZYph3SzF8DNc3MuGEDpVyyWuyM4ge/DoPLpl5bxHLs=;
-        b=oq8l+G8Swndlz1MFUdNEffgI3zLQI66VqJci15kadeMTaK6cwLn31Oxr0T3XH9jnLa
-         IPdTLbbMDINp89DQlC7BkB7XbeN8/jGvebhogc7jOH4zNiOOVcUjzc0Gu7x/64wXKSKa
-         D0/iJ//F6tUbJ2hHos+ksYDxNMAfzJXqP0PHTznPgY9y+Zwyz+7XwJMsbW+Xd01aZhPV
-         9YjwLiV1gTpRc4gzHiXnUOQWqTg5desd7QpoMFGvGreFgXWJzf+ho77lPoqf3anqnhin
-         mg8Q0BCineqxYhdjhXVkX2Vs2STGyfX7i+Z9LTrgjYNBzZTBXcG31gZch6pjD0Yu9V0w
-         Kd8w==
+        bh=YSbW92ll6VraodQnupXl7opG78OubPyViHFwv8TLCbk=;
+        b=g9z9SAUv+8I/NVUCOBbOhVO0NJCPvRnFDylv2+aSlV8Rfi1S7RtWjVbaeZQVz5JY23
+         cWsXLK9j1cU5Bf+J+Zi5KaUEYfACLEFehz6pzdjzFziNqZinhZ6HjXYyScJbfJDi9yPf
+         YGDXIW9XXEo61QKvnMBBo2w0t1Cdc+GtYqtR+QaDucZEM0x0a8mILTSJh1RA8w+2JdSM
+         FUrmQnt5bEn+2DtncDuIqgU9h7nGzoeWms59hEqZFDBP9qCTzb+TfpPcC8fGhgCJHaoi
+         1mYBgRAK5WNIMbWBPBumk2zAIm/wZiovkc9rBosaaVmtrD6DitICFhzOSuYX/kcls6jD
+         ysjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789762021; x=1790366821;
+        d=1e100.net; s=20260707; t=1789762018; x=1790366818;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=8ZYph3SzF8DNc3MuGEDpVyyWuyM4ge/DoPLpl5bxHLs=;
-        b=ln1rCXMvUF4sK28rlx9IneDyGfwRm8ZSrwM7fgzKVXO1p4lTI9QqIY3hCdJtl3uupe
-         yYIQ+Cm2sHYzaJ6a5I/OYn4WG+jXN659GsJXvFCanOhiQPmh9+4cP9fNiqGwQ7DWng7i
-         PsXH/G+h6XWXClN0XdbONG7hIeAKlmOeyLigoOLhPFaoGWT7oUdeEWrudnCUuMf3HPb/
-         EyFL21wDzZib2p8AeuFgiCJwbBsy+fX0WizjpewN/HXmUxkktamyzpRFe3FwiLcJuRXn
-         k62YUdUvV/dhwcFBYOdl866MZ5ytbRxveYvIjYODKMfv1uwc6YPQ1YwP64wEsoWXe4eO
-         m3Lw==
-X-Gm-Message-State: AFuF++nnhH3KyxlQpuTG31FWAr3BRzYCOpYKadOBKPrLA8RgjFSXCVU9
-	PQTI3j60SkzXznOczUOUHIn3gvSobLZ/Qa4K2vjPhcUnXeU6EYJhFTb2K4lXqBNZO61YNcBa7hT
-	IcAsHJgwzm7Y7L5CnqXMrF9MKgafWjQyNXTQpiJe1q78ptoqRhd90W9NZwkU8SuZrPMUhNfsgPV
-	UIwO7oeJ0BI8pcNdNIXSeLpNwSMpIWhXxxtZp/ApnazSWRfAkg6X4=
-X-Received: from plld5.prod.google.com ([2002:a17:902:7285:b0:2dd:4e69:703b])
+        bh=YSbW92ll6VraodQnupXl7opG78OubPyViHFwv8TLCbk=;
+        b=JU9E1xWI2LdQ7Bu5rtd0okSDOgiePbzDyVguI2G19zga6k3chYRmPr37Yrq+7n779x
+         hE5ai9Qkp4hoIFRg8iUCw9uB0N+bzhq4Jxg3V7x3x6L31OT2hwykeoORUKk2UgJEU3u8
+         tO1OCtCpsOQJ45xubFzFPiJguh+iA44V/toLR3qrsrXfRR68zG894+BEsxxblg9epjJ/
+         N6QBs3hIwB9/bNbvnGS2SzQHHlWGMsgEVbNQhh5Ru+GIU9/Yeew2BW1wKxwQj7pMxtYS
+         8BtH+ejMUcdra+FBZ+sRyq8AoEYjmJa4hwMiTtPmq23BFO2qGxQhw+9suLIF6TexY01c
+         rsbQ==
+X-Gm-Message-State: AFuF++kQm+D4SsCC5pL6RtDc/NKl1NJRkOii/JFjzKPkwh2FO+OWqhXQ
+	kBrNCb/O6Fr7WTBJ2N2G486fzWTJlcDe34YZTAZ07KTAD+/QlQFKahRMMzIxT2ZexlqCrq9YjeV
+	9ATl+uKYNZ+e/jDMcCB0m0nOaGJQp5G3eYD9POo0Po+bwgIr0b+mSbgMhJveFu2CXTnXERgTRLk
+	3ZtByVvvp+z33o3S+z7EvOHikREyg3WkRiEVzBu5n8C1wkxz3tmCA=
+X-Received: from pgbcn9.prod.google.com ([2002:a05:6a02:a89:b0:cc1:be9e:35ef])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:903:2ecb:b0:2dd:c100:9439 with SMTP id d9443c01a7336-2ddc1009c48mr9484545ad.55.1789762020378;
- Fri, 18 Sep 2026 13:07:00 -0700 (PDT)
-Date: Fri, 18 Sep 2026 20:06:34 +0000
+ 2002:a17:903:4b28:b0:2dd:c100:a5e7 with SMTP id d9443c01a7336-2ddc100a6e5mr8872815ad.59.1789762018048;
+ Fri, 18 Sep 2026 13:06:58 -0700 (PDT)
+Date: Fri, 18 Sep 2026 20:06:31 +0000
 In-Reply-To: <20260918200640.887030-1-dmatlack@google.com>
 Mime-Version: 1.0
 References: <20260918200640.887030-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260918200640.887030-9-dmatlack@google.com>
-Subject: [PATCH v9 08/13] PCI: Save and restore the ACS Control register
+Message-ID: <20260918200640.887030-6-dmatlack@google.com>
+Subject: [PATCH v9 05/13] PCI: liveupdate: Auto-preserve upstream bridges
+ across Live Update
 From: David Matlack <dmatlack@google.com>
 To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org
@@ -84,8 +85,8 @@ Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.
 	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260918_130702_750778_454B92DC 
-X-CRM114-Status: GOOD (  18.39  )
+X-CRM114-CacheID: sfid-20260918_130701_894063_FDF1EEFE 
+X-CRM114-Status: GOOD (  28.57  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,183 +101,315 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Save the ACS Control register in pci_save_state() and write it back
-in pci_restore_state(), instead of recomputing the ACS controls from
-scratch with pci_enable_acs().
+When a PCI device is preserved across a Live Update, all of its upstream
+bridges up to the root port must also be preserved. This enables the PCI
+core and any drivers bound to the bridges to manage bridges correctly
+across a Live Update.
 
-This makes ACS symmetric with the rest of a device's saved state. Today
-pci_save_state() ignores ACS entirely and pci_restore_state() re-enables
-the ACS controls from the kernel's current ACS policy. As a result, a
-device can come out of a reset with different ACS controls than it went
-in with, e.g. any controls programmed outside of pci_enable_acs() are
-silently dropped.
+Notably, this will be used in subsequent commits to ensure that
+preserved devices can continue performing memory transactions without a
+disruption or change in routing.
 
-pci_enable_acs() runs when a driver binds to a device
-(pci_dma_configure()), i.e. after pci_bus_add_device() has already saved
-the device's state. Refresh the saved ACS Control register there as
-well, otherwise a subsequent reset would revert ACS back to the
-configuration left behind by firmware.
+To preserve bridges, the PCI core tracks the number of downstream
+devices preserved under each bridge using a reference count in struct
+pci_dev_ser. This allows a bridge to remain preserved until all its
+downstream preserved devices are unpreserved or finish their
+participation in the Live Update.
 
-Devices that rely on device-specific quirks to enable an ACS equivalent
-keep that configuration outside of the ACS Control register, so keep
-configuring ACS from scratch for them. Do the same for devices that have
-no saved ACS state at all.
-
-Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-Assisted-by: Claude:claude-opus-5
+Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+Reviewed-by: Pranjal Shrivastava <praan@google.com>
 Signed-off-by: David Matlack <dmatlack@google.com>
 ---
- drivers/pci/pci.c    | 66 +++++++++++++++++++++++++++++++++++++++++++-
- drivers/pci/pci.h    |  5 ++++
- drivers/pci/quirks.c |  7 +++++
- 3 files changed, 77 insertions(+), 1 deletion(-)
+ drivers/pci/liveupdate.c    | 125 +++++++++++++++++++++++++++---------
+ include/linux/kho/abi/pci.h |   5 +-
+ include/linux/pci.h         |   3 +
+ 3 files changed, 99 insertions(+), 34 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index b2879a6be5f8..dd25c01736b4 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1021,6 +1021,55 @@ static void pci_std_enable_acs(struct pci_dev *dev, struct pci_acs *caps)
- 		caps->ctrl |= (dev->acs_capabilities & PCI_ACS_TB);
+diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+index ec8db86ed66d..825df024eec4 100644
+--- a/drivers/pci/liveupdate.c
++++ b/drivers/pci/liveupdate.c
+@@ -122,7 +122,6 @@
+  * preserved. These may be relaxed in the future:
+  *
+  *  * The device cannot be a Virtual Function (VF).
+- *  * The device cannot be behind a PCI-to-PCI bridge.
+  *
+  * Driver Binding
+  * ==============
+@@ -137,6 +136,18 @@
+  * bound to the correct driver. The PCI core does not protect against a device
+  * getting preserved by driver A in the outgoing kernel and then getting bound
+  * to driver B in the incoming kernel.
++ *
++ * PCI-to-PCI Bridges
++ * ==================
++ *
++ * Any PCI-to-PCI bridges upstream of a preserved device are automatically
++ * preserved when the device is preserved. The PCI core keeps track of the
++ * number of downstream devices that are preserved under a bridge so that the
++ * bridge is only unpreserved once all downstream devices are unpreserved.
++ *
++ * This enables the PCI core and any drivers bound to the bridge to participate
++ * in the Live Update so that preserved endpoints can continue issuing memory
++ * transactions during the Live Update.
+  */
+ 
+ #define pr_fmt(fmt) "PCI: liveupdate: " fmt
+@@ -407,55 +418,84 @@ static struct pci_dev_ser *pci_flb_alloc_dev_ser(struct pci_flb_outgoing *outgoi
+ 	return dev_ser;
  }
  
-+/**
-+ * pci_save_acs_state - save the ACS Control register
-+ * @dev: the PCI device
-+ *
-+ * Record the ACS controls currently programmed in hardware so that
-+ * pci_restore_acs_state() can reapply them after a reset.
-+ */
-+static void pci_save_acs_state(struct pci_dev *dev)
-+{
-+	struct pci_cap_saved_state *save_state;
-+
-+	if (!dev->acs_cap)
-+		return;
-+
-+	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ACS);
-+	if (!save_state)
-+		return;
-+
-+	pci_read_config_word(dev, dev->acs_cap + PCI_ACS_CTRL,
-+			     (u16 *)&save_state->cap.data[0]);
-+}
-+
-+/**
-+ * pci_restore_acs_state - restore the ACS Control register
-+ * @dev: the PCI device
-+ */
-+static void pci_restore_acs_state(struct pci_dev *dev)
-+{
-+	struct pci_cap_saved_state *save_state = NULL;
-+
-+	if (dev->acs_cap && !pci_need_dev_specific_enable_acs(dev))
-+		save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ACS);
-+
-+	/*
-+	 * Devices that rely on device-specific quirks to enable an ACS
-+	 * equivalent keep that configuration outside of the ACS Control
-+	 * register, so there is nothing useful to restore for them. Configure
-+	 * ACS from scratch instead, which also covers devices that have no
-+	 * saved ACS state at all.
-+	 */
-+	if (!save_state) {
-+		pci_enable_acs(dev);
-+		return;
+-static void pci_liveupdate_unpreserve_device(struct pci_flb_outgoing *outgoing,
+-					     struct pci_dev *dev)
++static int pci_liveupdate_unpreserve_device(struct pci_flb_outgoing *outgoing,
++					    struct pci_dev *dev)
+ {
+ 	struct pci_dev_ser *dev_ser = dev->liveupdate.outgoing;
+ 
+ 	if (!dev_ser) {
+ 		pci_warn(dev, "Cannot unpreserve device that is not preserved\n");
+-		return;
++		return -EINVAL;
+ 	}
+ 
++	if (!dev_ser->refcount) {
++		pci_WARN(dev, 1, "Preserved device has a 0 refcount!\n");
++		return -EINVAL;
 +	}
 +
-+	pci_write_config_word(dev, dev->acs_cap + PCI_ACS_CTRL,
-+			      *(u16 *)&save_state->cap.data[0]);
++	if (--dev_ser->refcount)
++		return 0;
++
+ 	pci_info(dev, "Device will no longer be preserved across next Live Update\n");
+ 	outgoing->ser->nr_devices--;
+ 	memset(dev_ser, 0, sizeof(*dev_ser));
+ 	dev->liveupdate.outgoing = NULL;
++	return 0;
 +}
 +
- /**
-  * pci_enable_acs - enable ACS if hardware support it
-  * @dev: the PCI device
-@@ -1057,6 +1106,15 @@ void pci_enable_acs(struct pci_dev *dev)
- 	__pci_config_acs(dev, &caps, config_acs_param, 0, 0);
- 
- 	pci_write_config_word(dev, pos + PCI_ACS_CTRL, caps.ctrl);
++static void pci_liveupdate_unpreserve_path(struct pci_flb_outgoing *outgoing,
++					   struct pci_dev *dev,
++					   struct pci_dev *end)
++{
++	for_each_pci_dev_in_path(dev) {
++		if (dev == end)
++			break;
 +
++		if (pci_liveupdate_unpreserve_device(outgoing, dev))
++			return;
++	}
+ }
+ 
+ static int pci_liveupdate_preserve_device(struct pci_flb_outgoing *outgoing,
+ 					  struct pci_dev *dev)
+ {
+-	struct pci_dev_ser *dev_ser;
+-
+ 	if (dev->is_virtfn) {
+ 		pci_warn(dev, "Cannot preserve Virtual Functions\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	if (dev->liveupdate.outgoing) {
 +	/*
-+	 * pci_enable_acs() runs when a driver binds to the device, i.e. after
-+	 * pci_bus_add_device() has already saved the device's state. Refresh
-+	 * the saved ACS Control register so that a subsequent reset restores
-+	 * the controls programmed here rather than the ones left behind by
-+	 * firmware.
++	 * Endpoint devices should not be preserved more than once.
++	 * Bridges are preserved once for every downstream device that
++	 * is preserved.
 +	 */
-+	pci_save_acs_state(dev);
++	if (dev->liveupdate.outgoing && !dev->subordinate) {
+ 		pci_warn(dev, "Device is already preserved\n");
+ 		return -EBUSY;
+ 	}
+ 
+-	if (!pci_is_root_bus(dev->bus)) {
+-		pci_warn(dev, "Cannot preserve devices behind bridges\n");
++	if (dev->liveupdate.outgoing && !dev->liveupdate.outgoing->refcount) {
++		pci_WARN(dev, 1, "Preserved device with 0 refcount!\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	dev_ser = pci_flb_alloc_dev_ser(outgoing);
+-	if (IS_ERR(dev_ser))
+-		return PTR_ERR(dev_ser);
++	if (!dev->liveupdate.outgoing) {
++		struct pci_dev_ser *dev_ser;
+ 
+-	pci_info(dev, "Device will be preserved across next Live Update\n");
+-	outgoing->ser->nr_devices++;
+-	outgoing->ser->devices = kho_block_set_head_pa(&outgoing->block_set);
++		dev_ser = pci_flb_alloc_dev_ser(outgoing);
++		if (IS_ERR(dev_ser))
++			return PTR_ERR(dev_ser);
+ 
+-	dev_ser->domain = pci_domain_nr(dev->bus);
+-	dev_ser->bdf = pci_dev_id(dev);
+-	dev_ser->refcount++;
++		pci_info(dev, "Device will be preserved across next Live Update\n");
++		outgoing->ser->nr_devices++;
++		outgoing->ser->devices = kho_block_set_head_pa(&outgoing->block_set);
++
++		dev_ser->domain = pci_domain_nr(dev->bus);
++		dev_ser->bdf = pci_dev_id(dev);
++		dev->liveupdate.outgoing = dev_ser;
++	}
+ 
+-	dev->liveupdate.outgoing = dev_ser;
++	dev->liveupdate.outgoing->refcount++;
+ 	return 0;
+ }
+ 
+@@ -468,12 +508,16 @@ static int pci_liveupdate_preserve_device(struct pci_flb_outgoing *outgoing,
+  * pci_liveupdate_preserve() from their struct liveupdate_file_handler
+  * preserve() callback to ensure the outgoing struct pci_ser is already set up.
+  *
++ * pci_liveupdate_preserve() automatically preserves all bridges upstream of
++ * @dev.
++ *
+  * Returns: 0 on success, <0 on failure.
+  */
+ int pci_liveupdate_preserve(struct pci_dev *dev)
+ {
+ 	struct pci_flb_outgoing *outgoing = NULL;
+-	int ret;
++	struct pci_dev *start = dev;
++	int ret = -ENODEV;
+ 
+ 	guard(rwsem_write)(&pci_liveupdate.rwsem);
+ 
+@@ -481,7 +525,13 @@ int pci_liveupdate_preserve(struct pci_dev *dev)
+ 	if (IS_ERR(outgoing))
+ 		return PTR_ERR(outgoing);
+ 
+-	ret = pci_liveupdate_preserve_device(outgoing, dev);
++	for_each_pci_dev_in_path(dev) {
++		ret = pci_liveupdate_preserve_device(outgoing, dev);
++		if (ret) {
++			pci_liveupdate_unpreserve_path(outgoing, start, dev);
++			break;
++		}
++	}
+ 
+ 	pci_liveupdate_flb_put_outgoing();
+ 	return ret;
+@@ -497,6 +547,9 @@ EXPORT_SYMBOL_GPL(pci_liveupdate_preserve);
+  * pci_liveupdate_unpreserve() from their struct liveupdate_file_handler
+  * unpreserve() callback to ensure the outgoing struct pci_ser is already set
+  * up.
++ *
++ * pci_liveupdate_unpreserve() automatically unpreserves all bridges upstream of
++ * @dev.
+  */
+ void pci_liveupdate_unpreserve(struct pci_dev *dev)
+ {
+@@ -510,7 +563,7 @@ void pci_liveupdate_unpreserve(struct pci_dev *dev)
+ 		return;
+ 	}
+ 
+-	pci_liveupdate_unpreserve_device(outgoing, dev);
++	pci_liveupdate_unpreserve_path(outgoing, dev, /*end=*/NULL);
+ 	pci_liveupdate_flb_put_outgoing();
+ }
+ EXPORT_SYMBOL_GPL(pci_liveupdate_unpreserve);
+@@ -600,28 +653,30 @@ void pci_liveupdate_cleanup_device(struct pci_dev *dev)
+ 		pci_WARN(dev, 1, "Destroying incoming-preserved device!\n");
+ }
+ 
+-static void pci_liveupdate_finish_device(struct pci_ser *ser, struct pci_dev *dev)
++static int pci_liveupdate_finish_device(struct pci_ser *ser, struct pci_dev *dev)
+ {
+ 	if (!dev->liveupdate.incoming) {
+ 		pci_warn(dev, "Cannot finish preserving an unpreserved device\n");
+-		return;
++		return -EINVAL;
+ 	}
+ 
+-	if (dev->liveupdate.incoming->refcount != 1) {
+-		pci_WARN(dev, 1, "Preserved device has a corrupted refcount!\n");
+-		return;
++	if (!dev->liveupdate.incoming->refcount) {
++		pci_WARN(dev, 1, "Preserved device has a 0 refcount!\n");
++		return -EINVAL;
+ 	}
+ 
+ 	/*
+-	 * Drop the refcount so this device does not get treated as an incoming
+-	 * device again, e.g. in case pci_liveupdate_setup_device() gets called
+-	 * again because the device is hot-plugged.
++	 * Decrement the refcount so this device does not get treated as an
++	 * incoming device again, e.g. in case pci_liveupdate_setup_device()
++	 * gets called again because the device is hot-plugged.
+ 	 */
+-	dev->liveupdate.incoming->refcount = 0;
++	if (--dev->liveupdate.incoming->refcount)
++		return 0;
+ 
+ 	pci_info(dev, "Device is finished participating in Live Update\n");
+ 	dev->liveupdate.incoming = NULL;
+ 	ser->nr_devices--;
++	return 0;
  }
  
  /**
-@@ -1800,6 +1858,7 @@ int pci_save_state(struct pci_dev *dev)
- 	pci_save_aer_state(dev);
- 	pci_save_ptm_state(dev);
- 	pci_save_tph_state(dev);
-+	pci_save_acs_state(dev);
- 	return pci_save_vc_state(dev);
- }
- EXPORT_SYMBOL(pci_save_state);
-@@ -1877,7 +1936,7 @@ void pci_restore_state(struct pci_dev *dev)
- 	pci_restore_msi_state(dev);
- 
- 	/* Restore ACS and IOV configuration state */
--	pci_enable_acs(dev);
-+	pci_restore_acs_state(dev);
- 	pci_restore_iov_state(dev);
- 
- 	dev->state_saved = false;
-@@ -3532,6 +3591,11 @@ void pci_allocate_cap_save_buffers(struct pci_dev *dev)
- 	if (error)
- 		pci_err(dev, "unable to allocate suspend buffer for LTR\n");
- 
-+	error = pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ACS,
-+					    sizeof(u16));
-+	if (error)
-+		pci_err(dev, "unable to allocate suspend buffer for ACS\n");
-+
- 	pci_allocate_vc_save_buffers(dev);
- }
- 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index ba3c3fddddc2..037c1674f164 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -1095,6 +1095,7 @@ void pci_acs_init(struct pci_dev *dev);
- void pci_enable_acs(struct pci_dev *dev);
- #ifdef CONFIG_PCI_QUIRKS
- int pci_dev_specific_acs_enabled(struct pci_dev *dev, u16 acs_flags);
-+bool pci_need_dev_specific_enable_acs(struct pci_dev *dev);
- int pci_dev_specific_enable_acs(struct pci_dev *dev);
- int pci_dev_specific_disable_acs_redir(struct pci_dev *dev);
- void pci_disable_broken_acs_cap(struct pci_dev *pdev);
-@@ -1105,6 +1106,10 @@ static inline int pci_dev_specific_acs_enabled(struct pci_dev *dev,
+@@ -633,6 +688,8 @@ static void pci_liveupdate_finish_device(struct pci_ser *ser, struct pci_dev *de
+  * Update. Drivers must call pci_liveupdate_finish() from their struct
+  * liveupdate_file_handler finish() callback to ensure the incoming struct
+  * pci_ser is allocated.
++ *
++ * pci_liveupdate_finish() automatically finishes all bridges upstream of @dev.
+  */
+ void pci_liveupdate_finish(struct pci_dev *dev)
  {
- 	return -ENOTTY;
+@@ -646,7 +703,11 @@ void pci_liveupdate_finish(struct pci_dev *dev)
+ 		return;
+ 	}
+ 
+-	pci_liveupdate_finish_device(incoming->ser, dev);
++	for_each_pci_dev_in_path(dev) {
++		if (pci_liveupdate_finish_device(incoming->ser, dev))
++			break;
++	}
++
+ 	pci_liveupdate_flb_put_incoming();
  }
-+static inline bool pci_need_dev_specific_enable_acs(struct pci_dev *dev)
-+{
-+	return false;
-+}
- static inline int pci_dev_specific_enable_acs(struct pci_dev *dev)
- {
- 	return -ENOTTY;
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 7aee30734303..e500c202d2ec 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5476,6 +5476,13 @@ static const struct pci_dev_acs_ops *pci_dev_acs_ops_get(struct pci_dev *dev)
- 	return NULL;
+ EXPORT_SYMBOL_GPL(pci_liveupdate_finish);
+diff --git a/include/linux/kho/abi/pci.h b/include/linux/kho/abi/pci.h
+index 4096e3cd3324..9485ed73c351 100644
+--- a/include/linux/kho/abi/pci.h
++++ b/include/linux/kho/abi/pci.h
+@@ -24,7 +24,7 @@
+  */
+ 
+ #define PCI_LUO_FLB_COMPATIBLE "pci"
+-#define PCI_LUO_FLB_VERSION 1
++#define PCI_LUO_FLB_VERSION 2
+ 
+ /**
+  * struct pci_dev_ser - Serialized state about a single PCI device.
+@@ -33,7 +33,8 @@
+  * @bdf: The device's PCI bus, device, and function number.
+  * @refcount: Reference count used by the PCI core to keep track of whether it
+  *            is done using a device's struct pci_dev_ser. The value of the
+- *            refcount is equal to 1 when the struct pci_dev_ser is in use, and
++ *            refcount is equal to the number of preserved devices at or below
++ *            it in the PCI hierarchy when the struct pci_dev_ser is in use, and
+  *            0 otherwise.
+  */
+ struct pci_dev_ser {
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 76abe884e3dc..b35ac263c451 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -836,6 +836,9 @@ static inline struct pci_dev *pci_upstream_bridge(struct pci_dev *dev)
+ 	return dev->bus->self;
  }
  
-+bool pci_need_dev_specific_enable_acs(struct pci_dev *dev)
-+{
-+	const struct pci_dev_acs_ops *p = pci_dev_acs_ops_get(dev);
++#define for_each_pci_dev_in_path(dev) \
++	for (; dev; dev = pci_upstream_bridge(dev))
 +
-+	return p && p->enable_acs;
-+}
-+
- int pci_dev_specific_enable_acs(struct pci_dev *dev)
+ #ifdef CONFIG_PCI_MSI
+ static inline bool pci_dev_msi_enabled(struct pci_dev *pci_dev)
  {
- 	const struct pci_dev_acs_ops *p = pci_dev_acs_ops_get(dev);
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
