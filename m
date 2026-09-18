@@ -4,123 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EC5E4C982D2
-	for <kexec@archiver.kernel.org>; Fri, 18 Sep 2026 00:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9A510C982D2
+	for <kexec@archiver.kernel.org>; Fri, 18 Sep 2026 03:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:To:
+	Subject:Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=MH5QEcAdSFYOoMIMiWDV8W/y30UDqiHCwxXnldaYp0E=; b=3dwPhXHbBrxaEu1J+rediqK/ws
-	tYHUGv7ru6f4qV2E74Cl69HDqGhLePGSHx1cXJHUJ3DEYeivUSiONGpuHziHTSk1g0vvSejHe222k
-	gnj1L7rjN9/Ucfe1InMD5rOyuVOPPQQC0vn67rwId+rCGl6arF2i5JrYZFOx5AU8FmbfVMjJozcbS
-	6Vf9IxUxlSoFJB0zYpHIM1LE1oLNSnIY7oYP3GTPJi/a0g3IaSkoXyDKFVL0sjrR0RkehbWBs/e0U
-	ogsgzGShIG+6c3Ic1JcbC1FfdT6b9VICIQgwrle4pcZx3yC+5TT4Dj9B1mMGkSEijXUByEUW4jkF5
-	hFFY9l7A==;
+	bh=hkjoM6yd6CXdEoSX1RClXGhH+cgflcxUopLdHG+auvU=; b=IamOaXgi6Nd+/eFVT3a9+XnGj9
+	KNNR/SlYDWPfOEwpzcpxe9lsaYCRioQ/WVyTV9d0D8i6zvmTtx7TF5uV72NJ0BIT71qf4WWH16wsY
+	bqxQ+KpKLoC6WIX+9iXByq1Mtp9IcizNcJd9VTkFJWWm2KoP6jXBzxI1Tr1sq/lqaP7rJ6Tel9JZY
+	r/6qRDn9850uCjcmsByYROnoxPZXO+v6MXb5u12zpX1jvTcCw3d4EScUeiw+BtIh5L7dvOwtnhIYL
+	ClhvqbWyPM6RQPznDXMZB3DNvoGekPwOAEV4597SaLCoQVZXzV76LMqkch2MHeKPCBg9niAADlBOR
+	Es/8nFyQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7MmJ-0000000D4MZ-16bk;
-	Fri, 18 Sep 2026 00:48:35 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1x7PCt-0000000DNne-1QOi;
+	Fri, 18 Sep 2026 03:24:11 +0000
+Received: from mail-pf1-x464.google.com ([2607:f8b0:4864:20::464])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7MmH-0000000D4MB-1wTE
-	for kexec@bombadil.infradead.org;
-	Fri, 18 Sep 2026 00:48:33 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=MH5QEcAdSFYOoMIMiWDV8W/y30UDqiHCwxXnldaYp0E=; b=FoDBfKktL7GuCssosNvPJfKPD7
-	IYCbsEMg4IIxBALhKDU1gKtPvxxHqX4tMpuuXSpAArDzcyUcpz51F61/V6kU15Qjamnb4y8fneS34
-	Cxj4H1y2p/DB5D8BEK/7CNnJ7CcRwrCfoL+ZDjLd3hIvJGe664S47j9/N4OJmAOv8C6id90g1nbKt
-	BvytOEXAFlBn1UL90Qpnp8pW9t6XiBAM5ti1BV5nRf1PpTscJdjIMRaSivHBMXxTNE0Ve7oOsaSzy
-	STbFVw+MW84UG9R0Yk9Q7EY3ou+ADKcNTWI/pVq5vNM9GqR1ZSokqMfrH2cu94rI2z8l/6cR1hAXT
-	EWIm/NUQ==;
-Received: from mail-pj2-x12.google.com ([2607:f8b0:4864:39::12])
-	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
-	id 1x7MmE-00000009S7y-0tOe
+	id 1x7PCq-0000000DNmz-0Es6
 	for kexec@lists.infradead.org;
-	Fri, 18 Sep 2026 00:48:32 +0000
-Received: by mail-pj2-x12.google.com with SMTP id d9443c01a7336-2dd58e1e2c7so1657475ad.0
-        for <kexec@lists.infradead.org>; Thu, 17 Sep 2026 17:48:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789692508; x=1790297308; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=MH5QEcAdSFYOoMIMiWDV8W/y30UDqiHCwxXnldaYp0E=;
-        b=n/WpymgHepiw1U+h3LwIppoRx2+p8tkuWC2oQG/I0MxLqvU+ZsuDi8xpxw+dR9keAt
-         NUbrLGSGo5xLdbjOwHOQDCqdgwS60PP5Sfbnaj9Rn+wtiu0JEgZRfRrf+IFAZEj9pm2s
-         Vx8H8MzbQGku3FIBW+fRIe3DJdx1SCUbbg2gojY9ck3oBC8Szp8WaPWqML4FD73hLLi6
-         C3td22M04UyKvYV4qRQk1gw0F0/cEIQtqWLGByhVZrkkpAlWzwuzkd5yu01qpUp7PSxm
-         wJICpVGRaHypNMmziiMaBbYrRGpeqaHQcy0iyLZlgpDSaysrw/O3nzIDJdh2ro70y45m
-         W3iw==
+	Fri, 18 Sep 2026 03:24:10 +0000
+Received: by mail-pf1-x464.google.com with SMTP id d2e1a72fcca58-86927f9ba4dso176342b3a.1
+        for <kexec@lists.infradead.org>; Thu, 17 Sep 2026 20:24:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789692508; x=1790297308;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=1e100.net; s=20260707; t=1789701846; x=1790306646;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:dkim-signature:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=hkjoM6yd6CXdEoSX1RClXGhH+cgflcxUopLdHG+auvU=;
+        b=PkmoxNYhHKSktLm1Jsty1Q+kkEBWHGyauqAGcYh1PgnglapegYeHsYMe5W9I2CB2TI
+         NlBGFv6KCWWA1c5o8x4BSBch5E/Z9IaBzT8Rcmh+URIFVIHXm6v7GWSleXTB04IlsT3J
+         Km6kBlI3O5j5xVSUd7WSuq6/GSFJ7Ge2HnuyPDcGidfVIjXJn2CBiDEBXfLWnjixa6NU
+         Okh4++vGFn4XpbTGdyrM8QQR/5DV5d4qp5QV5xSJX7JqCra94o/2j6znAab55NSxgGHM
+         dw4Z9ZWcdkb5g09OEypEmu9KkaB77lxL4QVHq4JKkU6mqRReFF5XEFeSe0sZHChxgJj9
+         xUyw==
+X-Forwarded-Encrypted: i=1; AKwUvByvSuw6AVmQeGfGVy7IkbWsZg8GOLJU9bT+HXS1a7j+WvD+tk+O0YWHTZ+iCPt+uQ4bz6wQGA==@lists.infradead.org
+X-Gm-Message-State: AFuF++lKlK5ZU8xFjsSCbTrhbF7Pk/OByqcwpaiKeV7roqa/YHpLN2fO
+	QeF55r6nzModQbHhbd0X2I8R3vAu28WxwBJAFtmPyBwg6vB36iv/vIw/h8tcpXNoBa1eptYGSSp
+	QUbLo3wS+Ng2r5q4YAfW9IoSK9/VXVB3rXoNevQgUWtPltIEbmpf6bUMI6M2XtfKkWNh/UBzEgF
+	A92v+i5o5xQAv0x+fO4KuBP8fq/VIuox4RdhjBNMR7YOGxzCAne1sni9Ss7pHSsBEwQ8MX/toax
+	GUwOiUMeLKT
+X-Gm-Gg: AYBFou3Xtb5Otu4mbIwqR9540StY50DurWb7DaREeqe3TkgZkkGZQuGUDdeI+Od8JKo
+	eM+kU2YpVyDNELzZdMV+qGe4jrc8X5UEeg89RftsNCE+qkbpUfKLGfVmWqbzFyCCsMiKEFoJWqZ
+	S8iOA5JvqneEAnInAfIlyuEbwesDOvOJ3kvfmGgUYq1teZFaN3nx21L2XBqFEtVbVmr/lNpOY5E
+	lW/86SlwSNkhqBsfJJSShoInjt5e91Mg+IZOO4Jmg3VwRzN+GtYOTN13wSf/n8r7wz4VWJOgtDs
+	pNNcwGuO9q/9DbqIVjUcKx4xED8Qinzg7nZp1cqVSknzqzgad92+X7Wndy9fSq1THyM86J5uw4s
+	1TyDcZmjFFjOCPcBAau2HD2VkCNTtN/IlfFWj/FaVwM29DntP1bat6wtjQMxHsmdSDtWZmvcqPX
+	OT0O2QQoHyN9D5dp7u1PplUOStzGjkVAom
+X-Received: by 2002:a05:6a21:7486:b0:3da:bd6d:bef4 with SMTP id adf61e73a8af0-3dd8c441374mr2384261637.13.1789701845789;
+        Thu, 17 Sep 2026 20:24:05 -0700 (PDT)
+Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-29.dlp.protect.broadcom.com. [144.49.247.29])
+        by smtp-relay.gmail.com with ESMTPS id 41be03b00d2f7-cc5bc9f893dsm160407a12.3.2026.09.17.20.24.05
+        for <kexec@lists.infradead.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 17 Sep 2026 20:24:05 -0700 (PDT)
+X-Relaying-Domain: broadcom.com
+X-CFilter-Loop: Reflected
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-3a55b68ae57so1383841fa.2
+        for <kexec@lists.infradead.org>; Thu, 17 Sep 2026 20:24:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1789701843; x=1790306643; darn=lists.infradead.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=MH5QEcAdSFYOoMIMiWDV8W/y30UDqiHCwxXnldaYp0E=;
-        b=hgqWfv+EIhd5St2uUNzrqzrMbat+Tf5a/DE2jzkzH/v1Q72SiUdXoH81QCyToy9S+j
-         SNQo6gdgLDs1derLu/26wZoeU7eu2bQBB5p7/uYz57y3YW3WMxd8nN4I6vnFFozKwjob
-         NSzxhWDEp0bbnq2OiZNUoZ8nU+eYljvr9HZAtqIFumAzHJ4/OCEIxKIvVbC1TmH5V4zV
-         zMZBTvMqZc7l/iOFZLjY5qKD757+0IGP99+6usRPrx3/VGk+Nq1p9t0H8RzWEuzc4lfj
-         QWJnoRmEwaHsiINRdZg5NCVxTzW2mxclQ1h/xD0RexJgkRVpRnfQ5kL+qmAlH9W8IxU5
-         LJkA==
-X-Gm-Message-State: AFuF++mmjBO3fLksuyIlglQvFxoaS4RZi2d6a1kTUcFo8xU5oM2hQTxV
-	w1LgKXmFK5U1MpKUczh0HxZ76MmRZXM+W5nMjkhu5YAue6fYWbtxo998jA3F+e+HTQ==
-X-Gm-Gg: AYBFou1ec5XRFpaHXM6rpXQqYp3vqMa5pgh1eaTzrMuBp8YrLnB3G1VUw49DSx3/SM2
-	2Gx+28Zuerga3bL5oCwcprGadiG2D6h35XxpzJmMhuhUdF2JKiHXKcg3CJ+ndT3iFuhN6GwJWkT
-	/+/uOWACTrU0sCkIBRh0eIywb3NmDma+KLL2zRD4V6yDASpT1DDraGivmgPrGpkcnkX8Aj/mM4M
-	nl6P8Hmk9TK5x/aAZfQ/psLYtjzkz17khYXc2q2H+a94QCh3ifAJ8inTQ4Ct8pJxn73C1SJ0Rhn
-	2794V4LAvhBAFmCzZhUCK8bqRabpKoPC5ibTLMZFw1CMml0g4TX/pGWhv0dyTVHV5aBlmH1UQUf
-	75JrQDXZHSiDcN39ot52Xk7FP9V5W4GGyr/AnNndH2Vf/ariIphyCmzsmSFgJI/IU9dKRMlluRr
-	JpjZKwkE2rBMoJ5lzsjEBVMzdNtHWlq9iyeBhRhwajKL/j4s16zECWhF+NMNFLby2wxGPE2JD0c
-	FiiHimokxXPst6hbiuQvBThK3tdqdGST+CcMrrgcFPIuj74qSg=
-X-Received: by 2002:a17:90b:2ecb:b0:39e:4c7f:8b1c with SMTP id 98e67ed59e1d1-39e54d4cb89mr1939357a91.33.1789692507312;
-        Thu, 17 Sep 2026 17:48:27 -0700 (PDT)
-Received: from google.com (132.200.185.35.bc.googleusercontent.com. [35.185.200.132])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39e5a0e8ca0sm201754a91.2.2026.09.17.17.48.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Sep 2026 17:48:26 -0700 (PDT)
-Date: Fri, 18 Sep 2026 00:48:22 +0000
-From: David Matlack <dmatlack@google.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-pci@vger.kernel.org,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Alexander Graf <graf@amazon.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
-	Josh Hilke <jrhilke@google.com>,
-	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pranjal Shrivastava <praan@google.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
-	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v8 01/12] PCI: liveupdate: Set up FLB handler for the PCI
- core
-Message-ID: <aqyKVkIH58DK0EZO@google.com>
-References: <aqQv0jJdT4xq6VWu@google.com>
- <20260916235041.GA989143@bhelgaas>
+        bh=hkjoM6yd6CXdEoSX1RClXGhH+cgflcxUopLdHG+auvU=;
+        b=cLxlKs1v8a7auzn8JrP9pb978pE0yRXpL8uiC6DxIX11mRlc835Os5FVSAyVnOrHhN
+         eZQbtPUWTUtZeWniBDc6TFXV/NTnF2sa2u8R4anBqo1saO2kaGIpAQWftyhkG9UGWQ0/
+         ikJAUQQsNVlWFEBMrgHCkLgQEU3eZhO2KP4t4=
+X-Forwarded-Encrypted: i=1; AKwUvBz31+cRyMJ7N176ztlI+TFo4PRQgl9Qg/OhGmB5rS2tdIOS8BWAxvV5qf7QqcUfNv/Q7siGug==@lists.infradead.org
+X-Received: by 2002:a05:6512:3ba3:b0:5b8:bc5e:d118 with SMTP id 2adb3069b0e04-5b8c1986aeamr235852e87.66.1789701843369;
+        Thu, 17 Sep 2026 20:24:03 -0700 (PDT)
+X-Received: by 2002:a05:6512:3ba3:b0:5b8:bc5e:d118 with SMTP id
+ 2adb3069b0e04-5b8c1986aeamr235845e87.66.1789701842954; Thu, 17 Sep 2026
+ 20:24:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260916235041.GA989143@bhelgaas>
+References: <cover.1788414671.git.zack.rusin@broadcom.com> <7487011dfb95aadda9515b22a5852680df1982c5.1788414671.git.zack.rusin@broadcom.com>
+ <aquttpMVKX8e6zGB@pathway.suse.cz>
+In-Reply-To: <aquttpMVKX8e6zGB@pathway.suse.cz>
+From: Zack Rusin <zack.rusin@broadcom.com>
+Date: Thu, 17 Sep 2026 23:23:49 -0400
+X-Gm-Features: AcwNN1UbbvzheDkuAbTIJB-wv3-UyGyD0BDcZCvagFWxgsOb2LvxtBfe6D-Qesg
+Message-ID: <CABQX2QPJVg-dZB9f4ydRU_5W7nyWwVCQtDoRGoe1+9cA7wyUDw@mail.gmail.com>
+Subject: Re: [PATCH v1 4/4] x86/vmware: Run panic diagnostics before kdump by default
+To: Petr Mladek <pmladek@suse.com>
+X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000a5e45c065bb96e66"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260918_014830_539656_99CCFA7B 
-X-CRM114-Status: GOOD (  66.93  )
+X-CRM114-CacheID: sfid-20260917_202408_141951_091B1713 
+X-CRM114-Status: GOOD (  33.37  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -132,306 +107,202 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Cc: linux-doc@vger.kernel.org, Kees Cook <kees@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Young <ruirui.yang@linux.dev>, Bo Gan <bo.gan@broadcom.com>, "H . Peter Anvin" <hpa@zytor.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, Jonathan Corbet <corbet@lwn.net>, Brennan Lamoreaux <brennan.lamoreaux@broadcom.com>, x86@kernel.org, Joel Granados <joel.granados@kernel.org>, Alexey Makhalov <alexey.makhalov@broadcom.com>, Ingo Molnar <mingo@redhat.com>, bcm-kernel-feedback-list@broadcom.com, Ajay Kaher <ajay.kaher@broadcom.com>, Baoquan He <baoquan.he@linux.dev>, John Ogness <john.ogness@linutronix.de>, virtualization@lists.linux.dev, Steven Rostedt <rostedt@goodmis.org>, Borislav Petkov <bp@alien8.de>, Mike Rapoport <rppt@kernel.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Sergey Senozhatsky <senozhatsky@chromium.org>, Thomas Gleixner <tglx@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Pratyush Yadav <pratyush@kernel.org>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-09-16 06:50 PM, Bjorn Helgaas wrote:
-> On Fri, Sep 11, 2026 at 04:44:02PM +0000, David Matlack wrote:
-> > On 2026-09-10 06:48 PM, Bjorn Helgaas wrote:
-> > > On Tue, Jul 28, 2026 at 10:09:55PM +0000, David Matlack wrote:
-> > > > Set up a File-Lifecycle-Bound (FLB) handler for the PCI core to enable
-> > > > it to participate in the preservation of PCI devices across Live Update.
-> > > > Essentially, this commit enables the PCI core to allocate a struct
-> > > > (struct pci_ser) and preserve it across a Live Update whenever at least
-> > > > one device is preserved.
-> > > 
-> > > I assume pci_ser is the state the PCI core needs to preserve across
-> > > kexec so the new kernel's enumeration doesn't interrupt the device
-> > > operation.  And that whatever state the endpoint drivers need to
-> > > adopt/inherit the device in the new kernel is managed without any help
-> > > from the PCI core?
-> > 
-> > Yes.
-> > 
-> > > > Preserving PCI devices across Live Update is built on top of the Live
-> > > > Update Orchestrator's (LUO) support for file preservation. Drivers are
-> > > > expected to expose a file to userspace to represent a single PCI device
-> > > > and support preservation of that file. This is intended primarily to
-> > > > support preservation of PCI devices bound to VFIO drivers.
-> > > 
-> > > Where do drivers expose this file?  sysfs?  I guess it's a file per
-> > > preserved device?  Thinking like a driver writer, I'm expecting a hint
-> > > about how to expose this file (should also be in the file doc somehere
-> > > if it's not already).
-> > 
-> > There is no requirement about how drivers do this from the PCI core
-> > perspective. For all intents and purposes, the VFIO PCI variant drivers
-> > are the only drivers that are going to be supported in the next 1-2
-> > years. They expose a misc character device for each file.
-> 
-> If this file isn't relevant to the PCI core, maybe we don't need to
-> mention it here.  It doesn't seem like it motivates this patch.
-> 
-> > > > This commit enables drivers to register their liveupdate_file_handler
-> > > > with the PCI core so that the PCI core can do its own tracking and
-> > > > enforcement of which devices are preserved.
-> > > > 
-> > > >   pci_liveupdate_register_flb(driver_file_handler);
-> > > >   pci_liveupdate_unregister_flb(driver_file_handler);
-> > > 
-> > > So a driver calls pci_liveupdate_register_flb() once, then
-> > > pci_liveupdate_preserve() once for each device it wants preserved?
-> > 
-> > Yes
-> > 
-> > > > When the first file (with a handler registered with the PCI core) is
-> > > > preserved, the PCI core will be notified to allocate its tracking struct
-> > > > (pci_ser).
-> > > 
-> > > The passive voice here makes the actors a bit obscure.  I guess a
-> > > LIVEUPDATE_SESSION_PRESERVE_FD ioctl on some per-device file kicks
-> > > this off?
-> > 
-> > Yes. (And I will reduce the passive voice in the next version.)
-> > 
-> > > I guess the pci_ser allocation is in
-> > > pci_liveupdate_flb_ops.preserve(), i.e., pci_flb_preserve()?
-> > 
-> > Yes.
-> > 
-> > > So the PCI core tracker (pci_ser) isn't actually allocated at the time
-> > > of pci_liveupdate_register_flb(); it's allocated on the first
-> > > LIVEUPDATE_SESSION_PRESERVE_FD ioctl for a driver that has called
-> > > pci_liveupdate_register_flb()?
-> > 
-> > Yes. The first device that gets preserved triggers the allocation of
-> > struct pci_ser. And the last device that gets unpreserved (preservation
-> > cancelled) triggers the freeing of struct pci_ser.
-> > 
-> > > IIUC the call tree for that ioctl looks something like this:
-> > > 
-> > >   <driver>
-> > >     pci_liveupdate_register_flb
-> > >       liveupdate_register_flb(fh, &pci_liveupdate_flb)
-> > > 
-> > >   luo_session_ioctl
-> > >     op = &luo_session_ioctl_ops[...]
-> > >     op->execute                               # eg luo_session_preserve_fd()
-> > >       luo_session_preserve_fd
-> > >         luo_preserve_file
-> > >           luo_flb_file_preserve
-> > >             luo_flb_file_preserve_one
-> > >               if (outgoing_count == 0)        # only for first FLB device
-> > >                 flb->ops->preserve            # eg pci_flb_preserve()
-> > >                   pci_flb_preserve
-> > >                     ser = kho_alloc_preserve  <-- alloc pci_ser
-> > >                 outgoing.count = 1
-> > >           fh->ops->preserve                   # something not included here
-> 
-> So IIUC this part of the path looks like this, which answers my
-> question below about ordering of pci_ser and
-> pci_liveupdate_preserve():
-> 
->               fh->ops->preserve                   # eg vfio_pci_liveupdate_preserve()
->                 vfio_pci_liveupdate_preserve
->                   pci_liveupdate_preserve
->                     pci_liveupdate_preserve_device
->                       dev_ser = pci_flb_alloc_dev_ser  <-- alloc per-dev PCI core serialized state
->                       dev_ser->bdf = pci_dev_id(dev)
-> 
-> > > Seems like kind of an awkward way to allocate pci_ser.  Couldn't it be
-> > > allocated on the first call to pci_liveupdate_register_flb()?  That
-> > > would be a lot easier for driver writers to trace through.
-> > 
-> > I agree the LUO FLB API is a bit awkward, but this is how it works.
-> > 
-> > If we allocated it during pci_liveupdate_register_flb() we would then
-> > need to stash it in a global variable to hand-off the LUO later. Despite
-> > the awkwardness of FLBs, it is useful to avoid globals and have LUO
-> > management the lifetime.
-> 
-> It seems like pci_ser is a singleton by design, so a global variable
-> doesn't sound like it would be terrible to me.
-> 
-> > > > When the last file is unpreserved (i.e. preservation
-> > > > cancelled) the PCI core will be notified to free struct pci_ser.
-> > > 
-> > > There's a lot going on behind "PCI core will be notified".  I assume
-> > > these refer to the first-time behavior of luo_flb_file_preserve_one()
-> > > and last-time behavior of liveupdate_flb_put_outgoing(), which is
-> > > honestly kind of hard to suss out.
-> 
-> Could we say something specific and PCI-related here, to help connect
-> the dots?  Most of these paths are outside the PCI core.
-> 
-> IIUC luo_session essentially has a refcount (outgoing.count)
-> incremented by each LIVEUPDATE_SESSION_PRESERVE_FD ioctl, and the 0->1
-> transition in luo_flb_file_preserve_one() ends up calling
-> pci_flb_preserve(), where pci_ser is allocated.
-> 
-> And the refcount is decremented by luo_flb_file_unpreserve() (in a
-> luo_session .release() function), where the 1->0 transition in
-> liveupdate_flb_put_outgoing() calls pci_flb_unpreserve() where pci_ser
-> is deallocated.
-> 
-> That gets into a lot of detail, probably too much for a commit log.
-> Maybe mentioning the function names by which the PCI core is notified
-> to alloc/free pci_ser would be enough of a bread crumb.
-> 
-> > > This series doesn't include a caller of pci_liveupdate_preserve() (or
-> > > pci_liveupdate_register_flb()), so I can't figure out the ordering.
-> > > Obviously pci_liveupdate_register_flb() must be first.
-> > 
-> > In every version of this patch series I have sent I included a link to
-> > the vfio-pci driver changes that build on top of this, rebased that
-> > series on top of this one, uploaded it to my GitHub, and included a link
-> > in the cover letter. Here is the relevant section from the v8 cover
-> > letter:
-> > 
-> > . This series was tested in conjunction with v5 of the VFIO PCI driver
-> > . series:
-> > .
-> > .   https://lore.kernel.org/kvm/20260714151505.3466855-1-vipinsh@google.com/
-> > .
-> > . The full set of patches used for testing can be found on GitHub.
-> > .
-> > .   https://github.com/dmatlack/linux/tree/liveupdate/pci/base/v8-with-vfio
-> > 
-> > 
-> > > I first thought pci_liveupdate_preserve() would be called via the
-> > > fh->ops->preserve() in the luo_session_preserve_fd() ioctl path, but
-> > > it's not.  pci_liveupdate_preserve() is intended for the driver to
-> > > call it directly.  But it looks like it has to be called *after* the
-> > > ioctl?  Obviously I'm confused :)
-> > 
-> > It is called by the driver during it's fh->ops->preserve() callback. In
-> > other words, it is called during the ioctl by the driver.
-> 
-> I think the updated call tree above shows the connection?
+--000000000000a5e45c065bb96e66
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Yes the call tree you added above is correct. Here is an attempt at the
-complete picture that I plan to include in the kernel-doc in v9:
+On Thu, Sep 17, 2026 at 5:07=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrot=
+e:
+>
+> Adding Guilherme G. Piccoli into Cc.
+>
+> On Tue 2026-09-08 14:07:16, Zack Rusin wrote:
+> > The core panic path enters a loaded crash kernel before running kmsg
+> > dumpers, so the VMware logger cannot preserve the panic in the host log=
+.
+> > Set crash_kexec_post_notifiers during VMware platform setup. setup_arch=
+()
+> > runs before ordinary core parameters are parsed, so an explicit
+> > crash_kexec_post_notifiers=3D0 still overrides this default. The 0644
+> > parameter also remains writable at runtime.
+> >
+> > VMware exposes no capability bit for this behavior, so the default chan=
+ges
+> > for every VMware guest. Running the logger first adds work to the panic
+> > path and can reduce kdump reliability.
+>
+> AFAIK, the quality of the notifiers is varying. Running all notifiers
+> might reduce the kdump reliability even more.
+>
+> I do not like much the hack with crash_kexec_post_notifiers. It is
+> an all or nothing option.
+>
+> Also it was introduced as a quick hack so that users could decide
+> what is more important for them. But it is not longer a "user"
+> decision when some platforms enforce the ordering because they
+> depend on the notifier.
+>
+> panic() is problematic and it is about compromises. And we need
+> to balance what is important, what is safe, and what is optional.
+> This is why I suggested to introduce more notifiers some time ago,
+> see https://lore.kernel.org/lkml/YfPxvzSzDLjO5ldp@alley/
+>
+> Guillermo implemented this, see
+> https://lore.kernel.org/all/20220427224924.592546-1-gpiccoli@igalia.com/
+> But it has stalled because it touched too many subsystems and it was
+> hard to get an agreement.
+>
+> Maybe, we should start with something simple, and introduce
+> one more panic notifier as a start. It might be called either:
+>
+>   + "panic_hypervisor_list" because "crash_kexec_post_notifiers =3D true"
+>     seems to be primary set on hypervisors.
+>
+> But I would rather make it more generic and call it
+>
+>   + panic_pre_crash_kexec or panic_pre_kdump because there might be
+>     more notifiers which are either 100% safe and useful or are worth
+>     the risk before calling crash dump.
+>
+> We could put there x86/vmware notifiers as a start. And we could later
+> move there other important notifiers.
+>
+> How does that sound, please?
 
- * Call Flow
- * ---------
- *
- * ::
- *
- *   # Driver initialization
- *   pci_liveupdate_register_flb(fh)
- *
- *   # Userspace: ioctl(LIVEUPDATE_SESSION_PRESERVE_FD, devfd)
- *   luo_preserve_file()
- *     luo_flb_file_preserve()
- *       luo_flb_file_preserve_one()      # first preserved file only
- *         pci_flb_preserve()             # alloc and preserve struct pci_ser
- *     fh->ops->preserve()                # driver callback
- *       pci_liveupdate_preserve(dev)     # record this device in struct pci_ser
- *
- *   # Userspace: preservation cancelled or session torn down
- *   luo_file_unpreserve_files()
- *     luo_flb_file_unpreserve()
- *       liveupdate_flb_put_outgoing()    # last unpreserved file only
- *         pci_flb_unpreserve()           # free struct pci_ser
- *
- *   # ---------------- kexec ----------------
- *
- *   # New kernel: PCI enumeration
- *   pci_setup_device()
- *     pci_liveupdate_setup_device()
- *       liveupdate_flb_get_incoming()
- *         luo_flb_retrieve_one()         # first request only
- *           pci_flb_retrieve()           # previous kernel's struct pci_ser
- *
- *   # Userspace: ioctl(LIVEUPDATE_SESSION_FINISH)
- *   luo_file_finish_one()
- *     fh->ops->finish()                  # driver callback
- *       pci_liveupdate_finish(dev)       # release this device's pci_dev_ser
- *     luo_flb_file_finish()
- *       liveupdate_flb_put_incoming()    # last incoming file only
- *         pci_flb_finish()               # free struct pci_ser
- *
+afaict that sounds good. Keeping it to one new list and one client
+should make it manageable to review (which is my biggest worry :) ).
 
-And here is an updated commit message that I hope explains everything more
-clearly:
+As so the implementation: I'll drop VMware's
+crash_kexec_post_notifiers default and start with one generic
+panic_pre_kdump_list, with only the VMware log sender on it. The
+structured crash-report hypercall (REPORTGUESTCRASH) can terminate the
+VM, so it stays late and remains suppressed when a crash kernel is
+loaded. Log transfer is still controlled by
+kernel.vmware_record_panic_msg, with encrypted guests defaulting to
+off.
 
- PCI: liveupdate: Set up FLB handler for the PCI core
+I think that without that default though, x86 oops_end() can enter
+crash_kexec(regs) before reaching panic(), for example with
+panic_on_oops=3D1. To cover that path too, I'd call the chain from
+__crash_kexec() after the image check and register capture, under the
+existing kexec lock. A second call in vpanic(), immediately before
+kmsg_dump_desc(), would cover the fallback path. And I think a
+set-once guard would prevent duplicate or recursive dispatch.
 
- Set up a File-Lifecycle-Bound (FLB) handler so that the PCI core can
- preserve its own state across a Live Update kexec.
+That leaves CPU-stop and ordinary notifier ordering unchanged. The
+logger would read the kmsg buffer directly, without invoking the other
+dumpers, and would need to tolerate NMI context and other CPUs still
+running. I'll keep the crash-core call in a separate patch for kdump
+review, leaving other clients for follow-ups.
 
- Preserving a PCI device across kexec requires preserving two independent
- sets of state:
+Does that sound good to you?
 
-  - Driver state, e.g. everything vfio-pci needs so that userspace can
-    keep using the device in the new kernel. The driver preserves this
-    itself and the PCI core is not involved.
+z
 
-  - PCI core state, e.g. which devices are preserved, so that the new
-    kernel knows not to disturb them while they are still running and
-    doing DMA. That is what this commit adds, serialized into struct
-    pci_ser.
+--000000000000a5e45c065bb96e66
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
- Userspace, not the kernel, decides which devices are preserved, and it
- does so through the Live Update Orchestrator's (LUO) support for file
- preservation: a driver exposes a file that represents a single PCI
- device, and userspace preserves that device with
- ioctl(LIVEUPDATE_SESSION_PRESERVE_FD) on that file. Binding preservation
- to a file gives it proper lifecycle management, e.g. the preservation is
- undone if userspace cancels it or goes away. How a driver exposes that
- file is up to the driver and invisible to the PCI core (vfio-pci variant
- drivers, the first intended use-case, use their per-device cdev).
-
- LUO only knows that a file was preserved; it does not know that the
- represents a PCI device, or which one. Bridging that gap, drivers
- register their liveupdate_file_handler with the PCI core:
-
-   pci_liveupdate_register_flb(driver_file_handler);
-   pci_liveupdate_unregister_flb(driver_file_handler);
-
- LUO then refcounts the PCI core's FLB against the files preserved by
- that handler, and that refcount drives the lifetime of struct pci_ser:
-
-  - On the first preserved file, luo_flb_file_preserve_one() calls
-    pci_flb_preserve(), which allocates struct pci_ser and preserves it
-    with KHO.
-
-  - On the last unpreserved file (i.e. preservation cancelled),
-    liveupdate_flb_put_outgoing() calls pci_flb_unpreserve(), which
-    unpreserves and frees struct pci_ser.
-
-  - In the next kernel, pci_flb_retrieve() hands the PCI core the struct
-    pci_ser built by the previous kernel, whenever the PCI core asks for
-    it (e.g. during enumeration), and pci_flb_finish() frees it once the
-    PCI core is done with it.
-
- So the flow for preserving a device, once a driver has registered, looks
- like this:
-
-   ioctl(LIVEUPDATE_SESSION_PRESERVE_FD)
-     luo_session_preserve_fd()
-       luo_preserve_file()
-         luo_flb_file_preserve()
-           luo_flb_file_preserve_one()  # only on the first preserved file
-             pci_flb_preserve()         # alloc + KHO-preserve pci_ser
-         fh->ops->preserve()            # driver callback, e.g. vfio-pci
-
- Note that struct pci_ser is deliberately not allocated when a driver
- calls pci_liveupdate_register_flb(). A driver can be loaded for the
- lifetime of the machine without ever preserving a device, and there is
- no reason to allocate memory and hand it to the next kernel in that
- case. Letting LUO own the lifetime also means the PCI core does not have
- to duplicate LUO's refcounting and unwind logic for preservation
- failures, session aborts and fd close, and the incoming side
- (retrieve/finish) comes from the same object rather than requiring a
- separate KHO FDT entry owned by the PCI core.
-
- Note: This commit only allocates struct pci_ser and preserves it across
- Live Update. A subsequent commit adds pci_liveupdate_preserve(), the API
- drivers call from their fh->ops->preserve() callback to tell the PCI
- core exactly which devices are being preserved.
-
- Note: There is no reason to check for kho_is_enabled() since it can be
- assumed to return true. If KHO was not enabled then Live Update would
- not be enabled and these routines would never run.
+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
+6U6qgI8F5eiKsQyE0HgYrQJx/sDs9LLVZlaNiA3U8M8CgEnb8VhuH3BN/yXphhEQdJXb1TyaJA60
+SmHcZdEQZbl4EjwUcs3UIowmI/Mhi7ADQB7VNsO/BaOVBEQk53xH+4djY/cg7jvqTTeliY05j2Yx
+uwwXcDC4mWjGzxAT5DVqC8fKQvon1uc2heorHb555+sLdwYxAgMBAAGjggHYMIIB1DAOBgNVHQ8B
+Af8EBAMCBaAwgZMGCCsGAQUFBwEBBIGGMIGDMEYGCCsGAQUFBzAChjpodHRwOi8vc2VjdXJlLmds
+b2JhbHNpZ24uY29tL2NhY2VydC9nc2djY3I2c21pbWVjYTIwMjMuY3J0MDkGCCsGAQUFBzABhi1o
+dHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3I2c21pbWVjYTIwMjMwZQYDVR0gBF4wXDAJ
+BgdngQwBBQMBMAsGCSsGAQQBoDIBKDBCBgorBgEEAaAyCgMCMDQwMgYIKwYBBQUHAgEWJmh0dHBz
+Oi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwQQYDVR0fBDowODA2
+oDSgMoYwaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3I2c21pbWVjYTIwMjMuY3JsMCIG
+A1UdEQQbMBmBF3phY2sucnVzaW5AYnJvYWRjb20uY29tMBMGA1UdJQQMMAoGCCsGAQUFBwMEMB8G
+A1UdIwQYMBaAFAApNp5ceroPry1QLdugI4UYsKCSMB0GA1UdDgQWBBQNDn2m/OLuDx9YjEqPLCDB
+s/VKNTANBgkqhkiG9w0BAQsFAAOCAgEAF463syOLTQkWZmEyyR60W1sM3J1cbnMRrBFUBt3S2NTY
+SJ2NAvkTAxbPoOhK6IQdaTyrWi8xdg2tftr5FC1bOSUdxudY6dipq2txe7mEoUE6VlpJid/56Mo4
+QJRb6YiykQeIfoJiYMKsyuXWsTB1rhQxlxfnaFxi8Xy3+xKAeX68DcsHG3ZU0h1beBURA44tXcz6
+fFDNPQ2k6rWDFz+XNN2YOPqfse2wEm3DXpqNT79ycU7Uva7e51b8XdbmJ6XVzUFmWzhjXy5hvV8z
+iF+DvP+KT1/bjO6aNL2/3PWiy1u6xjnWvobHuAYVrXxQ5wzk8aPOnED9Q8pt2nqk/UIzw2f67Cn9
+3CxrVqXUKm93J+rupyKVTGgKO9T1ODVPo665aIbM72RxSI9Wsofatm2fo8DWOkrfs29pYfy6eECl
+91qfFMl+IzIVfDgIrEX6gSngJ2ZLaG6L+/iNrUxHxxsaUmyDwBbTfjYwr10H6NKES3JaxVRslnpF
+06HTTciJNx2wowbYF1c+BFY4r/19LHygijIVa+hZEgNuMrVLyAamaAKZ1AWxTdv8Q/eeNN3Myq61
+b1ykTSPCXjBq/03CMF/wT1wly16jYjLDXZ6II/HYyJt34QeqnBENU9zXTc9RopqcuHD2g+ROT7lI
+VLi5ffzC8rVliltTltbYPc7F0lAvGKAxggJXMIICUwIBATBiMFIxCzAJBgNVBAYTAkJFMRkwFwYD
+VQQKExBHbG9iYWxTaWduIG52LXNhMSgwJgYDVQQDEx9HbG9iYWxTaWduIEdDQyBSNiBTTUlNRSBD
+QSAyMDIzAgxhPxw+eieHWB40hPkwDQYJYIZIAWUDBAIBBQCggccwLwYJKoZIhvcNAQkEMSIEIP6m
+uYCiia3ORHyqPmaSAdKPjfLBQQ4P4lHomezD1Dh3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEw
+HAYJKoZIhvcNAQkFMQ8XDTI2MDkxODAzMjQwM1owXAYJKoZIhvcNAQkPMU8wTTALBglghkgBZQME
+ASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQcwCwYJ
+YIZIAWUDBAIBMA0GCSqGSIb3DQEBAQUABIIBAIJoiqN+pGBweUn+Tw/Bk02/2LuL0p2H5SVE0c/c
+RackBtK7eGpsWfY80ejZOxPsrOcCSNd/PwPLAHfTDFrBV4eeRsKSIvXnYo9Rd/s/WXtvfnj7aksD
+arOk+coO3+mc6qBHRSeQ6/JJJOxBkavp6QdrvJVDF9/hryFuMHaIZEOC/Jg6b8zCMv696KHqI2LH
+Gsw5+z4jBn/co22kaB8CqYvlWWSzvqpHK6QJp9ZHtGfVqoROyKfvWGMv02z54jwmscT6p60Ru2IY
+XN1CMthKyOmV+cLZzJv5XVGDiy0i7AoAH+aGU8BWVmKulTEcWBlUd8zX/E1WsuK+yNMAGGEGDcU=
+--000000000000a5e45c065bb96e66--
 
