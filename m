@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3CA1DC982F3
-	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CB163C9830B
+	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:23:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
 	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
 	:Subject:To:From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=g746orfjBM5FKI/4ioFM0MPbnRDGHMAm7NJngqq6WSA=; b=huFcJHAu9O3USrwiCN4XL5rjKV
-	vAwqpBonQkcDj4XWZezlIsBEdU9Q0+4RjARzy8dc9S2G2Mr/4vB6uu/UB0mS5PH0GX3Z+5QnPLOZ/
-	xPnaLvXvd55l9hGIMWCipSJTnxlfON8hOTeRk/W3ITblxWwFiBHRt0Jqob8SMtcuJQxtdt0gShTxQ
-	oITNCNBYO9swiYyUKt5VeN3Wi/niwFYJu/gA7J6h0pjy6p5IDN/q7AwYI+Gge5ayE19W8hh5zVsBJ
-	qkT/4silagpdSQ8GgiuYjp2Bbcz/xycQHAvHCeKG+ad52VVqc93qkY1M9uDYVYYNmFJU2I7AlpoXP
-	H/c7lbKQ==;
+	bh=gl9dOVAVG56ScS9MwUOL4momh5UtqrFy6pN1ShFcuZM=; b=JSdjRs+mfPJJjawx2O0SD1YPe4
+	KD6BOrUTzlcl5V4P38mQH0EzLUUDU8/lM0nuebqGkULI0/5re9GfHZNgxmR/XYDvrqVBZBvMQHY/U
+	q4vj3nPA7uIb3OZWXo1tbgspOf31CVQlFuFDvjUygjZnbppGND4d7svqjrywOKXSAlwyAjWOqynMt
+	U4xEWNFDiF+90GkY/uRIc694SiJIfnseO43tvzvs6rkO34UZI6qpe6auoibpyffJrkEAugswtA7nn
+	1iMfVum2AmRMNboLC1nD67DlXi5PWnHjNVEtceulDJ2qv8JtlvzXM/VOa1w2/jIyYBdMu/va8qUZe
+	8N0c/f7A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8O4V-00000000MeU-2Cgk;
-	Sun, 20 Sep 2026 20:23:35 +0000
+	id 1x8O4U-00000000Mcu-3XrR;
+	Sun, 20 Sep 2026 20:23:34 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7VSN-0000000E2S2-04Aq;
-	Fri, 18 Sep 2026 10:04:35 +0000
+	id 1x7VSM-0000000E2R9-1HRB;
+	Fri, 18 Sep 2026 10:04:34 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Content-Type:Content-Transfer-Encoding
 	:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Sender:
 	Reply-To:Cc:Content-ID:Content-Description;
-	bh=g746orfjBM5FKI/4ioFM0MPbnRDGHMAm7NJngqq6WSA=; b=bS5w84SOh2IcOObb+20HMPc7Cg
-	KeIoN9McqOyzlCh53vJzisIWEtuwxGZTHUfWA9UBeWN1jf4t5CefJwaqEG93srZi/Bo8DqQfa0WIW
-	AlML8/kht+DVAE8PLR+TNMEuETPduc5NaD4kn+E+Vy7F+HshmA/E7l96R4Jx/DuoS/AfNvvSt3K1L
-	N3RJbIhDRFN9nRho3XPSmwNphJBJUcvXrem2dVKcm78aB17O+vgkuSpnMxq3UivZ1MEAoV380LLac
-	3cc/0tsdTFc3ogCv2mRq+52DQF/dszOP/vcOS3qzJ8OKakibUMcEAwR6OOTqWtXHNChNpQ6LF+3kk
-	6kW46vfw==;
-Received: from canpmsgout06.his.huawei.com ([113.46.200.221])
+	bh=gl9dOVAVG56ScS9MwUOL4momh5UtqrFy6pN1ShFcuZM=; b=Uc/vU2/kJ1VcNIiolbBXsIRKzJ
+	+ye/zN1DnPSl5T0oAcx74P/Lonrxvr9b+3HOD1XA9E+gzuxQn3isxClusaAUmGrLOK7hz+64EFL/0
+	5KhEM0n9UV+FNMte0DdEakY4j/sZjDvcmSWB07Qbd2EMD08q/nVsz37xZjHnnc7vpl5oePN8r5LIS
+	+iCobOmz1F5yj9lwxXK/Oug3mxa2RNp/CWzV2pnlECUdEsQx5vvilZEvvT023Ue3Pdktzo4L3PRQX
+	eqQzy/yB3yUyJa6+IXyva0p91fk0KxszFRo47PX2xP7asOfDbjJZVAjGq3S5jZnmxA5hd4zdHzlPK
+	pbJLTb7g==;
+Received: from canpmsgout08.his.huawei.com ([113.46.200.223])
 	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
-	id 1x7VSG-00000009tU1-2NaF;
-	Fri, 18 Sep 2026 10:04:34 +0000
+	id 1x7VSI-00000009tVw-2HIE;
+	Fri, 18 Sep 2026 10:04:33 +0000
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=g746orfjBM5FKI/4ioFM0MPbnRDGHMAm7NJngqq6WSA=;
-	b=h1jxo3g6i+Np9G/ygFulWombg/WWMVz/nTSO7gjsBS9mUvrsf8A1hYwT/QK9YNw/PYEjbGJJP
-	flmsFMVVXB+OPm2NGt/WJCIxlXEKLJyUYJ29/n9rb9hEiJCkb2OYQAVDWCoW/izsogrfAUkYoKj
-	HDssVLSCyfy0uWkUl/kaLnw=
-Received: from mail.maildlp.com (unknown [172.19.162.144])
-	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4hmScB70ylzRhXT;
-	Fri, 18 Sep 2026 17:53:14 +0800 (CST)
+	bh=gl9dOVAVG56ScS9MwUOL4momh5UtqrFy6pN1ShFcuZM=;
+	b=wVs/Hs9Gq6VG/cWAMpWvzJmy/oIAMsdmFRrHLaMN8dhT/208NNm+Jy57C8JdLMxP37J0PUlpB
+	GvTnqbaNF3Y1buLGfFQc0tAbMgmC9XUKdLppSMLKPgLCRodGAQm9QZNfIEVZADGVfpSUfrMTgAo
+	355Yjh2Bx4bZrE0WgEv0YQ0=
+Received: from mail.maildlp.com (unknown [172.19.163.163])
+	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4hmScL1T4gzmVWY;
+	Fri, 18 Sep 2026 17:53:22 +0800 (CST)
 Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6093540538;
-	Fri, 18 Sep 2026 18:04:12 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 492124048B;
+	Fri, 18 Sep 2026 18:04:22 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemk200008.china.huawei.com
  (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Fri, 18 Sep
- 2026 18:04:10 +0800
+ 2026 18:04:20 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
@@ -82,9 +82,9 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
 	<driver-core@lists.linux.dev>, <kexec@lists.infradead.org>,
 	<linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>
-Subject: [PATCH v5 02/17] kexec: Record allocated CMA pages to fix release size mismatch
-Date: Fri, 18 Sep 2026 18:04:27 +0800
-Message-ID: <20260918100442.3841135-3-ruanjinjie@huawei.com>
+Subject: [PATCH v5 09/17] x86/crash: Fix massive out-of-bounds write on 32-bit Highmem
+Date: Fri, 18 Sep 2026 18:04:34 +0800
+Message-ID: <20260918100442.3841135-10-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260918100442.3841135-1-ruanjinjie@huawei.com>
 References: <20260918100442.3841135-1-ruanjinjie@huawei.com>
@@ -95,8 +95,8 @@ X-Originating-IP: [10.90.53.73]
 X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
  kwepemk200008.china.huawei.com (7.202.194.74)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260918_110429_200007_8B07949F 
-X-CRM114-Status: GOOD (  16.13  )
+X-CRM114-CacheID: sfid-20260918_110431_276186_CF013523 
+X-CRM114-Status: GOOD (  13.23  )
 X-Mailman-Approved-At: Sun, 20 Sep 2026 13:23:20 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -112,125 +112,87 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The CMA pages allocated for a kexec segment are released using the
-segment's memsz to calculate the number of pages. However, some
-architecture loaders modify the segment's memsz after allocation
-(e.g. arm64 subtracts text_offset), causing the release function to
-free fewer pages than were originally allocated, leaking the remaining
-CMA pages.
+On 32-bit x86 systems with HIGHMEM, kmap_local_page() only maps a single
+4KB page. However, the elfcorehdr segment can span several pages (up to
+hundreds of kilobytes).
 
-Add a per-segment `segment_cma_pages` array to store the number of
-pages actually allocated from CMA. Populate it during
-kexec_add_buffer() using the aligned memsz, and use it in
-kimage_free_cma() to accurately release all allocated pages.
+The original code blindly copies 'elfsz' bytes at once via
+memcpy_flushcache(), overwriting adjacent fixmap entries or critical
+virtual addresses.
 
-This avoids relying on the potentially modified segment->memsz and
-prevents silent CMA memory leaks.
+Fix this by copying the new elfcorehdr page by page.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Thomas Gleixner <tglx@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
 Cc: Baoquan He <baoquan.he@linux.dev>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>
-Cc: Brian Mak <makb@juniper.net>
-Cc: Pingfan Liu <piliu@redhat.com>
+Cc: Chao Gao <chao.gao@intel.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: Eric DeVolder <eric.devolder@oracle.com>
+Cc: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: Justinien Bouron <jbouron@amazon.com>
-Cc: Li Chen <me@linux.beauty>
 Cc: stable@vger.kernel.org
-Link: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%40huawei.com
-Fixes: 07d24902977e ("kexec: enable CMA based contiguous allocation")
+Fixes: ea53ad9cf73b ("x86/crash: add x86 crash hotplug support")
+Link: https://sashiko.dev/#/patchset/20260907125404.922123-1-ruanjinjie%40huawei.com
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- include/linux/kexec.h |  1 +
- kernel/kexec_core.c   |  7 ++++---
- kernel/kexec_file.c   | 13 +++++++++----
- 3 files changed, 14 insertions(+), 7 deletions(-)
+ arch/x86/kernel/crash.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 0af8ae4fdd08..6b1df80524bf 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -349,6 +349,7 @@ struct kimage {
- 	unsigned long nr_segments;
- 	struct kexec_segment segment[KEXEC_SEGMENT_MAX];
- 	struct page *segment_cma[KEXEC_SEGMENT_MAX];
-+	unsigned long segment_cma_pages[KEXEC_SEGMENT_MAX];
- 
- 	struct list_head control_pages;
- 	struct list_head dest_pages;
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 7f7cb77f0caa..5493591a9e4b 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -560,14 +560,15 @@ static void kimage_free_cma(struct kimage *image)
- 
- 	for (i = 0; i < image->nr_segments; i++) {
- 		struct page *cma = image->segment_cma[i];
--		u32 nr_pages = image->segment[i].memsz >> PAGE_SHIFT;
-+		unsigned long nr_pages = image->segment_cma_pages[i];
- 
- 		if (!cma)
- 			continue;
- 
--		arch_kexec_pre_free_pages(page_address(cma), nr_pages);
--		dma_release_from_contiguous(NULL, cma, nr_pages);
-+		arch_kexec_pre_free_pages(page_address(cma), (unsigned int)nr_pages);
-+		dma_release_from_contiguous(NULL, cma, (int)nr_pages);
- 		image->segment_cma[i] = NULL;
-+		image->segment_cma_pages[i] = 0;
- 	}
- 
- }
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 59fb9d71e9d8..67d6df9824e6 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -670,7 +670,7 @@ static int kexec_walk_resources(struct kexec_buf *kbuf,
- 
- static int kexec_alloc_contig(struct kexec_buf *kbuf)
- {
--	size_t nr_pages = kbuf->memsz >> PAGE_SHIFT;
-+	size_t nr_pages = PFN_DOWN(kbuf->memsz);
- 	unsigned long mem;
- 	struct page *p;
- 
-@@ -756,14 +756,16 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index e681ec9cf1dc..3c9f4fbbe7ff 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -447,9 +447,10 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
   */
- int kexec_add_buffer(struct kexec_buf *kbuf)
+ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
  {
-+	unsigned long nr_segments = kbuf->image->nr_segments;
- 	struct kexec_segment *ksegment;
-+	size_t nr_cma_pages = 0;
- 	int ret;
- 
- 	/* Currently adding segment this way is allowed only in file mode */
- 	if (!kbuf->image->file_mode)
- 		return -EINVAL;
- 
--	if (kbuf->image->nr_segments >= KEXEC_SEGMENT_MAX)
-+	if (nr_segments >= KEXEC_SEGMENT_MAX)
- 		return -EINVAL;
+-	void *elfbuf = NULL, *old_elfcorehdr;
+ 	unsigned long mem, memsz;
+ 	unsigned long elfsz = 0;
++	void *elfbuf = NULL;
++	unsigned long done;
  
  	/*
-@@ -789,12 +791,15 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
- 		return ret;
+ 	 * As crash_prepare_elf64_headers() has already described all
+@@ -484,21 +485,20 @@ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
  
- 	/* Found a suitable memory range */
--	ksegment = &kbuf->image->segment[kbuf->image->nr_segments];
-+	ksegment = &kbuf->image->segment[nr_segments];
- 	ksegment->kbuf = kbuf->buffer;
- 	ksegment->bufsz = kbuf->bufsz;
- 	ksegment->mem = kbuf->mem;
- 	ksegment->memsz = kbuf->memsz;
--	kbuf->image->segment_cma[kbuf->image->nr_segments] = kbuf->cma;
-+	kbuf->image->segment_cma[nr_segments] = kbuf->cma;
-+	if (kbuf->cma)
-+		nr_cma_pages = PFN_DOWN(kbuf->memsz);
-+	kbuf->image->segment_cma_pages[nr_segments] = nr_cma_pages;
- 	kbuf->image->nr_segments++;
- 	return 0;
- }
+ 	/*
+ 	 * Copy new elfcorehdr over the old elfcorehdr at destination.
+-	 */
+-	old_elfcorehdr = kmap_local_page(pfn_to_page(mem >> PAGE_SHIFT));
+-	if (!old_elfcorehdr) {
+-		pr_err("mapping elfcorehdr segment failed\n");
+-		goto out;
+-	}
+-
+-	/*
+-	 * Temporarily invalidate the crash image while the
+-	 * elfcorehdr is updated.
++	 * The segment is physically contiguous but can span several pages.
++	 * On 32-bit Highmem architectures, kmap_local_page() maps only a
++	 * single page at a time, so copy page by page.
+ 	 */
+ 	xchg(&kexec_crash_image, NULL);
+-	memcpy_flushcache(old_elfcorehdr, elfbuf, elfsz);
++	for (done = 0; done < elfsz; ) {
++		size_t chunk = min_t(size_t, PAGE_SIZE, elfsz - done);
++		void *dst = kmap_local_page(pfn_to_page((mem + done) >> PAGE_SHIFT));
++
++		memcpy_flushcache(dst, elfbuf + done, chunk);
++		kunmap_local(dst);
++		done += chunk;
++	}
+ 	xchg(&kexec_crash_image, image);
+-	kunmap_local(old_elfcorehdr);
+ 	pr_debug("updated elfcorehdr\n");
+ 
+ out:
 -- 
 2.34.1
 
