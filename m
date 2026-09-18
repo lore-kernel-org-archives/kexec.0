@@ -4,67 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 98EBEC982D2
-	for <kexec@archiver.kernel.org>; Fri, 18 Sep 2026 07:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1F767C982D2
+	for <kexec@archiver.kernel.org>; Fri, 18 Sep 2026 07:30:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Ep+W+Lzk1KLKOXlBALTloOl7Wm88/geYoc+t7Jo7KS4=; b=aXMHDZJF1WiFS4DsJ1Aj/F0gsi
-	IJ9qmm38kBNVK84qWzwvCsO8u6euNEJp/bEudEXzVX9XbElTs9rMFZS0LNb5j0ar1/EcKsQtCGJHA
-	0M7AzseCVSK4tnLZH+YSRLUcO4/NfAE3I4sDu3fUcHq8iJLtsp+F5HgQxQyXX8YqcX2d8QbGcQhsz
-	ZAw6GnP4u6yre7FqJLcsHit7pj2yqDmrk2N10t/eHHJpTBz2b3jtcdoWQjKFWbdQRz7TJ75M8EYZr
-	9T1oApANg0aYJC17CpP3iEhQH4mkhvIB9SUq6u6VZHUKqjRrZ9rUf0DZxfU1dKSVzhDjTgRCkiCn4
-	RXwreeGw==;
+	bh=kM1dRFmDXeAoN/p5ctvzv5ZVRnmxbgQAJ3cL+XZ9LEo=; b=SybRzsQAwVBki/FRkXmeZWKEdn
+	c/00cHUnwAgRacueZHG3kN8Hantzzx0JrqgG4y0rrAXd734rzHuulF8yx/5NT25zPfQOP5rn0Y/OW
+	Nrk/bpAfeYYzKRxTl49Lv2x0ML5/43bNQ9NB2oiA2BA6XHwL/MDLJ68RUo/NCRoQBrUEct79KUnG9
+	bQ1INIugKHX3qX1LedCXI6PGTLO0/gTt+wvZXxGeEbRKRRcW8/oZtoNkGlwHUzRkSq/bxyj/Jyvjq
+	D2gW+S3TucphMqC09YyYEjklIVv8oIHsEx5D/uSiEy/PURylO40rD6IBIjJUeQf1DEA6T6C2uDWtP
+	kRccT4Sg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7SdD-0000000DdXr-3c4j;
-	Fri, 18 Sep 2026 07:03:35 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1x7T3T-0000000Dhkr-3suP;
+	Fri, 18 Sep 2026 07:30:43 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7SdC-0000000DdXd-3S0d;
-	Fri, 18 Sep 2026 07:03:34 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id D0CC160A5A;
-	Fri, 18 Sep 2026 07:03:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4649D1F000FF;
-	Fri, 18 Sep 2026 07:03:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789715013;
-	bh=Ep+W+Lzk1KLKOXlBALTloOl7Wm88/geYoc+t7Jo7KS4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=aPqXv2uZx1vrO+PGIvxXetVU48iXAfQOmpEtCVU//nGS7ei6IPcEoDCJgz3uBJ/PI
-	 4Ddj/QUegJf2lBmSwpiwGp0foLgSapfWj8m4hF+/C7TOHKXoy5QC/HRyVZE7XtGvDi
-	 oIiMOu5mX7bOS9af9DCTeeRRRfgZJHWVSCoGTm7NkbtqJVjEutnRc8rJ79LAAI6xNM
-	 LI35wyNgzvc0HS0XFS9SL1xqlGnKNh9JkTPxSK1Fbgm6sfte18euCfzErieKv0gAFR
-	 1uDxAjt1ilWU3dgH+v91xGigckxp1MSaaqBJ4RgpW3b9zxO7GZ/pOARkUq7rmhnxBg
-	 2S0VaeUw3vPyw==
-Date: Fri, 18 Sep 2026 10:03:22 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Wandun <chenwandun1@gmail.com>
+	id 1x7T3S-0000000DhkT-0bdW
+	for kexec@bombadil.infradead.org;
+	Fri, 18 Sep 2026 07:30:42 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=kM1dRFmDXeAoN/p5ctvzv5ZVRnmxbgQAJ3cL+XZ9LEo=; b=E352pph6If8a9YIPKMbjqwMDbD
+	zU+xbbghUzqaR9Z+DUotx1W90YZZlG+40oCz5XAptJNMBHDfanp1l03qoyNEdXGpUDgm9Sz5hgHk1
+	edIlMtiZH9Xh3RmLACeldgYsMIR7vXi6MNSr5boXk/fQ3fAHh/m6b2ksAwl6CgIUlJhfho8/vrsrm
+	RtmwXs8f6VFtr8SFRngA9/cagcltSfrjFXKYj+TiMgUD1cwiWS0ICfveBFe+AoUimsv6HWONQ5W4Y
+	mXLZIOZ/nKM6YtxV3cgfpztvi5PMx/WngN5l2kStWxu3vKczOJGj1TJNZ+cRkcLvy3glVDnMUIeVz
+	xQWoWBrQ==;
+Received: from out-163.mta0.migadu.com ([2001:41d0:1004:224b::a3] helo=mta0.migadu.com)
+	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1x7T3P-00000009iE3-1Itz
+	for kexec@lists.infradead.org;
+	Fri, 18 Sep 2026 07:30:41 +0000
+X-Envelope-To: kexec@lists.infradead.org
+DKIM-Signature: a=rsa-sha256; bh=UhePvlO6Uju4KMSGgi0DFyyW4sOpnmjHBEaUsD91vSc=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1789716635; v=1; x=1790321435;
+ b=ULNtSIa4m9Ewij1GnUkqGxU9aXQ2oILTA+9T2u7ixLXmqYR0nKCO44mGqYBlywtYYqe+h75F
+ cwwwES+57lXO+C/ybgQiFLJQ5sAh/z90HQN0U4gkWvyg/gDIwUz7rPyp+n3UnwLXDcICr4PZZUq
+ Gj0ULHhyxmZmM4k7ZqWmX/LQ=
+X-Envelope-To: kexec@lists.infradead.org
+Received: by mta10.migadu.com with ESMTPS id 37e6b37ee04b46ae;
+	Fri, 18 Sep 2026 07:30:35 +0000
+X-Mizu-Trace-ID: 37e6b37ee04b46ae
+X-Migadu-Flow: FLOW_OUT
+Date: Fri, 18 Sep 2026 15:30:28 +0800
+From: Baoquan He <baoquan.he@linux.dev>
+To: Wandun Chen <chenwandun1@gmail.com>
 Cc: catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
 	pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
 	tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
 	dave.hansen@linux.intel.com, x86@kernel.org, robh@kernel.org,
-	saravanak@kernel.org, akpm@linux-foundation.org,
-	baoquan.he@linux.dev, pasha.tatashin@soleen.com,
-	pratyush@kernel.org, m.szyprowski@samsung.com, mark.rutland@arm.com,
-	kernel@xen0n.name, alex@ghiti.fr, hpa@zytor.com,
-	ruirui.yang@linux.dev, robin.murphy@arm.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, kexec@lists.infradead.org,
-	linux-mm@kvack.org, iommu@lists.linux.dev
-Subject: Re: [PATCH v6 00/10] kdump: reduce vmcore size and capture time
-Message-ID: <aqziOmx1yhy0ozkX@kernel.org>
+	saravanak@kernel.org, akpm@linux-foundation.org, rppt@kernel.org,
+	pasha.tatashin@soleen.com, pratyush@kernel.org,
+	m.szyprowski@samsung.com, mark.rutland@arm.com, kernel@xen0n.name,
+	alex@ghiti.fr, hpa@zytor.com, ruirui.yang@linux.dev,
+	robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	kexec@lists.infradead.org, linux-mm@kvack.org,
+	iommu@lists.linux.dev
+Subject: Re: [PATCH v6 03/10] crash_core: fold duplicated memblock arch hooks
+ into the weak default
+Message-ID: <aqzolBceoRchBdbx@fedora>
 References: <20260902073116.802752-1-chenwandun1@gmail.com>
- <13cfcd99-e420-478b-8ce8-06674727977d@gmail.com>
+ <20260902073116.802752-4-chenwandun1@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <13cfcd99-e420-478b-8ce8-06674727977d@gmail.com>
+In-Reply-To: <20260902073116.802752-4-chenwandun1@gmail.com>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260918_083039_509676_5B8F8811 
+X-CRM114-Status: GOOD (  22.02  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,148 +97,198 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
+On 09/02/26 at 03:31pm, Wandun Chen wrote:
+> From: Wandun Chen <chenwandun@lixiang.com>
+> 
+> arm64, loongarch and riscv open-code the same memblock walk in
+> arch_get_system_nr_ranges() and arch_crash_populate_cmem(). Move it into
+> the __weak defaults in kernel/crash_core.c and delete the arch copies.
+> 
+> No functional change.
 
-On Tue, Sep 15, 2026 at 09:01:07PM +0800, Wandun wrote:
-> On 9/2/26 15:31, Wandun Chen wrote:
-> > From: Wandun Chen <chenwandun@lixiang.com>
-> > 
-> > On SoCs that carve out large firmware-owned reserved memory (GPU,
-> > camera ISP, ...), kdump currently dumps those carveouts as part of
-> > system RAM even though their contents are firmware state that is not
-> > useful for kernel crash analysis.
-> > 
-> > This series introduces a MEMBLOCK_NODUMP flag in memblock to filter
-> > reserved memory on DT-based architectures (arm64, riscv, loongarch).
-> > Reserved regions default are marked MEMBLOCK_NODUMP so kdump omits them;
-> > reusable CMA regions are different because their pages are handed back
-> > to the buddy allocator and may carry crash-relevant data.
-> > 
-> > ACPI systems already filter reserved memory out of the vmcore through
-> > their existing path; only DT-based systems currently fail to filter these
-> > regions, which is what this series addresses. The flag lives in memblock
-> > itself rather than in a DT-only structure, so the mechanism is generic and
-> > both ACPI and DT systems can benefit from it (suggested by Rob, thanks) [1].
-> > 
-> > Since the reserved memory regions are filtered out, the vmcore is
-> > smaller in size and faster to produce. 
-> > 
-> > The series is based on linux-next and is organized as follows:
-> > 
-> > Patches 1-4: Preparation and bugfixes: fix the missing HugeTLB
-> >              flagname, switch riscv crash_mem to memblock, fold the
-> >              duplicated per-arch memblock walks into the weak
-> >              defaults, and serialize crash header preparation against
-> >              memory hotplug.
-> > Patches 5-9: NODUMP infrastructure: switch crash_core to
-> >              for_each_mem_region(), introduce the MEMBLOCK_NODUMP
-> >              flag, add a dumpable flag to struct reserved_mem, and
-> >              mark /reserved-memory and /memreserve/ entries with
-> > 	     MEMBLOCK_NODUMP flag.
-> > Patch 10:    Exclude MEMBLOCK_NODUMP regions from the vmcore ELF
-> >              header.
-> 
-> Hi,
-> 
-> Gentle ping on the remaining patches of this series.
-> Patches 1, 7, 8 and 9 have been reviewed (thanks Mike and Marek);
-> Still looking for review on patches 2-6 and 10.
+In one version, you also tried to remove these functions on x86, I could
+remember it wrong. 
 
-I'm waiting for reviews from Baoquan and Dave for crash core patches before
-applying this series.
- 
-> Would appreciate a look when you have a moment, happy to rework
-> anything based on feedback.
-> 
-> Best regards,
-> Wanun
-> 
-> > 
-> > In v5, Sashiko found some pre-existing issues related to reserved-memory,
-> > and has no dependency on this series, so these issues have been addressed
-> > in a separate series [2].
-> > 
-> > v5 --> v6:
-> > 1. Serialize crash header preparation against memory hotplug to avoid
-> >    out-of-bounds or use-after-free issues.
-> > 
-> > 2. MEMBLOCK_NODUMP marking is now done after memblock allows resizing,
-> >    avoiding a panic from too few regions before resize is permitted.
-> > 
-> > 3. Reordered the patches, put pre-existing bugfixes earlier in the series.
-> > 
-> > 
-> > v4 --> v5:
-> > 1. Rework the mechanism around a memblock-level MEMBLOCK_NODUMP flag
-> >    (suggested by Rob) instead of the v4 opt-in 'dumpable' flag on
-> >    DT-only struct reserved_mem.
-> > 2. Switch the riscv vmcore elf header preparation to use memblock
-> >    instead of the resource tree, aligning it with arm64 and loongarch,
-> >    so riscv also can exclude reserved memory from vmcore.
-> > 3. Deduplicate the vmcore elf header preparation: arm64, riscv and
-> >    loongarch open-coded the same logic, so fold it into shared
-> >     __weak defaults in crash_core.
-> > 4.  Drop the v4 patch that saved /memreserve/ entries into the
-> >     reserved_mem array; /memreserve/ is now marked MEMBLOCK_NODUMP
-> >     directly.
-> > 
-> > v3 --> v4:
-> > 1. Rebase this series on v7.2-rc1.
-> > 2. Add two cleanup patches (patch 02/03).
-> > 3. Simplify patch 03 to avoid checking whether initial_boot_params is
-> >    NULL multiple times, suggested by Rob.
-> > 
-> > v2 --> v3:
-> > 1. Fix out-of-bounds issue if device tree lacks /reserved-memory node.
-> > 2. Fix UAF issue when alloc_reserved_mem_array() fails.
-> > 3. Add some prepare patches.
-> > 
-> > v1 --> v2:
-> > 1. v1 added an opt-out DT property ('linux,no-dump'). Per Rob's
-> >    feedback [3], v2 drop that property and exclude reserve memory
-> >    by default.
-> > 2. Split some prepared patches from the original patches.
-> > 3. Address coding-style comments on patch 5 from Rob.
-> > 
-> > [1] https://lore.kernel.org/lkml/20260723234126.GA3253409-robh@kernel.org/
-> > [2] https://lore.kernel.org/lkml/20260818092420.2859026-1-chenwandun1@gmail.com/
-> > [3] https://lore.kernel.org/lkml/20260506144542.GA2072596-robh@kernel.org/
-> > 
-> > Meijing Zhao (1):
-> >   mm: memblock: add missing HugeTLB flag name
-> > 
-> > Wandun Chen (9):
-> >   riscv: build crash_mem ranges from memblock instead of resource tree
-> >   crash_core: fold duplicated memblock arch hooks into the weak default
-> >   crash_core: serialize crash header preparation against hotplug
-> >   crash_core: replace for_each_mem_range() with for_each_mem_region()
-> >   memblock: introduce MEMBLOCK_NODUMP flag
-> >   of: reserved_mem: add dumpable flag to opt-in vmcore
-> >   of: reserved_mem: mark /reserved-memory entries with MEMBLOCK_NODUMP
-> >   of: reserved_mem: mark /memreserve/ entries as MEMBLOCK_NODUMP
-> >   crash_core: skip MEMBLOCK_NODUMP regions when building vmcore ELF
-> >     header
-> > 
-> >  arch/arm64/kernel/machine_kexec_file.c     | 29 ------------
-> >  arch/loongarch/kernel/machine_kexec_file.c | 27 ------------
-> >  arch/riscv/Kconfig                         |  2 +-
-> >  arch/riscv/kernel/machine_kexec_file.c     | 33 --------------
-> >  arch/x86/kernel/crash.c                    |  2 +-
-> >  drivers/of/fdt.c                           |  2 +
-> >  drivers/of/of_private.h                    |  2 +
-> >  drivers/of/of_reserved_mem.c               | 48 ++++++++++++++++++++
-> >  include/linux/crash_core.h                 |  2 +
-> >  include/linux/memblock.h                   |  9 ++++
-> >  include/linux/of_reserved_mem.h            |  1 +
-> >  kernel/crash_core.c                        | 51 ++++++++++++++++++++--
-> >  kernel/dma/contiguous.c                    |  1 +
-> >  mm/memblock.c                              | 17 ++++++++
-> >  14 files changed, 131 insertions(+), 95 deletions(-)
-> > 
-> 
-> 
+Anyway, this looks good to me.
 
--- 
-Sincerely yours,
-Mike.
+Acked-by: Baoquan He <baoquan.he@linux.dev>
+
+> 
+> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
+> Tested-by: Meijing Zhao <zhaomeijing@lixiang.com>
+> ---
+>  arch/arm64/kernel/machine_kexec_file.c     | 29 ----------------------
+>  arch/loongarch/kernel/machine_kexec_file.c | 27 --------------------
+>  arch/riscv/kernel/machine_kexec_file.c     | 26 -------------------
+>  kernel/crash_core.c                        | 25 +++++++++++++++++--
+>  4 files changed, 23 insertions(+), 84 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+> index 854d872dfd0f..34d944d3f22f 100644
+> --- a/arch/arm64/kernel/machine_kexec_file.c
+> +++ b/arch/arm64/kernel/machine_kexec_file.c
+> @@ -14,7 +14,6 @@
+>  #include <linux/kernel.h>
+>  #include <linux/kexec.h>
+>  #include <linux/libfdt.h>
+> -#include <linux/memblock.h>
+>  #include <linux/of.h>
+>  #include <linux/of_fdt.h>
+>  #include <linux/slab.h>
+> @@ -39,34 +38,6 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+>  	return kexec_image_post_load_cleanup_default(image);
+>  }
+>  
+> -#ifdef CONFIG_CRASH_DUMP
+> -unsigned int arch_get_system_nr_ranges(void)
+> -{
+> -	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* for exclusion of crashkernel region */
+> -	phys_addr_t start, end;
+> -	u64 i;
+> -
+> -	for_each_mem_range(i, &start, &end)
+> -		nr_ranges++;
+> -
+> -	return nr_ranges;
+> -}
+> -
+> -int arch_crash_populate_cmem(struct crash_mem *cmem)
+> -{
+> -	phys_addr_t start, end;
+> -	u64 i;
+> -
+> -	for_each_mem_range(i, &start, &end) {
+> -		cmem->ranges[cmem->nr_ranges].start = start;
+> -		cmem->ranges[cmem->nr_ranges].end = end - 1;
+> -		cmem->nr_ranges++;
+> -	}
+> -
+> -	return 0;
+> -}
+> -#endif
+> -
+>  /*
+>   * Tries to add the initrd and DTB to the image. If it is not possible to find
+>   * valid locations, this function will undo changes to the image and return non
+> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
+> index 5412aa9f3568..481b8f906a56 100644
+> --- a/arch/loongarch/kernel/machine_kexec_file.c
+> +++ b/arch/loongarch/kernel/machine_kexec_file.c
+> @@ -13,7 +13,6 @@
+>  #include <linux/ioport.h>
+>  #include <linux/kernel.h>
+>  #include <linux/kexec.h>
+> -#include <linux/memblock.h>
+>  #include <linux/slab.h>
+>  #include <linux/string.h>
+>  #include <linux/types.h>
+> @@ -56,32 +55,6 @@ static void cmdline_add_initrd(struct kimage *image, unsigned long *cmdline_tmpl
+>  }
+>  
+>  #ifdef CONFIG_CRASH_DUMP
+> -unsigned int arch_get_system_nr_ranges(void)
+> -{
+> -	int nr_ranges = 2; /* for exclusion of crashkernel region */
+> -	phys_addr_t start, end;
+> -	uint64_t i;
+> -
+> -	for_each_mem_range(i, &start, &end)
+> -		nr_ranges++;
+> -
+> -	return nr_ranges;
+> -}
+> -
+> -int arch_crash_populate_cmem(struct crash_mem *cmem)
+> -{
+> -	phys_addr_t start, end;
+> -	uint64_t i;
+> -
+> -	for_each_mem_range(i, &start, &end) {
+> -		cmem->ranges[cmem->nr_ranges].start = start;
+> -		cmem->ranges[cmem->nr_ranges].end = end - 1;
+> -		cmem->nr_ranges++;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>  /*
+>   * Add the "mem=size@start" command line parameter to command line, indicating the
+>   * memory region the new kernel can use to boot into.
+> diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
+> index 808e872f4063..fdc6695e8588 100644
+> --- a/arch/riscv/kernel/machine_kexec_file.c
+> +++ b/arch/riscv/kernel/machine_kexec_file.c
+> @@ -37,32 +37,6 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+>  }
+>  
+>  #ifdef CONFIG_CRASH_DUMP
+> -unsigned int arch_get_system_nr_ranges(void)
+> -{
+> -	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* For exclusion of crashkernel region */
+> -	u64 i;
+> -	phys_addr_t start, end;
+> -
+> -	for_each_mem_range(i, &start, &end)
+> -		nr_ranges++;
+> -
+> -	return nr_ranges;
+> -}
+> -
+> -int arch_crash_populate_cmem(struct crash_mem *cmem)
+> -{
+> -	u64 i;
+> -	phys_addr_t start, end;
+> -
+> -	for_each_mem_range(i, &start, &end) {
+> -		cmem->ranges[cmem->nr_ranges].start = start;
+> -		cmem->ranges[cmem->nr_ranges].end = end - 1;
+> -		cmem->nr_ranges++;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>  static char *setup_kdump_cmdline(struct kimage *image, char *cmdline,
+>  				 unsigned long cmdline_len)
+>  {
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 2b36aa9fade0..77285ae3ce60 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -281,8 +281,29 @@ static struct crash_mem *alloc_cmem(unsigned int nr_ranges)
+>  	return cmem;
+>  }
+>  
+> -unsigned int __weak arch_get_system_nr_ranges(void) { return 0; }
+> -int __weak arch_crash_populate_cmem(struct crash_mem *cmem) { return -1; }
+> +unsigned int __weak arch_get_system_nr_ranges(void)
+> +{
+> +	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* crashk_res + crashk_low_res, +CMA splits */
+> +	phys_addr_t start, end;
+> +	u64 i;
+> +
+> +	for_each_mem_range(i, &start, &end)
+> +		nr_ranges++;
+> +	return nr_ranges;
+> +}
+> +
+> +int __weak arch_crash_populate_cmem(struct crash_mem *cmem)
+> +{
+> +	phys_addr_t start, end;
+> +	u64 i;
+> +
+> +	for_each_mem_range(i, &start, &end) {
+> +		cmem->ranges[cmem->nr_ranges].start = start;
+> +		cmem->ranges[cmem->nr_ranges].end = end - 1;
+> +		cmem->nr_ranges++;
+> +	}
+> +	return 0;
+> +}
+>  int __weak arch_crash_exclude_ranges(struct crash_mem *cmem) { return 0; }
+>  
+>  int __weak arch_crash_exclude_mem_range(struct crash_mem **mem,
+> -- 
+> 2.43.0
+> 
 
