@@ -4,67 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B5CB5C982DD
-	for <kexec@archiver.kernel.org>; Fri, 18 Sep 2026 20:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 208D2C982DD
+	for <kexec@archiver.kernel.org>; Fri, 18 Sep 2026 20:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:
 	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
 	From:MIME-Version:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=IdDvdVBUP9dI0We8t/DLRSXpGyJGcqmjaxTczi9FQIk=; b=juueMG/OVHSLg9aSQA0OtsPKsO
-	ruQ6NUmPGlt7lsHrn1gd63EvwQdKEyHRvepIyEum3Cfziv62Upgbfhv7Cs4jT6uylKfus1BYoiht8
-	fPQnQoflxv193SN+zInwbyfDM+CPM3mWHeoEYKA3Y0TWXYRAFdPL0wD8O/7OS4TWB1hzYz0UDV7IX
-	j3H0SPDokjZmbI/sUEd1g/6yhPI6Bk/Heyd8vFDmF2gX8JE2HgMQ+6erMDTEp+JPUJB97bOP4cC+2
-	p7lSGf+2U68/fiWZDRHCKj4cfpkX8wAS8oK5E136g/SFAEUHBPqzAY9bQ5bwbQcUiwbEurZBTEK1U
-	fZk1Fsgw==;
+	bh=4BHzfgU7NlhiaeoyLw4QIVrcWHr6+Q91E2JaLOkHxcc=; b=VqI0rrWiuxNW2w4zKmHS7IigRn
+	7GyDFJLdDzvHwUDoWa3Zpas/9NPDAOO4icq5faY+BT1q+SiykCtVyP+q2TDXbsD3VePlDxqUmOE15
+	/n7xxgCAStBh7qVf+pPXX1Na5uEXHYXWOcMRXd3GuLv1fh8odw3XIfnkjcIYKf8vs2IQrZ53bK/Jt
+	cvYszB0ksNbLbc/dPzvkCecGYvnwce1t3rLmimJRUGG6P5K6K8O858IFOc4IztGgE1cSrzW/QgkD6
+	r6mjILq2Y8TG/wgz2XnBIYgDg7TX6QZeTvbm/iGI4qBLr8oTrd6JrrpcZnZ+w2zZehz7o5KsTHHIV
+	llb0F90w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7exi-0000000FUZV-03b1;
-	Fri, 18 Sep 2026 20:13:34 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1x7exu-0000000FUcw-0QUx;
+	Fri, 18 Sep 2026 20:13:46 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7exg-0000000FUZI-1kCb
+	id 1x7exs-0000000FUcS-48s8
 	for kexec@lists.infradead.org;
-	Fri, 18 Sep 2026 20:13:32 +0000
+	Fri, 18 Sep 2026 20:13:45 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 2DFC6404EB;
-	Fri, 18 Sep 2026 20:13:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A56931F00898;
-	Fri, 18 Sep 2026 20:13:30 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 56CF3602CC;
+	Fri, 18 Sep 2026 20:13:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 916F81F000FF;
+	Fri, 18 Sep 2026 20:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789762412;
-	bh=IdDvdVBUP9dI0We8t/DLRSXpGyJGcqmjaxTczi9FQIk=;
+	s=k20260515; t=1789762424;
+	bh=4BHzfgU7NlhiaeoyLw4QIVrcWHr6+Q91E2JaLOkHxcc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mAw5UlvuSYKxbaxLCoAdn3B+ntHZiwR/3D2Ji+Fn0ZYKJwHYM8ZnlI2lT9lc6eb7A
-	 JjVJDX7cv5qlgm8kMuylieYao30s6Af5TxWMQiJEToD9w/W8doPLT49tEFpV5faalO
-	 e4dd4qJ/t0EnNhNTBjNF7Z7pkYdEurfIwnCwwR1jh/5z1uu5TJiV6qV2CDbJtowFRi
-	 y4OCFgD/LrEhJJBx7yNMbEypfKALMLRBMdGc30aUkMmy+IZSKcFV14ouvIQE6Xn0cM
-	 D5TpUnHhBJeSt1EhOMj9QrfXH2NLa+MBO+9DwxRHNR0liwtuGRHjPBQq/FYnwYAxIh
-	 nxHv56C4VlqWg==
+	b=HyCzK9W1dXl+/YzMV88nR47sMs1YSKPOm7r206nkfEqmpQfxEqtGNi3uGia1CiCBy
+	 58AvHvwaIQ+5VvMMIpang4tGjgDjDjJJHMlILNjF+5dHsU7BoGwhL8u0ThDISYllWa
+	 7jwOzqBUcYKmKJocF1NyOwvZClXirVEzLYh7xCASXkO0Xc7ZYgKO/LgUzZj6HR1apQ
+	 fEFmh0X2YOQQ+ddXCNBoH92KvaJYaS0WTY5IpHpB67cYD40enYMIXjOOGUAXE3Qvr/
+	 zo/uC4l4oyXj/Kr40at8aj+ZgiYbrX4n5HubEsVEjViWcJitj/xiMzVDD9pJJoNy+4
+	 om2D0s+D1QSlg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 07/13] PCI: Refactor matching logic for
- pci_dev_acs_ops
-To: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, "David Matlack" <dmatlack@google.com>, linux-mm@kvack.org
-Cc: kexec@lists.infradead.org, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Jason
- Gunthorpe" <jgg@nvidia.com>, "Jonathan Corbet" <corbet@lwn.net>, "Parav
- Pandit" <parav@nvidia.com>, "Leon Romanovsky" <leonro@nvidia.com>, "Adithya
- Jayachandran" <ajayachandra@nvidia.com>, "Randy Dunlap" <rdunlap@infradead.org>, "Pratyush
- Yadav" <pratyush@kernel.org>, "Alex Williamson" <alex@shazbot.org>, "Mike
- Rapoport" <rppt@kernel.org>, "Pranjal Shrivastava" <praan@google.com>, "Alexander
- Graf" <graf@amazon.com>, "Josh Hilke" <jrhilke@google.com>, "Chris Li" <chrisl@kernel.org>, "David
- Rientjes" <rientjes@google.com>, "Saeed Mahameed" <saeedm@nvidia.com>, "Samiullah
- Khawaja" <skhawaja@google.com>, "Shuah Khan" <skhan@linuxfoundation.org>, "Vipin
- Sharma" <vipinsh@google.com>, "Bjorn Helgaas" <bhelgaas@google.com>, "Lukas
- Wunner" <lukas@wunner.de>, "Jacob Pan" <jacob.pan@linux.microsoft.com>, linux-pci@vger.kernel.org, "William
- Tu" <witu@nvidia.com>, "Yi Liu" <yi.l.liu@intel.com>
-In-Reply-To: <20260918200640.887030-8-dmatlack@google.com>
+Subject: Re: [PATCH v9 09/13] PCI: liveupdate: Adopt ACS controls in
+ incoming preserved devices
+To: "David Matlack" <dmatlack@google.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc: "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Alex Williamson" <alex@shazbot.org>, linux-pci@vger.kernel.org, "Pratyush
+ Yadav" <pratyush@kernel.org>, "Randy Dunlap" <rdunlap@infradead.org>, "Mike
+ Rapoport" <rppt@kernel.org>, "Yi Liu" <yi.l.liu@intel.com>, "Josh Hilke" <jrhilke@google.com>, "Jason
+ Gunthorpe" <jgg@nvidia.com>, "Alexander Graf" <graf@amazon.com>, "Jonathan
+ Corbet" <corbet@lwn.net>, kexec@lists.infradead.org, "Adithya Jayachandran" <ajayachandra@nvidia.com>, "Leon
+ Romanovsky" <leonro@nvidia.com>, "Pranjal Shrivastava" <praan@google.com>, "Chris
+ Li" <chrisl@kernel.org>, "Samiullah Khawaja" <skhawaja@google.com>, "Saeed
+ Mahameed" <saeedm@nvidia.com>, "Vipin Sharma" <vipinsh@google.com>, "Shuah
+ Khan" <skhan@linuxfoundation.org>, "William Tu" <witu@nvidia.com>, "Parav
+ Pandit" <parav@nvidia.com>, "Jacob Pan" <jacob.pan@linux.microsoft.com>, "Lukas
+ Wunner" <lukas@wunner.de>, "Bjorn Helgaas" <bhelgaas@google.com>, "David
+ Rientjes" <rientjes@google.com>
+In-Reply-To: <20260918200640.887030-10-dmatlack@google.com>
 References: <20260918200640.887030-1-dmatlack@google.com>
- <20260918200640.887030-8-dmatlack@google.com>
+ <20260918200640.887030-10-dmatlack@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 18 Sep 2026 20:13:30 +0000
-Message-Id: <20260918201330.A56931F00898@smtp.kernel.org>
+Date: Fri, 18 Sep 2026 20:13:42 +0000
+Message-Id: <20260918201342.916F81F000FF@smtp.kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,24 +80,32 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> Refactor the logic to match devices to pci_dev_acs_ops by factoring out
-> the device matching loop into its own routine, pci_dev_acs_ops_get().
-> This eliminates duplicate code between pci_dev_specific_enable_acs() and
-> pci_dev_specific_disable_acs_redir(), and will also be used in a
-> subsequent commit to check if a device requires device-specific
-> enable_acs() during a Live Update.
+> Adopt Access Control Services (ACS) controls on all incoming preserved
+> devices (endpoints and upstream bridges) during a Live Update.
 >=20
-> No functional change intended.
+> Inheriting ACS flags avoids changing routing rules while memory
+> transactions are in flight from preserved devices. This is also strictly
+> necessary to ensure that IOMMU group assignments do not change during or
+> after Live Update.
 >=20
-> Reviewed-by: Pranjal Shrivastava <praan@google.com>
-> Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+> The adopted controls are recorded by the pci_save_state() call in
+> pci_bus_add_device(), which runs before drivers bind, so they are
+> automatically reapplied by pci_restore_state() if the device is reset.
+> If that save buffer could not be allocated there is nowhere to record
+> the adopted controls, and they would be silently lost by the first
+> reset. Program ACS from scratch in that case, which is a better outcome
+> than leaving ACS disabled.
+>=20
+> To simplify ACS inheritance, reject preserving any devices that require
+> quirks to enable ACS as those quirks would also have to take Live Update
+> into account.
+>=20
 > Signed-off-by: David Matlack <dmatlack@google.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260918200640.8870=
-30-1-dmatlack@google.com?part=3D7
+30-1-dmatlack@google.com?part=3D9
 
 
