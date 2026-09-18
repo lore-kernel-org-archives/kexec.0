@@ -4,57 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8A4B0C982F8
-	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5C24EC982EE
+	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:23:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:
 	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
 	From:MIME-Version:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=UDxOdOM4SxQI/SRvITcvClpR4kJ1LyTAVJnnNy5mOjQ=; b=KGtSxVnUUIoq0v2T/eZPo0UtoQ
-	FHWDd3/sVLtksvh1v5rfD14WinfYArmFjOf2TuRVGEQfsNDO2knjfWgwMCJruf8ZGfZoW2y5iOH+w
-	yogJ1cGXyFJMUR3ycs4d8HeOwmNuCiBNDj7XubGk+eA+mv3N2VJM6IOyCz4u+8x++dqkWZxZtrlzy
-	NT3lLCNt5BLhClVqsrirXAH4tBPwUSdphVn/xET8X9XVSQ4nk6EoIn8td0TKFcAMIq+juHh2WkihI
-	T+0SZCmkubiP1LNEVjSdgSUwpOMoGsWgAHxvXFQmrF11Qjt/7L6IUbJ8oVxZuAfLP6HE9oIw2j4Ev
-	ClbxCtgA==;
+	bh=XCX7OD0MFSj63jeBdnj32V2m69meKqvW8/7zSh3AOsY=; b=Dr8MQtE36863wumVMfI4l4JVj0
+	Q0vnMPV2Q13zENd5KDMSOIaMJF86u7ia0myCfUX0NQN53cQy9ncPDUOBjuvmvl2I6+fiedVKhQru5
+	r8z4K+3kbL3YkWPJrAxM2OEezRAujjL+TpEnl4WWeuNxLBYbn6da/6DC/ZtpLFeqinXzlm5NNfoBe
+	6pLjoj48+TtaVI37FNXfBtbI/aDJCihwlGuMVXZebtiBbyeXNKYYA1a7jEwVN3ixmH8kfQqf8jDQl
+	Y74CapjbJ7fttCUHTknfSinCtEFgobthVDItj3fjB973X0lEnzOvlW9kFNKbjAcrvF8mR3Df2pGx6
+	rYW1ICvQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8O4Y-00000000MnA-1wKf;
-	Sun, 20 Sep 2026 20:23:40 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1x8O4h-00000000NBo-1iF9;
+	Sun, 20 Sep 2026 20:23:47 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7Ve9-0000000E4yN-40ye;
-	Fri, 18 Sep 2026 10:16:46 +0000
+	id 1x7Vmd-0000000E5eC-2T1L;
+	Fri, 18 Sep 2026 10:25:31 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 6584A60A5F;
-	Fri, 18 Sep 2026 10:16:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D27101F00898;
-	Fri, 18 Sep 2026 10:16:41 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 0B11B41418;
+	Fri, 18 Sep 2026 10:25:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 170481F000FF;
+	Fri, 18 Sep 2026 10:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789726605;
-	bh=UDxOdOM4SxQI/SRvITcvClpR4kJ1LyTAVJnnNy5mOjQ=;
+	s=k20260515; t=1789727130;
+	bh=XCX7OD0MFSj63jeBdnj32V2m69meKqvW8/7zSh3AOsY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Qh+PxjuhUYtQuTeeOL6D5uiL1736me4lgCC18Dyr540KpX1gn7g2viekAqDkINVeW
-	 V16ZuYKknpyPGGG3APdOEwuMAA9Mi2X01p1YlM68ibSO/A8gHWKdpYguVle1KPxGUW
-	 SwSHBlhTwmXypnGgRbnUrfbCkHZj8vLURNJsaxUScCCy2zq0L8WhG7YW/LanxlaQ30
-	 Y9ixgrAUskPcxu43UTAsVmm1yKlQoJ86LJsqXWxWO2wBCStypE1LKZLL4qmNA3jhPT
-	 N93ecpuLle22qWqJDfk1PgsNhWBnUkKlE/ktYVKnz6zp5EwRIw2pWOt96ZTKfbwF6+
-	 Dj/abVCxxaFWA==
+	b=bgn07gul2XbQMTEsRc4NB0SooXCoVClfKj7xYlHbS0pB2k+p9hs37drFAnbcjmF6s
+	 4uQTP4i4RTHhMXyDNCKCVqtp09Vt4jf/2sZpt6hXCITDDYmNLKHl/7GEuioB10pBbq
+	 KgC8pFhunF4pZVF52aAyqYLmVje7onyZnDtkoMo7M+n8lrWgnW2qD56PzJwaioLm4S
+	 fHUW0/h/VQS1YQuMks/Kfw+mvY5dmMgMBMzsknhX/LGDPMoVKKagSg7iLX1wTh+7zx
+	 SfTRxREogXbxKWtWO3h7HjVP9J++VI67o4Pb8NZxEUTXLM29u8MBaqpCcwe6O9eeSz
+	 2AjhZSXEB/PNg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 02/17] kexec: Record allocated CMA pages to fix
- release size mismatch
-To: gregkh@linuxfoundation.org, dakr@kernel.org, maddy@linux.ibm.com, mingo@redhat.com, bp@alien8.de, ruanjinjie@huawei.com, ardb@kernel.org, robh@kernel.org, vishal.l.verma@intel.com, me@linux.beauty, kas@kernel.org, bgwin@google.com, linux-kernel@vger.kernel.org, chleroy@kernel.org, baoquan.he@linux.dev, rppt@kernel.org, will@kernel.org, rafael@kernel.org, lizhengyu3@huawei.com, hpa@zytor.com, yeoreum.yun@arm.com, tangyouling@kylinos.cn, graf@amazon.com, eric.devolder@oracle.com, sshegde@linux.ibm.com, kernel@xen0n.name, loongarch@lists.linux.dev, gshan@redhat.com, thuth@redhat.com, linux-mm@kvack.org, sourabhjain@linux.ibm.com, hbathini@linux.ibm.com, ritesh.list@gmail.com, mark.rutland@arm.com, adityag@linux.ibm.com, guodongtai@kylinos.cn, catalin.marinas@arm.com, maqianga@uniontech.com, seanjc@google.com, kees@kernel.org, dave.hansen@linux.intel.com, ruirui.yang@linux.dev, x86@kernel.org, palmer@rivosinc.com, piliu@redhat.com, pratyush@kernel.org, james.morse@arm.com, tglx@kerne
- l.org, jbouron@amazon.com, zhangtianyang@loongson.cn, driver-core@lists.linux.dev, linux-arm-kernel@lists.infradead.org, chao.gao@intel.com, "Jinjie
- Ruan" <ruanjinjie@huawei.com>, liukexin@kylinos.cn, linux-fsdevel@vger.kernel.org, blum@kernel.org, npiggin@gmail.com, leitao@debian.org, mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, pasha.tatashin@soleen.com, mclapinski@google.com, chenhuacai@kernel.org, coxu@redhat.com, takahiro.akashi@linaro.org, akpm@linux-foundation.org
+Subject: Re: [PATCH v5 14/17] elf: Introduce elf64_phdr_size() helper
+To: "Jinjie Ruan" <ruanjinjie@huawei.com>, lizhengyu3@huawei.com, dave.hansen@linux.intel.com, mark.rutland@arm.com, bgwin@google.com, npiggin@gmail.com, mingo@redhat.com, mclapinski@google.com, thuth@redhat.com, ruirui.yang@linux.dev, sourabhjain@linux.ibm.com, linuxppc-dev@lists.ozlabs.org, catalin.marinas@arm.com, dakr@kernel.org, linux-kernel@vger.kernel.org, vishal.l.verma@intel.com, pasha.tatashin@soleen.com, robh@kernel.org, sshegde@linux.ibm.com, chao.gao@intel.com, rppt@kernel.org, seanjc@google.com, chleroy@kernel.org, liukexin@kylinos.cn, linux-mm@kvack.org, takahiro.akashi@linaro.org, piliu@redhat.com, akpm@linux-foundation.org, pratyush@kernel.org, ruanjinjie@huawei.com, kees@kernel.org, hpa@zytor.com, rafael@kernel.org, ritesh.list@gmail.com, blum@kernel.org, linux-arm-kernel@lists.infradead.org, coxu@redhat.com, maddy@linux.ibm.com, eric.devolder@oracle.com, palmer@rivosinc.com, tglx@kernel.org, adityag@linux.ibm.com, kas@kernel.org, chenhuacai@kernel.org, yeoreum.yun@
+ arm.com, maqianga@uniontech.com, gshan@redhat.com, guodongtai@kylinos.cn, gregkh@linuxfoundation.org, x86@kernel.org, zhangtianyang@loongson.cn, jbouron@amazon.com, bp@alien8.de, tangyouling@kylinos.cn, loongarch@lists.linux.dev, james.morse@arm.com, ardb@kernel.org, mpe@ellerman.id.au, leitao@debian.org, will@kernel.org, baoquan.he@linux.dev, hbathini@linux.ibm.com, me@linux.beauty, graf@amazon.com, linux-fsdevel@vger.kernel.org, kernel@xen0n.name, driver-core@lists.linux.dev
 Cc: kexec@lists.infradead.org
-In-Reply-To: <20260918100442.3841135-3-ruanjinjie@huawei.com>
+In-Reply-To: <20260918100442.3841135-15-ruanjinjie@huawei.com>
 References: <20260918100442.3841135-1-ruanjinjie@huawei.com>
- <20260918100442.3841135-3-ruanjinjie@huawei.com>
+ <20260918100442.3841135-15-ruanjinjie@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 18 Sep 2026 10:16:41 +0000
-Message-Id: <20260918101641.D27101F00898@smtp.kernel.org>
+Date: Fri, 18 Sep 2026 10:25:26 +0000
+Message-Id: <20260918102527.170481F000FF@smtp.kernel.org>
 X-Mailman-Approved-At: Sun, 20 Sep 2026 13:23:20 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -71,41 +69,39 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> The CMA pages allocated for a kexec segment are released using the
-> segment's memsz to calculate the number of pages. However, some
-> architecture loaders modify the segment's memsz after allocation
-> (e.g. arm64 subtracts text_offset), causing the release function to
-> free fewer pages than were originally allocated, leaking the remaining
-> CMA pages.
+> Add a common helper to compute the total size of an ELF64 header
+> (Ehdr + program headers) from the number of program headers.
+> Replace open-coded calculations in powerpc, x86, vmcore,
+> and crash_core.
 >=20
-> Add a per-segment `segment_cma_pages` array to store the number of
-> pages actually allocated from CMA. Populate it during
-> kexec_add_buffer() using the aligned memsz, and use it in
-> kimage_free_cma() to accurately release all allocated pages.
+> On ppc64, struct elfhdr maps to elf64_hdr, so the powerpc change
+> is a pure cleanup.
 >=20
-> This avoids relying on the potentially modified segment->memsz and
-> prevents silent CMA memory leaks.
+> No functional change intended.
 >=20
+> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+> Cc: Thomas Gleixner <tglx@kernel.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
 > Cc: Andrew Morton <akpm@linux-foundation.org>
 > Cc: Baoquan He <baoquan.he@linux.dev>
 > Cc: Mike Rapoport <rppt@kernel.org>
 > Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
 > Cc: Pratyush Yadav <pratyush@kernel.org>
-> Cc: Brian Mak <makb@juniper.net>
-> Cc: Pingfan Liu <piliu@redhat.com>
+> Cc: Dave Young <ruirui.yang@linux.dev>
+> Cc: Kees Cook <kees@kernel.org>
 > Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
-> Cc: Justinien Bouron <jbouron@amazon.com>
-> Cc: Li Chen <me@linux.beauty>
-> Cc: stable@vger.kernel.org
-> Link: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%=
-40huawei.com
-> Fixes: 07d24902977e ("kexec: enable CMA based contiguous allocation")
 > Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260918100442.3841=
-135-1-ruanjinjie@huawei.com?part=3D2
+135-1-ruanjinjie@huawei.com?part=3D14
 
 
