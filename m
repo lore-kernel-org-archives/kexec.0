@@ -4,101 +4,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1AE17C982D6
-	for <kexec@archiver.kernel.org>; Fri, 18 Sep 2026 10:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2C33CC982DD
+	for <kexec@archiver.kernel.org>; Fri, 18 Sep 2026 12:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=TAR8zhCOEVqWXPt6vBsjOMeeQmFuBz9UsZFbgyML5lo=; b=DH6j+z9gmtQdNXJ3Hh1GemNiNj
-	kzGBfXIEM/cqUWkKG1Fm3M+nTs5EGfXkB76Xo3+68c3JO0gWZCGlcpZNX14EmKv2ANneW7tvYP2fB
-	f8k2J7/G2MDzYLIL1/cUsdHyH6XPiKNAQv6bUIqi9DCPFG5V43M1WjykDnLoKRk0UDkSYKoUNZxA2
-	QLvUKNra7RnVwJ9+cBJt3rWkAELNlfHgmqa+oynBjn2+meHjsjEr35P+690ZaIBxUrgGFThoq2pxi
-	RJKTToz62+P64i8FoFpShatxjItmb2cjA2OlMe5uQ+AK3ZkxZcI1IUchQp+2rZZqR46hzEsLydNNI
-	C5ImPaNw==;
+	bh=iraf2G8GnLk55v/tOz9PuW5FKw3tZzsJG7inOso05Qw=; b=y4qNQF5lNorhXELox4rwNfY0jf
+	OhLsbKwRUH6ybpMIGwsep+Zt7SKs5tJNeYo2PhvVNYTsCbrhNyl9QK8r8rGCf64NHAydcH6cexYmp
+	yqsMOplAiOC3xVVDgFYH+0sEQkgHM9pr/v9G/nD2G2giQZI9wGj6OVIW3ii0PBcruRuLnQSupPMmR
+	mlPNuo+Fw4jV7yHXKgCUzO9vSTGTZWK/fPWsH4RVonRT1kjbHLIg/IRfWJG5cX8h8x9x0FaGShp9X
+	rzhZvvoYiF/G8mArVJnRU0mmpmwzDOsYEDceelU0RD/jTQioLwmMkFR+GlrmEQzPrGL6j61KET+CL
+	7VZpoBJw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7WE3-0000000E9jv-3rFm;
-	Fri, 18 Sep 2026 10:53:51 +0000
-Received: from mail-pl1-x641.google.com ([2607:f8b0:4864:20::641])
+	id 1x7XXq-0000000ELbD-03CH;
+	Fri, 18 Sep 2026 12:18:22 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7WDy-0000000E9j5-1E23
+	id 1x7XXo-0000000ELau-3Iuo
 	for kexec@lists.infradead.org;
-	Fri, 18 Sep 2026 10:53:47 +0000
-Received: by mail-pl1-x641.google.com with SMTP id d9443c01a7336-2dd1dcdcf95so3986675ad.1
-        for <kexec@lists.infradead.org>; Fri, 18 Sep 2026 03:53:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789728825; x=1790333625; darn=lists.infradead.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=TAR8zhCOEVqWXPt6vBsjOMeeQmFuBz9UsZFbgyML5lo=;
-        b=NP/AXqZEBj4qh+4CQoloMtTZi3ddfXJFlqPMZ0oDBg7PkRd+q6vW4a50xIMU9kbhmX
-         BNr9EX5qrPfvt0AeaeVCKF2xI+kog61j0KQy1ZSq9RtEbunjGBnfJpQ8zc6SoicDKZpj
-         cjcDaez3qtzhqDD3cKBKerPbK6KbDqNXNoF8sN4R1Wq7L3A2GEuWD+QnYDAR4V+/5t3s
-         m76eNR5thSI4VkiH22Ki2teykprAAAX5Fb/CsNNJLimbdgLgTNtB/giTaIg9GWan+ISr
-         ua+RlZU6+F6gImvNbMEzI2JNWJY51dRLkTvq+VUJpgFGm1e9MSXZhVfm9+sMIWGaltOK
-         K9og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789728825; x=1790333625;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=TAR8zhCOEVqWXPt6vBsjOMeeQmFuBz9UsZFbgyML5lo=;
-        b=l/9I7avArlvcgIBoDQfvIyMM9/7okrpd1oCzx6vq1pDh1MqDAqthmv9DBvQ6pHsawS
-         7Nwjmcvd8ByRfKLfI7zfoV3+SpWHH1EfFtbLW07DN7zLAbvd47fqDOIqzciLWIythWxZ
-         8SQ8pl0UCUsZNGaPSoS58+80iJZtRxj3EvPK+wPQMuI2XSXt0pzLAjCfdAw7H5EHUhap
-         swowoP88KteM1BT3HMjv/shAquFi1HQejPuikHZAVsKJ3dnmtACH53w1AK7Vsc3yfJmV
-         wE3SSbmXcF/I5myh1iTozuirwC4uBHHR9JVNAXwggsA3GJAmXrLFe1McA3Pm50PxtY6p
-         kEMA==
-X-Forwarded-Encrypted: i=1; AKwUvBzD6PwNLkCZV9llsNbUst8PsmSmDro0b8sCoF6YO/9P2zNV4DxLq/2lBsg5ky0NYLEv+7xSeg==@lists.infradead.org
-X-Gm-Message-State: AFuF++mwQaF/BQAwqjw4AHKGkzJV36u+KEHp70bzJ+7vRAHt9xkwqAK3
-	TppF+VSsG4NtgHak+wRgELFu5se4a+yTU/qhlmlUf3Jqp/G0NiR9muLP
-X-Gm-Gg: AYBFou21a1/JTE7sg1OFCgHoy3iC6jCZOeXVRXiCPwto/XcszNtvKEZSMXtSvNZcm+N
-	TBTjzXp7QVzLoQiBpG9cwUI4eNGEl8mNY23TRIAr4L/Dkmq3q/EC8rmppHLCaIa8vFtTIu+TZ6C
-	wfbtUPSt/9RQvMWZl8FtK2wwQYynpp35q+UzMJGP3O4djppEDMtovXfWr963wZ03EWQxeWGGThx
-	H/vRp3Gj7tAjee7PksclN+YrxvmR+skUujXCu803XLleFeybkmMLzztASMg92IxVOaxnvYrB10X
-	oJPCXbvEB5dV7lgqzstkSrqHLl3ikNMWD0ruMlZdwhbBbmxXUu5KFYrCXvXkJJhmaOP8xaNA9zQ
-	evlOSncgcKzoxgSUdAV/iaQauTqFQQwahlAMLUHgI9wNv4AEby/hGImm41DF+KL/U3WYoOqc4Np
-	2nyYg94uCG5Y3UjbtJLNmYFFuZxn0NmRW1dUh/JqKJULqoXywfV/Q3lOIA1zD+grjfoLbass0oV
-	/aiJA==
-X-Received: by 2002:a17:902:cecc:b0:2d8:d4d2:d139 with SMTP id d9443c01a7336-2dd9ca3f088mr93269015ad.21.1789728825328;
-        Fri, 18 Sep 2026 03:53:45 -0700 (PDT)
-Received: from [10.125.112.20] ([122.11.210.25])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ddb7525b2asm5835555ad.19.2026.09.18.03.53.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Sep 2026 03:53:44 -0700 (PDT)
-Message-ID: <1a47d5de-fb68-4c10-a199-f0d274689cdc@gmail.com>
-Date: Fri, 18 Sep 2026 18:53:32 +0800
+	Fri, 18 Sep 2026 12:18:20 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id A88A660A89;
+	Fri, 18 Sep 2026 12:18:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 251121F000FF;
+	Fri, 18 Sep 2026 12:18:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789733899;
+	bh=iraf2G8GnLk55v/tOz9PuW5FKw3tZzsJG7inOso05Qw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=nHi3LIqlfCjI2cn+NwQvM+CZ6Xylz1qzVBvMVHU9ino6iJj0S1Gv6y6qT3JyuiqVw
+	 9NwLROYnHXnhBnwRDXtkpuBo0RiuhYfP372H/PrZ5Nmt5H7qMGr4ZvjDP7Dwj0hTX6
+	 t9ukArpPNzDq/p+rmRjeDwz2aikNKZW1dqPzMlSgMIrL0+8GchhWkMtqhxcMBbwlYM
+	 HZJToJz+7PH7D09H/haTWnVS9i0c84gZW++nFFnRWSopuUlryKmKqMgcjwZv21FwQz
+	 Y2Neq90H9WGRd9haugFuPUNOpXZWqNTYrEEcEwM034L57yQl4mqvl9boN1WzzbFTxb
+	 aVrL4ESb4oOWg==
+Message-ID: <caac2cb9-8faa-49bc-ae8a-47c5fd7b7e58@kernel.org>
+Date: Fri, 18 Sep 2026 14:18:03 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 00/10] kdump: reduce vmcore size and capture time
-To: Baoquan He <baoquan.he@linux.dev>
-Cc: catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
- pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, tglx@kernel.org,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
- robh@kernel.org, saravanak@kernel.org, akpm@linux-foundation.org,
- rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org,
- m.szyprowski@samsung.com, mark.rutland@arm.com, kernel@xen0n.name,
- alex@ghiti.fr, hpa@zytor.com, ruirui.yang@linux.dev, robin.murphy@arm.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- devicetree@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org,
- iommu@lists.linux.dev
-References: <20260902073116.802752-1-chenwandun1@gmail.com>
- <aqzznOgILX2pZg7b@fedora>
+Subject: Re: [PATCH v5 7/9] drivers/base/memory: count inherited poisoned
+ frames into the block
+To: Breno Leitao <leitao@debian.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi
+ <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>,
+ kas@kernel.org, kexec@lists.infradead.org, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Brendan Jackman
+ <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>,
+ Zi Yan <ziy@nvidia.com>, Oscar Salvador <osalvador@suse.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ hannes@cmpxchg.or, shakeel.butt@linux.dev, linux-efi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, rmikey@meta.com,
+ riel@surriel.com, harry@kernel.org, linux-cxl@vger.kernel.org,
+ driver-core@lists.linux.dev, kernel-team@meta.com
+References: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
+ <20260915-hwpoison-kho-v5-7-3bc7a57bd503@debian.org>
+ <de41b78a-8471-4832-be0c-35d410a4499a@kernel.org>
+ <aqpczrtIwSG948iv@gmail.com>
+ <b8ad366a-a019-4462-9dce-f687f60ee7f2@kernel.org>
+ <aqvHHHuWJ-y4WRJZ@gmail.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
-From: Wandun <chenwandun1@gmail.com>
-In-Reply-To: <aqzznOgILX2pZg7b@fedora>
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <aqvHHHuWJ-y4WRJZ@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260918_035346_324791_CEAC93B1 
-X-CRM114-Status: GOOD (  12.11  )
+Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -113,71 +137,66 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-
-On 9/18/26 16:17, Baoquan He wrote:
-> On 09/02/26 at 03:31pm, Wandun Chen wrote:
->> From: Wandun Chen <chenwandun@lixiang.com>
+On 9/17/26 15:01, Breno Leitao wrote:
+> On Wed, Sep 16, 2026 at 04:51:40PM +0200, David Hildenbrand (Arm) wrote:
+>> On 9/16/26 11:35, Breno Leitao wrote:
+>>>
+>>> hmmm, I am not sure I see it that way.
+>>>
+>>> The loop only runs for a block the bitmap marks. On a machine with nothing
+>>> recorded the bitmap is all zeros, the range_contains_poisoned_memory() check
+>>> right above it returns false, and the loop never executes.
+>>>
+>>> What every boot does pay is that check, once per block. The stub installs
+>>> the table whether or not anything was ever recorded in it, so this is not a
+>>> NULL test: it is two 64-bit divisions by the unit size plus a
+>>> find_next_bit() over the single word a 128M block covers at one bit per 2M.
+>>>
+>>> The real cost (that "for loop above"), comes when you kexec (not on cold
+>>> boot -- given the bitmap is empty), and you are trying to init
+>>> a memory block that has poisoned pages into it. Which seems the right
+>>> trade-off, no?
+>>>
+>>> That said, can we do better? Yes. The silly win is to let the table say
+>>> whether anything was ever recorded in it, something like a
+>>> linux_efi_poisoned_memory->empty that the first recorded frame clears,
+>>> and return on that before the bitmap is reached at all.
+>>>
+>>> Is this what you are looking for, or something more drastic?
 >>
-> ...snip... 
->> ACPI systems already filter reserved memory out of the vmcore through
->> their existing path; only DT-based systems currently fail to filter these
->> regions, which is what this series addresses. The flag lives in memblock
->> itself rather than in a DT-only structure, so the mechanism is generic and
->                                                                  ~~~
-> The patchset itself looks goot to me, while I am concerned if it's
-> really generic. I raised that in sub-thread talking with Wandun. Imagine
-> I tried to exclude many driver regions and split memblock regions into
-> hundreds, cma could yell out: cma_declare_contiguous_multi()?
-
-Are you concerned that setting the MEMBLOCK_NODUMP flag could split a memblock
-region into many smaller regions, which might then prevent
-cma_declare_contiguous_multi() from satisfying a multi-range allocation?
-If so, IICU I don’t think that applies here.
-
-MEMBLOCK_NODUMP is currently only set on memory that has already been reserved.
-These regions are excluded when iterating over free memory, so marking them NODUMP
-does not increase the number of free regions seen by CMA.
-
-
-Before marking NODUMP:
-
-  memblock.memory:    [ free ] [ reserved ] [ free ]
-  memblock.reserved:           [ reserved ]
-
-Now, for memblock.memory, it is one region that contains free and reserved memory.
-
-
-After marking the reserved region NODUMP:
-
-  memblock.memory:    [ free ] [  NODUMP  ] [ free ]
-  memblock.reserved:           [ reserved ]
-
-for memblock.memory, it splits into 3 regions, 2 free regions, 1 nodump region.
-
-Although the memblock.memory array may be split internally, it does not create additional
-free ranges for cma_declare_contiguous_multi() to process.
-
-
-> 
-> IMHO, withdrawing the claim can fix the nit concern. If I am wrong,
-> please help point it out to let me learn more.
-
-I will revise this description to avoid any misunderstanding.
-
-Best regards,
-Wandun
-
-
-> 
-> Thanks
-> Baoquan
-> 
->> both ACPI and DT systems can benefit from it (suggested by Rob, thanks) [1].
+>> Ah, that magical "range_contains_poisoned_memory" does a bitmap scan?
 >>
->> Since the reserved memory regions are filtered out, the vmcore is
->> smaller in size and faster to produce. 
+>> I'm sorry, but that is absolutely confusing.
 >>
-> ...snip...
+>> There is no way someone will figure out that range_contains_poisoned_memory()
+>> queries some efi specific bitmap that won't even be able to represent any memory
+>> outside of it's range.
+>>
+>> I don't really have time to give a better solution, but starting with the
+>> naming, range_contains_poisoned_memory() is just absolutely misleading.
+> 
+> Fair point, I'll clean up the naming in the next revision.
+> 
+> I'll also add that ->empty field, which should help locate this bit
+> faster and may let us skip the bitmap query entirely on the happy path.
+> 
+> Anything else you'd like addressed?
+> 
+> Good to know this moved the needle from "David hates this feature" to
+> "David only hates the naming" -- I'll take that as progress.  :-P
 
+;)
+
+I think the crucial part is to find a way to cleanly distinguish our source of
+information, and also how the source does only apply to some memory.
+
+Regarding this patch here, I'd assume it's sufficient.
+
+But I do wonder why we are walking pages when we have a bitmap to walk/process
+at hand?
+
+-- 
+Cheers,
+
+David
 
