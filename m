@@ -4,68 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 503AEC982DD
-	for <kexec@archiver.kernel.org>; Fri, 18 Sep 2026 20:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5A912C982D7
+	for <kexec@archiver.kernel.org>; Fri, 18 Sep 2026 20:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:
 	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
 	From:MIME-Version:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Cyl7vQEW3LfLjMkgXBXkK29B6dIUdPn+EyE/qOnRRR0=; b=V1fI0d+c4TPrb3HLlqw8pmrBju
-	9iV0wm+Hy7U/yAQzlyis6xBHAHjCkjA+rmq8YBYBr3etCIrvWnR8oOcOWpu/ufbPz1q34mYMX5jGS
-	rATE85hznUEw8i2edhgqsTohZOilaIpyvy9OqBeF06+Ahr9kudxOIriFrQbzJM1Vm4TlUHeKSpTz8
-	42XVr8GVDg0coOg9fUcepei6kpkSDPFU92tN1jTx/voKqF22yeIxiuz0ShDVAtx6cs8r7w6BDO8M7
-	tZrRZDnqOwpYk/hApBhoY8o1b6VfePiyOJNOx9hxy9PULG5+plzQeL+5C++Xb7RubBmU3mO3h4B59
-	f32nfvQw==;
+	bh=aFG6NMPPSuorbIlqU27dxScbJKZhV+vI/vVxbxtvQPs=; b=ptWglEu/5n1W1c816h8VaEfLAb
+	wrvS01JMq87G5dpjO5Mk+CyfZe9zRr2mEEOpU4AQTVKRhQLP6gVa3qKRq8OEyl6uM+GzNYm5gEBFV
+	mFTcGKmp9OV0NF8K6cQXvPFm8rdu/CcsSTKPHgyPRSLpxW8CZAVtj2BiP7l1tKmfINhDG6kQOfmnn
+	7RFMlW1Rrv6LGEvj5m7R1w2W4nD2kQwtzTCcO/4ph7gePMlCg29AUS3N5nrP3fhUAZejaaJ/o8wlE
+	9s8uVZXRqAAQMvYAX6/2aa5p2X55Q8E0pB17SDyzPl3ny3jDUKUMoXeCSokZgDy/aDdXiAHZcpfqg
+	bSZluJZA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7f44-0000000FVJ4-29hr;
-	Fri, 18 Sep 2026 20:20:08 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1x7f75-0000000FVVW-2LxA;
+	Fri, 18 Sep 2026 20:23:15 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7f42-0000000FVIe-15ua
+	id 1x7f74-0000000FVVP-1eNX
 	for kexec@lists.infradead.org;
-	Fri, 18 Sep 2026 20:20:06 +0000
+	Fri, 18 Sep 2026 20:23:14 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id AE1CD602CC;
-	Fri, 18 Sep 2026 20:20:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7AE51F000FF;
-	Fri, 18 Sep 2026 20:20:03 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id CFBBE602CC;
+	Fri, 18 Sep 2026 20:23:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1483A1F00898;
+	Fri, 18 Sep 2026 20:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789762805;
-	bh=Cyl7vQEW3LfLjMkgXBXkK29B6dIUdPn+EyE/qOnRRR0=;
+	s=k20260515; t=1789762993;
+	bh=aFG6NMPPSuorbIlqU27dxScbJKZhV+vI/vVxbxtvQPs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mjUAFoYZxPnQsQpOb1L4wDNqgVs+S5TR7L4F5G2tKrnkscbfk4QcfcKxREph+VKZo
-	 HU3vZ2CgZGzNL0KHEe0HjGVd/CzNrQI8pyVAy0FTcj2mqPOkLNYCPtrf3ckcj7DhE8
-	 +tqrhYnJcft2QiuKOnJYw3zmVc4Hfu4Bv8z2uZRXufolpGJHLAOMy7wLeOoCyIaywN
-	 0YFL2w4urvGcCgv50l6U6RJbbLEgs44TDrHqe2wuj+SIUebumCXE7QON4KoF2V65y2
-	 ogVEOzaDp5uXgGhOWTsvegM1Tsg/bEtnr51NmkSqpNGRH+UMEc75JUA3+0XnXd3u8h
-	 VBiGcEdnQ9wiQ==
+	b=J8EevRzhuZz4nJEgD7WdIubGd5xCkXjojQLV1YgZ45BionFAmz9HLZIbms7CHK15M
+	 qGVgkpcsiBOXYX5pbbHphFQYd4YZHAYMdRBoWtpud2Ej7+nwVjI9o3h0YlB5hyhjQ1
+	 lxdR3U7SIH3gvr8sECbSpAAwQnXc0JHgxljXo5u9i6vonpDVyEWs5Q5tgfIlqvzDBU
+	 +vFA8B2g28agSSRUW9EKOQQsY34hXUyiFvh6fgdJOToPZIj++uRa/MFKgEZzCJJ7oa
+	 KgqJTzLXtH+VzfrilkfgyCInD9Y6a71qJLA0scREO7NAMaageYRCdHCAdw3QbKVOSd
+	 kEO2Gr9EfF6Zg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 03/13] PCI: liveupdate: Track incoming preserved PCI
+Subject: Re: [PATCH v9 02/13] PCI: liveupdate: Track outgoing preserved PCI
  devices
-To: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, "David
- Matlack" <dmatlack@google.com>
-Cc: "Mike Rapoport" <rppt@kernel.org>, "Leon Romanovsky" <leonro@nvidia.com>, "Pratyush
- Yadav" <pratyush@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>, "Saeed
- Mahameed" <saeedm@nvidia.com>, "William Tu" <witu@nvidia.com>, "Yi Liu" <yi.l.liu@intel.com>, "Bjorn
- Helgaas" <bhelgaas@google.com>, "Josh Hilke" <jrhilke@google.com>, "Pranjal
- Shrivastava" <praan@google.com>, "Jacob Pan" <jacob.pan@linux.microsoft.com>, "Alex
- Williamson" <alex@shazbot.org>, "Randy Dunlap" <rdunlap@infradead.org>, "Adithya
- Jayachandran" <ajayachandra@nvidia.com>, "Chris Li" <chrisl@kernel.org>, "Samiullah
- Khawaja" <skhawaja@google.com>, linux-pci@vger.kernel.org, "Alexander Graf" <graf@amazon.com>, "David
- Rientjes" <rientjes@google.com>, "Parav Pandit" <parav@nvidia.com>, kexec@lists.infradead.org, "Lukas
- Wunner" <lukas@wunner.de>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Shuah
- Khan" <skhan@linuxfoundation.org>, "Vipin Sharma" <vipinsh@google.com>, "Jason
- Gunthorpe" <jgg@nvidia.com>
-In-Reply-To: <20260918200640.887030-4-dmatlack@google.com>
+To: "David Matlack" <dmatlack@google.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-doc@vger.kernel.org
+Cc: "Saeed Mahameed" <saeedm@nvidia.com>, "Jacob Pan" <jacob.pan@linux.microsoft.com>, "Jason
+ Gunthorpe" <jgg@nvidia.com>, "Leon Romanovsky" <leonro@nvidia.com>, "William
+ Tu" <witu@nvidia.com>, "Shuah Khan" <skhan@linuxfoundation.org>, "Chris Li" <chrisl@kernel.org>, "David
+ Rientjes" <rientjes@google.com>, "Alexander Graf" <graf@amazon.com>, "Jonathan
+ Corbet" <corbet@lwn.net>, "Adithya Jayachandran" <ajayachandra@nvidia.com>, "Mike
+ Rapoport" <rppt@kernel.org>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Vipin
+ Sharma" <vipinsh@google.com>, kexec@lists.infradead.org, "Parav Pandit" <parav@nvidia.com>, "Bjorn
+ Helgaas" <bhelgaas@google.com>, "Lukas Wunner" <lukas@wunner.de>, "Randy
+ Dunlap" <rdunlap@infradead.org>, "Pranjal Shrivastava" <praan@google.com>, "Pratyush
+ Yadav" <pratyush@kernel.org>, "Samiullah Khawaja" <skhawaja@google.com>, "Josh
+ Hilke" <jrhilke@google.com>, "Yi Liu" <yi.l.liu@intel.com>, "Alex
+ Williamson" <alex@shazbot.org>, linux-pci@vger.kernel.org
+In-Reply-To: <20260918200640.887030-3-dmatlack@google.com>
 References: <20260918200640.887030-1-dmatlack@google.com>
- <20260918200640.887030-4-dmatlack@google.com>
+ <20260918200640.887030-3-dmatlack@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 18 Sep 2026 20:20:03 +0000
-Message-Id: <20260918202003.E7AE51F000FF@smtp.kernel.org>
+Date: Fri, 18 Sep 2026 20:23:11 +0000
+Message-Id: <20260918202312.1483A1F00898@smtp.kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,25 +80,26 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> During PCI enumeration, the previous kernel might have passed state about
-> devices that were preserved across kexec. The PCI core needs to fetch
-> this state to identify which devices are "incoming" and require special
-> handling.
+> Add APIs to allow drivers to notify the PCI core of which devices are
+> being preserved across a Live Update for the next kernel, i.e.
+> "outgoing" devices.
 >=20
-> Add pci_liveupdate_setup_device() which is called during device setup
-> to fetch the serialized state (struct pci_ser) from the Live Update
-> Orchestrator. The first time this happens, pci_flb_retrieve() will run
-> and convert the array of pci_dev_ser structs into an xarray so that it
-> can be looked up efficiently.
+> Drivers must notify the PCI core when devices are preserved so that the
+> PCI core can update its FLB data (struct pci_ser) and track the list of
+> outgoing devices. pci_liveupdate_preserve() notifies the PCI core that a
+> device must be preserved across Live Update. pci_liveupdate_unpreserve()
+> reverses this (cancels the preservation of the device).
 >=20
-> If a device is found in the xarray, the PCI core stores a pointer to its
-> state in dev->liveupdate_incoming until pci_liveupdate_finish() is
-> called by the driver. This pointer allows the PCI core and drivers to
-> apply Live Update-specific logic to incoming devices in subsequent
-> [ ... ]
-> as the xarray key.
+> This tracking ensures the PCI core is fully aware of which devices may
+> need special handling during shutdown and kexec, and so the list of
+> preserved devices can be handed off to the next kernel.
+>=20
+> For now, the API only supports preserving non-VF devices on a root bus
+> (not behind an PCI-to-PCI bridges).
 >=20
 > Reviewed-by: Pranjal Shrivastava <praan@google.com>
+> Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
 > Reviewed-by: Samiullah Khawaja <skhawaja@google.com>
 > Signed-off-by: David Matlack <dmatlack@google.com>
 
@@ -107,6 +107,6 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260918200640.8870=
-30-1-dmatlack@google.com?part=3D3
+30-1-dmatlack@google.com?part=3D2
 
 
