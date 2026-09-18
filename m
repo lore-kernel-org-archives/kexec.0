@@ -4,157 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3F7A4C982D8
-	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0385AC982EF
+	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:23:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=HMEr8VxikyVfU6qvEUZWpmfPP3XV/5sFL4uxF81JxCA=; b=l2twN9W7Kb++eps910uBCw8ml0
-	DS33CCVNCnvzHJGao99P4Z+NC6zfuB1RxkS3sh/LYLRl6jPpDVfSVabzqnhMX5N/dcnPpl0VU4yFg
-	0Dk4Fo2TahVr1pF9b24gd3nyBLUCfm1Bxcszu237g1DLWr5v+FbEn917pHkSN4ce1jHHyAsIr2Qy5
-	lQGrwRFGyUoylVMvdRjkNbFsI0mb3al7Dn08kuuWS/jrAd7wMtJa6Ai7S1C1sk7vQAyZ2OatdicBi
-	/SitgV4EttKs9/ALwoaEDlu8y8jNZsx5T3guvEh2YEoJC+EJ/KfPisExfdmZfZkL3GolgEExvQwJx
-	EVQan3XA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
+	:Subject:To:From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=gzeLYP4W/HVtauBH6zrP+s/J9Q0YG9Qv0eMgDswYLO0=; b=KWx0Xnq5OpWvIpiHBk+h4ZaNkH
+	2yX++WPqzo/P9VXWx3df6TMeZJ+rxbmvyAC3w31T8npD6W7PYBc21OCivUYFxCn43h+Il01yEbLuA
+	YgMV/3jzV15qd5vkCv868wNAkZg37XvFTya6Yrb6+PSU7DEWXD+a19ZcajMA4yE6Y3JgAD73ehY1z
+	RBkjEY5tMoUkqFO2+lI4xFMdeqO8LR4Kbt2Ql5Z8p5ykMEeiUX5ahrLUs9hx3K5EVOFxAt2mo3cAy
+	2k/CmOE7bGx1p03j9SnQQj2bz+RBs3xVauPjhoBCaWKaSYMg/R2b15YuMHvrl/WyrZv3NnPc2WaTw
+	0z1518jQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8O4P-00000000MMC-0Rdg;
-	Sun, 20 Sep 2026 20:23:29 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1x8O4S-00000000MUh-3jqZ;
+	Sun, 20 Sep 2026 20:23:32 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x66Sz-00000003hgp-2XnK;
-	Mon, 14 Sep 2026 13:11:25 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 0A94E40332;
-	Mon, 14 Sep 2026 13:11:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65F6B1F000FF;
-	Mon, 14 Sep 2026 13:11:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789391484;
-	bh=HMEr8VxikyVfU6qvEUZWpmfPP3XV/5sFL4uxF81JxCA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=CJKJt+kIe+hjf+CMIokL8p95jJbZP9ztsmmxzZVo1NFVjWTN+jeWfJ8gkpM0krJT8
-	 Utjnt2XRl1o23z+XgGILQt1K7qKpVap9QKwfAQ3Pbw7Nb1qdciasZLG+bCxX6W8crk
-	 mB6ySTVDkFOyHlizGE9wPiKXzd5ZoeQzUUHq4GK3Az9uzbVLKJs+jLvaWj//Z7s9yJ
-	 26BLl4l4JsAZDlTiLo0F5mBC0VkJP+XRzFeBS+pwUeA7vgq+fA4Y2VALNJVCMnpA9v
-	 1Oa2VfL25A9Rb97s1Afe8qFm5GadjQrDawLd5iUENfXkRUR76/6j5S6iZTu65TIRWr
-	 3oGpW4Ax822zA==
-Message-ID: <066c3b3b-e5a7-4cbb-b077-26c78cfc07ac@kernel.org>
-Date: Mon, 14 Sep 2026 15:10:57 +0200
+	id 1x7VSI-0000000E2PC-2r7h;
+	Fri, 18 Sep 2026 10:04:31 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Type:Content-Transfer-Encoding
+	:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Sender:
+	Reply-To:Cc:Content-ID:Content-Description;
+	bh=gzeLYP4W/HVtauBH6zrP+s/J9Q0YG9Qv0eMgDswYLO0=; b=f0RTznkt7rrReBeMkFp2+mxZDT
+	39QXdQrpxlBL4GYRDOwcc9LvYSKhsLghRYV3F5umuWwwhvRWA0oBNsh7FKCZas99XhscyUS7xqA9S
+	JwvlwD6XAx1+XynCQZ0+4FswIznmhAo9WezQYvSULO5SYqFBo9qk3Aozb9Mf75LC7QCpzhz3YhIRY
+	2EJsdtBI/YMhWMSgOFcj+VvDGBrmV1Xsl5MrkjG0P9T3p3VDb+rfvnTUIIaGso4n+HAT1UBb3g/2V
+	JpKAtQbsMHxmPQMk5NcEzFwO7GNb8l5TsiOE+qaMPlMueudpgPRJF0WQrMjKzsnicob59fHAzAobc
+	JiU3N6Iw==;
+Received: from canpmsgout02.his.huawei.com ([113.46.200.217])
+	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1x7VSE-00000009tTx-2TvA;
+	Fri, 18 Sep 2026 10:04:29 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=gzeLYP4W/HVtauBH6zrP+s/J9Q0YG9Qv0eMgDswYLO0=;
+	b=Ez/wOSF7kN0QxhLrYOxwsAq0t/qVSH7zO1LO6a7rzHbsnPODXfipqqsojEw0qCoGxc7ny7coD
+	r5CTzt7mwcrfYR0Ns1b2jGOyjEoC1z/DtVergIB5XHUbsALHHtqEUbsn6WEYdxjWUtLytZbUcoZ
+	lEboIM0h4256GoXqxjGf9KM=
+Received: from mail.maildlp.com (unknown [172.19.162.197])
+	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4hmSbq5r7Yzcb4D;
+	Fri, 18 Sep 2026 17:52:55 +0800 (CST)
+Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id E5DD54057D;
+	Fri, 18 Sep 2026 18:04:10 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemk200008.china.huawei.com
+ (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Fri, 18 Sep
+ 2026 18:04:09 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
+	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
+	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
+	<ritesh.list@gmail.com>, <sshegde@linux.ibm.com>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
+	<dakr@kernel.org>, <akpm@linux-foundation.org>, <baoquan.he@linux.dev>,
+	<rppt@kernel.org>, <pasha.tatashin@soleen.com>, <pratyush@kernel.org>,
+	<ruirui.yang@linux.dev>, <kees@kernel.org>, <thuth@redhat.com>,
+	<ruanjinjie@huawei.com>, <gshan@redhat.com>, <ardb@kernel.org>,
+	<james.morse@arm.com>, <leitao@debian.org>, <yeoreum.yun@arm.com>,
+	<sourabhjain@linux.ibm.com>, <robh@kernel.org>, <coxu@redhat.com>,
+	<tangyouling@kylinos.cn>, <liukexin@kylinos.cn>, <guodongtai@kylinos.cn>,
+	<maqianga@uniontech.com>, <zhangtianyang@loongson.cn>, <blum@kernel.org>,
+	<adityag@linux.ibm.com>, <chao.gao@intel.com>, <kas@kernel.org>,
+	<vishal.l.verma@intel.com>, <seanjc@google.com>, <piliu@redhat.com>,
+	<jbouron@amazon.com>, <me@linux.beauty>, <mclapinski@google.com>,
+	<graf@amazon.com>, <bgwin@google.com>, <eric.devolder@oracle.com>,
+	<hbathini@linux.ibm.com>, <takahiro.akashi@linaro.org>,
+	<lizhengyu3@huawei.com>, <palmer@rivosinc.com>, <x86@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<driver-core@lists.linux.dev>, <kexec@lists.infradead.org>,
+	<linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>
+Subject: [PATCH v5 01/17] kexec: Fix CMA segment address translation with non-zero text_offset
+Date: Fri, 18 Sep 2026 18:04:26 +0800
+Message-ID: <20260918100442.3841135-2-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260918100442.3841135-1-ruanjinjie@huawei.com>
+References: <20260918100442.3841135-1-ruanjinjie@huawei.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 00/16] Remove PG_private by using page/folio->private
- checks instead
-To: Matthew Wilcox <willy@infradead.org>, Zi Yan <ziy@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Muchun Song <muchun.song@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>,
- Gregory Price <gourry@gourry.net>, Ying Huang
- <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Kairui Song <kasong@tencent.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Minchan Kim <minchan@kernel.org>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, Juergen Gross <jgross@suse.com>,
- Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- xen-devel@lists.xenproject.org, Eric Biggers <ebiggers@kernel.org>,
- "Theodore Y. Ts'o" <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
- linux-fscrypt@vger.kernel.org, Oscar Salvador <osalvador@suse.de>,
- Chao Yu <chao@kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
- Tal Zussman <tz2294@columbia.edu>, Gao Xiang <xiang@kernel.org>,
- Jan Kara <jack@suse.cz>, Yue Hu <zbestahu@gmail.com>,
- Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale
- <dhavale@google.com>, Hongbo Li <hongbohbli@tencent.com>,
- Chunhai Guo <guochunhai@vivo.com>, linux-erofs@lists.ozlabs.org,
- linux-fsdevel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Axel Rasmussen
- <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, linux-trace-kernel@vger.kernel.org,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- linux-nfs@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
- Alex Markuze <amarkuze@redhat.com>, Viacheslav Dubeyko <slava@dubeyko.com>,
- ceph-devel@vger.kernel.org, Song Liu <song@kernel.org>,
- Yu Kuai <yukuai@fygo.io>, Li Nan <magiclinan@didiglobal.com>,
- Xiao Ni <xiao@kernel.org>, linux-raid@vger.kernel.org,
- Richard Weinberger <richard@nod.at>, Zhihao Cheng <chengzhihao1@huawei.com>,
- linux-mtd@lists.infradead.org, Baoquan He <baoquan.he@linux.dev>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Dave Young <ruirui.yang@linux.dev>, Shuah Khan <skhan@linuxfoundation.org>,
- kexec@lists.infradead.org, linux-doc@vger.kernel.org
-References: <20260913-remove-pg_private-v4-0-848550f7574e@nvidia.com>
- <aqd2N1J3ui1llWWG@casper.infradead.org>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <aqd2N1J3ui1llWWG@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.73]
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemk200008.china.huawei.com (7.202.194.74)
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260918_110427_244791_AF2F95AA 
+X-CRM114-Status: GOOD (  14.12  )
 X-Mailman-Approved-At: Sun, 20 Sep 2026 13:23:20 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -170,22 +112,71 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 9/14/26 06:21, Matthew Wilcox wrote:
-> On Sun, Sep 13, 2026 at 10:23:58PM -0400, Zi Yan wrote:
->>       md/md-bitmap: replace PagePrivate() with page_private()
->>       buffer: replace page_buffer() with page_private() and delete it
-> 
-> Sorry, looks like I screwed up git send-email usage.  I'm proposing
-> replacing these two patches wth the three I sent.
+kimage_load_cma_segment() and kimage_map_segment() translate a CMA
+segment to a kernel virtual address with page_address(cma), ignoring
+segment->mem. But arm64's image_load() adds text_offset to segment->mem,
+so the kernel payload is copied to the wrong offset while image->start
+points past it, and kexec jumps into the middle of the kernel.
+kimage_map_segment() has the same problem for any CMA segment whose mem
+was moved.
 
-For everybody CCed wondering "which patches":
+Add kimage_cma_vaddr() to translate a boot physical address inside a CMA
+segment to its virtual address, and use it in both places.
 
-https://lore.kernel.org/r/20260914041830.2072626-1-willy@infradead.org
-https://lore.kernel.org/r/20260914041830.2072626-2-willy@infradead.org
-https://lore.kernel.org/r/20260914041830.2072626-3-willy@infradead.org
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan He <baoquan.he@linux.dev>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>
+Cc: Pingfan Liu <piliu@redhat.com>
+Cc: Justinien Bouron <jbouron@amazon.com>
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: stable@vger.kernel.org
+Fixes: 07d24902977e ("kexec: enable CMA based contiguous allocation")
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+---
+ kernel/kexec_core.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index dc770b9a6d05..7f7cb77f0caa 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -738,11 +738,23 @@ static struct page *kimage_alloc_page(struct kimage *image,
+ 	return page;
+ }
+ 
++/*
++ * Translate a boot physical address inside a CMA segment to a kernel
++ * virtual address.  Architecture loaders may move segment->mem away from
++ * the CMA base (arm64 adds text_offset), so the offset must be preserved.
++ */
++static void *kimage_cma_vaddr(struct page *cma, unsigned long mem)
++{
++	unsigned long cma_base = page_to_boot_pfn(cma) << PAGE_SHIFT;
++
++	return page_address(cma) + (mem - cma_base);
++}
++
+ static int kimage_load_cma_segment(struct kimage *image, int idx)
+ {
+ 	struct kexec_segment *segment = &image->segment[idx];
+ 	struct page *cma = image->segment_cma[idx];
+-	char *ptr = page_address(cma);
++	char *ptr = kimage_cma_vaddr(cma, segment->mem);
+ 	size_t ubytes, mbytes;
+ 	int result = 0;
+ 	unsigned char __user *buf = NULL;
+@@ -965,7 +977,7 @@ void *kimage_map_segment(struct kimage *image, int idx)
+ 
+ 	cma = image->segment_cma[idx];
+ 	if (cma)
+-		return page_address(cma);
++		return kimage_cma_vaddr(cma, image->segment[idx].mem);
+ 
+ 	addr = image->segment[idx].mem;
+ 	size = image->segment[idx].memsz;
 -- 
-Cheers,
+2.34.1
 
-David
 
