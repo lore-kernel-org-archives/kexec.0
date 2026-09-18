@@ -4,68 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8F610C982DA
-	for <kexec@archiver.kernel.org>; Fri, 18 Sep 2026 09:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1AE17C982D6
+	for <kexec@archiver.kernel.org>; Fri, 18 Sep 2026 10:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=mMUmZK0P8YmnJG/+8kD4oWYLxaHcjZK2HJ/Mgo1W5Pw=; b=qfwtLB3DZg3X7BgKqVE0SRJXiz
-	1s+SPiwFm8XcbMPVpOd9C6n+XHNAwrQN/uu415KsgwQs45E0Kg3RX5+667mJYv5haTLW96/uFSqIl
-	ebBFiso4CYsuY4GoeFeOG4yNQ+GwH5BmJByvmB9UFG+MaXVtpaw6Cdt+L5/f//EBnq/X5Wfvm6UAn
-	cL2gN+9T6V1G9Lucfr5Zbx05Tf6hu7v16gwe/48UESqY/Ux1HfDsrkkoZJsllCAowwj+gTu8l7P3G
-	6ts0+WxlJjepF1rI4UoX4EoRp9+q2WgRYu9z5I8wh+UR/9gws3fC2pVjYMzfZfOycEqYePxSR87TX
-	Se2l5RdA==;
+	bh=TAR8zhCOEVqWXPt6vBsjOMeeQmFuBz9UsZFbgyML5lo=; b=DH6j+z9gmtQdNXJ3Hh1GemNiNj
+	kzGBfXIEM/cqUWkKG1Fm3M+nTs5EGfXkB76Xo3+68c3JO0gWZCGlcpZNX14EmKv2ANneW7tvYP2fB
+	f8k2J7/G2MDzYLIL1/cUsdHyH6XPiKNAQv6bUIqi9DCPFG5V43M1WjykDnLoKRk0UDkSYKoUNZxA2
+	QLvUKNra7RnVwJ9+cBJt3rWkAELNlfHgmqa+oynBjn2+meHjsjEr35P+690ZaIBxUrgGFThoq2pxi
+	RJKTToz62+P64i8FoFpShatxjItmb2cjA2OlMe5uQ+AK3ZkxZcI1IUchQp+2rZZqR46hzEsLydNNI
+	C5ImPaNw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7Uzu-0000000Dxmr-2WYG;
-	Fri, 18 Sep 2026 09:35:10 +0000
-Received: from out-176.mta0.migadu.com ([91.218.175.176] helo=mta0.migadu.com)
+	id 1x7WE3-0000000E9jv-3rFm;
+	Fri, 18 Sep 2026 10:53:51 +0000
+Received: from mail-pl1-x641.google.com ([2607:f8b0:4864:20::641])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7Uzs-0000000DxlX-1VzY
+	id 1x7WDy-0000000E9j5-1E23
 	for kexec@lists.infradead.org;
-	Fri, 18 Sep 2026 09:35:09 +0000
-X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=p/DQJd95U/7tkNehVUiamBQTKyTjZl52MTnDy+aDty8=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1789724104; v=1; x=1790328904;
- b=t7TZ60mtyBpGmXyqF9xUBXtjYq9ZtoFwrn0HSx2Ph+U4/WywNAhaY7HkNO2bIxtCLk/QXpXx
- ePKIRBMR7usKqfagJlrKT6QvXX4vhQ9JjEXuC8fYvlcP9wnXceW7kStV9BWvI9jpomfSYnSzZ8P
- /2Era6AfCaa01vvu6sABCWxY=
-X-Envelope-To: kexec@lists.infradead.org
-Received: by smtp.migadu.com with ESMTPS id c0e6a754c1f50c48;
-	Fri, 18 Sep 2026 09:35:02 +0000
-X-Mizu-Trace-ID: c0e6a754c1f50c48
-X-Migadu-Flow: FLOW_OUT
-From: George Guo <dongtai.guo@linux.dev>
-To: pratyush@kernel.org
-Cc: rppt@kernel.org,
-	pasha.tatashin@soleen.com,
-	sourabhjain@linux.ibm.com,
-	graf@amazon.com,
-	changyuanl@google.com,
-	akpm@linux-foundation.org,
-	chenhuacai@kernel.org,
-	liukexin@kylinos.cn,
-	guodongtai@kylinos.cn,
-	kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] liveupdate: kho: calculate per-node scratch sizes before allocation
-Date: Fri, 18 Sep 2026 17:33:16 +0800
-Message-ID: <20260918093317.12216-1-dongtai.guo@linux.dev>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <2vxz1par7amw.fsf@kernel.org>
-References: <2vxz1par7amw.fsf@kernel.org>
+	Fri, 18 Sep 2026 10:53:47 +0000
+Received: by mail-pl1-x641.google.com with SMTP id d9443c01a7336-2dd1dcdcf95so3986675ad.1
+        for <kexec@lists.infradead.org>; Fri, 18 Sep 2026 03:53:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789728825; x=1790333625; darn=lists.infradead.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=TAR8zhCOEVqWXPt6vBsjOMeeQmFuBz9UsZFbgyML5lo=;
+        b=NP/AXqZEBj4qh+4CQoloMtTZi3ddfXJFlqPMZ0oDBg7PkRd+q6vW4a50xIMU9kbhmX
+         BNr9EX5qrPfvt0AeaeVCKF2xI+kog61j0KQy1ZSq9RtEbunjGBnfJpQ8zc6SoicDKZpj
+         cjcDaez3qtzhqDD3cKBKerPbK6KbDqNXNoF8sN4R1Wq7L3A2GEuWD+QnYDAR4V+/5t3s
+         m76eNR5thSI4VkiH22Ki2teykprAAAX5Fb/CsNNJLimbdgLgTNtB/giTaIg9GWan+ISr
+         ua+RlZU6+F6gImvNbMEzI2JNWJY51dRLkTvq+VUJpgFGm1e9MSXZhVfm9+sMIWGaltOK
+         K9og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789728825; x=1790333625;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=TAR8zhCOEVqWXPt6vBsjOMeeQmFuBz9UsZFbgyML5lo=;
+        b=l/9I7avArlvcgIBoDQfvIyMM9/7okrpd1oCzx6vq1pDh1MqDAqthmv9DBvQ6pHsawS
+         7Nwjmcvd8ByRfKLfI7zfoV3+SpWHH1EfFtbLW07DN7zLAbvd47fqDOIqzciLWIythWxZ
+         8SQ8pl0UCUsZNGaPSoS58+80iJZtRxj3EvPK+wPQMuI2XSXt0pzLAjCfdAw7H5EHUhap
+         swowoP88KteM1BT3HMjv/shAquFi1HQejPuikHZAVsKJ3dnmtACH53w1AK7Vsc3yfJmV
+         wE3SSbmXcF/I5myh1iTozuirwC4uBHHR9JVNAXwggsA3GJAmXrLFe1McA3Pm50PxtY6p
+         kEMA==
+X-Forwarded-Encrypted: i=1; AKwUvBzD6PwNLkCZV9llsNbUst8PsmSmDro0b8sCoF6YO/9P2zNV4DxLq/2lBsg5ky0NYLEv+7xSeg==@lists.infradead.org
+X-Gm-Message-State: AFuF++mwQaF/BQAwqjw4AHKGkzJV36u+KEHp70bzJ+7vRAHt9xkwqAK3
+	TppF+VSsG4NtgHak+wRgELFu5se4a+yTU/qhlmlUf3Jqp/G0NiR9muLP
+X-Gm-Gg: AYBFou21a1/JTE7sg1OFCgHoy3iC6jCZOeXVRXiCPwto/XcszNtvKEZSMXtSvNZcm+N
+	TBTjzXp7QVzLoQiBpG9cwUI4eNGEl8mNY23TRIAr4L/Dkmq3q/EC8rmppHLCaIa8vFtTIu+TZ6C
+	wfbtUPSt/9RQvMWZl8FtK2wwQYynpp35q+UzMJGP3O4djppEDMtovXfWr963wZ03EWQxeWGGThx
+	H/vRp3Gj7tAjee7PksclN+YrxvmR+skUujXCu803XLleFeybkmMLzztASMg92IxVOaxnvYrB10X
+	oJPCXbvEB5dV7lgqzstkSrqHLl3ikNMWD0ruMlZdwhbBbmxXUu5KFYrCXvXkJJhmaOP8xaNA9zQ
+	evlOSncgcKzoxgSUdAV/iaQauTqFQQwahlAMLUHgI9wNv4AEby/hGImm41DF+KL/U3WYoOqc4Np
+	2nyYg94uCG5Y3UjbtJLNmYFFuZxn0NmRW1dUh/JqKJULqoXywfV/Q3lOIA1zD+grjfoLbass0oV
+	/aiJA==
+X-Received: by 2002:a17:902:cecc:b0:2d8:d4d2:d139 with SMTP id d9443c01a7336-2dd9ca3f088mr93269015ad.21.1789728825328;
+        Fri, 18 Sep 2026 03:53:45 -0700 (PDT)
+Received: from [10.125.112.20] ([122.11.210.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ddb7525b2asm5835555ad.19.2026.09.18.03.53.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Sep 2026 03:53:44 -0700 (PDT)
+Message-ID: <1a47d5de-fb68-4c10-a199-f0d274689cdc@gmail.com>
+Date: Fri, 18 Sep 2026 18:53:32 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 00/10] kdump: reduce vmcore size and capture time
+To: Baoquan He <baoquan.he@linux.dev>
+Cc: catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
+ pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, tglx@kernel.org,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+ robh@kernel.org, saravanak@kernel.org, akpm@linux-foundation.org,
+ rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org,
+ m.szyprowski@samsung.com, mark.rutland@arm.com, kernel@xen0n.name,
+ alex@ghiti.fr, hpa@zytor.com, ruirui.yang@linux.dev, robin.murphy@arm.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ devicetree@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org,
+ iommu@lists.linux.dev
+References: <20260902073116.802752-1-chenwandun1@gmail.com>
+ <aqzznOgILX2pZg7b@fedora>
+Content-Language: en-US
+From: Wandun <chenwandun1@gmail.com>
+In-Reply-To: <aqzznOgILX2pZg7b@fedora>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260918_023508_546478_69385B7B 
-X-CRM114-Status: GOOD (  15.39  )
+X-CRM114-CacheID: sfid-20260918_035346_324791_CEAC93B1 
+X-CRM114-Status: GOOD (  12.11  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,88 +113,71 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Sourabh, Pratyush, 
 
-> But in practice, this problem is only on CONFIG_NUMA=n and I don't think
-> in practice KHO or LUO is being used in non-NUMA systems. So while I
-> think it is worth fixing, I think we should also have a test where we
-> enable CONFIG_NUMA.
 
-Confirmed. My vmtest kernel has CONFIG_NUMA unset, and your analysis
-matches the data.
+On 9/18/26 16:17, Baoquan He wrote:
+> On 09/02/26 at 03:31pm, Wandun Chen wrote:
+>> From: Wandun Chen <chenwandun@lixiang.com>
+>>
+> ...snip... 
+>> ACPI systems already filter reserved memory out of the vmcore through
+>> their existing path; only DT-based systems currently fail to filter these
+>> regions, which is what this series addresses. The flag lives in memblock
+>> itself rather than in a DT-only structure, so the mechanism is generic and
+>                                                                  ~~~
+> The patchset itself looks goot to me, while I am concerned if it's
+> really generic. I raised that in sub-thread talking with Wandun. Imagine
+> I tried to exclude many driver regions and split memblock regions into
+> hundreds, cma could yell out: cma_declare_contiguous_multi()?
 
-I reran the vmtest with Sourabh's debug prints on both configurations:
-same kernel, same QEMU command, and without my this fix patch, so the
-default percentage policy is exercised. The only difference is
-CONFIG_NUMA.
+Are you concerned that setting the MEMBLOCK_NODUMP flag could split a memblock
+region into many smaller regions, which might then prevent
+cma_declare_contiguous_multi() from satisfying a multi-range allocation?
+If so, IICU I don’t think that applies here.
 
-Without CONFIG_NUMA:
+MEMBLOCK_NODUMP is currently only set on memory that has already been reserved.
+These regions are excluded when iterating over free memory, so marking them NODUMP
+does not increase the number of free regions seen by CMA.
 
-  KHO: Before low and global scratch allocations
-  KHO: low size = 330185 KB
-  KHO: global size = 322 MB
-  KHO: Per node 0 = 672 MB
-  KHO: After low and global scratch allocations
-  KHO: low size = 330185 KB
-  KHO: global size = 322 MB
-  KHO: Per node 0 = 672 MB
-  KHO: Failed to reserve nid 0 scratch buffer
-  KHO: Failed to reserve scratch area, disabling kexec handover
 
-With CONFIG_NUMA=y:
+Before marking NODUMP:
 
-  KHO: Before low and global scratch allocations
-  KHO: low size = 330197 KB
-  KHO: global size = 322 MB
-  KHO: Per node 0 = 96 MB
-  KHO: After low and global scratch allocations
-  KHO: low size = 330197 KB
-  KHO: global size = 322 MB
-  KHO: Per node 0 = 96 MB
-  KHO: After per node allocation
-  KHO: low size = 428501 KB
-  KHO: global size = 418 MB
-  KHO: Per node 0 = 288 MB
+  memblock.memory:    [ free ] [ reserved ] [ free ]
+  memblock.reserved:           [ reserved ]
 
-In the run without CONFIG_NUMA, the reserved-kern sum the sizing sees
-is 330185 KB, which is the 98.45 MiB baseline plus the 224 MiB lowmem
-scratch area: with memblock_get_region_node() hardcoded to return 0,
-the NUMA_NO_NODE lowmem area is counted as node 0's kernel reservation.
-Node 0 therefore requests 200% of (98.45 MiB + 224 MiB), rounded up to
-32 MiB alignment: 672 MiB. That no longer fits next to the other areas
-in the 1 GiB guest, and KHO disables itself.
+Now, for memblock.memory, it is one region that contains free and reserved memory.
 
-In the run with CONFIG_NUMA=y, the real node ID excludes the
-NUMA_NO_NODE regions, so node 0 requests 96 MiB. The allocation
-succeeds and is visible in the sums printed afterwards (330197 KB ->
-428501 KB), and the KHO selftest passes end to end ("KHO: found kexec
-handover data", restore succeeds).
 
-Sourabh, this also answers your question. Your PowerPC system runs
-CONFIG_NUMA=y, so the node filter excludes the lowmem and global areas
-and your numbers stay flat. Your experiment and mine are the two halves
-of the same mechanism.
+After marking the reserved region NODUMP:
 
-> I think on NUMA systems the problem is the other way round. The
-> calculation for the global scratch also counts per-node allocations.
+  memblock.memory:    [ free ] [  NODUMP  ] [ free ]
+  memblock.reserved:           [ reserved ]
 
-> So I think the proper fix for scratch sizing is what this patch does
-> and then a fixup for the global scratch calculation as well.
+for memblock.memory, it splits into 3 regions, 2 free regions, 1 nodump region.
 
-Agreed. For v2 I plan to:
+Although the memblock.memory array may be split internally, it does not create additional
+free ranges for cma_declare_contiguous_multi() to process.
 
-  - Compute all scratch sizes (lowmem, global, per-node) before any
-    scratch area is allocated, per Mike's comment. The sizes are a
-    function of the pre-allocation state, so this seals both feedback
-    directions at once.
-  - State the !CONFIG_NUMA condition in the commit message. The feedback
-    described there is not unconditional, which is what triggered the
-    question.
-  - Add the LLM attribution Mike asked for.
-  - Include the CONFIG_NUMA=y vmtest result as coverage.
-  - Look at the global scratch calculation on NUMA systems as a
-    follow-up.
 
-Thanks,
-George
+> 
+> IMHO, withdrawing the claim can fix the nit concern. If I am wrong,
+> please help point it out to let me learn more.
+
+I will revise this description to avoid any misunderstanding.
+
+Best regards,
+Wandun
+
+
+> 
+> Thanks
+> Baoquan
+> 
+>> both ACPI and DT systems can benefit from it (suggested by Rob, thanks) [1].
+>>
+>> Since the reserved memory regions are filtered out, the vmcore is
+>> smaller in size and faster to produce. 
+>>
+> ...snip...
+
 
