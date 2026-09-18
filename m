@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3386AC982F2
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3CA1DC982F3
 	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:23:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,51 +12,51 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
 	:Subject:To:From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zufRRvpwVHCucp4/a8wU/krIeaWea9Chc2jByLlFL4c=; b=zipkBosTXbG59u0J7S/jerFlfx
-	RXgKlY9k+tM1/S2vAAHXAqBGr19k5sEmGikkeCSZE8s+H6HPXhc06BbuXTNgk86sHuy1SJciQUm1j
-	QPwvJbfnqVIEfB+XLUC1FYAIbMQMKvGyd/3SDXnbA65D6cNAyvZM6MefSaKyNVm6tr/C234dUzHHq
-	Yqvm4RebCnK3grHnktmp3FVoC9GihCl3bLWdLhuj1CxLryEUDFj5f4YZ49z9/cKPBJ2ZQwRu5wQll
-	zepQsnWJfCl4t9GZ56FVEpWoq8dSnwH99lu0rwlkzQ/iFBMw34NZ3O5jEK1eZqZ/A9p5Ip/j3AEz1
-	dQGHBMFQ==;
+	bh=g746orfjBM5FKI/4ioFM0MPbnRDGHMAm7NJngqq6WSA=; b=huFcJHAu9O3USrwiCN4XL5rjKV
+	vAwqpBonQkcDj4XWZezlIsBEdU9Q0+4RjARzy8dc9S2G2Mr/4vB6uu/UB0mS5PH0GX3Z+5QnPLOZ/
+	xPnaLvXvd55l9hGIMWCipSJTnxlfON8hOTeRk/W3ITblxWwFiBHRt0Jqob8SMtcuJQxtdt0gShTxQ
+	oITNCNBYO9swiYyUKt5VeN3Wi/niwFYJu/gA7J6h0pjy6p5IDN/q7AwYI+Gge5ayE19W8hh5zVsBJ
+	qkT/4silagpdSQ8GgiuYjp2Bbcz/xycQHAvHCeKG+ad52VVqc93qkY1M9uDYVYYNmFJU2I7AlpoXP
+	H/c7lbKQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8O4V-00000000Mf2-2mzL;
+	id 1x8O4V-00000000MeU-2Cgk;
 	Sun, 20 Sep 2026 20:23:35 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7VSN-0000000E2Sc-227v;
+	id 1x7VSN-0000000E2S2-04Aq;
 	Fri, 18 Sep 2026 10:04:35 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Content-Type:Content-Transfer-Encoding
 	:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Sender:
 	Reply-To:Cc:Content-ID:Content-Description;
-	bh=zufRRvpwVHCucp4/a8wU/krIeaWea9Chc2jByLlFL4c=; b=U4xfvJZj/uC0/iLc+ypm6yVeM/
-	f+HL2BD15XkE7wvHRZBTEdPcDZJ5iqhXAJCuQxBskKBQI/AK5dypnSpY88ezWg/6UYvQ1UmTdjanO
-	B4Y8ju1u7I93FPfWkkPl+cA/Kz84amXtZov6n9IYigGoTBkjHdV8+KhSskfssvi8LuC6+ltcg5I93
-	CZ4HuW8G7tK5+lJ2oqKNHVuxsn5BMBZzF7v8zqrF8XspKulw7pdMeQnltnKTK1ZwDMzSDRZV/s0y/
-	h09lgIpniPTc/n/tuxpnFevMqfe0xtI4XjVXYol+xGS2rwpRqY5J0IQ7nssfPwHDBGeYbPftBUMMU
-	k5kfGVNw==;
-Received: from canpmsgout11.his.huawei.com ([113.46.200.226])
+	bh=g746orfjBM5FKI/4ioFM0MPbnRDGHMAm7NJngqq6WSA=; b=bS5w84SOh2IcOObb+20HMPc7Cg
+	KeIoN9McqOyzlCh53vJzisIWEtuwxGZTHUfWA9UBeWN1jf4t5CefJwaqEG93srZi/Bo8DqQfa0WIW
+	AlML8/kht+DVAE8PLR+TNMEuETPduc5NaD4kn+E+Vy7F+HshmA/E7l96R4Jx/DuoS/AfNvvSt3K1L
+	N3RJbIhDRFN9nRho3XPSmwNphJBJUcvXrem2dVKcm78aB17O+vgkuSpnMxq3UivZ1MEAoV380LLac
+	3cc/0tsdTFc3ogCv2mRq+52DQF/dszOP/vcOS3qzJ8OKakibUMcEAwR6OOTqWtXHNChNpQ6LF+3kk
+	6kW46vfw==;
+Received: from canpmsgout06.his.huawei.com ([113.46.200.221])
 	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
-	id 1x7VSJ-00000009tX5-3RgU;
+	id 1x7VSG-00000009tU1-2NaF;
 	Fri, 18 Sep 2026 10:04:34 +0000
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=zufRRvpwVHCucp4/a8wU/krIeaWea9Chc2jByLlFL4c=;
-	b=BckyjycAl3ciFIMoUA4aZPGw9VUPen7PpwqZaxbivk06HsP2G2e1o1OYRpVjCGxZ5ScmXWiON
-	VLeKRZcC4u9YJAKQArJ+X4FgbKFWIz3sdq8RcX+POy8ZO6Pxq07qezk90rBm7yrQxrk4UOcJCME
-	uqEZBVLJJhWv39vUktkr7hk=
-Received: from mail.maildlp.com (unknown [172.19.163.214])
-	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hmScN3dtKzKm8V;
-	Fri, 18 Sep 2026 17:53:24 +0800 (CST)
+	bh=g746orfjBM5FKI/4ioFM0MPbnRDGHMAm7NJngqq6WSA=;
+	b=h1jxo3g6i+Np9G/ygFulWombg/WWMVz/nTSO7gjsBS9mUvrsf8A1hYwT/QK9YNw/PYEjbGJJP
+	flmsFMVVXB+OPm2NGt/WJCIxlXEKLJyUYJ29/n9rb9hEiJCkb2OYQAVDWCoW/izsogrfAUkYoKj
+	HDssVLSCyfy0uWkUl/kaLnw=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4hmScB70ylzRhXT;
+	Fri, 18 Sep 2026 17:53:14 +0800 (CST)
 Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 17A674057C;
-	Fri, 18 Sep 2026 18:04:28 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 6093540538;
+	Fri, 18 Sep 2026 18:04:12 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemk200008.china.huawei.com
  (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Fri, 18 Sep
- 2026 18:04:26 +0800
+ 2026 18:04:10 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
@@ -82,9 +82,9 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
 	<driver-core@lists.linux.dev>, <kexec@lists.infradead.org>,
 	<linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>
-Subject: [PATCH v5 13/17] crash: Assert device_hotplug_lock in crash_get_memory_ranges_nolock()
-Date: Fri, 18 Sep 2026 18:04:38 +0800
-Message-ID: <20260918100442.3841135-14-ruanjinjie@huawei.com>
+Subject: [PATCH v5 02/17] kexec: Record allocated CMA pages to fix release size mismatch
+Date: Fri, 18 Sep 2026 18:04:27 +0800
+Message-ID: <20260918100442.3841135-3-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260918100442.3841135-1-ruanjinjie@huawei.com>
 References: <20260918100442.3841135-1-ruanjinjie@huawei.com>
@@ -95,9 +95,8 @@ X-Originating-IP: [10.90.53.73]
 X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
  kwepemk200008.china.huawei.com (7.202.194.74)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260918_110432_587109_ED6BAF40 
-X-CRM114-Status: UNSURE (   9.64  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260918_110429_200007_8B07949F 
+X-CRM114-Status: GOOD (  16.13  )
 X-Mailman-Approved-At: Sun, 20 Sep 2026 13:23:20 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -113,66 +112,125 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-crash_get_memory_ranges_nolock() walks memblock, which memory hotplug
-modifies under device_hotplug_lock.  A caller that does not hold the lock
-can race with memblock_double_array() and iterate a freed regions array.
+The CMA pages allocated for a kexec segment are released using the
+segment's memsz to calculate the number of pages. However, some
+architecture loaders modify the segment's memsz after allocation
+(e.g. arm64 subtracts text_offset), causing the release function to
+free fewer pages than were originally allocated, leaking the remaining
+CMA pages.
 
-Add device_hotplug_lock_assert_held() and call it at the top of the
-function so that such callers are caught by lockdep.
+Add a per-segment `segment_cma_pages` array to store the number of
+pages actually allocated from CMA. Populate it during
+kexec_add_buffer() using the aligned memsz, and use it in
+kimage_free_cma() to accurately release all allocated pages.
 
+This avoids relying on the potentially modified segment->memsz and
+prevents silent CMA memory leaks.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan He <baoquan.he@linux.dev>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>
+Cc: Brian Mak <makb@juniper.net>
+Cc: Pingfan Liu <piliu@redhat.com>
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: Justinien Bouron <jbouron@amazon.com>
+Cc: Li Chen <me@linux.beauty>
+Cc: stable@vger.kernel.org
+Link: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%40huawei.com
+Fixes: 07d24902977e ("kexec: enable CMA based contiguous allocation")
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- drivers/base/core.c    | 5 +++++
- include/linux/device.h | 1 +
- kernel/crash_core.c    | 7 +++++++
- 3 files changed, 13 insertions(+)
+ include/linux/kexec.h |  1 +
+ kernel/kexec_core.c   |  7 ++++---
+ kernel/kexec_file.c   | 13 +++++++++----
+ 3 files changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 4c0c373998a1..c04adc457a96 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -2420,6 +2420,11 @@ void unlock_device_hotplug(void)
- 	mutex_unlock(&device_hotplug_lock);
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 0af8ae4fdd08..6b1df80524bf 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -349,6 +349,7 @@ struct kimage {
+ 	unsigned long nr_segments;
+ 	struct kexec_segment segment[KEXEC_SEGMENT_MAX];
+ 	struct page *segment_cma[KEXEC_SEGMENT_MAX];
++	unsigned long segment_cma_pages[KEXEC_SEGMENT_MAX];
+ 
+ 	struct list_head control_pages;
+ 	struct list_head dest_pages;
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 7f7cb77f0caa..5493591a9e4b 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -560,14 +560,15 @@ static void kimage_free_cma(struct kimage *image)
+ 
+ 	for (i = 0; i < image->nr_segments; i++) {
+ 		struct page *cma = image->segment_cma[i];
+-		u32 nr_pages = image->segment[i].memsz >> PAGE_SHIFT;
++		unsigned long nr_pages = image->segment_cma_pages[i];
+ 
+ 		if (!cma)
+ 			continue;
+ 
+-		arch_kexec_pre_free_pages(page_address(cma), nr_pages);
+-		dma_release_from_contiguous(NULL, cma, nr_pages);
++		arch_kexec_pre_free_pages(page_address(cma), (unsigned int)nr_pages);
++		dma_release_from_contiguous(NULL, cma, (int)nr_pages);
+ 		image->segment_cma[i] = NULL;
++		image->segment_cma_pages[i] = 0;
+ 	}
+ 
  }
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 59fb9d71e9d8..67d6df9824e6 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -670,7 +670,7 @@ static int kexec_walk_resources(struct kexec_buf *kbuf,
  
-+void device_hotplug_lock_assert_held(void)
-+{
-+	lockdep_assert_held(&device_hotplug_lock);
-+}
-+
- int lock_device_hotplug_sysfs(void)
+ static int kexec_alloc_contig(struct kexec_buf *kbuf)
  {
- 	if (mutex_trylock(&device_hotplug_lock))
-diff --git a/include/linux/device.h b/include/linux/device.h
-index aee79fd6b32b..9cca8c8bd372 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -1261,6 +1261,7 @@ do { \
- void lock_device_hotplug(void);
- void unlock_device_hotplug(void);
- int lock_device_hotplug_sysfs(void);
-+void device_hotplug_lock_assert_held(void);
- int device_offline(struct device *dev);
- int device_online(struct device *dev);
+-	size_t nr_pages = kbuf->memsz >> PAGE_SHIFT;
++	size_t nr_pages = PFN_DOWN(kbuf->memsz);
+ 	unsigned long mem;
+ 	struct page *p;
  
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 760ca9822a13..852a5f51d472 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -338,6 +338,13 @@ int crash_get_memory_ranges_nolock(struct crash_mem **mem_ranges)
- 	struct crash_mem *cmem;
+@@ -756,14 +756,16 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+  */
+ int kexec_add_buffer(struct kexec_buf *kbuf)
+ {
++	unsigned long nr_segments = kbuf->image->nr_segments;
+ 	struct kexec_segment *ksegment;
++	size_t nr_cma_pages = 0;
  	int ret;
  
-+	/*
-+	 * Callers must serialize against memory hotplug by holding
-+	 * device_hotplug_lock, otherwise the memblock iteration below can
-+	 * race with memblock_double_array() and read freed memory.
-+	 */
-+	device_hotplug_lock_assert_held();
-+
- 	max_nr_ranges = arch_get_system_nr_ranges();
- 	if (!max_nr_ranges)
- 		return -ENOMEM;
+ 	/* Currently adding segment this way is allowed only in file mode */
+ 	if (!kbuf->image->file_mode)
+ 		return -EINVAL;
+ 
+-	if (kbuf->image->nr_segments >= KEXEC_SEGMENT_MAX)
++	if (nr_segments >= KEXEC_SEGMENT_MAX)
+ 		return -EINVAL;
+ 
+ 	/*
+@@ -789,12 +791,15 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+ 		return ret;
+ 
+ 	/* Found a suitable memory range */
+-	ksegment = &kbuf->image->segment[kbuf->image->nr_segments];
++	ksegment = &kbuf->image->segment[nr_segments];
+ 	ksegment->kbuf = kbuf->buffer;
+ 	ksegment->bufsz = kbuf->bufsz;
+ 	ksegment->mem = kbuf->mem;
+ 	ksegment->memsz = kbuf->memsz;
+-	kbuf->image->segment_cma[kbuf->image->nr_segments] = kbuf->cma;
++	kbuf->image->segment_cma[nr_segments] = kbuf->cma;
++	if (kbuf->cma)
++		nr_cma_pages = PFN_DOWN(kbuf->memsz);
++	kbuf->image->segment_cma_pages[nr_segments] = nr_cma_pages;
+ 	kbuf->image->nr_segments++;
+ 	return 0;
+ }
 -- 
 2.34.1
 
