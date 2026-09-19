@@ -4,113 +4,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4414EC982D8
-	for <kexec@archiver.kernel.org>; Fri, 18 Sep 2026 23:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1FD73C982DE
+	for <kexec@archiver.kernel.org>; Sat, 19 Sep 2026 01:19:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6Z4kuHBfiAA8umRicEbaojieMc7CTxQ/nFpTYhHXkVM=; b=SqneyPa2DBXg0WTLAI5A7U0uNh
-	CHF9EejUgB9UcYimA3pn88GiYYMg0G6J0gRku3QWGhBYhLyelaZ1zu4bVIx4lwqaTUkv38VoYcHnA
-	TjrYae0DEbDQL7Pm/P2ycO5iBQyBPK2z2Kdb++7UeDpIxhLUvL8+0DvsuZyOheGz/7dJUjwa/yLN5
-	A3vl/tlyM6zDRlChn1IXc+ZS9tyVfnZODeAo1PRIMjUrqbftX9jbrV3WaoaCw5xjXdhsf9oAxbr8b
-	PV0dB6Ob+tKx10RN0PKmJa91uScYUwllZG94EsT/An9m22cTqTojm75lUh14xhXLy642xrvoe4W+s
-	dBauDvaQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=f07OJapwP7n4iN5o+VTBr7NTU5yudYQ1EeJavoRTsAU=; b=DtWVJeb6kHBNKsAnTCqPfE8ijv
+	TrO72VbXkYJlgCBHAroVQSrkf2G5r+UVVf4lndai/VxOIakeEPy6Hwzj5hz70XJBEMjhB7omrRIet
+	WWxhqXfZvQ6UKr3e46ndsJrY793GjR6L7FlHyhlb0q4kjLnMIXGFvALiMc+Uy1g6lybI7J0AWqrFf
+	ZA74efo2h363f2XyjBUx1fffLxd+TiFzqU0Jxwr+VZin/O2b/pH51y5XN6QGf/Q+tR4rHUqQynyoE
+	MXq5xqcIBqa85j+v1JnzmdKNEoZ3DBxITjuJK0aeYH9v3krHNrycXofROY1dr7VpRjaTxxxvwAL2Z
+	x7WWqmZw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7hZO-0000000FgBl-0Nug;
-	Fri, 18 Sep 2026 23:00:38 +0000
-Received: from mail-pl1-x662.google.com ([2607:f8b0:4864:20::662])
+	id 1x7jjL-0000000Fohj-1l0x;
+	Sat, 19 Sep 2026 01:19:03 +0000
+Received: from fhigh-b4-smtp.messagingengine.com ([202.12.124.155])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7hZK-0000000FgAS-0pgD
+	id 1x7jjH-0000000Fogi-3Jhd
 	for kexec@lists.infradead.org;
-	Fri, 18 Sep 2026 23:00:37 +0000
-Received: by mail-pl1-x662.google.com with SMTP id d9443c01a7336-2d942c7cc2fso4030605ad.3
-        for <kexec@lists.infradead.org>; Fri, 18 Sep 2026 16:00:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789772433; x=1790377233;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:dkim-signature:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=6Z4kuHBfiAA8umRicEbaojieMc7CTxQ/nFpTYhHXkVM=;
-        b=mLkmL0u1LAmgdQHal7UmYRCSZkEGWqzEjCilOPC0iS5XufGZU1+ircpvTUsCiFiv8x
-         4zvoHikQzP+ZDB9f5mxmfEQLne7rWMaaRjn4frAnjoNnxXC74whDvt3DjTcY30ilaQGM
-         WQcB4F21H2nhKDi+yG2nmVi7ulw/kQOTRfb2MGSPzE1AYs7Fi7+2eFeoHE1fD0QvvI80
-         SPj5YOErGuTiSFq1+PABNPt0MGljH0bgNSA0FPn09KGKD1L4SWoVhtQ0/a6UtBGi1eHX
-         EUWpghcq/0rEwLuJmLXLZ2Sb3uYitvsZmwIqPFJTnEi34PZqK8nC9TzcW8L2CeL/dYy6
-         KxrA==
-X-Forwarded-Encrypted: i=1; AKwUvBxJpheFq11O0gl0fop+AqXjm7DsHwJGR3O1fm5PWAc1McKvmtDkJweM9HzEr2kVE5pLr/tVEQ==@lists.infradead.org
-X-Gm-Message-State: AFuF++ndVCuIg1O8wcFrgB07qsm5VnYjwybdPE1kIvDvH8vbtiJhzx1e
-	4MPRYL69Ytd8W1mBhLrylrdtSoeG3uNTBea/S96MyFNICZ0rX960asVEis8JytRBdcqZNW3Nvv6
-	j0w9GxXxzSEn0SUuafuw0A6uphk/8kK63BB6Z736lVkgLxwK5m9QFUMrcCtdzBWCrfs/TlqpWZP
-	eYpTjBH9wuCP6tRiekukNZyGy1N10tLROIoOYEL2XuOlEjM1kXRxcyxhX1FptN/oZRe56RsD/TV
-	I4wfu6U8/YT
-X-Gm-Gg: AYBFou3Qic3dL+rUOpS8UqN8f3tdggo12QYx+GeKhBWN7durSoisHB9TeVAaI2JmF1l
-	80TAfXDj6LEqz4eMwVBuMPVKoLG2upgaIQHw3O7QgmktK5oerk8w2rEpk5dLjCbpjVRSeF/cXDc
-	Oj9qWhbpk0SegxDDwfa+t7c6fIqS6iRl3h5VpOdwZxyyGHshYQSv56SVfGy3HEkW3e+hrZxXanG
-	b7WVl+QjJmgo293W/3UrzAuqXxQj33wC+CQX0q/ueP2xLKue2xcSgRRdXvgTaZuvA+goaA5wSkf
-	UcRc5OxaWJpOo20vB3HxB5maBbkaSQgwP6GX+wXccnxdsYSnEw8CufgHD+Y4jYQwKN3vU4h1Vk4
-	d5LYqXJ9xRVYD/vxV5JsCmmI3iwbczNUgvOKNgRbM2paYhKE34ia/0FFYD2vISxzoaDnCw/4s5F
-	1kUA7k1PzE/+8DeheHVhe69yyWiXocPITH
-X-Received: by 2002:a17:90b:3c05:b0:399:1f8b:d255 with SMTP id 98e67ed59e1d1-39e54af0c87mr8560102a91.5.1789772432544;
-        Fri, 18 Sep 2026 16:00:32 -0700 (PDT)
-Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-29.dlp.protect.broadcom.com. [144.49.247.29])
-        by smtp-relay.gmail.com with ESMTPS id 98e67ed59e1d1-39e5353c0b4sm568387a91.1.2026.09.18.16.00.30
-        for <kexec@lists.infradead.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 18 Sep 2026 16:00:32 -0700 (PDT)
-X-Relaying-Domain: broadcom.com
-X-CFilter-Loop: Reflected
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-5b8980a1772so589184e87.3
-        for <kexec@lists.infradead.org>; Fri, 18 Sep 2026 16:00:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1789772429; x=1790377229; darn=lists.infradead.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=6Z4kuHBfiAA8umRicEbaojieMc7CTxQ/nFpTYhHXkVM=;
-        b=XYVj5bkthLWSbUbujWQGk7Q5jCnpxWdKYJPd9oflqxbqWxsCS/PXqavjJF6TZze5EQ
-         t0OUjYmkoo1zejFcbf/SCR65neHWOj5TupJy/RIepqcAoAFT3D4fVT+nohFlE0uZZ2/6
-         F5H16L1SZbsuSGtMkMQ/Mueh4jFseUcVcuzo0=
-X-Forwarded-Encrypted: i=1; AKwUvByjHQn2BsM3FvURwKhfCVssnCjF6fqINiPWQxmQIng1TfENrHXWZpHO2q2nEYKOnY2ONcXyDA==@lists.infradead.org
-X-Received: by 2002:a05:6512:159d:b0:5b6:4ad:77b3 with SMTP id 2adb3069b0e04-5b8c184fdb1mr1253433e87.27.1789772428882;
-        Fri, 18 Sep 2026 16:00:28 -0700 (PDT)
-X-Received: by 2002:a05:6512:159d:b0:5b6:4ad:77b3 with SMTP id
- 2adb3069b0e04-5b8c184fdb1mr1253406e87.27.1789772428354; Fri, 18 Sep 2026
- 16:00:28 -0700 (PDT)
+	Sat, 19 Sep 2026 01:19:01 +0000
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id A06117A00F7;
+	Fri, 18 Sep 2026 21:18:54 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Fri, 18 Sep 2026 21:18:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1789780734;
+	 x=1789867134; bh=f07OJapwP7n4iN5o+VTBr7NTU5yudYQ1EeJavoRTsAU=; b=
+	GfU3B8bzgvN3baH4hN7kVi3lK+nwsYLBoo8cuedw+XfuLRi7C2LDOr2zGEqpyItk
+	eQoRHmiP7gdOYs4G+8gpNILRD1NXFmda7hFAMawTqLZlswHVgxBzxcrjACt0t1mW
+	tgO9e4sqsVcqDI7Uw0UTvZ4BtfzKqUbSP7IPivwb7zwTOCGwHGaX3v7NqsU2WNMo
+	omFYls3/du51cPE6bB8koXlKIW2lNpV7owGIhw1oTppNYkBPxiEtBttdBwAWRz7m
+	7efK2Z7EnC+/QZYvSIBHjfWU/Fau93vviQy345fFfOQMwK3BZuTz+Ov0bDw3uj6c
+	DluMmuq+++tmqRxCLPnIow==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1789780734; x=
+	1789867134; bh=f07OJapwP7n4iN5o+VTBr7NTU5yudYQ1EeJavoRTsAU=; b=I
+	ThjHthLB53HlQOXiE/B8C3BzG82k34YmTXWtypVrrj1sjAl98hJPFZ/PA3L3KWGO
+	zMZCQjnbil2KmYaPnS/La+VdZhooz7N38ZnWV/G8dAla26+qRY3PLTlOjvlFBBJ1
+	+mx2dQybAiByY9eqhXx2HduZXZsj0yzqh71wvT0igfSONIw0bX5t6aBcbIaDHpIe
+	LU0HR6/dtgJhImLLqevRoUrkgh2jX6IqChVBAZ228wP8225XjZvUHi0L0XgCug8V
+	a+S8pOhSrolB8dq+eSA1w75N5gjmio1xONFAojmsmVDmsDxusNdJBl4tLAEnpq+4
+	7BZb90CwahB0U5AxiriZg==
+X-ME-Sender: <xms:_OKtaga1fTfEWHifyiBStU5q9_fICtTmkw9yO3PHO-DRBGkRgLhT1g>
+    <xme:_OKtaiV5RKACYIrHoXPOlyWPJUa6XFxgsdCF0p3mhbTljbESOF56b7UeHhIVzQn1u
+    ZPhhlvBI3Ibc6uA_co5L3_YYocxTmjAxU7xMvg3B_GxkG9_iZFlcwu_>
+X-ME-Received: <xmr:_OKtahZ-2xFlTFGAN0BdpiQP7dQ9Y6RzUBtbF9QY5lq-YUZGP37_jBq9GjsAOQ>
+X-ME-Proxy-Cause: dmFkZTFsi21agycuHwmyYJyjldjG/6AIpBHOLfkjZs+7QWdmfXu3roB/D7PU/BJ5GavaBQ
+    AU4Zx86E3Ar9fkk1i41sLL79DnqebEpC8pDQ6c5ESWbp577Kk3af/AT9f5eoXlX0Lw/Mwn
+    FcwH1rl6rXf0ysQZescsD7HR4aD9cokOy6JHc/odoFo5LW74f6xcHPp7/3IXor/7lPRlg4
+    yVxI+ykZmTAbWVw9hIWIcQv2dY+r8MD8Wy3QjrkvIeBpxUqwnvjaOFAxf3/hHEtPNnLxjs
+    ds98IeB4eQbJsmnMJLcg38qvtl3mGH/yUl4cVyev259XESUEPVRdDW+b9fBfBPjDcrgVI+
+    BVIlyr12V9nYqdU5Zo1weZP/CyuOjwUSS3xmHA+sFvyIYwVdXKsVOOrcJLgBflm22kdNyO
+    OefOMArnTas4zRxUhJgbvX1OAkCf+nqcf4j6frGTX205opZyUxnl5xlsaBa3ibVeWM9erA
+    ePj0w2q/rKlqCJNRlmxVdXJwfsxkckiDWN/E3g0t1fXf8kv9cv+RYjAWIatFvyc6rL8rxQ
+    u3X3RlPxpeu3mB7lNH5rrGoxRaqoxgs4aW/La6pfZxaymhcUewyZeQ84Z/YefVcxKQhX9/
+    ib/pnrw0CtPk1XE16IBpOJ7VT/SFvHGcnz/4zucdY+TDS4kvL8ePHyTyeVYg
+X-ME-Proxy: <xmx:_OKtapJ8d19Nb_dUW0u98RLaH22nwgDrxhCtssfSsItOxCPsRIc54g>
+    <xmx:_OKtas1lKKCmEv1xr5qabBOKGe-sUnb_2jS4i6JqtfX4Do4V0lSltw>
+    <xmx:_OKtangcRGH9oLTXiMpZwZ86j52cO0RMagUMHuuvD_HQGYuySJBpsg>
+    <xmx:_OKtarwxBsVW90ouA5BhWWosP9nDeIcGzw6Fx3cFQ4qfWaWzUry8wA>
+    <xmx:_uKtasPXkArDpKb2s-2cwtmutgEGZHjf9sxZHxleXUugjeM4BZ0cS2UU>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 18 Sep 2026 21:18:48 -0400 (EDT)
+Date: Fri, 18 Sep 2026 19:18:46 -0600
+From: Alex Williamson <alex@shazbot.org>
+To: David Matlack <dmatlack@google.com>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-pci@vger.kernel.org,
+ Adithya Jayachandran <ajayachandra@nvidia.com>,
+ Alexander Graf <graf@amazon.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Chris Li <chrisl@kernel.org>, David Rientjes <rientjes@google.com>,
+ Jacob Pan <jacob.pan@linux.microsoft.com>,
+ Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
+ Josh Hilke <jrhilke@google.com>, Leon Romanovsky <leonro@nvidia.com>,
+ Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>,
+ Parav Pandit <parav@nvidia.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pranjal Shrivastava <praan@google.com>,
+ Pratyush Yadav <pratyush@kernel.org>,
+ Randy Dunlap <rdunlap@infradead.org>, Saeed Mahameed <saeedm@nvidia.com>,
+ Samiullah Khawaja <skhawaja@google.com>,
+ Shuah Khan <skhan@linuxfoundation.org>,
+ Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+ Yi Liu <yi.l.liu@intel.com>, alex@shazbot.org
+Subject: Re: [PATCH v9 08/13] PCI: Save and restore the ACS Control register
+Message-ID: <20260918191846.2f68b23b@shazbot.org>
+In-Reply-To: <20260918200640.887030-9-dmatlack@google.com>
+References: <20260918200640.887030-1-dmatlack@google.com>
+	<20260918200640.887030-9-dmatlack@google.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <cover.1788414671.git.zack.rusin@broadcom.com> <7487011dfb95aadda9515b22a5852680df1982c5.1788414671.git.zack.rusin@broadcom.com>
- <aquttpMVKX8e6zGB@pathway.suse.cz> <CABQX2QPJVg-dZB9f4ydRU_5W7nyWwVCQtDoRGoe1+9cA7wyUDw@mail.gmail.com>
- <bc0bdd14-5e6a-0676-cd04-14fb0bb93cd5@igalia.com>
-In-Reply-To: <bc0bdd14-5e6a-0676-cd04-14fb0bb93cd5@igalia.com>
-From: Zack Rusin <zack.rusin@broadcom.com>
-Date: Fri, 18 Sep 2026 19:00:13 -0400
-X-Gm-Features: AcwNN1W9lMhxZ0Ag7iI_GI8G3SXomYGHl4Cl2Mrq5Z0118EogNv41H5NqksNg5M
-Message-ID: <CABQX2QMDNHcKotEa_t9Y37L+uHhV-CfqSR2vcRpNT1c2O9C_2Q@mail.gmail.com>
-Subject: Re: [PATCH v1 4/4] x86/vmware: Run panic diagnostics before kdump by default
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Petr Mladek <pmladek@suse.com>, Borislav Petkov <bp@alien8.de>, Ajay Kaher <ajay.kaher@broadcom.com>, 
-	Alexey Makhalov <alexey.makhalov@broadcom.com>, x86@kernel.org, 
-	Joel Granados <joel.granados@kernel.org>, Baoquan He <baoquan.he@linux.dev>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
-	virtualization@lists.linux.dev, bcm-kernel-feedback-list@broadcom.com, 
-	linux-kernel@vger.kernel.org, John Ogness <john.ogness@linutronix.de>, 
-	Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Kees Cook <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Dave Young <ruirui.yang@linux.dev>, 
-	Jonathan Corbet <corbet@lwn.net>, Bo Gan <bo.gan@broadcom.com>, 
-	Brennan Lamoreaux <brennan.lamoreaux@broadcom.com>, kexec@lists.infradead.org, 
-	linux-doc@vger.kernel.org, Stephen Brennan <stephen.s.brennan@oracle.com>
-X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000e2ce99065bc9dd78"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260918_160034_303603_03D429C0 
-X-CRM114-Status: GOOD (  43.44  )
+X-CRM114-CacheID: sfid-20260918_181900_436580_64128B47 
+X-CRM114-Status: GOOD (  31.72  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -125,223 +126,194 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
---000000000000e2ce99065bc9dd78
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Fri, 18 Sep 2026 20:06:34 +0000
+David Matlack <dmatlack@google.com> wrote:
 
-On Fri, Sep 18, 2026 at 10:26=E2=80=AFAM Guilherme G. Piccoli
-<gpiccoli@igalia.com> wrote:
->
-> Hi Petr, Zack - thanks for CCing me!
-> Some comments below:
+> Save the ACS Control register in pci_save_state() and write it back
+> in pci_restore_state(), instead of recomputing the ACS controls from
+> scratch with pci_enable_acs().
+> 
+> This makes ACS symmetric with the rest of a device's saved state. Today
+> pci_save_state() ignores ACS entirely and pci_restore_state() re-enables
+> the ACS controls from the kernel's current ACS policy. As a result, a
+> device can come out of a reset with different ACS controls than it went
+> in with, e.g. any controls programmed outside of pci_enable_acs() are
+> silently dropped.
 
-Hi, Guilherme.
+Controls, yes, but if we're restoring controls that might have EC set
+now, should the Egress Control Vector also be part of the save state?
 
-Thanks for looking at this and for adding Stephen. I'll keep you both copie=
-d.
+Currently EC always gets cleared on reset and won't be restored by
+pci_enable_acs(), so we can lose both EC and the EC vector.  With this,
+I think we restore EC but still lose the EC vector.  Thanks,
 
-> On 18/09/2026 00:23, Zack Rusin wrote:
-> >> [...]
-> >> Maybe, we should start with something simple, and introduce
-> >> one more panic notifier as a start. It might be called either:
-> >>
-> >>   + "panic_hypervisor_list" because "crash_kexec_post_notifiers =3D tr=
-ue"
-> >>     seems to be primary set on hypervisors.
-> >>
-> >> But I would rather make it more generic and call it
-> >>
-> >>   + panic_pre_crash_kexec or panic_pre_kdump because there might be
-> >>     more notifiers which are either 100% safe and useful or are worth
-> >>     the risk before calling crash dump.
-> >>
-> >> We could put there x86/vmware notifiers as a start. And we could later
-> >> move there other important notifiers.
-> >>
-> >> How does that sound, please?
-> >
->
-> It's a good idea, IMO. We could start with this, Zach commented some
-> implementation details below...and after it gets merged, we could move
-> other hypervisors that currently set "crash_kexec_post_notifiers" to
-> this list and eventually, unexport this symbol. We should avoid having
-> code forcing this parameter, as Petr said, many notifiers are executed
-> if that is set.
+Alex
 
-Agreed. The v2 I'm working on drops VMware's assignment to
-crash_kexec_post_notifiers and leaves the existing setting unchanged.
+> pci_enable_acs() runs when a driver binds to a device
+> (pci_dma_configure()), i.e. after pci_bus_add_device() has already saved
+> the device's state. Refresh the saved ACS Control register there as
+> well, otherwise a subsequent reset would revert ACS back to the
+> configuration left behind by firmware.
+> 
+> Devices that rely on device-specific quirks to enable an ACS equivalent
+> keep that configuration outside of the ACS Control register, so keep
+> configuring ACS from scratch for them. Do the same for devices that have
+> no saved ACS state at all.
+> 
+> Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+> Assisted-by: Claude:claude-opus-5
+> Signed-off-by: David Matlack <dmatlack@google.com>
+> ---
+>  drivers/pci/pci.c    | 66 +++++++++++++++++++++++++++++++++++++++++++-
+>  drivers/pci/pci.h    |  5 ++++
+>  drivers/pci/quirks.c |  7 +++++
+>  3 files changed, 77 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index b2879a6be5f8..dd25c01736b4 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1021,6 +1021,55 @@ static void pci_std_enable_acs(struct pci_dev *dev, struct pci_acs *caps)
+>  		caps->ctrl |= (dev->acs_capabilities & PCI_ACS_TB);
+>  }
+>  
+> +/**
+> + * pci_save_acs_state - save the ACS Control register
+> + * @dev: the PCI device
+> + *
+> + * Record the ACS controls currently programmed in hardware so that
+> + * pci_restore_acs_state() can reapply them after a reset.
+> + */
+> +static void pci_save_acs_state(struct pci_dev *dev)
+> +{
+> +	struct pci_cap_saved_state *save_state;
+> +
+> +	if (!dev->acs_cap)
+> +		return;
+> +
+> +	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ACS);
+> +	if (!save_state)
+> +		return;
+> +
+> +	pci_read_config_word(dev, dev->acs_cap + PCI_ACS_CTRL,
+> +			     (u16 *)&save_state->cap.data[0]);
+> +}
+> +
+> +/**
+> + * pci_restore_acs_state - restore the ACS Control register
+> + * @dev: the PCI device
+> + */
+> +static void pci_restore_acs_state(struct pci_dev *dev)
+> +{
+> +	struct pci_cap_saved_state *save_state = NULL;
+> +
+> +	if (dev->acs_cap && !pci_need_dev_specific_enable_acs(dev))
+> +		save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ACS);
+> +
+> +	/*
+> +	 * Devices that rely on device-specific quirks to enable an ACS
+> +	 * equivalent keep that configuration outside of the ACS Control
+> +	 * register, so there is nothing useful to restore for them. Configure
+> +	 * ACS from scratch instead, which also covers devices that have no
+> +	 * saved ACS state at all.
+> +	 */
+> +	if (!save_state) {
+> +		pci_enable_acs(dev);
+> +		return;
+> +	}
+> +
+> +	pci_write_config_word(dev, dev->acs_cap + PCI_ACS_CTRL,
+> +			      *(u16 *)&save_state->cap.data[0]);
+> +}
+> +
+>  /**
+>   * pci_enable_acs - enable ACS if hardware support it
+>   * @dev: the PCI device
+> @@ -1057,6 +1106,15 @@ void pci_enable_acs(struct pci_dev *dev)
+>  	__pci_config_acs(dev, &caps, config_acs_param, 0, 0);
+>  
+>  	pci_write_config_word(dev, pos + PCI_ACS_CTRL, caps.ctrl);
+> +
+> +	/*
+> +	 * pci_enable_acs() runs when a driver binds to the device, i.e. after
+> +	 * pci_bus_add_device() has already saved the device's state. Refresh
+> +	 * the saved ACS Control register so that a subsequent reset restores
+> +	 * the controls programmed here rather than the ones left behind by
+> +	 * firmware.
+> +	 */
+> +	pci_save_acs_state(dev);
+>  }
+>  
+>  /**
+> @@ -1800,6 +1858,7 @@ int pci_save_state(struct pci_dev *dev)
+>  	pci_save_aer_state(dev);
+>  	pci_save_ptm_state(dev);
+>  	pci_save_tph_state(dev);
+> +	pci_save_acs_state(dev);
+>  	return pci_save_vc_state(dev);
+>  }
+>  EXPORT_SYMBOL(pci_save_state);
+> @@ -1877,7 +1936,7 @@ void pci_restore_state(struct pci_dev *dev)
+>  	pci_restore_msi_state(dev);
+>  
+>  	/* Restore ACS and IOV configuration state */
+> -	pci_enable_acs(dev);
+> +	pci_restore_acs_state(dev);
+>  	pci_restore_iov_state(dev);
+>  
+>  	dev->state_saved = false;
+> @@ -3532,6 +3591,11 @@ void pci_allocate_cap_save_buffers(struct pci_dev *dev)
+>  	if (error)
+>  		pci_err(dev, "unable to allocate suspend buffer for LTR\n");
+>  
+> +	error = pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ACS,
+> +					    sizeof(u16));
+> +	if (error)
+> +		pci_err(dev, "unable to allocate suspend buffer for ACS\n");
+> +
+>  	pci_allocate_vc_save_buffers(dev);
+>  }
+>  
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index ba3c3fddddc2..037c1674f164 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -1095,6 +1095,7 @@ void pci_acs_init(struct pci_dev *dev);
+>  void pci_enable_acs(struct pci_dev *dev);
+>  #ifdef CONFIG_PCI_QUIRKS
+>  int pci_dev_specific_acs_enabled(struct pci_dev *dev, u16 acs_flags);
+> +bool pci_need_dev_specific_enable_acs(struct pci_dev *dev);
+>  int pci_dev_specific_enable_acs(struct pci_dev *dev);
+>  int pci_dev_specific_disable_acs_redir(struct pci_dev *dev);
+>  void pci_disable_broken_acs_cap(struct pci_dev *pdev);
+> @@ -1105,6 +1106,10 @@ static inline int pci_dev_specific_acs_enabled(struct pci_dev *dev,
+>  {
+>  	return -ENOTTY;
+>  }
+> +static inline bool pci_need_dev_specific_enable_acs(struct pci_dev *dev)
+> +{
+> +	return false;
+> +}
+>  static inline int pci_dev_specific_enable_acs(struct pci_dev *dev)
+>  {
+>  	return -ENOTTY;
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 7aee30734303..e500c202d2ec 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5476,6 +5476,13 @@ static const struct pci_dev_acs_ops *pci_dev_acs_ops_get(struct pci_dev *dev)
+>  	return NULL;
+>  }
+>  
+> +bool pci_need_dev_specific_enable_acs(struct pci_dev *dev)
+> +{
+> +	const struct pci_dev_acs_ops *p = pci_dev_acs_ops_get(dev);
+> +
+> +	return p && p->enable_acs;
+> +}
+> +
+>  int pci_dev_specific_enable_acs(struct pci_dev *dev)
+>  {
+>  	const struct pci_dev_acs_ops *p = pci_dev_acs_ops_get(dev);
 
-> (I'm CCing Stephen Brennan here, I recall he had problems with this
-> being auto-set, we talked about that in the panic notifiers big
-> discussions in the past heh)
->
-> The only thing I'd like to suggest: I think we should have a parameter
-> that disables running this list, which would be the opposite of
-> "crash_kexec_post_notifiers".
->
-> I would implement it as something like: "postpone_pre_kexec_notifiers"
-> or something like that. The parameter would basically "move" this list
-> execution to the same time as the current notifiers, gating them to
-> "crash_kexec_post_notifiers". This way, we'd allow users to debug kexec
-> failures maybe related to the "early" notifiers. WDYT?
-
-I'm happy to add that as a separate patch if Petr agrees. With it set,
-the new list would follow ordinary panic-notifier ordering relative to
-kdump: it would run before a successful transition only when
-crash_kexec_post_notifiers is also set. If panic reaches the late
-site, the list would remain eligible to run there. I'd keep that site
-after sys_info() and before the kmsg dumpers so the log includes the
-additional notifier and panic_print output available at that point.
-
-I've called it panic_pre_kdump_postpone after the list, but I'm fine
-with whatever name you and Petr prefer.
-
-> > [...]
-> > I think that without that default though, x86 oops_end() can enter
-> > crash_kexec(regs) before reaching panic(), for example with
-> > panic_on_oops=3D1. To cover that path too, I'd call the chain from
-> > __crash_kexec() after the image check and register capture, under the
-> > existing kexec lock. A second call in vpanic(), immediately before
-> > kmsg_dump_desc(), would cover the fallback path. And I think a
-> > set-once guard would prevent duplicate or recursive dispatch.
-> >
->
-> Regarding this, 2 things:
->
-> a) I think you could change kexec_should_crash() to "return 0" also in
-> case the new list is set to run, the same is done currently for
-> "crash_kexec_post_notifiers". Makes sense?
-
-I'd prefer to leave kexec_should_crash() unchanged. The direct oops
-path supplies the exception registers to crash_kexec(regs), while
-routing it through panic() would capture later state instead. In my
-early v2 tests, the vmcores from the direct-oops path retain the
-original fault registers in the crash notes. Some crash callers, for
-example uv_nmi_kdump(), also bypass kexec_should_crash(). Calling the
-chain from __crash_kexec() after register capture covers those paths
-without changing their routing, and the shared once-only guard
-prevents duplicate or recursive dispatch.
-
-> b) Well, does this whole panic diag thing you're implementing here aims
-> only at x86 guests ? Or would it be possible to run, for example, arm64
-> guests? Asking this because in x86 and some other architectures (but not
-> arm64[0]), it's possible to override machine_crash_shutdown() handler,
-> and run things prior to a kexec. Take a look on how Hyper-V does that on
-> arch/x86 - this could be just what you need, except if you plan to have
-> it for all architectures heh
-
-I'd like to support arm64 guests in the near future, but I figured
-especially for review sake to limit our client in this series to x86.
-So I prefer the common chain Petr proposed: as the thread you linked
-shows, arm64 deliberately has no such override, and the chain gives
-other clients a place to migrate away from forcing
-crash_kexec_post_notifiers.
-
-Would keeping the two call sites, with postponement in a separate
-patch, work for you and Petr?
-
-z
-
---000000000000e2ce99065bc9dd78
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-6U6qgI8F5eiKsQyE0HgYrQJx/sDs9LLVZlaNiA3U8M8CgEnb8VhuH3BN/yXphhEQdJXb1TyaJA60
-SmHcZdEQZbl4EjwUcs3UIowmI/Mhi7ADQB7VNsO/BaOVBEQk53xH+4djY/cg7jvqTTeliY05j2Yx
-uwwXcDC4mWjGzxAT5DVqC8fKQvon1uc2heorHb555+sLdwYxAgMBAAGjggHYMIIB1DAOBgNVHQ8B
-Af8EBAMCBaAwgZMGCCsGAQUFBwEBBIGGMIGDMEYGCCsGAQUFBzAChjpodHRwOi8vc2VjdXJlLmds
-b2JhbHNpZ24uY29tL2NhY2VydC9nc2djY3I2c21pbWVjYTIwMjMuY3J0MDkGCCsGAQUFBzABhi1o
-dHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3I2c21pbWVjYTIwMjMwZQYDVR0gBF4wXDAJ
-BgdngQwBBQMBMAsGCSsGAQQBoDIBKDBCBgorBgEEAaAyCgMCMDQwMgYIKwYBBQUHAgEWJmh0dHBz
-Oi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwQQYDVR0fBDowODA2
-oDSgMoYwaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3I2c21pbWVjYTIwMjMuY3JsMCIG
-A1UdEQQbMBmBF3phY2sucnVzaW5AYnJvYWRjb20uY29tMBMGA1UdJQQMMAoGCCsGAQUFBwMEMB8G
-A1UdIwQYMBaAFAApNp5ceroPry1QLdugI4UYsKCSMB0GA1UdDgQWBBQNDn2m/OLuDx9YjEqPLCDB
-s/VKNTANBgkqhkiG9w0BAQsFAAOCAgEAF463syOLTQkWZmEyyR60W1sM3J1cbnMRrBFUBt3S2NTY
-SJ2NAvkTAxbPoOhK6IQdaTyrWi8xdg2tftr5FC1bOSUdxudY6dipq2txe7mEoUE6VlpJid/56Mo4
-QJRb6YiykQeIfoJiYMKsyuXWsTB1rhQxlxfnaFxi8Xy3+xKAeX68DcsHG3ZU0h1beBURA44tXcz6
-fFDNPQ2k6rWDFz+XNN2YOPqfse2wEm3DXpqNT79ycU7Uva7e51b8XdbmJ6XVzUFmWzhjXy5hvV8z
-iF+DvP+KT1/bjO6aNL2/3PWiy1u6xjnWvobHuAYVrXxQ5wzk8aPOnED9Q8pt2nqk/UIzw2f67Cn9
-3CxrVqXUKm93J+rupyKVTGgKO9T1ODVPo665aIbM72RxSI9Wsofatm2fo8DWOkrfs29pYfy6eECl
-91qfFMl+IzIVfDgIrEX6gSngJ2ZLaG6L+/iNrUxHxxsaUmyDwBbTfjYwr10H6NKES3JaxVRslnpF
-06HTTciJNx2wowbYF1c+BFY4r/19LHygijIVa+hZEgNuMrVLyAamaAKZ1AWxTdv8Q/eeNN3Myq61
-b1ykTSPCXjBq/03CMF/wT1wly16jYjLDXZ6II/HYyJt34QeqnBENU9zXTc9RopqcuHD2g+ROT7lI
-VLi5ffzC8rVliltTltbYPc7F0lAvGKAxggJXMIICUwIBATBiMFIxCzAJBgNVBAYTAkJFMRkwFwYD
-VQQKExBHbG9iYWxTaWduIG52LXNhMSgwJgYDVQQDEx9HbG9iYWxTaWduIEdDQyBSNiBTTUlNRSBD
-QSAyMDIzAgxhPxw+eieHWB40hPkwDQYJYIZIAWUDBAIBBQCggccwLwYJKoZIhvcNAQkEMSIEIHOa
-+0IiCwwqnpfl7/PL0BKXpAwBhOY+sEXiwrhDo2quMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEw
-HAYJKoZIhvcNAQkFMQ8XDTI2MDkxODIzMDAyOVowXAYJKoZIhvcNAQkPMU8wTTALBglghkgBZQME
-ASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQcwCwYJ
-YIZIAWUDBAIBMA0GCSqGSIb3DQEBAQUABIIBACRzkdS8PBtfkVAgw6esLlajTHbCJvKmZJkRVr58
-TKwTOIDnizhMQX39ryHLEz+SD1ex6VhUZ3JiKyRUL1SJ7P4UVMLEIJcdr6WKlCjDYvghmJpxYTBS
-tEL4YpMckbVF3ueneBELQ6o/FvKAZeB5wDLvfV88Pj4CHC5CbEMnvy9cIO7sugP6SY5OwMSFQwIB
-WEHEFaFC8YuqXJokyOP2NTzPjRbUG7DBVMRnZC0BVS+3LSKsM+5Q+lDG2xUjlY0wg/BpHPk2SoSd
-FPIpzt8SkrUErXBxGvoOMo9Kp8r9U8yDRO2moS2l0o7zLg7Ent/3yYT1uwTb/xy2hiHK1wAToAE=
---000000000000e2ce99065bc9dd78--
 
