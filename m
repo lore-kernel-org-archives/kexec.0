@@ -4,114 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1FD73C982DE
-	for <kexec@archiver.kernel.org>; Sat, 19 Sep 2026 01:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B6050C982CC
+	for <kexec@archiver.kernel.org>; Sat, 19 Sep 2026 07:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=f07OJapwP7n4iN5o+VTBr7NTU5yudYQ1EeJavoRTsAU=; b=DtWVJeb6kHBNKsAnTCqPfE8ijv
-	TrO72VbXkYJlgCBHAroVQSrkf2G5r+UVVf4lndai/VxOIakeEPy6Hwzj5hz70XJBEMjhB7omrRIet
-	WWxhqXfZvQ6UKr3e46ndsJrY793GjR6L7FlHyhlb0q4kjLnMIXGFvALiMc+Uy1g6lybI7J0AWqrFf
-	ZA74efo2h363f2XyjBUx1fffLxd+TiFzqU0Jxwr+VZin/O2b/pH51y5XN6QGf/Q+tR4rHUqQynyoE
-	MXq5xqcIBqa85j+v1JnzmdKNEoZ3DBxITjuJK0aeYH9v3krHNrycXofROY1dr7VpRjaTxxxvwAL2Z
-	x7WWqmZw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=bEP94n9v3wLAo85N51UgdrheAoXFz2CprleV4BZJMM8=; b=I7oDS/+O27M18xtBBLXFGCLWi3
+	IL1AyBG0pEhLHME0Tyh+eXSJEC8YXXl4zK87tgeROpZ++Tecd1SviHhVjcCFWeKd0LumwGPlYYTBw
+	qOQDpLt+U7QTyUL0vKNTLco5btmtyRTBpVza9FuNnNAL8nTKqONzqAt5TzTV9KYfL9boAIb5mDlOo
+	tVdQct7L+1xOH/QWvKOhRCoZ8KRrNxv4gAYWKsw/GcyyyXwAoiOOMiQs+5oAFlxSHW+DoJ6QukCot
+	hVEjQpbUVfxceaX9nFaekAYe0HtHQjDr9MgaLQxgx3wOh138t1VNWeUbny8wuNVn5CX54YKuEqj8M
+	hwwqE/1g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7jjL-0000000Fohj-1l0x;
-	Sat, 19 Sep 2026 01:19:03 +0000
-Received: from fhigh-b4-smtp.messagingengine.com ([202.12.124.155])
+	id 1x7pEX-0000000G2W7-1MBO;
+	Sat, 19 Sep 2026 07:11:37 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x7jjH-0000000Fogi-3Jhd
-	for kexec@lists.infradead.org;
-	Sat, 19 Sep 2026 01:19:01 +0000
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id A06117A00F7;
-	Fri, 18 Sep 2026 21:18:54 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Fri, 18 Sep 2026 21:18:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1789780734;
-	 x=1789867134; bh=f07OJapwP7n4iN5o+VTBr7NTU5yudYQ1EeJavoRTsAU=; b=
-	GfU3B8bzgvN3baH4hN7kVi3lK+nwsYLBoo8cuedw+XfuLRi7C2LDOr2zGEqpyItk
-	eQoRHmiP7gdOYs4G+8gpNILRD1NXFmda7hFAMawTqLZlswHVgxBzxcrjACt0t1mW
-	tgO9e4sqsVcqDI7Uw0UTvZ4BtfzKqUbSP7IPivwb7zwTOCGwHGaX3v7NqsU2WNMo
-	omFYls3/du51cPE6bB8koXlKIW2lNpV7owGIhw1oTppNYkBPxiEtBttdBwAWRz7m
-	7efK2Z7EnC+/QZYvSIBHjfWU/Fau93vviQy345fFfOQMwK3BZuTz+Ov0bDw3uj6c
-	DluMmuq+++tmqRxCLPnIow==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1789780734; x=
-	1789867134; bh=f07OJapwP7n4iN5o+VTBr7NTU5yudYQ1EeJavoRTsAU=; b=I
-	ThjHthLB53HlQOXiE/B8C3BzG82k34YmTXWtypVrrj1sjAl98hJPFZ/PA3L3KWGO
-	zMZCQjnbil2KmYaPnS/La+VdZhooz7N38ZnWV/G8dAla26+qRY3PLTlOjvlFBBJ1
-	+mx2dQybAiByY9eqhXx2HduZXZsj0yzqh71wvT0igfSONIw0bX5t6aBcbIaDHpIe
-	LU0HR6/dtgJhImLLqevRoUrkgh2jX6IqChVBAZ228wP8225XjZvUHi0L0XgCug8V
-	a+S8pOhSrolB8dq+eSA1w75N5gjmio1xONFAojmsmVDmsDxusNdJBl4tLAEnpq+4
-	7BZb90CwahB0U5AxiriZg==
-X-ME-Sender: <xms:_OKtaga1fTfEWHifyiBStU5q9_fICtTmkw9yO3PHO-DRBGkRgLhT1g>
-    <xme:_OKtaiV5RKACYIrHoXPOlyWPJUa6XFxgsdCF0p3mhbTljbESOF56b7UeHhIVzQn1u
-    ZPhhlvBI3Ibc6uA_co5L3_YYocxTmjAxU7xMvg3B_GxkG9_iZFlcwu_>
-X-ME-Received: <xmr:_OKtahZ-2xFlTFGAN0BdpiQP7dQ9Y6RzUBtbF9QY5lq-YUZGP37_jBq9GjsAOQ>
-X-ME-Proxy-Cause: dmFkZTFsi21agycuHwmyYJyjldjG/6AIpBHOLfkjZs+7QWdmfXu3roB/D7PU/BJ5GavaBQ
-    AU4Zx86E3Ar9fkk1i41sLL79DnqebEpC8pDQ6c5ESWbp577Kk3af/AT9f5eoXlX0Lw/Mwn
-    FcwH1rl6rXf0ysQZescsD7HR4aD9cokOy6JHc/odoFo5LW74f6xcHPp7/3IXor/7lPRlg4
-    yVxI+ykZmTAbWVw9hIWIcQv2dY+r8MD8Wy3QjrkvIeBpxUqwnvjaOFAxf3/hHEtPNnLxjs
-    ds98IeB4eQbJsmnMJLcg38qvtl3mGH/yUl4cVyev259XESUEPVRdDW+b9fBfBPjDcrgVI+
-    BVIlyr12V9nYqdU5Zo1weZP/CyuOjwUSS3xmHA+sFvyIYwVdXKsVOOrcJLgBflm22kdNyO
-    OefOMArnTas4zRxUhJgbvX1OAkCf+nqcf4j6frGTX205opZyUxnl5xlsaBa3ibVeWM9erA
-    ePj0w2q/rKlqCJNRlmxVdXJwfsxkckiDWN/E3g0t1fXf8kv9cv+RYjAWIatFvyc6rL8rxQ
-    u3X3RlPxpeu3mB7lNH5rrGoxRaqoxgs4aW/La6pfZxaymhcUewyZeQ84Z/YefVcxKQhX9/
-    ib/pnrw0CtPk1XE16IBpOJ7VT/SFvHGcnz/4zucdY+TDS4kvL8ePHyTyeVYg
-X-ME-Proxy: <xmx:_OKtapJ8d19Nb_dUW0u98RLaH22nwgDrxhCtssfSsItOxCPsRIc54g>
-    <xmx:_OKtas1lKKCmEv1xr5qabBOKGe-sUnb_2jS4i6JqtfX4Do4V0lSltw>
-    <xmx:_OKtangcRGH9oLTXiMpZwZ86j52cO0RMagUMHuuvD_HQGYuySJBpsg>
-    <xmx:_OKtarwxBsVW90ouA5BhWWosP9nDeIcGzw6Fx3cFQ4qfWaWzUry8wA>
-    <xmx:_uKtasPXkArDpKb2s-2cwtmutgEGZHjf9sxZHxleXUugjeM4BZ0cS2UU>
-Feedback-ID: i03f14258:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 18 Sep 2026 21:18:48 -0400 (EDT)
-Date: Fri, 18 Sep 2026 19:18:46 -0600
-From: Alex Williamson <alex@shazbot.org>
-To: David Matlack <dmatlack@google.com>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-pci@vger.kernel.org,
- Adithya Jayachandran <ajayachandra@nvidia.com>,
- Alexander Graf <graf@amazon.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Chris Li <chrisl@kernel.org>, David Rientjes <rientjes@google.com>,
- Jacob Pan <jacob.pan@linux.microsoft.com>,
- Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
- Josh Hilke <jrhilke@google.com>, Leon Romanovsky <leonro@nvidia.com>,
- Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>,
- Parav Pandit <parav@nvidia.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pranjal Shrivastava <praan@google.com>,
- Pratyush Yadav <pratyush@kernel.org>,
- Randy Dunlap <rdunlap@infradead.org>, Saeed Mahameed <saeedm@nvidia.com>,
- Samiullah Khawaja <skhawaja@google.com>,
- Shuah Khan <skhan@linuxfoundation.org>,
- Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
- Yi Liu <yi.l.liu@intel.com>, alex@shazbot.org
-Subject: Re: [PATCH v9 08/13] PCI: Save and restore the ACS Control register
-Message-ID: <20260918191846.2f68b23b@shazbot.org>
-In-Reply-To: <20260918200640.887030-9-dmatlack@google.com>
-References: <20260918200640.887030-1-dmatlack@google.com>
-	<20260918200640.887030-9-dmatlack@google.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	id 1x7pEW-0000000G2VA-03jm;
+	Sat, 19 Sep 2026 07:11:36 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id BD9CD402DD;
+	Sat, 19 Sep 2026 07:11:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F3261F000FF;
+	Sat, 19 Sep 2026 07:11:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789801895;
+	bh=bEP94n9v3wLAo85N51UgdrheAoXFz2CprleV4BZJMM8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=F4W1bQei0WbJqW4r8EVplbGGhiwx7NXzD9fjTAJz1nnroqL5YVOgqQUiArkdtmHyr
+	 W9CUxLppulp2QWgWTUWbd/dAehRrSW/lkzZ8oqUe3f2GoaBZ9mxErL6fLMqXM7hUoW
+	 pflbnHmqkcZuRmlsQGGEHcLyopvAXc13ZfvUKI6JKD4iUk+a26j861qNbyRs7NwWAe
+	 5rxSiPFeIPanXD5TpncL4/J1QB4XlrZSZXGeFurkupyx3dvKksXmU0uWgTWfiWByEt
+	 kIY5KOkGCC+OaHU6gMgpAmJdMdOpQb8sI62v9yK0E5VZLKYJBnSZK7nFcRXx41rwCe
+	 CYxurd2l460hw==
+Date: Sat, 19 Sep 2026 10:11:24 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Baoquan He <baoquan.he@linux.dev>
+Cc: Wandun Chen <chenwandun1@gmail.com>, catalin.marinas@arm.com,
+	will@kernel.org, chenhuacai@kernel.org, pjw@kernel.org,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, tglx@kernel.org,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	x86@kernel.org, robh@kernel.org, saravanak@kernel.org,
+	akpm@linux-foundation.org, pasha.tatashin@soleen.com,
+	pratyush@kernel.org, m.szyprowski@samsung.com, mark.rutland@arm.com,
+	kernel@xen0n.name, alex@ghiti.fr, hpa@zytor.com,
+	ruirui.yang@linux.dev, robin.murphy@arm.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, kexec@lists.infradead.org,
+	linux-mm@kvack.org, iommu@lists.linux.dev
+Subject: Re: [PATCH v6 06/10] memblock: introduce MEMBLOCK_NODUMP flag
+Message-ID: <aq41nFRPtRWTQ7cK@kernel.org>
+References: <20260902073116.802752-1-chenwandun1@gmail.com>
+ <20260902073116.802752-7-chenwandun1@gmail.com>
+ <aqzxavL91icLw-Xv@fedora>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260918_181900_436580_64128B47 
-X-CRM114-Status: GOOD (  31.72  )
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aqzxavL91icLw-Xv@fedora>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -126,194 +80,114 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, 18 Sep 2026 20:06:34 +0000
-David Matlack <dmatlack@google.com> wrote:
+On Fri, Sep 18, 2026 at 04:08:10PM +0800, Baoquan He wrote:
+> On 09/02/26 at 03:31pm, Wandun Chen wrote:
+> > From: Wandun Chen <chenwandun@lixiang.com>
+> > 
+> > Add MEMBLOCK_NODUMP to mark regions that should be excluded from
+> > kdump vmcores.
+> > 
+> > The flag is meant for reserved memory that carries no data useful for
+> > crash analysis. Reusable reserved regions such as CMA may hold useful
+> > data, so these regions must not be marked MEMBLOCK_NODUMP. Subsequent
+> > patches wire this up for /reserved-memory and /memreserve/ entries.
+> > 
+> > Suggested-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
+> > Tested-by: Meijing Zhao <zhaomeijing@lixiang.com>
+> > ---
+> >  include/linux/memblock.h |  9 +++++++++
+> >  mm/memblock.c            | 16 ++++++++++++++++
+> >  2 files changed, 25 insertions(+)
+> > 
+> > diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> > index d62db9e776cf..b2fcf11fba2b 100644
+> > --- a/include/linux/memblock.h
+> > +++ b/include/linux/memblock.h
+> > @@ -52,6 +52,8 @@ extern unsigned long long max_possible_pfn;
+> >   * kernel that we know is good to use. It is the only memory that
+> >   * allocations may happen from in this phase.
+> >   * @MEMBLOCK_RSRV_HUGETLB: memory is reserved for hugetlb pages
+> > + * @MEMBLOCK_NODUMP: exclude from kdump vmcore. It carries no data useful
+> > + * for crash analysis (e.g. firmware carveouts).
+> >   */
+> >  enum memblock_flags {
+> >  	MEMBLOCK_NONE		= 0x0,	/* No special request */
+> > @@ -63,6 +65,7 @@ enum memblock_flags {
+> >  	MEMBLOCK_RSRV_KERN	= 0x20,	/* memory reserved for kernel use */
+> >  	MEMBLOCK_KHO_SCRATCH	= 0x40,	/* scratch memory for kexec handover */
+> >  	MEMBLOCK_RSRV_HUGETLB	= 0x80, /* memory reserved for hugetlb pages */
+> > +	MEMBLOCK_NODUMP		= 0x100,/* exclude from kdump vmcore */
+> >  };
+> >  
+> >  /**
+> > @@ -160,6 +163,7 @@ int memblock_reserved_mark_noinit(phys_addr_t base, phys_addr_t size);
+> >  int memblock_reserved_mark_kern(phys_addr_t base, phys_addr_t size);
+> >  int memblock_mark_kho_scratch(phys_addr_t base, phys_addr_t size);
+> >  int memblock_clear_kho_scratch(phys_addr_t base, phys_addr_t size);
+> > +int memblock_mark_nodump(phys_addr_t base, phys_addr_t size);
+> >  
+> >  void memblock_free(void *ptr, size_t size);
+> >  void reset_all_zones_managed_pages(void);
+> > @@ -306,6 +310,11 @@ static inline bool memblock_is_kho_scratch(struct memblock_region *m)
+> >  	return m->flags & MEMBLOCK_KHO_SCRATCH;
+> >  }
+> >  
+> > +static inline bool memblock_is_nodump(struct memblock_region *m)
+> > +{
+> > +	return m->flags & MEMBLOCK_NODUMP;
+> > +}
+> > +
+> >  int memblock_search_pfn_nid(unsigned long pfn, unsigned long *start_pfn,
+> >  			    unsigned long  *end_pfn);
+> >  void __next_mem_pfn_range(int *idx, int nid, unsigned long *out_start_pfn,
+> > diff --git a/mm/memblock.c b/mm/memblock.c
+> > index f2952d725c10..2e87f39826dd 100644
+> > --- a/mm/memblock.c
+> > +++ b/mm/memblock.c
+> > @@ -1204,6 +1204,21 @@ __init int memblock_clear_kho_scratch(phys_addr_t base, phys_addr_t size)
+> >  				    MEMBLOCK_KHO_SCRATCH);
+> >  }
+> >  
+> > +/**
+> > + * memblock_mark_nodump - Mark a memory region with flag MEMBLOCK_NODUMP.
+> > + * @base: the base phys addr of the region
+> > + * @size: the size of the region
+> > + *
+> > + * Mark the region as not to be included in crash dumps.
+> > + *
+> > + * Return: 0 on success, -errno on failure.
+> > + */
+> > +int __init_memblock memblock_mark_nodump(phys_addr_t base, phys_addr_t size)
+>       ~~~~~~~~~~~~~~^
+> Is it impossible to use at runtime even thought it claims to be generic?
 
-> Save the ACS Control register in pci_save_state() and write it back
-> in pci_restore_state(), instead of recomputing the ACS controls from
-> scratch with pci_enable_acs().
-> 
-> This makes ACS symmetric with the rest of a device's saved state. Today
-> pci_save_state() ignores ACS entirely and pci_restore_state() re-enables
-> the ACS controls from the kernel's current ACS policy. As a result, a
-> device can come out of a reset with different ACS controls than it went
-> in with, e.g. any controls programmed outside of pci_enable_acs() are
-> silently dropped.
+This should only happen at boot.
 
-Controls, yes, but if we're restoring controls that might have EC set
-now, should the Egress Control Vector also be part of the save state?
+Allowing modifications of memblock properties in runtime is a can of worms
+I don't want to open.
+ 
+> > +{
+> > +	return memblock_setclr_flag(&memblock.memory, base, size, 1,
+> > +				    MEMBLOCK_NODUMP);
+> > +}
+> > +
+> >  static bool should_skip_region(struct memblock_type *type,
+> >  			       struct memblock_region *m,
+> >  			       int nid, int flags)
+> > @@ -2887,6 +2902,7 @@ static const char * const flagname[] = {
+> >  	[ilog2(MEMBLOCK_RSRV_KERN)] = "RSV_KERN",
+> >  	[ilog2(MEMBLOCK_KHO_SCRATCH)] = "KHO_SCRATCH",
+> >  	[ilog2(MEMBLOCK_RSRV_HUGETLB)] = "RSV_HUGETLB",
+> > +	[ilog2(MEMBLOCK_NODUMP)] = "NODUMP",
+> >  };
+> >  
+> >  static int memblock_debug_show(struct seq_file *m, void *private)
+> > -- 
+> > 2.43.0
+> > 
 
-Currently EC always gets cleared on reset and won't be restored by
-pci_enable_acs(), so we can lose both EC and the EC vector.  With this,
-I think we restore EC but still lose the EC vector.  Thanks,
-
-Alex
-
-> pci_enable_acs() runs when a driver binds to a device
-> (pci_dma_configure()), i.e. after pci_bus_add_device() has already saved
-> the device's state. Refresh the saved ACS Control register there as
-> well, otherwise a subsequent reset would revert ACS back to the
-> configuration left behind by firmware.
-> 
-> Devices that rely on device-specific quirks to enable an ACS equivalent
-> keep that configuration outside of the ACS Control register, so keep
-> configuring ACS from scratch for them. Do the same for devices that have
-> no saved ACS state at all.
-> 
-> Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-> Assisted-by: Claude:claude-opus-5
-> Signed-off-by: David Matlack <dmatlack@google.com>
-> ---
->  drivers/pci/pci.c    | 66 +++++++++++++++++++++++++++++++++++++++++++-
->  drivers/pci/pci.h    |  5 ++++
->  drivers/pci/quirks.c |  7 +++++
->  3 files changed, 77 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b2879a6be5f8..dd25c01736b4 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1021,6 +1021,55 @@ static void pci_std_enable_acs(struct pci_dev *dev, struct pci_acs *caps)
->  		caps->ctrl |= (dev->acs_capabilities & PCI_ACS_TB);
->  }
->  
-> +/**
-> + * pci_save_acs_state - save the ACS Control register
-> + * @dev: the PCI device
-> + *
-> + * Record the ACS controls currently programmed in hardware so that
-> + * pci_restore_acs_state() can reapply them after a reset.
-> + */
-> +static void pci_save_acs_state(struct pci_dev *dev)
-> +{
-> +	struct pci_cap_saved_state *save_state;
-> +
-> +	if (!dev->acs_cap)
-> +		return;
-> +
-> +	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ACS);
-> +	if (!save_state)
-> +		return;
-> +
-> +	pci_read_config_word(dev, dev->acs_cap + PCI_ACS_CTRL,
-> +			     (u16 *)&save_state->cap.data[0]);
-> +}
-> +
-> +/**
-> + * pci_restore_acs_state - restore the ACS Control register
-> + * @dev: the PCI device
-> + */
-> +static void pci_restore_acs_state(struct pci_dev *dev)
-> +{
-> +	struct pci_cap_saved_state *save_state = NULL;
-> +
-> +	if (dev->acs_cap && !pci_need_dev_specific_enable_acs(dev))
-> +		save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ACS);
-> +
-> +	/*
-> +	 * Devices that rely on device-specific quirks to enable an ACS
-> +	 * equivalent keep that configuration outside of the ACS Control
-> +	 * register, so there is nothing useful to restore for them. Configure
-> +	 * ACS from scratch instead, which also covers devices that have no
-> +	 * saved ACS state at all.
-> +	 */
-> +	if (!save_state) {
-> +		pci_enable_acs(dev);
-> +		return;
-> +	}
-> +
-> +	pci_write_config_word(dev, dev->acs_cap + PCI_ACS_CTRL,
-> +			      *(u16 *)&save_state->cap.data[0]);
-> +}
-> +
->  /**
->   * pci_enable_acs - enable ACS if hardware support it
->   * @dev: the PCI device
-> @@ -1057,6 +1106,15 @@ void pci_enable_acs(struct pci_dev *dev)
->  	__pci_config_acs(dev, &caps, config_acs_param, 0, 0);
->  
->  	pci_write_config_word(dev, pos + PCI_ACS_CTRL, caps.ctrl);
-> +
-> +	/*
-> +	 * pci_enable_acs() runs when a driver binds to the device, i.e. after
-> +	 * pci_bus_add_device() has already saved the device's state. Refresh
-> +	 * the saved ACS Control register so that a subsequent reset restores
-> +	 * the controls programmed here rather than the ones left behind by
-> +	 * firmware.
-> +	 */
-> +	pci_save_acs_state(dev);
->  }
->  
->  /**
-> @@ -1800,6 +1858,7 @@ int pci_save_state(struct pci_dev *dev)
->  	pci_save_aer_state(dev);
->  	pci_save_ptm_state(dev);
->  	pci_save_tph_state(dev);
-> +	pci_save_acs_state(dev);
->  	return pci_save_vc_state(dev);
->  }
->  EXPORT_SYMBOL(pci_save_state);
-> @@ -1877,7 +1936,7 @@ void pci_restore_state(struct pci_dev *dev)
->  	pci_restore_msi_state(dev);
->  
->  	/* Restore ACS and IOV configuration state */
-> -	pci_enable_acs(dev);
-> +	pci_restore_acs_state(dev);
->  	pci_restore_iov_state(dev);
->  
->  	dev->state_saved = false;
-> @@ -3532,6 +3591,11 @@ void pci_allocate_cap_save_buffers(struct pci_dev *dev)
->  	if (error)
->  		pci_err(dev, "unable to allocate suspend buffer for LTR\n");
->  
-> +	error = pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ACS,
-> +					    sizeof(u16));
-> +	if (error)
-> +		pci_err(dev, "unable to allocate suspend buffer for ACS\n");
-> +
->  	pci_allocate_vc_save_buffers(dev);
->  }
->  
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index ba3c3fddddc2..037c1674f164 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -1095,6 +1095,7 @@ void pci_acs_init(struct pci_dev *dev);
->  void pci_enable_acs(struct pci_dev *dev);
->  #ifdef CONFIG_PCI_QUIRKS
->  int pci_dev_specific_acs_enabled(struct pci_dev *dev, u16 acs_flags);
-> +bool pci_need_dev_specific_enable_acs(struct pci_dev *dev);
->  int pci_dev_specific_enable_acs(struct pci_dev *dev);
->  int pci_dev_specific_disable_acs_redir(struct pci_dev *dev);
->  void pci_disable_broken_acs_cap(struct pci_dev *pdev);
-> @@ -1105,6 +1106,10 @@ static inline int pci_dev_specific_acs_enabled(struct pci_dev *dev,
->  {
->  	return -ENOTTY;
->  }
-> +static inline bool pci_need_dev_specific_enable_acs(struct pci_dev *dev)
-> +{
-> +	return false;
-> +}
->  static inline int pci_dev_specific_enable_acs(struct pci_dev *dev)
->  {
->  	return -ENOTTY;
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 7aee30734303..e500c202d2ec 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5476,6 +5476,13 @@ static const struct pci_dev_acs_ops *pci_dev_acs_ops_get(struct pci_dev *dev)
->  	return NULL;
->  }
->  
-> +bool pci_need_dev_specific_enable_acs(struct pci_dev *dev)
-> +{
-> +	const struct pci_dev_acs_ops *p = pci_dev_acs_ops_get(dev);
-> +
-> +	return p && p->enable_acs;
-> +}
-> +
->  int pci_dev_specific_enable_acs(struct pci_dev *dev)
->  {
->  	const struct pci_dev_acs_ops *p = pci_dev_acs_ops_get(dev);
-
+-- 
+Sincerely yours,
+Mike.
 
