@@ -4,88 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 13926C982F6
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 02772C982F7
 	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
-	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=H+SlWroSdaGxZWUb4GAQgkH+PVdX8bfzP0oz7opOlFk=; b=mqd2UJkHimEDq2Jge1olwmPLBc
-	d3oDHUCg3/P6wIl5RDIGw59cjJ3TS/TlpJplBOs9a0Q/yUPcpLQegpViaF+T5MLHKCsTVM6eOIBk7
-	+GghQxP6TPJ1037ip2qOlwBUqf5HObsTJ9Pe2ReYrBhiKe2rP+y+rojn9FRqPUJ7cDvkr/LXXwqVy
-	Ny22GqEfYwPLaZD0dBnKPPt0xhftjn8CqXRiMtfTvGcjfQ8OYYXWC7XQQiu0FWaTGtQcWHO4YYcWw
-	qB4sktp7H3Rtzs7lAidWRtFIFwu9Y2WExZPtDFauneWo3+rKl+pGHmggSJ9R7Y2nX7y/LLWuJKbgh
-	32JpdXUQ==;
+	MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=SWKz/8OeAkiGFbZLGJoBxcLgC1DzN7WUJVOWNvZAQ8A=; b=f1gY7dUqAsPLDIfpZKQKBKkYtw
+	Gu5xWijTck+cVFIqafCdmV+1HKbLoR53oCc3uod7lFnVYXmb8RUN5rSccbvHXMaI3yzRZrjEXVJH2
+	j8FqPiFKwKBroFlzZEFqarH9td8ZXs3mylwkBczSvgswzeNZ87WmyjstTXIX9bOC9Zbb7HquczEJV
+	Ks0MPieaXEAfVRbwTw/FhSfDVIPaYMVC5uPYzy4cEHI3PhhSEJAPT9NYDeJPEye5aop3dlXMgXJ3B
+	L7ekjWO6yd2NhvoNpGiAES9Oxckt5l+BRM8aua29v9NfcuR2f5H6h69o7Fowillp/Qx6EdUeDte6U
+	9NcLzIGg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8O4M-00000000MHA-46Sj;
-	Sun, 20 Sep 2026 20:23:26 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8NMU-00000000Idp-0ASi
-	for kexec@bombadil.infradead.org;
-	Sun, 20 Sep 2026 19:38:06 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
-	:References:In-Reply-To:Message-ID:Date:Subject:To:From:Sender:Reply-To:Cc:
-	Content-Type:Content-ID:Content-Description;
-	bh=H+SlWroSdaGxZWUb4GAQgkH+PVdX8bfzP0oz7opOlFk=; b=BiiGpM1UHKdQ/dlMsWhSxcxpEf
-	8Eo3Te/p3hkFuOVOlYhSALspBNln6Jj5MeCERx0spahP08iOefu48WYz7j0Fx2FeUDwCaTWDD4R1k
-	yJrU0rGfhKMV14jgH1Vwl0/gyJOCKDBExzgwXbIVPEm2gaZPatNzcQm9BHFdL14whvu1AwbN781le
-	toAQzQicegOt1gJLrANJKc2glswOveRiUZcMemR0FSnRae3T5UHC8nF09bLZj562KFxacN/ubCbIA
-	B6lHpefonB3EycZW2LAtzEYh7lfwO7lTf8OrLmh0w6QeXKhDqHAth6gWrVPhlaaqJfj/uBcW38J2U
-	zwg9Busg==;
+	id 1x8O4L-00000000MF1-2Yz8;
+	Sun, 20 Sep 2026 20:23:25 +0000
 Received: from mail-yx2-x10.google.com ([2607:f8b0:4864:41::10])
-	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
-	id 1x8NMR-0000000BaRm-0Kjr
+	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1x8NLO-00000000IET-1OgN
 	for kexec@lists.infradead.org;
-	Sun, 20 Sep 2026 19:38:04 +0000
-Received: by mail-yx2-x10.google.com with SMTP id 00721157ae682-85d43ac8d1fso15034127b3.0
-        for <kexec@lists.infradead.org>; Sun, 20 Sep 2026 12:38:02 -0700 (PDT)
+	Sun, 20 Sep 2026 19:37:00 +0000
+Received: by mail-yx2-x10.google.com with SMTP id 00721157ae682-85d43da99easo18599817b3.1
+        for <kexec@lists.infradead.org>; Sun, 20 Sep 2026 12:36:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1789933081; x=1790537881; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=H+SlWroSdaGxZWUb4GAQgkH+PVdX8bfzP0oz7opOlFk=;
-        b=Kb92NEXkQ0l53Ho7eU2l2IOy7oN2hrQPO8iDTE6TbQ72ihEX/nzuEt0c3qYq9RjApq
-         EkNMtjxMXoq3y0pjr7jqDdgBswrt6QtnFoAXbppi+xradxeVxEGn3u7/du+Gw04l3vg0
-         /E7/Jy/e7jZjXESr0fZRvk7PEtF3NEVbU6L9geB7gnVHlSh0ZqvyENV6pBypGPX9jtJb
-         YeN7FJ92FpEtcmQCdlQFt7gyDK2Lr5k4a/4sptrCFUOq+/7OQVb/okA2NihhsQiVe1zC
-         S5CJmCHnL21HQXslpmG0pNR/sQsGuL5EZCe3cbqNZHGmZLmUgJSROjB36EqUpT2yNYUK
-         iZ/g==
+        d=soleen.com; s=google; t=1789933016; x=1790537816; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=SWKz/8OeAkiGFbZLGJoBxcLgC1DzN7WUJVOWNvZAQ8A=;
+        b=aBar/VYCoNL/Fk+HY6x0nBp5ypQho1RdaweiSTIKjvDzG0IRALFblmiETo6NQh2QtP
+         +RhnLvabkrJTQL/OoIldeIz3fZYZ/vCvvYqfptfsdBolJ2nJ+k0YVVqz8Y+/BTUTuPWu
+         moyxt2cs2Asm2tHF7DnlnSdg83ivPYgbSQlGjK8jZ8A5nJjtiPq7ngfZ56nRrgCfHpmv
+         uac0amBtwB7duJWDTE9bXteievzfasOH1CIMHqeigHBPoMDUVK6ARsi/XHThyhqumx+a
+         Y1OPCKNWTjBHoWxb0ACt9RsvNZUTq/wRZBeXwfgwaw9YptTUmFw+1GMZ/Hsju0+ZAQCC
+         kGNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789933081; x=1790537881;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=H+SlWroSdaGxZWUb4GAQgkH+PVdX8bfzP0oz7opOlFk=;
-        b=kr/wZZEvh0YzUIVyYW3rT3tXhACgt0bCIJXmv2H3u79pk6CpO5xAhBGdz0FwNByb2k
-         NoblwZR3OI6Q6k4Q9dEnfVMK6Hip+Aflb9SE7ezlVZBd2eiKjwEyf3SB+RVqVDyVwGuu
-         +mLCyEoHLNwIv0sBQWReCrGV8zLnPbNOPk9Iu9xVBUN1q1dw/mqVjx7lARCoDOUInmdz
-         e6DLhbg8MxeT/YDyL0/0muR7B6mN17SELoY37ilRYuFPt12l33pHJn7eX8vZ1FkRx6o4
-         xouXjsiYErIqaK13by/YMv55MMM53MdVFmoCfYb8vf2PfFReguuN4/+Sg0wfqw+bxfH6
-         mKgg==
-X-Forwarded-Encrypted: i=1; AKwUvBy+GiCgXsDsqlBsAFqCW3ca8YWxqL/3RUs2kyuv30TojOUGbAt5Tj5kZGWTkcHGM6o27bZBzA==@lists.infradead.org
-X-Gm-Message-State: AFuF++nt0B3acuhxXsrX330FtCOfrziooLMM88a+Z0ksi5UiOlKuv7P8
-	hwB2NEMCaQCwLLmI08/7vMmsXuy0zPydYAVg7v2VRooWCr+JFQbpilYVe8t3WqEcBrI=
-X-Gm-Gg: AYBFou3kkRqjjIJNZMNuDQ7o8CXmhyMTJkGfA8lqSLRNP2NWkLUzJTAMM6ULEcK/y9U
-	BUmOMB50FP/b7WkYLj5wGkv+VWgR/kGFAh9gzTlr582Qz9p2Wd2ShmVoGhNdR/yLylGqNhfvPiO
-	rYiXDWO3qThNMbbLfZ/wQdtLJUyjFA/k3kns8gWap/CJzCD+HVaPDzj1BTkLiGfQrGuwE9EQUHC
-	WmGbAN7blCXpgPgqBb2VoQbIkUpk/gkWY5acIxCtEp3F5Fo4xTG5m5f8NjMp1OCkr6XWK6eTtsg
-	PusS6LiiSjcvwVCdOosIlsR8VL/UhEfNwr82ggftg2JGuUSqUzhgj6nC9djbeKKbpj8p0HNT49e
-	NJnMc+xrDLF7CXa3GBPILGKQIXWCAchmiM/kC1tA0UAh224Th3T48XkTp19LLo7lE698eQVukbh
-	tT1oJJvGviPGkpe0ijtic0m9JMiOzn0M41jAeYiIxqiG+qxn4dcug+MsYMJ4uF1IDRfcWHHpUzm
-	TVwJJkk9aDGcY43VZ0A8tlQtqj/wyFOCj0Yxfgz3twu8JuGp8VkDtiUSZTXGVIdIWrwhmuQCgya
-	32MvHc6M1sPnvVC69+VO
-X-Received: by 2002:a05:690c:60c7:b0:873:5c0f:280 with SMTP id 00721157ae682-89735f6df22mr25869157b3.42.1789933081162;
-        Sun, 20 Sep 2026 12:38:01 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1789933016; x=1790537816;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=SWKz/8OeAkiGFbZLGJoBxcLgC1DzN7WUJVOWNvZAQ8A=;
+        b=omZ7ePG5Kzmd3RoAPTcM+PwQujsQCSwK4ukP5zqy5k+B4oXJCH5B3zr3cbU3+6XDqJ
+         AKrujCKdtRTUBRhCiLmWIyPIFs0IKImFwLNjIw5y1tK7Fky0vt9bTPa3I7TFCa31J01X
+         u21E+4TVxfR5SzOwWAP3ZaJPF8o0B3swmZprNt9DE6NHnsQ4P80RjSxNvPdFePnxwwA5
+         1ySk+FymWtWO4i1rBoy3CqSi0ca+ZXyDlz4UmO7R6jhgdBonACme+69gOI1xgOzUOURG
+         TT3xzyDP4KaagKWW9jU/61gLfAMYORcODKi9upOk3d9Pk/QLTQJ1QxHeb+pyqbvPwPkO
+         P4DA==
+X-Forwarded-Encrypted: i=1; AKwUvBx/G+ADiknK3fimhlWleIhVPbRR0f46lj4pPFWgyf7v9aPlpfTAS/7EeI9fYb/uev1nqmaO6w==@lists.infradead.org
+X-Gm-Message-State: AFuF++mMWam2GYTS4U4Kf3Z6ozyf3703/9mPdrjtrRhdWMURla3RMbEy
+	Rgrpjr3bzFfq/A3S2uHcUguongF325Z1n4p37RvGIjjCvq23esV/JwDYIQ0041F9n+U=
+X-Gm-Gg: AYBFou2FGI+hJ7RF0Jz3jakr6IMb6WOjTkfesfsWM0EkcaIXvYgJAPIUgR5hR5KdPxG
+	HCRQSNJHBxoWQKTK4hUxmAz/9t/xahgyGDxFpFAtRVeg6m5DUdzgnS34WdW06bYJ/ftTJl+A62F
+	0u8vMbvmOsxbO6lifzE+vu1ZetmUxBWwfvQhHCqYiwbThOxIV6nMYvbS8EWBGfF1Roj6s7tmtIk
+	aNJtEVrH7kGtLO1NoSLcaoSC1F0oeYmmxRFellXCA7Z9W7Je2Fdz05INPsejT1dxEmAJF6q6SQC
+	I9JfF+S0YFep+76qmkxSBrnaAjCkcdGNTWj4Y3/T0wwLh6jfxfkLLEIgSQjXVQmyMwQRv99QtO7
+	7/Yjx6Iis9IsP87GsQKjt6GBaMNAMXanKLcQ5/m9L9L5Zq/fo929CdiHU45s2lclrBhUtbfTs4Q
+	WYvlZGF02esoFgrfg2zsd0Abw/cElGyZicW+FvGYBvUWuIfNbup2kT+mCX9mxy/BD/ZKHHtY/V/
+	6ERBm1eRsyHFhzS4ItMWVOVrQ+YMDngaUmJekMXi3rPDqir7YN+Kel83rV8QHeaWc4Yfxz6sCfF
+	aaTwKdxb4MLdnd40P5Q=
+X-Received: by 2002:a05:690c:c6d2:b0:873:5bd1:98cf with SMTP id 00721157ae682-89738781626mr20406527b3.65.1789933015865;
+        Sun, 20 Sep 2026 12:36:55 -0700 (PDT)
 Received: from soleen.c.googlers.com.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-89a46a44699sm18596057b3.19.2026.09.20.12.37.57
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-89a415208bfsm19230137b3.3.2026.09.20.12.36.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Sep 2026 12:37:59 -0700 (PDT)
+        Sun, 20 Sep 2026 12:36:55 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: linux-kselftest@vger.kernel.org,
 	legion@kernel.org,
@@ -163,17 +147,15 @@ To: linux-kselftest@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	vladimir.murzin@arm.com,
 	kas@kernel.org
-Subject: [RFC PATCH 11/46] liveupdate: Define CPU preservation linker sections
-Date: Sun, 20 Sep 2026 15:36:15 -0400
-Message-ID: <20260920193650.3373435-12-pasha.tatashin@soleen.com>
+Subject: [RFC PATCH 00/46] Orphaned Virtual Machines
+Date: Sun, 20 Sep 2026 15:36:04 -0400
+Message-ID: <20260920193650.3373435-1-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-In-Reply-To: <20260920193650.3373435-1-pasha.tatashin@soleen.com>
-References: <20260920193650.3373435-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260920_203803_340029_60747922 
-X-CRM114-Status: GOOD (  23.28  )
+X-CRM114-CacheID: sfid-20260920_123658_478986_089FA251 
+X-CRM114-Status: GOOD (  12.38  )
 X-Mailman-Approved-At: Sun, 20 Sep 2026 13:23:19 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -189,297 +171,472 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Define CPU_PRESERVED_TEXT and CPU_PRESERVED_DATA linker macros to place
-code and data required for CPU preservation into dedicated sections
-(.text.cpu_preserved and .data.cpu_preserved).
+This RFC series is a PoC intended to showcase e2e working OrphanVMs
+uninterrupted continuing execution on preserved physical CPUs across a
+host kernel live update, prepared for the LPC'26 presentation at the
+KVM Microconf [1].
 
-These sections are preserved across live update transitions and mapped
-executable/read-write as needed.
+The original design proposal discussion can be found at [2].
 
-Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
----
- include/asm-generic/vmlinux.lds.h     | 29 +++++++++++++++++
- include/linux/cpu_preserve.h          | 47 +++++++++++++++++++++++++++
- scripts/mod/modpost.c                 | 32 +++++++++++++++---
- tools/objtool/check.c                 | 35 +++++++++++++++++++-
- tools/objtool/include/objtool/check.h |  1 +
- tools/objtool/include/objtool/elf.h   |  2 +-
- 6 files changed, 140 insertions(+), 6 deletions(-)
+This series is applied on top of v7.3-rc1 + the "[PATCH v4 00/11]
+liveupdate: kvm: Guest_memfd preservation" series [3]. The whole branch
+can be accessed at [4].
+
+It was tested on Intel Xeon Granite Rapids-AP, AMD EPYC Turin, and ARM
+Neoverse V2, as well as in emulation on QEMU and Intel Simics. However,
+it is still very early WIP, and is not anywhere near being production
+ready.
+
+Overview & Submission Strategy
+==============================
+While this RFC bundles the e2e stack, it is NOT intended to be merged as
+a single series, the goal of this series is to have a discussion about
+the technical layers, and the challenges that need to be solved in order
+to have full Caretaker support within the kernel.
+
+Some of the arch/* changes duplicate small helpers (such as GICv3 list
+register accessors or low-level VMCS/VMCB/sysreg helpers) that could be
+shared with existing KVM/arch code if those routines and their callees
+are moved to static inlines or annotated with __cpu_preserved_text (and
+built without ftrace/KASAN/per-CPU references, as enforced by objtool
+and modpost). To avoid sprinkling __cpu_preserved_text annotations
+across core arch/* files in this PoC, those helpers are kept local to
+caretaker.c for now and can be consolidated when individual platform
+support is upstreamed.
+
+The series is structured into at least 8 workstreams that will be
+discussed and worked on separately:
+
+1. Workstream 1: Preparation Patches (Patches 01-06)
+   Architecture-neutral and arch-specific preparatory cleanups (in
+   future these could be bundled with the workstreams that require these
+   changes):
+     01. KVM: luo: Delegate VM creation type to kvm_arch_vm_luo_preserve
+     02. KVM: arm64: Split demux_c15_{get,set}_val from userspace
+         accessors
+     03. KVM: arm64: Split kvm_sys_reg_{get,set}_user from kernel
+         accessors
+     04. x86/mm/ident_map: Add force_pte to support 4K PTE identity
+         mappings
+     05. arm64: mm: Add trans_pgd_map_range() support
+     06. x86/smp: Skip offline CPUs for REBOOT_VECTOR in
+         native_stop_other_cpus()
+
+2. Workstream 2: In-Kernel In-RAM vCPU State Preservation via LUO
+   (Patches 07-10)
+   Allows performing suspend/resume-type preservation across kexec
+   without carrying the vCPU internal state in the VMM in userspace,
+   keeping all vCPU state in-kernel:
+     07. KVM: luo: Support vCPU file preservation across live updates
+     08. KVM: x86: Add x86 vCPU LUO preservation ABI and register
+         helpers
+     09. KVM: x86: Implement architectural vCPU state preservation via
+         LUO
+     10. KVM: arm64: Implement architectural vCPU state preservation via
+         LUO
+
+3. Workstream 3: Physical CPU Preservation Core & x86 Support
+   (Patches 11-24)
+   Introduces the physical CPU preservation subsystem (cpu_preserve),
+   linker sections (.text.cpu_preserved, .data.cpu_preserved) with
+   build-time section isolation checks in modpost and objtool, isolated
+   transition page table management (struct cpu_preserved_as), and sysfs
+   interfaces. Allows booting the machine with some CPUs removed from
+   the OS scheduler, and provides infrastructure for executing orphaned
+   jobs on such CPUs:
+     11. liveupdate: Define CPU preservation linker sections
+     12. liveupdate: Add liveupdate_session_name() helper
+     13. cpu_preserve: Add physical CPU preservation ABI and core API
+         headers
+     14. cpu_preserve: Add core physical CPU preservation state and park
+         loop
+     15. cpu_preserve: Add physical CPU preservation lifecycle and build
+         rules
+     16. liveupdate: cpu_preserve: Add sysfs interface
+     17. liveupdate: cpu_preserve: Add isolated address space management
+         API
+     18. liveupdate: cpu_preserve: Add LUO file handler for preserved
+         physical CPUs
+     19. x86: liveupdate: Add low-level physical CPU preservation
+         assembly
+     20. x86: liveupdate: Add physical CPU preservation context and page
+         table support
+     21. selftests: liveupdate: Add physical CPU preservation unit tests
+     22. selftests: liveupdate: Add physical CPU preservation live
+         update tests
+     23. Documentation: liveupdate: Add physical CPU preservation
+         documentation
+     24. MAINTAINERS: Add entry for KVM Caretaker
+
+4. Workstream 4: ARM64 Support for Physical CPU Preservation (Patch 25)
+   Enables physical CPU preservation on ARM64 using isolated transition
+   page tables (trans_pgd_map_range()), cache maintenance to PoC, and
+   GICv3 redistributor SGI wake helpers:
+     25. arm64: liveupdate: Add support for physical CPU preservation
+
+5. Workstream 5: On-Core Scheduling Framework (oncore) (Patches 26-27)
+   (Note: This layer sits between cpu_preserve and the KVM Caretaker and
+   Kernel Caretaker (Future Work for Orphaned Processes))
+   Provides a runqueue and time-slice scheduling framework
+   (kernel/liveupdate/oncore.c) that multiplexes preserved workloads
+   onto preserved physical CPUs during the kexec blackout window:
+     26. oncore: Add on-core KHO ABI and public framework headers
+     27. oncore: Implement on-core session lifecycle and scheduling loop
+
+6. Workstream 6: KVM Caretaker Core & Intel VMX Support
+   (Patches 28-39)
+   Introduces the KVM Caretaker execution engine (virt/kvm/caretaker.c),
+   vCPU detach/attach/cancel lifecycle, optional cross-kexec execution
+   telemetry and debugfs reporting, x86 TDP MMU KHO page table
+   preservation, x86 common Caretaker runtime (LAPIC timer injection,
+   VM-exit dispatch, instruction decoding), and the Intel VMX Caretaker
+   backend:
+     28. KVM: caretaker: Add Caretaker control block and architecture
+         ops headers
+     29. KVM: caretaker: Implement Caretaker session memory mapping
+         helpers
+     30. KVM: caretaker: Integrate Caretaker vCPU detach, attach, and
+         cancel with KVM
+     31. KVM: caretaker: Add generic KHO ABI telemetry and debugfs
+         reporting
+     32. KVM: x86: Add TDP MMU KHO preservation helpers
+     33. KVM: x86: Add Caretaker x86 KHO ABI and runtime context headers
+     34. KVM: x86: Implement Caretaker LAPIC timer and interrupt
+         injection
+     35. KVM: x86: Implement Caretaker VM-exit dispatch and instruction
+         decoders
+     36. KVM: x86: Implement Caretaker run loop and LUO detach/attach
+         lifecycle
+     37. KVM: VMX: Add Caretaker VMX assembly guest entry/exit routine
+         and helpers
+     38. KVM: VMX: Implement Caretaker VMX VMCS lifecycle and exit
+         dispatch
+     39. KVM: VMX: Integrate Caretaker VMX detach serialization and KVM
+         registration
+
+7. Workstream 7: KVM Caretaker for AMD SVM (Patches 40-41)
+   Implements the AMD SVM Caretaker backend (caretaker_vmenter.S, VMCB
+   lifecycle, exit decoding, and next-RIP sync):
+     40. KVM: SVM: Add Caretaker SVM assembly guest entry/exit routine
+     41. KVM: SVM: Implement Caretaker SVM VMCB lifecycle and exit
+         dispatch
+
+8. Workstream 8: KVM Caretaker for ARM64 (Patches 42-46)
+   Implements the ARM64 VHE Caretaker backend (caretaker_vmenter.S,
+   EL2 exception vectors, GICv3 CPU interface & arch timer emulation,
+   system register trap handling, and Stage-2 fault handling):
+     42. KVM: arm64: Add Caretaker arm64 KHO ABI and runtime context
+         headers
+     43. KVM: arm64: Add Caretaker EL2 exception vectors and guest
+         entry/exit assembly
+     44. KVM: arm64: Implement Caretaker GICv3 CPU interface and arch
+         timer emulation
+     45. KVM: arm64: Implement Caretaker system register trap and
+         exception handlers
+     46. KVM: arm64: Implement Caretaker vCPU run loop and LUO
+         detach/attach lifecycle
+
+Architectural Design Layers
+===========================
+The OrphanVM architecture is layered so that each subsystem has zero
+upward symbol dependencies:
+
+  +--------------------------------------------------------------------+
+  | Layer 4: KVM Caretaker Engine (virt/kvm/caretaker.c + arch/kvm/*)  |
+  |   - VMENTER/VMRUN/ERET guest execution loop                        |
+  |   - Handling of timer preemption, HLT/WFI, MSR/sysreg traps        |
+  |   - Yield on unhandled I/O or Stage-2 MMIO faults                  |
+  +--------------------------------------------------------------------+
+                                    |
+                                    v (registers oncore jobs)
+  +--------------------------------------------------------------------+
+  | Layer 3: On-Core Scheduler Framework (kernel/liveupdate/oncore.c)  |
+  |   - Runqueue and time-slice scheduler on preserved cores           |
+  |   - Architecture-neutral counter frequency deadline calculation    |
+  |   - Session memory mapping into isolated address spaces            |
+  +--------------------------------------------------------------------+
+                                    |
+                                    v (attaches cpu_preserve workload)
+  +--------------------------------------------------------------------+
+  | Layer 2: Physical CPU Preservation (kernel/liveupdate/cpu_preserve)|
+  |   - Offlines CPUs into preserved park loop (.text.cpu_preserved)   |
+  |   - Switches CR3/TTBR to isolated transition page tables           |
+  |   - Manages cpu_present state across kexec and hotplug reclaim     |
+  +--------------------------------------------------------------------+
+                                    |
+                                    v (persists state via KHO / LUO)
+  +--------------------------------------------------------------------+
+  | Layer 1: KHO & LUO                                                 |
+  |   - Preserves guest_memfd RAM, TDP/Stage-2 MMU, and vCPU state     |
+  |   - Cross-kexec ABI (include/linux/kho/abi/*)                      |
+  +--------------------------------------------------------------------+
+
+1. Layer 1: KHO & LUO In-RAM Preservation (kvm_luo)
+   Preserves VM and vCPU file descriptors across kexec using KHO memory
+   preservation. Guest memory (guest_memfd) and secondary MMU page
+   tables remain in place in physical RAM. Architectural vCPU state is
+   serialized into struct kvm_vcpu_arch_luo_state buffers.
+
+2. Layer 2: Physical CPU Preservation (cpu_preserve)
+   Before kexec, selected physical CPUs are taken offline and
+   transitioned into a park loop compiled into .text.cpu_preserved and
+   copied into KHO-preserved pages outside KHO scratch memory. Each
+   preserved CPU switches to an isolated address space (struct
+   cpu_preserved_as) that maps ONLY the preserved text/data, per-CPU
+   stack, and mapped workload buffers. Build-time section checks in
+   modpost and objtool enforce that .text.cpu_preserved and
+   .data.cpu_preserved do not reference unmapped host kernel symbols.
+   Because preserved CPUs are marked !cpu_present(cpu) while preserved,
+   the host kernel's SMP stop routines and incoming kernel's SMP boot
+   bringup skip them without hotplug workarounds.
+
+3. Layer 3: On-Core Scheduling Framework (oncore)
+   Provides a runqueue and session scheduler (kernel/liveupdate/oncore.c)
+   that runs inside the cpu_preserve park loop. Multiple preserved
+   workloads (such as vCPUs) can be scheduled across one or more
+   preserved physical CPUs using hardware counter deadlines (TSC on x86,
+   CNTPCT_EL0 on ARM64).
+
+4. Layer 4: KVM Caretaker Execution Engine (caretaker)
+   Attaches preserved KVM vCPUs to oncore jobs. During the kexec
+   blackout window, the Caretaker enters the guest directly from
+   preserved text with baseline speculative execution mitigations
+   (VERW CPU buffer clearing on x86 VM-entry, RSB stuffing on x86
+   VM-exit, and Spectre-BHB loop clearing on ARM64 EL2 guest exit):
+   - On Intel VMX (vmx/caretaker.c), executes VMLAUNCH/VMRESUME against
+     a preserved VMCS page and handles VMX preemption timer / physical
+     LAPIC timer, HLT, PAUSE, CPUID, RDTSC, COM1 UART, and basic MSR
+     exits. Software emulation of x2APIC ICR IPIs is intentionally
+     omitted (trapped ICR writes park the vCPU until the incoming kernel
+     reclaims it); instead, the Caretaker KHO-preserves the virtual APIC
+     page and the VM's Posted-Interrupt Descriptor pointer table
+     (pid_table), allowing hardware with APICv and Intel IPIv to deliver
+     inter-vCPU IPIs without VM-exits.
+   - On AMD SVM (svm/caretaker.c), executes VMRUN with a preserved VMCB,
+     preserved MSR/IO permission bitmaps (msrpm/iopm), and host save
+     area (MSR_VM_HSAVE_PA), sharing the common x86 Caretaker exit and
+     timer handlers.
+   - On ARM64 VHE (arm64/kvm/caretaker.c), switches EL2 exception
+     vectors (VBAR_EL2) to Caretaker vectors, emulates the GICv3 CPU
+     interface (including inter-vCPU SGI delivery via ICC_SGI1R_EL1
+     trapping and GICv3 List Register injection) and arch timer, and
+     handles WFI/WFE and system register traps.
+   - Note that the set of supported VM-exits can be adjusted as needed;
+     initial upstreaming can start by not supporting any VM-exits at
+     all, waiting in the Caretaker loop if a vCPU exits until the
+     incoming host kernel finishes booting and reclaims the vCPU.
+   - Cross-Kexec Re-Attachment: When the incoming kernel boots and
+     retrieves the preserved VM, it signals detach via the Caretaker
+     control block. The Caretaker serializes live hardware state on the
+     preserved core into struct kvm_vcpu_arch_luo_state before yielding,
+     exits the park loop, and allows the incoming kernel to reclaim the
+     physical CPU and resume KVM execution. Optional execution telemetry
+     (runs, exits, stalls, exit reasons, and last RIP) is preserved via
+     the KHO ABI and exposed in dmesg and per-vCPU debugfs
+     (caretaker_telemetry), both live during detached execution and upon
+     re-attachment.
+
+Links
+=====
+[1] https://lpc.events/event/20/contributions/2553/
+[2] https://lore.kernel.org/all/afEwWZksU0Fw61oT@plex/
+[3] https://lore.kernel.org/all/20260728121138.1103610-1-tarunsahu@google.com/#r
+[4] https://github.com/soleen/linux/tree/ovm/rfc/v1
+
+Pasha Tatashin (46):
+  KVM: luo: Delegate VM creation type to kvm_arch_vm_luo_preserve
+  KVM: arm64: Split demux_c15_{get,set}_val from userspace accessors
+  KVM: arm64: Split kvm_sys_reg_{get,set}_user from kernel accessors
+  x86/mm/ident_map: Add force_pte to support 4K PTE identity mappings
+  arm64: mm: Add trans_pgd_map_range() support
+  x86/smp: Skip offline CPUs for REBOOT_VECTOR in
+    native_stop_other_cpus()
+  KVM: luo: Support vCPU file preservation across live updates
+  KVM: x86: Add x86 vCPU LUO preservation ABI and register helpers
+  KVM: x86: Implement architectural vCPU state preservation via LUO
+  KVM: arm64: Implement architectural vCPU state preservation via LUO
+  liveupdate: Define CPU preservation linker sections
+  liveupdate: Add liveupdate_session_name() helper
+  cpu_preserve: Add physical CPU preservation ABI and core API headers
+  cpu_preserve: Add core physical CPU preservation state and park loop
+  cpu_preserve: Add physical CPU preservation lifecycle and build rules
+  liveupdate: cpu_preserve: Add sysfs interface
+  liveupdate: cpu_preserve: Add isolated address space management API
+  liveupdate: cpu_preserve: Add LUO file handler for preserved physical
+    CPUs
+  x86: liveupdate: Add low-level physical CPU preservation assembly
+  x86: liveupdate: Add physical CPU preservation context and page table
+    support
+  selftests: liveupdate: Add physical CPU preservation unit tests
+  selftests: liveupdate: Add physical CPU preservation live update tests
+  Documentation: liveupdate: Add physical CPU preservation documentation
+  MAINTAINERS: Add entry for KVM Caretaker
+  arm64: liveupdate: Add support for physical CPU preservation
+  oncore: Add on-core KHO ABI and public framework headers
+  oncore: Implement on-core session lifecycle and scheduling loop
+  KVM: caretaker: Add Caretaker control block and architecture ops
+    headers
+  KVM: caretaker: Implement Caretaker session memory mapping helpers
+  KVM: caretaker: Integrate Caretaker vCPU detach, attach, and cancel
+    with KVM
+  KVM: caretaker: Add generic KHO ABI telemetry and debugfs reporting
+  KVM: x86: Add TDP MMU KHO preservation helpers
+  KVM: x86: Add Caretaker x86 KHO ABI and runtime context headers
+  KVM: x86: Implement Caretaker LAPIC timer and interrupt injection
+  KVM: x86: Implement Caretaker VM-exit dispatch and instruction
+    decoders
+  KVM: x86: Implement Caretaker run loop and LUO detach/attach lifecycle
+  KVM: VMX: Add Caretaker VMX assembly guest entry/exit routine and
+    helpers
+  KVM: VMX: Implement Caretaker VMX VMCS lifecycle and exit dispatch
+  KVM: VMX: Integrate Caretaker VMX detach serialization and KVM
+    registration
+  KVM: SVM: Add Caretaker SVM assembly guest entry/exit routine
+  KVM: SVM: Implement Caretaker SVM VMCB lifecycle and exit dispatch
+  KVM: arm64: Add Caretaker arm64 KHO ABI and runtime context headers
+  KVM: arm64: Add Caretaker EL2 exception vectors and guest entry/exit
+    assembly
+  KVM: arm64: Implement Caretaker GICv3 CPU interface and arch timer
+    emulation
+  KVM: arm64: Implement Caretaker system register trap and exception
+    handlers
+  KVM: arm64: Implement Caretaker vCPU run loop and LUO detach/attach
+    lifecycle
+
+ .../ABI/testing/sysfs-devices-system-cpu      |   20 +
+ Documentation/liveupdate/cpu_preservation.rst |   48 +
+ Documentation/liveupdate/index.rst            |   11 +
+ Documentation/liveupdate/vmm.rst              |   15 +
+ Documentation/virt/kvm/api.rst                |   16 +
+ MAINTAINERS                                   |   11 +
+ arch/arm64/Kconfig                            |    1 +
+ arch/arm64/include/asm/caretaker.h            |   56 +
+ arch/arm64/include/asm/cpu_preserve.h         |   44 +
+ arch/arm64/include/asm/oncore.h               |   24 +
+ arch/arm64/include/asm/trans_pgd.h            |    4 +
+ arch/arm64/kernel/Makefile                    |    7 +
+ arch/arm64/kernel/cpu_preserve.c              |  674 ++++++
+ arch/arm64/kernel/preserve_cpu.S              |   44 +
+ arch/arm64/kernel/smp.c                       |    8 +-
+ arch/arm64/kernel/vmlinux.lds.S               |    1 +
+ arch/arm64/kvm/Kconfig                        |    2 +
+ arch/arm64/kvm/Makefile                       |   14 +
+ arch/arm64/kvm/caretaker.c                    | 1162 +++++++++++
+ arch/arm64/kvm/caretaker.h                    |  130 ++
+ arch/arm64/kvm/caretaker_vmenter.S            |  248 +++
+ arch/arm64/kvm/kvm_luo.c                      |  304 +++
+ arch/arm64/kvm/sys_regs.c                     |  247 ++-
+ arch/arm64/kvm/sys_regs.h                     |    4 +
+ arch/arm64/mm/trans_pgd.c                     |   70 +
+ arch/x86/Kconfig                              |    1 +
+ arch/x86/include/asm/cpu_preserve.h           |   34 +
+ arch/x86/include/asm/init.h                   |    3 +-
+ arch/x86/include/asm/oncore.h                 |   25 +
+ arch/x86/kernel/Makefile                      |    7 +
+ arch/x86/kernel/cpu_preserve.c                |  432 ++++
+ arch/x86/kernel/preserve_cpu.S                |   62 +
+ arch/x86/kernel/smp.c                         |    2 +-
+ arch/x86/kernel/vmlinux.lds.S                 |    2 +
+ arch/x86/kvm/Kconfig                          |    2 +
+ arch/x86/kvm/Makefile                         |   32 +
+ arch/x86/kvm/caretaker.c                      | 1129 ++++++++++
+ arch/x86/kvm/caretaker.h                      |  238 +++
+ arch/x86/kvm/caretaker_asm.h                  |  117 ++
+ arch/x86/kvm/cpuid.c                          |    4 +-
+ arch/x86/kvm/cpuid.h                          |    1 +
+ arch/x86/kvm/kvm-asm-offsets.c                |   32 +
+ arch/x86/kvm/kvm_luo.c                        |  368 ++++
+ arch/x86/kvm/mmu.h                            |    7 +
+ arch/x86/kvm/mmu/kho.c                        |  193 ++
+ arch/x86/kvm/msrs.c                           |   17 +
+ arch/x86/kvm/msrs.h                           |    2 +
+ arch/x86/kvm/regs.c                           |    8 +-
+ arch/x86/kvm/regs.h                           |    4 +
+ arch/x86/kvm/svm/caretaker.c                  |  467 +++++
+ arch/x86/kvm/svm/caretaker.h                  |   63 +
+ arch/x86/kvm/svm/caretaker_vmenter.S          |   91 +
+ arch/x86/kvm/svm/svm.c                        |   11 +-
+ arch/x86/kvm/vmx/caretaker.c                  |  658 ++++++
+ arch/x86/kvm/vmx/caretaker.h                  |   78 +
+ arch/x86/kvm/vmx/caretaker_vmenter.S          |  110 +
+ arch/x86/kvm/vmx/vmx.c                        |    6 +-
+ arch/x86/kvm/vmx/vmx.h                        |    1 +
+ arch/x86/kvm/x86.c                            |    8 +-
+ arch/x86/kvm/x86.h                            |    4 +
+ arch/x86/mm/ident_map.c                       |   72 +-
+ include/asm-generic/vmlinux.lds.h             |   29 +
+ include/linux/cpu_preserve.h                  |  464 +++++
+ include/linux/kho/abi/cpu.h                   |  151 ++
+ include/linux/kho/abi/kvm.h                   |  137 +-
+ include/linux/kho/abi/kvm_arm64.h             |   93 +
+ include/linux/kho/abi/kvm_x86.h               |  106 +
+ include/linux/kvm_caretaker.h                 |  439 ++++
+ include/linux/kvm_host.h                      |   63 +
+ include/linux/liveupdate.h                    |    6 +
+ include/linux/oncore.h                        |  129 ++
+ include/uapi/linux/kvm.h                      |    2 +
+ kernel/cpu.c                                  |    2 +
+ kernel/liveupdate/Kconfig                     |   45 +
+ kernel/liveupdate/Makefile                    |   15 +
+ kernel/liveupdate/cpu_preserve.c              | 1811 +++++++++++++++++
+ kernel/liveupdate/luo_session.c               |   14 +
+ kernel/liveupdate/oncore.c                    |  947 +++++++++
+ scripts/mod/modpost.c                         |   32 +-
+ tools/objtool/check.c                         |   35 +-
+ tools/objtool/include/objtool/check.h         |    1 +
+ tools/objtool/include/objtool/elf.h           |    2 +-
+ tools/testing/selftests/liveupdate/Makefile   |    1 +
+ tools/testing/selftests/liveupdate/config     |    6 +
+ tools/testing/selftests/liveupdate/init.c     |   27 +-
+ .../testing/selftests/liveupdate/liveupdate.c |  251 +++
+ .../selftests/liveupdate/luo_cpu_preserve.c   |  145 ++
+ .../selftests/liveupdate/run-vmtests.sh       |    1 +
+ tools/testing/selftests/liveupdate/vmtest.sh  |    4 +-
+ virt/kvm/Kconfig                              |   41 +
+ virt/kvm/Makefile.kvm                         |    8 +
+ virt/kvm/caretaker.c                          |  639 ++++++
+ virt/kvm/caretaker_debug.c                    |  120 ++
+ virt/kvm/kvm_luo.c                            |  249 ++-
+ virt/kvm/kvm_main.c                           |   66 +-
+ 95 files changed, 13415 insertions(+), 122 deletions(-)
+ create mode 100644 Documentation/liveupdate/cpu_preservation.rst
+ create mode 100644 Documentation/liveupdate/index.rst
+ create mode 100644 arch/arm64/include/asm/caretaker.h
+ create mode 100644 arch/arm64/include/asm/cpu_preserve.h
+ create mode 100644 arch/arm64/include/asm/oncore.h
+ create mode 100644 arch/arm64/kernel/cpu_preserve.c
+ create mode 100644 arch/arm64/kernel/preserve_cpu.S
+ create mode 100644 arch/arm64/kvm/caretaker.c
+ create mode 100644 arch/arm64/kvm/caretaker.h
+ create mode 100644 arch/arm64/kvm/caretaker_vmenter.S
+ create mode 100644 arch/arm64/kvm/kvm_luo.c
+ create mode 100644 arch/x86/include/asm/cpu_preserve.h
+ create mode 100644 arch/x86/include/asm/oncore.h
+ create mode 100644 arch/x86/kernel/cpu_preserve.c
+ create mode 100644 arch/x86/kernel/preserve_cpu.S
+ create mode 100644 arch/x86/kvm/caretaker.c
+ create mode 100644 arch/x86/kvm/caretaker.h
+ create mode 100644 arch/x86/kvm/caretaker_asm.h
+ create mode 100644 arch/x86/kvm/kvm_luo.c
+ create mode 100644 arch/x86/kvm/mmu/kho.c
+ create mode 100644 arch/x86/kvm/svm/caretaker.c
+ create mode 100644 arch/x86/kvm/svm/caretaker.h
+ create mode 100644 arch/x86/kvm/svm/caretaker_vmenter.S
+ create mode 100644 arch/x86/kvm/vmx/caretaker.c
+ create mode 100644 arch/x86/kvm/vmx/caretaker.h
+ create mode 100644 arch/x86/kvm/vmx/caretaker_vmenter.S
  create mode 100644 include/linux/cpu_preserve.h
+ create mode 100644 include/linux/kho/abi/cpu.h
+ create mode 100644 include/linux/kho/abi/kvm_arm64.h
+ create mode 100644 include/linux/kho/abi/kvm_x86.h
+ create mode 100644 include/linux/kvm_caretaker.h
+ create mode 100644 include/linux/oncore.h
+ create mode 100644 kernel/liveupdate/cpu_preserve.c
+ create mode 100644 kernel/liveupdate/oncore.c
+ create mode 100644 tools/testing/selftests/liveupdate/luo_cpu_preserve.c
+ create mode 100644 virt/kvm/caretaker.c
+ create mode 100644 virt/kvm/caretaker_debug.c
 
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index b2988aa12f66..0dbaac582bcc 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -655,6 +655,34 @@
- 		*(.static_call.text)					\
- 		__static_call_text_end = .;
- 
-+/*
-+ * Page-aligned text and data sections for preserved CPUs.
-+ * This code and data are KHO preserved when CPUs are preserved across
-+ * live update.
-+ */
-+#ifdef CONFIG_LIVEUPDATE_CPU
-+#define CPU_PRESERVED_TEXT						\
-+		. = ALIGN(PAGE_SIZE);					\
-+		__cpu_preserved_text_start = .;				\
-+		*(.text.cpu_preserved .text.cpu_preserved.*)		\
-+		*(.cpu_preserved.text .cpu_preserved.text.*)		\
-+		. = ALIGN(PAGE_SIZE);					\
-+		__cpu_preserved_text_end = .;
-+
-+#define CPU_PRESERVED_DATA						\
-+		. = ALIGN(PAGE_SIZE);					\
-+		__cpu_preserved_data_start = .;				\
-+		*(.data.cpu_preserved .data.cpu_preserved.*)		\
-+		*(.cpu_preserved.data .cpu_preserved.data.*)		\
-+		*(.rodata.cpu_preserved .rodata.cpu_preserved.*)	\
-+		*(.bss..data.cpu_preserved .bss..data.cpu_preserved.*)	\
-+		. = ALIGN(PAGE_SIZE);					\
-+		__cpu_preserved_data_end = .;
-+#else
-+#define CPU_PRESERVED_TEXT
-+#define CPU_PRESERVED_DATA
-+#endif
-+
- /* Section used for early init (in .S files) */
- #define HEAD_TEXT  KEEP(*(.head.text))
- 
-@@ -1155,6 +1183,7 @@
- 		INIT_TASK_DATA(inittask)				\
- 		NOSAVE_DATA						\
- 		PAGE_ALIGNED_DATA(pagealigned)				\
-+		CPU_PRESERVED_DATA					\
- 		CACHE_HOT_DATA(cacheline)				\
- 		CACHELINE_ALIGNED_DATA(cacheline)			\
- 		READ_MOSTLY_DATA(cacheline)				\
-diff --git a/include/linux/cpu_preserve.h b/include/linux/cpu_preserve.h
-new file mode 100644
-index 000000000000..f653838c383d
---- /dev/null
-+++ b/include/linux/cpu_preserve.h
-@@ -0,0 +1,47 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2026, Google LLC.
-+ * Pasha Tatashin <pasha.tatashin@soleen.com>
-+ *
-+ * Preserved CPU across Live Update
-+ */
-+#ifndef _LINUX_CPU_PRESERVE_H
-+#define _LINUX_CPU_PRESERVE_H
-+
-+#include <linux/compiler.h>
-+
-+#ifdef CONFIG_LIVEUPDATE_CPU
-+
-+/*
-+ * __cpu_preserved_text: Code executed by preserved physical CPUs during live
-+ * update kexec handover in orphan mode.
-+ *
-+ * All code in this section must run without stack protector checks because
-+ * per-CPU canary state may be invalid during handover and __stack_chk_fail()
-+ * resides in regular .text, which gets overwritten during kexec before the
-+ * incoming kernel boots.
-+ *
-+ * Architecture-specific requirements (such as disabling external retpolines
-+ * and return thunks on x86) are supplied via ARCH_CPU_PRESERVED_TEXT.
-+ */
-+#ifndef ARCH_CPU_PRESERVED_TEXT
-+#define ARCH_CPU_PRESERVED_TEXT
-+#endif
-+
-+#define __cpu_preserved_text					\
-+	__section(".text.cpu_preserved")			\
-+	__no_stack_protector					\
-+	ARCH_CPU_PRESERVED_TEXT
-+#define __cpu_preserved_data	__section(".data.cpu_preserved")
-+
-+extern char __cpu_preserved_text_start[], __cpu_preserved_text_end[];
-+extern char __cpu_preserved_data_start[], __cpu_preserved_data_end[];
-+
-+#else /* !CONFIG_LIVEUPDATE_CPU */
-+
-+#define __cpu_preserved_text
-+#define __cpu_preserved_data
-+
-+#endif /* CONFIG_LIVEUPDATE_CPU */
-+
-+#endif /* _LINUX_CPU_PRESERVE_H */
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 75374c64b8cc..51631cd2f6c4 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -810,13 +810,27 @@ static void check_section(struct module *mod, struct elf_info *elf,
- #define ALL_INIT_SECTIONS ".init.*"
- #define ALL_EXIT_SECTIONS ".exit.*"
- 
-+#define ALL_CPU_PRESERVED_TEXT_SECTIONS \
-+	".text.cpu_preserved", ".text.cpu_preserved.*", \
-+	".cpu_preserved.text", ".cpu_preserved.text.*"
-+
-+#define ALL_CPU_PRESERVED_DATA_SECTIONS \
-+	".data.cpu_preserved", ".data.cpu_preserved.*", \
-+	".cpu_preserved.data", ".cpu_preserved.data.*", \
-+	".rodata.cpu_preserved", ".rodata.cpu_preserved.*", \
-+	".bss..data.cpu_preserved", ".bss..data.cpu_preserved.*"
-+
-+#define ALL_CPU_PRESERVED_SECTIONS \
-+	ALL_CPU_PRESERVED_TEXT_SECTIONS, ALL_CPU_PRESERVED_DATA_SECTIONS
-+
- #define DATA_SECTIONS ".data", ".data.rel"
- #define TEXT_SECTIONS ".text", ".text.*", ".sched.text", \
- 		".kprobes.text", ".cpuidle.text", ".noinstr.text", \
- 		".ltext", ".ltext.*"
- #define OTHER_TEXT_SECTIONS ".ref.text", ".head.text", ".spinlock.text", \
- 		".fixup", ".entry.text", ".exception.text", \
--		".coldtext", ".softirqentry.text", ".irqentry.text"
-+		".coldtext", ".softirqentry.text", ".irqentry.text", \
-+		ALL_CPU_PRESERVED_TEXT_SECTIONS
- 
- #define ALL_TEXT_SECTIONS  ".init.text", ".exit.text", \
- 		TEXT_SECTIONS, OTHER_TEXT_SECTIONS
-@@ -827,6 +841,7 @@ enum mismatch {
- 	ANY_INIT_TO_ANY_EXIT,
- 	ANY_EXIT_TO_ANY_INIT,
- 	EXTABLE_TO_NON_TEXT,
-+	CPU_PRESERVED_TO_NON_PRESERVED,
- };
- 
- /**
-@@ -843,13 +858,19 @@ enum mismatch {
-  * @mismatch: Type of mismatch.
-  */
- struct sectioncheck {
--	const char *fromsec[20];
--	const char *bad_tosec[20];
--	const char *good_tosec[20];
-+	const char *fromsec[32];
-+	const char *bad_tosec[32];
-+	const char *good_tosec[32];
- 	enum mismatch mismatch;
- };
- 
- static const struct sectioncheck sectioncheck[] = {
-+/* Do not reference non-preserved code/data from cpu_preserved sections */
-+{
-+	.fromsec = { ALL_CPU_PRESERVED_SECTIONS, NULL },
-+	.good_tosec = { ALL_CPU_PRESERVED_SECTIONS, NULL },
-+	.mismatch = CPU_PRESERVED_TO_NON_PRESERVED,
-+},
- /* Do not reference init/exit code/data from
-  * normal code and data
-  */
-@@ -960,6 +981,9 @@ static const struct sectioncheck *section_mismatch(
- static int secref_whitelist(const char *fromsec, const char *fromsym,
- 			    const char *tosec, const char *tosym)
- {
-+	if (match(fromsec, PATTERNS(ALL_CPU_PRESERVED_SECTIONS)))
-+		return 1;
-+
- 	/* Check for pattern 1 */
- 	if (match(tosec, PATTERNS(ALL_INIT_DATA_SECTIONS)) &&
- 	    match(fromsec, PATTERNS(DATA_SECTIONS)) &&
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 464f6c9d9ff0..77389fbfd9ea 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -329,6 +329,8 @@ static void init_insn_state(struct objtool_file *file, struct insn_state *state,
- 
- 	if (opts.noinstr && sec)
- 		state->noinstr = sec->noinstr;
-+	if (sec)
-+		state->cpu_preserved = sec->cpu_preserved;
- }
- 
- static struct cfi_state *cfi_alloc(void)
-@@ -419,6 +421,14 @@ static int decode_instructions(struct objtool_file *file)
- 		u8 prev_len = 0;
- 		u8 idx = 0;
- 
-+		if (!strncmp(sec->name, ".text.cpu_preserved", 19) ||
-+		    !strncmp(sec->name, ".cpu_preserved.text", 19) ||
-+		    !strncmp(sec->name, ".data.cpu_preserved", 19) ||
-+		    !strncmp(sec->name, ".cpu_preserved.data", 19) ||
-+		    !strncmp(sec->name, ".rodata.cpu_preserved", 21) ||
-+		    !strncmp(sec->name, ".bss..data.cpu_preserved", 24))
-+			sec->cpu_preserved = true;
-+
- 		if (!is_text_sec(sec))
- 			continue;
- 
-@@ -3511,6 +3521,17 @@ static int validate_call(struct objtool_file *file,
- 			 struct instruction *insn,
- 			 struct insn_state *state)
- {
-+	if (state->cpu_preserved) {
-+		struct symbol *dest = insn_call_dest(insn);
-+
-+		if (dest && (dest->sec->idx != SHN_UNDEF || opts.link) &&
-+		    !dest->sec->cpu_preserved) {
-+			WARN_INSN(insn, "call to %s() leaves .text.cpu_preserved section",
-+				  call_dest_name(insn));
-+			return 1;
-+		}
-+	}
-+
- 	if (state->noinstr && state->instr <= 0 &&
- 	    !noinstr_call_dest(file, insn, insn_call_dest(insn))) {
- 		WARN_INSN(insn, "call to %s() leaves .noinstr.text section", call_dest_name(insn));
-@@ -4164,7 +4185,13 @@ static int validate_retpoline(struct objtool_file *file)
- 		if (insn->retpoline_safe)
- 			continue;
- 
--		if (insn->sec->init)
-+		/*
-+		 * Preserved CPU text (.text.cpu_preserved) executes across
-+		 * kexec when the outgoing kernel's retpoline/rethunk targets
-+		 * are no longer mapped.
-+		 */
-+		if (insn->sec->init ||
-+		    !strcmp(insn->sec->name, ".text.cpu_preserved"))
- 			continue;
- 
- 		if (insn->type == INSN_RETURN) {
-@@ -4440,6 +4467,12 @@ static int validate_noinstr_sections(struct objtool_file *file)
- 		warnings += validate_unwind_hints(file, sec);
- 	}
- 
-+	sec = find_section_by_name(file->elf, ".text.cpu_preserved");
-+	if (sec) {
-+		warnings += validate_section(file, sec);
-+		warnings += validate_unwind_hints(file, sec);
-+	}
-+
- 	return warnings;
- }
- 
-diff --git a/tools/objtool/include/objtool/check.h b/tools/objtool/include/objtool/check.h
-index 063f5985fecd..18318f2faf11 100644
---- a/tools/objtool/include/objtool/check.h
-+++ b/tools/objtool/include/objtool/check.h
-@@ -16,6 +16,7 @@ struct insn_state {
- 	bool uaccess;
- 	bool df;
- 	bool noinstr;
-+	bool cpu_preserved;
- 	s8 instr;
- };
- 
-diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
-index a82517a76a0f..bac9e5f4921f 100644
---- a/tools/objtool/include/objtool/elf.h
-+++ b/tools/objtool/include/objtool/elf.h
-@@ -58,7 +58,7 @@ struct section {
- 	Elf_Data *data;
- 	const char *name;
- 	int idx;
--	bool _changed, text, rodata, noinstr, init, truncate;
-+	bool _changed, text, rodata, noinstr, init, cpu_preserved, truncate;
- 	struct reloc *relocs;
- 	unsigned long nr_alloc_relocs;
- 	struct section *twin;
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
