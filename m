@@ -4,73 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F04BC982EF
-	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D657AC982D8
+	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=K+2B3zmRro/zDH0n7+YdvazCE3Eaf+b235sNOcPlOno=; b=a+nRkQKGqu/wm+Vw1ysJ+rPRys
-	t/9D8X40WGFAgXEOoAZWFuA6hnnIRwGLpV0d284OwC2oA8otjwVZFNXVlq1+w4jUSVqyDQLeYPzDV
-	Q3h2IDxHf36pTBtcHBOaa+4AU2wpthb9fv0/w619lzLAi5vxpGhrqDAWUAR5sLpXQxq7o6BAC7xpR
-	XJlaIHgMhV0s1TaqFlSBeRxJvPX0X202Denvb2eoqv2PUmRu8fUjpXa4k7vW//WIixJQ/6prWLHEy
-	qWESt9Pawb5Y2AieGwBDr12o9GoCyto64GkQ5aorHe3bnongxeeFHdvvm7EF48z/0bBkHyN0IMdPV
-	o88gnFSQ==;
+	bh=cf5rLykmCWIC3OsLJKmCN2FyaY3ZIm+gv4og5D7dmSY=; b=tGquG4gWg8IzDPTw6ffq5RPZ8E
+	27v4VEPLK8HjrEi9PdG9PAwo5JEIYukiptPg/4u3OGPoAnLWfkLKptQARpUfX9UZc7PK61iZXEdVu
+	ir7l25uf8B5j0PRoIdBpM3lAyLK1oDrLujtofBnxe9SnFeeRkbPvip3kKz44o1VvvcwiDvVrJ6ERm
+	1zjWycNbMu6ernCgHJDl9hPXkHjDXlsxgF0fZafEp9UhbjckXecuPfHpwbmLt/ru4LaXPWGYZMPn6
+	oigLzCxyj9hiGUcBpBPNACEjL9vy7w0hcTDC8h6/ieMlIT8cqLSOTAPhPa7m/QywzxiuvcdDyTbK2
+	z1RqToRw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8O55-00000000O3U-2Xw8;
+	id 1x8O55-00000000O2l-1IUM;
 	Sun, 20 Sep 2026 20:24:11 +0000
-Received: from mail-yx2-x10.google.com ([2607:f8b0:4864:41::10])
+Received: from mail-yx2-x11.google.com ([2607:f8b0:4864:41::11])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8NOK-00000000JGP-1mPO
+	id 1x8NOE-00000000JEo-2cBy
 	for kexec@lists.infradead.org;
-	Sun, 20 Sep 2026 19:40:01 +0000
-Received: by mail-yx2-x10.google.com with SMTP id 956f58d0204a3-66fabb1a601so1826073d50.3
-        for <kexec@lists.infradead.org>; Sun, 20 Sep 2026 12:40:00 -0700 (PDT)
+	Sun, 20 Sep 2026 19:39:57 +0000
+Received: by mail-yx2-x11.google.com with SMTP id 956f58d0204a3-66e4aac9321so2007519d50.3
+        for <kexec@lists.infradead.org>; Sun, 20 Sep 2026 12:39:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1789933199; x=1790537999; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1789933194; x=1790537994; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=K+2B3zmRro/zDH0n7+YdvazCE3Eaf+b235sNOcPlOno=;
-        b=J6vllhWla+kXMYhmOQpZCmigR5y9nm+mtnkw2S+DgHFqD9iWo9zirVl2/NTe0WxT14
-         JvJN2KMSEsh0f2ZIstE8pr/HYcbUywRmG/YpDSle2NxBmsNC/5RkPmUrZxvpVXboGwQ6
-         ggGVKkNbAp+VzBfTRJZICH1EtMv/6utDDluhZ7UfM1KXDgspiGRGKMmtqM6McUn2IUKi
-         4Cli6HH7tgGFt9zQwhnw8qAVep6DhaYtXkUCbPMx2u+NBZDhiud+4h/8Q7MDZ4elBxpS
-         ab19DSS2EKBiAGgLXVjzXLgjZGu0AaNs76BrTx7Dkea2CQLtO+wtXp7Oi9Ykxcx8ixUt
-         Au0A==
+        bh=cf5rLykmCWIC3OsLJKmCN2FyaY3ZIm+gv4og5D7dmSY=;
+        b=MQgYaG+shBPbDGmF2U0eWnppenaXA5/utQWq/aYLS3YUFuTK3sTH2TNlO3GziarchP
+         XRcFVrbliWh89fGtYgzWnIkYaFgYdMRNYsRN4RbQN/oIKucbI4WWjuWJUKWS0oR9g9DL
+         IeNB5D5xs5KGYYJPW8pBTWkk9IG4nmTF8WPFgUZReKxjwRV85eZie8CYGUtJ8ZbhB8l8
+         rQLnGBMy+nnpwrxpegzAhU9c1vrnHdwPhjenGLDqgAu+OIlX0u8qy1Ih567C1EGLJytT
+         Y3idUqSVSW5EPXGwlnNTyOc56ateYkN8alThE6l0WgVlo2LbNuI9o4p9taLVsSaxNmOO
+         EY+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789933199; x=1790537999;
+        d=1e100.net; s=20260707; t=1789933194; x=1790537994;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to:content-type;
-        bh=K+2B3zmRro/zDH0n7+YdvazCE3Eaf+b235sNOcPlOno=;
-        b=ozKBkUyhUfdlZOoh2dvUJ6jK9XUM4/BhdUqNrUJHN957wlBKEcKbvMmd31d88/Fq1S
-         yAJCvK3UpSlLQRj7rQQHWnzJIJFrc26fiFRwLiFLzdJ0C7t/3X+8l3RvwzFVI/WnaJNt
-         0+hnBe4b2UKuYc2ToDDUTXwKGIxLkvv/hQ0831wKK/k+uctlcMBFCO8bmLWZ4KggX1GW
-         MZGYsOan7P1OdvTQFxXu/Qvxky4ZL+nsYwmlMu4pMzZfZwItfJE9Ry25hobhlflfmIvz
-         ZBWFVjtQYQYM8kQ7jK7d7f/oqCUIICfobH4jhY1M75qY3u7A/0v+J3KGppt1uXGg5VHC
-         osGA==
-X-Forwarded-Encrypted: i=1; AKwUvBxCvP497ZH39IzuvVaXM1lQndDY2WDefBHRV+HV67Jd3W/qjTwmXR+9mjpghwqn2mF3P+tpAw==@lists.infradead.org
-X-Gm-Message-State: AFuF++kxBEl4YRiT0Y2pL7iZsvsjGqIUdP6MV1jz0l0wGU4cxcoqpmjg
-	3a2SYKi1s29fP+nufuedwkelKzNQbp3qmFf5vXPQ6ngy+K4GHuPCfgktzFxoGL94lTY=
-X-Gm-Gg: AYBFou2o0nFCPMxHuuEpkDnjP1HSQHmKJLvkzgBx0jQKVAl6Gc7kNeZvRM5lk9fdo5M
-	OL5UPc2jjUU1a2atvXx77kQzMs/mTyWShBrzuOerVrpDY4X7ddSA15dnkIyv3Zg76b1I2bBscf+
-	wssXIz7r81s9DjHTmxS6S9NYy0THgdB4tgw8lVeUc6DgK2Tw9q8jsv38FRvUabULjZYWBpIqFV/
-	k/XvnYJIe2+XiI+QDkzmmWdllm8pDlNZty1PCLVkSyhRbbvNVr0SDnbJD7DvHDqMZOOBfX3BFAr
-	Mh0JoNzGvgYZ0xjl9r11gGbColWgehrxE3zMTdkEMAunxgr1uihtMDLFijsKpFbyqxl7J7169BE
-	1HryyTrBP3HQv1YDriG0XnJLogca7FrV768ZzuQqUVVERh0K2PHbBB4U8DSxQDYSD40HtFaZsUN
-	lJl4SIS+8zZkAfBRUALTRh4qkAXBfb03fdURX6Y9vewiZHf6aFbnBo0k4zhC4ch6THDe7Hq71O0
-	MM9NwpnwxITadMqPK6juUVUdQ8UgEJQe5REbvWbxdnU4dCMJaJI0B1GQ+PXxVtLRlTQ3mKKACyU
-	+rARxeRiuXPeowUlnnE=
-X-Received: by 2002:a05:690e:1408:b0:671:41c1:daaf with SMTP id 956f58d0204a3-6717fc95e09mr2518491d50.6.1789933199337;
-        Sun, 20 Sep 2026 12:39:59 -0700 (PDT)
+        bh=cf5rLykmCWIC3OsLJKmCN2FyaY3ZIm+gv4og5D7dmSY=;
+        b=Kp+s2kNnW3lhfSASJPch89VtmQMtOBJH25tIMt004TkH7F1xC4461K88sCy6Ta45Kb
+         l/Pce6BmNPF+wHmegp1jUU70UlS7hOevRKSw8DanijeJrF11sgtYjLyQure2mf1JbEsD
+         EkWYTLFO+HP0DPuCzuIZe0OrdkTjyGCTcH3k0jk88T77mRGS0Wc3PXUHfVwKYhAtNMsl
+         zkKh2P6ANY7/6A3LQ0jJIrLBNDkUWeq3VcpjDS7QCRVlw1xhWGFavafJDi7zGIe/7wM7
+         v+CbJGGXVarDK3FDr2WIuRKAONvCDCOjV/mOgpbn03OtvjXwS3xhnQzotkE0rCrgu46v
+         5tFA==
+X-Forwarded-Encrypted: i=1; AKwUvBxsZ5qVp9UZsohiPxX7cuP3vqesdDAezS/uj5oPHwRA209vHfgjf8nAU/A9VoUeHYs5E8EZIg==@lists.infradead.org
+X-Gm-Message-State: AFuF++nAdMszXJsKz7WxIMM+LiMRgNroe5DSno+HryR4jeOI0S6MpvuT
+	l/IJGY6oJI3dlTzk/r3nZFDZ9/BFXEGu6Oiy1YU/81hTVd0hjP18ixdJf36IiNre7ew=
+X-Gm-Gg: AYBFou2S0UYlBgjWOTwOj27bD3GKpaLzTFfR3buUp1U6ZEIBB3EvJkfO/KtYdaTzDH6
+	zpmAbUkVYkzdH9wyLSVPthAkC3rrQaVJeSYOddHivHdkjyAnl5kWQkaeAFc8Opf4O8QSjYc1NDI
+	NIFRNxCCPao81dRAYGs5eP1lhU0yJhB/AiWCC9GBGincdl43kp+qeKRQLwjW7h8e9ecD7HxFFJH
+	FR2qIRoigkS3XNDX2dhHQeI7ZAQyr3HYmywuXt/c6RjxryIybkdkx2oarM1uruw1tagx4xW/1Na
+	ZFRrsvtWc8EgQEcy0JqI+upedIhuD3F86RToueAur3VnWZwAb/pwhdOL1kF+QCKhQyxrbtKfs+f
+	zaoNz19iWAYmuI3/WoUU4TadNdYW+K6zVMn4TYzvMUJ+olUdrVlTlY4v6omEHtomDt8dkdk+Sw+
+	RkrKrp9t/qS8Qvt16bpCIjR+dNrS6Ur2bLmzcOBPceEpmrfDNEwdJxXb142JqLIZavPgNFhT9zd
+	jQWZrg/pJge6CoW2iTrS5XGy4hQRZjFwZLYAj18+aQI67Iiwu/wZ/AfnNRzIzQBlqoM1w61SCnM
+	+89MvJpu3e7wRDaEIpM=
+X-Received: by 2002:a05:690c:385:b0:81e:45a6:bd53 with SMTP id 00721157ae682-897308fc956mr28724767b3.8.1789933193482;
+        Sun, 20 Sep 2026 12:39:53 -0700 (PDT)
 Received: from soleen.c.googlers.com.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-672990ab5desm2605625d50.8.2026.09.20.12.39.57
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-89a45d8fb3csm19035517b3.13.2026.09.20.12.39.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Sep 2026 12:39:58 -0700 (PDT)
+        Sun, 20 Sep 2026 12:39:52 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: linux-kselftest@vger.kernel.org,
 	legion@kernel.org,
@@ -148,17 +148,17 @@ To: linux-kselftest@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	vladimir.murzin@arm.com,
 	kas@kernel.org
-Subject: [RFC PATCH 31/46] KVM: caretaker: Add generic KHO ABI telemetry and debugfs reporting
-Date: Sun, 20 Sep 2026 15:36:35 -0400
-Message-ID: <20260920193650.3373435-32-pasha.tatashin@soleen.com>
+Subject: [RFC PATCH 30/46] KVM: caretaker: Integrate Caretaker vCPU detach, attach, and cancel with KVM
+Date: Sun, 20 Sep 2026 15:36:34 -0400
+Message-ID: <20260920193650.3373435-31-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
 In-Reply-To: <20260920193650.3373435-1-pasha.tatashin@soleen.com>
 References: <20260920193650.3373435-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260920_124000_496522_F67111CD 
-X-CRM114-Status: GOOD (  20.60  )
+X-CRM114-CacheID: sfid-20260920_123954_744205_31CC22D3 
+X-CRM114-Status: GOOD (  20.20  )
 X-Mailman-Approved-At: Sun, 20 Sep 2026 13:23:19 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -174,324 +174,536 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When a preserved vCPU executes inside the Caretaker during a host live
-update blackout window, standard kernel tracing and KVM exit counters
-are unavailable because the host kernel is being replaced via kexec. If
-a guest vCPU hits an unhandled exit and parks, or experiences unexpected
-exit patterns during the transition, the incoming kernel has no
-visibility into what occurred while the vCPU was detached.
-
-Add optional cross-kexec Caretaker execution telemetry behind
-CONFIG_KVM_CARETAKER_DEBUG. During detached execution, the Caretaker
-records run counts, exit counts, stall counts, the last exit reason and
-guest PC, and stall diagnostics into a KHO-preserved telemetry buffer
-referenced from struct kvm_caretaker_cb_ser. When the incoming kernel
-reclaims the vCPU, it logs a summary to dmesg and exposes the preserved
-telemetry under /sys/kernel/debug/kvm/<vm>/vcpu<N>/caretaker_telemetry.
+Integrate Caretaker vCPU preservation, re-attachment, and cancellation
+with KVM LUO handlers and enable CONFIG_KVM_CARETAKER build rules.
 
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- include/linux/kvm_caretaker.h |  97 +++++++++++++++++++++++++++
- virt/kvm/Kconfig              |  10 +++
- virt/kvm/Makefile.kvm         |   1 +
- virt/kvm/caretaker_debug.c    | 120 ++++++++++++++++++++++++++++++++++
- virt/kvm/kvm_main.c           |   1 +
- 5 files changed, 229 insertions(+)
- create mode 100644 virt/kvm/caretaker_debug.c
+ Documentation/liveupdate/vmm.rst |  15 +++
+ include/linux/kvm_caretaker.h    |   1 +
+ virt/kvm/Kconfig                 |  28 +++++
+ virt/kvm/Makefile.kvm            |   7 ++
+ virt/kvm/caretaker.c             | 197 ++++++++++++++++++++++++++++++-
+ virt/kvm/kvm_luo.c               |  70 ++++++++++-
+ virt/kvm/kvm_main.c              |   7 ++
+ 7 files changed, 318 insertions(+), 7 deletions(-)
 
+diff --git a/Documentation/liveupdate/vmm.rst b/Documentation/liveupdate/vmm.rst
+index b8e8fb2b63c2..a0b54d6f1220 100644
+--- a/Documentation/liveupdate/vmm.rst
++++ b/Documentation/liveupdate/vmm.rst
+@@ -100,8 +100,23 @@ VM & Guest_Memfd Preservation ABI
+ .. kernel-doc:: include/linux/kho/abi/kvm.h
+    :internal:
+ 
++KVM Caretaker (Orphaned VM Execution)
++=====================================
++
++.. kernel-doc:: virt/kvm/caretaker.c
++   :doc: KVM Caretaker Architecture and Lifecycle
++
++KVM Caretaker Core & Architecture API
++=====================================
++
++.. kernel-doc:: include/linux/kvm_caretaker.h
++
++.. kernel-doc:: virt/kvm/caretaker.c
++   :identifiers:
++
+ See Also
+ ========
+ 
+ - :doc:`/core-api/liveupdate`
++- :doc:`/liveupdate/cpu_preservation`
+ - :doc:`/userspace-api/liveupdate`
 diff --git a/include/linux/kvm_caretaker.h b/include/linux/kvm_caretaker.h
-index 0d4bdde7b1c3..f889d17212b0 100644
+index 3e89738d7fdf..0d4bdde7b1c3 100644
 --- a/include/linux/kvm_caretaker.h
 +++ b/include/linux/kvm_caretaker.h
-@@ -108,11 +108,13 @@ struct kvm_caretaker_ops {
-  * @cb:        Pointer to KHO-preserved Caretaker control block (&struct kvm_caretaker_cb_ser).
-  * @ops:       Architecture operations vector (&struct kvm_caretaker_ops).
-  * @arch_data: Architecture-specific runtime context passed to @ops callbacks.
-+ * @telemetry: Pointer to KHO-preserved telemetry counters, or %NULL.
-  */
- struct kvm_caretaker_vcpu {
- 	struct kvm_caretaker_cb_ser *cb;
- 	const struct kvm_caretaker_ops *ops;
- 	void *arch_data;
-+	struct kvm_caretaker_telemetry_ser *telemetry;
- };
+@@ -241,6 +241,7 @@ void kvm_arch_vcpu_luo_pre_retrieve_caretaker(struct kvm_vcpu *vcpu,
+ void kvm_arch_vcpu_luo_attach_caretaker(struct kvm_vcpu *vcpu,
+ 					struct kvm_vcpu_ser *ser);
  
- struct kvm_kho_folios_ser *kvm_kho_folios_alloc(unsigned int max_folios);
-@@ -260,11 +262,106 @@ void kvm_caretaker_vcpu_finish(struct kvm_vcpu *vcpu,
- 			       struct liveupdate_session *session,
- 			       struct kvm_vcpu_ser *ser);
- 
-+#ifdef CONFIG_KVM_CARETAKER_DEBUG
-+void kvm_caretaker_telemetry_init(struct kvm_caretaker_vcpu *cvcpu,
-+				  struct oncore_session *sess);
-+void kvm_caretaker_telemetry_report(struct kvm_vcpu *vcpu,
-+				    struct kvm_caretaker_cb_ser *cb);
-+void kvm_caretaker_telemetry_free(struct kvm_vcpu_ser *ser, bool is_incoming);
-+void kvm_caretaker_create_vcpu_debugfs(struct kvm_vcpu *vcpu,
-+				       struct dentry *debugfs_dentry);
-+
-+/**
-+ * kvm_caretaker_telemetry_run - Record a guest entry in Caretaker telemetry
-+ * @cvcpu: Common Caretaker vCPU descriptor.
-+ */
-+static __always_inline __caretaker_text void
-+kvm_caretaker_telemetry_run(struct kvm_caretaker_vcpu *cvcpu)
-+{
-+	if (cvcpu->telemetry)
-+		cvcpu->telemetry->total_runs++;
-+}
-+
-+/**
-+ * kvm_caretaker_telemetry_exit - Record a decoded VM exit in Caretaker telemetry
-+ * @cvcpu: Common Caretaker vCPU descriptor.
-+ * @exit:  Decoded VM exit descriptor.
-+ */
-+static __always_inline __caretaker_text void
-+kvm_caretaker_telemetry_exit(struct kvm_caretaker_vcpu *cvcpu,
-+			     const struct kvm_caretaker_exit *exit)
-+{
-+	if (cvcpu->telemetry) {
-+		cvcpu->telemetry->total_exits++;
-+		cvcpu->telemetry->last_exit_reason = exit->raw_reason;
-+		cvcpu->telemetry->last_exit_rip = exit->rip;
-+	}
-+}
-+
-+/**
-+ * kvm_caretaker_telemetry_stall - Record an unhandled stall exit in Caretaker telemetry
-+ * @cvcpu:  Common Caretaker vCPU descriptor.
-+ * @reason: Raw hardware exit reason or entry failure code.
-+ * @rip:    Guest instruction pointer at stall (0 if entry failure).
-+ */
-+static __always_inline __caretaker_text void
-+kvm_caretaker_telemetry_stall(struct kvm_caretaker_vcpu *cvcpu,
-+			      u64 reason, u64 rip)
-+{
-+	if (cvcpu->telemetry) {
-+		cvcpu->telemetry->stall_count++;
-+		cvcpu->telemetry->last_exit_reason = reason;
-+		cvcpu->telemetry->stall_exit_reason = reason;
-+		if (rip)
-+			cvcpu->telemetry->stall_exit_rip = rip;
-+	}
-+}
-+
-+/**
-+ * kvm_caretaker_telemetry_flush - Clean Caretaker telemetry counters to PoC
-+ * @cvcpu: Common Caretaker vCPU descriptor.
-+ */
-+static __always_inline __caretaker_text void
-+kvm_caretaker_telemetry_flush(struct kvm_caretaker_vcpu *cvcpu)
-+{
-+	if (cvcpu->telemetry)
-+		cpu_preserved_clean_sz(cvcpu->telemetry,
-+				       sizeof(*cvcpu->telemetry));
-+}
-+#else
-+static inline void kvm_caretaker_telemetry_init(struct kvm_caretaker_vcpu *cvcpu,
-+						struct oncore_session *sess) {}
-+
-+static inline void kvm_caretaker_telemetry_report(struct kvm_vcpu *vcpu,
-+						  struct kvm_caretaker_cb_ser *cb) {}
-+
-+static inline void kvm_caretaker_telemetry_free(struct kvm_vcpu_ser *ser,
-+						bool is_incoming) {}
-+
-+static inline void kvm_caretaker_create_vcpu_debugfs(struct kvm_vcpu *vcpu,
-+						     struct dentry *debugfs_dentry) {}
-+static __always_inline void
-+kvm_caretaker_telemetry_run(struct kvm_caretaker_vcpu *cvcpu) {}
-+static __always_inline void
-+kvm_caretaker_telemetry_exit(struct kvm_caretaker_vcpu *cvcpu,
-+			     const struct kvm_caretaker_exit *exit) {}
-+static __always_inline void
-+kvm_caretaker_telemetry_stall(struct kvm_caretaker_vcpu *cvcpu,
-+			      u64 reason, u64 rip) {}
-+static __always_inline void
-+kvm_caretaker_telemetry_flush(struct kvm_caretaker_vcpu *cvcpu) {}
-+#endif
-+
- #else /* !CONFIG_KVM_CARETAKER */
- 
- #define __caretaker_text
- #define __caretaker_data
- 
-+struct dentry;
-+
-+static inline void kvm_caretaker_create_vcpu_debugfs(struct kvm_vcpu *vcpu,
-+						     struct dentry *debugfs_dentry) {}
-+
- static inline bool kvm_caretaker_is_stopped(const struct kvm_caretaker_cb_ser *cb)
- {
- 	return true;
++void kvm_caretaker_vm_pre_retrieve(void);
+ int kvm_caretaker_vcpu_pre_preserve(struct kvm_vcpu *vcpu,
+ 				    struct liveupdate_session *session,
+ 				    struct kvm_vcpu_ser *ser);
 diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
-index 165e0c85b8aa..bee73dd079c6 100644
+index fcaf57377e73..165e0c85b8aa 100644
 --- a/virt/kvm/Kconfig
 +++ b/virt/kvm/Kconfig
-@@ -153,3 +153,13 @@ config KVM_CARETAKER
- 	  without pausing the guest.
- 
- 	  If unsure, say N.
+@@ -125,3 +125,31 @@ config HAVE_KVM_ARCH_GMEM_INVALIDATE
+ config HAVE_KVM_ARCH_GMEM_POPULATE
+        bool
+        depends on KVM_GUEST_MEMFD
 +
-+config KVM_CARETAKER_DEBUG
-+	bool "Caretaker execution telemetry and debug reporting"
-+	depends on KVM_CARETAKER
-+	default n
++config HAVE_KVM_ARCH_CARETAKER
++	bool
++
++config KVM_CARETAKER
++	bool "Orphaned VM Caretaker execution and lifecycle management"
++	depends on KVM
++	depends on LIVEUPDATE_CPU
++	depends on SMP
++	depends on HOTPLUG_CPU
++	depends on HAVE_KVM_ARCH_CARETAKER
++	select LIVEUPDATE_ONCORE
++	default LIVEUPDATE_CPU
 +	help
-+	  Enable Caretaker telemetry collection and reporting of VM exits,
-+	  runs, and stall diagnostics via debugfs and dmesg upon vCPU resume
-+	  following a host kexec live update or cancelled live update session.
++	  Enable Caretaker CPU preservation and standalone execution for
++	  orphaned virtual machines across host kernel live updates.
++
++	  During a host kernel live update, user space hypervisors
++	  and host services terminate, leaving running guest virtual
++	  machines in an orphaned state. Caretaker keeps designated physical
++	  CPUs running their respective guest vCPUs on-core in a standalone
++	  execution loop throughout the entire live update transition.
++
++	  Caretaker attaches to preserved CPUs via the cpu_preserve subsystem
++	  and continues guest vCPU execution across the kexec live update
++	  without pausing the guest.
++
 +	  If unsure, say N.
 diff --git a/virt/kvm/Makefile.kvm b/virt/kvm/Makefile.kvm
-index ae1fcf9861b7..157d0bf6132d 100644
+index d30fca094c42..ae1fcf9861b7 100644
 --- a/virt/kvm/Makefile.kvm
 +++ b/virt/kvm/Makefile.kvm
-@@ -15,6 +15,7 @@ kvm-$(CONFIG_HAVE_KVM_PFNCACHE) += $(KVM)/pfncache.o
+@@ -14,3 +14,10 @@ kvm-$(CONFIG_HAVE_KVM_DIRTY_RING) += $(KVM)/dirty_ring.o
+ kvm-$(CONFIG_HAVE_KVM_PFNCACHE) += $(KVM)/pfncache.o
  kvm-$(CONFIG_KVM_GUEST_MEMFD) += $(KVM)/guest_memfd.o
  kvm-$(CONFIG_LIVEUPDATE_GUEST_MEMFD) += $(KVM)/guest_memfd_luo.o $(KVM)/kvm_luo.o
- kvm-$(CONFIG_KVM_CARETAKER) += $(KVM)/caretaker.o
-+kvm-$(CONFIG_KVM_CARETAKER_DEBUG) += $(KVM)/caretaker_debug.o
- KASAN_SANITIZE_$(KVM)/caretaker.o := n
- KCSAN_SANITIZE_$(KVM)/caretaker.o := n
- UBSAN_SANITIZE_$(KVM)/caretaker.o := n
-diff --git a/virt/kvm/caretaker_debug.c b/virt/kvm/caretaker_debug.c
-new file mode 100644
-index 000000000000..8905938bfec3
---- /dev/null
-+++ b/virt/kvm/caretaker_debug.c
-@@ -0,0 +1,120 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2026, Google LLC.
-+ * Pasha Tatashin <pasha.tatashin@soleen.com>
++kvm-$(CONFIG_KVM_CARETAKER) += $(KVM)/caretaker.o
++KASAN_SANITIZE_$(KVM)/caretaker.o := n
++KCSAN_SANITIZE_$(KVM)/caretaker.o := n
++UBSAN_SANITIZE_$(KVM)/caretaker.o := n
++KCOV_INSTRUMENT_$(KVM)/caretaker.o := n
++CFLAGS_REMOVE_$(KVM)/caretaker.o = $(CC_FLAGS_FTRACE)
++CFLAGS_$(KVM)/caretaker.o += -fno-stack-protector $(call cc-option,-ftrivial-auto-var-init=uninitialized) -fno-builtin-memset -fno-builtin-memcpy $(call cc-option,-fno-tree-loop-distribute-patterns) $(call cc-option,-fno-jump-tables)
+diff --git a/virt/kvm/caretaker.c b/virt/kvm/caretaker.c
+index b4a203562727..dac64c466d76 100644
+--- a/virt/kvm/caretaker.c
++++ b/virt/kvm/caretaker.c
+@@ -196,7 +196,7 @@ kvm_caretaker_should_exit(struct kvm_caretaker_vcpu *cvcpu)
+ 
+ 	cpu_preserved_inval(cvcpu->cb);
+ 
+-	st = READ_ONCE(cvcpu->cb->state);
++	st = smp_load_acquire(&cvcpu->cb->state);
+ 	if (st != KVM_CARETAKER_PAUSED && st != KVM_CARETAKER_RUNNING)
+ 		return true;
+ 
+@@ -365,7 +365,7 @@ static bool kvm_caretaker_try_stop(struct kvm_caretaker_cb_ser *cb)
+ {
+ 	cpu_preserved_inval(cb);
+ 
+-	if (READ_ONCE(cb->state) == KVM_CARETAKER_STOPPED)
++	if (smp_load_acquire(&cb->state) == KVM_CARETAKER_STOPPED)
+ 		return true;
+ 
+ 	if (cmpxchg(&cb->state, KVM_CARETAKER_PAUSED,
+@@ -397,10 +397,8 @@ int kvm_caretaker_wait_for_attach(struct kvm_caretaker_cb_ser *cb, int pcpu)
+ 		return 0;
+ 
+ 	if (!cpu_is_preserved(pcpu)) {
+-		WRITE_ONCE(cb->state, KVM_CARETAKER_STOPPED);
++		smp_store_release(&cb->state, KVM_CARETAKER_STOPPED);
+ 		cpu_preserved_clean(cb);
+-		/* Ensure state update is visible before returning to caller */
+-		smp_wmb();
+ 		return 0;
+ 	}
+ 
+@@ -450,3 +448,192 @@ void kvm_caretaker_post_attach_vcpu(struct kvm_vcpu *vcpu)
+ 	}
+ }
+ 
++/**
++ * kvm_caretaker_vcpu_pre_preserve - Submit an On-Core job for a vCPU prior to arch preserve
++ * @vcpu:    KVM vCPU being preserved.
++ * @session: Active Live Update session.
++ * @ser:     Serialized KHO vCPU descriptor to populate.
 + *
-+ * KVM Caretaker execution telemetry and debugfs reporting.
++ * Submits a Caretaker job to @session before kvm_arch_vcpu_luo_preserve() runs.
++ * If @session has preserved physical CPUs, assigns the job to the least-loaded
++ * preserved CPU and sets %KVM_VCPU_LUO_FLAG_CARETAKER in @ser->flags so the
++ * architecture hook allocates and populates a Caretaker runtime page.  If
++ * @session has no preserved physical CPUs, returns 0 without setting the flag
++ * so the vCPU is preserved in RAM only.
++ *
++ * Return: 0 on success, or a negative errno on job allocation failure.
 + */
-+
-+#include <linux/cpu_preserve.h>
-+#include <linux/debugfs.h>
-+#include <linux/kernel.h>
-+#include <linux/kexec_handover.h>
-+#include <linux/kho/abi/kvm.h>
-+#include <linux/kvm_caretaker.h>
-+#include <linux/kvm_host.h>
-+#include <linux/oncore.h>
-+#include <linux/seq_file.h>
-+
-+void kvm_caretaker_telemetry_init(struct kvm_caretaker_vcpu *cvcpu,
-+				  struct oncore_session *sess)
++int kvm_caretaker_vcpu_pre_preserve(struct kvm_vcpu *vcpu,
++				    struct liveupdate_session *session,
++				    struct kvm_vcpu_ser *ser)
 +{
-+	struct kvm_caretaker_telemetry_ser *tel;
++	struct oncore_job *job;
 +
-+	tel = kho_alloc_preserve(sizeof(*tel));
-+	if (IS_ERR_OR_NULL(tel))
-+		return;
++	/*
++	 * Submit with no data: the run callback's argument is the caretaker
++	 * control block, which does not exist until the architecture's
++	 * kvm_arch_vcpu_luo_preserve() has allocated it.  It is installed with
++	 * oncore_job_set_data() from _post_preserve(), before activation.
++	 */
++	job = oncore_session_submit_job(session, kvm_arch_vcpu_caretaker_run,
++					NULL);
++	if (IS_ERR(job))
++		return PTR_ERR(job);
++	if (!job)
++		return 0;
 +
-+	memset(tel, 0, sizeof(*tel));
-+	oncore_session_map_buffer(sess, tel, sizeof(*tel));
-+	cpu_preserved_clean_sz(tel, sizeof(*tel));
-+	cvcpu->telemetry = tel;
-+	KHOSER_STORE_PTR(cvcpu->cb->telemetry, tel);
-+}
++	vcpu->caretaker.job = job;
++	ser->flags |= KVM_VCPU_LUO_FLAG_CARETAKER;
 +
-+void kvm_caretaker_telemetry_report(struct kvm_vcpu *vcpu,
-+				    struct kvm_caretaker_cb_ser *cb)
-+{
-+	struct kvm_caretaker_telemetry_ser *tel;
-+
-+	if (!vcpu || !cb)
-+		return;
-+
-+	cpu_preserved_inval(cb);
-+	tel = KHOSER_LOAD_PTR(cb->telemetry);
-+	if (!tel)
-+		return;
-+
-+	cpu_preserved_inval(tel);
-+	vcpu->caretaker.last_telemetry = *tel;
-+
-+	pr_info("caretaker: vcpu %d resume: runs=%llu exits=%llu stalls=%llu last_exit=0x%llx (%llu) rip=0x%llx\n",
-+		vcpu->vcpu_id, tel->total_runs, tel->total_exits,
-+		tel->stall_count, tel->last_exit_reason,
-+		tel->last_exit_reason, tel->last_exit_rip);
-+	if (tel->stall_count) {
-+		pr_info("caretaker: vcpu %d stall info: reason=0x%llx (%llu) rip=0x%llx\n",
-+			vcpu->vcpu_id, tel->stall_exit_reason,
-+			tel->stall_exit_reason, tel->stall_exit_rip);
-+	}
-+}
-+
-+void kvm_caretaker_telemetry_free(struct kvm_vcpu_ser *ser, bool is_incoming)
-+{
-+	struct kvm_caretaker_telemetry_ser *tel;
-+	struct kvm_caretaker_cb_ser *cb;
-+
-+	if (!ser || !(ser->flags & KVM_VCPU_LUO_FLAG_CARETAKER))
-+		return;
-+
-+	cb = KHOSER_LOAD_PTR(ser->cb);
-+	tel = cb ? KHOSER_LOAD_PTR(cb->telemetry) : NULL;
-+	if (tel) {
-+		cb->telemetry.phys = 0;
-+		if (is_incoming)
-+			kho_restore_free(tel);
-+		else
-+			kho_unpreserve_free(tel);
-+	}
-+}
-+
-+static int caretaker_telemetry_show(struct seq_file *m, void *v)
-+{
-+	struct kvm_vcpu *vcpu = m->private;
-+	const struct kvm_caretaker_telemetry_ser *t =
-+		&vcpu->caretaker.last_telemetry;
-+	struct kvm_caretaker_cb_ser *cb = READ_ONCE(vcpu->caretaker.cb);
-+
-+	if (cb) {
-+		struct kvm_caretaker_telemetry_ser *live;
-+
-+		cpu_preserved_inval(cb);
-+		live = KHOSER_LOAD_PTR(cb->telemetry);
-+		if (live) {
-+			cpu_preserved_inval(live);
-+			t = live;
-+		}
-+	}
-+
-+	seq_printf(m, "runs: %llu\n", t->total_runs);
-+	seq_printf(m, "exits: %llu\n", t->total_exits);
-+	seq_printf(m, "stalls: %llu\n", t->stall_count);
-+	seq_printf(m, "last_exit_reason: 0x%llx (%llu)\n",
-+		   t->last_exit_reason, t->last_exit_reason);
-+	seq_printf(m, "last_exit_rip: 0x%llx\n", t->last_exit_rip);
-+	seq_printf(m, "stall_exit_reason: 0x%llx (%llu)\n",
-+		   t->stall_exit_reason, t->stall_exit_reason);
-+	seq_printf(m, "stall_exit_rip: 0x%llx\n", t->stall_exit_rip);
 +	return 0;
 +}
-+DEFINE_SHOW_ATTRIBUTE(caretaker_telemetry);
 +
-+void kvm_caretaker_create_vcpu_debugfs(struct kvm_vcpu *vcpu,
-+				       struct dentry *debugfs_dentry)
++/**
++ * kvm_caretaker_vcpu_post_preserve - Activate the Caretaker On-Core job after arch preserve
++ * @vcpu:     KVM vCPU being preserved.
++ * @session:  Active Live Update session.
++ * @ser:      Serialized KHO vCPU descriptor.
++ * @arch_err: Result of kvm_arch_vcpu_luo_preserve() (non-zero on failure).
++ *
++ * If @arch_err is non-zero, cancels and frees any job created in
++ * kvm_caretaker_vcpu_pre_preserve().  Otherwise, installs @vcpu->caretaker.cb
++ * as the job's run argument, flushes the control block to PoC, and activates
++ * the job on the session's runqueue so the preserved physical CPU begins
++ * executing the vCPU.
++ *
++ * Return: 0 on success, or @arch_err / negative errno on failure.
++ */
++int kvm_caretaker_vcpu_post_preserve(struct kvm_vcpu *vcpu,
++				     struct liveupdate_session *session,
++				     struct kvm_vcpu_ser *ser,
++				     int arch_err)
 +{
-+	if (!debugfs_dentry)
++	struct kvm_caretaker_cb_ser *cb = vcpu->caretaker.cb;
++	struct oncore_job *job = vcpu->caretaker.job;
++	int err;
++
++	if (arch_err) {
++		if (job)
++			oncore_session_cancel_job(session, job);
++		vcpu->caretaker.job = NULL;
++		vcpu->caretaker.cb = NULL;
++		return arch_err;
++	}
++
++	if (!(ser->flags & KVM_VCPU_LUO_FLAG_CARETAKER) || !cb)
++		return 0;
++
++	oncore_job_set_data(job, cb);
++
++	kvm_caretaker_pause(cb);
++	cpu_preserved_clean(cb);
++
++	err = oncore_session_activate_job(session, job);
++	if (err) {
++		oncore_session_cancel_job(session, job);
++		vcpu->caretaker.job = NULL;
++		kvm_caretaker_stop(cb);
++		vcpu->caretaker.cb = NULL;
++		return err;
++	}
++
++	return 0;
++}
++
++/**
++ * kvm_caretaker_vm_pre_retrieve - Stop Caretaker execution before retrieving VM state
++ *
++ * Detaches preserved physical CPU workloads before the incoming kernel creates
++ * the restored KVM VM instance so Caretaker execution stops immediately when
++ * userspace begins reclaiming the VM session.
++ */
++void kvm_caretaker_vm_pre_retrieve(void)
++{
++	int cpu;
++
++	for_each_cpu(cpu, cpu_get_preserved_mask())
++		cpu_preserved_detach_workload(cpu);
++}
++
++/**
++ * kvm_caretaker_vcpu_pre_retrieve - Stop Caretaker execution before retrieving vCPU state
++ * @vcpu: Incoming KVM vCPU being restored.
++ * @ser:  Serialized KHO vCPU descriptor.
++ *
++ * Resolves @ser->cb and invokes kvm_arch_vcpu_luo_pre_retrieve_caretaker() so
++ * the preserved physical CPU stops guest execution and serializes its latest
++ * state into @ser->arch_state before kvm_arch_vcpu_luo_retrieve() reads it.
++ */
++void kvm_caretaker_vcpu_pre_retrieve(struct kvm_vcpu *vcpu,
++				     struct kvm_vcpu_ser *ser)
++{
++	if (ser->flags & KVM_VCPU_LUO_FLAG_CARETAKER)
++		vcpu->caretaker.cb = KHOSER_LOAD_PTR(ser->cb);
++
++	kvm_arch_vcpu_luo_pre_retrieve_caretaker(vcpu, ser);
++}
++
++/**
++ * kvm_caretaker_vcpu_retrieve - Complete Caretaker hardware attachment during vCPU retrieve
++ * @vcpu: Incoming KVM vCPU being restored.
++ * @ser:  Serialized KHO vCPU descriptor.
++ *
++ * Invokes kvm_arch_vcpu_luo_attach_caretaker() after architectural register
++ * state has been restored into @vcpu.
++ */
++void kvm_caretaker_vcpu_retrieve(struct kvm_vcpu *vcpu,
++				 struct kvm_vcpu_ser *ser)
++{
++	kvm_arch_vcpu_luo_attach_caretaker(vcpu, ser);
++}
++
++/**
++ * kvm_caretaker_vcpu_unpreserve - Roll back Caretaker execution on live update cancellation
++ * @vcpu:    Outgoing KVM vCPU being unpreserved.
++ * @session: Live Update session being cancelled.
++ * @ser:     Serialized KHO vCPU descriptor.
++ *
++ * Stops the vCPU on the preserved physical CPU, synchronizes any guest state
++ * updates back into the outgoing @vcpu, frees KHO telemetry buffers, and
++ * cancels the On-Core job.
++ */
++void kvm_caretaker_vcpu_unpreserve(struct kvm_vcpu *vcpu,
++				   struct liveupdate_session *session,
++				   struct kvm_vcpu_ser *ser)
++{
++	if (ser->flags & KVM_VCPU_LUO_FLAG_CARETAKER) {
++		kvm_arch_vcpu_luo_pre_retrieve_caretaker(vcpu, ser);
++		kvm_arch_vcpu_luo_retrieve(vcpu, ser);
++		kvm_arch_vcpu_luo_attach_caretaker(vcpu, ser);
++		kvm_caretaker_telemetry_free(ser, false);
++	}
++
++	if (vcpu->caretaker.job) {
++		oncore_session_cancel_job(session, vcpu->caretaker.job);
++		vcpu->caretaker.job = NULL;
++	}
++	vcpu->caretaker.cb = NULL;
++}
++
++/**
++ * kvm_caretaker_vcpu_finish - Release Caretaker KHO resources after live update completion
++ * @vcpu:    Incoming KVM vCPU (or %NULL on retrieve failure cleanup).
++ * @session: Completed Live Update session.
++ * @ser:     Serialized KHO vCPU descriptor.
++ *
++ * Ensures the Caretaker vCPU has detached and frees KHO-preserved telemetry
++ * buffers in the incoming kernel.
++ */
++void kvm_caretaker_vcpu_finish(struct kvm_vcpu *vcpu,
++			       struct liveupdate_session *session,
++			       struct kvm_vcpu_ser *ser)
++{
++	if (ser->flags & KVM_VCPU_LUO_FLAG_CARETAKER) {
++		kvm_arch_vcpu_luo_pre_retrieve_caretaker(vcpu, ser);
++		kvm_caretaker_telemetry_free(ser, true);
++	}
++
++	if (vcpu)
++		vcpu->caretaker.cb = NULL;
++}
++
+diff --git a/virt/kvm/kvm_luo.c b/virt/kvm/kvm_luo.c
+index f7e259bef4b7..fe30f2d41eb4 100644
+--- a/virt/kvm/kvm_luo.c
++++ b/virt/kvm/kvm_luo.c
+@@ -44,6 +44,7 @@
+  */
+ #include <linux/liveupdate.h>
+ #include <linux/kvm_host.h>
++#include <linux/kvm_caretaker.h>
+ #include <linux/pagemap.h>
+ #include <linux/fdtable.h>
+ #include <linux/file.h>
+@@ -55,6 +56,45 @@
+ #include <linux/kho/abi/kvm.h>
+ #include "kvm_mm.h"
+ 
++struct kvm_kho_folios_ser *kvm_kho_folios_alloc(unsigned int max_folios)
++{
++	struct kvm_kho_folios_ser *kp;
++	size_t sz = struct_size(kp, folios_pa, max_folios);
++
++	kp = kho_alloc_preserve(sz);
++	if (IS_ERR(kp))
++		return kp;
++
++	kp->nr_folios = 0;
++	return kp;
++}
++
++void kvm_kho_folios_unpreserve(struct kvm_kho_folios_ser *kp)
++{
++	unsigned int i;
++
++	if (!kp)
 +		return;
 +
-+	debugfs_create_file("caretaker_telemetry", 0444, debugfs_dentry, vcpu,
-+			    &caretaker_telemetry_fops);
++	for (i = 0; i < kp->nr_folios; i++)
++		kho_unpreserve_folio(page_folio(phys_to_page(kp->folios_pa[i])));
++
++	kho_unpreserve_free(kp);
 +}
++
++void kvm_kho_folios_finish(struct kvm_kho_folios_ser *kp)
++{
++	unsigned int i;
++
++	if (!kp)
++		return;
++
++	for (i = 0; i < kp->nr_folios; i++)
++		kho_restore_free(phys_to_virt(kp->folios_pa[i]));
++
++	kho_restore_free(kp);
++}
++
+ static bool kvm_luo_can_preserve(struct liveupdate_file_handler *handler,
+ 				 struct file *file)
+ {
+@@ -81,6 +121,7 @@ static int kvm_luo_preserve(struct liveupdate_file_op_args *args)
+ 	 * architecture that does not implement the hook.
+ 	 */
+ 	ser->type = 0;
++	ser->kho_folios.phys = 0;
+ 	err = kvm_arch_vm_luo_preserve(kvm, ser);
+ 	if (err) {
+ 		kho_unpreserve_free(ser);
+@@ -104,6 +145,8 @@ static int kvm_luo_retrieve(struct liveupdate_file_op_args *args)
+ 	if (!args->serialized_data)
+ 		return -EINVAL;
+ 
++	kvm_caretaker_vm_pre_retrieve();
++
+ 	ser = phys_to_virt(args->serialized_data);
+ 
+ 	snprintf(fdname, sizeof(fdname), "%d",
+@@ -130,6 +173,7 @@ static int kvm_luo_retrieve(struct liveupdate_file_op_args *args)
+ 
+ err_free_ser:
+ 	kvm_arch_vm_luo_finish(ser);
++	kvm_kho_folios_finish(KHOSER_LOAD_PTR(ser->kho_folios));
+ 	kho_restore_free(ser);
+ 	return err;
+ }
+@@ -150,6 +194,9 @@ static void kvm_luo_unpreserve(struct liveupdate_file_op_args *args)
+ 
+ 	ser = phys_to_virt(args->serialized_data);
+ 	kvm_arch_vm_luo_unpreserve(kvm, ser);
++	if (kvm)
++		kvm->kho_folios = NULL;
++	kvm_kho_folios_unpreserve(KHOSER_LOAD_PTR(ser->kho_folios));
+ 	kho_unpreserve_free(ser);
+ }
+ 
+@@ -165,6 +212,7 @@ static void kvm_luo_finish(struct liveupdate_file_op_args *args)
+ 
+ 	ser = phys_to_virt(args->serialized_data);
+ 	kvm_arch_vm_luo_finish(ser);
++	kvm_kho_folios_finish(KHOSER_LOAD_PTR(ser->kho_folios));
+ 	kho_restore_free(ser);
+ }
+ 
+@@ -217,8 +265,15 @@ static int kvm_vcpu_luo_preserve(struct liveupdate_file_op_args *args)
+ 	ser->vcpu_id = vcpu->vcpu_id;
+ 	ser->flags = 0;
+ 	ser->vm_token = vm_token;
+-
+-	err = kvm_arch_vcpu_luo_preserve(vcpu, ser);
++	ser->arch_state.phys = 0;
++	ser->cb.phys = 0;
++
++	err = kvm_caretaker_vcpu_pre_preserve(vcpu, args->session, ser);
++	if (!err) {
++		err = kvm_arch_vcpu_luo_preserve(vcpu, ser);
++		err = kvm_caretaker_vcpu_post_preserve(vcpu, args->session,
++						       ser, err);
++	}
+ 	mutex_unlock(&vcpu->mutex);
+ 	if (err) {
+ 		kho_unpreserve_free(ser);
+@@ -259,16 +314,19 @@ static int kvm_vcpu_luo_retrieve(struct liveupdate_file_op_args *args)
+ 	}
+ 
+ 	vcpu = file->private_data;
++	kvm_caretaker_vcpu_pre_retrieve(vcpu, ser);
+ 	err = kvm_arch_vcpu_luo_retrieve(vcpu, ser);
+ 	if (err) {
+ 		fput(file);
+ 		goto err_free_ser;
+ 	}
++	kvm_caretaker_vcpu_retrieve(vcpu, ser);
+ 
+ 	args->file = file;
+ 	return 0;
+ 
+ err_free_ser:
++	kvm_caretaker_vcpu_finish(NULL, args->session, ser);
+ 	kvm_arch_vcpu_luo_finish(ser);
+ 	kho_restore_free(ser);
+ 	return err;
+@@ -276,18 +334,24 @@ static int kvm_vcpu_luo_retrieve(struct liveupdate_file_op_args *args)
+ 
+ static void kvm_vcpu_luo_unpreserve(struct liveupdate_file_op_args *args)
+ {
++	struct kvm_vcpu *vcpu = args->file ? args->file->private_data : NULL;
+ 	struct kvm_vcpu_ser *ser;
+ 
+ 	if (WARN_ON_ONCE(!args->serialized_data))
+ 		return;
+ 
+ 	ser = phys_to_virt(args->serialized_data);
++
++	if (vcpu)
++		kvm_caretaker_vcpu_unpreserve(vcpu, args->session, ser);
++
+ 	kvm_arch_vcpu_luo_unpreserve(ser);
+ 	kho_unpreserve_free(ser);
+ }
+ 
+ static void kvm_vcpu_luo_finish(struct liveupdate_file_op_args *args)
+ {
++	struct kvm_vcpu *vcpu = args->file ? args->file->private_data : NULL;
+ 	struct kvm_vcpu_ser *ser;
+ 
+ 	if (args->retrieve_status < 0)
+@@ -297,6 +361,8 @@ static void kvm_vcpu_luo_finish(struct liveupdate_file_op_args *args)
+ 		return;
+ 
+ 	ser = phys_to_virt(args->serialized_data);
++
++	kvm_caretaker_vcpu_finish(vcpu, args->session, ser);
+ 	kvm_arch_vcpu_luo_finish(ser);
+ 	kho_restore_free(ser);
+ }
 diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 4f661c5d2ee2..84b4b96d7916 100644
+index ae91123e1822..4f661c5d2ee2 100644
 --- a/virt/kvm/kvm_main.c
 +++ b/virt/kvm/kvm_main.c
-@@ -4156,6 +4156,7 @@ static void kvm_create_vcpu_debugfs(struct kvm_vcpu *vcpu)
- 	debugfs_create_file("pid", 0444, debugfs_dentry, vcpu,
- 			    &vcpu_get_pid_fops);
+@@ -4521,6 +4521,11 @@ static long kvm_vcpu_ioctl(struct file *filp,
  
-+	kvm_caretaker_create_vcpu_debugfs(vcpu, debugfs_dentry);
- 	kvm_arch_create_vcpu_debugfs(vcpu, debugfs_dentry);
- }
+ 			put_pid(oldpid);
+ 		}
++
++		if (!kvm_caretaker_vcpu_is_attached(vcpu)) {
++			r = -EBUSY;
++			break;
++		}
+ 		vcpu->wants_to_run = !READ_ONCE(vcpu->run->immediate_exit__unsafe);
+ 		r = kvm_arch_vcpu_ioctl_run(vcpu);
+ 		vcpu->wants_to_run = false;
+@@ -4989,6 +4994,8 @@ static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
  #endif
+ 	case KVM_CAP_VCPU_PRESERVE:
+ 		return IS_ENABLED(CONFIG_HAVE_KVM_ARCH_VCPU_PRESERVE);
++	case KVM_CAP_CARETAKER:
++		return IS_ENABLED(CONFIG_KVM_CARETAKER);
+ 	default:
+ 		break;
+ 	}
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
