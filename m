@@ -4,192 +4,162 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 76EBFC982FF
-	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C6491C982EB
+	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Cc:To:
-	Content-Transfer-Encoding:Content-Type:Message-Id:Date:Subject:From:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=0/+loFgTpB5WI64K9N4RnP70y5sRGMjPtenQs1tbBDA=; b=pNpRlr0ibdA3w7WNev3y5lhv7p
-	LNnqBj8uddWJVzm3v4SbplZ5SEC9+4CtwUWQvEq3ft7cgTZ5JMk1d/Ff/IQrVBKGWGz0aIdQQTHYC
-	el7D1ldDHlL08YDFfEuw4LTfecs38iwkrmCJrc1yAmVJmA0yjCN9boy8Nt6+H6f+uC11wXFEsbcd7
-	hWedvlaLhNaIPbAKmshwf7E/uM64CYg+PrfHHwjKSPBas865cQQ6m+mlR1MmGev4J6uDIwkYqEuYC
-	kcxzJSemD8jE8oe4GpUHw5ZEVnYrEDo5+zBWHvOROHmRv1SOX2kR/RmJLShvYOwX7UHEyWXyvZ/JZ
-	q2fK2MBw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
+	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=z+0zDYCWnORIsjY8meHJFhyUNQ+KgCcFKzQxoWC/8Bo=; b=rARD06N6BFNiyA8c8Teqn0Xzwp
+	u97vra+Gg24O/FHcIRIU/uvZjkxfM6NGu46h/MxSFhx6XK/d2uqXdj/nMRFk+ZusTp5FPr6Pr39Jh
+	fEBQbXMLodQIWlv27bNgUaFgmEuhTpKIpMv57y0SHvtW8VgtcG98z/dlq0tx7w/HzSelMFMZ1jOau
+	WDfjouV9z+wtUNwx5WnLrp8wDe/2Q8H+Pdcy0xPEjirpGjlBt2t8Vo2zILsJYJ6hbLLIBYmBT9t1t
+	HQbVvFvihayDl3DA16Rexi/3g5PXTakBG335oZfaJII+GDFL5zCXGgbBkaONB3E+UfP3mfxj8oQOH
+	UGiNIj2Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8O4O-00000000MKq-22cG;
-	Sun, 20 Sep 2026 20:23:28 +0000
-Received: from mail-westus2azlp170120002.outbound.protection.outlook.com ([2a01:111:f403:c007::2] helo=MW6PR02CU001.outbound.protection.outlook.com)
+	id 1x8O4M-00000000MFw-2YE2;
+	Sun, 20 Sep 2026 20:23:26 +0000
+Received: from mail-yx2-x10.google.com ([2607:f8b0:4864:41::10])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x3m0w-00000007wtO-3jVc;
-	Tue, 08 Sep 2026 02:56:56 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FNLKY/TL9ihjVf2a51ONNvLPuDvfAHEdEwlp53OPvKoYISnQQCA1Pe3CuSbYICUW75wUwpeq4vqynBY714801xJh2vGx0V302o5ftHSglYgVDCUyLqlubRlMBRt3M/du4b95mEDv/WmKdIeRZxufODQNX0K/jxby0sWLM/+kSf4LndFxaTIVE44HayniZ9TespyJWKuOrV1dkjkGd7Binj3Nb2Y38hxDZwCAAoabkSD6wvnhgSwv0K2NlbS4hrf/ZCHMNqQsdvJd89lIjHxEUEbqG7xOR7CQ89JaQNBRfuM6GY33kpv5qRbsasVCoNQa5C7mihcg97TM+rEAj2xsxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0/+loFgTpB5WI64K9N4RnP70y5sRGMjPtenQs1tbBDA=;
- b=lTeeySTtb4b/YkEw9x3cLjYc0qImguU9uDMHWRKpgl+r3iioTtN2l5VS0TPf2FqB82Zw8VfxqaA8LnUnUMnEJEOXI40UVp7lobphhdoFnRRsTwiakI8PrpUn4VefNlAvMYTCK8vH4qXM5c3XxfuXO4zQor7tF/YNB2N8H2eZnH+Var5a6JLgL173TsC2Z8d7LBC3Pq1+VqdlkR3g62QHWBruGh7IkdaubyHRPPXGjl5d/TJnpodOEJToSHKRn4hJcOzAp9VdD6n+g7MtGBn6EhgLMKakXPsJzxrdCtTNzU1GfwdSWmnpxGJqfpJqwMIy1OPonfEY9IPzys26aoA3nw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0/+loFgTpB5WI64K9N4RnP70y5sRGMjPtenQs1tbBDA=;
- b=O7zqGrJipndOZP+iH4uMuHVRC/jFfGog+WpzDfJc48qIu1XEmMioqbdt1soIAjrJi9tD2laD1hutZUAdLf6QmmC8EWG8ZPJSGgIXVl/5ZzLy+XnpQJ4FXR6k+8e35lfIafxsS4BC/tKH/fwqoaWpcREealRy0eT0Ij2bKudWYOXRyl/wKtFIdQNhegY+kjBoCKrd7uYIJ87o5ts0MnRt2YEsUJ+RtX2KPa/+wz9rHaBBOpye4ptOGIkLndknWWTy2+oCBMqu1uC0rgV2A5hG4gm+HWonFtSV8vddbrmU/bBfTmLQ269DUCpZ8nZ592kK3WNDA6sPi/FZ5M0e/YMbgg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
- by DM6PR12MB4435.namprd12.prod.outlook.com (2603:10b6:5:2a6::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.382.15; Tue, 8 Sep
- 2026 02:56:27 +0000
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16%5]) with mapi id 15.21.0382.014; Tue, 8 Sep 2026
- 02:56:27 +0000
-From: Zi Yan <ziy@nvidia.com>
-Subject: [PATCH v3 00/14] Remove PG_private by using page/folio->private
- checks instead
-Date: Mon, 07 Sep 2026 22:56:07 -0400
-Message-Id: <20260907-remove-pg_private-v3-0-6ae22f9d9272@nvidia.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/23N0QqCMBTG8VeRXbdwZzm3rnqPiFjzqOciJ5uMQ
- nz3pgQRePn/4PzOzCIGwsjOxcwCJorkhxzyUDDX26FDTk1uBiWosgbNAz59Qj529zFQshNy16I
- B5epWS8fy3RiwpddmXm+5e4qTD+/tRRLr+tWk2NGS4CUXJ3CmflhZKbgMiRqyR+efbOUS/Ai9T
- 0AmpFJaVMY1BvUfsSzLB/oTPbj2AAAA
-X-Change-ID: 20260728-remove-pg_private-cfe926c7f83c
-To: David Hildenbrand <david@kernel.org>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Muchun Song <muchun.song@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
- Michal Hocko <mhocko@suse.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
- Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, 
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
- Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
- Gregory Price <gourry@gourry.net>, 
- Ying Huang <ying.huang@linux.alibaba.com>, 
- Alistair Popple <apopple@nvidia.com>, Johannes Weiner <hannes@cmpxchg.org>, 
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
- Kairui Song <kasong@tencent.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
- Zi Yan <ziy@nvidia.com>, Minchan Kim <minchan@kernel.org>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, "H. Peter Anvin" <hpa@zytor.com>, 
- linux-perf-users@vger.kernel.org, Juergen Gross <jgross@suse.com>, 
- Stefano Stabellini <sstabellini@kernel.org>, 
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, 
- xen-devel@lists.xenproject.org, Eric Biggers <ebiggers@kernel.org>, 
- "Theodore Y. Ts'o" <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>, 
- linux-fscrypt@vger.kernel.org, Oscar Salvador <osalvador@suse.de>, 
- Chao Yu <chao@kernel.org>, linux-f2fs-devel@lists.sourceforge.net, 
- Gao Xiang <xiang@kernel.org>, Jan Kara <jack@suse.cz>, 
- Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, 
- Sandeep Dhavale <dhavale@google.com>, Hongbo Li <hongbohbli@tencent.com>, 
- Chunhai Guo <guochunhai@vivo.com>, linux-erofs@lists.ozlabs.org, 
- linux-fsdevel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Matthew Brost <matthew.brost@intel.com>, 
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
- Byungchul Park <byungchul@sk.com>, 
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
- Wei Xu <weixugc@google.com>, linux-trace-kernel@vger.kernel.org, 
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- linux-nfs@vger.kernel.org, Song Liu <song@kernel.org>, 
- Yu Kuai <yukuai@fygo.io>, Ilya Dryomov <idryomov@gmail.com>, 
- Alex Markuze <amarkuze@redhat.com>, Viacheslav Dubeyko <slava@dubeyko.com>, 
- Li Nan <magiclinan@didiglobal.com>, Xiao Ni <xiao@kernel.org>, 
- linux-raid@vger.kernel.org, ceph-devel@vger.kernel.org, 
- Richard Weinberger <richard@nod.at>, Zhihao Cheng <chengzhihao1@huawei.com>, 
- linux-mtd@lists.infradead.org, Baoquan He <baoquan.he@linux.dev>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
- Dave Young <ruirui.yang@linux.dev>, Shuah Khan <skhan@linuxfoundation.org>, 
- kexec@lists.infradead.org, linux-doc@vger.kernel.org
-X-Mailer: b4 0.15.2
-X-ClientProxiedBy: BL1PR13CA0376.namprd13.prod.outlook.com
- (2603:10b6:208:2c0::21) To IA0PR12MB8374.namprd12.prod.outlook.com
- (2603:10b6:208:40e::7)
+	id 1x8NM1-00000000IU9-3Vzr
+	for kexec@lists.infradead.org;
+	Sun, 20 Sep 2026 19:37:39 +0000
+Received: by mail-yx2-x10.google.com with SMTP id 956f58d0204a3-66e4ab201ecso1902126d50.2
+        for <kexec@lists.infradead.org>; Sun, 20 Sep 2026 12:37:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1789933057; x=1790537857; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=z+0zDYCWnORIsjY8meHJFhyUNQ+KgCcFKzQxoWC/8Bo=;
+        b=L2iUW/Us67G2Fzc5PHU2Gi4Bop0SRs84/4RcFc2JCHjxvJGR24ZZ8Q7M+qgrLJ7Jo7
+         clF9vYDnh3FgOmdlbgFsEbCqdNcVtF/VArAX99IkxICB82yEW7ohca7X004HgvfzQxeL
+         QgatSRcC3dZCgo5k7EuK0CMjvfig49VcecomWiCie5PzhsvJM56fmZm9HXomyyuQ7l6n
+         U5vp9zDlfi621EnM9CjjAYuogQGKrB+k74feURTMoABsnzpLImKEFQdrtXwp4Lgj3t0Z
+         SCQwbwFK3DW/evv9n0Ba3DQnhK34mQJFpvEHVlhf2myKiytTFCTnqH4wwiqVEVgksdBn
+         LTfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789933057; x=1790537857;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=z+0zDYCWnORIsjY8meHJFhyUNQ+KgCcFKzQxoWC/8Bo=;
+        b=Xw/FLpBxEQSs4BI6Z8ZI83TTwbrqEiZ3j7reFAK99oHfadwe7cYcNnwuRMVIWUNM0J
+         M1k8sIw9/4+os/s7lezaYFKyXbDq7eKoOlNrBrvzz+CkuN/u52JRYxyqLL/rgVAlj7vs
+         L6a0LJL1W0JU54hvMqU0k1N24Io6LhWwLI/Yrcdaed8gVQmxs6RARy03+0Eo0OoLdLtZ
+         P2weQi2vZVSl7z3DcNDqXSju6qsu/Gv0aIaF49KMTG8QfQMZX7X5S3pYhZL5LDIWik+2
+         CdI/4ljTNWoXwTO+X3Js3eagxC3Ik+klJl5tDw3z9NqdiXKUivrDkxme0yqmoIMCuqyd
+         rF3A==
+X-Forwarded-Encrypted: i=1; AKwUvByH3pclh59ufuY9ZjSkdGt4LpF9gFVNvezGk5iSsm6UROVDSZykWZQsfKNL4N1c+drdDtJqew==@lists.infradead.org
+X-Gm-Message-State: AFuF++nHXUmEhWsKQBTud9Q6ja+ny2lIxkaJQ9PtYkhE6GLFRcZ/DrIL
+	G3thLI1lLegWWbzzR63pisFlGlnlEMMDSO3tbjyFagqAwsLRMUxQ2v5O9AVNgPLrYIc=
+X-Gm-Gg: AYBFou1PTbvg2Ep0hg743rNryFK1PQd1dVm5cxT6+hTtQRP/LjWoATz5Gy0MPkyLjcm
+	2JVOdXaTqI0rSeFK80qI7ARrl1z9egn5vUYnuCTs48GnDRMSQ6udeQE3jSk3HKexOE/x/GKpFNx
+	Qr2OU8CeZNVcBe+3lRFdxBcz5/R0C2CirIBDx89TAxDZCeb0pJmSzhtonj0P/gLmJpB5Tk16273
+	nDY8ajNNXf0rABsUzoiZrkWc59wMLqcCot4o4c3pNPzKgDqNjeptOKPXm4ttUipyaWjYj5Zw9DK
+	8r2C1tcQFSHB+rI2Fn7BLYf1vrZtrkS3m8ejGTwo76ttUBDkuakeC8R6rfFNvIitN//F9WgJWHr
+	BalXpIPA/F8lhArbu5M4M+VRCYvetVvVeB1huPnEz0xBse2o4jc/pDf8ab7+2Y37+YfxsQclSK1
+	/cq5qLq/TM8AQ5Zcz1tWQLkrL2ZVk0kzDgs9wXt/6Qk/AFIkr2ijdxCJaLXmOzNlHEvnUISg9yJ
+	66xb7x27E7cAnRj6n1M7XtnCnzGerQ011FCyEFU7V5r5M50ah13n9UeDKObDs6B15X/NTpPoy9j
+	78G+kwH7/Cql8A/xLlE=
+X-Received: by 2002:a05:690e:418c:b0:66a:d2cf:1b8e with SMTP id 956f58d0204a3-6717fc7670amr2083970d50.20.1789933056700;
+        Sun, 20 Sep 2026 12:37:36 -0700 (PDT)
+Received: from soleen.c.googlers.com.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-67298f64c7esm2656351d50.2.2026.09.20.12.37.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Sep 2026 12:37:35 -0700 (PDT)
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: linux-kselftest@vger.kernel.org,
+	legion@kernel.org,
+	kees@kernel.org,
+	will@kernel.org,
+	ruanjinjie@huawei.com,
+	atomlin@atomlin.com,
+	rppt@kernel.org,
+	jani.nikula@intel.com,
+	hamzamahfooz@linux.microsoft.com,
+	joey.gouly@arm.com,
+	tglx@kernel.org,
+	nsc@kernel.org,
+	alexandre.chartre@oracle.com,
+	james.morse@arm.com,
+	dianders@chromium.org,
+	bp@alien8.de,
+	jpoimboe@kernel.org,
+	shuah@kernel.org,
+	catalin.marinas@arm.com,
+	linux-kbuild@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	kvmarm@lists.linux.dev,
+	jaredwhite@microsoft.com,
+	johan@kernel.org,
+	pbonzini@redhat.com,
+	mingo@redhat.com,
+	linux-mm@kvack.org,
+	seanjc@google.com,
+	mark.rutland@arm.com,
+	vdonnefort@google.com,
+	tarunsahu@google.com,
+	gshan@redhat.com,
+	skhan@linuxfoundation.org,
+	linux-doc@vger.kernel.org,
+	xur@google.com,
+	djbw@kernel.org,
+	oupton@kernel.org,
+	nogikh@google.com,
+	sumitg@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	zengheng4@huawei.com,
+	peterz@infradead.org,
+	corbet@lwn.net,
+	suzuki.poulose@arm.com,
+	luto@kernel.org,
+	hpa@zytor.com,
+	zhangpengjie2@huawei.com,
+	x86@kernel.org,
+	yuzenghui@huawei.com,
+	jic23@kernel.org,
+	ardb@kernel.org,
+	pasha.tatashin@soleen.com,
+	petr.pavlu@suse.com,
+	ryan.roberts@arm.com,
+	kexec@lists.infradead.org,
+	pratyush@kernel.org,
+	dave.hansen@linux.intel.com,
+	rdunlap@infradead.org,
+	kvm@vger.kernel.org,
+	fuad.tabba@linux.dev,
+	maz@kernel.org,
+	mbenes@suse.cz,
+	jgross@suse.com,
+	seiden@linux.ibm.com,
+	pierre.gondois@arm.com,
+	song@kernel.org,
+	nathan@kernel.org,
+	pmladek@suse.com,
+	graf@amazon.com,
+	chao.gao@intel.com,
+	zhenglifeng1@huawei.com,
+	arnd@arndb.de,
+	sidnayyar@google.com,
+	linux-arm-kernel@lists.infradead.org,
+	vladimir.murzin@arm.com,
+	kas@kernel.org
+Subject: [RFC PATCH 07/46] KVM: luo: Support vCPU file preservation across live updates
+Date: Sun, 20 Sep 2026 15:36:11 -0400
+Message-ID: <20260920193650.3373435-8-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
+In-Reply-To: <20260920193650.3373435-1-pasha.tatashin@soleen.com>
+References: <20260920193650.3373435-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|DM6PR12MB4435:EE_
-X-MS-Office365-Filtering-Correlation-Id: f5a43f69-1177-4e40-a343-08df0d54c6aa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|23010399003|1800799024|921020|6133799003|5023799004|10067099003|56012099006|11063799006|18002099003|3023799007;
-X-Microsoft-Antispam-Message-Info: DFa4PsxrZxBeb2/5wrXjfZDIHi2Fxy5+95qvY6K4FHW1tGYNOuTnl0W80trBtV+yMqR20GMCuTgFr7jFXcNEmVzhUYPAo027yju8Vx8gRqUcB+HEeQIptn/BNF1M2gTahlQnDAjgZ1/7THy+UX6nw2ejea5UInnMW5HhPRVMTAOyfICe/ya5H/gVoTCIMTledsODGZHVBYq7eNHD25KQ2GLYI0p/4QzIptdrvqJ89u4P/Cmg2sYCOS44wtcqJFMO3E4+Gc0QNeSm6FmDKV9HuhPkcOGKidN2Uk3xf/LGljecrN4+ePb0TJHhNXaEzTYCJjHU2sh5N5IJEZKT9DyaF5FLJcUiXZ+Vu5pvTGykaT0fVMnLXB2ykNEDDChCUP/P5gPd+UWNCnPVmW+wG3jY1tjDAJDQZ8Y4Tw9WQ4N3Za69ZGQEHPcoKgWN8EdXlh6QFhDag1F4I13DZvFbkNJDd0wTgp3uAE9sXC9BdB0R6wjKihtaEqmWZlXl+Apul6nfDUVeSp9cnZGCmobaPmOm6VphOHAn+wqKtQvCDuQ/4LvGuWIDl29E9xye9CdVGd8AonXkh3hIaL5KTr72yUqyS4+cD6kawxp5eavsy7pDA09skWDfYkGrCQuWjrwgZazW3JQXALmF24ITJylhDA244hv+dhXgFOM5ftIrMEpncTy1cE49CJOt5h8rABb1CEKW3lf4jTlhiR8tLDtRPWDFFw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(23010399003)(1800799024)(921020)(6133799003)(5023799004)(10067099003)(56012099006)(11063799006)(18002099003)(3023799007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?c0ZkUmxZZjFYTzVXbExEWUhiMGkyWk9VWjc2aE1yTUl4UnVURW1lZWY2RGNW?=
- =?utf-8?B?S3ozbW9vV20xazBDUVFzNlFTRkRYVlJSQUhFS3pDTWVLZGNLQ0prd1M3R2k5?=
- =?utf-8?B?MlZoc0c3ZHFXMGRkSUFaejlWQTNLZm4xYUp5TjZPNGZEczRzUy9CdkdOa3o3?=
- =?utf-8?B?bStheEdaSGlQNnIxTjdZOXU5em0wekVoTjcyR2Q3TStmNWVWZldQSGRVRXRP?=
- =?utf-8?B?VkNHWHdMZFU2ZFBzOEpQNURzYm13dXVBQU5wSmtQQXc4dHBmc0lTeVJKbGJo?=
- =?utf-8?B?TkxMYW5uNnZRUWlweDFORE5sUERQeUtlcTdLeGEyU0RNbTltWndwR3l4L2ZO?=
- =?utf-8?B?V1MybllhMUtlYlY4Z2ZlT0VtOHpkTktwLzJEaFdnVE1lMVdtR3BMT0dlaGly?=
- =?utf-8?B?NXdGWUl0cHR1anRVcy9MV3M4dWNVSWx0QmtmSVZ6NEdYcmVCbUJQaDY4QmRk?=
- =?utf-8?B?alRQOUZYU09PZ2pva2c4YW1FeXhBSDVGMFRzM0ZyYnVtQ2dWemx0bCs5dW5u?=
- =?utf-8?B?eEorTENjbnRKU3ZIWDZKcldBR0p1R2dTV3ZZTVdPUHJuWjZRUUUxWXNlRXJj?=
- =?utf-8?B?eTA2VzFtRjFSMGk0OEZLcDc4QTJIa21hZmJTNUoxZlpzQ1d5V3FvQWxxWWVO?=
- =?utf-8?B?Qi9sczVsU2Z5K0p1TW5GTnJldUtjc0hEOWdSbWtWcGV3RnhtSGlaOUdQWW9x?=
- =?utf-8?B?enhzRWsrMU04bDJzSlUvNm5HY1M0OE1GY29VRjk1Z1FsNDZscVJIMFIyVHBr?=
- =?utf-8?B?bloxSUNCRXJLWnVQMHduZVdEZ2EvVzVvUDJva3Z3UXhaSmpUU1hsZG53aG1D?=
- =?utf-8?B?Tmt0ZmNJQjY4WkpMdng4TWt1MmFHZG1QQi9Wa2dXNzc5NEdWdnNqY09QbUw4?=
- =?utf-8?B?SzJPbUcycVpvQmtiS1c1QmlWRUEzMGM0OGhJVWR6RDh2ZTZNbWppSjlBWGdi?=
- =?utf-8?B?dTkrdmFja25tekpnYXROSFJRK3FtNWU2WFA4TkE2MFBPeTZsak5ZTVkvS0h5?=
- =?utf-8?B?dVZheFRqSUxJSXZSSHc0dG95RXVVVnMyYytBUTNoQ1QrZUZ4M2xuRVZ6Y2F3?=
- =?utf-8?B?T0VGcFprY3lmbkNVSksrUEVBSDkrNTdzS21MSzB2VEVRUFNQNTgzcVQ4S2Nl?=
- =?utf-8?B?Q0VGUEVOTk9MZS9Ebk02azhaQkNrQTM2ZVFWazNBUjBtS3gzdlovR1lGMk1r?=
- =?utf-8?B?V0NKaytEQzMvNlE1UGJJTEFnK01GQ0J0d2lCNkxRM3ZGRWJFUGw0UERDdVEx?=
- =?utf-8?B?UVFMaWV4NERCU1MvZlhIbEJuN1psWXBvSWJvNGIrdW9ZRXlhemZuckltOFVr?=
- =?utf-8?B?NHUvSGp6Y2psbWRhcVdZTkFsSDhWMkJHNEc0eUtESldzRkNmb3NiSFR6akk5?=
- =?utf-8?B?UGRzcHNTaGpFRVMzVUlnSmJ1dzRuL0NkaHVTWk1OSC9qNU5IVk9CQWhvQ3dZ?=
- =?utf-8?B?Sy9aUHJRNWtxWlkza0RqSFVOL0FYRTVINXF1YS9vVTRyM2l4RkZBVXFpSzlk?=
- =?utf-8?B?c0pNTGtVOGRobTBkWHZCeUc0YTFybUt6U3c3UlpObWpoRWlKd3k5MzVXdjZM?=
- =?utf-8?B?cHNFSzFRL0JpV0ZOUzlRY09ldE94Vkg2RzJOZFJ3Y2IyTUVjNURyRzZMNlNw?=
- =?utf-8?B?MStzSG1nZHIvdEZLdVJVQ25FYi8yTkRKaFF1OTVQUlNINXJOVXZJM0JuczhN?=
- =?utf-8?B?SjRIVFJNUEpqNFlsc3FlTWUvaVBodTN0ZVZBb01zYk5YdkJzUDdGNVVtd3RV?=
- =?utf-8?B?eFpKY0g5MTN4NkhxM2ZnZUlpeTBvMTQ1WTg0emFadi9heTRORGF3Y2pqU2do?=
- =?utf-8?B?US9PaTN3VnJTYSt3MHA4R3FsN1JYS0dqTWRpdFdwU0ozNEJKUHd3djNVMzlt?=
- =?utf-8?B?cmRjN2htTDRTajVxc3JhYi9xeHg1WTlzeXc1SU9jWmxTeTNoRW1IWjRRMVBR?=
- =?utf-8?B?VVJCYVRaSVdiL3JYaVplWnJmNjFFUW5zclArN3J4WTF6YUx6WFdDYmdrNlVt?=
- =?utf-8?B?c1krOGFHcVlNblRFUkFESDBEb2tHc2VXNTBVTUY5eTh4dmZieHJpUGQ2K01n?=
- =?utf-8?B?UVlRUWdUOUVSNmhiRmYyU3dLSnJIZ05vRjVCM0RpZWtPRTUwT3NaRHFQQXJL?=
- =?utf-8?B?cGQ4MzAxQ0tPRVhBa3A4dC85bVlNRElEd1JMUUJObkNqRStQeHdzMm1uNThS?=
- =?utf-8?B?c3pQTXNIUCtxS3lKRURaUU9BUDV3TlBhVGxXZHNmZzZHUFczVWFGMjdUN1R3?=
- =?utf-8?B?MDRBZzd4T1VsM0wrTzY1M0hUem5zR0pJRDE2SU1IcS8wVG81TUkzNS9aYzhx?=
- =?utf-8?Q?tqOmrccOv/+NYgACkW?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5a43f69-1177-4e40-a343-08df0d54c6aa
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2026 02:56:27.2502
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: INmokXrarh8Yoor8WTq7CLfba+LlxdubfXkWLLcIL40rtSGcfkO9FCQhfhZ4OJUH
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4435
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260907_195654_920177_CC0BC3B4 
-X-CRM114-Status: GOOD (  13.78  )
-X-Mailman-Approved-At: Sun, 20 Sep 2026 13:23:20 -0700
+X-CRM114-CacheID: sfid-20260920_123737_987377_81FF05FF 
+X-CRM114-Status: GOOD (  22.71  )
+X-Mailman-Approved-At: Sun, 20 Sep 2026 13:23:19 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -204,230 +174,536 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi all,
+Register LUO file handler for KVM vCPU file descriptors to allow
+preserving vCPU state across live updates.
 
-This patchset removes PG_private to make space for upcoming PG_folio
-(reserved as __PG_folio) for identifying pages from a folio (more details
-in Note below). Instead of checking PG_private, all code is changed to
-check page/folio->private != NULL instead.
-
-MM people are cc'd on all patches and subsystem people are cc'd on the
-cover letter and corresponding patches.
-
-Patch 6 is picked up separately in f2fs tree, but since mm-new does not
-have it yet, it is sent for MM testing.
-
-Overview
-===
-Most code uses folio_attach/detach/change_private() functions, so folio
-refcount is increased and decreased when folio->private is set and reset,
-respectively. There is no need to change them.
-
-Changes are needed for exceptional users:
-1. zsmalloc uses PG_private to indicate first component zpdesc page and
-   page->private is used to store zspage in zpdesc. To remove PG_private,
-   is_first_zpdesc() is replaced by pointer comparison.
-
-2. kernel/events/ring_buffer.c stores page order in page->private.
-   Replacing PG_private with page->private != NULL works.
-
-3. drivers/xen/grant-table.c stores xen_page_foreign in page->private,
-   where on 32-bit, a pointer to xen_page_foreign is stored; on 64-bit,
-   page->private is used as xen_page_foreign. PG_private check is replaced
-   by page->private != NULL on 32-bit for xen_page_foreign deallocation.
-   On 64-bit, page->private is cleared unconditionally since {domid=0,
-   gref=0} (xen_page_foreign can be 0) is valid.
-
-4. fs/crypto/crypto.c stores a folio pointer in page->private, PG_private
-   checks are replaced by page->private != NULL.
-
-5. fs/erofs has two different uses:
-
-    5a. folio->private is used to form a reversed list of
-    the outputs of readahead_folio(). readahead_folio_last() is added to
-    output folios in reversed order, so that ->private is no longer needed.
-
-    5b. folio->private is used as an in-flight I/O counter. Convert the
-    code to use folio_attach/detach/get_private() and add bias==1 to the
-    counter to avoid folio->private being zero.
-
-6. fs/nfs/write.c: folio refcount maintenance is in a bigger scope than
-   folio->private. So folio_attach/detach/get_private() is not used.
-   Nothing to change.
-
-7. fs/f2fs uses attach_page_private() to first reset folio->private then
-   immediately sets PAGE_PRIVATE_NOT_POINTER bit on it. Change it to use
-   attach_page_private() to set PAGE_PRIVATE_NOT_POINTER bit directly to
-   avoid folio->private == NULL gap inside set_page_private_##name().
-
-8. hugetlb uses folio_change_private(folio, NULL) without folio refcount
-   maintenance. Change it to folio->private = NULL.
-
-After the above changes, PG_private ops are converted to
-page/folio->private ops.
-
-folio_test_fs_private() is added to check filesystem-only private data by
-excluding swapcache and hugetlb folios, because swapcache folios overlap
-swp_entry_t swap with ->private and hugetlb sets its own flags in
-->private.
-
-Note
-===
-1. KPF_PRIVATE is removed after PG_private is removed.
-
-2. Documentation/mm/hugetlbfs_reserv.rst is outdated, so I did not remove
-   PG_private related text. It should be rewritten.
-
-3. PG_folio is planned to be set on every page from a folio in
-   page_rmappable_folio(), so folios with any order (currently
-   PG_large_rmappable is used to identify >0 order folios, but not order-0
-   folios) can be identified. Then vm_insert_*() can correctly reject all
-   folios and rmap code will only see folios. Eventually, page_folio()
-   will return NULL for non-folio pages by checking PG_folio, but before
-   that all existing users that treat compound pages as folios will need
-   to be converted.
-
-Tests
-===
-1. allmodconfig build passed.
-
-2. zsmalloc is tested using ext4 on a 1GB lz4 zram:
-    2a. zram load + zsmalloc compaction;
-    2b. concurrent zspage migration via memory compaction;
-    2c. confirmed that multi-page zspages actually formed.
-
-    Details: https://github.com/x-y-z/linux-dev/blob/b4/remove-pg_private/test_zsmalloc.md
-
-3. erofs is tested on images created with -C4096 and lz4hc, lzma,
-   deflate, and zstd algorithms:
-   3a. cold read of all files, verify checksums match source;
-   3b. readahead + reclaim/migration race.
-
-   Details: https://github.com/x-y-z/linux-dev/blob/b4/remove-pg_private/test_erofs.md
-
-4. fscrypt is tested on software-encrypted ext4 with writes to exercise
-   bounce pages.
-
-   Details: https://github.com/x-y-z/linux-dev/blob/b4/remove-pg_private/test_fscrypt.md
-
-5. f2fs is tested on an image with inline_data,compress_algorithm=lz4:
-    5a. INLINE_INODE — lots of tiny files;
-    5b. REF_RESOURCE + general writeback — buffered write churn with fsync;
-    5c. ONGOING_MIGRATION — force GC / page migration;
-    5d. ATOMIC_WRITE — atomic-write ioctl path.
-
-    Details: https://github.com/x-y-z/linux-dev/blob/b4/remove-pg_private/test_f2fs.md
-    (I did not run xfstests)
-
-6. MM selftests passed.
-
-LLM use
-===
-Claude was used to form a concrete plan on what code needs to be changed
-and how to change them. The plan was reviewed by Codex until no issue was
-spotted.
-
-Plan is at: https://github.com/x-y-z/linux-dev/blob/b4/remove-pg_private/plan.md
-
-I then followed the plan to make code changes. I did bounce ideas with
-Claude how to change fs/erofs, since I did not like the original idea.
-After each change, I asked Claude to review my code and git commit message.
-I also asked Claude to give me test plans (see above).
-
-At last, Codex was used to review all patches.
-
-Comments and suggestions are welcome. Thanks.
-
-Assisted-by: Claude:claude-opus-4-8
-Assisted-by: Codex:gpt-5
-Signed-off-by: Zi Yan <ziy@nvidia.com>
+Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
-Changes in v3:
-1. changed folio_test_fs_private() to check PG_swapbacked instead of
-   PG_swapcache for excluding swapcache folios. Because folio->private and
-   PG_swapcache are not set as a whole, making folio_test_fs_private() give
-   false positive, whereas PG_swapbacked is always set for swapcache
-   folios.
-2. added __DEF_PAGEFLAG_NAME() to show __PG_folio instead of open code.
-3. f2fs change is picked up at
-   https://git.kernel.org/jaegeuk/f2fs/c/5ad9409a9533, mm-new currently
-   does not have it, so the patch is sent for MM testing purpose.
-- Link to v2: https://patch.msgid.link/20260831-remove-pg_private-v2-0-3668159cd9e8@nvidia.com
+ include/linux/kho/abi/kvm.h |  25 ++++++
+ include/linux/kvm_host.h    |  53 ++++++++++++
+ include/uapi/linux/kvm.h    |   1 +
+ virt/kvm/Kconfig            |   3 +
+ virt/kvm/kvm_luo.c          | 161 +++++++++++++++++++++++++++++++++++-
+ virt/kvm/kvm_main.c         |  58 ++++++++++---
+ 6 files changed, 286 insertions(+), 15 deletions(-)
 
-Changes in v2:
-1. removed is_first_zpdesc() in patch 1 and open coded the checks.
-2. fixed wording in patch 2's commit message and clarified page_private()
-   also works when ring buffer's AUX page order is 0.
-3. removed the empty loop in 64-bit gnttab_pages_set_private().
-4. clarified folio->private will be reset to NULL by
-   fscrypt_free_bounce_page() in the commit message.
-5. clarified why hugetlb needs to restore hugetlb_vmemmap_optimized.
-6. renamed readahead_folio_reverse() readahead_folio_last() and
-   reimplemented readahead_folio_last() by adding a new readahead_control
-   private member, _forward, and a new helper __readahead_advance().
-7. added a bias, 1, to erofs I/O counter, so that folio->private stays non
-   NULL between folio_attach_private() and folio_detach_private().
-8. converted more call sites to use folio_test_fs_private().
-- Link to v1: https://lore.kernel.org/r/20260731-remove-pg_private-v1-0-142c97ba3562@nvidia.com
-
----
-Zi Yan (14):
-      mm/zsmalloc: replace PG_private with pointer comparison
-      perf/ring_buffer: stop using PG_private as AUX page high-order marker
-      xen/grant-table: stop setting PG_private on pages for grant mapping
-      fscrypt: stop setting PG_private on bounce page
-      mm/hugetlb: use direct assignment instead of folio_change_private()
-      f2fs: stop using PG_private
-      erofs: mm/pagemap: add readahead_folio_last() to avoid folio->private
-      erofs: use folio_attach/detach_private() instead of direct assignment
-      mm/page-flags: check page/folio->private instead of PG_private
-      mm/page-flags: introduce folio_test_fs_private()
-      treewide: remove folio_set/clear_private()
-      treewide: replace PagePrivate() with page_private()
-      treewide: adjust comments on PagePrivate and PG_private
-      mm/page-flags: remove PG_private
-
- Documentation/admin-guide/kdump/vmcoreinfo.rst |  2 +-
- Documentation/filesystems/vfs.rst              |  6 +--
- arch/x86/events/intel/bts.c                    |  3 --
- arch/x86/events/intel/pt.c                     |  6 +--
- drivers/md/md-bitmap.c                         |  6 +--
- drivers/xen/balloon.c                          |  5 +++
- drivers/xen/grant-table.c                      | 11 +++--
- fs/ceph/addr.c                                 |  8 ++--
- fs/crypto/crypto.c                             |  2 -
- fs/erofs/data.c                                | 16 ++++---
- fs/erofs/zdata.c                               | 13 ++----
- fs/f2fs/f2fs.h                                 |  8 ++--
- fs/nfs/file.c                                  |  4 +-
- fs/nfs/write.c                                 |  2 -
- fs/proc/page.c                                 |  1 -
- fs/ubifs/file.c                                |  8 ++--
- include/linux/buffer_head.h                    |  6 ---
- include/linux/kernel-page-flags.h              |  1 -
- include/linux/mm.h                             | 35 +++++++++------
- include/linux/mm_types.h                       |  4 +-
- include/linux/page-flags.h                     | 43 +++++++++++++-----
- include/linux/pagemap.h                        | 60 +++++++++++++++++++++-----
- include/trace/events/mmflags.h                 |  3 +-
- include/trace/events/pagemap.h                 |  3 +-
- kernel/events/ring_buffer.c                    |  7 ++-
- kernel/vmcore_info.c                           |  1 -
- mm/huge_memory.c                               |  3 +-
- mm/hugetlb.c                                   |  6 +--
- mm/migrate.c                                   |  3 +-
- mm/page-writeback.c                            |  3 +-
- mm/vmscan.c                                    |  2 +-
- mm/zpdesc.h                                    |  2 +-
- mm/zsmalloc.c                                  | 24 +++--------
- tools/mm/page-types.c                          |  2 -
- 34 files changed, 172 insertions(+), 137 deletions(-)
----
-base-commit: 5f4c0999b2bde1fbbba3c499208b415447ca4c7a
-change-id: 20260728-remove-pg_private-cfe926c7f83c
-
-Best regards,
---  
-Yan, Zi
+diff --git a/include/linux/kho/abi/kvm.h b/include/linux/kho/abi/kvm.h
+index 42074d76e04a..166a0a2f13c8 100644
+--- a/include/linux/kho/abi/kvm.h
++++ b/include/linux/kho/abi/kvm.h
+@@ -39,6 +39,31 @@ struct kvm_luo_ser {
+ /* The compatibility string for KVM VM file handler */
+ #define KVM_LUO_FH_COMPATIBLE	"kvm_vm_luo_v1"
+ 
++/**
++ * enum kvm_vcpu_luo_flags - Flags for KVM vCPU LUO preservation
++ * @KVM_VCPU_LUO_FLAG_CARETAKER: vCPU is preserved with on-core Caretaker execution.
++ */
++enum kvm_vcpu_luo_flags {
++	KVM_VCPU_LUO_FLAG_CARETAKER = BIT(0),
++};
++
++/**
++ * struct kvm_vcpu_ser - Main serialization structure for a KVM vCPU.
++ * @vcpu_id:    The ID of the virtual CPU.
++ * @flags:      Flags for vCPU preservation.
++ * @vm_token:   Token of the associated KVM VM instance.
++ * @arch_state: Preservation pointer to vCPU architectural state.
++ */
++struct kvm_vcpu_ser {
++	u32 vcpu_id;
++	u32 flags;
++	u64 vm_token;
++	DECLARE_KHOSER_PTR(arch_state, struct kvm_vcpu_arch_ser *);
++} __packed;
++
++/* The compatibility string for KVM vCPU file handler */
++#define KVM_VCPU_LUO_FH_COMPATIBLE	"kvm_vcpu_luo_v1"
++
+ /**
+  * struct guest_memfd_luo_folio_ser - Serialization layout for a single folio in guest_memfd.
+  * @pfn:   Page Frame Number of the folio.
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 1217cd6ec6ab..643b941286c2 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1094,7 +1094,9 @@ void kvm_get_kvm(struct kvm *kvm);
+ bool kvm_get_kvm_safe(struct kvm *kvm);
+ void kvm_put_kvm(struct kvm *kvm);
+ bool file_is_kvm(struct file *file);
++bool file_is_kvm_vcpu(struct file *file);
+ struct file *kvm_create_vm_file(unsigned long type, const char *fdname);
++struct file *kvm_create_vcpu_file(struct kvm *kvm, unsigned long id);
+ void kvm_put_kvm_no_destroy(struct kvm *kvm);
+ void kvm_uevent_notify_vm_create(struct kvm *kvm);
+ 
+@@ -2661,4 +2663,55 @@ long kvm_arch_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
+ 				    struct kvm_pre_fault_memory *range);
+ #endif
+ 
++struct kvm_luo_ser;
++struct kvm_vcpu_ser;
++
++#ifdef CONFIG_HAVE_KVM_ARCH_VCPU_PRESERVE
++int kvm_arch_vm_luo_preserve(struct kvm *kvm, struct kvm_luo_ser *ser);
++int kvm_arch_vm_luo_retrieve(struct kvm *kvm, struct kvm_luo_ser *ser);
++void kvm_arch_vm_luo_unpreserve(struct kvm *kvm, struct kvm_luo_ser *ser);
++/*
++ * Unlike unpreserve(), finish() runs after the kexec on a VM that was never
++ * reclaimed, so there is no struct kvm to pass: it may only free what @ser
++ * points at.
++ */
++void kvm_arch_vm_luo_finish(struct kvm_luo_ser *ser);
++
++int kvm_arch_vcpu_luo_preserve(struct kvm_vcpu *vcpu, struct kvm_vcpu_ser *ser);
++int kvm_arch_vcpu_luo_retrieve(struct kvm_vcpu *vcpu, struct kvm_vcpu_ser *ser);
++void kvm_arch_vcpu_luo_unpreserve(struct kvm_vcpu_ser *ser);
++void kvm_arch_vcpu_luo_finish(struct kvm_vcpu_ser *ser);
++#else
++static inline int kvm_arch_vm_luo_preserve(struct kvm *kvm,
++					   struct kvm_luo_ser *ser)
++{
++	return 0;
++}
++
++static inline int kvm_arch_vm_luo_retrieve(struct kvm *kvm,
++					   struct kvm_luo_ser *ser)
++{
++	return 0;
++}
++
++static inline void kvm_arch_vm_luo_unpreserve(struct kvm *kvm,
++					      struct kvm_luo_ser *ser) {}
++static inline void kvm_arch_vm_luo_finish(struct kvm_luo_ser *ser) {}
++
++static inline int kvm_arch_vcpu_luo_preserve(struct kvm_vcpu *vcpu,
++					     struct kvm_vcpu_ser *ser)
++{
++	return 0;
++}
++
++static inline int kvm_arch_vcpu_luo_retrieve(struct kvm_vcpu *vcpu,
++					     struct kvm_vcpu_ser *ser)
++{
++	return 0;
++}
++
++static inline void kvm_arch_vcpu_luo_unpreserve(struct kvm_vcpu_ser *ser) {}
++static inline void kvm_arch_vcpu_luo_finish(struct kvm_vcpu_ser *ser) {}
++#endif
++
+ #endif
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index ac2d77d14963..4b1754050681 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -999,6 +999,7 @@ struct kvm_enable_cap {
+ #define KVM_CAP_S390_HPAGE_2G 249
+ #define KVM_CAP_PPC_COMPAT_CAPS 250
+ #define KVM_CAP_ARM_PMU_V3_STRICT 251
++#define KVM_CAP_VCPU_PRESERVE 252
+ 
+ struct kvm_irq_routing_irqchip {
+ 	__u32 irqchip;
+diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
+index c3c0ee253fc7..fcaf57377e73 100644
+--- a/virt/kvm/Kconfig
++++ b/virt/kvm/Kconfig
+@@ -71,6 +71,9 @@ config KVM_GENERIC_DIRTYLOG_READ_PROTECT
+ config KVM_GENERIC_PRE_FAULT_MEMORY
+        bool
+ 
++config HAVE_KVM_ARCH_VCPU_PRESERVE
++       bool
++
+ config KVM_COMPAT
+        def_bool y
+        depends on KVM && COMPAT && !(S390 || ARM64 || RISCV)
+diff --git a/virt/kvm/kvm_luo.c b/virt/kvm/kvm_luo.c
+index b3bd9bebe17a..f7e259bef4b7 100644
+--- a/virt/kvm/kvm_luo.c
++++ b/virt/kvm/kvm_luo.c
+@@ -35,7 +35,6 @@
+  *
+  * The preservation does not cover:
+  *
+- * - vCPUs and vCPU states
+  * - Memspots / Memory slot layout (memslots)
+  * - Interrupt controllers and IRQ routings
+  * - Coalesced MMIO zones
+@@ -46,6 +45,7 @@
+ #include <linux/liveupdate.h>
+ #include <linux/kvm_host.h>
+ #include <linux/pagemap.h>
++#include <linux/fdtable.h>
+ #include <linux/file.h>
+ #include <linux/err.h>
+ #include <linux/anon_inodes.h>
+@@ -65,6 +65,7 @@ static int kvm_luo_preserve(struct liveupdate_file_op_args *args)
+ {
+ 	struct kvm *kvm = args->file->private_data;
+ 	struct kvm_luo_ser *ser;
++	int err;
+ 
+ 	if (kvm->vm_dead || kvm->vm_bugged)
+ 		return -EINVAL;
+@@ -80,6 +81,11 @@ static int kvm_luo_preserve(struct liveupdate_file_op_args *args)
+ 	 * architecture that does not implement the hook.
+ 	 */
+ 	ser->type = 0;
++	err = kvm_arch_vm_luo_preserve(kvm, ser);
++	if (err) {
++		kho_unpreserve_free(ser);
++		return err;
++	}
+ 
+ 	args->serialized_data = virt_to_phys(ser);
+ 	return 0;
+@@ -111,18 +117,26 @@ static int kvm_luo_retrieve(struct liveupdate_file_op_args *args)
+ 
+ 	kvm = file->private_data;
+ 
++	err = kvm_arch_vm_luo_retrieve(kvm, ser);
++	if (err) {
++		fput(file);
++		goto err_free_ser;
++	}
++
+ 	args->file = file;
+ 
+ 	kvm_uevent_notify_vm_create(kvm);
+ 	return 0;
+ 
+ err_free_ser:
++	kvm_arch_vm_luo_finish(ser);
+ 	kho_restore_free(ser);
+ 	return err;
+ }
+ 
+ static void kvm_luo_unpreserve(struct liveupdate_file_op_args *args)
+ {
++	struct kvm *kvm = args->file ? args->file->private_data : NULL;
+ 	struct kvm_luo_ser *ser;
+ 
+ 	/*
+@@ -135,7 +149,7 @@ static void kvm_luo_unpreserve(struct liveupdate_file_op_args *args)
+ 		return;
+ 
+ 	ser = phys_to_virt(args->serialized_data);
+-
++	kvm_arch_vm_luo_unpreserve(kvm, ser);
+ 	kho_unpreserve_free(ser);
+ }
+ 
+@@ -150,7 +164,7 @@ static void kvm_luo_finish(struct liveupdate_file_op_args *args)
+ 		return;
+ 
+ 	ser = phys_to_virt(args->serialized_data);
+-
++	kvm_arch_vm_luo_finish(ser);
+ 	kho_restore_free(ser);
+ }
+ 
+@@ -168,6 +182,139 @@ static struct liveupdate_file_handler kvm_luo_handler = {
+ 	.compatible = KVM_LUO_FH_COMPATIBLE,
+ };
+ 
++static bool kvm_vcpu_luo_can_preserve(struct liveupdate_file_handler *handler,
++				      struct file *file)
++{
++	return file_is_kvm_vcpu(file);
++}
++
++static int kvm_vcpu_luo_preserve(struct liveupdate_file_op_args *args)
++{
++	struct kvm_vcpu *vcpu = args->file->private_data;
++	struct kvm_vcpu_ser *ser;
++	struct file *kvm_file;
++	u64 vm_token;
++	int err;
++
++	kvm_file = get_file_active(&vcpu->kvm->vm_file);
++	if (!kvm_file)
++		return -ENOENT;
++
++	err = liveupdate_get_token_outgoing(args->session, kvm_file, &vm_token);
++	fput(kvm_file);
++	if (err)
++		return err;
++
++	if (mutex_lock_killable(&vcpu->mutex))
++		return -EINTR;
++
++	ser = kho_alloc_preserve(sizeof(*ser));
++	if (IS_ERR(ser)) {
++		mutex_unlock(&vcpu->mutex);
++		return PTR_ERR(ser);
++	}
++
++	ser->vcpu_id = vcpu->vcpu_id;
++	ser->flags = 0;
++	ser->vm_token = vm_token;
++
++	err = kvm_arch_vcpu_luo_preserve(vcpu, ser);
++	mutex_unlock(&vcpu->mutex);
++	if (err) {
++		kho_unpreserve_free(ser);
++		return err;
++	}
++
++	args->serialized_data = virt_to_phys(ser);
++	return 0;
++}
++
++static int kvm_vcpu_luo_retrieve(struct liveupdate_file_op_args *args)
++{
++	struct kvm_vcpu_ser *ser;
++	struct file *vm_file, *file;
++	struct kvm_vcpu *vcpu;
++	int err;
++
++	if (!args->serialized_data)
++		return -EINVAL;
++
++	ser = phys_to_virt(args->serialized_data);
++
++	err = liveupdate_get_file_incoming(args->session, ser->vm_token, &vm_file);
++	if (err)
++		goto err_free_ser;
++
++	if (!file_is_kvm(vm_file)) {
++		fput(vm_file);
++		err = -EINVAL;
++		goto err_free_ser;
++	}
++
++	file = kvm_create_vcpu_file(vm_file->private_data, ser->vcpu_id);
++	fput(vm_file);
++	if (IS_ERR(file)) {
++		err = PTR_ERR(file);
++		goto err_free_ser;
++	}
++
++	vcpu = file->private_data;
++	err = kvm_arch_vcpu_luo_retrieve(vcpu, ser);
++	if (err) {
++		fput(file);
++		goto err_free_ser;
++	}
++
++	args->file = file;
++	return 0;
++
++err_free_ser:
++	kvm_arch_vcpu_luo_finish(ser);
++	kho_restore_free(ser);
++	return err;
++}
++
++static void kvm_vcpu_luo_unpreserve(struct liveupdate_file_op_args *args)
++{
++	struct kvm_vcpu_ser *ser;
++
++	if (WARN_ON_ONCE(!args->serialized_data))
++		return;
++
++	ser = phys_to_virt(args->serialized_data);
++	kvm_arch_vcpu_luo_unpreserve(ser);
++	kho_unpreserve_free(ser);
++}
++
++static void kvm_vcpu_luo_finish(struct liveupdate_file_op_args *args)
++{
++	struct kvm_vcpu_ser *ser;
++
++	if (args->retrieve_status < 0)
++		return;
++
++	if (!args->serialized_data)
++		return;
++
++	ser = phys_to_virt(args->serialized_data);
++	kvm_arch_vcpu_luo_finish(ser);
++	kho_restore_free(ser);
++}
++
++static const struct liveupdate_file_ops kvm_vcpu_luo_file_ops = {
++	.can_preserve = kvm_vcpu_luo_can_preserve,
++	.preserve = kvm_vcpu_luo_preserve,
++	.retrieve = kvm_vcpu_luo_retrieve,
++	.unpreserve = kvm_vcpu_luo_unpreserve,
++	.finish = kvm_vcpu_luo_finish,
++	.owner = THIS_MODULE,
++};
++
++static struct liveupdate_file_handler kvm_vcpu_luo_handler = {
++	.ops = &kvm_vcpu_luo_file_ops,
++	.compatible = KVM_VCPU_LUO_FH_COMPATIBLE,
++};
++
+ int kvm_luo_init(void)
+ {
+ 	int err = liveupdate_register_file_handler(&kvm_luo_handler);
+@@ -177,11 +324,19 @@ int kvm_luo_init(void)
+ 		return err;
+ 	}
+ 
++	err = liveupdate_register_file_handler(&kvm_vcpu_luo_handler);
++	if (err && err != -EOPNOTSUPP) {
++		pr_err("Could not register kvm_vcpu_luo handler: %pe\n", ERR_PTR(err));
++		liveupdate_unregister_file_handler(&kvm_luo_handler);
++		return err;
++	}
++
+ 	return 0;
+ }
+ 
+ void kvm_luo_exit(void)
+ {
++	liveupdate_unregister_file_handler(&kvm_vcpu_luo_handler);
+ 	liveupdate_unregister_file_handler(&kvm_luo_handler);
+ }
+ 
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 4b03a65a8428..ae91123e1822 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -4121,12 +4121,12 @@ static struct file_operations kvm_vcpu_fops = {
+ /*
+  * Allocates an inode for the vcpu.
+  */
+-static int create_vcpu_fd(struct kvm_vcpu *vcpu)
++static struct file *create_vcpu_file(struct kvm_vcpu *vcpu)
+ {
+ 	char name[8 + 1 + ITOA_MAX_LEN + 1];
+ 
+ 	snprintf(name, sizeof(name), "kvm-vcpu:%d", vcpu->vcpu_id);
+-	return anon_inode_getfd(name, &kvm_vcpu_fops, vcpu, O_RDWR | O_CLOEXEC);
++	return anon_inode_getfile(name, &kvm_vcpu_fops, vcpu, O_RDWR);
+ }
+ 
+ #ifdef __KVM_HAVE_ARCH_VCPU_DEBUGFS
+@@ -4163,11 +4163,12 @@ static void kvm_create_vcpu_debugfs(struct kvm_vcpu *vcpu)
+ /*
+  * Creates some virtual cpus.  Good luck creating more than one.
+  */
+-static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, unsigned long id)
++struct file *kvm_create_vcpu_file(struct kvm *kvm, unsigned long id)
+ {
+-	int r;
+ 	struct kvm_vcpu *vcpu;
++	struct file *file;
+ 	struct page *page;
++	int r;
+ 
+ 	/*
+ 	 * KVM tracks vCPU IDs as 'int', be kind to userspace and reject
+@@ -4179,23 +4180,23 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, unsigned long id)
+ 	 */
+ 	BUILD_BUG_ON(KVM_MAX_VCPU_IDS > INT_MAX);
+ 	if (id >= KVM_MAX_VCPU_IDS)
+-		return -EINVAL;
++		return ERR_PTR(-EINVAL);
+ 
+ 	mutex_lock(&kvm->lock);
+ 	if (kvm->created_vcpus >= kvm->max_vcpus) {
+ 		mutex_unlock(&kvm->lock);
+-		return -EINVAL;
++		return ERR_PTR(-EINVAL);
+ 	}
+ 
+ 	if (test_bit(id, kvm->vcpu_ids)) {
+ 		mutex_unlock(&kvm->lock);
+-		return -EEXIST;
++		return ERR_PTR(-EEXIST);
+ 	}
+ 
+ 	r = kvm_arch_vcpu_precreate(kvm, id);
+ 	if (r) {
+ 		mutex_unlock(&kvm->lock);
+-		return r;
++		return ERR_PTR(r);
+ 	}
+ 
+ 	kvm->created_vcpus++;
+@@ -4259,9 +4260,11 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, unsigned long id)
+ 	 */
+ 	mutex_lock(&vcpu->mutex);
+ 	kvm_get_kvm(kvm);
+-	r = create_vcpu_fd(vcpu);
+-	if (r < 0)
++	file = create_vcpu_file(vcpu);
++	if (IS_ERR(file)) {
++		r = PTR_ERR(file);
+ 		goto kvm_put_xa_erase;
++	}
+ 
+ 	/*
+ 	 * Pairs with smp_rmb() in kvm_get_vcpu.  Store the vcpu
+@@ -4274,7 +4277,7 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, unsigned long id)
+ 	mutex_unlock(&kvm->lock);
+ 	kvm_arch_vcpu_postcreate(vcpu);
+ 	kvm_create_vcpu_debugfs(vcpu);
+-	return r;
++	return file;
+ 
+ kvm_put_xa_erase:
+ 	mutex_unlock(&vcpu->mutex);
+@@ -4295,7 +4298,30 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, unsigned long id)
+ 	kvm->created_vcpus--;
+ 	__clear_bit(id, kvm->vcpu_ids);
+ 	mutex_unlock(&kvm->lock);
+-	return r;
++	return ERR_PTR(r);
++}
++
++static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, unsigned long id)
++{
++	struct file *file;
++	int fd;
++
++	/*
++	 * Reserve the fd up front: kvm_create_vcpu_file() publishes the vCPU
++	 * in kvm->vcpu_array, and there is no clean way to unwind that.
++	 */
++	fd = get_unused_fd_flags(O_RDWR | O_CLOEXEC);
++	if (fd < 0)
++		return fd;
++
++	file = kvm_create_vcpu_file(kvm, id);
++	if (IS_ERR(file)) {
++		put_unused_fd(fd);
++		return PTR_ERR(file);
++	}
++
++	fd_install(fd, file);
++	return fd;
+ }
+ 
+ static int kvm_vcpu_ioctl_set_sigmask(struct kvm_vcpu *vcpu, sigset_t *sigset)
+@@ -4961,6 +4987,8 @@ static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
+ 	case KVM_CAP_GUEST_MEMFD_FLAGS:
+ 		return kvm_gmem_get_supported_flags(kvm);
+ #endif
++	case KVM_CAP_VCPU_PRESERVE:
++		return IS_ENABLED(CONFIG_HAVE_KVM_ARCH_VCPU_PRESERVE);
+ 	default:
+ 		break;
+ 	}
+@@ -5506,6 +5534,12 @@ bool file_is_kvm(struct file *file)
+ }
+ EXPORT_SYMBOL_FOR_KVM_INTERNAL(file_is_kvm);
+ 
++bool file_is_kvm_vcpu(struct file *file)
++{
++	return file && file->f_op == &kvm_vcpu_fops;
++}
++EXPORT_SYMBOL_FOR_KVM_INTERNAL(file_is_kvm_vcpu);
++
+ struct file *kvm_create_vm_file(unsigned long type, const char *fdname)
+ {
+ 	struct kvm *kvm = kvm_create_vm(type, fdname);
+-- 
+2.55.0.1082.g2b9226bbc0-goog
 
 
