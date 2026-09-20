@@ -4,88 +4,162 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 32382C982F0
-	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D60BEC982D8
+	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
+	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=tlRuK8oy4p5tnkX98fUn+MG7+GepzpfRQqepp1VDdiI=; b=Psz6UiYFdRsKTOEnzozWYqNjy5
-	T+LGBDYlepXe9/0C9FnABFr5uMfTbuesZVOs9nmOhII4CRWpYOtVF/lclWj5yJT0Y6iPadlScUfPj
-	xlxOOAW/MMPQ2HyY3w1nojJDAAGkKRBqmaUOJ8ryPfLkAfVBqUJWAXXri4Zv4fpc9UraqMM2Foiy0
-	GctjIYy9LBDdA7laKzD5blXMr+m0lGHsnqc/YQ9G9BV+JIge3JjOIM98sk5npZGVczPxVGpX0vEMt
-	Fq0QeIq7Nm1pR1mswjCtPASXu8LlZhhq6o6B9u1fdCYM8n23LipnVKKzavX4XPJAee9GuD45lMK7M
-	0Fr7y8mA==;
+	bh=748fu/RuSuWEHxLL4+C7te7l41PPhxbrrdqn5kAp7do=; b=CnTJrIwvs61pstBPnSjOxLPoaN
+	lmJ2Wr4BoAQJPrwMQ4FvpXAKhP8/SDlu6P23F/40fofDd1/qPs0GSRDv+C+Z3++Sr1WqNPlWM3dwt
+	Ny0B3Tzr9kK84V7aBn81ohp6S3hNNR0m7WmPjkYyz8iuHtW9GiM142foXVZ+ANV7aJD03KrHVM4JK
+	N0rJd3YivwR62y++PhkYqRkBlHRd37VwPjzXemyMfjOrgDKGIkf83pKOmiabwO7KR6Z3oR+4ZF1J+
+	3v6Cq44Cxw8q6je47IRsxWeb5+f5KECoNc22dL6ZSGDgzHzpheeoQDXT1O4eqDYk/aiXsVJC/GZbe
+	f2qqGBPQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8O4r-00000000NY0-2GnY;
-	Sun, 20 Sep 2026 20:23:57 +0000
-Received: from canpmsgout07.his.huawei.com ([113.46.200.222])
+	id 1x8O4s-00000000NZm-1Ecd;
+	Sun, 20 Sep 2026 20:23:58 +0000
+Received: from mail-yx2-x10.google.com ([2607:f8b0:4864:41::10])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x88cE-0000000GqNE-0cc9;
-	Sun, 20 Sep 2026 03:53:24 +0000
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=tlRuK8oy4p5tnkX98fUn+MG7+GepzpfRQqepp1VDdiI=;
-	b=rF0Ks1OVp5HjgPVdwO3vQJK5rTKW6B2t+TaIafWOspsRr/x2OEimEnA3Y1/krDlFP7+YZPvyG
-	wJIUAx17deeeASsWoW/3sf4A4bz6SS6FzoZgdnjTbEsn+xbijr4z/yaIvZIjme1/WUcWKbfgM22
-	Tv7akItYW11zMpSyr8HODo4=
-Received: from mail.maildlp.com (unknown [172.19.162.92])
-	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4hnXHF4FgQzLlSh;
-	Sun, 20 Sep 2026 11:42:17 +0800 (CST)
-Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8B33A40565;
-	Sun, 20 Sep 2026 11:53:18 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- kwepemk200008.china.huawei.com (7.202.194.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45; Sun, 20 Sep 2026 11:53:16 +0800
-Message-ID: <a6772b15-0229-40f3-be55-0d9ed229c0a1@huawei.com>
-Date: Sun, 20 Sep 2026 11:53:15 +0800
+	id 1x8NN4-00000000IsU-3lgi
+	for kexec@lists.infradead.org;
+	Sun, 20 Sep 2026 19:38:44 +0000
+Received: by mail-yx2-x10.google.com with SMTP id 00721157ae682-85d43ac608dso16455427b3.3
+        for <kexec@lists.infradead.org>; Sun, 20 Sep 2026 12:38:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1789933122; x=1790537922; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=748fu/RuSuWEHxLL4+C7te7l41PPhxbrrdqn5kAp7do=;
+        b=axQsB8AEKwGzeAzmoI1TCTKcdjcKhc3DLhcVgzCj/cgb6vW/UC5A6T1YFqKRbIFwa1
+         Gl7r2uJFYSVn2tbwNr2crxT0LJ2La+k98OdL1rTkuwh6zUqdd2wMRcK0n100shIO3N0b
+         vltfogh/GQ9l6ulwbmJCDcTWbnA5rawZNICkO6xJb3BnmVVnDJTfTzvGWifnNxIdWyiL
+         uQsEMAJpe6v4bIXTzdS58MLknmpsS0iClFvWub+Dmio2EN5IaXAiMj+Gv2aBbWaPkYJA
+         2Ziu8WQ994jmPgpSp4TZpdEm46xis47i6h4NyDyz0wg2B9Kqno0PCyER4Ya5m0xxesNZ
+         SzUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789933122; x=1790537922;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=748fu/RuSuWEHxLL4+C7te7l41PPhxbrrdqn5kAp7do=;
+        b=IBVmZzgSVaZgfXqIZQ7fN5eP5Uh8JQM4SeR+PWXcUyaRKZ1FuZIY6ZtyeRVkF8WfgW
+         1brHqePGQTfa6Jhi13BN+q8uLmtH3+mtGZv9c1hw8K5OLmV97FDHG9umpv66OQ2456+j
+         fX44Io2tl0aumtqoXxO/aZpug2Mt4tpMgVhPE98Y7Dzx28KFTl6Lg/OR/wR1nFxqMSN0
+         LIgo5zmFyZ9EUSrPjQbf3YIIEvLSwJegp/8fubaaZ+p+W5/Zf4cT5+EtuH2zfsuAfJAT
+         AZiFQnLjVJy8ZxfT/at1NQ15UFtto9I2guzFV5+mPIfc+3V03ez+96aN2pd4EdpOuVYk
+         RtLw==
+X-Forwarded-Encrypted: i=1; AKwUvBynCBUa8oP2IGEm1MHL7atfzRqrmzpF5HZN3ifaNTfoAFvMoTvaaDVWC9pRBAST1Qfc+tzo7g==@lists.infradead.org
+X-Gm-Message-State: AFuF++kMPa1Q4eomMUe2RsK0Mf09o1lJnt09pDD2oyoOX64FKOFu2Iiz
+	SzdZFrBUix7ay4eQ24iOMiG3t9RcDy2rDltpCVr9WkR+bkqbxtUURwPLTN+8I1yN3Po=
+X-Gm-Gg: AYBFou3YvGG3Ke6E9ZDqfWrDHPdrwE1nKnB/TiRTlaSDLQuQpnvDhBPJUUK946CUiqn
+	oQvOZthHAYrZl4CeaLPONAck24/0QTiEToHwtbEhhgdLweWZn14Z34KdMBrqsRPpNoZNVwjk/S/
+	jU76FcL/xuNNPl/UWS2FXEoCBqxKvNUoTVL9oUCOlec8H9EtU96FkIoPMw35V2aVK2Jbp05yipR
+	gCkXsXIPHxb6KegHz1Zz+Ioan4M0Qw7ksvO2vW8AdZkoMucZ6h3ut5Kw507xWPFgHsVxTMsbgTb
+	KotyC18o8kmNFmK8aL95eJR7wCsYUHpYjkmSykj0cby5/54HibWxvJk1kKFfJqjfkcAbRtO7Amf
+	vCWDd8IFG/ZPwZnwVPJn+1VB3trNjvIIcmDVEeZF8A1XSFv6CmOVj5bvQ/FiMh/A7LO67v+UJhG
+	Uy+cIuLZS4AMfH4qK00GCV5WEk6/hNEqnPBE7wnJnsaXSpFkOUGlNASsqI3Lq9/cudEqB/tj34O
+	TGUI/+7hE8hJ6upTc2+gdgn86ji8n2trq70pjNgEGkYOvI65tdQf/WyfUycfV+tcHQxetghgbc/
+	zI8JgsWYNDUC7BvdGhN6XR8wHE24dzk=
+X-Received: by 2002:a05:690c:6a0d:b0:857:f33:6f1d with SMTP id 00721157ae682-897311d51a6mr25294217b3.6.1789933121962;
+        Sun, 20 Sep 2026 12:38:41 -0700 (PDT)
+Received: from soleen.c.googlers.com.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-89a41521d6csm18803647b3.1.2026.09.20.12.38.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Sep 2026 12:38:41 -0700 (PDT)
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: linux-kselftest@vger.kernel.org,
+	legion@kernel.org,
+	kees@kernel.org,
+	will@kernel.org,
+	ruanjinjie@huawei.com,
+	atomlin@atomlin.com,
+	rppt@kernel.org,
+	jani.nikula@intel.com,
+	hamzamahfooz@linux.microsoft.com,
+	joey.gouly@arm.com,
+	tglx@kernel.org,
+	nsc@kernel.org,
+	alexandre.chartre@oracle.com,
+	james.morse@arm.com,
+	dianders@chromium.org,
+	bp@alien8.de,
+	jpoimboe@kernel.org,
+	shuah@kernel.org,
+	catalin.marinas@arm.com,
+	linux-kbuild@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	kvmarm@lists.linux.dev,
+	jaredwhite@microsoft.com,
+	johan@kernel.org,
+	pbonzini@redhat.com,
+	mingo@redhat.com,
+	linux-mm@kvack.org,
+	seanjc@google.com,
+	mark.rutland@arm.com,
+	vdonnefort@google.com,
+	tarunsahu@google.com,
+	gshan@redhat.com,
+	skhan@linuxfoundation.org,
+	linux-doc@vger.kernel.org,
+	xur@google.com,
+	djbw@kernel.org,
+	oupton@kernel.org,
+	nogikh@google.com,
+	sumitg@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	zengheng4@huawei.com,
+	peterz@infradead.org,
+	corbet@lwn.net,
+	suzuki.poulose@arm.com,
+	luto@kernel.org,
+	hpa@zytor.com,
+	zhangpengjie2@huawei.com,
+	x86@kernel.org,
+	yuzenghui@huawei.com,
+	jic23@kernel.org,
+	ardb@kernel.org,
+	pasha.tatashin@soleen.com,
+	petr.pavlu@suse.com,
+	ryan.roberts@arm.com,
+	kexec@lists.infradead.org,
+	pratyush@kernel.org,
+	dave.hansen@linux.intel.com,
+	rdunlap@infradead.org,
+	kvm@vger.kernel.org,
+	fuad.tabba@linux.dev,
+	maz@kernel.org,
+	mbenes@suse.cz,
+	jgross@suse.com,
+	seiden@linux.ibm.com,
+	pierre.gondois@arm.com,
+	song@kernel.org,
+	nathan@kernel.org,
+	pmladek@suse.com,
+	graf@amazon.com,
+	chao.gao@intel.com,
+	zhenglifeng1@huawei.com,
+	arnd@arndb.de,
+	sidnayyar@google.com,
+	linux-arm-kernel@lists.infradead.org,
+	vladimir.murzin@arm.com,
+	kas@kernel.org
+Subject: [RFC PATCH 18/46] liveupdate: cpu_preserve: Add LUO file handler for preserved physical CPUs
+Date: Sun, 20 Sep 2026 15:36:22 -0400
+Message-ID: <20260920193650.3373435-19-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
+In-Reply-To: <20260920193650.3373435-1-pasha.tatashin@soleen.com>
+References: <20260920193650.3373435-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 17/17] arm64: crash: Add crash hotplug support
-To: <sashiko-reviews@lists.linux.dev>, <tglx@kernel.org>,
-	<ritesh.list@gmail.com>, <mark.rutland@arm.com>, <chao.gao@intel.com>,
-	<kas@kernel.org>, <linuxppc-dev@lists.ozlabs.org>, <yeoreum.yun@arm.com>,
-	<x86@kernel.org>, <baoquan.he@linux.dev>, <hbathini@linux.ibm.com>,
-	<sourabhjain@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <jbouron@amazon.com>,
-	<dave.hansen@linux.intel.com>, <rafael@kernel.org>, <coxu@redhat.com>,
-	<akpm@linux-foundation.org>, <gshan@redhat.com>, <vishal.l.verma@intel.com>,
-	<ruirui.yang@linux.dev>, <seanjc@google.com>, <bgwin@google.com>,
-	<chenhuacai@kernel.org>, <pasha.tatashin@soleen.com>, <kees@kernel.org>,
-	<me@linux.beauty>, <npiggin@gmail.com>, <maddy@linux.ibm.com>,
-	<thuth@redhat.com>, <graf@amazon.com>, <palmer@rivosinc.com>,
-	<chleroy@kernel.org>, <guodongtai@kylinos.cn>, <zhangtianyang@loongson.cn>,
-	<eric.devolder@oracle.com>, <catalin.marinas@arm.com>, <leitao@debian.org>,
-	<driver-core@lists.linux.dev>, <piliu@redhat.com>, <kernel@xen0n.name>,
-	<dakr@kernel.org>, <pratyush@kernel.org>, <sshegde@linux.ibm.com>,
-	<tangyouling@kylinos.cn>, <adityag@linux.ibm.com>, <rppt@kernel.org>,
-	<mclapinski@google.com>, <takahiro.akashi@linaro.org>,
-	<linux-arm-kernel@lists.infradead.org>, <will@kernel.org>, <ardb@kernel.org>,
-	<gregkh@linuxfoundation.org>, <lizhengyu3@huawei.com>, <linux-mm@kvack.org>,
-	<james.morse@arm.com>, <linux-fsdevel@vger.kernel.org>, <mpe@ellerman.id.au>,
-	<mingo@redhat.com>, <bp@alien8.de>, <blum@kernel.org>, <robh@kernel.org>,
-	<hpa@zytor.com>, <liukexin@kylinos.cn>, <maqianga@uniontech.com>
-CC: <kexec@lists.infradead.org>
-References: <20260918100442.3841135-1-ruanjinjie@huawei.com>
- <20260918100442.3841135-18-ruanjinjie@huawei.com>
- <20260918103657.0CC341F000FF@smtp.kernel.org>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20260918103657.0CC341F000FF@smtp.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.109.254]
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemk200008.china.huawei.com (7.202.194.74)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260919_205322_505172_C419F599 
-X-CRM114-Status: GOOD (  18.05  )
-X-Mailman-Approved-At: Sun, 20 Sep 2026 13:23:20 -0700
+X-CRM114-CacheID: sfid-20260920_123842_958420_0558FF5B 
+X-CRM114-Status: GOOD (  15.29  )
+X-Mailman-Approved-At: Sun, 20 Sep 2026 13:23:19 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,84 +174,243 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Implement the LUO file handler (cpu_preserve_handler) and early boot
+incoming CPU adoption for /sys/devices/system/cpu/cpuX/preserve fds.
 
+Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+---
+ kernel/liveupdate/cpu_preserve.c | 189 ++++++++++++++++++++++++++++++-
+ 1 file changed, 185 insertions(+), 4 deletions(-)
 
-在 2026/9/18 18:36, sashiko-bot@kernel.org 写道:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] kexec: arch_crash_get_elfcorehdr_size() exports undersized buffer when MEMORY_HOTPLUG is disabled
-> --
-> 
-> commit fd293f9cfd1a12554d9352f4ad58fc9f85721fa3
-> Author: Jinjie Ruan <ruanjinjie@huawei.com>
-> arm64: crash: Add crash hotplug support
-> 
-> This commit introduces kernel mechanisms to update only the elfcorehdr
-> on memory hotplug events for arm64. It adds ARCH_SUPPORTS_CRASH_HOTPLUG 
-> and implements arch-specific functions to handle memory hotplug, avoiding
-> full kdump image reloads from userspace.
-> 
-> Link: https://lore.kernel.org/all/20240529133446.28446-1-Jonathan.Cameron@huawei.com/
-> 
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index b5a51b0ef9440..96de2660b1cbb 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -1720,6 +1720,9 @@ config ARCH_DEFAULT_CRASH_DUMP
->>  config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
->>  	def_bool CRASH_RESERVE
->>  
->> +config ARCH_SUPPORTS_CRASH_HOTPLUG
->> +	def_bool y
->> +
-> 
-> [Severity: High]
-> Does unconditionally enabling ARCH_SUPPORTS_CRASH_HOTPLUG here expose an
-> undersized buffer to userspace when CONFIG_MEMORY_HOTPLUG is disabled?
-> 
-> Since CONFIG_HOTPLUG_CPU natively selects CONFIG_CRASH_HOTPLUG on
-> architectures that support it, having this default to 'y' allows
-> CRASH_HOTPLUG to be active even without MEMORY_HOTPLUG. This leads to the
-> size calculation issue below.
-> 
-> [ ... ]
->> diff --git a/arch/arm64/kernel/crash.c b/arch/arm64/kernel/crash.c
->> new file mode 100644
->> index 0000000000000..08dc9b952498e
->> --- /dev/null
->> +++ b/arch/arm64/kernel/crash.c
-> [ ... ]
->> +unsigned int arch_crash_get_elfcorehdr_size(void)
->> +{
->> +	unsigned long phdr_cnt;
->> +
->> +	/* A program header for possible CPUs, vmcoreinfo and kernel_map */
->> +	phdr_cnt = 2 + num_possible_cpus();
->> +	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
->> +		phdr_cnt += CONFIG_CRASH_MAX_MEMORY_RANGES;
->> +
-> 
-> [Severity: High]
-> Is this calculation missing the static memory ranges when
-> CONFIG_MEMORY_HOTPLUG is disabled?
-> 
-> If compiled with CONFIG_HOTPLUG_CPU=y (which natively selects
-> CONFIG_CRASH_HOTPLUG) and CONFIG_MEMORY_HOTPLUG=n, phdr_cnt is computed as
-> exactly 2 + num_possible_cpus(). This does not account for the mandatory
-> memblock ranges from arch_get_system_nr_ranges(). 
-
-Will fix it in v6.
-
-> 
-> Unlike x86 or powerpc which might survive this due to heavily padded
-> CONFIG_NR_CPUS_DEFAULT values, arm64's precise num_possible_cpus() leaves
-> zero headroom. As a result, the exported maximum elfcorehdr size is strictly
-> smaller than the required size to hold static memory ranges, and any attempt
-> to arm kdump (kexec -p) will fail because kexec-tools cannot load the crash
-> kernel into the undersized segment.
-> 
-
+diff --git a/kernel/liveupdate/cpu_preserve.c b/kernel/liveupdate/cpu_preserve.c
+index 2f92dfee82b1..9a039ba9e912 100644
+--- a/kernel/liveupdate/cpu_preserve.c
++++ b/kernel/liveupdate/cpu_preserve.c
+@@ -837,8 +837,10 @@ void __cpu_preserved_text cpu_preserved_set_dead(int cpu)
+ {
+ 	struct cpu_preserved_pcpu_ser *ser = cpu_preserved_get_pcpu_ser(cpu);
+ 
+-	if (ser)
+-		WRITE_ONCE(ser->workload, CPU_PRESERVED_DEAD);
++	if (ser) {
++		smp_store_release(&ser->workload, CPU_PRESERVED_DEAD);
++		cpu_preserved_clean(ser);
++	}
+ }
+ EXPORT_SYMBOL_GPL(cpu_preserved_set_dead);
+ 
+@@ -1097,8 +1099,6 @@ void __cpu_preserved_text cpu_preserved_park_loop(int cpu)
+ 		switch (READ_ONCE(ser->workload)) {
+ 		case CPU_PRESERVED_EXITING:
+ 		case CPU_PRESERVED_DEAD:
+-			WRITE_ONCE(ser->workload, CPU_PRESERVED_DEAD);
+-			cpu_preserved_clean(ser);
+ 			return;
+ 		case CPU_PRESERVED_WORKLOAD:
+ 			cpu_preserved_run_workload(ser, pcpu);
+@@ -1131,6 +1131,7 @@ void cpu_preserved_park(int cpu)
+ 	} else {
+ 		cpu_preserved_park_loop(cpu);
+ 		arch_cpu_preserved_park_finish(cpu);
++		cpu_preserved_set_dead(cpu);
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(cpu_preserved_park);
+@@ -1498,6 +1499,171 @@ static struct liveupdate_flb cpu_preserved_flb = {
+ 	.compatible = CPU_PRESERVED_LUO_FLB_COMPATIBLE,
+ };
+ 
++/*
++ * LUO File Handler Callbacks for /sys/devices/system/cpu/cpu<N>/preserve
++ */
++static int file_to_cpu(struct file *file, unsigned int *cpup)
++{
++	struct dentry *dentry, *parent;
++	unsigned int cpu;
++
++	if (!file || !file->f_path.dentry)
++		return -EINVAL;
++
++	if (file_inode(file)->i_sb->s_magic != SYSFS_MAGIC)
++		return -EINVAL;
++
++	dentry = file->f_path.dentry;
++	if (strcmp(dentry->d_name.name, "preserve"))
++		return -EINVAL;
++
++	parent = dentry->d_parent;
++	if (!parent || sscanf(parent->d_name.name, "cpu%u", &cpu) != 1)
++		return -EINVAL;
++
++	if (cpu >= nr_cpu_ids || !cpu_possible(cpu) ||
++	    !cpu_is_hotpluggable(cpu)) {
++		return -EINVAL;
++	}
++
++	*cpup = cpu;
++	return 0;
++}
++
++static bool cpu_preserve_can_preserve(struct liveupdate_file_handler *handler,
++				      struct file *file)
++{
++	unsigned int cpu;
++
++	return IS_ENABLED(CONFIG_LIVEUPDATE_ONCORE) && file_to_cpu(file, &cpu) == 0;
++}
++
++static int cpu_preserve_preserve(struct liveupdate_file_op_args *args)
++{
++	struct cpu_preserved_file_ser *fser;
++	unsigned int cpu;
++	int ret;
++
++	ret = file_to_cpu(args->file, &cpu);
++	if (ret)
++		return ret;
++
++	ret = cpu_preserve(cpu);
++	if (ret)
++		return ret;
++
++	fser = kho_alloc_preserve(sizeof(*fser));
++	if (IS_ERR(fser)) {
++		cpu_unpreserve(cpu);
++		return PTR_ERR(fser);
++	}
++
++	memset(fser, 0, sizeof(*fser));
++	fser->cpu = cpu;
++
++	scoped_guard(mutex, &cpu_preserved_lock)
++		fser->stack_pa = cpu_preserved_outgoing.pcpus[cpu].stack_pa;
++
++	args->serialized_data = virt_to_phys(fser);
++	return 0;
++}
++
++static void cpu_preserve_unpreserve(struct liveupdate_file_op_args *args)
++{
++	struct cpu_preserved_file_ser *fser;
++	unsigned int cpu;
++
++	if (!args->serialized_data)
++		return;
++
++	fser = phys_to_virt(args->serialized_data);
++	cpu = fser->cpu;
++
++	cpu_unpreserve(cpu);
++
++	kho_unpreserve_free(fser);
++}
++
++static void cpu_preserve_restore_incoming_cpu(struct liveupdate_session *session,
++					      struct cpu_preserved_file_ser *fser)
++{
++	unsigned int cpu = fser->cpu;
++
++	scoped_guard(mutex, &cpu_preserved_lock) {
++		cpumask_set_cpu(cpu, &cpu_preserved_incoming.mask);
++		cpumask_set_cpu(cpu, &cpu_preserved_mask);
++
++		if (!cpu_preserved_incoming.pcpus) {
++			cpu_preserved_incoming.pcpus =
++				kcalloc(nr_cpu_ids,
++					sizeof(*cpu_preserved_incoming.pcpus),
++					GFP_KERNEL);
++			WRITE_ONCE(cpu_preserved_host_pcpus_va,
++				   cpu_preserved_incoming.pcpus);
++			cpu_preserved_clean(&cpu_preserved_host_pcpus_va);
++		}
++
++		if (cpu_preserved_incoming.pcpus)
++			cpu_preserved_incoming.pcpus[cpu].stack_pa = fser->stack_pa;
++
++		cpu_preserved_clean(&cpu_preserved_mask);
++	}
++}
++
++static int cpu_preserve_retrieve(struct liveupdate_file_op_args *args)
++{
++	struct cpu_preserved_file_ser *fser;
++	struct file *file;
++	char path[64];
++
++	if (!args->serialized_data)
++		return -EINVAL;
++
++	fser = phys_to_virt(args->serialized_data);
++
++	snprintf(path, sizeof(path),
++		 "/sys/devices/system/cpu/cpu%u/preserve", fser->cpu);
++	file = filp_open(path, O_RDONLY, 0);
++	if (IS_ERR(file))
++		return PTR_ERR(file);
++
++	args->file = file;
++	cpu_preserve_restore_incoming_cpu(args->session, fser);
++	cpu_preserved_detach_workload(fser->cpu);
++
++	return 0;
++}
++
++static void cpu_preserve_finish(struct liveupdate_file_op_args *args)
++{
++	struct cpu_preserved_file_ser *fser;
++
++	if (!args->serialized_data)
++		return;
++
++	fser = phys_to_virt(args->serialized_data);
++	if (args->retrieve_status <= 0)
++		cpu_preserve_restore_incoming_cpu(args->session, fser);
++
++	cpu_unpreserve(fser->cpu);
++
++	kho_restore_free(fser);
++}
++
++static const struct liveupdate_file_ops cpu_preserve_file_ops = {
++	.can_preserve = cpu_preserve_can_preserve,
++	.preserve     = cpu_preserve_preserve,
++	.retrieve     = cpu_preserve_retrieve,
++	.unpreserve   = cpu_preserve_unpreserve,
++	.finish       = cpu_preserve_finish,
++	.owner        = THIS_MODULE,
++};
++
++static struct liveupdate_file_handler cpu_preserve_handler = {
++	.ops        = &cpu_preserve_file_ops,
++	.compatible = CPU_PRESERVED_LUO_FH_COMPATIBLE,
++};
++
+ static int cpu_preserve_reboot_notify(struct notifier_block *nb,
+ 				      unsigned long action, void *data)
+ {
+@@ -1555,6 +1721,21 @@ static int __init cpu_preserve_early_init(void)
+ 	cpu_preserved_incoming.pcpus_ser = NULL;
+ 	cpu_preserved_global_ser = NULL;
+ 
++	err = liveupdate_register_file_handler(&cpu_preserve_handler);
++	if (err && err != -EOPNOTSUPP) {
++		pr_err("Could not register cpu_preserve file handler: %pe\n",
++		       ERR_PTR(err));
++		return err;
++	}
++
++	err = liveupdate_register_flb(&cpu_preserve_handler,
++				      &cpu_preserved_flb);
++	if (err && err != -EOPNOTSUPP) {
++		pr_err("Could not register cpu_preserved FLB: %pe\n",
++		       ERR_PTR(err));
++		return err;
++	}
++
+ 	/* Retrieve incoming preserved CPUs before secondary CPU bringup */
+ 	if (liveupdate_enabled())
+ 		liveupdate_flb_get_incoming(&cpu_preserved_flb, &obj);
 -- 
-Best regards,
-Jinjie
+2.55.0.1082.g2b9226bbc0-goog
 
 
