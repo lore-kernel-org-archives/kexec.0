@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A5823C982DA
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7FDDFC982D8
 	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,65 +12,65 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=GOyD94xneAEU7+yzaxi3P4vCBB/CkWgVuLYMi+o49fI=; b=pf6GzOYLv/IVSKANpXCHlxtjcC
-	xQvegUjQC7Ba9Hddwryx/t3sNq8lSfVx0tXzyKNliT6WyOIQlhY2QdWr8ngAjDRxLO/CD5fcUVqac
-	41LYr7kOeRpLbKfhnDssnIs3DS2XInEPVKeeqDIHwgYbmdO4IAOr7G2E2vpo8YhxeA1sZQG/OCv0t
-	aFDMWJh59nC58cBHhHFAU2s5yNcMbJ5mZI6zNAWnVWlPnXW0jG/S+rm7ZMdR6ZU5yUeC5+s32Gmbs
-	6d6aFtUx8oxPlcYEZHp1vLl0LbYE6m+77a6HaEZ5zwVSpz99pBCeYXML76FF0ZF+uLCStea4o0Pvk
-	aTKiyxnA==;
+	bh=sEtY+1n4Sw7+L9nuvlWdwzAf6I2rCrn2rF9X6RG1+q8=; b=ZzMw+PGZVtyrsGMkhAjyXSCleA
+	0h/v3MMGyq0Hx/uMChMvac9iT/GZSGshuQYNz6lRApTNTeqzr4UXGQawOR9hEJiAr+BPX5FnW1Uc6
+	ttXyiizWCyqaXtAgMWzStLV7+89KnAQEVvBjCWxx8f1RF8MgIE2KdHcFG/urpayc74Qic9p1hnkBT
+	GilhetYkV5Xz5m9JxQZmPvK6cAUCECBiIzxeFRRfHo7b0IvcJaF1FNeIjZhz73f68RVLUsmfd6dB6
+	+POXcy7z4Et5yvK6oCY0iIinWcMg3CilWpogPlwnvBJR6DvFF2LOS2gVPKd06O6vZj6YZvoEunYED
+	YRNftTqA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8O4v-00000000Nir-45mp;
+	id 1x8O4v-00000000NhG-10u2;
 	Sun, 20 Sep 2026 20:24:01 +0000
-Received: from mail-yx2-x10.google.com ([2607:f8b0:4864:41::10])
+Received: from mail-yx2-x0f.google.com ([2607:f8b0:4864:41::f])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8NNd-00000000J4a-3trz
+	id 1x8NNR-00000000J0Z-2279
 	for kexec@lists.infradead.org;
-	Sun, 20 Sep 2026 19:39:19 +0000
-Received: by mail-yx2-x10.google.com with SMTP id 00721157ae682-85d440939e3so14291707b3.0
-        for <kexec@lists.infradead.org>; Sun, 20 Sep 2026 12:39:17 -0700 (PDT)
+	Sun, 20 Sep 2026 19:39:06 +0000
+Received: by mail-yx2-x0f.google.com with SMTP id 00721157ae682-895eaf30817so23275937b3.0
+        for <kexec@lists.infradead.org>; Sun, 20 Sep 2026 12:39:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1789933157; x=1790537957; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1789933144; x=1790537944; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=GOyD94xneAEU7+yzaxi3P4vCBB/CkWgVuLYMi+o49fI=;
-        b=A7w3ozFW7SOiXTYPnRicdVNiZhZAAlAAnzlVrIKzC32MmDx1kCaoaFAQwH1SgI0312
-         wKbsmoGp+UwdL2HAEsy9TZNBQidAL//f0TrcyFI9zyhX1g0EmJ0SPCg0ZLzmF6Fr1Jc5
-         cLLoWP5pe8bQd+bLNj25RxKBY4MHUon3wL8icC7ExDJBhMf0XhM8y3bx6EAXvovAU9H3
-         CCaD680AFkdtLk0V7ApVefw9/6dUGZ8QAlgvC0sejLPzR1Ro8KAEoZd0aAK6LTQQaSWA
-         xnaynjIENSlRy/3WPJsFPQMN0XyXCE7UnV+3jnMJFXCN0nDEMfAcqzzK05Rpmv3MGYW+
-         cvFg==
+        bh=sEtY+1n4Sw7+L9nuvlWdwzAf6I2rCrn2rF9X6RG1+q8=;
+        b=ONoUL48QHEWpeVi7U5YcYFOJFaQx2dztNy/O07bBiN5Gt4DAXVctvzfyxraM6KRolU
+         HhueRkoq976koFFBsc5oANK2wNkNchrjVzbddXapg0nK3hE13HrVx159T77vvafwDwdY
+         s5lktrV6bccM+Nykf6xcKumlFgkyyFzb4B1UIYEW8K0N9eGce2IWwKi5tTfPuj4SGZti
+         of0AYIrvMaVfiuMOuJxxLh/tZKriYo+iSUt+RjM2BwRbdTZIn7on5OJbLYZOKq/RfeIw
+         mCFhb/CJP/cG3eRmIjvxQm6WFOQV+QzAuShjN3qzKAOuEyunnCK6Bice0RUu51kTk12v
+         mVpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789933157; x=1790537957;
+        d=1e100.net; s=20260707; t=1789933144; x=1790537944;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to:content-type;
-        bh=GOyD94xneAEU7+yzaxi3P4vCBB/CkWgVuLYMi+o49fI=;
-        b=YWzjkkDH2TjWvyWF1LImEnLgXoLvdE8YXQYOQUY99VZ7zsgSbAgN/oiwyH/jIvABRQ
-         HOZCuvaoHpdQT7to+bPjr+Zn+IV1UCaKTPy4ixU5W9i3FTRkqSXIoP8EMYFhsXotxtAD
-         r0pHI5uZ0F3x2f7vSqsLWOzW1zfmYdcClODNK2VT6AqON5kUUz9iNHuttd3qhB6rryo6
-         GgmYI+AHaFoZi/f8PHDTqDwBMOgiujXlOH36AuMnjyflZwkIHIZLgiWXED5pukQ/zor0
-         jNFjfYXFF0pZDHrKn18Zrl4fcUmbyukl1baRKCYo+Jqnim7k6Qdbpix8hrVHxUeVWUhc
-         +Dxw==
-X-Forwarded-Encrypted: i=1; AKwUvBxPA3x1rUqSCze7maLoGj175rWL3Bt+Wmn13N2xH9ytkxJhuV5sR1Q6PBdjXum0oxG0TrbFog==@lists.infradead.org
-X-Gm-Message-State: AFuF++njo57bpbVFVFjZ4aylZ+WEOu/QzsVN8/mb5s8Igva5Rhd///d1
-	Hx5+RT/3FomvU1vrU2jLiot7uEECu0YneFtw9ea4L9cfKpKVCsmsyyxh/s0wUGe/roU=
-X-Gm-Gg: AYBFou36t4mOeOhbUsuVu5F4XvY6eGHhlKgphQ753lqq+YuZZ9500K1ia3aWod8vBiI
-	56zu0DZvGxciA/LJAz1GnkovtU3PiPeN664ES5V/UBG3hoS95D8HgtrkLl4kIIW0SRCjcgnWeNb
-	UyEzW0vkpd5D0mAT+H3q6kYG7E9Q3+DGbWugB6xt0vtkUwuhtgyeYWlYR6hH3JoRo9eLvcTNWTq
-	We4mGKu339XEuasPVdlo75pUGGu3vVKWdpVfDxLtGkJtVrEg5sXr8ue6BtyE84QbmiSVRm4593F
-	PeJ0Kjrk6SBHquVyUkHQQgQXQzgBARGirYNMy6wd8pboQ0xovsfEXRu3FWtdd/S1NMrnVniowGS
-	e+ji62O47FcLnJm1dwlTWIV9WRjy5230cfYSLr3P/O/4T3d0L7If45ruNSZh8sqRU7cmgVUFNuK
-	6d1/xpV4QuPWQBic9YCEucHW1kREGyGxD9nVOE+vhwZ1bEOss0pSheS8zUSLbq4e3IPPYQ4jWcd
-	ot8WngFHl1hsK6SvGhtetFBTQDzKFzBVLQN2QlSXrBXgwFUGphBlMDugKi9qzP8TuQIHLo8ctdw
-	YViB9YbhhNaFub9MwwQ=
-X-Received: by 2002:a05:690c:e3cf:b0:845:ddf4:a399 with SMTP id 00721157ae682-897308f89e5mr31680887b3.11.1789933156801;
-        Sun, 20 Sep 2026 12:39:16 -0700 (PDT)
+        bh=sEtY+1n4Sw7+L9nuvlWdwzAf6I2rCrn2rF9X6RG1+q8=;
+        b=eZtBpr4ZDRHsSnKrJaaK3VAbscQ4cRO4VB3rTRPtURh5dHsfEF/Onaxhhc1a1qtNav
+         pjXZtGqT+catDhTpCkH4FO0ExCLidb3FuIX7cFzQSxIgKnbYpqdDcUPyZQb2UUY91TAC
+         hiWDzRNOF2JMRduoQhmWNhTrwV5CWpluYTCtnpEnIFdY5hBq/YzGybZnXfYBVj16Mt86
+         Vqb+IKcxcpYUNgLou3WkLyqL+Rl4xDeEEj9OBWOGVAcVpAn2IJly9vwFqMRPs1fssYeR
+         5QDXuD9uyo1F/ZrVI09pD7BhIl6KQOqlwAaOCQFJ3r59TdeeK/EJddc6E1/b8NZ+uo17
+         yueA==
+X-Forwarded-Encrypted: i=1; AKwUvBxHhEPHwWPHBAfQ3/4le7dDRFQscFXad0Wcm9bJKzesTW9sUEVeufV24huuVI1Or2efc2a44A==@lists.infradead.org
+X-Gm-Message-State: AFuF++kKT2e6SPBO58ki+FwqxJB3ME4XvMuRPr9qSMQT2LnPpde6Ucij
+	m1x+Zps5Mv1IztGajOl9Jlb17dwTAXHx7rVqXTABJsYVroMRMLXkVBvC86LmYLEVXCY=
+X-Gm-Gg: AYBFou2vcZSdCkHFYLpN2XqhO+ZJa0i5te8mBqh9RQBfP15fj3yMuTewUJeejEEGttV
+	uhYWXWKg1/OPK8R2SQBB4050LuKM7tHrB6R/Z7EzTjARmTVrfIcXpZmGdBGjw9mINJ4UKjsrjvn
+	rPzv2WaPMFP9lXRM+LtBu+ep/cE5pBHCJ6pzmKyCtrPwF9HhAy1xo7kYACBes9Gg6xeVm9V/7R1
+	siGdf7fmdhHJ5SoGxOW/sEC5o5P5UmMTjYNwmTDnxAEz0rvSL/gOgS0V3YONiDtF4o0ED6Hhv8r
+	jaALiAdVB6teoi+TckYy3yAFRX9RcKg+ViXor7mi0jiFVVNUBqNWZhBBax43gGOD9hUH2kT+C7q
+	yc4HXy63vSYkYNBEUccs9SY1hu9WzKpJIl+sC2vV2qJsIzHcUuAA+bl+AhFmvLWyFylDyA0kan7
+	4cb94l9it3YvwMomye7r4WnldI7RV0jng1lmzKJGWXimSSFS7qn92r+voEb0bYpEROJ+o/B7POL
+	eL9hlbA45vMSa93iUgPtwQ9gAC5xapw4c2iL86jYnu9HkgFDnh/JYgbQc2uD0Z4f054lY/LSI21
+	jGWy+znKl3slohVWQw8=
+X-Received: by 2002:a05:690c:498f:b0:81e:6c2e:f0f5 with SMTP id 00721157ae682-89734ac7b85mr23278327b3.28.1789933144397;
+        Sun, 20 Sep 2026 12:39:04 -0700 (PDT)
 Received: from soleen.c.googlers.com.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-89a4761747asm18686667b3.30.2026.09.20.12.39.13
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-89a48d99122sm18304727b3.48.2026.09.20.12.39.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Sep 2026 12:39:15 -0700 (PDT)
+        Sun, 20 Sep 2026 12:39:03 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: linux-kselftest@vger.kernel.org,
 	legion@kernel.org,
@@ -148,18 +148,17 @@ To: linux-kselftest@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	vladimir.murzin@arm.com,
 	kas@kernel.org
-Subject: [RFC PATCH 24/46] MAINTAINERS: Add entry for KVM Caretaker
-Date: Sun, 20 Sep 2026 15:36:28 -0400
-Message-ID: <20260920193650.3373435-25-pasha.tatashin@soleen.com>
+Subject: [RFC PATCH 22/46] selftests: liveupdate: Add physical CPU preservation live update tests
+Date: Sun, 20 Sep 2026 15:36:26 -0400
+Message-ID: <20260920193650.3373435-23-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
 In-Reply-To: <20260920193650.3373435-1-pasha.tatashin@soleen.com>
 References: <20260920193650.3373435-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260920_123917_978792_ECE75963 
-X-CRM114-Status: UNSURE (   7.25  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260920_123905_540419_F398A800 
+X-CRM114-Status: GOOD (  20.19  )
 X-Mailman-Approved-At: Sun, 20 Sep 2026 13:23:19 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -175,36 +174,289 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add KERNEL VIRTUAL MACHINE CARETAKER section in MAINTAINERS covering
-Caretaker headers, architecture backends, and core execution files.
+Add integration tests performing kexec live updates with preserved
+CPUs:
+- Preserve physical cores across kexec reboot.
+- Verify cores remain preserved and isolated in incoming kernel.
+- Verify unpreserve and online restoration.
 
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ tools/testing/selftests/liveupdate/Makefile   |   1 +
+ tools/testing/selftests/liveupdate/init.c     |  27 +++-
+ .../selftests/liveupdate/luo_cpu_preserve.c   | 145 ++++++++++++++++++
+ .../selftests/liveupdate/run-vmtests.sh       |   1 +
+ tools/testing/selftests/liveupdate/vmtest.sh  |   4 +-
+ 5 files changed, 175 insertions(+), 3 deletions(-)
+ create mode 100644 tools/testing/selftests/liveupdate/luo_cpu_preserve.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 23f332cfbd16..86806245041e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14296,6 +14296,17 @@ F:	tools/kvm/
- F:	tools/testing/selftests/kvm/
- F:	virt/kvm/*
+diff --git a/tools/testing/selftests/liveupdate/Makefile b/tools/testing/selftests/liveupdate/Makefile
+index 634211c66652..0fa80f26a191 100644
+--- a/tools/testing/selftests/liveupdate/Makefile
++++ b/tools/testing/selftests/liveupdate/Makefile
+@@ -3,6 +3,7 @@
+ TEST_GEN_PROGS += liveupdate
  
-+KERNEL VIRTUAL MACHINE CARETAKER
-+M:	Pasha Tatashin <pasha.tatashin@soleen.com>
-+L:	kvm@vger.kernel.org
-+L:	kexec@lists.infradead.org
-+S:	Maintained
-+F:	arch/*/include/asm/kvm_caretaker*
-+F:	arch/*/kvm/*caretaker*
-+F:	arch/x86/kvm/mmu/kho.c
-+F:	include/linux/kvm_caretaker.h
-+F:	virt/kvm/caretaker*.c
+ TEST_GEN_PROGS_EXTENDED += luo_kexec_simple
++TEST_GEN_PROGS_EXTENDED += luo_cpu_preserve
+ TEST_GEN_PROGS_EXTENDED += luo_multi_session
+ TEST_GEN_PROGS_EXTENDED += luo_stress_sessions
+ TEST_GEN_PROGS_EXTENDED += luo_stress_files
+diff --git a/tools/testing/selftests/liveupdate/init.c b/tools/testing/selftests/liveupdate/init.c
+index fb08bd58b9b9..a3850ff95c00 100644
+--- a/tools/testing/selftests/liveupdate/init.c
++++ b/tools/testing/selftests/liveupdate/init.c
+@@ -11,6 +11,7 @@
+ #include <string.h>
+ #include <sys/mount.h>
+ #include <sys/reboot.h>
++#include <sys/stat.h>
+ #include <sys/syscall.h>
+ #include <sys/wait.h>
+ #include <unistd.h>
+@@ -27,11 +28,15 @@ static int mount_filesystems(void)
+ 		return -1;
+ 	}
+ 
+-	if (mount("debugfs", "/debugfs", "debugfs", 0, NULL) < 0) {
+-		fprintf(stderr, "INIT: Failed to mount debugfs\n");
++	if (mount("sysfs", "/sys", "sysfs", 0, NULL) < 0) {
++		fprintf(stderr, "INIT: Failed to mount sysfs\n");
+ 		return -1;
+ 	}
+ 
++	mkdir("/sys/kernel/debug", 0755);
++	mount("debugfs", "/sys/kernel/debug", "debugfs", 0, NULL);
++	mount("debugfs", "/debugfs", "debugfs", 0, NULL);
 +
- KERNEL VIRTUAL MACHINE FOR ARM64 (KVM/arm64)
- M:	Marc Zyngier <maz@kernel.org>
- M:	Oliver Upton <oupton@kernel.org>
+ 	if (mount("proc", "/proc", "proc", 0, NULL) < 0) {
+ 		fprintf(stderr, "INIT: Failed to mount proc\n");
+ 		return -1;
+@@ -116,7 +121,23 @@ static int run_test(int stage)
+ 	}
+ 
+ 	waitpid(pid, &status, 0);
++	if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
++		return 0;
++
++	/* If test binary does not accept -s (e.g. kselftest harness), run without -s */
++	pid = fork();
++	if (pid < 0)
++		return -1;
++
++	if (!pid) {
++		char *const argv[] = {TEST_BINARY, NULL};
+ 
++		execve(TEST_BINARY, argv, NULL);
++		fprintf(stderr, "INIT: execve failed\n");
++		_exit(1);
++	}
++
++	waitpid(pid, &status, 0);
+ 	return (WIFEXITED(status) && WEXITSTATUS(status) == 0) ? 0 : -1;
+ }
+ 
+@@ -168,6 +189,8 @@ int main(int argc, char *argv[])
+ 	}
+ 
+ 	printf("INIT: Stage %d completed successfully.\n", current_stage);
++	if (current_stage == 2)
++		printf("\n--- TEST PASSED ---\n");
+ 	reboot(current_stage == 1 ? RB_KEXEC : RB_AUTOBOOT);
+ 
+ 	return 0;
+diff --git a/tools/testing/selftests/liveupdate/luo_cpu_preserve.c b/tools/testing/selftests/liveupdate/luo_cpu_preserve.c
+new file mode 100644
+index 000000000000..85d17ccf3d90
+--- /dev/null
++++ b/tools/testing/selftests/liveupdate/luo_cpu_preserve.c
+@@ -0,0 +1,145 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++/*
++ * Copyright (c) 2026, Google LLC.
++ * Pasha Tatashin <pasha.tatashin@soleen.com>
++ *
++ * A selftest to validate the lifecycle of preserved CPUs across Live Update
++ * and within a local session.
++ */
++
++#include <fcntl.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/ioctl.h>
++#include <unistd.h>
++
++#include <libliveupdate.h>
++
++#define TEST_SESSION_NAME "cpu-preserve-session"
++#define STATE_SESSION_NAME "cpu_preserve_state"
++#define STATE_MEMFD_TOKEN 999
++#define TEST_CPU_TOKEN 0x100
++
++static int find_target_cpu(void)
++{
++	char path[128];
++	int cpu;
++
++	for (cpu = 1; cpu < 256; cpu++) {
++		snprintf(path, sizeof(path), "/sys/devices/system/cpu/cpu%d/preserve", cpu);
++		if (access(path, R_OK) == 0) {
++			snprintf(path, sizeof(path), "/sys/devices/system/cpu/cpu%d/online", cpu);
++			if (access(path, R_OK) == 0)
++				return cpu;
++		}
++	}
++	return -1;
++}
++
++static int read_cpu_online(int cpu)
++{
++	char path[128], buf[16];
++	int fd, val = -1;
++
++	snprintf(path, sizeof(path), "/sys/devices/system/cpu/cpu%d/online", cpu);
++	fd = open(path, O_RDONLY);
++	if (fd < 0)
++		return -1;
++	if (read(fd, buf, sizeof(buf) - 1) > 0)
++		val = atoi(buf);
++	close(fd);
++	return val;
++}
++
++static int preserve_cpu_fd(int session_fd, int cpu, int token)
++{
++	struct liveupdate_session_preserve_fd pfd = {};
++	char path[128];
++	int cpu_fd, ret;
++
++	snprintf(path, sizeof(path), "/sys/devices/system/cpu/cpu%d/preserve", cpu);
++	cpu_fd = open(path, O_RDONLY);
++	if (cpu_fd < 0)
++		return -1;
++
++	pfd.size = sizeof(pfd);
++	pfd.fd = cpu_fd;
++	pfd.token = token;
++
++	ret = ioctl(session_fd, LIVEUPDATE_SESSION_PRESERVE_FD, &pfd);
++	close(cpu_fd);
++	return ret;
++}
++
++/* Stage 1: Executed before kexec */
++static void run_stage_1(int luo_fd)
++{
++	int target_cpu, session_fd;
++
++	target_cpu = find_target_cpu();
++	if (target_cpu < 0)
++		fail_exit("No hotpluggable CPU with preserve attribute found");
++
++	ksft_print_msg("[STAGE 1] Target CPU for preservation: %d\n", target_cpu);
++
++	create_state_file(luo_fd, STATE_SESSION_NAME, STATE_MEMFD_TOKEN, target_cpu);
++
++	session_fd = luo_create_session(luo_fd, TEST_SESSION_NAME);
++	if (session_fd < 0)
++		fail_exit("luo_create_session for '%s'", TEST_SESSION_NAME);
++
++	if (preserve_cpu_fd(session_fd, target_cpu, TEST_CPU_TOKEN) < 0)
++		fail_exit("preserve_cpu_fd for cpu %d", target_cpu);
++
++	if (read_cpu_online(target_cpu) != 0)
++		fail_exit("CPU %d was expected to be offline after preservation", target_cpu);
++
++	ksft_print_msg("[STAGE 1] CPU %d successfully preserved and offlined\n", target_cpu);
++
++	close(luo_fd);
++	daemonize_and_wait();
++}
++
++/* Stage 2: Executed after kexec */
++static void run_stage_2(int luo_fd, int state_session_fd)
++{
++	struct liveupdate_session_retrieve_fd rfd = {};
++	int target_cpu, session_fd;
++
++	restore_and_read_stage(state_session_fd, STATE_MEMFD_TOKEN, &target_cpu);
++	ksft_print_msg("[STAGE 2] Restored target CPU: %d\n", target_cpu);
++
++	session_fd = luo_retrieve_session(luo_fd, TEST_SESSION_NAME);
++	if (session_fd < 0)
++		fail_exit("luo_retrieve_session for '%s'", TEST_SESSION_NAME);
++
++	rfd.size = sizeof(rfd);
++	rfd.token = TEST_CPU_TOKEN;
++	if (ioctl(session_fd, LIVEUPDATE_SESSION_RETRIEVE_FD, &rfd) < 0)
++		fail_exit("LIVEUPDATE_SESSION_RETRIEVE_FD for cpu token %#x", TEST_CPU_TOKEN);
++
++	close(rfd.fd);
++
++	if (read_cpu_online(target_cpu) != 1)
++		fail_exit("CPU %d was expected to be online after retrieval", target_cpu);
++
++	ksft_print_msg("[STAGE 2] CPU %d successfully retrieved and online\n", target_cpu);
++
++	if (luo_session_finish(session_fd) < 0)
++		fail_exit("luo_session_finish for test session");
++	close(session_fd);
++
++	if (luo_session_finish(state_session_fd) < 0)
++		fail_exit("luo_session_finish for state session");
++	close(state_session_fd);
++
++	ksft_print_msg("\n--- CPU PRESERVATION KEXEC TEST PASSED ---\n");
++}
++
++int main(int argc, char *argv[])
++{
++	return luo_test(argc, argv, STATE_SESSION_NAME,
++			run_stage_1, run_stage_2);
++}
+diff --git a/tools/testing/selftests/liveupdate/run-vmtests.sh b/tools/testing/selftests/liveupdate/run-vmtests.sh
+index d656ce58c5a7..1b90d56ec4a2 100755
+--- a/tools/testing/selftests/liveupdate/run-vmtests.sh
++++ b/tools/testing/selftests/liveupdate/run-vmtests.sh
+@@ -20,6 +20,7 @@ TEST_NAMES=(
+ 	"luo_multi_session"
+ 	"luo_stress_files"
+ 	"luo_stress_sessions"
++	"luo_cpu_preserve"
+ )
+ 
+ function usage() {
+diff --git a/tools/testing/selftests/liveupdate/vmtest.sh b/tools/testing/selftests/liveupdate/vmtest.sh
+index 64fd2ab55b76..c934c76c00a0 100755
+--- a/tools/testing/selftests/liveupdate/vmtest.sh
++++ b/tools/testing/selftests/liveupdate/vmtest.sh
+@@ -145,6 +145,7 @@ function mkinitrd() {
+ 	cat > "$workspace_dir/cpio_list_inner" <<EOF
+ dir /dev 0755 0 0
+ dir /proc 0755 0 0
++dir /sys 0755 0 0
+ dir /debugfs 0755 0 0
+ nod /dev/console 0600 0 0 c 5 1
+ file /init $workspace_dir/init 0755 0 0
+@@ -157,6 +158,7 @@ EOF
+ 	cat > "$workspace_dir/cpio_list" <<EOF
+ dir /dev 0755 0 0
+ dir /proc 0755 0 0
++dir /sys 0755 0 0
+ dir /debugfs 0755 0 0
+ nod /dev/console 0600 0 0 c 5 1
+ file /init $workspace_dir/init 0755 0 0
+@@ -179,7 +181,7 @@ function run_qemu() {
+ 
+ 	echo "# Serial Log: $serial"
+ 	timeout 30s \
+-	$qemu_cmd -m 1G -smp 2 -no-reboot -nographic -nodefaults \
++	$qemu_cmd -m 1G -smp 4 -no-reboot -nographic -nodefaults \
+ 		  -accel tcg -accel hvf -accel kvm \
+ 		  -serial file:"$serial" \
+ 		  -append "$cmdline" \
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
