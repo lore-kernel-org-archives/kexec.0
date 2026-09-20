@@ -4,73 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7FDDFC982D8
-	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3BFE2C982EE
+	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=sEtY+1n4Sw7+L9nuvlWdwzAf6I2rCrn2rF9X6RG1+q8=; b=ZzMw+PGZVtyrsGMkhAjyXSCleA
-	0h/v3MMGyq0Hx/uMChMvac9iT/GZSGshuQYNz6lRApTNTeqzr4UXGQawOR9hEJiAr+BPX5FnW1Uc6
-	ttXyiizWCyqaXtAgMWzStLV7+89KnAQEVvBjCWxx8f1RF8MgIE2KdHcFG/urpayc74Qic9p1hnkBT
-	GilhetYkV5Xz5m9JxQZmPvK6cAUCECBiIzxeFRRfHo7b0IvcJaF1FNeIjZhz73f68RVLUsmfd6dB6
-	+POXcy7z4Et5yvK6oCY0iIinWcMg3CilWpogPlwnvBJR6DvFF2LOS2gVPKd06O6vZj6YZvoEunYED
-	YRNftTqA==;
+	bh=2ibDJILDIEWvBMPoTlKij96smUhkgzpAH7q+zsoMbGI=; b=Ol9Psv0mKGMwSPuPMBstTQDvR0
+	BeOJTvYJW/BbAJSqpGz8cksq+wZvpSMvr3xdCgHp88W7447Y7UjAaGuO2AZIDcT/C10OrT09hH+LP
+	yR7gZGa72TggicOdUoS7BixKSojhkNHGtP9An6qdFrBA9tQXhGmzojAVE9lwohivrQAi/XvRdBzOr
+	K0xMM9W/ANF/mYAjRoGCuW/80V2zFhdDFZoDA9qlKzXZ0xGxlRLcY2+Ba0+jJAGA+Je/miDDgLl9C
+	FTmUNID4zoFYa5/VrB6WXiBlLXFC+w8Ce/It83U+Dk82z0HdFXJSYMNI+Rv82ozbbSVgTQUiH/fqL
+	Wjx2qP7Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8O4v-00000000NhG-10u2;
-	Sun, 20 Sep 2026 20:24:01 +0000
-Received: from mail-yx2-x0f.google.com ([2607:f8b0:4864:41::f])
+	id 1x8O4y-00000000NjP-2RHg;
+	Sun, 20 Sep 2026 20:24:04 +0000
+Received: from mail-yx2-x11.google.com ([2607:f8b0:4864:41::11])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8NNR-00000000J0Z-2279
+	id 1x8NNk-00000000J66-0ey2
 	for kexec@lists.infradead.org;
-	Sun, 20 Sep 2026 19:39:06 +0000
-Received: by mail-yx2-x0f.google.com with SMTP id 00721157ae682-895eaf30817so23275937b3.0
-        for <kexec@lists.infradead.org>; Sun, 20 Sep 2026 12:39:05 -0700 (PDT)
+	Sun, 20 Sep 2026 19:39:25 +0000
+Received: by mail-yx2-x11.google.com with SMTP id 00721157ae682-85d43ac8d1fso15038547b3.0
+        for <kexec@lists.infradead.org>; Sun, 20 Sep 2026 12:39:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1789933144; x=1790537944; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1789933163; x=1790537963; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=sEtY+1n4Sw7+L9nuvlWdwzAf6I2rCrn2rF9X6RG1+q8=;
-        b=ONoUL48QHEWpeVi7U5YcYFOJFaQx2dztNy/O07bBiN5Gt4DAXVctvzfyxraM6KRolU
-         HhueRkoq976koFFBsc5oANK2wNkNchrjVzbddXapg0nK3hE13HrVx159T77vvafwDwdY
-         s5lktrV6bccM+Nykf6xcKumlFgkyyFzb4B1UIYEW8K0N9eGce2IWwKi5tTfPuj4SGZti
-         of0AYIrvMaVfiuMOuJxxLh/tZKriYo+iSUt+RjM2BwRbdTZIn7on5OJbLYZOKq/RfeIw
-         mCFhb/CJP/cG3eRmIjvxQm6WFOQV+QzAuShjN3qzKAOuEyunnCK6Bice0RUu51kTk12v
-         mVpw==
+        bh=2ibDJILDIEWvBMPoTlKij96smUhkgzpAH7q+zsoMbGI=;
+        b=M7hg6d/sVS7EQ2nkMiCJxrvOtYJaBx4u8ZPLG09ha2HeVifboSuNWHd6UuVg2NS+lH
+         e+7HhkH7j0hvE/hzyraRqonCNPtVVPidjiUn+2xLbAfVJPeVPfum85MpVK9eTK+U9Ngi
+         FFT2RTzdMSXHDey7eDQk6011t5IpHyavF2CZmCgNiuJ8/4LkxkXhhykXlL1vzgScSwnZ
+         Io9dk+5oLMAT9s+VB33C88+SdDM2vU8g4uYKr5YJLE/g90A1KB3z0tegXaXg922/AnJZ
+         0l2QxIhYRuLHbi6l63xPauka4gFPy3TlEt3nmlLDR/P1p5TSJPJJm0g+ikwRzO7uRHfd
+         OTzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789933144; x=1790537944;
+        d=1e100.net; s=20260707; t=1789933163; x=1790537963;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to:content-type;
-        bh=sEtY+1n4Sw7+L9nuvlWdwzAf6I2rCrn2rF9X6RG1+q8=;
-        b=eZtBpr4ZDRHsSnKrJaaK3VAbscQ4cRO4VB3rTRPtURh5dHsfEF/Onaxhhc1a1qtNav
-         pjXZtGqT+catDhTpCkH4FO0ExCLidb3FuIX7cFzQSxIgKnbYpqdDcUPyZQb2UUY91TAC
-         hiWDzRNOF2JMRduoQhmWNhTrwV5CWpluYTCtnpEnIFdY5hBq/YzGybZnXfYBVj16Mt86
-         Vqb+IKcxcpYUNgLou3WkLyqL+Rl4xDeEEj9OBWOGVAcVpAn2IJly9vwFqMRPs1fssYeR
-         5QDXuD9uyo1F/ZrVI09pD7BhIl6KQOqlwAaOCQFJ3r59TdeeK/EJddc6E1/b8NZ+uo17
-         yueA==
-X-Forwarded-Encrypted: i=1; AKwUvBxHhEPHwWPHBAfQ3/4le7dDRFQscFXad0Wcm9bJKzesTW9sUEVeufV24huuVI1Or2efc2a44A==@lists.infradead.org
-X-Gm-Message-State: AFuF++kKT2e6SPBO58ki+FwqxJB3ME4XvMuRPr9qSMQT2LnPpde6Ucij
-	m1x+Zps5Mv1IztGajOl9Jlb17dwTAXHx7rVqXTABJsYVroMRMLXkVBvC86LmYLEVXCY=
-X-Gm-Gg: AYBFou2vcZSdCkHFYLpN2XqhO+ZJa0i5te8mBqh9RQBfP15fj3yMuTewUJeejEEGttV
-	uhYWXWKg1/OPK8R2SQBB4050LuKM7tHrB6R/Z7EzTjARmTVrfIcXpZmGdBGjw9mINJ4UKjsrjvn
-	rPzv2WaPMFP9lXRM+LtBu+ep/cE5pBHCJ6pzmKyCtrPwF9HhAy1xo7kYACBes9Gg6xeVm9V/7R1
-	siGdf7fmdhHJ5SoGxOW/sEC5o5P5UmMTjYNwmTDnxAEz0rvSL/gOgS0V3YONiDtF4o0ED6Hhv8r
-	jaALiAdVB6teoi+TckYy3yAFRX9RcKg+ViXor7mi0jiFVVNUBqNWZhBBax43gGOD9hUH2kT+C7q
-	yc4HXy63vSYkYNBEUccs9SY1hu9WzKpJIl+sC2vV2qJsIzHcUuAA+bl+AhFmvLWyFylDyA0kan7
-	4cb94l9it3YvwMomye7r4WnldI7RV0jng1lmzKJGWXimSSFS7qn92r+voEb0bYpEROJ+o/B7POL
-	eL9hlbA45vMSa93iUgPtwQ9gAC5xapw4c2iL86jYnu9HkgFDnh/JYgbQc2uD0Z4f054lY/LSI21
-	jGWy+znKl3slohVWQw8=
-X-Received: by 2002:a05:690c:498f:b0:81e:6c2e:f0f5 with SMTP id 00721157ae682-89734ac7b85mr23278327b3.28.1789933144397;
-        Sun, 20 Sep 2026 12:39:04 -0700 (PDT)
+        bh=2ibDJILDIEWvBMPoTlKij96smUhkgzpAH7q+zsoMbGI=;
+        b=lHu6+pqPDkDKnjhV3qVIp99dN5xEbctSmLRadLDcuqEZVKYLjhBC8Ix3HYE8lXcXUf
+         cAuewgsQ95dPFw7MIVAO6ZdXdnI2mXGRvYvrUWU/ciHmTn+e6OR0tl2YqQYeMebR6/Fs
+         uTkusf5pHTglpwj6dtEyR/soxhyzn7CMPFq8CBMUk+PLC9etl/xLifcEYKzgTDeRPsSI
+         8XlmdKuyGTTeOoLlbr4gC+up8TJDZ2fqFVhJ135QKuV3bq3Ywvs5sugdplPmdKQ4zNFM
+         Hf1fnGW++3RlBs/4DK0kzcN7tKujqWErLgjB+zTz59vc2OF/eHwEVTHNWH6ccz11NXz1
+         eFJw==
+X-Forwarded-Encrypted: i=1; AKwUvBw7Qb9CrW0oyeow74SllAeCF1jVR5tvUWNBN1ai7ObLfkKDBL/1nUUcUL9OTUXPirtB4zO4zA==@lists.infradead.org
+X-Gm-Message-State: AFuF++lzQSg5GVvmjpg+N+KYn6JiQiIaeo9LG47NZXcimfg+yX+4/PLG
+	+0tk0jKkWqNK1dBLKK1fNFGBKwi/KsAT1sdNrgpI1CXmsD3GkS2L5VW3U2BOOJDJe0c=
+X-Gm-Gg: AYBFou3874u26B3o4R/Rc9TWMVktzH6uWu+rSn5JaM4RFjdPrIXfDfe+g9gfze1fEhY
+	tkOdBsJrEYN8kxg06rSF8le4lYe+EBPI3cMvzBM1hV4Dfa8Ckm+mSltcDcW1fz0BHmzld2U04di
+	tg9k8x2cUhPXwcpqZU4m7b1SMtR+rYAZtzfKQsSl6g686V0+VL1ortMw/vZwtBBJjrLGFlLy8fa
+	li/0SCiDDFkuxG4km6+XD3Y61H8u6fX6n6BuEh3zPtNl6chATUNv+yjwxbo1Q6S/8EQeJETwJTW
+	G+f8kttdSfiOJXCGMforwic8THePJItZwad1q6Lp8+IOhuFKhBa7+M0lnlRsz0cHntwTBIwUsBC
+	0Vh8mZzPAygaBTd26KrNZ+VcrriJy25eBNiZRIOezsfs83RMMVi/gwI0mWQ8LDHICIGfS9XvVL+
+	RxJm8T8YH/tpsHM7bkVRxcuaS0Gh1IqvPIRvUzhpZqWISbsaWa2EsjzWekab+x5GVmm4b++sM5c
+	wIJlckOovaq4M5d81f/H5g4D+kGvWlZx8Hw/CwWFlHErsBRPf9Mum2CWYogsZ/k/jrY9XgowuGW
+	UP5X56y6pQIfJEZEwszI8/Mjb/ZN9A==
+X-Received: by 2002:a05:690c:e1dc:10b0:873:5c0f:27d with SMTP id 00721157ae682-89735f6eb39mr22894817b3.39.1789933162976;
+        Sun, 20 Sep 2026 12:39:22 -0700 (PDT)
 Received: from soleen.c.googlers.com.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-89a48d99122sm18304727b3.48.2026.09.20.12.39.02
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-89a47af7bfbsm18840877b3.33.2026.09.20.12.39.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Sep 2026 12:39:03 -0700 (PDT)
+        Sun, 20 Sep 2026 12:39:21 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: linux-kselftest@vger.kernel.org,
 	legion@kernel.org,
@@ -148,17 +148,17 @@ To: linux-kselftest@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	vladimir.murzin@arm.com,
 	kas@kernel.org
-Subject: [RFC PATCH 22/46] selftests: liveupdate: Add physical CPU preservation live update tests
-Date: Sun, 20 Sep 2026 15:36:26 -0400
-Message-ID: <20260920193650.3373435-23-pasha.tatashin@soleen.com>
+Subject: [RFC PATCH 25/46] arm64: liveupdate: Add support for physical CPU preservation
+Date: Sun, 20 Sep 2026 15:36:29 -0400
+Message-ID: <20260920193650.3373435-26-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
 In-Reply-To: <20260920193650.3373435-1-pasha.tatashin@soleen.com>
 References: <20260920193650.3373435-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260920_123905_540419_F398A800 
-X-CRM114-Status: GOOD (  20.19  )
+X-CRM114-CacheID: sfid-20260920_123924_278458_F2D46DAB 
+X-CRM114-Status: GOOD (  23.70  )
 X-Mailman-Approved-At: Sun, 20 Sep 2026 13:23:19 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -174,289 +174,576 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add integration tests performing kexec live updates with preserved
-CPUs:
-- Preserve physical cores across kexec reboot.
-- Verify cores remain preserved and isolated in incoming kernel.
-- Verify unpreserve and online restoration.
+Enable physical CPU preservation on arm64 by selecting
+ARCH_SUPPORTS_LIVEUPDATE_CPU.
+
+Integrate preserved CPU handling into the arm64 SMP and CPU hotplug
+paths with isolated transition page tables:
+- Build isolated transition page tables mapping exclusively preserved
+  text/rodata (ROX), data (RW), stacks (RW), and preserved buffers.
+- Completely eliminate bulk cloning of the kernel linear direct map.
+- Limit KHO page table memory footprint to < 10 pages total.
+- Include CPU_PRESERVED_TEXT in arm64 vmlinux.lds.S.
+- Compile cpu_preserve.o with -mbranch-protection=none and
+  -fno-stack-protector to prevent PAC key mismatch aborts.
+- In __cpu_disable(), avoid tearing down IPIs for preserved CPUs.
+- In op_cpu_kill(), skip waiting for the CPU to die if preserved.
+- In smp_send_stop(), exclude preserved CPUs from stop IPIs.
+- Add cache maintenance to PoC for secondary boot data and page tables.
 
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- tools/testing/selftests/liveupdate/Makefile   |   1 +
- tools/testing/selftests/liveupdate/init.c     |  27 +++-
- .../selftests/liveupdate/luo_cpu_preserve.c   | 145 ++++++++++++++++++
- .../selftests/liveupdate/run-vmtests.sh       |   1 +
- tools/testing/selftests/liveupdate/vmtest.sh  |   4 +-
- 5 files changed, 175 insertions(+), 3 deletions(-)
- create mode 100644 tools/testing/selftests/liveupdate/luo_cpu_preserve.c
+ arch/arm64/Kconfig                    |   1 +
+ arch/arm64/include/asm/cpu_preserve.h |  44 ++++
+ arch/arm64/kernel/Makefile            |   7 +
+ arch/arm64/kernel/cpu_preserve.c      | 365 ++++++++++++++++++++++++++
+ arch/arm64/kernel/preserve_cpu.S      |  44 ++++
+ arch/arm64/kernel/smp.c               |   8 +-
+ arch/arm64/kernel/vmlinux.lds.S       |   1 +
+ 7 files changed, 469 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/include/asm/cpu_preserve.h
+ create mode 100644 arch/arm64/kernel/cpu_preserve.c
+ create mode 100644 arch/arm64/kernel/preserve_cpu.S
 
-diff --git a/tools/testing/selftests/liveupdate/Makefile b/tools/testing/selftests/liveupdate/Makefile
-index 634211c66652..0fa80f26a191 100644
---- a/tools/testing/selftests/liveupdate/Makefile
-+++ b/tools/testing/selftests/liveupdate/Makefile
-@@ -3,6 +3,7 @@
- TEST_GEN_PROGS += liveupdate
- 
- TEST_GEN_PROGS_EXTENDED += luo_kexec_simple
-+TEST_GEN_PROGS_EXTENDED += luo_cpu_preserve
- TEST_GEN_PROGS_EXTENDED += luo_multi_session
- TEST_GEN_PROGS_EXTENDED += luo_stress_sessions
- TEST_GEN_PROGS_EXTENDED += luo_stress_files
-diff --git a/tools/testing/selftests/liveupdate/init.c b/tools/testing/selftests/liveupdate/init.c
-index fb08bd58b9b9..a3850ff95c00 100644
---- a/tools/testing/selftests/liveupdate/init.c
-+++ b/tools/testing/selftests/liveupdate/init.c
-@@ -11,6 +11,7 @@
- #include <string.h>
- #include <sys/mount.h>
- #include <sys/reboot.h>
-+#include <sys/stat.h>
- #include <sys/syscall.h>
- #include <sys/wait.h>
- #include <unistd.h>
-@@ -27,11 +28,15 @@ static int mount_filesystems(void)
- 		return -1;
- 	}
- 
--	if (mount("debugfs", "/debugfs", "debugfs", 0, NULL) < 0) {
--		fprintf(stderr, "INIT: Failed to mount debugfs\n");
-+	if (mount("sysfs", "/sys", "sysfs", 0, NULL) < 0) {
-+		fprintf(stderr, "INIT: Failed to mount sysfs\n");
- 		return -1;
- 	}
- 
-+	mkdir("/sys/kernel/debug", 0755);
-+	mount("debugfs", "/sys/kernel/debug", "debugfs", 0, NULL);
-+	mount("debugfs", "/debugfs", "debugfs", 0, NULL);
-+
- 	if (mount("proc", "/proc", "proc", 0, NULL) < 0) {
- 		fprintf(stderr, "INIT: Failed to mount proc\n");
- 		return -1;
-@@ -116,7 +121,23 @@ static int run_test(int stage)
- 	}
- 
- 	waitpid(pid, &status, 0);
-+	if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
-+		return 0;
-+
-+	/* If test binary does not accept -s (e.g. kselftest harness), run without -s */
-+	pid = fork();
-+	if (pid < 0)
-+		return -1;
-+
-+	if (!pid) {
-+		char *const argv[] = {TEST_BINARY, NULL};
- 
-+		execve(TEST_BINARY, argv, NULL);
-+		fprintf(stderr, "INIT: execve failed\n");
-+		_exit(1);
-+	}
-+
-+	waitpid(pid, &status, 0);
- 	return (WIFEXITED(status) && WEXITSTATUS(status) == 0) ? 0 : -1;
- }
- 
-@@ -168,6 +189,8 @@ int main(int argc, char *argv[])
- 	}
- 
- 	printf("INIT: Stage %d completed successfully.\n", current_stage);
-+	if (current_stage == 2)
-+		printf("\n--- TEST PASSED ---\n");
- 	reboot(current_stage == 1 ? RB_KEXEC : RB_AUTOBOOT);
- 
- 	return 0;
-diff --git a/tools/testing/selftests/liveupdate/luo_cpu_preserve.c b/tools/testing/selftests/liveupdate/luo_cpu_preserve.c
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index b5a51b0ef944..957ec38a9680 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -38,6 +38,7 @@ config ARM64
+ 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
+ 	select ARCH_HAS_MEM_ENCRYPT
+ 	select ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
++	select ARCH_SUPPORTS_LIVEUPDATE_CPU if LIVEUPDATE
+ 	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
+ 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+ 	select ARCH_HAS_NONLEAF_PMD_YOUNG if ARM64_HAFT
+diff --git a/arch/arm64/include/asm/cpu_preserve.h b/arch/arm64/include/asm/cpu_preserve.h
 new file mode 100644
-index 000000000000..85d17ccf3d90
+index 000000000000..7c7c94f21ccc
 --- /dev/null
-+++ b/tools/testing/selftests/liveupdate/luo_cpu_preserve.c
-@@ -0,0 +1,145 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++++ b/arch/arm64/include/asm/cpu_preserve.h
+@@ -0,0 +1,44 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2026, Google LLC.
++ * Pasha Tatashin <pasha.tatashin@soleen.com>
++ */
++#ifndef __ASM_ARM64_CPU_PRESERVE_H
++#define __ASM_ARM64_CPU_PRESERVE_H
 +
++#include <asm/memory.h>
++#include <asm/tlbflush.h>
++#include <asm/virt.h>
++
++#define ARCH_CPU_PRESERVED_STACK_ORDER	(THREAD_SIZE_ORDER + 1)
++
++bool arch_cpu_preserved_is_active(void);
++asmlinkage void __arch_cpu_preserved_dcache_clean(unsigned long start, unsigned long end);
++asmlinkage void arch_cpu_preserved_dcache_clean(unsigned long start, unsigned long end);
++asmlinkage void arch_cpu_preserved_dcache_inval(unsigned long start, unsigned long end);
++
++static inline void arm64_flush_host_tlb_local(void)
++{
++	dsb(nshst);
++	if (is_kernel_in_hyp_mode()) {
++		asm volatile("tlbi alle2\n"
++			     "dsb nsh\n"
++			     "isb\n" ::: "memory");
++	} else {
++		local_flush_tlb_all();
++	}
++}
++
++static inline void arm64_flush_host_tlb_all(void)
++{
++	dsb(ishst);
++	if (is_kernel_in_hyp_mode()) {
++		asm volatile("tlbi alle2is\n"
++			     "dsb ish\n"
++			     "isb\n" ::: "memory");
++	} else {
++		flush_tlb_all();
++	}
++}
++
++#endif /* __ASM_ARM64_CPU_PRESERVE_H */
+diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+index d2690c3ec528..151513a5350b 100644
+--- a/arch/arm64/kernel/Makefile
++++ b/arch/arm64/kernel/Makefile
+@@ -70,6 +70,13 @@ obj-$(CONFIG_ARM_SDE_INTERFACE)		+= sdei.o
+ obj-$(CONFIG_ARM64_PTR_AUTH)		+= pointer_auth.o
+ obj-$(CONFIG_ARM64_MPAM)		+= mpam.o
+ obj-$(CONFIG_ARM64_MTE)			+= mte.o
++obj-$(CONFIG_LIVEUPDATE_CPU)		+= cpu_preserve.o preserve_cpu.o
++KASAN_SANITIZE_cpu_preserve.o := n
++KCSAN_SANITIZE_cpu_preserve.o := n
++UBSAN_SANITIZE_cpu_preserve.o := n
++KCOV_INSTRUMENT_cpu_preserve.o := n
++CFLAGS_REMOVE_cpu_preserve.o = $(CC_FLAGS_FTRACE)
++CFLAGS_cpu_preserve.o += $(call cc-option,-mbranch-protection=none) -fno-stack-protector $(call cc-option,-ftrivial-auto-var-init=uninitialized) $(call cc-option,-fno-jump-tables)
+ obj-y					+= vdso-wrap.o
+ obj-$(CONFIG_COMPAT_VDSO)		+= vdso32-wrap.o
+ 
+diff --git a/arch/arm64/kernel/cpu_preserve.c b/arch/arm64/kernel/cpu_preserve.c
+new file mode 100644
+index 000000000000..15de1ca09062
+--- /dev/null
++++ b/arch/arm64/kernel/cpu_preserve.c
+@@ -0,0 +1,365 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (c) 2026, Google LLC.
 + * Pasha Tatashin <pasha.tatashin@soleen.com>
 + *
-+ * A selftest to validate the lifecycle of preserved CPUs across Live Update
-+ * and within a local session.
++ * Architecture specific CPU preservation support for ARM64.
 + */
++#include <linux/arm-smccc.h>
++#include <linux/cpu_preserve.h>
++#include <linux/irqchip/arm-gic-v3.h>
++#include <linux/kexec_handover.h>
++#include <linux/kho/abi/cpu.h>
++#include <linux/mm.h>
++#include <linux/psci.h>
++#include <linux/sched/mm.h>
++#include <uapi/linux/psci.h>
 +
-+#include <fcntl.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/ioctl.h>
-+#include <unistd.h>
++#include <asm/barrier.h>
++#include <linux/cacheflush.h>
++#include <asm/cpu_ops.h>
++#include <asm/daifflags.h>
++#include <asm/kernel-pgtable.h>
++#include <asm/kvm_asm.h>
++#include <linux/pgtable.h>
++#include <asm/sysreg.h>
++#include <asm/tlbflush.h>
++#include <asm/trans_pgd.h>
++#include <asm/virt.h>
 +
-+#include <libliveupdate.h>
++static enum arm_smccc_conduit arm64_psci_conduit __cpu_preserved_data;
++phys_addr_t arm64_caretaker_pgd_pa __cpu_preserved_data;
++static u64 arm64_cpu_mpidr[NR_CPUS] __cpu_preserved_data;
 +
-+#define TEST_SESSION_NAME "cpu-preserve-session"
-+#define STATE_SESSION_NAME "cpu_preserve_state"
-+#define STATE_MEMFD_TOKEN 999
-+#define TEST_CPU_TOKEN 0x100
-+
-+static int find_target_cpu(void)
++/*
++ * Signal or wake up a preserved physical CPU via SEV.
++ */
++void __cpu_preserved_text arch_cpu_preserved_kick(int cpu)
 +{
-+	char path[128];
-+	int cpu;
++	dsb(ishst);
++	sev();
++	isb();
++}
 +
-+	for (cpu = 1; cpu < 256; cpu++) {
-+		snprintf(path, sizeof(path), "/sys/devices/system/cpu/cpu%d/preserve", cpu);
-+		if (access(path, R_OK) == 0) {
-+			snprintf(path, sizeof(path), "/sys/devices/system/cpu/cpu%d/online", cpu);
-+			if (access(path, R_OK) == 0)
-+				return cpu;
++/*
++ * Low-power wait in parking loop.
++ */
++void __cpu_preserved_text arch_cpu_preserved_park_wait(void)
++{
++	wfe();
++}
++
++int __cpu_preserved_text arch_cpu_preserved_mpidr_to_cpu(u64 mpidr)
++{
++	int c;
++
++	for (c = 0; c < ARRAY_SIZE(arm64_cpu_mpidr); c++) {
++		if ((arm64_cpu_mpidr[c] & MPIDR_HWID_BITMASK) == (mpidr & MPIDR_HWID_BITMASK))
++			return c;
++	}
++	return -EINVAL;
++}
++EXPORT_SYMBOL_GPL(arch_cpu_preserved_mpidr_to_cpu);
++
++bool __cpu_preserved_text arch_cpu_preserved_is_active(void)
++{
++	struct cpu_preserved_stack_context *sctx = cpu_preserved_get_stack_context();
++	u64 ttbr1 = read_sysreg(ttbr1_el1);
++
++	if (sctx && sctx->session_pgd_pa && ttbr1 == sctx->session_pgd_pa)
++		return true;
++
++	if (arm64_caretaker_pgd_pa)
++		return ttbr1 == arm64_caretaker_pgd_pa;
++
++	return false;
++}
++EXPORT_SYMBOL_GPL(arch_cpu_preserved_is_active);
++
++void __cpu_preserved_text arch_cpu_preserved_switch_pgd(phys_addr_t pgd_pa)
++{
++	if (pgd_pa && read_sysreg(ttbr1_el1) != pgd_pa) {
++		write_sysreg(pgd_pa, ttbr1_el1);
++		isb();
++		arm64_flush_host_tlb_local();
++	}
++}
++EXPORT_SYMBOL_GPL(arch_cpu_preserved_switch_pgd);
++
++static pte_t *arm64_get_kernel_pte(unsigned long addr)
++{
++	pgd_t *pgdp = pgd_offset_k(addr);
++	p4d_t *p4dp;
++	pud_t *pudp;
++	pmd_t *pmdp;
++
++	if (pgd_none(READ_ONCE(*pgdp)))
++		return NULL;
++
++	p4dp = p4d_offset(pgdp, addr);
++	if (p4d_none(READ_ONCE(*p4dp)))
++		return NULL;
++
++	pudp = pud_offset(p4dp, addr);
++	if (pud_none(READ_ONCE(*pudp)) || pud_leaf(READ_ONCE(*pudp)))
++		return NULL;
++
++	pmdp = pmd_offset(pudp, addr);
++	if (pmd_none(READ_ONCE(*pmdp)) || pmd_leaf(READ_ONCE(*pmdp)))
++		return NULL;
++
++	return pte_offset_kernel(pmdp, addr);
++}
++
++/**
++ * arch_cpu_preserved_as_map - Populate an isolated page table on arm64
++ * @as: Address space to map into.
++ * @pa: Physical address of the range.
++ * @va: Virtual address the range must appear at.
++ * @size: Size of the range in bytes.
++ * @prot: Protection to apply.
++ *
++ * Return: 0 on success, or a negative errno on failure.
++ */
++int arch_cpu_preserved_as_map(struct cpu_preserved_as *as, phys_addr_t pa,
++			      unsigned long va, size_t size, pgprot_t prot)
++{
++	struct trans_pgd_info info = {
++		.trans_alloc_page = cpu_preserved_as_alloc_page,
++		.trans_alloc_arg = as,
++	};
++	unsigned long offset = va & ~PAGE_MASK;
++	size_t page_size = PAGE_ALIGN(offset + size);
++	unsigned long page_va = va & PAGE_MASK;
++	phys_addr_t page_pa = (pa & PAGE_MASK);
++
++	return trans_pgd_map_range(&info, as->pgd, page_pa,
++				   page_va, page_size, prot);
++}
++
++void arch_cpu_preserved_as_flush_tlb(void)
++{
++	arm64_flush_host_tlb_all();
++}
++
++void arch_cpu_preserved_set_transition_as(struct cpu_preserved_as *as)
++{
++	arm64_caretaker_pgd_pa = as ? as->pgd_pa : 0;
++	cpu_preserved_clean(&arm64_caretaker_pgd_pa);
++}
++
++/**
++ * arch_cpu_preserved_setup_buffer - Set up runtime buffer and page tables
++ * @text_page: Runtime-allocated physical page backing preserved text
++ * @text_nr_pages: Number of pages in text buffer
++ * @data_page: Runtime-allocated physical page backing preserved data
++ * @data_nr_pages: Number of pages in data buffer
++ *
++ * Remap init_mm kernel mappings for __cpu_preserved_text and
++ * __cpu_preserved_data to point to the runtime-allocated pages outside
++ * Scratch.
++ *
++ * Return: 0 on success, or -ENOMEM on failure.
++ */
++static void arm64_split_contpte_range(unsigned long start, unsigned long end)
++{
++	unsigned long addr;
++
++	if (start >= end)
++		return;
++
++	for (addr = ALIGN_DOWN(start, CONT_PTE_SIZE); addr < end; addr += CONT_PTE_SIZE) {
++		pte_t *ptep = arm64_get_kernel_pte(addr);
++		int i;
++
++		if (!ptep)
++			continue;
++
++		ptep = PTR_ALIGN_DOWN(ptep, sizeof(*ptep) * CONT_PTES);
++
++		for (i = 0; i < CONT_PTES; i++) {
++			pte_t pte = __ptep_get(&ptep[i]);
++
++			if (pte_valid_cont(pte))
++				__set_pte(&ptep[i], pte_mknoncont(pte));
 +		}
 +	}
-+	return -1;
++
++	flush_tlb_kernel_range(ALIGN_DOWN(start, CONT_PTE_SIZE),
++			       ALIGN(end, CONT_PTE_SIZE));
++	arm64_flush_host_tlb_all();
 +}
 +
-+static int read_cpu_online(int cpu)
++int arch_cpu_preserved_setup_buffer(struct page *text_page,
++				    unsigned int text_nr_pages,
++				    struct page *data_page,
++				    unsigned int data_nr_pages)
 +{
-+	char path[128], buf[16];
-+	int fd, val = -1;
++	unsigned long text_start = (unsigned long)__cpu_preserved_text_start;
++	unsigned long data_start = (unsigned long)__cpu_preserved_data_start;
++	unsigned int i;
 +
-+	snprintf(path, sizeof(path), "/sys/devices/system/cpu/cpu%d/online", cpu);
-+	fd = open(path, O_RDONLY);
-+	if (fd < 0)
-+		return -1;
-+	if (read(fd, buf, sizeof(buf) - 1) > 0)
-+		val = atoi(buf);
-+	close(fd);
-+	return val;
++	/* Split any contiguous 64KB mappings before replacing individual PTEs */
++	arm64_split_contpte_range(text_start, text_start + text_nr_pages * PAGE_SIZE);
++	arm64_split_contpte_range(data_start, data_start + data_nr_pages * PAGE_SIZE);
++
++	/* Clean old mappings before switching PTEs */
++	__arch_cpu_preserved_dcache_clean(text_start, text_start + text_nr_pages * PAGE_SIZE);
++	__arch_cpu_preserved_dcache_clean(data_start, data_start + data_nr_pages * PAGE_SIZE);
++
++	/* Remap init_mm kernel mappings to point to allocated buffer pages */
++	for (i = 0; i < text_nr_pages; i++) {
++		unsigned long va = text_start + i * PAGE_SIZE;
++		pte_t *ptep = arm64_get_kernel_pte(va);
++
++		if (!ptep)
++			return -EINVAL;
++
++		pgprot_t prot = __pgprot(pgprot_val(pte_pgprot(*ptep)) & ~PTE_CONT);
++		phys_addr_t pa = page_to_phys(text_page) + i * PAGE_SIZE;
++
++		set_pte_at(&init_mm, va, ptep, pfn_pte(PHYS_PFN(pa), prot));
++	}
++
++	for (i = 0; i < data_nr_pages; i++) {
++		unsigned long va = data_start + i * PAGE_SIZE;
++		pte_t *ptep = arm64_get_kernel_pte(va);
++
++		if (!ptep)
++			return -EINVAL;
++
++		pgprot_t prot = __pgprot(pgprot_val(pte_pgprot(*ptep)) & ~PTE_CONT);
++		phys_addr_t pa = page_to_phys(data_page) + i * PAGE_SIZE;
++
++		set_pte_at(&init_mm, va, ptep, pfn_pte(PHYS_PFN(pa), prot));
++	}
++
++	arm64_flush_host_tlb_all();
++	flush_icache_range(text_start, text_start + (text_nr_pages * PAGE_SIZE));
++
++	for (i = 0; i < nr_cpu_ids; i++)
++		arm64_cpu_mpidr[i] = cpu_logical_map(i);
++	cpu_preserved_clean(&arm64_cpu_mpidr);
++
++	return 0;
 +}
 +
-+static int preserve_cpu_fd(int session_fd, int cpu, int token)
++/*
++ * Masks DAIF interrupts and enables GIC CPU interface for WFx wakeups.
++ */
++void __cpu_preserved_text arch_cpu_preserved_park_init(int cpu)
 +{
-+	struct liveupdate_session_preserve_fd pfd = {};
-+	char path[128];
-+	int cpu_fd, ret;
++	struct cpu_preserved_stack_context *sctx = cpu_preserved_get_stack_context();
++	phys_addr_t pgd_pa = 0;
 +
-+	snprintf(path, sizeof(path), "/sys/devices/system/cpu/cpu%d/preserve", cpu);
-+	cpu_fd = open(path, O_RDONLY);
-+	if (cpu_fd < 0)
-+		return -1;
++	if (sctx && sctx->session_pgd_pa)
++		pgd_pa = sctx->session_pgd_pa;
++	else
++		pgd_pa = cpu_preserved_get_pgd(cpu);
 +
-+	pfd.size = sizeof(pfd);
-+	pfd.fd = cpu_fd;
-+	pfd.token = token;
++	local_daif_mask();
++	cpu_preserved_inval(&arm64_psci_conduit);
++	cpu_preserved_inval(&arm64_cpu_mpidr);
++	if (!pgd_pa) {
++		cpu_preserved_inval(&arm64_caretaker_pgd_pa);
++		pgd_pa = READ_ONCE(arm64_caretaker_pgd_pa);
++	}
 +
-+	ret = ioctl(session_fd, LIVEUPDATE_SESSION_PRESERVE_FD, &pfd);
-+	close(cpu_fd);
-+	return ret;
++	write_sysreg(0, ttbr0_el1);
++	if (pgd_pa)
++		write_sysreg(pgd_pa, ttbr1_el1);
++	isb();
++	arm64_flush_host_tlb_local();
++
++	write_sysreg_s(0xff, SYS_ICC_PMR_EL1);
++	write_sysreg_s(1, SYS_ICC_IGRPEN1_EL1);
++	isb();
 +}
 +
-+/* Stage 1: Executed before kexec */
-+static void run_stage_1(int luo_fd)
++void arch_cpu_preserved_early_init(void)
 +{
-+	int target_cpu, session_fd;
++	int c;
 +
-+	target_cpu = find_target_cpu();
-+	if (target_cpu < 0)
-+		fail_exit("No hotpluggable CPU with preserve attribute found");
++	for (c = 0; c < ARRAY_SIZE(arm64_cpu_mpidr); c++)
++		arm64_cpu_mpidr[c] = cpu_logical_map(c);
++	cpu_preserved_clean(&arm64_cpu_mpidr);
 +
-+	ksft_print_msg("[STAGE 1] Target CPU for preservation: %d\n", target_cpu);
-+
-+	create_state_file(luo_fd, STATE_SESSION_NAME, STATE_MEMFD_TOKEN, target_cpu);
-+
-+	session_fd = luo_create_session(luo_fd, TEST_SESSION_NAME);
-+	if (session_fd < 0)
-+		fail_exit("luo_create_session for '%s'", TEST_SESSION_NAME);
-+
-+	if (preserve_cpu_fd(session_fd, target_cpu, TEST_CPU_TOKEN) < 0)
-+		fail_exit("preserve_cpu_fd for cpu %d", target_cpu);
-+
-+	if (read_cpu_online(target_cpu) != 0)
-+		fail_exit("CPU %d was expected to be offline after preservation", target_cpu);
-+
-+	ksft_print_msg("[STAGE 1] CPU %d successfully preserved and offlined\n", target_cpu);
-+
-+	close(luo_fd);
-+	daemonize_and_wait();
++	cpu_preserved_inval(&arm64_psci_conduit);
++	if (arm64_psci_conduit == SMCCC_CONDUIT_NONE) {
++		arm64_psci_conduit = arm_smccc_1_1_get_conduit();
++		cpu_preserved_clean(&arm64_psci_conduit);
++	}
 +}
++EXPORT_SYMBOL_GPL(arch_cpu_preserved_early_init);
 +
-+/* Stage 2: Executed after kexec */
-+static void run_stage_2(int luo_fd, int state_session_fd)
++void __cpu_preserved_text arch_cpu_preserved_park_finish(int cpu)
 +{
-+	struct liveupdate_session_retrieve_fd rfd = {};
-+	int target_cpu, session_fd;
++	u32 el = (read_sysreg(CurrentEL) >> 2) & 3;
++	enum arm_smccc_conduit conduit;
 +
-+	restore_and_read_stage(state_session_fd, STATE_MEMFD_TOKEN, &target_cpu);
-+	ksft_print_msg("[STAGE 2] Restored target CPU: %d\n", target_cpu);
++	cpu_preserved_inval(&arm64_psci_conduit);
++	conduit = READ_ONCE(arm64_psci_conduit);
 +
-+	session_fd = luo_retrieve_session(luo_fd, TEST_SESSION_NAME);
-+	if (session_fd < 0)
-+		fail_exit("luo_retrieve_session for '%s'", TEST_SESSION_NAME);
++	local_daif_mask();
++	write_sysreg_s(0, SYS_ICC_PMR_EL1);
++	write_sysreg_s(0, SYS_ICC_IGRPEN1_EL1);
++	isb();
 +
-+	rfd.size = sizeof(rfd);
-+	rfd.token = TEST_CPU_TOKEN;
-+	if (ioctl(session_fd, LIVEUPDATE_SESSION_RETRIEVE_FD, &rfd) < 0)
-+		fail_exit("LIVEUPDATE_SESSION_RETRIEVE_FD for cpu token %#x", TEST_CPU_TOKEN);
++	if (el == 2 || conduit == SMCCC_CONDUIT_NONE)
++		conduit = (el == 2) ? SMCCC_CONDUIT_SMC : SMCCC_CONDUIT_HVC;
 +
-+	close(rfd.fd);
++	cpu_preserved_set_dead(cpu);
 +
-+	if (read_cpu_online(target_cpu) != 1)
-+		fail_exit("CPU %d was expected to be online after retrieval", target_cpu);
++	/*
++	 * Direct PSCI CPU_OFF call in preserved text without relying on
++	 * unpreserved kernel data structures or function pointers.
++	 *
++	 * x0: PSCI_0_2_FN_CPU_OFF (0x84000002)
++	 * x1: Power down state (0x00010000)
++	 */
++	if (conduit == SMCCC_CONDUIT_HVC) {
++		asm volatile("mov	x0, #0x0002\n"
++			"movk	x0, #0x8400, lsl #16\n"
++			"mov	x1, #0\n"
++			"mov	x2, #0\n"
++			"mov	x3, #0\n"
++			"mov	x4, #0\n"
++			"mov	x5, #0\n"
++			"mov	x6, #0\n"
++			"mov	x7, #0\n"
++			"hvc	#0\n"
++			:
++			:
++			: "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "memory"
++		);
++	} else {
++		asm volatile("mov	x0, #0x0002\n"
++			"movk	x0, #0x8400, lsl #16\n"
++			"mov	x1, #0\n"
++			"mov	x2, #0\n"
++			"mov	x3, #0\n"
++			"mov	x4, #0\n"
++			"mov	x5, #0\n"
++			"mov	x6, #0\n"
++			"mov	x7, #0\n"
++			"smc	#0\n"
++			:
++			:
++			: "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "memory"
++		);
++	}
 +
-+	ksft_print_msg("[STAGE 2] CPU %d successfully retrieved and online\n", target_cpu);
-+
-+	if (luo_session_finish(session_fd) < 0)
-+		fail_exit("luo_session_finish for test session");
-+	close(session_fd);
-+
-+	if (luo_session_finish(state_session_fd) < 0)
-+		fail_exit("luo_session_finish for state session");
-+	close(state_session_fd);
-+
-+	ksft_print_msg("\n--- CPU PRESERVATION KEXEC TEST PASSED ---\n");
++	while (1) {
++		wfi();
++		wfe();
++	}
 +}
 +
-+int main(int argc, char *argv[])
++void arch_cpu_preserved_wait_dead(int cpu)
 +{
-+	return luo_test(argc, argv, STATE_SESSION_NAME,
-+			run_stage_1, run_stage_2);
++	const struct cpu_operations *ops = get_cpu_ops(cpu);
++
++	if (ops && ops->cpu_kill)
++		ops->cpu_kill(cpu);
 +}
-diff --git a/tools/testing/selftests/liveupdate/run-vmtests.sh b/tools/testing/selftests/liveupdate/run-vmtests.sh
-index d656ce58c5a7..1b90d56ec4a2 100755
---- a/tools/testing/selftests/liveupdate/run-vmtests.sh
-+++ b/tools/testing/selftests/liveupdate/run-vmtests.sh
-@@ -20,6 +20,7 @@ TEST_NAMES=(
- 	"luo_multi_session"
- 	"luo_stress_files"
- 	"luo_stress_sessions"
-+	"luo_cpu_preserve"
- )
++
+diff --git a/arch/arm64/kernel/preserve_cpu.S b/arch/arm64/kernel/preserve_cpu.S
+new file mode 100644
+index 000000000000..c7e3cd8133f0
+--- /dev/null
++++ b/arch/arm64/kernel/preserve_cpu.S
+@@ -0,0 +1,44 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Low-level assembly routines for ARM64 physical CPU preservation.
++ *
++ * Copyright (c) 2026, Google LLC.
++ * Pasha Tatashin <pasha.tatashin@soleen.com>
++ */
++#include <linux/linkage.h>
++#include <asm/assembler.h>
++
++	.section .text.cpu_preserved, "ax"
++
++/*
++ * arch_cpu_preserved_park_on_stack - Switch stack and enter park loop
++ * @cpu: Logical CPU identifier (x0)
++ * @stack_top: Top of runtime allocated stack (x1)
++ */
++SYM_FUNC_START(arch_cpu_preserved_park_on_stack)
++	mov	sp, x1
++	mov	x19, x0
++	bl	cpu_preserved_park_loop
++	mov	x0, x19
++	bl	arch_cpu_preserved_park_finish
++	b	.
++SYM_FUNC_END(arch_cpu_preserved_park_on_stack)
++EXPORT_SYMBOL(arch_cpu_preserved_park_on_stack)
++
++/*
++ * __arch_cpu_preserved_dcache_clean - Clean and invalidate data cache to PoC
++ * @start: Virtual start address (x0)
++ * @end: Virtual end address (x1)
++ */
++SYM_FUNC_START(__arch_cpu_preserved_dcache_clean)
++	dsb	sy
++	raw_dcache_line_size x2, x3
++	dcache_by_myline_op_nosync civac, x0, x1, x2, x3
++	dsb	sy
++	ret
++SYM_FUNC_END(__arch_cpu_preserved_dcache_clean)
++SYM_FUNC_ALIAS(arch_cpu_preserved_dcache_clean, __arch_cpu_preserved_dcache_clean)
++SYM_FUNC_ALIAS(arch_cpu_preserved_dcache_inval, __arch_cpu_preserved_dcache_clean)
++EXPORT_SYMBOL(__arch_cpu_preserved_dcache_clean)
++EXPORT_SYMBOL(arch_cpu_preserved_dcache_clean)
++EXPORT_SYMBOL(arch_cpu_preserved_dcache_inval)
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index a61dc3016a11..43651eceb09c 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -21,6 +21,7 @@
+ #include <linux/mm.h>
+ #include <linux/err.h>
+ #include <linux/cpu.h>
++#include <linux/cpu_preserve.h>
+ #include <linux/smp.h>
+ #include <linux/seq_file.h>
+ #include <linux/irq.h>
+@@ -327,7 +328,12 @@ int __cpu_disable(void)
  
- function usage() {
-diff --git a/tools/testing/selftests/liveupdate/vmtest.sh b/tools/testing/selftests/liveupdate/vmtest.sh
-index 64fd2ab55b76..c934c76c00a0 100755
---- a/tools/testing/selftests/liveupdate/vmtest.sh
-+++ b/tools/testing/selftests/liveupdate/vmtest.sh
-@@ -145,6 +145,7 @@ function mkinitrd() {
- 	cat > "$workspace_dir/cpio_list_inner" <<EOF
- dir /dev 0755 0 0
- dir /proc 0755 0 0
-+dir /sys 0755 0 0
- dir /debugfs 0755 0 0
- nod /dev/console 0600 0 0 c 5 1
- file /init $workspace_dir/init 0755 0 0
-@@ -157,6 +158,7 @@ EOF
- 	cat > "$workspace_dir/cpio_list" <<EOF
- dir /dev 0755 0 0
- dir /proc 0755 0 0
-+dir /sys 0755 0 0
- dir /debugfs 0755 0 0
- nod /dev/console 0600 0 0 c 5 1
- file /init $workspace_dir/init 0755 0 0
-@@ -179,7 +181,7 @@ function run_qemu() {
+ static int op_cpu_kill(unsigned int cpu)
+ {
+-	const struct cpu_operations *ops = get_cpu_ops(cpu);
++	const struct cpu_operations *ops;
++
++	if (cpu_is_preserved(cpu))
++		return 0;
++
++	ops = get_cpu_ops(cpu);
  
- 	echo "# Serial Log: $serial"
- 	timeout 30s \
--	$qemu_cmd -m 1G -smp 2 -no-reboot -nographic -nodefaults \
-+	$qemu_cmd -m 1G -smp 4 -no-reboot -nographic -nodefaults \
- 		  -accel tcg -accel hvf -accel kvm \
- 		  -serial file:"$serial" \
- 		  -append "$cmdline" \
+ 	/*
+ 	 * If we have no means of synchronising with the dying CPU, then assume
+diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+index af1d72020976..9e809b6908a1 100644
+--- a/arch/arm64/kernel/vmlinux.lds.S
++++ b/arch/arm64/kernel/vmlinux.lds.S
+@@ -197,6 +197,7 @@ SECTIONS
+ 			IRQENTRY_TEXT
+ 			SOFTIRQENTRY_TEXT
+ 			ENTRY_TEXT
++			CPU_PRESERVED_TEXT
+ 			TEXT_TEXT
+ 			SCHED_TEXT
+ 			LOCK_TEXT
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
