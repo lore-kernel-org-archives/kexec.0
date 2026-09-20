@@ -4,73 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 79EF1C982E6
-	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AF756C982F3
+	for <kexec@archiver.kernel.org>; Sun, 20 Sep 2026 20:24:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=EGHl9G2Q8EmXvEbGL4UYBvGbfn4j1FoYD4wdklwyMj4=; b=eyktzgSTHnCRQYuNKnyKsbxUwM
-	NnVtT4njqxFt7wSKDDltraMs2CeYojngTycm+bwNPXG5jPEgqeF+WTAwn/OeSlMLJygi7mBkHK9xo
-	QTaQVbcA7zACew7BclcJKEPXzXs+d1rA/IMmvXgnS4wogFr/gf8WPIVDRSh5JHp+f/Xy8Mxo6XzO6
-	hkjkW3bWgWncFvLILf5wDKI1nIPmX5w6sCLGbmBkjSENuVSkQOCn5KpSYJlmH3x5M64gCBH1qgi1/
-	s6XQfJVCXGspNEbbGpvJaTNIZiRoJboIyubqRxzO8pjU0aX8noM3UtqeaMfjYf8Yq998dxvsYjW46
-	nX28DaKQ==;
+	bh=Y5wqvR/8Rgbn3Q8wmCLu7MA68JCRgtXzVIxWF4pI6Mc=; b=dbLC2UNesjQyDf7BAt/sAGh/E0
+	wSbeHND+n7ttjgUyC29OFsy5DKvSmiB/MYs7yszkoL/2LeRcICNANy8Em+GGVrhIYFM0Tgb1gYwBm
+	h0QLapGpUbkdcLvPIqJd6R+tpf/gD1TTgHk8Pda06RETN+eeLV8rhkdQhb4kwfI0pECddMb2vvlxW
+	yfezgMfrbLCHbxk7mmSZmdGD9FbWf+b4sJF4jMcevKNhgyehnVK+Ey0tR3RNpnUcWyI3k8wnWqhc0
+	iAYa9my2t/8smMRbj/AKIR4hWgm+qw4I17C8sSeIGUwVg0L+P/FvluFU0LZy57k/CkTsBNDL5eS3T
+	UoVba78Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8O57-00000000O8A-2UA2;
-	Sun, 20 Sep 2026 20:24:13 +0000
-Received: from mail-yx2-x10.google.com ([2607:f8b0:4864:41::10])
+	id 1x8O59-00000000OD6-17Sh;
+	Sun, 20 Sep 2026 20:24:15 +0000
+Received: from mail-yx2-x11.google.com ([2607:f8b0:4864:41::11])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8NOc-00000000JML-4772
+	id 1x8NOw-00000000JRg-2IZa
 	for kexec@lists.infradead.org;
-	Sun, 20 Sep 2026 19:40:20 +0000
-Received: by mail-yx2-x10.google.com with SMTP id 00721157ae682-85d43db0c16so16391087b3.1
-        for <kexec@lists.infradead.org>; Sun, 20 Sep 2026 12:40:18 -0700 (PDT)
+	Sun, 20 Sep 2026 19:40:39 +0000
+Received: by mail-yx2-x11.google.com with SMTP id 956f58d0204a3-66e4ab201f9so1873710d50.0
+        for <kexec@lists.infradead.org>; Sun, 20 Sep 2026 12:40:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1789933218; x=1790538018; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1789933237; x=1790538037; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=EGHl9G2Q8EmXvEbGL4UYBvGbfn4j1FoYD4wdklwyMj4=;
-        b=SQsUTVyOBpqDSSvMZfv9eWVxx7FWesC40MIXSBnJNLckCMFSKJ+kfAPlH9RLNWi4M5
-         YMRQJRdQCU3VylqnhCY1dZTcSrsUnI1Gsy8U6nOic7crtqH6plDluosNCbqfaw/E5dMX
-         p/ygAqy3d7TVbjvIka9QAWh2nY/IOxxof+c/4e7En7ql+YtPb30YIZBL4ZUjUgNdgfVk
-         Tqhl3Pio+AX1h4TYOEPcTPifZBNKiraaRiUXMBV7HYo9f1ic9cwz8T+ESCdpnaSKzo1A
-         UuVzy0rYo+K+kBteelU/fjRazi22qQ0XyS0vUrKk4thbyCWHWDyYaYQ3lC03/hdgTJ0T
-         mlIw==
+        bh=Y5wqvR/8Rgbn3Q8wmCLu7MA68JCRgtXzVIxWF4pI6Mc=;
+        b=CkAWE7oEGGT1hhuNmiPrNsGFB9KQFYBOWuVco08gKsU7dFGRCm/OKJG4rUG/uIV/sm
+         /bXedYeOn4TgpFBazFKxYJlClvamkVuUKwTlCOD6IXbj6/LWyJfL4gLKD5pZeWbDOnxm
+         n9h9UZ43DykTVFC2ZsMrgV5yrAiC59wlX8hjc5QRJkp23fa9YI7+JOIsAiS5cbWc10J0
+         9yYw+8JXwN7rp9E8FbQTSuy+VB9wBabeaZtpYvxo4XeKOOFlf2x4XaSM0m2r5BsjL08e
+         QjUDm8eplfCcpBKL2MEDouZgMHX0PFakLBNxLLF9hHb4bAnFk7XNMiarjX54Dhqq0pKU
+         gbZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789933218; x=1790538018;
+        d=1e100.net; s=20260707; t=1789933237; x=1790538037;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to:content-type;
-        bh=EGHl9G2Q8EmXvEbGL4UYBvGbfn4j1FoYD4wdklwyMj4=;
-        b=MkVNVxxiCwRVpHaTZRAKtXNxWlsKWaWhaptEqzvEYFgeivyase0MByMl/ZhXOPxGmR
-         vwraUjMeveXFCFXay2EJZABg5svfGQxBZUKC/4yBk9kSBpAi5Vj4J7k5GTAGjiu0RSO4
-         aOgrC6UkIGCrasvgeZByRd3J8AnQQ4hC722tpbxKXJG5FSrW/CCax4+qLaul/7VqtK4u
-         e39jCJnWHTIMgKBhA74nUD8Tym4l0YSEEayiL8jiBcHmCPaOag79li1lpxodbnfrmR57
-         QbiFe/h1K5sGwYe8bm/bwxjGTAWUKqwhvts8Et9BFcbSLaVMAdjSuqVf8Efmqf0bMhab
-         xtnw==
-X-Forwarded-Encrypted: i=1; AKwUvByD+Kq9rsI5+mhIAgfDJ9STNY4h7kaQOgHPmxCVrXGm+hk1bMaM3YZnzgcnivOKfAmbckx22A==@lists.infradead.org
-X-Gm-Message-State: AFuF++lLlXQ+WV3Uhzp+CFqEOoKo/pmnOPNbliUSTBHs9v03VTl9Dxav
-	Z2deTDKa7eDbwDDzexoLeQk3mhgpqdDcgMbHXniFeh1CC1tvZjF4n+5JhCtHHXs+FP4=
-X-Gm-Gg: AYBFou0iEd+kvLxnOr+81RiLR4ChJGWZ1sETBg5KCNHvJh3eR3zd5PRUsaJA4Is/PNY
-	xE1RzaE4LBZZ5Nk3lgf/zHGhMdjRmAV6v9cNRHgVP3zAK5vNyZzM/MLy2WEdo6Lq5Xq6dDbNLhX
-	rK3Hybo4A/OsPerOKVdzffOjBX1jGlYpk2WHtXI2p7hbZK5ZjXnyRJnS2liZHEd6PABFyBaWzkA
-	AMz4Pzf88IBhp3fmIG3R4QJZGj40U+Vl2WB2wA2TawwFh1svHRnmMv/VGKhIdxBrwXqIEJ0XLZu
-	w2etY3G5853yU4cl1c26fzVM+F5WhnAkQhwOGUx1cpQIKxJUZdSL+n/i1Vf++f6g5jAv8ZZ8eyR
-	NxocvMspfni+jf0QFrHYKqrLJ/vq7u7XYU4tDPHqXAK0Lq3xY8mx/vNbndhkISCKqWHqQw61oWi
-	6D5NJu7tOH6TJg/HlBHqsAtQIgftrzX5X262i6nkTI5zfDo3zcduD7y08L5WTE0YyvOhf9gHW9R
-	DTSqk8UU/9ZdeaEHi5ksFHznJJniyIfVm1c4YnO0RQsCq5JOMilusDrfHxMY8yQpBAY8m0egbRB
-	+FkkT5RtRF9oa/BSpzvsLDWYm6ldjA==
-X-Received: by 2002:a05:690e:12c4:b0:672:99e0:ebda with SMTP id 956f58d0204a3-67299e0ee4emr1603719d50.114.1789933217886;
-        Sun, 20 Sep 2026 12:40:17 -0700 (PDT)
+        bh=Y5wqvR/8Rgbn3Q8wmCLu7MA68JCRgtXzVIxWF4pI6Mc=;
+        b=EH7ra0IcxiAB5oRVnf0tCfTmf11AjYjOozGC+TKHSC2EL3ZXZHeIRbRb7OmH0JP+5j
+         CQriHj4AcbJmueWdB8MXaLq4UtGZW11TVJnIpMJmmEsUutT8aA1G67aGdrUdvlJAeVX4
+         +BKQyE0CakAZi2QJf7HTpXxqGZPr9ljbieWhbWpYRhoSToikHmq+YUvMI5la1mHWat58
+         ZtTZPCj4OClQEy7AUOp209a1ZbIzAw6ONfgB0NQaQ9DdrSflwSlkNWTyFix4/+0a+TTP
+         w+PqSoEPBHVh84YsAAScE7RxltnVuPBnny+0zLxLJuz5wwaomUOKO8DhaHBcDTV3sKks
+         PjbQ==
+X-Forwarded-Encrypted: i=1; AKwUvByqVf6w7aCDe72fXv9jH5MxFFUc5FRwQjI0crAIFjxhR8NgFV5wCEr3bLHSXPKNdDCTf8YcOQ==@lists.infradead.org
+X-Gm-Message-State: AFuF++kpRKrwn8vsBYcpCVivjMofwxWghiZ33TxyPP2hQYChFp0rdGzQ
+	vzzNsHBJgXvV8P66RnexkNShPgWcUkKIfOFBjKDc2jtPlHUDLwzxmUYmCGUEV5wJuZ8=
+X-Gm-Gg: AYBFou1JXenGDWm7BFACoNQ/4qfTpGaI7e6EcgHWOyPJb8mp2PoJZSJEd8xLlSQpQLv
+	rcVXqr0DPlM9YsTqXmwMpAzUVmjJeWWiuVcf4goUbvS+GHhKwJ+ePUoF7m9jPfvpfs2oWeBpjhu
+	D9GZxAftGi18KBhsSRqZGSXwnFpb3xKmpQ1/7GQWkgo5V1aH+ss5MjwDskslxC8sdQsE8tiEyYM
+	HvEFJAhisU+UerocCFlIAzfXt9008ey0aLMm7W3J8reEMsnF1Ta2R5MHDh/HX2GVj3d8o1feKE4
+	6os+BswPNx8O9D/F5M9yx4md7jgl6lOY2MpHWNUXN4sQ47jPE5oE3LBpZQI6S0ylY9yKaUw3uQP
+	zrKUC5dXc06IuXXtmHRwmitdQEZae0kTMH+ef1k8oga3wTfqekmvkO7442IYs8CmUw1iQZDy3DS
+	SGrQFl7tBLLxt3HxlFAJY6WR5orh01pgu/xK6igyK70OT4pSaj2KVWzfnQJKM4gOTM27LRG93KS
+	ksn27l1jN3smnQXCPxxnX/0o3nGIMU/LFLSU5voqmMwvvuGNdU46e2qCiaa/WsbRYKsoKcXccSf
+	v28mG+icRvVtWsjwVmb/
+X-Received: by 2002:a05:690e:4854:20b0:672:99e1:11f2 with SMTP id 956f58d0204a3-67299e11844mr878861d50.143.1789933237384;
+        Sun, 20 Sep 2026 12:40:37 -0700 (PDT)
 Received: from soleen.c.googlers.com.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-89a45d8fb9asm18884327b3.17.2026.09.20.12.40.14
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-672990aada0sm2671022d50.9.2026.09.20.12.40.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Sep 2026 12:40:16 -0700 (PDT)
+        Sun, 20 Sep 2026 12:40:36 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: linux-kselftest@vger.kernel.org,
 	legion@kernel.org,
@@ -148,17 +148,17 @@ To: linux-kselftest@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	vladimir.murzin@arm.com,
 	kas@kernel.org
-Subject: [RFC PATCH 34/46] KVM: x86: Implement Caretaker LAPIC timer and interrupt injection
-Date: Sun, 20 Sep 2026 15:36:38 -0400
-Message-ID: <20260920193650.3373435-35-pasha.tatashin@soleen.com>
+Subject: [RFC PATCH 37/46] KVM: VMX: Add Caretaker VMX assembly guest entry/exit routine and helpers
+Date: Sun, 20 Sep 2026 15:36:41 -0400
+Message-ID: <20260920193650.3373435-38-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
 In-Reply-To: <20260920193650.3373435-1-pasha.tatashin@soleen.com>
 References: <20260920193650.3373435-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260920_124019_050612_8A8C554F 
-X-CRM114-Status: GOOD (  20.38  )
+X-CRM114-CacheID: sfid-20260920_124038_603318_0B0CA9D1 
+X-CRM114-Status: GOOD (  14.57  )
 X-Mailman-Approved-At: Sun, 20 Sep 2026 13:23:19 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -174,333 +174,238 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Implement standalone Caretaker LAPIC timer deadline programming and
-interrupt injection helpers in arch/x86/kvm/caretaker.c.
+Add arch/x86/kvm/vmx/caretaker_vmenter.S and caretaker.h for standalone
+Intel VMX VMLAUNCH/VMRESUME world switch on preserved physical cores.
 
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/x86/kvm/caretaker.c | 312 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 312 insertions(+)
- create mode 100644 arch/x86/kvm/caretaker.c
+ arch/x86/kvm/msrs.c                  |   2 +
+ arch/x86/kvm/vmx/caretaker.h         |  78 +++++++++++++++++++
+ arch/x86/kvm/vmx/caretaker_vmenter.S | 112 +++++++++++++++++++++++++++
+ 3 files changed, 192 insertions(+)
+ create mode 100644 arch/x86/kvm/vmx/caretaker.h
+ create mode 100644 arch/x86/kvm/vmx/caretaker_vmenter.S
 
-diff --git a/arch/x86/kvm/caretaker.c b/arch/x86/kvm/caretaker.c
+diff --git a/arch/x86/kvm/msrs.c b/arch/x86/kvm/msrs.c
+index ae849e0b7d14..536c8d1959dc 100644
+--- a/arch/x86/kvm/msrs.c
++++ b/arch/x86/kvm/msrs.c
+@@ -882,11 +882,13 @@ int kvm_msr_write(struct kvm_vcpu *vcpu, u32 index, u64 data)
+ {
+ 	return __kvm_set_msr(vcpu, index, data, true);
+ }
++EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_msr_write);
+ 
+ int kvm_msr_read(struct kvm_vcpu *vcpu, u32 index, u64 *data)
+ {
+ 	return __kvm_get_msr(vcpu, index, data, true);
+ }
++EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_msr_read);
+ 
+ int __kvm_emulate_msr_read(struct kvm_vcpu *vcpu, u32 index, u64 *data)
+ {
+diff --git a/arch/x86/kvm/vmx/caretaker.h b/arch/x86/kvm/vmx/caretaker.h
 new file mode 100644
-index 000000000000..9e0f20cbb137
+index 000000000000..d4272e202e73
 --- /dev/null
-+++ b/arch/x86/kvm/caretaker.c
-@@ -0,0 +1,312 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/arch/x86/kvm/vmx/caretaker.h
+@@ -0,0 +1,78 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
 +/*
 + * Copyright (c) 2026, Google LLC.
 + * Pasha Tatashin <pasha.tatashin@soleen.com>
-+ *
-+ * x86 KVM Caretaker execution loop and hardware virtualization attachment.
 + */
++#ifndef __VMX_CARETAKER_H
++#define __VMX_CARETAKER_H
 +
-+#include <linux/cpu.h>
-+#include <linux/cpu_preserve.h>
-+#include <linux/delay.h>
-+#include <linux/kexec_handover.h>
-+#include <linux/kho/abi/kvm.h>
++#define VMCS_VM_INSTRUCTION_ERROR	0x4400
++
++#ifndef __ASSEMBLY__
++#include <linux/types.h>
 +#include <linux/kvm_host.h>
 +#include <linux/oncore.h>
-+#include <linux/smp.h>
-+#include <uapi/linux/serial_reg.h>
++#include <asm/vmx.h>
++#endif
 +
-+#include <asm/apic.h>
-+#include <asm/cpu_entry_area.h>
-+#include <linux/cpu_preserve.h>
++#include "../caretaker.h"
++
++#ifndef __ASSEMBLY__
 +#include <asm/desc.h>
-+#include <asm/fpu/api.h>
-+#include <asm/fixmap.h>
-+#include <asm/irq_vectors.h>
-+#include <linux/kvm_host.h>
-+#include <asm/msr.h>
-+#include <linux/sync_core.h>
-+#include <asm/trapnr.h>
-+#include <asm/virt.h>
++#include <linux/processor.h>
 +
-+#include "caretaker.h"
-+#include "cpuid.h"
-+#include "lapic.h"
-+#include "regs.h"
-+#include "x86.h"
++/* Length of instructions */
++#define PAUSE_INSN_LEN			2
++#define VMCALL_INSN_LEN			3
 +
-+/* Host register state saved around an on-core caretaker run. */
-+struct caretaker_x86_host_state {
-+	struct desc_ptr orig_idt;
-+	unsigned long orig_cr2;
-+	unsigned long orig_fs_base;
-+	unsigned long orig_gs_base;
-+	unsigned long orig_kernel_gs_base;
-+	u64 orig_star;
-+	u64 orig_lstar;
-+	u64 orig_fmask;
-+};
++/* Exit qualification bitfields for I/O instructions (Intel SDM Vol 3C) */
++#define VMX_IO_SIZE_MASK		0x7
++#define VMX_IO_DIRECTION_BIT		BIT(3)
++#define VMX_IO_PORT_SHIFT		16
 +
-+/* Defined below their first use. */
-+static void kvm_x86_caretaker_save_gprs(struct kvm_vcpu *vcpu, u64 *gprs);
-+static void kvm_x86_caretaker_init_idt(gate_desc *idt);
-+static void kvm_x86_caretaker_init_gdt_tss(struct desc_struct *gdt,
-+					   struct x86_hw_tss *tss,
-+					   unsigned long stack_top);
++/* Default VMX preemption timer shift (counts down every 2^5 TSC ticks) */
++#define VMX_PREEMPTION_TIMER_SHIFT	5
 +
++struct caretaker_vmx_page {
++	struct caretaker_x86_page common;
++	/* Guest syscall state not automatically switched by VMCS */
++	u64 star;
++	u64 lstar;
++	u64 fmask;
++	u64 vmxon_pa;
++	u32 timer_shift;
++	u32 ple_supported;
++	u8 vmxon_area[PAGE_SIZE] __aligned(PAGE_SIZE);
++} __aligned(PAGE_SIZE);
++
++static inline unsigned long vmx_vmread(unsigned long field)
++{
++	unsigned long val;
++
++	asm volatile("vmread %1, %0" : "=r" (val) : "r" (field) : "cc");
++	return val;
++}
++
++static inline void vmx_vmwrite(unsigned long field, unsigned long val)
++{
++	asm volatile("vmwrite %1, %0" : : "r" (field), "r" (val) : "cc");
++}
++
++#ifdef CONFIG_KVM_CARETAKER
++int vmx_caretaker_enter(void *page);
++void vmx_caretaker_exit_handler(void);
++void vmx_caretaker_register(void);
++void vmx_caretaker_unregister(void);
++void vmx_caretaker_decode_exit(void *page,
++			       struct kvm_caretaker_exit *exit);
++void vmx_caretaker_init_host_vmcs(struct caretaker_vmx_page *cvp);
++void vmx_caretaker_init(struct kvm_vcpu *vcpu);
++#else
++static inline void vmx_caretaker_register(void) {}
++static inline void vmx_caretaker_unregister(void) {}
++static inline void vmx_caretaker_init(struct kvm_vcpu *vcpu) {}
++#endif
++
++#endif /* !__ASSEMBLY__ */
++
++#endif /* __VMX_CARETAKER_H */
+diff --git a/arch/x86/kvm/vmx/caretaker_vmenter.S b/arch/x86/kvm/vmx/caretaker_vmenter.S
+new file mode 100644
+index 000000000000..ff135cba854d
+--- /dev/null
++++ b/arch/x86/kvm/vmx/caretaker_vmenter.S
+@@ -0,0 +1,112 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * A preserved page is handed over by physical address.  The SME/SEV C-bit is
-+ * an encryption attribute, not part of the address, so strip it before
-+ * forming a kernel virtual address.
-+ *
-+ * Both helpers are __always_inline because callers live in
-+ * __cpu_preserved_text: an out-of-line copy would sit outside the section
-+ * that survives the kexec.
++ * Copyright (c) 2026, Google LLC.
++ * Pasha Tatashin <pasha.tatashin@soleen.com>
 + */
-+static __always_inline void *caretaker_pa_to_va(u64 pa)
-+{
-+	return phys_to_virt(__sme_clr(pa));
-+}
++#include <linux/linkage.h>
++#include <linux/cfi_types.h>
++#include <linux/objtool.h>
++#include <asm/asm.h>
++#include <asm/bitsperlong.h>
++#include <asm/kvm_vcpu_regs.h>
++#include <asm/nospec-branch.h>
++#include <asm/msr-index.h>
++#include <asm/page_types.h>
++#include "caretaker.h"
++#include "../caretaker_asm.h"
 +
-+/* The control block is embedded in the vendor-agnostic caretaker page. */
-+static __always_inline struct caretaker_x86_page *
-+cxp_from_cb(struct kvm_caretaker_cb_ser *cb)
-+{
-+	return container_of(cb, struct caretaker_x86_page, abi.cb);
-+}
++.section .text.cpu_preserved, "ax"
 +
-+static const struct kvm_x86_caretaker_ops *kvm_x86_caretaker_ops __cpu_preserved_data;
++/**
++ * vmx_caretaker_enter - Low-level transition to VMX guest mode and back
++ * @cvp: Pointer to struct caretaker_vmx_page (%rdi)
++ */
++SYM_TYPED_FUNC_START(vmx_caretaker_enter)
++	ENDBR
++	CARETAKER_PUSH_HOST_REGS
++	movq %rsp, CXP_STACK_ORIG(%rdi)
 +
-+void kvm_x86_caretaker_register_ops(const struct kvm_x86_caretaker_ops *ops)
-+{
-+	WRITE_ONCE(kvm_x86_caretaker_ops, ops);
-+}
-+EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_x86_caretaker_register_ops);
++	/* Switch to private preserved stack */
++	movq CXP_STACK_TOP(%rdi), %rsp
 +
-+void kvm_x86_caretaker_unregister_ops(const struct kvm_x86_caretaker_ops *ops)
-+{
-+	if (kvm_x86_caretaker_ops == ops)
-+		WRITE_ONCE(kvm_x86_caretaker_ops, NULL);
-+}
-+EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_x86_caretaker_unregister_ops);
++	/* Activate VMCS on this pCPU */
++	vmptrld CXP_VMCS_PA(%rdi)
 +
-+static bool caretaker_x86_has_tsc_deadline __cpu_preserved_data;
-+static u32 caretaker_x86_lapic_timer_period __cpu_preserved_data;
-+static u32 caretaker_x86_tsc_khz __cpu_preserved_data;
-+gate_desc caretaker_x86_idt[IDT_ENTRIES] __caretaker_data __aligned(16);
-+EXPORT_SYMBOL_FOR_KVM_INTERNAL(caretaker_x86_idt);
-+static bool caretaker_x86_idt_initialized;
++	/* Restore guest MSR_KERNEL_GS_BASE if valid/canonical */
++	movq CXP_KERNEL_GS_BASE(%rdi), %rax
++	movq %rax, %rdx
++	sarq $56, %rdx
++	incq %rdx
++	cmpq $1, %rdx
++	ja 2f
++	movl $MSR_KERNEL_GS_BASE, %ecx
++	movq CXP_KERNEL_GS_BASE(%rdi), %rax
++	movq %rax, %rdx
++	shrq $32, %rdx
++1:	wrmsr
++2:
++	_ASM_EXTABLE(1b, 2b)
 +
-+static void kvm_x86_caretaker_init_uart(struct caretaker_uart *uart)
-+{
-+	if (!uart)
-+		return;
++	/* Restore guest GPRs */
++	CARETAKER_RESTORE_GPRS %rdi
 +
-+	uart->lcr = UART_LCR_WLEN8;
-+	uart->ier = 0x00;
-+	uart->mcr = UART_MCR_DTR | UART_MCR_RTS;
-+	uart->scr = 0x00;
-+	uart->dll = 0x01;
-+	uart->dlm = 0x00;
-+}
++	pushq %rdi
++	movq CXP_REG_RDI(%rdi), %rdi
 +
-+int kvm_x86_caretaker_preserve_page(struct kvm_caretaker_arch_ser *abi,
-+				    struct page *page)
-+{
-+	int ret;
++	/* Clear CPU microarchitectural buffers before guest entry */
++	CARETAKER_CLEAR_CPU_BUFFERS
 +
-+	if (WARN_ON_ONCE(abi->nr_preserved_pages >= KVM_X86_CARETAKER_MAX_PAGES))
-+		return -ENOSPC;
++	/* Launch or resume */
++	vmresume
++	vmlaunch
 +
-+	ret = kho_preserve_pages(page, 1);
-+	if (ret)
-+		return ret;
++	/* If both fail, record error and return */
++	popq %rdi
++	mov $VMCS_VM_INSTRUCTION_ERROR, %eax
++	vmread %rax, %rax
++	movq %rax, CXP_LAST_EXIT_CODE(%rdi)
++	btsq $31, %rax
++	jmp .Lvmx_ret
++SYM_FUNC_END(vmx_caretaker_enter)
 +
-+	abi->preserved_pages_pa[abi->nr_preserved_pages++] = page_to_phys(page);
-+	return 0;
-+}
-+EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_x86_caretaker_preserve_page);
++SYM_FUNC_START(vmx_caretaker_exit_handler)
++	ENDBR
++	/*
++	 * Hardware jumps here on VM-Exit with:
++	 * RSP = HOST_RSP (CXP_STACK_TOP)
++	 * CR3 = HOST_CR3
++	 */
++	pushq %rdi
 +
-+void kvm_x86_caretaker_unpreserve_pages(struct kvm_caretaker_arch_ser *abi)
-+{
-+	u32 i;
++	/* Recompute CVP pointer from RSP: CVP = (RSP & PAGE_MASK) - CXP_STACK_OFFSET */
++	movq %rsp, %rdi
++	andq $PAGE_MASK, %rdi
++	subq $CXP_STACK_OFFSET, %rdi
 +
-+	for (i = 0; i < abi->nr_preserved_pages; i++)
-+		kho_unpreserve_pages(phys_to_page(__sme_clr(abi->preserved_pages_pa[i])), 1);
-+	abi->nr_preserved_pages = 0;
-+}
-+EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_x86_caretaker_unpreserve_pages);
++	/* Save guest GPRs into CVP */
++	CARETAKER_SAVE_GPRS %rdi
++	popq CXP_REG_RDI(%rdi)
 +
-+int kvm_x86_caretaker_init_common_page(struct caretaker_x86_page *cxp,
-+				       struct kvm_vcpu *vcpu,
-+				       size_t full_page_size)
-+{
-+	struct oncore_session *sess;
-+	phys_addr_t pgd_pa;
-+	u32 apic_id;
-+	int pcpu;
-+	int ret;
++	/* Stuff Return Stack Buffer to prevent guest RSB poisoning */
++	CARETAKER_FILL_RETURN_BUFFER %rax
 +
-+	if (!cxp || !vcpu)
-+		return -EINVAL;
++	/* Read guest MSR_KERNEL_GS_BASE */
++	movl $MSR_KERNEL_GS_BASE, %ecx
++	rdmsr
++	shlq $32, %rdx
++	orq %rax, %rdx
++	movq %rdx, CXP_KERNEL_GS_BASE(%rdi)
 +
-+	caretaker_x86_has_tsc_deadline = boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER);
-+	caretaker_x86_lapic_timer_period = lapic_timer_period;
-+	caretaker_x86_tsc_khz = tsc_khz;
-+	cpu_preserved_clean(&caretaker_x86_has_tsc_deadline);
-+	cpu_preserved_clean(&caretaker_x86_lapic_timer_period);
-+	cpu_preserved_clean(&caretaker_x86_tsc_khz);
-+	if (!caretaker_x86_idt_initialized) {
-+		kvm_x86_caretaker_init_idt(caretaker_x86_idt);
-+		cpu_preserved_clean_sz(caretaker_x86_idt, sizeof(caretaker_x86_idt));
-+		caretaker_x86_idt_initialized = true;
-+	}
++	xorq %rax, %rax
++	jmp .Lvmx_ret
 +
-+	memset(cxp, 0, full_page_size);
++.Lvmx_ret:
++	/* Restore caller stack */
++	movq CXP_STACK_ORIG(%rdi), %rsp
 +
-+	kvm_caretaker_init_common_vcpu(&cxp->vcpu, &cxp->abi.cb, vcpu, cxp,
-+				       full_page_size, NULL, cxp);
-+
-+	pcpu = cxp->abi.cb.pcpu_id;
-+
-+	apic_id = apic->cpu_present_to_apicid(pcpu);
-+	if (apic_id == BAD_APICID)
-+		apic_id = pcpu;
-+	cxp->abi.apic_id = apic_id;
-+
-+	kvm_x86_caretaker_init_uart(&cxp->uart);
-+
-+	cxp->save_guest_fpu = boot_cpu_has(X86_FEATURE_XSAVE) &&
-+			      !fpstate_is_confidential(&vcpu->arch.guest_fpu);
-+
-+	/* Capture guest GPRs */
-+	kvm_x86_caretaker_save_gprs(vcpu, &cxp->rax);
-+
-+	/* Preserved CR3 from session or fallback to global cpu_preserve page table */
-+	sess = oncore_job_session(vcpu->caretaker.job);
-+	pgd_pa = oncore_session_get_pgd_pa(sess);
-+	cxp->host_cr3 = pgd_pa ? pgd_pa : x86_caretaker_pgd_pa;
-+	cxp->cr3 = kvm_read_cr3(vcpu);
-+	cxp->cr0 = kvm_read_cr0(vcpu);
-+	cxp->cr4 = kvm_read_cr4(vcpu);
-+	cxp->efer = vcpu->arch.efer;
-+
-+	/* Build KHO-preserved Host GDT and TSS */
-+	kvm_x86_caretaker_init_gdt_tss(cxp->gdt, &cxp->tss,
-+				       (unsigned long)&cxp->stack[CXP_STACK_SIZE]);
-+
-+	/* Preserve in-kernel local APIC register page across kexec */
-+	if (vcpu->arch.apic && vcpu->arch.apic->regs) {
-+		ret = kvm_x86_caretaker_preserve_page(&cxp->abi,
-+						      virt_to_page(vcpu->arch.apic->regs));
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_x86_caretaker_init_common_page);
-+
-+static void kvm_x86_caretaker_save_gprs(struct kvm_vcpu *vcpu, u64 *gprs)
-+{
-+	gprs[0]  = kvm_register_read_raw(vcpu, VCPU_REGS_RAX);
-+	gprs[1]  = kvm_register_read_raw(vcpu, VCPU_REGS_RBX);
-+	gprs[2]  = kvm_register_read_raw(vcpu, VCPU_REGS_RCX);
-+	gprs[3]  = kvm_register_read_raw(vcpu, VCPU_REGS_RDX);
-+	gprs[4]  = kvm_register_read_raw(vcpu, VCPU_REGS_RSI);
-+	gprs[5]  = kvm_register_read_raw(vcpu, VCPU_REGS_RDI);
-+	gprs[6]  = kvm_register_read_raw(vcpu, VCPU_REGS_RBP);
-+	gprs[7]  = kvm_register_read_raw(vcpu, VCPU_REGS_R8);
-+	gprs[8]  = kvm_register_read_raw(vcpu, VCPU_REGS_R9);
-+	gprs[9]  = kvm_register_read_raw(vcpu, VCPU_REGS_R10);
-+	gprs[10] = kvm_register_read_raw(vcpu, VCPU_REGS_R11);
-+	gprs[11] = kvm_register_read_raw(vcpu, VCPU_REGS_R12);
-+	gprs[12] = kvm_register_read_raw(vcpu, VCPU_REGS_R13);
-+	gprs[13] = kvm_register_read_raw(vcpu, VCPU_REGS_R14);
-+	gprs[14] = kvm_register_read_raw(vcpu, VCPU_REGS_R15);
-+}
-+
-+static void kvm_x86_caretaker_init_idt(gate_desc *idt)
-+{
-+	int v;
-+
-+	for (v = 0; v < IDT_ENTRIES; v++) {
-+		bool has_err = (v == X86_TRAP_DF ||
-+				(v >= X86_TRAP_TS && v <= X86_TRAP_PF) ||
-+				v == X86_TRAP_AC || v == X86_TRAP_CP ||
-+				v == X86_TRAP_VC || v == 30);
-+		unsigned long handler = (v >= FIRST_EXTERNAL_VECTOR) ?
-+			(unsigned long)&x86_preserved_apic_eoi_stub :
-+			(has_err ? (unsigned long)&x86_preserved_iret_err_stub :
-+				   (unsigned long)&x86_preserved_iret_stub);
-+
-+		pack_gate(&idt[v], GATE_INTERRUPT, handler, 0, 0, __KERNEL_CS);
-+	}
-+}
-+
-+static void kvm_x86_caretaker_init_gdt_tss(struct desc_struct *gdt,
-+					   struct x86_hw_tss *tss,
-+					   unsigned long stack_top)
-+{
-+	int k;
-+
-+	memcpy(gdt, get_current_gdt_ro(), sizeof(struct desc_struct) * GDT_ENTRIES);
-+	memset(tss, 0, sizeof(*tss));
-+	tss->sp0 = stack_top;
-+	tss->io_bitmap_base = sizeof(*tss);
-+	for (k = 0; k < ARRAY_SIZE(tss->ist); k++)
-+		tss->ist[k] = stack_top;
-+
-+	caretaker_set_tss_desc(gdt, (unsigned long)tss, sizeof(struct x86_hw_tss) - 1);
-+}
-+
-+__caretaker_text void kvm_x86_caretaker_arm_timer(u64 deadline_ticks)
-+{
-+	if (!deadline_ticks)
-+		return;
-+
-+	if (caretaker_x86_has_tsc_deadline) {
-+		u32 lvtt = LOCAL_TIMER_VECTOR | APIC_LVT_TIMER_TSCDEADLINE;
-+
-+		native_wrmsrq(APIC_BASE_MSR + (APIC_LVTT >> 4), lvtt);
-+		native_wrmsrq(MSR_IA32_TSC_DEADLINE, deadline_ticks);
-+	} else {
-+		u64 now = rdtsc();
-+		u64 delta_tsc = (deadline_ticks > now) ? (deadline_ticks - now) : 1;
-+		u32 lvtt = LOCAL_TIMER_VECTOR;
-+		u64 count;
-+
-+		if (caretaker_x86_tsc_khz != 0 && caretaker_x86_lapic_timer_period != 0) {
-+			u64 period = caretaker_x86_lapic_timer_period;
-+			u64 apic_khz = (period * HZ) / 1000ULL;
-+
-+			count = (delta_tsc * apic_khz) /
-+				((u64)caretaker_x86_tsc_khz * 16ULL);
-+		} else {
-+			count = delta_tsc >> 4;
-+		}
-+		if (count == 0)
-+			count = 1;
-+		if (count > U32_MAX)
-+			count = U32_MAX;
-+
-+		native_wrmsrq(APIC_BASE_MSR + (APIC_TDCR >> 4),
-+			      APIC_TDR_DIV_16);
-+		native_wrmsrq(APIC_BASE_MSR + (APIC_LVTT >> 4), lvtt);
-+		native_wrmsrq(APIC_BASE_MSR + (APIC_TMICT >> 4), (u32)count);
-+	}
-+}
-+EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_x86_caretaker_arm_timer);
-+
-+__caretaker_text void kvm_x86_caretaker_disarm_timer(void)
-+{
-+	if (caretaker_x86_has_tsc_deadline)
-+		native_wrmsrq(MSR_IA32_TSC_DEADLINE, 0);
-+	else
-+		native_wrmsrq(APIC_BASE_MSR + (APIC_TMICT >> 4), 0);
-+
-+	native_wrmsrq(APIC_BASE_MSR + (APIC_LVTT >> 4),
-+		      APIC_LVT_MASKED | LOCAL_TIMER_VECTOR);
-+}
-+EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_x86_caretaker_disarm_timer);
-+
++	/* Restore host callee-saved registers */
++	CARETAKER_POP_HOST_REGS
++	ret
++SYM_FUNC_END(vmx_caretaker_exit_handler)
++STACK_FRAME_NON_STANDARD(vmx_caretaker_enter)
++STACK_FRAME_NON_STANDARD(vmx_caretaker_exit_handler)
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
