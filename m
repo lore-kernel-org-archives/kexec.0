@@ -4,83 +4,156 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BDF91C982E6
-	for <kexec@archiver.kernel.org>; Mon, 21 Sep 2026 14:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9C65BC982E6
+	for <kexec@archiver.kernel.org>; Mon, 21 Sep 2026 15:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Message-ID:Date
+	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=1DNM4B/DKlNamjDekFwegs2ASgo7JXOtIGUcdV58DYc=; b=zHyigw156dQ/POdktV8d1mE/Nx
-	M4nSGSzf3eKdm9OE19ytaegNVq3DA7Y1e7TsVDGIQcn3zIt9EDmaL8U8TS2pnVD4bRnfnjh0E459w
-	p76ZC5+AkC7SQeM/7zXbYxYYpXjF2EvI0uFLM96sV+Gzrstzxyz+Ks0nMB/gbxpYO7wwUD9PaoD5+
-	VKg0DL3vAv/1+J577cmJhD1B6moOR8dvKDC6Jz9Ds8E1WLO7tDy8I4aLG9jD7/FHD4yvXPxtXKOQq
-	YQ19VvZuXK4LKk6cCuofXBoJVqXUkkQz6ccE6mM+7ww0dK+inypPVlrapJOUikAkQlNN7vAq8UNfk
-	2pHMJltA==;
+	bh=5dv3xH2vDzFdoqjECjxDHtmNHC6nK0SVP+RwkJFB1L8=; b=iqBLiiYRW4kCnK3hNBZZI/F20c
+	j9CHeqn5306asxGtI67bhKyKeQ+5PApT5FGmNTBru3L/KQstP6LxdEi+4LwLJeTj6VtWxowVJHmet
+	0wTeI/aTjxyGllDsnS9KJIU61bybyTRfY8BevmXnLZtYjBO/A49BMXid5/reY92GSXQWC5S2SY88q
+	pG1UGp1LgK8Q/jmXUxMbVVCK2j7AXpQG5iKX18lAhVIp7WSgWx/E/wk8ImIzEoy/sjBZWZg3/X5BN
+	JT/Da0i42sGMdRM3OaMggj8dE/NUlYRiwXUbnfOJvUv6thnQP3iL+rjc7L7wQJYLCS5apLzQjKvB2
+	MzTpjrzg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8f3s-00000002P9y-3Xdo;
-	Mon, 21 Sep 2026 14:32:04 +0000
-Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
+	id 1x8g4O-00000002dof-3hF4;
+	Mon, 21 Sep 2026 15:36:40 +0000
+Received: from mail-eastus2azlp170100001.outbound.protection.outlook.com ([2a01:111:f403:c110::1] helo=BN1PR04CU002.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8f3p-00000002P9N-3u9b
+	id 1x8g4M-00000002dnX-0aUr
 	for kexec@lists.infradead.org;
-	Mon, 21 Sep 2026 14:32:03 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=1DNM4B/DKlNamjDekFwegs2ASgo7JXOtIGUcdV58DYc=; b=jROXMDRfo0GolAgRZOKDUIe1Ny
-	oXuMeZRRQqhnqgHuusb8v8dJoNC9zcEOyLyZu+BZBcvWhFhozxE0ZJwYdMdP6PDSfDlIRIR+9FaPd
-	t9XL38hNAX9fuXWR7lA9GQvwALO6oXas5lgdKJtQigxTlIok/zX9rUO5ZtjQtfnLoEcYl6U6r/OX/
-	m/quCLTYp0ULCRVgY0tve0ib7FCqfpCfOIbSgBZhHNodcIB9U/8phtzDRWkQTu1/MWyVFGlcLJMPZ
-	yjRrLCQKowCumoAukJuexM5Q8Xa7a8temrLWl6RqAXjilfvXE9hRDJxrA70tuTCIAY+RnvcX+UIFN
-	5v4lKQZQ==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1x8f3Z-002Gnz-2x;
-	Mon, 21 Sep 2026 14:31:46 +0000
-Date: Mon, 21 Sep 2026 07:31:37 -0700
-From: Breno Leitao <leitao@debian.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, kas@kernel.org, 
-	kexec@lists.infradead.org, Lorenzo Stoakes <ljs@kernel.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Brendan Jackman <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
-	Oscar Salvador <osalvador@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, hannes@cmpxchg.or, 
-	shakeel.butt@linux.dev, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, rmikey@meta.com, riel@surriel.com, harry@kernel.org, 
-	linux-cxl@vger.kernel.org, driver-core@lists.linux.dev, kernel-team@meta.com
-Subject: Re: [PATCH v5 7/9] drivers/base/memory: count inherited poisoned
- frames into the block
-Message-ID: <arE3UjqPsxctWckg@gmail.com>
-References: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
- <20260915-hwpoison-kho-v5-7-3bc7a57bd503@debian.org>
- <de41b78a-8471-4832-be0c-35d410a4499a@kernel.org>
- <aqpczrtIwSG948iv@gmail.com>
- <b8ad366a-a019-4462-9dce-f687f60ee7f2@kernel.org>
- <aqvHHHuWJ-y4WRJZ@gmail.com>
- <caac2cb9-8faa-49bc-ae8a-47c5fd7b7e58@kernel.org>
- <aq1RaH0eE0hZfNpr@gmail.com>
- <fb2237be-f7bc-4ad6-bcb0-7c3ef53136ef@kernel.org>
+	Mon, 21 Sep 2026 15:36:40 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=m72I2LjVLiA/yzb3hQ6SImsNTZ4QRxcXuXyHG7ddXGxcTKJZLEjHtGNMQNHN7xTwhHKxNs4cEFT1sfkndovYoTs9SMv4hCa1vZ2tXXLN8gn5/TbXRIndkHxPjNS+7/Ai+h9NtNWCqW6bB22j0RtiStTsj+8m7Jt8Sf6nrguL+kDPnwMkNTUEDRr5sUWTRQo9//MuthJah9/XPaN2silAWkgMmqJPlbfSXvP1/LX53wRgUxlH/rdfoeobE+HiAQKpHeIGtQUwAlJGlKqN2xh1ePfjeUVz0EIJfB7ITjajrkMso0n2Q9eqLb2aLjKzX5zUjPG/vqQ+6F1Yf9OdcfYtyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5dv3xH2vDzFdoqjECjxDHtmNHC6nK0SVP+RwkJFB1L8=;
+ b=n25+RbiVf95IAO6qN8v5kcuXSurVDoZxAxtn2yQhcFTrQaADRRUIgCMivNEVXO9KqgyYxZMVcrgtSJe/f6vxUzhGoBMRXy+cT29R4cGrvNSxMJ8UrciWWCu48t4+NFCuYe1S2MDgfir+o6kzENq94/vv9JaDSPaHiM8iHtM/AUqYddE7DlUQHUXsHTgbss9/vAyAFRAl7O/UEXKLACduYKL5E2V8Ll+Uqq9M46LXLm9if7C8bhbKFhRyT3Rf7XQn+EvwxWLqvPmzWTtk9dMDZ6XS54Bs+cBb1/SlUjdUr9uHd6dgvqvEbwHYuiXaZmGdNtGQAPj9uhL3IxDenHfa8g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5dv3xH2vDzFdoqjECjxDHtmNHC6nK0SVP+RwkJFB1L8=;
+ b=blenGkJauq83IJxAd/yHYDnyE0h8L3S2TQJWVMv5Zpp5tLQ307wipJqpFqBrh4K2/cow72hWgKKgcu24SGZnK/veOeFctBkeLKVOoGzd9ENJCmrHGU9t+gQuaHfQmoHjJjXeLmTzALsD/fGDW5q4EEpfI3m7jxg3+9EEtJNGDXDcM3C1TD5HeCjvl+Jwk06yWKiUauGPD9NIMZVEaQBOfCbxJ0+BaWeUh1Y9dHmaVM3Wif678WQoIogUnZ4SHFP4mDBywPWWwPimBu6Jygyi0AHc/c2nt/dWb24QpoYTRoC10ISBmn1fk60dUxqab787ZoctXmLA08A+F2oE9nGi3w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
+ by LVUPR12MB999186.namprd12.prod.outlook.com (2603:10b6:408:3a3::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.16; Mon, 21 Sep
+ 2026 15:36:30 +0000
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16%6]) with mapi id 15.21.0428.015; Mon, 21 Sep 2026
+ 15:36:30 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: sashiko-reviews@lists.linux.dev
+Cc: Shakeel Butt <shakeel.butt@linux.dev>,
+ Muchun Song <muchun.song@linux.dev>, "Liam R. Howlett" <liam@infradead.org>,
+ Matthew Wilcox <willy@infradead.org>, Suren Baghdasaryan <surenb@google.com>,
+ Nico Pache <nico.pache@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>,
+ Gregory Price <gourry@gourry.net>, Kairui Song <kasong@tencent.com>,
+ David Hildenbrand <david@kernel.org>, Michal Hocko <mhocko@suse.com>,
+ Alistair Popple <apopple@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Vlastimil Babka <vbabka@kernel.org>, Lance Yang <lance.yang@linux.dev>,
+ Lorenzo Stoakes <ljs@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Barry Song <baohua@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
+ Qi Zheng <qi.zheng@linux.dev>, Dev Jain <dev.jain@arm.com>,
+ Ying Huang <ying.huang@linux.alibaba.com>, Usama Arif <usama.arif@linux.dev>,
+ Mike Rapoport <rppt@kernel.org>, Jan Kara <jack@suse.cz>,
+ Jonathan Corbet <corbet@lwn.net>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+ linux-mm@kvack.org, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ kexec@lists.infradead.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Pratyush Yadav <pratyush@kernel.org>, linux-doc@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Baoquan He <baoquan.he@linux.dev>,
+ linux-kernel@vger.kernel.org, Dave Young <ruirui.yang@linux.dev>,
+ Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <skhan@linuxfoundation.org>,
+ linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v5 17/17] mm/page-flags: remove PG_private
+Date: Mon, 21 Sep 2026 11:36:27 -0400
+X-Mailer: MailMate (3.0r7032)
+Message-ID: <E5E3D08D-F0C4-49E4-8763-10CC58FF4260@nvidia.com>
+In-Reply-To: <20260921025520.628971F000FF@smtp.kernel.org>
+References: <20260920-remove-pg_private-v5-0-bb68b6a21869@nvidia.com>
+ <20260920-remove-pg_private-v5-17-bb68b6a21869@nvidia.com>
+ <20260921025520.628971F000FF@smtp.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-MS-Reactions: disallow
+X-ClientProxiedBy: BN9PR03CA0644.namprd03.prod.outlook.com
+ (2603:10b6:408:13b::19) To IA0PR12MB8374.namprd12.prod.outlook.com
+ (2603:10b6:208:40e::7)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fb2237be-f7bc-4ad6-bcb0-7c3ef53136ef@kernel.org>
-X-Debian-User: leitao
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|LVUPR12MB999186:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3128daf8-4bb7-4e24-32cc-08df17f61bcc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|23010399003|366016|376014|7416014|6133799003|10067099003|11063799006|4143699003|56012099006|5023799004|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info: 49tp2czc8S79zvrqeI5IBzR1qzO0uh0rTojWB8UnXjCGvq8a4Hs9GCxF49+8boPvJNERmL1Ie34bWY2aaGJY4AQqacrl7vBLgSkxGwnkY4j2x67W6w/04NeKCCV9+F/5qp3myyidm8P9ljdDaXZ1NjhHm+dyoFwJHaChR+RXaiOxY2XjRrkKw6RVWuU4/g0SwQgPS6/cy76NjhPvrBX01IBnr0v1S6hqoXUvkltfhChMIQw6OXUeuoWO6Zxma+XqakU+Kp8exc+OUgjuU9CqS+9XH43RPBdbjtY8RaIDD2bTJA6cIQhKggNW2hf06t2fKYgXuI8TKoe/y7H7TCjN2jgrgaf9if8a4HR+3ZznD4Z/56C0HosEgEN9YN/8kBj6Ntn3V6McGYzto8jsichmcug+SZ8khz+FkLxjhwSd931OSSzptDv/Se6sqQuVr4QFgD77yRqqrfAiyK6guFFcDPSN8NgDsNQmpiMtgNFOjhZ/rLfxXCoSTqHC3xllTWfchdcx8cCTVZYlZ67Q0HB4p9ekjAGS/CPR55VwpNuLwiZ4W8KZymDzqa4GZBJn7Mz5M/tSRUh+5GNHm8lLzqHElmZeQ7PYA004pWiRUoJU8WxmzMfoMWMmclSlJcItnkjg4jLgz01klX/2MValVYAd4kkec6eFUK0/wK64xr48zSY=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(366016)(376014)(7416014)(6133799003)(10067099003)(11063799006)(4143699003)(56012099006)(5023799004)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MG5xYlBGSGw5U2I4UjBZeDQyb3ltb3NTWStvMVkweXg2c3YrUXVCS05NaWEw?=
+ =?utf-8?B?TWcreUN1NmdTTFZNOVJ6S1ZTQ1JBZUhWQkRubTBySHA5UUNadUxaNzFMMEJ1?=
+ =?utf-8?B?NW03eUNFV01KRVBjejZ2Z0J0QUNmMVFLZ1BLM0wySEhiZ09OMms3VjZoTmZH?=
+ =?utf-8?B?MHJoaHoxdG1yejMrOTdwOFhSelQ3KzNOMURvMTJPbmI2RFc5RUtwcnVpbC9l?=
+ =?utf-8?B?MDBNaUE1OU94Q2xhL0hYYzYvSUNIRG8zVmJFMGVXaC83TkpRODlxZTB0ZDlJ?=
+ =?utf-8?B?bE5WWDB1REpCSjFHZ1l5QmhGcTYzZ0dtNFRuaUczdFVlcE8wODk0ekd2eWVU?=
+ =?utf-8?B?UUVkMWtHRVNFRjBOSnB1bktRSEMzVC9qdmVBZ1B3YU9KSGVQSzk0NGRrNHZj?=
+ =?utf-8?B?Wnh2NlIyeUlTNEtxcEpSSjlsM3NXZCsvQ3M2ejYrVmdtRnNxVWdvTkJNaTl2?=
+ =?utf-8?B?WVlYWVZhT0l3MlBPUDAyZFFXdWU1VlBYd0ZzSlpwQXVPZ0tkejFTamdQYm5y?=
+ =?utf-8?B?Nnc4R3RXclJCS0VFdXlrY0xFZldmWDhYdlAvK3RCdlpmb2pRcyt3aXNyZ1Z3?=
+ =?utf-8?B?aml3UWVxczl5YzBCMGtac2cxYk9qRzArdVdWTGxkUmdqS3puUXN5d2djLzRw?=
+ =?utf-8?B?QlY1MUd5K1FVQXRaUmlhZEZpc2hNdFQyTkFaQW5PcGwrRU56S3hEL01MSWRw?=
+ =?utf-8?B?QThVeXkvelZ1bEpKVlNheXhYK0ltWUx3ZTBTUlZhVFIwb3ovZmxuVlI0RnpV?=
+ =?utf-8?B?WlNXYlhhVWVwdXEzV2EvN2lidEhLZ0NlRDAwaDV3RGFvRUF2YjU2OTVxZzFV?=
+ =?utf-8?B?SHdscEtTNU01eDVTbXY3MWNYREd4T2JlaVFCNXNKd0RQUTlReDIweXhBYkkr?=
+ =?utf-8?B?NndwdHZmV21VY2YwSjc3WmpUaHN3M0RwUnlEME5pNGwvb0pQUVhmZkRMcU55?=
+ =?utf-8?B?YVRjdHFkcUhEd3BxaDJmYWZ3Lzh3MHl1azNSU3dpK0N1aEZFNUM3bmxUMHoy?=
+ =?utf-8?B?TzVSVFNNODRMWkFVS0ZZQk91RWpKS0luVDYyRWtIUGphM05EdzlmV2VFYkpD?=
+ =?utf-8?B?N1U4eko2QU5qT001Y0JFanFJZzQrV3EwQVlKUkR0OTlGUTZqS1pxSk5VZ0o5?=
+ =?utf-8?B?dGZyN0F3cWp6SVdnRzl5aTJEczlDZEJHUEJrUHRNcCt3M3k1eTZ6OWpkNGk2?=
+ =?utf-8?B?NmVYcUJLYk1ncHUzekgzSVc2Vk9lWWlnZHVkYjU5ejdMeUdyRVdWcDJ5SkND?=
+ =?utf-8?B?TWxxSWVMM2lVNzRKVlNxbzhhRm8zMmNScVk2ei9FR2h2TDZxQUdNckZnazZG?=
+ =?utf-8?B?c1hWNlVEVlExR29nOUNhY2htVDYyNkVPU2RGWnhqSlJCU3E2NC9YbmFRaG9M?=
+ =?utf-8?B?dFRKYTY3V2s4UWw4NGtSTGxHdWtkTzViVlZnSnJwbnMrUjdGcTA0YVFTVXFj?=
+ =?utf-8?B?MmZHZ2lpQ1ZGbDJOODRzemlaTnAwZWJ5ampQRWZPYWZZd1FSYzdkOHVHY0ZO?=
+ =?utf-8?B?SndTbWtyNVFOdjlBbzVEblFzOURWRG1Va0RqUCtOc09vYnJrSm5DVnFETGkz?=
+ =?utf-8?B?bU95VzBEUkp6UUN2SjFRbXBwaFJmUkNGakRZRWhUc2YzVVVIM1JOcG9ITkIw?=
+ =?utf-8?B?M0dDNklWWlZFZzV2U044YTdvVVJLSG1FaWhiZitWbWtqbTZNTmY2b3Q5WEU0?=
+ =?utf-8?B?azBQamxmU29XWGJoRUlyMHlsaWc0RTVuNkRneDJyb05vNjM4VnlVdkdqSDVM?=
+ =?utf-8?B?MjRJZ09PbXg0cGhHMlg0OHFHVFhQNmkyd1Y1Z0loMEZmZkVkZFJrZ3VGTlo5?=
+ =?utf-8?B?UHdhVEt3TTVrVE94S0x4UWlYaG5ITTNNbkw2K0hJRlozMFpkUldUMFZ2STJQ?=
+ =?utf-8?B?a3F0cE5jdzEvdW9qTUZKOFRPc2hrT21mUnRSWEt1a0FUelJ0QWFpYm53QzlU?=
+ =?utf-8?B?ZVF1VGdCVXExUXpLTjA2akFZaWh1OTRqWWxkV21MMmNuaGpHWkM3SWg4ZWIx?=
+ =?utf-8?B?QmVoU2RrSmRiSHlObkUwSjJzemlYMDB6b3FlVE1BRit4VVVXY1BNSEFNVUpu?=
+ =?utf-8?B?TEFBODFvSitzYXZNTm5JUFJVVm51WVMwRVovWmQ5NE5pYzl3elNaTW00ZTlY?=
+ =?utf-8?B?OVZseWF3N2cyMlFZR1pYVmR5SWhVQ01XZmNXZzFnWHlFT1dDdUhueHNoNnJq?=
+ =?utf-8?B?a00rV2pTZzlzQTA5QVU1STZaMVd6SlBZQ3pCMnc0endESlpHN3VWWTRDUGtX?=
+ =?utf-8?B?S25KVEZVUlhsVHNiZzRhOXZiOCsyVlVpbWxhNFdadG9FN3JxOFMvdEtQMTQ0?=
+ =?utf-8?B?aFZaelByMUtQMU5XZUtSVUNiL2g0Sm9kam5OMjg2VDloUUs5VWlKUT09?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3128daf8-4bb7-4e24-32cc-08df17f61bcc
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Sep 2026 15:36:30.7188
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5lXwUPPExatbCOknvAinav0a6N+I3lc5/SXtlrMUZR5jjCdirVDFG7LGFFB7F4HT
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LVUPR12MB999186
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260921_073202_164512_9766A642 
-X-CRM114-Status: GOOD (  65.75  )
+X-CRM114-CacheID: sfid-20260921_083638_180332_B238BFC3 
+X-CRM114-Status: GOOD (  17.48  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,217 +168,75 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Sep 18, 2026 at 10:16:25PM +0200, David Hildenbrand (Arm) wrote:
-> On 9/18/26 17:22, Breno Leitao wrote:
-> > On Fri, Sep 18, 2026 at 02:18:03PM +0200, David Hildenbrand (Arm) wrote:
-> >> On 9/17/26 15:01, Breno Leitao wrote:
-> >>>
-> >>> Fair point, I'll clean up the naming in the next revision.
-> >>>
-> >>> I'll also add that ->empty field, which should help locate this bit
-> >>> faster and may let us skip the bitmap query entirely on the happy path.
-> >>>
-> >>> Anything else you'd like addressed?
-> >>>
-> >>> Good to know this moved the needle from "David hates this feature" to
-> >>> "David only hates the naming" -- I'll take that as progress.  :-P
-> >>
-> >> ;)
-> >>
-> >> I think the crucial part is to find a way to cleanly distinguish our source of
-> >> information, and also how the source does only apply to some memory.
-> >
-> > Right, we have two source for poisoned page information, today.
-> >
-> > 1) LINUX_EFI_POISONED_MEMORY: Used to track memory block that got
-> >    poisioned, and will be passed around during kexec.
-> > 2) PG_hwpoison on struct page: Used by the memory subsystem to avoid
-> >    touching it.
+On 20 Sep 2026, at 22:55, sashiko-bot@kernel.org wrote:
+
+> Thank you for your contribution! Sashiko AI review found 1 potential issu=
+e(s) to consider:
+> - [Medium] mm: silent memory leak masking due to PG_private removal
+> --
 >
-> How are both kept in sync? See below.
-
-The EFI table is only written when there is a memory failure. That is
-the only thing that writes to it:
-
-	action_result() -> efi_hwpoison_record_pfn() -> set_bit()
-
-You can see it on patch "mm/memory-failure: efi: record
-hardware-poisoned frames into the poisoned-memory table"
-
-Then, when the kernel kexecs into a second kernel, the EFI config table
-is queried and the pages are poisoned from it at boot, as they are
-getting into the buddy allocator, in __free_pages_core().
-
-You can see this at patch "mm/memory-failure: keep inherited poisoned
-frames out of the buddy allocator"
-
-> > And I understand that this design is fine, and we want to be easy to
-> > identify what we are querying on function name. For instance,
-> > I understand you confusion in range_contains_poisoned_memory() came
-> > from:
-> >
-> > range_contains_poisoned_memory():
-> >    * What the caller reads:
-> > 	* "is any memory in this range hardware poisoned?"
-> >    * What actually runs:
-> > 	* "is any bit set in an EFI table that a PREVIOUS kernel wrote,
-> > 	   at 2 MiB granularity, for this memory region?"
+> commit aee12ed3446e69cb6eee57384ca09e768dab36dd
+> Author: Zi Yan <ziy@nvidia.com>
 >
-> Right, and we should use that only as a source for anything during early boot.
-> So maybe it should hint at the "early" aspect somehow.
-
-Ack. What I have in mind is to make the read side mirror the write side:
-
-	efi_hwpoison_record_pfn()	writes
-	efi_hwpoison_recorded()		reads
-
-"efi_" says where it comes from and "recorded" says an earlier kernel
-wrote it down, rather than it being a property of the page.
-
-On the "early" part: it is not strictly early boot, since
-generic_online_page() reaches __free_pages_core() as well. The real
-contract is "before the frame enters the allocator". I don't think a
-name carries that, so I'd rather state it in a comment on the function,
-unless you prefer something like efi_hwpoison_recorded_preinit().
-
-> Which brings me back to: is the bitmap kept in sync when memory gets hwpoisoned?
+> mm/page-flags: remove PG_private
 >
-> That is: as memory gets hwpoisoned, will the bitmap get set immediately?
-
-Every hard offline does, yes, and by the same path:
-
-	action_result() -> efi_hwpoison_record_pfn() -> set_bit()
-
-Three deliberate exceptions, so the sync is one-way and conservative
-rather than exact:
-
-    - soft offline sets PG_hwpoison but no bit, on purpose: those are
-      functional pages offlined predictively, and we do not want to turn
-      them into a permanent loss for every kernel down the chain.
-
-    - a bit is never cleared on unpoison, because a bit stands for 2M and
-      cannot tell whether the whole unit is good again. So the table is a
-      superset of PG_hwpoison, never a subset.
-
-    - a bit covers 2M, a flag covers 4K, so one bad frame comes back as
-      512 flagged frames in the next boot.
-
-One more case is a bug rather than a design point: the
-MF_MSG_ALREADY_POISONED guard also skips the record, so a hard error on
-a frame that was soft offlined earlier is never recorded. Sashiko caught
-it, and v6 moves the call out of the stats guard.
-
-> > So, I think think this is a naming issue, and I need to think more about
-> > it. Maybe appending efiposioned (on data that is coming from EFI config
-> > table). Let me think more about it.
-> >
-> >> Regarding this patch here, I'd assume it's sufficient.
-> >>
-> >> But I do wonder why we are walking pages when we have a bitmap to walk/process
-> >> at hand?
-> >
-> > Because the counter has to agree with the page flag, and the page flag is
-> > not the bitmap.
+> This commit removes the PG_private page flag and replaces its usage with
+> checking if folio->private !=3D NULL. The space left by PG_private is
+> reserved as PG_folio for future use.
 >
-> But how could they go out of sync? I'd assume only for memory holes
-> (!pfn_to_online_page), but for that we don't need to test actual page flags.
-
-True for the frames the table marks, so the walk could be narrowed to
-those and not test the flag at all (untested):
-
-static void memblk_nr_poison_init(struct memory_block *mem)
-{
-	....
-	for (i = 0; i < nr_pages; i++) {
-		struct page *page = pfn_to_online_page(pfn + i);
-
-		if (!page)
-			continue;
-		if (!efi_hwpoison_recorded(PFN_PHYS(pfn + i), PAGE_SIZE))
-			continue;
-
-		nr_poison++;
-	}
-
-
-> > PG_hwpoison in a block is the union of every source that poisoned a
-> > frame; the inherited EFI table is one of them, and it is the coarse and
-> > partial one.
+>> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+>> index 7080a6a1a79e7..b0ddc652e76cc 100644
+>> --- a/include/linux/page-flags.h
+>> +++ b/include/linux/page-flags.h
+> [ ... ]
+>> @@ -1169,7 +1175,7 @@ static __always_inline void __ClearPageAnonExclusi=
+ve(struct page *page)
+>>   */
+>>  #define PAGE_FLAGS_CHECK_AT_FREE				\
+>>  	(1UL << PG_lru		| 1UL << PG_locked	|	\
+>> -	 1UL << PG_private	| 1UL << PG_private_2	|	\
+>> +	 1UL << PG_private_2	|				\
 >
-> So you're saying that this code is possibly racy with other setting code? Or
-> which other sources might there be if the generically called
+> [Severity: Medium]
+> Since PG_private is removed from PAGE_FLAGS_CHECK_AT_FREE, does this bypa=
+ss
+> the safety check that ensures a page doesn't have uncleared private data?
 >
-> range_contains_poisoned_memory()
+> Looking at __free_pages_prepare() in mm/page_alloc.c:
 >
-> wouldn't be able to identify it (and it only queries the bitmap?).
-
-Not racy: memblk_nr_poison_init() only ever runs at boot. It is gated on
-MEM_ONLINE, and only one of the two callers passes that.
-
-	memory_dev_init()		-> MEM_ONLINE	(boot)
-	create_memory_block_devices()	-> MEM_OFFLINE	(hotplug)
-
-So the hotplug path returns on the first line and never walks, and at
-the point the boot path walks, the only thing that has set PG_hwpoison
-in that block is hwpoison_boot_page().
-
-> > You might ask why I do not just count the bits set in the bitmape and
-> > multiply by the frames a unit covers.
-> >
-> > That was my first try. It over-counts: a bit stands for a whole 2M unit,
-> > but only the frames that reach __free_pages_core() get flagged -- CMA
-> > comes back through __free_pages(), the initrd and __init memory through
-> > free_reserved_pages(), and KHO-preserved frames never get an initialised
-> > struct page at all.
+> 	page_cpupid_reset_last(page);
+> 	page->flags.f &=3D ~PAGE_FLAGS_CHECK_AT_PREP;
+> 	page->private =3D 0;
+> 	reset_page_owner(page, order);
 >
-> Why are other hwpoisoned pages not flagged? If initrd or anything else is
-> hwpoisoned, we should not be running this kernel?
-
-For the initrd and the image, the previous kernel's record cannot stop
-this kernel's loader from placing them on a bad frame. If that happens
-we consumed the poison in the relocation memcpy, long before any of this
-code runs. That is the kexec segment placement problem, which Kiryl
-raised on the RFC and which I split into its own series, which is landed
-in some mm tree already.
-
-https://lore.kernel.org/all/20260812-kexec_posioned-v6-0-e477887086f0@debian.org/
-
-
-> >
-> > And the over-count cannot be undone later.
+> The head page's private field is silently zeroed here without any prior
+> verification that it was NULL. Previously, free_page_is_bad() would catch
+> and report leaked data via a bad_page() warning using
+> PAGE_FLAGS_CHECK_AT_FREE.
 >
-> The inconsistency is worrisome.
-> I wouldn't say that I hate it but it certainly has "great, more hwpoison hacks"
-> smell to it.
->
-> We have enough semi-broken hwpoison ... stuff ... in our code base already. So
-> I'm hoping we're not adding more to it?
->
-> > If the walk itself is what bothers you, the way out is not the bitmap
-> > but counting as we flag: hwpoison_boot_page() already knows the pfn, so
-> > it can bump a per-block-id counter in a small memblock array that
-> > memblk_nr_poison_init() then just reads.
->
-> The inconsistency is what worries me.
->
-> And that we have pages we are told are hwpoisoned but we seem to ignore that and
-> carry on with our kernel letting it boot?
+> Now, if a buggy filesystem fails to detach and free folio->private data
+> before freeing the page, will this result in silent memory leaks?
 
-The walk exists precisely because of that inconsistency: the counter has
-to match the frames that actually carry the flag, and the bitmap says
-more than that.
+Answer copied from RFC:
 
-If we drop the page walk, then there is change for inconsistency, but,
-as-is, there is no inconsistency.
+After the conversion, folio/page should have an elevated refcount whenever
+->private is set. That would help detect leaked private data. I tried to
+enforce ->private needs to be NULL at page free time[1], but that might
+cause trouble for certain use cases.
 
-So, I am planning to keep the page walk above, when there is a poisoned
-page in the memory block, avoiding any inconsitency.
+[1] https://lore.kernel.org/all/20260223032641.1859381-1-ziy@nvidia.com/
 
-> > Exact by construction, no walk. Happy to go that way instead if you
-> > prefer it.
+
 >
-> Let me first try to understand the semantics here.
+>>  	 1UL << PG_writeback	| 1UL << PG_reserved	|	\
+>>  	 1UL << PG_active 	|				\
+>>  	 1UL << PG_unevictable	| __PG_MLOCKED | LRU_GEN_MASK)
+>
+> --=20
+> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260920-remove-p=
+g_private-v5-0-bb68b6a21869@nvidia.com?part=3D17
 
-Thanks for the review,
---breno
+
+Best Regards,
+Yan, Zi
 
