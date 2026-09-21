@@ -2,76 +2,76 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F705606A32E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0924606A334
 	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 08:21:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=orNn7ojQ;
-	dkim=permerror header.d=soleen.com header.i=@soleen.com header.a=rsa-sha1 header.s=google header.b=IbHBJa4N
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=EBQxLFsZ;
+	dkim=permerror header.d=soleen.com header.i=@soleen.com header.a=rsa-sha1 header.s=google header.b=VuiLRFkF
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=GqeqlOCg1HclTeosM0Kb19hmyEop41lmxz51E1YFR5I=; b=orNn7ojQWAgXKvng+XzG8mAYZL
-	VKeBBp94NBNYLtalIupkgBn2v2RBIwDnTDsEIglokEm3fVPITFiIGyUCXk0GhLlcER5hMrquWjKPE
-	eIqJg/uRu6asmJNnBMgT3/AGYbi1oQIfHGn8XvvH8AjHrRMwbxi9zVUwJCHx451wErhwl8M+AlsCB
-	YtIYlyNr3i0OxrnXYzZLLSZrfOWKOthMkK3C7AolQmDqn20fI9gHsVTIJsY2xtHqEbOONOM2GsuRq
-	KncRISUG9YPl4XPz2E6vNfjUEFS2j8vFXs0caQlQEDTKgeacPvkbeSJr9Kc+of+WhJcwPWKRYAdis
-	bbk3BA8Q==;
+	bh=yiFGjgmYdihnRq5zn4J7+lquPNFdcPY4JCSVkkBVe/c=; b=EBQxLFsZIg7bCks13z94J8hXZG
+	zIfzKqrHYqBLL4CojW3tG83czv5lGeZsZW4JxcxOa4ANwttCRO1lizT/2SZRLHEkL64TqRMcittSj
+	Kp5kaIKSrzzNcg2cnpS7Jxo+CLhxDDx3eH8MulkYDmzquCi5QmR2JPpWK2XaBv64BriLUnkGoqHM3
+	sXEvFvp+7txdfc/OeSM3MMbIswN/W7Z6cQVnfFUqhBj1okGzajYrjDoD9EcFhGvgs9abm1nYwr/Tg
+	kib0gwcv/89ZXgxFQ9MXBJ013FEzo5fVTFA6dO9H9O7BPiVOLBuRDl/d8CPCFegvqrAnF7UD0LfAv
+	2xcQczRQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJ55t-000000098sK-2otD;
+	id 1xJ55t-000000098sp-3q5B;
 	Tue, 20 Oct 2026 08:21:13 +0000
-Received: from mail-yx2-x11.google.com ([2607:f8b0:4864:41::11])
+Received: from mail-yx2-x10.google.com ([2607:f8b0:4864:41::10])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8l82-00000003PcQ-1lxX
+	id 1x8l88-00000003Pfn-2sjN
 	for kexec@lists.infradead.org;
-	Mon, 21 Sep 2026 21:00:47 +0000
-Received: by mail-yx2-x11.google.com with SMTP id 00721157ae682-85d440939efso29864707b3.1
-        for <kexec@lists.infradead.org>; Mon, 21 Sep 2026 14:00:46 -0700 (PDT)
+	Mon, 21 Sep 2026 21:00:53 +0000
+Received: by mail-yx2-x10.google.com with SMTP id 00721157ae682-85d43f9b11bso26939657b3.0
+        for <kexec@lists.infradead.org>; Mon, 21 Sep 2026 14:00:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1790024445; x=1790629245; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1790024452; x=1790629252; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=GqeqlOCg1HclTeosM0Kb19hmyEop41lmxz51E1YFR5I=;
-        b=IbHBJa4NpMF5PZjmsiwY0TOlo5HLGRNWxr3taNSeiUygQHTsYcRNAgRYQ/1w0Mvveh
-         wL5HyDItaHn4HE1SbfBoCrZRlUtPACJAeZlNvr02pl1A1+hny5CBZce6p/CA7eMEhtCY
-         DbrPDbdpXJE7qRMCJYIIHm9MBNCKb+/weGhhUWkJAyjlhijbaQt4NlFgv7u4C6+rnqEP
-         70vKQB15e3CxCm5X5arqUEcXBDRfnt0yS+bY3Ojr7B8UZirI0xFuoF8bnPcLF+FWzFTY
-         hZX9rB6z6DilVbb6NxSePh/qO6QSBcS5K/+demVKq/As9hFSrFNCTBGikaMJaDQGgNwC
-         JY7w==
+        bh=yiFGjgmYdihnRq5zn4J7+lquPNFdcPY4JCSVkkBVe/c=;
+        b=VuiLRFkFChWlSeASuuOzfY9M/hrkXlPjUvYsSTRSEEWRJ1iei2N05U1gAR6XY9J408
+         oymG+Ong22sf4JhhDxhSf5nQHN6UsnlBw4WRJrcZmhpF1i4jp8b6bKVo9VVx4Zc/1nFN
+         zB6OQn2JYd79Pl4WFrH2u1Qt62bdEGjlUSrXLp3EmkFnPMvhA8inFto5y9XJowM657BP
+         ku/W+AJxdtyKiUvLqExQP90Wk+KRgL1BsW8dmSETIypA5VbgN1/GWl4Qv7zQWY50njGH
+         HyCRtiwJrF/pKJMVbv3876kWnLHuxB0m3DdqfQsMNTaxUGlgAPAtE8bQF736ISi/QRDE
+         LC9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790024445; x=1790629245;
+        d=1e100.net; s=20260707; t=1790024452; x=1790629252;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to:content-type;
-        bh=GqeqlOCg1HclTeosM0Kb19hmyEop41lmxz51E1YFR5I=;
-        b=LlNKYIUImX2yN3EZywbiTZj6pTsAqU05ceRbfEI2mIDFUUOQePg/ormM8PBtkXq5y6
-         1pqquh6UgHdOhcW7IkSqeBhyvVrwv757j+trWdqiZJAcLRFx34TiIbQwLXP7zzipD26s
-         9lvDag9+2o9Y3tk5FZbSRd0umolWgIpDkCSbzgqJFj0fGKSbYVbShgkAok0JlT49/Z3b
-         EnF03I/phjbXZOXDauzRyGCIwcRJN6Q6Pi/I9iII4qwQRWwPc8fsDfS2DSPwy5OBD3NF
-         tbndEmp7vFqr1TQVZ5IXt613lgcNKuBfq6A5JSa9q8hZUiuOVTGwLDcfoTU8qZuoWeWR
-         bFuw==
-X-Forwarded-Encrypted: i=1; AKwUvBzEJGgDKqDpnBKZDJhmoGZdcZSYnPjAuQcQmJ/PaWBticGG9uaEtTkUHKPSrNBnKCVZAVWmKw==@lists.infradead.org
-X-Gm-Message-State: AFuF++naWexheNJHWmY57+jl3dH+cfiNTss/LqZ5Bg+wXR6jzbNuj7ri
-	/BMaib65q5Vi1Jx/qjiawpGLbbEfmqNd6Es3jdMQiwzClvHfnp0F9GAWYFQ2/jMVZhg=
-X-Gm-Gg: AYBFou3CIZ3TPKOkqG/ScyCYpskUMCAwiDa2drDDBeG/zWf2H2EY/+653IpeMZtJtMG
-	2wZzxaiyxhPDFLHtGMvMcwWUALnuw9xJNDTz2LWHxEEwa43cM0ZL4PzBbZuGxxaNz/3OGE9pWpU
-	mRH9sZnRS1UEMTNmYJ978cXWxNkPf2T9fvShPnvKq8551eEtI3P9ntL3ZC7Qbjg20luyyq889Dy
-	MLbfDezUo8SjdsK/bAdPSTmHB4nlidvPPOS9gNB6mCZfNAoiKCrvDjQbWEntZyv9LOZJpn0lHPE
-	jmdnENinUvx4QJ0o1Z9eNYi0v+mG9mlrQ3wZ/3Fx80hfkLyy53QYcDpX2YzJYQ2kYYkVQbgF1xY
-	Z32bOe8BUjVby/wKbJdoc8tGLkbPLnGmCEhU2NesWTSG+hb2hXKQq8dJ7o4EZXJx/cwlyabX2Cg
-	LbA9yHavb9T+qSBnCrqO8Ud3feotv1RQDB4jomxMoFFBAL5beI23jspJWjpQTYPWPOX80ybgOD5
-	zuqshQK0Tp+CxjyS36xnmvLwNlCfRvNcfB/yw+XGaOGCpT2oG3/NO++ovj60/TzddH0bF/6YWOn
-	/lewcpBAZn6GZ4veluZ0VnlB+Xlpsw==
-X-Received: by 2002:a05:690c:6b01:b0:8a1:17f0:a44a with SMTP id 00721157ae682-8a117f0b633mr11060827b3.46.1790024444982;
-        Mon, 21 Sep 2026 14:00:44 -0700 (PDT)
+        bh=yiFGjgmYdihnRq5zn4J7+lquPNFdcPY4JCSVkkBVe/c=;
+        b=f6w5W9n/hrKOoctiMeCwbRBuAbHS4YfFu2eqAlHYewqFA7bamv/DA00pGUo4lXZhDm
+         F14OxgaS5BqKZ5m348dyMhMg36Nx2j9UwiymQtYAI8Z8ogOSQc5Dc8HniPaswKQLP+/o
+         lcB0GiYSY9VfSbuWJgol+aT5AdSQ/uGyZTHlFiGZHsRucpovrifEJ6n8YW9ed08dBo0b
+         GjenuJyFKqvrEWvRTdbd3oLRtGavMhtisXiIi9LrExnRReENQ8hscjRxfJAgUFuuaEVb
+         khDATzfs38mqYHt4PYuvM8BxQ7ViCN9qOGEmgfuZFrPXu1msn9J7/pbIAk3WWhdGFQNQ
+         aTZw==
+X-Forwarded-Encrypted: i=1; AKwUvBzp2IXDOWVYt9qF4wQdC16hQ7M0yWV+l/g4IU7/V0KHO7nt0QYFqy4Gzwov91aI3RkynD7ZJA==@lists.infradead.org
+X-Gm-Message-State: AFuF++nLvOum21nQIbGaF5ogMP+sXMLZsblACKLgZyoXbCBJaZT0nmEN
+	wXcToA+iy2H3JSJuT1kJq1U+F7MRJfqEX7jXBF+vx/M8d+snemdAIzoNvNqxJc0dXhE=
+X-Gm-Gg: AYBFou3vqmGH/Kz107oFRzAE+qVOGqzQyLy0/H/p/nES3Juvw2CIw0nZ/scPHZcc0Kc
+	vkDK+3yCyauRgNJf3H4v9WH/JN3BKW31/yk3i65C4/BIzSxSqIBwRB/1DZoZaFNgr9c1sZdvDFK
+	KWBRWEzhtFJuq4jw05TYKIzckeKVZc4tFzl84nOiiegqprXgU1a5Y5Hv+jFwkDRPI1dSLVVwUKC
+	IbFOjI/aOx9NU4DnGxF2gkC7qLG5mbcb4blc6ZDyutOeIS6JeE9FEQzmur9pxMz1ojbRrpdJdbL
+	DsMKKLidUQ3UYjLG6hqba/G+H/ZsrQYvFb13GQ42FWSVSnATB/0qR0DfAybX61IHBdhExe4xgpm
+	qrPnpDpNZ1b+2jkYmmoYT/zNiFqNQUNR0u4TCiOLLlAcWsxpbmsAzooCUCmfhYiY46SWekAomFq
+	/T+xh3qLYZNXJ6n16kZi7HjsX5/GvNV2j+l+BQTEPu7AYW3JNpLRFBkrSpYD5rDFnVLTC3SECwI
+	1yHiYuOvs2X7QYJSzjRDnuCfBRoFvzSkXOlQlw51rDI2SK/J69ogrtb7P1IApxjMuaqDy7uAYbL
+	l6StiJDfG2j6r8jJ1PM=
+X-Received: by 2002:a05:690c:6:b0:873:5ddf:d85d with SMTP id 00721157ae682-897346e159emr38436627b3.40.1790024451380;
+        Mon, 21 Sep 2026 14:00:51 -0700 (PDT)
 Received: from soleen.c.googlers.com.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-8a23c738bdfsm1445297b3.11.2026.09.21.14.00.41
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-8a23c738bdfsm1445297b3.11.2026.09.21.14.00.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Sep 2026 14:00:43 -0700 (PDT)
+        Mon, 21 Sep 2026 14:00:50 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: linux-kselftest@vger.kernel.org,
 	legion@kernel.org,
@@ -149,9 +149,9 @@ To: linux-kselftest@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	vladimir.murzin@arm.com,
 	kas@kernel.org
-Subject: [RFC PATCH 41/46] KVM: SVM: Implement Caretaker SVM VMCB lifecycle and exit dispatch
-Date: Mon, 21 Sep 2026 17:00:29 -0400
-Message-ID: <20260921210034.180424-3-pasha.tatashin@soleen.com>
+Subject: [RFC PATCH 44/46] KVM: arm64: Implement Caretaker GICv3 CPU interface and arch timer emulation
+Date: Mon, 21 Sep 2026 17:00:32 -0400
+Message-ID: <20260921210034.180424-6-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
 In-Reply-To: <20260921210034.180424-1-pasha.tatashin@soleen.com>
 References: <20260920193650.3373435-1-pasha.tatashin@soleen.com>
@@ -160,10 +160,10 @@ X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260921_140046_537286_50A212AE 
-X-CRM114-Status: GOOD (  17.64  )
+X-CRM114-CacheID: sfid-20260921_140052_820432_E1C4B1CD 
+X-CRM114-Status: GOOD (  18.76  )
 X-Spam-Score: 1.2 (+)
-X-Mailman-Approved-At: Tue, 20 Oct 2026 01:21:09 -0700
+X-Mailman-Approved-At: Tue, 20 Oct 2026 01:21:10 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -182,618 +182,542 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Implement AMD SVM Caretaker VMCB preservation, exit decoding, and
-detach-time serialization in arch/x86/kvm/svm/caretaker.c.
+Implement standalone Caretaker GICv3 ICH_* register save/restore and
+virtual timer deadline emulation in arch/arm64/kvm/caretaker.c.
 
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/x86/kvm/Makefile                |  23 +-
- arch/x86/kvm/svm/caretaker.c         | 467 +++++++++++++++++++++++++++
- arch/x86/kvm/svm/caretaker_vmenter.S |   4 +-
- arch/x86/kvm/svm/svm.c               |  11 +-
- 4 files changed, 500 insertions(+), 5 deletions(-)
- create mode 100644 arch/x86/kvm/svm/caretaker.c
+ arch/arm64/kvm/caretaker.c | 521 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 521 insertions(+)
+ create mode 100644 arch/arm64/kvm/caretaker.c
 
-diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
-index b550a3fd0708..9213d274817e 100644
---- a/arch/x86/kvm/Makefile
-+++ b/arch/x86/kvm/Makefile
-@@ -26,6 +26,7 @@ kvm-intel-$(CONFIG_KVM_HYPERV)	+= vmx/hyperv.o vmx/hyperv_evmcs.o
- kvm-intel-$(CONFIG_KVM_INTEL_TDX)	+= vmx/tdx.o
- 
- kvm-amd-y		+= svm/svm.o svm/vmenter.o svm/pmu.o svm/nested.o svm/avic.o
-+kvm-amd-$(CONFIG_KVM_CARETAKER) += svm/caretaker.o svm/caretaker_vmenter.o
- 
- kvm-amd-$(CONFIG_KVM_AMD_SEV)	+= svm/sev.o
- kvm-amd-$(CONFIG_KVM_HYPERV)	+= svm/hyperv.o
-@@ -43,6 +44,26 @@ obj-$(CONFIG_KVM_AMD)	+= kvm-amd.o
- AFLAGS_svm/vmenter.o    := -iquote $(obj)
- $(obj)/svm/vmenter.o: $(obj)/kvm-asm-offsets.h
- 
-+AFLAGS_svm/caretaker_vmenter.o := -iquote $(obj)
-+$(obj)/svm/caretaker_vmenter.o: $(obj)/kvm-asm-offsets.h
-+
-+KASAN_SANITIZE_caretaker.o := n
-+KCSAN_SANITIZE_caretaker.o := n
-+UBSAN_SANITIZE_caretaker.o := n
-+KCOV_INSTRUMENT_caretaker.o := n
-+KASAN_SANITIZE_svm/caretaker.o := n
-+KCSAN_SANITIZE_svm/caretaker.o := n
-+UBSAN_SANITIZE_svm/caretaker.o := n
-+KCOV_INSTRUMENT_svm/caretaker.o := n
-+KASAN_SANITIZE_vmx/caretaker.o := n
-+KCSAN_SANITIZE_vmx/caretaker.o := n
-+UBSAN_SANITIZE_vmx/caretaker.o := n
-+KCOV_INSTRUMENT_vmx/caretaker.o := n
-+CFLAGS_REMOVE_caretaker.o = $(CC_FLAGS_FTRACE)
-+CFLAGS_caretaker.o += -fno-stack-protector $(call cc-option,-ftrivial-auto-var-init=uninitialized) $(call cc-option,-fno-jump-tables)
-+CFLAGS_REMOVE_svm/caretaker.o = $(CC_FLAGS_FTRACE)
-+CFLAGS_svm/caretaker.o := -fno-stack-protector $(call cc-option,-ftrivial-auto-var-init=uninitialized) $(call cc-option,-fno-jump-tables)
-+
- AFLAGS_vmx/vmenter.o    := -iquote $(obj)
- $(obj)/vmx/vmenter.o: $(obj)/kvm-asm-offsets.h
- 
-@@ -50,7 +71,7 @@ AFLAGS_vmx/caretaker_vmenter.o := -iquote $(obj)
- $(obj)/vmx/caretaker_vmenter.o: $(obj)/kvm-asm-offsets.h
- 
- CFLAGS_REMOVE_vmx/caretaker.o = $(CC_FLAGS_FTRACE)
--CFLAGS_vmx/caretaker.o := -fno-stack-protector
-+CFLAGS_vmx/caretaker.o := -fno-stack-protector $(call cc-option,-ftrivial-auto-var-init=uninitialized) $(call cc-option,-fno-jump-tables)
- 
- 
- $(obj)/kvm-asm-offsets.h: $(obj)/kvm-asm-offsets.s FORCE
-diff --git a/arch/x86/kvm/svm/caretaker.c b/arch/x86/kvm/svm/caretaker.c
+diff --git a/arch/arm64/kvm/caretaker.c b/arch/arm64/kvm/caretaker.c
 new file mode 100644
-index 000000000000..cb30e336f014
+index 000000000000..65c11fe8c2fa
 --- /dev/null
-+++ b/arch/x86/kvm/svm/caretaker.c
-@@ -0,0 +1,467 @@
++++ b/arch/arm64/kvm/caretaker.c
+@@ -0,0 +1,521 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * AMD SVM Caretaker Standalone Execution Engine
-+ *
 + * Copyright (c) 2026, Google LLC.
 + * Pasha Tatashin <pasha.tatashin@soleen.com>
-+ *
-+ * Runs the AMD SVM guest VMRUN loop in an isolated, KHO-preserved memory
-+ * page that remains alive and executing across kexec relocation and
-+ * kernel handover.
 + */
-+
 +#include <linux/cpu_preserve.h>
 +#include <linux/delay.h>
-+#include <linux/kernel.h>
++#include <linux/irqchip/arm-gic-v3.h>
 +#include <linux/kexec_handover.h>
++#include <linux/kho/abi/kvm.h>
 +#include <linux/kvm_host.h>
 +#include <linux/objtool.h>
 +#include <linux/oncore.h>
++#include <linux/sched.h>
 +
-+#include <asm/apic.h>
-+#include <asm/cpu_entry_area.h>
-+#include <asm/desc.h>
++#include <asm/barrier.h>
++#include <asm/caretaker.h>
++#include <asm/cpu_ops.h>
++#include <linux/cpufeature.h>
++#include <asm/cputype.h>
++#include <asm/fpsimd.h>
++#include <asm/kernel-pgtable.h>
++#include <linux/kexec.h>
++#include <asm/kvm_emulate.h>
++#include <asm/kvm_hyp.h>
++#include <asm/kvm_mmu.h>
++#include <asm/kvm_pgtable.h>
++#include <asm/kvm_ptrauth.h>
++#include <linux/mmu_context.h>
 +#include <linux/pgtable.h>
-+#include <linux/processor.h>
-+#include <asm/set_memory.h>
-+#include <asm/svm.h>
++#include <asm/smp_plat.h>
++#include <asm/sysreg.h>
 +#include <asm/tlbflush.h>
++#include <asm/vectors.h>
 +
-+#include "../caretaker.h"
++#include <kvm/arm_arch_timer.h>
++#include <kvm/arm_vgic.h>
++
 +#include "caretaker.h"
-+#include "mmu.h"
-+#include "svm.h"
-+#include "svm_ops.h"
 +
-+static int svm_caretaker_init_page(struct caretaker_svm_page *csp, struct kvm_vcpu *vcpu);
-+STACK_FRAME_NON_STANDARD(svm_caretaker_init_page);
++struct caretaker_fault_info {
++	u64 elr;
++	u64 esr;
++	u64 far;
++	u64 count;
++};
 +
-+static int svm_caretaker_init_page(struct caretaker_svm_page *csp, struct kvm_vcpu *vcpu)
++static struct caretaker_fault_info arm64_caretaker_faults[NR_CPUS] __cpu_preserved_data;
++
++void __caretaker_text
++arm64_caretaker_handle_invalid(u64 elr, u64 esr, u64 far)
 +{
-+	struct vcpu_svm *svm = to_svm(vcpu);
-+	int ret;
++	int cpu = arm64_caretaker_get_pcpu();
 +
-+	if (is_guest_mode(vcpu) || is_sev_guest(vcpu) ||
-+	    kvm_vcpu_apicv_activated(vcpu))
++	if (cpu >= 0 && cpu < ARRAY_SIZE(arm64_caretaker_faults)) {
++		arm64_caretaker_faults[cpu].elr = elr;
++		arm64_caretaker_faults[cpu].esr = esr;
++		arm64_caretaker_faults[cpu].far = far;
++		arm64_caretaker_faults[cpu].count++;
++	}
++
++	while (1) {
++		if (cpu_preserved_should_exit(cpu)) {
++			cpu_preserved_set_dead(cpu);
++			arch_cpu_preserved_park_finish(cpu);
++		}
++		arch_cpu_preserved_park_wait();
++	}
++}
++
++__caretaker_text static inline void
++arm64_caretaker_load_sysregs(struct kvm_cpu_context *ctxt)
++{
++	u64 mpidr = ctxt_sys_reg(ctxt, MPIDR_EL1);
++	u64 midr = read_cpuid_id();
++
++	write_sysreg(midr, vpidr_el2);
++	write_sysreg(mpidr, vmpidr_el2);
++
++	write_sysreg_el1(ctxt_sys_reg(ctxt, SCTLR_EL1), SYS_SCTLR);
++	write_sysreg_el1(ctxt_sys_reg(ctxt, CPACR_EL1), SYS_CPACR);
++	write_sysreg_el1(ctxt_sys_reg(ctxt, TTBR0_EL1), SYS_TTBR0);
++	write_sysreg_el1(ctxt_sys_reg(ctxt, TTBR1_EL1), SYS_TTBR1);
++	write_sysreg_el1(ctxt_sys_reg(ctxt, TCR_EL1), SYS_TCR);
++	if (cpus_have_final_cap(ARM64_HAS_TCR2)) {
++		write_sysreg_el1(ctxt_sys_reg(ctxt, TCR2_EL1), SYS_TCR2);
++		if (cpus_have_final_cap(ARM64_HAS_S1PIE)) {
++			write_sysreg_el1(ctxt_sys_reg(ctxt, PIR_EL1), SYS_PIR);
++			write_sysreg_el1(ctxt_sys_reg(ctxt, PIRE0_EL1), SYS_PIRE0);
++		}
++	}
++	if (cpus_have_final_cap(ARM64_HAS_SCTLR2))
++		write_sysreg_el1(ctxt_sys_reg(ctxt, SCTLR2_EL1), SYS_SCTLR2);
++	write_sysreg_el1(ctxt_sys_reg(ctxt, ESR_EL1), SYS_ESR);
++	write_sysreg_el1(ctxt_sys_reg(ctxt, AFSR0_EL1), SYS_AFSR0);
++	write_sysreg_el1(ctxt_sys_reg(ctxt, AFSR1_EL1), SYS_AFSR1);
++	write_sysreg_el1(ctxt_sys_reg(ctxt, FAR_EL1), SYS_FAR);
++	write_sysreg_el1(ctxt_sys_reg(ctxt, MAIR_EL1), SYS_MAIR);
++	write_sysreg_el1(ctxt_sys_reg(ctxt, VBAR_EL1), SYS_VBAR);
++	write_sysreg_el1(ctxt_sys_reg(ctxt, CONTEXTIDR_EL1), SYS_CONTEXTIDR);
++	write_sysreg_el1(ctxt_sys_reg(ctxt, AMAIR_EL1), SYS_AMAIR);
++	write_sysreg_el1(ctxt_sys_reg(ctxt, CNTKCTL_EL1), SYS_CNTKCTL);
++	write_sysreg(ctxt_sys_reg(ctxt, PAR_EL1), par_el1);
++	write_sysreg(ctxt_sys_reg(ctxt, TPIDR_EL1), tpidr_el1);
++	write_sysreg(ctxt_sys_reg(ctxt, TPIDR_EL0), tpidr_el0);
++	write_sysreg(ctxt_sys_reg(ctxt, TPIDRRO_EL0), tpidrro_el0);
++	write_sysreg(ctxt_sys_reg(ctxt, SP_EL1), sp_el1);
++	write_sysreg_el1(ctxt_sys_reg(ctxt, ELR_EL1), SYS_ELR);
++	write_sysreg_el1(ctxt_sys_reg(ctxt, SPSR_EL1), SYS_SPSR);
++	write_sysreg(ctxt_sys_reg(ctxt, MDSCR_EL1), mdscr_el1);
++}
++
++__caretaker_text static inline void
++arm64_caretaker_save_sysregs(struct kvm_cpu_context *ctxt)
++{
++	ctxt_sys_reg(ctxt, SCTLR_EL1) = read_sysreg_el1(SYS_SCTLR);
++	ctxt_sys_reg(ctxt, CPACR_EL1) = read_sysreg_el1(SYS_CPACR);
++	ctxt_sys_reg(ctxt, TTBR0_EL1) = read_sysreg_el1(SYS_TTBR0);
++	ctxt_sys_reg(ctxt, TTBR1_EL1) = read_sysreg_el1(SYS_TTBR1);
++	ctxt_sys_reg(ctxt, TCR_EL1) = read_sysreg_el1(SYS_TCR);
++	if (cpus_have_final_cap(ARM64_HAS_TCR2)) {
++		ctxt_sys_reg(ctxt, TCR2_EL1) = read_sysreg_el1(SYS_TCR2);
++		if (cpus_have_final_cap(ARM64_HAS_S1PIE)) {
++			ctxt_sys_reg(ctxt, PIR_EL1) = read_sysreg_el1(SYS_PIR);
++			ctxt_sys_reg(ctxt, PIRE0_EL1) = read_sysreg_el1(SYS_PIRE0);
++		}
++	}
++	if (cpus_have_final_cap(ARM64_HAS_SCTLR2))
++		ctxt_sys_reg(ctxt, SCTLR2_EL1) = read_sysreg_el1(SYS_SCTLR2);
++	ctxt_sys_reg(ctxt, ESR_EL1) = read_sysreg_el1(SYS_ESR);
++	ctxt_sys_reg(ctxt, AFSR0_EL1) = read_sysreg_el1(SYS_AFSR0);
++	ctxt_sys_reg(ctxt, AFSR1_EL1) = read_sysreg_el1(SYS_AFSR1);
++	ctxt_sys_reg(ctxt, FAR_EL1) = read_sysreg_el1(SYS_FAR);
++	ctxt_sys_reg(ctxt, MAIR_EL1) = read_sysreg_el1(SYS_MAIR);
++	ctxt_sys_reg(ctxt, VBAR_EL1) = read_sysreg_el1(SYS_VBAR);
++	ctxt_sys_reg(ctxt, CONTEXTIDR_EL1) = read_sysreg_el1(SYS_CONTEXTIDR);
++	ctxt_sys_reg(ctxt, AMAIR_EL1) = read_sysreg_el1(SYS_AMAIR);
++	ctxt_sys_reg(ctxt, CNTKCTL_EL1) = read_sysreg_el1(SYS_CNTKCTL);
++	ctxt_sys_reg(ctxt, PAR_EL1) = read_sysreg_par();
++	ctxt_sys_reg(ctxt, TPIDR_EL1) = read_sysreg(tpidr_el1);
++	ctxt_sys_reg(ctxt, TPIDR_EL0) = read_sysreg(tpidr_el0);
++	ctxt_sys_reg(ctxt, TPIDRRO_EL0) = read_sysreg(tpidrro_el0);
++	ctxt_sys_reg(ctxt, SP_EL1) = read_sysreg(sp_el1);
++	ctxt_sys_reg(ctxt, ELR_EL1) = read_sysreg_el1(SYS_ELR);
++	ctxt_sys_reg(ctxt, SPSR_EL1) = read_sysreg_el1(SYS_SPSR);
++	ctxt_sys_reg(ctxt, MDSCR_EL1) = read_sysreg(mdscr_el1);
++}
++
++int arm64_kvm_caretaker_preserve(struct kvm_vcpu *vcpu,
++				 struct kvm_vcpu_ser *ser)
++{
++	struct kvm_s2_mmu *mmu = vcpu->arch.hw_mmu ?
++				 vcpu->arch.hw_mmu : &vcpu->kvm->arch.mmu;
++	struct oncore_session *sess = oncore_job_session(vcpu->caretaker.job);
++	struct arch_timer_context *vtimer;
++	struct caretaker_arm64_page *head;
++	struct caretaker_arm64_page *cap;
++
++	if (!has_vhe() || is_protected_kvm_enabled() || vcpu_has_nv(vcpu))
++		return -EOPNOTSUPP;
++	/*
++	 * Same predicate as kvm_arch_vcpu_luo_preserve() (kvm_luo.c) and
++	 * kvm_arm_copy_sys_reg_indices() (sys_regs.c): what matters is whether
++	 * an in-kernel irqchip exists at all, not whether it has been
++	 * initialised yet.  vgic_initialized() would let a created-but-not-ready
++	 * in-kernel VGICv2 through, and the caretaker cannot emulate one.
++	 */
++	if (irqchip_in_kernel(vcpu->kvm) &&
++	    vcpu->kvm->arch.vgic.vgic_model != KVM_DEV_TYPE_ARM_VGIC_V3)
++		return -EOPNOTSUPP;
++	if (kvm_has_mte(vcpu->kvm) || kvm_has_s1poe(vcpu->kvm) ||
++	    vcpu_has_sve(vcpu) || vcpu_has_ptrauth(vcpu) ||
++	    test_bit(KVM_ARCH_FLAG_WRITABLE_IMP_ID_REGS, &vcpu->kvm->arch.flags))
 +		return -EOPNOTSUPP;
 +
-+	ret = kvm_x86_caretaker_init_common_page(&csp->common, vcpu, sizeof(*csp));
-+	if (ret)
-+		return ret;
++	cap = kho_alloc_preserve(sizeof(*cap));
++	if (IS_ERR(cap)) {
++		pr_err("caretaker arm64: failed to allocate preserved page\n");
++		return -ENOMEM;
++	}
++	oncore_session_map_buffer(sess, cap, sizeof(*cap));
 +
-+	if (svm->vmcb01.ptr)
-+		csp->vmcb = *svm->vmcb01.ptr;
-+	csp->vmcb_pa = virt_to_phys(&csp->vmcb);
-+	csp->hsave_pa = virt_to_phys(csp->hsave_area);
++	memset(cap, 0, sizeof(*cap));
 +
-+	if (svm->msrpm)
-+		memcpy(csp->msrpm, svm->msrpm, MSRPM_SIZE);
-+	else
-+		memset(csp->msrpm, 0xff, MSRPM_SIZE);
-+	memset(csp->iopm, 0xff, IOPM_SIZE);
-+	csp->vmcb.control.msrpm_base_pa = virt_to_phys(csp->msrpm);
-+	csp->vmcb.control.iopm_base_pa = virt_to_phys(csp->iopm);
-+	vmcb_set_intercept(&csp->vmcb.control, INTERCEPT_MSR_PROT);
-+	vmcb_set_intercept(&csp->vmcb.control, INTERCEPT_IOIO_PROT);
++	kvm_caretaker_init_common_vcpu(&cap->vcpu, &cap->abi.cb, vcpu, cap,
++				       sizeof(*cap), NULL, cap);
 +
-+	/* Enable HLT/CPUID/VMMCALL intercepts handled by standalone loop */
-+	vmcb_set_intercept(&csp->vmcb.control, INTERCEPT_HLT);
-+	vmcb_set_intercept(&csp->vmcb.control, INTERCEPT_PAUSE);
-+	csp->vmcb.control.pause_filter_count = 4096;
-+	csp->vmcb.control.pause_filter_thresh = 128;
-+	vmcb_clr_intercept(&csp->vmcb.control, INTERCEPT_RDTSC);
-+	vmcb_set_intercept(&csp->vmcb.control, INTERCEPT_VMMCALL);
-+	vmcb_set_intercept(&csp->vmcb.control, INTERCEPT_CPUID);
-+	vmcb_clr_intercept(&csp->vmcb.control, INTERCEPT_MONITOR);
-+	vmcb_clr_intercept(&csp->vmcb.control, INTERCEPT_MWAIT);
-+	vmcb_set_intercept(&csp->vmcb.control, INTERCEPT_NMI);
-+	vmcb_clr_intercept(&csp->vmcb.control, INTERCEPT_INTR);
-+	vmcb_set_intercept(&csp->vmcb.control, INTERCEPT_INIT);
++	/* Copy architectural execution state */
++	cap->ctx.ctxt = vcpu->arch.ctxt;
++	cap->ctx.fault = vcpu->arch.fault;
++	cap->ctx.hcr_el2 = vcpu->arch.hcr_el2;
++	cap->ctx.mdcr_el2 = vcpu->arch.mdcr_el2;
++	cap->ctx.cflags = vcpu->arch.cflags;
 +
-+	/*
-+	 * Clear interrupt-window intercepts and virtual IRQ injection state
-+	 * left behind in vmcb01 if vcpu_enter_guest() was aborted while
-+	 * KVM had an active interrupt window open (matching VMX clearing
-+	 * CPU_BASED_INTR_WINDOW_EXITING | CPU_BASED_NMI_WINDOW_EXITING).
-+	 */
-+	vmcb_clr_intercept(&csp->vmcb.control, INTERCEPT_VINTR);
-+	vmcb_clr_intercept(&csp->vmcb.control, INTERCEPT_IRET);
-+	vmcb_clr_intercept(&csp->vmcb.control, INTERCEPT_STGI);
-+	vmcb_clr_intercept(&csp->vmcb.control, INTERCEPT_CR8_WRITE);
++	cap->ctx.vtcr_el2 = mmu->vtcr;
++	cap->ctx.vttbr_el2 = kvm_get_vttbr(mmu);
 +
-+	/* Clear VMCB clean bits and flush TLB for execution on Caretaker CPU */
-+	csp->vmcb.control.clean = 0;
-+	csp->vmcb.control.tlb_ctl = TLB_CONTROL_FLUSH_ALL_ASID;
-+	csp->vmcb.control.int_ctl &= ~V_IRQ_INJECTION_BITS_MASK;
-+	csp->vmcb.control.int_ctl |= V_INTR_MASKING_MASK;
-+	if (csp->vmcb.control.int_ctl & V_GIF_ENABLE_MASK)
-+		csp->vmcb.control.int_ctl |= V_GIF_MASK;
-+	csp->vmcb.control.int_vector = 0;
-+	csp->vmcb.control.int_state = 0;
-+	csp->vmcb.control.event_inj = 0;
-+	csp->vmcb.control.exit_int_info = 0;
-+	if (csp->vmcb.control.asid == 0)
-+		csp->vmcb.control.asid = 1;
-+	csp->vmcb.save.rflags = kvm_get_rflags(vcpu);
-+	csp->vmcb.save.rax = csp->common.rax;
-+	csp->vmcb.save.rsp = kvm_rsp_read(vcpu);
-+	csp->vmcb.save.rip = kvm_rip_read(vcpu);
-+	csp->common.cr3 = csp->vmcb.save.cr3;
-+	csp->common.cr0 = csp->vmcb.save.cr0;
-+	csp->common.cr4 = csp->vmcb.save.cr4;
-+	csp->common.efer = csp->vmcb.save.efer;
-+	csp->common.last_exit_rsp = csp->vmcb.save.rsp;
-+	csp->common.last_exit_rip = csp->vmcb.save.rip;
-+	csp->common.last_exit_rflags = csp->vmcb.save.rflags;
++	if (vgic_initialized(vcpu->kvm)) {
++		int i;
++
++		cap->ctx.vgic_initialized = true;
++		cap->ctx.vgic_v3 = vcpu->arch.vgic_cpu.vgic_v3;
++
++		for (i = 0; ; i++) {
++			phys_addr_t rpa;
++			unsigned long rva;
++			size_t rsize;
++
++			if (gicv3_caretaker_get_redist_region(i, &rpa, &rva, &rsize))
++				break;
++			oncore_session_map_range(sess, rpa, rva, rsize,
++						 pgprot_device(PAGE_KERNEL));
++		}
++	}
++
++	vtimer = vcpu_vtimer(vcpu);
++	cap->ctx.cntvoff_el2 = timer_get_offset(vtimer);
++	cap->ctx.cntv_cval_el0 = timer_get_cval(vtimer);
++	cap->ctx.cntv_ctl_el0 = timer_get_ctl(vtimer);
++
++	head = vcpu->kvm->caretaker_vm;
++	if (!head) {
++		cap->next_vcpu = cap;
++		vcpu->kvm->caretaker_vm = cap;
++	} else {
++		struct caretaker_arm64_page *peer;
++
++		cap->next_vcpu = head->next_vcpu;
++		head->next_vcpu = cap;
++		cpu_preserved_clean(head);
++
++		for (peer = cap->next_vcpu; peer != cap; peer = peer->next_vcpu)
++			oncore_session_map_buffer(sess, peer, sizeof(*peer));
++	}
++
++	cap->abi.vgic_initialized = cap->ctx.vgic_initialized ? 1 : 0;
++	cap->abi.cntvoff_el2 = cap->ctx.cntvoff_el2;
++	cap->abi.hcr_el2 = cap->ctx.hcr_el2;
++	cap->abi.mdcr_el2 = cap->ctx.mdcr_el2;
++	cap->abi.cflags = (u32)cap->ctx.cflags;
++	if (cap->ctx.vgic_initialized) {
++		int i;
++
++		cap->abi.used_lrs = cap->ctx.vgic_v3.used_lrs;
++		cap->abi.vgic_hcr = cap->ctx.vgic_v3.vgic_hcr;
++		cap->abi.vgic_vmcr = cap->ctx.vgic_v3.vgic_vmcr;
++		for (i = 0; i < 4; i++) {
++			cap->abi.vgic_ap0r[i] = cap->ctx.vgic_v3.vgic_ap0r[i];
++			cap->abi.vgic_ap1r[i] = cap->ctx.vgic_v3.vgic_ap1r[i];
++		}
++		for (i = 0; i < 16; i++)
++			cap->abi.vgic_lr[i] = cap->ctx.vgic_v3.vgic_lr[i];
++	}
++
++	if (ser->arch_state.phys) {
++		struct kvm_vcpu_arch_ser *state =
++			phys_to_virt(ser->arch_state.phys);
++		size_t sz = struct_size(state, sysregs, state->num_sysregs);
++
++		cap->arch_state = state;
++		oncore_session_map_buffer(sess, state, sz);
++	}
++
++	ser->cb.phys = virt_to_phys(cap);
++
++	cpu_preserved_clean(cap);
 +
 +	return 0;
 +}
 +
-+void svm_caretaker_init(struct kvm_vcpu *vcpu)
++static __always_inline void arm64_caretaker_save_ptrauth(struct arm64_caretaker_ptrauth_keys *k)
 +{
-+	struct caretaker_svm_page *csp;
-+
-+	csp = kho_alloc_preserve(sizeof(*csp));
-+	if (IS_ERR(csp)) {
-+		pr_err("caretaker svm: failed to allocate preserved page\n");
++	if (!arm64_caretaker_has_ptrauth)
 +		return;
-+	}
 +
-+	if (svm_caretaker_init_page(csp, vcpu)) {
-+		kvm_x86_caretaker_unpreserve_pages(&csp->common.abi);
-+		vcpu->caretaker.cb = NULL;
-+		kho_unpreserve_free(csp);
-+	}
++	k->apia_lo = read_sysreg_s(SYS_APIAKEYLO_EL1);
++	k->apia_hi = read_sysreg_s(SYS_APIAKEYHI_EL1);
++	k->apib_lo = read_sysreg_s(SYS_APIBKEYLO_EL1);
++	k->apib_hi = read_sysreg_s(SYS_APIBKEYHI_EL1);
++	k->apda_lo = read_sysreg_s(SYS_APDAKEYLO_EL1);
++	k->apda_hi = read_sysreg_s(SYS_APDAKEYHI_EL1);
++	k->apdb_lo = read_sysreg_s(SYS_APDBKEYLO_EL1);
++	k->apdb_hi = read_sysreg_s(SYS_APDBKEYHI_EL1);
++	k->apga_lo = read_sysreg_s(SYS_APGAKEYLO_EL1);
++	k->apga_hi = read_sysreg_s(SYS_APGAKEYHI_EL1);
 +}
 +
-+static __cpu_preserved_text void
-+svm_caretaker_seg_to_kvm(struct kvm_segment *var, const struct vmcb_seg *s, int seg)
++static __always_inline void
++arm64_caretaker_restore_ptrauth(const struct arm64_caretaker_ptrauth_keys *k)
 +{
-+	var->base = s->base;
-+	var->limit = s->limit;
-+	var->selector = s->selector;
-+	var->type = s->attrib & SVM_SELECTOR_TYPE_MASK;
-+	var->s = (s->attrib >> SVM_SELECTOR_S_SHIFT) & 1;
-+	var->dpl = (s->attrib >> SVM_SELECTOR_DPL_SHIFT) & 3;
-+	var->present = (s->attrib >> SVM_SELECTOR_P_SHIFT) & 1;
-+	var->avl = (s->attrib >> SVM_SELECTOR_AVL_SHIFT) & 1;
-+	var->l = (s->attrib >> SVM_SELECTOR_L_SHIFT) & 1;
-+	var->db = (s->attrib >> SVM_SELECTOR_DB_SHIFT) & 1;
-+	var->g = s->limit > 0xfffff;
-+	var->unusable = !var->present;
-+	if (seg == VCPU_SREG_TR)
-+		var->type |= 0x2;
++	if (!arm64_caretaker_has_ptrauth)
++		return;
++
++	write_sysreg_s(k->apia_lo, SYS_APIAKEYLO_EL1);
++	write_sysreg_s(k->apia_hi, SYS_APIAKEYHI_EL1);
++	write_sysreg_s(k->apib_lo, SYS_APIBKEYLO_EL1);
++	write_sysreg_s(k->apib_hi, SYS_APIBKEYHI_EL1);
++	write_sysreg_s(k->apda_lo, SYS_APDAKEYLO_EL1);
++	write_sysreg_s(k->apda_hi, SYS_APDAKEYHI_EL1);
++	write_sysreg_s(k->apdb_lo, SYS_APDBKEYLO_EL1);
++	write_sysreg_s(k->apdb_hi, SYS_APDBKEYHI_EL1);
++	write_sysreg_s(k->apga_lo, SYS_APGAKEYLO_EL1);
++	write_sysreg_s(k->apga_hi, SYS_APGAKEYHI_EL1);
++	isb();
 +}
 +
-+static __cpu_preserved_text void
-+svm_caretaker_detach_serialize(void *page, struct kvm_vcpu_arch_ser *state)
++#define __caretaker_apr_save(_v, _reg)		((_v) = read_sysreg_s(_reg))
++#define __caretaker_apr_restore(_v, _reg)	write_sysreg_s((_v), _reg)
++
++/*
++ * ICH_AP0R<n>_EL2 and ICH_AP1R<n>_EL2 encode <n> in the instruction, so the
++ * accesses cannot be put in a loop.  Generate the ladder for either group and
++ * either direction from one pattern instead of writing it out four times.
++ *
++ * @_dir: save or restore
++ * @_grp: 0 or 1, selecting ICH_AP0R<n>_EL2 or ICH_AP1R<n>_EL2
++ */
++#define caretaker_vgic_v3_apr(_dir, _grp, _regs, _nr_pre_bits)			\
++do {										\
++	switch (_nr_pre_bits) {							\
++	case 7:									\
++		__caretaker_apr_##_dir((_regs)[3], SYS_ICH_AP##_grp##R3_EL2);	\
++		__caretaker_apr_##_dir((_regs)[2], SYS_ICH_AP##_grp##R2_EL2);	\
++		fallthrough;							\
++	case 6:									\
++		__caretaker_apr_##_dir((_regs)[1], SYS_ICH_AP##_grp##R1_EL2);	\
++		fallthrough;							\
++	default:								\
++		__caretaker_apr_##_dir((_regs)[0], SYS_ICH_AP##_grp##R0_EL2);	\
++	}									\
++} while (0)
++
++/*
++ * Acknowledge and retire whichever Group 1 interrupt is pending on this CPU.
++ * EOImode is 1 (priority drop and deactivation are separate), so a real INTID
++ * needs both an EOIR1 and a DIR write.  The special INTIDs (1020-1023) mean
++ * "nothing pending" and must not be written back.
++ */
++__caretaker_text static void caretaker_gic_drain_iar(void)
 +{
-+	struct caretaker_svm_page *csp = page;
-+	struct vmcb_save_area *save = &csp->vmcb.save;
++	u32 iar = read_sysreg_s(SYS_ICC_IAR1_EL1);
 +
-+	csp->common.cr0 = save->cr0;
-+	csp->common.cr3 = save->cr3;
-+	csp->common.cr4 = save->cr4;
-+	csp->common.efer = save->efer;
-+	csp->common.last_exit_rip = save->rip;
-+	csp->common.last_exit_rsp = save->rsp;
-+	csp->common.last_exit_rflags = save->rflags;
-+
-+	kvm_x86_caretaker_detach_serialize_common(&csp->common, state);
-+
-+	state->sregs.cr2 = save->cr2;
-+	svm_caretaker_seg_to_kvm(&state->sregs.cs, &save->cs, VCPU_SREG_CS);
-+	svm_caretaker_seg_to_kvm(&state->sregs.ds, &save->ds, VCPU_SREG_DS);
-+	svm_caretaker_seg_to_kvm(&state->sregs.es, &save->es, VCPU_SREG_ES);
-+	svm_caretaker_seg_to_kvm(&state->sregs.fs, &save->fs, VCPU_SREG_FS);
-+	svm_caretaker_seg_to_kvm(&state->sregs.gs, &save->gs, VCPU_SREG_GS);
-+	svm_caretaker_seg_to_kvm(&state->sregs.ss, &save->ss, VCPU_SREG_SS);
-+	svm_caretaker_seg_to_kvm(&state->sregs.tr, &save->tr, VCPU_SREG_TR);
-+	svm_caretaker_seg_to_kvm(&state->sregs.ldt, &save->ldtr, VCPU_SREG_LDTR);
-+	state->sregs.gdt.base = save->gdtr.base;
-+	state->sregs.gdt.limit = save->gdtr.limit;
-+	state->sregs.idt.base = save->idtr.base;
-+	state->sregs.idt.limit = save->idtr.limit;
-+
-+	kvm_x86_caretaker_update_msr(state, MSR_STAR, save->star);
-+	kvm_x86_caretaker_update_msr(state, MSR_LSTAR, save->lstar);
-+	kvm_x86_caretaker_update_msr(state, MSR_CSTAR, save->cstar);
-+	kvm_x86_caretaker_update_msr(state, MSR_SYSCALL_MASK, save->sfmask);
-+	kvm_x86_caretaker_update_msr(state, MSR_KERNEL_GS_BASE, save->kernel_gs_base);
-+	kvm_x86_caretaker_update_msr(state, MSR_IA32_SYSENTER_CS, save->sysenter_cs);
-+	kvm_x86_caretaker_update_msr(state, MSR_IA32_SYSENTER_ESP, save->sysenter_esp);
-+	kvm_x86_caretaker_update_msr(state, MSR_IA32_SYSENTER_EIP, save->sysenter_eip);
-+}
-+
-+static void svm_caretaker_sync_vcpu(struct kvm_vcpu *vcpu, void *vcpu_data)
-+{
-+	struct vcpu_svm *svm = to_svm(vcpu);
-+	struct svm_cpu_data *sd = per_cpu_ptr(&svm_data, raw_smp_processor_id());
-+
-+	if (sd && sd->save_area_pa)
-+		wrmsrq(MSR_VM_HSAVE_PA, sd->save_area_pa);
-+
-+	kvm_x86_caretaker_sync_vcpu_common(vcpu);
-+
-+	if (svm->vmcb) {
-+		if (!svm->vmcb->control.next_rip && svm->vmcb->control.insn_len)
-+			svm->vmcb->control.next_rip = kvm_rip_read(vcpu) +
-+						      svm->vmcb->control.insn_len;
-+		if (!svm->vmcb->control.next_rip) {
-+			switch (svm->vmcb->control.exit_code) {
-+			case SVM_EXIT_CPUID:
-+			case SVM_EXIT_MSR:
-+			case SVM_EXIT_PAUSE:
-+				svm->vmcb->control.next_rip = kvm_rip_read(vcpu) + 2;
-+				break;
-+			case SVM_EXIT_HLT:
-+				svm->vmcb->control.next_rip = kvm_rip_read(vcpu) + 1;
-+				break;
-+			case SVM_EXIT_VMMCALL:
-+			case SVM_EXIT_XSETBV:
-+			case SVM_EXIT_INVLPGA:
-+				svm->vmcb->control.next_rip = kvm_rip_read(vcpu) + 3;
-+				break;
-+			default:
-+				break;
-+			}
-+		}
-+
-+		svm->vmcb->control.clean = 0;
-+		svm->vmcb->control.tlb_ctl = TLB_CONTROL_FLUSH_ALL_ASID;
-+		svm->vmcb->control.int_ctl &= ~V_IRQ_INJECTION_BITS_MASK;
-+		svm->vmcb->control.int_ctl |= V_INTR_MASKING_MASK;
-+		if (vgif)
-+			svm_set_gif(svm, true);
-+		svm_clr_intercept(svm, INTERCEPT_VINTR);
-+		svm->vmcb->control.int_state = 0;
-+		svm->nmi_masked = false;
-+		svm->awaiting_iret_completion = false;
-+		svm_set_intercept(svm, INTERCEPT_INTR);
-+		svm_set_intercept(svm, INTERCEPT_NMI);
-+		svm_set_intercept(svm, INTERCEPT_INIT);
-+		svm_clr_intercept(svm, INTERCEPT_RDTSC);
-+		svm_clr_intercept(svm, INTERCEPT_PAUSE);
-+		svm_recalc_intercepts(vcpu);
-+		svm->vmcb->control.event_inj = 0;
-+		svm->vmcb->control.exit_int_info = 0;
++	if (iar < GIC_SPECIAL_INTID_START) {
++		write_sysreg_s(iar, SYS_ICC_EOIR1_EL1);
++		write_sysreg_s(iar, SYS_ICC_DIR_EL1);
 +	}
 +}
 +
-+void __cpu_preserved_text
-+svm_caretaker_decode_exit(void *page,
-+			  struct kvm_caretaker_exit *exit)
++/*
++ * Put EL2 back into host (VHE) configuration.  Both vector bases are pointed
++ * at the caretaker's own hyp vectors: while a preserved core is running a
++ * guest the caretaker owns EL2, and the kernel that installed kvm_hyp_vector
++ * may no longer exist.
++ */
++__caretaker_text static void caretaker_restore_host_el2(void)
 +{
-+	struct caretaker_svm_page *csp = page;
-+	u64 exit_code = csp->vmcb.control.exit_code;
-+	u64 info1 = csp->vmcb.control.exit_info_1;
-+	u64 info2 = csp->vmcb.control.exit_info_2;
-+	struct vmcb *vmcb = &csp->vmcb;
-+	u64 rip = vmcb->save.rip;
-+	u32 insn_len;
++	write_sysreg_hcr(HCR_HOST_VHE_FLAGS);
++	write_sysreg((unsigned long)caretaker_hyp_vector, vbar_el1);
++	write_sysreg_s((unsigned long)caretaker_hyp_vector, SYS_VBAR_EL2);
++	dsb(sy);
++	isb();
++}
 +
-+	if (vmcb->control.next_rip && vmcb->control.next_rip > rip)
-+		insn_len = vmcb->control.next_rip - rip;
-+	else
-+		insn_len = vmcb->control.insn_len;
-+
-+	csp->common.last_exit_rip = rip;
-+	csp->common.last_exit_rsp = vmcb->save.rsp;
-+	csp->common.last_exit_rflags = vmcb->save.rflags;
-+	csp->common.cr3 = vmcb->save.cr3;
-+	csp->common.cr0 = vmcb->save.cr0;
-+	csp->common.cr4 = vmcb->save.cr4;
-+	csp->common.efer = vmcb->save.efer;
-+	vmcb->control.exit_int_info = 0;
-+
-+	exit->rip = rip;
-+	exit->insn_len = insn_len;
-+	exit->raw_reason = exit_code;
-+	exit->type = KVM_CARETAKER_EXIT_ARCH;
-+
-+	switch (exit_code) {
-+	case SVM_EXIT_IOIO: {
-+		u16 port = (u16)(info1 >> 16);
-+
-+		if (!exit->insn_len && info2 > rip)
-+			exit->insn_len = (u32)(info2 - rip);
-+
-+		if (port >= COM1_PORT_BASE && port <= COM1_PORT_END) {
-+			exit->type = KVM_CARETAKER_EXIT_CONSOLE;
-+			exit->mmio_io.addr = port;
-+			exit->mmio_io.is_write = !(info1 & SVM_IOIO_TYPE_MASK);
-+			exit->mmio_io.size = (u8)((info1 & SVM_IOIO_SIZE_MASK) >>
-+						  SVM_IOIO_SIZE_SHIFT);
-+			exit->mmio_io.is_mmio = false;
-+			exit->mmio_io.val_ptr = &csp->common.rax;
-+		}
-+		break;
++__caretaker_text static u64 caretaker_gic_v3_get_lr(unsigned int lr)
++{
++	switch (lr & 0xf) {
++	case 0:
++		return read_gicreg(ICH_LR0_EL2);
++	case 1:
++		return read_gicreg(ICH_LR1_EL2);
++	case 2:
++		return read_gicreg(ICH_LR2_EL2);
++	case 3:
++		return read_gicreg(ICH_LR3_EL2);
++	case 4:
++		return read_gicreg(ICH_LR4_EL2);
++	case 5:
++		return read_gicreg(ICH_LR5_EL2);
++	case 6:
++		return read_gicreg(ICH_LR6_EL2);
++	case 7:
++		return read_gicreg(ICH_LR7_EL2);
++	case 8:
++		return read_gicreg(ICH_LR8_EL2);
++	case 9:
++		return read_gicreg(ICH_LR9_EL2);
++	case 10:
++		return read_gicreg(ICH_LR10_EL2);
++	case 11:
++		return read_gicreg(ICH_LR11_EL2);
++	case 12:
++		return read_gicreg(ICH_LR12_EL2);
++	case 13:
++		return read_gicreg(ICH_LR13_EL2);
++	case 14:
++		return read_gicreg(ICH_LR14_EL2);
++	default:
++		return read_gicreg(ICH_LR15_EL2);
 +	}
-+	case SVM_EXIT_HLT:
-+		exit->type = KVM_CARETAKER_EXIT_IDLE;
-+		if (!exit->insn_len)
-+			exit->insn_len = 1;
++}
++
++__caretaker_text static void caretaker_gic_v3_set_lr(u64 val, unsigned int lr)
++{
++	switch (lr & 0xf) {
++	case 0:
++		write_gicreg(val, ICH_LR0_EL2);
 +		break;
-+	case SVM_EXIT_PAUSE:
-+		exit->type = KVM_CARETAKER_EXIT_IDLE;
-+		if (!exit->insn_len)
-+			exit->insn_len = 2;
++	case 1:
++		write_gicreg(val, ICH_LR1_EL2);
 +		break;
-+	case SVM_EXIT_CPUID:
-+		exit->type = KVM_CARETAKER_EXIT_CPUID;
-+		if (!exit->insn_len)
-+			exit->insn_len = 2;
++	case 2:
++		write_gicreg(val, ICH_LR2_EL2);
 +		break;
-+	case SVM_EXIT_MSR:
-+		exit->type = KVM_CARETAKER_EXIT_MSR;
-+		exit->msr.msr = (u32)csp->common.rcx;
-+		exit->msr.is_write = (info1 != 0);
-+		if (!exit->insn_len)
-+			exit->insn_len = 2;
++	case 3:
++		write_gicreg(val, ICH_LR3_EL2);
 +		break;
-+	case SVM_EXIT_INVD:
-+	case SVM_EXIT_WBINVD:
-+		exit->type = KVM_CARETAKER_EXIT_INSN_STEP;
-+		if (!exit->insn_len)
-+			exit->insn_len = 2;
++	case 4:
++		write_gicreg(val, ICH_LR4_EL2);
 +		break;
-+	case SVM_EXIT_NPF:
-+		exit->type = KVM_CARETAKER_EXIT_UNHANDLED;
++	case 5:
++		write_gicreg(val, ICH_LR5_EL2);
 +		break;
-+	case SVM_EXIT_INTR:
-+		kvm_x86_caretaker_disarm_timer();
-+		asm volatile("sti\n\tnop\n\tpause\n\tcli" : : : "memory");
-+		exit->type = KVM_CARETAKER_EXIT_PREEMPT_TIMER;
-+		exit->insn_len = 0;
++	case 6:
++		write_gicreg(val, ICH_LR6_EL2);
 +		break;
-+	case SVM_EXIT_NMI:
-+	case SVM_EXIT_INIT:
-+		exit->type = KVM_CARETAKER_EXIT_PREEMPT_TIMER;
-+		exit->insn_len = 0;
++	case 7:
++		write_gicreg(val, ICH_LR7_EL2);
 +		break;
-+	case SVM_EXIT_VINTR:
-+	case SVM_EXIT_WRITE_CR8:
-+		exit->type = KVM_CARETAKER_EXIT_CROSS_VCPU;
-+		exit->insn_len = 0;
++	case 8:
++		write_gicreg(val, ICH_LR8_EL2);
 +		break;
-+	case SVM_EXIT_VMMCALL:
-+		exit->type = KVM_CARETAKER_EXIT_CROSS_VCPU;
-+		if (!exit->insn_len)
-+			exit->insn_len = 3;
++	case 9:
++		write_gicreg(val, ICH_LR9_EL2);
 +		break;
-+	case SVM_EXIT_RDTSC:
-+		exit->type = KVM_CARETAKER_EXIT_RDTSC;
-+		if (!exit->insn_len)
-+			exit->insn_len = 2;
++	case 10:
++		write_gicreg(val, ICH_LR10_EL2);
++		break;
++	case 11:
++		write_gicreg(val, ICH_LR11_EL2);
++		break;
++	case 12:
++		write_gicreg(val, ICH_LR12_EL2);
++		break;
++	case 13:
++		write_gicreg(val, ICH_LR13_EL2);
++		break;
++	case 14:
++		write_gicreg(val, ICH_LR14_EL2);
 +		break;
 +	default:
-+		/*
-+		 * Everything not decoded above keeps KVM_CARETAKER_EXIT_ARCH
-+		 * and stalls in kvm_x86_caretaker_handle_exit().
-+		 *
-+		 * XSETBV and RDTSCP used to be decoded here and are
-+		 * deliberately not any more.  INSN_STEP means "the instruction
-+		 * had no architectural effect worth emulating", which holds
-+		 * for INVD and WBINVD on a coherent, guest_memfd-backed VM but
-+		 * not for these: stepping XSETBV leaves XCR0 unchanged while
-+		 * the guest believes it changed.  RDTSCP is the same story via
-+		 * KVM_CARETAKER_EXIT_RDTSC, which writes only RAX and RDX and
-+		 * would leave a stale RCX instead of IA32_TSC_AUX.
-+		 */
++		write_gicreg(val, ICH_LR15_EL2);
 +		break;
 +	}
 +}
 +
-+static __cpu_preserved_text void
-+svm_caretaker_advance_rip(void *page, u64 rip)
++__caretaker_text static void caretaker_vgic_v3_restore(struct caretaker_arm64_page *cap)
 +{
-+	struct caretaker_svm_page *csp = page;
++	struct vgic_v3_cpu_if *cpu_if = &cap->ctx.vgic_v3;
++	unsigned int used_lrs = cpu_if->used_lrs;
++	u64 vtr = read_sysreg_s(SYS_ICH_VTR_EL2);
++	unsigned int max_lrs = FIELD_GET(ICH_VTR_EL2_ListRegs, vtr) + 1;
++	u32 nr_pre_bits = FIELD_GET(ICH_VTR_EL2_PREbits, vtr) + 1;
++	unsigned int i;
 +
-+	csp->vmcb.save.rax = csp->common.rax;
-+	csp->vmcb.save.rip = rip;
-+	csp->common.last_exit_rip = rip;
-+	csp->common.last_exit_rsp = csp->vmcb.save.rsp;
-+}
++	/* Drain any pending software-generated SGIs into empty LRs */
++	if (cap->ctx.pending_sgis) {
++		for (i = 0; i < max_lrs && cap->ctx.pending_sgis; i++) {
++			if (i >= used_lrs || (cpu_if->vgic_lr[i] & ICH_LR_STATE) == 0) {
++				int sgi = __ffs(cap->ctx.pending_sgis);
 +
-+static __cpu_preserved_text void
-+svm_caretaker_arm_timer(void *page, u64 deadline_ticks)
-+{
-+	struct caretaker_svm_page *csp = page;
-+
-+	if (deadline_ticks) {
-+		vmcb_set_intercept(&csp->vmcb.control, INTERCEPT_INTR);
-+		kvm_x86_caretaker_arm_timer(deadline_ticks);
-+	} else {
-+		vmcb_clr_intercept(&csp->vmcb.control, INTERCEPT_INTR);
++				cap->ctx.pending_sgis &= ~BIT(sgi);
++				cpu_if->vgic_lr[i] = ((u64)sgi & 0xf) |
++						     ICH_LR_PENDING_BIT |
++						     ICH_LR_GROUP |
++						     ((u64)GIC_DEFAULT_SGI_PRIO <<
++						      ICH_LR_PRIORITY_SHIFT);
++				if (i >= used_lrs)
++					used_lrs = i + 1;
++			}
++		}
++		cpu_if->used_lrs = used_lrs;
 +	}
++
++	write_sysreg_s(cpu_if->vgic_vmcr, SYS_ICH_VMCR_EL2);
++
++	caretaker_vgic_v3_apr(restore, 0, cpu_if->vgic_ap0r, nr_pre_bits);
++	caretaker_vgic_v3_apr(restore, 1, cpu_if->vgic_ap1r, nr_pre_bits);
++
++	write_sysreg_s(cpu_if->vgic_hcr | ICH_HCR_EL2_En, SYS_ICH_HCR_EL2);
++
++	used_lrs = min3(used_lrs, max_lrs, (unsigned int)VGIC_V3_MAX_LRS);
++
++	for (i = 0; i < used_lrs; i++)
++		caretaker_gic_v3_set_lr(cpu_if->vgic_lr[i], i);
++	isb();
 +}
 +
-+static __cpu_preserved_text void
-+svm_caretaker_disarm_timer(void *page)
++__caretaker_text static void caretaker_vgic_v3_save(struct vgic_v3_cpu_if *cpu_if)
 +{
-+	struct caretaker_svm_page *csp = page;
++	u64 vtr = read_sysreg_s(SYS_ICH_VTR_EL2);
++	unsigned int max_lrs = FIELD_GET(ICH_VTR_EL2_ListRegs, vtr) + 1;
++	u32 nr_pre_bits = FIELD_GET(ICH_VTR_EL2_PREbits, vtr) + 1;
++	unsigned int used_lrs = cpu_if->used_lrs;
++	unsigned int i;
 +
-+	kvm_x86_caretaker_disarm_timer();
-+	vmcb_clr_intercept(&csp->vmcb.control, INTERCEPT_INTR);
-+	asm volatile("sti\n\tnop\n\tpause\n\tcli" : : : "memory");
++	used_lrs = min3(used_lrs, max_lrs, (unsigned int)VGIC_V3_MAX_LRS);
++
++	for (i = 0; i < used_lrs; i++) {
++		cpu_if->vgic_lr[i] = __gic_v3_get_lr(i);
++		__gic_v3_set_lr(0, i);
++	}
++
++	cpu_if->vgic_vmcr = read_sysreg_s(SYS_ICH_VMCR_EL2);
++
++	caretaker_vgic_v3_apr(save, 0, cpu_if->vgic_ap0r, nr_pre_bits);
++	caretaker_vgic_v3_apr(save, 1, cpu_if->vgic_ap1r, nr_pre_bits);
++
++	write_sysreg_s(0, SYS_ICH_HCR_EL2);
++	isb();
 +}
 +
-+static __cpu_preserved_text void
-+svm_caretaker_pre_enter(void *page)
-+{
-+	struct caretaker_svm_page *csp = page;
-+	u64 efer;
-+
-+	csp->orig_hsave_pa = native_rdmsrq(MSR_VM_HSAVE_PA);
-+
-+	/* Ensure EFER_SVME is enabled and HSAVE is configured */
-+	efer = native_rdmsrq(MSR_EFER);
-+	csp->orig_efer = efer;
-+	native_wrmsrq(MSR_EFER, efer | EFER_SVME);
-+	native_wrmsrq(MSR_VM_HSAVE_PA, csp->hsave_pa);
-+}
-+
-+static __cpu_preserved_text void
-+svm_caretaker_post_exit(void *page)
-+{
-+	struct caretaker_svm_page *csp = page;
-+
-+	native_wrmsrq(MSR_VM_HSAVE_PA, csp->orig_hsave_pa);
-+	asm volatile("1: stgi\n\t"
-+		     "2:\n\t"
-+		     _ASM_EXTABLE(1b, 2b)
-+		     : : : "memory");
-+	if (!(csp->orig_efer & EFER_SVME))
-+		native_wrmsrq(MSR_EFER, native_rdmsrq(MSR_EFER) & ~EFER_SVME);
-+}
-+
-+static const struct kvm_x86_caretaker_runtime_ops svm_caretaker_runtime_ops __cpu_preserved_data = {
-+	.detach_serialize = svm_caretaker_detach_serialize,
-+	.common = {
-+		.enter_guest = svm_caretaker_enter,
-+		.decode_exit = svm_caretaker_decode_exit,
-+		.handle_arch_exit = kvm_x86_caretaker_handle_exit,
-+		.advance_rip = svm_caretaker_advance_rip,
-+		.arm_timer = svm_caretaker_arm_timer,
-+		.disarm_timer = svm_caretaker_disarm_timer,
-+		.pre_run = svm_caretaker_pre_enter,
-+		.post_run = svm_caretaker_post_exit,
-+	},
-+};
-+
-+static const struct kvm_x86_caretaker_ops svm_caretaker_ops = {
-+	.name = "svm",
-+	.init = svm_caretaker_init,
-+	.sync_vcpu = svm_caretaker_sync_vcpu,
-+	.runtime = &svm_caretaker_runtime_ops,
-+};
-+
-+void svm_caretaker_register(void)
-+{
-+	kvm_x86_caretaker_register_ops(&svm_caretaker_ops);
-+}
-+
-+void svm_caretaker_unregister(void)
-+{
-+	kvm_x86_caretaker_unregister_ops(&svm_caretaker_ops);
-+}
-diff --git a/arch/x86/kvm/svm/caretaker_vmenter.S b/arch/x86/kvm/svm/caretaker_vmenter.S
-index e0276a34403e..10303268844e 100644
---- a/arch/x86/kvm/svm/caretaker_vmenter.S
-+++ b/arch/x86/kvm/svm/caretaker_vmenter.S
-@@ -27,7 +27,7 @@ SYM_TYPED_FUNC_START(svm_caretaker_enter)
- 	sti
- 
- 	/* 0. Save host VMCB state (FS, GS, TR, LDTR) to host save area */
--	movq CXP_HSAVE_PA(%rdi), %rax
-+	movq CSP_HSAVE_PA_OFFSET(%rdi), %rax
- 	testq %rax, %rax
- 	jz 10f
- 	vmsave %rax
-@@ -69,7 +69,7 @@ SYM_TYPED_FUNC_START(svm_caretaker_enter)
- 	movq %rbx, CXP_REG_RAX(%rdi)
- 
- 	/* 5a. Restore host VMCB state (FS, GS, TR, LDTR) from HSAVE */
--	movq CXP_HSAVE_PA(%rdi), %rax
-+	movq CSP_HSAVE_PA_OFFSET(%rdi), %rax
- 	testq %rax, %rax
- 	jz 40f
- 	vmload %rax
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 7d59d301e1e5..ca6b0d1e80fe 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -54,6 +54,7 @@
- #include "svm.h"
- #include "svm_ops.h"
- 
-+#include "caretaker.h"
- #include "hyperv.h"
- #include "kvm_onhyperv.h"
- #include "svm_onhyperv.h"
-@@ -973,6 +974,8 @@ static void svm_hardware_unsetup(void)
- {
- 	int cpu;
- 
-+	svm_caretaker_unregister();
-+
- 	avic_hardware_unsetup();
- 
- 	sev_hardware_unsetup();
-@@ -1117,7 +1120,7 @@ static void svm_recalc_instruction_intercepts(struct kvm_vcpu *vcpu)
- 		svm_clr_intercept(svm, INTERCEPT_RDPMC);
- }
- 
--static void svm_recalc_intercepts(struct kvm_vcpu *vcpu)
-+void svm_recalc_intercepts(struct kvm_vcpu *vcpu)
- {
- 	svm_recalc_instruction_intercepts(vcpu);
- 	svm_recalc_msr_intercepts(vcpu);
-@@ -4344,6 +4347,7 @@ static void svm_complete_interrupts(struct kvm_vcpu *vcpu)
- 	bool nmi_l1_to_l2 = svm->nmi_l1_to_l2;
- 	bool soft_int_injected = svm->soft_int_injected;
- 
-+	svm->vmcb->control.exit_int_info = 0;
- 	svm->nmi_l1_to_l2 = false;
- 	svm->soft_int_injected = false;
- 
-@@ -4396,7 +4400,8 @@ static void svm_complete_interrupts(struct kvm_vcpu *vcpu)
- 		break;
- 	}
- 	case SVM_EXITINTINFO_TYPE_INTR:
--		kvm_queue_interrupt(vcpu, vector, false);
-+		if (kvm_get_rflags(vcpu) & X86_EFLAGS_IF)
-+			kvm_queue_interrupt(vcpu, vector, false);
- 		break;
- 	case SVM_EXITINTINFO_TYPE_SOFT:
- 		kvm_queue_interrupt(vcpu, vector, true);
-@@ -5762,6 +5767,8 @@ static __init int svm_hardware_setup(void)
- 			goto err;
- 	}
- 
-+	svm_caretaker_register();
-+
- 	return 0;
- 
- err:
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
