@@ -4,118 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DFC20C982DE
-	for <kexec@archiver.kernel.org>; Mon, 21 Sep 2026 05:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F0BA6C982E1
+	for <kexec@archiver.kernel.org>; Mon, 21 Sep 2026 05:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=9GfQGwi/bINbQG0lJ4TrNy13j95JizRsDT1BfgiquJ8=; b=qZ6cQuZ4qsv6ZDDR9Zh1UI58aT
-	gWQG1WWV7cgjDEmeh1M2hjNDN+WVNh6bloQwi/UHAX1gtipaOYPAkbPgs6HZ246FWx4NStAVfC6uG
-	XromrxRaGBxd4J2BTgtqCLqjJZAZB4INQI9rejdO+/cWG8RFqx9vdeV3Q14TwUL84IPvcSC3TnQuv
-	y9o5bMK6uI7iHNT0utvJPotWUKfdbKfsDklWA5JXbspYyC5eS52Pa1sZy4kBi9ORI/JP9n1omHpSX
-	f/UVGKcKPizd5X/cvx/1+rzWu7L1h4H+U3g80hRpWL5sexytISOt+RHBb4tiZ6aavCrLe8S2bmHCO
-	LCqIZrqQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=DfKCxDkGmiGAvVKE3w2w5luUgwycfNwU8vR07vCusUo=; b=jKj6N2/hcD+Ve+X67dasnTAwt6
+	Ty5jRJh3wpZpF1sScIqgFSHCysGpbbRqu2M4bohLxbA/ZqH0XDj+cmNuhTFGXoqCJ4OdwKVD3kH9A
+	x7j6h3B1hD9IoXO4PRdrEEazLErISS14ZfpGOxsr6b5q28bMK9t0bHWxQmMZFeSn11zZ+tzXVp18w
+	RaRRzS8M1sK6/T/CtnQzlvpx51hqnNjpMunqjMhw5JIkKbl14zzjeZVmUcge1NdfPCSOsw5LHGR6Q
+	R+AdrN16txunTkQyVfghTSlUIugXcJjSKAxoaxuEhxRXyUPDvQZ4uJ8J2XRHSbDMwgrbcOcZNSJ4k
+	dPBIKJ8A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8Wcp-00000000w07-48Uw;
-	Mon, 21 Sep 2026 05:31:35 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1x8WtR-00000000xpj-2EmE;
+	Mon, 21 Sep 2026 05:48:45 +0000
+Received: from out-109.mta0.migadu.com ([2001:41d0:1004:224b::6d] helo=mta0.migadu.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8Wcn-00000000vzi-1Oov
+	id 1x8WtO-00000000xnJ-0Vtv
 	for kexec@lists.infradead.org;
-	Mon, 21 Sep 2026 05:31:34 +0000
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68L3aniH122829;
-	Mon, 21 Sep 2026 05:31:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=9GfQGw
-	i/bINbQG0lJ4TrNy13j95JizRsDT1BfgiquJ8=; b=ITST43vdOtjfRXFtREB0mH
-	SwN7lMADtBCz5BoK5pNJ0SnlasjAC0yaI5C+vHARRRxkl5PBMxRkeiuHUPOEAHmB
-	sr3JvM9Febhh1JiJ9vQ/tzWyZ12xnuZoyKt/pkzuGJ46zfy07IXgWqwmLjY5K8Wh
-	FTsoKNV66rD+oeTFd7JfTowh+360JWlKVmbdmLZzBO9AL2EJEtNeVoxi2xl8UHbp
-	Mex913+DZvP/Sx8sm4lpJ4djzHbhP9QorE2rl+jPS5sidc3KSeHdYqIOVuv9/geF
-	O58d1qXHOJEv9mWkDjsEt+RLsf8lJpjhmMSUxCuQ/oR1y5jGm6WDv01ML0XDcaqA
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gske16sam-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Mon, 21 Sep 2026 05:31:15 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68L3XWf01596402;
-	Mon, 21 Sep 2026 05:31:14 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4gt7dy3p42-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Sep 2026 05:31:14 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68L5VCHJ50397628
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 21 Sep 2026 05:31:12 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 78C272004D;
-	Mon, 21 Sep 2026 05:31:12 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 383C820040;
-	Mon, 21 Sep 2026 05:31:10 +0000 (GMT)
-Received: from [9.123.14.142] (unknown [9.123.14.142])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 21 Sep 2026 05:31:10 +0000 (GMT)
-Message-ID: <e0af4c02-039c-4afe-9349-cedc1bfd3cbf@linux.ibm.com>
-Date: Mon, 21 Sep 2026 11:01:09 +0530
+	Mon, 21 Sep 2026 05:48:43 +0000
+X-Envelope-To: kexec@lists.infradead.org
+DKIM-Signature: a=rsa-sha256; bh=jhV/vw4+vWN8dqMOnDQNzr0Wd/YKWAZ5SZrLjVrKgJI=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1789969718; v=1; x=1790574518;
+ b=wsWyZ/itCi6fu86wCCcJ0RZGEFvh1E6p15NlDx9Adkkv4ElC8H2tSzAL4teGcsjDOD6R85qz
+ ElMAx70yL56Y1inpsiwWZHt2hrRRGoQ/lXhLrDGO15qK0CXIIZPbnue43uUKvmPYjDQXRaCwlcP
+ 2RBx/KWVKMVfSuslG0ikOMXY=
+X-Envelope-To: kexec@lists.infradead.org
+Received: by mta11.migadu.com with ESMTPS id 417d6ee2dae11de6;
+	Mon, 21 Sep 2026 05:48:38 +0000
+X-Mizu-Trace-ID: 417d6ee2dae11de6
+X-Migadu-Flow: FLOW_OUT
+Date: Mon, 21 Sep 2026 13:48:34 +0800
+From: Baoquan He <baoquan.he@linux.dev>
+To: Wandun Chen <chenwandun1@gmail.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
+	pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, robh@kernel.org,
+	saravanak@kernel.org, akpm@linux-foundation.org, rppt@kernel.org,
+	pasha.tatashin@soleen.com, pratyush@kernel.org,
+	m.szyprowski@samsung.com, mark.rutland@arm.com, kernel@xen0n.name,
+	alex@ghiti.fr, hpa@zytor.com, ruirui.yang@linux.dev,
+	robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	kexec@lists.infradead.org, linux-mm@kvack.org,
+	iommu@lists.linux.dev
+Subject: Re: [PATCH v6 02/10] riscv: build crash_mem ranges from memblock
+ instead of resource tree
+Message-ID: <arDFMqcUr6xkTn-h@fedora>
+References: <20260902073116.802752-1-chenwandun1@gmail.com>
+ <20260902073116.802752-3-chenwandun1@gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] liveupdate: kho: calculate per-node scratch sizes
- before allocation
-To: Pratyush Yadav <pratyush@kernel.org>, George Guo <dongtai.guo@linux.dev>
-Cc: rppt@kernel.org, pasha.tatashin@soleen.com, graf@amazon.com,
-        changyuanl@google.com, akpm@linux-foundation.org,
-        chenhuacai@kernel.org, liukexin@kylinos.cn, guodongtai@kylinos.cn,
-        kexec@lists.infradead.org, linux-mm@kvack.org,
-        loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20260904025101.9959-1-dongtai.guo@linux.dev>
- <616daf17-4598-4a30-8574-16480dfc23cb@linux.ibm.com>
- <0969ede4-f617-4e24-b32e-c5e30a96880e@linux.ibm.com>
- <2vxz1par7amw.fsf@kernel.org>
-Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <2vxz1par7amw.fsf@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-ORIG-GUID: AqJVR50ALucX-AiAxwJ3x_T1MyrYMlkJ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTIxMDA3MSBTYWx0ZWRfX5z9Nn1aBIyH0
- Y6FU2W/PVzqspg4B8hJHIsMSQVEWYZOQOY1cIyH3awA9iuDMuX34zyzSIKNu7ktkkqMC+KIEC92
- EE3q6l4DhW01bHHzJbyZL+wEW2Of9yXrfO2I+wu/ovX5pGSPfsDf4vvU4XSG+FSi6F+JA6mEWOz
- gHlNZQBfbRpw0vGzqV7iLvW+3x372ZLQjm6quYxfXnKEJ/L9U8q1PlxTYvF8nRzdRwLjWb9cdGY
- OBemnmF3uY9N/SYRRzGWQkbGvf75osjzocP3LDl6ZXh4GmlorhhunOTysAoFW/y8GFZatIrGaf0
- bGzS/Ty2kUJmqwMUeMdvd6BJjEP6JLMR0PQTWkYjG3WogMfWz6u5RYEalY2w/Rg/VyzcLls9WQF
- H5j3rHXNBu+4dObdijJCpfG/Sa3dATZczzcCU5N044iZh0RCavrkG934/5Vej3c8RvyL+/acDgr
- Uu96yC7qEjTuEpZ4Wqw==
-X-Authority-Analysis: v=2.4 cv=O/KsLx9W c=1 sm=1 tr=0 ts=6ab0c123 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=WwVblQKFIFXS0NQbftcA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTIxMDA3MSBTYWx0ZWRfXwgZgXeLr8xU9
- FGKrxm4isb7FUHpouifOb6aBebTDrotgL9KWspbHCjq8ESbWuA9UgTuIPu3mbs6r85DhN0KIpjm
- jfTlQ6i+L1DVknYoUSUkLWaA3umbN1w=
-X-Proofpoint-GUID: k_yw72S4r9Ehjcyfejr_IGUKpcpQljxG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-21_02,2026-09-16_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 malwarescore=0 phishscore=0 impostorscore=0 suspectscore=0
- bulkscore=0 priorityscore=1501 lowpriorityscore=0 adultscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609210071
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260902073116.802752-3-chenwandun1@gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260920_223133_515129_ACDD6C2E 
-X-CRM114-Status: GOOD (  38.91  )
+X-CRM114-CacheID: sfid-20260920_224842_299917_F52B07D5 
+X-CRM114-Status: GOOD (  16.93  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -130,147 +82,102 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On 09/02/26 at 03:31pm, Wandun Chen wrote:
+> From: Wandun Chen <chenwandun@lixiang.com>
+> 
+> Replace walk_system_ram_res() with for_each_mem_range(). A later patch
+> introduces MEMBLOCK_NODUMP in memblock, the reserved-memory regions
+> marked with MEMBLOCK_NODUMP can be excluded from the vmcore by walking
+> memblock.
+> 
+> for_each_mem_range() iterates memblock.memory, which is freed after
+> init unless ARCH_KEEP_MEMBLOCK is selected. riscv needs ARCH_KEEP_MEMBLOCK
+> to filter reserved memory from the vmcore, so extend its condition
+> (ACPI || KEXEC) with CRASH_DUMP. arm64 and loongarch already select
+> ARCH_KEEP_MEMBLOCK unconditionally.
+> 
+> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
+> Tested-by: Meijing Zhao <zhaomeijing@lixiang.com>
+> ---
+>  arch/riscv/Kconfig                     |  2 +-
+>  arch/riscv/kernel/machine_kexec_file.c | 31 ++++++++++----------------
+>  2 files changed, 13 insertions(+), 20 deletions(-)
 
+This looks good to me, FWIW,
 
-On 18/09/26 04:23, Pratyush Yadav wrote:
-> On Thu, Sep 17 2026, Sourabh Jain wrote:
->
->> Hello George,
->>
->> On 12/09/26 12:03, Sourabh Jain wrote:
->>> Hello George,
->>>
->>> On 04/09/26 08:21, George Guo wrote:
->>>> From: George Guo <guodongtai@kylinos.cn>
->>>>
->>>> The default percentage-based policy sizes scratch areas from the current
->>>> kernel's MEMBLOCK_RSRV_KERN footprint. This is a reasonable heuristic for
->>>> predicting the early memory demand of the next kernel.
->>>>
->>>> scratch_size_update() calculates the lowmem and global sizes before either
->>>> area is allocated. However, kho_reserve_scratch() calculates each per-node
->>>> size only after allocating the lowmem and global areas. Since memblock
->>>> allocations are marked MEMBLOCK_RSRV_KERN, the per-node calculation
->>>> includes those newly allocated scratch areas and scales them again.
->>> I may be missing something here, but doesn't memblock_reserved_kern_size()
->>> check the node ID of the region before checking the region flag
->>> (MEMBLOCK_RSRV_KERN)?
->>>
->>> Code snippet from memblock_reserved_kern_size()
->>> ```
->>> if (nid == memblock_get_region_node(r) || !numa_valid_node(nid))
->>>      if (r->flags & MEMBLOCK_RSRV_KERN)
->>>          total += size;
->>> ```
->>>
->>> For a valid nid, my understanding is that the global and lowmem scratch
->>> areas should not be counted because they are allocated with NUMA_NO_NODE
->>> (-1). So, ideally, these regions should be excluded when calculating the
->>> reserved memory for a specific node ID.
->>>
->>> Based on this, I am not sure that marking the lowmem and global areas as
->>> MEMBLOCK_RSRV_KERN is what causes the per-node size calculation to be
->>> inflated. I am looking into the code further to better understand the
->>> actual cause of the issue that this patch is trying to address.
-[...]
->> I added some prints in kho_reserve_scratch() and found that the per-node size
->> calculation is not impacted by the lowmem and global scratch memory allocations.
->>
->> KHO: Before low and global scratch allocations
->> KHO: low size = 899 KB
->> KHO: global size = 137 MB
->> KHO: Per node 2 = 80 MB
->>
->> KHO: After low and global scratch allocations
->> KHO: low size = 312195 KB
->> KHO: global size = 441 MB
->> KHO: Per node 2 = 80 MB
->>
->> KHO: After per node allocation
->> KHO: low size = 394115 KB
->> KHO: global size = 521 MB
->> KHO: Per node 2 = 240 MB
->>
->> I only had one NUMA node (nid=2), and the per-NUMA
->> allocation before and after the lowmem and global scratch
->> memory allocations remained the same at 80 MB.
->>
->> The experiment was done on the PowerPC architecture.
->>
->> I am wondering how the per-NUMA allocation in your setup is
->> getting inflated due to the lowmem and global scratch memory
->> reservations.
-> I had the same question, so I asked AI. Here's what it says:
->
-> --- 8< ---
->
-> The bug was reported and tested using the KHO self-test runner
-> (tools/testing/selftests/kho/vmtest.sh), which builds a test kernel
-> using make olddefconfig with only a minimal set of CONFIG_* options.
-> Crucially, CONFIG_NUMA is not enabled.
->
-> When CONFIG_NUMA is disabled:
->
->      #ifndef CONFIG_NUMA
->      static inline void memblock_set_region_node(struct memblock_region *r, int nid)
->      {
->      }
->      
->      static inline int memblock_get_region_node(const struct memblock_region *r)
->      {
->          return 0;
->      }
->      #endif
->
->
-> struct memblock_region does not even contain an nid member.
->
-> memblock_set_region_node() is a no-op (the NUMA_NO_NODE argument is
-> simply discarded), and memblock_get_region_node() is hardcoded to always
-> return 0.
->
-> There is only one node (nid = 0), so for_each_node_state(nid, N_MEMORY)
-> loops once for nid = 0.
->
-> Both memblock_phys_alloc_range() and memblock_phys_alloc() mark their
-> allocations with MEMBLOCK_RSRV_KERN. Therefore, when
-> scratch_size_node(0) runs after allocating the lowmem scratch buffer,
-> memblock_get_region_node(r) returns 0 for that lowmem scratch buffer,
-> and r->flags & MEMBLOCK_RSRV_KERN is true. As a result,
-> scratch_size_node(0) counts the lowmem scratch area as part of Node 0's
-> kernel footprint and scales it by scratch_scale (200%) again.
+Acked-by: Baoquan He <baoquan.he@linux.dev>
 
-Yes, CONFIG_NUMA is the reason I didn't observe this in my setup.
-With CONFIG_NUMA disabled, I can see the per-node allocation getting
-inflated due to the low and global allocations.
-
-This raises the question: do we really need per-node allocation when
-CONFIG_NUMA is disabled?
-
-For example, if a VM boots with 4G RAM, the low, global, and per-node
-allocations are all the same. With KHO enabled, the kernel would then
-allocate 6 times the total memblock reserved memory: twice for each of
-the three components (low, global, and per-node).
-
-
-> --- >8 ---
->
-> I didn't look closer, but it does seem to make sense.
->
-> But in practice, this problem is only on CONFIG_NUMA=n and I don't think
-> in practice KHO or LUO is being used in non-NUMA systems. So while I
-> think it is worth fixing, I think we should also have a test where we
-> enable CONFIG_NUMA.
->
-> Your system probably has CONFIG_NUMA=y and that's why you aren't able to
-> reproduce this bug.
->
-> I think on NUMA systems the problem is the other way round. The
-> calculation for the global scratch also counts per-node allocations.
->
-> So I think the proper fix for scratch sizing is what this patch does and
-> then a fixup for the global scratch calculation as well.
-Agree.
-
-- Sourabh Jain
+> 
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index d6c2dbf8455c..1de14a2d5aba 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -58,7 +58,7 @@ config RISCV
+>  	select ARCH_HAS_UBSAN
+>  	select ARCH_HAS_VDSO_ARCH_DATA
+>  	select ARCH_HAVE_NMI_SAFE_CMPXCHG
+> -	select ARCH_KEEP_MEMBLOCK if ACPI || KEXEC
+> +	select ARCH_KEEP_MEMBLOCK if ACPI || KEXEC || CRASH_DUMP
+>  	select ARCH_MHP_MEMMAP_ON_MEMORY_ENABLE	if 64BIT && MMU
+>  	select ARCH_OPTIONAL_KERNEL_RWX if ARCH_HAS_STRICT_KERNEL_RWX
+>  	select ARCH_OPTIONAL_KERNEL_RWX_DEFAULT
+> diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
+> index 26cd2a8bd0cd..808e872f4063 100644
+> --- a/arch/riscv/kernel/machine_kexec_file.c
+> +++ b/arch/riscv/kernel/machine_kexec_file.c
+> @@ -37,39 +37,32 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+>  }
+>  
+>  #ifdef CONFIG_CRASH_DUMP
+> -static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
+> -{
+> -	unsigned int *nr_ranges = arg;
+> -
+> -	(*nr_ranges)++;
+> -	return 0;
+> -}
+> -
+>  unsigned int arch_get_system_nr_ranges(void)
+>  {
+>  	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* For exclusion of crashkernel region */
+> +	u64 i;
+> +	phys_addr_t start, end;
+>  
+> -	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
+> +	for_each_mem_range(i, &start, &end)
+> +		nr_ranges++;
+>  
+>  	return nr_ranges;
+>  }
+>  
+> -static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+> +int arch_crash_populate_cmem(struct crash_mem *cmem)
+>  {
+> -	struct crash_mem *cmem = arg;
+> +	u64 i;
+> +	phys_addr_t start, end;
+>  
+> -	cmem->ranges[cmem->nr_ranges].start = res->start;
+> -	cmem->ranges[cmem->nr_ranges].end = res->end;
+> -	cmem->nr_ranges++;
+> +	for_each_mem_range(i, &start, &end) {
+> +		cmem->ranges[cmem->nr_ranges].start = start;
+> +		cmem->ranges[cmem->nr_ranges].end = end - 1;
+> +		cmem->nr_ranges++;
+> +	}
+>  
+>  	return 0;
+>  }
+>  
+> -int arch_crash_populate_cmem(struct crash_mem *cmem)
+> -{
+> -	return walk_system_ram_res(0, -1, cmem, prepare_elf64_ram_headers_callback);
+> -}
+> -
+>  static char *setup_kdump_cmdline(struct kimage *image, char *cmdline,
+>  				 unsigned long cmdline_len)
+>  {
+> -- 
+> 2.43.0
+> 
 
