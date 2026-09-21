@@ -4,151 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EE1FAC982ED
-	for <kexec@archiver.kernel.org>; Mon, 21 Sep 2026 13:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BDF91C982E6
+	for <kexec@archiver.kernel.org>; Mon, 21 Sep 2026 14:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:In-Reply-To:References:Message-ID:Date
-	:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=QL4ZdK8AUnq/CagraVKaEOD57HNhxdY9hysb0mZBhTM=; b=x+EQkCIcOOzbITPY/1iMDcFNVf
-	5sEogj86Jc21BIilJQq9jb+Ooyn596ryR/65dlCYrZiFiQ98jWcFwfSE9lbgovQzpFdI++CxC5ndI
-	sq/D8gKi2QRbGMU3fIo+CnEJwiCm5wlIZg5N8Z/BHSjytD1lAUNRsJfPbDPzi0keBea2d62NK4rb8
-	Nt2uh9d14r6MeeJuiZjXd7gUC0zIVjQm5LgCVnobO0kI3tqcvnkJK2Of8vnTkYgLRhg4QQEj0ROz6
-	0fOiXLIqVt+tdXCWzaHo3xefeIYygeMac3dhRJySbNsHXg3z2uc7mf1e9uFkIgx2ey4xhUZysruUb
-	vayw6A+g==;
+	bh=1DNM4B/DKlNamjDekFwegs2ASgo7JXOtIGUcdV58DYc=; b=zHyigw156dQ/POdktV8d1mE/Nx
+	M4nSGSzf3eKdm9OE19ytaegNVq3DA7Y1e7TsVDGIQcn3zIt9EDmaL8U8TS2pnVD4bRnfnjh0E459w
+	p76ZC5+AkC7SQeM/7zXbYxYYpXjF2EvI0uFLM96sV+Gzrstzxyz+Ks0nMB/gbxpYO7wwUD9PaoD5+
+	VKg0DL3vAv/1+J577cmJhD1B6moOR8dvKDC6Jz9Ds8E1WLO7tDy8I4aLG9jD7/FHD4yvXPxtXKOQq
+	YQ19VvZuXK4LKk6cCuofXBoJVqXUkkQz6ccE6mM+7ww0dK+inypPVlrapJOUikAkQlNN7vAq8UNfk
+	2pHMJltA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8eYR-00000002Jbi-0qS3;
-	Mon, 21 Sep 2026 13:59:35 +0000
-Received: from mail-southcentralusazolkn190110001.outbound.protection.outlook.com ([2a01:111:f403:d10c::1] helo=SN4PR0501CU005.outbound.protection.outlook.com)
+	id 1x8f3s-00000002P9y-3Xdo;
+	Mon, 21 Sep 2026 14:32:04 +0000
+Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8eYO-00000002JbC-0uY1
+	id 1x8f3p-00000002P9N-3u9b
 	for kexec@lists.infradead.org;
-	Mon, 21 Sep 2026 13:59:33 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ee/XE/iHhGOGhF1S1mEUBEw4zrkP8pjL+qSEyr4KgEqjJ0l1kUUEWyCB95tQPNM59rqkiwrr8/pjZLlb6vXMSlIXBzeqJMr4lhhkCjKeS+P0JlBo3SiF5A07ovuGc9fAW4GG/5JOgU+a8hWPmpzkV2ugTP1JV08SHV5TfsUhcaN4C1jr9AamQNCa8paGbBmzE7GhnjZ+thlIq28AwWmAjZXtYjIqUR9H57GDxDnqAFsAN0tq+NbD+06WGwbVcLAD5aNE4mbf13ernkiMEnDuJSs2t34OxF+bna7jBqYeLcb4oTEaP8W8NkOayoQgJ89Knr2+307NIAul/jeC4EpIpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QL4ZdK8AUnq/CagraVKaEOD57HNhxdY9hysb0mZBhTM=;
- b=t5dWRcAYbhNP73Pu/n+hPuilQQVqVViJJ0OqnwXSi0QOMaP7b9sc/IsTo1a7sDKr0GYjZWPqxwXyfod9J1QHy/3dl8WT349NsPRskyd64K5MB9MvwbtKw54p2QB7QAGpVJj9V6/y4ab4BfYCGpk7xbvwwgod1dCvkJvP7Z2o8dHR8l9wl6xs9qSMw69tPk0wum5EGh58F2OdwzZNUSXobiRpBGI97tzUbwYb1f5xsiXHvgE4LAFRjTg4XyHw4DvvOYbeV9OVSknZdS5E455CjGs73wMh+HVDbP/aJpPjP3l2VkpskRSKX/BWOrlTSOTyjdsrVNZrMzBxPpH6FReA+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QL4ZdK8AUnq/CagraVKaEOD57HNhxdY9hysb0mZBhTM=;
- b=P4a3vcPZeWjfTd7qGJuFSIPirF73MDiKakVylcDBEV1K7Ks/Yc4Ggy5tpaX2bUWvoIweP8ZdK9ULwkr8O8NBRUrdIgzwuJE7CWsSy0I8Fx9D/wm4tK7fqREuIn9H6JSqmPfaSyBhGgTmIvi5PYRX/v/Sibx51bOfs8DP+u7JAjpC/Ax3Wwe2zMXFnkZzForrznw5e1pbbLKlVDqzvL50SCixooB41yUV8icnMnZ6SxvS1ForOsGSSXsN8hYYCaxHMnd6QzLoqeZ337zp++fAXWyCMIqEkRh7+TRh1DL1OvAFXoFL4cOZcKniNv9lV3vCw7cjJdVe/+jJbs1tr+ylvg==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by DS1PR02MB10419.namprd02.prod.outlook.com (2603:10b6:8:213::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.16; Mon, 21 Sep
- 2026 13:59:26 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6%5]) with mapi id 15.21.0428.015; Mon, 21 Sep 2026
- 13:59:25 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Zack Rusin <zack.rusin@broadcom.com>, Borislav Petkov <bp@alien8.de>, Ajay
- Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
-	<alexey.makhalov@broadcom.com>, "x86@kernel.org" <x86@kernel.org>, Petr
- Mladek <pmladek@suse.com>, Joel Granados <joel.granados@kernel.org>, Baoquan
- He <baoquan.he@linux.dev>
-CC: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Dave
- Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>,
-	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>,
-	"bcm-kernel-feedback-list@broadcom.com"
-	<bcm-kernel-feedback-list@broadcom.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, John Ogness <john.ogness@linutronix.de>,
-	Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky
-	<senozhatsky@chromium.org>, Kees Cook <kees@kernel.org>, Andrew Morton
-	<akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, Pasha Tatashin
-	<pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, Dave Young
-	<ruirui.yang@linux.dev>, Jonathan Corbet <corbet@lwn.net>, Bo Gan
-	<bo.gan@broadcom.com>, Brennan Lamoreaux <brennan.lamoreaux@broadcom.com>,
-	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: RE: [PATCH v1 1/4] x86/vmware: Add a bounded panic log sender
-Thread-Topic: [PATCH v1 1/4] x86/vmware: Add a bounded panic log sender
-Thread-Index: AQDzRMZMPXW8diaCGPo9yW1hFxpnOwFlsqbluKHn46A=
-Date: Mon, 21 Sep 2026 13:59:25 +0000
-Message-ID: <SN6PR02MB41574A11D309A0530C63E0FED4842@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <cover.1788414671.git.zack.rusin@broadcom.com>
- <18115e519d85b753c147b45470120721eaf14505.1788414671.git.zack.rusin@broadcom.com>
-In-Reply-To: <18115e519d85b753c147b45470120721eaf14505.1788414671.git.zack.rusin@broadcom.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|DS1PR02MB10419:EE_
-x-ms-office365-filtering-correlation-id: 48ecb68a-5d3e-4804-b347-08df17e88bf3
-x-ms-exchange-slblob-mailprops: YfhX3sd/0TWTq462A1ci1xfPBdi3ebdlDESEEZ3ciwWGdGunGE597jySxvEiJ5WDZKkW7Z50PFsRPjw8UH8Xp8qt3lU4X+89RuEP8ONAqOW/hEvpb5ljuH8h0rHv6G1qOk1nbIAGSUjtBZbxcQaF3OAVkAMoVyuesYDIEUGi2y8J44Rc/Sz7U01FrdeFnLAcnxzpOvhckzVksODHVUI6N9jiWxv8CgOGyZf2HdiDcOMcrgt3QvcHTSk9+3jizkJnlTJZiur0NovJ2qkYCk2TzHQMa+6GPhzUHy1IhVUDzebouu79PL+bkfWT6tAY+2fP/YZiiLRlwde4CnRzAaJfOWDEcNQZMjab9SLkt2NicJgwta37Ej/2x9fytR35d3nLSzFk/5J8rX2FwMKJZUfbYNZFvDXhHYx80xlX6ygolv//DTh9JwNMw1M4oyL4ihmBP6OJ6bToAT36LYNPCDDSaf7wjy68gKzTHWf5r6rw2yKQfODp8/JeCu0PEflY0DuI13yt26iIABMvpNs1Z+bDk/q2Ib/4dKMKyDKfRdLRC/XgE6/NfH/YAYEivkiKUrWxEJJIcULncS/jeWQ8uN6UJV4sCmyp7SXQ/cjYtmKqZUJTwWQOIotDtjwWraQPEg+PJks6A3H8VApxjYTpPcy9jmFixQ6ek4IM2ZBptMZ85BFhF+0JO5VfCbOa6KFozKi4bPgZkkXPNqAv4Fk7Mh33COXOXoniDTEdeboTmTbV5+x1ELmjMBQSrBZMjUYbZVYrTyioUfTshjwlOLV6Ki9Y5TofHV6rD1r1dvKCJ7hczrY=
-x-microsoft-antispam: BCL:0;ARA:14566002|8060799015|8062599012|19110799012|25010399006|4140399003|31061999003|37011999003|55001999006|24021099003|13091999003|15080799012|52005399003|40105399003|41105399003|12091999003|1602099012|10035399007|2607281247196008|102099032|440099028|3412199025|4302099013;
-x-microsoft-antispam-message-info: =?us-ascii?Q?NobZbp/DHWCHMZtwh1YD62OaWAJxrXTAjxNlCVnK1ebuiGF5oz1Cfejcbw4r?=
- =?us-ascii?Q?pMj0+//iOIEiMEeTr3uwiDcccnPKXye1lgEvlNMyX+C9Rab36BdwjFetl6Mw?=
- =?us-ascii?Q?pEeM3iBaO/JdQj9Nl8v45gVdClu06UNocPjL0SgbGGqqafsdI4suAsuAkbxw?=
- =?us-ascii?Q?sTqToVTUZqW2BnYRVqgDQ9RnaOM3SPYxrKzStE1buHlPhtLDdGp/6Ls2d4b5?=
- =?us-ascii?Q?iawG7GalN9AwFMqKN82AUwWK6xhTguqjIEJ1O9FJzvG7B1uuL592BvgI1OnP?=
- =?us-ascii?Q?ZW2mI3RNs6fugsi4xjvylTHFN16XpXxRGslslpUgh10OR8k9JFm6AnROorNl?=
- =?us-ascii?Q?Ggh7VD3YZrBA0s1eEJEiCo7hUkDDAVv/giUOzzGAbw8mKqlhulJPL+NWRG/2?=
- =?us-ascii?Q?FOp5qd/HFacNsSdoOSNZVQKP8xOImOHrx8qNe2ERTERTBvZt2zXEaNAjhn09?=
- =?us-ascii?Q?K+Sfym/3MkPI3YhX2OCHDNba3la/JKfL7rH0GivUe9QwKxWQvlHBnoT29POb?=
- =?us-ascii?Q?xv8pwIL+pUZzr4RxKWxsnMUwzb30YM7azxGgPmT/NQag/20mRnDJvgEnSdx6?=
- =?us-ascii?Q?5HqFx5h+1Dw7jBdIb/7B7vfBK1F6fUugo5HljYtXdCWOb21sed0qjz1yLozh?=
- =?us-ascii?Q?7DGMAMiZBEbiTC6D++RGteaUdNZNWzdCro9mdatn1hR8rZbUOiDyfKAHIdG3?=
- =?us-ascii?Q?Cbr9RH22Er5/Sq85KcS7L3v7H8RZTHYBqKjzJSCSJlOYippBgXetFyfIIL6h?=
- =?us-ascii?Q?8wdJv1q1PB1w/tBOooZI4GUrk3LjDoLUUM6yLKJveQV7pdzTKL8CuhhX9UvM?=
- =?us-ascii?Q?qXJnTAaIqYA0enBYV0V+cEqn5TquufefU3EThOnzMZQg0hS+tIzLFKP3m9vk?=
- =?us-ascii?Q?0v9IrgVJtkDSgPrdstDIrQOEmJtmHcSrG034QUL7e7u7PvyFEXBVAEaDw09e?=
- =?us-ascii?Q?Ln8IQ0H79rWmrToQAVFqBmmyk/VrGRBHjuNHqibRa45VpshAi4ynBKVYfcWs?=
- =?us-ascii?Q?v76Wn2itpQKrgRXW2UkncyT4J3huE6hXvF7gf9rjegfU1+t9yih0a+kmUcdQ?=
- =?us-ascii?Q?8O3a6bQMkC1n/4R4M20ejRNxTKi/l9HalOnTxTqNv0vfpUYD0M2/Pmyoio0Z?=
- =?us-ascii?Q?4uYPNZJGiA88HIkOGWJteoRkkeXdCrxsDA=3D=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Tz2LNnjhxvG/xaIR+ePFaJ1Ihsvuqlof+Ql4UW0EAF6tF1+NV0RGWV38wEZT?=
- =?us-ascii?Q?1tqKB+R/anZXzvm3oPvN3quztlFzuaLIdS2G5ycxChy3oNsN4YB8GJtUhDvX?=
- =?us-ascii?Q?DuREZPAWa/OGhDBMS4A/ATKrQydjgZ75AV/Z55RqHTddR4JOF8dnEQa8/GxB?=
- =?us-ascii?Q?kPoKvBMrnX4uaddDY0rVtJ2IIDwx6SlGkCrLPqe3FOKGyv4cM58dLV3JFMVr?=
- =?us-ascii?Q?Egj8vonwX1rbnEpImdnX3LRhFR4aCBvtK9T5dZuuNjGDfGJy4MYyhv5nJjCZ?=
- =?us-ascii?Q?JuEwVdQ0YQ6VSA4XCW2ZE/l+KX/ZNND8MRt1syCB+1xECOAOBx4oPG/n6j0g?=
- =?us-ascii?Q?Q6T6ZtGoHa6vVUmSnF52D7VVGrHhEzgU7ovtTdOLt4vav8p6SpCK59b3lgd9?=
- =?us-ascii?Q?0s2uB7CR+DwW7N2ghLqHfEvmDzfDjbCHxhwK1uy1vHW+Vksp4OqdWIziBDbm?=
- =?us-ascii?Q?UAp63s5HaayknGt7/v3HfoAwYHa5kygBZhTY18qN6xfSeQoljrgbF2rcdlWd?=
- =?us-ascii?Q?lB3JvKZxXUAhVHSQbeWRtMfCqgwC1uvyRjJqNQHcNbUgOvZbln5bI+BUpoAJ?=
- =?us-ascii?Q?9uzkQ4vt/KNhcb6jaRyACrqi6WPvHyo8LnsNEirPM411LuKYkdkeRo7TcGiG?=
- =?us-ascii?Q?OHKfKDCd166r8f+G0CBxEP8CLSwb3VsYK+zd3bXDPhnKLMQ6cv/wBD8wW0TL?=
- =?us-ascii?Q?f54voAlY6AoIoV7pHEGAn8sa0G/iMBQTdNVr/MfkASbxrf6+Gmk8y88zZbSe?=
- =?us-ascii?Q?MFVBHy6FpvrxsNOZK5if6zZuQqSkboPHqIzvZrwmASNMpY46ILNqM3jL0Z+G?=
- =?us-ascii?Q?sdoZ68YtfzsoQHN7rBEM2m2sGLch18jvfoiMpYv6Vn8cDTLjCG6dUVLiO9Qr?=
- =?us-ascii?Q?EYRW+44m77xH8gsRHHqgH3JJ31kFemJU/kCdkYOTrF4QC2K9m7lktlg9W+Dz?=
- =?us-ascii?Q?FmhQOl0XDEgPnhCIifLZv0k1Sm9ilNVSWv9Gh3UuJo87Jf79lUU/qLSfD1BF?=
- =?us-ascii?Q?QEIuyYR8qhIo+akGQCN73Vdtnq9IHSQVjOnGI6OAn7EsC3cWHcir0FdfSEV6?=
- =?us-ascii?Q?vSoEacjB7YSipBThzRp6Kv49nr16GTgnCwUTRwK3/c0mBVnCDMRXcLr3zu53?=
- =?us-ascii?Q?t1XzUc4c0I8UfXfSVWy8Rof1Gcv5KbUjA93N+3oDyPq1IaPpvR4fOuKqIVCs?=
- =?us-ascii?Q?q/SIU8EmN4TYYDkXL1hxR1IMTFACYEFeo300kWPh2fC3TjCrKigVj78FAiLX?=
- =?us-ascii?Q?S6Kvpyd3ISWPiY9xiVTIYY1jD8aLc0yspxa1NPQqjh/FFlJa80bJ6jjBasSZ?=
- =?us-ascii?Q?XB31nCO9oNK+arhGAtAOo/UVB7pyMlfJKwfiTu8mYahtFx3o1ZH8pWNLaZBi?=
- =?us-ascii?Q?cOT19KM=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	Mon, 21 Sep 2026 14:32:03 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=1DNM4B/DKlNamjDekFwegs2ASgo7JXOtIGUcdV58DYc=; b=jROXMDRfo0GolAgRZOKDUIe1Ny
+	oXuMeZRRQqhnqgHuusb8v8dJoNC9zcEOyLyZu+BZBcvWhFhozxE0ZJwYdMdP6PDSfDlIRIR+9FaPd
+	t9XL38hNAX9fuXWR7lA9GQvwALO6oXas5lgdKJtQigxTlIok/zX9rUO5ZtjQtfnLoEcYl6U6r/OX/
+	m/quCLTYp0ULCRVgY0tve0ib7FCqfpCfOIbSgBZhHNodcIB9U/8phtzDRWkQTu1/MWyVFGlcLJMPZ
+	yjRrLCQKowCumoAukJuexM5Q8Xa7a8temrLWl6RqAXjilfvXE9hRDJxrA70tuTCIAY+RnvcX+UIFN
+	5v4lKQZQ==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1x8f3Z-002Gnz-2x;
+	Mon, 21 Sep 2026 14:31:46 +0000
+Date: Mon, 21 Sep 2026 07:31:37 -0700
+From: Breno Leitao <leitao@debian.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Naoya Horiguchi <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, kas@kernel.org, 
+	kexec@lists.infradead.org, Lorenzo Stoakes <ljs@kernel.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Brendan Jackman <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
+	Oscar Salvador <osalvador@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, hannes@cmpxchg.or, 
+	shakeel.butt@linux.dev, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, rmikey@meta.com, riel@surriel.com, harry@kernel.org, 
+	linux-cxl@vger.kernel.org, driver-core@lists.linux.dev, kernel-team@meta.com
+Subject: Re: [PATCH v5 7/9] drivers/base/memory: count inherited poisoned
+ frames into the block
+Message-ID: <arE3UjqPsxctWckg@gmail.com>
+References: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
+ <20260915-hwpoison-kho-v5-7-3bc7a57bd503@debian.org>
+ <de41b78a-8471-4832-be0c-35d410a4499a@kernel.org>
+ <aqpczrtIwSG948iv@gmail.com>
+ <b8ad366a-a019-4462-9dce-f687f60ee7f2@kernel.org>
+ <aqvHHHuWJ-y4WRJZ@gmail.com>
+ <caac2cb9-8faa-49bc-ae8a-47c5fd7b7e58@kernel.org>
+ <aq1RaH0eE0hZfNpr@gmail.com>
+ <fb2237be-f7bc-4ad6-bcb0-7c3ef53136ef@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48ecb68a-5d3e-4804-b347-08df17e88bf3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Sep 2026 13:59:25.7501
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS1PR02MB10419
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fb2237be-f7bc-4ad6-bcb0-7c3ef53136ef@kernel.org>
+X-Debian-User: leitao
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260921_065932_266344_2A5B24AB 
-X-CRM114-Status: GOOD (  16.52  )
+X-CRM114-CacheID: sfid-20260921_073202_164512_9766A642 
+X-CRM114-Status: GOOD (  65.75  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -163,53 +95,217 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Zack Rusin <zack.rusin@broadcom.com> Sent: Tuesday, September 8, 2026=
- 11:07 AM
->=20
-> A virtual machine may have no guest-local persistent storage or working
-> userspace after a panic. Preserve the newest kernel log tail in the host
-> vmware.log, which remains available after the VM terminates.
->=20
-> Allocate one page during early init and register a panic-only kmsg dumper=
-.
-> Copy the newest records once, prefix them with "log ", and send one
-> explicit-length RPC message over the low-bandwidth register path. The pag=
-e
-> limit bounds panic-time work and avoids sharing guest memory with the hos=
-t.
+On Fri, Sep 18, 2026 at 10:16:25PM +0200, David Hildenbrand (Arm) wrote:
+> On 9/18/26 17:22, Breno Leitao wrote:
+> > On Fri, Sep 18, 2026 at 02:18:03PM +0200, David Hildenbrand (Arm) wrote:
+> >> On 9/17/26 15:01, Breno Leitao wrote:
+> >>>
+> >>> Fair point, I'll clean up the naming in the next revision.
+> >>>
+> >>> I'll also add that ->empty field, which should help locate this bit
+> >>> faster and may let us skip the bitmap query entirely on the happy path.
+> >>>
+> >>> Anything else you'd like addressed?
+> >>>
+> >>> Good to know this moved the needle from "David hates this feature" to
+> >>> "David only hates the naming" -- I'll take that as progress.  :-P
+> >>
+> >> ;)
+> >>
+> >> I think the crucial part is to find a way to cleanly distinguish our source of
+> >> information, and also how the source does only apply to some memory.
+> >
+> > Right, we have two source for poisoned page information, today.
+> >
+> > 1) LINUX_EFI_POISONED_MEMORY: Used to track memory block that got
+> >    poisioned, and will be passed around during kexec.
+> > 2) PG_hwpoison on struct page: Used by the memory subsystem to avoid
+> >    touching it.
+>
+> How are both kept in sync? See below.
 
-Hyper-V provides a similar capability to push the newest 4 KiB of the
-kmsg log to the host so it is preserved after the VM terminates. I've used
-this functionality on many occasions, and it is definitely valuable. The bi=
-ggest
-problem is that 4 KiB is often not enough bytes to capture the most relevan=
-t
-part of the stack dump that's created by panic(). If you can expand to 8 Ki=
-B,
-I think you'll find that works much better. For Hyper-V, we're still stuck
-with the 4 KiB limit because negotiating and staging the expansion with the
-host hasn't gotten above that team's cut line.
+The EFI table is only written when there is a memory failure. That is
+the only thing that writes to it:
 
-Michael
+	action_result() -> efi_hwpoison_record_pfn() -> set_bit()
 
->=20
-> Keep the source immutable for up to three attempts. Retry only checkpoint
-> responses, zero-fill a short final word, and close the single RPC channel
-> on every exit after open. The panic callback allocates nothing, does not
-> sleep, and emits no printk messages.
->=20
-> Free the page and leave panic logging disabled if dumper registration
-> fails, including when CONFIG_PRINTK=3Dn.
->=20
-> Link: https://lore.kernel.org/r/20260309235250.2611115-3-alexey.makhalov@=
-broadcom.com
-> Co-developed-by: Bo Gan <bo.gan@broadcom.com>
-> Signed-off-by: Bo Gan <bo.gan@broadcom.com>
-> Co-developed-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
-> Signed-off-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
-> Signed-off-by: Zack Rusin <zack.rusin@broadcom.com>
-> ---
->  arch/x86/include/asm/vmware.h |   1 +
->  arch/x86/kernel/cpu/vmware.c  | 158 ++++++++++++++++++++++++++++++++++
->  2 files changed, 159 insertions(+)
+You can see it on patch "mm/memory-failure: efi: record
+hardware-poisoned frames into the poisoned-memory table"
+
+Then, when the kernel kexecs into a second kernel, the EFI config table
+is queried and the pages are poisoned from it at boot, as they are
+getting into the buddy allocator, in __free_pages_core().
+
+You can see this at patch "mm/memory-failure: keep inherited poisoned
+frames out of the buddy allocator"
+
+> > And I understand that this design is fine, and we want to be easy to
+> > identify what we are querying on function name. For instance,
+> > I understand you confusion in range_contains_poisoned_memory() came
+> > from:
+> >
+> > range_contains_poisoned_memory():
+> >    * What the caller reads:
+> > 	* "is any memory in this range hardware poisoned?"
+> >    * What actually runs:
+> > 	* "is any bit set in an EFI table that a PREVIOUS kernel wrote,
+> > 	   at 2 MiB granularity, for this memory region?"
+>
+> Right, and we should use that only as a source for anything during early boot.
+> So maybe it should hint at the "early" aspect somehow.
+
+Ack. What I have in mind is to make the read side mirror the write side:
+
+	efi_hwpoison_record_pfn()	writes
+	efi_hwpoison_recorded()		reads
+
+"efi_" says where it comes from and "recorded" says an earlier kernel
+wrote it down, rather than it being a property of the page.
+
+On the "early" part: it is not strictly early boot, since
+generic_online_page() reaches __free_pages_core() as well. The real
+contract is "before the frame enters the allocator". I don't think a
+name carries that, so I'd rather state it in a comment on the function,
+unless you prefer something like efi_hwpoison_recorded_preinit().
+
+> Which brings me back to: is the bitmap kept in sync when memory gets hwpoisoned?
+>
+> That is: as memory gets hwpoisoned, will the bitmap get set immediately?
+
+Every hard offline does, yes, and by the same path:
+
+	action_result() -> efi_hwpoison_record_pfn() -> set_bit()
+
+Three deliberate exceptions, so the sync is one-way and conservative
+rather than exact:
+
+    - soft offline sets PG_hwpoison but no bit, on purpose: those are
+      functional pages offlined predictively, and we do not want to turn
+      them into a permanent loss for every kernel down the chain.
+
+    - a bit is never cleared on unpoison, because a bit stands for 2M and
+      cannot tell whether the whole unit is good again. So the table is a
+      superset of PG_hwpoison, never a subset.
+
+    - a bit covers 2M, a flag covers 4K, so one bad frame comes back as
+      512 flagged frames in the next boot.
+
+One more case is a bug rather than a design point: the
+MF_MSG_ALREADY_POISONED guard also skips the record, so a hard error on
+a frame that was soft offlined earlier is never recorded. Sashiko caught
+it, and v6 moves the call out of the stats guard.
+
+> > So, I think think this is a naming issue, and I need to think more about
+> > it. Maybe appending efiposioned (on data that is coming from EFI config
+> > table). Let me think more about it.
+> >
+> >> Regarding this patch here, I'd assume it's sufficient.
+> >>
+> >> But I do wonder why we are walking pages when we have a bitmap to walk/process
+> >> at hand?
+> >
+> > Because the counter has to agree with the page flag, and the page flag is
+> > not the bitmap.
+>
+> But how could they go out of sync? I'd assume only for memory holes
+> (!pfn_to_online_page), but for that we don't need to test actual page flags.
+
+True for the frames the table marks, so the walk could be narrowed to
+those and not test the flag at all (untested):
+
+static void memblk_nr_poison_init(struct memory_block *mem)
+{
+	....
+	for (i = 0; i < nr_pages; i++) {
+		struct page *page = pfn_to_online_page(pfn + i);
+
+		if (!page)
+			continue;
+		if (!efi_hwpoison_recorded(PFN_PHYS(pfn + i), PAGE_SIZE))
+			continue;
+
+		nr_poison++;
+	}
+
+
+> > PG_hwpoison in a block is the union of every source that poisoned a
+> > frame; the inherited EFI table is one of them, and it is the coarse and
+> > partial one.
+>
+> So you're saying that this code is possibly racy with other setting code? Or
+> which other sources might there be if the generically called
+>
+> range_contains_poisoned_memory()
+>
+> wouldn't be able to identify it (and it only queries the bitmap?).
+
+Not racy: memblk_nr_poison_init() only ever runs at boot. It is gated on
+MEM_ONLINE, and only one of the two callers passes that.
+
+	memory_dev_init()		-> MEM_ONLINE	(boot)
+	create_memory_block_devices()	-> MEM_OFFLINE	(hotplug)
+
+So the hotplug path returns on the first line and never walks, and at
+the point the boot path walks, the only thing that has set PG_hwpoison
+in that block is hwpoison_boot_page().
+
+> > You might ask why I do not just count the bits set in the bitmape and
+> > multiply by the frames a unit covers.
+> >
+> > That was my first try. It over-counts: a bit stands for a whole 2M unit,
+> > but only the frames that reach __free_pages_core() get flagged -- CMA
+> > comes back through __free_pages(), the initrd and __init memory through
+> > free_reserved_pages(), and KHO-preserved frames never get an initialised
+> > struct page at all.
+>
+> Why are other hwpoisoned pages not flagged? If initrd or anything else is
+> hwpoisoned, we should not be running this kernel?
+
+For the initrd and the image, the previous kernel's record cannot stop
+this kernel's loader from placing them on a bad frame. If that happens
+we consumed the poison in the relocation memcpy, long before any of this
+code runs. That is the kexec segment placement problem, which Kiryl
+raised on the RFC and which I split into its own series, which is landed
+in some mm tree already.
+
+https://lore.kernel.org/all/20260812-kexec_posioned-v6-0-e477887086f0@debian.org/
+
+
+> >
+> > And the over-count cannot be undone later.
+>
+> The inconsistency is worrisome.
+> I wouldn't say that I hate it but it certainly has "great, more hwpoison hacks"
+> smell to it.
+>
+> We have enough semi-broken hwpoison ... stuff ... in our code base already. So
+> I'm hoping we're not adding more to it?
+>
+> > If the walk itself is what bothers you, the way out is not the bitmap
+> > but counting as we flag: hwpoison_boot_page() already knows the pfn, so
+> > it can bump a per-block-id counter in a small memblock array that
+> > memblk_nr_poison_init() then just reads.
+>
+> The inconsistency is what worries me.
+>
+> And that we have pages we are told are hwpoisoned but we seem to ignore that and
+> carry on with our kernel letting it boot?
+
+The walk exists precisely because of that inconsistency: the counter has
+to match the frames that actually carry the flag, and the bitmap says
+more than that.
+
+If we drop the page walk, then there is change for inconsistency, but,
+as-is, there is no inconsistency.
+
+So, I am planning to keep the page walk above, when there is a poisoned
+page in the memory block, avoiding any inconsitency.
+
+> > Exact by construction, no walk. Happy to go that way instead if you
+> > prefer it.
+>
+> Let me first try to understand the semantics here.
+
+Thanks for the review,
+--breno
 
