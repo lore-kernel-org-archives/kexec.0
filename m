@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C8C5CC982F7
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8302AC982ED
 	for <kexec@archiver.kernel.org>; Mon, 21 Sep 2026 09:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
@@ -12,48 +12,48 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
 	From:MIME-Version:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=tsIzCklxA1OR0ZhVy9j+cyd5RWzkJaDGyF6RmABKvFI=; b=XiEy8mxCn21ABjn/rm+/qM8Knr
-	3mh6AdX3ICNA6ztCkpZPmdrlmS80y1LBKF9PaMJtd3vucw6a+vfLusNmfAIdAtC9LOthNulrNUyyT
-	87v6+k4z2XywAb4zuyt3AetYGp//3G+f3CNNciBAJH0rMCFcb2DbrsBEmnLHVNiOAc0ZIPn5nmSKU
-	vb6toN6whjONI1sXGn20u0BMDMZzqlJ4F6sLzbWaf/jjTrFZm5E7KyOrizSCZdRFf3UEGnkcYQQVR
-	gKuQHLiWddzIUvTKu4JNx/hRMjSfQoGfzKwUzMCZ3X7XqT6WZOvN37SvSqA+Ba3HNqmSgaDsC0JzN
-	cR4RlvDA==;
+	bh=iKFnnUVgMFXCyMZXDC0Gp9g2hFUBByCOSHmRiQGpkGs=; b=Yny6BMId04yebiVVk5DtTONCzc
+	FLP39AXpnbrHW9PW9kALb8928E8SFSa3lnTSztu4evFb3u3OgT9zglDMxEBzL/iPcz3WZ/5eKNMm1
+	w9EsoGrOSobiuu43JmclW6rJAtdbMzIIeZbaEWXNl/fACMzmI9yk9T1qR0T9vMheCcaN91aJXGzL/
+	ZDZH6TRNUwU1jp27tLXxXLcoqiUQhOshNvcqv63PR/H3TZFFWI6/LDE++ajJWbzWpf7Rfm2A+Yp5L
+	24x3SjMi3kI9IZ1jqKb44sR/6whbFLaj4R3koY8DjwNe+6qe3LiKs1b1mm90NLAA2br0Cjaey4nWJ
+	1Ru4BWLA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8adF-00000001Zj0-1jlw;
-	Mon, 21 Sep 2026 09:48:17 +0000
+	id 1x8adE-00000001Zfe-2lTE;
+	Mon, 21 Sep 2026 09:48:16 +0000
 Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8aAV-00000001U15-3oI1;
-	Mon, 21 Sep 2026 09:18:35 +0000
+	id 1x8a81-00000001Te6-2nKC;
+	Mon, 21 Sep 2026 09:16:01 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 5D23841384;
-	Mon, 21 Sep 2026 09:18:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 871BC1F000FF;
-	Mon, 21 Sep 2026 09:18:31 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 6999B42004;
+	Mon, 21 Sep 2026 09:16:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56B4C1F00898;
+	Mon, 21 Sep 2026 09:15:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789982315;
-	bh=tsIzCklxA1OR0ZhVy9j+cyd5RWzkJaDGyF6RmABKvFI=;
+	s=k20260515; t=1789982161;
+	bh=iKFnnUVgMFXCyMZXDC0Gp9g2hFUBByCOSHmRiQGpkGs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=SMHnycOPKN9qTyZjIdzxqiQkBqe8TEOAyTaK79u+kYwBW/Wh9tJJF65/tlUGFl4Zf
-	 /CqPGAac9B4NZ2mlNpo2Fzu6pZDo2D9yK2HdgqtYrF+HkXbYXVMGPmbxP9R+RhwJwV
-	 YZblf79v1O7TYxdtcDmF9HQtIR5mdoqv1EBbRHqzkrJ+LRMsP/aSjLZPWJcdPQyyqH
-	 gnzTMi9Nzgn9EW3vJs1OebGdTg8vKLmD+pLEukdRRqYj8nLU1eaknVh6FuPZNOWNPU
-	 aAMOJXknMuq+uxAGd3fkvo0bi8Zm+cXxSIHwqVlhF5LsIdoWEUJtStC+zBb4hAAl8t
-	 Ai37eNFY5eUnQ==
+	b=eHG0fA+GVBiImiZzlsuxCmiW4QIyTR/aPZvoP9v5NylyTbUhwz4qciulTNW5LXkXq
+	 K3WKoRW+fr226xkxw7R8r5SnsneEjP6Axshr6u75njSZGCXcCVluZnG9xDRpyDY6xs
+	 EFriL5emiLA/XLPMxq58s20ogoBPHi1s/Ak8FZ6OgYDuj1unhLvxtbQY/CLkUuDL3Q
+	 1ZwP/YXZpcRKGPEnhufv0pbrNo41MXu7WUOt6ucbymZFWiH5nhO2OL77j+WD7zsECf
+	 0lyezSqj6JCNikhjuCaXKWXmVNvuRoNz090YaolbMqD14eT8wEpe3E1pvpPf0p4jC7
+	 dKFuz1EbnrY7A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 13/14] driver core: Add
- device_hotplug_lock_assert_held() helper
-To: bp@alien8.de, kernel@xen0n.name, graf@amazon.com, npiggin@gmail.com, hpa@zytor.com, rafael@kernel.org, hbathini@linux.ibm.com, leitao@debian.org, takahiro.akashi@linaro.org, palmer@rivosinc.com, akpm@linux-foundation.org, me@linux.beauty, sshegde@linux.ibm.com, sourabhjain@linux.ibm.com, kai.huang@intel.com, x86@kernel.org, ritesh.list@gmail.com, pasha.tatashin@soleen.com, coxu@redhat.com, linuxppc-dev@lists.ozlabs.org, baoquan.he@linux.dev, mark.rutland@arm.com, linux-kernel@vger.kernel.org, piliu@redhat.com, zhangtianyang@loongson.cn, will@kernel.org, chleroy@kernel.org, chao.gao@intel.com, loongarch@lists.linux.dev, yeoreum.yun@arm.com, tangyouling@kylinos.cn, pratyush@kernel.org, rppt@kernel.org, mingo@redhat.com, seanjc@google.com, bgwin@google.com, catalin.marinas@arm.com, liukexin@kylinos.cn, driver-core@lists.linux.dev, guodongtai@kylinos.cn, mclapinski@google.com, james.morse@arm.com, "Jinjie
- Ruan" <ruanjinjie@huawei.com>, robh@kernel.org, vishal.l.verma@intel.com, kees@kernel.org, linux-arm-kernel@lists.infradead.org, dave.hansen@linux.intel.com, jbouron@amazon.com, thuth@redhat.com, chenhuacai@kernel.org, tglx@kernel.org, maddy@linux.ibm.com, dakr@kernel.org, ruirui.yang@linux.dev, eric.devolder@oracle.com, maqianga@uniontech.com, gregkh@linuxfoundation.org, mpe@ellerman.id.au
-Cc: kexec@lists.infradead.org, ruanjinjie@huawei.com
-In-Reply-To: <20260921090450.807575-14-ruanjinjie@huawei.com>
+Subject: Re: [PATCH v6 08/14] LoongArch: kexec_file: Fix a modified_cmdline
+ leak
+To: maqianga@uniontech.com, dakr@kernel.org, kees@kernel.org, mingo@redhat.com, seanjc@google.com, gregkh@linuxfoundation.org, mpe@ellerman.id.au, driver-core@lists.linux.dev, palmer@rivosinc.com, chleroy@kernel.org, coxu@redhat.com, akpm@linux-foundation.org, piliu@redhat.com, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, mclapinski@google.com, robh@kernel.org, maddy@linux.ibm.com, hpa@zytor.com, ruirui.yang@linux.dev, bgwin@google.com, leitao@debian.org, catalin.marinas@arm.com, jbouron@amazon.com, npiggin@gmail.com, guodongtai@kylinos.cn, kai.huang@intel.com, sourabhjain@linux.ibm.com, bp@alien8.de, baoquan.he@linux.dev, pratyush@kernel.org, pasha.tatashin@soleen.com, chenhuacai@kernel.org, zhangtianyang@loongson.cn, ritesh.list@gmail.com, vishal.l.verma@intel.com, thuth@redhat.com, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, hbathini@linux.ibm.com, tglx@kernel.org, yeoreum.yun@arm.com, sshegde@linux.ibm.com, rppt@kernel.org, will@kernel.org, "Jinjie
+ Ruan" <ruanjinjie@huawei.com>, rafael@kernel.org, kernel@xen0n.name, me@linux.beauty, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, dave.hansen@linux.intel.com, liukexin@kylinos.cn, graf@amazon.com, mark.rutland@arm.com, chao.gao@intel.com, takahiro.akashi@linaro.org, eric.devolder@oracle.com, tangyouling@kylinos.cn
+Cc: ruanjinjie@huawei.com, kexec@lists.infradead.org
+In-Reply-To: <20260921090450.807575-9-ruanjinjie@huawei.com>
 References: <20260921090450.807575-1-ruanjinjie@huawei.com>
- <20260921090450.807575-14-ruanjinjie@huawei.com>
+ <20260921090450.807575-9-ruanjinjie@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 21 Sep 2026 09:18:31 +0000
-Message-Id: <20260921091831.871BC1F000FF@smtp.kernel.org>
+Date: Mon, 21 Sep 2026 09:15:57 +0000
+Message-Id: <20260921091558.56B4C1F00898@smtp.kernel.org>
 X-Mailman-Approved-At: Mon, 21 Sep 2026 02:47:56 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -70,23 +70,29 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> crash_get_memory_ranges() walks memblock, which memory hotplug
-> modifies under device_hotplug_lock.  A caller that does not hold
-> the lock can race with memblock_double_array() and iterate a freed
-> regions array.
+> load_other_segments() allocates modified_cmdline and stores it in
+> image->arch.cmdline_ptr.  machine_kexec_prepare() then copies it to
+> KEXEC_CMDLINE_ADDR and overwrites the pointer, so the heap buffer is
+> leaked on every successful kexec_file_load().
 >=20
-> Add device_hotplug_lock_assert_held() so that crash code can
-> use it to catch such unsafe callers via lockdep.
+> Free the buffer after the copy.
 >=20
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Danilo Krummrich <dakr@kernel.org>
+> Cc: Huacai Chen <chenhuacai@kernel.org>
+> Cc: WANG Xuerui <kernel@xen0n.name>
+> Cc: Kexin Liu <liukexin@kylinos.cn>
+> Cc: Youling Tang <tangyouling@kylinos.cn>
+> Cc: Qiang Ma <maqianga@uniontech.com>
+> Cc: Tianyang Zhang <zhangtianyang@loongson.cn>
+> Cc: George Guo <guodongtai@kylinos.cn>
+> Cc: stable@vger.kernel.org
+> Fixes: d162feec6b6e ("LoongArch: Add preparatory infrastructure for kexec=
+_file")
 > Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260921090450.8075=
-75-1-ruanjinjie@huawei.com?part=3D13
+75-1-ruanjinjie@huawei.com?part=3D8
 
 
