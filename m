@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E7BCEC982F1
-	for <kexec@archiver.kernel.org>; Tue, 22 Sep 2026 04:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EA6EEC98302
+	for <kexec@archiver.kernel.org>; Tue, 22 Sep 2026 04:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ztoHkzSakhlgEUc7G/LHxksYMrAIZTyBYMa2Uf2Hlbg=; b=bN5XYRWR8MvzvTne8HkMYUeSob
-	xtkSXblicYgpqn8hNB6bbPWqtE1VbY7RSay73QuSQyEdTuLa/Gj5BhnyhCBXxzWo97rtAXJAs02GG
-	2XAI7ZbGeIfcl5LkDIw9NdNTwPaL4djiZJJPFp09rL7yjsIb1niadJ1w0geWh8bRGZh9tlkztlGSr
-	PT0s8mWLhFXvvog3nVuAzmr4n7G71vIt+J4qAd6adtlueqtSCmFL1uY13mLjqP4C4IipV1q/Dmj0q
-	4EaTnMX8EL9pFJibPe5qcaFvu+adUnvF72NfeqPAGNpD3UTHP+1sFonA0494aPlr4Hbbb6Y+iGYm9
-	xmKguUzg==;
+	bh=3JhbkvL+0f8gvXye8KGOOiOlIpLpto8LiGmguIZMevY=; b=QV5jq0ox6NXls0kfICTRBkB3td
+	grvueKoE6LhU1IjCKay72Rdf5L43BRRw9vcgbmN1+uKHmbtc3hJdj6kID6+Qt060nJzBL2/I9EgAo
+	SbRsNBLNjrvPLPYcd4Xh8kvTvCX/+UO6aAN/AQF5VYG5JKMkVFBmxK2nmjAalhtG6pvel9WO+Q0o6
+	D/87WVf8aFxVhUgIkpSUGzrvzBAaWf4w8TKD2xb9yPQ3JsLy4cID7flUUqw2OvHofsGFZHXZHbl76
+	n61zCv+UIVmglqCNgPI6h5HOqQJj5toCrJkiOwho+daVb4FxcIiMeOMurrxsM6B854rmps2LytvlI
+	V9JCn40Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8rt9-000000049qS-0GFr;
-	Tue, 22 Sep 2026 04:13:51 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1x8rtL-000000049uS-36Z1;
+	Tue, 22 Sep 2026 04:14:03 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8rt7-000000049qG-2ukD
+	id 1x8rtJ-000000049tq-2et8
 	for kexec@lists.infradead.org;
-	Tue, 22 Sep 2026 04:13:49 +0000
+	Tue, 22 Sep 2026 04:14:01 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 717FB4095A;
-	Tue, 22 Sep 2026 04:13:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 547BA1F000FF;
-	Tue, 22 Sep 2026 04:13:44 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 902F460236;
+	Tue, 22 Sep 2026 04:14:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 477B01F000FF;
+	Tue, 22 Sep 2026 04:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790050429;
-	bh=ztoHkzSakhlgEUc7G/LHxksYMrAIZTyBYMa2Uf2Hlbg=;
+	s=k20260515; t=1790050440;
+	bh=3JhbkvL+0f8gvXye8KGOOiOlIpLpto8LiGmguIZMevY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bVqv4SwS3M/13d0XbLVjgC9iKlv6RYkfuAu6SSvxOVXC2YqtiBhE9BJXnPRqP/cUR
-	 huM6zC9L0BemJBUbZaWzqKnYDhFV155rpGk6RyhNzBveJu/Z2qUtZDItXgARcluOVk
-	 jOD20tJtw+CHfR6E9EiqX7fhuXvVrPWXIAcQr+bDh2oZb6F4UMzMsNdnNX1kz1VO7w
-	 Pxd+SLQ2ZybkJav7qabpF+G7RWN0Til9Na/0uu6Dv+J3p8UtTChxICL2Oj9qupRkkn
-	 S7jvAm76sznfUM9vxVl19e0PhNv3gj/U/ZOqj1NMsQr9yDfKIsfVafMMKyiChx6pvn
-	 KF+x7AAUbZXgw==
+	b=lNK1gNgShJJpusLlZPOmjVBfk/yMx/e4K7M/fOX449kJiCAMPuoIP0wPz99MYiEPk
+	 moidshyK8kQSZv4gEJRA0Pglkggl8AXaRI0oTuz6P/YUWZfwhRv3EUs0GPyRU9oD0m
+	 DPlnk9bJmyB1bKQzY9a5yXfJEZpedncnBnPic6OTPA4IOIqeGLYtMKlummlBXb/apz
+	 4XWA9rdTaHLORV4+DmBLyct59dfMpLSbNsx7Nv77bTjg5dSwhXQOoY7wM8ceFqXwFw
+	 QMwyRjlT7mGCTtVnRT9/RwXWri9F/XB/SIJLX0NjGZIjSKApwSf6ITh9Xm8iX0XsQh
+	 rOyCMTm7zwOCA==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
 	Shuah Khan <skhan@linuxfoundation.org>,
@@ -75,9 +75,9 @@ Cc: x86@kernel.org,
 	linux-efi@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-arch@vger.kernel.org
-Subject: [PATCH v3 2/4] memblock: rename KHO_SCRATCH to KHO_NOPRSRV
-Date: Tue, 22 Sep 2026 06:13:14 +0200
-Message-ID: <20260922041321.233986-3-pratyush@kernel.org>
+Subject: [PATCH v3 4/4] kho: rename kho_scratch= commandline parameter to kho_bootmem=
+Date: Tue, 22 Sep 2026 06:13:16 +0200
+Message-ID: <20260922041321.233986-5-pratyush@kernel.org>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
 In-Reply-To: <20260922041321.233986-1-pratyush@kernel.org>
 References: <20260922041321.233986-1-pratyush@kernel.org>
@@ -99,333 +99,74 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-The term "KHO scratch" is vague. It does not accurately describe what
-the memory is for. Generally, scratch is for things that don't contain
-anything useful. This is not true.
-
-For memblock, KHO_SCRATCH is the _only_ useful memory during a KHO boot.
-It is memory passed by the previous kernel that is guaranteed to have no
-preserved pages, and so is the only thing safe to allocate from early in
-boot.
-
-In addition, KHO now has the ability to discover other "scratch" areas.
-These aren't directly passed by the previous kernel. Instead, they are
-found by searching the KHO preserved memory map.
-
-Memblock does not care about the difference between the two. From
-memblock's perspective, both are memory areas with no preservations and
-so they are safe to allocate from before KHO fully initializes.
-
-Rename MEMBLOCK_KHO_SCRATCH to MEMBLOCK_KHO_NOPRSRV. This name clearly
-shows what the memory is for from memblock's perspective. Update
-memblock functions and comments that refer to scratch to use noprsrv.
-
-There are no functional changes apart from the flag name change in
-debugfs.
+KHO now no longer uses "scratch" to describe the memory areas passed by
+previous kernel. Instead, it calls them boot memory, or bootmem in
+short. Rename the kho_scratch= commandline parameter to reflect this
+terminology change.
 
 Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
- arch/x86/kernel/e820.c             | 11 ++++----
- arch/x86/realmode/init.c           |  2 +-
- drivers/firmware/efi/efi-init.c    |  2 +-
- include/linux/memblock.h           | 28 +++++++++----------
- kernel/liveupdate/kexec_handover.c |  8 +++---
- mm/memblock.c                      | 44 +++++++++++++++---------------
- 6 files changed, 47 insertions(+), 48 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt | 2 +-
+ Documentation/admin-guide/mm/kho.rst            | 4 ++--
+ kernel/liveupdate/kexec_handover.c              | 6 +++---
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index eb72537bc0b1..0967b485f38b 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -1352,18 +1352,17 @@ __init void e820__memblock_setup(void)
- 	 * below 1M (aka ISA_END_ADDRESS) up until direct map is completely set
- 	 * up in init_mem_mapping().
- 	 *
--	 * KHO kernels are special and use only scratch memory for memblock
-+	 * KHO kernels are special and use only NOPRSRV memory for memblock
- 	 * allocations, but memory below 1M is ignored by kernel after early
--	 * boot and cannot be naturally marked as scratch.
-+	 * boot and cannot be naturally marked as NOPRSRV.
- 	 *
- 	 * To allow allocation of the real-mode trampoline and a few (if any)
- 	 * other very early allocations from below 1M forcibly mark the memory
--	 * below 1M as scratch.
-+	 * below 1M as NOPRSRV.
- 	 *
--	 * After real mode trampoline is allocated, we clear that scratch
--	 * marking.
-+	 * After real mode trampoline is allocated, we clear that marking.
- 	 */
--	memblock_mark_kho_scratch(0, SZ_1M);
-+	memblock_mark_kho_noprsrv(0, SZ_1M);
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 6132fa73382a..8a42a924f133 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3031,7 +3031,7 @@ Kernel parameters
+ 			"0" | "off" | "n" - kexec handover is disabled
+ 			"1" | "on" | "y" - kexec handover is enabled
  
- 	/*
- 	 * 32-bit systems are limited to 4BG of memory even with HIGHMEM and
-diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
-index 694d80a5c68e..65110b2ee1a1 100644
---- a/arch/x86/realmode/init.c
-+++ b/arch/x86/realmode/init.c
-@@ -66,7 +66,7 @@ void __init reserve_real_mode(void)
- 	 */
- 	memblock_reserve(0, SZ_1M);
+-	kho_scratch=	[KEXEC,EARLY]
++	kho_bootmem=	[KEXEC,EARLY]
+ 			Format: ll[KMG],mm[KMG],nn[KMG] | nn%
  
--	memblock_clear_kho_scratch(0, SZ_1M);
-+	memblock_clear_kho_noprsrv(0, SZ_1M);
- }
+ 			Defines the size of the KHO boot memory region. The
+diff --git a/Documentation/admin-guide/mm/kho.rst b/Documentation/admin-guide/mm/kho.rst
+index a6a09b693413..902d171a780a 100644
+--- a/Documentation/admin-guide/mm/kho.rst
++++ b/Documentation/admin-guide/mm/kho.rst
+@@ -20,8 +20,8 @@ need to enable if you would like to preserve their respective state across
+ kexec.
  
- static void __init sme_sev_setup_real_mode(struct trampoline_header *th)
-diff --git a/drivers/firmware/efi/efi-init.c b/drivers/firmware/efi/efi-init.c
-index 6103b1a082d2..a2edaf3766eb 100644
---- a/drivers/firmware/efi/efi-init.c
-+++ b/drivers/firmware/efi/efi-init.c
-@@ -178,7 +178,7 @@ static __init void reserve_regions(void)
+ To use KHO, please boot the kernel with the ``kho=on`` command line
+-parameter. You may use ``kho_scratch`` parameter to define size of the
+-boot memory regions. For example ``kho_scratch=16M,512M,256M`` will reserve a
++parameter. You may use ``kho_bootmem`` parameter to define size of the
++boot memory regions. For example ``kho_bootmem=16M,512M,256M`` will reserve a
+ 16 MiB low memory bootmem area, a 512 MiB global bootmem region, and 256 MiB
+ per NUMA node bootmem regions on boot.
  
- 		/* Remove all non-KHO regions */
- 		for_each_mem_region(r) {
--			if (!memblock_is_kho_scratch(r)) {
-+			if (!memblock_is_kho_noprsrv(r)) {
- 				memblock_remove(r->base, r->size);
- 				r--;
- 			}
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index db3b106c6335..aaa11a589843 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -46,11 +46,11 @@ extern unsigned long long max_possible_pfn;
-  * @MEMBLOCK_RSRV_KERN: memory region that is reserved for kernel use,
-  * either explictitly with memblock_reserve_kern() or via memblock
-  * allocation APIs. All memblock allocations set this flag.
-- * @MEMBLOCK_KHO_SCRATCH: memory region that kexec can pass to the next
-- * kernel in handover mode. During early boot, we do not know about all
-- * memory reservations yet, so we get scratch memory from the previous
-- * kernel that we know is good to use. It is the only memory that
-- * allocations may happen from in this phase.
-+ * @MEMBLOCK_KHO_NOPRSRV: memory region with no preservation from kexec
-+ * handover. During early boot, we do not know about all memory preservations
-+ * yet, so we get memory with no preservations from the previous kernel that we
-+ * know is good to use. It is the only memory that allocations may happen from
-+ * in this phase.
-  * @MEMBLOCK_RSRV_HUGETLB: memory is reserved for hugetlb pages
-  */
- enum memblock_flags {
-@@ -61,7 +61,7 @@ enum memblock_flags {
- 	MEMBLOCK_DRIVER_MANAGED = 0x8,	/* always detected via a driver */
- 	MEMBLOCK_RSRV_NOINIT	= 0x10,	/* don't initialize struct pages */
- 	MEMBLOCK_RSRV_KERN	= 0x20,	/* memory reserved for kernel use */
--	MEMBLOCK_KHO_SCRATCH	= 0x40,	/* scratch memory for kexec handover */
-+	MEMBLOCK_KHO_NOPRSRV	= 0x40,	/* memory with no KHO preservations */
- 	MEMBLOCK_RSRV_HUGETLB	= 0x80, /* memory reserved for hugetlb pages */
- };
- 
-@@ -158,8 +158,8 @@ int memblock_mark_nomap(phys_addr_t base, phys_addr_t size);
- int memblock_clear_nomap(phys_addr_t base, phys_addr_t size);
- int memblock_reserved_mark_noinit(phys_addr_t base, phys_addr_t size);
- int memblock_reserved_mark_kern(phys_addr_t base, phys_addr_t size);
--int memblock_mark_kho_scratch(phys_addr_t base, phys_addr_t size);
--int memblock_clear_kho_scratch(phys_addr_t base, phys_addr_t size);
-+int memblock_mark_kho_noprsrv(phys_addr_t base, phys_addr_t size);
-+int memblock_clear_kho_noprsrv(phys_addr_t base, phys_addr_t size);
- 
- void memblock_free(void *ptr, size_t size);
- void reset_all_zones_managed_pages(void);
-@@ -301,9 +301,9 @@ static inline bool memblock_is_driver_managed(struct memblock_region *m)
- 	return m->flags & MEMBLOCK_DRIVER_MANAGED;
- }
- 
--static inline bool memblock_is_kho_scratch(struct memblock_region *m)
-+static inline bool memblock_is_kho_noprsrv(struct memblock_region *m)
- {
--	return m->flags & MEMBLOCK_KHO_SCRATCH;
-+	return m->flags & MEMBLOCK_KHO_NOPRSRV;
- }
- 
- int memblock_search_pfn_nid(unsigned long pfn, unsigned long *start_pfn,
-@@ -615,11 +615,11 @@ static inline void memtest_report_meminfo(struct seq_file *m) { }
- #endif
- 
- #ifdef CONFIG_KEXEC_HANDOVER
--void memblock_set_kho_scratch_only(void);
--void memblock_clear_kho_scratch_only(void);
-+void memblock_set_kho_noprsrv_only(void);
-+void memblock_clear_kho_noprsrv_only(void);
- #else
--static inline void memblock_set_kho_scratch_only(void) { }
--static inline void memblock_clear_kho_scratch_only(void) { }
-+static inline void memblock_set_kho_noprsrv_only(void) { }
-+static inline void memblock_clear_kho_noprsrv_only(void) { }
- #endif
- 
- #endif /* _LINUX_MEMBLOCK_H */
 diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 3c87c2a3d6f0..7f45cecf2c2c 100644
+index fe4b76ff5a2c..7018e25e4eda 100644
 --- a/kernel/liveupdate/kexec_handover.c
 +++ b/kernel/liveupdate/kexec_handover.c
-@@ -958,7 +958,7 @@ static int __init kho_ext_mark_scratch(unsigned long key, void *data)
- 	int err;
- 
- 	if (start > *prev_end) {
--		err = memblock_mark_kho_scratch(*prev_end, start - *prev_end);
-+		err = memblock_mark_kho_noprsrv(*prev_end, start - *prev_end);
- 		if (err)
- 			return err;
- 	}
-@@ -1031,7 +1031,7 @@ static void __init kho_extend_scratch(void)
- 
- 	/* Mark everything from last busy block to end of DRAM. */
- 	if (prev_end < memblock_end_of_DRAM())
--		err = memblock_mark_kho_scratch(prev_end, memblock_end_of_DRAM() - prev_end);
-+		err = memblock_mark_kho_noprsrv(prev_end, memblock_end_of_DRAM() - prev_end);
- 
- 	/* fallthrough */
- out:
-@@ -2002,7 +2002,7 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
- 		u64 size = area->size;
- 
- 		memblock_add(area->addr, size);
--		err = memblock_mark_kho_scratch(area->addr, size);
-+		err = memblock_mark_kho_noprsrv(area->addr, size);
- 		if (err) {
- 			pr_warn("failed to mark the scratch region 0x%pa+0x%pa: %pe",
- 				&area->addr, &size, ERR_PTR(err));
-@@ -2020,7 +2020,7 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
- 	 * we initialize the page tables which we will need to ingest all
- 	 * memory reservations from the previous kernel.
- 	 */
--	memblock_set_kho_scratch_only();
-+	memblock_set_kho_noprsrv_only();
- 
- 	kho_in.fdt_phys = fdt_phys;
- 	kho_in.scratch_phys = scratch_phys;
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 197d854c18d5..947d8767d7ec 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -114,10 +114,10 @@ unsigned long max_pfn;
- unsigned long long max_possible_pfn;
- 
- #ifdef CONFIG_KEXEC_HANDOVER
--/* When set to true, only allocate from MEMBLOCK_KHO_SCRATCH ranges */
--static bool kho_scratch_only;
-+/* When set to true, only allocate from MEMBLOCK_KHO_NOPRSRV ranges */
-+static bool kho_noprsrv_only;
- #else
--#define kho_scratch_only false
-+#define kho_noprsrv_only false
- #endif
- 
- static struct memblock_region memblock_memory_init_regions[INIT_MEMBLOCK_MEMORY_REGIONS] __initdata_memblock;
-@@ -179,9 +179,9 @@ bool __init_memblock memblock_has_mirror(void)
- 
- static enum memblock_flags __init_memblock choose_memblock_flags(void)
- {
--	/* skip non-scratch memory for kho early boot allocations */
--	if (kho_scratch_only)
--		return MEMBLOCK_KHO_SCRATCH;
-+	/* only use KHO_NOPRSRV memory for kho early boot allocations */
-+	if (kho_noprsrv_only)
-+		return MEMBLOCK_KHO_NOPRSRV;
- 
- 	return system_has_some_mirror ? MEMBLOCK_MIRROR : MEMBLOCK_NONE;
- }
-@@ -1175,33 +1175,33 @@ int __init_memblock memblock_reserved_mark_kern(phys_addr_t base, phys_addr_t si
- }
- 
- /**
-- * memblock_mark_kho_scratch - Mark a memory region as MEMBLOCK_KHO_SCRATCH.
-+ * memblock_mark_kho_noprsrv - Mark a memory region as MEMBLOCK_KHO_NOPRSRV.
-  * @base: the base phys addr of the region
-  * @size: the size of the region
+@@ -671,12 +671,12 @@ unsigned int kho_bootmem_cnt;
+  * The bootmem areas are scaled by default as percent of memory allocated from
+  * memblock. A user can override the scale with command line parameter:
   *
-- * Only memory regions marked with %MEMBLOCK_KHO_SCRATCH will be considered
-+ * Only memory regions marked with %MEMBLOCK_KHO_NOPRSRV will be considered
-  * for allocations during early boot with kexec handover.
+- * kho_scratch=N%
++ * kho_bootmem=N%
   *
-  * Return: 0 on success, -errno on failure.
+  * It is also possible to explicitly define size for a lowmem, a global and
+  * per-node bootmem areas:
+  *
+- * kho_scratch=l[KMG],n[KMG],m[KMG]
++ * kho_bootmem=l[KMG],n[KMG],m[KMG]
+  *
+  * The explicit size definition takes precedence over scale definition.
   */
--__init int memblock_mark_kho_scratch(phys_addr_t base, phys_addr_t size)
-+__init int memblock_mark_kho_noprsrv(phys_addr_t base, phys_addr_t size)
+@@ -751,7 +751,7 @@ static int __init kho_parse_bootmem_size(char *p)
+ 
+ 	return 0;
+ }
+-early_param("kho_scratch", kho_parse_bootmem_size);
++early_param("kho_bootmem", kho_parse_bootmem_size);
+ 
+ static void __init bootmem_size_update(void)
  {
- 	return memblock_setclr_flag(&memblock.memory, base, size, 1,
--				    MEMBLOCK_KHO_SCRATCH);
-+				    MEMBLOCK_KHO_NOPRSRV);
- }
- 
- /**
-- * memblock_clear_kho_scratch - Clear MEMBLOCK_KHO_SCRATCH flag for a
-+ * memblock_clear_kho_noprsrv - Clear MEMBLOCK_KHO_NOPRSRV flag for a
-  * specified region.
-  * @base: the base phys addr of the region
-  * @size: the size of the region
-  *
-  * Return: 0 on success, -errno on failure.
-  */
--__init int memblock_clear_kho_scratch(phys_addr_t base, phys_addr_t size)
-+__init int memblock_clear_kho_noprsrv(phys_addr_t base, phys_addr_t size)
- {
- 	return memblock_setclr_flag(&memblock.memory, base, size, 0,
--				    MEMBLOCK_KHO_SCRATCH);
-+				    MEMBLOCK_KHO_NOPRSRV);
- }
- 
- static bool should_skip_region(struct memblock_type *type,
-@@ -1237,9 +1237,9 @@ static bool should_skip_region(struct memblock_type *type,
- 
- 	/*
- 	 * In early alloc during kexec handover, we can only consider
--	 * MEMBLOCK_KHO_SCRATCH regions for the allocations
-+	 * MEMBLOCK_KHO_NOPRSRV regions for the allocations
- 	 */
--	if ((flags & MEMBLOCK_KHO_SCRATCH) && !memblock_is_kho_scratch(m))
-+	if ((flags & MEMBLOCK_KHO_NOPRSRV) && !memblock_is_kho_noprsrv(m))
- 		return true;
- 
- 	return false;
-@@ -2498,7 +2498,7 @@ void __init memblock_free_all(void)
- 	free_unused_memmap();
- 	reset_all_zones_managed_pages();
- 
--	memblock_clear_kho_scratch_only();
-+	memblock_clear_kho_noprsrv_only();
- 	pages = free_low_memory_core_early();
- 	totalram_pages_add(pages);
- }
-@@ -2597,14 +2597,14 @@ int reserve_mem_release_by_name(const char *name)
- }
- 
- #ifdef CONFIG_KEXEC_HANDOVER
--__init void memblock_set_kho_scratch_only(void)
-+__init void memblock_set_kho_noprsrv_only(void)
- {
--	kho_scratch_only = true;
-+	kho_noprsrv_only = true;
- }
- 
--__init void memblock_clear_kho_scratch_only(void)
-+__init void memblock_clear_kho_noprsrv_only(void)
- {
--	kho_scratch_only = false;
-+	kho_noprsrv_only = false;
- }
- #endif
- 
-@@ -2860,7 +2860,7 @@ static int __init reserve_mem(char *p)
- 	if (reserve_mem_kho_revive(name, size, align))
- 		return 1;
- 
--	/* TODO: Allocation must be outside of scratch region */
-+	/* TODO: Allocation must be outside of KHO_NOPRSRV region */
- 	start = memblock_phys_alloc(size, align);
- 	if (!start) {
- 		pr_err("reserve_mem: memblock allocation failed\n");
-@@ -2885,7 +2885,7 @@ static const char * const flagname[] = {
- 	[ilog2(MEMBLOCK_DRIVER_MANAGED)] = "DRV_MNG",
- 	[ilog2(MEMBLOCK_RSRV_NOINIT)] = "RSV_NIT",
- 	[ilog2(MEMBLOCK_RSRV_KERN)] = "RSV_KERN",
--	[ilog2(MEMBLOCK_KHO_SCRATCH)] = "KHO_SCRATCH",
-+	[ilog2(MEMBLOCK_KHO_NOPRSRV)] = "KHO_NOPRSRV",
- };
- 
- static int memblock_debug_show(struct seq_file *m, void *private)
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
