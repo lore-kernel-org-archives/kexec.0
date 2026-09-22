@@ -4,66 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 53A83C98302
-	for <kexec@archiver.kernel.org>; Tue, 22 Sep 2026 04:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EA736C982F1
+	for <kexec@archiver.kernel.org>; Tue, 22 Sep 2026 06:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
-	From:MIME-Version:Content-ID:Content-Description:Resent-Date:Resent-From:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:CC:To:
+	Subject:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=syaZVYvUtgFnasCG/seUwWXzYWSqGpbsEDVlFQfkXQ4=; b=GKGRxrA0Qjd0h4WEo5hG1hB61O
-	ct+pu5rfwrDf4YAbScuO9Ix6h74tXsPT4w6FwwNX6tFEmXKU+W+NJVGFJSh+AxONCljtbXI8C+uHM
-	/eLSnWwqwvJQHla+ILRRhMVLqN4UZBr2//QQgXv/f9AvxxiHuOElwBZk1sS3RXHBxs9C3avyf9RH9
-	rW/Zg9wR0oUYmPLZgCcZj0aSfgxLCR3UXe3T0LZww74NutZfAhj55bGihDxpTAq8bCM7tn9vlF8q/
-	k70L6UAu4cUb7Z/dWc6fYdNXreRnfncW1oV/4VUgvb/LpY3fqwMU+05w4TxHU/1+9Fk0B1cqjRiWz
-	oKBwMLkQ==;
+	bh=FGbhkQwIGfdAyVtjg1Ql4s8k82iByJqzyE4qhg2yGrY=; b=P44BfusaN4S0EYjww6OQJzKRko
+	LT21vnURyxjd3uCGbE7lE0s0+0qp44+ZaLntU/q1tRLwPDt8I1jKV1yVOolAV5j2ATh43iHaizP0n
+	TFmiLs3717MpEWjkAURNgBRv7GRHGqqyjAthuhUnhRgYG5GAvkUFoSWLEdTb++FT52BV8vrgaIlVz
+	YnkjRfNPZMvpOrDlsxT761yE5eZtbwbZnv23pCG6nGaL7NJXA5xdVlS127XhRp9gTfZ6gohBcBUvF
+	Qhh07RGn13GhRLN7N0/5Y6DWlZSwL3CkwkEvXVUTxSSmUG+NmlPPlEbfLHUxSyXZ1dtnNCNF7HjhN
+	9HnSY3EA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8s0y-00000004Afm-02KD;
-	Tue, 22 Sep 2026 04:21:56 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1x8tzM-00000004Kvw-0P95;
+	Tue, 22 Sep 2026 06:28:24 +0000
+Received: from canpmsgout07.his.huawei.com ([113.46.200.222])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8s0x-00000004AfS-1mKp
+	id 1x8tzH-00000004Kus-0VG4
 	for kexec@lists.infradead.org;
-	Tue, 22 Sep 2026 04:21:55 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id D75D760210;
-	Tue, 22 Sep 2026 04:21:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1D851F000FF;
-	Tue, 22 Sep 2026 04:21:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790050914;
-	bh=syaZVYvUtgFnasCG/seUwWXzYWSqGpbsEDVlFQfkXQ4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Me/fCZ3MkA+e5U5b7deNmL46lRZBivAbchui33mecbxteRUKkj+jf8wzRvO04cu9i
-	 EZ8xCRpw3vgbZyON30v6aXiQRUdJiKxepri33w/E2eFJyEVGZfPB16OW2r0qNWWblq
-	 Oaa5LwQbUzjU7/+shPeIpqLzgVyqXVy4zfH/Bhfx74HHNvfWT8OI558TpMVhWeik3H
-	 SQAzsnkOufbKRZcUm/Dpibq6u6z6g35XOq6hzs8/pEt5uIJpT9s1nytWeUKhBWI94a
-	 EmBttiqJC4CSt9N2V7WgO0Jd1pPIbayqwCbuGkFIKACCA11pRoVLg9AGPG6UABCkRv
-	 vQrJ/mGlQJu1g==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 3/4] kho: rename KHO scratch to KHO bootmem
-To: "Lorenzo Stoakes" <ljs@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>, "Alexander
- Graf" <graf@amazon.com>, "Liam R. Howlett" <liam@infradead.org>, "Vlastimil
- Babka" <vbabka@kernel.org>, "Suren Baghdasaryan" <surenb@google.com>, "Dave
- Hansen" <dave.hansen@linux.intel.com>, "Rob Herring" <robh@kernel.org>, "Mike
- Rapoport" <rppt@kernel.org>, "Pratyush Yadav" <pratyush@kernel.org>, "Pasha
- Tatashin" <pasha.tatashin@soleen.com>, "Ingo Molnar" <mingo@redhat.com>, "Shuah
- Khan" <skhan@linuxfoundation.org>, "Ilias Apalodimas" <ilias.apalodimas@linaro.org>, "H.
- Peter Anvin" <hpa@zytor.com>, "Baoquan He" <baoquan.he@linux.dev>, "Ard
- Biesheuvel" <ardb@kernel.org>, "Andrew Morton" <akpm@linux-foundation.org>, "Thomas
- Gleixner" <tglx@kernel.org>, "Saravana Kannan" <saravanak@kernel.org>, "Arnd
- Bergmann" <arnd@arndb.de>, "David Hildenbrand" <david@kernel.org>, "Michal
- Hocko" <mhocko@suse.com>, "Borislav Petkov" <bp@alien8.de>
-Cc: x86@kernel.org, devicetree@vger.kernel.org, conor+dt@kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, linux-arch@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, linux-efi@vger.kernel.org, kexec@lists.infradead.org
-In-Reply-To: <20260922041321.233986-4-pratyush@kernel.org>
-References: <20260922041321.233986-1-pratyush@kernel.org>
- <20260922041321.233986-4-pratyush@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 22 Sep 2026 04:21:52 +0000
-Message-Id: <20260922042152.D1D851F000FF@smtp.kernel.org>
+	Tue, 22 Sep 2026 06:28:21 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=FGbhkQwIGfdAyVtjg1Ql4s8k82iByJqzyE4qhg2yGrY=;
+	b=TVb/XxdniyjxDFy7pVMTRQxolIRi+rQVHqCEnlKh1dbNqIt3c2xKfhY78rYOnafftzF8lAstD
+	xy2sKyyG+aKfvZphbGF6i0pqXqKi4+Lx7oBYcGyOLnBdBgO4nzlpnNBmoKdAIsiGoqcxSUoEfMe
+	/ubLcOzVXiphJvNeeFaqF5c=
+Received: from mail.maildlp.com (unknown [172.19.163.127])
+	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4hpqcs4qVZzLlXZ;
+	Tue, 22 Sep 2026 14:17:01 +0800 (CST)
+Received: from whupemk100004.china.huawei.com (unknown [7.152.185.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id EDB3440573;
+	Tue, 22 Sep 2026 14:28:03 +0800 (CST)
+Received: from [10.173.124.160] (10.173.124.160) by
+ whupemk100004.china.huawei.com (7.152.185.74) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Tue, 22 Sep 2026 14:28:00 +0800
+Subject: Re: [PATCH v5 0/9] mm/memory-failure: keep hardware-poisoned pages
+ out of the next kexec
+To: Breno Leitao <leitao@debian.org>
+CC: <linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <rmikey@meta.com>, <riel@surriel.com>,
+	<harry@kernel.org>, <linux-cxl@vger.kernel.org>,
+	<driver-core@lists.linux.dev>, <kernel-team@meta.com>, Ard Biesheuvel
+	<ardb@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Naoya
+ Horiguchi <nao.horiguchi@gmail.com>, Andrew Morton
+	<akpm@linux-foundation.org>, <kas@kernel.org>, <kexec@lists.infradead.org>,
+	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, "Liam
+ R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike
+ Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal
+ Hocko <mhocko@suse.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
+	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
+	<hpa@zytor.com>, Brendan Jackman <brendan.jackman@linux.dev>, Johannes Weiner
+	<hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, Oscar Salvador
+	<osalvador@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael
+ J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+	<hannes@cmpxchg.or>, <shakeel.butt@linux.dev>
+References: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
+From: Miaohe Lin <linmiaohe@huawei.com>
+Message-ID: <d6e35901-f74d-bf81-75d3-bac4b26d9d72@huawei.com>
+Date: Tue, 22 Sep 2026 14:27:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
+MIME-Version: 1.0
+In-Reply-To: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.124.160]
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ whupemk100004.china.huawei.com (7.152.185.74)
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260921_232819_898275_CE1DE2E5 
+X-CRM114-Status: GOOD (  33.10  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,41 +93,100 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
->=20
-> The term "KHO scratch" is vague and overloaded.
->=20
-> For one, it does not accurately describe what the memory is for. From
-> KHO's perspective, it is memory passed by the previous kernel that is
-> guaranteed to have no allocations and hence it is safe to allocate from.
->=20
-> For another, the term is overloaded. KHO also knows to discover other
-> ranges of memory that don't have any preservations and are safe to
-> allocate from. This is done by kho_extend_scratch(). These areas, while
-> called "scratch", are completely different from the chunk of memory
-> passed by the previous kernel for early boot allocations.
->=20
-> Rename "KHO scratch" to "KHO boot memory", or "KHO bootmem" in short.
-> Update all function names, variable names, comments, and documentation
-> to use this.
->=20
-> Call the discovered areas "noprsrv", matching what memblock would see
-> them as. Rename kho_extend_scratch() to reflect this.
->=20
-> This patch largely has no functional changes. The only functional
-> changes are renames of debugfs files from "scratch_phys" and
-> "scratch_len" to "bootmem_phys" and "bootmem_len" respectively.
->=20
-> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+On 2026/9/15 20:53, Breno Leitao wrote:
+> Problem:
+> ========
+> 
+> When a page is hard-offlined due to an uncorrectable memory error (multi
+> bit ECC), memory_failure() sets PG_hwpoison, unmaps it, removes it from
+> the buddy allocator. This information is not carried to the next kernel
+> that is kexeced. The new kernel kexecs and trip over that bad memory
+> bank _again_.
+> 
+> Why now:
+> ========
+> 
+> Several industry trends make this increasingly important:
+> 
+>     1) DRAM is getting more expensive
+>     2) soldered / on-package memory (LPDDR, HBM) is becoming more common, so a
+>        failing part can no longer simply be swapped;
+>     3) memory is kept in service far longer (at Meta, DRAM lifetime is being
+>        drastically extended).
+>     4) It is more and more common to kexec instead of full reboot
+>     5) Increase of memory per system with CXL
+> 
+> What was done already:
+> ======================
+> 
+> In order make linux deal better with the problem above, I've done
+> already fixed a bunch of stuff in this area, such as:
+> 
+> 1) Panic on unrecoverable errors, instead of "printk and carry over":
+> https://lore.kernel.org/all/20260630-ecc_panic-v10-0-c6ed5b62eea2@debian.org/
+> 
+> 2) Respect poisoned memory at kexec time
+> https://lore.kernel.org/all/20260812-kexec_posioned-v6-0-e477887086f0@debian.org/
+> 
+> Now, the natural follow up is to carry the poisoned memory information
+> to the next kexec kernel, avoiding tripping over a known "bad page".
+> 
+> Proposed Solution:
+> ==================
+> 
+> Carry the poisoned frames to the next kernel in a new EFI configuration
+> table, LINUX_EFI_POISONED_MEMORY.
+> 
+> The table is a bitmap with one bit per 2MB of physical memory, modeled
+> on LINUX_EFI_UNACCEPTED_MEMORY. The stub sizes it from the EFI memory
+> map and installs it empty while boot services are up -- a running kernel
+> cannot install a configuration table, it can only flip bits -- and a
+> table inherited from an earlier boot is reused as-is. That is one
+> fixed-size allocation, 64KB per TiB of the span the memory map describes,
+> with no list to grow at runtime and no chain to trust at parse time.
+> 
+> The mechanism is architecture independent, so x86 and arm64 use the same
+> code.
+> 
+> Each hard offline sets the bit for its unit. Soft-offlined pages are not
+> recorded: they are still functional, and were offlined predictively.
+> 
+> The next kernel takes the table into use from efi_config_parse_tables(),
+> which vets the inherited header and hands the table's pages to memblock.
+> It is EFI ACPI reclaim memory, which x86 leaves out of memblock and so
+> out of the direct map; the unaccepted memory table is handled the same
+> way for the same reason.
+> 
+> The frames themselves are poisoned in __free_pages_core(), as each block
+> reaches the buddy allocator. That is the one point every producer passes
+> through -- memblock_free_pages() early, deferred_free_pages() once the
+> deferred struct pages are up, and generic_online_page() at any later
+> hotplug -- and it is already where the unaccepted memory table is
+> consulted. The recorded frames are held back and the rest of the block is
+> freed, so they never enter the allocator instead of being taken back out
+> of it. They end up in the state a frame poisoned by this kernel would be
+> in, so everything that already understands PG_hwpoison covers them --
+> including the kexec segment placement check from the series linked above,
+> which keeps the segments a kexec places off these frames.
+> 
+> Granularity is the trade-off: one bad 4KB frame costs a whole 2MB unit in
+> every later kernel of the chain. In exchange, a row or column fault --
+> roughly a quarter of the DRAM faults reported in [1], and potentially
+> thousands of 4KB pages scattered over gigabytes -- collapses into a bit
+> or two.
+> 
+> A bit is never cleared, which is a known limitation: it stands for a
+> whole unit, so an unpoison of one frame cannot tell whether the unit as a
+> whole is good again.
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+Thanks for your patches. I have a question about unpoison: If a bit is never
+cleared, after we do some memory-failure+unpoison tests, kexec will lose the
+tested memory without reboot?
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260922041321.2339=
-86-1-pratyush@kernel.org?part=3D3
+Thanks.
+.
 
 
