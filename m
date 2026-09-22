@@ -4,58 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9DC8DC982FA
-	for <kexec@archiver.kernel.org>; Tue, 22 Sep 2026 13:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E3D36C98302
+	for <kexec@archiver.kernel.org>; Tue, 22 Sep 2026 13:45:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
-	From:MIME-Version:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=hOgpW4IgnM+iWttR9xGzJPKFkLCxSHMpX5I4y07+yQM=; b=QBPMTkyjhkwH+mc645+MWFndO/
-	/ZhThExPphPs6hy7tWM4f+ZwJV8r5nRNPq5rxIl0/9C8FAGEH7mwoAtohBR8XVt7PghsMbNLH312R
-	nva2G0iQfMTZeZD3uAFgqa9g51PF/Hb5BCldsti0EtSuqHVu293n/edRr2LHpJ/SoeIknNr+Xjaoo
-	mhf9n4CeAlYctJ5cXGK5bO0PJlzBzyCMiwGg23FU18W4/9onmAotKwiTh26RNfeB7Jb5Kr1tBTSaz
-	uXJWecjA9Rh9sQsAPFCtbXoja2pN0xckAj6+Jsffad/Wu4BH5PTbZvPX1iBzOXOqs4sUGBTKGLJoB
-	9ZfbLXhA==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=vQogC0AaDJB13p395CjVa0K8IHFuyempieXINkDBjmI=; b=gzAQa34u7r5mEuoDmGSstdxwUM
+	4D268gTGGPKPtb5CrJAXnzDzQoFIR71tMrT13khNGtpV1VfZAtV6JIKNc5kPFTbAxOlHU5uuHoUaV
+	RPxtecIyLPZOwCMGuDEDjahbrIKrg85fwzShIpTXfqF27vrqZFw2qjbo8uLDJmg6HuJ7ucT56wsBA
+	vaTE62GOVnRdxiPyiSqucyhyJ155DhuADf/pKTLp2DVnHTC3AINJ4OIndTlIeWNbSLXs4yHyZY8f3
+	MeSjX0xMx1Wpq3VePxZJW0YVQDLz36ox7+/YtJ3fYseBD/vytYcpsoU0qwt0BZ7x5HRKbJx36miCh
+	DxhWzcBQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x90X8-00000005WAz-0Uzj;
-	Tue, 22 Sep 2026 13:27:42 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1x90o7-00000005aPR-0vAb;
+	Tue, 22 Sep 2026 13:45:15 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x90X6-00000005WAe-1wsH
+	id 1x90o6-00000005aPC-1nqO
 	for kexec@lists.infradead.org;
-	Tue, 22 Sep 2026 13:27:40 +0000
+	Tue, 22 Sep 2026 13:45:14 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 9439B60DFF;
-	Tue, 22 Sep 2026 13:27:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B15EB1F000FF;
-	Tue, 22 Sep 2026 13:27:38 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id A82EC6024D;
+	Tue, 22 Sep 2026 13:45:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B96561F00893;
+	Tue, 22 Sep 2026 13:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790083659;
-	bh=hOgpW4IgnM+iWttR9xGzJPKFkLCxSHMpX5I4y07+yQM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ScK32LSyDrY7d5+C8okcVeEUzggCwaZYw48LGkNFs79g2d6FsaGQjUnycanFRtVn/
-	 hVgC5C16xSQSsH2ZWl7i3uAL/tMCQoA+/QwbuNe64iWM6kBd3o1Eb3mmpc7HjHD8Yx
-	 kFY95VDNDpXS71ZTlFVcgX8Nqc/33yM7UhzutJO2t1MBcf/W7Rjhot17y1bDFDaJ3U
-	 ljz6jq4Tl7ABUOVZvYSOLHqjIbCdkQ6img71hVkM5E+Bx1hisyF41hkCYvstoSB3tP
-	 bGoAXpXw1TTnkBf9sdeMUMjmG8UJIdgk4LYOkKO09YGtGblsPQySTBTwIpEtSDfjqk
-	 5B4IZ4Ors4mVQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] kho: fix global scratch size calculation
-To: "Sourabh Jain" <sourabhjain@linux.ibm.com>
-Cc: "Pasha Tatashin" <pasha.tatashin@soleen.com>, linux-mm@kvack.org, "Mike
- Rapoport" <rppt@kernel.org>, kexec@lists.infradead.org, =?utf-8?b?Uml0?=
- =?utf-8?b?ZXNoIEhhcmphbmkgKElCTSk=?= <ritesh.list@gmail.com>, "George Guo" <guodongtai@kylinos.cn>, "Pratyush
- Yadav" <pratyush@kernel.org>, linux-kernel@vger.kernel.org, "Andrew Morton" <akpm@linux-foundation.org>, "Alexander
- Graf" <graf@amazon.com>
-In-Reply-To: <20260922131217.698809-1-sourabhjain@linux.ibm.com>
-References: <20260922131217.698809-1-sourabhjain@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 22 Sep 2026 13:27:38 +0000
-Message-Id: <20260922132738.B15EB1F000FF@smtp.kernel.org>
+	s=k20260515; t=1790084713;
+	bh=vQogC0AaDJB13p395CjVa0K8IHFuyempieXINkDBjmI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=nXn4KJ5YCt7msZuBG7rmlIi53n8XfETgu6aRe4PZFQxj1jg1WctsRsI2laIFPKxcq
+	 KFMjOH9RfXFKsqQOGPuzUbM1RgW0kn9wvT8gHMwy6Ph6yX9efU/mBk0nhmEGM1d23+
+	 1u7KQ5pwBezqsOs+QxAjhex7Kad0ZPmmkOhxooTgsWA5epfHfE5rHF+9hp9ODHG9eG
+	 wGF9mgKd9HvUwnBMxAUyfAtAv8S4k4QW7tED3m8IwIQnoh+QcXgam+BAV5yJSeZNCv
+	 mXg9ZdNE+JflO8CbRUQCBwti/hKJlm1tIbegXIgF56GBM8wz088RoehPQhlg9uCrFf
+	 35pYat0LXjbHQ==
+Date: Tue, 22 Sep 2026 14:45:11 +0100
+From: Harry Yoo <harry@kernel.org>
+To: Kiryl Shutsemau <kas@kernel.org>
+Cc: "David Hildenbrand (Arm)" <david@kernel.org>, 
+	Breno Leitao <leitao@debian.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Naoya Horiguchi <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	kexec@lists.infradead.org, Lorenzo Stoakes <ljs@kernel.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Brendan Jackman <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
+	Oscar Salvador <osalvador@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, hannes@cmpxchg.or, 
+	shakeel.butt@linux.dev, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, rmikey@meta.com, riel@surriel.com, linux-cxl@vger.kernel.org, 
+	driver-core@lists.linux.dev, kernel-team@meta.com
+Subject: Re: [PATCH v5 7/9] drivers/base/memory: count inherited poisoned
+ frames into the block
+Message-ID: <arKCBl7Ee7fSyKoR@thinkstation>
+References: <de41b78a-8471-4832-be0c-35d410a4499a@kernel.org>
+ <aqpczrtIwSG948iv@gmail.com>
+ <b8ad366a-a019-4462-9dce-f687f60ee7f2@kernel.org>
+ <aqvHHHuWJ-y4WRJZ@gmail.com>
+ <caac2cb9-8faa-49bc-ae8a-47c5fd7b7e58@kernel.org>
+ <aq1RaH0eE0hZfNpr@gmail.com>
+ <fb2237be-f7bc-4ad6-bcb0-7c3ef53136ef@kernel.org>
+ <arE3UjqPsxctWckg@gmail.com>
+ <ad2ed3ed-959a-4af3-a2f5-4c21e5af62d6@kernel.org>
+ <arJ5I9QHHBvuGH_F@thinkstation>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <arJ5I9QHHBvuGH_F@thinkstation>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -67,91 +89,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] kho: lowmem scratch exhaustion due to missing node-specific lowmem=
- reservations
---
+On Tue, Sep 22, 2026 at 01:51:08PM +0100, Kiryl Shutsemau wrote:
+> On Tue, Sep 22, 2026 at 01:33:51PM +0200, David Hildenbrand (Arm) wrote:
+> > On 9/21/26 16:31, Breno Leitao wrote:
+> > > On Fri, Sep 18, 2026 at 10:16:25PM +0200, David Hildenbrand (Arm) wrote:
+> > >> On 9/18/26 17:22, Breno Leitao wrote:
+> > >>>
+> > >>> Right, we have two source for poisoned page information, today.
+> > >>>
+> > >>> 1) LINUX_EFI_POISONED_MEMORY: Used to track memory block that got
+> > >>>    poisioned, and will be passed around during kexec.
+> > >>> 2) PG_hwpoison on struct page: Used by the memory subsystem to avoid
+> > >>>    touching it.
+> > >>
+> > >> How are both kept in sync? See below.
+> > > 
+> > > The EFI table is only written when there is a memory failure. That is
+> > > the only thing that writes to it:
+> > > 
+> > > 	action_result() -> efi_hwpoison_record_pfn() -> set_bit()
+> > > 
+> > > You can see it on patch "mm/memory-failure: efi: record
+> > > hardware-poisoned frames into the poisoned-memory table"
+> > > 
+> > > Then, when the kernel kexecs into a second kernel, the EFI config table
+> > > is queried and the pages are poisoned from it at boot, as they are
+> > > getting into the buddy allocator, in __free_pages_core().
+> > 
+> > I am not sure that is really the right place. That means we only poison free
+> > memory. Shouldn't we poison as soon as we initialize the memmap, and check
+> > whether any memblock allocations ended up on that poisoned memory and bail out?
+> 
+> __free_pages_core() is how we hand over pages from memblock to page allocator
+> initially -- from memblock_free_pages(), deferred_free_pages() and
+> hotplug. It is the right place to never allow them on free lists.
 
-commit 45b67db1813edaa6fb1bdfe7033f0598a814cd63
-Author: Sourabh Jain <sourabhjain@linux.ibm.com>
+One limitation with that is that (as David mentioned)
 
-kho: fix global scratch size calculation
+by poisoning memory when freeing memory from memblock to the buddy,
+the kernel might end up allocating the bad memory from memblock
+during the early boot process. I don't think we have a functionality
+to poison memory in memblock.
 
-This commit updates the scratch size calculations to correctly distinguish
-between memory reserved for a specific NUMA node and memory reserved with
-NUMA_NO_NODE. It introduces memblock_reserved_size_nid() to calculate
-reserved memory based on reservation type and NUMA node, fixing an issue
-where per-node reservations were incorrectly included in the global scratch
-allocation.
+Hmm, will it be a problem if we just reserve area memblock....?
+Well, that was the case in v2!
+https://lore.kernel.org/all/aohldTtzE2GJ76md@thinkstation
 
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec=
-_handover.c
-> index 7c4d86daf86d5..dc809e1e768c0 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-[ ... ]
-> @@ -787,17 +787,17 @@ static void __init scratch_size_update(void)
->  	if (scratch_scale) {
->  		phys_addr_t size;
-> =20
-> -		size =3D memblock_reserved_kern_size(ARCH_LOW_ADDRESS_LIMIT,
-> -						   NUMA_NO_NODE);
-> -		size -=3D memblock_reserved_hugetlb_size(ARCH_LOW_ADDRESS_LIMIT,
-> -						       NUMA_NO_NODE);
-> +		size =3D memblock_reserved_size_nid(ARCH_LOW_ADDRESS_LIMIT, NUMA_NO_NO=
-DE,
-> +						  MEMBLOCK_RSRV_KERN);
+IIUC the problem there was: when the architecture does not keep memblock
+metadata, nothing prevents kexec from allocating memory from the
+reserved space.
 
-[Severity: High]
-Does checking NUMA_NO_NODE here exclude node-specific lowmem reservations
-(like node-bound DMA pools) from the lowmem scratch size calculation?
+So, what should we do know? Reserve the poisoned areas in memblock AND
+free those reserved spaces to the buddy to pass poison information? ;-)
 
-If the successor kernel requires lowmem for these node-specific reservations
-during early boot, could shrinking the global lowmem scratch memory lead to
-memblock allocation failures and a panic?
-
-> +		size -=3D memblock_reserved_size_nid(ARCH_LOW_ADDRESS_LIMIT, NUMA_NO_N=
-ODE,
-> +						   MEMBLOCK_RSRV_HUGETLB);
->  		size =3D size * scratch_scale / 100;
->  		scratch_size_lowmem =3D size;
-[ ... ]
-> @@ -815,11 +815,11 @@ static phys_addr_t __init scratch_size_node(int nid)
->  	phys_addr_t size;
-> =20
->  	if (scratch_scale) {
-> -		size =3D memblock_reserved_kern_size(MEMBLOCK_ALLOC_ANYWHERE,
-> -						   nid);
-> +		size =3D memblock_reserved_size_nid(MEMBLOCK_ALLOC_ANYWHERE, nid,
-> +						  MEMBLOCK_RSRV_KERN);
-
-[Severity: High]
-Are the node-specific lowmem reservations that were excluded from
-scratch_size_lowmem now being counted here instead? Since this counts
-with MEMBLOCK_ALLOC_ANYWHERE, will these reservations potentially be satisf=
-ied
-using scratch memory in highmem?
-
-If the successor kernel restricts its memblock allocations to
-MEMBLOCK_KHO_SCRATCH regions, won't it be unable to recreate its
-node-specific lowmem reservations if the per-node scratch memory was placed
-in highmem?
-
->  		/* Do not count HugeTLB pages. */
-> -		size -=3D memblock_reserved_hugetlb_size(MEMBLOCK_ALLOC_ANYWHERE,
-> -						       nid);
-> +		size -=3D memblock_reserved_size_nid(MEMBLOCK_ALLOC_ANYWHERE, nid,
-> +						   MEMBLOCK_RSRV_HUGETLB);
->  		size =3D size * scratch_scale / 100;
->  	} else {
->  		size =3D scratch_size_pernode;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260922131217.6988=
-09-1-sourabhjain@linux.ibm.com?part=3D1
+-- 
+Cheers,
+Harry / Hyeonggon
 
