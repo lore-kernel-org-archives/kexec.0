@@ -4,87 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6158FC98302
-	for <kexec@archiver.kernel.org>; Tue, 22 Sep 2026 19:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A0A2FC98302
+	for <kexec@archiver.kernel.org>; Tue, 22 Sep 2026 21:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
-	From:Date:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=u9E5x/FfD+0jEg90xYjPFkqo5uFO1/usAbSa4iwW4Ac=; b=d0hJUtgRVAYW8ienHSD9DDFb46
-	K9o4Vl026ApGDTDNmMqtXCqjtgs5L5kTkcqquw5JCO8wP6YvH5s/qEduZ0WsLC+C9BzTTXiTEnJ7o
-	0xuebIWEN2koY/MBHcdEh+IcVUTdtJmBxo7tbZsV5NV4da5Dj28u7IOWjCRJRvihKPKtz1nyxM0JM
-	IXQVtygMRgIbNjLglfYMUBm9Gb1BSaPSC+65EDTm8HJZCcYY4FZuQTWfb2Pa9ahHB1JovKezbfGl7
-	b69mUTIOYhIfb1B1DfdzqqbcfYQ/D74yyVN5MEv3e6aBxbsg5jPMxjXp2mlTbdgKyyCbzTI8FOGrk
-	k931wq3Q==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=ZseRs3VM5qy6NfSEI25R9aNsCqbQNgrWnR+mKGskJD4=; b=xwFBCyw7E8T1thTUCRPb9kH1ui
+	BckPT/8xCuKmEwPXBE+hpS5amA2YwSejBCYRlROBxeJM/DMynoJFn8Sjj+3W4G5TrGaBRrpgi7qmO
+	btY42gpCuCjRrIfo6wZdsHLE/ckCtfhB4fdlgmzGpfYecsee9bQ00T1+uZCbHLmDX9vFvBRkc0vjW
+	liXdduafIlZGyw4fYv/y/qACDcNY3vpgkNchrG2SALJ0l5w/gmTgyZbzpLbIFEV7NPh8ePXrIFCPH
+	ZwtNjwLx9fVOJNnVDGLLtLkTMurm+sv0iPiSx6a21zmwucvTSWc/uA/T994PYvCMkONgfquXgEjzu
+	v49jmYLw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x968U-00000006PWr-3eY0;
-	Tue, 22 Sep 2026 19:26:38 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+	id 1x98L4-00000006e3M-3Qgx;
+	Tue, 22 Sep 2026 21:47:46 +0000
+Received: from out-21.mta0.migadu.com ([2001:41d0:1004:224b::15] helo=mta0.migadu.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x968T-00000006PWa-0MXy
-	for kexec@bombadil.infradead.org;
-	Tue, 22 Sep 2026 19:26:37 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=u9E5x/FfD+0jEg90xYjPFkqo5uFO1/usAbSa4iwW4Ac=; b=b4WdHqFQh0tGysYRnvGM1pFQaf
-	iAxuX1EsTTnGaaU01Z+50ZCTMgHi/n9VXdGOyqHLzy3rt4XBN/RxECCB2VBD/194VRX54Fty7mSDD
-	4k8/LhcfddNVko6RHR21I1T+QQFGhn2wrOclidx2c0wIFWAaUSKFTtBz55vCQUwaS738HL10kmvjO
-	NxYBqOnfeMn2W0TOp1EXVeOkL75OFti/wjVEbAnf6BBz9BvinsqXox9fTJfnXCVBq1MC6O4CII0Sm
-	BwvUgApx0+hWMXgtSNrVjeUYEMH5kexODj6tDmbwnnTdvtB2lQ3mIOsFEOAIS2w5Wn94sT2vzLYxs
-	0MUPLBPQ==;
-Received: from mgamail.intel.com ([192.198.163.15])
-	by casper.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x968P-0000000A9No-1Fhe
+	id 1x98Ky-00000006e2i-440A
 	for kexec@lists.infradead.org;
-	Tue, 22 Sep 2026 19:26:36 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790105193; x=1821641193;
-  h=date:from:to:cc:subject:message-id;
-  bh=vORfgnFh2aqRk1acG+SuIAxjINGWFw7GR00VU7DdgO8=;
-  b=P7Pd7RlxsyOmGkmpaEQo1T0ykr3xU4FN8/L6i2tHdw4hYuRQ500qyoaS
-   sRFEWY5QnRe/HMNKjTraBUBIICxy39YLA7XbzYHeoP2XcFKsrCjPZB/V4
-   ahCDjUZXxpFoPbhVaooclVzPatMOGmAz/+lW3OkIVfR2A9CNhu4/mF7c6
-   uOISWXb9TqDpG4gSGks8MRIp85YixPpr9kmvrtUFw3cJOLdQtlXQvtyKd
-   P04ftMRnJVGW26KSIF43zTiP5mdq45CLSQnx0MpDaue5qDsNqYe0Ww/ky
-   6ak1+k+TvVQsVFBDEDvwflBf0+fJ0P1yht652o/nQctLEA/cd96xL/bLX
-   Q==;
-X-CSE-ConnectionGUID: ijGBtn63SZq9A+58IzgR9w==
-X-CSE-MsgGUID: FkkgAmvCTBCY4JSSU6qaVg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11913"; a="90858487"
-X-IronPort-AV: E=Sophos;i="6.27,117,1787036400"; 
-   d="scan'208";a="90858487"
-Received: from fmviesa012.fm.intel.com ([10.60.135.152])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2026 12:26:04 -0700
-X-CSE-ConnectionGUID: evtxYEh7Sl6KgFfz/72cNQ==
-X-CSE-MsgGUID: h6k1WHY+RQOUTPH8RsUNZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,117,1787036400"; 
-   d="scan'208";a="4284381"
-Received: from lkp-server01.sh.intel.com (HELO 462990a40a85) ([10.239.97.150])
-  by fmviesa012.fm.intel.com with ESMTP; 22 Sep 2026 12:26:01 -0700
-Received: from kbuild by 462990a40a85 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1x967q-00000000Fz2-2tT3;
-	Tue, 22 Sep 2026 19:25:58 +0000
-Date: Wed, 23 Sep 2026 03:25:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org
-Subject: [liveupdate:next] BUILD SUCCESS
- db3db4c33a1cf89a201ad1a11c63f503b248ee32
-Message-ID: <202609230303.Vvh4XYbK-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	Tue, 22 Sep 2026 21:47:42 +0000
+X-Envelope-To: kexec@lists.infradead.org
+DKIM-Signature: a=rsa-sha256; bh=j978S3kujL0t2IzwtfW4gW4OFjeQsDQ4dfVPJMp9cw0=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1790113658; v=1; x=1790718458;
+ b=mvujhRK3HPNWh5jZ1O6mWbwgc5ofxed21gj77WTukikBzLL5PMkjFm9ZNtoKhhu+ze6BQWY9
+ S62VL/gheKaPl6qzTKvUmIpaGRvnG4+/Yk5aA9180TL2mN1+7ZAiTJkXbJDW9pMpJjimd9oazka
+ 4AbRgZbCIhZWTlIX8GqCS3dA=
+X-Envelope-To: kexec@lists.infradead.org
+Received: by smtp.migadu.com with ESMTPS id dcd07712fee43c99;
+	Tue, 22 Sep 2026 21:47:38 +0000
+X-Mizu-Trace-ID: dcd07712fee43c99
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <4e893390-ac53-4c50-b2b4-50d415ff3d1f@linux.dev>
+Date: Tue, 22 Sep 2026 14:47:31 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 00/13] PCI: liveupdate: PCI core support for Live
+ Update
+To: David Matlack <dmatlack@google.com>, kexec@lists.infradead.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-pci@vger.kernel.org
+Cc: Adithya Jayachandran <ajayachandra@nvidia.com>,
+ Alexander Graf <graf@amazon.com>, Alex Williamson <alex@shazbot.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+ David Rientjes <rientjes@google.com>,
+ Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>,
+ Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>,
+ Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
+ Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pranjal Shrivastava <praan@google.com>, Pratyush Yadav
+ <pratyush@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+ Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>,
+ Shuah Khan <skhan@linuxfoundation.org>, Vipin Sharma <vipinsh@google.com>,
+ William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
+ "yanjun.zhu@linux.dev" <yanjun.zhu@linux.dev>
+References: <20260918200640.887030-1-dmatlack@google.com>
+ <079e343d-c6a6-4430-b900-25918197bfad@linux.dev>
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <079e343d-c6a6-4430-b900-25918197bfad@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260922_202633_848338_3AB74AE8 
-X-CRM114-Status: UNSURE (   3.55  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260922_144741_236140_D28BAB4C 
+X-CRM114-Status: GOOD (  26.65  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,308 +87,248 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git next
-branch HEAD: db3db4c33a1cf89a201ad1a11c63f503b248ee32  Merge branch 'lu-pci-preservation' into next
 
-elapsed time: 4573m
+在 2026/9/22 11:54, Zhu Yanjun 写道:
+> 在 2026/9/18 13:06, David Matlack 写道:
+>> This series can be found on GitHub:
+>>
+>>    https://github.com/dmatlack/linux/tree/liveupdate/pci/base/v9
+>>
+>> This series introduces support in the PCI core for Live Update, enabling
+>> drivers to preserve PCI devices across a kexec-based kernel update
+>> without interrupting the device. This functionality is critical for
+>> minimizing downtime in environments where PCI devices (e.g., those
+>> assigned to VMs via VFIO) must continue operating or maintain state
+>> across a host kernel upgrade.
+>>
+>> Specifically, this series allows preserved PCI devices to perform
+>> uninterrupted memory transactions (DMA) targeting system memory
+>> (specifically, preserved memfds) across a Live Update. These devices can
+>> be behind a bridge but must not be VFs. Support for P2P and VF
+>> preservation will be addressed in future series.
+>>
+>> Series Overview
+>> ---------------
+>>
+>> This series implements the following to support PCI device preservation
+>> across Live Update:
+>>
+>>    1. Set up a File-Lifecycle-Bound (FLB) handler to track and preserve
+>>       PCI-specific state (struct pci_ser) across Live Update using Kexec
+>>       Handover (KHO).
+>>
+>>    2. Add APIs for drivers to register devices for preservation
+>>       (outgoing) and for the PCI core to identify preserved devices
+>>       during enumeration (incoming)
+>>
+>>    3. Automatically preserve all upstream bridges for any preserved
+>>       endpoint. Use reference counting to ensure bridges remain 
+>> preserved
+>>       as long as any downstream device is preserved.
+>>
+>>    4. Guarantee that preserved devices retain the same RequesterID (bus,
+>>       device, function) for the duration of their preservation by
+>>       inheriting secondary bus numbers, subordinate bus numbers, and ARI
+>>       Forwarding Enable on preserved bridges.
+>>
+>>    5. Guarantee that memory transactions to/from preserved devices are
+>>       routed consistently by inheriting Access Control Services (ACS)
+>>       flags across a Live Update, from the endpoint up to the root port.
+>>
+>>    6. Modify the PCI shutdown path to avoid disabling bus mastering on
+>>       preserved devices, thereby allowing preserved devices to perform
+>>       uninterrupted during kexec for Live Update.
+>>
+>>    7. Provide comprehensive documentation for the FLB API, device
+>>       tracking mechanisms, and the division of responsibilities between
+>>       the PCI core, drivers, and userspace.
+>>
+>> Merge Plan
+>> ----------
+>>
+>> This series will be merged through liveupdate.git, matching the
+>> agreed-upon tree in the MAINTAINERS entry for PCI LIVE UPDATE.
+>>
+>> Testing
+>> -------
+>>
+>> This series was tested in conjunction with v5 of the VFIO PCI driver
+>> series:
+>>
+>> https://lore.kernel.org/kvm/20260714151505.3466855-1-vipinsh@google.com/
+>>
+>> The full set of patches used for testing can be found on GitHub.
+>>
+>> https://github.com/dmatlack/linux/tree/liveupdate/pci/base/v9-with-vfio
+>>
+>> Testing was performed using the new VFIO selftests:
+>>
+>>    - vfio_pci_liveupdate_uapi_test
+>>    - vfio_pci_liveupdate_kexec_test
+>
+> With this vfio_pci_liveupdate_kexec_test based on this patchset v9, I 
+> have made tests in my local kvm. It worked as expected.
+>
+> Yanjun Zhu
 
-configs tested: 288
-configs skipped: 16
+The test result with vfio_pci_liveupdate_kexec_test is as below.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-tested configs:
-alpha                              allnoconfig    gcc-16.1.0
-alpha                             allyesconfig    gcc-16.1.0
-alpha                                defconfig    gcc-16.1.0
-alpha                randconfig-r2101-20260918    clang-22   cocci
-arc                               allmodconfig    gcc-16.1.0
-arc                                allnoconfig    gcc-16.1.0
-arc                               allyesconfig    gcc-16.1.0
-arc                                  defconfig    gcc-16.1.0
-arc                   randconfig-1000-20260922    gcc-8.5.0
-arc                   randconfig-1001-20260922    gcc-16.1.0
-arc                  randconfig-r2105-20260917    gcc-8.5.0  cocci
-arc                  randconfig-r2107-20260918    clang-24   cocci
-arm                                allnoconfig    clang-17
-arm                                allnoconfig    gcc-16.1.0
-arm                               allyesconfig    gcc-16.1.0
-arm                        aspeed_g4_defconfig    clang-20
-arm                           collie_defconfig    gcc-16.1.0
-arm                                  defconfig    clang-24
-arm                           moxart_defconfig    gcc-16.1.0
-arm                         multi_v7_defconfig    clang-20
-arm                          nhk8815_defconfig    clang-24
-arm                   randconfig-1000-20260922    gcc-16.1.0
-arm                   randconfig-1001-20260922    gcc-10.5.0
-arm                   randconfig-1002-20260922    clang-24
-arm                   randconfig-1003-20260922    gcc-8.5.0
-arm                         spear3xx_defconfig    clang-20
-arm64                             allmodconfig    clang-24
-arm64                              allnoconfig    gcc-16.1.0
-arm64                                defconfig    gcc-16.1.0
-arm64                 randconfig-1000-20260922    clang-24
-arm64                 randconfig-1001-20260922    gcc-11.5.0
-arm64                 randconfig-1002-20260922    gcc-9.5.0
-arm64                 randconfig-1003-20260922    gcc-11.5.0
-arm64                randconfig-r2104-20260917    clang-24   cocci
-arm64                randconfig-r2105-20260918    gcc-11.5.0 cocci
-csky                              allmodconfig    gcc-16.1.0
-csky                               allnoconfig    gcc-16.1.0
-csky                                 defconfig    gcc-16.1.0
-csky                  randconfig-1000-20260922    gcc-16.1.0
-csky                  randconfig-1001-20260922    gcc-12.5.0
-csky                 randconfig-r1300-20260922    gcc-9.5.0  sparse
-hexagon                           allmodconfig    clang-24
-hexagon                            allnoconfig    clang-24
-hexagon                            allnoconfig    gcc-16.1.0
-hexagon                              defconfig    clang-24
-hexagon               randconfig-1000-20260922    clang-17
-hexagon               randconfig-1001-20260922    clang-17
-hexagon              randconfig-r1309-20260922    clang-24   sparse
-i386                               allnoconfig    gcc-14
-i386                               allnoconfig    gcc-16.1.0
-i386        buildonly-randconfig-1000-20260922    clang-22
-i386        buildonly-randconfig-1001-20260922    clang-22
-i386        buildonly-randconfig-1002-20260922    gcc-14
-i386        buildonly-randconfig-1003-20260922    gcc-14
-i386        buildonly-randconfig-1004-20260922    gcc-14
-i386        buildonly-randconfig-1005-20260922    gcc-12
-i386                                 defconfig    clang-22
-i386                  randconfig-1000-20260922    clang-22
-i386                  randconfig-1001-20260922    clang-22
-i386                  randconfig-1002-20260922    clang-22
-i386                  randconfig-1003-20260922    gcc-14
-i386                  randconfig-1004-20260922    gcc-14
-i386                  randconfig-1005-20260922    gcc-14
-i386                  randconfig-1006-20260922    gcc-14
-i386                  randconfig-1007-20260922    clang-22
-i386                  randconfig-1008-20260922    gcc-14
-i386                  randconfig-1009-20260922    gcc-14
-i386                  randconfig-1010-20260922    clang-22
-i386                  randconfig-1011-20260922    gcc-14
-i386                  randconfig-1012-20260922    gcc-13
-i386                  randconfig-1013-20260922    gcc-14
-i386                  randconfig-1300-20260922    clang-22   sparse
-i386                  randconfig-1301-20260922    clang-22   sparse
-i386                  randconfig-1302-20260922    gcc-14     sparse
-i386                  randconfig-2100-20260918    clang-22   cocci
-i386                  randconfig-2101-20260918    clang-22   cocci
-i386                  randconfig-2102-20260918    clang-22   cocci
-i386                  randconfig-2103-20260918    clang-22   cocci
-i386                  randconfig-2200-20260918    clang-22   smatch
-loongarch                         allmodconfig    clang-19
-loongarch                          allnoconfig    clang-20
-loongarch                          allnoconfig    gcc-16.1.0
-loongarch                            defconfig    clang-24
-loongarch             randconfig-1000-20260922    gcc-16.1.0
-loongarch             randconfig-1001-20260922    clang-18
-loongarch            randconfig-r2107-20260918    gcc-11.5.0 cocci
-loongarch            randconfig-r2200-20260917    clang-19   smatch
-loongarch            randconfig-r2201-20260917    clang-24   smatch
-m68k                              allmodconfig    gcc-16.1.0
-m68k                               allnoconfig    gcc-16.1.0
-m68k                              allyesconfig    gcc-16.1.0
-m68k                                 defconfig    clang-24
-m68k                                 defconfig    gcc-16.1.0
-m68k                         m5272c3_defconfig    gcc-16.1.0
-m68k                        m5282evb_defconfig    gcc-16.1.0
-m68k                        m5475evb_defconfig    clang-20
-m68k                 randconfig-r1304-20260922    gcc-8.5.0  sparse
-microblaze                        alldefconfig    clang-24
-microblaze                         allnoconfig    gcc-16.1.0
-microblaze                        allyesconfig    gcc-16.1.0
-microblaze                           defconfig    clang-24
-microblaze                           defconfig    gcc-16.1.0
-microblaze           randconfig-r1306-20260922    gcc-12.5.0 sparse
-microblaze           randconfig-r2100-20260918    clang-24   cocci
-microblaze           randconfig-r2106-20260917    gcc-8.5.0  cocci
-microblaze           randconfig-r2202-20260917    gcc-15.2.0 smatch
-microblaze           randconfig-r2202-20260918    gcc-12.5.0 smatch
-mips                               allnoconfig    gcc-16.1.0
-mips                              allyesconfig    gcc-16.1.0
-mips                         bcm47xx_defconfig    clang-24
-mips                       malta_kvm_defconfig    gcc-16.1.0
-mips                         qi_lb60_defconfig    clang-24
-mips                 randconfig-r1302-20260922    clang-24   sparse
-mips                 randconfig-r2103-20260918    clang-24   cocci
-mips                 randconfig-r2202-20260918    gcc-15.2.0 smatch
-mips                    sb1250_swarm_defconfig    clang-24
-nios2                             allmodconfig    gcc-11.5.0
-nios2                              allnoconfig    clang-24
-nios2                              allnoconfig    gcc-11.5.0
-nios2                                defconfig    clang-24
-nios2                                defconfig    gcc-11.5.0
-nios2                 randconfig-1000-20260922    gcc-10.5.0
-nios2                 randconfig-1001-20260922    gcc-11.5.0
-nios2                randconfig-r2106-20260918    gcc-11.5.0 cocci
-openrisc                          allmodconfig    gcc-16.1.0
-openrisc                           allnoconfig    clang-24
-openrisc                           allnoconfig    gcc-16.1.0
-openrisc                             defconfig    gcc-16.1.0
-openrisc             randconfig-r2101-20260918    clang-24   cocci
-parisc                            allmodconfig    gcc-16.1.0
-parisc                             allnoconfig    clang-24
-parisc                             allnoconfig    gcc-16.1.0
-parisc                            allyesconfig    gcc-16.1.0
-parisc                               defconfig    gcc-16.1.0
-parisc                randconfig-1000-20260922    gcc-12.5.0
-parisc                randconfig-1000-20260923    clang-22
-parisc                randconfig-1001-20260922    gcc-10.5.0
-parisc                randconfig-1001-20260923    clang-22
-parisc64                             defconfig    clang-24
-parisc64                             defconfig    gcc-16.1.0
-powerpc                            allnoconfig    clang-24
-powerpc                            allnoconfig    gcc-16.1.0
-powerpc                      mpc83xx_defconfig    clang-24
-powerpc               randconfig-1000-20260922    gcc-11.5.0
-powerpc               randconfig-1000-20260923    clang-22
-powerpc               randconfig-1001-20260922    gcc-8.5.0
-powerpc               randconfig-1001-20260923    clang-22
-powerpc              randconfig-r2105-20260918    clang-24   cocci
-powerpc              randconfig-r2107-20260917    gcc-8.5.0  cocci
-powerpc                     socrates_defconfig    clang-24
-powerpc                   storcenter_defconfig    clang-20
-powerpc                       tqm8xx_defconfig    clang-20
-powerpc64             randconfig-1000-20260922    gcc-8.5.0
-powerpc64             randconfig-1000-20260923    clang-22
-powerpc64             randconfig-1001-20260922    gcc-11.5.0
-powerpc64             randconfig-1001-20260923    clang-22
-powerpc64            randconfig-r1308-20260922    gcc-10.5.0 sparse
-riscv                             allmodconfig    clang-24
-riscv                              allnoconfig    clang-24
-riscv                              allnoconfig    gcc-16.1.0
-riscv                             allyesconfig    clang-24
-riscv                                defconfig    clang-24
-riscv                 randconfig-1000-20260922    gcc-8.5.0
-riscv                 randconfig-1001-20260922    gcc-13.4.0
-riscv                 randconfig-2000-20260917    clang-24
-riscv                 randconfig-2000-20260918    gcc-13.4.0
-riscv                 randconfig-2001-20260917    clang-17
-riscv                 randconfig-2001-20260918    gcc-13.4.0
-riscv                randconfig-r1307-20260922    clang-17   sparse
-riscv                randconfig-r2102-20260918    clang-22   cocci
-s390                              allmodconfig    clang-24
-s390                               allnoconfig    clang-24
-s390                                 defconfig    clang-18
-s390                  randconfig-1000-20260922    clang-19
-s390                  randconfig-1001-20260922    clang-21
-s390                  randconfig-2000-20260917    clang-17
-s390                  randconfig-2000-20260918    gcc-13.4.0
-s390                  randconfig-2001-20260917    clang-24
-s390                  randconfig-2001-20260918    gcc-13.4.0
-sh                                allmodconfig    gcc-16.1.0
-sh                                 allnoconfig    clang-24
-sh                                 allnoconfig    gcc-16.1.0
-sh                                allyesconfig    gcc-16.1.0
-sh                                   defconfig    gcc-16.1.0
-sh                          ecovec24_defconfig    clang-24
-sh                         edosk7760_defconfig    gcc-16.1.0
-sh                           r7785rp_defconfig    clang-20
-sh                    randconfig-1000-20260922    gcc-10.5.0
-sh                    randconfig-1001-20260922    gcc-16.1.0
-sh                    randconfig-2000-20260917    gcc-14.3.0
-sh                    randconfig-2000-20260918    gcc-13.4.0
-sh                    randconfig-2001-20260917    gcc-16.1.0
-sh                    randconfig-2001-20260918    gcc-13.4.0
-sh                   randconfig-r1301-20260922    gcc-14.3.0 sparse
-sh                   randconfig-r1303-20260922    gcc-10.5.0 sparse
-sh                   randconfig-r1305-20260922    gcc-16.1.0 sparse
-sh                   randconfig-r2200-20260918    gcc-16.1.0 smatch
-sh                            se7343_defconfig    clang-20
-sparc                             alldefconfig    clang-20
-sparc                              allnoconfig    clang-24
-sparc                              allnoconfig    gcc-16.1.0
-sparc                                defconfig    gcc-16.1.0
-sparc                 randconfig-1000-20260922    gcc-14.3.0
-sparc                 randconfig-1001-20260922    gcc-8.5.0
-sparc                 randconfig-2000-20260917    gcc-16.1.0
-sparc                 randconfig-2000-20260918    gcc-14
-sparc                 randconfig-2001-20260917    gcc-12.5.0
-sparc                 randconfig-2001-20260918    gcc-14
-sparc                randconfig-r2104-20260918    clang-24   cocci
-sparc                randconfig-r2106-20260918    clang-24   cocci
-sparc                randconfig-r2200-20260918    gcc-8.5.0  smatch
-sparc64                           alldefconfig    gcc-16.1.0
-sparc64                           allmodconfig    clang-20
-sparc64                              defconfig    clang-24
-sparc64               randconfig-1000-20260922    gcc-15.2.0
-sparc64               randconfig-1001-20260922    clang-20
-sparc64               randconfig-2000-20260917    clang-20
-sparc64               randconfig-2000-20260918    gcc-14
-sparc64               randconfig-2001-20260917    clang-20
-sparc64               randconfig-2001-20260918    gcc-14
-sparc64              randconfig-r2102-20260918    clang-24   cocci
-sparc64              randconfig-r2103-20260918    clang-22   cocci
-um                                allmodconfig    clang-17
-um                                 allnoconfig    clang-17
-um                                 allnoconfig    clang-24
-um                                allyesconfig    gcc-14
-um                                   defconfig    clang-24
-um                              i386_defconfig    gcc-14
-um                    randconfig-1000-20260922    gcc-14
-um                    randconfig-1001-20260922    clang-17
-um                    randconfig-2000-20260917    clang-20
-um                    randconfig-2000-20260918    gcc-14
-um                    randconfig-2001-20260917    clang-17
-um                    randconfig-2001-20260918    gcc-14
-um                   randconfig-r2104-20260918    gcc-11.5.0 cocci
-um                   randconfig-r2201-20260918    gcc-14     smatch
-um                            x86_64_defconfig    clang-24
-x86_64                             allnoconfig    clang-22
-x86_64                             allnoconfig    clang-24
-x86_64      buildonly-randconfig-1000-20260922    gcc-14
-x86_64      buildonly-randconfig-1001-20260922    gcc-14
-x86_64      buildonly-randconfig-1002-20260922    gcc-14
-x86_64      buildonly-randconfig-1003-20260922    clang-22
-x86_64      buildonly-randconfig-1004-20260922    clang-22
-x86_64      buildonly-randconfig-1005-20260922    gcc-14
-x86_64                               defconfig    gcc-14
-x86_64                                   kexec    clang-22
-x86_64                randconfig-1000-20260922    gcc-12
-x86_64                randconfig-1001-20260922    clang-22
-x86_64                randconfig-1002-20260922    clang-22
-x86_64                randconfig-1003-20260922    clang-22
-x86_64                randconfig-1004-20260922    clang-22
-x86_64                randconfig-1005-20260922    gcc-14
-x86_64                randconfig-1006-20260922    clang-22
-x86_64                randconfig-1007-20260922    gcc-14
-x86_64                randconfig-1008-20260922    clang-22
-x86_64                randconfig-1009-20260922    clang-22
-x86_64                randconfig-1010-20260922    gcc-14
-x86_64                randconfig-1011-20260922    clang-22
-x86_64                randconfig-1300-20260922    gcc-13     sparse
-x86_64                randconfig-1301-20260922    gcc-13     sparse
-x86_64                randconfig-1302-20260922    clang-22   sparse
-x86_64                randconfig-2100-20260917    clang-22   cocci
-x86_64                randconfig-2100-20260918    clang-22   cocci
-x86_64                randconfig-2101-20260917    gcc-14     cocci
-x86_64                randconfig-2101-20260918    clang-22   cocci
-x86_64                randconfig-2102-20260917    gcc-14     cocci
-x86_64                randconfig-2102-20260918    clang-22   cocci
-x86_64                randconfig-2103-20260917    gcc-13     cocci
-x86_64                randconfig-2103-20260918    clang-22   cocci
-x86_64                randconfig-2200-20260918    gcc-14     smatch
-x86_64               randconfig-r2100-20260918    clang-22   cocci
-x86_64                                rhel-9.4    clang-22
-x86_64                            rhel-9.4-bpf    clang-22
-x86_64                           rhel-9.4-func    clang-22
-x86_64                     rhel-9.4-kselftests    clang-22
-x86_64                          rhel-9.4-kunit    clang-22
-x86_64                            rhel-9.4-ltp    clang-22
-x86_64                           rhel-9.4-rust    clang-22
-x86_64                           rhel-9.4-rust    clang-22
-xtensa                             allnoconfig    clang-24
-xtensa                             allnoconfig    gcc-16.1.0
-xtensa                            allyesconfig    gcc-16.1.0
-xtensa                randconfig-1000-20260922    gcc-12.5.0
-xtensa                randconfig-1001-20260922    gcc-10.5.0
-xtensa                randconfig-2000-20260917    gcc-8.5.0
-xtensa                randconfig-2000-20260918    gcc-14
-xtensa                randconfig-2001-20260918    gcc-14
+1.
+insmod 
+/lib/modules/7.3.0-rc1-dmabuf+/kernel/drivers/iommu/iommufd/iommufd.ko
+insmod /lib/modules/7.3.0-rc1-dmabuf+/kernel/drivers/vfio/vfio.ko
+insmod 
+/lib/modules/7.3.0-rc1-dmabuf+/kernel/drivers/vfio/vfio_iommu_type1.ko
+insmod 
+/lib/modules/7.3.0-rc1-dmabuf+/kernel/drivers/vfio/pci/vfio-pci-core.ko
+insmod /lib/modules/7.3.0-rc1-dmabuf+/kernel/drivers/vfio/pci/vfio-pci.ko
++ echo "vfio-pci" > /sys/bus/pci/devices/0000:00:04.0/driver_override
++ echo "0000:00:04.0" > /sys/bus/pci/drivers/vfio-pci/bind
+Preserving device in session
+Preserving memfd of size 0x40100000 in session
+# [STAGE 1] Forking persistent child to hold sessions...
+# [STAGE 1] Child PID: 1214. Resources are pinned.
+# [STAGE 1] You may now perform kexec reboot.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2. kexec reboot
+
+3.
+insmod 
+/lib/modules/7.3.0-rc1-dmabuf+/kernel/drivers/iommu/iommufd/iommufd.ko
+insmod /lib/modules/7.3.0-rc1-dmabuf+/kernel/drivers/vfio/vfio.ko
+insmod 
+/lib/modules/7.3.0-rc1-dmabuf+/kernel/drivers/vfio/vfio_iommu_type1.ko
+insmod 
+/lib/modules/7.3.0-rc1-dmabuf+/kernel/drivers/vfio/pci/vfio-pci-core.ko
+insmod /lib/modules/7.3.0-rc1-dmabuf+/kernel/drivers/vfio/pci/vfio-pci.ko
++ echo "vfio-pci" > /sys/bus/pci/devices/0000:00:04.0/driver_override
++ echo "0000:00:04.0" > /sys/bus/pci/drivers/vfio-pci/bind
+Retrieving memfd from LUO
+Finishing the session before retrieving the device (should fail)
+Retrieving the device FD from LUO
+Finishing the session before binding to iommufd (should fail)
+Binding the device to an iommufd and setting it up
+Finishing the session
+
+Yanjun Zhu
+
+>
+>>
+>> Both tests were run in a QEMU-based VM environment (using a single
+>> virtio-net PCIe device connected to a root port to exercise bridge
+>> support) and on bare metal using an Intel EMR server with 8x Intel DSA
+>> PCIe devices and 1x NVMe device.
+>>
+>> Future Work
+>> -----------
+>>
+>> Following this series, we expect to make further improvements to the PCI
+>> core support for Live Update:
+>>
+>>    - Allow P2P across Live Update by avoiding resizing or moving
+>>      preserved device BARs and preserving all upstream bridge windows.
+>>
+>>    - Support preserving Virtual Functions by preserving SR-IOV
+>>      configuration on PFs and enumerating VFs after Live Update.
+>>
+>> Changelog
+>> ---------
+>>
+>> v9:
+>>   - Simplify pci_liveupdate_preserve_bus_numbers() to always return true
+>>     if a device was preserved and drop pci_liveupdate_scan_bridge_end()
+>>     (Bjorn)
+>>   - Add pci_liveupdate_refuse_bus_numbers() to determine when it is safe
+>>     for the PCI core to assign bus numbers to unconfigured bridges. This
+>>     required moving "Auto-preserve upstream bridges across Live Update"
+>>     before "Preserve bus numbers during Live Update" (Bjorn)
+>>   - Add "PCI: Save and restore the ACS Control register" so that the ACS
+>>     Control register is handled by the normal save/restore path (Bjorn)
+>>   - Rename struct pci_liveupdate::was_preserved to was_incoming, to
+>>     disambiguate incoming from outgoing preservation (me)
+>>   - Log unfinished preserved devices from the incoming FLB rather than
+>>     by walking struct pci_dev (Sashiko)
+>>   - Document that state handed over by the previous kernel is trusted,
+>>     and panic in pci_flb_retrieve() where failures are detected rather
+>>     than unwinding into a caller that panics anyway (Sashiko)
+>>   - Fall back to programming ACS from scratch when a preserved device 
+>> has
+>>     no ACS save buffer, since there is nowhere to record the adopted
+>>     controls and they would be lost by the first reset (Sashiko)
+>>   - Drop Reviewed-by tags from "Preserve bus numbers during Live Update"
+>>     and "Adopt ACS controls in incoming preserved devices", both of 
+>> which
+>>     changed materially since v8
+>>   - Extend commit messages and kernel-doc comments to make the FLB code
+>>     flow more clear (Bjorn)
+>>   - Address various spelling, formatting, and stylistic issues (Bjorn)
+>>
+>> v8: 
+>> https://lore.kernel.org/linux-pci/20260728221007.2098560-1-dmatlack@google.com/
+>> v7: 
+>> https://lore.kernel.org/linux-pci/20260710212616.1351130-1-dmatlack@google.com/
+>> v6: 
+>> https://lore.kernel.org/linux-pci/20260522202410.3104264-1-dmatlack@google.com/
+>> v5: 
+>> https://lore.kernel.org/linux-pci/20260512184846.119396-1-dmatlack@google.com/
+>> v4: 
+>> https://lore.kernel.org/linux-pci/20260423212316.3431746-1-dmatlack@google.com/
+>> v3: 
+>> https://lore.kernel.org/kvm/20260323235817.1960573-1-dmatlack@google.com/
+>> v2: 
+>> https://lore.kernel.org/kvm/20260129212510.967611-1-dmatlack@google.com/
+>> v1: 
+>> https://lore.kernel.org/kvm/20251126193608.2678510-1-dmatlack@google.com/
+>> rfc: 
+>> https://lore.kernel.org/kvm/20251018000713.677779-1-vipinsh@google.com/
+>>
+>>
+>> David Matlack (13):
+>>    PCI: liveupdate: Set up FLB handler for the PCI core
+>>    PCI: liveupdate: Track outgoing preserved PCI devices
+>>    PCI: liveupdate: Track incoming preserved PCI devices
+>>    PCI: liveupdate: Document driver binding responsibilities
+>>    PCI: liveupdate: Auto-preserve upstream bridges across Live Update
+>>    PCI: liveupdate: Preserve bus numbers during Live Update
+>>    PCI: Refactor matching logic for pci_dev_acs_ops
+>>    PCI: Save and restore the ACS Control register
+>>    PCI: liveupdate: Adopt ACS controls in incoming preserved devices
+>>    PCI: liveupdate: Adopt ARI Forwarding Enable on preserved bridges
+>>    PCI: liveupdate: Freeze preservation status during shutdown
+>>    PCI: liveupdate: Do not disable bus mastering on preserved devices
+>>      during kexec
+>>    Documentation: PCI: Add documentation for Live Update
+>>
+>>   Documentation/PCI/index.rst                   |    1 +
+>>   Documentation/PCI/liveupdate.rst              |   35 +
+>>   .../admin-guide/kernel-parameters.txt         |    7 +-
+>>   Documentation/core-api/liveupdate.rst         |    5 +
+>>   MAINTAINERS                                   |   15 +
+>>   drivers/pci/Kconfig                           |   15 +
+>>   drivers/pci/Makefile                          |    1 +
+>>   drivers/pci/liveupdate.c                      | 1015 +++++++++++++++++
+>>   drivers/pci/liveupdate.h                      |   62 +
+>>   drivers/pci/pci-driver.c                      |    9 +-
+>>   drivers/pci/pci.c                             |   79 +-
+>>   drivers/pci/pci.h                             |    5 +
+>>   drivers/pci/probe.c                           |   16 +-
+>>   drivers/pci/quirks.c                          |   58 +-
+>>   include/linux/kho/abi/pci.h                   |   66 ++
+>>   include/linux/pci.h                           |    7 +
+>>   include/linux/pci_liveupdate.h                |   72 ++
+>>   17 files changed, 1429 insertions(+), 39 deletions(-)
+>>   create mode 100644 Documentation/PCI/liveupdate.rst
+>>   create mode 100644 drivers/pci/liveupdate.c
+>>   create mode 100644 drivers/pci/liveupdate.h
+>>   create mode 100644 include/linux/kho/abi/pci.h
+>>   create mode 100644 include/linux/pci_liveupdate.h
+>>
+>>
+>> base-commit: 945d61765894dda2f0344de50cb1ade2e51b66fd
+>
+-- 
+Best Regards,
+Yanjun.Zhu
+
 
