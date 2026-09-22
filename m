@@ -4,84 +4,129 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EA736C982F1
-	for <kexec@archiver.kernel.org>; Tue, 22 Sep 2026 06:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D5AC9C982FF
+	for <kexec@archiver.kernel.org>; Tue, 22 Sep 2026 08:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:CC:To:
-	Subject:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=FGbhkQwIGfdAyVtjg1Ql4s8k82iByJqzyE4qhg2yGrY=; b=P44BfusaN4S0EYjww6OQJzKRko
-	LT21vnURyxjd3uCGbE7lE0s0+0qp44+ZaLntU/q1tRLwPDt8I1jKV1yVOolAV5j2ATh43iHaizP0n
-	TFmiLs3717MpEWjkAURNgBRv7GRHGqqyjAthuhUnhRgYG5GAvkUFoSWLEdTb++FT52BV8vrgaIlVz
-	YnkjRfNPZMvpOrDlsxT761yE5eZtbwbZnv23pCG6nGaL7NJXA5xdVlS127XhRp9gTfZ6gohBcBUvF
-	Qhh07RGn13GhRLN7N0/5Y6DWlZSwL3CkwkEvXVUTxSSmUG+NmlPPlEbfLHUxSyXZ1dtnNCNF7HjhN
-	9HnSY3EA==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=9UsbLRFUse88WvBnvQ2Q7a6jE7KnWiu4inPojM0/Ln8=; b=fC637GTOQVJzJmD6c/gNkswsaD
+	/Q5Ghnj46ZiZcerLnsUmkj+xRC0Njkg9HuyZJ1syFpiz77nHzqXou6p8986YJ+G1iO7HtvsgHnMw1
+	sMwrjZb5U5J1OXpWoEc5AX679+rrqBU7X+gx0qb/zvBs/DE1vR+ZkSKrqvCwR7sdMiZdyhcVH55NY
+	/cQxl1+4qTVKuCkobWJ1elo35/mD5sHp3lL/O8GqT2gQ6fJEsGkszcHNxpLgwBqOXZE44NvSQ+Y17
+	0k2cUP2Fk8jTh+OV2XmYWDExwCrDn0p6MjiYpu3yZgWSqPbXCddjgN2xHQ1PLeggdg5krH/VzC7BX
+	35bVBSrg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8tzM-00000004Kvw-0P95;
-	Tue, 22 Sep 2026 06:28:24 +0000
-Received: from canpmsgout07.his.huawei.com ([113.46.200.222])
+	id 1x8w5v-00000004iQ9-3bMZ;
+	Tue, 22 Sep 2026 08:43:19 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8tzH-00000004Kus-0VG4
+	id 1x8w5t-00000004iPU-3GEd
+	for kexec@bombadil.infradead.org;
+	Tue, 22 Sep 2026 08:43:17 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
+	:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=9UsbLRFUse88WvBnvQ2Q7a6jE7KnWiu4inPojM0/Ln8=; b=JCEcj4oUBB39lufBkOjPhM1BjO
+	JUv38CpTwn6NRnPVYZwluPoklgbKUNIup5hZknCrbeFIxoMdmUWhGIXd7WfIHxEid0CUZxP4gzVX4
+	0qbMJ8KkyPx8RkLaO+POYXSRVklkWTf3OUQcp6P9sg9zO5xfjg3YfAyJMsQrj6FeTfDhXMr9mz1dH
+	Ud6Ngvt5zYh7NpDUsutmGBYV/i03XZSOwyX09/oZPc2mmWYuHDo5WvkUbZdI7wWxEy1RuPm/dkM8/
+	ucsNUXtqtwqLDalmLeySaA05YB1nRN48QTEptrVgUHl8mkl3BFgJc5+ewp/B/DQ4VKSV0E+Drlgac
+	bdIWE0dQ==;
+Received: from mail-pj2-x00.google.com ([2607:f8b0:4864:39::])
+	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1x8w5q-0000000DHQd-1XwU
 	for kexec@lists.infradead.org;
-	Tue, 22 Sep 2026 06:28:21 +0000
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=FGbhkQwIGfdAyVtjg1Ql4s8k82iByJqzyE4qhg2yGrY=;
-	b=TVb/XxdniyjxDFy7pVMTRQxolIRi+rQVHqCEnlKh1dbNqIt3c2xKfhY78rYOnafftzF8lAstD
-	xy2sKyyG+aKfvZphbGF6i0pqXqKi4+Lx7oBYcGyOLnBdBgO4nzlpnNBmoKdAIsiGoqcxSUoEfMe
-	/ubLcOzVXiphJvNeeFaqF5c=
-Received: from mail.maildlp.com (unknown [172.19.163.127])
-	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4hpqcs4qVZzLlXZ;
-	Tue, 22 Sep 2026 14:17:01 +0800 (CST)
-Received: from whupemk100004.china.huawei.com (unknown [7.152.185.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id EDB3440573;
-	Tue, 22 Sep 2026 14:28:03 +0800 (CST)
-Received: from [10.173.124.160] (10.173.124.160) by
- whupemk100004.china.huawei.com (7.152.185.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45; Tue, 22 Sep 2026 14:28:00 +0800
-Subject: Re: [PATCH v5 0/9] mm/memory-failure: keep hardware-poisoned pages
- out of the next kexec
-To: Breno Leitao <leitao@debian.org>
-CC: <linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <rmikey@meta.com>, <riel@surriel.com>,
-	<harry@kernel.org>, <linux-cxl@vger.kernel.org>,
-	<driver-core@lists.linux.dev>, <kernel-team@meta.com>, Ard Biesheuvel
-	<ardb@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Naoya
- Horiguchi <nao.horiguchi@gmail.com>, Andrew Morton
-	<akpm@linux-foundation.org>, <kas@kernel.org>, <kexec@lists.infradead.org>,
-	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, "Liam
- R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike
- Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal
- Hocko <mhocko@suse.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
-	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
-	<hpa@zytor.com>, Brendan Jackman <brendan.jackman@linux.dev>, Johannes Weiner
-	<hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, Oscar Salvador
-	<osalvador@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael
- J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
-	<hannes@cmpxchg.or>, <shakeel.butt@linux.dev>
-References: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
-From: Miaohe Lin <linmiaohe@huawei.com>
-Message-ID: <d6e35901-f74d-bf81-75d3-bac4b26d9d72@huawei.com>
-Date: Tue, 22 Sep 2026 14:27:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+	Tue, 22 Sep 2026 08:43:16 +0000
+Received: by mail-pj2-x00.google.com with SMTP id 98e67ed59e1d1-39e59dca659so2355030a91.1
+        for <kexec@lists.infradead.org>; Tue, 22 Sep 2026 01:43:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790066592; x=1790671392; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=9UsbLRFUse88WvBnvQ2Q7a6jE7KnWiu4inPojM0/Ln8=;
+        b=VLO8y52RCC748YAmeZT42k8M5hwtPEZIE+n61WcUUKzVANlRp8iKyutXDlADfqmE/M
+         8bz3da1K5uzM81Wsj9p96O92STc7yPEfP95bXFG4qy+iZx45eUdj+/CdCE0QEaK5Ufpw
+         s7wCof01iRezGMNMO5kMqvR9KFxibxmCUzyLRN0909pUXru1uERDCkDSfGqmyLsQgz+E
+         0xwSGKDZTzFuR1aK8QKCRaJrWz1OWbD3omGen3lOehyg3894AaQDeAM8hMRozAwsXbNn
+         QOT7f6WQQ+2az5p3CYX1WB1Dbag8663LialBfkWSjI+vXzGp5TufjKbw5Rw2Rp8DGtLz
+         91+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790066592; x=1790671392;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=9UsbLRFUse88WvBnvQ2Q7a6jE7KnWiu4inPojM0/Ln8=;
+        b=UuxalEV/ZG9jH3/CMKPy0MiNEaO+sJ+0iwQfHQ1LW3/NIlTgnpEp+vWtvoUF8dWPi5
+         kSsTAPQ3Fs8GROAmt8ZIwZjrc6aeBJkObcbl+yMaSZKRyFpX+mkLiCAdEIuZSM7dUINV
+         E+KQZh7yBv2w++rV5LJfsFQDMCfob/gLe2FElb18dqXsLaiT/h6Bcn7RBbf11DMAxBE1
+         ShuE6/uEd9eNk9WHoXdvabB/lRH3lxvcXdYONphgFGLBasjl/gkhyDrl/3YZJzYgl6ca
+         3i55p0Y7mSuvBYcd5HiJeOPVtoNo/495YGWSjRUctWa/9BMGlz6oB4UnUUoyNTarozwc
+         ks3A==
+X-Forwarded-Encrypted: i=1; AKwUvBzYYgoSvnqTndqBD2HbWzRCHU+LG8nJZroGdFxWtAuvWpisnHztd75rbJfiDYRMlrAQ7hCm6g==@lists.infradead.org
+X-Gm-Message-State: AFuF++mXmfWjsUW3Z/aogrzKFHk7ULzxhUQYDpFR+WXHUeMrUfIv7Fzd
+	GtiULC59C2zql6+qiJ5hs1GgwpCF1y6Yc8Va3o/4gUY2r51qDav7hIy7
+X-Gm-Gg: AYBFou1/5aqYJ/TeVulV+kqVf3ocO3k8b+UEPSIPZutDB4CQBKBo6AdzmNOaPBUg3Ej
+	xtuXLHFlNCvwpmgmczgxXxXRtI6pmvSEPD+PXupTElrjmKI0OIlDqOE6cL4t/xNCNI+76xG0c/G
+	b2+8c10kOuPx/WmYE4iMxfOY73lXLCEF/7zyby2xmstYW92owAV3rC68Kxhz9eiQLjsMvPHQaT5
+	mx9BnBhcL70pHZVnzAc2Kd0syXO0+ytgZqfZpYgFBC+1I0IOMgnsIC3bH/hZocV9SfHgLEB8zCc
+	VuLyd+BLQ19hiSEEywOxUm0J1CSzy/LMrLjtIrP6zrgVDwNO+fki20CZhspsOfwrk/nOjQA1bt1
+	GtNpV0t9N5sVHTvVa78lmKbsuY2RXItkZrzyxE5QQgxnKjZrR8i9RPUkXcP2uR5vwvMidOOQJzb
+	Y5PwSOlQ2EaS/05OW8t0j7V6YpBrkDJgVruDm5CnRo235+diR32j80xba8eRyunOLewd7sZRDsJ
+	U/Z7t3CA+EEDC3X4KD3bw==
+X-Received: by 2002:a17:90b:4cca:b0:39e:423:bb8f with SMTP id 98e67ed59e1d1-3a0730988bdmr477897a91.1.1790066591638;
+        Tue, 22 Sep 2026 01:43:11 -0700 (PDT)
+Received: from intel.company.local ([122.11.210.25])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a0674a5ae4sm3670016a91.12.2026.09.22.01.43.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Sep 2026 01:43:10 -0700 (PDT)
+From: Wandun Chen <chenwandun1@gmail.com>
+To: robh@kernel.org,
+	baoquan.he@linux.dev,
+	rppt@kernel.org,
+	m.szyprowski@samsung.com
+Cc: catalin.marinas@arm.com,
+	will@kernel.org,
+	mark.rutland@arm.com,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	tglx@kernel.org,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	saravanak@kernel.org,
+	akpm@linux-foundation.org,
+	pasha.tatashin@soleen.com,
+	pratyush@kernel.org,
+	ruirui.yang@linux.dev,
+	robin.murphy@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	iommu@lists.linux.dev
+Subject: [PATCH v7 0/9] kdump: reduce vmcore size and capture time
+Date: Tue, 22 Sep 2026 16:42:47 +0800
+Message-ID: <20260922084256.1515554-1-chenwandun1@gmail.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-In-Reply-To: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.124.160]
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- whupemk100004.china.huawei.com (7.152.185.74)
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260921_232819_898275_CE1DE2E5 
-X-CRM114-Status: GOOD (  33.10  )
+X-CRM114-CacheID: sfid-20260922_094314_527350_8CAF8E00 
+X-CRM114-Status: GOOD (  15.13  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,97 +141,134 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026/9/15 20:53, Breno Leitao wrote:
-> Problem:
-> ========
-> 
-> When a page is hard-offlined due to an uncorrectable memory error (multi
-> bit ECC), memory_failure() sets PG_hwpoison, unmaps it, removes it from
-> the buddy allocator. This information is not carried to the next kernel
-> that is kexeced. The new kernel kexecs and trip over that bad memory
-> bank _again_.
-> 
-> Why now:
-> ========
-> 
-> Several industry trends make this increasingly important:
-> 
->     1) DRAM is getting more expensive
->     2) soldered / on-package memory (LPDDR, HBM) is becoming more common, so a
->        failing part can no longer simply be swapped;
->     3) memory is kept in service far longer (at Meta, DRAM lifetime is being
->        drastically extended).
->     4) It is more and more common to kexec instead of full reboot
->     5) Increase of memory per system with CXL
-> 
-> What was done already:
-> ======================
-> 
-> In order make linux deal better with the problem above, I've done
-> already fixed a bunch of stuff in this area, such as:
-> 
-> 1) Panic on unrecoverable errors, instead of "printk and carry over":
-> https://lore.kernel.org/all/20260630-ecc_panic-v10-0-c6ed5b62eea2@debian.org/
-> 
-> 2) Respect poisoned memory at kexec time
-> https://lore.kernel.org/all/20260812-kexec_posioned-v6-0-e477887086f0@debian.org/
-> 
-> Now, the natural follow up is to carry the poisoned memory information
-> to the next kexec kernel, avoiding tripping over a known "bad page".
-> 
-> Proposed Solution:
-> ==================
-> 
-> Carry the poisoned frames to the next kernel in a new EFI configuration
-> table, LINUX_EFI_POISONED_MEMORY.
-> 
-> The table is a bitmap with one bit per 2MB of physical memory, modeled
-> on LINUX_EFI_UNACCEPTED_MEMORY. The stub sizes it from the EFI memory
-> map and installs it empty while boot services are up -- a running kernel
-> cannot install a configuration table, it can only flip bits -- and a
-> table inherited from an earlier boot is reused as-is. That is one
-> fixed-size allocation, 64KB per TiB of the span the memory map describes,
-> with no list to grow at runtime and no chain to trust at parse time.
-> 
-> The mechanism is architecture independent, so x86 and arm64 use the same
-> code.
-> 
-> Each hard offline sets the bit for its unit. Soft-offlined pages are not
-> recorded: they are still functional, and were offlined predictively.
-> 
-> The next kernel takes the table into use from efi_config_parse_tables(),
-> which vets the inherited header and hands the table's pages to memblock.
-> It is EFI ACPI reclaim memory, which x86 leaves out of memblock and so
-> out of the direct map; the unaccepted memory table is handled the same
-> way for the same reason.
-> 
-> The frames themselves are poisoned in __free_pages_core(), as each block
-> reaches the buddy allocator. That is the one point every producer passes
-> through -- memblock_free_pages() early, deferred_free_pages() once the
-> deferred struct pages are up, and generic_online_page() at any later
-> hotplug -- and it is already where the unaccepted memory table is
-> consulted. The recorded frames are held back and the rest of the block is
-> freed, so they never enter the allocator instead of being taken back out
-> of it. They end up in the state a frame poisoned by this kernel would be
-> in, so everything that already understands PG_hwpoison covers them --
-> including the kexec segment placement check from the series linked above,
-> which keeps the segments a kexec places off these frames.
-> 
-> Granularity is the trade-off: one bad 4KB frame costs a whole 2MB unit in
-> every later kernel of the chain. In exchange, a row or column fault --
-> roughly a quarter of the DRAM faults reported in [1], and potentially
-> thousands of 4KB pages scattered over gigabytes -- collapses into a bit
-> or two.
-> 
-> A bit is never cleared, which is a known limitation: it stands for a
-> whole unit, so an unpoison of one frame cannot tell whether the unit as a
-> whole is good again.
+From: Wandun Chen <chenwandun@lixiang.com>
 
-Thanks for your patches. I have a question about unpoison: If a bit is never
-cleared, after we do some memory-failure+unpoison tests, kexec will lose the
-tested memory without reboot?
+On SoCs that carve out large firmware-owned reserved memory (GPU,
+camera ISP, ...), kdump currently dumps those carveouts as part of
+system RAM even though their contents are firmware state that is not
+useful for kernel crash analysis.
 
-Thanks.
-.
+This series introduces a MEMBLOCK_NODUMP flag in memblock to filter
+reserved memory on DT-based architectures (arm64, riscv, loongarch).
+Reserved regions are marked MEMBLOCK_NODUMP by default so kdump omits
+them; reusable CMA regions are different because their pages are handed
+back to the buddy allocator and may carry crash-relevant data.
+
+ACPI systems already filter reserved memory out of the vmcore through
+their existing path; only DT-based systems currently fail to filter these
+regions, which is what this series addresses. The flag lives in memblock
+itself rather than in a DT-only structure, so both ACPI and DT systems
+can benefit from it (suggested by Rob, thanks).
+
+Since the reserved memory regions are filtered out, the vmcore is
+smaller in size and faster to produce.
+
+The series is based on linux-next and is organized as follows:
+
+Patches 1-3: Preparation and bugfixes: switch riscv crash_mem to memblock,
+	     fold the duplicated per-arch memblock walks into the weak
+             defaults, and serialize crash header preparation against
+             memory hotplug.
+Patches 4-8: NODUMP infrastructure: switch crash_core to
+             for_each_mem_region(), introduce the MEMBLOCK_NODUMP flag,
+	     add a dumpable flag to struct reserved_mem, and mark
+	     /reserved-memory and /memreserve/ entries with MEMBLOCK_NODUMP
+	     flag.
+Patch 9:     Exclude MEMBLOCK_NODUMP regions from the vmcore ELF
+             header.
+
+v6 --> v7:
+1. Fix a stale MEMBLOCK_NODUMP flag issue [1]. Memory reserved and
+   marked as NODUMP may later be freed (the initrd, for example),
+   so the NODUMP flag must be cleared accordingly. Since the fix is
+   part of the NODUMP infrastructure introduced by patch 5, it has
+   been folded into that patch.
+
+2. Drop the "generic" related description in the cover letter.
+
+3. Collect the Acked-by and Reviewed-by tags received during the v6
+   review (thanks to Baoquan, Mike, Rob and Marek). Patch 5 is the
+   only one without a tag, as its Reviewed-by was dropped when the
+   fix was folded in.
+
+4. Drop patch 1 of v6, which has been merged separately.
+
+
+v5 --> v6:
+1. Serialize crash header preparation against memory hotplug to avoid
+   out-of-bounds or use-after-free issues.
+2. MEMBLOCK_NODUMP marking is now done after memblock allows resizing,
+   avoiding a panic from too few regions before resize is permitted.
+3. Reordered the patches, put pre-existing bugfixes earlier in the series.
+
+
+v4 --> v5:
+1. Rework the mechanism around a memblock-level MEMBLOCK_NODUMP flag
+   (suggested by Rob) instead of the v4 opt-in 'dumpable' flag on
+   DT-only struct reserved_mem [2].
+2. Switch the riscv vmcore elf header preparation to use memblock
+   instead of the resource tree, aligning it with arm64 and loongarch,
+   so riscv also can exclude reserved memory from vmcore.
+3. Deduplicate the vmcore elf header preparation: arm64, riscv and
+   loongarch open-coded the same logic, so fold it into shared
+    __weak defaults in crash_core.
+4.  Drop the v4 patch that saved /memreserve/ entries into the
+    reserved_mem array; /memreserve/ is now marked MEMBLOCK_NODUMP
+    directly.
+
+v3 --> v4:
+1. Rebase this series on v7.2-rc1.
+2. Add two cleanup patches (patch 02/03).
+3. Simplify patch 03 to avoid checking whether initial_boot_params is
+   NULL multiple times, suggested by Rob.
+
+v2 --> v3:
+1. Fix out-of-bounds issue if device tree lacks /reserved-memory node.
+2. Fix UAF issue when alloc_reserved_mem_array() fails.
+3. Add some prepare patches.
+
+v1 --> v2:
+1. v1 added an opt-out DT property ('linux,no-dump'). Per Rob's
+   feedback [3], v2 drop that property and exclude reserve memory
+   by default.
+2. Split some prepared patches from the original patches.
+3. Address coding-style comments on patch 5 from Rob.
+
+[1] https://sashiko.dev/#/message/20260917220750.GA4013814-robh%40kernel.org
+[2] https://lore.kernel.org/lkml/20260723234126.GA3253409-robh@kernel.org/
+[3] https://lore.kernel.org/lkml/20260506144542.GA2072596-robh@kernel.org/
+
+
+
+Wandun Chen (9):
+  riscv: build crash_mem ranges from memblock instead of resource tree
+  crash_core: fold duplicated memblock arch hooks into the weak default
+  crash_core: serialize crash header preparation against hotplug
+  crash_core: replace for_each_mem_range() with for_each_mem_region()
+  memblock: introduce MEMBLOCK_NODUMP flag
+  of: reserved_mem: add dumpable flag to opt-in vmcore
+  of: reserved_mem: mark /reserved-memory entries with MEMBLOCK_NODUMP
+  of: reserved_mem: mark /memreserve/ entries as MEMBLOCK_NODUMP
+  crash_core: skip MEMBLOCK_NODUMP regions when building vmcore ELF
+    header
+
+ arch/arm64/kernel/machine_kexec_file.c     | 29 ------------
+ arch/loongarch/kernel/machine_kexec_file.c | 27 ------------
+ arch/riscv/Kconfig                         |  2 +-
+ arch/riscv/kernel/machine_kexec_file.c     | 33 --------------
+ arch/x86/kernel/crash.c                    |  2 +-
+ drivers/of/fdt.c                           |  2 +
+ drivers/of/of_private.h                    |  2 +
+ drivers/of/of_reserved_mem.c               | 48 ++++++++++++++++++++
+ include/linux/crash_core.h                 |  2 +
+ include/linux/memblock.h                   |  9 ++++
+ include/linux/of_reserved_mem.h            |  1 +
+ kernel/crash_core.c                        | 51 ++++++++++++++++++++--
+ kernel/dma/contiguous.c                    |  1 +
+ mm/memblock.c                              | 43 +++++++++++++++++-
+ 14 files changed, 155 insertions(+), 97 deletions(-)
+
+-- 
+2.43.0
 
 
