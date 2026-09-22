@@ -4,55 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 66C57C982FF
-	for <kexec@archiver.kernel.org>; Tue, 22 Sep 2026 09:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BD6BEC982FA
+	for <kexec@archiver.kernel.org>; Tue, 22 Sep 2026 09:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
-	From:MIME-Version:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=gVJZTypgXfKJStNVi3R0a2JQB/tvx6NLIBfpEAfH+Ko=; b=kFU2tYAfT6Ihozvt36Fjz5ogG/
-	xBn6R7tCo5Wob3LJ8Fu3XFAT+WrkG/iXUhp74S8bUDQPm4zTJgupwUDRQEKv1/Vp6IbizeuVarO4e
-	g7wF5gzfI6fqW2x1JfyH5yFjltDGNyqksk8/oMSX6KSmzG6kkxBBnmNmdcjgS/MWnahG6e/5431P1
-	uEVQVwFYTDrvMi3ic1d1ZAIDgx22/1P5XDo+i1mmDJbQxQObUHLVjHSNtyIQJ7o3Pwx3/ZCrK00bP
-	/6c719V3i4XozNxYD5n+rPyKaPdwh4cWyYnT6l4n23Gi7GVQhRGRAngY1zgFyDxeUufDK35NJOee+
-	v+6k9RPg==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=FH7I6UR6jBDl/t2avlBDN/FfwVeJE6mNz3ibf6d5W4E=; b=Lj/AbdlQzSZsXIpnTnuD51SJZK
+	1BSH6ObGyMQH6KF6eg1fWXIrYjzH3altU0bvOs9HiJG5RReqcFmht4OUCmWKdB/S8uQiBSKAvW2Ph
+	0LUOmzG3v3ou3+bV6bbuXHJjwakZyiSZ6F/PhrC+oJzWgd4ednsbt9E+0yvfJCGU6JckcRPVJz/i2
+	ETz0lIcHgSkcvSo3GpiDsZzmP45DE6qkLashmf4uxZDgzFzWqcdGgETNvH+RxpB1gRZzQan6VAPFP
+	qae0fvIOziSHh+LqNU/Td6qQFURhZYmhuogRZcv30Tlt9JuWeF1zfZ/fbMClxXsOvwdA6QDjx9wGG
+	SCIu+ksg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8wQx-00000004q4H-1Wuf;
-	Tue, 22 Sep 2026 09:05:03 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1x8wam-00000004rvK-1R0D;
+	Tue, 22 Sep 2026 09:15:12 +0000
+Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8wQv-00000004q3D-47HY;
-	Tue, 22 Sep 2026 09:05:02 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 589CE408F4;
-	Tue, 22 Sep 2026 09:05:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B5581F000FF;
-	Tue, 22 Sep 2026 09:04:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790067901;
-	bh=gVJZTypgXfKJStNVi3R0a2JQB/tvx6NLIBfpEAfH+Ko=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=k9LHr2Wd4Rxx3+1boxWUT9I2oXWCmuvgxijo5nc6bPCgxtO998Rsh7NKemCZPMZ7q
-	 jCqEgkFPjzxPK4mReOTTd/elY+ciGLQH0sdAs9Gj6meNVO4LfN2kzV+4LXR0oVx6SK
-	 7ZH/T7Wv5A2AUNswlgh8q3cB2VzM3drCJ2lhSUow3TBR7t+5QqoSZi80Bp+U336otT
-	 6+pWL7hrOojomJ2u753Enniueu6LZnlrBvU6X6vwp9prGtDnyfBK/IXM5CJdbxbR9Z
-	 4Y6VvuOiSdy8+S0cHn5PGHelRvFyfDPZFS7siU3DaFG8DB1NQi0pi6gHzGpuQPP6oN
-	 01swkhQ7UyoBw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 8/9] of: reserved_mem: mark /memreserve/ entries as
- MEMBLOCK_NODUMP
-To: robh@kernel.org, baoquan.he@linux.dev, "Wandun Chen" <chenwandun1@gmail.com>, rppt@kernel.org, m.szyprowski@samsung.com
-Cc: saravanak@kernel.org, pjw@kernel.org, conor+dt@kernel.org, iommu@lists.linux.dev, ruirui.yang@linux.dev, linux-kernel@vger.kernel.org, mark.rutland@arm.com, loongarch@lists.linux.dev, tglx@kernel.org, bp@alien8.de, x86@kernel.org, pratyush@kernel.org, kexec@lists.infradead.org, chenhuacai@kernel.org, hpa@zytor.com, pasha.tatashin@soleen.com, mingo@redhat.com, linux-mm@kvack.org, robin.murphy@arm.com, linux-riscv@lists.infradead.org, aou@eecs.berkeley.edu, linux-arm-kernel@lists.infradead.org, alex@ghiti.fr, catalin.marinas@arm.com, will@kernel.org, devicetree@vger.kernel.org, dave.hansen@linux.intel.com, akpm@linux-foundation.org, palmer@dabbelt.com, kernel@xen0n.name
-In-Reply-To: <20260922084256.1515554-9-chenwandun1@gmail.com>
-References: <20260922084256.1515554-1-chenwandun1@gmail.com>
- <20260922084256.1515554-9-chenwandun1@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 22 Sep 2026 09:04:58 +0000
-Message-Id: <20260922090459.2B5581F000FF@smtp.kernel.org>
+	id 1x8wak-00000004rtk-14wA
+	for kexec@lists.infradead.org;
+	Tue, 22 Sep 2026 09:15:11 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=FH7I6UR6jBDl/t2avlBDN/FfwVeJE6mNz3ibf6d5W4E=; b=eUPTj9eAaXcbs4q80PbAeG7F41
+	9081MjBXTkIMWK+8zT65gf+PM19anFfCRJOI6aZDApSOMevfYWb7efc71TgWLRLz8Exj/Nz6e3oNX
+	mp/w6EYIlF0u9JFuQE14R4PxwI4XFehfbZAkhGeX6EqqO11Jmi9aD8og1r8c2WBbO+aoH++ZsQDTq
+	5MI3ibU0iCpKRWkSKqMVcUfHWhXxDKZrlmTSKxjS4cR2YGJ5D5lcnutLJShjnAq+FsJHp6txXpr3P
+	VyHyIM4Le5aXVewo0dNiv1C6zkiqmZda9lDVm/dor3vG7NOQtXJd4UBmw/Yn3VZTs1fK3FRW1640T
+	s6m1xKKg==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1x8wa5-002sKz-0P;
+	Tue, 22 Sep 2026 09:14:29 +0000
+Date: Tue, 22 Sep 2026 02:14:20 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Miaohe Lin <linmiaohe@huawei.com>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, rmikey@meta.com, riel@surriel.com, harry@kernel.org, 
+	linux-cxl@vger.kernel.org, driver-core@lists.linux.dev, kernel-team@meta.com, 
+	Ard Biesheuvel <ardb@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+	Naoya Horiguchi <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, kas@kernel.org, 
+	kexec@lists.infradead.org, David Hildenbrand <david@kernel.org>, 
+	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Brendan Jackman <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
+	Oscar Salvador <osalvador@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, hannes@cmpxchg.or, 
+	shakeel.butt@linux.dev
+Subject: Re: [PATCH v5 0/9] mm/memory-failure: keep hardware-poisoned pages
+ out of the next kexec
+Message-ID: <arJBkNOgbR8NrgFP@gmail.com>
+References: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
+ <d6e35901-f74d-bf81-75d3-bac4b26d9d72@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d6e35901-f74d-bf81-75d3-bac4b26d9d72@huawei.com>
+X-Debian-User: leitao
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260922_021510_300602_8946F774 
+X-CRM114-Status: GOOD (  16.76  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -64,75 +85,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] of/fdt: silent u64 truncation in fdt_mark_memreserve_nodump caus=
-es nodump false positives
---
+Hello Miaohe,
 
-commit 070ed699ada4d456618a640c6ad541abbec98f95
-Author: Wandun Chen <chenwandun@lixiang.com>
+On Tue, Sep 22, 2026 at 02:27:59PM +0800, Miaohe Lin wrote:
+> > A bit is never cleared, which is a known limitation: it stands for a
+> > whole unit, so an unpoison of one frame cannot tell whether the unit as a
+> > whole is good again.
+> 
+> Thanks for your patches. I have a question about unpoison: If a bit is never
+> cleared, after we do some memory-failure+unpoison tests, kexec will lose the
+> tested memory without reboot?
 
-of: reserved_mem: mark /memreserve/ entries as MEMBLOCK_NODUMP
+Correct, A bit stands for a 2M unit, so every tested page that falls in
+a distinct unit costs 2M in each kernel after the kexec.
 
-The /memreserve/ entries are memory reservations made by the bootloader
-or firmware, their contents are not needed for kernel crash analysis. This
-commit marks them MEMBLOCK_NODUMP to omit them from the vmcore, while leavi=
-ng
-overlapping dumpable regions unmarked.
+Worth being precise about the state today: the unpoison itself works.
+The frame goes back to the allocator and num_poisoned_pages drops. Only
+the bit stays, so the next kernel poisons the frame again. Test loop
+in, memory out, and nothing gives it back.
 
-> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> index f29a07e8fb23e..a42cf6eac55b5 100644
-> --- a/drivers/of/of_reserved_mem.c
-> +++ b/drivers/of/of_reserved_mem.c
-[ ... ]
-> @@ -251,6 +251,39 @@ static void __init __rmem_check_for_overlap(void)
->  	}
->  }
-> =20
-> +void __init fdt_mark_memreserve_nodump(void)
-> +{
-> +	u64 base, size;
-> +	int n;
-> +	const void *fdt =3D initial_boot_params;
-[ ... ]
-> +		for (i =3D 0; i < reserved_mem_count; i++) {
-> +			struct reserved_mem *rmem =3D &reserved_mem[i];
-> +
-> +			if (rmem->dumpable &&
-> +			    base < (u64)rmem->base + (u64)rmem->size &&
-> +			    (u64)rmem->base < base + size)
-> +				break;
-> +		}
-> +		if (i =3D=3D reserved_mem_count)
-> +			memblock_mark_nodump(base, size);
+Important to say that nothing block us from unpoison the bitmap, and in
+fact my initial patchset had it. I also _think_ we should unpoison the
+bitmap once we unpoison the page. 
 
-[Severity: Medium]
-Is there a risk of silent truncation here when passing u64 arguments to
-memblock_mark_nodump() on 32-bit architectures?
+I have just kept it out of this patch in order to simplify the patchset and
+get the basis correct, and then evolve on top of it.
 
-The u64 base and size variables are passed directly to memblock_mark_nodump=
-()
-which takes phys_addr_t arguments. On a 32-bit architecture where phys_addr=
-_t
-is 32-bit, if the device tree contains a /memreserve/ entry with an address
-greater than 4GB, fdt_mark_memreserve_nodump() reads it as a 64-bit value.
+That said, If you think this is a must have in first patchset, I am more
+than happy to do it now, but just keep it in mind that it will grow the
+patchset by about 2 extra functions.
 
-It performs a 64-bit overlap check against dumpable regions in reserved_mem.
-Because the upper 32 bits differ, it concludes there is no overlap. It then
-calls memblock_mark_nodump(), where the compiler silently truncates base to=
- 32
-bits.
-
-Could this incorrectly mark the lower 32-bit address as MEMBLOCK_NODUMP,
-mistakenly excluding any dumpable region located there that the overlap
-check was intended to protect?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260922084256.1515=
-554-1-chenwandun1@gmail.com?part=3D8
+Thanks the review,
+--breno
 
