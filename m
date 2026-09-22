@@ -4,65 +4,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B4265C982FA
-	for <kexec@archiver.kernel.org>; Tue, 22 Sep 2026 12:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 78381C982FA
+	for <kexec@archiver.kernel.org>; Tue, 22 Sep 2026 12:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=r4eH9hr+yvfFnvbbCrIYejYZnIdTOc3jXJLWRBe+BYc=; b=UoDZwvmUibSUMKbPHKlf35N7zX
-	cJZ+vPbVRl3FmKXuYxpaoQxC2tiBLMGjWEZi64iZPSZGCchVEnyDtudjqCarQEE4Xms4GV6lAqB2f
-	HZ2YtrH+kajAGBCQIMvJGkon3SKNlbY5o1Q6lu3jtwhqH9yJE0D8k2PR44iiuV+ItOXQHyN0eXyu0
-	tcLSgMFEId8Pa3OHkXkCIjtJdtBuSRBTYtIXI53a7/JqK45CEuCN5uWwzLBGWi3BQ1ws98wD2WG/d
-	gvSrY3bdTS7wrdrhSfjmrIB129a9k0CfDlyjK0wtglnje4oI1s1Yqz+AnJLa6PKK6siJjBlabaHfW
-	VFC3m9nQ==;
+	bh=bjn6H9bAPusg9K8m56V4G1qk8427IsHI5UeWzmUJBww=; b=CpE8wb0aTtQu5laYeNxMSEUWuc
+	Yg5Jn5CEODgLrdzrbPlwnx1wZYjQiDJBqZYZsOGdwIIIFZtO9jBWUtSOUCqUuLtB8QKRK8MPgzrcI
+	fAOyWvVdHt2oGDOwBqRlFGx+HV7nOl0yj+pvPb9ZW8r0jz0Ax532J94s6Xdd/HGiPrViNZwSPiJJT
+	YyK2VLy/XhWe9kDVrOYqCitEHJTihWdS3c8serEp4id40K5q4byc+Os1x2I7FgD2F8P3GXq8su43g
+	QbtEAqU1b8JwK2KdrEgxzHTacNAEgnHoynqbECM3GZULBtR5lHsatc3soGdSRZ1mL/JChXkbBp7+z
+	ITv6WWJQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8zus-00000005MCM-2nh9;
-	Tue, 22 Sep 2026 12:48:10 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1x8zxz-00000005MsJ-20RQ;
+	Tue, 22 Sep 2026 12:51:23 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8zuq-00000005MBv-3kBs
+	id 1x8zxy-00000005Mry-2j1l
 	for kexec@lists.infradead.org;
-	Tue, 22 Sep 2026 12:48:08 +0000
+	Tue, 22 Sep 2026 12:51:22 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 4DC23411B5;
-	Tue, 22 Sep 2026 12:48:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1CC61F000FF;
-	Tue, 22 Sep 2026 12:48:04 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id D9F6160DE9;
+	Tue, 22 Sep 2026 12:51:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3132F1F00893;
+	Tue, 22 Sep 2026 12:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790081288;
-	bh=r4eH9hr+yvfFnvbbCrIYejYZnIdTOc3jXJLWRBe+BYc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=AxRcrfCKj4TeX6ZLNGmys0EohkLSWdZA4WpCoVu2s2m54mvKPCy6liQKcGrQ8XbgI
-	 SQupz29e6y7f+7JP+FdhlC3s1z2X8i7JkPdbM3Y976b8njRgJrKLRElYxFR9JEM0BM
-	 8TCcoyrcCXV565sfkLcc6LcmZjQmjecePjY6QHJrrJkVK8K8VbGFL91PeILG+FoFl9
-	 1THEXtqQfFgXse9S65S+IyHqHuKjKQQgT8FUJXtwclVIR9dTtE3pMYo8uBe0eAvsYc
-	 VeRU/FuqXgJPqY0qchNGgBdyeHHurNFz2kQGrv3nsl9hWhSY6PVrVOyB3nSxSAKtfk
-	 9k3gXyOmIuBAg==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: George Guo <dongtai.guo@linux.dev>
-Cc: rppt@kernel.org,  pasha.tatashin@soleen.com,  pratyush@kernel.org,
-  chenhuacai@kernel.org,  ardb@kernel.org,  shuah@kernel.org,
-  ilias.apalodimas@linaro.org,  akpm@linux-foundation.org,
-  baoquan.he@linux.dev,  ruirui.yang@linux.dev,  guodongtai@kylinos.cn,
-  kernel@xen0n.name,  graf@amazon.com,  liukexin@kylinos.cn,
-  loongarch@lists.linux.dev,  linux-kernel@vger.kernel.org,
-  kexec@lists.infradead.org,  linux-mm@kvack.org,
-  linux-kselftest@vger.kernel.org,  linux-efi@vger.kernel.org
-Subject: Re: [PATCH v5 2/5] liveupdate: synchronize EFI KHO channel at
- execution
-In-Reply-To: <20260904100852.26006-3-dongtai.guo@linux.dev> (George Guo's
-	message of "Fri, 4 Sep 2026 18:08:49 +0800")
-References: <20260904100852.26006-1-dongtai.guo@linux.dev>
-	<20260904100852.26006-3-dongtai.guo@linux.dev>
-Date: Tue, 22 Sep 2026 14:48:03 +0200
-Message-ID: <2vxz1pal5u64.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=k20260515; t=1790081481;
+	bh=bjn6H9bAPusg9K8m56V4G1qk8427IsHI5UeWzmUJBww=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ZDpmoKnkXHYvgzWDcXnkPtfTAO4v0F1RscKB2fTnyZdqTfqeB8e97fRQ+cvLiJzvi
+	 fgtbgN39wAvaTedzLC7nH363xblfKf51JwbGpFsDV5ceVV1tKBHyppmMluDntmarUM
+	 U/YPxsFIdvCFV/yM//9wBfgvhnkZE5MCbaPTe4KVxCbC4jDaVy4mmA8r8Z8VLUfYYO
+	 GEtV4JdUTWiHgcGUAYxi3Oytv9PRiyzGo78QyLDtIl0wdvqW8jwcRMt4o3CsPNvRBD
+	 /GUn4U2YIQnOzBci4AoYgn1zojzErZuH9TO4AcrJsNrQUfE9oJWBMaYoqNPS6u45uQ
+	 j4BLCYvl0v8/g==
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfauth.ams.internal (Postfix) with ESMTP id 9D4B41980052;
+	Tue, 22 Sep 2026 08:51:11 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Tue, 22 Sep 2026 08:51:17 -0400
+X-ME-Sender: <xms:v3myaqO1dJPBBp2pNjko1t5k8FQl_hc03Kdfb9AYFnNOuyG4iLR2jA>
+    <xme:v3myanvKy0YCF5GpjVA1evG7y3p8XhUh-KR1TqJq1uq7pKQ0IGJf1uU6CQrAhySyT
+    K19JLBuqm3DMdxinXVb2J7xaGy17Zil4GTrpqJJnoQw-9z-HCxljWU>
+X-ME-Received: <xmr:v3myajdxZgA5ab59yvkNNapjP2aGmt6aEtXJu7dPZxiT_mpeRjIJGn400Wg>
+X-ME-Proxy-Cause: dmFkZTGJsDyAcE8QiCZz6dfbgOk9P/ImhfvjdTgEGi1dyPDTortTmKMOuYz4ch97JTuIJY
+    fCTeb/jUDs7RR8+EO82LYzphUG3CyOtSymtz/L464Wc9DfgUawrMcTy2lA/clKyJoAksX0
+    ZH839lnzNd/xvI9x9FHSP0kzB6tqsirVPUdHuDCIJ/wWCTBeNdhCrHmzdo6sUbJdKR/2O/
+    sWo9+A4BnuafPVatN035tZ09J6Fj99W4S+sDDcIwrbw5dyhaeZ44nnTKKearwgnnRyhT8p
+    2DheY2M4Nvuau7iuiAq3/CO0Qk8O5FLAWWU3996mTM//yGu/EY0oyjBeIKfGh7ymLgF2dO
+    XupXwF/czUZ2NpcRi/n/HbJd73UF6MopxxDLQXZZTZVEIq8jwxTtntgz1Fudldxc+duznM
+    zyN0Jj4dGAXH3J5iS2JrkGwjaln77bkaPrm/ycPIVoKlFDoDCRdxpscdTHnPCICqfqS73s
+    hy2SSZD3R9IdvfMM3cVc0eArLzOPt7zot16Rvzjau0S0mryVCZR9cKZJPrITNaxC2WJwRz
+    fnTwgIn7q07MgFSsf9rXprcLoqngdr9uLOAXpUXXoVfYM4O+/VQT2vrRpXrrKl6q73ti/q
+    doU1LkDyfW1eee9VOUfwBk/tMFKY1IzwPGNO8VK00HRjFLNHKhCBI+4vXJKw
+X-ME-Proxy: <xmx:v3myavMzzUcCooHWAjag_NsuwtOzP4qcAfrSEqhzqAEebaztzsxEWA>
+    <xmx:v3myamsaWir7lZYy4jpF5EYv1OuaZf2fvO0h0ncnscgZm28WUYCh8g>
+    <xmx:v3myao3hUXsCT3LxEmOAAr2Uf60p7xl8XEP1QkfNUvC2ST3uj26bFw>
+    <xmx:v3myam9xe1K-RT_7T98Kg09Zq9aohOe4xyGMtGQQZuaj89gdtRJ_2Q>
+    <xmx:v3myaukgoi2czh2NEkzuD_dpAYttVrftyzu5kkVWaZA2uWmvyAeQA0st>
+Feedback-ID: i10464835:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 22 Sep 2026 08:51:09 -0400 (EDT)
+Date: Tue, 22 Sep 2026 13:51:08 +0100
+From: Kiryl Shutsemau <kas@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Breno Leitao <leitao@debian.org>, Ard Biesheuvel <ardb@kernel.org>,
+ 	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Miaohe Lin <linmiaohe@huawei.com>,
+ 	Naoya Horiguchi <nao.horiguchi@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>, 	kexec@lists.infradead.org,
+ Lorenzo Stoakes <ljs@kernel.org>,
+ 	"Liam R. Howlett" <liam@infradead.org>,
+ Vlastimil Babka <vbabka@kernel.org>, 	Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, 	Michal Hocko <mhocko@suse.com>,
+ Thomas Gleixner <tglx@kernel.org>, 	Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>,
+ 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ 	Brendan Jackman <brendan.jackman@linux.dev>,
+ Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+ 	Oscar Salvador <osalvador@suse.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ 	"Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, hannes@cmpxchg.or,
+ 	shakeel.butt@linux.dev, linux-efi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	linux-mm@kvack.org, rmikey@meta.com,
+ riel@surriel.com, harry@kernel.org, 	linux-cxl@vger.kernel.org,
+ driver-core@lists.linux.dev, kernel-team@meta.com
+Subject: Re: [PATCH v5 7/9] drivers/base/memory: count inherited poisoned
+ frames into the block
+Message-ID: <arJ5I9QHHBvuGH_F@thinkstation>
+References: <20260915-hwpoison-kho-v5-7-3bc7a57bd503@debian.org>
+ <de41b78a-8471-4832-be0c-35d410a4499a@kernel.org>
+ <aqpczrtIwSG948iv@gmail.com>
+ <b8ad366a-a019-4462-9dce-f687f60ee7f2@kernel.org>
+ <aqvHHHuWJ-y4WRJZ@gmail.com>
+ <caac2cb9-8faa-49bc-ae8a-47c5fd7b7e58@kernel.org>
+ <aq1RaH0eE0hZfNpr@gmail.com>
+ <fb2237be-f7bc-4ad6-bcb0-7c3ef53136ef@kernel.org>
+ <arE3UjqPsxctWckg@gmail.com>
+ <ad2ed3ed-959a-4af3-a2f5-4c21e5af62d6@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ad2ed3ed-959a-4af3-a2f5-4c21e5af62d6@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,155 +126,40 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Sep 04 2026, George Guo wrote:
+On Tue, Sep 22, 2026 at 01:33:51PM +0200, David Hildenbrand (Arm) wrote:
+> On 9/21/26 16:31, Breno Leitao wrote:
+> > On Fri, Sep 18, 2026 at 10:16:25PM +0200, David Hildenbrand (Arm) wrote:
+> >> On 9/18/26 17:22, Breno Leitao wrote:
+> >>>
+> >>> Right, we have two source for poisoned page information, today.
+> >>>
+> >>> 1) LINUX_EFI_POISONED_MEMORY: Used to track memory block that got
+> >>>    poisioned, and will be passed around during kexec.
+> >>> 2) PG_hwpoison on struct page: Used by the memory subsystem to avoid
+> >>>    touching it.
+> >>
+> >> How are both kept in sync? See below.
+> > 
+> > The EFI table is only written when there is a memory failure. That is
+> > the only thing that writes to it:
+> > 
+> > 	action_result() -> efi_hwpoison_record_pfn() -> set_bit()
+> > 
+> > You can see it on patch "mm/memory-failure: efi: record
+> > hardware-poisoned frames into the poisoned-memory table"
+> > 
+> > Then, when the kernel kexecs into a second kernel, the EFI config table
+> > is queried and the pages are poisoned from it at boot, as they are
+> > getting into the buddy allocator, in __free_pages_core().
+> 
+> I am not sure that is really the right place. That means we only poison free
+> memory. Shouldn't we poison as soon as we initialize the memmap, and check
+> whether any memblock allocations ended up on that poisoned memory and bail out?
 
-> From: George Guo <guodongtai@kylinos.cn>
->
-> The EFI KHO configuration table is a global channel. Updating it while
-> a candidate kexec image is still being loaded can leave the channel
-> pointing at the failed candidate even though the previous image remains
-> installed. Synchronize it instead from the image selected for execution.
-
-Huh? Sorry, I don't understand this is supposed to mean at all. What
-failed candidate?
-
->
-> Use the actual scratch payload size rather than its page-aligned segment
-> size, and propagate update failures before live-update serialization.
-> Keep clearing the channel for cold and crash images best-effort.
-
-Huh? This is word soup and I don't understand what any of this is
-supposed to mean.
-
-If you are using a LLM to generate this, please _read_ what the output
-is and see if it even is readable to someone else.
-
-And if you are writing this by hand, then take a step back, and consider
-if patch reviews can even understand what you are saying.
-
->
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> ---
->  kernel/crash_core.c                |  7 +++++++
->  kernel/kexec_core.c                |  5 +++++
->  kernel/kexec_internal.h            |  3 +++
->  kernel/liveupdate/kexec_handover.c | 33 ++++++++++++++++++++++++++++++
->  4 files changed, 48 insertions(+)
->
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 2b36aa9fade0..6166ce4203d3 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -138,6 +138,13 @@ void __noclone __crash_kexec(struct pt_regs *regs)
->  		if (kexec_crash_image) {
->  			struct pt_regs fixed_regs;
->  
-> +			/*
-> +			 * A crash image carries no KHO state: clear the
-> +			 * transport so the crash kernel boots cold instead
-> +			 * of reviving from stale state.
-> +			 */
-> +			(void)kho_sync_channel(kexec_crash_image);
-> +
->  			crash_setup_regs(&fixed_regs, regs);
->  			crash_save_vmcoreinfo();
->  			machine_crash_shutdown(&fixed_regs);
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index dc770b9a6d05..147f5b5b23d4 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -1146,6 +1146,11 @@ int kernel_kexec(void)
->  		goto Unlock;
->  	}
->  
-> +	/* Synchronize the handover transport with the image being executed. */
-> +	error = kho_sync_channel(kexec_image);
-> +	if (error)
-> +		goto Unlock;
-> +
-
-Why are you setting this at kexec time? Why not set it at load time like
-every other architecture?
-
-Also what's this "sync channel"? Use simpler words that _actually
-describe_ what they do.
-
->  	if (!kexec_image->preserve_context) {
->  		error = liveupdate_reboot();
->  		if (error)
-> diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
-> index 228bb88c018b..4d4c2290e85c 100644
-> --- a/kernel/kexec_internal.h
-> +++ b/kernel/kexec_internal.h
-> @@ -46,6 +46,7 @@ struct kexec_buf;
->  int kho_locate_mem_hole(struct kexec_buf *kbuf,
->  			int (*func)(struct resource *, void *));
->  int kho_fill_kimage(struct kimage *image);
-> +int kho_sync_channel(struct kimage *image);
->  #else
->  static inline int kho_locate_mem_hole(struct kexec_buf *kbuf,
->  				      int (*func)(struct resource *, void *))
-> @@ -54,5 +55,7 @@ static inline int kho_locate_mem_hole(struct kexec_buf *kbuf,
->  }
->  
->  static inline int kho_fill_kimage(struct kimage *image) { return 0; }
-> +
-> +static inline int kho_sync_channel(struct kimage *image) { return 0; }
->  #endif /* CONFIG_KEXEC_HANDOVER */
->  #endif /* LINUX_KEXEC_INTERNAL_H */
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-> index 39f489a258d9..3aa5c66dfc6d 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -14,6 +14,7 @@
->  #include <linux/cma.h>
->  #include <linux/kmemleak.h>
->  #include <linux/count_zeros.h>
-> +#include <linux/efi.h>
->  #include <linux/kasan.h>
->  #include <linux/kexec.h>
->  #include <linux/kexec_handover.h>
-> @@ -2074,6 +2075,38 @@ int kho_fill_kimage(struct kimage *image)
->  	return 0;
->  }
->  
-> +/*
-> + * Synchronize the handover transport with the image that is about to be
-> + * executed.  The EFI config table channel is global, while kexec keeps
-> + * separate images for a normal reboot and for crash.  Write the state of the
-> + * selected image immediately before it is executed, rather than while a
-> + * candidate image is being loaded, so a failed replacement cannot leave the
-> + * channel pointing at that failed image.
-> + *
-> + * An image loaded through the legacy kexec_load() syscall, a crash image, or
-> + * an image loaded while KHO is disabled carries no handover state.  Clear the
-> + * channel for those images so the next kernel boots cold instead of reviving
-> + * from stale state.  Clearing is best-effort because an absent channel cannot
-> + * affect a cold boot.
-> + */
-> +int kho_sync_channel(struct kimage *image)
-> +{
-> +	int err;
-> +
-> +	if (!image->kho.fdt || !image->kho.scratch) {
-> +		efi_kho_update(0, 0, 0, 0);
-> +		return 0;
-> +	}
-> +
-> +	err = efi_kho_update(image->kho.fdt, PAGE_SIZE,
-> +			     image->kho.scratch->mem,
-> +			     image->kho.scratch->bufsz);
-> +	if (err)
-> +		pr_warn("failed to update EFI config table: %d\n", err);
-> +
-> +	return err;
-> +}
-> +
->  static int kho_walk_scratch(struct kexec_buf *kbuf,
->  			    int (*func)(struct resource *, void *))
->  {
+__free_pages_core() is how we hand over pages from memblock to page allocator
+initially -- from memblock_free_pages(), deferred_free_pages() and
+hotplug. It is the right place to never allow them on free lists.
 
 -- 
-Regards,
-Pratyush Yadav
+  Kiryl Shutsemau / Kirill A. Shutemov
 
