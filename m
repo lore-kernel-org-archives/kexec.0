@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1C5D4C98312
-	for <kexec@archiver.kernel.org>; Wed, 23 Sep 2026 22:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F0B58C9830D
+	for <kexec@archiver.kernel.org>; Wed, 23 Sep 2026 22:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=XCYcL1R5NicLL/NhwgzYeBgYTteRbyS24vJmmzlRDaw=; b=RbFOqvdHnReq64uKLvpnDbFuEL
-	Kc5K11mRW4x6N+fDBxg7Q60h3QwpVY4fDg85s4Mjq9sT+5c9kqi28fxiuEP5cXsZyErEOsbCJUUxG
-	4As+TXAnuAkcuVIVkJmLOaWEPWenIrB/UkPivJhtNIiAGOKVQJNzJgUxX8i82Mb7sJVvlyga9RIlZ
-	ez9bWVYFxC/orU88AnsbqZdiVjBYlfh5VDqflSP9LHSZDL0djrKE4B9Yfnqk3cq673UOYc77STWUb
-	ULMd1Ae6aJU1nHax1V2c5MUsGhQCcxaezEoRyrWEgcsDALV/Tm7b2RkPIJz4VTL1KLppI7ASQXs9Y
-	II0nAiow==;
+	bh=5nQ+hBf6qVec8z+IXo2hdLde0/quAUf4P/g17WYv1iw=; b=yi5F/4udTMVQWnNR4OJ0pBrdyk
+	iDC6uGCyQpQLfWOJW262qpZ3FySa7HM29fW5nMtNJqG0UCJwj9qH4fdr2UrdFruWwR1D7H7Yxr6T+
+	kK7c19d/COlWScrwwMF2zz+Hz8ZtxVk8d2nziSdOEVD6CYCDZludq1R3dpWVD2BUgHspYCcRequo+
+	WIVdtQMRziw4p0swXt/P8NtClUMkDtAN1POUWFG/ABMLkFKqSD5YoSFYS+U23xoBEvPXWkH4+doyt
+	b+pK3nm/MIeV5BaymP+D79tVvH2FCkCBxQyY/u9O+IcQU9L0U9785eRpkrYOnU8O4WHXezds5gkZa
+	f6CBKsgQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x9VhR-00000009fba-2UTV;
-	Wed, 23 Sep 2026 22:44:25 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1x9VhT-00000009fc7-38wb;
+	Wed, 23 Sep 2026 22:44:27 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x9VhP-00000009fb6-2OVg
+	id 1x9VhS-00000009fbW-0vQH
 	for kexec@lists.infradead.org;
-	Wed, 23 Sep 2026 22:44:23 +0000
+	Wed, 23 Sep 2026 22:44:26 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id A22B360209;
+	by tor.source.kernel.org (Postfix) with ESMTP id 5695560216;
+	Wed, 23 Sep 2026 22:44:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9D4C1F000FF;
 	Wed, 23 Sep 2026 22:44:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 117221F00893;
-	Wed, 23 Sep 2026 22:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790203462;
-	bh=XCYcL1R5NicLL/NhwgzYeBgYTteRbyS24vJmmzlRDaw=;
+	s=k20260515; t=1790203465;
+	bh=5nQ+hBf6qVec8z+IXo2hdLde0/quAUf4P/g17WYv1iw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=TLDWEyiH4tsSHQ5jJ4W2INbg6NtCw24Nd55zZ1YffQlaEZPAogYwjP2a/jc2DrkPj
-	 fXfbbY0AbOWflZJduor+NXDIF6D+FNeJF7fl8dSS/E5uP0Qr0d96bjebpX+f4ESMn/
-	 iPGrG7bYGtfPO3T4UR+BK/3sz9bYHuMUdh/5T7cjpw4U7scGJJsTDgxf2jodSDjEoI
-	 sKzZnyHAKe6jGpPk8E3MGJqmqx+C5rJILC4+9pbw+A1ID0OAaQjT1kgvaS4YzT/Y1G
-	 pojgEXXMxey8NvFAyaDGkdrYwSbl0qyYLPQj7yrknb+ildxh1CLxjM3OlCEiyPkYsh
-	 qIjtHZqFGtM2Q==
+	b=i6SWVv8JLcwPyjTj/ZDmJk2VviUSkDwPsJXxoiR+68IM0XkG2b/fK11NvvSzU1pUr
+	 1QY4Nv5LrjQFn+aUKbtb0oehm0nI8M4hQNRrQSnb8f8Vk+4Nwg61O4TVn/5bfO7kDG
+	 WRJgBF0aN5ghNfbptXbCvvvM/IHl2/k3bBVfQ699CFcZgTxhuMoaxWde76uHDTD1AJ
+	 esysnoUGA8ha6czLuP7V5/2FL0G7zB6+NtUSaKQ3nVu9yEO/Hgi0kQpXMymT0AF2xx
+	 a4L+ue7xBokmi5+T5BLMctK8w6q7SJ7KjPf+fDarlrpngQ2DmuhEyTyjGKQyUoeMR1
+	 gbdRrYSdIIc0Q==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>,
 	Mike Rapoport <rppt@kernel.org>,
@@ -57,9 +57,9 @@ To: Pasha Tatashin <pasha.tatashin@soleen.com>,
 Cc: kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: [RFC PATCH 1/6] liveupdate: luo_file: look up outgoing tokens by id
-Date: Thu, 24 Sep 2026 00:44:00 +0200
-Message-ID: <20260923224408.3745689-2-pratyush@kernel.org>
+Subject: [RFC PATCH 2/6] shmem: add tmpfs_create_mount() to create tmpfs mounts internally
+Date: Thu, 24 Sep 2026 00:44:01 +0200
+Message-ID: <20260923224408.3745689-3-pratyush@kernel.org>
 X-Mailer: git-send-email 2.56.0.rc1.310.g51773c2048-goog
 In-Reply-To: <20260923224408.3745689-1-pratyush@kernel.org>
 References: <20260923224408.3745689-1-pratyush@kernel.org>
@@ -81,98 +81,83 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-liveupdate_get_token_outgoing() is used to look up tokens of
-dependencies. It does the search based on struct file. LUO preserves
-resources; the files are only handles to those resources.
+Upcoming commits will add support for preserving a tmpfs mount via LUO.
+While the retrieve logic can create the mount by constructing an options
+string from its preserved data, it is simpler to let it directly pass
+the parameters.
 
-LUO provides file handlers a ->get_id() callback that can return the
-unique identifier of a resource. LUO uses it to ensure the same resource
-can't be preserved twice if it can be referred to by multiple files. The
-default ID is the struct file, but file handlers can implement the
-callback and return something else. For example, memfd returns the inode
-of the file, not the struct file itself.
-
-Use ID to look up dependencies in liveupdate_get_token_outgoing()
-instead of struct file. This allows the lookup to work with handlers
-that use things other than the struct file.
+tmpfs_create_mount() allows creating a mount with the specified
+max_blocks and mode. The function only takes max_blocks and mode for now
+because that is all the tmpfs preservation will use. All other values
+are left to their defaults.
 
 Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
- include/linux/liveupdate.h   |  6 +++---
- kernel/liveupdate/luo_file.c | 21 ++++++++++++---------
- 2 files changed, 15 insertions(+), 12 deletions(-)
+ mm/internal.h |  1 +
+ mm/shmem.c    | 38 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 39 insertions(+)
 
-diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
-index 6051abc0612c..1cddbab50b98 100644
---- a/include/linux/liveupdate.h
-+++ b/include/linux/liveupdate.h
-@@ -253,9 +253,9 @@ void liveupdate_flb_put_outgoing(struct liveupdate_flb *flb);
- int liveupdate_get_file_incoming(struct liveupdate_session *s, u64 token,
- 				 struct file **filep);
+diff --git a/mm/internal.h b/mm/internal.h
+index 38b1165212c9..d82c92c8fddd 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -1436,6 +1436,7 @@ int shmem_add_to_page_cache(struct folio *folio,
+ 			    pgoff_t index, void *expected, gfp_t gfp);
+ int shmem_inode_acct_blocks(struct inode *inode, long pages);
+ bool shmem_recalc_inode(struct inode *inode, long alloced, long swapped);
++struct vfsmount *tmpfs_create_mount(unsigned long max_blocks, umode_t mode);
  
--/* Get a token for an outgoing file, or -ENOENT if file is not preserved */
-+/* Get a token for a preserved object, or -ENOENT if it is not preserved */
- int liveupdate_get_token_outgoing(struct liveupdate_session *s,
--				  struct file *file, u64 *tokenp);
-+				  unsigned long id, u64 *tokenp);
+ #ifdef CONFIG_SHRINKER_DEBUG
+ static inline __printf(2, 0) int shrinker_debugfs_name_alloc(
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 897fa2b61346..8660405b6ab8 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -5313,6 +5313,44 @@ static struct file_system_type shmem_fs_type = {
+ 	.fs_flags	= FS_USERNS_MOUNT | FS_ALLOW_IDMAP | FS_MGTIME,
+ };
  
- #else /* CONFIG_LIVEUPDATE */
++/**
++ * tmpfs_create_mount - Create a new tmpfs instance from explicit parameters.
++ * @max_blocks: Block limit of the filesystem, in PAGE_SIZE units, as held by
++ *              shmem_sb_info::max_blocks.
++ * @mode:       Mode of the root directory.
++ *
++ * Creates a new tmpfs superblock and returns a mount for it. Everything not
++ * named above is left at its default.
++ *
++ * The returned mount belongs to no mount namespace and is owned by the caller,
++ * who must either mntput() it or hand it to something that takes it over.
++ *
++ * Return: the new mount, or an ERR_PTR.
++ */
++struct vfsmount *tmpfs_create_mount(unsigned long max_blocks, umode_t mode)
++{
++	struct shmem_options *ctx;
++	struct fs_context *fc;
++	struct vfsmount *mnt;
++
++	if (!IS_ENABLED(CONFIG_TMPFS))
++		return ERR_PTR(-EOPNOTSUPP);
++
++	fc = fs_context_for_mount(&shmem_fs_type, 0);
++	if (IS_ERR(fc))
++		return ERR_CAST(fc);
++
++	ctx = fc->fs_private;
++	ctx->blocks = max_blocks;
++	ctx->seen |= SHMEM_SEEN_BLOCKS;
++	ctx->mode = mode;
++
++	mnt = fc_mount(fc);
++	put_fs_context(fc);
++
++	return mnt;
++}
++
+ #if defined(CONFIG_SYSFS) && defined(CONFIG_TMPFS)
  
-@@ -316,7 +316,7 @@ static inline int liveupdate_get_file_incoming(struct liveupdate_session *s,
- }
- 
- static inline int liveupdate_get_token_outgoing(struct liveupdate_session *s,
--						struct file *file, u64 *tokenp)
-+						unsigned long id, u64 *tokenp)
- {
- 	return -EOPNOTSUPP;
- }
-diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
-index a39992da504f..51817d202ce2 100644
---- a/kernel/liveupdate/luo_file.c
-+++ b/kernel/liveupdate/luo_file.c
-@@ -950,29 +950,32 @@ void liveupdate_unregister_file_handler(struct liveupdate_file_handler *fh)
- }
- 
- /**
-- * liveupdate_get_token_outgoing - Get the token for a preserved file.
-+ * liveupdate_get_token_outgoing - Get the token for a preserved object.
-  * @s:      The outgoing liveupdate session.
-- * @file:   The file object to search for.
-+ * @id:     The identifier of the preserved object to search for, as returned
-+ *          by the owning handler's ->get_id().
-  * @tokenp: Output parameter for the found token.
-  *
-- * Searches the list of preserved files in an outgoing session for a matching
-- * file object. If found, the corresponding user-provided token is returned.
-+ * Searches the list of preserved files in an outgoing session for an object
-+ * with a matching identifier. If found, the corresponding user-provided token
-+ * is returned.
-  *
-- * This function is intended for in-kernel callers that need to correlate a
-- * file with its liveupdate token.
-+ * For handlers that do not implement ->get_id() use the 'struct file' pointer
-+ * as their identifier.
-  *
-  * Context: It must be called with session mutex acquired.
-- * Return: 0 on success, -ENOENT if the file is not preserved in this session.
-+ * Return: 0 on success, -ENOENT if no such object is preserved in this
-+ *         session.
-  */
- int liveupdate_get_token_outgoing(struct liveupdate_session *s,
--				  struct file *file, u64 *tokenp)
-+				  unsigned long id, u64 *tokenp)
- {
- 	struct luo_file_set *file_set = luo_file_set_from_session_locked(s);
- 	struct luo_file *luo_file;
- 	int err = -ENOENT;
- 
- 	list_for_each_entry(luo_file, &file_set->files_list, list) {
--		if (luo_file->file == file) {
-+		if (luo_get_id(luo_file->fh, luo_file->file) == id) {
- 			if (tokenp)
- 				*tokenp = luo_file->token;
- 			err = 0;
+ #define __INIT_KOBJ_ATTR(_name, _mode, _show, _store)			\
 -- 
 2.56.0.rc1.310.g51773c2048-goog
 
