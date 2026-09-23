@@ -4,117 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E6C8DC98302
-	for <kexec@archiver.kernel.org>; Wed, 23 Sep 2026 04:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 45286C98302
+	for <kexec@archiver.kernel.org>; Wed, 23 Sep 2026 06:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=IL5T/x9wo2ltEMEZ8/1aNrwgbLXnEAWwAyXPHWtAGlo=; b=EZv1mHv3JeJ347s/twlxCDJGok
-	KLIAGVlSWPc8XtiN8MHpEjE9gK8FweV9WWYMqbkVjBeOFe8IHNdpN80+57cdCV8a3yl2/OeChyiGa
-	zDjeQgXU900Qjd6oS2KUvt3G+jDaDK6s10cbo/UAF8rZJE33fgFeta2EqnWEGaazyG6mBvPErV0UV
-	DnTsW7bKnZYmP74+WB8eh+CrYeXRiqg/9DtxR+HOGlO7D8jZt6EsDwXbqLsZxS7KjYXHSDmX1694R
-	TQ6VFza5gfScbKaLbE2p9e/3EL/EQomCcxqNQKMqlfeC76xm+RL7nNF874hibl8OCou/bSqDV/uyM
-	Z5ZA7YvA==;
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=t/UY/m5fB+YopvJ/qJkRlBT/C+InmGSj75PrUGqRBBQ=; b=p60Zc0W0nxVJvIvUNuiaNtJ11t
+	b435i7WHOHBQFjnAvqAraWsE1XMQI7fV0P9LRJ0Trzv3o30nEUmzK9PqOmIm/04ROKmhrtvzV0MMO
+	BRJZpZktu0PstfC4UbVykD4q7aovGPudcxO5QNGg3U155mLXwzD2c6dNM/NbB91j8lpGOHN9+W9hD
+	4ZjinLXo7OaV2FSm+IS9l8Huki+JfCc+jsFhb95LUohFzK4624y0Dn3xVd+fLoKyU1a8DcPHMzsQz
+	74bqaVYNl70I0IisvgMQrpifiHI3gFYGTUqKqr2pr4RzIVwpCos7EOR/iA2FtXebR8zUlxKBLgYGL
+	JTxymfjg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x9Egx-000000077Jq-3ZMv;
-	Wed, 23 Sep 2026 04:34:47 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1x9G67-00000007Ee8-2HvS;
+	Wed, 23 Sep 2026 06:04:51 +0000
+Received: from mailgw.kylinos.cn ([124.126.103.232])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x9Egw-000000077JH-0NyW
+	id 1x9G64-00000007Eda-0u6P
 	for kexec@lists.infradead.org;
-	Wed, 23 Sep 2026 04:34:47 +0000
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68N46M3l2190692;
-	Wed, 23 Sep 2026 04:34:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=IL5T/x
-	9wo2ltEMEZ8/1aNrwgbLXnEAWwAyXPHWtAGlo=; b=pO00lmFlutDiqbUkdKhc5R
-	hZra2OvfsGeowoGlBySClcQgNWzv1OzIZK3bFq/HuOV4vH7SQrxtGPEjHjwQVkgL
-	z7sJLUEspqy7ptJBFfi/8OY04wEAx5hgVXtaugwCRVIwixdJ9tpROHyLFHgKIYo1
-	zbkdhzks6wL34UJV6gHJrQggPKm5gsEJpwna+cY1EqT5HG+aEPnUMKhV6g6RG0HW
-	09DXioGVjsspMG+C5kR1HJM7Yh03by/+48ShoKbqQJf6Mofk8t2ela665vaTXtvO
-	HQw55mh3uOXLr1xmQTWwnTKZc53QLqm9sLViodRHl5mGatDnmZwusj4O6N4O9q8w
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gske1gvcq-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Wed, 23 Sep 2026 04:34:32 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68N3lcXs3822101;
-	Wed, 23 Sep 2026 04:34:32 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4gt5qjvqp7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Sep 2026 04:34:31 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68N4YTsm40436114
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 23 Sep 2026 04:34:30 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CE9BC20040;
-	Wed, 23 Sep 2026 04:34:29 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 68C2020043;
-	Wed, 23 Sep 2026 04:34:27 +0000 (GMT)
-Received: from [9.123.14.142] (unknown [9.123.14.142])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 23 Sep 2026 04:34:27 +0000 (GMT)
-Message-ID: <2c632eee-0a86-4bdf-90c6-66de2c092114@linux.ibm.com>
-Date: Wed, 23 Sep 2026 10:04:26 +0530
+	Wed, 23 Sep 2026 06:04:50 +0000
+X-UUID: a6eef1b4b71411f19a56ed5b684f684d-20260923
+X-CTIC-Tags: HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NAME
+	IP_TRUSTED, SRC_TRUSTED, SA_UNTRUSTED, SA_UNFAMILIAR, SN_UNTRUSTED
+	SN_UNFAMILIAR, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD
+	CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_GOOD
+	ABX_MISS_RDNS
+X-CID-UNFAMILIAR: 1
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.19,REQID:3d88e1a1-1cb0-49d7-9bf1-907f6b91530b,IP:10,
+	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:5
+X-CID-INFO: VERSION:1.3.19,REQID:3d88e1a1-1cb0-49d7-9bf1-907f6b91530b,IP:10,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:5
+X-CID-META: VersionHash:7db8b62,CLOUDID:5af9268b5c019df38064f5dd3d537d19,BulkI
+	D:260923140438MTI5JYX5,BulkQuantity:0,SF:16|19|38|66|78|102|127|136|850|86
+	5|898,TC:nil,Content:0|15|50|99,EDM:-3|-100,IP:-2,URL:0,File:nil,RT:nil,Bu
+	lk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:
+	0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_USA,TF_CID_SPAM_FSD
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: a6eef1b4b71411f19a56ed5b684f684d-20260923
+X-User: lianyangyang@kylinos.cn
+Received: from localhost.localdomain [(39.156.73.11)] by mailgw.kylinos.cn
+	(envelope-from <lianyangyang@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1618895294; Wed, 23 Sep 2026 14:04:35 +0800
+From: Yangyang Lian <lianyangyang@kylinos.cn>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Dave Young <ruirui.yang@linux.dev>,
+	WANG Xuerui <kernel@xen0n.name>,
+	kexec@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Yangyang Lian <lianyangyang@kylinos.cn>,
+	Haoran Jiang <jianghaoran@kylinos.cn>,
+	George Guo <guodongtai@kylinos.cn>
+Subject: [PATCH] LoongArch: kdump: add arch_crash_save_vmcoreinfo() support
+Date: Wed, 23 Sep 2026 14:03:49 +0800
+Message-Id: <20260923060349.146780-1-lianyangyang@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kho: fix global scratch size calculation
-To: sashiko-reviews@lists.linux.dev
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org,
-        Mike Rapoport <rppt@kernel.org>, kexec@lists.infradead.org,
-        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-        George Guo <guodongtai@kylinos.cn>,
-        Pratyush Yadav <pratyush@kernel.org>, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Graf <graf@amazon.com>
-References: <20260922131217.698809-1-sourabhjain@linux.ibm.com>
- <20260922132738.B15EB1F000FF@smtp.kernel.org>
-Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <20260922132738.B15EB1F000FF@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-ORIG-GUID: JymBw-GCVZgIpua2F5lE7y4uPHUhjmhU
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTIzMDAxNiBTYWx0ZWRfX4fnr310VoGhS
- ku8sYVZ1ROR6XXfm9qfj97POaQPYccW2YsY/3b9ifmMLSMKqSdJhTWvlJfQY0+QJ39raF3HmRcx
- 3SNFEEZmgSyu+ymoB9e9wr1JpWShI44/mnLMwspIy+D34qIQeLsubye3tWhixOpFzPrSOBUGrxz
- D4cw+EzWUblfEvD0LBm24kM8nF8kZrOfRpDOFqy08NNm/PRPwkwMT0lgK5UkkSZq7vWDfqT2m8v
- +EQuIh7UJsOVoWOGKrvqmzlXWnKYKzezT7rD0RCQxkgc/1T0NfT/cnN93TJSwSo34O2NfpK6a9s
- A7I/BPBfl/QMRPrE0aQuDwPYY52UhRdMZvISrQ2XfB5xHcR7Q0TpY0qnfK102WhjvSZ9a3MP26l
- qGpfvmL353guqwavWfkSLVWt9B94/9OUddgINpDPKPocXtgrgQhvtbt0UdOobvCi7wAJeMfHvkD
- gnpwIf7Bg4bH8qexE3g==
-X-Authority-Analysis: v=2.4 cv=O/KsLx9W c=1 sm=1 tr=0 ts=6ab356d8 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=1qZhHyjmDr2UWPvmznUA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTIzMDAxNiBTYWx0ZWRfX3GDmaw5CSYm1
- q1eZOX6F1XIe5Zj/ODLLPPoql/nH958H253hA3yDVQOU0AWYyZmHdj5nAhDJjjgmNb4UeB/1yq1
- rAnaIma1PG25vCH6RsL0QCV5wzpjuRo=
-X-Proofpoint-GUID: 6DTDKEWtVzrOZRL56iOSkiCokObvGjJC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-23_02,2026-09-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 malwarescore=0 phishscore=0 impostorscore=0 suspectscore=0
- bulkscore=0 priorityscore=1501 lowpriorityscore=0 adultscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609230016
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260922_213446_288830_AE2B3D7F 
-X-CRM114-Status: GOOD (  23.01  )
+X-CRM114-CacheID: sfid-20260922_230448_565802_02045393 
+X-CRM114-Status: GOOD (  15.61  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -129,105 +97,114 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Since commit 23c85094fe18 ("proc/kcore: add vmcoreinfo note to
+/proc/kcore") the kernel has exported the vmcoreinfo PT_NOTE on
+/proc/kcore as wellas /proc/vmcore.
 
+LoongArch does not provide arch_crash_save_vmcoreinfo(), so the
+arch-specific values are missing from the vmcoreinfo PT_NOTE. The
+generic exporter in kernel/vmcore_info.c already provides
+NUMBER(VMALLOC_START), but tools like crash cannot derive the module
+and vmemmap ranges, VA_BITS, or the KASLR offset of a LoongArch dump.
 
-On 22/09/26 18:57, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] kho: lowmem scratch exhaustion due to missing node-specific lowmem reservations
-> --
->
-> commit 45b67db1813edaa6fb1bdfe7033f0598a814cd63
-> Author: Sourabh Jain <sourabhjain@linux.ibm.com>
->
-> kho: fix global scratch size calculation
->
-> This commit updates the scratch size calculations to correctly distinguish
-> between memory reserved for a specific NUMA node and memory reserved with
-> NUMA_NO_NODE. It introduces memblock_reserved_size_nid() to calculate
-> reserved memory based on reservation type and NUMA node, fixing an issue
-> where per-node reservations were incorrectly included in the global scratch
-> allocation.
->
->> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
->> index 7c4d86daf86d5..dc809e1e768c0 100644
->> --- a/kernel/liveupdate/kexec_handover.c
->> +++ b/kernel/liveupdate/kexec_handover.c
-> [ ... ]
->> @@ -787,17 +787,17 @@ static void __init scratch_size_update(void)
->>   	if (scratch_scale) {
->>   		phys_addr_t size;
->>   
->> -		size = memblock_reserved_kern_size(ARCH_LOW_ADDRESS_LIMIT,
->> -						   NUMA_NO_NODE);
->> -		size -= memblock_reserved_hugetlb_size(ARCH_LOW_ADDRESS_LIMIT,
->> -						       NUMA_NO_NODE);
->> +		size = memblock_reserved_size_nid(ARCH_LOW_ADDRESS_LIMIT, NUMA_NO_NODE,
->> +						  MEMBLOCK_RSRV_KERN);
-> [Severity: High]
-> Does checking NUMA_NO_NODE here exclude node-specific lowmem reservations
-> (like node-bound DMA pools) from the lowmem scratch size calculation?
+Since commit 18210a104bb9 ("LoongArch: Expand module virtual address
+space to 2GB") the vmalloc and module boundaries are no longer stable
+across kernel versions either, so vmcoreinfo is the only reliable
+source for them.
 
-No. Node-specific reservations are handled separately. The node-specific
-scratch memory size is calculated in scratch_size_node(), so if the kernel
-has made a node-specific allocation, KHO will reserve scratch memory on
-the corresponding node.
+Provide this function in a separate file that is built at the same time
+as its caller in kernel/vmcore_info.c, and add a LOONGARCH64 section to
+Documentation/admin-guide/kdump/vmcoreinfo.rst.
 
-> If the successor kernel requires lowmem for these node-specific reservations
-> during early boot, could shrinking the global lowmem scratch memory lead to
-> memblock allocation failures and a panic?
+Reported-by: Haoran Jiang <jianghaoran@kylinos.cn>
+Suggested-by: Haoran Jiang <jianghaoran@kylinos.cn>
+Co-developed-by: George Guo <guodongtai@kylinos.cn>
+Signed-off-by: George Guo <guodongtai@kylinos.cn>
+Signed-off-by: Yangyang Lian <lianyangyang@kylinos.cn>
+---
+ .../admin-guide/kdump/vmcoreinfo.rst          | 29 +++++++++++++++++++
+ arch/loongarch/kernel/Makefile                |  1 +
+ arch/loongarch/kernel/vmcore_info.c           | 21 ++++++++++++++
+ 3 files changed, 51 insertions(+)
+ create mode 100644 arch/loongarch/kernel/vmcore_info.c
 
-
-With this fix, KHO still reserves both per-node scratch memory and
-lowmem scratch memory to meet the needs of the successor kernel.
-
-Per-node scratch memory is reserved on the corresponding node.
-The only change is that per-node allocations made in lowmem (below 4G 
-by-default)
-are no longer counted when calculating the lowmem scratch size.
-
-
->> +		size -= memblock_reserved_size_nid(ARCH_LOW_ADDRESS_LIMIT, NUMA_NO_NODE,
->> +						   MEMBLOCK_RSRV_HUGETLB);
->>   		size = size * scratch_scale / 100;
->>   		scratch_size_lowmem = size;
-> [ ... ]
->> @@ -815,11 +815,11 @@ static phys_addr_t __init scratch_size_node(int nid)
->>   	phys_addr_t size;
->>   
->>   	if (scratch_scale) {
->> -		size = memblock_reserved_kern_size(MEMBLOCK_ALLOC_ANYWHERE,
->> -						   nid);
->> +		size = memblock_reserved_size_nid(MEMBLOCK_ALLOC_ANYWHERE, nid,
->> +						  MEMBLOCK_RSRV_KERN);
-> [Severity: High]
-> Are the node-specific lowmem reservations that were excluded from
-> scratch_size_lowmem now being counted here instead? Since this counts
-> with MEMBLOCK_ALLOC_ANYWHERE, will these reservations potentially be satisfied
-> using scratch memory in highmem?
-
-No.
-
->
-> If the successor kernel restricts its memblock allocations to
-> MEMBLOCK_KHO_SCRATCH regions, won't it be unable to recreate its
-> node-specific lowmem reservations if the per-node scratch memory was placed
-> in highmem?
-
-The per-node scratch memory will be allocated on the corresponding
-node. Therefore, the successor kernel should be able to recreate its
-node-specific reservations, even if the per-node scratch memory is
-placed in highmem.
-
-
-
->
->>   		/* Do not count HugeTLB pages. */
->> -		size -= memblock_reserved_hugetlb_size(MEMBLOCK_ALLOC_ANYWHERE,
->> -						       nid);
->> +		size -= memblock_reserved_size_nid(MEMBLOCK_ALLOC_ANYWHERE, nid,
->> +						   MEMBLOCK_RSRV_HUGETLB);
->>   		size = size * scratch_scale / 100;
->>   	} else {
->>   		size = scratch_size_pernode;
+diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+index 7663c610fe90..2ff921232616 100644
+--- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
++++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+@@ -594,3 +594,32 @@ va_kernel_pa_offset
+ 
+ Indicates the offset between the kernel virtual and physical mappings.
+ Used to translate virtual to physical addresses.
++
++LOONGARCH64
++===========
++
++VA_BITS
++-------
++
++The maximum number of bits for virtual addresses. Used to compute the
++virtual memory ranges.
++
++PHYS_OFFSET
++-----------
++
++Indicates the physical address of the start of memory. Used to translate
++virtual to physical addresses.
++
++KERNELOFFSET
++------------
++
++The kernel randomization offset. Used to locate the kernel text in
++virtual memory. If KASLR is disabled, this value is zero.
++
++MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMAP_END
++-----------------------------------------------------------------------------
++
++Used to get the correct ranges:
++	MODULES_VADDR ~ MODULES_END-1 : Kernel module space.
++	VMALLOC_START ~ VMALLOC_END-1 : vmalloc() / ioremap() space.
++	VMEMMAP_START ~ VMEMMAP_END-1 : vmemmap region, used for struct page array.
+diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+index 001924877772..6260c15adaba 100644
+--- a/arch/loongarch/kernel/Makefile
++++ b/arch/loongarch/kernel/Makefile
+@@ -64,6 +64,7 @@ obj-$(CONFIG_RELOCATABLE)	+= relocate.o
+ obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec.o relocate_kernel.o
+ obj-$(CONFIG_KEXEC_FILE)	+= machine_kexec_file.o kexec_efi.o kexec_elf.o
+ obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
++obj-$(CONFIG_VMCORE_INFO)	+= vmcore_info.o
+ 
+ obj-$(CONFIG_UNWINDER_GUESS)	+= unwind_guess.o
+ obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
+diff --git a/arch/loongarch/kernel/vmcore_info.c b/arch/loongarch/kernel/vmcore_info.c
+new file mode 100644
+index 000000000000..1128f6cdfe0d
+--- /dev/null
++++ b/arch/loongarch/kernel/vmcore_info.c
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/vmcore_info.h>
++#include <asm/addrspace.h>
++#include <asm/pgtable.h>
++#include <asm/setup.h>
++
++void arch_crash_save_vmcoreinfo(void)
++{
++	VMCOREINFO_NUMBER(VA_BITS);
++	/* NUMBER(VMALLOC_START) is exported by the generic code */
++	vmcoreinfo_append_str("NUMBER(VMALLOC_END)=0x%lx\n", VMALLOC_END);
++#ifdef CONFIG_64BIT
++	vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=0x%lx\n", MODULES_VADDR);
++	vmcoreinfo_append_str("NUMBER(MODULES_END)=0x%lx\n", MODULES_END);
++	vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=0x%lx\n", (unsigned long)vmemmap);
++	vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=0x%lx\n", VMEMMAP_END);
++#endif
++	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%lx\n", PHYS_OFFSET);
++	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
++}
+-- 
+2.25.1
 
 
