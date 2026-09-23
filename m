@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 552FFC98304
-	for <kexec@archiver.kernel.org>; Wed, 23 Sep 2026 23:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C3C5EC98304
+	for <kexec@archiver.kernel.org>; Wed, 23 Sep 2026 23:14:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:
 	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
 	From:MIME-Version:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=WZdmhBqOMuKYNscPsuUbYi6tP3G80UEN5EI2cwEtmR8=; b=VUupCersVLWrk6hJLTyl3G84PO
-	Es0bEAHyRisNJXW0H1+NkVZ/BP14CvRn0MwDb/8n6nGiVlTLTl36s7SFvEYEGJ2kH+Y5Kp8ii3RGA
-	ZcNdaa+uen4b2m/kBS8R5vSSUr4CETOgL53htLZbi4L3KrcKpR3t9p6sgOfwxzmftM56o5FZu2r35
-	FhBbmdymiJHKNi135OzTxTzix62OHObunt/CWQZJ8Wcz8w6g0nl2ixOSkecTN79cTFXFxUqXXxjuA
-	Cdx4PabqvmjVRbM/gVYlzKyjuTaFYKif27t0+tGSoIZpUiKW8KJf4PEpxUjJ+oHbSHqZ1BLkFI4NJ
-	XiYsHpsg==;
+	bh=PunvAU+DlMDl9/ZMTsQFtHIX6hxmtTujipDeh0Nhe6g=; b=xxmDVJverJ1OyltEAcV/qULyuG
+	y0znaLtXJ53ZYw4jW++tkpQ/2uiovIfUSZf3fQJ8TmQFFxi7THBALmk/w9OEL3o+5v5YFu8gUdBoU
+	rVTnW2p+tfdmDwcd1vz7vkLraX8X5PiM9B9e5Lk57KYmo47Mb4MErm9SFfx0SRGoXjWDZ1LWMDDi4
+	QjIyyfHL9q4Qjx2buv9GMQNhhZLYw1O3xVTP08EIytw/zS0t17bDWRKJ55nQmoMJ3+4I9I6uhRVdR
+	FGHYzQnYS53s10o8JnZEOFWkvtFfhxRr37ujrHIpgX5tAmtR5xctFx4hi36d2uguLTOHfGGn86ZFE
+	XeQslBBA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x9W35-00000009h9v-3mOs;
-	Wed, 23 Sep 2026 23:06:47 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1x9WAr-00000009hMn-2k9P;
+	Wed, 23 Sep 2026 23:14:49 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x9W34-00000009h9p-1Xj3
+	id 1x9WAq-00000009hMf-2SPY
 	for kexec@lists.infradead.org;
-	Wed, 23 Sep 2026 23:06:46 +0000
+	Wed, 23 Sep 2026 23:14:48 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id BFEC340758;
-	Wed, 23 Sep 2026 23:06:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E847A1F000FF;
-	Wed, 23 Sep 2026 23:06:44 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 3784E43D1C;
+	Wed, 23 Sep 2026 23:14:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6007E1F000FF;
+	Wed, 23 Sep 2026 23:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790204805;
-	bh=WZdmhBqOMuKYNscPsuUbYi6tP3G80UEN5EI2cwEtmR8=;
+	s=k20260515; t=1790205286;
+	bh=PunvAU+DlMDl9/ZMTsQFtHIX6hxmtTujipDeh0Nhe6g=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ZzuHD4GfgdAkX+OUfQZ6s7tIgAQjGqlqG7OhOna8OhvbMDSeHf6VeKfOHVcSh4/tm
-	 8XIBmh7+Vx7lTluK+P8eFyYsACVvqdN4LsDY+JRyF+2WvXMocelVF+MBLGwxj3HUmE
-	 tKi+7G74HzQEWKKQQ1Duf93OfrGeAiWU9A2MfKgNPir+AR/wFXQ1mwAF00nZpV7674
-	 2tELmsn+Tn/7ooLIyS4NPUHqZwOaHCptdW68CGWV1EWC50i6yX7sjcech7zZY4Onpm
-	 UfjrFl+wjzhmL5Kh261xy7QdpWy10OiAZ708xw1p9jqE5xAJ4nCdpAu9KWJry3mpRZ
-	 tCaljRNJprcWg==
+	b=GwCaB5PBF3E1FC7ficVZunVcVFP0VTS4+2Bga9Zh/QWOyuH+hyzsTGLPyEMk96WMf
+	 +kc/oK1keREe/0gQBuzQyoZq3CDbecwLRM8O5ySUTnSGYs3dHQt/PCXL+l3pnWCzBq
+	 8v5YXQQoz+eqdXYFpCyp8o1nU7W1tw2hhUZEdsZJx03gNAcoNu+/pHkyJUyiL7aMBM
+	 G0y2Nxbed1B9b5RMeUi6BRWNr3yCLvxgYDZr4S9Xu2xYatq12zK0sn/yBPtbjplq5S
+	 /jp8m9DH1r6h8OKTYOgvj3UBZI5WVdk9hcvn/8OeJLddtZZzBqRBs9kQ3fI0ky1imT
+	 UdSPO5heLxLVw==
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH 4/6] mm/memfd_luo: allow preserving a tmpfs mount
-To: "Baolin Wang" <baolin.wang@linux.alibaba.com>, "Hugh Dickins" <hughd@google.com>, "Mike
- Rapoport" <rppt@kernel.org>, "Pratyush Yadav" <pratyush@kernel.org>, "Samiullah
- Khawaja" <skhawaja@google.com>, "Alexander Graf" <graf@amazon.com>, "David
- Matlack" <dmatlack@google.com>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Andrew
- Morton" <akpm@linux-foundation.org>, "David Hildenbrand" <david@kernel.org>, "Lorenzo
- Stoakes" <ljs@kernel.org>
-Cc: kexec@lists.infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260923224408.3745689-5-pratyush@kernel.org>
+Subject: Re: [RFC PATCH 6/6] selftests/liveupdate: add tmpfs kexec test
+To: "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Baolin
+ Wang" <baolin.wang@linux.alibaba.com>, "David Matlack" <dmatlack@google.com>, "Hugh
+ Dickins" <hughd@google.com>, "Samiullah Khawaja" <skhawaja@google.com>, "David
+ Hildenbrand" <david@kernel.org>, "Mike Rapoport" <rppt@kernel.org>, "Alexander
+ Graf" <graf@amazon.com>, "Lorenzo Stoakes" <ljs@kernel.org>, "Pratyush
+ Yadav" <pratyush@kernel.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+In-Reply-To: <20260923224408.3745689-7-pratyush@kernel.org>
 References: <20260923224408.3745689-1-pratyush@kernel.org>
- <20260923224408.3745689-5-pratyush@kernel.org>
+ <20260923224408.3745689-7-pratyush@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 23 Sep 2026 23:06:44 +0000
-Message-Id: <20260923230644.E847A1F000FF@smtp.kernel.org>
+Date: Wed, 23 Sep 2026 23:14:44 +0000
+Message-Id: <20260923231445.6007E1F000FF@smtp.kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,73 +73,78 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] mm: tmpfs LUO drops group quotas due to incomplete USRQUOTA check
-- [Medium] mm: TOCTOU race allows unsupported ID mappings and quotas to byp=
-ass LUO validation
+- [Medium] selftests/liveupdate: luo_kexec_tmpfs fails on persistent rootfs
 --
 
-commit 20e62ff0b162f0ffc76cd0d972cc6c760a83d003
+commit 656981de91db4b31da49ddcf77d65f446841090b
 Author: Pratyush Yadav (Google) <pratyush@kernel.org>
 
-mm/memfd_luo: allow preserving a tmpfs mount
+selftests/liveupdate: add tmpfs kexec test
 
-This commit adds support for preserving a tmpfs mount across a live update.
-It preserves the filesystem block limit and root directory mode, while
-resetting other options to default, identifying the mount via a file
-pointing to it.
+This commit adds a two-stage kexec test for tmpfs preservation. The first
+stage creates a tmpfs mount, creates a file, and preserves both. The second
+stage retrieves both and verifies the contents.
 
-> diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
-> --- a/mm/memfd_luo.c
-> +++ b/mm/memfd_luo.c
+> diff --git a/tools/testing/selftests/liveupdate/luo_kexec_tmpfs.c b/tools=
+/testing/selftests/liveupdate/luo_kexec_tmpfs.c
+> new file mode 100644
+> index 0000000000000..608a6eddbd7ba
+> --- /dev/null
+> +++ b/tools/testing/selftests/liveupdate/luo_kexec_tmpfs.c
 [ ... ]
-> +static bool tmpfs_luo_mnt_can_preserve(struct liveupdate_file_handler *f=
-h,
-> +				       struct file *file)
+> +/* Stage 1: Executed before the kexec reboot. */
+> +static void run_stage_1(int luo_fd)
 > +{
 [ ... ]
-> +	/* These features are not supported. */
-> +	if (SHMEM_SB(sb)->mpol || sb_has_quota_active(sb, USRQUOTA) ||
-> +	    sb_has_encoding(sb) || is_idmapped_mnt(mnt))
-> +		return false;
+> +	ksft_print_msg("[STAGE 1] Mounting tmpfs at %s...\n", TMPFS_DIR);
+> +	if (mkdir(TMPFS_DIR, 0755) < 0)
+> +		fail_exit("mkdir %s", TMPFS_DIR);
 
 [Severity: Medium]
-Does this condition improperly accept tmpfs mounts with group or project
-quotas active?=20
+Will this fail on test re-runs if the directory is left behind from a prior
+run?
 
-The check only tests for USRQUOTA, which means mounts with grpquota or=20
-prjquota will bypass this rejection and their quota state will be silently
-lost across kexec.=20
-
-Should this use sb_any_quota_loaded(sb) to properly detect all quota types?
-
+> +	if (mount("tmpfs", TMPFS_DIR, "tmpfs", 0, NULL) < 0)
+> +		fail_exit("mount tmpfs at %s", TMPFS_DIR);
 [ ... ]
-> +static int tmpfs_luo_mnt_freeze(struct liveupdate_file_op_args *args)
+> +/* Stage 2: Executed after the kexec reboot. */
+> +static void run_stage_2(int luo_fd, int state_session_fd)
 > +{
-> +	struct super_block *sb =3D args->file->f_path.mnt->mnt_sb;
-> +	struct shmem_sb_info *sbinfo =3D SHMEM_SB(sb);
-> +	struct tmpfs_luo_mnt_ser *ser;
+[ ... ]
+> +	ksft_print_msg("[STAGE 2] Attaching the restored mount at %s...\n",
+> +		       TMPFS_DIR);
+> +	if (mkdir(TMPFS_DIR, 0755) < 0)
+> +		fail_exit("mkdir %s", TMPFS_DIR);
+
+[Severity: Medium]
+Will this unconditionally fail with EEXIST in run_stage_2() if the underlyi=
+ng
+root filesystem is persistent across kexec?
+
+> +	if (move_mount_empty_from(mnt_fd, TMPFS_DIR) < 0)
+> +		fail_exit("move_mount of the restored mount to %s", TMPFS_DIR);
+> +	close(mnt_fd);
+[ ... ]
+> +	ksft_print_msg("[STAGE 2] Test data verified successfully.\n");
+> +	if (luo_session_finish(session_fd) < 0)
+> +		fail_exit("luo_session_finish for test session");
+> +	close(session_fd);
 > +
-> +	/*
-> +	 * A remount can install a memory policy after can_preserve() accepted
-> +	 * the mount.
-> +	 */
-> +	if (sbinfo->mpol)
-> +		return -EOPNOTSUPP;
+> +	if (luo_session_finish(state_session_fd) < 0)
+> +		fail_exit("luo_session_finish for state session");
+> +	close(state_session_fd);
+> +
+> +	ksft_print_msg("\n--- TMPFS KEXEC TEST PASSED ---\n");
+> +}
 
 [Severity: Medium]
-Does this leave a TOCTOU window for ID mappings and quotas?=20
-
-While mpol is re-validated here to handle concurrent remounts, checks for
-is_idmapped_mnt() and quotas are missing. If a user concurrently adds an ID
-mapping via mount_setattr() or enables quotas via remount after the
-tmpfs_luo_mnt_can_preserve() check passes, those unsupported properties will
-bypass validation and be silently dropped across kexec.
-
-Should this re-validate the ID mapping and quota state as well?
+Does the test exit successfully here without calling umount() or rmdir() to
+clean up the environment? If so, does it leak the /tmpfs directory and its
+mount on the host system?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260923224408.3745=
-689-1-pratyush@kernel.org?part=3D4
+689-1-pratyush@kernel.org?part=3D6
 
