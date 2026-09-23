@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 23087C98304
-	for <kexec@archiver.kernel.org>; Wed, 23 Sep 2026 22:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6C4C6C98311
+	for <kexec@archiver.kernel.org>; Wed, 23 Sep 2026 22:44:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ppyzkpiHfzcRPB9/8pM+Rg0xhLEz5xnxGptHULBj05Q=; b=EzP1+uTVzHjrCEc6C4FFZs4zzA
-	9ZRqbQFN4ojp1cLKuIkoSi9btQQsKYTv/9XKzHdDRLoWLSI/rwneDKH8RTDj5FYRx3ZWhvf8AuJcU
-	ja9lwmACvL/A2fEBfEHx4K3ltPMpiU9phlPTl12pPEU+GQhRDiD0uYF52QrwH3uC8PvzsF0fx/H4a
-	alzB9cuKlYLbr4YvAcxcapmepSpn92ST+UI3ETn/WMNpJ2t5APMHIT1hVCLIWdVy6yaWwfHzN23QW
-	wm8tVjXx2/Sie9MNQCv8QqSEzL49WORF4wBz9xrAYsOM1xlOZw2Z+tJdHy1vDduU34yjqFITOfz/E
-	aFRelA6Q==;
+	bh=eG1RVyLzxpChpBzlqXiCEe5ZgN0Ss8wEK7e+2vb2e54=; b=iN0MgkWMuQaDbTKL2aRu/yphpP
+	+n/04N+szwgsZdSO+jVd9o4s2tcuD/obMMKX9j4/R+WfetDce75S0y5Pi0aJlDrxdtr49vAirtyaT
+	8VB/UOl8dZycbkCqIzfFms6C6bK5y6XUSGkAjEcmeTLbcNbIFG9rC2UO0Yy2i2NmUGgO1AlQ2TZMD
+	HtIA0xVID+01Q1ZmupIRUsfsOrbzNl38HsVgh0uaq3euVm3VqV7b/o1A+GSgdlvOKx5ZwnBHTmvj0
+	3F6nc8uckVb1uX9AIndT0gdiHHnJfHYXWiTYDcQpflxCaV+9vf3YFoL/6b5N91gzoIyjqo8ylHHsV
+	hAamMQtw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x9Vhc-00000009fgH-0JMZ;
-	Wed, 23 Sep 2026 22:44:36 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1x9Vhd-00000009fh9-1YBH;
+	Wed, 23 Sep 2026 22:44:37 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x9Vha-00000009ffE-02bv
+	id 1x9Vhc-00000009fgS-2jNQ
 	for kexec@lists.infradead.org;
-	Wed, 23 Sep 2026 22:44:34 +0000
+	Wed, 23 Sep 2026 22:44:36 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 688706020C;
+	by tor.source.kernel.org (Postfix) with ESMTP id 1E10360235;
+	Wed, 23 Sep 2026 22:44:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80C181F000FF;
 	Wed, 23 Sep 2026 22:44:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC0F21F00898;
-	Wed, 23 Sep 2026 22:44:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790203473;
-	bh=ppyzkpiHfzcRPB9/8pM+Rg0xhLEz5xnxGptHULBj05Q=;
+	s=k20260515; t=1790203475;
+	bh=eG1RVyLzxpChpBzlqXiCEe5ZgN0Ss8wEK7e+2vb2e54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=fP2ibDoPZ4EXQS+PSvLtiwA3SOjO2JC8tuNRaL2UUfZxIX+HeouMuBP/+Y71TSpa5
-	 CmvlFyGFpn/eyAgKl0Yw71IT65dJKaRFXeJDVwFi7tGEzV3GFq08QO9IQR4x2uGWAg
-	 aQaxngQ5F1vtH6RZWMMhRBARZHnVDGZGlBQJSJ7oJjUvFJs8cdfMAgEu9/eE9OL967
-	 E/32rcLdGy9tqPe8rrP9zizmXV2V1884jVR4S8DW/ILwEMkDvB2Aog4KhFn4hRv+tc
-	 i63l844SnbMNZ6sWJ6SRfQXkJsBdn66kSiEaYBsmyaUrRwj3GQS6O7gBryB0A90PTM
-	 dlyZdVkf089BQ==
+	b=lrNPl32yv6F7bSR3BBzsqEEgJOJEV8vFbf2FKbw9lshqzfR65ccPCOJrqAkD2p5dL
+	 dceuUNDxeMsYJbywPccHmuE230lS6vk/AYFN7uRp5Y6af4bXBnog4RDEgjovaNk0vH
+	 1tZtoFXrlSDPdSi+zHKFGvM3jhrruDUqwLP+kB+BFI9KazHg/iH9HA8BeB4POaGwcE
+	 oTusEO9VVQk7Ea3J+NAnoHhjtImwGRjE4HBy+5RREt4Uc+/M0VsG6hXtY8iPiMATNZ
+	 mLX0J6Za6n2riopDl4RwuE2OFpMbcT4q2cyZEkPOqeC+RrAoUGR3QXVuCkGVKYeCbI
+	 90kT3SnYBBQgQ==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>,
 	Mike Rapoport <rppt@kernel.org>,
@@ -57,9 +57,9 @@ To: Pasha Tatashin <pasha.tatashin@soleen.com>,
 Cc: kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: [RFC PATCH 5/6] mm/memfd_luo: allow preserving a tmpfs file
-Date: Thu, 24 Sep 2026 00:44:04 +0200
-Message-ID: <20260923224408.3745689-6-pratyush@kernel.org>
+Subject: [RFC PATCH 6/6] selftests/liveupdate: add tmpfs kexec test
+Date: Thu, 24 Sep 2026 00:44:05 +0200
+Message-ID: <20260923224408.3745689-7-pratyush@kernel.org>
 X-Mailer: git-send-email 2.56.0.rc1.310.g51773c2048-goog
 In-Reply-To: <20260923224408.3745689-1-pratyush@kernel.org>
 References: <20260923224408.3745689-1-pratyush@kernel.org>
@@ -81,501 +81,245 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-A memfd can be preserved across a live update, but it has no name, so
-anything that needs a filesystem path cannot use one.
+Add a two-stage kexec test for tmpfs preservation, in the same shape as
+luo_kexec_simple.
 
-The main use case is to fetch VMM binaries that need to be kept on the
-host memory during a live update to avoid the latency of fetching them
-from network. The host does not have any attached local storage to store
-the binaries.
+The first stage create a tmpfs mount, creates a file in it, write some
+data to it, and preserves both. In the second stage, it retrieves both
+and verifies the contents of the file. It also verifies it can be
+reached by a filesystem path.
 
-Allow preserving files in a tmpfs mount. Only regular files in the mount
-root are supported to keep things simple. Files in subdirectories will
-be rejected. The mount must be preserved before the files because the
-file takes a dependency on the mount. Restoration can be done in any
-order.
-
-Files are allowed to be renamed after preservation, but they can not be
-unlinked. Unlinked files will cause the freeze() callback to fail and
-result in a failed live update.
-
-Re-use the memfd preservation logic and ABI since it already knows how
-to preserve a shmem file. The same restrictions around file resizing
-apply.
+Add the test to run_vmtests.sh to allow automated runs.
 
 Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-
 ---
+ tools/testing/selftests/liveupdate/Makefile   |   1 +
+ .../selftests/liveupdate/luo_kexec_tmpfs.c    | 191 ++++++++++++++++++
+ .../selftests/liveupdate/run-vmtests.sh       |   1 +
+ 3 files changed, 193 insertions(+)
+ create mode 100644 tools/testing/selftests/liveupdate/luo_kexec_tmpfs.c
 
-The usage of liveupdate_get_file_incoming() makes lockdep scream. The
-locking itself is fine, but two locks of the same class are taken.
-Likely need some annotation in liveupdate_get_file_incoming(). That is
-separate work and not done by this series.
----
- include/linux/kho/abi/tmpfs.h |  35 ++++
- mm/memfd_luo.c                | 342 ++++++++++++++++++++++++++++++++--
- 2 files changed, 366 insertions(+), 11 deletions(-)
-
-diff --git a/include/linux/kho/abi/tmpfs.h b/include/linux/kho/abi/tmpfs.h
-index bed41048a19b..cd47e2eb5041 100644
---- a/include/linux/kho/abi/tmpfs.h
-+++ b/include/linux/kho/abi/tmpfs.h
-@@ -19,6 +19,11 @@
-  * tmpfs uses the ABI defined below for preserving a mount and the regular
-  * files in it across a kexec reboot using the LUO.
-  *
-+ * Regular files in the root of such a mount are preserved individually into
-+ * `struct tmpfs_luo_file_ser` and reference their mount by its LUO token. Only
-+ * the folios holding the file contents are true handover payload; they use the
-+ * memfd ABI (`struct memfd_luo_folio_ser`) unchanged.
-+ *
-  * The mount metadata is preserved via `tmpfs_luo_mnt_ser`.
-  *
-  * This interface is a contract. Any modification to the structure layout
-@@ -42,7 +47,37 @@ struct tmpfs_luo_mnt_ser {
- 	u32 flags;
- } __packed;
+diff --git a/tools/testing/selftests/liveupdate/Makefile b/tools/testing/selftests/liveupdate/Makefile
+index 634211c66652..c35aee04b4a3 100644
+--- a/tools/testing/selftests/liveupdate/Makefile
++++ b/tools/testing/selftests/liveupdate/Makefile
+@@ -3,6 +3,7 @@
+ TEST_GEN_PROGS += liveupdate
  
-+/**
-+ * struct tmpfs_luo_file_ser - Serialized state of a preserved tmpfs file.
-+ * @mnt_token: The LUO token of the tmpfs mount this file lives in.
-+ * @pos:       The file's current position (f_pos).
-+ * @size:      The total size of the file in bytes (i_size).
-+ * @mode:      The permission bits of the file (i_mode). The file type is
-+ *             always S_IFREG.
-+ * @flags:     Flags for the file. Unused flag bits must be set to 0.
-+ * @nr_folios: Number of folios in the folios array.
-+ * @folios:    KHO vmalloc descriptor pointing to the array of
-+ *             struct memfd_luo_folio_ser.
-+ * @name:      The NUL-terminated name of the file in the root of the mount,
-+ *             This is a single path component: it never contains '/', is never
-+ *             "." or "..", and all bytes after the terminator must be 0.
-+ */
-+struct tmpfs_luo_file_ser {
-+	u64 mnt_token;
-+	u64 pos;
-+	u64 size;
-+	u32 mode;
-+	u32 flags;
-+	u64 nr_folios;
-+	struct kho_vmalloc folios;
-+	/* NAME_MAX is uAPI. */
-+	char name[NAME_MAX + 1];
-+} __packed;
-+
- /* The compatibility string for the tmpfs mount file handler */
- #define TMPFS_LUO_MNT_FH_COMPATIBLE	"tmpfs-mnt-v1"
- 
-+/* The compatibility string for the tmpfs file handler */
-+#define TMPFS_LUO_FILE_FH_COMPATIBLE	"tmpfs-file-v1"
-+
- #endif /* _LINUX_KHO_ABI_TMPFS_H */
-diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
-index f29571666364..aacae90218cc 100644
---- a/mm/memfd_luo.c
-+++ b/mm/memfd_luo.c
-@@ -619,8 +619,8 @@ static struct liveupdate_file_handler memfd_luo_handler = {
-  * Overview
-  * ========
-  *
-- * tmpfs mounts can be preserved via LUO. This allows userspace to preserve an
-- * in-memory filesystem across kexec.
-+ * tmpfs mounts and the files contained can be preserved via LUO. This allows
-+ * userspace to preserve in-memory files with a filesystem path across kexec.
-  *
-  * Preservation is not transparent. Only the properties listed below survive;
-  * everything else comes back at its default.
-@@ -632,10 +632,16 @@ static struct liveupdate_file_handler memfd_luo_handler = {
-  * descriptor is rejected, so one obtained from fsmount(2) has to be reopened
-  * first with ``openat(fsmount_fd, ".", O_RDONLY | O_DIRECTORY)``.
-  *
-- * Mounts with memory policies, id mappings, quotas, and casefolding are not
-- * supported.
-+ * Each file is then preserved through its own FD. A file depends on its mount,
-+ * so the mount must already be preserved in the same session; otherwise
-+ * preserving the file fails with ``-ENOENT``.
-  *
-- * Attaching a memory policy after preserve will fail the freeze.
-+ * Only regular files linked at the root are supported. Files in subdirectories
-+ * are not supported. Mounts with memory policies, id mappings, quotas, and
-+ * casefolding are also not supported.
-+ *
-+ * Unlinking a file or attaching a memory policy after preserve will fail the
-+ * freeze.
-  *
-  * Restoring
-  * =========
-@@ -645,8 +651,12 @@ static struct liveupdate_file_handler memfd_luo_handler = {
-  *
-  *	move_mount(fd, "", AT_FDCWD, "/some/path", MOVE_MOUNT_F_EMPTY_PATH);
-  *
-- * Closing the mount descriptor without ever attaching it tears the mount down,
-- * and everything in it goes too.
-+ * Until then the restored files are reachable only through the descriptors LUO
-+ * hands back. Closing the mount descriptor without ever attaching it tears the
-+ * mount down, and everything in it goes too.
-+ *
-+ * Unlike preservation, files may be retrieved before their mount. If the mount
-+ * cannot be retrieved, every file in it fails with the same error.
-  *
-  * Like fsmount(2)'s, the restored mount descriptor is an ``O_PATH`` one, so
-  * preserving the same mount again for a second live update means reopening its
-@@ -655,12 +665,30 @@ static struct liveupdate_file_handler memfd_luo_handler = {
-  * Preserved Properties
-  * ====================
-  *
-+ * Of the mount:
-+ *
-  * ``nr_blocks=``:
-  *   The block limit. Restoring file contents is charged against it.
-  *
-  * Root directory mode
-  *   Including the sticky and setgid bits.
-  *
-+ * Of each file:
-+ *
-+ * Contents and size
-+ *   Holes are filled by allocating pages for them during preservation, as with
-+ *   memfd.
-+ *
-+ * Name
-+ *   A single component in the root of the mount.
-+ *
-+ * Permission bits
-+ *   Not including the setuid and setgid bits; see below.
-+ *
-+ * File position
-+ *   So that the returned descriptor can be read from or written to where the
-+ *   old one left off.
-+ *
-  * Not Preserved
-  * =============
-  *
-@@ -670,12 +698,11 @@ static struct liveupdate_file_handler memfd_luo_handler = {
-  *
-  * Ownership
-  *   Everything comes back owned by whoever retrieves it. If different ownership
-- *   is needed, userspace must do that after retrieving the mount.
-+ *   is needed, userspace must do that after retrieving the files.
-  *
-  * Timestamps, inode numbers, extended attributes and ACLs
-- *   A restored mount root is a new inode with fresh timestamps and a new
-- *   number. utimensat(2) can set the timestamps again once the mount is
-- *   attached.
-+ *   A restored file is a new inode with fresh timestamps and a new number.
-+ *   utimensat(2) can set the timestamps again once the mount is attached.
-  */
- 
- static unsigned long tmpfs_luo_mnt_id(struct super_block *sb)
-@@ -821,6 +848,289 @@ static struct liveupdate_file_handler tmpfs_luo_mnt_handler = {
- 	.compatible = TMPFS_LUO_MNT_FH_COMPATIBLE,
- };
- 
-+static bool tmpfs_luo_file_can_preserve(struct liveupdate_file_handler *fh,
-+					struct file *file)
-+{
-+	struct inode *inode = file_inode(file);
-+	struct dentry *dentry = file->f_path.dentry;
-+	struct super_block *sb = inode->i_sb;
-+
-+	if (!shmem_file(file) || (sb->s_flags & SB_NOUSER))
-+		return false;
-+
-+	/* Only linked regular files allowed. */
-+	if (!S_ISREG(inode->i_mode) || d_unlinked(dentry))
-+		return false;
-+
-+	/* Only files in the root of the mount are supported for now. */
-+	if (dentry->d_parent != sb->s_root)
-+		return false;
-+
-+	return true;
-+}
-+
-+static unsigned long tmpfs_luo_file_get_id(struct file *file)
-+{
-+	return (unsigned long)file_inode(file);
-+}
-+
-+static int tmpfs_luo_file_preserve(struct liveupdate_file_op_args *args)
-+{
-+	struct inode *inode = file_inode(args->file);
-+	struct memfd_luo_folio_ser *folios_ser;
-+	u64 nr_folios, inode_size, mnt_token;
-+	struct tmpfs_luo_file_ser *ser;
-+	int err;
-+
-+	/* Find the token of the mount. It is identified by its superblock. */
-+	err = liveupdate_get_token_outgoing(args->session, tmpfs_luo_mnt_id(inode->i_sb),
-+					    &mnt_token);
-+	if (err)
-+		return err;
-+
-+	ser = kho_alloc_preserve(sizeof(*ser));
-+	if (IS_ERR(ser))
-+		return PTR_ERR(ser);
-+
-+	inode_lock(inode);
-+	shmem_freeze(inode, true);
-+
-+	inode_size = i_size_read(inode);
-+
-+	/*
-+	 * memfd_pin_folios() caps at UINT_MAX folios; refuse larger files to
-+	 * avoid silently preserving only a prefix.
-+	 */
-+	if (DIV_ROUND_UP_ULL(inode_size, PAGE_SIZE) > UINT_MAX) {
-+		err = -EFBIG;
-+		goto err_free_ser;
-+	}
-+
-+	ser->mnt_token = mnt_token;
-+
-+	/*
-+	 * Preserve only folios now. Name, mode, etc. can change later and are
-+	 * cheap to preserve. They will be preserved on freeze().
-+	 */
-+	err = memfd_luo_preserve_folios(args->file, &ser->folios, &folios_ser,
-+					&nr_folios);
-+	if (err)
-+		goto err_free_ser;
-+
-+	ser->nr_folios = nr_folios;
-+	inode_unlock(inode);
-+
-+	args->private_data = folios_ser;
-+	args->serialized_data = virt_to_phys(ser);
-+
-+	return 0;
-+
-+err_free_ser:
-+	kho_unpreserve_free(ser);
-+	shmem_freeze(inode, false);
-+	inode_unlock(inode);
-+	return err;
-+}
-+
-+static int tmpfs_luo_file_freeze(struct liveupdate_file_op_args *args)
-+{
-+	struct dentry *dentry = args->file->f_path.dentry;
-+	struct inode *inode = file_inode(args->file);
-+	struct dentry *root = inode->i_sb->s_root;
-+	struct tmpfs_luo_file_ser *ser;
-+	int err;
-+
-+	/*
-+	 * Lock the mount root to block renames and unlinks, then the inode
-+	 * itself to stabilize its mode and size.
-+	 */
-+	inode_lock_shared_nested(d_inode(root), I_MUTEX_PARENT);
-+	inode_lock_shared(inode);
-+
-+	/* Renamed into a subdirectory. */
-+	if (dentry->d_parent != root) {
-+		err = -EOPNOTSUPP;
-+		goto unlock;
-+	}
-+
-+	/* Unlinked after preserve. */
-+	if (d_unlinked(dentry)) {
-+		err = -ENOENT;
-+		goto unlock;
-+	}
-+
-+	ser = phys_to_virt(args->serialized_data);
-+
-+	/*
-+	 * Zero-pads the tail, which the ABI requires. Cannot fail, the dentry
-+	 * name is bounded by NAME_MAX, but check anyway.
-+	 */
-+	if (strscpy_pad(ser->name, dentry->d_name.name) < 0) {
-+		err = -ENAMETOOLONG;
-+		goto unlock;
-+	}
-+
-+	ser->mode = inode->i_mode & 0777;
-+	ser->size = i_size_read(inode);
-+	ser->pos = args->file->f_pos;
-+
-+	err = 0;
-+
-+unlock:
-+	inode_unlock_shared(inode);
-+	inode_unlock_shared(d_inode(root));
-+	return err;
-+}
-+
-+static void tmpfs_luo_file_unpreserve(struct liveupdate_file_op_args *args)
-+{
-+	struct inode *inode = file_inode(args->file);
-+	struct tmpfs_luo_file_ser *ser;
-+
-+	inode_lock(inode);
-+	shmem_freeze(inode, false);
-+
-+	ser = phys_to_virt(args->serialized_data);
-+	memfd_luo_unpreserve_folios(&ser->folios, args->private_data,
-+				    ser->nr_folios);
-+
-+	kho_unpreserve_free(ser);
-+	inode_unlock(inode);
-+}
+ TEST_GEN_PROGS_EXTENDED += luo_kexec_simple
++TEST_GEN_PROGS_EXTENDED += luo_kexec_tmpfs
+ TEST_GEN_PROGS_EXTENDED += luo_multi_session
+ TEST_GEN_PROGS_EXTENDED += luo_stress_sessions
+ TEST_GEN_PROGS_EXTENDED += luo_stress_files
+diff --git a/tools/testing/selftests/liveupdate/luo_kexec_tmpfs.c b/tools/testing/selftests/liveupdate/luo_kexec_tmpfs.c
+new file mode 100644
+index 000000000000..608a6eddbd7b
+--- /dev/null
++++ b/tools/testing/selftests/liveupdate/luo_kexec_tmpfs.c
+@@ -0,0 +1,191 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +
 +/*
-+ * A name from the previous kernel is untrusted input. There is no separate
-+ * length, so the NUL terminator is the only bound.
++ * Copyright (C) 2026, Google LLC.
++ * Pratyush Yadav <pratyush@kernel.org>
++ *
++ * Validate preservation of a tmpfs mount and a file in it across a kexec
++ * reboot. Stage 1 creates a tmpfs, puts a file in it and preserves both.
++ * Stage 2 retrieves the mount, attaches it with move_mount(2), and checks that
++ * the file's contents are intact and that it is reachable by path.
 + */
-+static bool tmpfs_luo_name_valid(const char *name, size_t size)
++
++#include <fcntl.h>
++#include <stdio.h>
++#include <string.h>
++#include <sys/mount.h>
++#include <sys/stat.h>
++#include <sys/syscall.h>
++#include <unistd.h>
++
++#include <libliveupdate.h>
++
++#define TEST_SESSION_NAME	"tmpfs-session"
++#define TMPFS_MNT_TOKEN		0x2A
++#define TMPFS_FILE_TOKEN	0x2B
++
++/* Constants for the state-tracking mechanism, specific to this test file. */
++#define STATE_SESSION_NAME	"kexec_tmpfs_state"
++#define STATE_MEMFD_TOKEN	998
++
++#define TMPFS_DIR		"/tmpfs"
++#define TMPFS_FILE_NAME		"state.bin"
++#define TMPFS_FILE_PATH		TMPFS_DIR "/" TMPFS_FILE_NAME
++#define TMPFS_DATA		"hello tmpfs kexec world"
++
++#ifndef MOVE_MOUNT_F_EMPTY_PATH
++#define MOVE_MOUNT_F_EMPTY_PATH	0x00000004
++#endif
++
++/* nolibc has no move_mount() wrapper. */
++static int move_mount_empty_from(int from_fd, const char *to_path)
 +{
-+	size_t len = strnlen(name, size);
-+
-+	/* Non-empty, NUL terminated, and a single component. */
-+	if (!len || len == size || memchr(name, '/', len))
-+		return false;
-+
-+	return strcmp(name, ".") && strcmp(name, "..");
++	return syscall(__NR_move_mount, from_fd, "", AT_FDCWD, to_path,
++		       MOVE_MOUNT_F_EMPTY_PATH);
 +}
 +
-+static int tmpfs_luo_file_retrieve(struct liveupdate_file_op_args *args)
++static void write_file(int fd, const char *data, size_t len)
 +{
-+	struct memfd_luo_folio_ser *folios_ser;
-+	struct file *mnt_file, *file;
-+	struct tmpfs_luo_file_ser *ser;
-+	struct inode *inode;
-+	int err;
++	ssize_t written = write(fd, data, len);
 +
-+	if (!args->serialized_data)
-+		return -EINVAL;
++	if (written < 0 || (size_t)written != len)
++		fail_exit("write of %zu bytes returned %zd", len, written);
++}
 +
-+	ser = phys_to_virt(args->serialized_data);
++static void verify_contents(int fd, const char *expected, size_t len)
++{
++	char buf[128];
++	ssize_t got;
 +
-+	if ((ser->mode & ~0777) || ser->flags ||
-+	    !tmpfs_luo_name_valid(ser->name, sizeof(ser->name))) {
-+		err = -EINVAL;
-+		goto free_ser;
-+	}
++	if (len > sizeof(buf))
++		fail_exit("test data too large for buffer");
 +
-+	err = liveupdate_get_file_incoming(args->session, ser->mnt_token,
-+					   &mnt_file);
-+	if (err) {
-+		pr_err("failed to retrieve tmpfs mount: %pe\n", ERR_PTR(err));
-+		goto free_ser;
-+	}
++	/* nolibc has no pread(). */
++	if (lseek(fd, 0, SEEK_SET) < 0)
++		fail_exit("lseek to the start of the file");
++
++	got = read(fd, buf, len);
++	if (got < 0 || (size_t)got != len)
++		fail_exit("read of %zu bytes returned %zd", len, got);
++
++	if (memcmp(buf, expected, len))
++		fail_exit("file contents do not match");
++}
++
++/* Stage 1: Executed before the kexec reboot. */
++static void run_stage_1(int luo_fd)
++{
++	int session_fd, mnt_fd, file_fd;
++
++	ksft_print_msg("[STAGE 1] Starting pre-kexec setup...\n");
++
++	ksft_print_msg("[STAGE 1] Creating state file for next stage (2)...\n");
++	create_state_file(luo_fd, STATE_SESSION_NAME, STATE_MEMFD_TOKEN, 2);
++
++	session_fd = luo_create_session(luo_fd, TEST_SESSION_NAME);
++	if (session_fd < 0)
++		fail_exit("luo_create_session for '%s'", TEST_SESSION_NAME);
++
++	ksft_print_msg("[STAGE 1] Mounting tmpfs at %s...\n", TMPFS_DIR);
++	if (mkdir(TMPFS_DIR, 0755) < 0)
++		fail_exit("mkdir %s", TMPFS_DIR);
++	if (mount("tmpfs", TMPFS_DIR, "tmpfs", 0, NULL) < 0)
++		fail_exit("mount tmpfs at %s", TMPFS_DIR);
 +
 +	/*
-+	 * TODO: This is racy. This will link the file in the mount so after
-+	 * this call userspace can already open the file and write to it.
-+	 * Ideally we should first create the inode and set it up, and only
-+	 * then link it to the root.
++	 * A plain open of the mount root. LUO's preserve uses fget(), which
++	 * refuses O_PATH descriptors, so an fsmount(2) fd cannot be handed to
++	 * it directly either.
 +	 */
-+	file = file_open_root(&mnt_file->f_path, ser->name,
-+			      O_RDWR | O_CREAT | O_EXCL | O_LARGEFILE,
-+			      ser->mode);
-+	fput(mnt_file);
-+	if (IS_ERR(file)) {
-+		pr_err("failed to create '%s': %pe\n", ser->name, file);
-+		err = PTR_ERR(file);
-+		goto free_ser;
-+	}
++	mnt_fd = open(TMPFS_DIR, O_RDONLY | O_DIRECTORY);
++	if (mnt_fd < 0)
++		fail_exit("open %s", TMPFS_DIR);
 +
-+	inode = file_inode(file);
++	file_fd = open(TMPFS_FILE_PATH, O_RDWR | O_CREAT, 0644);
++	if (file_fd < 0)
++		fail_exit("open %s", TMPFS_FILE_PATH);
 +
-+	inode_lock(inode);
-+	i_size_write(inode, ser->size);
-+	inode_unlock(inode);
++	write_file(file_fd, TMPFS_DATA, sizeof(TMPFS_DATA));
 +
-+	vfs_setpos(file, ser->pos, MAX_LFS_FILESIZE);
++	/* The mount must be preserved before any file that lives in it. */
++	ksft_print_msg("[STAGE 1] Preserving mount (token %#x)...\n",
++		       TMPFS_MNT_TOKEN);
++	if (luo_session_preserve_fd(session_fd, mnt_fd, TMPFS_MNT_TOKEN) < 0)
++		fail_exit("luo_session_preserve_fd for the mount");
 +
-+	if (ser->nr_folios) {
-+		folios_ser = kho_restore_vmalloc(&ser->folios);
-+		if (!folios_ser) {
-+			err = -EINVAL;
-+			goto put_file;
-+		}
++	ksft_print_msg("[STAGE 1] Preserving file (token %#x)...\n",
++		       TMPFS_FILE_TOKEN);
++	if (luo_session_preserve_fd(session_fd, file_fd, TMPFS_FILE_TOKEN) < 0)
++		fail_exit("luo_session_preserve_fd for the file");
 +
-+		err = memfd_luo_retrieve_folios(file, folios_ser,
-+						ser->nr_folios);
-+		vfree(folios_ser);
-+		if (err)
-+			goto put_file;
-+	}
-+
-+	args->file = file;
-+	kho_restore_free(ser);
-+
-+	return 0;
-+
-+put_file:
-+	fput(file);
-+free_ser:
-+	kho_restore_free(ser);
-+	return err;
++	close(file_fd);
++	close(mnt_fd);
++	close(luo_fd);
++	daemonize_and_wait();
 +}
 +
-+static void tmpfs_luo_file_finish(struct liveupdate_file_op_args *args)
++/* Stage 2: Executed after the kexec reboot. */
++static void run_stage_2(int luo_fd, int state_session_fd)
 +{
-+	struct memfd_luo_folio_ser *folios_ser;
-+	struct tmpfs_luo_file_ser *ser;
++	int session_fd, mnt_fd, file_fd, path_fd, stage;
 +
-+	/*
-+	 * A successful retrieve() already consumed the preserved memory, and a
-+	 * failed one cleaned up what it could. Only a file that was never
-+	 * retrieved is left to discard here.
-+	 */
-+	if (args->retrieve_status || !args->serialized_data)
-+		return;
++	ksft_print_msg("[STAGE 2] Starting post-kexec verification...\n");
 +
-+	ser = phys_to_virt(args->serialized_data);
++	restore_and_read_stage(state_session_fd, STATE_MEMFD_TOKEN, &stage);
++	if (stage != 2)
++		fail_exit("Expected stage 2, but state file contains %d", stage);
 +
-+	if (ser->nr_folios) {
-+		folios_ser = kho_restore_vmalloc(&ser->folios);
-+		if (folios_ser) {
-+			memfd_luo_discard_folios(folios_ser, ser->nr_folios);
-+			vfree(folios_ser);
-+		}
-+	}
++	session_fd = luo_retrieve_session(luo_fd, TEST_SESSION_NAME);
++	if (session_fd < 0)
++		fail_exit("luo_retrieve_session for '%s'", TEST_SESSION_NAME);
 +
-+	kho_restore_free(ser);
++	ksft_print_msg("[STAGE 2] Retrieving mount (token %#x)...\n",
++		       TMPFS_MNT_TOKEN);
++	mnt_fd = luo_session_retrieve_fd(session_fd, TMPFS_MNT_TOKEN);
++	if (mnt_fd < 0)
++		fail_exit("luo_session_retrieve_fd for the mount");
++
++	ksft_print_msg("[STAGE 2] Attaching the restored mount at %s...\n",
++		       TMPFS_DIR);
++	if (mkdir(TMPFS_DIR, 0755) < 0)
++		fail_exit("mkdir %s", TMPFS_DIR);
++	if (move_mount_empty_from(mnt_fd, TMPFS_DIR) < 0)
++		fail_exit("move_mount of the restored mount to %s", TMPFS_DIR);
++	close(mnt_fd);
++
++	ksft_print_msg("[STAGE 2] Retrieving file (token %#x)...\n",
++		       TMPFS_FILE_TOKEN);
++	file_fd = luo_session_retrieve_fd(session_fd, TMPFS_FILE_TOKEN);
++	if (file_fd < 0)
++		fail_exit("luo_session_retrieve_fd for the file");
++
++	/* The contents are intact through the retrieved fd. */
++	verify_contents(file_fd, TMPFS_DATA, sizeof(TMPFS_DATA));
++
++	/* And the file is reachable by path, which is the point. */
++	path_fd = open(TMPFS_FILE_PATH, O_RDONLY);
++	if (path_fd < 0)
++		fail_exit("open restored %s by path", TMPFS_FILE_PATH);
++
++	verify_contents(path_fd, TMPFS_DATA, sizeof(TMPFS_DATA));
++
++	close(path_fd);
++	close(file_fd);
++
++	ksft_print_msg("[STAGE 2] Test data verified successfully.\n");
++	if (luo_session_finish(session_fd) < 0)
++		fail_exit("luo_session_finish for test session");
++	close(session_fd);
++
++	if (luo_session_finish(state_session_fd) < 0)
++		fail_exit("luo_session_finish for state session");
++	close(state_session_fd);
++
++	ksft_print_msg("\n--- TMPFS KEXEC TEST PASSED ---\n");
 +}
 +
-+static const struct liveupdate_file_ops tmpfs_luo_file_ops = {
-+	.freeze = tmpfs_luo_file_freeze,
-+	.finish = tmpfs_luo_file_finish,
-+	.retrieve = tmpfs_luo_file_retrieve,
-+	.preserve = tmpfs_luo_file_preserve,
-+	.unpreserve = tmpfs_luo_file_unpreserve,
-+	.can_preserve = tmpfs_luo_file_can_preserve,
-+	.get_id = tmpfs_luo_file_get_id,
-+	.owner = THIS_MODULE,
-+};
-+
-+static struct liveupdate_file_handler tmpfs_luo_file_handler = {
-+	.ops = &tmpfs_luo_file_ops,
-+	.compatible = TMPFS_LUO_FILE_FH_COMPATIBLE,
-+};
-+
- static int __init memfd_luo_init(void)
- {
- 	int err;
-@@ -844,8 +1154,18 @@ static int __init memfd_luo_init(void)
- 		goto err_unregister_memfd;
- 	}
++int main(int argc, char *argv[])
++{
++	return luo_test(argc, argv, STATE_SESSION_NAME,
++			run_stage_1, run_stage_2);
++}
+diff --git a/tools/testing/selftests/liveupdate/run-vmtests.sh b/tools/testing/selftests/liveupdate/run-vmtests.sh
+index d656ce58c5a7..624d1916eeda 100755
+--- a/tools/testing/selftests/liveupdate/run-vmtests.sh
++++ b/tools/testing/selftests/liveupdate/run-vmtests.sh
+@@ -17,6 +17,7 @@ skipped=0
  
-+	err = liveupdate_register_file_handler(&tmpfs_luo_file_handler);
-+	if (err) {
-+		pr_err("Could not register luo tmpfs file handler: %pe\n",
-+		       ERR_PTR(err));
-+
-+		goto err_unregister_tmpfs_mnt;
-+	}
-+
- 	return 0;
- 
-+err_unregister_tmpfs_mnt:
-+	liveupdate_unregister_file_handler(&tmpfs_luo_mnt_handler);
- err_unregister_memfd:
- 	liveupdate_unregister_file_handler(&memfd_luo_handler);
- 
+ TEST_NAMES=(
+ 	"luo_kexec_simple"
++	"luo_kexec_tmpfs"
+ 	"luo_multi_session"
+ 	"luo_stress_files"
+ 	"luo_stress_sessions"
 -- 
 2.56.0.rc1.310.g51773c2048-goog
 
