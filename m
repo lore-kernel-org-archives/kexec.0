@@ -4,75 +4,117 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A0A2FC98302
-	for <kexec@archiver.kernel.org>; Tue, 22 Sep 2026 21:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E6C8DC98302
+	for <kexec@archiver.kernel.org>; Wed, 23 Sep 2026 04:34:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ZseRs3VM5qy6NfSEI25R9aNsCqbQNgrWnR+mKGskJD4=; b=xwFBCyw7E8T1thTUCRPb9kH1ui
-	BckPT/8xCuKmEwPXBE+hpS5amA2YwSejBCYRlROBxeJM/DMynoJFn8Sjj+3W4G5TrGaBRrpgi7qmO
-	btY42gpCuCjRrIfo6wZdsHLE/ckCtfhB4fdlgmzGpfYecsee9bQ00T1+uZCbHLmDX9vFvBRkc0vjW
-	liXdduafIlZGyw4fYv/y/qACDcNY3vpgkNchrG2SALJ0l5w/gmTgyZbzpLbIFEV7NPh8ePXrIFCPH
-	ZwtNjwLx9fVOJNnVDGLLtLkTMurm+sv0iPiSx6a21zmwucvTSWc/uA/T994PYvCMkONgfquXgEjzu
-	v49jmYLw==;
+	bh=IL5T/x9wo2ltEMEZ8/1aNrwgbLXnEAWwAyXPHWtAGlo=; b=EZv1mHv3JeJ347s/twlxCDJGok
+	KLIAGVlSWPc8XtiN8MHpEjE9gK8FweV9WWYMqbkVjBeOFe8IHNdpN80+57cdCV8a3yl2/OeChyiGa
+	zDjeQgXU900Qjd6oS2KUvt3G+jDaDK6s10cbo/UAF8rZJE33fgFeta2EqnWEGaazyG6mBvPErV0UV
+	DnTsW7bKnZYmP74+WB8eh+CrYeXRiqg/9DtxR+HOGlO7D8jZt6EsDwXbqLsZxS7KjYXHSDmX1694R
+	TQ6VFza5gfScbKaLbE2p9e/3EL/EQomCcxqNQKMqlfeC76xm+RL7nNF874hibl8OCou/bSqDV/uyM
+	Z5ZA7YvA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x98L4-00000006e3M-3Qgx;
-	Tue, 22 Sep 2026 21:47:46 +0000
-Received: from out-21.mta0.migadu.com ([2001:41d0:1004:224b::15] helo=mta0.migadu.com)
+	id 1x9Egx-000000077Jq-3ZMv;
+	Wed, 23 Sep 2026 04:34:47 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x98Ky-00000006e2i-440A
+	id 1x9Egw-000000077JH-0NyW
 	for kexec@lists.infradead.org;
-	Tue, 22 Sep 2026 21:47:42 +0000
-X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=j978S3kujL0t2IzwtfW4gW4OFjeQsDQ4dfVPJMp9cw0=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790113658; v=1; x=1790718458;
- b=mvujhRK3HPNWh5jZ1O6mWbwgc5ofxed21gj77WTukikBzLL5PMkjFm9ZNtoKhhu+ze6BQWY9
- S62VL/gheKaPl6qzTKvUmIpaGRvnG4+/Yk5aA9180TL2mN1+7ZAiTJkXbJDW9pMpJjimd9oazka
- 4AbRgZbCIhZWTlIX8GqCS3dA=
-X-Envelope-To: kexec@lists.infradead.org
-Received: by smtp.migadu.com with ESMTPS id dcd07712fee43c99;
-	Tue, 22 Sep 2026 21:47:38 +0000
-X-Mizu-Trace-ID: dcd07712fee43c99
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <4e893390-ac53-4c50-b2b4-50d415ff3d1f@linux.dev>
-Date: Tue, 22 Sep 2026 14:47:31 -0700
+	Wed, 23 Sep 2026 04:34:47 +0000
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68N46M3l2190692;
+	Wed, 23 Sep 2026 04:34:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=IL5T/x
+	9wo2ltEMEZ8/1aNrwgbLXnEAWwAyXPHWtAGlo=; b=pO00lmFlutDiqbUkdKhc5R
+	hZra2OvfsGeowoGlBySClcQgNWzv1OzIZK3bFq/HuOV4vH7SQrxtGPEjHjwQVkgL
+	z7sJLUEspqy7ptJBFfi/8OY04wEAx5hgVXtaugwCRVIwixdJ9tpROHyLFHgKIYo1
+	zbkdhzks6wL34UJV6gHJrQggPKm5gsEJpwna+cY1EqT5HG+aEPnUMKhV6g6RG0HW
+	09DXioGVjsspMG+C5kR1HJM7Yh03by/+48ShoKbqQJf6Mofk8t2ela665vaTXtvO
+	HQw55mh3uOXLr1xmQTWwnTKZc53QLqm9sLViodRHl5mGatDnmZwusj4O6N4O9q8w
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gske1gvcq-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Wed, 23 Sep 2026 04:34:32 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68N3lcXs3822101;
+	Wed, 23 Sep 2026 04:34:32 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4gt5qjvqp7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Sep 2026 04:34:31 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68N4YTsm40436114
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 23 Sep 2026 04:34:30 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CE9BC20040;
+	Wed, 23 Sep 2026 04:34:29 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 68C2020043;
+	Wed, 23 Sep 2026 04:34:27 +0000 (GMT)
+Received: from [9.123.14.142] (unknown [9.123.14.142])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 23 Sep 2026 04:34:27 +0000 (GMT)
+Message-ID: <2c632eee-0a86-4bdf-90c6-66de2c092114@linux.ibm.com>
+Date: Wed, 23 Sep 2026 10:04:26 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 00/13] PCI: liveupdate: PCI core support for Live
- Update
-To: David Matlack <dmatlack@google.com>, kexec@lists.infradead.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-pci@vger.kernel.org
-Cc: Adithya Jayachandran <ajayachandra@nvidia.com>,
- Alexander Graf <graf@amazon.com>, Alex Williamson <alex@shazbot.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
- David Rientjes <rientjes@google.com>,
- Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>,
- Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>,
- Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
- Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pranjal Shrivastava <praan@google.com>, Pratyush Yadav
- <pratyush@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>,
- Shuah Khan <skhan@linuxfoundation.org>, Vipin Sharma <vipinsh@google.com>,
- William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
- "yanjun.zhu@linux.dev" <yanjun.zhu@linux.dev>
-References: <20260918200640.887030-1-dmatlack@google.com>
- <079e343d-c6a6-4430-b900-25918197bfad@linux.dev>
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <079e343d-c6a6-4430-b900-25918197bfad@linux.dev>
+Subject: Re: [PATCH] kho: fix global scratch size calculation
+To: sashiko-reviews@lists.linux.dev
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org,
+        Mike Rapoport <rppt@kernel.org>, kexec@lists.infradead.org,
+        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+        George Guo <guodongtai@kylinos.cn>,
+        Pratyush Yadav <pratyush@kernel.org>, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Graf <graf@amazon.com>
+References: <20260922131217.698809-1-sourabhjain@linux.ibm.com>
+ <20260922132738.B15EB1F000FF@smtp.kernel.org>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <20260922132738.B15EB1F000FF@smtp.kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-ORIG-GUID: JymBw-GCVZgIpua2F5lE7y4uPHUhjmhU
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTIzMDAxNiBTYWx0ZWRfX4fnr310VoGhS
+ ku8sYVZ1ROR6XXfm9qfj97POaQPYccW2YsY/3b9ifmMLSMKqSdJhTWvlJfQY0+QJ39raF3HmRcx
+ 3SNFEEZmgSyu+ymoB9e9wr1JpWShI44/mnLMwspIy+D34qIQeLsubye3tWhixOpFzPrSOBUGrxz
+ D4cw+EzWUblfEvD0LBm24kM8nF8kZrOfRpDOFqy08NNm/PRPwkwMT0lgK5UkkSZq7vWDfqT2m8v
+ +EQuIh7UJsOVoWOGKrvqmzlXWnKYKzezT7rD0RCQxkgc/1T0NfT/cnN93TJSwSo34O2NfpK6a9s
+ A7I/BPBfl/QMRPrE0aQuDwPYY52UhRdMZvISrQ2XfB5xHcR7Q0TpY0qnfK102WhjvSZ9a3MP26l
+ qGpfvmL353guqwavWfkSLVWt9B94/9OUddgINpDPKPocXtgrgQhvtbt0UdOobvCi7wAJeMfHvkD
+ gnpwIf7Bg4bH8qexE3g==
+X-Authority-Analysis: v=2.4 cv=O/KsLx9W c=1 sm=1 tr=0 ts=6ab356d8 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=1qZhHyjmDr2UWPvmznUA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTIzMDAxNiBTYWx0ZWRfX3GDmaw5CSYm1
+ q1eZOX6F1XIe5Zj/ODLLPPoql/nH958H253hA3yDVQOU0AWYyZmHdj5nAhDJjjgmNb4UeB/1yq1
+ rAnaIma1PG25vCH6RsL0QCV5wzpjuRo=
+X-Proofpoint-GUID: 6DTDKEWtVzrOZRL56iOSkiCokObvGjJC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-23_02,2026-09-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 malwarescore=0 phishscore=0 impostorscore=0 suspectscore=0
+ bulkscore=0 priorityscore=1501 lowpriorityscore=0 adultscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609230016
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260922_144741_236140_D28BAB4C 
-X-CRM114-Status: GOOD (  26.65  )
+X-CRM114-CacheID: sfid-20260922_213446_288830_AE2B3D7F 
+X-CRM114-Status: GOOD (  23.01  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -88,247 +130,104 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
-在 2026/9/22 11:54, Zhu Yanjun 写道:
-> 在 2026/9/18 13:06, David Matlack 写道:
->> This series can be found on GitHub:
->>
->>    https://github.com/dmatlack/linux/tree/liveupdate/pci/base/v9
->>
->> This series introduces support in the PCI core for Live Update, enabling
->> drivers to preserve PCI devices across a kexec-based kernel update
->> without interrupting the device. This functionality is critical for
->> minimizing downtime in environments where PCI devices (e.g., those
->> assigned to VMs via VFIO) must continue operating or maintain state
->> across a host kernel upgrade.
->>
->> Specifically, this series allows preserved PCI devices to perform
->> uninterrupted memory transactions (DMA) targeting system memory
->> (specifically, preserved memfds) across a Live Update. These devices can
->> be behind a bridge but must not be VFs. Support for P2P and VF
->> preservation will be addressed in future series.
->>
->> Series Overview
->> ---------------
->>
->> This series implements the following to support PCI device preservation
->> across Live Update:
->>
->>    1. Set up a File-Lifecycle-Bound (FLB) handler to track and preserve
->>       PCI-specific state (struct pci_ser) across Live Update using Kexec
->>       Handover (KHO).
->>
->>    2. Add APIs for drivers to register devices for preservation
->>       (outgoing) and for the PCI core to identify preserved devices
->>       during enumeration (incoming)
->>
->>    3. Automatically preserve all upstream bridges for any preserved
->>       endpoint. Use reference counting to ensure bridges remain 
->> preserved
->>       as long as any downstream device is preserved.
->>
->>    4. Guarantee that preserved devices retain the same RequesterID (bus,
->>       device, function) for the duration of their preservation by
->>       inheriting secondary bus numbers, subordinate bus numbers, and ARI
->>       Forwarding Enable on preserved bridges.
->>
->>    5. Guarantee that memory transactions to/from preserved devices are
->>       routed consistently by inheriting Access Control Services (ACS)
->>       flags across a Live Update, from the endpoint up to the root port.
->>
->>    6. Modify the PCI shutdown path to avoid disabling bus mastering on
->>       preserved devices, thereby allowing preserved devices to perform
->>       uninterrupted during kexec for Live Update.
->>
->>    7. Provide comprehensive documentation for the FLB API, device
->>       tracking mechanisms, and the division of responsibilities between
->>       the PCI core, drivers, and userspace.
->>
->> Merge Plan
->> ----------
->>
->> This series will be merged through liveupdate.git, matching the
->> agreed-upon tree in the MAINTAINERS entry for PCI LIVE UPDATE.
->>
->> Testing
->> -------
->>
->> This series was tested in conjunction with v5 of the VFIO PCI driver
->> series:
->>
->> https://lore.kernel.org/kvm/20260714151505.3466855-1-vipinsh@google.com/
->>
->> The full set of patches used for testing can be found on GitHub.
->>
->> https://github.com/dmatlack/linux/tree/liveupdate/pci/base/v9-with-vfio
->>
->> Testing was performed using the new VFIO selftests:
->>
->>    - vfio_pci_liveupdate_uapi_test
->>    - vfio_pci_liveupdate_kexec_test
+
+On 22/09/26 18:57, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [High] kho: lowmem scratch exhaustion due to missing node-specific lowmem reservations
+> --
 >
-> With this vfio_pci_liveupdate_kexec_test based on this patchset v9, I 
-> have made tests in my local kvm. It worked as expected.
+> commit 45b67db1813edaa6fb1bdfe7033f0598a814cd63
+> Author: Sourabh Jain <sourabhjain@linux.ibm.com>
 >
-> Yanjun Zhu
+> kho: fix global scratch size calculation
+>
+> This commit updates the scratch size calculations to correctly distinguish
+> between memory reserved for a specific NUMA node and memory reserved with
+> NUMA_NO_NODE. It introduces memblock_reserved_size_nid() to calculate
+> reserved memory based on reservation type and NUMA node, fixing an issue
+> where per-node reservations were incorrectly included in the global scratch
+> allocation.
+>
+>> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+>> index 7c4d86daf86d5..dc809e1e768c0 100644
+>> --- a/kernel/liveupdate/kexec_handover.c
+>> +++ b/kernel/liveupdate/kexec_handover.c
+> [ ... ]
+>> @@ -787,17 +787,17 @@ static void __init scratch_size_update(void)
+>>   	if (scratch_scale) {
+>>   		phys_addr_t size;
+>>   
+>> -		size = memblock_reserved_kern_size(ARCH_LOW_ADDRESS_LIMIT,
+>> -						   NUMA_NO_NODE);
+>> -		size -= memblock_reserved_hugetlb_size(ARCH_LOW_ADDRESS_LIMIT,
+>> -						       NUMA_NO_NODE);
+>> +		size = memblock_reserved_size_nid(ARCH_LOW_ADDRESS_LIMIT, NUMA_NO_NODE,
+>> +						  MEMBLOCK_RSRV_KERN);
+> [Severity: High]
+> Does checking NUMA_NO_NODE here exclude node-specific lowmem reservations
+> (like node-bound DMA pools) from the lowmem scratch size calculation?
 
-The test result with vfio_pci_liveupdate_kexec_test is as below.
+No. Node-specific reservations are handled separately. The node-specific
+scratch memory size is calculated in scratch_size_node(), so if the kernel
+has made a node-specific allocation, KHO will reserve scratch memory on
+the corresponding node.
+
+> If the successor kernel requires lowmem for these node-specific reservations
+> during early boot, could shrinking the global lowmem scratch memory lead to
+> memblock allocation failures and a panic?
 
 
-1.
-insmod 
-/lib/modules/7.3.0-rc1-dmabuf+/kernel/drivers/iommu/iommufd/iommufd.ko
-insmod /lib/modules/7.3.0-rc1-dmabuf+/kernel/drivers/vfio/vfio.ko
-insmod 
-/lib/modules/7.3.0-rc1-dmabuf+/kernel/drivers/vfio/vfio_iommu_type1.ko
-insmod 
-/lib/modules/7.3.0-rc1-dmabuf+/kernel/drivers/vfio/pci/vfio-pci-core.ko
-insmod /lib/modules/7.3.0-rc1-dmabuf+/kernel/drivers/vfio/pci/vfio-pci.ko
-+ echo "vfio-pci" > /sys/bus/pci/devices/0000:00:04.0/driver_override
-+ echo "0000:00:04.0" > /sys/bus/pci/drivers/vfio-pci/bind
-Preserving device in session
-Preserving memfd of size 0x40100000 in session
-# [STAGE 1] Forking persistent child to hold sessions...
-# [STAGE 1] Child PID: 1214. Resources are pinned.
-# [STAGE 1] You may now perform kexec reboot.
+With this fix, KHO still reserves both per-node scratch memory and
+lowmem scratch memory to meet the needs of the successor kernel.
 
-2. kexec reboot
+Per-node scratch memory is reserved on the corresponding node.
+The only change is that per-node allocations made in lowmem (below 4G 
+by-default)
+are no longer counted when calculating the lowmem scratch size.
 
-3.
-insmod 
-/lib/modules/7.3.0-rc1-dmabuf+/kernel/drivers/iommu/iommufd/iommufd.ko
-insmod /lib/modules/7.3.0-rc1-dmabuf+/kernel/drivers/vfio/vfio.ko
-insmod 
-/lib/modules/7.3.0-rc1-dmabuf+/kernel/drivers/vfio/vfio_iommu_type1.ko
-insmod 
-/lib/modules/7.3.0-rc1-dmabuf+/kernel/drivers/vfio/pci/vfio-pci-core.ko
-insmod /lib/modules/7.3.0-rc1-dmabuf+/kernel/drivers/vfio/pci/vfio-pci.ko
-+ echo "vfio-pci" > /sys/bus/pci/devices/0000:00:04.0/driver_override
-+ echo "0000:00:04.0" > /sys/bus/pci/drivers/vfio-pci/bind
-Retrieving memfd from LUO
-Finishing the session before retrieving the device (should fail)
-Retrieving the device FD from LUO
-Finishing the session before binding to iommufd (should fail)
-Binding the device to an iommufd and setting it up
-Finishing the session
 
-Yanjun Zhu
+>> +		size -= memblock_reserved_size_nid(ARCH_LOW_ADDRESS_LIMIT, NUMA_NO_NODE,
+>> +						   MEMBLOCK_RSRV_HUGETLB);
+>>   		size = size * scratch_scale / 100;
+>>   		scratch_size_lowmem = size;
+> [ ... ]
+>> @@ -815,11 +815,11 @@ static phys_addr_t __init scratch_size_node(int nid)
+>>   	phys_addr_t size;
+>>   
+>>   	if (scratch_scale) {
+>> -		size = memblock_reserved_kern_size(MEMBLOCK_ALLOC_ANYWHERE,
+>> -						   nid);
+>> +		size = memblock_reserved_size_nid(MEMBLOCK_ALLOC_ANYWHERE, nid,
+>> +						  MEMBLOCK_RSRV_KERN);
+> [Severity: High]
+> Are the node-specific lowmem reservations that were excluded from
+> scratch_size_lowmem now being counted here instead? Since this counts
+> with MEMBLOCK_ALLOC_ANYWHERE, will these reservations potentially be satisfied
+> using scratch memory in highmem?
+
+No.
 
 >
->>
->> Both tests were run in a QEMU-based VM environment (using a single
->> virtio-net PCIe device connected to a root port to exercise bridge
->> support) and on bare metal using an Intel EMR server with 8x Intel DSA
->> PCIe devices and 1x NVMe device.
->>
->> Future Work
->> -----------
->>
->> Following this series, we expect to make further improvements to the PCI
->> core support for Live Update:
->>
->>    - Allow P2P across Live Update by avoiding resizing or moving
->>      preserved device BARs and preserving all upstream bridge windows.
->>
->>    - Support preserving Virtual Functions by preserving SR-IOV
->>      configuration on PFs and enumerating VFs after Live Update.
->>
->> Changelog
->> ---------
->>
->> v9:
->>   - Simplify pci_liveupdate_preserve_bus_numbers() to always return true
->>     if a device was preserved and drop pci_liveupdate_scan_bridge_end()
->>     (Bjorn)
->>   - Add pci_liveupdate_refuse_bus_numbers() to determine when it is safe
->>     for the PCI core to assign bus numbers to unconfigured bridges. This
->>     required moving "Auto-preserve upstream bridges across Live Update"
->>     before "Preserve bus numbers during Live Update" (Bjorn)
->>   - Add "PCI: Save and restore the ACS Control register" so that the ACS
->>     Control register is handled by the normal save/restore path (Bjorn)
->>   - Rename struct pci_liveupdate::was_preserved to was_incoming, to
->>     disambiguate incoming from outgoing preservation (me)
->>   - Log unfinished preserved devices from the incoming FLB rather than
->>     by walking struct pci_dev (Sashiko)
->>   - Document that state handed over by the previous kernel is trusted,
->>     and panic in pci_flb_retrieve() where failures are detected rather
->>     than unwinding into a caller that panics anyway (Sashiko)
->>   - Fall back to programming ACS from scratch when a preserved device 
->> has
->>     no ACS save buffer, since there is nowhere to record the adopted
->>     controls and they would be lost by the first reset (Sashiko)
->>   - Drop Reviewed-by tags from "Preserve bus numbers during Live Update"
->>     and "Adopt ACS controls in incoming preserved devices", both of 
->> which
->>     changed materially since v8
->>   - Extend commit messages and kernel-doc comments to make the FLB code
->>     flow more clear (Bjorn)
->>   - Address various spelling, formatting, and stylistic issues (Bjorn)
->>
->> v8: 
->> https://lore.kernel.org/linux-pci/20260728221007.2098560-1-dmatlack@google.com/
->> v7: 
->> https://lore.kernel.org/linux-pci/20260710212616.1351130-1-dmatlack@google.com/
->> v6: 
->> https://lore.kernel.org/linux-pci/20260522202410.3104264-1-dmatlack@google.com/
->> v5: 
->> https://lore.kernel.org/linux-pci/20260512184846.119396-1-dmatlack@google.com/
->> v4: 
->> https://lore.kernel.org/linux-pci/20260423212316.3431746-1-dmatlack@google.com/
->> v3: 
->> https://lore.kernel.org/kvm/20260323235817.1960573-1-dmatlack@google.com/
->> v2: 
->> https://lore.kernel.org/kvm/20260129212510.967611-1-dmatlack@google.com/
->> v1: 
->> https://lore.kernel.org/kvm/20251126193608.2678510-1-dmatlack@google.com/
->> rfc: 
->> https://lore.kernel.org/kvm/20251018000713.677779-1-vipinsh@google.com/
->>
->>
->> David Matlack (13):
->>    PCI: liveupdate: Set up FLB handler for the PCI core
->>    PCI: liveupdate: Track outgoing preserved PCI devices
->>    PCI: liveupdate: Track incoming preserved PCI devices
->>    PCI: liveupdate: Document driver binding responsibilities
->>    PCI: liveupdate: Auto-preserve upstream bridges across Live Update
->>    PCI: liveupdate: Preserve bus numbers during Live Update
->>    PCI: Refactor matching logic for pci_dev_acs_ops
->>    PCI: Save and restore the ACS Control register
->>    PCI: liveupdate: Adopt ACS controls in incoming preserved devices
->>    PCI: liveupdate: Adopt ARI Forwarding Enable on preserved bridges
->>    PCI: liveupdate: Freeze preservation status during shutdown
->>    PCI: liveupdate: Do not disable bus mastering on preserved devices
->>      during kexec
->>    Documentation: PCI: Add documentation for Live Update
->>
->>   Documentation/PCI/index.rst                   |    1 +
->>   Documentation/PCI/liveupdate.rst              |   35 +
->>   .../admin-guide/kernel-parameters.txt         |    7 +-
->>   Documentation/core-api/liveupdate.rst         |    5 +
->>   MAINTAINERS                                   |   15 +
->>   drivers/pci/Kconfig                           |   15 +
->>   drivers/pci/Makefile                          |    1 +
->>   drivers/pci/liveupdate.c                      | 1015 +++++++++++++++++
->>   drivers/pci/liveupdate.h                      |   62 +
->>   drivers/pci/pci-driver.c                      |    9 +-
->>   drivers/pci/pci.c                             |   79 +-
->>   drivers/pci/pci.h                             |    5 +
->>   drivers/pci/probe.c                           |   16 +-
->>   drivers/pci/quirks.c                          |   58 +-
->>   include/linux/kho/abi/pci.h                   |   66 ++
->>   include/linux/pci.h                           |    7 +
->>   include/linux/pci_liveupdate.h                |   72 ++
->>   17 files changed, 1429 insertions(+), 39 deletions(-)
->>   create mode 100644 Documentation/PCI/liveupdate.rst
->>   create mode 100644 drivers/pci/liveupdate.c
->>   create mode 100644 drivers/pci/liveupdate.h
->>   create mode 100644 include/linux/kho/abi/pci.h
->>   create mode 100644 include/linux/pci_liveupdate.h
->>
->>
->> base-commit: 945d61765894dda2f0344de50cb1ade2e51b66fd
+> If the successor kernel restricts its memblock allocations to
+> MEMBLOCK_KHO_SCRATCH regions, won't it be unable to recreate its
+> node-specific lowmem reservations if the per-node scratch memory was placed
+> in highmem?
+
+The per-node scratch memory will be allocated on the corresponding
+node. Therefore, the successor kernel should be able to recreate its
+node-specific reservations, even if the per-node scratch memory is
+placed in highmem.
+
+
+
 >
--- 
-Best Regards,
-Yanjun.Zhu
+>>   		/* Do not count HugeTLB pages. */
+>> -		size -= memblock_reserved_hugetlb_size(MEMBLOCK_ALLOC_ANYWHERE,
+>> -						       nid);
+>> +		size -= memblock_reserved_size_nid(MEMBLOCK_ALLOC_ANYWHERE, nid,
+>> +						   MEMBLOCK_RSRV_HUGETLB);
+>>   		size = size * scratch_scale / 100;
+>>   	} else {
+>>   		size = scratch_size_pernode;
 
 
