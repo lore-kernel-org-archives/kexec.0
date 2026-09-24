@@ -4,96 +4,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3C848C98318
-	for <kexec@archiver.kernel.org>; Thu, 24 Sep 2026 21:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 876EEC9830E
+	for <kexec@archiver.kernel.org>; Thu, 24 Sep 2026 21:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zl2fNi5BfSzkgDSihIsrR46mveZ03y1JQtjuR5aZ97A=; b=YP+xprsYYOE0B6kNJIBircTR5d
-	xgVXm5B4RyQV53u+t0KemrQkUA9NllcZXVweDY0PIxxiE+4iMkPzk0NZQ7Mm8qNFGmTRCFXVI6C2A
-	mzkRcR5AcL+GE464mNCC8846qRO3IcObQ7EakRogKCC+w5ez9bCdjXzDjzJjXLqM0cGlzTcJKHVNH
-	UIgk1x3VR4/YGTZLrp8xdxrERMIA6Ku4DTQkoan/NBwcxEKQrlu0t+RCPV8Z5kLhANNCWyvqTNSac
-	9gCOvRg3Vx21J6cb41OeXo+N0Eu5FYRj5DzPG1+ZrDTmXVDYplK6RRzwm88J/7Sr4LH9CVIWQpgG2
-	z19wmvKw==;
+	bh=NevIoRhVPx1e2+eEuK5IsXEei6EeRuHGTwV+ThnOoJ8=; b=X5wz20OAV5fMGxip7CGKPUGPlt
+	r9uO9sJrcgQizPDWhuatPnXsX3IkAyrYwT1Ck8Hz8TgeEJXi5rFyXykH77j9TOX6xQl8IDNBtcAAc
+	xUebiI64GVkX8/dW9Zd4jT8sZAU9iAhlc2VE+RKP2QAqcaDMbTvaJYfKyXXbt/AUAiKgwI6W2tmX0
+	WnlhHlo1Ly/mgOFoId3gYu2YHjofQn5Au1nNH0q2kJIcpK3T2i8DW/f3DRcDwdTT3G6mc30ZzYmcy
+	L885qAOszRNVks5FQY2Olh+85HmV9x9w8hsBrb5drceY5H9pF7ZICpTHZgatXrkC7ynGEGAAOglel
+	fTUV7nSA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x9qht-0000000CCHv-49NK;
-	Thu, 24 Sep 2026 21:10:17 +0000
-Received: from mail-pz2-x0c.google.com ([2607:f8b0:4864:3b::c])
+	id 1x9rTP-0000000CG36-3Mln;
+	Thu, 24 Sep 2026 21:59:23 +0000
+Received: from mail-pz2-x10.google.com ([2607:f8b0:4864:3b::10])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x9qhq-0000000CCHV-4AA0
+	id 1x9rTM-0000000CG2a-1Dd1
 	for kexec@lists.infradead.org;
-	Thu, 24 Sep 2026 21:10:16 +0000
-Received: by mail-pz2-x0c.google.com with SMTP id 41be03b00d2f7-cc75e33cc69so72456a12.0
-        for <kexec@lists.infradead.org>; Thu, 24 Sep 2026 14:10:13 -0700 (PDT)
+	Thu, 24 Sep 2026 21:59:21 +0000
+Received: by mail-pz2-x10.google.com with SMTP id 41be03b00d2f7-cc1cea50dc0so47269a12.2
+        for <kexec@lists.infradead.org>; Thu, 24 Sep 2026 14:59:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790284213; x=1790889013; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=zl2fNi5BfSzkgDSihIsrR46mveZ03y1JQtjuR5aZ97A=;
-        b=LN3mHwvyqa7LFaB7+xe3PhwgL8URtTgFOJj67O7M5KcSUgTPgDA/W9iM5o88gvFDxr
-         5Pe4+w/zlwz2g9aNQ0zalzJzMhbEdV0dnjAMQNM4SESP5d2PKcaRe4QArQenqlNMU34N
-         VGSzRPDZyO8PItxT3vEs1jhVuTWF8fsxkN8QOBUkwHtKiwwziIVTpohyz22q1+L0Blky
-         a71vkRgd17+65iu+0Hw9GGpO9Hz0519fw5jD+V1AkXm8jbXQq9Hto95pKEz3qaX7mgRe
-         5fOrLV1PPqUbiTvJo55fFn4AxgaqMLkPIgiaJHySRYiqhEjW/7J9LnB7MfKhbrqGZkTU
-         VQFg==
+        d=google.com; s=20251104; t=1790287159; x=1790891959; darn=lists.infradead.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=NevIoRhVPx1e2+eEuK5IsXEei6EeRuHGTwV+ThnOoJ8=;
+        b=MWfpaNwTf/m1M5wovbtXrcTNxoafNUOTUrjN1xircHPFVqPGu/0AdYaE5XKK/3IJXJ
+         pj0KCHV8eAWp7AmCeAW8jfmAUPgnNIKuqDVjdNwvm9cLbJsRwwk/vcxK9B5NnVioMnGq
+         T7ktAluW9ilcW/LYAfmr2z95b4V8oCTKxWTG9IIWEQ+NJb1KBgqLB0zSVvhdsXLb/gNb
+         WA4KGPwi0IoYczv15xF9D9mUmUtpvAcMbm+s0s60R0gVnx3/9Jw7L7QAvupcT78EhPnN
+         TMBg5NP7HxMizDomJlvtWXOM8ZjdQiOpuB1jFbBTotmHHeGOjlWhs8klRkq8t3nYWvJJ
+         FHQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790284213; x=1790889013;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=zl2fNi5BfSzkgDSihIsrR46mveZ03y1JQtjuR5aZ97A=;
-        b=zQEXZjWs9NPO4REFAY8wKMJZ3bputiHMBWLdvOmhuMG36JzjkPFRhoQGyz3c8rMaZf
-         nvDInuQeLp5N8EMhsDX9Y3BVL4vs//2p1lcTSAeXYtlTluGcIoffP9rfpwVw/Oj91e7c
-         YIkg6uuFGREJUnVAUXf1DuIZdGseYfU8fbfIY8zU5wyofIsPteayXr5+OmRLq1qsThWG
-         hq4IDw01uOlHAznfH+P9mH8CX1D3JAHABemMFc0BxPSdhxRVrj7id9k1Vib5KtjfGNjA
-         SBls+BtMjsyh5AZKVOwCQGZHSP/Tj4ZDuubRybIsdmPy6aGW3hVa69cRyiap7xXx28b3
-         H0wQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzLKpkGw3oFZW1KZiX/xHQhOLnYPRiTGOKAwod+DnAMJ0IiPmZIM6taa/Nlt++zpOFsr9AjXg==@lists.infradead.org
-X-Gm-Message-State: AFuF++kjxj00zDYfTnEsM0ELwYjvwt9WBEHlXlZkfgLTo257MJmXa5Yu
-	KEPs6cB96q3Zace29bThO/t/mKm+hNHO/5igGSBMMMNNNnleeKOx+cshb/S9i1ES4fc/usPZLGC
-	+Du/Q+A==
-X-Gm-Gg: AYBFou38JPxOwyHOevyQIXMupXIPnui7z/VZI2kCmphaCPVSoN3re4xLMl17d04NqBS
-	q5shh5OihpjFRoXyEHph3qxSKIeyZzwCw+D9rBfluDnQr5mP+6OB0+brVDj/VIssDrAXzj3eq6r
-	Evt+z+mvJrrnMAyclvPOuSMtGy16sVgHqkRnBovbbAp7RHA+okIQNalJyUa9IaSuJnBn/hzlEx8
-	7WBUw6fl2VoD777NTs5GBmTxcRif4QpI42ESMeeCgh4UlRAxP1WEiMHlKwyS+Y5yurSIbsDE8Ap
-	wRktaNkRU1afNLlCqFrACoulKnod2Iy7exM2Fy9PaO9BfVd6st31YwtwDPQ3doiM09rxjUaZRuE
-	bBnBnhbYkYjYnogfK03CPk5sApOts3eB9nkee8OC2rfzfEDLhy7SeC9sYekbZQ/tJ5pAb3nyfat
-	/y+jz0LjSDNPDJt6rPqYRaCi/gv5PVGjz5EV3v0ye+du6+fTdqljEtQYoWADcuz3VBHVh5lYjwU
-	bQsNX0j0tjqgN1ipW5SSfYGYo/HWbzp6SvV571C
-X-Received: by 2002:a17:90b:3d81:b0:3a0:2c7d:edd7 with SMTP id 98e67ed59e1d1-3a098ad4cb9mr3516520a91.10.1790284212075;
-        Thu, 24 Sep 2026 14:10:12 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1790287159; x=1790891959;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=NevIoRhVPx1e2+eEuK5IsXEei6EeRuHGTwV+ThnOoJ8=;
+        b=Uay4B1wHLxW6KYFaQbHPHqW2xT3h3cG5r8iqlc5fuBwmJHbKEod/T2FYI8m1lJ1Eif
+         46+MZUwOIKSr0dy1nJtwQ9kTe2gwVX/KnQAYP3IyXD+tj1WuPnmLLFUsZLC1D/aXZArH
+         JjGh1VkMrs1palFz731KEtwo/2jZrdZCKg7fpDdX1YI9uPGMsqiT/srdTxDUqzWCYHgh
+         WQNYue/OLueLpcirSOmW09dI1mf+xI/AJKdoZdy0MTBCHvzSL2J5jSV2vL36gKzYLN5i
+         Fbt/gd7F1V8uKhapbefMhqUom/EAeCG3h72ABwJfp3Wdx2DKx58CSxfvVQfD83t8Ai04
+         4PBQ==
+X-Gm-Message-State: AFuF++lZUQjD4aulCM4Q4J3z6A/ZsIfauMbdHpeyAzPQXBvsBtm2RGtT
+	YopJDgZb7kdWe/JdIcCvyCWaClWZLfkXU6b6mvnBu9iRP/K5SXD2r6XuBD8XQAFjyg==
+X-Gm-Gg: AYBFou0fGqIbl+/h5rFns/Gih+A+N13yAztLVioY3aLl/MM30tkd7NDIHdMGcZzaNe+
+	UKHWQBittmB2hUP3iQTjiR4OaSvqsWJQ6TwLy7bnARIOpQ6FGVNooyS5IxDsJ84Q87astBvQcVT
+	Tt545Rl/5Sg2huGZzJNrEh8kQ2y3UzjLW1f6DfFhZOXLdZuDE/hlj3U9eVxRm1V3fz1rUOxTyNN
+	QfvIkhtr937um5bR4xGMSuYp6m2aYfIGCy+cVe8I9MFtxSwq0HG+7Mhkm+/q7e61QLyHEvdKbB+
+	41vR/rWLnIM07uPXMaeRWIwdfJYJ7NBm8RRORTpF1iUbkNvTBrMVyux/69czhnYc4uyI51XlLNZ
+	Nj71pcolH38btt67W+rZlnyH12e8YA4IpXN9BZ+b4Kr9tRyNmWgDneJLL1LFP21FQuwZv2yBvMa
+	6QoDea3CjlOk9D8kB5oeul+BSz3zhSf/g3Sodw+ljQBLZMPo7nypjzfu1MEb8gnGkKwgGgUiyFx
+	AIf/lfx3QynVfYB3nQ1/kjkEs8aOrH+SFInphZI
+X-Received: by 2002:a05:6a20:548d:b0:3dd:a008:dc3e with SMTP id adf61e73a8af0-3de0e89e58bmr4338025637.44.1790287158837;
+        Thu, 24 Sep 2026 14:59:18 -0700 (PDT)
 Received: from google.com (192.150.203.35.bc.googleusercontent.com. [35.203.150.192])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a0b9892dbfsm434036a91.11.2026.09.24.14.10.11
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cc78791e4b3sm309308a12.17.2026.09.24.14.59.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Sep 2026 14:10:11 -0700 (PDT)
-Date: Thu, 24 Sep 2026 21:10:03 +0000
+        Thu, 24 Sep 2026 14:59:17 -0700 (PDT)
+Date: Thu, 24 Sep 2026 21:59:11 +0000
 From: David Matlack <dmatlack@google.com>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>, Alexander Graf <graf@amazon.com>,
-	Hugh Dickins <hughd@google.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH 0/6] luo: tmpfs preservation
-Message-ID: <arWRq4ZRbmyWK4SI@google.com>
-References: <20260923224408.3745689-1-pratyush@kernel.org>
+To: Zhu Yanjun <yanjun.zhu@linux.dev>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Alexander Graf <graf@amazon.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
+	Josh Hilke <jrhilke@google.com>,
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pranjal Shrivastava <praan@google.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v9 00/13] PCI: liveupdate: PCI core support for Live
+ Update
+Message-ID: <arWdLyuHJwcU5tVn@google.com>
+References: <20260918200640.887030-1-dmatlack@google.com>
+ <2e88b92a-d3f2-41f7-bdbe-11fd71690606@linux.dev>
+ <CALzav=eJU+fnPr-QN4s7gY_Lj8Pc3T6KXfC9kiQQ=g4rPEDMuA@mail.gmail.com>
+ <d4547411-eeae-46c5-a30b-12d8cdde9329@linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260923224408.3745689-1-pratyush@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d4547411-eeae-46c5-a30b-12d8cdde9329@linux.dev>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260924_141015_044809_49AFDED6 
-X-CRM114-Status: GOOD (  44.34  )
+X-CRM114-CacheID: sfid-20260924_145920_342246_E7BC7002 
+X-CRM114-Status: GOOD (  46.33  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,223 +124,157 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-09-24 12:43 AM, Pratyush Yadav wrote:
-> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+On 2026-09-23 04:27 PM, Zhu Yanjun wrote:
+> 在 2026/9/22 11:53, David Matlack 写道:
+> > On Tue, Sep 22, 2026 at 11:36 AM Zhu Yanjun<yanjun.zhu@linux.dev> wrote:
+> > > 在 2026/9/18 13:06, David Matlack 写道:
+> > > > Future Work
+> > > > -----------
+> > > > 
+> > > > Following this series, we expect to make further improvements to the PCI
+> > > > core support for Live Update:
+> > > > 
+> > > >     - Allow P2P across Live Update by avoiding resizing or moving
+> > > >       preserved device BARs and preserving all upstream bridge windows.
+> > > > 
+> > > >     - Support preserving Virtual Functions by preserving SR-IOV
+> > > >       configuration on PFs and enumerating VFs after Live Update.
+> > > Preserving the PCIe topology, bus numbers, ACS, and Bus Mastering across
+> > > kexec is a foundational step for minimizing downtime.
+> > > 
+> > > As we look toward complete end-to-end support for DMA preservation
+> > > across Live Update—especially for VFIO device passthrough and dma-buf
+> > > sharing scenarios—IOMMU table/domain preservation becomes crucial to
+> > > prevent IOMMU page faults when devices continue performing DMA during kexec.
+> > > 
+> > > I would like to ask about the current status and roadmap regarding IOMMU
+> > > Live Update / KHO (Kexec Handover) support:
+> > > 
+> > > Is there an ongoing effort or RFC series for IOMMU handover / page-table
+> > > preservation currently in development or under discussion?
+> > > 
+> > > How is the coordination between the PCI core Live Update mechanisms and
+> > > the IOMMU subsystem being envisioned for preserving IOVA mappings (e.g.,
+> > > restoring domains or handing over root tables)?
+> > > 
+> > > Any pointers to active discussion threads, RFCs, or future plans
+> > > regarding IOMMU participation in Live Update would be greatly appreciated.
+> > The first IOMMU series to support Live update, can be found here:
+> > 
+> >    https://lore.kernel.org/linux-iommu/20260921004834.2601285-1-skhawaja@google.com/
 > 
-> I brought this idea up in this week's Hypervisor Live Update bi-weekly.
-> I decided to try using an LLM to see if it can produce a
-> proof-of-concept quickly. This series is the end result.
+> Thanks.
 > 
-> The main use case is preserving in-memory files that have a filesystem
-> path. We already support memfd preservation, but memfds can't be linked
-> to a (user-visible) filesystem. This is needed for storing VMM packages
-> for live update on hosts that don't have a disk. A cold boot fetches the
-> binaries from network, but that is too slow for a live update.
+> I have a question regarding the restoration sequencing when module
+> dependencies are involved during a Live Update reboot.
 > 
-> David tried to solve the problem by introducing
-> LIVEUPDATE_SESSION_RETRIEVE_INTO_FD [0], which lets you provide a FD for
-> LUO to retrieve into. This is an alternative to the idea. It uses the
-> standard preservation and retrieval API that LUO already provides.
+> For the standard hardware/driver stack, the sequence seems to naturally
+> follow the kernel's early initcalls and device probing (e.g., IOMMU early
+> hardware handover -> PCI bus topology/BME preservation -> IOMMU domain
+> attach & DMA ownership claim -> VFIO/iommufd cdev binding).
 > 
-> The core idea is to allow userspace to preserve a tmpfs mount FD. Once
-> the mount is preserved, userspace can pass in regular files in that
-> mount for preservation. The files take a dependency on the mount token,
-> and that is used for retrieving the files in the right mount. This saves
-> us from doing a full FS preservation and makes preservation of each file
-> explicit.
+> However, if there is a custom kernel module or subsystem (let's call it
+> Module A) that is not part of the standard PCI/IOMMU device probe callback
+> chain, but strictly depends on the fully restored state of PCI, IOMMU, and
+> VFIO/iommufd:
 > 
-> Currently only files in the root are supported. Files in subdirectories
-> will be rejected. This is mainly for simplicity. Complex mount features
-> like memory policies, id mappings, or casefolding are also not
-> supported. All these can be reconfigured after retrieve if really
-> needed.
+> 1.
 > 
-> The code re-uses a lot of the preservation and retrieval logic from
-> memfd preservation. It only adds some extra file and mount metadata on
-> top.
+>    What is the recommended or standardized way in the Live Update
+>    architecture to guarantee that Module A's restoration happens
+>    *after* all its underlying dependencies (PCI / IOMMU / VFIO) have
+>    completely finished their restore processes?
 > 
-> As I mentioned earlier, this is heavily LLM generated. The code is not
-> very polished and has some rough edges. That said, I have read all the
-> code and did significant cleanups of the LLM output. This includes
-> turning the 1600 or so lines it generated to a more modest 977 lines.
-> So (I think) it isn't complete AI garbage. And I think it does get the
-> core idea across.
+> 2.
+> 
+>    Is the expectation to rely on LUO (Live Update Orchestrator) phase
+>    notification callbacks (e.g., late restore notifiers), Driver Core
+>    mechanisms like |-EPROBE_DEFER| / |device_link|, or something else?
+> 
+> Any guidance on how cross-subsystem restoration order and async probe
+> dependencies should be handled in the Live Update framework would be greatly
+> appreciated.
 
-Hi Pratyush,
+Note: Some of what I write below is not yet merged into the Live Update
+tree so may change. Samiullah Khawaja will be giving a talk about file
+dependencies at LPC where some of these topics will be discussed.
 
-Thanks for posting this. I wanted to compare this series against the
-RETRIEVE_INTO_FD approach, since both are trying to solve the same
-problem: preserving files with filesystem paths across a Live Update.
-Both are RFCs, so I'm going to ignore implementation details and focus
-on the design.
+LUO does not have a global "restore phase" or late-restore notifier.
+Restoration is on-demand and driven by dependencies, and userspace does
+the orchestration.
 
-As we discussed at the Hypervisor Live Update bi-weekly, this will be a
-topic to discuss at LPC. I'm hoping we can use this thread to align on
-the pros and cons of the two approaches so I don't unintentionally
-mischaracterize anything.
+There are two types of objects that LUO manages:
 
-At the memory level the two approaches are the same: file contents are
-handed over using the existing memfd folio ABI and re-inserted into a
-shmem inode in the new kernel. The difference is who owns the filesystem
-topology around those folios.
+1. FLB (File-Lifecycle-Bound) data, for shared/global state.
 
-  - RETRIEVE_INTO_FD: The kernel preserves only memory. Userspace
-    own the fileystem topology, recreates it after kexec with normal
-    syscalls, and then asks LUO to fill each empty file with its
-    preserved contents.
+   An FLB is retrieved lazily the first time someone calls
+   liveupdate_flb_get_incoming(). The PCI core does that from
+   pci_setup_device() during enumeration, and the IOMMU driver does it
+   when it initializes. So the order in which this global state is
+   restored is simply the normal boot/initcall/probe order of the
+   subsystems that use it. LUO does not impose any extra order.
 
-  - tmpfs handlers (this series): The kernel preserves the mount and
-    the files as first-class LUO objects (name, mode, pos, etc.),
-    rebuilds them after kexec, and hands back a detached mount.
+2. Files in sessions, for per-object state (vfio cdevs, iommufds,
+   memfds, ...).
 
-Everything else below follows from that difference.
+   Files are retrieved either by userspace (LIVEUPDATE_SESSION_RETRIEVE_FD)
+   or by kernel code (liveupdate_get_file_incoming()). Retrieval can
+   happen in any order and is idempotent. When one file depends on
+   another, the dependency is expressed between the two files, not
+   through a global phase.
 
-Comparison
-==========
+VFIO -> iommufd is an example to follow (see Samiullah's IOMMU series
+[1] on top of Vipin's VFIO series [2]):
 
-What LUO preserves:
-  RETRIEVE_INTO_FD: Memory only.
-  tmpfs handlers:   Memory plus filesystem objects and metadata.
+ - Outgoing: when a vfio cdev is preserved, iommufd_device_preserve()
+   calls liveupdate_get_token_outgoing() on the iommufd file the device
+   is attached to. That fails unless userspace has already preserved
+   the iommufd in the same session, so the dependency is enforced at
+   preserve time. The iommufd token is then recorded in the preserved
+   device state.
 
-New uAPI:
-  RETRIEVE_INTO_FD: One new generic ioctl, or a generic extension to
-                    the existing RETRIEVE ioctl.
-  tmpfs handlers:   None. Existing PRESERVE/RETRIEVE with new file
-                    types.
+ - Incoming: the recorded token is what connects the device back to its
+   iommufd after kexec. Retrieving and re-attaching to the restored
+   iommufd is the next phase of the IOMMU work, so that part is not in
+   [1] yet. The building blocks are there, though:
+   liveupdate_get_file_incoming() lets one file handler pull in a file
+   it depends on by token (it is idempotent, so the order userspace
+   retrieves in doesn't matter), and ->can_finish() lets a handler
+   block LIVEUPDATE_SESSION_FINISH until everything it depends on is in
+   a consistent state.
 
-New LUO ABI:
-  RETRIEVE_INTO_FD: None
-  tmpfs handlers:   Mount and file structs, plus a version bump for
-                    every new attribute added in the future.
+ - Device binding: vfio-pci's ->retrieve() simply fails (-ENODEV) if the
+   preserved device is not bound to vfio-pci yet. There is no probe
+   deferral inside LUO. Userspace is expected to make sure the device
+   is bound (e.g. wait for udev) before retrieving the file. In the
+   meantime the device is protected: the PCI core keeps bus mastering
+   and BDFs stable, and the IOMMU core reattaches the preserved domain
+   and claims DMA ownership, so no other driver can bind to it.
 
-New VFS surface:
-  RETRIEVE_INTO_FD: None.
-  tmpfs handlers:   Kernel-created mounts handed to userspace as
-                    detached mounts.
+If you can share more about what Module A is and what state it needs to
+carry across the update, I can try to go into more detail. But
+generically I would recommend:
 
-Where the filesystem topology description lives:
-  RETRIEVE_INTO_FD: Userspace, in a private format it can evolve
-                    freely.
-  tmpfs handlers:   Kernel ABI.
+ - If Module A has state that must survive the Live Update, model it as
+   a LUO file handler. If it depends on specific VFIO/iommufd files,
+   record their tokens with liveupdate_get_token_outgoing() in your
+   ->preserve(). Then in your ->retrieve(), get them back with
+   liveupdate_get_file_incoming(). If something isn't ready yet (e.g.
+   the device hasn't probed), fail ->retrieve() and let userspace retry,
+   and use ->can_finish() to keep the session from finishing too early.
 
-Mount options:
-  RETRIEVE_INTO_FD: Anything userspace can pass to mount.
-  tmpfs handlers:   Only what the ABI enumerates (currently the block
-                    limit and root mode).
+ - If Module A is a driver that binds to a device, the normal driver
+   core mechanisms (-EPROBE_DEFER, device links) still apply for
+   probe-time dependencies. Live Update doesn't replace them. But
+   restoring the preserved state itself should probably go through LUO
+   as above.
 
-Dirs, hardlinks, symlinks, ownership, xattrs:
-  RETRIEVE_INTO_FD: Free. Userspace recreates them with normal
-                    syscalls.
-  tmpfs handlers:   Each requires new kernel code and ABI.
+ - If Module A doesn't need to preserve anything itself but just
+   consumes the restored VFIO/iommufd objects, the simplest option is to
+   let userspace sequence it. Userspace already knows when the devices
+   are bound and the FDs have been retrieved, so it can hand them to
+   Module A at that point.
 
-Userspace complexity:
-  RETRIEVE_INTO_FD: Higher. Userspace needs a manifest, then must
-                    mkdir, create, chown, etc. before calling
-                    retrieve_into.
-  tmpfs handlers:   Low. Preserve the mount and files, retrieve them,
-                    and move_mount().
-
-Metadata consistency:
-  RETRIEVE_INTO_FD: Userspace must snapshot and keep its manifest
-                    consistent with what it preserved.
-  tmpfs handlers:   The kernel captures metadata at freeze time,
-                    atomically with the contents.
-
-Trust surface for previous-kernel data:
-  RETRIEVE_INTO_FD: Userspace validates its own manifest. The kernel
-                    only validates the folio list.
-  tmpfs handlers:   The kernel must validate names, modes, etc.
-
-Generality:
-  RETRIEVE_INTO_FD: Applies to any handler where "fill a
-                    userspace-created object" makes sense.
-  tmpfs handlers:   tmpfs only.
-
-Arguments for RETRIEVE_INTO_FD
-==============================
-
-1. It follows the principle that LUO should only preserve what
-   userspace cannot recreate. Names, modes, ownership, directories,
-   and mount options can all be recreated by userspace. Memory
-   contents cannot. This approach draws the line exactly there.
-
-2. The kernel ABI stays small. Every attribute the tmpfs handlers
-   learn to preserve becomes a stable KHO ABI that has to be
-   maintained across kernel versions. Reaching parity with what users
-   will eventually want (subdirectories, ownership, xattrs, ACLs,
-   symlinks, hardlinks, huge=, mpol, quotas, idmaps) implies a long
-   series of ABI revisions. RETRIEVE_INTO_FD gets all of that for
-   free via existing syscalls.
-
-3. Policy stays in userspace. The target file lives on a mount that
-   userspace configured, in a cgroup and namespace of its choosing.
-   The kernel never has to guess the right configuration for a
-   recreated object.
-
-4. It is a reusable LUO primitive rather than a tmpfs feature.
-   "Retrieve into an object that userspace already set up" could be
-   useful for other handlers where the object must be created in a
-   specific context, e.g. HugeTLBfs files come to mind. The tmpfs
-   series adds a one-off pair of handlers.
-
-5. It requires no new VFS surface. There are no kernel-created
-   mounts being handed to userspace, so the change stays contained
-   to LUO and memfd, which lowers the cost of getting it upstream.
-
-Arguments for the tmpfs handlers
-================================
-
-1. It gives a filesystem-shaped abstraction from the kernel's side.
-   The kernel knows that the preserved files belong to a mount,
-   tracks that dependency, and returns a working filesystem. This
-   maps directly onto the stated use case of VMM binaries on hosts
-   without local storage.
-
-2. Metadata is captured atomically. Name, mode, size, and pos are
-   captured at freeze time alongside the contents, so they cannot
-   drift. With RETRIEVE_INTO_FD, userspace must keep its manifest
-   correct across any renames or chmods that happen after it takes
-   its snapshot.
-
-3. The restored mount can be hidden until it is ready. The mount
-   comes back detached, and userspace chooses when and where to
-   attach it with move_mount(). Nobody can observe a half-built tree.
-
-4. There is less for userspace to do. For the simple case of a
-   single tmpfs mount with a few files, userspace needs very little
-   new code.
-
-5. It leaves the door open for whole-tree preservation. In the
-   future the kernel could preserve an entire mount with a single
-   token by walking the tree, which RETRIEVE_INTO_FD cannot express.
-
-Where each approach hurts
-=========================
-
-RETRIEVE_INTO_FD pushes work and correctness onto userspace, likely
-requiring a shared userspace library or daemon. The kernel also has
-no notion that a set of tokens formed a single filesystem. It just
-sees unrelated files.
-
-The tmpfs handlers are narrow in scope today, and every extension is
-expensive. There is a real risk of slowly growing a partial
-filesystem serializer in the kernel. It also couples LUO to VFS
-concepts such as mounts, namespaces, and names.
-
-A possible middle ground
-========================
-
-The two approaches are not mutually exclusive. We could use
-RETRIEVE_INTO_FD as the core primitive for file contents, and provide
-a shared userspace library for the common "rebuild this tmpfs" case.
-Kernel-side mount preservation could then be added later, if and when
-a concrete need comes up that userspace cannot meet, such as an
-atomic snapshot or availability before userspace runs.
-
-That keeps the kernel ABI limited to memory, which is the part only
-the kernel can preserve, while leaving room for the more integrated
-model if it turns out to be needed.
-
-Thanks,
-David
+[1] https://lore.kernel.org/linux-iommu/20260921004834.2601285-1-skhawaja@google.com/
+[2] https://lore.kernel.org/kvm/20260714151505.3466855-1-vipinsh@google.com/
 
