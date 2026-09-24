@@ -4,67 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2BD54C98317
-	for <kexec@archiver.kernel.org>; Thu, 24 Sep 2026 13:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3C848C98318
+	for <kexec@archiver.kernel.org>; Thu, 24 Sep 2026 21:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=kjlo8XBtE9TxB1LKTX/vUG/maDWdF6slESEL4axLxF0=; b=xWl+P2wu3k9Iy6AFNqHKm4FG3K
-	+4lpqLiIFKOVaBYxMHpgSe/3nK7FF+uOckiDz3WezZtUm0GiY7/pYj4mNIBXbMlWPFuVyDt6PJbpq
-	T9U0gA2fFgMUOmNtSvGNr7Cu746Vc1is0ymzQGsrT/0dlpVAZmZ9ymH05HtMdIKLeVnLaxh10OlR+
-	OMU/HKwTg1yLBgODL3Y8Yv7KO/wp2oiu/LL5FdiMoR8Dg8DyzLbR1ucw8kw6UBfuxuhARWab8cg7E
-	74DHjfMEqSeT0w7494BectKHvzM+bBhyj2G8KOfuilvewp8k8SEmaX64lvII+2Z05OWdeHGbfd+YH
-	vTm/I3qw==;
+	bh=zl2fNi5BfSzkgDSihIsrR46mveZ03y1JQtjuR5aZ97A=; b=YP+xprsYYOE0B6kNJIBircTR5d
+	xgVXm5B4RyQV53u+t0KemrQkUA9NllcZXVweDY0PIxxiE+4iMkPzk0NZQ7Mm8qNFGmTRCFXVI6C2A
+	mzkRcR5AcL+GE464mNCC8846qRO3IcObQ7EakRogKCC+w5ez9bCdjXzDjzJjXLqM0cGlzTcJKHVNH
+	UIgk1x3VR4/YGTZLrp8xdxrERMIA6Ku4DTQkoan/NBwcxEKQrlu0t+RCPV8Z5kLhANNCWyvqTNSac
+	9gCOvRg3Vx21J6cb41OeXo+N0Eu5FYRj5DzPG1+ZrDTmXVDYplK6RRzwm88J/7Sr4LH9CVIWQpgG2
+	z19wmvKw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x9jT5-0000000B5MG-30xQ;
-	Thu, 24 Sep 2026 13:26:31 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1x9qht-0000000CCHv-49NK;
+	Thu, 24 Sep 2026 21:10:17 +0000
+Received: from mail-pz2-x0c.google.com ([2607:f8b0:4864:3b::c])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x9jT3-0000000B5M6-3AUj
+	id 1x9qhq-0000000CCHV-4AA0
 	for kexec@lists.infradead.org;
-	Thu, 24 Sep 2026 13:26:29 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id DFA2F601FE;
-	Thu, 24 Sep 2026 13:26:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F15541F000FF;
-	Thu, 24 Sep 2026 13:26:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790256388;
-	bh=kjlo8XBtE9TxB1LKTX/vUG/maDWdF6slESEL4axLxF0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=EXoEyJpbObkYPw/DP1BT2piCT31gRKuurm0smBCDhbkQwG4a2mfShKuql3FVVLIjm
-	 +yA/famYpOLn89tGaZGE+MzXDC1ESpo5SncCDOsPksbiM3Bvm3pVL55WPEW2ZEFrTS
-	 PJe6teyjuYG0jkQsqYCFIhZon1XF4icI4W44CDhYIwY7CHPbsaGFygYPIsCv8RvtW8
-	 8HlnJpEghYdF0tIp4r24+iUYmRjjr/Np/xzuf8gTk6o+gyERUXhEtTdy9J/qN7F7hr
-	 tbZlHPvZtTXvrpoq1AhVWxM6YNeYJTZ9D0iFATWWZqb8GNhSvZp7In4Qz+IfdXphnC
-	 ffIWYWAo54S0A==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: sashiko-bot@kernel.org
-Cc: "Pasha Tatashin" <pasha.tatashin@soleen.com>,  "Andrew Morton"
- <akpm@linux-foundation.org>,  "Samiullah Khawaja" <skhawaja@google.com>,
-  "Pratyush Yadav" <pratyush@kernel.org>,  "David Hildenbrand"
- <david@kernel.org>,  "Alexander Graf" <graf@amazon.com>,  "Baolin Wang"
- <baolin.wang@linux.alibaba.com>,  "Mike Rapoport" <rppt@kernel.org>,
-  "David Matlack" <dmatlack@google.com>,  "Hugh Dickins"
- <hughd@google.com>,  "Lorenzo Stoakes" <ljs@kernel.org>,
-  sashiko-reviews@lists.linux.dev,  linux-kernel@vger.kernel.org,
-  kexec@lists.infradead.org,  linux-mm@kvack.org
-Subject: Re: [RFC PATCH 1/6] liveupdate: luo_file: look up outgoing tokens
- by id
-In-Reply-To: <20260923225550.32AC21F00898@smtp.kernel.org>
-	(sashiko-bot@kernel.org's message of "Wed, 23 Sep 2026 22:55:49 +0000")
+	Thu, 24 Sep 2026 21:10:16 +0000
+Received: by mail-pz2-x0c.google.com with SMTP id 41be03b00d2f7-cc75e33cc69so72456a12.0
+        for <kexec@lists.infradead.org>; Thu, 24 Sep 2026 14:10:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1790284213; x=1790889013; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=zl2fNi5BfSzkgDSihIsrR46mveZ03y1JQtjuR5aZ97A=;
+        b=LN3mHwvyqa7LFaB7+xe3PhwgL8URtTgFOJj67O7M5KcSUgTPgDA/W9iM5o88gvFDxr
+         5Pe4+w/zlwz2g9aNQ0zalzJzMhbEdV0dnjAMQNM4SESP5d2PKcaRe4QArQenqlNMU34N
+         VGSzRPDZyO8PItxT3vEs1jhVuTWF8fsxkN8QOBUkwHtKiwwziIVTpohyz22q1+L0Blky
+         a71vkRgd17+65iu+0Hw9GGpO9Hz0519fw5jD+V1AkXm8jbXQq9Hto95pKEz3qaX7mgRe
+         5fOrLV1PPqUbiTvJo55fFn4AxgaqMLkPIgiaJHySRYiqhEjW/7J9LnB7MfKhbrqGZkTU
+         VQFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790284213; x=1790889013;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=zl2fNi5BfSzkgDSihIsrR46mveZ03y1JQtjuR5aZ97A=;
+        b=zQEXZjWs9NPO4REFAY8wKMJZ3bputiHMBWLdvOmhuMG36JzjkPFRhoQGyz3c8rMaZf
+         nvDInuQeLp5N8EMhsDX9Y3BVL4vs//2p1lcTSAeXYtlTluGcIoffP9rfpwVw/Oj91e7c
+         YIkg6uuFGREJUnVAUXf1DuIZdGseYfU8fbfIY8zU5wyofIsPteayXr5+OmRLq1qsThWG
+         hq4IDw01uOlHAznfH+P9mH8CX1D3JAHABemMFc0BxPSdhxRVrj7id9k1Vib5KtjfGNjA
+         SBls+BtMjsyh5AZKVOwCQGZHSP/Tj4ZDuubRybIsdmPy6aGW3hVa69cRyiap7xXx28b3
+         H0wQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzLKpkGw3oFZW1KZiX/xHQhOLnYPRiTGOKAwod+DnAMJ0IiPmZIM6taa/Nlt++zpOFsr9AjXg==@lists.infradead.org
+X-Gm-Message-State: AFuF++kjxj00zDYfTnEsM0ELwYjvwt9WBEHlXlZkfgLTo257MJmXa5Yu
+	KEPs6cB96q3Zace29bThO/t/mKm+hNHO/5igGSBMMMNNNnleeKOx+cshb/S9i1ES4fc/usPZLGC
+	+Du/Q+A==
+X-Gm-Gg: AYBFou38JPxOwyHOevyQIXMupXIPnui7z/VZI2kCmphaCPVSoN3re4xLMl17d04NqBS
+	q5shh5OihpjFRoXyEHph3qxSKIeyZzwCw+D9rBfluDnQr5mP+6OB0+brVDj/VIssDrAXzj3eq6r
+	Evt+z+mvJrrnMAyclvPOuSMtGy16sVgHqkRnBovbbAp7RHA+okIQNalJyUa9IaSuJnBn/hzlEx8
+	7WBUw6fl2VoD777NTs5GBmTxcRif4QpI42ESMeeCgh4UlRAxP1WEiMHlKwyS+Y5yurSIbsDE8Ap
+	wRktaNkRU1afNLlCqFrACoulKnod2Iy7exM2Fy9PaO9BfVd6st31YwtwDPQ3doiM09rxjUaZRuE
+	bBnBnhbYkYjYnogfK03CPk5sApOts3eB9nkee8OC2rfzfEDLhy7SeC9sYekbZQ/tJ5pAb3nyfat
+	/y+jz0LjSDNPDJt6rPqYRaCi/gv5PVGjz5EV3v0ye+du6+fTdqljEtQYoWADcuz3VBHVh5lYjwU
+	bQsNX0j0tjqgN1ipW5SSfYGYo/HWbzp6SvV571C
+X-Received: by 2002:a17:90b:3d81:b0:3a0:2c7d:edd7 with SMTP id 98e67ed59e1d1-3a098ad4cb9mr3516520a91.10.1790284212075;
+        Thu, 24 Sep 2026 14:10:12 -0700 (PDT)
+Received: from google.com (192.150.203.35.bc.googleusercontent.com. [35.203.150.192])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a0b9892dbfsm434036a91.11.2026.09.24.14.10.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Sep 2026 14:10:11 -0700 (PDT)
+Date: Thu, 24 Sep 2026 21:10:03 +0000
+From: David Matlack <dmatlack@google.com>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>, Alexander Graf <graf@amazon.com>,
+	Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH 0/6] luo: tmpfs preservation
+Message-ID: <arWRq4ZRbmyWK4SI@google.com>
 References: <20260923224408.3745689-1-pratyush@kernel.org>
-	<20260923224408.3745689-2-pratyush@kernel.org>
-	<20260923225550.32AC21F00898@smtp.kernel.org>
-Date: Thu, 24 Sep 2026 15:26:24 +0200
-Message-ID: <2vxzwlsa4w73.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260923224408.3745689-1-pratyush@kernel.org>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260924_141015_044809_49AFDED6 
+X-CRM114-Status: GOOD (  44.34  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,125 +108,223 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Sep 23 2026, sashiko-bot@kernel.org wrote:
+On 2026-09-24 12:43 AM, Pratyush Yadav wrote:
+> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+> 
+> I brought this idea up in this week's Hypervisor Live Update bi-weekly.
+> I decided to try using an LLM to see if it can produce a
+> proof-of-concept quickly. This series is the end result.
+> 
+> The main use case is preserving in-memory files that have a filesystem
+> path. We already support memfd preservation, but memfds can't be linked
+> to a (user-visible) filesystem. This is needed for storing VMM packages
+> for live update on hosts that don't have a disk. A cold boot fetches the
+> binaries from network, but that is too slow for a live update.
+> 
+> David tried to solve the problem by introducing
+> LIVEUPDATE_SESSION_RETRIEVE_INTO_FD [0], which lets you provide a FD for
+> LUO to retrieve into. This is an alternative to the idea. It uses the
+> standard preservation and retrieval API that LUO already provides.
+> 
+> The core idea is to allow userspace to preserve a tmpfs mount FD. Once
+> the mount is preserved, userspace can pass in regular files in that
+> mount for preservation. The files take a dependency on the mount token,
+> and that is used for retrieving the files in the right mount. This saves
+> us from doing a full FS preservation and makes preservation of each file
+> explicit.
+> 
+> Currently only files in the root are supported. Files in subdirectories
+> will be rejected. This is mainly for simplicity. Complex mount features
+> like memory policies, id mappings, or casefolding are also not
+> supported. All these can be reconfigured after retrieve if really
+> needed.
+> 
+> The code re-uses a lot of the preservation and retrieval logic from
+> memfd preservation. It only adds some extra file and mount metadata on
+> top.
+> 
+> As I mentioned earlier, this is heavily LLM generated. The code is not
+> very polished and has some rough edges. That said, I have read all the
+> code and did significant cleanups of the LLM output. This includes
+> turning the 1600 or so lines it generated to a more modest 977 lines.
+> So (I think) it isn't complete AI garbage. And I think it does get the
+> core idea across.
 
-> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
-> - [High] liveupdate: NULL pointer dereference in liveupdate_get_token_outgoing() on incoming sessions
-> - [Medium] liveupdate: flat ID namespace in liveupdate_get_token_outgoing() risks cross-handler collisions
-> - [Low] liveupdate: O(N) indirect function calls in liveupdate_get_token_outgoing() list traversal
-> --
+Hi Pratyush,
 
-Let me reply to Sashiko for this patch since I think we should take this
-regardless of where this series goes. I think struct file is the wrong
-primitive for liveupdate_get_token_outgoing().
+Thanks for posting this. I wanted to compare this series against the
+RETRIEVE_INTO_FD approach, since both are trying to solve the same
+problem: preserving files with filesystem paths across a Live Update.
+Both are RFCs, so I'm going to ignore implementation details and focus
+on the design.
 
-I'll ignore Sashiko on other patches. It does raise some good points,
-but code correctness isn't the main point of the series. I'll fix them
-up on the main posting if we agree to go in this direction.
+As we discussed at the Hypervisor Live Update bi-weekly, this will be a
+topic to discuss at LPC. I'm hoping we can use this thread to align on
+the pros and cons of the two approaches so I don't unintentionally
+mischaracterize anything.
 
->
-> commit 17b042e4901cfc25a86dec1038092fbe1eb5d060
-> Author: Pratyush Yadav (Google) <pratyush@kernel.org>
->
-> liveupdate: luo_file: look up outgoing tokens by id
->
-> liveupdate_get_token_outgoing() is used to look up tokens of dependencies.
-> It does the search based on struct file. LUO provides file handlers a
-> get_id callback that can return the unique identifier of a resource. This
-> patch uses ID to look up dependencies in liveupdate_get_token_outgoing()
-> instead of struct file.
->
->> diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
->> index a39992da504fb..51817d202ce26 100644
->> --- a/kernel/liveupdate/luo_file.c
->> +++ b/kernel/liveupdate/luo_file.c
-> [ ... ]
->>  int liveupdate_get_token_outgoing(struct liveupdate_session *s,
->> -				  struct file *file, u64 *tokenp)
->> +				  unsigned long id, u64 *tokenp)
->
-> [Severity: Medium]
-> Will this flat ID namespace risk cross-handler collisions?
->
-> Because liveupdate_get_token_outgoing() searches across all preserved files
-> using just an unsigned long id, it loses the context of which file handler
-> the ID belongs to.
->
-> If different handlers use overlapping namespaces, such as IDR indices or
-> pointers that might alias depending on object lifetime, a lookup intended
-> for one handler's object could incorrectly match an object from a different
-> handler that happens to appear earlier in the list.
+At the memory level the two approaches are the same: file contents are
+handed over using the existing memfd folio ABI and re-inserted into a
+shmem inode in the new kernel. The difference is who owns the filesystem
+topology around those folios.
 
-The IDs are supposed to be unique in the whole session. That's the whole
-point of the ID mechanism. If handlers use overlapping IDs, the handlers
-are broken and should be fixed.
+  - RETRIEVE_INTO_FD: The kernel preserves only memory. Userspace
+    own the fileystem topology, recreates it after kexec with normal
+    syscalls, and then asks LUO to fill each empty file with its
+    preserved contents.
 
->
-> Could the API require the expected file handler context to scope the search
-> safely?
+  - tmpfs handlers (this series): The kernel preserves the mount and
+    the files as first-class LUO objects (name, mode, pos, etc.),
+    rebuilds them after kexec, and hands back a detached mount.
 
-This can be done but only when there is a need for it, which we have not
-seen so far. Without a use-case, namespacing the IDs per-file-handler is
-overengineering.
+Everything else below follows from that difference.
 
->
->>  {
->>  	struct luo_file_set *file_set = luo_file_set_from_session_locked(s);
->>  	struct luo_file *luo_file;
->>  	int err = -ENOENT;
->>  
->>  	list_for_each_entry(luo_file, &file_set->files_list, list) {
->> -		if (luo_file->file == file) {
->> +		if (luo_get_id(luo_file->fh, luo_file->file) == id) {
->
-> [Severity: High]
-> Can this cause a NULL pointer dereference on incoming sessions?
->
-> In an incoming session after deserialization, luo_file->file is initialized
-> to NULL and remains NULL until the file is explicitly retrieved.
->
-> Because liveupdate_get_token_outgoing() is an exported API that accepts a
-> generic struct liveupdate_session, an in-kernel caller could mistakenly pass
-> an incoming session.
+Comparison
+==========
 
-That's a broken caller and should be fixed.
+What LUO preserves:
+  RETRIEVE_INTO_FD: Memory only.
+  tmpfs handlers:   Memory plus filesystem objects and metadata.
 
->
-> Prior to this patch, doing so would safely return -ENOENT because NULL == file
-> is false. With this patch, luo_get_id() will blindly pass the NULL file
-> pointer to the handler's get_id callback.
->
-> Handlers like memfd_luo call file_inode(file), which would cause an
-> immediate NULL pointer dereference and kernel crash.
->
-> [Severity: Low]
-> Are these indirect function calls necessary during the list traversal?
->
-> Replacing the direct pointer comparison with luo_get_id() performs an indirect
-> function call (fh->ops->get_id) if defined, on every iteration of the
-> files_list traversal.
->
-> Because this function is used to look up tokens for dependencies, it can be
-> called for every dependency of every preserved object, resulting in O(N * M)
-> indirect calls.
+New uAPI:
+  RETRIEVE_INTO_FD: One new generic ioctl, or a generic extension to
+                    the existing RETRIEVE ioctl.
+  tmpfs handlers:   None. Existing PRESERVE/RETRIEVE with new file
+                    types.
 
-A very large number of files with dependencies need to be preserved for
-this to be a problem. We haven't hit this bottleneck so far and don't
-think will hit it at least in the near future.
+New LUO ABI:
+  RETRIEVE_INTO_FD: None
+  tmpfs handlers:   Mount and file structs, plus a version bump for
+                    every new attribute added in the future.
 
->
-> Since the ID is a constant property of the preserved file, could it be
-> evaluated exactly once during luo_preserve_file() and cached directly in
-> struct luo_file?
+New VFS surface:
+  RETRIEVE_INTO_FD: None.
+  tmpfs handlers:   Kernel-created mounts handed to userspace as
+                    detached mounts.
 
-Not a bad idea to be fair. But that's an independent fixup.
+Where the filesystem topology description lives:
+  RETRIEVE_INTO_FD: Userspace, in a private format it can evolve
+                    freely.
+  tmpfs handlers:   Kernel ABI.
 
->
->>  			if (tokenp)
->>  				*tokenp = luo_file->token;
->>  			err = 0;
+Mount options:
+  RETRIEVE_INTO_FD: Anything userspace can pass to mount.
+  tmpfs handlers:   Only what the ABI enumerates (currently the block
+                    limit and root mode).
 
--- 
-Regards,
-Pratyush Yadav
+Dirs, hardlinks, symlinks, ownership, xattrs:
+  RETRIEVE_INTO_FD: Free. Userspace recreates them with normal
+                    syscalls.
+  tmpfs handlers:   Each requires new kernel code and ABI.
+
+Userspace complexity:
+  RETRIEVE_INTO_FD: Higher. Userspace needs a manifest, then must
+                    mkdir, create, chown, etc. before calling
+                    retrieve_into.
+  tmpfs handlers:   Low. Preserve the mount and files, retrieve them,
+                    and move_mount().
+
+Metadata consistency:
+  RETRIEVE_INTO_FD: Userspace must snapshot and keep its manifest
+                    consistent with what it preserved.
+  tmpfs handlers:   The kernel captures metadata at freeze time,
+                    atomically with the contents.
+
+Trust surface for previous-kernel data:
+  RETRIEVE_INTO_FD: Userspace validates its own manifest. The kernel
+                    only validates the folio list.
+  tmpfs handlers:   The kernel must validate names, modes, etc.
+
+Generality:
+  RETRIEVE_INTO_FD: Applies to any handler where "fill a
+                    userspace-created object" makes sense.
+  tmpfs handlers:   tmpfs only.
+
+Arguments for RETRIEVE_INTO_FD
+==============================
+
+1. It follows the principle that LUO should only preserve what
+   userspace cannot recreate. Names, modes, ownership, directories,
+   and mount options can all be recreated by userspace. Memory
+   contents cannot. This approach draws the line exactly there.
+
+2. The kernel ABI stays small. Every attribute the tmpfs handlers
+   learn to preserve becomes a stable KHO ABI that has to be
+   maintained across kernel versions. Reaching parity with what users
+   will eventually want (subdirectories, ownership, xattrs, ACLs,
+   symlinks, hardlinks, huge=, mpol, quotas, idmaps) implies a long
+   series of ABI revisions. RETRIEVE_INTO_FD gets all of that for
+   free via existing syscalls.
+
+3. Policy stays in userspace. The target file lives on a mount that
+   userspace configured, in a cgroup and namespace of its choosing.
+   The kernel never has to guess the right configuration for a
+   recreated object.
+
+4. It is a reusable LUO primitive rather than a tmpfs feature.
+   "Retrieve into an object that userspace already set up" could be
+   useful for other handlers where the object must be created in a
+   specific context, e.g. HugeTLBfs files come to mind. The tmpfs
+   series adds a one-off pair of handlers.
+
+5. It requires no new VFS surface. There are no kernel-created
+   mounts being handed to userspace, so the change stays contained
+   to LUO and memfd, which lowers the cost of getting it upstream.
+
+Arguments for the tmpfs handlers
+================================
+
+1. It gives a filesystem-shaped abstraction from the kernel's side.
+   The kernel knows that the preserved files belong to a mount,
+   tracks that dependency, and returns a working filesystem. This
+   maps directly onto the stated use case of VMM binaries on hosts
+   without local storage.
+
+2. Metadata is captured atomically. Name, mode, size, and pos are
+   captured at freeze time alongside the contents, so they cannot
+   drift. With RETRIEVE_INTO_FD, userspace must keep its manifest
+   correct across any renames or chmods that happen after it takes
+   its snapshot.
+
+3. The restored mount can be hidden until it is ready. The mount
+   comes back detached, and userspace chooses when and where to
+   attach it with move_mount(). Nobody can observe a half-built tree.
+
+4. There is less for userspace to do. For the simple case of a
+   single tmpfs mount with a few files, userspace needs very little
+   new code.
+
+5. It leaves the door open for whole-tree preservation. In the
+   future the kernel could preserve an entire mount with a single
+   token by walking the tree, which RETRIEVE_INTO_FD cannot express.
+
+Where each approach hurts
+=========================
+
+RETRIEVE_INTO_FD pushes work and correctness onto userspace, likely
+requiring a shared userspace library or daemon. The kernel also has
+no notion that a set of tokens formed a single filesystem. It just
+sees unrelated files.
+
+The tmpfs handlers are narrow in scope today, and every extension is
+expensive. There is a real risk of slowly growing a partial
+filesystem serializer in the kernel. It also couples LUO to VFS
+concepts such as mounts, namespaces, and names.
+
+A possible middle ground
+========================
+
+The two approaches are not mutually exclusive. We could use
+RETRIEVE_INTO_FD as the core primitive for file contents, and provide
+a shared userspace library for the common "rebuild this tmpfs" case.
+Kernel-side mount preservation could then be added later, if and when
+a concrete need comes up that userspace cannot meet, such as an
+atomic snapshot or availability before userspace runs.
+
+That keeps the kernel ABI limited to memory, which is the part only
+the kernel can preserve, while leaving room for the more integrated
+model if it turns out to be needed.
+
+Thanks,
+David
 
