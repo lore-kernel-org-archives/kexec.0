@@ -4,137 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00C8CC98304
-	for <kexec@archiver.kernel.org>; Thu, 24 Sep 2026 00:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 52BF1C9830D
+	for <kexec@archiver.kernel.org>; Thu, 24 Sep 2026 02:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:
-	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=7Fguypa9WhhVL/j2jfBYGUQkjiV8wVX0Mu7Jwe9laoI=; b=knqTc3FgtjsyIJumSHDXSYz7gk
-	hGcEYSblUN5STS2/Mx8mtjg3LpL/40xFnExc+8ug4FR5dnhmRRUMLBoB1n3vmRsJciQDKzo2xovDK
-	a3J0bTwG/C4xCu2RFotP/MG6qqMGzjq+HRC5PbId8l342WxSdgz6KFn5oCoWzMm3z9XP/sHUBnrZQ
-	fSbeTYHytFJVQ4IC6D6dbY0Dw74bxwXTc0MdC37TdGyvE8GZn39ofZFDtzSl+RJ0nHIc8KcyhwVV4
-	j/RmPr7VZIkN+tt1iKZ9KIVeT+HhYrorAiSdDNk1U5FbhWnyp2uQTIjwyVvnUX5IW0P1T8TsWQypH
-	K3jr72iw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:To:Subject:Cc:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=r7Xo3k73sVNFXdPFOTw84wdGKL58dImwT8ZVJPmTD5o=; b=mIkpNQHsVq4hqkMNtQyIgGaqWd
+	E0mLBR74tn42xt6XXnMfaAcn0uJNs0/n8hsBiShl6fWOWZC1On7CgarF8XcQ8osFfw9i+Qy1PakhC
+	/bQ20KAxksKpneeBb6gpslyjADjgZ5EQ4+yrAJO5PCA9LSU3XPbFRBnnJ5L61HjGntM7TSKZj1zdR
+	I4ULAiql1dTVKBiotYWpCfsq7x/kFUDOXj6++K7a+QQI4VZ0tzKktGw4lTJVqRJHgv3F/3bVcRABC
+	jWookchNH9/yaSj39e6RcBILeFpT0Vmplz/Oc3bwV52BTB0Nnh41HUy99mKBiV20UW7pDSMIo/fMz
+	Qq7lnkkg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x9XZ6-00000009lfi-0YNx;
-	Thu, 24 Sep 2026 00:43:56 +0000
-Received: from mail-japaneastazlp170110002.outbound.protection.outlook.com ([2a01:111:f403:c405::2] helo=TYVP286CU001.outbound.protection.outlook.com)
+	id 1x9Z7a-00000009rHi-39Y3;
+	Thu, 24 Sep 2026 02:23:38 +0000
+Received: from out-84.mta0.migadu.com ([91.218.175.84] helo=mta0.migadu.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x9XZ2-00000009lfJ-2e2S
+	id 1x9Z7W-00000009rHH-3PlS
 	for kexec@lists.infradead.org;
-	Thu, 24 Sep 2026 00:43:54 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=InGi8pFMQiMsms9WQLwnvJdIKbbFa2whLiq0T8gOpE32jdJMLZhNK1VD86ooPztHrV1IhpfY5h49L2ftpE4eUwip+OrXhv2Z3QRdpkERN91xbFWqmWLQBC6sxQluEt1UxnNmWMb7vOD2cyWNgvxqsz/tEgGpMovgfsz1BbjZU0SHarsqFc0/YI+gAiRMjsCs8Vw2P0WYQTw0uNEZGLoRmgFZKXxmd7mrdsiD45EGAzjdkGRDaZrcP/bi0kSak/2PwfuhgVaOlcuB19K4vBp8Ld63fLvkO0TLhAp/gfmGrlrTFbRCcfR9XvmP6wf+2a8lvop9RTiQKgSuSRMbyo9hYQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7Fguypa9WhhVL/j2jfBYGUQkjiV8wVX0Mu7Jwe9laoI=;
- b=FuvKjJYgzPsSvnFhZmd0B+St2zxuPYiiJJalZBQu5DTyBPqxdIM3etiUGXCavCbFoYiyqwcreHLvZwWbuBPxg718HNpW7LF0/I/vx9MfeKydjnKJtcqEPojTXk/0Vc00kfGyhoaJHYLCHnlXrmj7Sw4kYli+upBdFBLS9zb9vN/55dyVNvd1SCBEoxbsNxs4wZ4Q0dwGoDX+DonR3I9UDEA/ufKRNkXLv/1FlLvFNJUl8hsZPMkd9FBMTFe0P/SBDoG4k4Aye63vE7H8THelkSexJ743WMu6FgHyxCsoLPwcsqBcy0oy896fN3eCh5bD0qad8VNunCx4OUtygc3gcA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
- header.d=nec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7Fguypa9WhhVL/j2jfBYGUQkjiV8wVX0Mu7Jwe9laoI=;
- b=UV/bJ0GdBwjGvwRrb/0EEf8vfKuIgbVT+/wmJEhS+iN/cbFCOxuxXP9cfVyaf4IwxRz7gtUsx0otEpJRJYejaUSZkduG7nuWOLE5Of5IGtdNBu89BXvksshZ6AH7q5fI2VpIv6SkUBYKzKFWLWNGzEWqz3fcRCHH5broVn3YI7uiOtBrYHFILmgzUgotA6QqMWLK9s7cOvRmvVjvG9984CUhGh4R3S0+6KP8wa3fE6xnG25QDU8L9NI3Cq26OFoIgICldM45N1QdKYfgvAXLApwUC3UpgOkgwQiKTHWyhPEFHQVcYS3WDChFxIlxnlhpku7EQu8RPmBM28GznZm63A==
-Received: from TY1PR01MB10753.jpnprd01.prod.outlook.com
- (2603:1096:400:322::11) by OSZPR01MB9651.jpnprd01.prod.outlook.com
- (2603:1096:604:1d7::5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.14; Thu, 24 Sep
- 2026 00:43:31 +0000
-Received: from TY1PR01MB10753.jpnprd01.prod.outlook.com
- ([fe80::2a66:6d54:28:11]) by TY1PR01MB10753.jpnprd01.prod.outlook.com
- ([fe80::2a66:6d54:28:11%4]) with mapi id 15.21.0428.014; Thu, 24 Sep 2026
- 00:43:31 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
-	<kazuhito.hagio@nec.com>
-To: Nikunj Kela <nkela@crusoe.ai>
-CC: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Subject: Re: [PATCH] Derive the mem_section mem_map mask from SIZE(page)
-Thread-Topic: [PATCH] Derive the mem_section mem_map mask from SIZE(page)
-Thread-Index: AQIhZkyUwqAwDME02GWQmp8kxMDAYbZKBiRwgACwcgCACfg/gA==
-Date: Thu, 24 Sep 2026 00:43:30 +0000
-Message-ID: <9c960e7e-0edf-48c2-b5c0-d9b2c535310c@nec.com>
-References: <20260904190825.79964-1-nkela@crusoe.ai>
- <TY1PR01MB10753FE96BBA5EEBCAF6F13DD84B82@TY1PR01MB10753.jpnprd01.prod.outlook.com>
- <CAP328seLmGJpSkecRK+U2n7pdSqp=QdwDr4RuX9XfT13-pZaRg@mail.gmail.com>
-In-Reply-To: <CAP328seLmGJpSkecRK+U2n7pdSqp=QdwDr4RuX9XfT13-pZaRg@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nec.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY1PR01MB10753:EE_|OSZPR01MB9651:EE_
-x-ms-office365-filtering-correlation-id: 6ab1a752-7d8b-4a6b-050f-08df19d4db19
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|23010399003|376014|366016|38070700021|56012099006|3023799007|6133799003|10067099003|5023799004|4143699003|18002099003|22082099003|11063799006;
-x-microsoft-antispam-message-info: rep0SFZgjx69/uHsrUZ/NwmbHBAakGpjBzxUkWRNqAB6LyFDlGnYM+GdCGQ+iSYOqfq9fc0A0C3YHngj474uzeUP4F4PuCnUStxEACJTSzijqLtR/0nlmSNgcUWwXb3/evuKwXBNMIvch34qOyoU76NO+mk6i7VLls9koToetnAywjEhWOHaZ2rzTn4XV62Po98LKrrK1yq0OuV85kuKtrh9hQdTdxUI6JIZWPcqvAUVkzQvkolozfWDZZH1SpHg5HRYBkvsLKrC++qNRetL7MTWnrNOB2bjTvrj6TTrsf1Z5vOR/HkMrLfskLXikjf3JvRgjqjnUl6zF2fUpotkb7xh06ght97I+ke6LgVkiwNksoGYqH5oARvPlvs4GqCXNvXQARC2bWnGALWiEKsawPaCeC9N7heRz6ePcUvB4FJW6h9iOFesx/y9h6wfsW5PCHH8m7+IU5sT7GjV9BirqAxIem2iFHYoOyttC4FFKS0pAANu/14HPV7TL7g6OfBxn/X+me6KInu/Qodf0sE8JSPiiS8iwLZdxu8l7VmCeMRnECtakF7R7oQC1QliYnrFJSLisn4InvXmUKbdcHH6Iq+VZp+wLABec9Kb1eFlzS189iWvg+fIJ3fhAVBjO/vaKwlBrN3sPk1nD0ttjTdWXCRfGg/sY7es3qdSg8I0xeEu8jg4NUdfBVZj0dNrU22cxJa4LC55X9kki3mN30MygeqW8GBKFh5CwYp1x+cShOc=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY1PR01MB10753.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(376014)(366016)(38070700021)(56012099006)(3023799007)(6133799003)(10067099003)(5023799004)(4143699003)(18002099003)(22082099003)(11063799006);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?a2RPeDZBbUhQU3VzNTFTcFY3VWtXNWxDaTQ2cWZHbm9HZ1QxVExCMnFCOTRU?=
- =?utf-8?B?OG02aFdSSlVNZnBMWDM3UmRDRGJsU3I0dnFzUnYvZnRNdndvNEtQd2NGemZ2?=
- =?utf-8?B?OFVXSVdEUFBFTTNoV0RYUElhaUhGVXBsb2dQRzFINXdzYUlvTi9aOVd2cGh4?=
- =?utf-8?B?M2FRaHF0VlZObFU5UmtjdkJ5NWlkeE00V2pxenE2UjgvclJLRzJXMmQwaXFD?=
- =?utf-8?B?M2RSWW1xM2FtbHVsdWo1UzNTVk02WEVxc2RoVEVCalhyeW1rbG5WR2UvNGQy?=
- =?utf-8?B?a1RtMmZPWnJTZUsra3dUMVA3N2hFWGZUeklWZEtjWVQ3ckFDOWFLUCtZOEx6?=
- =?utf-8?B?U1VTMkV5WDZYQ05sZWkzQk8rNHc5bENwamh0U3dzY21xdWxiOUx1UHRkWkNG?=
- =?utf-8?B?a01odFJvdDFYTm9mbHdmcTFqWGEySXNsLzROKzEzMnZEYUxHcE41cThBWkdV?=
- =?utf-8?B?M05yWXJWMHRCbjEwZjk1ZUdiVWZKb1dMR21UYnNMaW5GcXo0L1pnRjNGT29y?=
- =?utf-8?B?Mi95V1RXOWFRaDdJR2FZQm53OUJTOGRnanluVWlkeWZKbmVVRTN2YUlJMHcv?=
- =?utf-8?B?Y0N6T2JFUnluUVVHTUZnY05ycVppa3ZXR0NLUEhpRFF0SGkrTk9zR3VudTFL?=
- =?utf-8?B?bmVYL1dkT3orM2NWZ2Z2R05ualB2Rkg0NXl6aVJZdStzVnozVVI1SUlaa1h4?=
- =?utf-8?B?a2RUUXJjM3czcndpRXZyZ3lZSGVneTUrNzdMdnhuaUkyaSt1WVpRMFR6dlpp?=
- =?utf-8?B?c1dBV1d5cDUvd2JpYU5UUlNqeVFJV1RXSDhEMXZwT0YxYytnbFpxMmRtMmRp?=
- =?utf-8?B?b0NFY3NHQ3FkQjhVUm42bkZnTXRPNFlBQ2hmVS9nMzViZnBJMHVINWczUjVh?=
- =?utf-8?B?NDIvZlFXNW8vMUVTaXpJK1JlVi83WDllbHFqdU5BdURhT2xyZXJwVkdaajhD?=
- =?utf-8?B?Uk9tMFNhUXQ2aU5BR3BVa2dURGt3bGZIVll1cis4K1M0eDhia21MMXNLZTlM?=
- =?utf-8?B?c01ZdVlOSm9nSzNRWmNISW53dUwrbFVhMElwVThkalpqeWlJeUl1Z1YvWjhx?=
- =?utf-8?B?d2RUTytQZ0ZYR0krRUNuMkhEdDJaOWorcDdNczFYcjQ4RVBFNG83NjlnM2Zj?=
- =?utf-8?B?WlVuRjYwcWpacGJ6QlpLNjZhQmZQb1B1V2xhUWZLVjdDYmpoaDNGazlrTWlL?=
- =?utf-8?B?TXVuS25XNFJuN0sxUGNRUGhYSEFScDA5L2Y3Rk82UXBpZGlCL0lBcG1PTlZI?=
- =?utf-8?B?dVROZlQwTlFCSFlmM1ltaFRYaXlhZ2FVUjE0dk5sU0xqSnRCc3N0QldhbEJm?=
- =?utf-8?B?YWNhaDBJM0Ivc2RTWFoyUjRYb3hlektWWkpIRGJyTU1GQURueXJ0NGR3cTFD?=
- =?utf-8?B?a3h3eFl3VS9LaFlueFJlT0JXcGFvVDFabHV5eXpKRC9RVTBJSW10OU9oK3I3?=
- =?utf-8?B?ak51MXU0RW02RVN3N0xKYnNjaUJRaXJTU3VUaC90WXBxR2NOc242TGtFWmhW?=
- =?utf-8?B?cjRzWWZDYTduS2tGNHc3cDFoNHFURDFTeEhSY3hDSE5ZRlhNajdKVytYeUxH?=
- =?utf-8?B?bjhCbGZ6amUvRHRMRVo1cFJxRHAveUllN2FVWEVXZkVwWGNtZ0MvbnV2VkZY?=
- =?utf-8?B?bWdSSE1YbHJsQmxkbllUNEJ4SklkZ3ZrR2FDWVpGckxnOGgyZzN1S1Y2cDV0?=
- =?utf-8?B?bnhEejJyZ1hCdWdWVkF3dXlkVHZSTk1VTXNwMjBNNlB6OXBPMnhYMThQUVJO?=
- =?utf-8?B?dE54TjY2ZmhKY1k2MVpoOFlKSTRQbGFBeHBlaDREVUh2cWNnRWs3aHVwVHF2?=
- =?utf-8?B?b0JWczhkRTlZc0t3cTd3a2RGUVM3QnVEY1FYWWJOZGppNUh0Y2ZtcDJlb1Rq?=
- =?utf-8?B?VWw4TXhRN2JNRW5XWnNNS3d1c0IyeHBLTXpGbmJkMHNJRzQ4d1p6YmE2L0pK?=
- =?utf-8?B?VkcyMkh3NUJ4b0JsZGgxZ3FrN2QrNVNMdTZIS0FtaTdvL2o3WkNDRFU0WHB1?=
- =?utf-8?B?VHU1M1QvYXNTR0NEaC9MZXVON2NxbG5lMWZkSzd3ZG5HVkkrUjZDbnZVcHFr?=
- =?utf-8?B?U1psZVJ0VkFwRStVZGtpQmtvVzFVV1Fyb0J3enExYklQTmtNVTFsUWJCUm54?=
- =?utf-8?B?Z0pjTVdQeVJqTXNEM1Q0TVNUUFN1QytMcmFTTHc2ZmRLTlpDZVNlcnVjTHFs?=
- =?utf-8?B?Y2dJRDBMZC9KTG0vRm5nRWpRZDBGcVBQTm9sV0lUZzVkYXUvRUZ2djZOVUEw?=
- =?utf-8?B?YXRtbVlFQWFTaGw4SWlmalhLN1FVMmxqQ3ZlMjhUZDlYMU5velpIeVA3Zysw?=
- =?utf-8?B?bkRKSDFPZWxCY2tSViszRkVDU1U1RDN1V3JQQktMa1hFdGx6R0VyUT09?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4F43121021E61F40B1642E1AA8F51CA6@jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	Thu, 24 Sep 2026 02:23:36 +0000
+X-Envelope-To: kexec@lists.infradead.org
+DKIM-Signature: a=rsa-sha256; bh=dVSnRPKzueHKvn3hxd2iOxG1Y/XRDHty4kMGTAfCYuE=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1790216609; v=1; x=1790821409;
+ b=KV0NPMmXKlSbD3NqqO70WLCyWuFE2YcWHiMEul4EbcdTvFLSJ6tsDgeSpbfEsUa5GCJ3sseG
+ opHEeih/98a7pwSimS2iOs7k6wkO/gyLVJLua1MAdbmYof8Mw5qNsNAM2bTOGWs81DJvFXhb6oz
+ UL/rHE/qYU7fqPmZXjbHU/xE=
+X-Envelope-To: kexec@lists.infradead.org
+Received: by smtp.migadu.com with ESMTPS id b8187a07f47f8b8e;
+	Thu, 24 Sep 2026 02:23:19 +0000
+X-Mizu-Trace-ID: b8187a07f47f8b8e
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <5151137f-da51-4428-83a5-0ea355e511ca@linux.dev>
+Date: Thu, 24 Sep 2026 10:23:14 +0800
 MIME-Version: 1.0
-X-OriginatorOrg: nec.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY1PR01MB10753.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ab1a752-7d8b-4a6b-050f-08df19d4db19
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Sep 2026 00:43:30.9240
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ks9yMqEK4EXyXn+bEklpSSvnGrJfBA0i5R0SQz1qTlTHA3ZCAbA2XUcwF0m1DPnqhjbczo7jTYlnAxKD9nwPPQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSZPR01MB9651
+User-Agent: Mozilla Thunderbird
+Cc: cui.tao@linux.dev, Dave Young <ruirui.yang@linux.dev>,
+ WANG Xuerui <kernel@xen0n.name>, kexec@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Haoran Jiang <jianghaoran@kylinos.cn>, George Guo <guodongtai@kylinos.cn>
+Subject: Re: [PATCH] LoongArch: kdump: add arch_crash_save_vmcoreinfo()
+ support
+To: Yangyang Lian <lianyangyang@kylinos.cn>,
+ Andrew Morton <akpm@linux-foundation.org>, Baoquan He
+ <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, Huacai Chen <chenhuacai@kernel.org>
+References: <20260923060349.146780-1-lianyangyang@kylinos.cn>
+From: Tao Cui <cui.tao@linux.dev>
+In-Reply-To: <20260923060349.146780-1-lianyangyang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260923_174353_009766_BE730080 
-X-CRM114-Status: GOOD (  29.96  )
+X-CRM114-CacheID: sfid-20260923_192335_265588_D33EBE80 
+X-CRM114-Status: GOOD (  25.10  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -149,108 +77,147 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-SGkgTmlrdW5qDQoNCk9uIDIwMjYvMDkvMTggMToyOCwgTmlrdW5qIEtlbGEgd3JvdGU6DQo+IEhp
-IEthenUsDQo+IA0KPiBZZXMsIHRoYXQncyBmaW5lLiBQbGVhc2UgcmVtb3ZlIHRoZSAiKHNlZSB0
-aGUgQlVHX09OIC4uLikiIHdoZW4NCj4gbWVyZ2luZy4gVGhlIHBvaW50IEkgd2FudGVkIHRvIGNh
-cHR1cmUgd2FzIGp1c3QgdGhhdCBtYXNraW5nIHdpdGgNCj4gU0VDVElPTl9NQVBfTUFTSyBsb3Nz
-bGVzc2x5IHJlY292ZXJzIHRoZSBlbmNvZGVkIG1lbV9tYXAgKHdoaWNoIHRoYXQNCj4gY2hlY2sg
-ZW5mb3JjZXMpLCBidXQgdGhlIHJlZmVyZW5jZSBpcyBtb3JlIGNvbmZ1c2luZyB0aGFuIGhlbHBm
-dWwsDQo+IGVzcGVjaWFsbHkgbm93IHRoYXQgaXQncyBhIFZNX1dBUk5fT05fT05DRSBpbg0KPiBz
-cGFyc2VfaW5pdF9vbmVfc2VjdGlvbigpLiBUaGFua3MgZm9yIHRlc3RpbmcgYW5kIHBpY2tpbmcg
-dGhpcyB1cC4NCg0KdGhhbmtzLCBhcHBsaWVkLg0KaHR0cHM6Ly9naXRodWIuY29tL21ha2VkdW1w
-ZmlsZS9tYWtlZHVtcGZpbGUvY29tbWl0L2NlY2NlMDBhYjRmM2JhYjZiMjRmNDM3ZDdhNmQxOWJi
-ODczODA4MWYNCg0KVGhhbmtzLA0KS2F6dQ0KDQo+IA0KPiBSZWdhcmRzLA0KPiAtTmlrdW5qDQo+
-IA0KPiANCj4gT24gVGh1LCBTZXAgMTcsIDIwMjYgYXQgMToxMOKAr0FNIEhBR0lPIEtBWlVISVRP
-KOiQqeWwvuOAgOS4gOS7gSkNCj4gPGthenVoaXRvLmhhZ2lvQG5lYy5jb20+IHdyb3RlOg0KPj4N
-Cj4+IEhpIE5pa3VuaiwNCj4+DQo+PiB0aGFuayB5b3UgZm9yIHRoZSBwYXRjaC4gIHNvcnJ5IGZv
-ciBteSBkZWxheS4NCj4+DQo+PiAoTXkgZW1haWwgd2lsbCBiZSBjaGFuZ2VkIHRvIHRoaXMgRnJv
-bSBhZGRyZXNzIHNvb24uKQ0KPj4NCj4+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPj4+
-IExpbnV4IDYuMTUgYWRkZWQgYSBuZXcgbWVtX3NlY3Rpb24gZmxhZyBiaXQsIFNFQ1RJT05fSVNf
-Vk1FTU1BUF9QUkVJTklUDQo+Pj4gKGNvbW1pdCAibW0vc3BhcnNlOiBhbGxvdyBmb3IgYWx0ZXJu
-YXRlIHZtZW1tYXAgc2VjdGlvbiBpbml0IGF0IGJvb3QiLA0KPj4+IEZyYW5rIHZhbiBkZXIgTGlu
-ZGVuKSwgdXNlZCBvbiB4ODYtNjQgdG8gbWFyayBzZWN0aW9ucyB3aG9zZSB2bWVtbWFwDQo+Pj4g
-d2FzIHByZS1pbml0aWFsaXplZCBhdCBib290IGZvciBIdWdlVExCIFZtZW1tYXAgT3B0aW1pemF0
-aW9uIChIVk8pLg0KPj4+IFdpdGggQ09ORklHX1pPTkVfREVWSUNFPXkgdGhpcyBpcyBiaXQgNSwg
-YW5kIFNFQ1RJT05fTUFQX0xBU1RfQklUIGluDQo+Pj4gdGhlIGtlcm5lbCBtb3ZlZCB0byBiaXQg
-NjoNCj4+Pg0KPj4+ICAgICAgU0VDVElPTl9NQVJLRURfUFJFU0VOVF9CSVQsICAgICAgLyogMCAq
-Lw0KPj4+ICAgICAgU0VDVElPTl9IQVNfTUVNX01BUF9CSVQsICAgICAgICAgLyogMSAqLw0KPj4+
-ICAgICAgU0VDVElPTl9JU19PTkxJTkVfQklULCAgICAgICAgICAgLyogMiAqLw0KPj4+ICAgICAg
-U0VDVElPTl9JU19FQVJMWV9CSVQsICAgICAgICAgICAgLyogMyAqLw0KPj4+ICAgICAgU0VDVElP
-Tl9UQUlOVF9aT05FX0RFVklDRV9CSVQsICAgLyogNCAqLw0KPj4+ICAgICAgU0VDVElPTl9JU19W
-TUVNTUFQX1BSRUlOSVRfQklULCAgLyogNSAqLw0KPj4+ICAgICAgU0VDVElPTl9NQVBfTEFTVF9C
-SVQsICAgICAgICAgICAgLyogNiAqLw0KPj4+DQo+Pj4gbWFrZWR1bXBmaWxlIHN0aWxsIGRlZmlu
-ZXMgU0VDVElPTl9NQVBfTEFTVF9CSVQgYXMgMVVMPDw1LCBzbw0KPj4+IFNFQ1RJT05fTUFQX01B
-U0sgaXMgfjB4MWYgYW5kIGJpdCA1IHN1cnZpdmVzIHdoZW4gc2VjdGlvbl9tZW1fbWFwIGlzDQo+
-Pj4gZGVjb2RlZCBpbiBzZWN0aW9uX21lbV9tYXBfYWRkcigpLiAgRm9yIGV2ZXJ5IHNlY3Rpb24g
-dGhhdCBoYXMNCj4+PiBTRUNUSU9OX0lTX1ZNRU1NQVBfUFJFSU5JVCBzZXQsIHRoZSByZXN1bHRp
-bmcgbWVtX21hcCBhZGRyZXNzIGlzIG9mZg0KPj4+IGJ5IDB4MjAgLS0gaGFsZiBhIHN0cnVjdCBw
-YWdlIG9uIDY0LWJpdC4gIEFsbCBzdHJ1Y3QgcGFnZSBmaWVsZHMgcmVhZA0KPj4+IGZyb20gdGhv
-c2Ugc2VjdGlvbnMgYXJlIG1pc2FsaWduZWQgKHBhZ2UuZmxhZ3MgcmVhZHMgcGFnZS5pbmRleCwN
-Cj4+PiBwYWdlLl9tYXBjb3VudCByZWFkcyB0aGUgbmV4dCBwYWdlJ3MgbHJ1LnByZXYsIC4uLiks
-IG5vIGV4Y2x1c2lvbg0KPj4+IGZpbHRlciBtYXRjaGVzLCBhbmQgdGhlIHBhZ2VzIGFyZSBrZXB0
-IGFzICJkdW1wYWJsZSBrZXJuZWwgZGF0YSIuDQo+Pj4gTm90aGluZyBpcyByZXBvcnRlZCwgYmVj
-YXVzZSB0aGUgYm9ndXMgYWRkcmVzcyBzdGlsbCBwYXNzZXMNCj4+PiBpc19rdmFkZHIoKS4NCj4+
-Pg0KPj4+IFRoZSBrZXJuZWwgc2V0cyB0aGlzIGZsYWcgb24gZXZlcnkgc2VjdGlvbiBiYWNraW5n
-IGEgYm9vdC10aW1lDQo+Pj4gZ2lnYW50aWMgaHVnZXRsYiBwYWdlIHdoZW4gSFZPIGlzIGVuYWJs
-ZWQgKGh1Z2V0bGJfdm1lbW1hcF9pbml0X2Vhcmx5KCkpLg0KPj4+IE9uIHRoZSBob3N0cyB3aXRo
-IGxvdCBvZiBodWdlcGFnZXMgcmVzZXJ2ZWQgYXQgYm9vdC10aW1lLCB0aGUgY29yZSBzaXplDQo+
-Pj4gZ3Jvd3Mgc2lnbmlmaWNhbnRseS4gSXQgaW5jcmVhc2UgdGhlIHRpbWUgdGFrZW4gdG8gZ2Vu
-ZXJhdGUgdGhlIGNvcmUgYXMNCj4+PiBhcyB0aGUgZGlzayBzcGFjZSBuZWVkZWQgdG8gc3RvcmUg
-aXQuDQo+Pj4NCj4+PiBTaWduZWQtb2ZmLWJ5OiBOaWt1bmogS2VsYSA8bmtlbGFAY3J1c29lLmFp
-Pg0KPj4+IC0tLQ0KPj4+IFRlc3RlZDoNCj4+PiAgICAtIHg4Ni02NCwgTGludXggNi4xNy4xMyAo
-U1BBUlNFTUVNX1ZNRU1NQVBfUFJFSU5JVD15LCBaT05FX0RFVklDRT15KSwNCj4+PiAgICAgIDE0
-NzAgeCAxIEdpQiBodWdlcGFnZXMsIEhWTyBlbmFibGVkDQo+Pj4gICAgLSBhcm02NCwgTGludXgg
-Ni4xMSwgNTEyIE1pQiBodWdlcGFnZXMsIEhWTyBub3QgZW5hYmxlZA0KPj4+ICAgIC0gTm8gMzIt
-Yml0IHRhcmdldCBhdmFpbGFibGU7IHRoZSAzMi1iaXQgY2FzZSBpcyBhIHByb3ZhYmxlIG5vLW9w
-DQo+Pj4gICAgICBzaW5jZSBtYXNrIGlzIHVuY2hhbmdlZA0KPj4+DQo+Pj4gICBtYWtlZHVtcGZp
-bGUuYyB8IDE2ICsrKysrKysrKysrKysrKy0NCj4+PiAgIG1ha2VkdW1wZmlsZS5oIHwgIDUgKysr
-KysNCj4+PiAgIDIgZmlsZXMgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
-KQ0KPj4+DQo+Pj4gZGlmZiAtLWdpdCBhL21ha2VkdW1wZmlsZS5jIGIvbWFrZWR1bXBmaWxlLmMN
-Cj4+PiBpbmRleCBiYTAxMTM3Li5iZTg4NWYzIDEwMDY0NA0KPj4+IC0tLSBhL21ha2VkdW1wZmls
-ZS5jDQo+Pj4gKysrIGIvbWFrZWR1bXBmaWxlLmMNCj4+PiBAQCAtMzcwNSw3ICszNzA1LDIxIEBA
-IHNlY3Rpb25fbWVtX21hcF9hZGRyKHVuc2lnbmVkIGxvbmcgYWRkciwgdW5zaWduZWQgbG9uZyAq
-bWFwX21hc2spDQo+Pj4gICAgICAgICAgICAgICAgcmV0dXJuIE5PVF9LVl9BRERSOw0KPj4+ICAg
-ICAgICB9DQo+Pj4gICAgICAgIG1hcCA9IFVMT05HKG1lbV9zZWN0aW9uICsgT0ZGU0VUKG1lbV9z
-ZWN0aW9uLnNlY3Rpb25fbWVtX21hcCkpOw0KPj4+IC0gICAgIG1hc2sgPSBTRUNUSU9OX01BUF9N
-QVNLOw0KPj4+ICsgICAgIC8qDQo+Pj4gKyAgICAgICogVGhlIGVuY29kZWQgbWVtX21hcCBpcyBz
-dHJ1Y3QgcGFnZSBwb2ludGVyIGFyaXRobWV0aWMsIHNvIGl0IGlzDQo+Pj4gKyAgICAgICogYWx3
-YXlzIFNJWkUocGFnZSktYWxpZ25lZCwgYW5kIHRoZSBrZXJuZWwgZ3VhcmFudGVlcyB0aGF0IGFs
-bA0KPj4+ICsgICAgICAqIHNlY3Rpb24gZmxhZyBiaXRzIGZpdCBiZWxvdyB0aGF0IGFsaWdubWVu
-dCAoc2VlIHRoZSBCVUdfT04gaW4NCj4+PiArICAgICAgKiBzcGFyc2VfZW5jb2RlX21lbV9tYXAo
-KSkuICBEZXJpdmUgdGhlIG1hc2sgZnJvbSBTSVpFKHBhZ2UpIGluc3RlYWQNCj4+DQo+PiBUaGUg
-d2hvbGUgcGF0Y2ggbG9va3MgZ29vZCB0byBtZSBhbmQgdGVzdGVkIG9rLCBidXQgZG9lcyB0aGUg
-QlVHX09OIHNheXMNCj4+IGFib3V0IHRoZSByZWxhdGlvbiB0byB0aGF0IGFsaWdubWVudD8NCj4+
-DQo+PiAgICBCVUdfT04oY29kZWRfbWVtX21hcCAmIH5TRUNUSU9OX01BUF9NQVNLKTsNCj4+DQo+
-PiAoY3VycmVudGx5IHRoaXMgaXMgaW4gc3BhcnNlX2luaXRfb25lX3NlY3Rpb24oKSBhcyBWTV9X
-QVJOX09OX09OQ0UgdGhvdWdoLikNCj4+DQo+PiBUaGlzIHNlZW1zIHRoYXQgYWxsIHNlY3Rpb24g
-ZmxhZyBiaXRzIGZpdCBiZWxvdyBTRUNUSU9OX01BUF9MQVNUX0JJVCwgbm90IHRoZQ0KPj4gYWxp
-Z25tZW50LiAgSXMgaXQgb2sgdG8gcmVtb3ZlIHRoZSAiKHNlZSB0aGUgQlVHX09OIC4uLikiIHRv
-IGF2b2lkIGNvbmZ1c2lvbj8NCj4+IElmIGl0J3Mgb2ssIEknbGwgcmVtb3ZlIGl0IHdoZW4gbWVy
-Z2luZy4NCj4+DQo+PiBUaGFua3MsDQo+PiBLYXp1DQo+Pg0KPj4+ICsgICAgICAqIG9mIGhhcmRj
-b2RpbmcgdGhlIG51bWJlciBvZiBmbGFnIGJpdHMsIHdoaWNoIGNoYW5nZWQgaW4gTGludXggNC4x
-MywNCj4+PiArICAgICAgKiA1LnggYW5kIGFnYWluIGluIDYuMTUgKFNFQ1RJT05fSVNfVk1FTU1B
-UF9QUkVJTklULCBiaXQgNSB3aXRoDQo+Pj4gKyAgICAgICogQ09ORklHX1pPTkVfREVWSUNFKSwg
-YW5kIGZhbGwgYmFjayB0byBTRUNUSU9OX01BUF9NQVNLIGlmIFNJWkUocGFnZSkNCj4+PiArICAg
-ICAgKiBpcyB1bmtub3duIG9yIG5vdCBhIHBvd2VyIG9mIHR3by4NCj4+PiArICAgICAgKi8NCj4+
-PiArICAgICBpZiAoU0laRShwYWdlKSAhPSBOT1RfRk9VTkRfU1RSVUNUVVJFICYmIFNJWkUocGFn
-ZSkgPiAwDQo+Pj4gKyAgICAgICAgICYmICEoU0laRShwYWdlKSAmIChTSVpFKHBhZ2UpIC0gMSkp
-KQ0KPj4+ICsgICAgICAgICAgICAgbWFzayA9IH4oKHVuc2lnbmVkIGxvbmcpU0laRShwYWdlKSAt
-IDEpOw0KPj4+ICsgICAgIGVsc2UNCj4+PiArICAgICAgICAgICAgIG1hc2sgPSBTRUNUSU9OX01B
-UF9NQVNLOw0KPj4+ICAgICAgICAqbWFwX21hc2sgPSBtYXAgJiB+bWFzazsNCj4+PiAgICAgICAg
-bWFwICY9IG1hc2s7DQo+Pj4gICAgICAgIGZyZWUobWVtX3NlY3Rpb24pOw0KPj4+IGRpZmYgLS1n
-aXQgYS9tYWtlZHVtcGZpbGUuaCBiL21ha2VkdW1wZmlsZS5oDQo+Pj4gaW5kZXggYzRmMzYxNC4u
-ZTJhYjAzNCAxMDA2NDQNCj4+PiAtLS0gYS9tYWtlZHVtcGZpbGUuaA0KPj4+ICsrKyBiL21ha2Vk
-dW1wZmlsZS5oDQo+Pj4gQEAgLTE5NSw2ICsxOTUsMTEgQEAgdGVzdF9iaXQoaW50IG5yLCB1bnNp
-Z25lZCBsb25nIGFkZHIpDQo+Pj4gICAgKiAgICAgdmVyc2lvbiA0LjEyLA0KPj4+ICAgICogIDIu
-IGl0IGhhcyBiZWVuIHZlcmlmaWVkIHRoYXQgKDFVTDw8Mikgd2FzIG5ldmVyIHNldCwgc28gaXQg
-aXMNCj4+PiAgICAqICAgICBzYWZlIHRvIG1hc2sgdGhhdCBiaXQgb2ZmIGV2ZW4gaW4gb2xkIGtl
-cm5lbHMuDQo+Pj4gKyAqICAzLiBzaW5jZSBMaW51eCA2LjE1IChTRUNUSU9OX0lTX1ZNRU1NQVBf
-UFJFSU5JVCwgYml0IDUgd2l0aA0KPj4+ICsgKiAgICAgQ09ORklHX1pPTkVfREVWSUNFKSB0aGVy
-ZSBhcmUgc2l4IGZsYWcgYml0cywgc28gdGhpcyB2YWx1ZSBpcw0KPj4+ICsgKiAgICAgc3RhbGU7
-IHNlY3Rpb25fbWVtX21hcF9hZGRyKCkgZGVyaXZlcyB0aGUgcmVhbCBtYXNrIGZyb20NCj4+PiAr
-ICogICAgIFNJWkUocGFnZSkgYW5kIG9ubHkgZmFsbHMgYmFjayB0byBTRUNUSU9OX01BUF9NQVNL
-IHdoZW4gdGhhdA0KPj4+ICsgKiAgICAgaXMgbm90IHBvc3NpYmxlLg0KPj4+ICAgICovDQo+Pj4g
-ICAjZGVmaW5lIFNFQ1RJT05fTUFQX0xBU1RfQklUICgxVUw8PDUpDQo+Pj4gICAjZGVmaW5lIFNF
-Q1RJT05fTUFQX01BU0sgICAgICh+KFNFQ1RJT05fTUFQX0xBU1RfQklULTEpKQ0KPj4+IC0tDQo+
-Pj4gMi41NC4w
+Hi Yangyang,
+
+在 2026/9/23 14:03, Yangyang Lian 写道:
+> Since commit 23c85094fe18 ("proc/kcore: add vmcoreinfo note to
+> /proc/kcore") the kernel has exported the vmcoreinfo PT_NOTE on
+> /proc/kcore as wellas /proc/vmcore.
+> 
+> LoongArch does not provide arch_crash_save_vmcoreinfo(), so the
+> arch-specific values are missing from the vmcoreinfo PT_NOTE. The
+> generic exporter in kernel/vmcore_info.c already provides
+> NUMBER(VMALLOC_START), but tools like crash cannot derive the module
+> and vmemmap ranges, VA_BITS, or the KASLR offset of a LoongArch dump.
+> 
+> Since commit 18210a104bb9 ("LoongArch: Expand module virtual address
+> space to 2GB") the vmalloc and module boundaries are no longer stable
+> across kernel versions either, so vmcoreinfo is the only reliable
+> source for them.
+> 
+
+I gave this patch a run on a Loongson-3A6000 box: built next-20260922
+with it applied and booted the kernel as a KVM guest. Without the
+patch /proc/kcore only has the generic fields (OSRELEASE, PAGESIZE,
+NUMBER(VMALLOC_START) and the usual symbols/offsets). With it, the
+note now looks like:
+
+  OSRELEASE=7.3.0-rc4-next-20260922-eagersplit+
+  PAGESIZE=16384
+  NUMBER(VMALLOC_START)=0xffff800082008000
+  NUMBER(VA_BITS)=47
+  NUMBER(VMALLOC_END)=0xfffffebffd7f8000
+  NUMBER(MODULES_VADDR)=0xffff800002008000
+  NUMBER(MODULES_END)=0xffff800082008000
+  NUMBER(VMEMMAP_START)=0xfffffebffe000000
+  NUMBER(VMEMMAP_END)=0xfffffffffdffffff
+  NUMBER(PHYS_OFFSET)=0x0
+  KERNELOFFSET=0
+
+(KASLR is off in my guest cmdline, hence KERNELOFFSET=0.)
+
+One thing worth a look: as also pointed out in the sashiko review,
+VMEMMAP_END on LoongArch is an inclusive bound (note the ...fdffffff
+above), while the doc added in this patch says
+VMEMMAP_START ~ VMEMMAP_END-1, and tools like makedumpfile compute
+the size as VMEMMAP_END - VMEMMAP_START. So exporting VMEMMAP_END + 1
+would probably match what consumers expect.
+
+Works fine otherwise.
+
+Tested-by: Tao Cui <cuitao@kylinos.cn>
+
+> Provide this function in a separate file that is built at the same time
+> as its caller in kernel/vmcore_info.c, and add a LOONGARCH64 section to
+> Documentation/admin-guide/kdump/vmcoreinfo.rst.
+> 
+> Reported-by: Haoran Jiang <jianghaoran@kylinos.cn>
+> Suggested-by: Haoran Jiang <jianghaoran@kylinos.cn>
+> Co-developed-by: George Guo <guodongtai@kylinos.cn>
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> Signed-off-by: Yangyang Lian <lianyangyang@kylinos.cn>
+> ---
+>  .../admin-guide/kdump/vmcoreinfo.rst          | 29 +++++++++++++++++++
+>  arch/loongarch/kernel/Makefile                |  1 +
+>  arch/loongarch/kernel/vmcore_info.c           | 21 ++++++++++++++
+>  3 files changed, 51 insertions(+)
+>  create mode 100644 arch/loongarch/kernel/vmcore_info.c
+> 
+> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> index 7663c610fe90..2ff921232616 100644
+> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> @@ -594,3 +594,32 @@ va_kernel_pa_offset
+>  
+>  Indicates the offset between the kernel virtual and physical mappings.
+>  Used to translate virtual to physical addresses.
+> +
+> +LOONGARCH64
+> +===========
+> +
+> +VA_BITS
+> +-------
+> +
+> +The maximum number of bits for virtual addresses. Used to compute the
+> +virtual memory ranges.
+> +
+> +PHYS_OFFSET
+> +-----------
+> +
+> +Indicates the physical address of the start of memory. Used to translate
+> +virtual to physical addresses.
+> +
+> +KERNELOFFSET
+> +------------
+> +
+> +The kernel randomization offset. Used to locate the kernel text in
+> +virtual memory. If KASLR is disabled, this value is zero.
+> +
+> +MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMAP_END
+> +-----------------------------------------------------------------------------
+> +
+> +Used to get the correct ranges:
+> +	MODULES_VADDR ~ MODULES_END-1 : Kernel module space.
+> +	VMALLOC_START ~ VMALLOC_END-1 : vmalloc() / ioremap() space.
+> +	VMEMMAP_START ~ VMEMMAP_END-1 : vmemmap region, used for struct page array.
+> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+> index 001924877772..6260c15adaba 100644
+> --- a/arch/loongarch/kernel/Makefile
+> +++ b/arch/loongarch/kernel/Makefile
+> @@ -64,6 +64,7 @@ obj-$(CONFIG_RELOCATABLE)	+= relocate.o
+>  obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec.o relocate_kernel.o
+>  obj-$(CONFIG_KEXEC_FILE)	+= machine_kexec_file.o kexec_efi.o kexec_elf.o
+>  obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
+> +obj-$(CONFIG_VMCORE_INFO)	+= vmcore_info.o
+>  
+>  obj-$(CONFIG_UNWINDER_GUESS)	+= unwind_guess.o
+>  obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
+> diff --git a/arch/loongarch/kernel/vmcore_info.c b/arch/loongarch/kernel/vmcore_info.c
+> new file mode 100644
+> index 000000000000..1128f6cdfe0d
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/vmcore_info.c
+> @@ -0,0 +1,21 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/vmcore_info.h>
+> +#include <asm/addrspace.h>
+> +#include <asm/pgtable.h>
+> +#include <asm/setup.h>
+> +
+> +void arch_crash_save_vmcoreinfo(void)
+> +{
+> +	VMCOREINFO_NUMBER(VA_BITS);
+> +	/* NUMBER(VMALLOC_START) is exported by the generic code */
+> +	vmcoreinfo_append_str("NUMBER(VMALLOC_END)=0x%lx\n", VMALLOC_END);
+> +#ifdef CONFIG_64BIT
+> +	vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=0x%lx\n", MODULES_VADDR);
+> +	vmcoreinfo_append_str("NUMBER(MODULES_END)=0x%lx\n", MODULES_END);
+> +	vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=0x%lx\n", (unsigned long)vmemmap);
+> +	vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=0x%lx\n", VMEMMAP_END);
+> +#endif
+> +	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%lx\n", PHYS_OFFSET);
+> +	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
+> +}
+
 
