@@ -4,130 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 18F54C98317
-	for <kexec@archiver.kernel.org>; Thu, 24 Sep 2026 11:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2BD54C98317
+	for <kexec@archiver.kernel.org>; Thu, 24 Sep 2026 13:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ctwayjHvAj5rO/ALkHWHVIPs9SRT5FDkZw4zngF4FsM=; b=qDipFp69gKqYb0FKsaUu+2tZWS
-	DEuBVqwW2NX4OrPJjZg8fpflV3WDNCvMqFoPY9dGI0+1VDQqTEN6JaNPszUhVVJljqsS5afsRnm10
-	kL4KJRQpCxvZ2kx3r3t2wtHDT31WpLbFKBuABDnnksEmfNamfZYxZrN1c+Io9QSM4RDRyLdeywA+N
-	cH80g7trwnehAwpG+41pfTzuQQUWh996AyqgiXEKqRLYS+hC/ykpLnpNwUCs8De0/IxcvW1AU5Kgl
-	D6oPEKuJdLtCvGLWgmBjMc6KxosnyUP2G+DGhYINHwtU51FGZUHr9rGRDHPP7Y/d7CNaUE1nXhARp
-	6sivgYPA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=kjlo8XBtE9TxB1LKTX/vUG/maDWdF6slESEL4axLxF0=; b=xWl+P2wu3k9Iy6AFNqHKm4FG3K
+	+4lpqLiIFKOVaBYxMHpgSe/3nK7FF+uOckiDz3WezZtUm0GiY7/pYj4mNIBXbMlWPFuVyDt6PJbpq
+	T9U0gA2fFgMUOmNtSvGNr7Cu746Vc1is0ymzQGsrT/0dlpVAZmZ9ymH05HtMdIKLeVnLaxh10OlR+
+	OMU/HKwTg1yLBgODL3Y8Yv7KO/wp2oiu/LL5FdiMoR8Dg8DyzLbR1ucw8kw6UBfuxuhARWab8cg7E
+	74DHjfMEqSeT0w7494BectKHvzM+bBhyj2G8KOfuilvewp8k8SEmaX64lvII+2Z05OWdeHGbfd+YH
+	vTm/I3qw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x9hWp-0000000AqoJ-3xSu;
-	Thu, 24 Sep 2026 11:22:15 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1x9jT5-0000000B5MG-30xQ;
+	Thu, 24 Sep 2026 13:26:31 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x9hWo-0000000Aqo9-123J
+	id 1x9jT3-0000000B5M6-3AUj
 	for kexec@lists.infradead.org;
-	Thu, 24 Sep 2026 11:22:14 +0000
+	Thu, 24 Sep 2026 13:26:29 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 1A2D9600AA;
-	Thu, 24 Sep 2026 11:22:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF9961F00893;
-	Thu, 24 Sep 2026 11:22:03 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id DFA2F601FE;
+	Thu, 24 Sep 2026 13:26:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F15541F000FF;
+	Thu, 24 Sep 2026 13:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790248932;
-	bh=ctwayjHvAj5rO/ALkHWHVIPs9SRT5FDkZw4zngF4FsM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=SLcpADPq4EEZy7CYxm/FfpTvXhOBlV7k27ge46+15mUNqtekLfytiC8znGla+1Snm
-	 PSbv92RSUcUv8ktM2tceZ9jdbEwC8TEK3PQTCtuySbOVTtsTySc7dsgsv/ScPTeVF8
-	 +JF2qqpHzRTVTTLnIT7nMcFBnjMaGkSGLudLCsU3Ix3do4DOJ90KnBEK+xYnM0mcGj
-	 H5k6GSwsaDxcQo4fcythrZ1YRBgmS802wUIdl4m/qMSmatE8+BseUx2JXkwVVqypy0
-	 ezrylZ6VcLud0LgaGtIs5YFzeuzIQDJh4PMRLOmx9POlfqEiLVL+b/y1OT7BZwTuEG
-	 GQ56tSjWThlVw==
-Message-ID: <cf2fe0bb-a79a-420e-8b65-3c8dfa5fadbb@kernel.org>
-Date: Thu, 24 Sep 2026 13:22:00 +0200
+	s=k20260515; t=1790256388;
+	bh=kjlo8XBtE9TxB1LKTX/vUG/maDWdF6slESEL4axLxF0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=EXoEyJpbObkYPw/DP1BT2piCT31gRKuurm0smBCDhbkQwG4a2mfShKuql3FVVLIjm
+	 +yA/famYpOLn89tGaZGE+MzXDC1ESpo5SncCDOsPksbiM3Bvm3pVL55WPEW2ZEFrTS
+	 PJe6teyjuYG0jkQsqYCFIhZon1XF4icI4W44CDhYIwY7CHPbsaGFygYPIsCv8RvtW8
+	 8HlnJpEghYdF0tIp4r24+iUYmRjjr/Np/xzuf8gTk6o+gyERUXhEtTdy9J/qN7F7hr
+	 tbZlHPvZtTXvrpoq1AhVWxM6YNeYJTZ9D0iFATWWZqb8GNhSvZp7In4Qz+IfdXphnC
+	 ffIWYWAo54S0A==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: sashiko-bot@kernel.org
+Cc: "Pasha Tatashin" <pasha.tatashin@soleen.com>,  "Andrew Morton"
+ <akpm@linux-foundation.org>,  "Samiullah Khawaja" <skhawaja@google.com>,
+  "Pratyush Yadav" <pratyush@kernel.org>,  "David Hildenbrand"
+ <david@kernel.org>,  "Alexander Graf" <graf@amazon.com>,  "Baolin Wang"
+ <baolin.wang@linux.alibaba.com>,  "Mike Rapoport" <rppt@kernel.org>,
+  "David Matlack" <dmatlack@google.com>,  "Hugh Dickins"
+ <hughd@google.com>,  "Lorenzo Stoakes" <ljs@kernel.org>,
+  sashiko-reviews@lists.linux.dev,  linux-kernel@vger.kernel.org,
+  kexec@lists.infradead.org,  linux-mm@kvack.org
+Subject: Re: [RFC PATCH 1/6] liveupdate: luo_file: look up outgoing tokens
+ by id
+In-Reply-To: <20260923225550.32AC21F00898@smtp.kernel.org>
+	(sashiko-bot@kernel.org's message of "Wed, 23 Sep 2026 22:55:49 +0000")
+References: <20260923224408.3745689-1-pratyush@kernel.org>
+	<20260923224408.3745689-2-pratyush@kernel.org>
+	<20260923225550.32AC21F00898@smtp.kernel.org>
+Date: Thu, 24 Sep 2026 15:26:24 +0200
+Message-ID: <2vxzwlsa4w73.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 7/9] drivers/base/memory: count inherited poisoned
- frames into the block
-To: Breno Leitao <leitao@debian.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi
- <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>,
- kas@kernel.org, kexec@lists.infradead.org, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Brendan Jackman
- <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>,
- Zi Yan <ziy@nvidia.com>, Oscar Salvador <osalvador@suse.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- hannes@cmpxchg.or, shakeel.butt@linux.dev, linux-efi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, rmikey@meta.com,
- riel@surriel.com, harry@kernel.org, linux-cxl@vger.kernel.org,
- driver-core@lists.linux.dev, kernel-team@meta.com
-References: <20260915-hwpoison-kho-v5-7-3bc7a57bd503@debian.org>
- <de41b78a-8471-4832-be0c-35d410a4499a@kernel.org>
- <aqpczrtIwSG948iv@gmail.com>
- <b8ad366a-a019-4462-9dce-f687f60ee7f2@kernel.org>
- <aqvHHHuWJ-y4WRJZ@gmail.com>
- <caac2cb9-8faa-49bc-ae8a-47c5fd7b7e58@kernel.org>
- <aq1RaH0eE0hZfNpr@gmail.com>
- <fb2237be-f7bc-4ad6-bcb0-7c3ef53136ef@kernel.org>
- <arE3UjqPsxctWckg@gmail.com>
- <ad2ed3ed-959a-4af3-a2f5-4c21e5af62d6@kernel.org>
- <arJqVWN-prvI_0NP@gmail.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <arJqVWN-prvI_0NP@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -142,201 +79,125 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 9/22/26 14:34, Breno Leitao wrote:
-> Hello David,
-> 
-> On Tue, Sep 22, 2026 at 01:33:51PM +0200, David Hildenbrand (Arm) wrote:
->> On 9/21/26 16:31, Breno Leitao wrote:
->>>
->>> The EFI table is only written when there is a memory failure. That is
->>> the only thing that writes to it:
->>>
->>> 	action_result() -> efi_hwpoison_record_pfn() -> set_bit()
->>>
->>> You can see it on patch "mm/memory-failure: efi: record
->>> hardware-poisoned frames into the poisoned-memory table"
->>>
->>> Then, when the kernel kexecs into a second kernel, the EFI config table
->>> is queried and the pages are poisoned from it at boot, as they are
->>> getting into the buddy allocator, in __free_pages_core().
->>
->> I am not sure that is really the right place. That means we only poison free
->> memory.
-> 
-> Right, and that is a real gap. A frame only reaches __free_pages_core()
-> if it is handed to the buddy allocator, so anything this kernel already
-> took from memblock -- the memmap itself, early page tables, percpu --
-> can be sitting on a recorded frame with nobody noticing.
-> 
->> Shouldn't we poison as soon as we initialize the memmap, and check
->> whether any memblock allocations ended up on that poisoned memory and bail out?
-> 
+On Wed, Sep 23 2026, sashiko-bot@kernel.org wrote:
 
-Thanks for the history on this.
+> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
+> - [High] liveupdate: NULL pointer dereference in liveupdate_get_token_outgoing() on incoming sessions
+> - [Medium] liveupdate: flat ID namespace in liveupdate_get_token_outgoing() risks cross-handler collisions
+> - [Low] liveupdate: O(N) indirect function calls in liveupdate_get_token_outgoing() list traversal
+> --
 
-> 
-> That is close to what I had until v2, where the bitmap was walked at EFI
-> parse time and every set unit was memblock_reserve()d:
-> 
-> 	for (off = 0; off < bitmap_size; off += PAGE_SIZE) {
-> 		...
-> 		for_each_set_bit(bit, map, nbits) {
-> 			u64 unit = off * BITS_PER_BYTE + bit;
-> 
-> 			memblock_reserve(phys_base + unit * unit_size, unit_size);
-> 			nr_units++;
-> 		}
-> 		...
-> 	}
+Let me reply to Sashiko for this patch since I think we should take this
+regardless of where this series goes. I think struct file is the wrong
+primitive for liveupdate_get_token_outgoing().
 
-Yes, that what I have in mind.
+I'll ignore Sashiko on other patches. It does raise some good points,
+but code correctness isn't the main point of the series. I'll fix them
+up on the main posting if we agree to go in this direction.
 
-> 
-> Set the full v2 patch at
-> https://lore.kernel.org/all/20260821-hwpoison-kho-v2-6-5743791e48e6@debian.org/
-> 
-> Kiryl raised some concerns, such as x86 does not keep memblock past
-> boot,
+>
+> commit 17b042e4901cfc25a86dec1038092fbe1eb5d060
+> Author: Pratyush Yadav (Google) <pratyush@kernel.org>
+>
+> liveupdate: luo_file: look up outgoing tokens by id
+>
+> liveupdate_get_token_outgoing() is used to look up tokens of dependencies.
+> It does the search based on struct file. LUO provides file handlers a
+> get_id callback that can return the unique identifier of a resource. This
+> patch uses ID to look up dependencies in liveupdate_get_token_outgoing()
+> instead of struct file.
+>
+>> diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
+>> index a39992da504fb..51817d202ce26 100644
+>> --- a/kernel/liveupdate/luo_file.c
+>> +++ b/kernel/liveupdate/luo_file.c
+> [ ... ]
+>>  int liveupdate_get_token_outgoing(struct liveupdate_session *s,
+>> -				  struct file *file, u64 *tokenp)
+>> +				  unsigned long id, u64 *tokenp)
+>
+> [Severity: Medium]
+> Will this flat ID namespace risk cross-handler collisions?
+>
+> Because liveupdate_get_token_outgoing() searches across all preserved files
+> using just an unsigned long id, it loses the context of which file handler
+> the ID belongs to.
+>
+> If different handlers use overlapping namespaces, such as IDR indices or
+> pointers that might alias depending on object lifetime, a lookup intended
+> for one handler's object could incorrectly match an object from a different
+> handler that happens to appear earlier in the list.
 
-The memmap contains that information. If it's a scalability problem with
-thousands of hwpoisoned 2M ranges, don't try to keep kernels running on utterly
-broken systems, seriously.
+The IDs are supposed to be unique in the whole session. That's the whole
+point of the ID mechanism. If handlers use overlapping IDs, the handlers
+are broken and should be fixed.
 
-> and kexec picks placement from iomem_resource via
-> walk_system_ram_res(), which memblock_reserve() does not touch. 
+>
+> Could the API require the expected file handler context to scope the search
+> safely?
 
-Where we could scan the memmap. If we find scalability problems with that they
-should be addressed there.
+This can be done but only when there is a need for it, which we have not
+seen so far. Without a use-case, namespacing the IDs per-file-handler is
+overengineering.
 
-> So the
-> frames stay out of buddy, but the next image can still be placed on
-> them, and since nothing sets PG_hwpoison none of the existing hwpoison
-> users see them either.
+>
+>>  {
+>>  	struct luo_file_set *file_set = luo_file_set_from_session_locked(s);
+>>  	struct luo_file *luo_file;
+>>  	int err = -ENOENT;
+>>  
+>>  	list_for_each_entry(luo_file, &file_set->files_list, list) {
+>> -		if (luo_file->file == file) {
+>> +		if (luo_get_id(luo_file->fh, luo_file->file) == id) {
+>
+> [Severity: High]
+> Can this cause a NULL pointer dereference on incoming sessions?
+>
+> In an incoming session after deserialization, luo_file->file is initialized
+> to NULL and remains NULL until the file is explicitly retrieved.
+>
+> Because liveupdate_get_token_outgoing() is an exported API that accepts a
+> generic struct liveupdate_session, an in-kernel caller could mistakenly pass
+> an incoming session.
 
-Memblock knows which ranges were poisoned. It shouldn't hand these out, neither
-to memblock users or the buddy.
+That's a broken caller and should be fixed.
 
-And is it knows that these ranges are poisoned, it should be marking them as
-hwpoisoned when we initialize the memmap.
+>
+> Prior to this patch, doing so would safely return -ENOENT because NULL == file
+> is false. With this patch, luo_get_id() will blindly pass the NULL file
+> pointer to the handler's get_id callback.
+>
+> Handlers like memfd_luo call file_inode(file), which would cause an
+> immediate NULL pointer dereference and kernel crash.
+>
+> [Severity: Low]
+> Are these indirect function calls necessary during the list traversal?
+>
+> Replacing the direct pointer comparison with luo_get_id() performs an indirect
+> function call (fh->ops->get_id) if defined, on every iteration of the
+> files_list traversal.
+>
+> Because this function is used to look up tokens for dependencies, it can be
+> called for every dependency of every preserved object, resulting in O(N * M)
+> indirect calls.
 
-Kiryl probably remembered the unaccepted-memory hammer and thought of hwpoison
-of being just another nail. It's not. hwpoison is a proper kernel infrastructure.
+A very large number of files with dependencies need to be preserved for
+this to be a problem. We haven't hit this bottleneck so far and don't
+think will hit it at least in the near future.
 
-> 
-> Most of the discussion happened here:
-> https://lore.kernel.org/all/aog_uH5fTsJzXjjx@thinkstation/
-> 
-> v3 then poisoned the frames from mm_core_init(), right after
-> memblock_free_all(), taking them back off buddy. 
+>
+> Since the ID is a constant property of the preserved file, could it be
+> evaluated exactly once during luo_preserve_file() and cached directly in
+> struct luo_file?
 
-They should have never been exposed to the buddy.
+Not a bad idea to be fair. But that's an independent fixup.
 
-> That breaks with
-> CONFIG_DEFERRED_STRUCT_PAGE_INIT, where the struct pages above
-> first_deferred_pfn do not exist yet at that point, and Kiryl's other
-> point was that the shape was wrong regardless: flag the frame on its
-> first add to buddy, not after buddy is up.
-
-The flags should be set earlier and pages never even handed to the buddy.
-
-Handing out poisoned pages from one allocator to hide them from another
-allocator is stupid.
-
-> 
-> See the discussion at:
-> https://lore.kernel.org/all/apGbDOnPm5VXP5ez@thinkstation/
-> 
-> Which is how it ended up in __free_pages_core().
->>>> From that point on, the memmap should be our reliable source of information.
-> 
-> Sure, is this approach better?
-> 
->   - the bitmap is read as the struct pages are initialised, and the only
->     thing it does there is SetPageHWPoison();
-> 
->   - __free_pages_core() keeps the hook but tests PageHWPoison() instead
->     of the table, so a recorded frame is still held back before it can
->     enter buddy;
-> 
->   - nothing else queries the table.
-
-Why should we give pages we know are poisoned to the buddy? And why should we
-let memblock hand out poisoned ranges?
-
-I'm sorry, it's all hacky.
-
-I see why we want a bitmap from kernel A to kernel B, but once the kernel is up
-we have established infrastrcture to identify poisoned pages.
-
-Just look at the mess in the patch here I replied to. Pairing bitmap scans with
-memmap scans ... hacky.
-
-> 
-> One caveat on "exactly once": if that means one pass at one point in
-> boot, it is what v3[1] did -- hwpoison_init_boot() from mm_core_init(),
-> right after memblock_free_all() -- and it does not work. With
-> CONFIG_DEFERRED_STRUCT_PAGE_INIT the struct pages above
-> first_deferred_pfn are not there yet at that point.
-> 
-> Link: https://lore.kernel.org/all/20260826-hwpoison-kho-v3-5-6f79c4b605bc@debian.org/
-> 
-> So I _think_ we want to do it once per frame, as that frame's struct
-> page comes up. __init_single_page() is the single function they all pass
-> through. Is __init_single_page() the right place to query the bitmap and
-> mark is as poisoned?
-
-That's what I originally had in mind, but I am not sure if it's the right time
-to query it.
-
-Assume we tell memblock about the poisoned ranges early and it would not hand
-them out.
-
-memblock_free_pages() would never get called in the first place.
-
-All pages would look like they are simply allocated by memblock.
-
-We'd have to traverse the poisoned ranges in memblock once to set the hwpoisoned
-bits.
-
-> 
->> For this code here, just remember globally whether we hwpoisoned any page. If
->> so, just walk the memmap. If not (the 99.9999% of all systems, no need to scan
->> anything).
-> 
-> Yes, and the counter already exists: num_poisoned_pages and we can query
-> it. I am also planning to add something similar in the EFI table, like
-> an ->empty field, which will be cleared when a bit is set, avoiding
-> doing bitmap walk on the happy path (not a single poisoned page).
-> 
-> Anyway, range_hwpoison() short-circuits on it today,
-> 
->       if (!size || !atomic_long_read(&num_poisoned_pages))
->               return poison;
-> 
-> so memblk_nr_poison_init() can gate on the same thing and walk the
-> memmap, with no EFI call left in drivers/base/memory.c at all. That
-> disposes of the misleading name there too, which was where this
-> started.
-> 
-> Now, the half I am less sure about is checking whether a memblock
-> allocation landed on a recorded frame. Poisoning at memmap init cannot
-> prevent that -- the memmap is itself a memblock allocation, so the
-> struct pages do not exist while the early allocations are being made --
-> it can only detect it afterwards, as a pass over memblock.reserved
-> before memblock_free_all().
-> 
-> The alternative is to bring v2's memblock_reserve() back purely to keep
-> the early allocator off those frames, and still poison at memmap init
-> so the flag is there for everyone else. That gets both properties, at
-> the cost of frames that are Reserved and HWPoison and never in buddy,
-> which I have not thought through for unpoison.
-
-
-Thanks for the history on this. I tried to summarize my thoughts above. I might
-be wrong.
+>
+>>  			if (tokenp)
+>>  				*tokenp = luo_file->token;
+>>  			err = 0;
 
 -- 
-Cheers,
-
-David
+Regards,
+Pratyush Yadav
 
