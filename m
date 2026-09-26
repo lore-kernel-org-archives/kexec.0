@@ -4,76 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EE507C9830E
-	for <kexec@archiver.kernel.org>; Fri, 25 Sep 2026 20:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D40E6C9831E
+	for <kexec@archiver.kernel.org>; Sat, 26 Sep 2026 05:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-	List-Owner; bh=ePJQkIFnt4F6epeLD6EuDPC3hOp4CqTE9+zCYw95jpI=; b=vb2RIR/aDrFSBf
-	NzZokYOBOLiwPmzn3RrVd80KgKjujVKSMxpD7ivzZfQm2ktNsGzs+ZGaZEXBdethHcKU8o59fXu3/
-	ETJ7vrggHy8wI/irfDUm0wwHChi2UDqOkDkWyfAEgLrIYI2v2hR/phNUC73R5mL2UT5tx9QuOjjQt
-	bnD0DNcjxKboZcTthsYf1hrgaUdpR8ww5pfj8GzAz1iYHAHCrfbCs2m42RIbsLS1lslTBm7G65QOW
-	eWUStN/KiUEJg2AiUe/Zy2aUdLznbdQLaZG5muMaecJCyYF13i9sY1nVGDSiWQUBb8WIjaaUbp10J
-	lDOD+mAdorCGNkDO8pJA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=D9XDeps2pDxqilbZZVLJzWllpUPhrEleL/dVE//lxog=; b=ch7bWZqIai4UYMYNDG+tL6I0AM
+	ohEoY+RRLW8Jym35edmuToxx8jHQnVTFboRUaxnLKh9qKu1/MFzx0rT5iCStKfxZq5up7ArOz1AG5
+	oUNyCJzzbj6/Nt0k6/KTVkdru69qS2luqNZx32muqdwzFgoBwxFYfWcJq3pWxlWiU2xBOu0QnalDh
+	oeyHX+aXOOiur1oVGp1+gFFg5jHc5JxALPOPxtsa6GpV+0amhlmR85wfgAEnpLWqi1WywiwSKll3Y
+	PnLqrJWbcSVmQwdvawQOpjz5Acc+8XVc+Z3OJKx8cb46CY4JhrM8LUCR1iaAnjZnC5SNsSDAF67C5
+	nWvamjvA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xAC9T-0000000EKBj-1zWW;
-	Fri, 25 Sep 2026 20:04:11 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xAKqp-0000000F12J-34zI;
+	Sat, 26 Sep 2026 05:21:31 +0000
+Received: from mail-dy2-x10.google.com ([2607:f8b0:4864:36::10])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xAC9R-0000000EKBE-2nHr
+	id 1xAKqi-0000000F11j-1pU3
 	for kexec@lists.infradead.org;
-	Fri, 25 Sep 2026 20:04:09 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 1E000439B9;
-	Fri, 25 Sep 2026 20:04:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAABE1F000FF;
-	Fri, 25 Sep 2026 20:04:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790366649;
-	bh=ePJQkIFnt4F6epeLD6EuDPC3hOp4CqTE9+zCYw95jpI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To;
-	b=JH1E97kezkKPIcz7LwNFF3K1iKvj9euda68sv7W2yJ9qsjlzc0ssvJKALY+6ylfG4
-	 ybzL9EF1N3nOKx/mJovi2dH6Ael6VB8u6vOVoo3EPq/fo3BGnoFBVowf9hXX8IMgLg
-	 dD2fpKfE1K8Y6ynjbKP5IfQYfq5eJby+Xbhm7W7LLeOuInDLlYPVZL0caXXD/qc7hr
-	 ZVLikbkiFvpI9mgXB44hIhvNxa7LzErt10gsQKDRhxTpfqdPQmBRTR/WeNGUGWZ7BL
-	 3rvrZKp8UskVAQUja2xGgd1kZA9LfYNzND6v9EmOm+NewSpsBnVaGJ/CG1HjwosEqI
-	 BXFfGMqEzApaA==
-Date: Fri, 25 Sep 2026 15:04:07 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: David Matlack <dmatlack@google.com>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-pci@vger.kernel.org,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Alexander Graf <graf@amazon.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
-	Josh Hilke <jrhilke@google.com>,
-	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pranjal Shrivastava <praan@google.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
-	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v9 06/13] PCI: liveupdate: Preserve bus numbers during
- Live Update
-Message-ID: <20260925200407.GA2082921@bhelgaas>
+	Sat, 26 Sep 2026 05:21:27 +0000
+Received: by mail-dy2-x10.google.com with SMTP id 5a478bee46e88-32dec843c37so2323211eec.3
+        for <kexec@lists.infradead.org>; Fri, 25 Sep 2026 22:21:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790400083; x=1791004883; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=D9XDeps2pDxqilbZZVLJzWllpUPhrEleL/dVE//lxog=;
+        b=NxUtjuD1HmIFdrCpdPtwkPO+hY+MyG3AzgFh3vJiEPDUNH/bBTrO8BZJEW9DPeWOOb
+         ihkxhDpNHuU793TOiU7IQLpQAouci4EhGq/Co7P905CFdGMHluHF2J0YmSDdcpO6eT/T
+         wLDTizjBnGA12/9rg+9Mjo2N7VxlJ6ZcZ5UwZUg/wN2Y0EPMl3kB4RB9WTli57PcUFOx
+         OaWpcaQqdKndRVoyJan6NLqIbhQpOAbC1/iNMOcVKo9yYObc5fcs/AI1ZGxgEehb9EUe
+         41/QMSatR+QR5kkcNTpNSfa5SX0tVaaRhQG2dp2LdXj3kg+9yG7IJIl6mfFqf07jiKgc
+         NuGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790400083; x=1791004883;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=D9XDeps2pDxqilbZZVLJzWllpUPhrEleL/dVE//lxog=;
+        b=xrz43gdDmSRfBETcEWesIDXx+IIa2TliiUonQmvuz2+QqIx1d0kKBeY3IGEwK9xtEV
+         n0vkIsr6ckVqE8V/zWBRjfZaE41hJ4b5SxaFDx/5upUTqJli68U9TG2AOIRMafZ6Ujix
+         vSKkS1IqB3Ik+kjXZA6rWsTSaLPI6hfl+QSNs+uYkg3U7hQwFWbw4QTN8FL+vOzD64WF
+         DfXRm6tscBXxyN1zUSfyZb0jIrRypg/Q7YBM+ME9vR3JpEcGqP+QMY/8QUmRVOqUIiMb
+         uaNux8vc2SXLS2sY/tv+21h9aGJn9EqEOe6CW+reKghIJJUUL0Z9COeiITUAD6/5m7vL
+         El1w==
+X-Forwarded-Encrypted: i=1; AKwUvBxNBPXAUiaO7iurqzAMa6p510yRlNivTZv0eVQfTnbgWS2zD33YrYul4XdfgBDfoux42HuXBA==@lists.infradead.org
+X-Gm-Message-State: AFuF++nO5ewKAJ6LdwtCjYq3v4NANkp2DIE4v9w7PDvLVWhJHszBaToC
+	UDrKnuTnFb0qcX6jke5eJWCVWhyOvirlECJBhVrsXli0cr1DWHtvFeJS
+X-Gm-Gg: AYBFou3ju+bI64FyRB+6rtJqU/8BIhGpoRiyzrfy6lO5OfgjfZcAjfO+7zxrH2ib+Uh
+	fgknBB/vJpYxXGeahgd6S6m0kI+uIYG6vGZjUANbIDwWcvFIkE9puR91+h3oQMdco4+FJm9Nnmy
+	lZymb+v6/eZ4Akou8QM7meGOHKM5NtqzPON2D3nfSW9UA/LN+Ri2OGbeh7ohwNKEykciyykWu9t
+	yRO1LLK/vgvR5QoOJKpT+0FwXAuWF0ABtb+gbIo7SDaYhNlZ3rvno/vutP0lsyXabDzPfCun7Yx
+	PNJq+XmFk4GMAePmn+p+xDSPIMMFnIMJFVVG9wrsb4en/JlyXeeokMgeC41W2Ph541TcCwgkZYn
+	4ffPZqvU7AkuQAIm7oyhLv/p5i3yidOdi9OLk26NHKpaq9FmCcJQ41NVOlMDlycKa7E7f7CEpl9
+	+h1OfH/fot5ZVD7mKDDttzW4cdfV3tJ4pNdZ9JW0TeUTE1XVxE8Bnae1oSLPNIEIeFmucBhLShl
+	5NGETit4W2KRhTN75GIobYAnbh9TcAGKKAtOoO+qYupNxXWW4GlDr4ITEOTlPAQyYeJLaa/2UmA
+	8LxSgVrYcd90dayTmjgGyEd1OOu+E8SZGnavn3luESqDPHI1ct5x0c2sA74=
+X-Received: by 2002:a05:701b:2905:b0:145:5c7:716d with SMTP id a92af1059eb24-146d0f3313bmr2024006c88.42.1790400083367;
+        Fri, 25 Sep 2026 22:21:23 -0700 (PDT)
+Received: from spider.bream-herring.ts.net ([103.6.151.236])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-145aa0cb7bcsm8670711c88.2.2026.09.25.22.21.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Sep 2026 22:21:22 -0700 (PDT)
+From: Matthias Goergens <matthias.goergens@gmail.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>
+Cc: linux-pm@vger.kernel.org,
+	pavel@kernel.org,
+	tglx@kernel.org,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	yu.c.chen@intel.com,
+	jlee@suse.com,
+	baoquan.he@linux.dev,
+	dyoung@redhat.com,
+	io@r-ricci.it,
+	scardracs@disroot.org,
+	moravec@ukf.sk,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] x86/hibernate: Ignore page-zero RAM in E820 checksum
+Date: Sat, 26 Sep 2026 13:21:17 +0800
+Message-ID: <20260926052117.3613637-1-matthias.goergens@gmail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260805070900.3390978-1-matthias.goergens@gmail.com>
+References: <20260805070900.3390978-1-matthias.goergens@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260918200640.887030-7-dmatlack@google.com>
+Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260925_222124_484223_1F56684F 
+X-CRM114-Status: GOOD (  18.87  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -88,339 +115,146 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Sep 18, 2026 at 08:06:32PM +0000, David Matlack wrote:
-> Keep the secondary and subordinate bus numbers that the previous kernel
-> programmed into bridges, rather than assigning new ones, if the previous
-> kernel preserved any device across a Live Update. Do this even on
-> architectures that would otherwise always assign bus numbers themselves,
-> e.g. when pci=assign-busses is passed.
-> 
-> Preserved devices must be allowed to continue performing memory
-> transactions across a Live Update, so the kernel cannot change the
-> fabric topology. Changing the bus numbers of a bridge changes the
-> RequesterIDs of the devices below it, which would require disabling and
-> flushing any in-flight memory transactions first.
-> 
-> Apply the policy globally rather than only to the paths that contain
-> preserved devices. Bus numbers have to be preserved above a preserved
-> device anyway, since an upstream bridge cannot expand its window. A
-> global policy matches the scope of pcibios_assign_all_busses(), and
-> gives an answer that cannot change part way through the two passes of a
-> bridge scan.
-> 
-> Bridges that do not have bus numbers are still assigned new ones, so
-> hot-adding a bridge keeps working, both during and after a Live Update.
-> The two-pass bridge scan guarantees such bridges are only assigned bus
-> numbers above those already claimed by preserved bridges.
-> 
-> The exception is a bridge that was preserved but comes up without a
-> valid bus number configuration, e.g. because it was reset during kexec.
-> Refuse to assign it new bus numbers, since that would silently change
-> the BDF of every preserved device in its hierarchy. Also refuse to
-> assign bus numbers to the other bridges on the same bus, since the bus
-> numbers of the failed bridge can no longer be read from hardware and
-> handing them out would let an unrelated device inherit the BDF of a
-> preserved device.
-> 
-> Require that CONFIG_CARDBUS is not enabled to enable
-> CONFIG_PCI_LIVEUPDATE since preserving bus numbers on PCI-to-CardBus
-> bridges requires additional work but is not a priority at the moment.
-> 
-> Signed-off-by: David Matlack <dmatlack@google.com>
+The legacy kexec_load path reconstructs the E820 map exported through
+sysfs.  kexec-tools leaves the first 1 KiB unavailable for the real-mode
+transition, so a kernel entered through kexec_load can see conventional
+RAM starting at 0x400.  A subsequent firmware boot reports the same RAM
+range starting at zero.
 
-Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+The hibernation E820 checksum compares those byte representations and
+rejects the image, even though the maps agree from page one onwards.
+A QEMU guest showed this transition:
 
-> ---
->  .../admin-guide/kernel-parameters.txt         |   7 +-
->  drivers/pci/Kconfig                           |   2 +-
->  drivers/pci/liveupdate.c                      | 114 ++++++++++++++++++
->  drivers/pci/liveupdate.h                      |  13 ++
->  drivers/pci/probe.c                           |  11 +-
->  include/linux/pci_liveupdate.h                |   5 +
->  6 files changed, 146 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 68647ff4bdd2..7eabf6320abf 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -5170,7 +5170,12 @@ Kernel parameters
->  				explicitly which ones they are.
->  		assign-busses	[X86] Always assign all PCI bus
->  				numbers ourselves, overriding
-> -				whatever the firmware may have done.
-> +				whatever the firmware may have done. Ignored
-> +				if any device was preserved across a Live
-> +				Update, where the kernel must preserve the
-> +				PCI topology (including bus numbers) to
-> +				avoid interrupting ongoing memory transactions
-> +				of preserved devices.
->  		usepirqmask	[X86] Honor the possible IRQ mask stored
->  				in the BIOS $PIR table. This is needed on
->  				some systems with broken BIOSes, notably
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index 8af20f558086..16fbd4212e0f 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -273,7 +273,7 @@ config VGA_ARB_MAX_GPUS
->  
->  config PCI_LIVEUPDATE
->  	bool "PCI Live Update Support"
-> -	depends on PCI && LIVEUPDATE && 64BIT
-> +	depends on PCI && LIVEUPDATE && 64BIT && !CARDBUS
->  	help
->  	  Enable PCI core support for preserving PCI devices across Live
->  	  Update. This, in combination with support in a device's driver,
-> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-> index 825df024eec4..686887a6c8d9 100644
-> --- a/drivers/pci/liveupdate.c
-> +++ b/drivers/pci/liveupdate.c
-> @@ -148,6 +148,32 @@
->   * This enables the PCI core and any drivers bound to the bridge to participate
->   * in the Live Update so that preserved endpoints can continue issuing memory
->   * transactions during the Live Update.
-> + *
-> + * BDF Stability
-> + * =============
-> + *
-> + * The PCI core guarantees that preserved devices can be identified by the same
-> + * bus, device, and function numbers for as long as they are preserved
-> + * (including across kexec). To accomplish this, the PCI core keeps the
-> + * secondary and subordinate bus numbers that the previous kernel programmed
-> + * into bridges, if the previous kernel preserved any device. This is true even
-> + * on architectures that always assign new bus numbers during scanning. The
-> + * kernel assumes the previous kernel established a sane bus topology across
-> + * kexec.
-> + *
-> + * Bridges that do not have bus numbers are assigned new ones as usual, so
-> + * hot-adding a bridge keeps working, both during and after a Live Update. The
-> + * two-pass bridge scan ensures such bridges are only assigned bus numbers above
-> + * those already claimed by preserved bridges.
-> + *
-> + * If a preserved bridge comes up without a valid bus number configuration, e.g.
-> + * because it was reset during kexec, the PCI core refuses to assign it new bus
-> + * numbers and does not enumerate anything below it. Assigning new bus numbers
-> + * would silently change the BDF of every preserved device in its hierarchy. The
-> + * PCI core also stops assigning bus numbers to the other bridges on the same
-> + * bus, since the bus numbers of the failed bridge can no longer be read from
-> + * hardware and handing them to another bridge would let an unrelated device
-> + * inherit the BDF of a preserved device.
->   */
->  
->  #define pr_fmt(fmt) "PCI: liveupdate: " fmt
-> @@ -168,9 +194,13 @@
->   * struct pci_liveupdate_global - Global state for PCI Live Update support
->   * @rwsem: Reader/writer semaphore used to protect the incoming and outgoing
->   *         FLBs, and the references to them in struct pci_dev.
-> + * @had_incoming: True if the previous kernel preserved at least one PCI device.
-> + *                Set when the incoming FLB is retrieved and never cleared, so
-> + *                it stays true after Live Update finishes.
->   */
->  struct pci_liveupdate_global {
->  	struct rw_semaphore rwsem;
-> +	bool had_incoming;
->  };
->  
->  static struct pci_liveupdate_global pci_liveupdate = {
-> @@ -298,6 +328,14 @@ static int pci_flb_retrieve(struct liveupdate_flb_op_args *args)
->  			      ret);
->  	}
->  
-> +	/*
-> +	 * Remember that the previous kernel preserved devices for the lifetime
-> +	 * of this kernel, even after Live Update finishes and the incoming FLB
-> +	 * is freed. See pci_liveupdate_preserve_bus_numbers().
-> +	 */
-> +	if (!xa_empty(&incoming->xa))
-> +		pci_liveupdate.had_incoming = true;
-> +
->  	args->obj = incoming;
->  	return 0;
->  }
-> @@ -606,6 +644,80 @@ static void pci_liveupdate_flb_put_incoming(void)
->  	liveupdate_flb_put_incoming(&pci_liveupdate_flb);
->  }
->  
-> +/**
-> + * pci_liveupdate_preserve_bus_numbers() - Determine if the PCI core should
-> + *                                         preserve bus numbers when scanning
-> + *                                         bridges.
-> + *
-> + * This function is called by the PCI core when it is scanning a bridge. It
-> + * determines whether the PCI core should preserve the secondary and subordinate
-> + * bus numbers that the previous kernel programmed into that bridge, rather than
-> + * assigning new ones. This is necessary to keep RequesterIDs constant for
-> + * preserved devices issuing memory transactions.
-> + *
-> + * Bus numbers are preserved everywhere, and for the lifetime of the kernel, if
-> + * the previous kernel preserved any device. Bus numbers have to be preserved
-> + * above a preserved device anyway, since an upstream bridge cannot expand its
-> + * window. Applying the same policy everywhere matches the scope of
-> + * pcibios_assign_all_busses(), and gives an answer that cannot change part way
-> + * through the two passes of a bridge scan.
-> + *
-> + * The incoming FLB is retrieved while setting up the first device, which always
-> + * happens before any bridge is scanned, so this returns the same answer for the
-> + * entire enumeration.
-> + *
-> + * Note that this does not prevent the PCI core from assigning bus numbers to
-> + * bridges that do not have any, e.g. bridges that are hot-added after the
-> + * Live Update. See pci_liveupdate_refuse_bus_numbers() for the one case where
-> + * the PCI core must refuse to do so.
-> + *
-> + * Return: True if bus numbers should be preserved, false otherwise.
-> + */
-> +bool pci_liveupdate_preserve_bus_numbers(void)
-> +{
-> +	return pci_liveupdate.had_incoming;
-> +}
-> +
-> +/**
-> + * pci_liveupdate_refuse_bus_numbers() - Determine if the PCI core must refuse
-> + *                                       to assign bus numbers to the provided
-> + *                                       bridge.
-> + * @bus: The PCI bus the bus numbers would be assigned from.
-> + * @dev: The PCI bridge device the bus numbers would be assigned to.
-> + *
-> + * This function is called by the PCI core before it assigns bus numbers to a
-> + * bridge that does not have any.
-> + *
-> + * A bridge that was preserved by the previous kernel but came up without a
-> + * valid bus number configuration, e.g. because it was reset during kexec, is
-> + * left alone by the PCI core and therefore has no child bus once the first pass
-> + * of the bridge scan is done.
-> + *
-> + * The PCI core must not assign bus numbers from @bus while such a bridge is on
-> + * it, including to the failed bridge itself. Assigning new bus numbers to the
-> + * failed bridge would silently change the BDF of every preserved device in its
-> + * hierarchy. Its bus numbers cannot be read from hardware anymore either, so
-> + * they cannot be excluded from assignment, and handing them to another bridge
-> + * would let an unrelated device inherit the BDF of a preserved device.
-> + *
-> + * Return: True if @dev must not be assigned bus numbers, false otherwise.
-> + */
-> +bool pci_liveupdate_refuse_bus_numbers(struct pci_bus *bus, struct pci_dev *dev)
-> +{
-> +	struct pci_dev *bridge;
-> +
-> +	for_each_pci_bridge(bridge, bus) {
-> +		if (!bridge->liveupdate.was_incoming || bridge->subordinate)
-> +			continue;
-> +
-> +		pci_err(dev, "Not assigning bus numbers, preserved bridge %s lost its bus number configuration\n",
-> +			pci_name(bridge));
-> +		return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
->  void pci_liveupdate_setup_device(struct pci_dev *dev)
->  {
->  	struct pci_flb_incoming *incoming;
-> @@ -634,6 +746,8 @@ void pci_liveupdate_setup_device(struct pci_dev *dev)
->  
->  	pci_info(dev, "Device was preserved by previous kernel across Live Update\n");
->  	dev->liveupdate.incoming = dev_ser;
-> +	dev->liveupdate.was_incoming = true;
-> +
->  	pci_liveupdate_flb_put_incoming();
->  }
->  
-> diff --git a/drivers/pci/liveupdate.h b/drivers/pci/liveupdate.h
-> index eaaa3559fd77..e5d2a19d2ca2 100644
-> --- a/drivers/pci/liveupdate.h
-> +++ b/drivers/pci/liveupdate.h
-> @@ -13,6 +13,8 @@
->  #ifdef CONFIG_PCI_LIVEUPDATE
->  void pci_liveupdate_setup_device(struct pci_dev *dev);
->  void pci_liveupdate_cleanup_device(struct pci_dev *dev);
-> +bool pci_liveupdate_preserve_bus_numbers(void);
-> +bool pci_liveupdate_refuse_bus_numbers(struct pci_bus *bus, struct pci_dev *dev);
->  #else
->  static inline void pci_liveupdate_setup_device(struct pci_dev *dev)
->  {
-> @@ -21,6 +23,17 @@ static inline void pci_liveupdate_setup_device(struct pci_dev *dev)
->  static inline void pci_liveupdate_cleanup_device(struct pci_dev *dev)
->  {
->  }
-> +
-> +static inline bool pci_liveupdate_preserve_bus_numbers(void)
-> +{
-> +	return false;
-> +}
-> +
-> +static inline bool pci_liveupdate_refuse_bus_numbers(struct pci_bus *bus,
-> +						     struct pci_dev *dev)
-> +{
-> +	return false;
-> +}
->  #endif
->  
->  #endif /* DRIVERS_PCI_LIVEUPDATE_H */
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index ad7fdf0d56b6..debe0ad1ef68 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1397,6 +1397,8 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
->  				  int max, unsigned int available_buses,
->  				  int pass)
->  {
-> +	bool preserve_bus_numbers = !pcibios_assign_all_busses() ||
-> +				    pci_liveupdate_preserve_bus_numbers();
->  	struct pci_bus *child;
->  	u32 buses;
->  	u16 bctl;
-> @@ -1449,8 +1451,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
->  		goto out;
->  	}
->  
-> -	if ((secondary || subordinate) &&
-> -	    !pcibios_assign_all_busses() && !broken) {
-> +	if ((secondary || subordinate) && preserve_bus_numbers && !broken) {
->  		unsigned int cmax, buses;
->  
->  		/*
-> @@ -1492,8 +1493,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
->  		 * do in the second pass.
->  		 */
->  		if (!pass) {
-> -			if (pcibios_assign_all_busses() || broken)
-> -
-> +			if (!preserve_bus_numbers || broken)
->  				/*
->  				 * Temporarily disable forwarding of the
->  				 * configuration cycles on all bridges in
-> @@ -1507,6 +1507,9 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
->  			goto out;
->  		}
->  
-> +		if (pci_liveupdate_refuse_bus_numbers(bus, dev))
-> +			goto out;
-> +
->  		/* Clear errors */
->  		pci_write_config_word(dev, PCI_STATUS, 0xffff);
->  
-> diff --git a/include/linux/pci_liveupdate.h b/include/linux/pci_liveupdate.h
-> index 710026ada2d5..d45a5b524909 100644
-> --- a/include/linux/pci_liveupdate.h
-> +++ b/include/linux/pci_liveupdate.h
-> @@ -17,10 +17,15 @@
->   * struct pci_liveupdate - PCI Live Update state for a struct pci_dev
->   * @outgoing: State preserved for the next kernel.
->   * @incoming: State preserved by the previous kernel.
-> + * @was_incoming: True if this struct pci_dev was incoming-preserved when it was
-> + *                set up, i.e. it was matched to state preserved by the previous
-> + *                kernel. Unlike @incoming, this is never cleared, so it stays
-> + *                true after the device finishes participating in Live Update.
->   */
->  struct pci_liveupdate {
->  	struct pci_dev_ser *outgoing;
->  	struct pci_dev_ser *incoming;
-> +	bool was_incoming;
->  };
->  
->  struct pci_dev;
-> -- 
-> 2.55.0.1082.g2b9226bbc0-goog
-> 
+  firmware:     RAM [0-0x9fbff]
+  kexec_load:   gap [0-0x3ff], RAM [0x400-0x9fbff]
+  firmware:     RAM [0-0x9fbff]
+
+The checksum covers e820_table_firmware, which trim_bios_range() leaves
+alone.  The nosave regions come from e820_table instead, where
+trim_bios_range() has already turned conventional RAM in page zero into
+reserved memory, so page zero never occurs in the image, whatever the
+firmware map says about it.
+
+Canonicalise only the conventional-RAM portion below PAGE_SIZE before
+calculating the checksum.  Preserve RESERVED, ACPI, NVS, UNUSABLE, PMEM
+and all other E820 types so that changes to exceptional mappings remain
+detectable.
+
+This is deliberately narrower than Marco Scardovi's June proposal to
+checksum only RAM and its opt-in relaxed_memmap successor.  Rafael
+noted that ignoring non-RAM changes could hide moved ACPI or UEFI
+regions still used by the resumed kernel.  This patch preserves every
+non-RAM entry and ignores only RAM within page zero, which common setup
+already reserves and excludes from the image.
+
+Bump RESTORE_MAGIC, since the checksum semantics change, so that an
+image written by a kernel without this change is refused by the magic
+check instead of being compared under different rules.
+
+In the same guest, with the page-zero difference kept, hibernation and
+resume now work after both a direct boot and a kexec_load boot.  An
+image written by an unpatched kernel is refused at resume with
+"Unrecognized hibernate image header format!", and the firmware-booted
+kernel carries on.
+
+Fixes: 62a03defeabd ("PM / hibernate: Verify the consistent of e820 memory map by md5 digest")
+Reported-by: Roberto Ricci <io@r-ricci.it>
+Signed-off-by: Matthias Goergens <matthias.goergens@gmail.com>
+Link: https://lore.kernel.org/all/Z-hYWc9LtBU1Yhtg@desktop0a/
+Link: https://lists.openwall.net/linux-kernel/2025/04/04/1372
+Link: https://lore.kernel.org/all/CAJZ5v0jmOj0WBtMTvbnaD+2b0bTFowA=JWrqRzaaCYpHpai1Nw@mail.gmail.com/
+Link: https://lore.kernel.org/all/20260623165724.10753-1-scardracs@disroot.org/
+---
+Changes in v2:
+- Bump RESTORE_MAGIC, as Rafael asked:
+  https://lore.kernel.org/all/CAJZ5v0izV3g1mSKJtKMcc=TfeUjJofSXCX92y4XX55Lam28qOg@mail.gmail.com/
+- Say which E820 table the checksum covers and why page zero still
+  cannot be in the image; drop the paragraph on cross-version images,
+  which the magic now covers, and report that such an image is refused.
+- Rebased on 6812ce4e4379 ("Merge tag 'drm-fixes-2026-09-26' of
+  https://gitlab.freedesktop.org/drm/kernel").
+
+ arch/x86/power/hibernate.c | 51 +++++++++++++++++++++++++++++++++-----
+ 1 file changed, 45 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/power/hibernate.c b/arch/x86/power/hibernate.c
+index a2294c1649f6..dbb340fb24ad 100644
+--- a/arch/x86/power/hibernate.c
++++ b/arch/x86/power/hibernate.c
+@@ -63,6 +63,25 @@ struct restore_data_record {
+ 	unsigned long e820_checksum;
+ };
+ 
++static bool trim_e820_page_zero_ram(struct e820_entry *entry)
++{
++	u64 lowmem_size;
++
++	/*
++	 * Page zero is BIOS-owned and registered as nosave.  Boot loaders may
++	 * therefore omit part of its conventional RAM entry without changing
++	 * any memory available to the image.  Preserve all other E820 types.
++	 */
++	if (entry->type != E820_TYPE_RAM || entry->addr >= PAGE_SIZE)
++		return true;
++
++	lowmem_size = min_t(u64, entry->size, PAGE_SIZE - entry->addr);
++	entry->addr += lowmem_size;
++	entry->size -= lowmem_size;
++
++	return entry->size;
++}
++
+ /**
+  * compute_e820_crc32 - calculate crc32 of a given e820 table
+  *
+@@ -70,18 +89,38 @@ struct restore_data_record {
+  *
+  * Return: the resulting checksum
+  */
+-static inline u32 compute_e820_crc32(struct e820_table *table)
++static u32 compute_e820_crc32(struct e820_table *table)
+ {
+-	int size = offsetof(struct e820_table, entries) +
+-		sizeof(struct e820_entry) * table->nr_entries;
++	struct e820_entry entry;
++	u32 crc = ~0;
++	u32 nr_entries = 0;
++	u32 i;
++
++	for (i = 0; i < table->nr_entries; i++) {
++		entry = table->entries[i];
++		if (trim_e820_page_zero_ram(&entry))
++			nr_entries++;
++	}
++
++	crc = crc32_le(crc, (unsigned char const *)&nr_entries,
++		       sizeof(nr_entries));
++
++	for (i = 0; i < table->nr_entries; i++) {
++		entry = table->entries[i];
++		if (!trim_e820_page_zero_ram(&entry))
++			continue;
++
++		crc = crc32_le(crc, (unsigned char const *)&entry,
++			       sizeof(entry));
++	}
+ 
+-	return ~crc32_le(~0, (unsigned char const *)table, size);
++	return ~crc;
+ }
+ 
+ #ifdef CONFIG_X86_64
+-#define RESTORE_MAGIC	0x23456789ABCDEF02UL
++#define RESTORE_MAGIC	0x23456789ABCDEF03UL
+ #else
+-#define RESTORE_MAGIC	0x12345679UL
++#define RESTORE_MAGIC	0x1234567AUL
+ #endif
+ 
+ /**
+
+base-commit: 6812ce4e4379ffc99c52401ec28f0d7ffbc36206
+-- 
+2.55.0
+
 
