@@ -4,58 +4,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EB02DC98318
-	for <kexec@archiver.kernel.org>; Sat, 26 Sep 2026 09:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F427C98338
+	for <kexec@archiver.kernel.org>; Sat, 26 Sep 2026 14:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
-	From:MIME-Version:Content-ID:Content-Description:Resent-Date:Resent-From:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=aahV+yzdFExMYzQQ+dk85KZLNDS7wQg/3/bXdqkAuRo=; b=RlcnhQ65AvOiSLY4DL/aV9Tdeo
-	Z7o6iPToVuQMmfvQB3bKeXnRL2I+cLBy863vpIswKJVGk/qAqBEmB9XepwF+jen0olyEGDLHA9JfG
-	TNwo0dS3UEOmVIUSeNH70NXaxwZlS+B/5DrTKnBRRdM33b+tqwCHEwY7eeTADrU0jGZtRU3pT51Q1
-	b3/7Azm7oxdukAQl/96hd/NVD5DHhsMUZ0WA6dPZndb3vg12mVvcrlToFvh5MKHULb7xgiPa2Cadb
-	vXkQuk0p8iL+0Y32JNjuwd9zeBY+7QLK06xIa2lx7/Lpi+fS4D8lK2obemogn5bm/lvJ0h7DB92Xw
-	Xemg3TDQ==;
+	bh=GuVElNNHPxhTvXMJfRPaqVwIwab/ZdlWhq0acISD99k=; b=0aAhbx6weHcrxbEcBUntnlhK88
+	QJBkCESh30Q7zzWuWnG++B+InVzBlYFmuwrv57GkW4ST0eoWJBJfafHRL8NQLx6Ceot1blpGESVJN
+	pMQ9bAOapkDKvY/+AKzOQr7a4JBI2eZFNsS5F7fi1r1aZSFS5G//bvnIYlRw6VWddYnOtxEWsVj71
+	11/JaZBs8M9HLPhwrJL5/ryKSTOLmOynA1WVjjwjSFZ3AxGHkxjE2pm/DubvsHATWJhEFg7qsaisw
+	XaBb7PrzedmmOBau+A1Ks095j/q4kSaFulWKZxVNW53I0S5aD/juuszbE2qRgHBYjY6Nu6flgHUDQ
+	z7GPSEqA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xAOlH-0000000FDE3-40e3;
-	Sat, 26 Sep 2026 09:32:03 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xATg8-0000000FXZj-2wQX;
+	Sat, 26 Sep 2026 14:47:04 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xAOlG-0000000FDDv-0MRB
+	id 1xATg6-0000000FXZK-0Xts
 	for kexec@lists.infradead.org;
-	Sat, 26 Sep 2026 09:32:02 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 2F3F26020C;
-	Sat, 26 Sep 2026 09:32:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5727C1F000FF;
-	Sat, 26 Sep 2026 09:32:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790415120;
-	bh=aahV+yzdFExMYzQQ+dk85KZLNDS7wQg/3/bXdqkAuRo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=K5QPVHkbO0pFLaCwEOWX/lc1IEnhnMfFx2Tvwe9TgoOqETu+9ttswGq7skYIVlyTk
-	 vM5UiMK+EADQGe3DrTxeY2XdszOTw1m7zLkuQlLFkF+kjSuQIIcFWmeaqc5M7x0r1F
-	 NlP7zcAg7LLrSwxBWhqhDHbvxcssDrfOUPD7nmF9E5o2Z1iJyKC2gMljqaLCeVbNWx
-	 q55RQmOacgCAOek1cnAlt470FG6VjJsLjVZRUKzqwULlIbeXvVvNLTxmlDE0PX3Pqd
-	 Ls4l3QW875CN/xouc33gBcC4fyAIVk6J7uFPYjqVRsS3zZ86/HzQhloBm8TBEcA2HO
-	 hd8JhY9X7bmaw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 2/2] memblock: use binary search to locate candidate
- regions
-To: "Tarun Sahu" <tarunsahu@google.com>, dmatlack@google.com, "Pasha
- Tatashin" <pasha.tatashin@soleen.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Mike
- Rapoport" <rppt@kernel.org>
-Cc: kexec@lists.infradead.org, linux-mm@kvack.org, "Pratyush Yadav" <pratyush@kernel.org>, linux-kernel@vger.kernel.org, dev.jain@arm.com
-In-Reply-To: <20260926092448.4090401-2-tarunsahu@google.com>
-References: <20260926092448.4090401-1-tarunsahu@google.com>
- <20260926092448.4090401-2-tarunsahu@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 26 Sep 2026 09:31:59 +0000
-Message-Id: <20260926093200.5727C1F000FF@smtp.kernel.org>
+	Sat, 26 Sep 2026 14:47:03 +0000
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68QE5lkQ2255700;
+	Sat, 26 Sep 2026 14:46:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=GuVElN
+	NHPxhTvXMJfRPaqVwIwab/ZdlWhq0acISD99k=; b=UKYHqpcyGxl7bkFErh8PYH
+	tEtydmGYRqkiLgud8OZ2Jnt3pMyoKSbHSO/U5NjzC4rwlZeoZEQOU5GVbgnuKQTR
+	JBR0dBz3HgrQhx4xLHCmXklG/Y52AdQ54BMnPWaQVdSOtgGxtzHsIwZzYva0Hzks
+	8qo2aaJzuzMJQHIcJb8kSx34oy6Mno1ehUQALc1f1Hb5U0TISz3VE+7aUpIly37b
+	9ylfkCUpAYERpRw9hxBKZMG86SyL8g2ApESnMXX75I0VGODFzmmyp2VMS2otIZ9m
+	nawCoKShBXQKqBqMDcrtoIF0grVAupc4koPczjQx5d6qMP/bknczlJ16eIoL9i7w
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gx5qqspug-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Sat, 26 Sep 2026 14:46:39 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68QDlXeb1378649;
+	Sat, 26 Sep 2026 14:46:38 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4gwy27asra-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 26 Sep 2026 14:46:38 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68QEkbN526673740
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 26 Sep 2026 14:46:37 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F2C8B20043;
+	Sat, 26 Sep 2026 14:46:36 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 811B420040;
+	Sat, 26 Sep 2026 14:46:34 +0000 (GMT)
+Received: from [9.43.82.149] (unknown [9.43.82.149])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sat, 26 Sep 2026 14:46:34 +0000 (GMT)
+Message-ID: <e265fdc8-e224-4815-b94e-9c974210f099@linux.ibm.com>
+Date: Sat, 26 Sep 2026 20:16:33 +0530
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] kho: fix global scratch size calculation
+To: Mike Rapoport <rppt@kernel.org>
+Cc: kexec@lists.infradead.org, Alexander Graf <graf@amazon.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        George Guo
+ <guodongtai@kylinos.cn>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Pratyush Yadav <pratyush@kernel.org>,
+        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20260922131217.698809-1-sourabhjain@linux.ibm.com>
+ <areLMLTC-bO1zcXP@kernel.org>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <areLMLTC-bO1zcXP@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTI2MDA1OCBTYWx0ZWRfXxvSfSzlMnSzp
+ 4z9xWrA4kTaGa2K1o6Bnlro/QntTS7aro4k2KZlX0qiBEVHMVJyUBTBaidGMVZuiWXkvZlwB0jx
+ gq8LmIZf3qS0WNnXYMxo4ZcCeCnL+pUr9p4HumGdQvNNQB+dVVw0pOizn60xVX62X1iw/K3e2bF
+ 7QHUahmDgVwJcUOCnFUnyDB+gAL/rpiMHZJ58M67bqfTTxn/W2BPAteDgonG2FMgk8ulG5/9vxK
+ 7NoqvkBlP2HW/Z7CSv/jO2sVsCoZo/TjamKX7R8iNiZhI0pcJCflWVwbr2E5+pDI3kTEvhte0az
+ KYcP/ICHovVco+HTNlEWcSuV3qaOIlQF5FPc6Avje7qD7XtTSHIYVwGX/JX2C8A0n/xcN5p8j4x
+ Y1RzFVGnPHliM3xMXcFDJZjQfYtECzBPlj9GbqEzBUUldVXjpk8hf2B9r0an6PKvX7aIa1EcUwo
+ vRo7QPdOeMOn924dUbg==
+X-Authority-Analysis: v=2.4 cv=SPbXx+vH c=1 sm=1 tr=0 ts=6ab7dad0 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=vggBfdFIAAAA:8
+ a=Z4Rwk6OoAAAA:8 a=VwQbUJbxAAAA:8 a=7ipKWUHlAAAA:8 a=pGLkceISAAAA:8
+ a=37rDS-QxAAAA:8 a=VnNF1IyMAAAA:8 a=bNo-Hw79ofwCn3g4lxgA:9 a=QEXdDO2ut3YA:10
+ a=HkZW87K1Qel5hWWM3VKY:22 a=gpc5p9EgBqZVLdJeV_V1:22 a=k1Nq6YrhK2t884LQW06G:22
+X-Proofpoint-ORIG-GUID: kzbMAnA0xg_o3d0chYonMeVx77MsnSDA
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTI2MDA1OCBTYWx0ZWRfX1BJ+9hxWRDhF
+ Y0HoeQqKTA9R4NDekMNrioz7bEDZbtzVBlL4vmkbuRkNMM1N8aSznXAhDeb/XvgqvVFpveJfOHR
+ tiuaYFq5NEBnQC0lBcWltAqQFm7q/f8=
+X-Proofpoint-GUID: BDbcgbsLYGFIuH4mxew6Px8aHk3t3IPu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-26_04,2026-09-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 suspectscore=0 clxscore=1015 spamscore=0
+ lowpriorityscore=0 malwarescore=0 adultscore=0 bulkscore=0 impostorscore=0
+ phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2609040000
+ definitions=main-2609260058
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260926_074702_185195_766392B4 
+X-CRM114-Status: GOOD (  27.41  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -67,66 +130,154 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] mm: commit message falsely claims O(N log N) worst-case complexi=
-ty
---
+Hello Mike,
 
-commit ffd047af563941b5aabcd86a52d569f9b40c01ec
-Author: Tarun Sahu <tarunsahu@google.com>
-
-memblock: use binary search to locate candidate regions
-
-This commit introduces a binary search helper, memblock_bsearch_start(),
-to optimize finding candidate regions in memblock_add_range() and
-memblock_isolate_range(), aiming to reduce boot-time overhead during heavy
-memory fragmentation.
-
-> Under heavy memory fragmentation (such as KHO page preservation registeri=
-ng
-> hundreds of thousands of disjoint folios), scanning from index 0 on every
-> insertion and isolation results in O(N^2) complexity, causing boot-time
-> memory retrieval to take several minutes (~268s for 393k pages).
+On 26/09/26 14:36, Mike Rapoport wrote:
+> Hi Sourabh,
 >
-> Using binary search reduces the worst-case complexity to O(N log N)
-> (and O(N) for sequential appends), cutting KHO memory retrieval time
-> from ~268s to ~50ms.
+> On Tue, Sep 22, 2026 at 06:42:16PM +0530, Sourabh Jain wrote:
+>> KHO calculates the global scratch size based on memblock-reserved kernel
+>> memory. It passes NUMA_NO_NODE to memblock_reserved_kern_size() for
+>> this calculation.
+>>
+>> When memblock_reserved_kern_size() is called with NUMA_NO_NODE, it
+>> counts both:
+>>
+>> - memory reserved for a specific NUMA node
+>> - memory reserved with NUMA_NO_NODE
+>>
+>> KHO needs to distinguish between these two types of reservations.
+>> When calculating the size of global scratch memory, KHO only needs to
+>> account for reservations made with NUMA_NO_NODE. Reservations made for
+>> a specific NUMA node must not be included in the global scratch size.
+>>
+>> Add memblock_reserved_size_nid() to calculate reserved memory for a
+>> given reservation type and NUMA node. When NUMA_NO_NODE is passed, it
+>> counts only memory reserved with NUMA_NO_NODE.
+>>
+>> Use the new API for lowmem, global, and per-node KHO scratch size
+>> calculations. For lowmem and global scratch, count only memory
+>> reservations that were made with NUMA_NO_NODE. For per-node scratch,
+>> count only memory reservations that were made with the corresponding
+>> NUMA node ID.
+>>
+>> Remove memblock_reserved_hugetlb_size() since it has the same
+>> implementation as the new API and differs only in the memblock
+>> reservation flag being checked. The new API handles both kernel and
+>> HugeTLB reservations through its reservation type argument.
+>>
+>> Define the new helper as a static function in the KHO implementation,
+>> since it is only used by KHO and has no users outside
+>> kernel/liveupdate/kexec_handover.c.
+>>
+>> On powerpc, the difference can be seen in the scratch_len values
+>> reported by:
+>>
+>> cat /sys/kernel/debug/kho/out/scratch_len
+>>
+>> Before this change, the global scratch allocation was 0x12000000
+>> (288 MB):
+>>
+>> 0x1000000   (16 MB)
+>> 0x12000000  (288 MB)  <- global allocation
+>> 0x5000000   (80 MB)
+>>
+>> After this change, the global scratch allocation is 0xd000000
+>> (208 MB):
+>>
+>> 0x1000000   (16 MB)
+>> 0xd000000   (208 MB)  <- global allocation
+>> 0x5000000   (80 MB)
+>>
+>> The 80 MB difference is the per-node reservation that was previously
+>> being included in the global allocation.
+>>
+>> The same issue also affects lowmem scratch memory, but its impact is
+>> limited because the lowmem scratch memory calculation is restricted to
+>> the first 4G of memory. The changes also cover the lowmem scratch
+>> memory case.
+>>
+>> Cc: Alexander Graf <graf@amazon.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: George Guo <guodongtai@kylinos.cn>
+>> Cc: Mike Rapoport <rppt@kernel.org>
+>> Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
+>> Cc: Pratyush Yadav <pratyush@kernel.org>
+>> Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+>> Cc: linux-kernel@vger.kernel.org
+>> Cc: linux-mm@kvack.org
+>> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>> ---
+>>   include/linux/memblock.h           |  1 -
+>>   kernel/liveupdate/kexec_handover.c | 49 ++++++++++++++++++++++--------
+>>   mm/memblock.c                      | 22 --------------
+>>   3 files changed, 37 insertions(+), 35 deletions(-)
+>>
+>> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+>> index d62db9e776cf..678fe466529a 100644
+>> --- a/include/linux/memblock.h
+>> +++ b/include/linux/memblock.h
+>> @@ -487,7 +487,6 @@ static inline __init_memblock bool memblock_bottom_up(void)
+>>   phys_addr_t memblock_phys_mem_size(void);
+>>   phys_addr_t memblock_reserved_size(void);
+>>   phys_addr_t memblock_reserved_kern_size(phys_addr_t limit, int nid);
+>> -phys_addr_t memblock_reserved_hugetlb_size(phys_addr_t limit, int nid);
+>>   unsigned long memblock_estimated_nr_free_pages(void);
+>>   phys_addr_t memblock_start_of_DRAM(void);
+>>   phys_addr_t memblock_end_of_DRAM(void);
+>> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+>> index 7c4d86daf86d..dc809e1e768c 100644
+>> --- a/kernel/liveupdate/kexec_handover.c
+>> +++ b/kernel/liveupdate/kexec_handover.c
+>> @@ -752,6 +752,31 @@ static int __init kho_parse_scratch_size(char *p)
+>>   }
+>>   early_param("kho_scratch", kho_parse_scratch_size);
+>>   
+>> +static phys_addr_t __init_memblock memblock_reserved_size_nid(phys_addr_t limit, int nid,
+>> +							      enum memblock_flags region_type)
+>> +{
+> Why is this in kexec_handover.c and not in memblock.c?
 
-[Severity: Medium]
-Is the claim of O(N log N) worst-case complexity mathematically accurate he=
-re?
+I kept it here because KHO is the only user of this. However, I'm happy 
+to move it to
+memblock.c if you think that would be more appropriate.
 
-While the binary search reduces the time to locate the insertion index to
-O(log N), the regions are still stored in a contiguous array. If disjoint
-memory regions are inserted in an order that requires inserting into the
-middle of the array, the subsequent elements still need to be shifted.
+>> +	struct memblock_region *r;
+>> +	phys_addr_t total = 0;
+>> +
+>> +	for_each_reserved_mem_region(r) {
+>> +		phys_addr_t size = r->size;
+>> +
+>> +		if (r->base > limit)
+>> +			break;
+>> +
+>> +		if (r->base + r->size > limit)
+>> +			size = limit - r->base;
+>> +
+>> +#ifdef CONFIG_NUMA
+>> +		if (nid == memblock_get_region_node(r))
+>> +#endif
+> Do we really need the #ifdef here?
 
-Looking at memblock_insert_region() which is called during insertion:
+Yes, otherwise, if CONFIG_NUMA is not set, the lowmem and global sizes 
+would be 0.
 
-static void __init_memblock memblock_insert_region(...)
-{
-        ...
-        memmove(rgn + 1, rgn, (type->cnt - idx) * sizeof(*rgn));
-        ...
-}
 
-Because this memory move operation guarantees the worst-case complexity of a
-single insertion remains O(N), wouldn't inserting N disjoint regions in
-descending or scattered order still result in an O(N^2) worst-case time
-complexity overall?
+- Sourabh Jain
 
-The described KHO workload sequentially appends regions, which avoids the
-shifting overhead and achieves O(N) overall. Could the commit message be
-updated to clarify that this patch improves sequential insertion to O(N),
-but the worst-case for fragmented insertions remains O(N^2) due to the array
-shifting?
+>
+>> +			if (r->flags & region_type)
+>> +				total += size;
+>> +	}
+>> +
+>> +	return total;
+>> +}
+>> +
+>>   static void __init scratch_size_update(void)
+>>   {
+>>   	/*
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260926092448.4090=
-401-1-tarunsahu@google.com?part=3D2
 
