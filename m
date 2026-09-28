@@ -2,96 +2,93 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936A960A2616
-	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 08:21:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7504A606A334
+	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 08:21:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=U9kqO48c;
-	dkim=permerror header.d=jaseg.de header.i=@jaseg.de header.a=rsa-sha1 header.s=fm1 header.b=PDW96tMY;
-	dkim=permerror header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha1 header.s=fm1 header.b=rP7VwLU+
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=YYStbY/b;
+	dkim=permerror header.d=jaseg.de header.i=@jaseg.de header.a=rsa-sha1 header.s=fm1 header.b=Q086wdPd;
+	dkim=permerror header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha1 header.s=fm1 header.b=aDzSMFZP
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Message-Id:Date:Subject:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=bVg0AFXfRcn0kYVBIO4bfsJw3vxA/g/QL37izKwnfQA=; b=U9kqO48cLZx8oF
-	/WnPtW9+gfZ7QJmTp6hB5ZyFwmR8QDNcyWST6xlP0JrkcXhcxty4+8wXshCkWeMIKtth64QGbXR9n
-	RLgJD2lOFlOlvOcPeVzFDjxlm4dIt/o6O42QNCuk/Dm4riRVBylbHOd2wBo0v7qD2adzoMpgsNa63
-	ya0k7/XxYyBu7OOyPnb16SkZk6SjOHYW8AbdkqvUh8vWLSM0WmsP5+swTEDzlR8zjxnZmlg2sQ2Sl
-	TfNRRYKhn32Mf4kbMdD6zIxV9wFZdq5BMXoobxRHCmNgCluZ3+1ueFC7MeQr56mreh6aR8HuvHwWL
-	bQRhG+jUCIvg8zxScqlQ==;
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=qb+DMhDeJ8ctMrQDexBGyo2lF6FDBF9wGMJ9M72kVDk=; b=YYStbY/bG8lTWic4eq2iNGL333
+	+f+HNu7oAj4GWyc4unYxe21GjrrBiI45+Tt2M5lRSLJs4M3EtdYlUjJkRgVpt8JULU64R4GWPSD4l
+	pPq7jvH+NDaLJzf8QZi7XwLqIwX1++ekt/UI1+PCvns2Cr4AT/nqBMHaftp/C58IqFUuShEdj1IYv
+	chg++QeQl2SwgJifyPFpIGjklx9PcqdNeP7SxesTFBWqcEKF30AxjI2if5QELFMh1pwjYMK147/XP
+	HLD/K4lY5Cx/cVqO64zW/LUZRChhrdwl/B7ablB8P7rN54qxtlTmLFzOZUsW98hqq4oiAtXLYV2be
+	T8MUMLYQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJ55v-000000098vp-0YUS;
-	Tue, 20 Oct 2026 08:21:15 +0000
+	id 1xJ55y-0000000991L-2bC3;
+	Tue, 20 Oct 2026 08:21:18 +0000
 Received: from flow-a2-smtp.messagingengine.com ([103.168.172.137])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xBEzp-000000017eV-1Xtw;
-	Mon, 28 Sep 2026 17:18:39 +0000
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailflow.phl.internal (Postfix) with ESMTP id 5F29B13804CF;
-	Mon, 28 Sep 2026 13:18:29 -0400 (EDT)
+	id 1xBF0J-0000000182V-2Rxz;
+	Mon, 28 Sep 2026 17:19:05 +0000
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailflow.phl.internal (Postfix) with ESMTP id AD33013804F5;
+	Mon, 28 Sep 2026 13:19:02 -0400 (EDT)
 Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-10.internal (MEProxy); Mon, 28 Sep 2026 13:18:29 -0400
+  by phl-compute-03.internal (MEProxy); Mon, 28 Sep 2026 13:19:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jaseg.de; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm1; t=1790615909; x=1790623109; bh=bV
-	g0AFXfRcn0kYVBIO4bfsJw3vxA/g/QL37izKwnfQA=; b=PDW96tMYg4rbGYdKku
-	0EJCPNI36r4B2hUwhfR3GlFGPvu014j8MQbAmAu/jDt3apTosy9kl2lONm7ZW0tM
-	WC4dSMUV+DZI/8WakXXy5rvWgEkGpzOScmSGb3IPOjsBrUN8LkjH/Ha/MT9arhrj
-	lV5WTyTu5QzeR2yKg40VcC6BtfLWYxr0LyUY5BGoYDxszYqxkqeq1WOd58jjird1
-	0fglY81og4AL3IOrAAj7x5sfsCKjH667Jl5IVYoZIlLo1qFx44vMQ/d8KNsxXLVQ
-	te3Wx/YozKKpZTJTzDde316FvaArpyqNf3tYolcTAtev5GeHOKL7zDSQW4uXXnx+
-	4Stw==
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1790615942;
+	 x=1790623142; bh=qb+DMhDeJ8ctMrQDexBGyo2lF6FDBF9wGMJ9M72kVDk=; b=
+	Q086wdPdPofyYqOd6CCUgyN/t8mpJMMP/HIX8oP64Zj5das0e/ptd+qP/oIBR5Mb
+	bSSletBqJYrsa1QoJg9+DRa40EOW8Bz7fFfT+JPOUNG3p4cbBKjM9ezoEeMOhm8k
+	hY1Sk36qMxifAag37sVgXy+u7vM7JQAmF0OsgbdRLfxNnlUnqkVv7sYOsM6/InhX
+	pHqyZABhdzHMb5OCZNAHlV5sxl7ExPt+Sd7AzhUK3yhVliCeYCeShOyDY3m7FLSy
+	WNWpidTfbcK8AEy/8PA6g+FNQ44pTni5eODz5GFG0U3Q5sN97imskEAAQnLouI+w
+	YRcLgaM4RSNDoy0xlR9aeg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1790615909; x=1790623109; bh=bVg0AFXfRcn0kYVBIO4bfsJw3vxA
-	/g/QL37izKwnfQA=; b=rP7VwLU+g5w5kgoZE/Ygfqp4O9SaMC2M+jdmk9pJscEl
-	bgmxy1pqsyLyypPy/teiX1wg0jXQ0nPfuIwXjq7cUEIAaTJcjGO6UtUMfk3GOpgU
-	GaOjwK1OyDrIS9OX4Y1TV59vKf7VSnORwDlqJraYMK2QlLsBNY9hYFndgoTVNxfh
-	vyCKI6ejywyPLgEjUW6+Pb04S7gVk5iKib7E09GD3L7/daSIm3D4AM307v44m2bR
-	SeamX+Tm+3Nvlp/aNOv1nfTHTGSkvpcrQBOJr8lxReqrA/SSML+H471MoZh6RYuM
-	JMo72E3ICD3MLbyjniYyWV9zP3MEDkginbxbVtTKqA==
-X-ME-Sender: <xms:YaG6akR6zEUWWm5zOtptcC5g5i5w2qNblqYpBtRBWKX05DcEkDNT_w>
-    <xme:YaG6alOFelEG63JQmHEZMaF-e4O7ggLjwK0VvoRAwxO-8RIN98lg_2lp5CIaMUa7R
-    W6iT7JUfZfhiE29ZEi5ZgAq-xs1FljwChczQM_LN_PCP9886HB2Pas>
-X-ME-Received: <xmr:YaG6auEySkVu0oVYOEBOMDlnLc03H5U-j1rY_MXACx-1l3Zx97auzd4rkzBPJVDq>
-X-ME-Proxy-Cause: dmFkZTF0iCUIjHjLkwYyqUzkXaYeY8zBVzbYdKa9uLqQTqMZv99nAR+IiEJPZL8+SJzKiZ
-    B7K3UjPIiWFyTiV33TJp2Iu3+otBrZpR7GdRG7oEWKpQxhAYRys/bIgWVjAFO+ttb48/Iu
-    vqtTDVO6beSYfb8DehSXxRdciBkpTkKn6DftQ8bRlXa4NWwGLAN1zR3yNWg1JGuJyO2wz/
-    IIAW+S+/FbyS/i0Qc8pWib5DM/WcYqRedoxaD58VxZCKYewFPrkCfWlpRLwPx+CCMijei6
-    NYqaXMB3pIqrRZsvEgwz9iXvEg7oTndNrsTGOSQoCalXtITSIECGB5COlgHV3BetS9pdNk
-    Mi2BWMxCxErt8z5rhQ8RzJjuSNmMDsZ13mfP2K5O4G/XtKP4GwUlbMqf2G/eDIzZTe7Ddf
-    W8g6pT8RqKP0+eIeSfmPFa6lY+sN4EB3i8gbBuTkoF0K64vyoMVtJhiICB7+CPi6u5Rqjk
-    Hx+lJhTi44brC6/RpmQR8K1/0vQ+VbXWiIsYI0Tajw97tGq1WtKJHin2gLVyZQXOghUoHC
-    iF9Q8Rkrf9hrCgBCVxZdi4r8n08voOTzj01FOEXwmMjJYyw/N0x0PZuaB8Z+VCCg0Vd3EA
-    qwVKuKkmhlJ7CaWDTzA2u9vCQbBGkZI7hdOPcs/SXlyoX3Q7/RgMG4GELV2Q
-X-ME-Proxy: <xmx:YaG6ahB_BxV8xWTFhKnQ-hpdBQ-bjdKKSLoNBOcCL1FzH_JkIOQyfQ>
-    <xmx:YaG6ankfpCLXapt1GM8R3UNIjgB_PVs2fW6PYF7Pk1XTmowCMoZQjA>
-    <xmx:YaG6ahvSEmutTft2TiccZxTYsTwsCXnVsrxvWvOoTJB2T9GVDW8Snw>
-    <xmx:YaG6anVJ0kMtsUB9aikmSQQRzu1NRpBUPJB1FlMUDlFX-eAuWy3grQ>
-    <xmx:ZaG6ahiI1MV-bxXkvIHv1w2c4MwhADANsDKMFiU-VHH_QQ7gj6gVuWzt>
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1790615942; x=
+	1790623142; bh=qb+DMhDeJ8ctMrQDexBGyo2lF6FDBF9wGMJ9M72kVDk=; b=a
+	DzSMFZPIVCqGZA1xbK69h1yNlARU4T0F4w8pywsoDcSkWFgFWIJAPpRSmCj7hwU5
+	iiuiTVbOAomCFtRJz6M6ceA1amvZsf0iqNrXs8SqbRrrpxdaUhI2qE1njVLKz8Hs
+	DXQetu0p98p5SizHy3Sf1p/1lKhUblthxt3a3MdoA1sA/V8kGlF+sCFJI2HLY2Db
+	PBWdQA3DxcnTbMZuvNEj5S8kNRcWMKogbOAtXycIaSZU+wDgb1EIib8T2qdWqvVZ
+	WjvLvzBxxfVe1l86skhGJIBT6qFT0br0l69Fq8VQ4M0Z6jfW5Gla5mD0mQmFMBdC
+	Jxpsh7/a8bn87pndxf0RQ==
+X-ME-Sender: <xms:haG6alhcHtVpFxOcMYo9n7uQAaDEdH6pTvr92hds5jj6I_IIzXwecg>
+    <xme:haG6agI-1xMGY9FvHYkLoQb5aORpkQY7EKUVJOFYQQ6UU5zGIaO4nC0WR-6PQX_0v
+    jYauO9sPAX99QgqvMKjCVOm9uPV7jkiQ0qEbhOxEHw-RmFF1-Oq8zU>
+X-ME-Received: <xmr:haG6ah3igJ8cyzNmVLUVotsuSTywoOje2f8xkAlZcy1CpQmLnFNgUnjsfAwEbcZ->
+X-ME-Proxy-Cause: dmFkZTE/22e7clbyNdHwn0HCBx+H3lsiFyo6QkPV6dpSn20/QyCOxtHNd7QTmx6b7eJ6RH
+    b7MD0YK3xmhVFW7pHJl/jJiaLCtzwYaWJ6VBcJNMtYB/lM8rXCQqoyXJAKc1Q+3NTJHLRu
+    Q+616RIwRjK3mn/tprgeZTxr9VaE0UGr12rr0RgYUziHPYN8WsIu22gnQm98Dq7NFgLEYb
+    bOn/3mv6ye0r5zsmXTZhHlWNyOVRZl7FwJjAmuaSy3Z2MGyz8Xby78ZPjGLjvAF+o1XCsp
+    YM5+7QijkJtemWRQaETyS2I23TsNHUOR4KF7C0sS19NgtEnCYopA0Qb1idGIqDD/y3bARJ
+    55TM2AUKDHkh3p2LJROf48L6qUKidKUf4FEmoaVrGC4BtePF1n4kQ/m8WMyNVrFYVliewq
+    dRS1Y4N3HwhoW3IXajbctY0m6YFjInaMQqGsF+0XxDoGs/X/shiYh8etw6bVnh78U7lhY5
+    szx7kaZUC6MoPnbZ48BDrm232jeMvKPGycpJAvfpGTGfOL+XzNv7JzJ2JsQZaz1R5t12c+
+    xYYM5pcB1L1B0EzIKqkqE6GPShoGEd7zO6/R0O4maSUQ6gpHRmZDQFJXWcr6ZOTHseBEgU
+    Mtz29FmBfsKN9cmGj5+5Q17gXknZhjm6ZUmWo0RbqMjw1Ly/hkmYCDe1Kajw
+X-ME-Proxy: <xmx:haG6agL6TL1VrGy04BGifmRplHIpmxSdIKWGI6-UKYT_fwpPZPdTrA>
+    <xmx:haG6anD0mj02oO8BLZk0_jzwJUYAw-qjgB_q9bIjdVUWvATeNYfeEw>
+    <xmx:haG6aqZF_ZIfNFShTzDipDR2qQhxmZ39ydWfCm15MEvUhhbTc2keUw>
+    <xmx:haG6ahX12vCFirqr5BnB2wgscdBu-oNGUDUG2Rw_U_Ap7614Ykkj6Q>
+    <xmx:hqG6anhkNZna4tijWomazQ1rmPyFeQAnHZDb6oYfzgRBiTCfNwSWgqRj>
 Feedback-ID: i60a14417:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 28 Sep 2026 13:18:08 -0400 (EDT)
+ 28 Sep 2026 13:18:47 -0400 (EDT)
 From: =?utf-8?q?Jan_Sebastian_G=C3=B6tte?= <linux@jaseg.de>
-Subject: [PATCH v3 00/12] CRASH_MEMACTION: describe pages to a kdump kernel
- (was: CRASH_WIPE_SECRETS)
-Date: Mon, 28 Sep 2026 19:17:48 +0200
-Message-Id: <20260928-crash-memaction-upstream-20260921-v3-0-e511e9ee2329@jaseg.de>
+Date: Mon, 28 Sep 2026 19:17:50 +0200
+Subject: [PATCH v3 02/12] lib, kexec: Add a secret pool for key material
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/y2Oyw6CMBBFf4V07RjaCgFX/odhUcsAxUDJtKBC+
- HfLY3mSk3vuwhySQcfu0cIIJ+OM7QPIS8R0o/oawZSBmYhFGuciAU3KNdBhp7QPLoyD84Sqg9P
- gkKLUldKJklnOws5AWJnv3ngWB7vx1aL22/BmNMZ5S7/9xCQ37+hlnJ+9GcmaGYHwY+kNk4AY8
- iTlJZdayFv8aJXD+loiK9Z1/QMbbXc71gAAAA==
-X-Change-ID: 20260925-crash-memaction-upstream-20260921-6e3cfac5a389
+Message-Id: <20260928-crash-memaction-upstream-20260921-v3-2-e511e9ee2329@jaseg.de>
+References: <20260928-crash-memaction-upstream-20260921-v3-0-e511e9ee2329@jaseg.de>
+In-Reply-To: <20260928-crash-memaction-upstream-20260921-v3-0-e511e9ee2329@jaseg.de>
 To: Jonathan Corbet <corbet@lwn.net>,
   Shuah Khan <skhan@linuxfoundation.org>,
   Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh@kernel.org>,
@@ -145,8 +142,8 @@ Cc: Eric Biggers <ebiggers@kernel.org>, linux-doc@vger.kernel.org,
  =?utf-8?q?Jan_Sebastian_G=C3=B6tte?= <linux@jaseg.de>
 X-Mailer: b4 0.15.2
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260928_101833_921857_23BCDFFB 
-X-CRM114-Status: GOOD (  25.81  )
+X-CRM114-CacheID: sfid-20260928_101903_721682_44E1B196 
+X-CRM114-Status: GOOD (  18.21  )
 X-Spam-Score: -2.1 (--)
 X-Mailman-Approved-At: Tue, 20 Oct 2026 01:21:06 -0700
 X-BeenThere: kexec@lists.infradead.org
@@ -166,226 +163,171 @@ X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-I'm using linux on an embedded target in a Hardware Security Module-like
-application. One requirement is that I want the system to be able to
-quickly erase its memory when it detects physical tampering. I'm
-approaching that by using kdump to load into a small payload that
-instead of dumping RAM, erases RAM frmo start to end. However, writing
-all of RAM, especially on an embedded target, is rather slow. For this
-reason, I propose a new crash_memaction mechanism that lets the old
-kernel indicate marked memory areas to the kdump kernel at page
-granularity.
+Key material allocated with kmalloc() shares its slab pages with
+unrelated allocations. crash_memaction marks memory at page granularity,
+so smaller objects in shared slab pages can't cleanly be marked or
+unmarked. This commit adds a secret pool built on kmem_buckets to
+hold such keys in marked pages.
 
-I will be using this mechanism to indicate "secret" memory ranges for
-early wiping by my kdump payload. After discussion with Baoquan He early
-August, the patchset includes a second flag that can be used to indicate
-"cache" memory that the kdump kernel may want to skip when creating the
-dumpfile.
+Allocations from the pool are marked CRASH_MEMACTION_SECRET. The
+marking compiles to nothing without CONFIG_CRASH_MEMACTION, and stays
+a no-op at runtime unless "secret" is among the types enabled on the
+kernel command line.
 
-The record is a bitmap with one bit per page, allocated at boot. It
-reaches the kdump kernel as a PT_NOTE named MEMACTION. Marking is a
-lock-free atomic bitmap update with no allocation, so it is safe in any
-context.
+The pool requires SLAB_BUCKETS, which in turn depends on !SLUB_TINY,
+hence the new dependency for CRASH_MEMACTION. Without SLAB_BUCKETS,
+allocations fall back to ordinary kmalloc allocations. The pool
+likewise falls back to the ordinary kmalloc caches when it is used
+before its initcall runs, or after pool creation failed.
 
-The feature is gated by a static key that is patched in only when the
-kernel is booted with a crash_memaction= parameter indicating which
-flags to pass to the kdump kernel. The parameter sets the meaning of the
-bitmap bits to both kernels.
+Markings are set on object allocation since there's no clean way to hook
+page allocation in kmem_buckets. This comes at a small per-allocation
+overhead. Markings are cleared implicitly by the page allocator in
+post_alloc_hook() when it hands out a reclaimed page to its next owner.
 
-Marking Memory
-==============
-
-Theres both a kernel and a userspace interface to mark memory.
-
-In-kernel, crash_memaction_mark() takes a virtual address range and a
-type. Marking has page granularity. To support smaller objects,
-patch 2 adds a "secret pool" kmem_buckets instance whose backing pages
-are marked SECRET. Patches 5 to 7 move dm-crypt volume keys and IV
-seeds, crypto tfm contexts, and the payloads of the user, trusted, and
-encrypted key types into this pool. Keeping keys in dedicated slab
-caches also provides some defence in depth against use-after-free and
-out-of-bounds reads, independently of what I'm doing here with kdump.
-
-For userspace mappings, madvise() with MADV_CRASH_SECRET or
-MADV_CRASH_CACHE sets a new VMA flag, VM_CRASH_MARK. Folios mapped into
-a marked VMA are registered as they arrive in rmap.
-
-A mark lasts until the page frame is allocated again, so it is cleared
-in post_alloc_hook() rather than when freed to account for leftover
-data. Hugetlb folios reused from the pool bypass post_alloc_hook(), so
-their marks are cleared on dequeue instead.
-
-Overhead
-========
-
-Measured on arm64 (QRB2210, 4x Cortex-A53, 3.6G) at next-20260922, three
-boots of the same tree:
-
-    k0  CONFIG_CRASH_MEMACTION=n
-    k1  CONFIG_CRASH_MEMACTION=y, no crash_memaction=
-    k2  CONFIG_CRASH_MEMACTION=y, crash_memaction=secret
-
-k1 and k2 are the same kernel image. The workload rebuilds mm/ of a
-kernel tree a few times with make -j4.
-
-    k0  157.05 s median (n=8, range 156.51-157.77)
-    k1  158.23 s median (n=8, range 157.96-159.69)
-    k2  157.42 s median (n=8, range 156.97-163.24)
-
-Against k0 that is +0.75% for k1 and +0.24% for k2, both within
-measurement noise.
-
-Out of scope here
-=================
-
-This series only records the page types in the note. The secret type is
-wired up with some kernel users related to disk encryption. The cache
-type is not wired up with any kernel users (but can be used from
-userspace).
-
-The bitmap is sized from the memblock memory map at boot and is never
-resized. Memory added by hotplug is therefore not covered by a bitmap
-and cannot be marked. I'm focused on embedded targets that don't support
-hotplug anyway.
+Using this pool for secrets has a useful side effect from a
+defense-in-depth perspective. Where SLAB_BUCKETS is enabled, it keeps
+secrets away from other kernel data, which makes UAF or out-of-bounds
+read vulnerabilities less likely to reach secrets.
 
 Signed-off-by: Jan Sebastian Götte <linux@jaseg.de>
+Assisted-by: Claude Opus 5 <noreply@anthropic.com>
 ---
-Changes in v3:
-- Use page bitmap instead of range-based registry
-- Move smaller allocations into secret_pool buckets
-- Link to v3: https://patch.msgid.link/20260811-crash-zeroize-rework-v2-0-9561d13c2340@jaseg.de
+ MAINTAINERS                 |  2 ++
+ include/linux/secret_pool.h | 47 +++++++++++++++++++++++++++++++++++++++++++++
+ kernel/Kconfig.kexec        |  2 ++
+ lib/Makefile                |  1 +
+ lib/secret_pool.c           | 27 ++++++++++++++++++++++++++
+ 5 files changed, 79 insertions(+)
 
-To: Jonathan Corbet <corbet@lwn.net>
-To: Shuah Khan <skhan@linuxfoundation.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-To: Rob Herring <robh@kernel.org>
-To: Saravana Kannan <saravanak@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-To: Baoquan He <baoquan.he@linux.dev>
-To: Mike Rapoport <rppt@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: Pratyush Yadav <pratyush@kernel.org>
-To: Dave Young <ruirui.yang@linux.dev>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-To: Danilo Krummrich <dakr@kernel.org>
-To: Muchun Song <muchun.song@linux.dev>
-To: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@kernel.org>
-To: Vlastimil Babka <vbabka@kernel.org>
-To: Suren Baghdasaryan <surenb@google.com>
-To: Michal Hocko <mhocko@suse.com>
-To: Brendan Jackman <brendan.jackman@linux.dev>
-To: Johannes Weiner <hannes@cmpxchg.org>
-To: Zi Yan <ziy@nvidia.com>
-To: Catalin Marinas <catalin.marinas@arm.com>
-To: Will Deacon <will@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>
-To: Alasdair Kergon <agk@redhat.com>
-To: Mike Snitzer <snitzer@kernel.org>
-To: Mikulas Patocka <mpatocka@redhat.com>
-To: Benjamin Marzinski <bmarzins@redhat.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-To: "David S. Miller" <davem@davemloft.net>
-To: Mimi Zohar <zohar@linux.ibm.com>
-To: David Howells <dhowells@redhat.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-To: Paul Moore <paul@paul-moore.com>
-To: James Morris <jmorris@namei.org>
-To: "Serge E. Hallyn" <serge@hallyn.com>
-To: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: "Liam R. Howlett" <liam@infradead.org>
-To: Lorenzo Stoakes <ljs@kernel.org>
-To: Jann Horn <jannh@google.com>
-To: Pedro Falcato <pfalcato@suse.de>
-To: Rik van Riel <riel@surriel.com>
-To: Harry Yoo <harry@kernel.org>
-To: Lance Yang <lance.yang@linux.dev>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-To: Nico Pache <nico.pache@linux.dev>
-To: Ryan Roberts <ryan.roberts@arm.com>
-To: Dev Jain <dev.jain@arm.com>
-To: Barry Song <baohua@kernel.org>
-To: Usama Arif <usama.arif@linux.dev>
-To: Kiryl Shutsemau <kas@kernel.org>
-To: Matthew Brost <matthew.brost@intel.com>
-To: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: Byungchul Park <byungchul@sk.com>
-To: Gregory Price <gourry@gourry.net>
-To: Ying Huang <ying.huang@linux.alibaba.com>
-To: Alistair Popple <apopple@nvidia.com>
-To: Peter Xu <peterx@redhat.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: kexec@lists.infradead.org
-Cc: driver-core@lists.linux.dev
-Cc: linux-mm@kvack.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: dm-devel@lists.linux.dev
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org
-Cc: keyrings@vger.kernel.org
-Cc: linux-security-module@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-arch@vger.kernel.org
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c6350fd34f4c..bcb11c2138bc 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14260,8 +14260,10 @@ F:	fs/proc/vmcore.c
+ F:	include/linux/crash_core.h
+ F:	include/linux/crash_dump.h
+ F:	include/linux/crash_memaction.h
++F:	include/linux/secret_pool.h
+ F:	include/uapi/linux/vmcore.h
+ F:	kernel/crash_*.c
++F:	lib/secret_pool.c
+ 
+ KEENE FM RADIO TRANSMITTER DRIVER
+ M:	Hans Verkuil <hverkuil@kernel.org>
+diff --git a/include/linux/secret_pool.h b/include/linux/secret_pool.h
+new file mode 100644
+index 000000000000..aa9296c981c5
+--- /dev/null
++++ b/include/linux/secret_pool.h
+@@ -0,0 +1,47 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_SECRET_POOL_H
++#define _LINUX_SECRET_POOL_H
++
++#include <linux/gfp.h>
++#include <linux/numa.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++
++void *secret_pool_alloc_node(size_t size, gfp_t flags, int node)
++	__alloc_size(1);
++
++static inline __alloc_size(1) void *secret_pool_alloc(size_t size, gfp_t flags)
++{
++	return secret_pool_alloc_node(size, flags, NUMA_NO_NODE);
++}
++
++static inline __alloc_size(1) void *secret_pool_zalloc_node(size_t size,
++							    gfp_t flags,
++							    int node)
++{
++	return secret_pool_alloc_node(size, flags | __GFP_ZERO, node);
++}
++
++static inline __alloc_size(1) void *secret_pool_zalloc(size_t size,
++						       gfp_t flags)
++{
++	return secret_pool_alloc_node(size, flags | __GFP_ZERO, NUMA_NO_NODE);
++}
++
++static inline void secret_pool_free(const void *objp)
++{
++	kfree_sensitive(objp);
++}
++
++#define secret_pool_alloc_obj(P, ...) \
++	__alloc_objs(secret_pool_alloc, default_gfp(__VA_ARGS__), typeof(P), 1)
++#define secret_pool_zalloc_obj(P, ...) \
++	__alloc_objs(secret_pool_zalloc, default_gfp(__VA_ARGS__), typeof(P), 1)
++#define secret_pool_alloc_flex(P, FAM, COUNT, ...) \
++	__alloc_flex(secret_pool_alloc, default_gfp(__VA_ARGS__), typeof(P), \
++		     FAM, COUNT)
++#define secret_pool_zalloc_flex(P, FAM, COUNT, ...) \
++	__alloc_flex(secret_pool_zalloc, default_gfp(__VA_ARGS__), typeof(P), \
++		     FAM, COUNT)
++
++#endif /* _LINUX_SECRET_POOL_H */
+diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
+index f7326fa6476b..890c35199bea 100644
+--- a/kernel/Kconfig.kexec
++++ b/kernel/Kconfig.kexec
+@@ -186,6 +186,8 @@ config CRASH_MEMACTION
+ 	bool "Register kdump actions for certain memory ranges"
+ 	depends on CRASH_DUMP
+ 	depends on KEXEC_FILE
++	depends on !SLUB_TINY
++	select SLAB_BUCKETS
+ 	depends on ARCH_SUPPORTS_CRASH_MEMACTION
+ 	help
+ 	  Track pages that may require special handling by the kdump kernel:
+diff --git a/lib/Makefile b/lib/Makefile
+index 43421c39d21b..0e69633bd79f 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -60,6 +60,7 @@ obj-y += bcd.o sort.o parser.o debug_locks.o random32.o \
+ 	 once.o refcount.o rcuref.o usercopy.o errseq.o bucket_locks.o \
+ 	 generic-radix-tree.o bitmap-str.o
+ obj-y += string_helpers.o
++obj-y += secret_pool.o
+ obj-y += hexdump.o
+ obj-$(CONFIG_TEST_HEXDUMP) += test_hexdump.o
+ obj-y += kstrtox.o
+diff --git a/lib/secret_pool.c b/lib/secret_pool.c
+new file mode 100644
+index 000000000000..62954847091a
+--- /dev/null
++++ b/lib/secret_pool.c
+@@ -0,0 +1,27 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/crash_memaction.h>
++#include <linux/export.h>
++#include <linux/init.h>
++#include <linux/secret_pool.h>
++#include <linux/slab.h>
++
++static kmem_buckets * secret_pool __ro_after_init;
++
++static int __init secret_pool_init(void)
++{
++	secret_pool = kmem_buckets_create("secret", 0, 0, 0, NULL);
++
++	return 0;
++}
++core_initcall(secret_pool_init);
++
++void *secret_pool_alloc_node(size_t size, gfp_t flags, int node)
++{
++	void *p = kmem_buckets_alloc_node_track_caller(secret_pool, size,
++						       flags, node);
++
++	crash_memaction_mark(p, size, CRASH_MEMACTION_SECRET);
++
++	return p;
++}
++EXPORT_SYMBOL_GPL(secret_pool_alloc_node);
 
----
-Jan Sebastian Götte (12):
-      kexec: Add a crash memaction registry
-      lib, kexec: Add a secret pool for key material
-      mm: Wire up the crash memaction registry
-      arm64: Enable the crash memaction registry
-      dm crypt: Allocate key material from the secret pool
-      crypto: api - Allocate tfms from the secret pool
-      security/keys: Allocate key payloads from the secret pool
-      mm: Add VM_CRASH_MARK
-      mm/rmap: Mark folios mapped into crash_memaction-marked VMAs
-      mm/madvise: Add MADV_CRASH_SECRET, MADV_CRASH_CACHE and MADV_CRASH_RESET
-      Documentation/mm: Document the crash memaction registry
-      kexec: Expose the crash memaction bitmap in debugfs
-
- Documentation/admin-guide/kernel-parameters.txt |   9 +
- Documentation/mm/crash_memaction.rst            |  68 ++++
- Documentation/mm/index.rst                      |   1 +
- MAINTAINERS                                     |   4 +
- arch/arm64/Kconfig                              |   3 +
- crypto/api.c                                    |   9 +-
- drivers/md/dm-crypt.c                           |  19 +-
- drivers/of/kexec.c                              |   7 +
- fs/proc/task_mmu.c                              |   3 +
- include/linux/crash_memaction.h                 |  86 +++++
- include/linux/kexec.h                           |   6 +
- include/linux/mm.h                              |   9 +
- include/linux/rmap.h                            |   5 +-
- include/linux/secret_pool.h                     |  47 +++
- include/uapi/asm-generic/mman-common.h          |   4 +
- kernel/Kconfig.kexec                            |  39 ++
- kernel/crash_core.c                             | 475 ++++++++++++++++++++++++
- kernel/kexec_core.c                             |   4 +
- kernel/kexec_file.c                             |  10 +
- kernel/ksysfs.c                                 |  15 +
- lib/Makefile                                    |   1 +
- lib/secret_pool.c                               |  27 ++
- mm/huge_memory.c                                |   2 +
- mm/hugetlb.c                                    |  10 +-
- mm/madvise.c                                    | 132 +++++++
- mm/migrate.c                                    |   2 +-
- mm/mm_init.c                                    |   3 +
- mm/page_alloc.c                                 |   6 +
- mm/rmap.c                                       |   8 +
- mm/userfaultfd.c                                |   1 +
- security/keys/encrypted-keys/encrypted.c        |   5 +-
- security/keys/trusted-keys/trusted_core.c       |   3 +-
- security/keys/user_defined.c                    |   3 +-
- 33 files changed, 1006 insertions(+), 20 deletions(-)
----
-base-commit: a8c591ed6b672915e0be57843f943a2a723aff40
-change-id: 20260925-crash-memaction-upstream-20260921-6e3cfac5a389
-
-Best regards,
---  
-Jan Sebastian Götte <linux@jaseg.de>
+-- 
+2.55.0
 
 
