@@ -2,184 +2,153 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16DA9606A336
-	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 08:21:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936A960A2616
+	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 08:21:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=U+9EPIqH;
-	dkim=fail reason="signature verification failed" (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=DR6WK/ms;
-	dkim=permerror header.d=soleen.com header.i=@soleen.com header.a=rsa-sha1 header.s=google header.b=b2f0oWAL
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=U9kqO48c;
+	dkim=permerror header.d=jaseg.de header.i=@jaseg.de header.a=rsa-sha1 header.s=fm1 header.b=PDW96tMY;
+	dkim=permerror header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha1 header.s=fm1 header.b=rP7VwLU+
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
-	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=R9yjuK1GvA7WV81vpr4lLFMgvL9Udfn1vNj/C/kFbiw=; b=U+9EPIqHVPTZM7BomxrDqVvkk+
-	/UkZkEanvoSRgBXwgVOmcKxv2eUqTOy9SVTSgqPZJikwkphKwnpsQh4OotqQZUPh9TUYBww4xax71
-	RimvqvF14sxSUjqyUCMamRsrstcQYViUX95MhUvnB7PuJdm4UC5Ywh+XoPvebIqtPdaMgWmv0ZX5S
-	4ypKJ1S8FLP/+aqw0VtehviHLgyLI39OsFau6F4ISaxcNTSBirEQGAM7/7P6BLbDTzj/IA2pKCk5J
-	6VCU8qG5TeBMAFmnToXdkK1gWk9pThXfQHcddwlL/1fEl5dLy8ysHcGuLtxVrvEmIRosQGKJyhP6Z
-	q7TSI5KQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Message-Id:Date:Subject:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=bVg0AFXfRcn0kYVBIO4bfsJw3vxA/g/QL37izKwnfQA=; b=U9kqO48cLZx8oF
+	/WnPtW9+gfZ7QJmTp6hB5ZyFwmR8QDNcyWST6xlP0JrkcXhcxty4+8wXshCkWeMIKtth64QGbXR9n
+	RLgJD2lOFlOlvOcPeVzFDjxlm4dIt/o6O42QNCuk/Dm4riRVBylbHOd2wBo0v7qD2adzoMpgsNa63
+	ya0k7/XxYyBu7OOyPnb16SkZk6SjOHYW8AbdkqvUh8vWLSM0WmsP5+swTEDzlR8zjxnZmlg2sQ2Sl
+	TfNRRYKhn32Mf4kbMdD6zIxV9wFZdq5BMXoobxRHCmNgCluZ3+1ueFC7MeQr56mreh6aR8HuvHwWL
+	bQRhG+jUCIvg8zxScqlQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJ55u-000000098tF-0PVJ;
-	Tue, 20 Oct 2026 08:21:14 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1xJ55v-000000098vp-0YUS;
+	Tue, 20 Oct 2026 08:21:15 +0000
+Received: from flow-a2-smtp.messagingengine.com ([103.168.172.137])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8l8I-00000003PkP-0wXs
-	for kexec@bombadil.infradead.org;
-	Mon, 21 Sep 2026 21:01:02 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
-	:References:In-Reply-To:Message-ID:Date:Subject:To:From:Sender:Reply-To:Cc:
-	Content-Type:Content-ID:Content-Description;
-	bh=R9yjuK1GvA7WV81vpr4lLFMgvL9Udfn1vNj/C/kFbiw=; b=DR6WK/msRrjMguP+sX4tLwFdV5
-	1zOL0zEaDTGOm6eeuTmslOV7VooFqFAQyQH1JI0DdOuP33v4V9OWhjYo35vHmA6LH0q1Cv0gMFwLW
-	1dHwBu9HxQ0nQjSXygGOC0QGu9vsVGAnZ8QTSow0tR1U82d8sl4JigwZESh6CAIY6n5O1V7fzLhJx
-	vB9ZLMCGaKRFy9kd3Ybfd7wkBp8wMR7bqXIME23AAuBtFUdMvTYsxtfb+pYXTbfn+EiPS5mPAiJzq
-	m9X6h8MgojulgJSpebkj/vQipO1wk6GODJSHmrHdxssOIPhRr+iJZKoDBNzyvj6Q/God7tGIAib6o
-	dhVnLSEQ==;
-Received: from mail-yx2-x10.google.com ([2607:f8b0:4864:41::10])
-	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
-	id 1x8l8E-0000000Cp8H-0KEz
-	for kexec@lists.infradead.org;
-	Mon, 21 Sep 2026 21:01:00 +0000
-Received: by mail-yx2-x10.google.com with SMTP id 00721157ae682-85d43da99easo30261997b3.1
-        for <kexec@lists.infradead.org>; Mon, 21 Sep 2026 14:00:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1790024456; x=1790629256; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=R9yjuK1GvA7WV81vpr4lLFMgvL9Udfn1vNj/C/kFbiw=;
-        b=b2f0oWAL6BneMeoLicYM7p8VMvCtIWuwU0osYXA8aTD24dE6mgcJs5ynz85RL8m9LC
-         BW7rzA9weFOjK2CL5/OhxEBcz2a5heUMNI4pYbjN//1ojdICVS4e2he2bVVOlInmelzg
-         iClngl11R/bWyXEyiJuQO9am1Awuqxnfq7TqIbZysogDV6OAukEwa9pos+363juBQpxk
-         QqjjjlHYcQz8TK64l6rBzDzDlm83hN7Enhi4sJFhZc1SoSMqJwco0M2FQn0GU0ZR8iQi
-         hk2jNPMcnARlHFk9SppyUQJlx6OvNLeguxbngYPRG+e2cNfvfqVysz/ImTV2Z6qxtgGU
-         ckig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790024456; x=1790629256;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=R9yjuK1GvA7WV81vpr4lLFMgvL9Udfn1vNj/C/kFbiw=;
-        b=iqawljtu08GNqc7WnjybGMNH0Jd8js7CYbNog3tc1w0iQvcgwoprzWRQQJ9QFtTFHd
-         UWs21ACQ+Y3Zky8qaPDRwQGgEbHZeBFvhypW8syZK77YuPqNomX4pq0CYdKa4D7ZGRa6
-         iO/hBLJNvNVbVEnoTEqOlP3ZHaE+Ip1R2PcnlMUxQQiEXi/ldwFumvB6cmLIhUiGnpMN
-         Bpl/GAKTCsvwo1ADU1/DBNYPohqwoa+dkf4YfVREGjcPihnKG0hsn3Xcg6Xn0sSjGNOI
-         VkMVbTNrNgEJw0AmaEm0235R3d83X/sVMTmeDygmXC7XjmdpS/LFUFttTwoPJqRNhg7Y
-         ILcQ==
-X-Forwarded-Encrypted: i=1; AKwUvBw01zCt1LlGfOP9n+MQW89+ntLYom7wz+0cagmwoxgy7PZAra3Gsh7sAPnYzV6uT/U2qWMMzw==@lists.infradead.org
-X-Gm-Message-State: AFuF++lnf8yGp2vM8cBsXrIZf1GiYbd9y+HaYDOwQLElOQfLw4bIpp53
-	Q1Nhc8emYAP9t8Lf49rTQC+kikJUzF4JtxyVLkv3xFw1mYyl/2I315CqFsWk2nk+sm4=
-X-Gm-Gg: AYBFou3yuXIZA0JkTooHYB6MkWXPmm9H7drOX0fdpG/4jNln2GQsqJXONps/EYNtjl7
-	CFr8tPa8yVbS8kgRCxZe8HwmgLBF4fpgHWrIKaZVXMLqY/f04ghV9PXqWg9ZaelfdPN9kV/0War
-	NWIXWWd6ZDzN+cq81s7m8cmc0/YfYv3lXeOPMssGvxACixJcNVU+dIpwCs+kHlmczVFpEOJsiYF
-	Ayg8oR+6eI0nzVHcUut/5tzUNQNT1ceyjTOfK1TqGAtI4SuI9Z95Fm4QURE6aPYZ2zJr2dIQITm
-	OXTs2hpSRntLwm/TYCPRufM3F00Ai5W2g+cqdwamwaIfiTfl9A45OPTxpayWHh15HjwNcY9eFqR
-	MX5uCuHwdh9YsXorqH/IahzHu1i8F7wBWBEsVVOEOm6ZcdtOaDBrk3+tqolcFN9xRQf4eB7orH1
-	2ui60aLpOfpF06GcdUYbxIEdyKYL8G97JlvOmoJOvjAj3NDf8B9N6yb8lKa4sNWbBUBUYVtRK7E
-	L1Oj30ns1QcgrLOL1Miq0vhwd0ZzxPBiDHDYMNo6rTN+iUL+uHI0ABdl3fHIh2cU4JQvxYuMiyT
-	5ANiC3DxGnp5pc9LPNc=
-X-Received: by 2002:a05:690c:60c7:b0:873:5bd1:98bc with SMTP id 00721157ae682-89737319ab8mr34742607b3.46.1790024456175;
-        Mon, 21 Sep 2026 14:00:56 -0700 (PDT)
-Received: from soleen.c.googlers.com.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-8a23c738bdfsm1445297b3.11.2026.09.21.14.00.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Sep 2026 14:00:55 -0700 (PDT)
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: linux-kselftest@vger.kernel.org,
-	legion@kernel.org,
-	kees@kernel.org,
-	will@kernel.org,
-	ruanjinjie@huawei.com,
-	atomlin@atomlin.com,
-	rppt@kernel.org,
-	jani.nikula@intel.com,
-	hamzamahfooz@linux.microsoft.com,
-	joey.gouly@arm.com,
-	tglx@kernel.org,
-	nsc@kernel.org,
-	alexandre.chartre@oracle.com,
-	james.morse@arm.com,
-	dianders@chromium.org,
-	bp@alien8.de,
-	jpoimboe@kernel.org,
-	shuah@kernel.org,
-	catalin.marinas@arm.com,
-	linux-kbuild@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	kvmarm@lists.linux.dev,
-	jaredwhite@microsoft.com,
-	johan@kernel.org,
-	pbonzini@redhat.com,
-	mingo@redhat.com,
-	linux-mm@kvack.org,
-	seanjc@google.com,
-	mark.rutland@arm.com,
-	vdonnefort@google.com,
-	tarunsahu@google.com,
-	gshan@redhat.com,
-	skhan@linuxfoundation.org,
-	linux-doc@vger.kernel.org,
-	xur@google.com,
-	djbw@kernel.org,
-	oupton@kernel.org,
-	nogikh@google.com,
-	sumitg@nvidia.com,
-	linux-kernel@vger.kernel.org,
-	zengheng4@huawei.com,
-	peterz@infradead.org,
-	corbet@lwn.net,
-	suzuki.poulose@arm.com,
-	luto@kernel.org,
-	hpa@zytor.com,
-	zhangpengjie2@huawei.com,
-	x86@kernel.org,
-	yuzenghui@huawei.com,
-	jic23@kernel.org,
-	ardb@kernel.org,
-	pasha.tatashin@soleen.com,
-	petr.pavlu@suse.com,
-	ryan.roberts@arm.com,
-	kexec@lists.infradead.org,
-	pratyush@kernel.org,
-	dave.hansen@linux.intel.com,
-	rdunlap@infradead.org,
-	kvm@vger.kernel.org,
-	fuad.tabba@linux.dev,
-	maz@kernel.org,
-	mbenes@suse.cz,
-	jgross@suse.com,
-	seiden@linux.ibm.com,
-	pierre.gondois@arm.com,
-	song@kernel.org,
-	nathan@kernel.org,
-	pmladek@suse.com,
-	graf@amazon.com,
-	chao.gao@intel.com,
-	zhenglifeng1@huawei.com,
-	arnd@arndb.de,
-	sidnayyar@google.com,
-	linux-arm-kernel@lists.infradead.org,
-	vladimir.murzin@arm.com,
-	kas@kernel.org
-Subject: [RFC PATCH 46/46] KVM: arm64: Implement Caretaker vCPU run loop and LUO detach/attach lifecycle
-Date: Mon, 21 Sep 2026 17:00:34 -0400
-Message-ID: <20260921210034.180424-8-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-In-Reply-To: <20260921210034.180424-1-pasha.tatashin@soleen.com>
-References: <20260920193650.3373435-1-pasha.tatashin@soleen.com>
- <20260921210034.180424-1-pasha.tatashin@soleen.com>
+	id 1xBEzp-000000017eV-1Xtw;
+	Mon, 28 Sep 2026 17:18:39 +0000
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailflow.phl.internal (Postfix) with ESMTP id 5F29B13804CF;
+	Mon, 28 Sep 2026 13:18:29 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-10.internal (MEProxy); Mon, 28 Sep 2026 13:18:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jaseg.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm1; t=1790615909; x=1790623109; bh=bV
+	g0AFXfRcn0kYVBIO4bfsJw3vxA/g/QL37izKwnfQA=; b=PDW96tMYg4rbGYdKku
+	0EJCPNI36r4B2hUwhfR3GlFGPvu014j8MQbAmAu/jDt3apTosy9kl2lONm7ZW0tM
+	WC4dSMUV+DZI/8WakXXy5rvWgEkGpzOScmSGb3IPOjsBrUN8LkjH/Ha/MT9arhrj
+	lV5WTyTu5QzeR2yKg40VcC6BtfLWYxr0LyUY5BGoYDxszYqxkqeq1WOd58jjird1
+	0fglY81og4AL3IOrAAj7x5sfsCKjH667Jl5IVYoZIlLo1qFx44vMQ/d8KNsxXLVQ
+	te3Wx/YozKKpZTJTzDde316FvaArpyqNf3tYolcTAtev5GeHOKL7zDSQW4uXXnx+
+	4Stw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1790615909; x=1790623109; bh=bVg0AFXfRcn0kYVBIO4bfsJw3vxA
+	/g/QL37izKwnfQA=; b=rP7VwLU+g5w5kgoZE/Ygfqp4O9SaMC2M+jdmk9pJscEl
+	bgmxy1pqsyLyypPy/teiX1wg0jXQ0nPfuIwXjq7cUEIAaTJcjGO6UtUMfk3GOpgU
+	GaOjwK1OyDrIS9OX4Y1TV59vKf7VSnORwDlqJraYMK2QlLsBNY9hYFndgoTVNxfh
+	vyCKI6ejywyPLgEjUW6+Pb04S7gVk5iKib7E09GD3L7/daSIm3D4AM307v44m2bR
+	SeamX+Tm+3Nvlp/aNOv1nfTHTGSkvpcrQBOJr8lxReqrA/SSML+H471MoZh6RYuM
+	JMo72E3ICD3MLbyjniYyWV9zP3MEDkginbxbVtTKqA==
+X-ME-Sender: <xms:YaG6akR6zEUWWm5zOtptcC5g5i5w2qNblqYpBtRBWKX05DcEkDNT_w>
+    <xme:YaG6alOFelEG63JQmHEZMaF-e4O7ggLjwK0VvoRAwxO-8RIN98lg_2lp5CIaMUa7R
+    W6iT7JUfZfhiE29ZEi5ZgAq-xs1FljwChczQM_LN_PCP9886HB2Pas>
+X-ME-Received: <xmr:YaG6auEySkVu0oVYOEBOMDlnLc03H5U-j1rY_MXACx-1l3Zx97auzd4rkzBPJVDq>
+X-ME-Proxy-Cause: dmFkZTF0iCUIjHjLkwYyqUzkXaYeY8zBVzbYdKa9uLqQTqMZv99nAR+IiEJPZL8+SJzKiZ
+    B7K3UjPIiWFyTiV33TJp2Iu3+otBrZpR7GdRG7oEWKpQxhAYRys/bIgWVjAFO+ttb48/Iu
+    vqtTDVO6beSYfb8DehSXxRdciBkpTkKn6DftQ8bRlXa4NWwGLAN1zR3yNWg1JGuJyO2wz/
+    IIAW+S+/FbyS/i0Qc8pWib5DM/WcYqRedoxaD58VxZCKYewFPrkCfWlpRLwPx+CCMijei6
+    NYqaXMB3pIqrRZsvEgwz9iXvEg7oTndNrsTGOSQoCalXtITSIECGB5COlgHV3BetS9pdNk
+    Mi2BWMxCxErt8z5rhQ8RzJjuSNmMDsZ13mfP2K5O4G/XtKP4GwUlbMqf2G/eDIzZTe7Ddf
+    W8g6pT8RqKP0+eIeSfmPFa6lY+sN4EB3i8gbBuTkoF0K64vyoMVtJhiICB7+CPi6u5Rqjk
+    Hx+lJhTi44brC6/RpmQR8K1/0vQ+VbXWiIsYI0Tajw97tGq1WtKJHin2gLVyZQXOghUoHC
+    iF9Q8Rkrf9hrCgBCVxZdi4r8n08voOTzj01FOEXwmMjJYyw/N0x0PZuaB8Z+VCCg0Vd3EA
+    qwVKuKkmhlJ7CaWDTzA2u9vCQbBGkZI7hdOPcs/SXlyoX3Q7/RgMG4GELV2Q
+X-ME-Proxy: <xmx:YaG6ahB_BxV8xWTFhKnQ-hpdBQ-bjdKKSLoNBOcCL1FzH_JkIOQyfQ>
+    <xmx:YaG6ankfpCLXapt1GM8R3UNIjgB_PVs2fW6PYF7Pk1XTmowCMoZQjA>
+    <xmx:YaG6ahvSEmutTft2TiccZxTYsTwsCXnVsrxvWvOoTJB2T9GVDW8Snw>
+    <xmx:YaG6anVJ0kMtsUB9aikmSQQRzu1NRpBUPJB1FlMUDlFX-eAuWy3grQ>
+    <xmx:ZaG6ahiI1MV-bxXkvIHv1w2c4MwhADANsDKMFiU-VHH_QQ7gj6gVuWzt>
+Feedback-ID: i60a14417:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 28 Sep 2026 13:18:08 -0400 (EDT)
+From: =?utf-8?q?Jan_Sebastian_G=C3=B6tte?= <linux@jaseg.de>
+Subject: [PATCH v3 00/12] CRASH_MEMACTION: describe pages to a kdump kernel
+ (was: CRASH_WIPE_SECRETS)
+Date: Mon, 28 Sep 2026 19:17:48 +0200
+Message-Id: <20260928-crash-memaction-upstream-20260921-v3-0-e511e9ee2329@jaseg.de>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/y2Oyw6CMBBFf4V07RjaCgFX/odhUcsAxUDJtKBC+
+ HfLY3mSk3vuwhySQcfu0cIIJ+OM7QPIS8R0o/oawZSBmYhFGuciAU3KNdBhp7QPLoyD84Sqg9P
+ gkKLUldKJklnOws5AWJnv3ngWB7vx1aL22/BmNMZ5S7/9xCQ37+hlnJ+9GcmaGYHwY+kNk4AY8
+ iTlJZdayFv8aJXD+loiK9Z1/QMbbXc71gAAAA==
+X-Change-ID: 20260925-crash-memaction-upstream-20260921-6e3cfac5a389
+To: Jonathan Corbet <corbet@lwn.net>,
+  Shuah Khan <skhan@linuxfoundation.org>,
+  Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh@kernel.org>,
+  Saravana Kannan <saravanak@kernel.org>,
+  Andrew Morton <akpm@linux-foundation.org>,
+  Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
+  Pasha Tatashin <pasha.tatashin@soleen.com>,
+  Pratyush Yadav <pratyush@kernel.org>,
+ Dave Young <ruirui.yang@linux.dev>,
+  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+  "Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>,  Muchun Song <muchun.song@linux.dev>,
+ Oscar Salvador <osalvador@suse.de>,
+  David Hildenbrand <david@kernel.org>,
+ Vlastimil Babka <vbabka@kernel.org>,
+  Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+  Brendan Jackman <brendan.jackman@linux.dev>,
+  Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+  Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>,  Mark Rutland <mark.rutland@arm.com>,
+ Alasdair Kergon <agk@redhat.com>,  Mike Snitzer <snitzer@kernel.org>,
+ Mikulas Patocka <mpatocka@redhat.com>,
+  Benjamin Marzinski <bmarzins@redhat.com>,
+  Herbert Xu <herbert@gondor.apana.org.au>,
+  "David S. Miller" <davem@davemloft.net>,
+ Mimi Zohar <zohar@linux.ibm.com>,  David Howells <dhowells@redhat.com>,
+ Jarkko Sakkinen <jarkko@kernel.org>,  Paul Moore <paul@paul-moore.com>,
+ James Morris <jmorris@namei.org>,  "Serge E. Hallyn" <serge@hallyn.com>,
+  James Bottomley <James.Bottomley@HansenPartnership.com>,
+  "Liam R. Howlett" <liam@infradead.org>,
+ Lorenzo Stoakes <ljs@kernel.org>,  Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>,  Rik van Riel <riel@surriel.com>,
+ Harry Yoo <harry@kernel.org>,  Lance Yang <lance.yang@linux.dev>,
+  Baolin Wang <baolin.wang@linux.alibaba.com>,
+  Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
+  Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+  Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
+  Matthew Brost <matthew.brost@intel.com>,
+  Joshua Hahn <joshua.hahnjy@gmail.com>,
+ Byungchul Park <byungchul@sk.com>,  Gregory Price <gourry@gourry.net>,
+  Ying Huang <ying.huang@linux.alibaba.com>,
+  Alistair Popple <apopple@nvidia.com>, Peter Xu <peterx@redhat.com>,
+  Arnd Bergmann <arnd@arndb.de>
+Cc: Eric Biggers <ebiggers@kernel.org>, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ kexec@lists.infradead.org, driver-core@lists.linux.dev, linux-mm@kvack.org, 
+ linux-arm-kernel@lists.infradead.org, dm-devel@lists.linux.dev, 
+ linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org, 
+ keyrings@vger.kernel.org, linux-security-module@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
+ =?utf-8?q?Jan_Sebastian_G=C3=B6tte?= <linux@jaseg.de>
+X-Mailer: b4 0.15.2
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260921_220058_817781_C1987A7A 
-X-CRM114-Status: GOOD (  18.28  )
-X-Spam-Score: 3.4 (+++)
-X-Mailman-Approved-At: Tue, 20 Oct 2026 01:21:10 -0700
+X-CRM114-CacheID: sfid-20260928_101833_921857_23BCDFFB 
+X-CRM114-Status: GOOD (  25.81  )
+X-Spam-Score: -2.1 (--)
+X-Mailman-Approved-At: Tue, 20 Oct 2026 01:21:06 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -190,484 +159,233 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=4.0.1
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Complete ARM64 Caretaker vCPU execution loop, detach-time state
-serialization, and LUO integration in arch/arm64/kvm/caretaker.c.
+I'm using linux on an embedded target in a Hardware Security Module-like
+application. One requirement is that I want the system to be able to
+quickly erase its memory when it detects physical tampering. I'm
+approaching that by using kdump to load into a small payload that
+instead of dumping RAM, erases RAM frmo start to end. However, writing
+all of RAM, especially on an embedded target, is rather slow. For this
+reason, I propose a new crash_memaction mechanism that lets the old
+kernel indicate marked memory areas to the kdump kernel at page
+granularity.
 
-Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+I will be using this mechanism to indicate "secret" memory ranges for
+early wiping by my kdump payload. After discussion with Baoquan He early
+August, the patchset includes a second flag that can be used to indicate
+"cache" memory that the kdump kernel may want to skip when creating the
+dumpfile.
+
+The record is a bitmap with one bit per page, allocated at boot. It
+reaches the kdump kernel as a PT_NOTE named MEMACTION. Marking is a
+lock-free atomic bitmap update with no allocation, so it is safe in any
+context.
+
+The feature is gated by a static key that is patched in only when the
+kernel is booted with a crash_memaction= parameter indicating which
+flags to pass to the kdump kernel. The parameter sets the meaning of the
+bitmap bits to both kernels.
+
+Marking Memory
+==============
+
+Theres both a kernel and a userspace interface to mark memory.
+
+In-kernel, crash_memaction_mark() takes a virtual address range and a
+type. Marking has page granularity. To support smaller objects,
+patch 2 adds a "secret pool" kmem_buckets instance whose backing pages
+are marked SECRET. Patches 5 to 7 move dm-crypt volume keys and IV
+seeds, crypto tfm contexts, and the payloads of the user, trusted, and
+encrypted key types into this pool. Keeping keys in dedicated slab
+caches also provides some defence in depth against use-after-free and
+out-of-bounds reads, independently of what I'm doing here with kdump.
+
+For userspace mappings, madvise() with MADV_CRASH_SECRET or
+MADV_CRASH_CACHE sets a new VMA flag, VM_CRASH_MARK. Folios mapped into
+a marked VMA are registered as they arrive in rmap.
+
+A mark lasts until the page frame is allocated again, so it is cleared
+in post_alloc_hook() rather than when freed to account for leftover
+data. Hugetlb folios reused from the pool bypass post_alloc_hook(), so
+their marks are cleared on dequeue instead.
+
+Overhead
+========
+
+Measured on arm64 (QRB2210, 4x Cortex-A53, 3.6G) at next-20260922, three
+boots of the same tree:
+
+    k0  CONFIG_CRASH_MEMACTION=n
+    k1  CONFIG_CRASH_MEMACTION=y, no crash_memaction=
+    k2  CONFIG_CRASH_MEMACTION=y, crash_memaction=secret
+
+k1 and k2 are the same kernel image. The workload rebuilds mm/ of a
+kernel tree a few times with make -j4.
+
+    k0  157.05 s median (n=8, range 156.51-157.77)
+    k1  158.23 s median (n=8, range 157.96-159.69)
+    k2  157.42 s median (n=8, range 156.97-163.24)
+
+Against k0 that is +0.75% for k1 and +0.24% for k2, both within
+measurement noise.
+
+Out of scope here
+=================
+
+This series only records the page types in the note. The secret type is
+wired up with some kernel users related to disk encryption. The cache
+type is not wired up with any kernel users (but can be used from
+userspace).
+
+The bitmap is sized from the memblock memory map at boot and is never
+resized. Memory added by hotplug is therefore not covered by a bitmap
+and cannot be marked. I'm focused on embedded targets that don't support
+hotplug anyway.
+
+Signed-off-by: Jan Sebastian Götte <linux@jaseg.de>
 ---
- arch/arm64/kvm/Kconfig     |   1 +
- arch/arm64/kvm/Makefile    |  12 ++
- arch/arm64/kvm/caretaker.c | 243 ++++++++++++++++++++++++++++++++++++-
- arch/arm64/kvm/kvm_luo.c   | 103 ++++++++++++++++
- 4 files changed, 357 insertions(+), 2 deletions(-)
+Changes in v3:
+- Use page bitmap instead of range-based registry
+- Move smaller allocations into secret_pool buckets
+- Link to v3: https://patch.msgid.link/20260811-crash-zeroize-rework-v2-0-9561d13c2340@jaseg.de
 
-diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-index fd25b3c0d8ca..9c43010873a3 100644
---- a/arch/arm64/kvm/Kconfig
-+++ b/arch/arm64/kvm/Kconfig
-@@ -38,6 +38,7 @@ menuconfig KVM
- 	select GUEST_PERF_EVENTS if PERF_EVENTS
- 	select KVM_GUEST_MEMFD
- 	select HAVE_KVM_ARCH_VCPU_PRESERVE
-+	select HAVE_KVM_ARCH_CARETAKER
- 	help
- 	  Support hosting virtualized guest machines.
- 
-diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
-index d5e888d1bd50..58550a0a8160 100644
---- a/arch/arm64/kvm/Makefile
-+++ b/arch/arm64/kvm/Makefile
-@@ -12,6 +12,18 @@ obj-$(CONFIG_KVM) += hyp/
- 
- CFLAGS_sys_regs.o += -Wno-override-init
- CFLAGS_handle_exit.o += -Wno-override-init
-+KASAN_SANITIZE_caretaker.o := n
-+KCSAN_SANITIZE_caretaker.o := n
-+UBSAN_SANITIZE_caretaker.o := n
-+KCOV_INSTRUMENT_caretaker.o := n
-+CFLAGS_REMOVE_caretaker.o = $(CC_FLAGS_FTRACE)
-+CFLAGS_caretaker.o += $(call cc-option,-mbranch-protection=none) \
-+		      -fno-stack-protector \
-+		      $(call cc-option,-ftrivial-auto-var-init=uninitialized) \
-+		      $(call cc-option,-fno-jump-tables)
-+AFLAGS_caretaker_vmenter.o += -D__KVM_VHE_HYPERVISOR__
-+
-+kvm-$(CONFIG_KVM_CARETAKER) += caretaker.o caretaker_vmenter.o
- 
- kvm-y += arm.o mmu.o mmio.o psci.o hypercalls.o pvtime.o \
- 	 inject_fault.o va_layout.o handle_exit.o config.o \
-diff --git a/arch/arm64/kvm/caretaker.c b/arch/arm64/kvm/caretaker.c
-index 6980c1f6b998..8cd73099a60a 100644
---- a/arch/arm64/kvm/caretaker.c
-+++ b/arch/arm64/kvm/caretaker.c
-@@ -193,6 +193,9 @@ int arm64_kvm_caretaker_preserve(struct kvm_vcpu *vcpu,
- 	cap->ctx.vtcr_el2 = mmu->vtcr;
- 	cap->ctx.vttbr_el2 = kvm_get_vttbr(mmu);
- 
-+	if (irqchip_in_kernel(vcpu->kvm) && !vgic_initialized(vcpu->kvm))
-+		kvm_vgic_map_resources(vcpu->kvm);
-+
- 	if (vgic_initialized(vcpu->kvm)) {
- 		int i;
- 
-@@ -504,8 +507,8 @@ __caretaker_text static void caretaker_vgic_v3_save(struct vgic_v3_cpu_if *cpu_i
- 	used_lrs = min3(used_lrs, max_lrs, (unsigned int)VGIC_V3_MAX_LRS);
- 
- 	for (i = 0; i < used_lrs; i++) {
--		cpu_if->vgic_lr[i] = __gic_v3_get_lr(i);
--		__gic_v3_set_lr(0, i);
-+		cpu_if->vgic_lr[i] = caretaker_gic_v3_get_lr(i);
-+		caretaker_gic_v3_set_lr(0, i);
- 	}
- 
- 	cpu_if->vgic_vmcr = read_sysreg_s(SYS_ICH_VMCR_EL2);
-@@ -921,3 +924,239 @@ static void arm64_caretaker_sync_vcpu(struct kvm_vcpu *vcpu,
- 	kvm_make_request(KVM_REQ_IRQ_PENDING, vcpu);
- }
- 
-+static __caretaker_text void
-+arm64_caretaker_op_pre_run(void *data)
-+{
-+	struct caretaker_arm64_page *cap = data;
-+
-+	local_daif_mask();
-+	arm64_caretaker_save_ptrauth(&cap->ptrauth_keys);
-+
-+	/* Pre-job: load guest context */
-+	cpu_preserved_inval(cap);
-+
-+	arm64_caretaker_load_sysregs(&cap->ctx.ctxt);
-+
-+	if (cap->ctx.vgic_initialized)
-+		caretaker_vgic_v3_restore(cap);
-+
-+	write_sysreg(cap->ctx.cntvoff_el2, cntvoff_el2);
-+	write_sysreg_el0(cap->ctx.cntv_cval_el0, SYS_CNTV_CVAL);
-+	write_sysreg_el0(cap->ctx.cntv_ctl_el0, SYS_CNTV_CTL);
-+	isb();
-+
-+	if (cap->ctx.vtcr_el2 && cap->ctx.vttbr_el2) {
-+		write_sysreg(cap->ctx.vtcr_el2, vtcr_el2);
-+		write_sysreg(cap->ctx.vttbr_el2, vttbr_el2);
-+		asm(ALTERNATIVE("nop", "isb", ARM64_WORKAROUND_SPECULATIVE_AT));
-+		__tlbi(vmalle1);
-+		asm volatile("ic iallu");
-+		dsb(nsh);
-+		isb();
-+	}
-+
-+	write_sysreg(CPACR_EL1_FPEN_EL0EN | CPACR_EL1_FPEN_EL1EN |
-+		     CPACR_EL1_ZEN_EL0EN | CPACR_EL1_ZEN_EL1EN,
-+		     cpacr_el1);
-+	isb();
-+
-+	fpsimd_load_state(&cap->ctx.ctxt.fp_regs);
-+
-+	gicv3_caretaker_enable_sgi();
-+	write_sysreg_s(ICC_CTLR_EL1_EOImode_drop, SYS_ICC_CTLR_EL1);
-+	write_sysreg_s(ICC_SRE_EL1_SRE, SYS_ICC_SRE_EL1);
-+	write_sysreg_s(0, SYS_ICC_BPR1_EL1);
-+	gicv3_caretaker_clear_active_priorities();
-+	write_sysreg_s(ICC_PMR_EL1_MASK, SYS_ICC_PMR_EL1);
-+	write_sysreg_s(ICC_IGRPEN1_EL1_MASK, SYS_ICC_IGRPEN1_EL1);
-+	caretaker_gic_drain_iar();
-+	dsb(sy);
-+	isb();
-+}
-+
-+static __caretaker_text void
-+arm64_caretaker_op_post_run(void *data)
-+{
-+	struct cpu_preserved_stack_context *sctx;
-+	struct caretaker_arm64_page *cap = data;
-+	int cpu = cap->abi.cb.pcpu_id;
-+	phys_addr_t pgd_pa;
-+
-+	/* Post-run: restore host hypervisor mode then save guest context */
-+	write_sysreg_s(0, SYS_CNTHP_CTL_EL2);
-+	caretaker_restore_host_el2();
-+
-+	fpsimd_save_state(&cap->ctx.ctxt.fp_regs);
-+
-+	cap->ctx.cntv_cval_el0 = read_sysreg_el0(SYS_CNTV_CVAL);
-+	cap->ctx.cntv_ctl_el0 = read_sysreg_el0(SYS_CNTV_CTL);
-+
-+	if (cap->ctx.vgic_initialized)
-+		caretaker_vgic_v3_save(&cap->ctx.vgic_v3);
-+
-+	arm64_caretaker_save_sysregs(&cap->ctx.ctxt);
-+
-+	sctx = cpu_preserved_get_stack_context();
-+	if (sctx && sctx->session_pgd_pa)
-+		pgd_pa = sctx->session_pgd_pa;
-+	else
-+		pgd_pa = cpu_preserved_get_pgd(cpu);
-+
-+	if (!pgd_pa)
-+		pgd_pa = READ_ONCE(arm64_caretaker_pgd_pa);
-+
-+	write_sysreg(0, ttbr0_el1);
-+	if (pgd_pa && read_sysreg(ttbr1_el1) != pgd_pa) {
-+		write_sysreg(pgd_pa, ttbr1_el1);
-+		isb();
-+		arm64_flush_host_tlb_local();
-+	}
-+
-+	cpu_preserved_clean(cap);
-+
-+	if (smp_load_acquire(&cap->abi.cb.state) >= KVM_CARETAKER_STOPPING ||
-+	    kvm_caretaker_should_exit(&cap->vcpu)) {
-+		local_daif_mask();
-+		isb();
-+
-+		caretaker_gic_drain_iar();
-+		gicv3_caretaker_clear_active_priorities();
-+		write_sysreg_s(0, SYS_ICC_IGRPEN1_EL1);
-+		write_sysreg_s(0, SYS_ICC_PMR_EL1);
-+		write_sysreg_s(0, SYS_ICC_BPR1_EL1);
-+		gicv3_caretaker_clear_sgi();
-+		dsb(sy);
-+		isb();
-+	}
-+
-+	arm64_caretaker_detach_serialize(cap);
-+
-+	arm64_caretaker_restore_ptrauth(&cap->ptrauth_keys);
-+	caretaker_restore_host_el2();
-+}
-+
-+static struct kvm_caretaker_ops arm64_caretaker_ops __cpu_preserved_data = {
-+	.enter_guest = arm64_caretaker_op_enter,
-+	.decode_exit = arm64_caretaker_op_decode_exit,
-+	.handle_arch_exit = arm64_caretaker_op_handle_exit,
-+	.advance_rip = arm64_caretaker_op_advance_rip,
-+	.arm_timer = arm64_caretaker_op_arm_timer,
-+	.disarm_timer = arm64_caretaker_op_disarm_timer,
-+	.pre_run = arm64_caretaker_op_pre_run,
-+	.post_run = arm64_caretaker_op_post_run,
-+};
-+
-+static __caretaker_text enum oncore_exit_reason
-+caretaker_arch_run_page(struct caretaker_arm64_page *cap, u64 deadline_ticks)
-+{
-+	enum oncore_exit_reason reason;
-+	int cpu;
-+
-+	if (!cap)
-+		return ONCORE_EXIT_ERROR;
-+
-+	cpu_preserved_inval(&cap->abi.cb);
-+	cpu = cap->abi.cb.pcpu_id;
-+	if (cpu < 0 || cpu >= ARRAY_SIZE(arm64_caretaker_faults))
-+		cpu = arm64_caretaker_get_pcpu();
-+
-+	cap->abi.cb.pcpu_id = cpu;
-+	if (cmpxchg(&cap->abi.cb.state, KVM_CARETAKER_PAUSED,
-+		    KVM_CARETAKER_RUNNING) != KVM_CARETAKER_PAUSED ||
-+	    cpu_preserved_should_exit(cpu)) {
-+		arm64_caretaker_detach_serialize(cap);
-+		smp_store_release(&cap->abi.cb.state, KVM_CARETAKER_STOPPED);
-+		cpu_preserved_clean(&cap->abi.cb);
-+		return ONCORE_EXIT_ATTACH_SIGNALED;
-+	}
-+	cpu_preserved_clean(&cap->abi.cb);
-+
-+	cap->vcpu.ops = &arm64_caretaker_ops;
-+
-+	reason = kvm_caretaker_vcpu_run(&cap->vcpu, deadline_ticks);
-+
-+	cpu_preserved_inval(&cap->abi.cb);
-+	if (reason == ONCORE_EXIT_ATTACH_SIGNALED ||
-+	    reason == ONCORE_EXIT_ERROR ||
-+	    cpu_preserved_should_exit(cpu) ||
-+	    cmpxchg(&cap->abi.cb.state, KVM_CARETAKER_RUNNING,
-+		    KVM_CARETAKER_PAUSED) != KVM_CARETAKER_RUNNING) {
-+		reason = ONCORE_EXIT_ATTACH_SIGNALED;
-+		arm64_caretaker_detach_serialize(cap);
-+		smp_store_release(&cap->abi.cb.state, KVM_CARETAKER_STOPPED);
-+		cpu_preserved_clean(&cap->abi.cb);
-+	} else {
-+		cpu_preserved_clean(&cap->abi.cb);
-+	}
-+
-+	return reason;
-+}
-+
-+__caretaker_text enum oncore_exit_reason
-+kvm_arch_vcpu_caretaker_run(void *data, u64 deadline_ticks)
-+{
-+	struct kvm_caretaker_cb_ser *cb = data;
-+
-+	/*
-+	 * @data is always a struct kvm_caretaker_cb_ser: kvm_caretaker_vcpu_preserve()
-+	 * installs it with oncore_job_set_data() before activating the job.
-+	 */
-+	if (!cb)
-+		return ONCORE_EXIT_ERROR;
-+
-+	return caretaker_arch_run_page(container_of(cb,
-+						    struct caretaker_arm64_page,
-+						    abi.cb),
-+				       deadline_ticks);
-+}
-+
-+void kvm_arch_vcpu_luo_pre_retrieve_caretaker(struct kvm_vcpu *vcpu,
-+					      struct kvm_vcpu_ser *ser)
-+{
-+	if ((ser->flags & KVM_VCPU_LUO_FLAG_CARETAKER) && ser->cb.phys) {
-+		struct kvm_caretaker_arch_ser *abi = phys_to_virt(ser->cb.phys);
-+		int pcpu = abi->cb.pcpu_id;
-+
-+		if (pcpu >= 0) {
-+			kvm_caretaker_wait_for_attach(&abi->cb, pcpu);
-+			cpu_preserved_inval(abi);
-+			if (ser->arch_state.phys) {
-+				struct kvm_vcpu_arch_ser *state =
-+					phys_to_virt(ser->arch_state.phys);
-+
-+				cpu_preserved_inval(state);
-+				cpu_preserved_inval_sz(state,
-+						       struct_size(state, sysregs,
-+								   state->num_sysregs));
-+			}
-+		}
-+	}
-+}
-+
-+void kvm_arch_vcpu_luo_attach_caretaker(struct kvm_vcpu *vcpu,
-+					struct kvm_vcpu_ser *ser)
-+{
-+	if ((ser->flags & KVM_VCPU_LUO_FLAG_CARETAKER) && ser->cb.phys) {
-+		struct kvm_caretaker_arch_ser *abi = phys_to_virt(ser->cb.phys);
-+
-+		arm64_caretaker_sync_vcpu(vcpu, abi);
-+	}
-+
-+	kvm_caretaker_post_attach_vcpu(vcpu);
-+}
-+
-+void arm64_kvm_caretaker_unpreserve(struct kvm_vcpu_ser *ser)
-+{
-+	if (ser->cb.phys) {
-+		kho_unpreserve_free(phys_to_virt(ser->cb.phys));
-+		ser->cb.phys = 0;
-+	}
-+}
-+
-+void arm64_kvm_caretaker_finish(struct kvm_vcpu_ser *ser)
-+{
-+	if (ser->cb.phys) {
-+		kho_restore_free(phys_to_virt(ser->cb.phys));
-+		ser->cb.phys = 0;
-+	}
-+}
-diff --git a/arch/arm64/kvm/kvm_luo.c b/arch/arm64/kvm/kvm_luo.c
-index 59c56836cda8..ae8baef49f97 100644
---- a/arch/arm64/kvm/kvm_luo.c
-+++ b/arch/arm64/kvm/kvm_luo.c
-@@ -6,6 +6,7 @@
-  * ARM64 KVM LUO preservation and retrieval handlers.
-  */
- 
-+#include <linux/cpu_preserve.h>
- #include <linux/kexec_handover.h>
- #include <linux/kho/abi/kvm_arm64.h>
- #include <linux/kvm_host.h>
-@@ -17,15 +18,100 @@
- #include <kvm/arm_arch_timer.h>
- #include <kvm/arm_vgic.h>
- 
-+#include "caretaker.h"
- #include "sys_regs.h"
- #include "vgic/vgic.h"
- 
-+#ifdef CONFIG_KVM_CARETAKER
-+struct arm64_stage2_kho_walk {
-+	struct kvm_kho_folios_ser *kp;
-+	unsigned int count;
-+};
-+
-+static int stage2_kho_visitor(const struct kvm_pgtable_visit_ctx *ctx,
-+			      enum kvm_pgtable_walk_flags visit)
-+{
-+	struct arm64_stage2_kho_walk *w = ctx->arg;
-+
-+	if (kvm_pte_valid(ctx->old) && ctx->level != KVM_PGTABLE_LAST_LEVEL &&
-+	    FIELD_GET(KVM_PTE_TYPE, ctx->old) == KVM_PTE_TYPE_TABLE) {
-+		u64 phys = kvm_pte_to_phys(ctx->old);
-+		struct page *p = phys_to_page(phys);
-+
-+		if (!p)
-+			return 0;
-+
-+		if (!w->kp) {
-+			w->count++;
-+			return 0;
-+		}
-+
-+		if (w->kp->nr_folios >= w->count)
-+			return -ENOSPC;
-+
-+		if (kho_preserve_folio(page_folio(p)))
-+			return -ENOMEM;
-+
-+		w->kp->folios_pa[w->kp->nr_folios++] = phys;
-+	}
-+	return 0;
-+}
-+#endif
-+
- int kvm_arch_vm_luo_preserve(struct kvm *kvm, struct kvm_luo_ser *ser)
- {
-+#ifdef CONFIG_KVM_CARETAKER
-+	struct kvm_s2_mmu *mmu = &kvm->arch.mmu;
-+	struct arm64_stage2_kho_walk walk = {};
-+	struct kvm_pgtable_walker walker = {
-+		.cb = stage2_kho_visitor,
-+		.flags = KVM_PGTABLE_WALK_TABLE_PRE,
-+		.arg = &walk,
-+	};
-+	struct kvm_kho_folios_ser *kp;
-+	int ret;
-+#endif
-+
- 	ser->type = kvm_phys_shift(&kvm->arch.mmu);
- 	if (kvm_vm_is_protected(kvm))
- 		ser->type |= KVM_VM_TYPE_ARM_PROTECTED;
- 
-+#ifdef CONFIG_KVM_CARETAKER
-+	kvm->caretaker_vm = NULL;
-+
-+	if (mmu->pgd_phys)
-+		walk.count++;
-+	if (mmu->pgt) {
-+		ret = kvm_pgtable_walk(mmu->pgt, 0, BIT(mmu->pgt->ia_bits), &walker);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	kp = kvm_kho_folios_alloc(walk.count);
-+	if (IS_ERR(kp))
-+		return PTR_ERR(kp);
-+	walk.kp = kp;
-+
-+	if (mmu->pgd_phys) {
-+		ret = kho_preserve_folio(page_folio(phys_to_page(mmu->pgd_phys)));
-+		if (ret) {
-+			kvm_kho_folios_unpreserve(kp);
-+			return ret;
-+		}
-+		kp->folios_pa[kp->nr_folios++] = mmu->pgd_phys;
-+	}
-+
-+	if (mmu->pgt) {
-+		ret = kvm_pgtable_walk(mmu->pgt, 0, BIT(mmu->pgt->ia_bits), &walker);
-+		if (ret) {
-+			kvm_kho_folios_unpreserve(kp);
-+			return ret;
-+		}
-+	}
-+
-+	kvm->kho_folios = kp;
-+	KHOSER_STORE_PTR(ser->kho_folios, kp);
-+#endif
- 	return 0;
- }
- 
-@@ -36,6 +122,10 @@ int kvm_arch_vm_luo_retrieve(struct kvm *kvm, struct kvm_luo_ser *ser)
- 
- void kvm_arch_vm_luo_unpreserve(struct kvm *kvm, struct kvm_luo_ser *ser)
- {
-+#ifdef CONFIG_KVM_CARETAKER
-+	if (kvm)
-+		kvm->caretaker_vm = NULL;
-+#endif
- }
- 
- void kvm_arch_vm_luo_finish(struct kvm_luo_ser *ser)
-@@ -119,6 +209,17 @@ int kvm_arch_vcpu_luo_preserve(struct kvm_vcpu *vcpu, struct kvm_vcpu_ser *ser)
- 	kfree(indices);
- 
- 	KHOSER_STORE_PTR(ser->arch_state, state);
-+
-+	if (ser->flags & KVM_VCPU_LUO_FLAG_CARETAKER) {
-+		int ret = arm64_kvm_caretaker_preserve(vcpu, ser);
-+
-+		if (ret) {
-+			kho_unpreserve_free(state);
-+			ser->arch_state.phys = 0;
-+			return ret;
-+		}
-+	}
-+
- 	return 0;
- }
- 
-@@ -186,6 +287,7 @@ int kvm_arch_vcpu_luo_retrieve(struct kvm_vcpu *vcpu, struct kvm_vcpu_ser *ser)
- 
- void kvm_arch_vcpu_luo_unpreserve(struct kvm_vcpu_ser *ser)
- {
-+	arm64_kvm_caretaker_unpreserve(ser);
- 	if (ser->arch_state.phys) {
- 		kho_unpreserve_free(phys_to_virt(ser->arch_state.phys));
- 		ser->arch_state.phys = 0;
-@@ -194,6 +296,7 @@ void kvm_arch_vcpu_luo_unpreserve(struct kvm_vcpu_ser *ser)
- 
- void kvm_arch_vcpu_luo_finish(struct kvm_vcpu_ser *ser)
- {
-+	arm64_kvm_caretaker_finish(ser);
- 	if (ser->arch_state.phys) {
- 		kho_restore_free(phys_to_virt(ser->arch_state.phys));
- 		ser->arch_state.phys = 0;
--- 
-2.55.0.1082.g2b9226bbc0-goog
+To: Jonathan Corbet <corbet@lwn.net>
+To: Shuah Khan <skhan@linuxfoundation.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+To: Rob Herring <robh@kernel.org>
+To: Saravana Kannan <saravanak@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+To: Baoquan He <baoquan.he@linux.dev>
+To: Mike Rapoport <rppt@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: Pratyush Yadav <pratyush@kernel.org>
+To: Dave Young <ruirui.yang@linux.dev>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+To: Danilo Krummrich <dakr@kernel.org>
+To: Muchun Song <muchun.song@linux.dev>
+To: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@kernel.org>
+To: Vlastimil Babka <vbabka@kernel.org>
+To: Suren Baghdasaryan <surenb@google.com>
+To: Michal Hocko <mhocko@suse.com>
+To: Brendan Jackman <brendan.jackman@linux.dev>
+To: Johannes Weiner <hannes@cmpxchg.org>
+To: Zi Yan <ziy@nvidia.com>
+To: Catalin Marinas <catalin.marinas@arm.com>
+To: Will Deacon <will@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+To: Alasdair Kergon <agk@redhat.com>
+To: Mike Snitzer <snitzer@kernel.org>
+To: Mikulas Patocka <mpatocka@redhat.com>
+To: Benjamin Marzinski <bmarzins@redhat.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+To: "David S. Miller" <davem@davemloft.net>
+To: Mimi Zohar <zohar@linux.ibm.com>
+To: David Howells <dhowells@redhat.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+To: Paul Moore <paul@paul-moore.com>
+To: James Morris <jmorris@namei.org>
+To: "Serge E. Hallyn" <serge@hallyn.com>
+To: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: "Liam R. Howlett" <liam@infradead.org>
+To: Lorenzo Stoakes <ljs@kernel.org>
+To: Jann Horn <jannh@google.com>
+To: Pedro Falcato <pfalcato@suse.de>
+To: Rik van Riel <riel@surriel.com>
+To: Harry Yoo <harry@kernel.org>
+To: Lance Yang <lance.yang@linux.dev>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: Nico Pache <nico.pache@linux.dev>
+To: Ryan Roberts <ryan.roberts@arm.com>
+To: Dev Jain <dev.jain@arm.com>
+To: Barry Song <baohua@kernel.org>
+To: Usama Arif <usama.arif@linux.dev>
+To: Kiryl Shutsemau <kas@kernel.org>
+To: Matthew Brost <matthew.brost@intel.com>
+To: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Byungchul Park <byungchul@sk.com>
+To: Gregory Price <gourry@gourry.net>
+To: Ying Huang <ying.huang@linux.alibaba.com>
+To: Alistair Popple <apopple@nvidia.com>
+To: Peter Xu <peterx@redhat.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: kexec@lists.infradead.org
+Cc: driver-core@lists.linux.dev
+Cc: linux-mm@kvack.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: dm-devel@lists.linux.dev
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-integrity@vger.kernel.org
+Cc: keyrings@vger.kernel.org
+Cc: linux-security-module@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-arch@vger.kernel.org
+
+---
+Jan Sebastian Götte (12):
+      kexec: Add a crash memaction registry
+      lib, kexec: Add a secret pool for key material
+      mm: Wire up the crash memaction registry
+      arm64: Enable the crash memaction registry
+      dm crypt: Allocate key material from the secret pool
+      crypto: api - Allocate tfms from the secret pool
+      security/keys: Allocate key payloads from the secret pool
+      mm: Add VM_CRASH_MARK
+      mm/rmap: Mark folios mapped into crash_memaction-marked VMAs
+      mm/madvise: Add MADV_CRASH_SECRET, MADV_CRASH_CACHE and MADV_CRASH_RESET
+      Documentation/mm: Document the crash memaction registry
+      kexec: Expose the crash memaction bitmap in debugfs
+
+ Documentation/admin-guide/kernel-parameters.txt |   9 +
+ Documentation/mm/crash_memaction.rst            |  68 ++++
+ Documentation/mm/index.rst                      |   1 +
+ MAINTAINERS                                     |   4 +
+ arch/arm64/Kconfig                              |   3 +
+ crypto/api.c                                    |   9 +-
+ drivers/md/dm-crypt.c                           |  19 +-
+ drivers/of/kexec.c                              |   7 +
+ fs/proc/task_mmu.c                              |   3 +
+ include/linux/crash_memaction.h                 |  86 +++++
+ include/linux/kexec.h                           |   6 +
+ include/linux/mm.h                              |   9 +
+ include/linux/rmap.h                            |   5 +-
+ include/linux/secret_pool.h                     |  47 +++
+ include/uapi/asm-generic/mman-common.h          |   4 +
+ kernel/Kconfig.kexec                            |  39 ++
+ kernel/crash_core.c                             | 475 ++++++++++++++++++++++++
+ kernel/kexec_core.c                             |   4 +
+ kernel/kexec_file.c                             |  10 +
+ kernel/ksysfs.c                                 |  15 +
+ lib/Makefile                                    |   1 +
+ lib/secret_pool.c                               |  27 ++
+ mm/huge_memory.c                                |   2 +
+ mm/hugetlb.c                                    |  10 +-
+ mm/madvise.c                                    | 132 +++++++
+ mm/migrate.c                                    |   2 +-
+ mm/mm_init.c                                    |   3 +
+ mm/page_alloc.c                                 |   6 +
+ mm/rmap.c                                       |   8 +
+ mm/userfaultfd.c                                |   1 +
+ security/keys/encrypted-keys/encrypted.c        |   5 +-
+ security/keys/trusted-keys/trusted_core.c       |   3 +-
+ security/keys/user_defined.c                    |   3 +-
+ 33 files changed, 1006 insertions(+), 20 deletions(-)
+---
+base-commit: a8c591ed6b672915e0be57843f943a2a723aff40
+change-id: 20260925-crash-memaction-upstream-20260921-6e3cfac5a389
+
+Best regards,
+--  
+Jan Sebastian Götte <linux@jaseg.de>
 
 
