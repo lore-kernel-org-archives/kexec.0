@@ -2,92 +2,91 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E353D60A2625
-	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 08:21:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C136D60A3813
+	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 08:21:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=MHjhhHYk;
-	dkim=permerror header.d=jaseg.de header.i=@jaseg.de header.a=rsa-sha1 header.s=fm1 header.b=CDGOvWh7;
-	dkim=permerror header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha1 header.s=fm1 header.b=F+kilLu8
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=mtrNrUo/;
+	dkim=permerror header.d=jaseg.de header.i=@jaseg.de header.a=rsa-sha1 header.s=fm1 header.b=f4Jdeeeb;
+	dkim=permerror header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha1 header.s=fm1 header.b=ONnaoMW+
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ZdE71mM25VCXqu1oQr1q/lSe+WnVe7LtQ1kxizjLL0g=; b=MHjhhHYkAkSuHHekzLLp5xSRrs
-	UMix6yM8+VTO/KhrrqdoDyaWTxYmwe/gl1kTBm6OuuF9F/o9LE2mk1ENuKtFBixxMvPXGy/GV4qeR
-	qQJZQe00tS6M8BBesAAvrQwv6T4iEZapfZGIsa6uI8JHobQ/TaL1hj+TzX8Am8FXv5Am6sK0h5FVQ
-	LxQbvYQJRYPqygTWSCd6OzUAqPJVO6+GF3SI9kcc6cxDu5IeJNS4yivKFDMQBTRlmCiqZpHs5KmSj
-	Xz0SDcYhxYMtlDpAs8aLm6OAjxNHNF7LFQt5GppN1O6q0PXJqrZOh0Dbt0QOPyXWhQH0GR2dFUZ0h
-	py4Y4D5Q==;
+	bh=fJz8EQpPkK5dirGHjixLblXPE0Wssy9Pl4MCLZ0+6fQ=; b=mtrNrUo/lKdGyAL6Hej/OpkQuA
+	6D7fRK7GutiY8XGhe0Wv+71UIGdNg6bpqNsI8roKeUIy8p8cUFL640xbXmffaHvztYiSTgUTsaBG0
+	EARnfiYdiegtzYvsZ8hGIL75nA0vTxdldd3hXIcMy4T21ogtd70+0i8DAckHvk8kc8iCDV/aVYQoy
+	rnZj2yzK/yk2df3zjWsRdvRrnnUk6MeVsvWbpegietbKoYFD8RV3unCse+6sPlQBS8/p6Ic10FPQs
+	kKaHJkI4kqHmxEIUhqsGVymYx+9wF+tGsZAYRu/ZG9fnwKZr/2KnqbhXpPmmuYu6YF+eeOKCa+N78
+	K8V8CXyQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJ55z-0000000992L-0MmU;
+	id 1xJ55z-0000000993k-21Kw;
 	Tue, 20 Oct 2026 08:21:19 +0000
 Received: from flow-a2-smtp.messagingengine.com ([103.168.172.137])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xBF11-000000018ZB-14xc;
-	Mon, 28 Sep 2026 17:19:49 +0000
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailflow.phl.internal (Postfix) with ESMTP id 5B41C13804C2;
-	Mon, 28 Sep 2026 13:19:46 -0400 (EDT)
+	id 1xBF20-000000018tE-1Wab;
+	Mon, 28 Sep 2026 17:20:49 +0000
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailflow.phl.internal (Postfix) with ESMTP id 7E12213804E6;
+	Mon, 28 Sep 2026 13:20:47 -0400 (EDT)
 Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Mon, 28 Sep 2026 13:19:46 -0400
+  by phl-compute-02.internal (MEProxy); Mon, 28 Sep 2026 13:20:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jaseg.de; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1790615986;
-	 x=1790623186; bh=ZdE71mM25VCXqu1oQr1q/lSe+WnVe7LtQ1kxizjLL0g=; b=
-	CDGOvWh7GLzuqGPgICFmEVYOunq3Lwqz3/uGv8TsUOBSNdmdEAQS9UetGJrdYXGf
-	r4x+U54zwuXwcsyxdqC7mwXEF3HsPw76HLvHI3eguRZ+Uh3i1zBTetTGyH90Fgmn
-	nly1PIr+pFXsSo9JJ0Idq3+S/+xFlItWkxb90glvftMh29KjSOfd/N7nlv87pZrl
-	ZlDgYsIKi16pbPRz6jZtd6jWqYXFrvijaonkOhRnq2gqlOvJJpmfnIDPwMOlQxXC
-	4JAmYANZiRJUCUSyZ/Q6ZFo6agHdKRcVWxEeDSu6stZ6qcGAnk/ag7rvGNJTw69d
-	aAWJJoY2Ner/x5EE056z7g==
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1790616047;
+	 x=1790623247; bh=fJz8EQpPkK5dirGHjixLblXPE0Wssy9Pl4MCLZ0+6fQ=; b=
+	f4JdeeebjueKH7ptVPXg9yoUidMKxSR/xbTUV13BYJMixzn8a+agIvN137gLDxLc
+	aS7eid66bSbZF7zEHELRYf+urBf6MNb2yAOgQBSIbBbolGwcll0fD4tHkcg3rYlh
+	ccXaOfBLATfQa3dl+UKKfKooBH5Bl2Zwn1PKnY2YgqYHFeom9gl/oCCZL9FJyTcD
+	3nkjCUYtFgNJbkrT1P97vJZpKPJ6oQeKNSRRFPnrmj/7doWJ2nna1dCBUMyNL72H
+	iyrEnXb/8nJfzszJaKuC0w5AuMYhBPBUzb7IL5RbDjxkwgpv70sh37AsVQY6dAzL
+	rduPcc0zVv2nD3l4EZKwAg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1790615986; x=
-	1790623186; bh=ZdE71mM25VCXqu1oQr1q/lSe+WnVe7LtQ1kxizjLL0g=; b=F
-	+kilLu89q7lo0Knbawu298hW/M72taC5Uu1xRlQiiz1LYqRj5dZ3JYbTEGnHCK9t
-	TiYFL18kFvNuFqXrIy7uS53DzNM/v8WN91lw778mQdW9Dw3bHpRFl5jNlvkD7ddI
-	qSKmI8+wYBuB7WqDWB2IsHxCILuoYwRrF0qRuP8CvAjvK9szvwg+HY3wXF+ur8EV
-	yf2Ygk5FsRE+PHuolp5qLybLsdgAj6CL3CPXINlMbXJBaTCXUh9pZVsOqUQEN6Te
-	c10tbzhgGrRwIpNEMZtMXefcAsKeDVMaAkvf67hkrNuSoED7brzYOsQq8cO8WZGd
-	cdmA4tlccsix5Yc29EiRg==
-X-ME-Sender: <xms:saG6al4RA8P-iRyBpg7fqMamAwDe5xCvw7K2Y6rueUoSwKvW_PLOfg>
-    <xme:saG6amU3coUJ1KyKus8GUBhKYpLmIOmTChpQqfR7L_GLamepQ7oUKCVRZfg7uvmLn
-    reThErzo0dYYjiffe3plYLYqW2lESrEWEG1FE32nJFBT5oph6lr5Q>
-X-ME-Received: <xmr:saG6aoswVbQKqQjAunKpAUxBtxWkMXXXGXAvdEn8NMsPKLKrX_nX8liHCU4drTVH>
-X-ME-Proxy-Cause: dmFkZTE/22e7clbyNdHwn0HCBx+H3lsiFyo6QkPV6dpSn20/QyCOxtHNd7QTmx6b7eJ6RH
-    b7MD0YK3xmhVFW7pHJl/jJiaLCtzwYaWJ6VBcJNMtYB/lM8rXCQqoyXJAKc1Q+3NTJHLRu
-    Q+616RIwRjK3mn/tprgeZTxr9VaE0UGr12rr0RgYUziHPYN8WsIu22gnQm98Dq7NFgLEYb
-    bOn/3mv6ye0r5zsmXTZhHlWNyOVRZl7FwJjAmuaSy3Z2MGyz8Xby78ZPjGLjvAF+o1XCsp
-    YM5+7QijkJtemWRQaETyS2I23TsNHUOR4KF7C0sS19NgtEnCYopA0Qb1idGIqDD/y3bAh+
-    OHLwLtIJSLc/HOMY8QogeCoydM5JvLEFLPDaOGSGQBEzsBv3+nx4wyYe5ZtEBmSCjAMlk0
-    jcFbl5cikzUyIIexea7pVa39IIorHJLOLvBi4dEzqEfi7hU48MzxRUPIO8Ode++2Wyw5gt
-    qOu+//xqHUlsWRJSas7npOvuAMuETFBHcwv6GfDpGNJq3i1/DPns37HnxKpHVU7GRs5Aam
-    L7eFdiKB4qfGL5vgwdmChG28DUFegZzTH9Xve3YvGv+SEKdQCa0xDbSiD0Wp89DS8aAKHX
-    nKuM6qjT0b9SsDP2OzvaTGw+Jioc14hPxrpXcfV2fd1aiyVYVy+VaP05uWDA
-X-ME-Proxy: <xmx:saG6anI8VIH0tVnGUymLbaJg5eSCor4mEPI47WQn_GkdHwZB3tBqHg>
-    <xmx:saG6ajPOzsPCBfcvMeyGah-EkpaRv0DBoblmEk7A_m1D9yjVdL-hPg>
-    <xmx:saG6ak1TssK1p75zcGnHYhyAzENKocbVvB12dGtL3-LrVy6RzdAUBQ>
-    <xmx:saG6ar8351bSodNRdpV4Jvf4LwutDeR3A8HSyDIgYN91Z-BYtvrEvw>
-    <xmx:sqG6amliZyllfm7YAY0wi1Fyilk0-7B3JdLDHjRtTRXG_3etj1B7-2dX>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1790616047; x=
+	1790623247; bh=fJz8EQpPkK5dirGHjixLblXPE0Wssy9Pl4MCLZ0+6fQ=; b=O
+	NnaoMW+2zQHkNDVwNrITLkagrR029Br1BAO9nUFTX8lCbpYaC2qU2F4Vcjip+Ula
+	Mupx+52KG+ol62sbiSxJTkszHne9+BISMFpSXsNsq6ZRJkWX5A+C9u/IUTi6mYok
+	uAi5FcXSUpOWFlXZWQa8423AX1So7GAW72/j7JqKOlp38FvLIsw1JfBKG2wp0mw5
+	PU2tWUasXduwhMNiqF63JBuIkN4NirumVvhihC75UcFl7C3Ap9Kued6Kl4zzQ7an
+	meBZDjTlFwyl0rwOVBJqxe04FslcT9kI6/1OkBaS+XP1IeYA8S/zBTGM8c79Q4Gm
+	s56EnFvtre8X7v2+BKPAw==
+X-ME-Sender: <xms:7qG6alzE978dBNRLukxM_mVEgrVOXFiXtAyWffYzCpjwNgnV30TgnQ>
+    <xme:7qG6aouhmlgq-mVGa6ghryYHxEfwf8ulLvPjFUDo33_3OkjN5mCfCWur9c7i_TK6m
+    oaBTC_RxI5MJVn8bX7Vlq80fgLR3qkEyBUOd4D2TWuL62HsPgu7CA8>
+X-ME-Received: <xmr:7qG6armG8LrOEqbbWuGrL9ytqTnHnyy1rsNQCZYPaW9VAPtgwzxkWVBcH9VBJQwa>
+X-ME-Proxy-Cause: dmFkZTE3Dtw6IjhE/poi/CDPb5VXEYPNUPEe3rZRr1/3vnluvSNGZwYnc7Od0VEEqw6V8C
+    kWRAMYAJAJV5aq+CNT4OFQyy1fVW8k3upxKlO9V7Rt5yUqYEIYE/wijeDPsE7H4gglp/5v
+    F6D384IbY5FCBCgoXmGheBdMQQxOBU4ICiAnYejBlRLhJ/CKeqEcgPSAZh68CS/pdW/x+j
+    oysMrjjAyGFH6oDZSV+ReHQBDpEH3XjCRs+r4WEsyv+LCLa1ZQRyjrSR6cKgS0Pi5Ve0FP
+    CSaf3rI2+ul2/rPFwdCO88CC3NXOaOC07b4Jq2/gPXxONS3ydc229KCVcj4zNvzLHbXFfR
+    eF4x0mLD+Fcfbzuser4/iLJZt8Fbokzu1nzs2ppJ4QnO/tS8WSt8700vWuD+S0oklObrCZ
+    eYUJXuXrVgCNBCBdaN07KqmODR19hbi8nuGl2UeTd1BMVfWD0zHPP2oNak6KLD0VPoNxRA
+    3Ak2HOrZ1IVBIqFUI0Ae4j33l6nDbJZlRWS9P1AeDiwcepSkX4qgDOR1DzF3eI0JfDzXGb
+    llEZJrMALOTu1I8Ke0lJQ99N1YvgfXf1A2PRoxOzk4hanz1XgNFkkehoH+rc6/TY1L0mx6
+    aNLkbSjOj7d4l8vP88bPuGlxta3VDopv7l8wJZXPSTS1TxgdetOYLw9Gr3OQ
+X-ME-Proxy: <xmx:7qG6aghCTTcvhFpjk8LCnNnfEzxbJxFnnuuWYAeYa-YLH4YUzHbUvQ>
+    <xmx:7qG6ahHzIjRNQA6Z0Bccd6_bi4pkkyrffh9120ESI4juzY9MmRMgGg>
+    <xmx:7qG6atN5TbDRD3GLUL4DjcKB-z281sLaNyhV79ElVGm-UARn8iTyRA>
+    <xmx:7qG6as0CG56dy-xqVJHMlukxHoSqQ2SjzGkRNQhFIaTJCurJkhaKbQ>
+    <xmx:76G6avDdeuSydoAaX6v9kdMCGrc0KNeoZfiEobVCpMGbamPVv-bmn3LI>
 Feedback-ID: i60a14417:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 28 Sep 2026 13:19:31 -0400 (EDT)
+ 28 Sep 2026 13:20:26 -0400 (EDT)
 From: =?utf-8?q?Jan_Sebastian_G=C3=B6tte?= <linux@jaseg.de>
-Date: Mon, 28 Sep 2026 19:17:53 +0200
-Subject: [PATCH v3 05/12] dm crypt: Allocate key material from the secret
- pool
+Date: Mon, 28 Sep 2026 19:17:56 +0200
+Subject: [PATCH v3 08/12] mm: Add VM_CRASH_MARK
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260928-crash-memaction-upstream-20260921-v3-5-e511e9ee2329@jaseg.de>
+Message-Id: <20260928-crash-memaction-upstream-20260921-v3-8-e511e9ee2329@jaseg.de>
 References: <20260928-crash-memaction-upstream-20260921-v3-0-e511e9ee2329@jaseg.de>
 In-Reply-To: <20260928-crash-memaction-upstream-20260921-v3-0-e511e9ee2329@jaseg.de>
 To: Jonathan Corbet <corbet@lwn.net>,
@@ -143,8 +142,8 @@ Cc: Eric Biggers <ebiggers@kernel.org>, linux-doc@vger.kernel.org,
  =?utf-8?q?Jan_Sebastian_G=C3=B6tte?= <linux@jaseg.de>
 X-Mailer: b4 0.15.2
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260928_101947_368951_E7CC32A2 
-X-CRM114-Status: GOOD (  14.78  )
+X-CRM114-CacheID: sfid-20260928_102048_472915_011AF5A9 
+X-CRM114-Status: GOOD (  13.32  )
 X-Spam-Score: -2.1 (--)
 X-Mailman-Approved-At: Tue, 20 Oct 2026 01:21:06 -0700
 X-BeenThere: kexec@lists.infradead.org
@@ -164,103 +163,81 @@ X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-dm-crypt keeps the volume key, the IV mode seeds and, when a keyring key
-is used, the key description in memory for as long as the target exists.
-If the system crashes, they are left in memory and will end up in a
-crash dump.
+Add a VMA flag saying that the folios mapped into a VMA should be
+described to the kdump kernel through crash_memaction. The flag
+indicates "marked" pages. The specific meaning of what pages are marked
+is set through the crash_memaction= cmdline param, which currently
+supports marking "secret" or "cache" pages.
 
-Allocate every buffer that holds key material from the new secret pool,
-whose backing pages are marked by crash_memaction for the kdump kernel
-to wipe. The volume key is a flexible array at the end of struct
-crypt_config, so the whole struct moves into the pool with it.
+The flag is an ordinary VMA flag, so splitting, merging, mremap() and
+inheritance across fork() all behave the way they do for MADV_DONTFORK
+and friends.
+
+To allocate the flag, CONFIG_CRASH_MEMACTION gains a dependency on
+64BIT. Both architectures that support the config are 64-bit already.
 
 Signed-off-by: Jan Sebastian Götte <linux@jaseg.de>
 Assisted-by: Claude Opus 5 <noreply@anthropic.com>
 ---
- drivers/md/dm-crypt.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ fs/proc/task_mmu.c   | 3 +++
+ include/linux/mm.h   | 9 +++++++++
+ kernel/Kconfig.kexec | 2 ++
+ 3 files changed, 14 insertions(+)
 
-diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-index 8e838530faab..c386b4824629 100644
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -29,6 +29,7 @@
- #include <linux/atomic.h>
- #include <linux/scatterlist.h>
- #include <linux/rbtree.h>
-+#include <linux/secret_pool.h>
- #include <linux/ctype.h>
- #include <asm/page.h>
- #include <linux/unaligned.h>
-@@ -486,7 +487,7 @@ static int crypt_iv_lmk_ctr(struct crypt_config *cc, struct dm_target *ti,
- 		return 0;
- 	}
- 
--	lmk->seed = kzalloc(LMK_SEED_SIZE, GFP_KERNEL);
-+	lmk->seed = secret_pool_zalloc(LMK_SEED_SIZE, GFP_KERNEL);
- 	if (!lmk->seed) {
- 		ti->error = "Error kmallocing seed storage in LMK";
- 		return -ENOMEM;
-@@ -603,8 +604,8 @@ static int crypt_iv_tcw_ctr(struct crypt_config *cc, struct dm_target *ti,
- 		return -EINVAL;
- 	}
- 
--	tcw->iv_seed = kzalloc(cc->iv_size, GFP_KERNEL);
--	tcw->whitening = kzalloc(TCW_WHITENING_SIZE, GFP_KERNEL);
-+	tcw->iv_seed = secret_pool_zalloc(cc->iv_size, GFP_KERNEL);
-+	tcw->whitening = secret_pool_zalloc(TCW_WHITENING_SIZE, GFP_KERNEL);
- 	if (!tcw->iv_seed || !tcw->whitening) {
- 		crypt_iv_tcw_dtr(cc);
- 		ti->error = "Error allocating seed storage in TCW";
-@@ -771,7 +772,7 @@ static int crypt_iv_elephant_ctr(struct crypt_config *cc, struct dm_target *ti,
- 	struct iv_elephant_private *elephant = &cc->iv_gen_private.elephant;
- 	int r;
- 
--	elephant->key = kmalloc_obj(*elephant->key);
-+	elephant->key = secret_pool_alloc_obj(*elephant->key);
- 	if (!elephant->key)
- 		return -ENOMEM;
- 
-@@ -2484,6 +2485,7 @@ static int set_key_trusted(struct crypt_config *cc, struct key *key)
- static int crypt_set_keyring_key(struct crypt_config *cc, const char *key_string)
- {
- 	char *new_key_string, *key_desc;
-+	size_t key_string_size;
- 	int ret;
- 	struct key_type *type;
- 	struct key *key;
-@@ -2521,9 +2523,11 @@ static int crypt_set_keyring_key(struct crypt_config *cc, const char *key_string
- 		return -EINVAL;
- 	}
- 
--	new_key_string = kstrdup(key_string, GFP_KERNEL);
-+	key_string_size = strlen(key_string) + 1;
-+	new_key_string = secret_pool_alloc(key_string_size, GFP_KERNEL);
- 	if (!new_key_string)
- 		return -ENOMEM;
-+	memcpy(new_key_string, key_string, key_string_size);
- 
- 	key = request_key(type, key_desc + 1, NULL);
- 	if (IS_ERR(key)) {
-@@ -2851,7 +2855,8 @@ static int crypt_ctr_auth_cipher(struct crypt_config *cc, char *cipher_api)
- 		cc->key_mac_size = crypto_ahash_digestsize(mac);
- 	crypto_free_ahash(mac);
- 
--	cc->authenc_key = kmalloc(crypt_authenckey_size(cc), GFP_KERNEL);
-+	cc->authenc_key = secret_pool_alloc(crypt_authenckey_size(cc),
-+					    GFP_KERNEL);
- 	if (!cc->authenc_key)
- 		return -ENOMEM;
- 
-@@ -3201,7 +3206,7 @@ static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 		return -EINVAL;
- 	}
- 
--	cc = kzalloc_flex(*cc, key, key_size);
-+	cc = secret_pool_zalloc_flex(*cc, key, key_size);
- 	if (!cc) {
- 		ti->error = "Cannot allocate encryption context";
- 		return -ENOMEM;
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index c0d228036b8a..880946edf4df 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -1161,6 +1161,9 @@ static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
+ #endif
+ #ifdef CONFIG_64BIT
+ 		[ilog2(VM_SEALED)] = "sl",
++#endif
++#ifdef CONFIG_CRASH_MEMACTION
++		[ilog2(VM_CRASH_MARK)] = "cm",
+ #endif
+ 	};
+ 	size_t i;
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index b9ed4f569b75..4ffe6350f865 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -345,6 +345,10 @@ enum {
+ 	DECLARE_VMA_BIT(UFFD_MINOR, 41),
+ 	DECLARE_VMA_BIT(SEALED, 42),
+ 	DECLARE_VMA_BIT(UFFD_RWP, 43),
++#if defined(CONFIG_CRASH_MEMACTION)
++	/* Describe this VMA's folios to the kdump kernel; carries no type. */
++	DECLARE_VMA_BIT(CRASH_MARK, 44),
++#endif
+ 	/* Flags that reuse flags above. */
+ 	DECLARE_VMA_BIT_ALIAS(PKEY_BIT0, HIGH_ARCH_0),
+ 	DECLARE_VMA_BIT_ALIAS(PKEY_BIT1, HIGH_ARCH_1),
+@@ -526,6 +530,11 @@ enum {
+ #define VM_ALLOW_ANY_UNCACHED	VM_NONE
+ #define VM_SEALED		VM_NONE
+ #endif
++#ifdef CONFIG_CRASH_MEMACTION
++#define VM_CRASH_MARK		INIT_VM_FLAG(CRASH_MARK)
++#else
++#define VM_CRASH_MARK		VM_NONE
++#endif
+ #if defined(CONFIG_64BIT) || defined(CONFIG_PPC32)
+ #define VM_DROPPABLE		INIT_VM_FLAG(DROPPABLE)
+ #define VMA_DROPPABLE		mk_vma_flags(VMA_DROPPABLE_BIT)
+diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
+index 890c35199bea..3cdc8d459ac0 100644
+--- a/kernel/Kconfig.kexec
++++ b/kernel/Kconfig.kexec
+@@ -189,6 +189,8 @@ config CRASH_MEMACTION
+ 	depends on !SLUB_TINY
+ 	select SLAB_BUCKETS
+ 	depends on ARCH_SUPPORTS_CRASH_MEMACTION
++	# VM_CRASH_MARK needs a bit from the 64-bit-only half of vm_flags.
++	depends on 64BIT
+ 	help
+ 	  Track pages that may require special handling by the kdump kernel:
+ 	  pages holding secrets such as crypto keys, which it can wipe before
 
 -- 
 2.55.0
