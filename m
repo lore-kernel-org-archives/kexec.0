@@ -4,124 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1E4BDCA5FA3
-	for <kexec@archiver.kernel.org>; Mon, 28 Sep 2026 08:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D9C9EC9833E
+	for <kexec@archiver.kernel.org>; Mon, 28 Sep 2026 08:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
+	From:MIME-Version:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=CCkRCmS19zEA9htpE9e4GGbeUnHYyLQnayb0RP1laFA=; b=ukCL0wyAF5AAqdXnZHUNhnMarR
-	DMjM8IZMb4UQyXMUKSWaLNQn2AtHTOLpgs+5T+awMCEVHoxuK+Ns8j8HutJLpaZabLbQ4CEkpASI/
-	UITDkIjn2wNAL/vxOefPtjyu0/ZMRhMkg/19SQvE2H8iGbX+hRXeUR0ax51hRlcjBqQLH18YUaQvK
-	bn3k8mOBqCeFvXj5oC0cwQhIbjXC6wMSGZkCQ8VsByfsot+xq+Y/6tUUjlVv/RrTCQPpCfV3karKZ
-	ayL64PyPadyuWRZSLYCUlddT4qy7GJRc99B4EPSfOMmAAyiyUwx20B3qZE2TVAEqdHjOWcyvaSZOx
-	ibBvlmfQ==;
+	bh=TdNzTDhEchXUCyf1n2C/rpdeXch7Ae3LIrA75qOk4gk=; b=uZ46c4k5WwUnj/3L05DgvCCPJ4
+	YvHSx+odiKHZm5bzODUPRFH/v2fOnAXpRHo9FG9gYNiPTq8h/Tu3rUvLw1VPe3tUQpVe7HII1PTpv
+	qaY0HGhuRCAdrOWm942LcPkT5nPsy7f4rXDYi+ZRbh4ctOllC393RL881MVOXw4Wrmo/cOc2xN7dJ
+	vfZIZB21koJIodySH9N57aQgkzNmjNRZQbVEGFVzsOlj6OV/3T4LKwM0/dMKmetWl7SvoOWZ6jfHl
+	y0XSRgyFoUxGrsToAM1xrgTyHNlNkPRidFOYVQ45LELNl5XMdG+gaRkmjUm09Yz4mUTrT8/f2s62X
+	PoaJ8fgA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xB6nV-000000005zY-1JqU;
-	Mon, 28 Sep 2026 08:33:17 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1xB6vs-000000007hg-297q;
+	Mon, 28 Sep 2026 08:41:56 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xB6nS-000000005ya-47CO
+	id 1xB6vr-000000007h1-01ni
 	for kexec@lists.infradead.org;
-	Mon, 28 Sep 2026 08:33:16 +0000
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68S85SDb595683;
-	Mon, 28 Sep 2026 08:32:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=CCkRCmS19zEA9htpE
-	9e4GGbeUnHYyLQnayb0RP1laFA=; b=aiS+D5zAIwa7JDbIT3OTzrC1Z2z3CrK9P
-	Vz0t91POS0mqwDJl4rV4JnOdwUJtewuyeXXS9e13cq0021M1Fp3MTH5L8HC2ZJvU
-	ZzIeBMdtrYbpe/PaHxG1weMLgXmcINLfEgDwx98BHkR9jp176wsn+VAEL0aXTi5q
-	NyBIjS+35Hy3d95H1WdMS7T2Y/sscJ1kaQHTqy2STvGv1AUaXK+73Pwm5dRKq5zH
-	pWm+kNq45wA8bmt6nTM7ru1OMRWoxsygFE208P9IX/GMip6Aoa+R8nstocAsuraD
-	zus5FjZd91Yigf2pIp7qrlTAGZZt8XzWNRo/CayNlx/nkrh6q06LQ==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gx5s506mj-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Mon, 28 Sep 2026 08:32:54 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68S82VE04055221;
-	Mon, 28 Sep 2026 08:32:53 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4gxsvhcbt7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Sep 2026 08:32:53 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68S8Wn7c36503890
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 28 Sep 2026 08:32:49 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 32AC72004B;
-	Mon, 28 Sep 2026 08:32:49 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2DD6620040;
-	Mon, 28 Sep 2026 08:32:45 +0000 (GMT)
-Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.bl1-in.ibm.com (unknown [9.123.14.142])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 28 Sep 2026 08:32:44 +0000 (GMT)
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-To: kexec@lists.infradead.org
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Aditya Gupta <adityag@linux.ibm.com>, Alexander Graf <graf@amazon.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Baoquan He <baoquan.he@linux.dev>,
-        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>, Mike Rapoport <rppt@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Pasha Tatashin <pasha.tatashin@soleen.com>,
-        Pratyush Yadav <pratyush@kernel.org>,
-        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-        Shivang Upadhyay <shivangu@linux.ibm.com>,
-        Shrikanth Hegde <sshegde@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v1 2/2] powerpc: add support for Kexec HandOver (KHO)
-Date: Mon, 28 Sep 2026 14:02:26 +0530
-Message-ID: <20260928083226.107807-3-sourabhjain@linux.ibm.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260928083226.107807-1-sourabhjain@linux.ibm.com>
+	Mon, 28 Sep 2026 08:41:55 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 069D260052;
+	Mon, 28 Sep 2026 08:41:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B52D21F000FF;
+	Mon, 28 Sep 2026 08:41:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790584913;
+	bh=TdNzTDhEchXUCyf1n2C/rpdeXch7Ae3LIrA75qOk4gk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=PD8hEsHegiJzwCoePhw1+13WgFrtcq5hV7DTTk9e9nX3Q4vTo9/bAAqtyfPzV33VA
+	 UvFDDccr/S4U2abGu8aTXiyCYGLlo13zWYfcYy/ejx2oy769fRe1PrVDyliVYT9UOt
+	 d8tLB6Q/U34borY1Xq3wUDCcDFbihcCGYan8Qmg0olnueWp8k11Q7DEYl6ZwoN1aiG
+	 oSS/UCTtpOjOgQM86e8R3yQuUyY3LmKwW36neXL9zEbJ9QR9W77mSlPjPrMEtd8oGH
+	 wZbMTRv9ATeMpjc9W1QR+bD1H6DPnrBEY2l8YvzjNhAvZXfCdMwAB+vdpMD7xQp7j9
+	 tW8irqCisFMJg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1 1/2] kho: check scratch vs CMA alignment at runtime
+To: "Sourabh Jain" <sourabhjain@linux.ibm.com>
+Cc: "Aditya Gupta" <adityag@linux.ibm.com>, "Baoquan He" <baoquan.he@linux.dev>, "Madhavan
+ Srinivasan" <maddy@linux.ibm.com>, "Pratyush Yadav" <pratyush@kernel.org>, kexec@lists.infradead.org,
+ =?utf-8?b?Q2hyaXN0b3BoZSBMZXJveSAoQ1MgR1JPVVAp?= <chleroy@kernel.org>, "Mahesh
+ Salgaonkar" <mahesh@linux.ibm.com>, "Michael Ellerman" <mpe@ellerman.id.au>, "Hari
+ Bathini" <hbathini@linux.ibm.com>, "Mike Rapoport" <rppt@kernel.org>, linux-kernel@vger.kernel.org, "Pasha
+ Tatashin" <pasha.tatashin@soleen.com>, linuxppc-dev@lists.ozlabs.org, "Andrew
+ Morton" <akpm@linux-foundation.org>, "Alexander Graf" <graf@amazon.com>, "Shrikanth
+ Hegde" <sshegde@linux.ibm.com>, "Shivang Upadhyay" <shivangu@linux.ibm.com>, "Nicholas
+ Piggin" <npiggin@gmail.com>, =?utf-8?b?Uml0ZXNoIEhhcmphbmkgKElCTSk=?= <ritesh.list@gmail.com>
+In-Reply-To: <20260928083226.107807-2-sourabhjain@linux.ibm.com>
 References: <20260928083226.107807-1-sourabhjain@linux.ibm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTI4MDAzMiBTYWx0ZWRfXx62h7Q83jBIn
- d2V01iCj99IXIR7Td7aDAwSAnsJrzBokntCj8ZLdaGDWNW+t1DPZ8gR6PtOHXmMs1laCV9Zf523
- jL08BdwVcbrjl0HdEyH0dROq7GKDug8=
-X-Authority-Analysis: v=2.4 cv=HJ5WhYtv c=1 sm=1 tr=0 ts=6aba2636 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=vggBfdFIAAAA:8 a=Z4Rwk6OoAAAA:8
- a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=7ipKWUHlAAAA:8 a=voM4FWlXAAAA:8
- a=itPyUPzOZQCiFHcQqVsA:9 a=HkZW87K1Qel5hWWM3VKY:22 a=gpc5p9EgBqZVLdJeV_V1:22
- a=IC2XNlieTeVoXbcui8wp:22
-X-Proofpoint-GUID: HxbnxvsmChTkRmuCimQHUfwc6bBNCkkf
-X-Proofpoint-ORIG-GUID: 0kIoDGGoCmOXXhETMhn5k3WDSwiqzuYm
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTI4MDAzMiBTYWx0ZWRfX1iz38KbaL99q
- Era/atBTzSJA1XBzjTyzhLdqapswT4jPsZWNy8ge5ciNV1JI+bvoVtGdncvONSDkVU5CPPlj4Le
- ELz8tHFOfQuAJGbGYXVKgPumyL0o/GouGHRIRcKDUkIksvuaC5WBrx+lh7ZmslND1IO4Y+gsVu1
- d51u0sy+oFGJWvvX7j8ykFFurbi3FwR2dczZHLgk4r7WrQqxjTpoF5zwEriKPdYzBrnzGn60kNT
- 7iLIChXMyQ0AQ3GxTqWdhlwZz/GDCnTFRKvjWQd+1chL5b1u995xhlM/b3F6i4G1SApSHYNkzHf
- 0L/FCIK7u3BYR6bvjoBQZVOufaTPp/0rLtUAku8rZ3/gFhqCkcSuwJ2vPyOadA+7w1JWf/IfV2/
- 6IS1W9Yb2YW7ZhZraXxrySegFs4Xz8rRn+CRopzkn42rJVjIirth/BwgHhhWyoxWdVxuTXOAeGY
- ZKq05diywjNadbakuGg==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-28_01,2026-09-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 suspectscore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0
- spamscore=0 impostorscore=0 phishscore=0 priorityscore=1501 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609280032
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260928_013315_052477_6A8F3911 
-X-CRM114-Status: GOOD (  19.46  )
+ <20260928083226.107807-2-sourabhjain@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 28 Sep 2026 08:41:52 +0000
+Message-Id: <20260928084152.B52D21F000FF@smtp.kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -133,110 +72,84 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add the architecture bits needed to enable CONFIG_KEXEC_HANDOVER on
-powerpc.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] kho: bypassed scratch alignment check during resume causes memory =
+corruption
+--
 
-Set ARCH_SUPPORTS_KEXEC_HANDOVER for PPC64.
+commit cbd7cb7f008e704b389d8dfe3306e1e83e49e8a8
+Author: Sourabh Jain <sourabhjain@linux.ibm.com>
 
-On the boot path, check for KHO information in the device tree before
-unflatten_device_tree(). This allows a kernel booted via KHO kexec to
-recover the FDT and scratch region left by the previous kernel.
+kho: check scratch vs CMA alignment at runtime
 
-Move early_init_dt_check_kho() out of the device tree implementation
-and call it from setup_arch() before the device tree is unflattened.
+KHO requires the scratch alignment to be at least CMA_MIN_ALIGNMENT_BYTES,
+which was previously enforced with a static_assert(). This commit replaces
+the static_assert() with a runtime check in kho_reserve_scratch() to allow
+KHO on configurations where the minimum alignment is not a constant.
 
-Note:
-Crashkernel reservation impacts KHO scratch reservation. Crashkernel
-memory is reserved first using memblock, and this memory is included
-when calculating the KHO scratch size. As a result, a large crashkernel
-reservation can increase the KHO scratch size and may cause the KHO
-scratch reservation to fail.
+> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec=
+_handover.c
+> index 7c4d86daf86d5..dc76dd6b74da7 100644
+> --- a/kernel/liveupdate/kexec_handover.c
+> +++ b/kernel/liveupdate/kexec_handover.c
 
-This issue also exists on other architectures and will be handled
-separately.
+[ ... ]
 
-Cc: Aditya Gupta <adityag@linux.ibm.com>
-Cc: Alexander Graf <graf@amazon.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan He <baoquan.he@linux.dev>
-Cc: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
-Cc: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>
-Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
-Cc: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
----
- arch/powerpc/Kconfig               | 3 +++
- arch/powerpc/kernel/setup-common.c | 2 ++
- drivers/of/fdt.c                   | 2 +-
- include/linux/of_fdt.h             | 1 +
- 4 files changed, 7 insertions(+), 1 deletion(-)
+> @@ -836,6 +828,21 @@ static void __init kho_reserve_scratch(void)
+>  	if (!kho_enable)
+>  		return;
+> =20
+> +	/*
+> +	 * This is the minimal alignment required by deferred struct page init.
+> +	 * deferred_init_memmap_chunk frees memory to the buddy allocator, whic=
+h looks
+> +	 * at the neighboring pages (up to MAX_PAGE_ORDER) to merge them.
+> +	 * If KHO scratch is not aligned to that value, buddy can access uninit=
+ialized
+> +	 * struct pages, which can cause a crash.
+> +	 */
+> +	if (WARN_ON_ONCE(SCRATCH_ALIGNMENT_BYTES < CMA_MIN_ALIGNMENT_BYTES)) {
+> +		pr_err("scratch alignment %lu < CMA minimum %lu, disabling\n",
+> +		       (unsigned long)SCRATCH_ALIGNMENT_BYTES,
+> +		       (unsigned long)CMA_MIN_ALIGNMENT_BYTES);
+> +		kho_enable =3D false;
+> +		return;
+> +	}
+> +
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 2580e27e4328..3517d74949d0 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -716,6 +716,9 @@ config ARCH_SELECTS_CRASH_DUMP
- 	depends on CRASH_DUMP
- 	select RELOCATABLE if PPC64 || 44x || PPC_85xx
- 
-+config ARCH_SUPPORTS_KEXEC_HANDOVER
-+	def_bool PPC64
-+
- config ARCH_SUPPORTS_CRASH_HOTPLUG
- 	def_bool y
- 	depends on PPC64
-diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
-index 4afaba19b586..53c2f1897bfe 100644
---- a/arch/powerpc/kernel/setup-common.c
-+++ b/arch/powerpc/kernel/setup-common.c
-@@ -923,6 +923,8 @@ void __init setup_arch(char **cmdline_p)
- 	/* Set a half-reasonable default so udelay does something sensible */
- 	loops_per_jiffy = 500000000 / HZ;
- 
-+	early_init_dt_check_kho();
-+
- 	/* Unflatten the device-tree passed by prom_init or kexec */
- 	unflatten_device_tree();
- 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index a64afc3ded3d..69e6ad868fa3 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -926,7 +926,7 @@ void __init early_init_dt_check_for_usable_mem_range(void)
- /**
-  * early_init_dt_check_kho - Decode info required for kexec handover from DT
-  */
--static void __init early_init_dt_check_kho(void)
-+void __init early_init_dt_check_kho(void)
- {
- 	unsigned long node = chosen_node_offset;
- 	u64 fdt_start, fdt_size, scratch_start, scratch_size;
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 51dadbaa3d63..5e9d6af0c7dd 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -83,6 +83,7 @@ extern int early_init_dt_scan_root(void);
- extern bool early_init_dt_scan(void *dt_virt, phys_addr_t dt_phys);
- extern bool early_init_dt_verify(void *dt_virt, phys_addr_t dt_phys);
- extern void early_init_dt_scan_nodes(void);
-+extern void early_init_dt_check_kho(void);
- 
- extern const char *of_flat_dt_get_machine_name(void);
- extern const void *of_flat_dt_match_machine(const void *default_match,
--- 
-2.55.0
+[Severity: High]
+Does this new runtime check get bypassed during a KHO resume?
 
+During a KHO resume, kho_memory_init() skips kho_reserve_scratch():
+
+kernel/liveupdate/kexec_handover.c:kho_memory_init() {
+	if (kho_in.scratch_phys)
+		kho_mem_retrieve();
+	else
+		kho_reserve_scratch();
+}
+
+If a predecessor kernel passes a scratch region with a smaller alignment,
+and the successor kernel has a larger pageblock_order, bypassing this check
+means kho_init() will iterate over the provided scratch memory using the
+successor kernel's larger pageblock_nr_pages:
+
+kernel/liveupdate/kexec_handover.c:kho_init() {
+		for (pfn =3D base_pfn; pfn < base_pfn + count;
+		     pfn +=3D pageblock_nr_pages)
+			init_cma_reserved_pageblock(pfn_to_page(pfn));
+}
+
+Can this lead to init_cma_reserved_pageblock() overwriting state for pages
+outside the actual scratch region bounds, or cause a crash in the buddy
+allocator if __free_pages() is called on an unaligned PFN?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260928083226.1078=
+07-1-sourabhjain@linux.ibm.com?part=3D1
 
