@@ -4,108 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DC1ADCA5FA1
-	for <kexec@archiver.kernel.org>; Mon, 28 Sep 2026 17:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D9219CA5FA2
+	for <kexec@archiver.kernel.org>; Mon, 28 Sep 2026 17:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=DWEY4l/bIKaUQ0LkmUfe65oGxH2cGGoTK+zPHQ0IPQM=; b=kzjs2QaUN5xoku6bHHCVP415aq
-	FExigVmOHUEixdUVxB22Dm+GoJL91JWi+PMLm7peX1+Kw+SIvfQXVDTtJ36vDFCHpxyQBxM3r/YSd
-	vcqulHatK5pZ/yRmCREcnPMr0hyzpS/EQyAJTDxTt9Ot4WOazTlTPXd1mhn2GKm58M34CIOINKyck
-	CzxKscabbD1sg2WXYMg0/kyfxXtgvSfWpjWvKmer5Xf0VOBOS05hYmHu0ARUe9xIlKg3L+jzs/Re0
-	cEceof0gQnmIZPVyLlGy4vUGaIoap/qCWEPk2mkjoh20uKoiJka3z9E+SL+pE1W5T4WP1vIDUp2kz
-	hNWp9JKg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=bYY6SIuB38pNpvOXnuI019MieEUYiynUJJ9aqYbDrY4=; b=NSVa0mXYtaEgxl9WW6JBY8ubAW
+	lsKCfV+Dkywt67JGpyL+wyjJI8WAXUQAydWtqJZQ1I2UBotx7ouASdeCHUyd+BI3JbIMsOFEwBWQK
+	Q5dZ+E1a73yGsKWiEB3vvVITE16dTBsY9Hz1ldLUHNfk/8GSDdCEYAuRqiMTgbzRT3g+vV50j/xx3
+	e83+8C39DjxLLYL77p0bfNms7323lnKQkuVoMcVvkPYe/hUTNdOJ+alQqbtBVIf5DMelDnnaSgdkw
+	yZjpdo3BbF7fp1RtzqnLp1c880OERiwPncfCQ9kTS/y197t0p4TkYkiR9F8O9DtqrojdCY81dO++1
+	u8/u/DTQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xBF19-000000018db-1oq3;
-	Mon, 28 Sep 2026 17:19:55 +0000
-Received: from mail-pl1-x62e.google.com ([2607:f8b0:4864:20::62e])
+	id 1xBF8Z-000000019ys-48N2;
+	Mon, 28 Sep 2026 17:27:35 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xBF15-000000018bm-44FK
+	id 1xBF8Y-000000019yl-48CF
 	for kexec@lists.infradead.org;
-	Mon, 28 Sep 2026 17:19:54 +0000
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-2d3b445a84fso3085ad.1
-        for <kexec@lists.infradead.org>; Mon, 28 Sep 2026 10:19:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790615991; x=1791220791; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=DWEY4l/bIKaUQ0LkmUfe65oGxH2cGGoTK+zPHQ0IPQM=;
-        b=OtgYB2mbuMwskOFjs1+9QqsrzB3twtUcwOrjraOYfC5NmkLhKs6iQPtRWbR8bp2Bcn
-         +974yL+eNAOW0f8mT9aiZj9VNA+vE1iAi0OYTQKfcl2WaqFGu+rLvgePy6gg7d9CiILq
-         htQCu5gVHaiXH8E14YJ8XrohmdC1elBu1TuyThv5BW0wFb0Mgi0RwRkoR+KNhm5nSbeY
-         96qM4GDE9fK0Cpd2INLWf3MKdhjqM0/1m3up4DIl7JTwc7UerRvmQY6dDrgNI17HXH4N
-         H3jd4pQxAoh4MkkpcL3DQSF57fAKtYOneQQC6lX2vUbA2svNiHZcmg/wkm2O8n3Ozdx7
-         9Rhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790615991; x=1791220791;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=DWEY4l/bIKaUQ0LkmUfe65oGxH2cGGoTK+zPHQ0IPQM=;
-        b=l3rVDVCJIxWkEPP341oGZFvaCUwEiE0SQkIm2qRTYWTArBMJVXeGtwOcHrUVkXwLSJ
-         WRJdYr5cA6G2Q2aqfKcPHr2oyQNDNvCLSkyGEBiI0Xrd2kMWUmLpLuZPCuMoey56pst9
-         Se7x82M1Q4aiCg9s8cQVKhGsnTN2GzyTDarRm2JIAxZblKH/9kaESpnnRAsZ9p2nn5Yn
-         OBEuX1ARLIxmbj6x5Hpx96hMB1GcMC7wgVWkep1nY6/QnCnnQ7mJJR5JSnz5pDL5zX7A
-         sq5fSJoltBbXvWQAlRUKJDrZZY8vthr+ucUijEVvrM/lERX0mljId3MG5xAidT18k1az
-         BFDw==
-X-Gm-Message-State: AFq9FYKDDUw1gvE7Enbop9MlJadLPcrYeGCpVWOnNfVPg1ZS1uCDJGf3
-	j2zu7PQptNHmRlBT3lUc/SGAKxZcbEiBWFc0kSceqq+iESZ9ay4u6bJsq/F0WHB89w==
-X-Gm-Gg: AYBFou2O74fffmgQzFsnHOnBwvBOniQwO2bFpe3xrAJooaGtzeaZKIsRSuM1pjqZ+zG
-	lVAhp9O445MLefhnLBBlx7u5UPX9qDcVLWC5ZW9Ce5bVBojGgQS4FEmke0ghQT5syVsruuEqk+A
-	Yr+Gi2BQAfcuoeZS9SdvquiCtoXU4iazthpA2Tfbn9H01x8pEdQDZprUqxb1idc9Zc/5RQkKVMx
-	KwFFazPShj9kJXsvEVvJTbSEyxM1QO730kbkUnGSbC06S7WlsvGRSw3tCX6gT8rG+AQAevXxihi
-	apOQfvHTdOOM7Cq3XosFf4800zez6O9Uj0PYT+yTyLSy1bATyftl44AXT2AxmjdTb91vH2VyHLV
-	w5DjNMD/7DeQar6wS/Q4O0AHOIUKCWDL4AS9vv6pTzeuWE/X53+sJSSQBL4ydBCbAreDzTXBBea
-	Mzen0MYNjoS6NBVbtu8EB47AzhtHYroFJDzc3tdcyE+X7o7XEHSC5R7zTlSadKh6gm9aHvjNbFT
-	Doq8QnkksEeOS7NBTcgwT7I+v/n8LXZhMw1
-X-Received: by 2002:a17:902:f54b:b0:2c6:99be:9dd with SMTP id d9443c01a7336-2dfa6248695mr7310435ad.12.1790615990264;
-        Mon, 28 Sep 2026 10:19:50 -0700 (PDT)
-Received: from google.com (105.211.142.34.bc.googleusercontent.com. [34.142.211.105])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a49858c123sm538411a91.3.2026.09.28.10.19.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Sep 2026 10:19:49 -0700 (PDT)
-Date: Mon, 28 Sep 2026 17:19:41 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: David Matlack <dmatlack@google.com>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-pci@vger.kernel.org,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Alexander Graf <graf@amazon.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
-	Josh Hilke <jrhilke@google.com>,
-	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
-	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v9 09/13] PCI: liveupdate: Adopt ACS controls in incoming
- preserved devices
-Message-ID: <arqhrVi0YfFNwKuS@google.com>
-References: <20260918200640.887030-1-dmatlack@google.com>
- <20260918200640.887030-10-dmatlack@google.com>
+	Mon, 28 Sep 2026 17:27:35 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with UTF8SMTP id 1B519600CB;
+	Mon, 28 Sep 2026 17:27:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 555441F000FF;
+	Mon, 28 Sep 2026 17:27:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790616453;
+	bh=bYY6SIuB38pNpvOXnuI019MieEUYiynUJJ9aqYbDrY4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=PMF4MzQQaBO1S123rLATz7lD7J/3S79MF4F1iuNOzs88eZr9hChaxqvOeeYV/q6PW
+	 CUo5hRjsrTwhTnA9VFnZ/YLT1rAS/LLuWTfTi+r321ElD6RZFkwxvOrxqESVvkX2G/
+	 rkXOaNGG/CUIhSvkIkBhNq/hbUZy8jgWYxVZc5ErX+du+7cruK/f9tYoyilePUgOuM
+	 KTjDceMzVZVR/0cRH5EAtEZ4BIsNS5DJ6H7bv9NMP+b4dRzdsAFTzDG6a/jMebFu6R
+	 K0J0VS5ArMRQARYfpVFXhnCwhQNfiF/fu+52s5O1LxcAOPLZuOzEVRHNJn2CzkyzZ0
+	 ypIUc5Ir8JYuw==
+From: Nicolas Schier <nsc@kernel.org>
+Date: Mon, 28 Sep 2026 19:26:57 +0200
+Subject: [PATCH v4 1/2] kbuild: Mark usr_gen_init_cpio as
+ no-dot-config-target
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260918200640.887030-10-dmatlack@google.com>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260928_101952_019090_6C5AB603 
-X-CRM114-Status: GOOD (  14.94  )
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260928-move-gen_init_cpio-to-scripts-v4-1-f437a33c40ac@kernel.org>
+References: <20260928-move-gen_init_cpio-to-scripts-v4-0-f437a33c40ac@kernel.org>
+In-Reply-To: <20260928-move-gen_init_cpio-to-scripts-v4-0-f437a33c40ac@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Randy Dunlap <rdunlap@infradead.org>, 
+ Luis Augenstein <luis.augenstein@tngtech.com>, 
+ Maximilian Huber <maximilian.huber@tngtech.com>, 
+ Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
+ Willy Tarreau <w@1wt.eu>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Askar Safin <safinaskar@gmail.com>, linux-doc@vger.kernel.org, 
+ kexec@lists.infradead.org, linux-mm@kvack.org, 
+ linux-kselftest@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1117; i=nsc@kernel.org;
+ s=20250924; h=from:subject:message-id;
+ bh=DREW0pnsHVnYIRYZJD9DChr73EUt3Hcbs4tKegeuVNU=;
+ b=owEBbQKS/ZANAwAKAQdSCnAWJhJpAcsmYgBquqNnSXZkN50m/3I+6jr4xgQZQchL3CmlL4kEv
+ i+EigEvgyaJAjMEAAEKAB0WIQSHQTenhzckp4G+wsYHUgpwFiYSaQUCarqjZwAKCRAHUgpwFiYS
+ ae2zD/9RtzfbLSq2k0CTp9fSMzaHgvIq9PoA0g6ReAplrJoADU/2bqSjWLjJPd5c9RuqfuAHgp4
+ fHW7Kc6on2hwnObtpbvt7w90j83hS1KOni88O9ez2ACmdmYyz7ZuQYbtDw0TqFgP3xz8lJVorTv
+ vtsXQS/7bIVX4rhIY7CX41T6yc93jsVHgMOuXgyBjM/dPRWXJpWTysvgRBrDFRO9z+a9QEOJXiB
+ V9cbYfZAGpdKHphXhOlXCpZG0tftpvv6FUv/ruB0VBSJS9WccGl8dZRdCrMnCHS5Yc3iqNxhuua
+ GMIwwaxiHufFAFS3BDQOHfd27k0t18Kx3VT3hsam8a2bp+3Ic8uMWB15ZbCatgalDbIufOAt59R
+ kR3fSmYKau1A52n8L7ChcSV8vFhkMBkNoclyibapUbreuliExvScTFXtUHPa9IBF/yYVsd/5NT0
+ gjaYUihtoKQz0jzX7KZKLPzxAVLD8C7rCcHT6Wko6YgDFUJNSdPubrLbCreF5aRTFsZsUk1Ph+P
+ yqJwaam6eZX2Q18p+BLbEvYPJg6A4PK1ryUh+4HRzeRAVwvhuE5uyRugm1ihl0VSC9JNfMrYudt
+ jQoY9lo8YjCTd9IgJHWtd+H1IjcMhmG8we+W5Wui3EHheGGBmvXvWQoWIYhkrAKB+ly6TwAlCdV
+ Jqz/BL+0xKqSI6g==
+X-Developer-Key: i=nsc@kernel.org; a=openpgp;
+ fpr=18ED52DBE34F860EE9FBC82B7D97093255A0CE7F
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -120,31 +97,34 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Sep 18, 2026 at 08:06:35PM +0000, David Matlack wrote:
-> Adopt Access Control Services (ACS) controls on all incoming preserved
-> devices (endpoints and upstream bridges) during a Live Update.
-> 
-> Inheriting ACS flags avoids changing routing rules while memory
-> transactions are in flight from preserved devices. This is also strictly
-> necessary to ensure that IOMMU group assignments do not change during or
-> after Live Update.
-> 
-> The adopted controls are recorded by the pci_save_state() call in
-> pci_bus_add_device(), which runs before drivers bind, so they are
-> automatically reapplied by pci_restore_state() if the device is reset.
-> If that save buffer could not be allocated there is nowhere to record
-> the adopted controls, and they would be silently lost by the first
-> reset. Program ACS from scratch in that case, which is a better outcome
-> than leaving ACS disabled.
-> 
-> To simplify ACS inheritance, reject preserving any devices that require
-> quirks to enable ACS as those quirks would also have to take Live Update
-> into account.
-> 
-> Signed-off-by: David Matlack <dmatlack@google.com>
+Let usr/gen_init_cpio be built also if there is no kernel configuration.
 
-Reviewed-by: Pranjal Shrivastava <praan@google.com>
+Askar Safin reported that gen_init_cpio may be of use before any kernel
+configuration is available.  Add usr_gen_init_cpio to list of targets
+that do not require a .config file.
 
-Thanks,
-Praan
+Reported-by: Askar Safin <safinaskar@gmail.com>
+Closes: https://lore.kernel.org/all/20260220191150.244006-1-safinaskar@gmail.com
+Fixes: f8e05c10631e ("kbuild: Add top-level target for building gen_init_cpio")
+Signed-off-by: Nicolas Schier <nsc@kernel.org>
+---
+ Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Makefile b/Makefile
+index 751a08643bf85ccfd05060a3f574980f73b3a97f..51fada9059d68a92e6f5725e45ff9a594bfd9645 100644
+--- a/Makefile
++++ b/Makefile
+@@ -298,6 +298,7 @@ no-dot-config-targets := $(clean-targets) \
+ 			 %asm-generic kernelversion %src-pkg dt_binding_check \
+ 			 dt_style_selftest \
+ 			 outputmakefile rustavailable rustfmt rustfmtcheck \
++			 usr_gen_init_cpio \
+ 			 run-command
+ no-sync-config-targets := $(no-dot-config-targets) %install modules_sign kernelrelease \
+ 			  image_name
+
+-- 
+2.47.3
+
 
