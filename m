@@ -4,71 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 96799CA5FA5
-	for <kexec@archiver.kernel.org>; Mon, 28 Sep 2026 14:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7CFB7CA5FA2
+	for <kexec@archiver.kernel.org>; Mon, 28 Sep 2026 15:46:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:
+	From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=YPzStzDokfiX/VDV5QtJf5+kUVF9DbxDMP+IisfKyT8=; b=XFUNaSpdj3u3jn3texkaT/eD6e
-	Qd0Ymgu8y/Icx+iKVrJCAIEUYmMgzRvbpn4FIX4x6UIJiepZFliSzKv30gy3rHZHbD6s138gDMHHy
-	7+rl2JoE0VrIthbeFgUN1eVKmCbBgpeBLVeDcaeaWLUKtewCZHBkOz++LZcyWto1W43ooWkZOfWAJ
-	hfXchn+SPDRWtRyN+oIxkNc2CqiW9UUGaWnrwA1KZxrTZtn7NNVI1se8vatQ7jff9BpB1rPDLFHyb
-	UCTsVPmhbiYF32wE/0FX1OCLmwo2vCz87OfOLss0z0KiPgkpsxzG7yJrqpQb92mWmr83AxdHieETc
-	Gwzo4rEQ==;
+	bh=L7d9v+dnfa33+IGduUY6om25xsOtSS5Ke8pK1c1zkhs=; b=uL0D5skAiQUnCDF9BrubshKjpB
+	F+zy6cvnUyYxoYOlN0/A4ZVXxraiN+7aGmSq1LXqCcIKsv0UEQuy+osyIA5wSA+nyvaJJZVnGuC1Q
+	MEx25RiD4haYPX2dY1DQ1c615sYegBkWlxqVQBziFbKdmXxZ2LnqvSrWFVAwCmwZK5MVo4A/amrV4
+	LBDWHyZbeg0+3ZaPUXSLtBvDvtWww5blWOF8DyCJ7BYWbJGQxN+pYU6W92NN0dCa+DfBM68dAbLrd
+	FsbGRgiizud+yDquuMzkh+L2ZJZAZNb7sW3DQoO4vi/DsZUYTQVKykmdwGFBdbe254s2CS4I+sm2K
+	n6SvwtvQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xBCLN-00000000l74-3nkM;
-	Mon, 28 Sep 2026 14:28:37 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xBDZ8-00000000wQ6-3uJo;
+	Mon, 28 Sep 2026 15:46:54 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xBCLM-00000000l6y-1Ztu
+	id 1xBDZ6-00000000wPr-3OKr
+	for kexec@bombadil.infradead.org;
+	Mon, 28 Sep 2026 15:46:52 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Sender:
+	Reply-To:Cc:Content-ID:Content-Description;
+	bh=L7d9v+dnfa33+IGduUY6om25xsOtSS5Ke8pK1c1zkhs=; b=pwENwZtNPk4ruRk69CVo8BYQJF
+	uDeUIPrjiLDVz89HoKRHsTq61x1BABEmWd7tChC2w0Gh1tds2+Rk6ducjjA67ZM4MK0LwCulsm5aH
+	jNKN19yWktnsNRrLU6rtVXV5TxrtfnX0oryL5v57vXQ1q8AT557XXYE9+O0fuH2SiTp5/AMatg5w7
+	sEUJ8uxsLQiJdtX0Fcmr/iqg/xumdbgxdv6HgYqJPIlXDTCle3lDJJvDAgwW9zPuGVfGYwhEsK3LL
+	90YoNdTv3cEUrAvAL9pw1eVIcWNfDrf2xnCigoNaLqGRYnLu6DV08dSBicO9v5jCBTnZ8wYJBfcS9
+	3FBD3Xxg==;
+Received: from mail-yx2-x10.google.com ([2607:f8b0:4864:41::10])
+	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1xBDZ3-00000001dvJ-2xU0
 	for kexec@lists.infradead.org;
-	Mon, 28 Sep 2026 14:28:36 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 7AA11600D1
-	for <kexec@lists.infradead.org>; Mon, 28 Sep 2026 14:28:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 330B31F00899
-	for <kexec@lists.infradead.org>; Mon, 28 Sep 2026 14:28:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790605715;
-	bh=YPzStzDokfiX/VDV5QtJf5+kUVF9DbxDMP+IisfKyT8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=YSfs5RMkDkKbpdzc32rdg+UCY/r9+hJ4gXPA0BaxZjWobloLH0meA7L2Ndcg0MVMQ
-	 voaDBj0dh4OTL3lIsFGVGWx7do1U1dPHpnaUxjioi49KxFmH9IopR+IJI8U6Ii8YDh
-	 52dleR4BVfIhNROssUvwdUsnLXo8FPOsTuIhnGKdhBJu918fDO88XDdjlxZQLIN2Tj
-	 SRRLN2HiCbJzv2aauias77hq4rOI86GltxBrmlKWMhETrsZQpGXC8Sgn1+6iwZ8awn
-	 UOIG2a6m+KM3jzZEUwIQ5ifhB00RG15phzB/filJQ+cs8ad8Tz19galLNSZqlbqFOm
-	 qpDinbQwKJhUg==
-Received: by mail-ed2-f33.google.com with SMTP id 4fb4d7f45d1cf-6abe19c4262so2154407a12.3
-        for <kexec@lists.infradead.org>; Mon, 28 Sep 2026 07:28:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBwM3YjNcu2MSQN9fLVCksu/i/oCEZjkSYcGiUxsZ4EYpngDXODReMtzGvEA7DTkIeShJUwE+Q==@lists.infradead.org
-X-Gm-Message-State: AFq9FYKhQs+0ma4k85LJesXN2JzEmj6myd0hrViXk1U6CC6EaHov85ff
-	m8+7q6ppeHGiAbos8TuB1NjABW5I5r0w5zkqpMDWwhxRp0asWZuX4G8Bt2b8OVpt+E1VL9XjGvI
-	tSjxPn/SPD84noA+h95sVcks/O8xT09c=
-X-Received: by 2002:a05:6402:4011:b0:6ac:62aa:e3dc with SMTP id
- 4fb4d7f45d1cf-6ac62aaea73mr3602685a12.26.1790605713775; Mon, 28 Sep 2026
- 07:28:33 -0700 (PDT)
+	Mon, 28 Sep 2026 15:46:51 +0000
+Received: by mail-yx2-x10.google.com with SMTP id 956f58d0204a3-66e4aa8d881so3162548d50.1
+        for <kexec@lists.infradead.org>; Mon, 28 Sep 2026 08:46:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1790610407; x=1791215207; darn=lists.infradead.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=L7d9v+dnfa33+IGduUY6om25xsOtSS5Ke8pK1c1zkhs=;
+        b=BV3V170gmrG30j1wc5JmesWLvja4E9Jf8jkS0P5NPZ6TwxaQlf4ywas+NL+Lm9l/Zi
+         eqEC3qqMq92d4RoP+YTWCdPJvds7GzjhSG9Q6b3iBS9BaQ8p3T5NzBNM5DTmzFryRvMQ
+         +SebgMr5NePREFkqfr2ZdtN830WCL33ZB3coo8I88/3qmy1ijq4loG2pnFpwerLvYl82
+         Ia4nChD/s7vFyQKUlPSDnikXVFJjZE4PxivMRRLNoT9tFWSjbtmW1sVB2La0ziOEb08m
+         JVEdk6KiKYDJX+MAQwWqfo2HYL+fbc+EJ2wfmSSsos+wnxPRUfvg6EW35AYF/LUBk0on
+         Ztpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790610407; x=1791215207;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=L7d9v+dnfa33+IGduUY6om25xsOtSS5Ke8pK1c1zkhs=;
+        b=qe06RNq7o0Uu/YQi9hw0pri06oqc1H58j0JwczF8b5R/khkQO3N7EHvq6LeLCG1NKA
+         EIQ7cber4ASYsXP6jv+kk14M0sQ5qwjsyQQoUvLRWNvyjoDgBv0apf7noilJF6c6s/y2
+         YJ8tDxgkYqEhKHaBG7Q0v93IoCK/csxlIve6YW9OGNj8Yg7sD9RlR+xo4ks3cmNTQl17
+         9laGlYwE1jJt6LLaQqqFZqz4hAsDvmog8IbCZRmf9BrgmrjfJV6n5FPx5C/H32yHuVhv
+         kZ3UnXdwKUy+mfEfjP35/LfhTGrAARBOsmYxVu5jGNSueM+HlWCdDBPtcgLUvwwYsBpH
+         vQmg==
+X-Gm-Message-State: AFq9FYIlK2JuMavPdx0vYKPHOWYwVnilEdMT65wWb83apJ6/lKKCNNLv
+	hhgqfqVtT7ivzmXSOxJU5X263xeZ/5WTIw14mhy2/FUJ4VpZ8hTz2lbAWWZbPVIR3AFCWcLSqQd
+	aiHU7NuM=
+X-Gm-Gg: AYBFou31qNt5z0xiUo4uiQqpq6nAq0X7jze/V8SCfVBvzBHJYeVM+UDaH85QwIzS0Zl
+	wMw7NHGaHH6etbjjvLK7yepwbUt5YwIxROZrba2TeKISqkk/NfdQanzYMML7m8AVDxqFJDLbFXb
+	Bhbni/o1ezhDTpa7KMMZ+mXON1+t+Dp1joMdZdWpgjiTKEM5zWmmwOw8H09JvbT+jefP7C40wdQ
+	3ebE+iLuT5NluP3iVaoYqJPZVen3la3suxidpNt6pwnJ6ArippyW9YvQhKGO+N/YFZfCd/H+xJ7
+	G1D4Xjt0gXeQk8TJJ2kri8cSYPL4K6O+4sKXo8Q50k6/u6M5mlMvxaaBGuP5eUGKojKSIapDjwa
+	gKIKVQbVxJnsM3xq+0UDCIccUaoP36jzwzQ5Mgbr4/SjYv07OmqikxysQI/x8GHTYgJG9TKb6qn
+	PbMBRp0gn1dMjzE6zK6RFM+aoF2hk6F1CNZ265SCPXB5N8v/6KIDVWqmn0E27Q5eoWpqp3SvYHy
+	nQqT+MKxhWb5Pl4+i8iSIGBdHvR1gVpF++y
+X-Received: by 2002:a05:690e:4093:b0:675:3247:9b40 with SMTP id 956f58d0204a3-6753247a525mr2940923d50.65.1790610407271;
+        Mon, 28 Sep 2026 08:46:47 -0700 (PDT)
+Received: from plex ([71.181.43.54])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91430e281a8sm82875936d6.33.2026.09.28.08.46.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Sep 2026 08:46:46 -0700 (PDT)
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: kexec@lists.infradead.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-pci@vger.kernel.org,
+	David Matlack <dmatlack@google.com>
+Subject: Re: [PATCH v9 00/13] PCI: liveupdate: PCI core support for Live Update
+Date: Mon, 28 Sep 2026 15:46:43 +0000
+Message-ID: <179061032462.173069.6066907606098407222.b4-ty@b4>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260918200640.887030-1-dmatlack@google.com>
+References: <20260918200640.887030-1-dmatlack@google.com>
 MIME-Version: 1.0
-References: <20260923060349.146780-1-lianyangyang@kylinos.cn> <20260924075655.375632-1-lianyangyang@kylinos.cn>
-In-Reply-To: <20260924075655.375632-1-lianyangyang@kylinos.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 28 Sep 2026 22:28:23 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6C=AyS=1AejxxaG-Zri=2=AfMtPzXFxEvzpFdD1_AaAw@mail.gmail.com>
-X-Gm-Features: AclHuK_Cw3Fa7E90RJ5ekvaNPqdQ2_xMfC9MdHhXGybH75CyqmNPIL39bdqS-mU
-Message-ID: <CAAhV-H6C=AyS=1AejxxaG-Zri=2=AfMtPzXFxEvzpFdD1_AaAw@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: kdump: add arch_crash_save_vmcoreinfo() support
-To: Yangyang Lian <lianyangyang@kylinos.cn>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Baoquan He <baoquan.he@linux.dev>, 
-	Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Dave Young <ruirui.yang@linux.dev>, 
-	WANG Xuerui <kernel@xen0n.name>, kexec@lists.infradead.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Haoran Jiang <jianghaoran@kylinos.cn>, 
-	Tao Cui <cuitao@kylinos.cn>, George Guo <guodongtai@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260928_164649_867044_9394B868 
+X-CRM114-Status: GOOD (  11.77  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,141 +119,53 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi, Yangyang,
 
-On Thu, Sep 24, 2026 at 3:58=E2=80=AFPM Yangyang Lian <lianyangyang@kylinos=
-.cn> wrote:
->
-> Since commit 23c85094fe18 ("proc/kcore: add vmcoreinfo note to
-> /proc/kcore") the kernel has exported the vmcoreinfo PT_NOTE on
-> /proc/kcore as wellas /proc/vmcore.
->
-> LoongArch does not provide arch_crash_save_vmcoreinfo(), so the
-> arch-specific values are missing from the vmcoreinfo PT_NOTE. The
-> generic exporter in kernel/vmcore_info.c already provides
-> NUMBER(VMALLOC_START), but tools like crash cannot derive the module
-> and vmemmap ranges, VA_BITS, or the KASLR offset of a LoongArch dump.
->
-> Since commit 18210a104bb9 ("LoongArch: Expand module virtual address
-> space to 2GB") the vmalloc and module boundaries are no longer stable
-> across kernel versions either, so vmcoreinfo is the only reliable
-> source for them.
->
-> Provide this function in a separate file that is built at the same time
-> as its caller in kernel/vmcore_info.c, and add a LOONGARCH64 section to
-> Documentation/admin-guide/kdump/vmcoreinfo.rst.
->
-> Reported-by: Haoran Jiang <jianghaoran@kylinos.cn>
-> Suggested-by: Haoran Jiang <jianghaoran@kylinos.cn>
-> Tested-by: Tao Cui <cuitao@kylinos.cn>
-> Co-developed-by: George Guo <guodongtai@kylinos.cn>
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> Signed-off-by: Yangyang Lian <lianyangyang@kylinos.cn>
-> ---
-> V2 -> V1: Export VMEMMAP_END + 1 to make it an exclusive bound, matching
->           what tools like makedumpfile expect.
->           Add Tested-by tag from Tao Cui.
->
->  .../admin-guide/kdump/vmcoreinfo.rst          | 29 +++++++++++++++++++
->  arch/loongarch/kernel/Makefile                |  1 +
->  arch/loongarch/kernel/vmcore_info.c           | 21 ++++++++++++++
->  3 files changed, 51 insertions(+)
->  create mode 100644 arch/loongarch/kernel/vmcore_info.c
->
-> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentati=
-on/admin-guide/kdump/vmcoreinfo.rst
-> index 7663c610fe90..2ff921232616 100644
-> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> @@ -594,3 +594,32 @@ va_kernel_pa_offset
->
->  Indicates the offset between the kernel virtual and physical mappings.
->  Used to translate virtual to physical addresses.
-> +
-> +LOONGARCH64
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +VA_BITS
-> +-------
-> +
-> +The maximum number of bits for virtual addresses. Used to compute the
-> +virtual memory ranges.
-> +
-> +PHYS_OFFSET
-> +-----------
-> +
-> +Indicates the physical address of the start of memory. Used to translate
-> +virtual to physical addresses.
-> +
-> +KERNELOFFSET
-> +------------
-> +
-> +The kernel randomization offset. Used to locate the kernel text in
-> +virtual memory. If KASLR is disabled, this value is zero.
-> +
-> +MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMA=
-P_END
-> +------------------------------------------------------------------------=
------
-> +
-> +Used to get the correct ranges:
-> +       MODULES_VADDR ~ MODULES_END-1 : Kernel module space.
-> +       VMALLOC_START ~ VMALLOC_END-1 : vmalloc() / ioremap() space.
-> +       VMEMMAP_START ~ VMEMMAP_END-1 : vmemmap region, used for struct p=
-age array.
-> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makef=
-ile
-> index 001924877772..6260c15adaba 100644
-> --- a/arch/loongarch/kernel/Makefile
-> +++ b/arch/loongarch/kernel/Makefile
-> @@ -64,6 +64,7 @@ obj-$(CONFIG_RELOCATABLE)     +=3D relocate.o
->  obj-$(CONFIG_KEXEC_CORE)       +=3D machine_kexec.o relocate_kernel.o
->  obj-$(CONFIG_KEXEC_FILE)       +=3D machine_kexec_file.o kexec_efi.o kex=
-ec_elf.o
->  obj-$(CONFIG_CRASH_DUMP)       +=3D crash_dump.o
-> +obj-$(CONFIG_VMCORE_INFO)      +=3D vmcore_info.o
->
->  obj-$(CONFIG_UNWINDER_GUESS)   +=3D unwind_guess.o
->  obj-$(CONFIG_UNWINDER_PROLOGUE) +=3D unwind_prologue.o
-> diff --git a/arch/loongarch/kernel/vmcore_info.c b/arch/loongarch/kernel/=
-vmcore_info.c
-> new file mode 100644
-> index 000000000000..fb703b716253
-> --- /dev/null
-> +++ b/arch/loongarch/kernel/vmcore_info.c
-> @@ -0,0 +1,21 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/vmcore_info.h>
-> +#include <asm/addrspace.h>
-> +#include <asm/pgtable.h>
-> +#include <asm/setup.h>
-> +
-> +void arch_crash_save_vmcoreinfo(void)
-> +{
-> +       VMCOREINFO_NUMBER(VA_BITS);
-> +       /* NUMBER(VMALLOC_START) is exported by the generic code */
-> +       vmcoreinfo_append_str("NUMBER(VMALLOC_END)=3D0x%lx\n", VMALLOC_EN=
-D);
-> +#ifdef CONFIG_64BIT
-> +       vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=3D0x%lx\n", MODULES_=
-VADDR);
-> +       vmcoreinfo_append_str("NUMBER(MODULES_END)=3D0x%lx\n", MODULES_EN=
-D);
-> +       vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=3D0x%lx\n", (unsigne=
-d long)vmemmap);
-> +       vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=3D0x%lx\n", VMEMMAP_EN=
-D + 1);
-> +#endif
-> +       vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=3D0x%lx\n", PHYS_OFFSE=
-T);
-I think it is also useful to export PAGE_OFFSET here.
+On Fri, 18 Sep 2026 20:06:26 +0000, David Matlack wrote:
+> This series can be found on GitHub:
+> 
+>   https://github.com/dmatlack/linux/tree/liveupdate/pci/base/v9
+> 
+> This series introduces support in the PCI core for Live Update, enabling
+> drivers to preserve PCI devices across a kexec-based kernel update
+> without interrupting the device. This functionality is critical for
+> minimizing downtime in environments where PCI devices (e.g., those
+> assigned to VMs via VFIO) must continue operating or maintain state
+> across a host kernel upgrade.
+> 
+> [...]
 
-Huacai
-> +       vmcoreinfo_append_str("KERNELOFFSET=3D%lx\n", kaslr_offset());
-> +}
-> --
-> 2.25.1
->
->
+Applied, thanks!
+
+https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git/log/?h=lu-pci-preservation
+
+[01/13] PCI: liveupdate: Set up FLB handler for the PCI core
+        commit: b9affdf3de08c9e5fd8dca0c0bc9c54041362a10
+[02/13] PCI: liveupdate: Track outgoing preserved PCI devices
+        commit: b7163342c1d4090bdd3eace61580197b2372bd34
+[03/13] PCI: liveupdate: Track incoming preserved PCI devices
+        commit: 16c1ff9563333530f97888fca4e48548b22ce282
+[04/13] PCI: liveupdate: Document driver binding responsibilities
+        commit: c7c6bc42b3eebba0562d128b5a578bfbe6a56d31
+[05/13] PCI: liveupdate: Auto-preserve upstream bridges across Live Update
+        commit: 6f58dec26ea52b6451b3b427caa3326b407883a1
+[06/13] PCI: liveupdate: Preserve bus numbers during Live Update
+        commit: ec2f2f51120b9461db0e04a7fb1fcdd9747fd96f
+[07/13] PCI: Refactor matching logic for pci_dev_acs_ops
+        commit: 05d208bda0fd3ef41c3452d1c3f5b365c75b59ae
+[08/13] PCI: Save and restore the ACS Control register
+        commit: 9f2072fd93310487bf3f51bd61f73ed722be3cc0
+[09/13] PCI: liveupdate: Adopt ACS controls in incoming preserved devices
+        commit: 16709a37292e480a2d560242d88ba400e0793706
+[10/13] PCI: liveupdate: Adopt ARI Forwarding Enable on preserved bridges
+        commit: f20575f35fd9ae63f80bc672fc6b31e4de12d4f7
+[11/13] PCI: liveupdate: Freeze preservation status during shutdown
+        commit: f6590754926ecb0f9119f82a08ef073038ca3293
+[12/13] PCI: liveupdate: Do not disable bus mastering on preserved devices during kexec
+        commit: 25ff6ea537fa2c1258cb73d57f11d6af51ec7f8c
+[13/13] Documentation: PCI: Add documentation for Live Update
+        commit: 3b4d450a5bff74e36b4c9e864c0ba7d08288941d
+
+Best regards,
+-- 
+Pasha Tatashin <pasha.tatashin@soleen.com>
 
