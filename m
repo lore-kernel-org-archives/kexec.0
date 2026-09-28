@@ -2,91 +2,91 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF4160A261D
-	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 08:21:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B80160A2629
+	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 08:21:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=XHlGn59b;
-	dkim=permerror header.d=jaseg.de header.i=@jaseg.de header.a=rsa-sha1 header.s=fm1 header.b=USSes1s6;
-	dkim=permerror header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha1 header.s=fm1 header.b=d5SizAxE
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=MunNRv9F;
+	dkim=permerror header.d=jaseg.de header.i=@jaseg.de header.a=rsa-sha1 header.s=fm1 header.b=pG9rJP3C;
+	dkim=permerror header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha1 header.s=fm1 header.b=otTvXp/P
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=8Eqqf0HCSBZT/jI6NYBtGEMXZWPAcZ1W8yz5dAV6pIs=; b=XHlGn59bD0ssTe+I2aZLjSSGr+
-	9PgDiXf/d/oEZEhU2CBi4cN4qtjXdzvznyXFeimCEK7T738cV+X042U5C/V3tu+N+g6jaDB5YRNK1
-	7IhxQwCsVWXAoTczyxqlrWm5vPnlkzNA+QYFbuNXVDlWhRi5VJ8s+WT1ZV/XAWETahdmqW/ZPjRDb
-	0C9SY3sLxLfItm3V6HEwZBTVuM7xIwh01zxxzwc1rTWVTdzttwi5OfG0xnzGLHqqS+f3RGLmH1r6+
-	2JI7WIq4KyoiEgdJw1BCpO+QtOVtPlIUrz8L4dkGlU+wNZDRMYzeXkY4YrdMX3C785eNd0UFg/BkF
-	bl9k9dHg==;
+	bh=vxkdii9Ix7VQo4OS5s53AyOtwZsAqIdchYLS+D7XBiA=; b=MunNRv9F8fkujclljLDDdxJCQT
+	SPxVW/Y6cyRwqmERP+0X3usCvHbxlJ6mfgCOuCYtC1+RLlqzwa5ROsd2yB8pHAcrG70jZuwQJk+7U
+	pvRsOTi0S1tixxGhmPhFIFBO1viWDzttJxelm3/Di/g6qSEbVV9nelmlEv8T4bRUPzV9hfXs20yxA
+	bYnDdUSXkvjH8PB3AHAF9vvyQxJk3ZxLKlEK+fk3lHGNZMvW1axLZEccIL3qdGqEOj0iQazxxY11F
+	9cOOH7AsPJB+1LjJlSq3HkLUrxUz8SNifUBhUSBrFAL/e+SbBTKoZBldCTn24oZ5P1CMZPupc4sPt
+	Wux0AfZw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJ55y-0000000991W-339A;
-	Tue, 20 Oct 2026 08:21:18 +0000
+	id 1xJ55z-0000000992q-0uXz;
+	Tue, 20 Oct 2026 08:21:19 +0000
 Received: from flow-a2-smtp.messagingengine.com ([103.168.172.137])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xBF0X-000000018Eb-0TYx;
-	Mon, 28 Sep 2026 17:19:18 +0000
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailflow.phl.internal (Postfix) with ESMTP id 379EA13804E3;
-	Mon, 28 Sep 2026 13:19:16 -0400 (EDT)
+	id 1xBF1K-000000018hh-052A;
+	Mon, 28 Sep 2026 17:20:07 +0000
+Received: from phl-compute-07.internal (phl-compute-07.internal [10.202.2.47])
+	by mailflow.phl.internal (Postfix) with ESMTP id 1D7F2138050F;
+	Mon, 28 Sep 2026 13:20:05 -0400 (EDT)
 Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-03.internal (MEProxy); Mon, 28 Sep 2026 13:19:16 -0400
+  by phl-compute-07.internal (MEProxy); Mon, 28 Sep 2026 13:20:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jaseg.de; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1790615956;
-	 x=1790623156; bh=8Eqqf0HCSBZT/jI6NYBtGEMXZWPAcZ1W8yz5dAV6pIs=; b=
-	USSes1s6BJwzq2EyJPOgLyoA42m2Szuaxg4fHYdIVEsM6a+c+5B4jtmOsypYMet2
-	cWlRH2UFJwV4SihUHQZepiNd44Wi6vzbuQpsoNBHUgweIIVbH2KC50Lx62NWHvG9
-	A23UQGj36gRTv8fA8FSlNzVQ+9dJjkrf1y3a7Sk3dIRc3mzxS8RMECD5zmPP7hLz
-	gaohdpUSF76np+amLfmoXxSe3MNXOmAAMbJ/Pg8b1euJLK4+hdUXum3Yc3Gzkd0Y
-	HTv081m46OYKMT2VPDuSTdDSqHQQQBTPg2aJraTBGR11T5L0vlEi+CNw2CY6GyVZ
-	SDAMWGuGckkeG2peEGKLoA==
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1790616005;
+	 x=1790623205; bh=vxkdii9Ix7VQo4OS5s53AyOtwZsAqIdchYLS+D7XBiA=; b=
+	pG9rJP3CoV3aXiT7wA6mzdqxQqmkzT7NTyjBjONOARIJelIMyKwdLznkkRoa+Yse
+	sZTWvdAvwXkK5CYFVSVtZf+p/wcVWS/uEliMy6yNeSO4lLFcgRAUTkrd8BFkhQPi
+	/t0MqzM3GdhIuAEQDlKGEmLCOqKCi+QO645Ojno3fGAfDhHZKH3ZmidS7NMTXMKy
+	IW7G1zzAGtriVCG9nvZx7u0x1fJTB4FEuugh+cjdYjjUWOvG4mPbAlb6DQOz0gDt
+	xAGwKiXnhesunA8zf662WJVv8uCqRzSfe3tuNcBcQZ6EkAULjA8DUuWq6Eh00v0U
+	nD2o+js/r2jXJpVEkAFgcA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1790615956; x=
-	1790623156; bh=8Eqqf0HCSBZT/jI6NYBtGEMXZWPAcZ1W8yz5dAV6pIs=; b=d
-	5SizAxEG4NEtVBU6Noa1+LIMQWPIToaS6fW+puNNNuq8kJJY88cjAj+Pz2tIlU58
-	YTuFRaDvBWy23WXE5etBTx+xq3aFDeAz+wDoYboEk32Dxg4N7elNhP2mmZSoLQ/d
-	tcQ/mXessBCQt1vxCegaA5B6TC4Db4tt6myNJwu1OBDXHmvHULTEzxQ0uh6S2evY
-	dxmej9z320SVslK7tqi4A8H9CBEKcmfV3xm0A1+JoIPjlRumuBmTjBumCiYNkhen
-	SYXV60omyaSV90HrnQWIbEC6aApEO2axgaqMKwrpRN8/+ycwdEJj2iGkqk3ZNTZR
-	m12di5ScZTVY1KizjbGgw==
-X-ME-Sender: <xms:lKG6anrrKOx5fQu0pRHdyb_8aX7jttAfKxIJo83VFXIL6Xs8FC4Huw>
-    <xme:lKG6alE9VWbFN4WInjtakYZ8jaFoM7EXWUUf35w3iWnBKqIjBNr0Cxcug0o-vw7Se
-    qmtkn17fAob1cNbqzJLaMVXFkTeIPUH4v3FEInPlDAYv9XCWB1fmWc>
-X-ME-Received: <xmr:lKG6age-4IlQC6waNKqVglG8gWemRJrYAaTw0aS9gQyEc6a1pHTj1Alenfwm77Dz>
-X-ME-Proxy-Cause: dmFkZTE3Dtw6IjhE/poi/CDPb5VXEYPNUPEe3rZRr1/3vnluvSNGZwYnc7Od0VEEqw6V8C
-    kWRAMYAJAJV5aq+CNT4OFQyy1fVW8k3upxKlO9V7Rt5yUqYEIYE/wijeDPsE7H4gglp/5v
-    F6D384IbY5FCBCgoXmGheBdMQQxOBU4ICiAnYejBlRLhJ/CKeqEcgPSAZh68CS/pdW/x+j
-    oysMrjjAyGFH6oDZSV+ReHQBDpEH3XjCRs+r4WEsyv+LCLa1ZQRyjrSR6cKgS0Pi5Ve0FP
-    CSaf3rI2+ul2/rPFwdCO88CC3NXOaOC07b4Jq2/gPXxONS3ydc229KCVcj4zNvzLHbXFTv
-    Y87bfWoHF8P/EF1BtBuJNXri5Y3jHaQznC4c8pM9EDVGJlvXB+ULU56B2/xFp63H3ba76F
-    ETaiTGM2+CV9ko/CMXbIA9HXJjVdDn9iwfU9WAkbJ/ktRKz+VCLmlAYjeMQn7eBHDTw/ME
-    H7h06B41486MeTNdQ9ihuVImVcZBasvjpa1q3RUWa62/9W6wN7P2jLHSxRBDt9MrP/YHXe
-    yrbQCcC5uo2HHogi63k5CazEKRjwFJ5SVg0gWg1DAf6rLjz1AVmATi0NJYKMjfy3jLjC7K
-    HX9wF3F9j1o+o0BJlm5e/UuJNK9Ajp2fhlMmmNKWUkt8i5EfZhPcrAzoAV5g
-X-ME-Proxy: <xmx:lKG6aj7iLMXS2IlkVZUzLevRbPUirNqNRSORUvG3PpJrzNlf5yEDsg>
-    <xmx:lKG6ag-uEgxLdKGbT4N_esjjUBU5IE4qYbp-u5jgSkmAi6zYPZIAHQ>
-    <xmx:lKG6avlLiKnKM3qjhyvlZyIHz4mXK79aSCnDuBirhZA0GO48uy4aRA>
-    <xmx:lKG6avug_EOHI9_lLLqxGtOHFgEkNxUv_BXJRivr3cNdSU27Lwm3BA>
-    <xmx:lKG6ar7342olHzHcQDVc978gVOkRg_kTwspjmX12JEl7Udkf-niszRQM>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1790616005; x=
+	1790623205; bh=vxkdii9Ix7VQo4OS5s53AyOtwZsAqIdchYLS+D7XBiA=; b=o
+	tTvXp/PC9AMJdNTCJXnAQ5GNkj4ePWloawyqrk60GzmEkdMINzhEN3HNlysRj9pF
+	KLkK+F1m2FeQsZMHtgFVQAfKPrWu4UQeXx5LWL4vanSM2taUh01f1M2Cmqg+q1li
+	VdVfbgjtJ0vkSFwxMu9fb6pFwXatcbmf5Y8znHFQdAOtOdnOvpnpdx4pcCt0j/Z2
+	+yVuI/BgJDJybauMgktVm2QCbAYGMf64EJMayQcvNLNOcN8Fdq5fYWvw5w1vZNzf
+	7cXGlJaz5WxlljAscF2k8fOg+N0I6DBuZuk5Hco38BsP9U7hrKnazOh2kYoT1DLV
+	/IUCPm6N9hx4Q/QZEn2Ug==
+X-ME-Sender: <xms:xKG6arU-NFZAUfVOSAzA7XUgD5lRZPtRFGW-7wnS1jouhjjE9chVvw>
+    <xme:xKG6anCvUp4CGAEq_uMSAE14Ayn4L6fh_2NK_Raiq_HrHbH6uwqxn-2Yq0nPvBpzf
+    Ir0guJvZ8JMGakcB4WOim-5Hzw-FFfCotwGLQz9nSvHyhKCfrQBbk4>
+X-ME-Received: <xmr:xKG6ajov5itGvlrpOIUWU0S3H2Fd6IIsAEea0FFVdkAlJBWFJ4HPbGUuczxbIHfl>
+X-ME-Proxy-Cause: dmFkZTE/22e7clbyNdHwn0HCBx+H3lsiFyo6QkPV6dpSn20/QyCOxtHNd7QTmx6b7eJ6RH
+    b7MD0YK3xmhVFW7pHJl/jJiaLCtzwYaWJ6VBcJNMtYB/lM8rXCQqoyXJAKc1Q+3NTJHLRu
+    Q+616RIwRjK3mn/tprgeZTxr9VaE0UGr12rr0RgYUziHPYN8WsIu22gnQm98Dq7NFgLEYb
+    bOn/3mv6ye0r5zsmXTZhHlWNyOVRZl7FwJjAmuaSy3Z2MGyz8Xby78ZPjGLjvAF+o1XCsp
+    YM5+7QijkJtemWRQaETyS2I23TsNHUOR4KF7C0sS19NgtEnCYopA0Qb1idGIqDD/y3bAYa
+    uYGsTDtUPqVICbQ41pUlOjImyF2mYxv7H7gXJYfr+UUv6rve/u4aNMTBiDT8EwdXsk9Mx2
+    TXQmTq1D7W7WpUpu8G+qst/ms9fDu//AR5HSo2XpBx/CwCnd8+mWeB21rTZjXb5LIE/uRa
+    QrHQ3n9NKfOfq44WCCaHP+Bx+f13ffxua18Crb1sbm6QoQgc5rOgtZKAnWd6u/PMAqYt7H
+    AMpT0cbBjxy6q1k4Zqo9kWKY6YhgCARYSauXvd43jgaGpXW4PkYONpj0EunNZHFanC+HCT
+    S92pn8bzcE29X+u1falzlomjIS3saU7TcTttaYKC/oXAb3tYP8+RWOwIeqKA
+X-ME-Proxy: <xmx:xKG6avXmNToMkzrPAVdGb1C9RDHakOzTvBWakh4jtiDxxyzr8gMj5A>
+    <xmx:xKG6avoZ2gXUh_oqH0bmQUC7JHgdTPfdG-5lyjnU5cRaRmhSsso_Ig>
+    <xmx:xKG6aghhCnUwCnQXjXjqzm14anG5jLvOmuDua_FSpsZlSsK4emYYIA>
+    <xmx:xKG6al4SHzW0IpZ6a4D737SKcPYf7P-hagcFXB1laCZk-31ETaFqjg>
+    <xmx:xaG6alArW58l36_-BMc7T96Cu8HyG9HAQSyWQhmfP9l37WNBz8SyPlkG>
 Feedback-ID: i60a14417:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 28 Sep 2026 13:19:02 -0400 (EDT)
+ 28 Sep 2026 13:19:46 -0400 (EDT)
 From: =?utf-8?q?Jan_Sebastian_G=C3=B6tte?= <linux@jaseg.de>
-Date: Mon, 28 Sep 2026 19:17:51 +0200
-Subject: [PATCH v3 03/12] mm: Wire up the crash memaction registry
+Date: Mon, 28 Sep 2026 19:17:54 +0200
+Subject: [PATCH v3 06/12] crypto: api - Allocate tfms from the secret pool
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260928-crash-memaction-upstream-20260921-v3-3-e511e9ee2329@jaseg.de>
+Message-Id: <20260928-crash-memaction-upstream-20260921-v3-6-e511e9ee2329@jaseg.de>
 References: <20260928-crash-memaction-upstream-20260921-v3-0-e511e9ee2329@jaseg.de>
 In-Reply-To: <20260928-crash-memaction-upstream-20260921-v3-0-e511e9ee2329@jaseg.de>
 To: Jonathan Corbet <corbet@lwn.net>,
@@ -142,8 +142,8 @@ Cc: Eric Biggers <ebiggers@kernel.org>, linux-doc@vger.kernel.org,
  =?utf-8?q?Jan_Sebastian_G=C3=B6tte?= <linux@jaseg.de>
 X-Mailer: b4 0.15.2
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260928_101917_229492_7E2AF721 
-X-CRM114-Status: GOOD (  14.43  )
+X-CRM114-CacheID: sfid-20260928_102006_134399_F7528DC6 
+X-CRM114-Status: GOOD (  12.77  )
 X-Spam-Score: -2.1 (--)
 X-Mailman-Approved-At: Tue, 20 Oct 2026 01:21:06 -0700
 X-BeenThere: kexec@lists.infradead.org
@@ -163,100 +163,72 @@ X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Allocate the registry bitmap during boot and sync marked pages to the
-bitmap.
+A tfm's context holds the expanded key schedule, which a crash dump
+would capture.
 
-The registry bitmap is handed over to the kdump kernel through physical
-addresses and thus needs to be a single, physically contiguous range.
+Allocate tfms from the secret pool, so that their backing pages are
+marked by crash_memaction for the kdump kernel to wipe.
+The context is a flexible array at the end of struct crypto_tfm and the
+frontend's private data sits in front of the struct, so the whole
+allocation moves into the pool.
 
-A marking lasts past free and until the page frame is handed out again
-in post_alloc_hook() to account for stale data left in pages that are
-mid-migration or currently being reclaimed. For the same reason the
-unmark comes after any init_on_alloc zeroing.
-
-A hugetlb folio coming out of the pool never passes through
-post_alloc_hook(), so it drops the marking of its previous life in
-dequeue_hugetlb_folio_node_exact() instead. A folio the pool got from
-the page allocator was already cleared in post_alloc_hook.
-
-The hooks sit behind a static key patched out unless the kernel was
-booted with crash_memaction= to mitigate overhead when not used.
+Allocation cost increases by a bucket lookup in crash_memaction. Freeing
+is unchanged.
 
 Signed-off-by: Jan Sebastian Götte <linux@jaseg.de>
 Assisted-by: Claude Opus 5 <noreply@anthropic.com>
 ---
- mm/hugetlb.c    | 4 ++++
- mm/mm_init.c    | 3 +++
- mm/page_alloc.c | 6 ++++++
- 3 files changed, 13 insertions(+)
+ crypto/api.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index da980377d353..36f0c0d8f5f1 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -31,6 +31,7 @@
- #include <linux/numa.h>
- #include <linux/llist.h>
- #include <linux/cma.h>
-+#include <linux/crash_memaction.h>
- #include <linux/migrate.h>
- #include <linux/nospec.h>
- #include <linux/delayacct.h>
-@@ -1281,6 +1282,9 @@ static struct folio *dequeue_hugetlb_folio_node_exact(struct hstate *h,
- 		folio_clear_hugetlb_freed(folio);
- 		h->free_huge_pages--;
- 		h->free_huge_pages_node[nid]--;
-+
-+		crash_memaction_unmark_pfns(folio_pfn(folio),
-+					    folio_nr_pages(folio));
- 		return folio;
- 	}
+diff --git a/crypto/api.c b/crypto/api.c
+index 24227582cfcf..eba310f128dc 100644
+--- a/crypto/api.c
++++ b/crypto/api.c
+@@ -18,6 +18,7 @@
+ #include <linux/module.h>
+ #include <linux/param.h>
+ #include <linux/sched/signal.h>
++#include <linux/secret_pool.h>
+ #include <linux/slab.h>
+ #include <linux/string.h>
+ #include <linux/completion.h>
+@@ -413,7 +414,7 @@ struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
+ 	int err = -ENOMEM;
  
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index 9ce6060de06d..2245972b2685 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -27,6 +27,7 @@
- #include <linux/stackdepot.h>
- #include <linux/swap.h>
- #include <linux/cma.h>
-+#include <linux/crash_memaction.h>
- #include <linux/crash_dump.h>
- #include <linux/execmem.h>
- #include <linux/sizes.h>
-@@ -2706,6 +2707,8 @@ void __init mm_core_init(void)
- 	 */
- 	kho_memory_init();
+ 	tfm_size = sizeof(*tfm) + crypto_ctxsize(alg, type, mask);
+-	tfm = kzalloc(tfm_size, GFP_KERNEL);
++	tfm = secret_pool_zalloc(tfm_size, GFP_KERNEL);
+ 	if (tfm == NULL)
+ 		goto out_err;
  
-+	crash_memaction_init();
-+
- 	memblock_free_all();
- 	mem_init();
- 	kmem_cache_init();
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 759786240af3..ff82f632dc7d 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -54,6 +54,7 @@
- #include <linux/khugepaged.h>
- #include <linux/delayacct.h>
- #include <linux/cacheinfo.h>
-+#include <linux/crash_memaction.h>
- #include <linux/pgalloc_tag.h>
- #include <asm/div64.h>
- #include "internal.h"
-@@ -1854,6 +1855,11 @@ inline void post_alloc_hook(struct page *page, unsigned int order,
- 	set_page_owner(page, order, gfp_flags);
- 	page_table_check_alloc(page, order);
- 	pgalloc_tag_add(page, current, 1 << order, alloc_flags);
-+
-+	/*
-+	 * Release leftover crash_memaction markings from a previous owner of this page.
-+	 */
-+	crash_memaction_unmark_pfns(page_to_pfn(page), 1UL << order);
- }
+@@ -428,7 +429,7 @@ struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
+ 	crypto_exit_ops(tfm);
+ 	if (err == -EAGAIN)
+ 		crypto_shoot_alg(alg);
+-	kfree(tfm);
++	kfree_sensitive(tfm);
+ out_err:
+ 	tfm = ERR_PTR(err);
+ out:
+@@ -502,7 +503,7 @@ void *crypto_create_tfm_node(struct crypto_alg *alg,
+ 	int err;
  
- static void prep_new_page(struct page *page, unsigned int order, gfp_t gfp_flags,
+ 	size = frontend->tfmsize + sizeof(*tfm) + frontend->extsize(alg);
+-	mem = kzalloc_node(size, GFP_KERNEL, node);
++	mem = secret_pool_zalloc_node(size, GFP_KERNEL, node);
+ 	if (!mem)
+ 		return ERR_PTR(-ENOMEM);
+ 
+@@ -525,7 +526,7 @@ void *crypto_create_tfm_node(struct crypto_alg *alg,
+ out_free_tfm:
+ 	if (err == -EAGAIN)
+ 		crypto_shoot_alg(alg);
+-	kfree(mem);
++	kfree_sensitive(mem);
+ 	mem = ERR_PTR(err);
+ out:
+ 	return mem;
 
 -- 
 2.55.0
