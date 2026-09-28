@@ -2,88 +2,87 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C1D606A320
-	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 08:21:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B770E606A329
+	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 08:21:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=VGhrnHyl;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CdVMt+Fz
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=USbB+S5Q;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ji81w2P3
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:
 	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
 	From:MIME-Version:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xXafi02ZLO1Y0xc1WsCP1jTVPyy0rIJ0X6evEJWG+Cs=; b=VGhrnHyl0QYhfjF2IoM83oW/wH
-	Z23WIr5dvKjfgacTqGZc6OGErJroykc9HdXcl/RRht5t3cWMpQ0Z34zUuladIF8di+KyG/1nNmar+
-	hobrdni+x+4LcqyGop7M1e8414xXg6ukqGU3cEEecsynmI829m6BNVmNPVGzrwl5ylI8TK+LbfwIQ
-	6mgUP2Ug0a/jRTVlUN6XWORQZ2Kp8tT0tZ2aZE2YHuP0fpHo9sKPvLR3ZPEdXWXESZINiMU2oSffm
-	Ns2fNQazzwiRjhz6JQKUA0We6Wo6exr++sAFOTDxu92U3KOFt10gecFdfAri5lLibSZq1QGMwfNnX
-	NrUTioiA==;
+	bh=bio2Y9F5gf2JUjQfJ3HNyq0KHsAJNYGF0LSeTxxnRz8=; b=USbB+S5QrzauD+/8IUgm0tNyLg
+	moDryIxUVOz0yro4fkSPbnM9QyWeX5GquLJk5oucysBD+BShfjfTmrhH8q66QAQkbytOOBKS9WD40
+	oOKjG76l2b1bctT4W6fjKSKO1f+poTQJg+zzGQWgqDcIL9QxUSfP5Gs4BmVX6xLOfPwgqJ9lgA/4M
+	j6yl2vYWqowC/qCYgKhVVb77NUSy+Uvmu9iazPez0iLZSNnrjwnaqjw7iUE3OzH5dNI6a7doG4mlC
+	M95OSfo3pJMiU03F94DQRwnr/tAttFbg09tuaVZ9J5hAXhjobMVGWD+mWwdrK185s8rViAmFJnLgQ
+	h+nuHh+w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJ56O-000000099bN-3qCS;
-	Tue, 20 Oct 2026 08:21:44 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xJ56P-000000099df-46ZU;
+	Tue, 20 Oct 2026 08:21:46 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xBFHN-00000001BUO-2QkX;
-	Mon, 28 Sep 2026 17:36:41 +0000
+	id 1xBFMK-00000001CUp-2lLq;
+	Mon, 28 Sep 2026 17:41:48 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 88D0B60120;
-	Mon, 28 Sep 2026 17:36:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78B211F000FF;
-	Mon, 28 Sep 2026 17:36:36 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 0C309600D1;
+	Mon, 28 Sep 2026 17:41:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 864EC1F000FF;
+	Mon, 28 Sep 2026 17:41:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790617000;
-	bh=xXafi02ZLO1Y0xc1WsCP1jTVPyy0rIJ0X6evEJWG+Cs=;
+	s=k20260515; t=1790617307;
+	bh=bio2Y9F5gf2JUjQfJ3HNyq0KHsAJNYGF0LSeTxxnRz8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CdVMt+Fzf8G8t9rbknnGaVrM5SS+D6vf8+Yoh8W6ZNN6HA8AwFKbWq4iAqfZXz+Ft
-	 d6MVIyxwinfxhUDgeSbx7Dog/6xDVinP9/nnAQpm3L3BeHj6F2w9uLhGMX0RIwqRFp
-	 ow0hYfT1lH9zRieXdzWZTFJ3OuwSjepCBV16JWZsA0vXLvh1ZOhMNs5F+OsbJov4tp
-	 Rvcjcg0CXhk62W2ijvnpQb0dh5CrMyp0hQ+z20rlXdt1LlRtr6DDTzOnq5FPBrwN13
-	 /j0jojUVX3IMJsrMgcEwhZ5ROe55Wv7PFan2FBHF9O9li/r2rx/qWmXuyEF8Ks1t22
-	 NGObYvk9JQFvQ==
+	b=ji81w2P3OvwBwZ+SfBFlHppqHkwIgn8FNMqhUbCYfyrtsaGSgA9Y6NadfxtKqDtRc
+	 G4hk/u46xqtuPWC1WCpBVreTPBuXwixIjfMEu0mDHhK/yMVG/8eIF2HlGo0kMQffMf
+	 GqY3YbTg8UX/0lArRf2Amw2MEp9DpkyGyR7xex0Cuy3ZMS/5rMC6JADOdNgpWV4rFN
+	 kZuEXyrTKpE4uJ66bwwrBN31kdfBimpDoR6N//XUlwV7lAMzWVLvUYB/LTnxAzIL4w
+	 Ubs2S8JTCuzXg/VukK3Y+Ks57iOqlME4Epo1KIkexQOk3ASeJyXF0S49fZzlm8sR60
+	 LrxzI3InFhyvw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 02/12] lib, kexec: Add a secret pool for key material
-To: "Rob Herring" <robh@kernel.org>, "Barry Song" <baohua@kernel.org>, "Matthew
- Brost" <matthew.brost@intel.com>, "Zi Yan" <ziy@nvidia.com>, "David Howells" <dhowells@redhat.com>, "Dev
- Jain" <dev.jain@arm.com>, "David Hildenbrand" <david@kernel.org>, "Herbert
- Xu" <herbert@gondor.apana.org.au>, "Andrew Morton" <akpm@linux-foundation.org>, "Benjamin
- Marzinski" <bmarzins@redhat.com>, "Michal Hocko" <mhocko@suse.com>, "Johannes
- Weiner" <hannes@cmpxchg.org>, =?utf-8?b?SmFuIFNlYmFzdGlhbiBHw7Z0dGU=?= <linux@jaseg.de>, "Mark
- Rutland" <mark.rutland@arm.com>, "Kiryl Shutsemau" <kas@kernel.org>, "Catalin
- Marinas" <catalin.marinas@arm.com>, "James Morris" <jmorris@namei.org>, "Rik
- van Riel" <riel@surriel.com>, "Usama Arif" <usama.arif@linux.dev>, "Mikulas
- Patocka" <mpatocka@redhat.com>, "Mike Snitzer" <snitzer@kernel.org>, "Lance
- Yang" <lance.yang@linux.dev>, "Randy Dunlap" <rdunlap@infradead.org>, "Baolin
- Wang" <baolin.wang@linux.alibaba.com>, "Byungchul Park" <byungchul@sk.com>, "Paul
- Moore" <paul@paul-moore.com>, "Lorenzo Stoakes" <ljs@kernel.org>, "Mike
- Rapoport" <rppt@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, "David
- S. Miller" <davem@davemloft.net>, "Peter Xu" <peterx@redhat.com>, "Jonathan
- Corbet" <corbet@lwn.net>, "Brendan Jackman" <brendan.jackman@linux.dev>, "Harry
- Yoo" <harry@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, "Arnd
- Bergmann" <arnd@arndb.de>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Oscar
- Salvador" <osalvador@suse.de>, "Pedro Falcato" <pfalcato@suse.de>, "Gregory
- Price" <gourry@gourry.net>, "Mimi Zohar" <zohar@linux.ibm.com>, "Saravana
- Kannan" <saravanak@kernel.org>, "Joshua Hahn" <joshua.hahnjy@gmail.com>, "Baoquan
- He" <baoquan.he@linux.dev>, "Jann Horn" <jannh@google.com>, "Serge E.
- Hallyn" <serge@hallyn.com>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Muchun
- Song" <muchun.song@linux.dev>, "Suren Baghdasaryan" <surenb@google.com>, "Shuah
- Khan" <skhan@linuxfoundation.org>, "Alistair Popple" <apopple@nvidia.com>, "Jarkko
- Sakkinen" <jarkko@kernel.org>, "Ryan Roberts" <ryan.roberts@arm.com>, "Danilo
- Krummrich" <dakr@kernel.org>, "James Bottomley" <James.Bottomley@HansenPartnership.com>, "Vlastimil
- Babka" <vbabka@kernel.org>, "Alasdair Kergon" <agk@redhat.com>, "Will
- Deacon" <will@kernel.org>, "Nico Pache" <nico.pache@linux.dev>, "Pratyush
- Yadav" <pratyush@kernel.org>, "Dave Young" <ruirui.yang@linux.dev>, "Ying
- Huang" <ying.huang@linux.alibaba.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, keyrings@vger.kernel.org, robh@kernel.org, linux-doc@vger.kernel.org, conor+dt@kernel.org, dm-devel@lists.linux.dev, linux-mm@kvack.org, linux-integrity@vger.kernel.org, devicetree@vger.kernel.org, driver-core@lists.linux.dev, linux-fsdevel@vger.kernel.org, "Eric
- Biggers" <ebiggers@kernel.org>, linux-security-module@vger.kernel.org, linux-crypto@vger.kernel.org, linux-arch@vger.kernel.org
-In-Reply-To: <20260928-crash-memaction-upstream-20260921-v3-2-e511e9ee2329@jaseg.de>
+Subject: Re: [PATCH v3 09/12] mm/rmap: Mark folios mapped into
+ crash_memaction-marked VMAs
+To: "Serge E. Hallyn" <serge@hallyn.com>, "Suren Baghdasaryan" <surenb@google.com>,
+ =?utf-8?b?SmFuIFNlYmFzdGlhbiBHw7Z0dGU=?= <linux@jaseg.de>, "Baoquan He" <baoquan.he@linux.dev>, "Oscar
+ Salvador" <osalvador@suse.de>, "Liam R. Howlett" <liam@infradead.org>, "Jonathan
+ Corbet" <corbet@lwn.net>, "Mike Rapoport" <rppt@kernel.org>, "Vlastimil
+ Babka" <vbabka@kernel.org>, "Dev Jain" <dev.jain@arm.com>, "Zi Yan" <ziy@nvidia.com>, "David
+ Howells" <dhowells@redhat.com>, "Alasdair Kergon" <agk@redhat.com>, "Arnd
+ Bergmann" <arnd@arndb.de>, "Joshua Hahn" <joshua.hahnjy@gmail.com>, "Alistair
+ Popple" <apopple@nvidia.com>, "Dave Young" <ruirui.yang@linux.dev>, "Rik
+ van Riel" <riel@surriel.com>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Lance
+ Yang" <lance.yang@linux.dev>, "Nico Pache" <nico.pache@linux.dev>, "Usama
+ Arif" <usama.arif@linux.dev>, "Jann Horn" <jannh@google.com>, "Barry Song" <baohua@kernel.org>, "Lorenzo
+ Stoakes" <ljs@kernel.org>, "Pedro Falcato" <pfalcato@suse.de>, "Danilo
+ Krummrich" <dakr@kernel.org>, "Mike Snitzer" <snitzer@kernel.org>, "James
+ Morris" <jmorris@namei.org>, "Mark Rutland" <mark.rutland@arm.com>, "Rafael
+ J. Wysocki" <rafael@kernel.org>, "Harry Yoo" <harry@kernel.org>, "Pratyush
+ Yadav" <pratyush@kernel.org>, "Matthew Brost" <matthew.brost@intel.com>, "Peter
+ Xu" <peterx@redhat.com>, "Benjamin Marzinski" <bmarzins@redhat.com>, "Muchun
+ Song" <muchun.song@linux.dev>, "Paul Moore" <paul@paul-moore.com>, "Baolin
+ Wang" <baolin.wang@linux.alibaba.com>, "Byungchul Park" <byungchul@sk.com>, "Shuah
+ Khan" <skhan@linuxfoundation.org>, "Andrew Morton" <akpm@linux-foundation.org>, "Jarkko
+ Sakkinen" <jarkko@kernel.org>, "Catalin Marinas" <catalin.marinas@arm.com>, "Randy
+ Dunlap" <rdunlap@infradead.org>, "Will Deacon" <will@kernel.org>, "Rob
+ Herring" <robh@kernel.org>, "Mikulas Patocka" <mpatocka@redhat.com>, "Ryan
+ Roberts" <ryan.roberts@arm.com>, "Gregory Price" <gourry@gourry.net>, "Ying
+ Huang" <ying.huang@linux.alibaba.com>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Mimi
+ Zohar" <zohar@linux.ibm.com>, "Herbert Xu" <herbert@gondor.apana.org.au>, "David
+ S. Miller" <davem@davemloft.net>, "James Bottomley" <James.Bottomley@HansenPartnership.com>, "Michal
+ Hocko" <mhocko@suse.com>, "Saravana Kannan" <saravanak@kernel.org>, "David
+ Hildenbrand" <david@kernel.org>, "Brendan Jackman" <brendan.jackman@linux.dev>, "Johannes
+ Weiner" <hannes@cmpxchg.org>, "Kiryl Shutsemau" <kas@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, "Eric Biggers" <ebiggers@kernel.org>, linux-integrity@vger.kernel.org, robh@kernel.org, linux-mm@kvack.org, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-doc@vger.kernel.org, driver-core@lists.linux.dev, keyrings@vger.kernel.org, linux-security-module@vger.kernel.org, dm-devel@lists.linux.dev, devicetree@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-crypto@vger.kernel.org, conor+dt@kernel.org
+In-Reply-To: <20260928-crash-memaction-upstream-20260921-v3-9-e511e9ee2329@jaseg.de>
 References: <20260928-crash-memaction-upstream-20260921-v3-0-e511e9ee2329@jaseg.de>
- <20260928-crash-memaction-upstream-20260921-v3-2-e511e9ee2329@jaseg.de>
+ <20260928-crash-memaction-upstream-20260921-v3-9-e511e9ee2329@jaseg.de>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 28 Sep 2026 17:36:35 +0000
-Message-Id: <20260928173636.78B211F000FF@smtp.kernel.org>
+Date: Mon, 28 Sep 2026 17:41:43 +0000
+Message-Id: <20260928174143.864EC1F000FF@smtp.kernel.org>
 X-Mailman-Approved-At: Tue, 20 Oct 2026 01:21:10 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -104,64 +103,136 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [High] lib/secret_pool: fallback to shared kmalloc inadvertently marks en=
-tire pages as secret
+- [Medium] mm/userfaultfd: UFFDIO_MOVE misses crash_memaction registration =
+for swap cache
+- [Medium] mm: stale crash_memaction marks when moving pages to unmarked VM=
+As
+- [Low] mm/rmap: data race on vma->vm_flags in crash_mark_pages()
 --
 
-commit 774a436bfd0576d919ce17b831096d5b8c8dbbb5
+commit 78115d9186907359bdb879efc1ef14d161aac39a
 Author: Jan Sebastian G=C3=B6tte <linux@jaseg.de>
+Subject: mm/rmap: Mark folios mapped into crash_memaction-marked VMAs
 
-lib, kexec: Add a secret pool for key material
-   =20
-Key material allocated with kmalloc() shares its slab pages with
-unrelated allocations. crash_memaction marks memory at page granularity,
-so smaller objects in shared slab pages can't cleanly be marked or
-unmarked. This commit adds a secret pool built on kmem_buckets to
-hold such keys in marked pages.
+This patch propagates crash_memaction marks set through madvise() to the
+crash_memaction registry. It registers folios of a VMA carrying VM_CRASH_MA=
+RK
+as they are mapped, and updates the registry when a folio moves. It also ho=
+oks
+into the free path to deregister pages and avoid tracking stale data.
 
-> diff --git a/lib/secret_pool.c b/lib/secret_pool.c
-> new file mode 100644
-> index 0000000000000..62954847091a0
-> --- /dev/null
-> +++ b/lib/secret_pool.c
-> @@ -0,0 +1,27 @@
+> diff --git a/include/linux/crash_memaction.h b/include/linux/crash_memact=
+ion.h
+> index 5f3e114c60ad7..2de60bc12dd9f 100644
+> --- a/include/linux/crash_memaction.h
+> +++ b/include/linux/crash_memaction.h
 [ ... ]
-> +void *secret_pool_alloc_node(size_t size, gfp_t flags, int node)
+> @@ -50,6 +51,18 @@ static inline void crash_memaction_unmark_pfns(unsigne=
+d long pfn,
+>  		__crash_memaction_unmark_pfns(pfn, nr_pages);
+>  }
+> =20
+> +static inline void crash_mark_pages(struct page *page, int nr_pages,
+> +		struct vm_area_struct *vma)
 > +{
-> +	void *p =3D kmem_buckets_alloc_node_track_caller(secret_pool, size,
-> +						       flags, node);
+> +	if (!static_branch_unlikely(&crash_memaction_active))
+> +		return;
 > +
-> +	crash_memaction_mark(p, size, CRASH_MEMACTION_SECRET);
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> +	if (likely(!(vma->vm_flags & VM_CRASH_MARK)))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-[Severity: High]
-Does this unconditionally mark the allocation even if it falls back to a sh=
-ared
-kmalloc page?
+[Severity: Low]
+Should this lockless read of vma->vm_flags use READ_ONCE()?
 
-The commit message notes that if the secret pool is used before its initcall
-runs or if pool creation fails, allocations will fall back to ordinary kmal=
-loc
-caches.
+The crash_mark_pages() function is called via folio_add_anon_rmap_ptes()
+during migration (such as in remove_migration_pte()) holding only the
+anon_vma lock. At the same time, mprotect() can update vma->vm_flags
+while holding the VMA lock, but not the anon_vma lock.=20
 
-Because crash_memaction_mark() operates at page granularity, wouldn't calli=
-ng
-it on a shared kmalloc page inadvertently mark the entire page (and unrelat=
-ed
-kernel objects sharing it) as a secret?
+Could this concurrent modification lead to a data race or torn reads during
+migration?
 
-In the event of a crash, could this cause the kdump kernel to wipe or exclu=
-de
-these shared pages, potentially destroying crash data?
-
+> +		return;
 > +
-> +	return p;
+> +	__crash_memaction_mark_pfns(page_to_pfn(page), nr_pages);
 > +}
-> +EXPORT_SYMBOL_GPL(secret_pool_alloc_node);
+> +
+>  void crash_memaction_mark(void *addr, size_t size, int types);
+>  void crash_memaction_unmark(void *addr, size_t size);
+> =20
+[ ... ]
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 3fb9504dff7a9..adbda968d58ef 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -2966,6 +2966,8 @@ int move_pages_huge_pmd(struct mm_struct *mm, pmd_t=
+ *dst_pmd, pmd_t *src_pmd, pm
+> =20
+>  		folio_move_anon_rmap(src_folio, dst_vma);
+>  		src_folio->index =3D linear_anon_page_index(dst_vma, dst_addr);
+> +		/* No rmap add, and the two VMAs need not agree on the flag. */
+> +		crash_mark_pages(&src_folio->page, HPAGE_PMD_NR, dst_vma);
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[Severity: Medium]
+How are stale crash_memaction marks handled when moving to an unmarked VMA?
+
+If a process marks a VMA with MADV_CRASH_CACHE, then moves an exclusive
+anonymous page to an unmarked VMA via mremap() here in
+move_pages_huge_pmd(), the destination VMA is checked but the source VMA
+is not unmarked.
+
+Because the new VMA lacks the mark, a subsequent madvise(MADV_CRASH_RESET)
+will short-circuit and fail to unmark the pages. Will these pages remain
+permanently marked and excluded from kdump dumps until freed, potentially
+risking data loss?
+
+> =20
+>  		_dst_pmd =3D folio_mk_pmd(src_folio, dst_vma->vm_page_prot);
+>  		/* Follow mremap() behavior and treat the entry dirty after the move */
+[ ... ]
+> diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> index b242fa8b22c8c..bb0a35d59daa9 100644
+> --- a/mm/userfaultfd.c
+> +++ b/mm/userfaultfd.c
+> @@ -1326,6 +1326,7 @@ static long move_present_ptes(struct mm_struct *mm,
+> =20
+>  		folio_move_anon_rmap(src_folio, dst_vma);
+>  		src_folio->index =3D linear_anon_page_index(dst_vma, dst_addr);
+> +		crash_mark_pages(&src_folio->page, 1, dst_vma);
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[Severity: Medium]
+Similar to the mremap() case above, does move_present_ptes() fail to unmark
+the PFN if the page came from a marked src_vma but is moving to an unmarked
+dst_vma?
+
+[Severity: Medium]
+Are we missing crash_memaction registration for swap cache folios during
+UFFDIO_MOVE?
+
+While the rmap is updated for present PTEs with a crash_mark_pages() call
+here, the parallel move_swap_pte() path in mm/userfaultfd.c seems to
+omit it:
+
+	if (src_folio) {
+		folio_move_anon_rmap(src_folio, dst_vma);
+		src_folio->index =3D linear_anon_page_index(dst_vma, dst_addr);
+	} else {
+
+If a process marks a VMA with MADV_CRASH_SECRET, and then uses UFFDIO_MOVE
+to move a swapped-out but swapcache-resident page into this VMA, the page
+registration is skipped. If the system crashes before the page is faulted
+in, is there a risk that the kdump kernel will dump the unmarked RAM and
+leak the secret data?
+
+> =20
+>  		orig_dst_pte =3D folio_mk_pte(src_folio, dst_vma->vm_page_prot);
+>  		/* Set soft dirty bit so userspace can notice the pte was moved */
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260928-crash-mema=
-ction-upstream-20260921-v3-0-e511e9ee2329@jaseg.de?part=3D2
+ction-upstream-20260921-v3-0-e511e9ee2329@jaseg.de?part=3D9
 
