@@ -2,92 +2,92 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F0560A3825
-	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 08:21:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90DE606A335
+	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 08:21:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=oJxxf1d2;
-	dkim=permerror header.d=jaseg.de header.i=@jaseg.de header.a=rsa-sha1 header.s=fm1 header.b=arzilkyI;
-	dkim=permerror header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha1 header.s=fm1 header.b=PiAcHMEn
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=4/DOIsBj;
+	dkim=permerror header.d=jaseg.de header.i=@jaseg.de header.a=rsa-sha1 header.s=fm1 header.b=dbQnwqwG;
+	dkim=permerror header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha1 header.s=fm1 header.b=rDrxL5x4
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=uGRShz7/CEgnybR8rXKhuxR+uSCSKOTb4RA8UBLfDNI=; b=oJxxf1d2hsYJyjY+JrC1h+tSkW
-	gX9r+lc7upOZ24I8TM6mkEIWTpGJjkHxnTpVY4yWdNZYDKDxe2o2VukjULCnXPMQ6Nr0Q7eVBoz7s
-	zPCN1sxaPkWDtY/Tdd4HuEzCua96dxd9jROgPRhTa3gZpCBU5gb8oAHgdpAhF+rTeDcxchoKZGjxR
-	fIb9sgpAwwucRk4Wn86IYwUMjLWTXMHMVB+5VvynvYYq4U8k9seBldaKwPfTmuHtk1psNCZgA4dwB
-	3G+8BCaFiNTOXdQ57xD9E4jmuBPEZ17wRu3TMMqulj0XynUrYcjNunHWYBnoGIISp8rfktE8UiEjf
-	ohk2dsAQ==;
+	bh=olwSF3uNVbiXNhlSbfHN88OmJDHwcqFsRULZ6TEZ7DY=; b=4/DOIsBjK0l3V0X9RaHinXjpQg
+	+1rDsH1Stl+ovrjCdzYuJZ+ytkadhf7NsTrxnY9Wjjjo6g+nnQn5p/vTtsp0nIwB6GdFRQRmb0wXA
+	UFc6tGe/mVEecL1gO9YCoL/hoALsVuYK6QsQ896hAzf6Fchr6V73ILjML/b7hO5tDXwd9AU3HVrJ4
+	iEYsNuA5fGZfhn7U521Y5+lHBCMPQpYnnj9yXQPjGCbscB1HflFyoP/aeErJcLc2+2yg+PSnYBRu2
+	o+3gqewbWjPctUcACO+2e7ZFAz0/deFaDN86KiCWYqRkiWhTFCkBB7jXBwPnnpm3MeaZicZJfb+1F
+	GgJMR+6A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJ55z-0000000993F-1WfV;
-	Tue, 20 Oct 2026 08:21:19 +0000
+	id 1xJ564-00000009955-1n66;
+	Tue, 20 Oct 2026 08:21:25 +0000
 Received: from flow-a2-smtp.messagingengine.com ([103.168.172.137])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xBF1e-000000018na-3sM4;
-	Mon, 28 Sep 2026 17:20:28 +0000
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailflow.phl.internal (Postfix) with ESMTP id 1030F13804CE;
-	Mon, 28 Sep 2026 13:20:26 -0400 (EDT)
+	id 1xBF32-000000019E3-3FeT;
+	Mon, 28 Sep 2026 17:21:53 +0000
+Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
+	by mailflow.phl.internal (Postfix) with ESMTP id D4DE41380050;
+	Mon, 28 Sep 2026 13:21:51 -0400 (EDT)
 Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Mon, 28 Sep 2026 13:20:26 -0400
+  by phl-compute-11.internal (MEProxy); Mon, 28 Sep 2026 13:21:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jaseg.de; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1790616026;
-	 x=1790623226; bh=uGRShz7/CEgnybR8rXKhuxR+uSCSKOTb4RA8UBLfDNI=; b=
-	arzilkyIlW8ydVRfrZ7Z1ABeXWx8pvbGCpbldO7pfpRcEQqogVBIiQ4x0OC01K2A
-	4/RKj96Cgn8FC50Cv875HSBU3LV1BlYs570QTRpbJn2p78bWyMBvnkQX45Tmwxxr
-	qMjE8s3OibcIsx4LQHbUpsqlOfE1m8lUs2Z0BZhVi4/zacIhFdTJtcWneDH4v229
-	tDwmr4EVMQvAAeQ92EzvrPo8HjOWzEiLKK4BI725+lYVATFJnOVuzopwaZVI8C1o
-	eZc7D5jxpd+oSQgPGqeJotNekMM+5OOAWW/vr12boU7zBszoZw4TeHvuUd4b+1Jf
-	traQzQw7Xr0CIA9Umiu88A==
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1790616111;
+	 x=1790623311; bh=olwSF3uNVbiXNhlSbfHN88OmJDHwcqFsRULZ6TEZ7DY=; b=
+	dbQnwqwGvJptiJWV3zxDZlSDkn8uqo0HXFIE0ICOqd8uZ9OXtFTfTgkgnoQs2aEk
+	w6T5994mCCxzWjbPjJVqT8JgZM6Pv9FP3tf5J+401tbQfy7rcNK4QJB8jtWb9fYW
+	kJU3IdyFTSrIsC8H+mS5fPlIkPUavVdzX+6WTBSFJLXRm1kTbIF7chVPkia/pajA
+	B/vM+7XJ9hrCXXSOJ173Hnk6ELL20UBwUGbdqpknBNuHYVw24O++te8xb71PmAtj
+	CgOxRTFQI3zRFPz0sjcZaXIXVp3v3xdX7OqQ6P3Ov3v9YTEv/7G3gPaGg6mMUb0f
+	Uoad8qDM6N3nckocuHyXYw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1790616026; x=
-	1790623226; bh=uGRShz7/CEgnybR8rXKhuxR+uSCSKOTb4RA8UBLfDNI=; b=P
-	iAcHMEn+/4usa1LG2ibAaKOKWn/fA+fxFMPOx+esfcVqmlLhkv0k+//JJGhDcyHT
-	jrl7h/Wc/4dg+g36Fe37F9aWZWsUp3uV0njJ9fKSBDv0zkIgy77lvV7yloblOfd2
-	YNyHgZrzC/pByOlZXOpPAS6vu5EqMsIwWVjWDmcgFnrFY035C5A3xDQjCSNnz49O
-	R5l9pl2+pDERs60d4i22q57SDhPo6niP4U+ROCZHOa1J61jHtEgV3jAHlWSSeQRG
-	bC0HOkUZ1GlnhOJM6W58WWuc9ed7ONsVn/N+oPTvc5hFvkdQ+hjzB1vreVvkQisX
-	wThm12jHp8ufnIFx2Gqyw==
-X-ME-Sender: <xms:2aG6ank5INbcEm76LgUiJa_7amBMFQJPpijJVBOsHuKegzlDwNDBSg>
-    <xme:2aG6auSMyD23cRSMQMUeLT-oFOZidPgDmmlzJV8TKF44EQNlsExhTLiWs2U6SNuCq
-    0s9ynw-R0Q1_MTg_pfwjzB7N4UuzSF5hT3DWsONomX18LXMtcqpJQ>
-X-ME-Received: <xmr:2aG6ap6x-7SLa931p2AR7S_B4HfG3ohEGVgbIa5xnIChl50rGI-VV5siVd4U8nOn>
-X-ME-Proxy-Cause: dmFkZTE3Dtw6IjhE/poi/CDPb5VXEYPNUPEe3rZRr1/3vnluvSNGZwYnc7Od0VEEqw6V8C
-    kWRAMYAJAJV5aq+CNT4OFQyy1fVW8k3upxKlO9V7Rt5yUqYEIYE/wijeDPsE7H4gglp/5v
-    F6D384IbY5FCBCgoXmGheBdMQQxOBU4ICiAnYejBlRLhJ/CKeqEcgPSAZh68CS/pdW/x+j
-    oysMrjjAyGFH6oDZSV+ReHQBDpEH3XjCRs+r4WEsyv+LCLa1ZQRyjrSR6cKgS0Pi5Ve0FP
-    CSaf3rI2+ul2/rPFwdCO88CC3NXOaOC07b4Jq2/gPXxONS3ydc229KCVcj4zNvzLHbXFmN
-    tBNIm7Z2RGei8KhHv2/TVTjH/o3X6NcTdHfo/OnAnrCWFAdogiHhZv31ci62SFGn/MozHg
-    ABFRFFqGcbYxwLJeBJe4thYz1QT/N2uIUUJISSciTjn0WOlAm66WEsgPEv1RiMJweOZJbb
-    SfejPaQ8ew6C7iElvtdyY04hwiudB3AnHM/jMyQgRgIdd/3GiwlFd3CgNvt79rvJGPr5LL
-    vUK49+VNc3WivjBgMS11aqb4NeGw7ZYL/+n9sZT1/Gd9crV6FI9XFlJC8rQJ8m5u45BSWu
-    GYyBHKfGc6WsRSsPQcp69nDAt9SFXMQafmUXJ1d6aZbKipcG2AoGuQkbtxqQ
-X-ME-Proxy: <xmx:2aG6aolDtNcrwXT8NDL02k8dwsWNBASyL3S2SiEoEH7HL-Ur3tBRgg>
-    <xmx:2aG6av58REzBnqo_kdilb5gAYIPYXyV9spbMCjex0PgWyRk2Q4gesA>
-    <xmx:2aG6arwh_MSV3vYAr5ruXFNT2JkekEX5e6BSRPlvoZCJB67IiAu2SQ>
-    <xmx:2aG6agLXHzA0c74M-yXItjXap2gS0MNg8qnG83XifTwUIxfHS3vDFw>
-    <xmx:2qG6apWQ6jTiBW-4_lAA-6X2as2dO4UXKo4yzSzVesqB_A0-IcHjOO3P>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1790616111; x=
+	1790623311; bh=olwSF3uNVbiXNhlSbfHN88OmJDHwcqFsRULZ6TEZ7DY=; b=r
+	DrxL5x4jjwMO8a36NJAqiuQ+tBGDl1Vn1IWoxv+sAX9iuH+FGAn2z4IMeZz+fyaG
+	UmTYyBnxsQUsFUQv2b9Z0DNnaFHBrnW69QUTSXrgmN4DxBuMoaoeHpPE/c0MGUr0
+	+OWr+LRon961uuD4izohqIKvm4pwFxvGt/JhUr3cNfF93JmP6Xtjh92f6lRAnFSr
+	SE8AuWKKtkQXHGGqlejODXlsgK8P6kbyqBV4XNfLjvu6/4jYFX40JfmVmCtMWHbf
+	OXcFxiWeDrGAPuGtvlXB+aP8r0jNUzk++vmdT2bW8t0wV9wUAfko4DEISxYzAEuy
+	q1SBzpcIuXqgzGLPv6QHw==
+X-ME-Sender: <xms:L6K6arIsp-cCUlGKr9vOAeLPDX6hVHsPBAKXvmtsRUFDcZwe2iRvEw>
+    <xme:L6K6ailST5k0OTaFkL4DbwqSk2fRBDnNp_4QDWgXSzpZoesbPRakPna_0QV9c9AIT
+    DwoRoE_JvnBbs88jPS9AWjTkn9dkdjuoU6zE9hNxSSpn_MY19z9ARM>
+X-ME-Received: <xmr:L6K6av-tNXS8bADYQUDC8ZXpVExbx-rizJKKlX3muF16uuvOHEtafuRLdJf0AxWT>
+X-ME-Proxy-Cause: dmFkZTGQbPrEKBeqiEbZUNbtwb09ozvDcKaPX2bGG4VdNYbMU+7LyhaeiINgn6IUjWkUVC
+    6JeDaps5HFM/iVHQBkfCnhUeITcngbOs46DTzpJ8KvHBBayyM5vMO0uohHMN0iPagLm+95
+    Rf1dd3pLxz1GzQp/2gzOK2F0n0TFVWoHHloAxxgj18kV4y1s6LHvG6y9wZp+SAkfx0lqDS
+    6+w2KnfcZVDjO3JLly6DGMBpywLp/GX5H1OE+vex7vwjXGaMwlcbDb4BamiBu6catKWgzf
+    i0JoJoKItLv8231p2gQ7Z4FeLva21ZLwkVm+uIm+lkrRoLKPavhRV5MYmoHTX3B5pG+gJE
+    mgxJ6jMnMrw2kF482XHxzUGcG5YwlHv4x+SFyrc5T6Z0Lfr3urEuSCKwI/VCz24ul4doIT
+    OFRSi/9VlGSrGIhdLmjarMb32SBmTyO8AKI4AXVZRQJQybE+lz33EAzCj5x0ELuVCk5Rfa
+    m1TEY5rMapnCV7CGN27IakeeOyRyXrhcVMhHv972PXUlJD4hxd0Iv1exZB2rkFqGrEZvBf
+    mde8p+CpkUmDZ5hOkl4OweX7iK0rM7DUCQGs1kCixlQDIl8dCflcnqqnlIqMwFvXjx34z5
+    O97ucpQ53u8thcXyAWpFFvCUUdyxbRITMhM2jASS/W/sg0DH08oEh2+PAWPQ
+X-ME-Proxy: <xmx:L6K6atbejyNWkDZ5Myfw8vpfMJyJJ8ey23mDjTj8XCSoRMe1YNTqPQ>
+    <xmx:L6K6asfKSNdGNMePMyW-FoXevmUmitKy4mBHpCa1OaYU7CGIpcLftA>
+    <xmx:L6K6alHW_9apoX-EtKikHRv24CI94EbDrU_MFBWwMqorCF_a86GMeg>
+    <xmx:L6K6anOYTd-zpwW17XDdAiyx6p--ln1secO0Xgu7Eo2jhxkPgFQ1og>
+    <xmx:L6K6av09XGtqYulP8xrMqaO1V5PZeToPxh9LGqv3WKI1jdG99f63t_CD>
 Feedback-ID: i60a14417:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 28 Sep 2026 13:20:05 -0400 (EDT)
+ 28 Sep 2026 13:21:30 -0400 (EDT)
 From: =?utf-8?q?Jan_Sebastian_G=C3=B6tte?= <linux@jaseg.de>
-Date: Mon, 28 Sep 2026 19:17:55 +0200
-Subject: [PATCH v3 07/12] security/keys: Allocate key payloads from the
- secret pool
+Date: Mon, 28 Sep 2026 19:17:59 +0200
+Subject: [PATCH v3 11/12] Documentation/mm: Document the crash memaction
+ registry
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260928-crash-memaction-upstream-20260921-v3-7-e511e9ee2329@jaseg.de>
+Message-Id: <20260928-crash-memaction-upstream-20260921-v3-11-e511e9ee2329@jaseg.de>
 References: <20260928-crash-memaction-upstream-20260921-v3-0-e511e9ee2329@jaseg.de>
 In-Reply-To: <20260928-crash-memaction-upstream-20260921-v3-0-e511e9ee2329@jaseg.de>
 To: Jonathan Corbet <corbet@lwn.net>,
@@ -143,10 +143,10 @@ Cc: Eric Biggers <ebiggers@kernel.org>, linux-doc@vger.kernel.org,
  =?utf-8?q?Jan_Sebastian_G=C3=B6tte?= <linux@jaseg.de>
 X-Mailer: b4 0.15.2
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260928_102027_038182_4874CB3F 
-X-CRM114-Status: GOOD (  13.89  )
+X-CRM114-CacheID: sfid-20260928_102152_892132_5DAE7C7F 
+X-CRM114-Status: GOOD (  21.03  )
 X-Spam-Score: -2.1 (--)
-X-Mailman-Approved-At: Tue, 20 Oct 2026 01:21:06 -0700
+X-Mailman-Approved-At: Tue, 20 Oct 2026 01:21:07 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -157,96 +157,113 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-22.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=4.0.1
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Key payloads sit in memory in plain text for as long as the key exists,
-and a kdump crash dump captures them along with everything else.
-
-Allocate the payloads of the user-defined, trusted and encrypted key
-types from the new secret pool, so that their backing pages are marked
-by crash_memaction for the kdump kernel to wipe.
-
-This commit covers the key types used by dm-crypt/cryptsetup. Additional
-key types can be added if needed in future commits.
+Describe the crash memaction registry, including its kernel and userspace
+interfaces, allocation lifetime rules, and current limitations.
 
 Signed-off-by: Jan Sebastian Götte <linux@jaseg.de>
-Assisted-by: Claude Opus 5 <noreply@anthropic.com>
 ---
- security/keys/encrypted-keys/encrypted.c  | 5 +++--
- security/keys/trusted-keys/trusted_core.c | 3 ++-
- security/keys/user_defined.c              | 3 ++-
- 3 files changed, 7 insertions(+), 4 deletions(-)
+ Documentation/mm/crash_memaction.rst | 59 ++++++++++++++++++++++++++++++++++++
+ Documentation/mm/index.rst           |  1 +
+ MAINTAINERS                          |  1 +
+ 3 files changed, 61 insertions(+)
 
-diff --git a/security/keys/encrypted-keys/encrypted.c b/security/keys/encrypted-keys/encrypted.c
-index e07092ea301a..633f31131867 100644
---- a/security/keys/encrypted-keys/encrypted.c
-+++ b/security/keys/encrypted-keys/encrypted.c
-@@ -27,6 +27,7 @@
- #include <linux/random.h>
- #include <linux/rcupdate.h>
- #include <linux/scatterlist.h>
-+#include <linux/secret_pool.h>
- #include <linux/ctype.h>
- #include <crypto/aes.h>
- #include <crypto/sha2.h>
-@@ -648,8 +649,8 @@ static struct encrypted_key_payload *encrypted_key_alloc(struct key *key,
- 	if (ret < 0)
- 		return ERR_PTR(ret);
- 
--	epayload = kzalloc_flex(*epayload, payload_data, payload_totallen,
--				GFP_KERNEL);
-+	epayload = secret_pool_zalloc_flex(*epayload, payload_data,
-+					   payload_totallen, GFP_KERNEL);
- 	if (!epayload)
- 		return ERR_PTR(-ENOMEM);
- 
-diff --git a/security/keys/trusted-keys/trusted_core.c b/security/keys/trusted-keys/trusted_core.c
-index 0509d9955f2a..5f209c5f3f14 100644
---- a/security/keys/trusted-keys/trusted_core.c
-+++ b/security/keys/trusted-keys/trusted_core.c
-@@ -22,6 +22,7 @@
- #include <linux/parser.h>
- #include <linux/random.h>
- #include <linux/rcupdate.h>
-+#include <linux/secret_pool.h>
- #include <linux/slab.h>
- #include <linux/static_call.h>
- #include <linux/string.h>
-@@ -140,7 +141,7 @@ static struct trusted_key_payload *trusted_payload_alloc(struct key *key)
- 	ret = key_payload_reserve(key, sizeof(*p));
- 	if (ret < 0)
- 		goto err;
--	p = kzalloc_obj(*p);
-+	p = secret_pool_zalloc_obj(*p);
- 	if (!p)
- 		goto err;
- 
-diff --git a/security/keys/user_defined.c b/security/keys/user_defined.c
-index 6f88b507f927..dce2508587df 100644
---- a/security/keys/user_defined.c
-+++ b/security/keys/user_defined.c
-@@ -7,6 +7,7 @@
- 
- #include <linux/export.h>
- #include <linux/init.h>
-+#include <linux/secret_pool.h>
- #include <linux/slab.h>
- #include <linux/seq_file.h>
- #include <linux/err.h>
-@@ -64,7 +65,7 @@ int user_preparse(struct key_preparsed_payload *prep)
- 	if (datalen == 0 || datalen > 32767 || !prep->data)
- 		return -EINVAL;
- 
--	upayload = kmalloc_flex(*upayload, data, datalen);
-+	upayload = secret_pool_alloc_flex(*upayload, data, datalen);
- 	if (!upayload)
- 		return -ENOMEM;
- 
+diff --git a/Documentation/mm/crash_memaction.rst b/Documentation/mm/crash_memaction.rst
+new file mode 100644
+index 000000000000..3658bff7693c
+--- /dev/null
++++ b/Documentation/mm/crash_memaction.rst
+@@ -0,0 +1,59 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++====================
++Crash memory actions
++====================
++
++`CONFIG_CRASH_MEMACTION` provides a mechanism for the running kernel to
++communicate a single bit attribute per memory page to a kdump kernel. This
++feature can be used by the kdump kernel to exclude certain pages (e.g. holding
++crypto secrets, or cache) from the system memory dump, or to wipe their contents
++after a  crash.
++
++The meaning of the registry bitmap is set by the ``crash_memaction=`` kernel
++cmdline parameter. The running kernel only sets the bits for the tracked pages,
++and it's up to the kdump kernel to do something with them.
++
++	``crash_memaction={secret|cache}``
++
++Right now, ``secret`` tracks pages containing kernel crypto keys as well as
++pages explicitly marked using ``madvise(2)``. ``cache`` currently only tracks
++pages marked from userspace using ``madvise(2)``.
++
++Kernel users
++============
++
++Kernel code can mark a virtual range in the linear map or in vmalloc space::
++
++	void crash_memaction_mark(void *addr, size_t size, int types);
++	void crash_memaction_unmark(void *addr, size_t size);
++
++Marking is safe from any context and cannot fail. Markings last until the page
++frame is handed out to another user to cover stale data left over after the page
++is free'd.
++
++For objects smaller than a page, lib/secret_pool provides allocations from a
++"secret" marked kmem_buckets. Objects can be allocated through secret_pool
++without the need for any additional lifetime/marking tracking.
++
++Userspace interface
++===================
++
++For userspace code, ``MADV_CRASH_SECRET``, ``MADV_CRASH_CACHE`` and
++``MADV_CRASH_RESET`` are provided for use with ``madvise(2)``. Marks show up in
++``/proc/pid/smaps`` as ``cm`` VMA flag. Only anonymous, shmem and hugetlb ranges
++can be marked. Marking is transparent to swapping and lazy allocation.
++
++Limitations
++===========
++
++* This mechanism is best-effort. During a crash, nothing can be guaranteed. At
++  page level granularity, some over- or under-marking is to be expected.
++* Marks are tracked only for *mapped* folios, so a shmem file only ever written
++  with ``write(2)`` cannot be covered.
++* A single ``madvise(2)`` call on a folio mapped into several processes globally
++  (un)marks it for all of them.
++* Marks are tracked at page level granularity. There is no refcounting. When
++  trying to mark smaller objects, use lib/secret_pool or a similar mechanism.
++* Memory hotplug is not supported at this time. When memory is hotplugged, the
++  newly hotplugged memory will not be included in the bitmap.
+diff --git a/Documentation/mm/index.rst b/Documentation/mm/index.rst
+index 13a79f5d092c..4cdfc5030a56 100644
+--- a/Documentation/mm/index.rst
++++ b/Documentation/mm/index.rst
+@@ -54,6 +54,7 @@ documentation, or deleted if it has served its purpose.
+    allocation-profiling
+    arch_pgtable_helpers
+    balance
++   crash_memaction
+    damon/index
+    free_page_reporting
+    hmm
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bcb11c2138bc..269b8be6c222 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14256,6 +14256,7 @@ L:	kexec@lists.infradead.org
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git
+ F:	Documentation/admin-guide/kdump/
++F:	Documentation/mm/crash_memaction.rst
+ F:	fs/proc/vmcore.c
+ F:	include/linux/crash_core.h
+ F:	include/linux/crash_dump.h
 
 -- 
 2.55.0
