@@ -4,70 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 18EBBCA5FAE
-	for <kexec@archiver.kernel.org>; Tue, 29 Sep 2026 07:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9BF37CA5FA1
+	for <kexec@archiver.kernel.org>; Tue, 29 Sep 2026 07:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=wIkR6mQzFcjI9veWh5hOSNmg3hYrXJQMUzfvP9wEqgw=; b=vs7WcT0S6eKhSH8fW291lux775
-	+SplWb7y7zbfpSkq0Q62tan48/eAmKVOAkgBkT5+eqyfq05oedQcrk3q3JVTLY1FQ/gnPnkfsmYmY
-	Ep6dvM/tJugW/7Jvi7zlRZ57RsPj+i4Vj4lLD8t9+YYIe3Tp9Zqxty7SYXcoS1tFsO0qOIRR8WnDE
-	EM2aJHd+249KdbDwgLnoejxW5nAvk5/P1BPTz0EI+8azU0BGbOVs8mzt5qieB+zwasKhdnnmY90rX
-	ioySQqH3SfhnFkR56rs2jwymqmc6da7QzmjXCZoWfQynwDy+NML+rZ9fv9Gg/28v0wE7oj6BwTyCA
-	FdFhMPew==;
+	bh=aRnDa4vAhhdrCZggWPWQopoSXxq018MvNv/VSTy8Lhs=; b=P9JRfYVGaO8pfzl7G+xND2SuAV
+	iL5Su1KydkzOIZZzGoiZ16UB08bUHUYaB5meKKtApTbBMxRV82UXIebseLOfoxr346obMs62U8BaI
+	hYGec2jFg+9ckaYFuUuq4/napvVFZtrYSL4kJJES8K9mqcI+MLAXNV5afWZzcGJY9ODG0TUhpgBoR
+	lfzFfGlvryt48F3Qm/rW/CwdKU38cLWUE4hOl4SZ2q2AxPSSkKT8RTbYDOx01ag98sSECLT1Psa7i
+	2lb5Aq4v5Ygf6tH2rCd2meWiGQmomL5Z4H54+69mdMa1rEX0R6iycvIl9dTTpSZgICOW7VGoP8KsQ
+	zRXXo4Ig==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xBS8H-00000002aMg-38R5;
-	Tue, 29 Sep 2026 07:20:09 +0000
-Received: from mail-pg1-x545.google.com ([2607:f8b0:4864:20::545])
+	id 1xBS8d-00000002ahk-1ZRj;
+	Tue, 29 Sep 2026 07:20:31 +0000
+Received: from mail-pf1-x445.google.com ([2607:f8b0:4864:20::445])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xBS8A-00000002aGp-0usg
+	id 1xBS8J-00000002aP6-2cFk
 	for kexec@lists.infradead.org;
-	Tue, 29 Sep 2026 07:20:03 +0000
-Received: by mail-pg1-x545.google.com with SMTP id 41be03b00d2f7-cc79892d934so2927315a12.0
-        for <kexec@lists.infradead.org>; Tue, 29 Sep 2026 00:20:01 -0700 (PDT)
+	Tue, 29 Sep 2026 07:20:12 +0000
+Received: by mail-pf1-x445.google.com with SMTP id d2e1a72fcca58-86a2639398cso5573758b3a.3
+        for <kexec@lists.infradead.org>; Tue, 29 Sep 2026 00:20:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790666401; x=1791271201; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1790666410; x=1791271210; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=wIkR6mQzFcjI9veWh5hOSNmg3hYrXJQMUzfvP9wEqgw=;
-        b=PaKnIQ5101qOOoA0US91Hz7y19Yhv8SM6IMryuTF6mYBHtDBaKMaYR17eNCAxqAekK
-         RJybiylhRyZ6RF1kYFhT0gz1Xmxd4CvpBi3e4Cxb1LBE29t+ie4/jMFrPRissYN4M4TM
-         DHfhfvaaG+aVgXaQVBn8yoPLUJqo9JyGDTgDND8u2Ju0EbPhUNlHV6q1Y9CT3ONVRU/d
-         Ny0cU78BgnOhc1vHulGfYNT4UusxciX4A82m3uup1f+Hy0Gaoq2tJaTFSX+ilGkM3/z1
-         gm3o5NxdfTmWQZwv88mXa0k4WRilg39oP5brROdRDtJSsT/7KgHiiFTdI+GiPpwt2+kz
-         ZPRg==
+        bh=aRnDa4vAhhdrCZggWPWQopoSXxq018MvNv/VSTy8Lhs=;
+        b=HYzmlfZfGmPUDk/VXAYpCAfagC7geiG/EbkA2SHJelXjl0i26D6QKA5hmyqnTSrZVJ
+         FIfdUW9nhTaCFHhuPm4QL/6ZsV/Vj6Ja6YML5k8HaYS0GcHGz3odV/pslGFfW4Bu846C
+         eZXfR/0z/+EfzIsZB7DyR40kq1pNsyKsGG8gcv7u0wvNh8Sc8GNvoXtWn2eN7eSzXexZ
+         cqixhOhj2HHYwLWQF0b/XjlrE3a5kIG2cvnHkbIPKTC8bCjaOGZsPBZwEgRhapz4S4X3
+         mLliC6fs393ihSZFZla4h7VqLJMq/IfXocMGNp+gkZCnQgMCAvyt4UsDq/S7s0IB6r6Z
+         KF2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790666401; x=1791271201;
+        d=1e100.net; s=20260707; t=1790666410; x=1791271210;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=wIkR6mQzFcjI9veWh5hOSNmg3hYrXJQMUzfvP9wEqgw=;
-        b=KQmw14chqDolz6gsa1QFwvd8xLcDB7Sphabh858YvIbVzQPXu8T0ktyON1EypD02VF
-         KYx3YbXLLaYSa6GSH4QLfAYgSyGkpSwei2XbkLkxJzaqufHY1cxq4AaVclczvJBQRcUq
-         ex0qXjhDYVGZn48DNA8apeNzMNXEJbzdDSFDRWJxf+CzvbZzd5QfAlO1zZwQDxRK9IG6
-         3nxEUOBcMMqMTbGOG4eTXOwF899SQhSU62K3p089AlLXqsMwI+LFYijWFxi0L72v+pOU
-         m2Ky2tIx/+TwTe51Ex8LDx9jAOvafLoskRG6zwSMcrTEIN0Pfbb3VeGY9Ylmy2elvu4x
-         V0SQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxGDWeJzcsBazBk+ghPAZbE2dq8xjIygGmUqdEvnH8VStYjf+gBfuSK4VbFu8VnRokcz98Gig==@lists.infradead.org
-X-Gm-Message-State: AFuF++lZMhV8Msg9wHnoWxmBDcju0F4ggnYNcIyiQsIXAR7pAGfKDQx+
-	4A4cMjnATJ10VRtEN3vJXFFI/X0ZHLqesT+f077Eg/6iOnsH3twKozx9iRb2MhQd3SLNVsA9AFY
-	rdw==
-X-Received: from pfjw16.prod.google.com ([2002:aa7:9a10:0:b0:87c:dd7e:8e68])
- (user=praan job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:910c:b0:3dd:85a9:55ab
- with SMTP id adf61e73a8af0-3de26db3402mr10807160637.36.1790666400760; Tue, 29
- Sep 2026 00:20:00 -0700 (PDT)
-Date: Tue, 29 Sep 2026 07:19:44 +0000
+        bh=aRnDa4vAhhdrCZggWPWQopoSXxq018MvNv/VSTy8Lhs=;
+        b=tyKLajIxxbX/KXSefAerfI6pxrPcEE5h9Utui9VLoIGlQ8wDqpaxzY5Gi0ItGIKhlB
+         eQORvY04x0Tv8qWtCQGbDHzbm5GcluWLikzoQLarXDTm28xq4DmNbxNU+QHRUD5BOmRl
+         GSBoXjAVudDnGWPlcB0Hiij/aGIwzUexdKeP+7dK6dAmcmLrNFXT9ZF5Y2aiToMOrSxL
+         Dz2oeb2PTXRt6AWIrBkRJkwdDSrUL5vbVmaMa6NZ9o8gGuzzMd9OcWENcwtmgfchwNQd
+         Ksn2OmfrJFwZa2GwPvbeY8ejlXUchGQHW+3zdrTbQWWBRm7JcT99o9vQU+uHgRA7L7DU
+         roLQ==
+X-Forwarded-Encrypted: i=1; AKwUvBx2MUu2T60PihMx0q4rJGPI/AKvacwrf5UmDZst3jeOdUBtloBKFXXUSZZuGxNG8Q9/DEP3pA==@lists.infradead.org
+X-Gm-Message-State: AFuF++k8qJqd5vYb9FOg8Mh+e6bN5fThEKGwTgLQfpgRoDXQzuSKVN9a
+	1PI8V3B8xUNv6ihq83QIuBjozYFNfaPEC2On/6PcWgj/C7luyFnA/oPJVMyLajZEJ1YpnavfgPX
+	QGw==
+X-Received: from pfbhu13.prod.google.com ([2002:a05:6a00:698d:b0:884:7cdd:23d1])
+ (user=praan job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:94fb:b0:882:1d:c2ba
+ with SMTP id d2e1a72fcca58-882001dcd3cmr5592982b3a.22.1790666410148; Tue, 29
+ Sep 2026 00:20:10 -0700 (PDT)
+Date: Tue, 29 Sep 2026 07:19:48 +0000
 In-Reply-To: <20260929071950.2710070-1-praan@google.com>
 Mime-Version: 1.0
 References: <20260929071950.2710070-1-praan@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20260929071950.2710070-4-praan@google.com>
-Subject: [RFC PATCH v1 3/9] iommu/arm-smmu-v3: Implement CD Table preservation
+Message-ID: <20260929071950.2710070-8-praan@google.com>
+Subject: [RFC PATCH v1 7/9] iommu/arm-smmu-v3: Retain SMMUEN across a Live
+ Update restore
 From: Pranjal Shrivastava <praan@google.com>
 To: iommu@lists.linux.dev, Will Deacon <will@kernel.org>, 
 	Jason Gunthorpe <jgg@nvidia.com>
@@ -81,8 +82,8 @@ Cc: Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
 	Pranjal Shrivastava <praan@google.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260929_002002_261066_8593E346 
-X-CRM114-Status: GOOD (  23.87  )
+X-CRM114-CacheID: sfid-20260929_002011_692107_7640823A 
+X-CRM114-Status: GOOD (  16.64  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,242 +98,98 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The core IOMMU Live Update framework preserves page tables pointed by the
-respective TTBs but the CD tables are expected to be preserved by the
-SMMUv3 driver.
+arm_smmu_device_reset() clears SMMUEN and rewrites CR1, CR2 and
+STRTAB_BASE, aborting the DMA of the preserved devices. The kdump adoption
+path already avoids this for a live Stream Table.
 
-Extend the arm-smmu-v3 driver to preserve CD tables across a KHO with
-Live Update enabled. Currently, only support for preserving S1 CD tables
-exists since nested CD tables are auto-preserved as they reside in the
-guest memory. The current implementation doesn't support preservation at
-a PASID granularity due to the similar limitation in IOMMU LU core.
-
-Unpreserve the CD tables in .unpreserve_device.
+Introduce arm_smmu_strtab_is_live() and route a Live Update restore
+through the kdump reset path. Also ack a stale GERROR, since the outgoing
+kernel masked the interrupts, and skip installing the RMR bypass STEs.
 
 Signed-off-by: Pranjal Shrivastava <praan@google.com>
 ---
- .../arm/arm-smmu-v3/arm-smmu-v3-liveupdate.c  | 173 +++++++++++++++++-
- 1 file changed, 164 insertions(+), 9 deletions(-)
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 29 ++++++++++++++-------
+ 1 file changed, 20 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-liveupdate.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-liveupdate.c
-index 515a266ac22e..38b9d4e4ab4d 100644
---- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-liveupdate.c
-+++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-liveupdate.c
-@@ -11,6 +11,114 @@
- #include "arm-smmu-v3.h"
+diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+index 3cf97f451b64..54c97ebc15b2 100644
+--- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
++++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+@@ -5048,6 +5048,13 @@ static void arm_smmu_write_strtab(struct arm_smmu_device *smmu)
+ 	writel_relaxed(reg, smmu->base + ARM_SMMU_STRTAB_BASE_CFG);
+ }
  
- #ifdef CONFIG_IOMMU_LIVEUPDATE
-+static int arm_smmu_preserve_cd_table_linear(struct arm_smmu_master *master,
-+					     struct iommu_device_ser *device_ser)
++/* Adopted by kdump or restored by LU (a failed restore fails the probe) */
++static bool arm_smmu_strtab_is_live(struct arm_smmu_device *smmu)
 +{
-+	struct device *dev = master->smmu->dev;
-+	struct arm_smmu_ctx_desc_cfg *cd_table = &master->cd_table;
-+	u32 size = cd_table->linear.num_ents * sizeof(struct arm_smmu_cd);
-+	u64 state;
-+	int ret;
-+
-+	ret = dma_preserve_coherent_allocation(dev, cd_table->linear.table,
-+					       size, cd_table->cdtab_dma, &state);
-+	if (ret)
-+		return ret;
-+
-+	device_ser->smmuv3.l1_cdtab_lu_state = state;
-+	device_ser->smmuv3.num_l2_cdtables = 0;
-+
-+	return 0;
++	return (smmu->options & ARM_SMMU_OPT_KDUMP_ADOPT) ||
++	       iommu_get_preserved_data(smmu->base_phys, IOMMU_ARM_SMMUV3);
 +}
 +
-+static int arm_smmu_preserve_cd_table_2lvl(struct arm_smmu_master *master,
-+					   struct iommu_device_ser *device_ser)
-+{
-+	struct device *dev = master->smmu->dev;
-+	struct arm_smmu_ctx_desc_cfg *cd_table = &master->cd_table;
-+	u32 l1size = cd_table->l2.num_l1_ents * sizeof(struct arm_smmu_cdtab_l1);
-+	u32 num_l2 = 0;
-+	u64 *l2_states;
-+	u64 state;
-+	int ret, i;
-+
-+	ret = dma_preserve_coherent_allocation(dev, cd_table->l2.l1tab,
-+					       l1size, cd_table->cdtab_dma, &state);
-+	if (ret)
-+		return ret;
-+
-+	device_ser->smmuv3.l1_cdtab_lu_state = state;
-+
-+	for (i = 0; i < cd_table->l2.num_l1_ents; i++) {
-+		if (cd_table->l2.l2ptrs[i])
-+			num_l2++;
-+	}
-+
-+	device_ser->smmuv3.num_l2_cdtables = num_l2;
-+	if (!num_l2)
-+		return 0;
-+
-+	l2_states = kho_alloc_preserve(sizeof(*l2_states) * num_l2);
-+	if (IS_ERR(l2_states)) {
-+		ret = PTR_ERR(l2_states);
-+		goto err_unpreserve_cd_l1;
-+	}
-+
-+	device_ser->smmuv3.l2_cdtab_lu_states_phys = virt_to_phys(l2_states);
-+	num_l2 = 0;
-+
-+	for (i = 0; i < cd_table->l2.num_l1_ents; i++) {
-+		dma_addr_t l2_dma;
-+
-+		if (!cd_table->l2.l2ptrs[i])
-+			continue;
-+
-+		l2_dma = le64_to_cpu(cd_table->l2.l1tab[i].l2ptr) & CTXDESC_L1_DESC_L2PTR_MASK;
-+		ret = dma_preserve_coherent_allocation(dev, cd_table->l2.l2ptrs[i],
-+						       sizeof(struct arm_smmu_cdtab_l2),
-+						       l2_dma, &state);
-+		if (ret)
-+			goto err_free_cd_l2_states;
-+
-+		l2_states[num_l2++] = state;
-+	}
-+
-+	return 0;
-+
-+err_free_cd_l2_states:
-+	for (i = i - 1; i >= 0; i--) {
-+		if (cd_table->l2.l2ptrs[i]) {
-+			num_l2--;
-+			dma_unpreserve_coherent_allocation(dev, l2_states[num_l2]);
-+		}
-+	}
-+	kho_unpreserve_free(l2_states);
-+err_unpreserve_cd_l1:
-+	dma_unpreserve_coherent_allocation(dev, device_ser->smmuv3.l1_cdtab_lu_state);
-+	return ret;
-+}
-+
-+static void arm_smmu_unpreserve_cd_table(struct arm_smmu_master *master,
-+					 struct iommu_device_ser *device_ser)
-+{
-+	struct device *dev = master->smmu->dev;
-+	u32 num_l2 = device_ser->smmuv3.num_l2_cdtables;
-+	u64 *l2_states;
-+	u32 i;
-+
-+	if (!device_ser->smmuv3.l1_cdtab_lu_state)
-+		return;
-+
-+	if (num_l2) {
-+		l2_states = phys_to_virt(device_ser->smmuv3.l2_cdtab_lu_states_phys);
-+		for (i = 0; i < num_l2; i++)
-+			dma_unpreserve_coherent_allocation(dev, l2_states[i]);
-+		kho_unpreserve_free(l2_states);
-+	}
-+	dma_unpreserve_coherent_allocation(dev, device_ser->smmuv3.l1_cdtab_lu_state);
-+	memset(&device_ser->smmuv3, 0, sizeof(device_ser->smmuv3));
-+}
-+
- static u64 *arm_smmu_l2_strtab_states(struct arm_smmu_device *smmu)
+ static int arm_smmu_device_reset(struct arm_smmu_device *smmu)
  {
- 	struct iommu_hw_ser *iommu_ser = iommu_preserved_state(&smmu->iommu);
-@@ -105,17 +213,53 @@ int arm_smmu_preserve_device(struct device *dev,
- {
- 	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
- 	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
-+	struct arm_smmu_domain *smmu_domain;
-+	struct arm_smmu_ctx_desc_cfg *cd_table = &master->cd_table;
- 	struct iommu_domain_ser *domain_ser;
--	int ret;
-+	int ret = 0;
-+
-+	memset(&device_ser->smmuv3, 0, sizeof(device_ser->smmuv3));
+ 	int ret;
+@@ -5064,10 +5071,11 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu)
+ 	 * According to spec, updating STRTAB_BASE/CR1/CR2 when CR0_SMMUEN=1 is
+ 	 * CONSTRAINED UNPREDICTABLE. So, skip those register updates and rely
+ 	 * on the adopted stream table from the crashed kernel.
++	 * Same for a Live Update restore.
+ 	 */
+-	if (smmu->options & ARM_SMMU_OPT_KDUMP_ADOPT) {
+-		dev_info(smmu->dev,
+-			 "kdump: retaining SMMUEN for in-flight DMA\n");
++	if (arm_smmu_strtab_is_live(smmu)) {
++		dev_info(smmu->dev, "%s: retaining SMMUEN for in-flight DMA\n",
++			 is_kdump_kernel() ? "kdump" : "live update");
+ 		enables = reg & ~(CR0_CMDQEN | CR0_EVTQEN | CR0_PRIQEN);
+ 		goto reset_queues;
+ 	}
+@@ -5103,7 +5111,7 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu)
+ 	arm_smmu_write_strtab(smmu);
+ 
+ reset_queues:
+-	if (smmu->options & ARM_SMMU_OPT_KDUMP_ADOPT) {
++	if (arm_smmu_strtab_is_live(smmu)) {
+ 		/*
+ 		 * Disable queues since arm_smmu_device_disable() was skipped.
+ 		 * CR0 fields are independent per spec, so the queue enable bits
+@@ -5122,8 +5130,9 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu)
+ 	 * errors would be visible. Ack everything prior to re-enabling the CMDQ
+ 	 * as a stale CMDQ_ERR would halt the CMDQ and new command will timeout.
+ 	 * Acking SFM_ERR is defined too, although it would not exit the SFM.
++	 * Same for a Live Update, as the outgoing kernel masked the interrupts.
+ 	 */
+-	if (is_kdump_kernel()) {
++	if (is_kdump_kernel() || arm_smmu_strtab_is_live(smmu)) {
+ 		u32 gerror = readl_relaxed(smmu->base + ARM_SMMU_GERROR);
+ 		u32 gerrorn = readl_relaxed(smmu->base + ARM_SMMU_GERRORN);
+ 
+@@ -5193,10 +5202,10 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu)
+ 	}
  
  	/*
- 	 * We'd anyway configure abort STEs for non-preserved masters.
- 	 * TODO: Re-visit for identity once IOMMUFD noIOMMU is merged
-+	 * TODO: Re-visit for CXL + ATS + Identity CD Table thing
-+	 *       Can use cd_table_allocated() helper here?
+-	 * In a kdump adopt case, retain the crashed kernel's ATS-check policy
+-	 * captured above rather than forcing it on.
++	 * In a kdump adopt or a Live Update restore case, retain the previous
++	 * kernel's ATS-check policy captured above rather than forcing it on.
  	 */
- 	if (domain->type == IOMMU_DOMAIN_IDENTITY ||
- 	    domain->type == IOMMU_DOMAIN_BLOCKED)
- 		return 0;
+-	if (!(smmu->options & ARM_SMMU_OPT_KDUMP_ADOPT) &&
++	if (!arm_smmu_strtab_is_live(smmu) &&
+ 	    (smmu->features & ARM_SMMU_FEAT_ATS)) {
+ 		enables |= CR0_ATSCHK;
+ 		ret = arm_smmu_write_reg_sync(smmu, enables, ARM_SMMU_CR0,
+@@ -5722,8 +5731,10 @@ static void arm_smmu_rmr_install_bypass_ste(struct arm_smmu_device *smmu)
+ 	 * Kdump adoption keeps the crashed kernel's table live. Rewriting the
+ 	 * adopted STE here could expose an in-flight fetch to a transient V=0
+ 	 * entry, or change Cfg=translate to Cfg=bypass. Must skip here.
++	 * Same for a Live Update restore.
++	 * TODO: Re-install the bypass STEs of the unpreserved RMR SIDs.
+ 	 */
+-	if (smmu->options & ARM_SMMU_OPT_KDUMP_ADOPT)
++	if (arm_smmu_strtab_is_live(smmu))
+ 		return;
  
-+	/*
-+	 * For nested domains we only need to preserve STE.
-+	 * The S2 parent domain's page tables are preserved via its own
-+	 * iommu_preserve_domain() call during IOMMUFD's HWPT preservation.
-+	 * Since the CD Table in this case lives in the guest memory, it is
-+	 * naturally preserved by default across KHO when Live Update is enabled.
-+	 * Thus, since CD isn't allocated via DMA allocator by the host driver
-+	 * we must not attempt preserving CD here.
-+	 */
-+	if (domain->type == IOMMU_DOMAIN_NESTED)
-+		goto skip_cd_preservation;
-+
-+	smmu_domain = to_smmu_domain(domain);
-+
-+	/* SVA domains cannot be preserved across KHO */
-+	if (smmu_domain->stage == ARM_SMMU_DOMAIN_SVA) {
-+		dev_err(dev, "SVA domains are NOT preserved across KHO\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	/*
-+	 * The IOMMU LU Core doesn't support preservation at a PASID
-+	 * granularity yet, reject preservation to prevent leaving active
-+	 * PASIDs pointing to unpreserved tables.
-+	 */
-+	if (arm_smmu_ssids_in_use(&master->cd_table)) {
-+		dev_err(dev, "Preserving devices with active PASIDS is NOT supported w/ Live Update\n");
-+		return -EOPNOTSUPP;
-+	}
-+
- 	if (domain->preserved_state) {
- 		domain_ser = domain->preserved_state;
- 	} else {
-@@ -128,18 +272,28 @@ int arm_smmu_preserve_device(struct device *dev,
- 	/* Link this master to the preserved IOMMU domain in the ABI */
- 	device_ser->domain_iommu_ser.domain_phys = virt_to_phys(domain_ser);
- 
--	ret = arm_smmu_preserve_l2_strtabs(master);
-+	/* If it's not Stage-1, or the CD table isn't allocated, we're done */
-+	if (smmu_domain->stage != ARM_SMMU_DOMAIN_S1 ||
-+	    !arm_smmu_cdtab_allocated(&master->cd_table))
-+		goto skip_cd_preservation;
-+
-+	if (cd_table->s1fmt == STRTAB_STE_0_S1FMT_LINEAR)
-+		ret = arm_smmu_preserve_cd_table_linear(master, device_ser);
-+	else if (cd_table->s1fmt == STRTAB_STE_0_S1FMT_64K_L2)
-+		ret = arm_smmu_preserve_cd_table_2lvl(master, device_ser);
-+
-+skip_cd_preservation:
- 	if (ret)
- 		return ret;
- 
--	/* Mark the master as preserved to track state across disable */
--	master->preserved = true;
--
--	/*
--	 * TODO: Preserve CD tables for Stage-1 domains here using
--	 * dmam_preserve_allocation_attrs() on master->cd_table.
--	 */
-+	ret = arm_smmu_preserve_l2_strtabs(master);
-+	if (ret) {
-+		arm_smmu_unpreserve_cd_table(master, device_ser);
-+		return ret;
-+	}
- 
-+	/* Mark the master as preserved to track state during disable */
-+	master->preserved = true;
- 	return 0;
- }
- 
-@@ -153,6 +307,7 @@ void arm_smmu_unpreserve_device(struct device *dev,
- 
- 	master->preserved = false;
- 	arm_smmu_unpreserve_l2_strtabs(master, master->num_streams);
-+	arm_smmu_unpreserve_cd_table(master, device_ser);
- }
- 
- static int arm_smmu_preserve_strtab_2lvl(struct arm_smmu_device *smmu,
+ 	INIT_LIST_HEAD(&rmr_list);
 -- 
 2.56.0.rc1.315.gc6ed9934b7-goog
 
