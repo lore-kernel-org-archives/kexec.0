@@ -4,78 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3D32ACA5FC7
-	for <kexec@archiver.kernel.org>; Wed, 30 Sep 2026 13:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 32095CA5FC4
+	for <kexec@archiver.kernel.org>; Wed, 30 Sep 2026 20:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Date:Message-Id:Subject:References:In-Reply-To:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zbkUDNwMgnqGHrbog0cra0S8SRCtAdGfYKEuqQ54rHU=; b=ZHknxWSw90ipMIanyFjHQchPCF
-	6OGXMWczg+0YfDYjwHHOdgrgp0eERX69uWT1snL7fg0F+7NC1h0hnUPIHcVYze9ViI4ZvwdcFF6uA
-	bTPsJv6tj/A+zo74zxk9wdXlC0xXeHqxUpuBAC0zQx7a0Kr6LU/lsse7psIjSq5G/fFxxUuZahqJc
-	+szD2AuwsLO1A9PeEnYsQYvfu+fd0+hecuS6cmjWtAbiSkDVteoBythpWyeyyqytPT+L9QXarwCG2
-	A1SBdEnNzK2OEUWLk73g41Qh2bCgrBDdz+x6JlSmdWsI+gPe4mk7dupPm7Y1RiP8achzANMuSRmyT
-	PlNEp6lA==;
+	bh=OapGlJY1wYDmw+Y0TtKR8EKrOr0XHXHejx9VYzSAsew=; b=oGkr5Va9oGvjeQ0mKFfow6wHbp
+	c2T78jk567g0t8+yHuqKpl+WFf3ZptOaUHNdtY9TzqSwiVXWkSOjOmacAAWOv0wmvF0h50NV/I9j8
+	SI/KCWxyRDDkNPZ5k+FJ0Dtnw6UqeeCmj9LRiBVWupEwXU0f+sGNWvOY6/5nknCgkL0fMrKTXneuN
+	GS4Pek/ZcAGzSrJo6I9olczLmtPdLt3f5DAkGqxF5DwSJGrAa0ok0+2gGANzo1x1RFiUZ0JGyJaYb
+	3TvOvRVrIZ0Erw+/7jThDoiuaF9yZpvS4u4K2VZNoIR1ijlvcZanXih8gyIKXz7DsN8EK7gXP+imo
+	37SxBszQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xBuXp-00000006A3a-23sl;
-	Wed, 30 Sep 2026 13:40:25 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xC0Wk-000000078Us-2ct0;
+	Wed, 30 Sep 2026 20:03:42 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xBuXl-00000006A3I-0wjR
+	id 1xC0Wi-000000078UV-3W8J
 	for kexec@lists.infradead.org;
-	Wed, 30 Sep 2026 13:40:21 +0000
+	Wed, 30 Sep 2026 20:03:40 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 68EF160252;
-	Wed, 30 Sep 2026 13:40:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 607161F000FF;
-	Wed, 30 Sep 2026 13:40:16 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 3776944786
+	for <kexec@lists.infradead.org>; Wed, 30 Sep 2026 20:03:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CD2B1F00A01
+	for <kexec@lists.infradead.org>; Wed, 30 Sep 2026 20:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790775620;
-	bh=zbkUDNwMgnqGHrbog0cra0S8SRCtAdGfYKEuqQ54rHU=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=XKtt4/A5r/NkfGSvjGsvCW5EFKALT4VUt/RHVBjfHu+gJmFaF8/SWNcnrhlmbywAS
-	 ifcqRGWYrmSjygRyyrsTfwOoN2bR2RY4k37nRTO86Fe/6ZQMJmouyYQepITjzW/tLt
-	 an92bB88qaT5hqoqilJyvJmu9fzkThXkvwq+yIw2k0S/X/1iXOxZ7uRrI2+wOdRlWG
-	 gg5IBr0eTLWXVU78MxgA3y+//L0MbFHibkUIsEBDi1XKQOlJjPlbCAIAprCWNyzfu2
-	 N4dBImdVO92xInyLowtE5Vy0a5O3aWxh1xfY0cTW7PyFmz5QQNqBm+piNDE9yfYwhg
-	 ZZSNukz9/nwOQ==
-From: Nathan Chancellor <nathan@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>, 
- Shuah Khan <skhan@linuxfoundation.org>, 
- Randy Dunlap <rdunlap@infradead.org>, 
- Luis Augenstein <luis.augenstein@tngtech.com>, 
- Maximilian Huber <maximilian.huber@tngtech.com>, 
- Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
- Willy Tarreau <w@1wt.eu>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
- Nicolas Schier <nsc@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Askar Safin <safinaskar@gmail.com>, linux-doc@vger.kernel.org, 
- kexec@lists.infradead.org, linux-mm@kvack.org, 
- linux-kselftest@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-In-Reply-To: <20260928-move-gen_init_cpio-to-scripts-v4-0-f437a33c40ac@kernel.org>
-References: <20260928-move-gen_init_cpio-to-scripts-v4-0-f437a33c40ac@kernel.org>
-Subject: Re: [PATCH v4 0/2] Move tool for generating initramfs cpio to
- scripts/
-Message-Id: <179077560598.3184845.8880862675609960141.b4-ty@b4>
-Date: Wed, 30 Sep 2026 15:40:05 +0200
+	s=k20260515; t=1790798620;
+	bh=OapGlJY1wYDmw+Y0TtKR8EKrOr0XHXHejx9VYzSAsew=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=ccB2M2y6VD9vQ0mxCk5bKfAYhKS2Od/YOO6eFlH+k4qkCYjrlgMPQbWPFIUjm0o2A
+	 O/XYaDudEzEwgqxousKfpjwxOUiJP44WQ8e77xw2YSaczeEsXnt3fdpWcKWrGa3qIe
+	 GqsA223hjSMjmeFHSSfPgZ1bLE/t2e+kVvk3Q8S2J+UE5dywQ5XWKlzPzzsGAPCyL2
+	 I3ZJU9jY1wEKKENs6OCHLSEySWTIa5XaEH0au3kdmiNSQVoCB7lSngi4gZ42nA8WGm
+	 u8Yg2DPYtQ9FfLcDBjDIgJFglCUe0ALMfmCUi5FYgqyqLLadqovRmEnkoNmlZPdDHp
+	 Ucp46HQ78exAw==
+Received: by mail-lr2-f12.google.com with SMTP id 38308e7fff4ca-3a2ff148dfdso47190511fa.1
+        for <kexec@lists.infradead.org>; Wed, 30 Sep 2026 13:03:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBzvIvAbEWQdcJfIZ6Y80rH64GnDBPvR2Maj6U9ICuHlLI9/RLgsiltkDSLuISuDK1s/LYeyqQ==@lists.infradead.org
+X-Gm-Message-State: AFq9FYLwnUdFMFMN6l/+nnXRm1ESSHi0oWwhE9iDiiNw1SmCXJhOMs50
+	7K6kczPq+mwP4MhcMYoMjrjKHxb/6Ko9iDN4MnvM/wPLVEwBvf9TIUVjVSLQn1ejarphdXwWEJp
+	ClnozsywJH76kxR4V718r/ndow6s+rXg=
+X-Received: by 2002:a05:651c:4182:b0:3a3:7681:6d66 with SMTP id
+ 38308e7fff4ca-3a779269585mr6413091fa.15.1790798618340; Wed, 30 Sep 2026
+ 13:03:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1195; i=nathan@kernel.org;
- h=from:subject:message-id; bh=uzHGM/3maVkIGwCJuKvC/PNaFcYXYyU6EAt9CwiwkGY=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDFl7BS33Hd+UGvve0kZKZXb3b+nkhL8/ZL9esLiXa6xya
- v0x49U3O0pZGMS4GGTFFFmqH6seNzScc5bxxqlJMHNYmUCGMHBxCsBEPioy/NNPOlPA9cZP+FZm
- WdDsvrtCQplpXb/C83d5LD07//GadGVGhqs7v7rem/Z96nyOPVe/fK5Nf7Jo0d+HUju3xd+vdmE
- 8H8wIAA==
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+References: <20260805070900.3390978-1-matthias.goergens@gmail.com> <20260926052117.3613637-1-matthias.goergens@gmail.com>
+In-Reply-To: <20260926052117.3613637-1-matthias.goergens@gmail.com>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Wed, 30 Sep 2026 22:01:52 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hzrTjgrteh6JwuiaJdXLXbHpKbD7Qdz=5TinZ934vmKg@mail.gmail.com>
+X-Gm-Features: AclHuK9cxMLeqKTvasUuTJx35wURz83sx4X-kdaW8aAo_1NHUJMN1pBDUOQ5Uzk
+Message-ID: <CAJZ5v0hzrTjgrteh6JwuiaJdXLXbHpKbD7Qdz=5TinZ934vmKg@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/hibernate: Ignore page-zero RAM in E820 checksum
+To: Matthias Goergens <matthias.goergens@gmail.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org, pavel@kernel.org, 
+	tglx@kernel.org, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, 
+	x86@kernel.org, hpa@zytor.com, yu.c.chen@intel.com, jlee@suse.com, 
+	baoquan.he@linux.dev, dyoung@redhat.com, io@r-ricci.it, scardracs@disroot.org, 
+	moravec@ukf.sk, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,38 +82,154 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, 28 Sep 2026 19:26:56 +0200, Nicolas Schier wrote:
-> Move tool for generating initramfs cpio to scripts/
-> 
-> initramfs cpio tools had been subject of several recent discussions on
-> linux-kbuild.  Let's get two minor steps forward by enabling a
-> top-level target for building gen_init_cpio w/o the need of a valid
-> kbuild configuration [1] and move the tools for generating the built-in
-> initramfs from usr/ to scripts/ [2].
-> 
-> [...]
+On Sat, Sep 26, 2026 at 7:21=E2=80=AFAM Matthias Goergens
+<matthias.goergens@gmail.com> wrote:
+>
+> The legacy kexec_load path reconstructs the E820 map exported through
+> sysfs.  kexec-tools leaves the first 1 KiB unavailable for the real-mode
+> transition, so a kernel entered through kexec_load can see conventional
+> RAM starting at 0x400.  A subsequent firmware boot reports the same RAM
+> range starting at zero.
+>
+> The hibernation E820 checksum compares those byte representations and
+> rejects the image, even though the maps agree from page one onwards.
+> A QEMU guest showed this transition:
+>
+>   firmware:     RAM [0-0x9fbff]
+>   kexec_load:   gap [0-0x3ff], RAM [0x400-0x9fbff]
+>   firmware:     RAM [0-0x9fbff]
+>
+> The checksum covers e820_table_firmware, which trim_bios_range() leaves
+> alone.  The nosave regions come from e820_table instead, where
+> trim_bios_range() has already turned conventional RAM in page zero into
+> reserved memory, so page zero never occurs in the image, whatever the
+> firmware map says about it.
+>
+> Canonicalise only the conventional-RAM portion below PAGE_SIZE before
+> calculating the checksum.  Preserve RESERVED, ACPI, NVS, UNUSABLE, PMEM
+> and all other E820 types so that changes to exceptional mappings remain
+> detectable.
+>
+> This is deliberately narrower than Marco Scardovi's June proposal to
+> checksum only RAM and its opt-in relaxed_memmap successor.  Rafael
+> noted that ignoring non-RAM changes could hide moved ACPI or UEFI
+> regions still used by the resumed kernel.  This patch preserves every
+> non-RAM entry and ignores only RAM within page zero, which common setup
+> already reserves and excludes from the image.
+>
+> Bump RESTORE_MAGIC, since the checksum semantics change, so that an
+> image written by a kernel without this change is refused by the magic
+> check instead of being compared under different rules.
+>
+> In the same guest, with the page-zero difference kept, hibernation and
+> resume now work after both a direct boot and a kexec_load boot.  An
+> image written by an unpatched kernel is refused at resume with
+> "Unrecognized hibernate image header format!", and the firmware-booted
+> kernel carries on.
+>
+> Fixes: 62a03defeabd ("PM / hibernate: Verify the consistent of e820 memor=
+y map by md5 digest")
+> Reported-by: Roberto Ricci <io@r-ricci.it>
+> Signed-off-by: Matthias Goergens <matthias.goergens@gmail.com>
+> Link: https://lore.kernel.org/all/Z-hYWc9LtBU1Yhtg@desktop0a/
+> Link: https://lists.openwall.net/linux-kernel/2025/04/04/1372
+> Link: https://lore.kernel.org/all/CAJZ5v0jmOj0WBtMTvbnaD+2b0bTFowA=3DJWrq=
+RzaaCYpHpai1Nw@mail.gmail.com/
+> Link: https://lore.kernel.org/all/20260623165724.10753-1-scardracs@disroo=
+t.org/
+> ---
+> Changes in v2:
+> - Bump RESTORE_MAGIC, as Rafael asked:
+>   https://lore.kernel.org/all/CAJZ5v0izV3g1mSKJtKMcc=3DTfeUjJofSXCX92y4XX=
+55Lam28qOg@mail.gmail.com/
+> - Say which E820 table the checksum covers and why page zero still
+>   cannot be in the image; drop the paragraph on cross-version images,
+>   which the magic now covers, and report that such an image is refused.
+> - Rebased on 6812ce4e4379 ("Merge tag 'drm-fixes-2026-09-26' of
+>   https://gitlab.freedesktop.org/drm/kernel").
+>
+>  arch/x86/power/hibernate.c | 51 +++++++++++++++++++++++++++++++++-----
+>  1 file changed, 45 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/x86/power/hibernate.c b/arch/x86/power/hibernate.c
+> index a2294c1649f6..dbb340fb24ad 100644
+> --- a/arch/x86/power/hibernate.c
+> +++ b/arch/x86/power/hibernate.c
+> @@ -63,6 +63,25 @@ struct restore_data_record {
+>         unsigned long e820_checksum;
+>  };
+>
+> +static bool trim_e820_page_zero_ram(struct e820_entry *entry)
+> +{
+> +       u64 lowmem_size;
+> +
+> +       /*
+> +        * Page zero is BIOS-owned and registered as nosave.  Boot loader=
+s may
+> +        * therefore omit part of its conventional RAM entry without chan=
+ging
+> +        * any memory available to the image.  Preserve all other E820 ty=
+pes.
+> +        */
+> +       if (entry->type !=3D E820_TYPE_RAM || entry->addr >=3D PAGE_SIZE)
+> +               return true;
+> +
+> +       lowmem_size =3D min_t(u64, entry->size, PAGE_SIZE - entry->addr);
+> +       entry->addr +=3D lowmem_size;
+> +       entry->size -=3D lowmem_size;
+> +
+> +       return entry->size;
+> +}
+> +
+>  /**
+>   * compute_e820_crc32 - calculate crc32 of a given e820 table
+>   *
+> @@ -70,18 +89,38 @@ struct restore_data_record {
+>   *
+>   * Return: the resulting checksum
+>   */
+> -static inline u32 compute_e820_crc32(struct e820_table *table)
+> +static u32 compute_e820_crc32(struct e820_table *table)
+>  {
+> -       int size =3D offsetof(struct e820_table, entries) +
+> -               sizeof(struct e820_entry) * table->nr_entries;
+> +       struct e820_entry entry;
+> +       u32 crc =3D ~0;
+> +       u32 nr_entries =3D 0;
+> +       u32 i;
+> +
+> +       for (i =3D 0; i < table->nr_entries; i++) {
+> +               entry =3D table->entries[i];
+> +               if (trim_e820_page_zero_ram(&entry))
+> +                       nr_entries++;
+> +       }
+> +
+> +       crc =3D crc32_le(crc, (unsigned char const *)&nr_entries,
+> +                      sizeof(nr_entries));
+> +
+> +       for (i =3D 0; i < table->nr_entries; i++) {
+> +               entry =3D table->entries[i];
+> +               if (!trim_e820_page_zero_ram(&entry))
+> +                       continue;
+> +
+> +               crc =3D crc32_le(crc, (unsigned char const *)&entry,
+> +                              sizeof(entry));
+> +       }
+>
+> -       return ~crc32_le(~0, (unsigned char const *)table, size);
+> +       return ~crc;
+>  }
+>
+>  #ifdef CONFIG_X86_64
+> -#define RESTORE_MAGIC  0x23456789ABCDEF02UL
+> +#define RESTORE_MAGIC  0x23456789ABCDEF03UL
+>  #else
+> -#define RESTORE_MAGIC  0x12345679UL
+> +#define RESTORE_MAGIC  0x1234567AUL
+>  #endif
+>
+>  /**
+>
 
-Applied to
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/kbuild/linux.git kbuild-next-unstable
-
-Thanks!
-
-[1/2] kbuild: Mark usr_gen_init_cpio as no-dot-config-target
-      https://git.kernel.org/kbuild/c/14e2c1f5431a0
-[2/2] kbuild: Move gen_init_cpio and gen_initramfs.sh to scripts/
-      https://git.kernel.org/kbuild/c/33bef82263082
-
-Please look out for regression or issue reports or other follow up
-comments, as they may result in the patch/series getting dropped or
-reverted. Patches applied to an "unstable" branch are accepted pending
-wider testing in -next and any post-commit review; they will generally
-be moved to the main branch in a week if no issues are found.
-
-Best regards,
--- 
-Cheers,
-Nathan
-
-
+Applied as 7.4 material, thanks!
 
