@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 393DBCA5FC5
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0572DCA5FC4
 	for <kexec@archiver.kernel.org>; Thu,  1 Oct 2026 00:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,62 +12,62 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=YTQtDRZE6hbaSqiCeRYm1Tiy2pek4MhmDBkS+QhXVW0=; b=CVobFht8xC+XmHGqgnfxU0TTFj
-	qKGhNA/Tfbk6xEX1kIgFViOzjVZX8yykFWkj5BHSsWEhKTqPZanH7WH5oW7kT9vTL0QuZjiHp/13a
-	dEiyIc4aGks/df3xd6AKMtnrk+zVFPa72YJI5SecIKP0k04k3qd9ESxgz2W/2VfcQsEQHFPd60p/u
-	V62BXhgNtP13qz79+50RS2PldDKbw3TRvG+w+FNZn8SRx+vR7zi+KhcIfY38tAI5nA+3Lo2G14bMN
-	0o8pS5ed2uATkRlqbAnoNPyAni4pyqt1BJL2njxfqRX2N0zQBgDyRwpZTt3qXiJFTS+bc83WoTHev
-	dkE0LArA==;
+	bh=yIoi1CTTQE+H6lBdui6vFwHZt26KiAg5p1JL2AMiq80=; b=nbSt5kw9CZwhoI/kBQkZFZHtew
+	S5nZbSfDsjplBgFiY+THcjYxvcwDsFcAz6lxFyY+lumejkf6NBqPCjdLX0aHERg+4KnFG80vKAa8c
+	K+9Z8JoEDaWZnuhWZQaKGsoWptPqkdG5yF5Rm2teG2vhc36EbhWrYpL6Q1a+A3aIRAgqjdGCZNNfu
+	rQGAtT/RiRKkBwvylpn+vt2G3Kq5o6VMNyRGx85oDwCCNTI00k5O7Q9Rvy3Y1D7GZkhBjwxdSLD2F
+	Vpxz8wiJY/o5gpWQ+JkG91ir6ftcQ5jwoY3eVOISVs2AINHFmQyBTmiBUtU93E0JGSCgWQw/v/FLR
+	oA+CLlNw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xC57N-00000007XHg-0Okh;
-	Thu, 01 Oct 2026 00:57:49 +0000
-Received: from mail-pj1-x1046.google.com ([2607:f8b0:4864:20::1046])
+	id 1xC57M-00000007XHJ-3POx;
+	Thu, 01 Oct 2026 00:57:48 +0000
+Received: from mail-pl1-x646.google.com ([2607:f8b0:4864:20::646])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xC57K-00000007XFJ-0tMF
+	id 1xC57K-00000007XFZ-0tPN
 	for kexec@lists.infradead.org;
 	Thu, 01 Oct 2026 00:57:47 +0000
-Received: by mail-pj1-x1046.google.com with SMTP id 98e67ed59e1d1-398dcfabbf8so13718101a91.0
+Received: by mail-pl1-x646.google.com with SMTP id d9443c01a7336-2cfa4e4684bso99750545ad.2
         for <kexec@lists.infradead.org>; Wed, 30 Sep 2026 17:57:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790816264; x=1791421064; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1790816265; x=1791421065; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=YTQtDRZE6hbaSqiCeRYm1Tiy2pek4MhmDBkS+QhXVW0=;
-        b=Bb9ei3FyjCHLgwmN9s7NVwtqR3l/WKu6/ohaTUhDHAF7zZ/qIZTuQMyK1ooHv4iJk8
-         BeNwmj2o/9UKNXFCMKyTNkXJIe2k8NQgITpWLTaI2bwS7RVd2cAUt1oaOgOD00jHCK5b
-         DPi368lfY8l9zEntJAVVKe31neK5SUBvGOkqtnwjcqvbolLFDibojVLyemQMXWHIQScn
-         9B3WFpQzbt48A/nyAc1cOzx/hREyHzMwUwAQF5IEPzCbd1pMR6mRKer0/plix5Bx5sMx
-         U7lm5B/fvj1RfnA3eanMEu4h6NdlF1w2Ekjgz0XtJOlSk/HwXZXQemvisT7RDhKjV0+h
-         7q5g==
+        bh=yIoi1CTTQE+H6lBdui6vFwHZt26KiAg5p1JL2AMiq80=;
+        b=i6upH5VHDSMm6xAd/kE25sspLfyZK3S/8co8eA0QzxtnCNB7uB12wGeY4mELbSn3/f
+         /bcOhYkCg+4V5SUn+G9oLBNwO2Pr2oZ+RZFRPo0Og/B3mZaOTVQPFFlBdnWDPj8472Ox
+         nwlljltZK1Y5ypmEyCrpgPxSlnX5sAA/ONhhGqWpS7GZF9Od2mowCvCHm8bajXcDf2Qa
+         C0OiKNAcj9Vp09cZ1UwuZi2Lv/vk27F38joWe+t2ynKrMYyMqSSGlpKEm2c3nYZgQPPU
+         Ng5lmpsU04mdb2+U5NZOD3COQBnFKEJqOjITVpK5KIcssjcTxbew5S3bPT4baqAMTQJ9
+         q9LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790816264; x=1791421064;
+        d=1e100.net; s=20260707; t=1790816265; x=1791421065;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=YTQtDRZE6hbaSqiCeRYm1Tiy2pek4MhmDBkS+QhXVW0=;
-        b=wzMRJQDU1eOoj8NPLiM/YTdn3CS4lOlePPf2AmY0WBNkXbeCGDi4cmRvGHnVA9bVFD
-         R+4+4ixGRhVasHAo6iwa0xfGVh05lnNlOEnMMN6Awb3wWVxk7WoavQjdbnRqdem6zMSi
-         BMOo1RXD1r9hQa1Cq/BYJmGmezYMqqL0IrP2i5dH2Vl2nt/dyAfOS7bqEdcoc9xxwh1J
-         JIyBh4CiznfnV4ZsPE1z/10Y9/RCCTMcr6unlueyibst1DqThGjc2jJEPyj3CflVL9Pt
-         aegsU1CPPxHzNuuF7S3K77kctnN74qA8qmtKjdSLlroIk3ivOK7kdpt18v2MFRXRf7FN
-         voXw==
-X-Forwarded-Encrypted: i=1; AKwUvBz9xxoYZobWTgxvxmjTgwdaGcw10sKctKZKF8rgx0qjULxmaQwIVFTykZaKWcM9Z1plumbtdQ==@lists.infradead.org
-X-Gm-Message-State: AFq9FYLeYdlT8R5YoWoHB571QdSLL7mefUQ2XQcvOr0uzqszmvyVaPN5
-	f9FutjkBedUVp+yd3DgRAtlE3b52MzH6vfaLtYwOM7YVGYG+oR1fRJtZidrxLBDGdmi6q5TbeHH
-	IArxSS3MEYT44Zg==
-X-Received: from plsm24.prod.google.com ([2002:a17:902:bb98:b0:2e2:dfc9:4865])
+        bh=yIoi1CTTQE+H6lBdui6vFwHZt26KiAg5p1JL2AMiq80=;
+        b=PSafTlHVFJXUZaL+j5HKw55TQ6cR0JE4yX26zvYm2DOKE6pakRDdVx5WppvlQB15jn
+         Mu4BUP0GWBjLyGddlMI5lHxclNUUD89lOTJmhhztU5L9k/uIrTCeSxi4yua34r3XuAYR
+         JqtnG+1VOmuRrAubyn1Sc1cZL67xeQ0H1oAWEV/Z5UC/GlUfbmfC4JRzjxTeMXtj1w3/
+         W4xcL3snY7y3ZOcYN478DjAOhSLhN0dxzHSJXNcFrvJj8cR4anX5zhaJpytnxoml/vdL
+         2DhJLpSlZVVnYBRSY2tLS1G+s0/kmf7tHbLOLL2Kh/mwLgqdD1nMVh/gH7aRqV6Q/l9p
+         nGGQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzaW51hOAM0g/HrG9kiQyANOAp6my+7Eg8QbZ5/fljU4mNVKnUiaSW07q+8QsaiIZGMfM514w==@lists.infradead.org
+X-Gm-Message-State: AFq9FYLWB64YJKkiNbxZ2CQ/4u513jUyD0CO5ectFap3uH8dqt9bd6+L
+	8Kp4lLG79+30oUjMAdfVPvHgSRGxDuuImFtKIQaFtbNwFjd2zEuCVEh52Ne4ofWkJIUClUkCpV6
+	xr8+xIOdWwQt9gw==
+X-Received: from plan4.prod.google.com ([2002:a17:903:4044:b0:2df:8ab5:8354])
  (user=skhawaja job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:903:3bcc:b0:2e3:110:b71a with SMTP id d9443c01a7336-2e30110bc9cmr8262235ad.0.1790816264188;
+ 2002:a17:903:2983:b0:2e2:dc0c:1615 with SMTP id d9443c01a7336-2e2e4b3399fmr25155855ad.31.1790816264954;
  Wed, 30 Sep 2026 17:57:44 -0700 (PDT)
-Date: Thu,  1 Oct 2026 00:57:32 +0000
+Date: Thu,  1 Oct 2026 00:57:33 +0000
 In-Reply-To: <20261001005734.1033516-1-skhawaja@google.com>
 Mime-Version: 1.0
 References: <20261001005734.1033516-1-skhawaja@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20261001005734.1033516-5-skhawaja@google.com>
-Subject: [RFC PATCH 4/6] vfio/pci: Set live update file handler level
+Message-ID: <20261001005734.1033516-6-skhawaja@google.com>
+Subject: [RFC PATCH 5/6] selftests/liveupdate: Add API to preserve a batch of FDs
 From: Samiullah Khawaja <skhawaja@google.com>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>, 
 	Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>
@@ -77,9 +77,8 @@ Cc: Samiullah Khawaja <skhawaja@google.com>, David Matlack <dmatlack@google.com>
 	"open list:KEXEC HANDOVER (KHO)" <linux-mm@kvack.org>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260930_175746_261351_93BCB1C1 
-X-CRM114-Status: UNSURE (   9.67  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260930_175746_261230_86B7E1A6 
+X-CRM114-Status: GOOD (  10.92  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,25 +93,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Set live update file handler to LIVEUPDATE_LEVEL_DEVICE.
+Add luo_session_preserve_fds() that can be used to preserve a batch of
+FDs using the LIVEUPDATE_SESSION_PRESERVE_FDS ioctl.
 
 Signed-off-by: Samiullah Khawaja <skhawaja@google.com>
 ---
- drivers/vfio/pci/vfio_pci_liveupdate.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../liveupdate/lib/include/libliveupdate.h    |  2 ++
+ .../selftests/liveupdate/lib/lu_utils.c       | 20 +++++++++++++++++++
+ 2 files changed, 22 insertions(+)
 
-diff --git a/drivers/vfio/pci/vfio_pci_liveupdate.c b/drivers/vfio/pci/vfio_pci_liveupdate.c
-index fb2141ee8942..4b8a350b867a 100644
---- a/drivers/vfio/pci/vfio_pci_liveupdate.c
-+++ b/drivers/vfio/pci/vfio_pci_liveupdate.c
-@@ -335,6 +335,7 @@ static const struct liveupdate_file_ops vfio_pci_liveupdate_file_ops = {
- static struct liveupdate_file_handler vfio_pci_liveupdate_fh = {
- 	.ops = &vfio_pci_liveupdate_file_ops,
- 	.compatible = VFIO_PCI_LUO_FH_COMPATIBLE,
-+	.level = LIVEUPDATE_LEVEL_DEVICE,
- };
+diff --git a/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h b/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
+index fa07fed08364..9aaf6f28ef56 100644
+--- a/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
++++ b/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
+@@ -29,6 +29,8 @@ int luo_get_session_name(int session_fd, char *name, size_t name_len);
  
- int __init vfio_pci_liveupdate_init(void)
+ int luo_ensure_nofile_limit(long min_limit);
+ int luo_session_preserve_fd(int session_fd, int fd, __u64 token);
++int luo_session_preserve_fds(int session_fd, const int *fds,
++			     const __u64 *tokens, __u32 nr, __u32 *failed_idx);
+ int luo_session_retrieve_fd(int session_fd, __u64 token);
+ 
+ int create_and_preserve_memfd(int session_fd, int token, const char *data);
+diff --git a/tools/testing/selftests/liveupdate/lib/lu_utils.c b/tools/testing/selftests/liveupdate/lib/lu_utils.c
+index 74d41115c281..1290f27ff004 100644
+--- a/tools/testing/selftests/liveupdate/lib/lu_utils.c
++++ b/tools/testing/selftests/liveupdate/lib/lu_utils.c
+@@ -93,6 +93,26 @@ int luo_session_preserve_fd(int session_fd, int fd, __u64 token)
+ 	return 0;
+ }
+ 
++int luo_session_preserve_fds(int session_fd, const int *fds,
++			     const __u64 *tokens, __u32 nr, __u32 *failed_idx)
++{
++	struct liveupdate_session_preserve_fds arg = {
++		.size = sizeof(arg),
++		.nr = nr,
++		.fds = (__u64)(uintptr_t)fds,
++		.tokens = (__u64)(uintptr_t)tokens,
++	};
++	int ret = 0;
++
++	if (ioctl(session_fd, LIVEUPDATE_SESSION_PRESERVE_FDS, &arg))
++		ret = -errno;
++
++	if (failed_idx)
++		*failed_idx = arg.out_failed_index;
++
++	return ret;
++}
++
+ int luo_session_retrieve_fd(int session_fd, __u64 token)
+ {
+ 	struct liveupdate_session_retrieve_fd arg = {
 -- 
 2.56.0.rc1.315.gc6ed9934b7-goog
 
