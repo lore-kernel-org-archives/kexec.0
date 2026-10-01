@@ -4,61 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8D771CA5FCB
-	for <kexec@archiver.kernel.org>; Thu,  1 Oct 2026 13:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BEFC2CA5FD2
+	for <kexec@archiver.kernel.org>; Thu,  1 Oct 2026 13:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
+	From:MIME-Version:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=GISBfCNPceIZSjVaURcaK2XPuYCZTPOv4jPbHJzoivY=; b=YTioaKlarr9/UOsGXqasJJI2LO
-	TWFUYQw5jBaGaOkW60ZHJYO7AJoOcxLIcSx4cizRwJSozg+LhLKWe01zOyz2iLG7YdS3VRqmqomPX
-	kiqXvOioIWZWi3Z7FI9WcZoQ1FJVUKtUweqLX/T1UlI03WxkxKAXYOEkJ8MadNT/WpnJzb24W1qn5
-	/1G7mb3vzrdLRfyychZK0Y1yEOqVdTxwwpd4uDQOq6ua7p1eu1MBwGaqA5MpHVV5brhx9Qof57hhN
-	QnzqvnlXm2LmnwJTtbL/gHIrW8K4fFokLqpQhJnzfIe0rqRr1s9Tul4Zs5Ip8joAbJPQynWl9g0pY
-	+QP5swLQ==;
+	bh=0qq8oCV2BwBfJa/uaAFfiCThhaiEr4Wxr9Goqf3oQeo=; b=rMWXe+AJtrd/y2p5Axl+jZ13g7
+	/lX6+GnbOu0DI0/ok69J2KYXSqNCASx8Ux0QdwTPUsCN4rMuiSzHs0wSOEDDhkvCK6AAQzdWIWaK4
+	eDmpB/q6wzHhwiqraWouKdm99sGy8Akw6lSd7d3dTyDIMYy5JuJ0eDigIjkdbdLcnjCeN32JJbwn3
+	2aPoRRmyjyXzQJuWoIjxXT2DMF2bS3izsbfF5xH/9cvRiq6SZo9LsWXOfABV2MwJQ849nqCuRN8qx
+	1xQiAYW106w+o1r4tsVZYigZrduXqZq4uaZDZ5q013p6+OabCdRXAKVkvMdJkqGoLnNbX6fp7lUlP
+	QywAMhxQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xCGkH-00000009E4M-20iO;
-	Thu, 01 Oct 2026 13:22:45 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xCGkE-00000009E3D-2wV7
+	id 1xCGpW-00000009EWb-0DUf;
+	Thu, 01 Oct 2026 13:28:10 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1xCGpT-00000009EWJ-3gZj
 	for kexec@lists.infradead.org;
-	Thu, 01 Oct 2026 13:22:43 +0000
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 0062D20B7168; Thu,  1 Oct 2026 06:21:48 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0062D20B7168
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1790860909;
-	bh=GISBfCNPceIZSjVaURcaK2XPuYCZTPOv4jPbHJzoivY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TDmSABufyhX1yZ1RR4wJ2LCnh2cL6ZgHS7YPAIQcLYNot3Y2Ljzc7exn+pd6dLj4z
-	 SNli2qg4G8RNSzyZzOLJH5eu7VNcEQA9uvjAaCZ3YooNxum55H6LkU7touRKSf0vt0
-	 hrCP1Rd5135XHBp3B5sLwjNuRJAmWgaUW7gWkhAI=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <baoquan.he@linux.dev>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Mark Brown <broonie@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/2] kexec: Add helper to report an active kexec reboot
-Date: Thu,  1 Oct 2026 06:21:44 -0700
-Message-ID: <20261001132147.1703600-1-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.7
-In-Reply-To: <20261001132128.1703511-1-shradhagupta@linux.microsoft.com>
+	Thu, 01 Oct 2026 13:28:07 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 3CECF6021D;
+	Thu,  1 Oct 2026 13:28:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91D501F000FF;
+	Thu,  1 Oct 2026 13:28:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790861286;
+	bh=0qq8oCV2BwBfJa/uaAFfiCThhaiEr4Wxr9Goqf3oQeo=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=ilOfVBdgPzPbenny4hzW1i6fVi6K/wirHM3QC9Xi0TBzGdIkdP1Ca2F4x9tcgIH1Q
+	 n1IGd3S4yQXoImH8d26P9hFoqUC2X6TDO5wWCW7GObGUUtCGHAH8I255t9d46CMAV9
+	 4Vj4JQHWbK0t3Eaifb2df4oR5rb85E5hGHcvb1b3v6JwN8d5l437S0YM4uqdnRPbDY
+	 0VC7Sh1pSGOiYiJfUhPr/zUtjMyNJUaV5ZOwWpgSXtgoWJBgubxIjEErLLgdGI/TtB
+	 /mtmPmmcdqi6ALgjA9Ki2i/bjOMMYsvIayCPfVIiwyndVuEMHBkAJgJOFqdo/itaVA
+	 GQgoP9NxM5hLQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 1/2] kexec: Add helper to report an active kexec
+ reboot
+To: "Mike Rapoport" <rppt@kernel.org>, "Shradha Gupta" <shradhagupta@linux.microsoft.com>, "Pasha
+ Tatashin" <pasha.tatashin@soleen.com>, "Baoquan He" <baoquan.he@linux.dev>, "Pratyush
+ Yadav" <pratyush@kernel.org>, "Andrew Morton" <akpm@linux-foundation.org>
+Cc: "Kees Cook" <kees@kernel.org>, "Mark Brown" <broonie@kernel.org>, linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+In-Reply-To: <20261001132147.1703600-1-shradhagupta@linux.microsoft.com>
 References: <20261001132128.1703511-1-shradhagupta@linux.microsoft.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261001_062242_774691_B08168EE 
-X-CRM114-Status: GOOD (  12.97  )
+ <20261001132147.1703600-1-shradhagupta@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 01 Oct 2026 13:28:06 +0000
+Message-Id: <20261001132806.91D501F000FF@smtp.kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,72 +67,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-A shutdown callback in a loadable module may need to distinguish a
-kexec reboot from a normal restart, halt, or poweroff. The Hyper-V
-VMBus driver needs this distinction when moving its kexec cleanup into
-a common syscore shutdown callback.
+> A shutdown callback in a loadable module may need to distinguish a
+> kexec reboot from a normal restart, halt, or poweroff. The Hyper-V
+> VMBus driver needs this distinction when moving its kexec cleanup into
+> a common syscore shutdown callback.
+>=20
+> Add kexec_is_in_progress() and export it to GPL modules so the callback
+> can remain guarded when VMBus is built as a module. Provide a false
+> inline implementation when CONFIG_KEXEC_CORE is disabled.
+>=20
+> The helper reports only the normal kexec reboot path. Crash kexec and
+> preserve-context kexec do not set this state.
+>=20
+> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
 
-Add kexec_is_in_progress() and export it to GPL modules so the callback
-can remain guarded when VMBus is built as a module. Provide a false
-inline implementation when CONFIG_KEXEC_CORE is disabled.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-The helper reports only the normal kexec reboot path. Crash kexec and
-preserve-context kexec do not set this state.
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261001132128.1703=
+511-1-shradhagupta@linux.microsoft.com?part=3D1
 
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
----
- include/linux/kexec.h | 2 ++
- kernel/kexec_core.c   | 7 +++++++
- 2 files changed, 9 insertions(+)
-
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 8a22bc9b8c6c..827a5311d97a 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -468,6 +468,7 @@ bool kexec_load_permitted(int kexec_image_type);
- 
- /* flag to track if kexec reboot is in progress */
- extern bool kexec_in_progress;
-+bool kexec_is_in_progress(void);
- 
- #ifndef page_to_boot_pfn
- static inline unsigned long page_to_boot_pfn(struct page *page)
-@@ -544,6 +545,7 @@ static inline void *kimage_map_segment(struct kimage *image, int idx)
- { return NULL; }
- static inline void kimage_unmap_segment(void *buffer) { }
- #define kexec_in_progress false
-+static inline bool kexec_is_in_progress(void) { return false; }
- #endif /* CONFIG_KEXEC_CORE */
- 
- #ifdef CONFIG_KEXEC_SIG
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index dc770b9a6d05..282c7b3c6c35 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -23,6 +23,7 @@
- #include <linux/hardirq.h>
- #include <linux/elf.h>
- #include <linux/elfcore.h>
-+#include <linux/export.h>
- #include <linux/utsname.h>
- #include <linux/numa.h>
- #include <linux/suspend.h>
-@@ -54,6 +55,12 @@ atomic_t __kexec_lock = ATOMIC_INIT(0);
- /* Flag to indicate we are going to kexec a new kernel */
- bool kexec_in_progress = false;
- 
-+bool kexec_is_in_progress(void)
-+{
-+	return kexec_in_progress;
-+}
-+EXPORT_SYMBOL_GPL(kexec_is_in_progress);
-+
- bool kexec_file_dbg_print;
- 
- /*
--- 
-2.43.0
 
