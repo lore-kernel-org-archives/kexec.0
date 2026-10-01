@@ -4,70 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 32095CA5FC4
-	for <kexec@archiver.kernel.org>; Wed, 30 Sep 2026 20:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 18DB0CA5FCF
+	for <kexec@archiver.kernel.org>; Thu,  1 Oct 2026 00:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=OapGlJY1wYDmw+Y0TtKR8EKrOr0XHXHejx9VYzSAsew=; b=oGkr5Va9oGvjeQ0mKFfow6wHbp
-	c2T78jk567g0t8+yHuqKpl+WFf3ZptOaUHNdtY9TzqSwiVXWkSOjOmacAAWOv0wmvF0h50NV/I9j8
-	SI/KCWxyRDDkNPZ5k+FJ0Dtnw6UqeeCmj9LRiBVWupEwXU0f+sGNWvOY6/5nknCgkL0fMrKTXneuN
-	GS4Pek/ZcAGzSrJo6I9olczLmtPdLt3f5DAkGqxF5DwSJGrAa0ok0+2gGANzo1x1RFiUZ0JGyJaYb
-	3TvOvRVrIZ0Erw+/7jThDoiuaF9yZpvS4u4K2VZNoIR1ijlvcZanXih8gyIKXz7DsN8EK7gXP+imo
-	37SxBszQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=TW/ACrzYYeMrBy3s3tjiEB934xbUSaPMMU4ABKPrx40=; b=2J+l9DeKRb4G4+FANEneIBBcsm
+	mBmpEU3eypc9VBeXsacLXyIaA9cHB4Axre4m60yhMMoWerbvybCcNAEKNeaFu21xZfJVpHtf9+HYu
+	sRsTjllg1vHXCEtSBRAR8BJGrU+IjzdkcRQ1avNj7c7rsgCZEbGGG+77A8PXBCzZ7xbjrEkUjiyGD
+	gTqF5jHfXMfpQVF+CeHxxjOVQrWXRxq4uU49a4sMkzc5lPSZHEotbYW/Iq02AymihneAOqHkbBQhU
+	ubCZ6ruWNoXYptBaNtGbOLBN6jUqM6wlWbSDHm6f0Mukqw2Jw+TrEJ+oKcfIxSuSQ4SSUnBIYRzdT
+	gnDAjuhg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xC0Wk-000000078Us-2ct0;
-	Wed, 30 Sep 2026 20:03:42 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xC57I-00000007XF7-1Qok;
+	Thu, 01 Oct 2026 00:57:44 +0000
+Received: from mail-pl1-x648.google.com ([2607:f8b0:4864:20::648])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xC0Wi-000000078UV-3W8J
+	id 1xC57G-00000007XEC-1x8T
 	for kexec@lists.infradead.org;
-	Wed, 30 Sep 2026 20:03:40 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 3776944786
-	for <kexec@lists.infradead.org>; Wed, 30 Sep 2026 20:03:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CD2B1F00A01
-	for <kexec@lists.infradead.org>; Wed, 30 Sep 2026 20:03:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790798620;
-	bh=OapGlJY1wYDmw+Y0TtKR8EKrOr0XHXHejx9VYzSAsew=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=ccB2M2y6VD9vQ0mxCk5bKfAYhKS2Od/YOO6eFlH+k4qkCYjrlgMPQbWPFIUjm0o2A
-	 O/XYaDudEzEwgqxousKfpjwxOUiJP44WQ8e77xw2YSaczeEsXnt3fdpWcKWrGa3qIe
-	 GqsA223hjSMjmeFHSSfPgZ1bLE/t2e+kVvk3Q8S2J+UE5dywQ5XWKlzPzzsGAPCyL2
-	 I3ZJU9jY1wEKKENs6OCHLSEySWTIa5XaEH0au3kdmiNSQVoCB7lSngi4gZ42nA8WGm
-	 u8Yg2DPYtQ9FfLcDBjDIgJFglCUe0ALMfmCUi5FYgqyqLLadqovRmEnkoNmlZPdDHp
-	 Ucp46HQ78exAw==
-Received: by mail-lr2-f12.google.com with SMTP id 38308e7fff4ca-3a2ff148dfdso47190511fa.1
-        for <kexec@lists.infradead.org>; Wed, 30 Sep 2026 13:03:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBzvIvAbEWQdcJfIZ6Y80rH64GnDBPvR2Maj6U9ICuHlLI9/RLgsiltkDSLuISuDK1s/LYeyqQ==@lists.infradead.org
-X-Gm-Message-State: AFq9FYLwnUdFMFMN6l/+nnXRm1ESSHi0oWwhE9iDiiNw1SmCXJhOMs50
-	7K6kczPq+mwP4MhcMYoMjrjKHxb/6Ko9iDN4MnvM/wPLVEwBvf9TIUVjVSLQn1ejarphdXwWEJp
-	ClnozsywJH76kxR4V718r/ndow6s+rXg=
-X-Received: by 2002:a05:651c:4182:b0:3a3:7681:6d66 with SMTP id
- 38308e7fff4ca-3a779269585mr6413091fa.15.1790798618340; Wed, 30 Sep 2026
- 13:03:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20260805070900.3390978-1-matthias.goergens@gmail.com> <20260926052117.3613637-1-matthias.goergens@gmail.com>
-In-Reply-To: <20260926052117.3613637-1-matthias.goergens@gmail.com>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Wed, 30 Sep 2026 22:01:52 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hzrTjgrteh6JwuiaJdXLXbHpKbD7Qdz=5TinZ934vmKg@mail.gmail.com>
-X-Gm-Features: AclHuK9cxMLeqKTvasUuTJx35wURz83sx4X-kdaW8aAo_1NHUJMN1pBDUOQ5Uzk
-Message-ID: <CAJZ5v0hzrTjgrteh6JwuiaJdXLXbHpKbD7Qdz=5TinZ934vmKg@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/hibernate: Ignore page-zero RAM in E820 checksum
-To: Matthias Goergens <matthias.goergens@gmail.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org, pavel@kernel.org, 
-	tglx@kernel.org, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, 
-	x86@kernel.org, hpa@zytor.com, yu.c.chen@intel.com, jlee@suse.com, 
-	baoquan.he@linux.dev, dyoung@redhat.com, io@r-ricci.it, scardracs@disroot.org, 
-	moravec@ukf.sk, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+	Thu, 01 Oct 2026 00:57:43 +0000
+Received: by mail-pl1-x648.google.com with SMTP id d9443c01a7336-2cfc52ddc55so56653025ad.3
+        for <kexec@lists.infradead.org>; Wed, 30 Sep 2026 17:57:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1790816261; x=1791421061; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=TW/ACrzYYeMrBy3s3tjiEB934xbUSaPMMU4ABKPrx40=;
+        b=HRW8xul2VufoyaMFDTP1gdD7mowQJ9s3Hjp6P5sN0Cg8rFmNuXQrG38Bjeqe40z24k
+         jdPZqi5iKhu7vzoOUKcrQkHubQP5FSEPTtiNvT3SBHfVW3jwFIyh5L6z6MfvR3d5wt3C
+         CKFk+3qr+mza0+kcQznW6K/fNPMcLZmzrRHfzeJ9iz2qY01n15WJukAI81vPU2yZUv64
+         zCb2pDHtPv0j5rIJV2vG5tBM9xhjwuy+IIjvHtM0oBLHDP/4kmPTWANuW0VruRW6cPLe
+         K5kSzqa4ZF5AYBK8z1segakp+foujqb6BvHJp2BFKhoxzg/4J69FIwJB8nnY8IdULdJx
+         e0zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790816261; x=1791421061;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=TW/ACrzYYeMrBy3s3tjiEB934xbUSaPMMU4ABKPrx40=;
+        b=LX6b3T87918zH97uq6CCVGkCkkstgrOUGRiCerkjP8IsQgM/lhntkT2DaMyyW2Nnd7
+         fLrE8D8o3hOfXog+/dkRkDSRhgL5W0sAsDn34XG8Db9zd9ixRRw6hjN36J8gQPHPeid8
+         7NcG+BPD9FGHVEQue7MNm2L+M4Nbd5676ncVl4ybnGQtj9SFDCj8rUQoXof8YPn9TfRK
+         OE0TBD50ZG/sMU5orpC/lOXzlPKxm3ghT+RAJQ/T0PTQtLfYrKKz3uMxScMx7OgSH8+7
+         ZG6UJtdn69ouHAjTJrUI+0FgRMFk5h4osXk0isXiWO0T5BR97TuNC9jaYyQ7SK3uVlNo
+         eXBg==
+X-Forwarded-Encrypted: i=1; AKwUvBxc1a6gLVo30f7lkSFPLjKym26nMkZFAm6lDpLn400N5VhPRMKHY6hnIrIvx9XTR5n+bnxMjg==@lists.infradead.org
+X-Gm-Message-State: AFq9FYK2SJMpm65OzIydUcWaI5W/wvOsNvNgStU397Y7GA2jtnDB12Wl
+	s8MfERR8XVEkF7YFPQHJnMvdM8QSag7z35wvbTo4i0AZx4cEJhHSJgFHUhHfKv1R1NuUMGQoYPo
+	V0yj9B2Qhd3sUnQ==
+X-Received: from plao6.prod.google.com ([2002:a17:903:3006:b0:2e2:c7fc:344f])
+ (user=skhawaja job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:903:2c8b:b0:2df:81d0:7c40 with SMTP id d9443c01a7336-2e2e4b97af6mr19847055ad.55.1790816260459;
+ Wed, 30 Sep 2026 17:57:40 -0700 (PDT)
+Date: Thu,  1 Oct 2026 00:57:28 +0000
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
+Message-ID: <20261001005734.1033516-1-skhawaja@google.com>
+Subject: [RFC PATCH 0/6] Introduce file handler dependency level
+From: Samiullah Khawaja <skhawaja@google.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>, 
+	Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>
+Cc: Samiullah Khawaja <skhawaja@google.com>, David Matlack <dmatlack@google.com>, tarunsahu@google.com, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:KEXEC HANDOVER (KHO)" <kexec@lists.infradead.org>, 
+	"open list:KEXEC HANDOVER (KHO)" <linux-mm@kvack.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260930_175742_520367_B42D0DA3 
+X-CRM114-Status: GOOD (  17.77  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,154 +90,90 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat, Sep 26, 2026 at 7:21=E2=80=AFAM Matthias Goergens
-<matthias.goergens@gmail.com> wrote:
->
-> The legacy kexec_load path reconstructs the E820 map exported through
-> sysfs.  kexec-tools leaves the first 1 KiB unavailable for the real-mode
-> transition, so a kernel entered through kexec_load can see conventional
-> RAM starting at 0x400.  A subsequent firmware boot reports the same RAM
-> range starting at zero.
->
-> The hibernation E820 checksum compares those byte representations and
-> rejects the image, even though the maps agree from page one onwards.
-> A QEMU guest showed this transition:
->
->   firmware:     RAM [0-0x9fbff]
->   kexec_load:   gap [0-0x3ff], RAM [0x400-0x9fbff]
->   firmware:     RAM [0-0x9fbff]
->
-> The checksum covers e820_table_firmware, which trim_bios_range() leaves
-> alone.  The nosave regions come from e820_table instead, where
-> trim_bios_range() has already turned conventional RAM in page zero into
-> reserved memory, so page zero never occurs in the image, whatever the
-> firmware map says about it.
->
-> Canonicalise only the conventional-RAM portion below PAGE_SIZE before
-> calculating the checksum.  Preserve RESERVED, ACPI, NVS, UNUSABLE, PMEM
-> and all other E820 types so that changes to exceptional mappings remain
-> detectable.
->
-> This is deliberately narrower than Marco Scardovi's June proposal to
-> checksum only RAM and its opt-in relaxed_memmap successor.  Rafael
-> noted that ignoring non-RAM changes could hide moved ACPI or UEFI
-> regions still used by the resumed kernel.  This patch preserves every
-> non-RAM entry and ignores only RAM within page zero, which common setup
-> already reserves and excludes from the image.
->
-> Bump RESTORE_MAGIC, since the checksum semantics change, so that an
-> image written by a kernel without this change is refused by the magic
-> check instead of being compared under different rules.
->
-> In the same guest, with the page-zero difference kept, hibernation and
-> resume now work after both a direct boot and a kexec_load boot.  An
-> image written by an unpatched kernel is refused at resume with
-> "Unrecognized hibernate image header format!", and the firmware-booted
-> kernel carries on.
->
-> Fixes: 62a03defeabd ("PM / hibernate: Verify the consistent of e820 memor=
-y map by md5 digest")
-> Reported-by: Roberto Ricci <io@r-ricci.it>
-> Signed-off-by: Matthias Goergens <matthias.goergens@gmail.com>
-> Link: https://lore.kernel.org/all/Z-hYWc9LtBU1Yhtg@desktop0a/
-> Link: https://lists.openwall.net/linux-kernel/2025/04/04/1372
-> Link: https://lore.kernel.org/all/CAJZ5v0jmOj0WBtMTvbnaD+2b0bTFowA=3DJWrq=
-RzaaCYpHpai1Nw@mail.gmail.com/
-> Link: https://lore.kernel.org/all/20260623165724.10753-1-scardracs@disroo=
-t.org/
-> ---
-> Changes in v2:
-> - Bump RESTORE_MAGIC, as Rafael asked:
->   https://lore.kernel.org/all/CAJZ5v0izV3g1mSKJtKMcc=3DTfeUjJofSXCX92y4XX=
-55Lam28qOg@mail.gmail.com/
-> - Say which E820 table the checksum covers and why page zero still
->   cannot be in the image; drop the paragraph on cross-version images,
->   which the magic now covers, and report that such an image is refused.
-> - Rebased on 6812ce4e4379 ("Merge tag 'drm-fixes-2026-09-26' of
->   https://gitlab.freedesktop.org/drm/kernel").
->
->  arch/x86/power/hibernate.c | 51 +++++++++++++++++++++++++++++++++-----
->  1 file changed, 45 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/x86/power/hibernate.c b/arch/x86/power/hibernate.c
-> index a2294c1649f6..dbb340fb24ad 100644
-> --- a/arch/x86/power/hibernate.c
-> +++ b/arch/x86/power/hibernate.c
-> @@ -63,6 +63,25 @@ struct restore_data_record {
->         unsigned long e820_checksum;
->  };
->
-> +static bool trim_e820_page_zero_ram(struct e820_entry *entry)
-> +{
-> +       u64 lowmem_size;
-> +
-> +       /*
-> +        * Page zero is BIOS-owned and registered as nosave.  Boot loader=
-s may
-> +        * therefore omit part of its conventional RAM entry without chan=
-ging
-> +        * any memory available to the image.  Preserve all other E820 ty=
-pes.
-> +        */
-> +       if (entry->type !=3D E820_TYPE_RAM || entry->addr >=3D PAGE_SIZE)
-> +               return true;
-> +
-> +       lowmem_size =3D min_t(u64, entry->size, PAGE_SIZE - entry->addr);
-> +       entry->addr +=3D lowmem_size;
-> +       entry->size -=3D lowmem_size;
-> +
-> +       return entry->size;
-> +}
-> +
->  /**
->   * compute_e820_crc32 - calculate crc32 of a given e820 table
->   *
-> @@ -70,18 +89,38 @@ struct restore_data_record {
->   *
->   * Return: the resulting checksum
->   */
-> -static inline u32 compute_e820_crc32(struct e820_table *table)
-> +static u32 compute_e820_crc32(struct e820_table *table)
->  {
-> -       int size =3D offsetof(struct e820_table, entries) +
-> -               sizeof(struct e820_entry) * table->nr_entries;
-> +       struct e820_entry entry;
-> +       u32 crc =3D ~0;
-> +       u32 nr_entries =3D 0;
-> +       u32 i;
-> +
-> +       for (i =3D 0; i < table->nr_entries; i++) {
-> +               entry =3D table->entries[i];
-> +               if (trim_e820_page_zero_ram(&entry))
-> +                       nr_entries++;
-> +       }
-> +
-> +       crc =3D crc32_le(crc, (unsigned char const *)&nr_entries,
-> +                      sizeof(nr_entries));
-> +
-> +       for (i =3D 0; i < table->nr_entries; i++) {
-> +               entry =3D table->entries[i];
-> +               if (!trim_e820_page_zero_ram(&entry))
-> +                       continue;
-> +
-> +               crc =3D crc32_le(crc, (unsigned char const *)&entry,
-> +                              sizeof(entry));
-> +       }
->
-> -       return ~crc32_le(~0, (unsigned char const *)table, size);
-> +       return ~crc;
->  }
->
->  #ifdef CONFIG_X86_64
-> -#define RESTORE_MAGIC  0x23456789ABCDEF02UL
-> +#define RESTORE_MAGIC  0x23456789ABCDEF03UL
->  #else
-> -#define RESTORE_MAGIC  0x12345679UL
-> +#define RESTORE_MAGIC  0x1234567AUL
->  #endif
->
->  /**
->
+LUO allows preservation of FDs into sessions. An FD can depend on other
+FDs, and for some FDs this can mean the dependency must be preserved
+before it due to various reasons including immutability and performance.
+See discussion on FD dependency patch series [1] and documentation [2]
+for details. Also see the Liveupdate IOMMU [3] and guest_memfd
+preservation [4] patch series for examples. These dependencies are
+enforced by the file handlers, and userspace is responsible for
+preserving the FDs in the correct order.
 
-Applied as 7.4 material, thanks!
+This RFC proposes a mechanism that allows userspace to preserve the FDs
+as a batch, and the kernel preserves them in the required order. This
+allows the VMM to preserve a bag of FDs without worrying about the
+order. A new ioctl is added that allows userspace to provide an array of
+FDs and tokens for preservation. This gives the kernel the token and the
+intent to preserve every FD in the batch up front.
+
+This RFC introduces the concept of file handler levels. Each file
+handler offers a certain type of resource or functionality that relates
+to other file handlers. These can be represented by levels. This RFC
+adds the following levels and more can be added later:
+
+ - Default (no level set)
+ - Memory Providers
+ - Memory Mappers (or users)
+ - Devices
+
+The levels are optional static configurations of how the file handlers
+relate to each other. Each level represents a class of file handler,
+which fixes the order of preservation between them.
+
+The levels are spaced out to allow addition of new levels. LUO can use
+these levels to deduce the order of preservation of a batch of FDs.
+
+The batch is atomic: either all FDs are preserved or none are, and on
+failure the index of the failing FD is returned to userspace. The
+existing LIVEUPDATE_SESSION_PRESERVE_FD ioctl is unchanged and behaves
+as a batch of one. Note that this does not break compatibility and
+userspace can still attempt to preserve FDs individually using the
+existing preservation ioctl.
+
+The patch series builds on top of the Liveupdate IOMMU series [3] to
+demonstrate the FD dependency. The full tree, including the
+dependencies, is available at:
+https://github.com/samikhawaja/linux/tree/luo/fd-dependency-rfc
+
+I will present this at the Live Update MC at LPC 2026. I will also talk
+about alternative solutions I considered.
+
+Future work:
+
+ - Allow file handlers to be preserved at multiple levels to allow
+   resolving circular dependencies.
+
+Looking forward to your feedback on this.
+
+[1] https://lore.kernel.org/all/alrDpAMknlYN9jL9@google.com/#t
+[2] https://lore.kernel.org/all/20260910173659.1945246-2-skhawaja@google.com/
+[3] https://lore.kernel.org/all/20260921004834.2601285-1-skhawaja@google.com/
+[4] https://lore.kernel.org/all/20260728121138.1103610-9-tarunsahu@google.com/
+
+Samiullah Khawaja (6):
+  liveupdate: Introduce file handler dependency level
+  mm/memfd_luo: Set Liveupdate level of a memfd file handler
+  iommufd: Set liveupdate file handler level
+  vfio/pci: Set live update file handler level
+  selftests/liveupdate: Add API to preserve a batch of FDs
+  iommufd/selftests: Preserve all the FDs in a batch
+
+ drivers/iommu/iommufd/liveupdate.c            |   1 +
+ drivers/vfio/pci/vfio_pci_liveupdate.c        |   1 +
+ include/linux/liveupdate.h                    |  24 ++
+ include/uapi/linux/liveupdate.h               |  39 +++
+ kernel/liveupdate/luo_file.c                  | 316 ++++++++++++------
+ kernel/liveupdate/luo_internal.h              |   2 +
+ kernel/liveupdate/luo_session.c               |  45 +++
+ mm/memfd_luo.c                                |   1 +
+ .../iommu/iommufd_liveupdate_kexec_test.c     |  27 +-
+ .../liveupdate/lib/include/libliveupdate.h    |   2 +
+ .../selftests/liveupdate/lib/lu_utils.c       |  20 ++
+ 11 files changed, 379 insertions(+), 99 deletions(-)
+
+
+base-commit: 945d61765894dda2f0344de50cb1ade2e51b66fd
+-- 
+2.56.0.rc1.315.gc6ed9934b7-goog
+
 
