@@ -4,110 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A1A6ACA5FCE
-	for <kexec@archiver.kernel.org>; Thu,  1 Oct 2026 22:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 985EACA5FD4
+	for <kexec@archiver.kernel.org>; Thu,  1 Oct 2026 23:21:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=P4WM2sVmhRCFu50J9FY7Xwjuu++yeN3gpo8AyU/n7NI=; b=pbwSTE1rtGiuaDAKJzt6o3DB+c
-	8FR+asxea3XWDRiAqrJiHb8JQ8eHwMJTWQO5d6CwjSgvImSHurllcyyOtmKRsFivXz1IOTm8Z4PDv
-	/Tnk+x6Qr1OZU2ZHkc/F3ArQjYFATJS1cfHwSsL2NJ//IYjw9dZujodo1chfmqyCEtNG3tPA7wbR5
-	/fiOu8W6wjqsMXPzDIe3OmWJ2pZKakLDUbmTQ9dwnzmxHTlOGKfi/OdSAgu1UxWKD+RYd2IcF+zCq
-	MMFUDE43QMR8M4WuRe/egYQMbsXw+I8N6h6OeJrJ1zz2G3Q8zWdWNA7YuyhGg9waeKdfTpnA/Tcva
-	k5rI/QBA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=bH2Pq1q5pIyFrXqiHygcqwFBcPzQ4OFyA1DBLvgDPs4=; b=rG3V1iIL53O2BdmEtxI44bzlNl
+	WPJ7njbo0H1tI+ZVOffpVemHLT+i2IFUt3djhZiA4M2uZc6PbuSJa6+Q1pIrCPikTwrl9b6ml/aEg
+	+1NGpoummnTtxivqB6PHpWK2R4oyPnQL2p+xOrS77SJNLxYeBMmcQyRFDdcfxeFfQRY0B/D7eIOFq
+	PgN82nyXK5RbJAY2LcgYZyl7zLM3ZdyNtkzX9ZiFaBw2a1FRdbieq4iOeW7tojysrnoWHrLWgFpim
+	2EtunnDaSRmpcS7GgOhRTFgl18iSApH3uubXbZsfI3KnUhMMT7KEWxBuPasCRQ3rx0V0sG25Thdp1
+	mWRmWsbg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xCPko-0000000AO5u-49Nv;
-	Thu, 01 Oct 2026 22:59:54 +0000
-Received: from mail-ed2-x0f.google.com ([2a00:1450:4864:33::f])
+	id 1xCQ63-0000000AOtT-0rWC;
+	Thu, 01 Oct 2026 23:21:51 +0000
+Received: from mail-pl1-x645.google.com ([2607:f8b0:4864:20::645])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xCPkm-0000000AO5Z-12Nl
+	id 1xCQ60-0000000AOs6-2nRc
 	for kexec@lists.infradead.org;
-	Thu, 01 Oct 2026 22:59:53 +0000
-Received: by mail-ed2-x0f.google.com with SMTP id 4fb4d7f45d1cf-6a6063d7dc4so9187377a12.3
-        for <kexec@lists.infradead.org>; Thu, 01 Oct 2026 15:59:50 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790895589; cv=none;
-        d=google.com; s=arc-20260327;
-        b=gkMcVfkmkO423HtnF0rX0RnbwgKH9o+GlHZtezZT58UbL47uR3hCJ27t0kG/7fN+xG
-         lchXLgo4wmykH+ZrXHszCmG+Ttm7hyQMnlz25amdjm60bY6eFQpXG36yFJP7Wuv1znlJ
-         yy659hbOPzvKtxgAuenF4iRw5ArTa2H4seoipyXF6hr1BthlLkus49ONXfNdvqczdqSc
-         Kyqs28uPRPlxNKMCHV8VfrtW4+wBFU+nzc5SflV/CWgyKvkihfPq9zm+vNHrXP/4a54d
-         nuv3jLqsfRNBeBkvsDWy4S9dYjXU9jV7wYg/R36ygV3bHR9aNj/vIsKclE7LMplSB4ba
-         +xwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=P4WM2sVmhRCFu50J9FY7Xwjuu++yeN3gpo8AyU/n7NI=;
-        fh=6Q7qVGWE25+VoQLyPCw5tSVguobMYwT3+BCVstQ1KAM=;
-        b=Yb8mhotshl67KV+JNb63N5MTG5EoXB9CLEw+aX9tVhGTNEOZxrOg+43qo6Ps+lRZ+d
-         NfQ1ESm2I8CQ0Zz4/U5Nt0F4zlg3TgEUpnBPLkyqYDkqoDSgEokWBOS7aODu2E7lnUqe
-         KUGcMQ8dLunWATK8aUzA0yowwdI4Mjnd9w8d/uTF8TRCiTVwtALca6dK17DC8Aa+lOK6
-         V66FVdVoY3Y5Sn/16+VHVERpNPE8lNSkW6PBGh4OAgWm47yk0WRJqvAjSEMs2n/pxzyl
-         xchP6gAd5jBEl1McdKxc/O46wt8DX7ghA4070iM70pChjQj4N9kAa3kudOTdzfuhI/0F
-         ELzw==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	Thu, 01 Oct 2026 23:21:50 +0000
+Received: by mail-pl1-x645.google.com with SMTP id d9443c01a7336-2ccb687f82eso46530275ad.3
+        for <kexec@lists.infradead.org>; Thu, 01 Oct 2026 16:21:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1790895589; x=1791500389; darn=lists.infradead.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=P4WM2sVmhRCFu50J9FY7Xwjuu++yeN3gpo8AyU/n7NI=;
-        b=cl4csYHkCXu35NVbDXaOSzR3vhncUX/WQtkdD8eaD3xKL9tjIlkSeEkOC4A5wbrmQJ
-         GD6tVWB4CVTL5YEGapYuOQw2T+NYyjq+bcQGTv0jyD7t7edadDmXiXJTFIg4W7AqWNSN
-         zjiruZUqTFQ7CdqOBTRWRCJ7jCApD7n/NIhz8XgvYGQ89TsTIsewmpsRBoc3/FrN6kIP
-         lziZU9vgvkgLGBHQnRU82udK9kddaINfO3+a+DkOxd9g7cmuTJ4SSRFcckCuXvkCQHKZ
-         nhZ8izqTOYrKZEXiuOa5avlOFJOFReoeKdecKO0ku/DKlU6dotEUGo4+K2BYW1zrI++X
-         1Auw==
+        d=google.com; s=20251104; t=1790896907; x=1791501707; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=bH2Pq1q5pIyFrXqiHygcqwFBcPzQ4OFyA1DBLvgDPs4=;
+        b=DzdqUwTzkMJ4sYG1dm7evC0bJ2h0tSWEbfjO9rHOZ/ruX7xWu+RRB2wHc6AdcQM5j2
+         jv/MCBFeTX9W7XAQshC9m4UYSmpu6X2/mRNCq8mBHF3ESbT4iKeHy9dxDCBW6xjjVBH9
+         T6nouSInyudNMaiSMniIJk3NwNG1CbmV+9V6UqPbu3d42FJw42t+IAHS8XRi2+Icsidl
+         9zw1RntfStVQKagVx4M+lOmSHsug63cPlJEboRsY/Ft3qAA7eiKIaKYUKSA21C9gLiII
+         eQDrTzlXICXK3jnnUZMHPUPCRmmcS8kCpP9HfDoyDdCZKUmhG0q7Fff7YACItVc5lF10
+         9PdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790895589; x=1791500389;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
+        d=1e100.net; s=20260707; t=1790896907; x=1791501707;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=P4WM2sVmhRCFu50J9FY7Xwjuu++yeN3gpo8AyU/n7NI=;
-        b=PWYvW5OCo80HBdqwWPgZpELC5xbqpAl8kGnfEp8hYfik3oGARrnylBv4zLWF9TzUej
-         cgXcR0FQxPOaijnGg31yxKQohf19cMHvaU7esFhwfS7P4ivJMHpoPtjKftyxF5II75Vb
-         J4XgkpffOC0WGRltJImC9In4T4eHEqQZfo9Zx1Pa1cgiRjJMSBfCqAWegZXFnwZ/YM0l
-         rQJ1VeFSdFMGmB/ck+JwaPJlL8vmLuPmQUs1ip/46q+tlHqcDaTTEQ5nw7MlNCeIxbB9
-         kuZ2RgMI0MNCwFIbS9rwkvCEMZd2jj+nhhwFAeZxB6REhuz4gWs0RphDBMuX1OvigjXP
-         1u3w==
-X-Forwarded-Encrypted: i=1; AKwUvBz901zldvaXlpAbBHhm7ajd+12pKxVoQMNeNy8sWuc7es8U9KqXPitwbpmwdgc4Fre6bx9oWw==@lists.infradead.org
-X-Gm-Message-State: AFq9FYLOGJKZsFZy0ANOawYroteCp26TTwSRMBrMsu+ogT1k7e3K5qjI
-	qUrVjURk7G96D66A7VzwmU6dywW+IvFNd6ntBwBVT0Qyg6qvRwCstaS2iksFCYVEFpkiaaqtN9Y
-	w+J9WrqPQrVWqnCB8zqK4NyOlQ3V/GMP5htJRmBOuYA==
-X-Gm-Gg: AYBFou0j9Db0j8J0YJwVCKZC4QYSG10/xuTIPMtKOsU0K/BVoYrFW0O+grlIpcsGeLg
-	fPJ7PJVYdzal02mm/K6h8dT50GxXwEe1suO/XZH7tLhYbv+8mt9O7SvsYDwSbNr+T1JQxtHX3nA
-	vY4HGQNxo+jxVS4aLM1KhZyJmC3mbzPigk1MLX/8jgcnvAJwUGXBDz1UZHMIAq2DVkhWR4hvU+g
-	ON5//pIzsLv/q4pvIpnkoj2bHZJSQwDtaEHYjseuZiI2aQ1DtgOm6ONvmQvTSVp4ZSRvjmV8FeZ
-	ZJFVaprIFk0w372fahNqVQXhX/ZeoI7Vr2jrG/REMjvobIyFKSk4SjYyLnMOMIZ+ueWCtfRCLgl
-	huqM04v7xQDlhcTLUX5bP
-X-Received: by 2002:a05:6402:5108:b0:6ac:94cf:9f2e with SMTP id
- 4fb4d7f45d1cf-6af9e2c17b3mr423406a12.13.1790895589436; Thu, 01 Oct 2026
- 15:59:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <2vxzh5j5kxsp.fsf@kernel.org> <06f0a0c9ec2da6eb85ef918a6dbfa495de0078cc.camel@infradead.org>
-In-Reply-To: <06f0a0c9ec2da6eb85ef918a6dbfa495de0078cc.camel@infradead.org>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 1 Oct 2026 18:59:12 -0400
-X-Gm-Features: AclHuK_eW6H8LpbfUm-Nl7BjawWPEiX32yOv1hKUL0TqY6bR7r5my23ImQwmJys
-Message-ID: <CA+CK2bCdHFXVghyDt3iFMvP2JYEd+t_9Y5jtVaD6tkjH4ak+Kg@mail.gmail.com>
-Subject: Re: [ANNOUNCE] Live Update BoF at LPC 2026
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Pratyush Yadav <pratyush@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Alexander Graf <graf@amazon.com>, Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Logan Odell <loganodell@google.com>, 
-	David Matlack <dmatlack@google.com>, Samiullah Khawaja <skhawaja@google.com>, 
-	Tarun Sahu <tarunsahu@google.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, 
-	Pranjal Shrivastava <praan@google.com>, Vipin Sharma <vipinsh@google.com>, kexec@lists.infradead.org
+        bh=bH2Pq1q5pIyFrXqiHygcqwFBcPzQ4OFyA1DBLvgDPs4=;
+        b=N4YQbTMctIdoIltJNmiA9RyPfWAsQ01c/v8K42U+H9SUzYQDeyc5m5KZhA5WG9x440
+         ouFOti83q1pe/vq/mQRXEBA2Pul1069aTa36aXbavBEB9wMC68YFG8eOogPEoLv8GSJo
+         ZJYC76aVBemvg/Ps+PWTgPpz1Ge+nlZaOvPRcZhRDkAeRPiGCxG71lP/j+Z8AQT58Lom
+         j5KzaXaNEmPNxQPM8imiMILtrdiwI22K0KLaIpckseQAjMzXEN8GeXkN6rq3jQmy4fFd
+         SWnYEQ9x5hSGLhNCwLM65/qRPb1Vd50jN6QuYQpqZXK8U5ut0e/UXth6evNSv7QHW5ot
+         cDdg==
+X-Forwarded-Encrypted: i=1; AKwUvBwlw5mcK9dma2iOhEF6QJGIAYySdsI6a/2tA7is6Fn9I0BNZXx44kfuyEfMeo7YqHlihIykgQ==@lists.infradead.org
+X-Gm-Message-State: AFq9FYItHjq0zO7Fj3k3J+5xozWwqQoklnglYbWScm9cVQh5Z5/6nedk
+	rK9mZQjMZw3ns5ZeigUhN9mS6Vs56rYCMakWDR1hNNWMHN0e183Zdn/tErZY1CR9eBWLommjW4F
+	mN0d/wJtiWprpuA==
+X-Received: from pldv20.prod.google.com ([2002:a17:902:ca94:b0:2e2:f25a:7b5])
+ (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:902:e807:b0:2dd:ad74:6d16 with SMTP id d9443c01a7336-2e49b6add39mr7150245ad.28.1790896906728;
+ Thu, 01 Oct 2026 16:21:46 -0700 (PDT)
+Date: Thu,  1 Oct 2026 23:21:07 +0000
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
+Message-ID: <20261001232133.560284-1-dmatlack@google.com>
+Subject: RFC: PCI core Live Update Roadmap
+From: David Matlack <dmatlack@google.com>
+To: linux-pci@vger.kernel.org
+Cc: David Matlack <dmatlack@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Alex Williamson <alex@shazbot.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>, 
+	Kevin Tian <kevin.tian@intel.com>, Lukas Wunner <lukas@wunner.de>, 
+	Logan Gunthorpe <logang@deltatee.com>, 
+	"=?UTF-8?q?Ilpo=20J=C3=A4rvinen?=" <ilpo.jarvinen@linux.intel.com>, Lu Baolu <baolu.lu@linux.intel.com>, 
+	Joerg Roedel <joro@8bytes.org>, Samiullah Khawaja <skhawaja@google.com>, Vipin Sharma <vipinsh@google.com>, 
+	Pranjal Shrivastava <praan@google.com>, kexec@lists.infradead.org, kvm@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261001_155952_313925_4CB95271 
-X-CRM114-Status: GOOD (  21.85  )
+X-CRM114-CacheID: sfid-20261001_162148_729955_46EC3150 
+X-CRM114-Status: GOOD (  32.44  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -122,44 +94,295 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Oct 1, 2026 at 4:10=E2=80=AFPM David Woodhouse <dwmw2@infradead.org=
-> wrote:
->
-> On Thu, 2026-10-01 at 21:47 +0200, Pratyush Yadav wrote:
-> > Hi all,
-> >
-> > The proposal for a Live Update BoF has been accepted. The BoF is
-> > scheduled on Monday October 5th at 12:00. Event link:
-> > https://lpc.events/event/20/contributions/2641/
-> >
-> > The primary topic of discussion will be LUO/KHO ABI and what type of
-> > backwards and forwards compatibility should be guaranteed for the ABI.
-> > There are different opinions from various parts of the community and
-> > this would be a chance to bring out all views and come to an agreement.
-> > More context can be found at these mailing list threads: [0][1].
-> >
-> > Other list of potential topics, time permitting:
-> >
-> > - TMPFS preservation [2][3].
-> > - Getting rid of scratch/bootmem areas.
-> > - KHO enablement on different architectures like Loongarch or PowerPC.
-> > - Making KHO work with crash reservations and KASAN.
->
->   - Benchmarking!
->
-> I'd love to get to the point where we can actually pause a running
-> guest, kexec underneath it, resume it, and see that the overall steal
-> time it experiences is less than, say, 500ms.
->
-> (Deliberately using a really *lax* target when obviously we want it to
-> be more like <100ms at worst, but let's start simple. We just need to
-> make sure we're *designing* with latency in mind, to start with.)
+Hi all,
 
-Hi David,
+Now that the base PCI core support for Live Update has been applied to
+liveupdate.git [1], I wanted to share the plan for the rest of the PCI core
+work, so that reviewers can see what is coming and how the pieces fit
+together.
 
-We are, Please check out the OrphanVM presentation at the KVM MC, I
-will be demonstrating a live demo.
+I was originally going to present this roadmap at LPC next week [2], but
+since there are no immediate blockers, we decided to repurpose the talk to
+cover tmpfs file preservation instead [3]. If anyone would like to discuss
+the roadmap at LPC, please reach out. I would love to talk about it.
 
-Best,
-Pasha
+As a reminder, the goal of Live Update is to allow the host kernel to be
+updated with kexec while VFIO-assigned PCI devices keep running and keep
+doing DMA to guest memory and P2P to other preserved devices. This work
+aims to get every PCI core change needed for that merged upstream.
+
+This roadmap only covers functional support in the PCI core. Blackout time
+(from VM pause to VM resume) is intentionally out of scope. For preserved
+devices, the PCI core mostly skips work it would normally do (bus number
+and BAR assignment, ACS/ATS/PASID programming), so these changes should not
+add meaningfully to blackout time. Please call out anything in this plan
+that would make blackout time worse or harder to optimize later.
+
+The work is split into six series (five feature series plus one selftests
+series). Each one will be sent and merged on its own. Feedback on the plan,
+the ordering, and the open question in #5 is very welcome.
+
+Overview
+========
+
+  #   Series                              Status             Target
+  --  ----------------------------------  -----------------  ------
+  1   PCI core support for Live Update    v9 applied         7.4
+  2   Index saved capability state by     v1 posted          7.5
+      configuration space offset
+  3   Do not break P2P across             In progress        7.6
+      Live Update
+  4   Adopt ATS and PASID state across    Not yet posted     7.7
+      Live Update
+  5   SR-IOV support across Live Update   Not started        7.8
+  T1  PCI core Live Update selftests      Not started        7.5
+
+Targets are tentative and based on the usual release cadence [4]. The 7.4
+merge window is expected to open in late October 2026, 7.5 in January 2027,
+7.6 in March, 7.7 in May, and 7.8 in July. A series needs to be in
+linux-next by about rc6 of the preceding cycle to make its target.
+
+Dependencies
+============
+
+  LUO FLB refcounting (applied) ---+
+                                   |
+  LUO FLB fixes (applied) ---------+
+                                   |
+                                   v
+                  #1 PCI core support for Live Update
+                                   |
+         +-------------+-----------+-----------+-------------+
+         |             |                       |             |
+         v             v                       v             v
+      #3 P2P     #4 ATS/PASID              #5 SR-IOV   T1 Selftests
+                 (+ IOMMU Live             (+ VFIO PF
+                  Update series)            preservation)
+
+#2 (saved state indexed by config space offset) is an independent PCI
+refactor with no dependency on #1. It is a prerequisite for VFIO carrying
+struct pci_saved_state across Live Update.
+
+Details
+=======
+
+1. PCI core support for Live Update
+-----------------------------------
+
+Status: v9 [5] was applied to liveupdate.git on Sep 28 [1] and is in
+linux-next, targeting 7.4. Thanks to everyone who reviewed it.
+
+One item from v9 review is still open. Alex pointed out that the ACS Egress
+Control Vector is not saved and restored along with the ACS Control
+register [6]. An updated patch that handles it is in that thread, and it
+will be sent as a follow-up if it turns out to be needed.
+
+This is the base series. It allows preserved PCI devices to keep doing DMA
+to system memory (preserved memfds) across Live Update. Devices can sit
+behind bridges but cannot be VFs, and P2P is not supported yet. The series:
+
+  - Sets up the PCI core FLB handler that carries struct pci_ser across
+    kexec through KHO. The ABI lives in include/linux/kho/abi/pci.h.
+
+  - Adds APIs for drivers to register devices for preservation (outgoing)
+    and lets the PCI core recognize preserved devices during enumeration
+    (incoming).
+
+  - Automatically preserves every upstream bridge of a preserved endpoint,
+    with refcounting.
+
+  - Keeps each preserved device's Requester ID (BDF) the same by inheriting
+    secondary/subordinate bus numbers and ARI Forwarding Enable on
+    preserved bridges.
+
+  - Keeps TLP routing the same by adopting the ACS controls on the path
+    from the endpoint up to the root port. ACS Control is now saved and
+    restored through the normal save/restore path.
+
+  - Freezes preservation status at shutdown and leaves Bus Master Enable on
+    for preserved devices during kexec.
+
+  - Adds Documentation/PCI/liveupdate.rst describing what the PCI core,
+    drivers, and userspace are each responsible for.
+
+Size: 17 files, about 1.4k lines added (mostly the new
+drivers/pci/liveupdate.c).
+
+History: v1 was posted in November 2025 together with the VFIO changes [7].
+The PCI core changes were split out into their own series in v4 (April
+2026) [8].
+
+2. Index saved capability state by configuration space offset
+-------------------------------------------------------------
+
+Status: v1 [9] (15 patches) was posted on Sep 24 and is waiting for review.
+It is intended to go through pci.git and has no dependency on #1.
+
+Why: VFIO saves a device's state with pci_store_saved_state() on first open
+and restores it with pci_load_and_free_saved_state() on last close. A Live
+Update can happen between those two calls. Today struct pci_saved_state
+cannot be handed to the next kernel, because its layout depends on the
+kernel that wrote it (which capabilities are recorded, how big each record
+is, what each word means). The receiving kernel has no way to check it
+against the device in front of it.
+
+What: Replace the per-capability save buffers with a single per-device
+store indexed by config space offset (new drivers/pci/saved-caps.c), and
+lay out struct pci_saved_state the same way: a bitmap of saved DWORDs plus
+their values. The format of the blob then comes from the hardware rather
+than the kernel version, so any kernel can check it.
+
+Side benefits:
+
+  - One saved-state allocation per device instead of up to nine separate
+    ones. The one remaining allocation failure is reported (AER, DPC, PTM,
+    and TPH used to ignore allocation failures).
+
+  - Removes fragile save/restore ordering that relied on running buffer
+    cursors. Restore routines now name registers by offset.
+
+  - Saves 32 to 160 bytes per device, and fixes a possible unaligned access
+    in pci_load_saved_state().
+
+Size: 13 files, +680/-621. The series is bisect-safe and converts one
+capability per patch, so feedback on one capability does not have to hold
+up review of the rest.
+
+Follow-on work (not part of this series): Serializing struct
+pci_saved_state across Live Update (a KHO ABI definition in
+include/linux/kho/abi/ plus serialize/deserialize routines) will be part of
+the VFIO Live Update work rather than a separate PCI core series. It builds
+on the offset-indexed layout from this series. Separately, the remaining
+saved-state allocation failure should be made fatal to device setup.
+
+3. Do not break P2P across Live Update
+--------------------------------------
+
+Status: In progress, not yet posted.
+
+Scope: This series only ensures that the PCI core does not break ongoing
+P2P between preserved devices across Live Update, e.g. by changing BAR
+addresses. Actually supporting P2P across Live Update will also require
+work in VFIO and a story around preserving dma-bufs.
+
+Why: Preserved devices may be doing peer-to-peer DMA to each other
+throughout the Live Update, e.g. device-to-device traffic between
+VFIO-assigned devices in a VM. That traffic breaks if the next kernel
+changes BAR addresses or bridge windows during enumeration. Independent of
+P2P, VFIO also needs stable BAR addresses so that it can safely preserve
+the rbar field in struct vfio_pci_core_device.
+
+Approach: This touches PCI resource code (preserve_config, BAR sizing). The
+new behavior will be limited to incoming preserved devices, so that boots
+without Live Update are unaffected, and existing mechanisms such as
+preserve_config will be reused rather than adding new ones.
+
+Dependencies: #1 and the LUO FLB fixes (applied).
+
+Next steps: Rebase onto the applied base series and post an RFC, so that
+review of the resource assignment changes can overlap with #1 soaking in
+linux-next. Early feedback on the approach from Bjorn and the PCI resource
+reviewers would be much appreciated.
+
+4. Adopt ATS and PASID state across Live Update
+-----------------------------------------------
+
+Status: Patches written, not yet posted.
+
+Why: Turning ATS or PASID on or off while a device is doing DMA is unsafe.
+Enabling ATS is not atomic (the IOMMU context entry and the endpoint's ATS
+Control register are separate), and disabling ATS without quiescing DMA can
+leave stale ATC translations behind, which risks silent memory corruption.
+For preserved devices the kernel must adopt the existing hardware state
+instead of reprogramming it.
+
+Dependencies: #1. Samiullah's IOMMU Live Update series [10] also needs to
+land for this to be useful end to end, since the IOMMU driver is what calls
+into ATS/PASID enablement. The plan is to post #4 once the IOMMU series has
+settled (targeting 7.7, with 7.6 as a stretch), and to agree on the
+ATS/PASID adoption interface with Samiullah ahead of time. Alternatively,
+these PCI core patches may be folded into a larger IOMMU series from
+Samiullah that handles ATS and PASID end to end.
+
+5. SR-IOV support across Live Update
+------------------------------------
+
+Status: Not started.
+
+Why: VFs assigned to VMs through VFIO need to survive Live Update. That
+means preserving the parent PF's SR-IOV configuration (NumVFs, VF Enable,
+VF BARs, etc.) and enumerating the VFs after kexec without resetting or
+reconfiguring them.
+
+Scope: Userspace must explicitly preserve a PF for a VF to be preserved.
+Unlike upstream bridges, the PCI core will not automatically preserve the
+PF of a preserved VF. The PF must be explicitly preserved by its driver.
+
+Expected work:
+
+  - Remove the base series' restriction against preserving VFs.
+
+  - Preserve and adopt the PF's SR-IOV capability state instead of
+    reprogramming it on the incoming side.
+
+  - Enumerate VFs on the incoming side while keeping their Requester IDs
+    and BARs unchanged (builds on the bus number and BAR work in #1 and
+    #3).
+
+Open question: When should the VFs be enumerated on the incoming side? The
+PCI core has enough information to enumerate them during the initial bus
+scan, but userspace may prefer to trigger enumeration itself after
+disabling VF autoprobe (sriov_drivers_autoprobe).
+
+Dependencies: #1 and VFIO PF preservation support.
+
+T1. PCI core Live Update selftests
+----------------------------------
+
+Status: Not started.
+
+Why: PCI core support for Live Update is currently tested by applying the
+VFIO series [11] on top and running the VFIO Live Update selftests. That
+works for basic sanity testing, but it will make it harder to test new PCI
+core features that need to land ahead of their VFIO counterparts. Adding
+PCI core specific tests under tools/testing/selftests/liveupdate would make
+PCI core development less coupled to VFIO. That requires a test driver,
+provided by the selftests, that can preserve devices without VFIO.
+
+Dependencies: #1.
+
+Related work outside the PCI core
+=================================
+
+  - LUO: Refcounting for incoming FLB [12]. Applied in May. Needed by #1,
+    #3, and #5.
+
+  - LUO: FLB fixes, outgoing refcounting, and preventing multiple retrieve
+    [13]. Applied in July. Needed by #1, #3, and #5.
+
+  - Vipin's VFIO PCI Live Update series (v5) [11]. Under review. The main
+    user of #1, and a future user of #2 (saved state) and #5 (PF/VF).
+
+  - Samiullah's IOMMU Live Update series (v5) [10]. Posted on Sep 21.
+    Needed end to end for DMA through the IOMMU. Pairs with #4.
+
+  - LUO file dependencies (Samiullah). LPC talk planned. Needed for
+    VFIO/iommufd ordering and for PF/VF dependencies (#5).
+
+Thanks,
+David
+
+[1] https://lore.kernel.org/linux-pci/179061032462.173069.6066907606098407222.b4-ty@b4/
+[2] https://lpc.events/event/20/contributions/2618/
+[3] https://lore.kernel.org/kexec/20260925143000.2729890-1-pasha.tatashin@soleen.com/
+[4] https://deb.tandrin.de/phb-crystal-ball.htm
+[5] https://lore.kernel.org/linux-pci/20260918200640.887030-1-dmatlack@google.com/
+[6] https://lore.kernel.org/linux-pci/20260918191846.2f68b23b@shazbot.org/
+[7] https://lore.kernel.org/kvm/20251126193608.2678510-1-dmatlack@google.com/
+[8] https://lore.kernel.org/linux-pci/20260423212316.3431746-1-dmatlack@google.com/
+[9] https://lore.kernel.org/linux-pci/20260924173501.856380-1-dmatlack@google.com/
+[10] https://lore.kernel.org/linux-iommu/20260921004834.2601285-1-skhawaja@google.com/
+[11] https://lore.kernel.org/kvm/20260714151505.3466855-1-vipinsh@google.com/
+[12] https://lore.kernel.org/lkml/177766042304.401635.6805828117822344063.b4-ty@soleen.com/
+[13] https://lore.kernel.org/kexec/178448096578.306041.16503153363800577876.b4-ty@b4/
 
