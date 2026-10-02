@@ -4,82 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 985EACA5FD4
-	for <kexec@archiver.kernel.org>; Thu,  1 Oct 2026 23:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 583CACA5FD9
+	for <kexec@archiver.kernel.org>; Fri,  2 Oct 2026 08:17:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=bH2Pq1q5pIyFrXqiHygcqwFBcPzQ4OFyA1DBLvgDPs4=; b=rG3V1iIL53O2BdmEtxI44bzlNl
-	WPJ7njbo0H1tI+ZVOffpVemHLT+i2IFUt3djhZiA4M2uZc6PbuSJa6+Q1pIrCPikTwrl9b6ml/aEg
-	+1NGpoummnTtxivqB6PHpWK2R4oyPnQL2p+xOrS77SJNLxYeBMmcQyRFDdcfxeFfQRY0B/D7eIOFq
-	PgN82nyXK5RbJAY2LcgYZyl7zLM3ZdyNtkzX9ZiFaBw2a1FRdbieq4iOeW7tojysrnoWHrLWgFpim
-	2EtunnDaSRmpcS7GgOhRTFgl18iSApH3uubXbZsfI3KnUhMMT7KEWxBuPasCRQ3rx0V0sG25Thdp1
-	mWRmWsbg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=9yx8ebg2bvWYOV3tWECQ37hO2lwB9L2e0febzTmH5JU=; b=XtN9K7NXOe9pbjD4i/dTBDLVXH
+	jQt+MkTSLw+nuhnVqPCYTXFGhyR0FFD/g0rpUlwOCQ7R0IC3ZSS04zLSuk0dH1cfjihVRoIQSg5h5
+	BALUcaif/ZK8kDVstBVBig7aGR8k1lSdWdxBYkZqFAP/Vx3fzHXqGfIVZcwLJJ1YMLPza29cW3z0V
+	PMo0zqOqoOwsz+0bb9hH8TRaMGjWhDp0342SOJhTHcllCiHket5U/rWB1oBqX/3TML+IchadVm0jv
+	K/tvtQn9xFQUeitdekQsnB45Ast2CKynwczRDU5d5+pwDroZvxab4/fyvHFNmHQSKdgjEhs1gOR9M
+	H5RskjJA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xCQ63-0000000AOtT-0rWC;
-	Thu, 01 Oct 2026 23:21:51 +0000
-Received: from mail-pl1-x645.google.com ([2607:f8b0:4864:20::645])
+	id 1xCYSD-0000000Axt1-3YYn;
+	Fri, 02 Oct 2026 08:17:17 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xCQ60-0000000AOs6-2nRc
-	for kexec@lists.infradead.org;
-	Thu, 01 Oct 2026 23:21:50 +0000
-Received: by mail-pl1-x645.google.com with SMTP id d9443c01a7336-2ccb687f82eso46530275ad.3
-        for <kexec@lists.infradead.org>; Thu, 01 Oct 2026 16:21:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790896907; x=1791501707; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=bH2Pq1q5pIyFrXqiHygcqwFBcPzQ4OFyA1DBLvgDPs4=;
-        b=DzdqUwTzkMJ4sYG1dm7evC0bJ2h0tSWEbfjO9rHOZ/ruX7xWu+RRB2wHc6AdcQM5j2
-         jv/MCBFeTX9W7XAQshC9m4UYSmpu6X2/mRNCq8mBHF3ESbT4iKeHy9dxDCBW6xjjVBH9
-         T6nouSInyudNMaiSMniIJk3NwNG1CbmV+9V6UqPbu3d42FJw42t+IAHS8XRi2+Icsidl
-         9zw1RntfStVQKagVx4M+lOmSHsug63cPlJEboRsY/Ft3qAA7eiKIaKYUKSA21C9gLiII
-         eQDrTzlXICXK3jnnUZMHPUPCRmmcS8kCpP9HfDoyDdCZKUmhG0q7Fff7YACItVc5lF10
-         9PdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790896907; x=1791501707;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=bH2Pq1q5pIyFrXqiHygcqwFBcPzQ4OFyA1DBLvgDPs4=;
-        b=N4YQbTMctIdoIltJNmiA9RyPfWAsQ01c/v8K42U+H9SUzYQDeyc5m5KZhA5WG9x440
-         ouFOti83q1pe/vq/mQRXEBA2Pul1069aTa36aXbavBEB9wMC68YFG8eOogPEoLv8GSJo
-         ZJYC76aVBemvg/Ps+PWTgPpz1Ge+nlZaOvPRcZhRDkAeRPiGCxG71lP/j+Z8AQT58Lom
-         j5KzaXaNEmPNxQPM8imiMILtrdiwI22K0KLaIpckseQAjMzXEN8GeXkN6rq3jQmy4fFd
-         SWnYEQ9x5hSGLhNCwLM65/qRPb1Vd50jN6QuYQpqZXK8U5ut0e/UXth6evNSv7QHW5ot
-         cDdg==
-X-Forwarded-Encrypted: i=1; AKwUvBwlw5mcK9dma2iOhEF6QJGIAYySdsI6a/2tA7is6Fn9I0BNZXx44kfuyEfMeo7YqHlihIykgQ==@lists.infradead.org
-X-Gm-Message-State: AFq9FYItHjq0zO7Fj3k3J+5xozWwqQoklnglYbWScm9cVQh5Z5/6nedk
-	rK9mZQjMZw3ns5ZeigUhN9mS6Vs56rYCMakWDR1hNNWMHN0e183Zdn/tErZY1CR9eBWLommjW4F
-	mN0d/wJtiWprpuA==
-X-Received: from pldv20.prod.google.com ([2002:a17:902:ca94:b0:2e2:f25a:7b5])
- (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:e807:b0:2dd:ad74:6d16 with SMTP id d9443c01a7336-2e49b6add39mr7150245ad.28.1790896906728;
- Thu, 01 Oct 2026 16:21:46 -0700 (PDT)
-Date: Thu,  1 Oct 2026 23:21:07 +0000
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20261001232133.560284-1-dmatlack@google.com>
-Subject: RFC: PCI core Live Update Roadmap
-From: David Matlack <dmatlack@google.com>
-To: linux-pci@vger.kernel.org
-Cc: David Matlack <dmatlack@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Alex Williamson <alex@shazbot.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>, 
-	Kevin Tian <kevin.tian@intel.com>, Lukas Wunner <lukas@wunner.de>, 
-	Logan Gunthorpe <logang@deltatee.com>, 
-	"=?UTF-8?q?Ilpo=20J=C3=A4rvinen?=" <ilpo.jarvinen@linux.intel.com>, Lu Baolu <baolu.lu@linux.intel.com>, 
-	Joerg Roedel <joro@8bytes.org>, Samiullah Khawaja <skhawaja@google.com>, Vipin Sharma <vipinsh@google.com>, 
-	Pranjal Shrivastava <praan@google.com>, kexec@lists.infradead.org, kvm@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261001_162148_729955_46EC3150 
-X-CRM114-Status: GOOD (  32.44  )
+	id 1xCYSC-0000000Axse-3Gdw;
+	Fri, 02 Oct 2026 08:17:16 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 2C41C41E45;
+	Fri,  2 Oct 2026 08:17:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50E981F000FF;
+	Fri,  2 Oct 2026 08:17:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790929036;
+	bh=9yx8ebg2bvWYOV3tWECQ37hO2lwB9L2e0febzTmH5JU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=nQXXNjLkwYz58zsrBOiKsev3kSoSv0Qn6uiQT1NeTnbVNcw1p5XvMUficJ1jAi+Ak
+	 IrQUl6apYNM0BZb+MwY+skimjk4Gaz+DKfu2Z7rrlWqcHeKazOZ/231skNjWs+VoHH
+	 hvldwUO3pE+zFitrOfFP0Nw36i/xpINvewLoPaNmIPApssJKO+twQoB8Do6cTfiqc5
+	 iB8xlM34AUVUaxFI7uiDOgQFd78kW0wtR2JuI/FknTclevK64ODgJXoQ+NBv/ZOiVh
+	 paTytyIjv85kIpY8OrS5F04vP35/hXTrzck/QL84DN+aQFgoAt0oSjO6j+qJxAzJrr
+	 gQoYq19TSfH3Q==
+Date: Fri, 2 Oct 2026 10:17:05 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Wandun Chen <chenwandun1@gmail.com>
+Cc: robh@kernel.org, baoquan.he@linux.dev, m.szyprowski@samsung.com,
+	catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+	chenhuacai@kernel.org, kernel@xen0n.name, pjw@kernel.org,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+	tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	saravanak@kernel.org, akpm@linux-foundation.org,
+	pasha.tatashin@soleen.com, pratyush@kernel.org,
+	ruirui.yang@linux.dev, robin.murphy@arm.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, kexec@lists.infradead.org,
+	linux-mm@kvack.org, iommu@lists.linux.dev
+Subject: Re: [PATCH v7 0/9] kdump: reduce vmcore size and capture time
+Message-ID: <ar9ogXc12cLjziHS@kernel.org>
+References: <20260922084256.1515554-1-chenwandun1@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260922084256.1515554-1-chenwandun1@gmail.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,295 +78,146 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi all,
-
-Now that the base PCI core support for Live Update has been applied to
-liveupdate.git [1], I wanted to share the plan for the rest of the PCI core
-work, so that reviewers can see what is coming and how the pieces fit
-together.
-
-I was originally going to present this roadmap at LPC next week [2], but
-since there are no immediate blockers, we decided to repurpose the talk to
-cover tmpfs file preservation instead [3]. If anyone would like to discuss
-the roadmap at LPC, please reach out. I would love to talk about it.
-
-As a reminder, the goal of Live Update is to allow the host kernel to be
-updated with kexec while VFIO-assigned PCI devices keep running and keep
-doing DMA to guest memory and P2P to other preserved devices. This work
-aims to get every PCI core change needed for that merged upstream.
-
-This roadmap only covers functional support in the PCI core. Blackout time
-(from VM pause to VM resume) is intentionally out of scope. For preserved
-devices, the PCI core mostly skips work it would normally do (bus number
-and BAR assignment, ACS/ATS/PASID programming), so these changes should not
-add meaningfully to blackout time. Please call out anything in this plan
-that would make blackout time worse or harder to optimize later.
-
-The work is split into six series (five feature series plus one selftests
-series). Each one will be sent and merged on its own. Feedback on the plan,
-the ordering, and the open question in #5 is very welcome.
-
-Overview
-========
-
-  #   Series                              Status             Target
-  --  ----------------------------------  -----------------  ------
-  1   PCI core support for Live Update    v9 applied         7.4
-  2   Index saved capability state by     v1 posted          7.5
-      configuration space offset
-  3   Do not break P2P across             In progress        7.6
-      Live Update
-  4   Adopt ATS and PASID state across    Not yet posted     7.7
-      Live Update
-  5   SR-IOV support across Live Update   Not started        7.8
-  T1  PCI core Live Update selftests      Not started        7.5
-
-Targets are tentative and based on the usual release cadence [4]. The 7.4
-merge window is expected to open in late October 2026, 7.5 in January 2027,
-7.6 in March, 7.7 in May, and 7.8 in July. A series needs to be in
-linux-next by about rc6 of the preceding cycle to make its target.
-
-Dependencies
-============
-
-  LUO FLB refcounting (applied) ---+
-                                   |
-  LUO FLB fixes (applied) ---------+
-                                   |
-                                   v
-                  #1 PCI core support for Live Update
-                                   |
-         +-------------+-----------+-----------+-------------+
-         |             |                       |             |
-         v             v                       v             v
-      #3 P2P     #4 ATS/PASID              #5 SR-IOV   T1 Selftests
-                 (+ IOMMU Live             (+ VFIO PF
-                  Update series)            preservation)
-
-#2 (saved state indexed by config space offset) is an independent PCI
-refactor with no dependency on #1. It is a prerequisite for VFIO carrying
-struct pci_saved_state across Live Update.
-
-Details
-=======
-
-1. PCI core support for Live Update
------------------------------------
-
-Status: v9 [5] was applied to liveupdate.git on Sep 28 [1] and is in
-linux-next, targeting 7.4. Thanks to everyone who reviewed it.
-
-One item from v9 review is still open. Alex pointed out that the ACS Egress
-Control Vector is not saved and restored along with the ACS Control
-register [6]. An updated patch that handles it is in that thread, and it
-will be sent as a follow-up if it turns out to be needed.
-
-This is the base series. It allows preserved PCI devices to keep doing DMA
-to system memory (preserved memfds) across Live Update. Devices can sit
-behind bridges but cannot be VFs, and P2P is not supported yet. The series:
-
-  - Sets up the PCI core FLB handler that carries struct pci_ser across
-    kexec through KHO. The ABI lives in include/linux/kho/abi/pci.h.
-
-  - Adds APIs for drivers to register devices for preservation (outgoing)
-    and lets the PCI core recognize preserved devices during enumeration
-    (incoming).
-
-  - Automatically preserves every upstream bridge of a preserved endpoint,
-    with refcounting.
-
-  - Keeps each preserved device's Requester ID (BDF) the same by inheriting
-    secondary/subordinate bus numbers and ARI Forwarding Enable on
-    preserved bridges.
-
-  - Keeps TLP routing the same by adopting the ACS controls on the path
-    from the endpoint up to the root port. ACS Control is now saved and
-    restored through the normal save/restore path.
-
-  - Freezes preservation status at shutdown and leaves Bus Master Enable on
-    for preserved devices during kexec.
-
-  - Adds Documentation/PCI/liveupdate.rst describing what the PCI core,
-    drivers, and userspace are each responsible for.
-
-Size: 17 files, about 1.4k lines added (mostly the new
-drivers/pci/liveupdate.c).
-
-History: v1 was posted in November 2025 together with the VFIO changes [7].
-The PCI core changes were split out into their own series in v4 (April
-2026) [8].
-
-2. Index saved capability state by configuration space offset
--------------------------------------------------------------
-
-Status: v1 [9] (15 patches) was posted on Sep 24 and is waiting for review.
-It is intended to go through pci.git and has no dependency on #1.
-
-Why: VFIO saves a device's state with pci_store_saved_state() on first open
-and restores it with pci_load_and_free_saved_state() on last close. A Live
-Update can happen between those two calls. Today struct pci_saved_state
-cannot be handed to the next kernel, because its layout depends on the
-kernel that wrote it (which capabilities are recorded, how big each record
-is, what each word means). The receiving kernel has no way to check it
-against the device in front of it.
-
-What: Replace the per-capability save buffers with a single per-device
-store indexed by config space offset (new drivers/pci/saved-caps.c), and
-lay out struct pci_saved_state the same way: a bitmap of saved DWORDs plus
-their values. The format of the blob then comes from the hardware rather
-than the kernel version, so any kernel can check it.
-
-Side benefits:
-
-  - One saved-state allocation per device instead of up to nine separate
-    ones. The one remaining allocation failure is reported (AER, DPC, PTM,
-    and TPH used to ignore allocation failures).
-
-  - Removes fragile save/restore ordering that relied on running buffer
-    cursors. Restore routines now name registers by offset.
-
-  - Saves 32 to 160 bytes per device, and fixes a possible unaligned access
-    in pci_load_saved_state().
-
-Size: 13 files, +680/-621. The series is bisect-safe and converts one
-capability per patch, so feedback on one capability does not have to hold
-up review of the rest.
-
-Follow-on work (not part of this series): Serializing struct
-pci_saved_state across Live Update (a KHO ABI definition in
-include/linux/kho/abi/ plus serialize/deserialize routines) will be part of
-the VFIO Live Update work rather than a separate PCI core series. It builds
-on the offset-indexed layout from this series. Separately, the remaining
-saved-state allocation failure should be made fatal to device setup.
-
-3. Do not break P2P across Live Update
---------------------------------------
-
-Status: In progress, not yet posted.
-
-Scope: This series only ensures that the PCI core does not break ongoing
-P2P between preserved devices across Live Update, e.g. by changing BAR
-addresses. Actually supporting P2P across Live Update will also require
-work in VFIO and a story around preserving dma-bufs.
-
-Why: Preserved devices may be doing peer-to-peer DMA to each other
-throughout the Live Update, e.g. device-to-device traffic between
-VFIO-assigned devices in a VM. That traffic breaks if the next kernel
-changes BAR addresses or bridge windows during enumeration. Independent of
-P2P, VFIO also needs stable BAR addresses so that it can safely preserve
-the rbar field in struct vfio_pci_core_device.
-
-Approach: This touches PCI resource code (preserve_config, BAR sizing). The
-new behavior will be limited to incoming preserved devices, so that boots
-without Live Update are unaffected, and existing mechanisms such as
-preserve_config will be reused rather than adding new ones.
-
-Dependencies: #1 and the LUO FLB fixes (applied).
-
-Next steps: Rebase onto the applied base series and post an RFC, so that
-review of the resource assignment changes can overlap with #1 soaking in
-linux-next. Early feedback on the approach from Bjorn and the PCI resource
-reviewers would be much appreciated.
-
-4. Adopt ATS and PASID state across Live Update
------------------------------------------------
-
-Status: Patches written, not yet posted.
-
-Why: Turning ATS or PASID on or off while a device is doing DMA is unsafe.
-Enabling ATS is not atomic (the IOMMU context entry and the endpoint's ATS
-Control register are separate), and disabling ATS without quiescing DMA can
-leave stale ATC translations behind, which risks silent memory corruption.
-For preserved devices the kernel must adopt the existing hardware state
-instead of reprogramming it.
-
-Dependencies: #1. Samiullah's IOMMU Live Update series [10] also needs to
-land for this to be useful end to end, since the IOMMU driver is what calls
-into ATS/PASID enablement. The plan is to post #4 once the IOMMU series has
-settled (targeting 7.7, with 7.6 as a stretch), and to agree on the
-ATS/PASID adoption interface with Samiullah ahead of time. Alternatively,
-these PCI core patches may be folded into a larger IOMMU series from
-Samiullah that handles ATS and PASID end to end.
-
-5. SR-IOV support across Live Update
-------------------------------------
-
-Status: Not started.
-
-Why: VFs assigned to VMs through VFIO need to survive Live Update. That
-means preserving the parent PF's SR-IOV configuration (NumVFs, VF Enable,
-VF BARs, etc.) and enumerating the VFs after kexec without resetting or
-reconfiguring them.
-
-Scope: Userspace must explicitly preserve a PF for a VF to be preserved.
-Unlike upstream bridges, the PCI core will not automatically preserve the
-PF of a preserved VF. The PF must be explicitly preserved by its driver.
-
-Expected work:
-
-  - Remove the base series' restriction against preserving VFs.
-
-  - Preserve and adopt the PF's SR-IOV capability state instead of
-    reprogramming it on the incoming side.
-
-  - Enumerate VFs on the incoming side while keeping their Requester IDs
-    and BARs unchanged (builds on the bus number and BAR work in #1 and
-    #3).
-
-Open question: When should the VFs be enumerated on the incoming side? The
-PCI core has enough information to enumerate them during the initial bus
-scan, but userspace may prefer to trigger enumeration itself after
-disabling VF autoprobe (sriov_drivers_autoprobe).
-
-Dependencies: #1 and VFIO PF preservation support.
-
-T1. PCI core Live Update selftests
-----------------------------------
-
-Status: Not started.
-
-Why: PCI core support for Live Update is currently tested by applying the
-VFIO series [11] on top and running the VFIO Live Update selftests. That
-works for basic sanity testing, but it will make it harder to test new PCI
-core features that need to land ahead of their VFIO counterparts. Adding
-PCI core specific tests under tools/testing/selftests/liveupdate would make
-PCI core development less coupled to VFIO. That requires a test driver,
-provided by the selftests, that can preserve devices without VFIO.
-
-Dependencies: #1.
-
-Related work outside the PCI core
-=================================
-
-  - LUO: Refcounting for incoming FLB [12]. Applied in May. Needed by #1,
-    #3, and #5.
-
-  - LUO: FLB fixes, outgoing refcounting, and preventing multiple retrieve
-    [13]. Applied in July. Needed by #1, #3, and #5.
-
-  - Vipin's VFIO PCI Live Update series (v5) [11]. Under review. The main
-    user of #1, and a future user of #2 (saved state) and #5 (PF/VF).
-
-  - Samiullah's IOMMU Live Update series (v5) [10]. Posted on Sep 21.
-    Needed end to end for DMA through the IOMMU. Pairs with #4.
-
-  - LUO file dependencies (Samiullah). LPC talk planned. Needed for
-    VFIO/iommufd ordering and for PF/VF dependencies (#5).
-
-Thanks,
-David
-
-[1] https://lore.kernel.org/linux-pci/179061032462.173069.6066907606098407222.b4-ty@b4/
-[2] https://lpc.events/event/20/contributions/2618/
-[3] https://lore.kernel.org/kexec/20260925143000.2729890-1-pasha.tatashin@soleen.com/
-[4] https://deb.tandrin.de/phb-crystal-ball.htm
-[5] https://lore.kernel.org/linux-pci/20260918200640.887030-1-dmatlack@google.com/
-[6] https://lore.kernel.org/linux-pci/20260918191846.2f68b23b@shazbot.org/
-[7] https://lore.kernel.org/kvm/20251126193608.2678510-1-dmatlack@google.com/
-[8] https://lore.kernel.org/linux-pci/20260423212316.3431746-1-dmatlack@google.com/
-[9] https://lore.kernel.org/linux-pci/20260924173501.856380-1-dmatlack@google.com/
-[10] https://lore.kernel.org/linux-iommu/20260921004834.2601285-1-skhawaja@google.com/
-[11] https://lore.kernel.org/kvm/20260714151505.3466855-1-vipinsh@google.com/
-[12] https://lore.kernel.org/lkml/177766042304.401635.6805828117822344063.b4-ty@soleen.com/
-[13] https://lore.kernel.org/kexec/178448096578.306041.16503153363800577876.b4-ty@b4/
+Hi Wandun,
+
+On Tue, Sep 22, 2026 at 04:42:47PM +0800, Wandun Chen wrote:
+> From: Wandun Chen <chenwandun@lixiang.com>
+> 
+> On SoCs that carve out large firmware-owned reserved memory (GPU,
+> camera ISP, ...), kdump currently dumps those carveouts as part of
+> system RAM even though their contents are firmware state that is not
+> useful for kernel crash analysis.
+> 
+> This series introduces a MEMBLOCK_NODUMP flag in memblock to filter
+> reserved memory on DT-based architectures (arm64, riscv, loongarch).
+> Reserved regions are marked MEMBLOCK_NODUMP by default so kdump omits
+> them; reusable CMA regions are different because their pages are handed
+> back to the buddy allocator and may carry crash-relevant data.
+> 
+> ACPI systems already filter reserved memory out of the vmcore through
+> their existing path; only DT-based systems currently fail to filter these
+> regions, which is what this series addresses. The flag lives in memblock
+> itself rather than in a DT-only structure, so both ACPI and DT systems
+> can benefit from it (suggested by Rob, thanks).
+
+Can you elaborate how ACPI systems filter their reserved memory?
+With your patches, the memblock flag becomes a part of DT-only
+infrastructure, so that claim that both ACPI and DT benefit from it does
+not hold, doesn't it?
+ 
+> Since the reserved memory regions are filtered out, the vmcore is
+> smaller in size and faster to produce.
+> 
+> The series is based on linux-next and is organized as follows:
+> 
+> Patches 1-3: Preparation and bugfixes: switch riscv crash_mem to memblock,
+> 	     fold the duplicated per-arch memblock walks into the weak
+>              defaults, and serialize crash header preparation against
+>              memory hotplug.
+> Patches 4-8: NODUMP infrastructure: switch crash_core to
+>              for_each_mem_region(), introduce the MEMBLOCK_NODUMP flag,
+> 	     add a dumpable flag to struct reserved_mem, and mark
+> 	     /reserved-memory and /memreserve/ entries with MEMBLOCK_NODUMP
+> 	     flag.
+> Patch 9:     Exclude MEMBLOCK_NODUMP regions from the vmcore ELF
+>              header.
+> 
+> v6 --> v7:
+> 1. Fix a stale MEMBLOCK_NODUMP flag issue [1]. Memory reserved and
+>    marked as NODUMP may later be freed (the initrd, for example),
+>    so the NODUMP flag must be cleared accordingly. Since the fix is
+>    part of the NODUMP infrastructure introduced by patch 5, it has
+>    been folded into that patch.
+> 
+> 2. Drop the "generic" related description in the cover letter.
+> 
+> 3. Collect the Acked-by and Reviewed-by tags received during the v6
+>    review (thanks to Baoquan, Mike, Rob and Marek). Patch 5 is the
+>    only one without a tag, as its Reviewed-by was dropped when the
+>    fix was folded in.
+> 
+> 4. Drop patch 1 of v6, which has been merged separately.
+> 
+> 
+> v5 --> v6:
+> 1. Serialize crash header preparation against memory hotplug to avoid
+>    out-of-bounds or use-after-free issues.
+> 2. MEMBLOCK_NODUMP marking is now done after memblock allows resizing,
+>    avoiding a panic from too few regions before resize is permitted.
+> 3. Reordered the patches, put pre-existing bugfixes earlier in the series.
+> 
+> 
+> v4 --> v5:
+> 1. Rework the mechanism around a memblock-level MEMBLOCK_NODUMP flag
+>    (suggested by Rob) instead of the v4 opt-in 'dumpable' flag on
+>    DT-only struct reserved_mem [2].
+> 2. Switch the riscv vmcore elf header preparation to use memblock
+>    instead of the resource tree, aligning it with arm64 and loongarch,
+>    so riscv also can exclude reserved memory from vmcore.
+> 3. Deduplicate the vmcore elf header preparation: arm64, riscv and
+>    loongarch open-coded the same logic, so fold it into shared
+>     __weak defaults in crash_core.
+> 4.  Drop the v4 patch that saved /memreserve/ entries into the
+>     reserved_mem array; /memreserve/ is now marked MEMBLOCK_NODUMP
+>     directly.
+> 
+> v3 --> v4:
+> 1. Rebase this series on v7.2-rc1.
+> 2. Add two cleanup patches (patch 02/03).
+> 3. Simplify patch 03 to avoid checking whether initial_boot_params is
+>    NULL multiple times, suggested by Rob.
+> 
+> v2 --> v3:
+> 1. Fix out-of-bounds issue if device tree lacks /reserved-memory node.
+> 2. Fix UAF issue when alloc_reserved_mem_array() fails.
+> 3. Add some prepare patches.
+> 
+> v1 --> v2:
+> 1. v1 added an opt-out DT property ('linux,no-dump'). Per Rob's
+>    feedback [3], v2 drop that property and exclude reserve memory
+>    by default.
+> 2. Split some prepared patches from the original patches.
+> 3. Address coding-style comments on patch 5 from Rob.
+> 
+> [1] https://sashiko.dev/#/message/20260917220750.GA4013814-robh%40kernel.org
+> [2] https://lore.kernel.org/lkml/20260723234126.GA3253409-robh@kernel.org/
+> [3] https://lore.kernel.org/lkml/20260506144542.GA2072596-robh@kernel.org/
+> 
+> 
+> 
+> Wandun Chen (9):
+>   riscv: build crash_mem ranges from memblock instead of resource tree
+>   crash_core: fold duplicated memblock arch hooks into the weak default
+>   crash_core: serialize crash header preparation against hotplug
+>   crash_core: replace for_each_mem_range() with for_each_mem_region()
+>   memblock: introduce MEMBLOCK_NODUMP flag
+>   of: reserved_mem: add dumpable flag to opt-in vmcore
+>   of: reserved_mem: mark /reserved-memory entries with MEMBLOCK_NODUMP
+>   of: reserved_mem: mark /memreserve/ entries as MEMBLOCK_NODUMP
+>   crash_core: skip MEMBLOCK_NODUMP regions when building vmcore ELF
+>     header
+> 
+>  arch/arm64/kernel/machine_kexec_file.c     | 29 ------------
+>  arch/loongarch/kernel/machine_kexec_file.c | 27 ------------
+>  arch/riscv/Kconfig                         |  2 +-
+>  arch/riscv/kernel/machine_kexec_file.c     | 33 --------------
+>  arch/x86/kernel/crash.c                    |  2 +-
+>  drivers/of/fdt.c                           |  2 +
+>  drivers/of/of_private.h                    |  2 +
+>  drivers/of/of_reserved_mem.c               | 48 ++++++++++++++++++++
+>  include/linux/crash_core.h                 |  2 +
+>  include/linux/memblock.h                   |  9 ++++
+>  include/linux/of_reserved_mem.h            |  1 +
+>  kernel/crash_core.c                        | 51 ++++++++++++++++++++--
+>  kernel/dma/contiguous.c                    |  1 +
+>  mm/memblock.c                              | 43 +++++++++++++++++-
+>  14 files changed, 155 insertions(+), 97 deletions(-)
+> 
+> -- 
+> 2.43.0
+> 
+
+-- 
+Sincerely yours,
+Mike.
 
