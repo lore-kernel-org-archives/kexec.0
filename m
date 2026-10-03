@@ -4,66 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 583CACA5FD9
-	for <kexec@archiver.kernel.org>; Fri,  2 Oct 2026 08:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 15507CA5FDD
+	for <kexec@archiver.kernel.org>; Sat,  3 Oct 2026 07:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=9yx8ebg2bvWYOV3tWECQ37hO2lwB9L2e0febzTmH5JU=; b=XtN9K7NXOe9pbjD4i/dTBDLVXH
-	jQt+MkTSLw+nuhnVqPCYTXFGhyR0FFD/g0rpUlwOCQ7R0IC3ZSS04zLSuk0dH1cfjihVRoIQSg5h5
-	BALUcaif/ZK8kDVstBVBig7aGR8k1lSdWdxBYkZqFAP/Vx3fzHXqGfIVZcwLJJ1YMLPza29cW3z0V
-	PMo0zqOqoOwsz+0bb9hH8TRaMGjWhDp0342SOJhTHcllCiHket5U/rWB1oBqX/3TML+IchadVm0jv
-	K/tvtQn9xFQUeitdekQsnB45Ast2CKynwczRDU5d5+pwDroZvxab4/fyvHFNmHQSKdgjEhs1gOR9M
-	H5RskjJA==;
+	bh=UPO4RM0i7SP/IETP8H+05lmtRukMrZzOkuL7g4aF8U4=; b=CR2n8is2KDvgiMDT0okPR+zIob
+	65i8fw635I9OQSi/JCR01nIDyjakrhLMnP2K7AUVDgpwOd6b2xy7V9SdWDrNJhDAlAZAH8qxgoJq5
+	Q6zA99VXy4jUmEEcEwcsbVoflbWgiHbvRCAPlsIyXLZsN84bMT8kOxBkmj2DfBNnIP099w2muAB/B
+	dc3C6QpFh1YNZ9ciW+02Ks057kmXy1VadHTBA6spazxSsTof2H2ggqVU2RAJ+3d66XWZSGr6xTfqa
+	Z0mFMj+2bP5rHwQXPIOwoiIfSTDE72HQuSFwxR6DLbHZ/BrwSUFgafwU28kNBgyZsjh7srmfrsJrP
+	f+Dr2Org==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xCYSD-0000000Axt1-3YYn;
-	Fri, 02 Oct 2026 08:17:17 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xCubS-0000000D96J-0fLM;
+	Sat, 03 Oct 2026 07:56:18 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xCYSC-0000000Axse-3Gdw;
-	Fri, 02 Oct 2026 08:17:16 +0000
+	id 1xCubN-0000000D964-3jCa
+	for kexec@lists.infradead.org;
+	Sat, 03 Oct 2026 07:56:14 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 2C41C41E45;
-	Fri,  2 Oct 2026 08:17:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50E981F000FF;
-	Fri,  2 Oct 2026 08:17:08 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 09447602C2;
+	Sat,  3 Oct 2026 07:56:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67E6A1F0089B;
+	Sat,  3 Oct 2026 07:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790929036;
-	bh=9yx8ebg2bvWYOV3tWECQ37hO2lwB9L2e0febzTmH5JU=;
+	s=k20260515; t=1791014172;
+	bh=UPO4RM0i7SP/IETP8H+05lmtRukMrZzOkuL7g4aF8U4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=nQXXNjLkwYz58zsrBOiKsev3kSoSv0Qn6uiQT1NeTnbVNcw1p5XvMUficJ1jAi+Ak
-	 IrQUl6apYNM0BZb+MwY+skimjk4Gaz+DKfu2Z7rrlWqcHeKazOZ/231skNjWs+VoHH
-	 hvldwUO3pE+zFitrOfFP0Nw36i/xpINvewLoPaNmIPApssJKO+twQoB8Do6cTfiqc5
-	 iB8xlM34AUVUaxFI7uiDOgQFd78kW0wtR2JuI/FknTclevK64ODgJXoQ+NBv/ZOiVh
-	 paTytyIjv85kIpY8OrS5F04vP35/hXTrzck/QL84DN+aQFgoAt0oSjO6j+qJxAzJrr
-	 gQoYq19TSfH3Q==
-Date: Fri, 2 Oct 2026 10:17:05 +0200
+	b=VRLJc7HyEynjBACssz2mmFo30gjCyNt5Q471QjoAwHeXP5o4nCvfFp9iyqR2qwIYy
+	 rdqKYt47RndMm6y1XcQ1FG8JEyO/28b1E10zVwA4k4cSfHfXz9a3q0FS4/ISdbLKOC
+	 75jgXrEMNeuWwhSa8lOgEgKFM1e1ytwEe/cQK0NnbQgVRgoSaIE+nx/ug084XIddZN
+	 yOIMS7FjC7SBakdQIeX3JIw7XCAE8j2vFG8jjmOCrjuhh2/LjnWS55aGmORTvWuvbJ
+	 HE7kIH1M+QqWOfDYzLHCKurMsqEw4mKRNR1LmeCrzdw0+Lxe3xXPkdJgRE0FZ79p/q
+	 JgL18ukxU0ciQ==
+Date: Sat, 3 Oct 2026 09:56:07 +0200
 From: Mike Rapoport <rppt@kernel.org>
-To: Wandun Chen <chenwandun1@gmail.com>
-Cc: robh@kernel.org, baoquan.he@linux.dev, m.szyprowski@samsung.com,
-	catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-	chenhuacai@kernel.org, kernel@xen0n.name, pjw@kernel.org,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
-	tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	saravanak@kernel.org, akpm@linux-foundation.org,
-	pasha.tatashin@soleen.com, pratyush@kernel.org,
-	ruirui.yang@linux.dev, robin.murphy@arm.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, kexec@lists.infradead.org,
-	linux-mm@kvack.org, iommu@lists.linux.dev
-Subject: Re: [PATCH v7 0/9] kdump: reduce vmcore size and capture time
-Message-ID: <ar9ogXc12cLjziHS@kernel.org>
-References: <20260922084256.1515554-1-chenwandun1@gmail.com>
+To: Tarun Sahu <tarunsahu@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>, dmatlack@google.com,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	dev.jain@arm.com, Pratyush Yadav <pratyush@kernel.org>,
+	linux-mm@kvack.org
+Subject: Re: [PATCH v3 2/2] memblock: use binary search to locate candidate
+ regions
+Message-ID: <asC1FwHVHOhBHDGK@kernel.org>
+References: <20260926092448.4090401-1-tarunsahu@google.com>
+ <20260926092448.4090401-2-tarunsahu@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260922084256.1515554-1-chenwandun1@gmail.com>
+In-Reply-To: <20260926092448.4090401-2-tarunsahu@google.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,143 +73,138 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Wandun,
+On Sat, Sep 26, 2026 at 09:24:48AM +0000, Tarun Sahu wrote:
+> Use binary search (memblock_bsearch_start) in memblock_add_range() and
+> memblock_isolate_range() to locate candidate regions instead of linearly
+> scanning from index 0.
+> 
+> Under heavy memory fragmentation (such as KHO page preservation registering
+> hundreds of thousands of disjoint folios), scanning from index 0 on every
+> insertion and isolation results in O(N^2) complexity, causing boot-time
+> memory retrieval to take several minutes (~268s for 393k pages).
+> 
+> Using binary search reduces the worst-case complexity to O(N log N)
+> (and O(N) for sequential appends), cutting KHO memory retrieval time
+> from ~268s to ~50ms.
+> 
+> memblock_search() open codes the same binary search, so reimplement it on
+> top of the new helper.
+> 
+> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
+> 
+>  mm/memblock.c | 53 +++++++++++++++++++++++++++++++++++----------------
+>  1 file changed, 37 insertions(+), 16 deletions(-)
+> 
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index 59dda7d085f3..87c71435c80c 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -586,6 +586,33 @@ static void __init_memblock memblock_insert_region(struct memblock_type *type,
+>  	type->total_size += size;
+>  }
+>  
+> +/**
+> + * memblock_bsearch_start - Find the first region index where rend > base
+> + * @type: memblock type to search
+> + * @base: base physical address of the candidate range
+> + *
+> + * Returns the first region index that could potentially overlap @base.
+> + */
+> +static int __init_memblock memblock_bsearch_start(struct memblock_type *type,
+> +						  phys_addr_t base)
 
-On Tue, Sep 22, 2026 at 04:42:47PM +0800, Wandun Chen wrote:
-> From: Wandun Chen <chenwandun@lixiang.com>
-> 
-> On SoCs that carve out large firmware-owned reserved memory (GPU,
-> camera ISP, ...), kdump currently dumps those carveouts as part of
-> system RAM even though their contents are firmware state that is not
-> useful for kernel crash analysis.
-> 
-> This series introduces a MEMBLOCK_NODUMP flag in memblock to filter
-> reserved memory on DT-based architectures (arm64, riscv, loongarch).
-> Reserved regions are marked MEMBLOCK_NODUMP by default so kdump omits
-> them; reusable CMA regions are different because their pages are handed
-> back to the buddy allocator and may carry crash-relevant data.
-> 
-> ACPI systems already filter reserved memory out of the vmcore through
-> their existing path; only DT-based systems currently fail to filter these
-> regions, which is what this series addresses. The flag lives in memblock
-> itself rather than in a DT-only structure, so both ACPI and DT systems
-> can benefit from it (suggested by Rob, thanks).
+I'd call it __memblock_search()
 
-Can you elaborate how ACPI systems filter their reserved memory?
-With your patches, the memblock flag becomes a part of DT-only
-infrastructure, so that claim that both ACPI and DT benefit from it does
-not hold, doesn't it?
- 
-> Since the reserved memory regions are filtered out, the vmcore is
-> smaller in size and faster to produce.
-> 
-> The series is based on linux-next and is organized as follows:
-> 
-> Patches 1-3: Preparation and bugfixes: switch riscv crash_mem to memblock,
-> 	     fold the duplicated per-arch memblock walks into the weak
->              defaults, and serialize crash header preparation against
->              memory hotplug.
-> Patches 4-8: NODUMP infrastructure: switch crash_core to
->              for_each_mem_region(), introduce the MEMBLOCK_NODUMP flag,
-> 	     add a dumpable flag to struct reserved_mem, and mark
-> 	     /reserved-memory and /memreserve/ entries with MEMBLOCK_NODUMP
-> 	     flag.
-> Patch 9:     Exclude MEMBLOCK_NODUMP regions from the vmcore ELF
->              header.
-> 
-> v6 --> v7:
-> 1. Fix a stale MEMBLOCK_NODUMP flag issue [1]. Memory reserved and
->    marked as NODUMP may later be freed (the initrd, for example),
->    so the NODUMP flag must be cleared accordingly. Since the fix is
->    part of the NODUMP infrastructure introduced by patch 5, it has
->    been folded into that patch.
-> 
-> 2. Drop the "generic" related description in the cover letter.
-> 
-> 3. Collect the Acked-by and Reviewed-by tags received during the v6
->    review (thanks to Baoquan, Mike, Rob and Marek). Patch 5 is the
->    only one without a tag, as its Reviewed-by was dropped when the
->    fix was folded in.
-> 
-> 4. Drop patch 1 of v6, which has been merged separately.
-> 
-> 
-> v5 --> v6:
-> 1. Serialize crash header preparation against memory hotplug to avoid
->    out-of-bounds or use-after-free issues.
-> 2. MEMBLOCK_NODUMP marking is now done after memblock allows resizing,
->    avoiding a panic from too few regions before resize is permitted.
-> 3. Reordered the patches, put pre-existing bugfixes earlier in the series.
-> 
-> 
-> v4 --> v5:
-> 1. Rework the mechanism around a memblock-level MEMBLOCK_NODUMP flag
->    (suggested by Rob) instead of the v4 opt-in 'dumpable' flag on
->    DT-only struct reserved_mem [2].
-> 2. Switch the riscv vmcore elf header preparation to use memblock
->    instead of the resource tree, aligning it with arm64 and loongarch,
->    so riscv also can exclude reserved memory from vmcore.
-> 3. Deduplicate the vmcore elf header preparation: arm64, riscv and
->    loongarch open-coded the same logic, so fold it into shared
->     __weak defaults in crash_core.
-> 4.  Drop the v4 patch that saved /memreserve/ entries into the
->     reserved_mem array; /memreserve/ is now marked MEMBLOCK_NODUMP
->     directly.
-> 
-> v3 --> v4:
-> 1. Rebase this series on v7.2-rc1.
-> 2. Add two cleanup patches (patch 02/03).
-> 3. Simplify patch 03 to avoid checking whether initial_boot_params is
->    NULL multiple times, suggested by Rob.
-> 
-> v2 --> v3:
-> 1. Fix out-of-bounds issue if device tree lacks /reserved-memory node.
-> 2. Fix UAF issue when alloc_reserved_mem_array() fails.
-> 3. Add some prepare patches.
-> 
-> v1 --> v2:
-> 1. v1 added an opt-out DT property ('linux,no-dump'). Per Rob's
->    feedback [3], v2 drop that property and exclude reserve memory
->    by default.
-> 2. Split some prepared patches from the original patches.
-> 3. Address coding-style comments on patch 5 from Rob.
-> 
-> [1] https://sashiko.dev/#/message/20260917220750.GA4013814-robh%40kernel.org
-> [2] https://lore.kernel.org/lkml/20260723234126.GA3253409-robh@kernel.org/
-> [3] https://lore.kernel.org/lkml/20260506144542.GA2072596-robh@kernel.org/
-> 
-> 
-> 
-> Wandun Chen (9):
->   riscv: build crash_mem ranges from memblock instead of resource tree
->   crash_core: fold duplicated memblock arch hooks into the weak default
->   crash_core: serialize crash header preparation against hotplug
->   crash_core: replace for_each_mem_range() with for_each_mem_region()
->   memblock: introduce MEMBLOCK_NODUMP flag
->   of: reserved_mem: add dumpable flag to opt-in vmcore
->   of: reserved_mem: mark /reserved-memory entries with MEMBLOCK_NODUMP
->   of: reserved_mem: mark /memreserve/ entries as MEMBLOCK_NODUMP
->   crash_core: skip MEMBLOCK_NODUMP regions when building vmcore ELF
->     header
-> 
->  arch/arm64/kernel/machine_kexec_file.c     | 29 ------------
->  arch/loongarch/kernel/machine_kexec_file.c | 27 ------------
->  arch/riscv/Kconfig                         |  2 +-
->  arch/riscv/kernel/machine_kexec_file.c     | 33 --------------
->  arch/x86/kernel/crash.c                    |  2 +-
->  drivers/of/fdt.c                           |  2 +
->  drivers/of/of_private.h                    |  2 +
->  drivers/of/of_reserved_mem.c               | 48 ++++++++++++++++++++
->  include/linux/crash_core.h                 |  2 +
->  include/linux/memblock.h                   |  9 ++++
->  include/linux/of_reserved_mem.h            |  1 +
->  kernel/crash_core.c                        | 51 ++++++++++++++++++++--
->  kernel/dma/contiguous.c                    |  1 +
->  mm/memblock.c                              | 43 +++++++++++++++++-
->  14 files changed, 155 insertions(+), 97 deletions(-)
-> 
+> +{
+> +	int mid, low = 0;
+> +	int high = type->cnt;
+> +
+> +	if (type->cnt && base >= type->regions[type->cnt - 1].base +
+> +				 type->regions[type->cnt - 1].size)
+> +		return type->cnt;
+
+Using local variables would make it more readable IMHO.
+
+> +
+> +	while (low < high) {
+> +		mid = (low + high) / 2;
+> +		if (type->regions[mid].base + type->regions[mid].size <= base)
+> +			low = mid + 1;
+> +		else
+> +			high = mid;
+> +	}
+> +	return low;
+> +}
+> +
+>  /**
+>   * memblock_add_range - add new memblock region
+>   * @type: memblock type to add new region into
+> @@ -609,7 +636,7 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
+>  	bool insert = false;
+>  	phys_addr_t obase = base;
+>  	phys_addr_t end = base + memblock_cap_size(base, &size);
+> -	int idx, nr_new, start_rgn = -1, end_rgn;
+> +	int idx, start_idx, nr_new, start_rgn = -1, end_rgn;
+>  
+>  	if (!size)
+>  		return 0;
+> @@ -644,8 +671,9 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
+>  	 */
+>  	base = obase;
+>  	nr_new = 0;
+> +	start_idx = memblock_bsearch_start(type, base);
+>  
+> -	for (idx = 0; idx < type->cnt; idx++) {
+> +	for (idx = start_idx; idx < type->cnt; idx++) {
+>  		struct memblock_region *rgn = &type->regions[idx];
+>  		phys_addr_t rbase = rgn->base;
+>  		phys_addr_t rend = rbase + rgn->size;
+> @@ -809,7 +837,7 @@ static int __init_memblock memblock_isolate_range(struct memblock_type *type,
+>  					int *start_rgn, int *end_rgn)
+>  {
+>  	phys_addr_t end = base + memblock_cap_size(base, &size);
+> -	int idx;
+> +	int idx, start_idx;
+>  
+>  	*start_rgn = *end_rgn = 0;
+>  
+> @@ -821,7 +849,9 @@ static int __init_memblock memblock_isolate_range(struct memblock_type *type,
+>  		if (memblock_double_array(type, base, size) < 0)
+>  			return -ENOMEM;
+>  
+> -	for (idx = 0; idx < type->cnt; idx++) {
+> +	start_idx = memblock_bsearch_start(type, base);
+> +
+> +	for (idx = start_idx; idx < type->cnt; idx++) {
+>  		struct memblock_region *rgn = &type->regions[idx];
+>  		phys_addr_t rbase = rgn->base;
+>  		phys_addr_t rend = rbase + rgn->size;
+> @@ -2062,19 +2092,10 @@ void __init memblock_mem_limit_remove_map(phys_addr_t limit)
+>  
+>  static int __init_memblock memblock_search(struct memblock_type *type, phys_addr_t addr)
+>  {
+> -	unsigned int left = 0, right = type->cnt;
+> +	int idx = memblock_bsearch_start(type, addr);
+>  
+> -	do {
+> -		unsigned int mid = (right + left) / 2;
+> -
+> -		if (addr < type->regions[mid].base)
+> -			right = mid;
+> -		else if (addr >= (type->regions[mid].base +
+> -				  type->regions[mid].size))
+> -			left = mid + 1;
+> -		else
+> -			return mid;
+> -	} while (left < right);
+> +	if (idx < type->cnt && addr >= type->regions[idx].base)
+> +		return idx;
+>  	return -1;
+>  }
+>  
+> base-commit: 1f18d740165163910df64d3063e1ad31648bc5e0
 > -- 
-> 2.43.0
+> 2.56.0.rc1.315.gc6ed9934b7-goog
 > 
 
 -- 
