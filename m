@@ -4,58 +4,129 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2D478CA5FCE
-	for <kexec@archiver.kernel.org>; Mon,  5 Oct 2026 09:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CE3A7CA5FCE
+	for <kexec@archiver.kernel.org>; Mon,  5 Oct 2026 09:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=5Td2jgZ9iuFQaqHEEPoHQlHGfvsxyaNRBcTYEBxaNio=; b=M78FMrsbBGXdRoLrbkAEWSteWJ
-	9a7WPTJblii2s5jzda52ULTzJK9aumEL3FofmMoODaD8Fn2bfyKUqsmD0KdvXBnXOwixAsg5uOmL8
-	soaK3Zvr9aYTJ1PIo2ZwYs2XQ5OIu4Eie4jcLS4tyz/59QMjFOzSjgtGdevufeq/VtDyGifB9O7Jl
-	hFv7aMzDPfX89ocrbmKUFI0kf6bcJcy4GOY05RUOsFbTVXOvY5xr3Mz4TVMSSRo/2jHpT+q1tKmbl
-	fnfUsGxJhOpwH+xZ+JP+5dEGHSB/mDbODWtHIOKvgOGPFUrV/r+vZ0ywYLcRB+l/8CI3b8atmt6ef
-	EVQPGUOQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=utxReP00qD5cgqEWxGBm18zTCm8VojZQaF5MSHHROUQ=; b=pGaz7OaUx6RYPg/jgWC834SWum
+	Dc+LLoSaElWi2155mqXgexZbCKN5xDsXIZS7KKuwvOc/07n2zCrA/zGUHsChDwq3CbuTBHi+CbOca
+	2IBCRQDjMRpmE9TGlZ1Ek/ks4YQieSunuk5nfwAMNZqSbBvMEA2Sr7LbPBf+2Z074/hOLZcQBP1jj
+	jdCcgCCoC09+UxC5c4lvwEPxkcXqkM9wUar0KgBpVGVancb0G0oyP8tPUFeIHsruagRc84a8yDgFA
+	5wk5RuD5sUjSDu6EgLj6DcM3e4c+AerNHbrHt6t2CvTD58LAfJr8chxvZEk8pehhMhDLK+kQl8goA
+	CdNS1kUQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xDefU-0000000Fw7o-0Z1W;
-	Mon, 05 Oct 2026 09:07:32 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xDekq-0000000FyjB-0Gfs;
+	Mon, 05 Oct 2026 09:13:04 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xDefT-0000000Fw78-2qB2
+	id 1xDekn-0000000Fyik-3MxS
 	for kexec@lists.infradead.org;
-	Mon, 05 Oct 2026 09:07:31 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 239CD60235;
-	Mon,  5 Oct 2026 09:07:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CEE01F00893;
-	Mon,  5 Oct 2026 09:07:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791191250;
-	bh=5Td2jgZ9iuFQaqHEEPoHQlHGfvsxyaNRBcTYEBxaNio=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=nS+xEIrUl7iXDaSwruA4IloVQLXLgkpGvQcXV6OM5uue41MZYyNq5xA9SHNCrsgCF
-	 UIne/e4SFne4pVD0CdUduIInKMHbMUuyspHYoKsGQo1+gs+aoIhgfhIe2pAVt9G0LP
-	 svfqOo+OABZ3XLx7agZ9LMPuFVGKADYK/b/6YGY8tfy+NiNX2y4zubsZCk1zeHH4SJ
-	 tBIXiessJXo6JXpls53KTvghu6gy404bdFmQNloR3c6EpMWaeWM75SgsT5TdUgzREN
-	 oksIIXk07MfFdnWDMSusN/9p654yp/DHyxo65F48Q1P0YlyhwobOLypGYQIFbidKe3
-	 5MPlw7HM3Oq6w==
-Date: Mon, 5 Oct 2026 10:07:27 +0100
-From: Simon Horman <horms@kernel.org>
-To: Serapheim Dimitropoulos <serapheimd@gmail.com>
-Cc: kexec@lists.infradead.org, Bhupesh Sharma <bhsharma@redhat.com>,
-	Pingfan Liu <piliu@redhat.com>, Philipp Rudo <prudo@redhat.com>,
-	Serapheim Dimitropoulos <sdimitropoulos@coreweave.com>
-Subject: Re: [PATCH kexec-tools] util_lib/elf_info: bound VMCOREINFO string
- comparisons
-Message-ID: <20261005090727.GD184916@horms.kernel.org>
-References: <20260911-codex-vmcoreinfo-bounds-mailtest-v1-1-32c9fe102018@coreweave.com>
+	Mon, 05 Oct 2026 09:13:03 +0000
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69516hra3276412;
+	Mon, 5 Oct 2026 09:12:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=utxReP
+	00qD5cgqEWxGBm18zTCm8VojZQaF5MSHHROUQ=; b=W0wQqDOj8WMJEBHN54EWFs
+	t3F8mchffU7RUPGCIbna4Z96bGUmMd2isOsNZygVc9b180jH/o9Md0xpoYvmpcFB
+	1RdDXF9N2aYuXizkcFTfUUVIieXhlUOaSOji38lQGErVx2Mngflld8fTArcrB93H
+	DIY9LH163jOyC8sWmQdKXos4+S3V3Kn1RmN5+cBWM8ZjI4ouf4b4+/Nj/kREgl1y
+	87vmDe+B5zTe2Qtb2+J2syIIVB0dliCjeQNEygPqp8gZFDw60hko/fhUe4+g2rTC
+	uUWOYAjB7dU+nvRGOR2dCzUP6lKKXLk6eSRtn66+UZseNFhL8JlY8lZ9DZVZcvMA
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4h2se59axa-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Mon, 05 Oct 2026 09:12:46 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6956S4rk2175575;
+	Mon, 5 Oct 2026 09:12:45 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4h3eqy4h42-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 Oct 2026 09:12:45 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6959Cf9A48169384
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 5 Oct 2026 09:12:42 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 77A8D20040;
+	Mon,  5 Oct 2026 09:12:41 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 01B5A2004B;
+	Mon,  5 Oct 2026 09:12:38 +0000 (GMT)
+Received: from [9.123.14.142] (unknown [9.123.14.142])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  5 Oct 2026 09:12:37 +0000 (GMT)
+Message-ID: <a5a1879f-32e4-4e7f-a209-6ec4826c937f@linux.ibm.com>
+Date: Mon, 5 Oct 2026 14:42:37 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260911-codex-vmcoreinfo-bounds-mailtest-v1-1-32c9fe102018@coreweave.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] kho: check scratch vs CMA alignment at runtime
+To: Mike Rapoport <rppt@kernel.org>
+Cc: kexec@lists.infradead.org, Aditya Gupta <adityag@linux.ibm.com>,
+        Alexander Graf <graf@amazon.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <baoquan.he@linux.dev>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Pratyush Yadav <pratyush@kernel.org>,
+        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+        Shivang Upadhyay <shivangu@linux.ibm.com>,
+        Shrikanth Hegde <sshegde@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+References: <20260928083226.107807-1-sourabhjain@linux.ibm.com>
+ <20260928083226.107807-2-sourabhjain@linux.ibm.com>
+ <asC15ISMMbHMwnHi@kernel.org>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <asC15ISMMbHMwnHi@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDA1MDAzNiBTYWx0ZWRfXz7edKAP3e9+i
+ mvX6hewUt/vlLwnts11l0A7mpkv49bpI/PS9nb+fKU0L212iUw8itQ1kJ31RnbP+gBmWsi1pMB8
+ DZbmxCa7bFZR4Rjb9Fo2hoTwe+GHRTc=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDA1MDAzNiBTYWx0ZWRfX75QgcX01hVAd
+ wVwzG1dOTHEM6laQ+uHZmKye3IdTcVapEBSZpALEkR3cFN+tDMEb7QcL3OyMN9ZT2bHz9wJ+M4C
+ VgCV+o5XB2jC9P6t4X4y6zYQw8uRn/KFq+/aZd/ti07qiIdGF+OQVh6d8LdiAmL8S+OMBtrm009
+ BUc63hiNu+yV4yEdY6nFPafop6n2NbWI9atVansrlCebcWG7OUT5JDNJSHz/hdzjLtvBZJ53f3h
+ FzPrsoocMfuArkmiDvMw3sZsbugA3aVkfYdIoFaV9okS3LRzXmRGWsbR+EwsNj+0wyJbL0zHiKW
+ h1uLbsfET0zEIEwJsmvrN7XkxXeiPSWo5pFjq5MfV5+8nxmUwgmPCR82p+64HLzUXMokbRRoXsX
+ n0kmGGmSY2C2vSbQ8bJv7Yret8x36WPvMcWFT6oFd+31X1A4EC2FCuiuJO63MYnGnplwOm82YFw
+ o4RU4+s9DsOl2RnCflQ==
+X-Proofpoint-GUID: goHjBEAZB996cFteavISIUM1oEYle7Ki
+X-Authority-Analysis: v=2.4 cv=UNRIjyfy c=1 sm=1 tr=0 ts=6ac36a0f cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8
+ a=vggBfdFIAAAA:8 a=Z4Rwk6OoAAAA:8 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8
+ a=7ipKWUHlAAAA:8 a=voM4FWlXAAAA:8 a=rxpbpe3YEeMVxz9nh0AA:9 a=QEXdDO2ut3YA:10
+ a=HkZW87K1Qel5hWWM3VKY:22 a=gpc5p9EgBqZVLdJeV_V1:22 a=IC2XNlieTeVoXbcui8wp:22
+X-Proofpoint-ORIG-GUID: LC6TT4KO37m9DrhgAtOZuI7GeiqV65P-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-10-05_01,2026-10-02_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 adultscore=0 bulkscore=0 lowpriorityscore=0
+ phishscore=0 clxscore=1015 priorityscore=1501 suspectscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2610050036
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261005_021301_890873_796484E4 
+X-CRM114-Status: GOOD (  28.20  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,45 +141,125 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Sep 11, 2026 at 10:23:51AM -0400, Serapheim Dimitropoulos wrote:
-> From: Serapheim Dimitropoulos <sdimitropoulos@coreweave.com>
-> 
-> scan_vmcoreinfo() terminates each VMCOREINFO line before matching
-> known field prefixes. Most fields nevertheless use memcmp() with the
-> full prefix length, so a short line near the end of the note can make
-> the comparison read beyond the allocated note buffer. AddressSanitizer
-> reports a 24-byte read immediately past the allocation in this case.
-> 
-> Use strncmp() for the terminated VMCOREINFO lines and in the arm64
-> VMCOREINFO hook. Check the ELF note name length before comparing it,
-> and ignore an empty VMCOREINFO descriptor.
-> 
-> Fixes: f4ce0706d957 ("util_lib: Add functionality to read elf notes")
-> Signed-off-by: Serapheim Dimitropoulos <sdimitropoulos@coreweave.com>
-> ---
-> AddressSanitizer found this while running vmcore-dmesg against a minimal
-> arm64 ELF core. A two-byte VMCOREINFO descriptor containing "X\n" makes
-> scan_vmcoreinfo() request a 24-byte comparison from the final four bytes
-> of the 28-byte PT_NOTE allocation. ASan reports the read at
-> scan_vmcoreinfo(), with the allocation originating in scan_notes().
-> 
-> Before this patch the reproducer aborts with:
-> 
->   ERROR: AddressSanitizer: heap-buffer-overflow
->   READ of size 24
->   0 bytes after 28-byte region
-> 
-> After the patch, the reproducer completes without a sanitizer report.
-> Empty VMCOREINFO descriptors and undersized note names were also tested.
-> A valid synthetic legacy vmcore exits successfully and produces the
-> expected output byte-for-byte.
-> 
-> The patch was tested on arm64 Ubuntu 24.04 with AddressSanitizer and with
-> make distcheck.
 
-Thanks, applied.
-Sorry for the delay.
 
-- util_lib/elf_info: bound VMCOREINFO string comparisons
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=0fd0d8e9ea97
+On 03/10/26 13:29, Mike Rapoport wrote:
+> Hi,
+>
+> On Mon, Sep 28, 2026 at 02:02:25PM +0530, Sourabh Jain wrote:
+>> KHO requires the scratch alignment to be at least CMA_MIN_ALIGNMENT_BYTES,
+>> and this is currently enforced with a static_assert().
+>>
+>> That assertion breaks the build on powerpc once CONFIG_KEXEC_HANDOVER is
+>> enabled together with CONFIG_TRANSPARENT_HUGEPAGE or CONFIG_HUGETLB_PAGE:
+>>
+>>      kernel/liveupdate/kexec_handover.c:49:39: error: expression in static assertion is not constant
+>>         49 | static_assert(SCRATCH_ALIGNMENT_BYTES >= CMA_MIN_ALIGNMENT_BYTES);
+>>      ./include/linux/build_bug.h:80:56: note: in definition of macro '__static_assert'
+>>         80 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+>>            |                                                        ^~~~
+>>      kernel/liveupdate/kexec_handover.c:49:1: note: in expansion of macro 'static_assert'
+>>         49 | static_assert(SCRATCH_ALIGNMENT_BYTES >= CMA_MIN_ALIGNMENT_BYTES);
+>>
+>> CMA_MIN_ALIGNMENT_BYTES depends on pageblock_order, which is not a
+>> compile-time constant with certain configs, such as
+>> CONFIG_HUGETLB_PAGE_SIZE_VARIABLE on powerpc. The next patch in this
+>> series enables KHO on powerpc, so the alignment must be checked at
+>> runtime instead.
+>>
+>> Replace the static_assert() with a runtime check at the start of
+>> kho_reserve_scratch(), before any scratch memory is reserved. If the
+>> scratch alignment is smaller than the CMA minimum alignment, warn once
+>> and disable KHO rather than continue with a misaligned reservation.
+> Can we keep static_assert() for everything !powerpc please?
+
+Yeah, that's a good idea. We can have a dynamic check for cases
+where a static check is not possible.
+
+Thanks for the suggestion.
+
+- Sourabh Jain
+
+
+> Like something along these lines:
+>
+> #ifndef CONFIG_HUGETLB_PAGE_SIZE_VARIABLE
+> #define check_scratch_alignment static_assert(...)
+> #else
+> static inline bool check_scratch_alignment()
+> {
+> ...
+> }
+> #endif
+>
+>   
+>> Cc: Aditya Gupta <adityag@linux.ibm.com>
+>> Cc: Alexander Graf <graf@amazon.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Baoquan He <baoquan.he@linux.dev>
+>> Cc: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
+>> Cc: Hari Bathini <hbathini@linux.ibm.com>
+>> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+>> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: Mike Rapoport <rppt@kernel.org>
+>> Cc: Nicholas Piggin <npiggin@gmail.com>
+>> Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
+>> Cc: Pratyush Yadav <pratyush@kernel.org>
+>> Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+>> Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
+>> Cc: Shrikanth Hegde <sshegde@linux.ibm.com>
+>> Cc: linux-kernel@vger.kernel.org
+>> Cc: linuxppc-dev@lists.ozlabs.org
+>> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>> ---
+>>   kernel/liveupdate/kexec_handover.c | 23 +++++++++++++++--------
+>>   1 file changed, 15 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+>> index 7c4d86daf86d..dc76dd6b74da 100644
+>> --- a/kernel/liveupdate/kexec_handover.c
+>> +++ b/kernel/liveupdate/kexec_handover.c
+>> @@ -39,15 +39,7 @@
+>>   #include "../kexec_internal.h"
+>>   #include "kexec_handover_internal.h"
+>>   
+>> -/*
+>> - * This is the minimal alignment required by deferred struct page init.
+>> - * deferred_init_memmap_chunk frees memory to the buddy allocator, which looks
+>> - * at the neighboring pages (up to MAX_PAGE_ORDER) to merge them.
+>> - * If KHO scratch is not aligned to that value, buddy can access uninitialized
+>> - * struct pages, which can cause a crash.
+>> - */
+>>   #define SCRATCH_ALIGNMENT_BYTES (PAGE_SIZE * MAX_ORDER_NR_PAGES)
+>> -static_assert(SCRATCH_ALIGNMENT_BYTES >= CMA_MIN_ALIGNMENT_BYTES);
+>>   
+>>   /* The magic token for preserved pages */
+>>   #define KHO_PAGE_MAGIC 0x4b484f50U /* ASCII for 'KHOP' */
+>> @@ -836,6 +828,21 @@ static void __init kho_reserve_scratch(void)
+>>   	if (!kho_enable)
+>>   		return;
+>>   
+>> +	/*
+>> +	 * This is the minimal alignment required by deferred struct page init.
+>> +	 * deferred_init_memmap_chunk frees memory to the buddy allocator, which looks
+>> +	 * at the neighboring pages (up to MAX_PAGE_ORDER) to merge them.
+>> +	 * If KHO scratch is not aligned to that value, buddy can access uninitialized
+>> +	 * struct pages, which can cause a crash.
+>> +	 */
+>> +	if (WARN_ON_ONCE(SCRATCH_ALIGNMENT_BYTES < CMA_MIN_ALIGNMENT_BYTES)) {
+>> +		pr_err("scratch alignment %lu < CMA minimum %lu, disabling\n",
+>> +		       (unsigned long)SCRATCH_ALIGNMENT_BYTES,
+>> +		       (unsigned long)CMA_MIN_ALIGNMENT_BYTES);
+>> +		kho_enable = false;
+>> +		return;
+>> +	}
+>> +
+>>   	scratch_size_update();
+>>   
+>>   	/* FIXME: deal with node hot-plug/remove */
+>> -- 
+>> 2.55.0
+>>
+
 
