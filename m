@@ -4,57 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5B70BCA600C
-	for <kexec@archiver.kernel.org>; Thu,  8 Oct 2026 19:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90A6DCA600D
+	for <kexec@archiver.kernel.org>; Thu,  8 Oct 2026 19:14:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
 	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=imD318uYbaR4I8GkThDrvvtTnqtl46+qes0QsXa8DAo=; b=eRhZeZQTSUwDVwceeZSvIhOcKg
-	9f0yMxYfqJObFQhuRTohr4Q6Q31QR3MZ18SN+3z9NkONNryk07QMH+OjO+fupOxXprdE1qbPzwIqB
-	Z6hCGsBNvyTpNTTTCBoPOsVagibUZSoCmISHLxLD0qIcVOg5GCcfiN4woJ3FxVlAqqpPl4BkH5KJE
-	vrcdM/WSNDENTWmUogrusxEUh1N/6VrzB/B1h8n41aDs5KZBj1nc9WfPKp9GrA7pE7jsazlxVAaRj
-	U7uEcj2Pp8sc9SghDL5K7z+kx5ITq7PWTlNnjcxqbBaH4erNkMOOatbmvkXdKIshs7az9czfd+Est
-	zjRMOIUw==;
+	bh=g8KQeNifzJDkfTub6uCXp9RKMHqJJTc0kuS7L1xFNWM=; b=VUv2UA/1ITITuE4Gd8Fcdq4sH7
+	amyE/QnBfPvYPUNmfEvJOmEqoQnq6UBiyKnkapJjdrnDn52Q/BPi4YKJQe7SS+W/JySiJjU7snuHj
+	y0EhFxU/4emsoviNX+yV45CNis2/zTdCFmUi/W4rXUlNcM4BDqFbuZ/FznWqJzr/TRozeHELzj8zG
+	BTEv+95rAiVjMQpNmQdLjyxxMdvZRY33Qhi8bd6XuGoMFr4Q2qYvUofosBelMTx2y/B52pTovbVAy
+	w6tGUQGcnlTu/Yiz+kzccizaLm65R9ipwH998QbTql7jtS73uIe5SgysCise8vSlYeQeiYSDPsdyt
+	hVnHVnUA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xEtXm-00000004uBl-0mii;
-	Thu, 08 Oct 2026 19:12:42 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xEtZu-00000004uOk-3x6E;
+	Thu, 08 Oct 2026 19:14:54 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xEtXk-00000004uBd-495f
+	id 1xEtZt-00000004uOV-2SKh
 	for kexec@lists.infradead.org;
-	Thu, 08 Oct 2026 19:12:41 +0000
+	Thu, 08 Oct 2026 19:14:54 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 52418413A5;
-	Thu,  8 Oct 2026 19:12:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B78B21F000FF;
-	Thu,  8 Oct 2026 19:12:39 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id A20E160267;
+	Thu,  8 Oct 2026 19:14:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1FDC1F000FF;
+	Thu,  8 Oct 2026 19:14:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791486760;
-	bh=imD318uYbaR4I8GkThDrvvtTnqtl46+qes0QsXa8DAo=;
+	s=k20260515; t=1791486891;
+	bh=g8KQeNifzJDkfTub6uCXp9RKMHqJJTc0kuS7L1xFNWM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=PnKRpahRAs+fCtPQqncrSuQSpAwUK3VFsokdhvscClzl2W+rCLWdn+MQfKgjpJm5z
-	 e5B29u7tHEzbtCCN5Gg9E937UIKqJtUjNs5lPBa8N3UIgn38tPpINJHT1wnGzunjRL
-	 QF1DOUumYsRMStJDTuSK5uKzqspKyN/3Ory2AKsVoauj5uvAPwidSGEDxYTZ9UxtH9
-	 bfp2OTL6sN2qZX2NrIRiHCyPT1lu2QlVosFVqcW43mkAAWvuhzsDrXX41RdVku2Ltx
-	 sUQfuwqyHCsDFzxcTMTQDkLl9oi9UXyRdpYpIosHfUgBqhTjHZO5+D+AphwNLm48aM
-	 569ZCvB0szQfA==
-Message-ID: <sashiko-outbox-164503@kernel.org>
+	b=L2FMifRhEDoiYaA/Dnn2ugNRparTpm3x5ZCC1vqmTwUiiOxVVPC+onovRHhZ5h2QH
+	 7taU5pl2DUzoVki4fstwIEh+jmSkXIZvalkchzyzk6y13DQYNaI8xjXCQDfrWPmFJu
+	 UGr5GEKkSrEWd6VGjM27xlJekcT26snY+yy1eJNOSPfc8AXLYiNGJSiakQX1G1zieE
+	 8/IvER3rxJ3fsGTj6C+NZsE+yeuVbk0CY/kbIpq/a1LhvgWuPx+RVwaRMA+sKKdGkT
+	 o3KKtjVYrZmcm6C//CkcvvWtCLDkzIISvC7+9+vZ+f5iUb1mBJqhm1WPThn92spuoh
+	 5o0pLdCPueGcQ==
+Message-ID: <sashiko-outbox-164506@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 1/2] memblock: drop for_each_memblock_type() and open
- code its users
-To: dmatlack@google.com, "Tarun Sahu" <tarunsahu@google.com>, "Pratyush
- Yadav" <pratyush@kernel.org>, "Mike Rapoport" <rppt@kernel.org>, "Pasha
- Tatashin" <pasha.tatashin@soleen.com>, "Andrew Morton" <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20261008190828.3221718-1-tarunsahu@google.com>
+Subject: Re: [PATCH v4 2/2] memblock: use binary search to locate candidate
+ regions
+To: "Andrew Morton" <akpm@linux-foundation.org>, "Pratyush Yadav" <pratyush@kernel.org>, "Mike
+ Rapoport" <rppt@kernel.org>, "Tarun Sahu" <tarunsahu@google.com>, dmatlack@google.com, "Pasha
+ Tatashin" <pasha.tatashin@soleen.com>
+Cc: kexec@lists.infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20261008190828.3221718-2-tarunsahu@google.com>
 References: <20261008190828.3221718-1-tarunsahu@google.com>
+ <20261008190828.3221718-2-tarunsahu@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 08 Oct 2026 19:12:39 +0000
+Date: Thu, 08 Oct 2026 19:14:50 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,24 +71,28 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> for_each_memblock_type() always starts the iteration at index 0 and its
-> body is a trivial 'for' loop, so it hides very little. It also gets in
-> the way of iterating from an arbitrary index, which the next patch
-> needs.
+> Use binary search (memblock_bsearch_start) in memblock_add_range() and
+> memblock_isolate_range() to locate candidate regions instead of linearly
+> scanning from index 0.
 >=20
-> Remove the macro and open code its three users: memblock_add_range(),
-> memblock_isolate_range() and memblock_dump(). While at it, move the
-> region pointer into the loop body scope.
+> Under heavy memory fragmentation (such as KHO page preservation registeri=
+ng
+> hundreds of thousands of disjoint folios), scanning from index 0 on every
+> insertion and isolation results in O(N^2) complexity, causing boot-time
+> memory retrieval to take several minutes (~268s for 393k pages).
 >=20
-> No functional change.
+> Using binary search reduces the candidate search complexity to O(log N)
+> (from O(N)), cutting KHO memory retrieval time from ~268s to ~50ms.
 >=20
-> Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+> memblock_search() open codes the same binary search, so reimplement it on
+> top of the new helper.
+>=20
 > Signed-off-by: Tarun Sahu <tarunsahu@google.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261008190828.3221=
-718-1-tarunsahu@google.com?part=3D1
+718-1-tarunsahu@google.com?part=3D2
 
 
