@@ -4,83 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BA20DCA6007
-	for <kexec@archiver.kernel.org>; Thu,  8 Oct 2026 01:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CEA63CA6007
+	for <kexec@archiver.kernel.org>; Thu,  8 Oct 2026 02:35:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
-	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=bXamncWaqlfk8qQgL1B8Mu0pQVkhOxTSHqjddGG4KBw=; b=MX4IaagQCxKtHEQw54xuXl50cf
-	DTHNd0hhrEqdx/m6QYzSmR3C1xraFCdBmP+paSfpOLisQ1po0J/Tft5HbthMEN70M3Anmh0keXQYe
-	IdEMI2RUY2smU61BvcUqTiJuR4gSYFxBoLNRDI2WRPf8AFSZL9QHPm5xNkyk2491zdyVUNW1/ZN4S
-	LgGKEO7a6mNjkcY3ElwibnOkNdmCDfn2lWdDrf0cOI7+WBm/WRXG1yDlzWNffSz4Wmu5qi+YUqwnD
-	hSA1l57omhSMUG0eLzYAuLrJ2vnlu7LEWsvAIH5TwrmB/J/c6BnTl+RYA5SE6BQus88cjArS50oDl
-	/ULENLKw==;
+	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=CgcNlsxcMo959axM9HhFkWRFdv9y7UY2NnaNAKcvJqA=; b=mgkTZd4pgdqFeBANg0kEyFHmtY
+	fb/5VmOLaoqEQrDGcSeeWU5Nv8WRgU9ITe7d1lZxBJVOJQ3UcNk/iJfviX+MP0KDZWc+4kBCS4IkI
+	qHbHYuord5a1edrIpYQ11e9FDCBVm40NndE7hdKrZmD6Mkp2xg6QYNKaChqrPT+tn/Q7t1ZzQJGDj
+	c8zunx5dWisaZYrWkvH4n7pSj7lesQe/8IrdZecRb2gjGOKJeYlrVVDIlTIAhzbdrsTHnRTnadUlr
+	gpkXzD+SBfdwl/quBGPq9m95F3puC31azz+LbcY5ioWjWWDvuJZ1uY7sAaKJdQwPmBDP2v3r8ur54
+	MZiV/TZw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xEdOh-00000003NaY-2DTz;
-	Thu, 08 Oct 2026 01:58:15 +0000
-Received: from [113.46.200.225] (helo=canpmsgout10.his.huawei.com)
+	id 1xEdz7-00000003PI4-1hAJ;
+	Thu, 08 Oct 2026 02:35:53 +0000
+Received: from mailgw.kylinos.cn ([124.126.103.232])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xEdOa-00000003NZP-1Pcm;
-	Thu, 08 Oct 2026 01:58:10 +0000
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=bXamncWaqlfk8qQgL1B8Mu0pQVkhOxTSHqjddGG4KBw=;
-	b=g78aXu5F+eX1vFGrdr7ODw3mfWRzJ2xHcdspBUNlAxc5IhvP2m+84BEowtEnJ7toedzRiDPqJ
-	c5RrHPIU8ToMw1OQpK0Wh1ee8RrekPA+Bcg43S7Q5Mtdi8Sp9wD1KAgm7iJsyXAjU3PESGUAKbY
-	aQDiKZOBs1rzK16wrPIzn0k=
-Received: from mail.maildlp.com (unknown [172.19.163.200])
-	by canpmsgout10.his.huawei.com (SkyGuard) with ESMTPS id 4j0Xr464hkz1K97G;
-	Thu,  8 Oct 2026 09:45:24 +0800 (CST)
-Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6AC8D4055B;
-	Thu,  8 Oct 2026 09:57:39 +0800 (CST)
-Received: from [10.67.110.68] (10.67.110.68) by kwepemk200008.china.huawei.com
- (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Thu, 8 Oct
- 2026 09:57:32 +0800
-Message-ID: <f4ba3a6b-537d-4328-b0c1-c0e5aa61924f@huawei.com>
-Date: Thu, 8 Oct 2026 09:57:30 +0800
+	id 1xEdz4-00000003PHA-0DtI
+	for kexec@lists.infradead.org;
+	Thu, 08 Oct 2026 02:35:52 +0000
+X-UUID: ee459a10c2c011f19a56ed5b684f684d-20261008
+X-CTIC-Tags: HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NAME, IP_TRUSTED, SRC_TRUSTED, SA_EXISTED, SN_EXISTED
+	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF
+	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.19,REQID:043ab7c5-33e0-466a-94bd-72c1afd6518b,IP:10,
+	URL:0,TC:0,Content:0,EDM:-20,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-10
+X-CID-INFO: VERSION:1.3.19,REQID:043ab7c5-33e0-466a-94bd-72c1afd6518b,IP:10,UR
+	L:0,TC:0,Content:0,EDM:-20,RT:0,SF:0,FILE:0,BULK:0,RULE:NOTI_GNA5D1EA,ACTI
+	ON:release,TS:-10
+X-CID-META: VersionHash:7db8b62,CLOUDID:f6fc088eedafb6138651ddfddfcb4f23,BulkI
+	D:261008103534QVX47VGW,BulkQuantity:0,SF:19|38|66|72|78|81|82|102|127|136|
+	850|865|898,TC:nil,Content:0|15|50|99,EDM:-19|2|-100,IP:-2,URL:0,File:nil,
+	RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,D
+	KP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSD
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: ee459a10c2c011f19a56ed5b684f684d-20261008
+X-User: lianyangyang@kylinos.cn
+Received: from localhost.localdomain [(39.156.73.11)] by mailgw.kylinos.cn
+	(envelope-from <lianyangyang@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 50174354; Thu, 08 Oct 2026 10:35:31 +0800
+From: Yangyang Lian <lianyangyang@kylinos.cn>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Dave Young <ruirui.yang@linux.dev>,
+	WANG Xuerui <kernel@xen0n.name>,
+	kexec@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Yangyang Lian <lianyangyang@kylinos.cn>,
+	Haoran Jiang <jianghaoran@kylinos.cn>,
+	Tao Cui <cuitao@kylinos.cn>,
+	George Guo <guodongtai@kylinos.cn>
+Subject: [PATCH v3] LoongArch: kdump: add arch_crash_save_vmcoreinfo() support
+Date: Thu,  8 Oct 2026 10:34:19 +0800
+Message-Id: <20261008023419.118623-1-lianyangyang@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20260924075655.375632-1-lianyangyang@kylinos.cn>
+References: <20260924075655.375632-1-lianyangyang@kylinos.cn>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 00/14] crash: Fix several bugs
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
-	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
-	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
-	<ritesh.list@gmail.com>, <sshegde@linux.ibm.com>, <tglx@kernel.org>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
-	<dakr@kernel.org>, <akpm@linux-foundation.org>, <baoquan.he@linux.dev>,
-	<rppt@kernel.org>, <pasha.tatashin@soleen.com>, <pratyush@kernel.org>,
-	<ruirui.yang@linux.dev>, <leitao@debian.org>, <yeoreum.yun@arm.com>,
-	<sourabhjain@linux.ibm.com>, <robh@kernel.org>, <coxu@redhat.com>,
-	<kees@kernel.org>, <tangyouling@kylinos.cn>, <liukexin@kylinos.cn>,
-	<zhangtianyang@loongson.cn>, <guodongtai@kylinos.cn>,
-	<maqianga@uniontech.com>, <chao.gao@intel.com>, <kai.huang@intel.com>,
-	<vishal.l.verma@intel.com>, <seanjc@google.com>, <piliu@redhat.com>,
-	<thuth@redhat.com>, <jbouron@amazon.com>, <me@linux.beauty>,
-	<mclapinski@google.com>, <graf@amazon.com>, <bgwin@google.com>,
-	<hbathini@linux.ibm.com>, <eric.devolder@oracle.com>,
-	<takahiro.akashi@linaro.org>, <james.morse@arm.com>, <palmer@rivosinc.com>,
-	<x86@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <loongarch@lists.linux.dev>,
-	<linuxppc-dev@lists.ozlabs.org>, <driver-core@lists.linux.dev>,
-	<kexec@lists.infradead.org>
-References: <20260921090450.807575-1-ruanjinjie@huawei.com>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20260921090450.807575-1-ruanjinjie@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.110.68]
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- kwepemk200008.china.huawei.com (7.202.194.74)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261007_185808_689488_BB69DE1D 
-X-CRM114-Status: GOOD (  22.54  )
+X-CRM114-CacheID: sfid-20261007_193550_423416_C6FCAE2A 
+X-CRM114-Status: GOOD (  16.45  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,131 +98,130 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Since commit 23c85094fe18 ("proc/kcore: add vmcoreinfo note to
+/proc/kcore") the kernel has exported the vmcoreinfo PT_NOTE on
+/proc/kcore as wellas /proc/vmcore.
 
+LoongArch does not provide arch_crash_save_vmcoreinfo(), so the
+arch-specific values are missing from the vmcoreinfo PT_NOTE. The
+generic exporter in kernel/vmcore_info.c already provides
+NUMBER(VMALLOC_START), but tools like crash cannot derive the module
+and vmemmap ranges, VA_BITS, or the KASLR offset of a LoongArch dump.
 
-在 2026/9/21 17:04, Jinjie Ruan 写道:
-> As Baoquan and Catalin suggested, this patch set fixes
-> several pre-existing code issues found by Sashiko AI [1][2][3].
-> 
-> The major improvements and fixes included in this series are:
-> - Fix several memory leaks for arm64, and similar issues on LoongArch.
-> - Fix out-of-bounds write on 32-bit Highmem for x86.
-> - Fix TOCTOU race in crash memory range collection.
+Since commit 18210a104bb9 ("LoongArch: Expand module virtual address
+space to 2GB") the vmalloc and module boundaries are no longer stable
+across kernel versions either, so vmcoreinfo is the only reliable
+source for them.
 
-Hi all,
+Provide this function in a separate file that is built at the same time
+as its caller in kernel/vmcore_info.c, and add a LOONGARCH64 section to
+Documentation/admin-guide/kdump/vmcoreinfo.rst.
 
-Gentle ping.
+Reported-by: Haoran Jiang <jianghaoran@kylinos.cn>
+Suggested-by: Haoran Jiang <jianghaoran@kylinos.cn>
+Tested-by: Tao Cui <cuitao@kylinos.cn>
+Co-developed-by: George Guo <guodongtai@kylinos.cn>
+Signed-off-by: George Guo <guodongtai@kylinos.cn>
+Signed-off-by: Yangyang Lian <lianyangyang@kylinos.cn>
+---
+V3 -> V2: Export PAGE_OFFSET, as suggested by Huacai Chen. It is not a
+          fixed value on LoongArch (PAGE_OFFSET = CACHE_BASE + PHYS_OFFSET)
+          and RISC-V already exports it.
+V2 -> V1: Export VMEMMAP_END + 1 to make it an exclusive bound, matching
+          what tools like makedumpfile expect.
+          Add Tested-by tag from Tao Cui.
 
-Could anyone take a look or let me know if there's anything
-else needed? I can rebase/resend if required.
+ .../admin-guide/kdump/vmcoreinfo.rst          | 36 +++++++++++++++++++
+ arch/loongarch/kernel/Makefile                |  1 +
+ arch/loongarch/kernel/vmcore_info.c           | 22 ++++++++++++
+ 3 files changed, 59 insertions(+)
+ create mode 100644 arch/loongarch/kernel/vmcore_info.c
 
-> 
-> This patch set is rebased on v7.3-rc3. Compared to the previous version,
-> split out arm64 crash hotplug patches as Breno suggested, which are based
-> on these bugfix patches and will be resubmitted after this patch series
-> is merged.
-> 
-> Slightly tested on x86_64 and arm64 qemu with:
-> - kexec_load (--kexec-syscall --hotplug)
-> - kexec_load (--kexec-file-syscall)
-> 
-> All boot successfully into the second kernel.
-> 
-> [1]: https://lore.kernel.org/all/20260601094805.2928614-1-ruanjinjie@huawei.com/
-> [2]: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%40huawei.com
-> [3]: https://sashiko.dev/#/patchset/20260907125404.922123-1-ruanjinjie%40huawei.com
-> 
-> Changes in v6:
-> - Split out arm64 crash hotplug patches as Breno suggested.
-> - Remove unused elfcorehdr_updated [4].
-> - Make the patch split more clear.
-> - Link to v5: https://lore.kernel.org/all/20260918100442.3841135-1-ruanjinjie@huawei.com/
-> 
-> [4]: https://sashiko.dev/#/patchset/20260907125404.922123-1-ruanjinjie%40huawei.com
-> 
-> Changs in v5:
-> - Rebased on v7.3-rc3.
-> - Fix several pre-existing code issues reported by Sashiko AI review. [3]
-> - Add an extra slot for memory hot-unplug.
-> - Add device_hotplug_lock_assert_held() helper.
-> - Rework to let the hotplug paths to skip CPU events entirely, which avoid
->   the TOCTOU race of memory hotplug events and internal CPU offline path
->   without holding device_hotplug_lock.
-> - Link to v4: https://lore.kernel.org/all/20260907125404.922123-1-ruanjinjie@huawei.com/
-> 
-> Changes in v4:
-> - Rebased on v7.3-rc1.
-> - Update the kexec_core code as Mike suggested.
-> - Update the LoongArch subject as Huacai suggested.
-> - Drop crash_dump_dm_crypt patch which will be fixed by Coiby in [4] as
->   Sourabh suggested.
-> - Drop x86 related patches because of branch conflict, which will
->   be done later.
-> - Drop the incorrect CRASH_MAX_MEMORY_RANGES patch.
-> - Handle elfcorehdr_index in arm64 arch code.
-> - Link to v3: https://lore.kernel.org/all/20260826092541.3905933-1-ruanjinjie@huawei.com/
-> 
-> [4] https://lore.kernel.org/all/20260828084900.1496839-2-coiby.xu@gmail.com/
-> 
-> Changes in v3:
-> - Handle "KEXEC_CRASH_HP_REMOVE_MEMORY" action.
-> - Fix several pre-existing code issues reported by Sashiko AI review [3].
-> - Introduce crash_extra_elfcorehdr_size() and elf64_phdr_size() helper.
-> - Rework related crash and arch code.
-> - Add test method.
-> - v2: https://lore.kernel.org/all/20260729031235.2840255-1-ruanjinjie@huawei.com/
-> 
-> Changes in v2:
-> - Split out Powerpc bugfix patch as Mike suggested.
-> - Use phys_to_virt() instead of __va() in update_crash_elfcorehdr().
-> - Convert pnum_hdr_sz() to a function.
-> - Only assign elfcorehdr_index after kexec_add_buffer succeeds, considering
->   crash_handle_hotplug_event() already performs validity check on
->   elfcorehdr_index:
->   - We can safely remove the check for CPU hotplug
->     in arch_crash_handle_hotplug_event().
->   - The elfcorehdr_index's segment mem will be valid in
->     update_crash_elfcorehdr(), so we can safely remove the NULL check.
-> - Simplify the commit message.
-> - v1: https://lore.kernel.org/all/20260723131242.1537633-1-ruanjinjie@huawei.com/#t
-> 
-> Jinjie Ruan (14):
->   kexec: Fix CMA segment address translation with non-zero text_offset
->   kexec: Record allocated CMA pages to fix release size mismatch
->   kexec: Extract kexec_free_segment_cma() from kimage_free_cma()
->   arm64: kexec_file: Fix CMA page leaks in segment placement retry loops
->   arm64: kexec_file: Fix elf_headers memory leak in retry loop
->   LoongArch: kexec_file: Fix CMA page leaks in segment placement retry
->     loops
->   LoongArch: kexec_file: Fix elf_headers memory leak in retry loop
->   LoongArch: kexec_file: Fix a modified_cmdline leak
->   x86/crash: Fix massive out-of-bounds write on 32-bit Highmem
->   crash: Extract crash_get_memory_ranges() helper
->   crash: Factor out crash_find_elfcorehdr() helper
->   crash: Normalize the kexec_load elfcorehdr at load time
->   driver core: Add device_hotplug_lock_assert_held() helper
->   crash: Fix TOCTOU race in crash memory range collection
-> 
->  arch/arm64/kernel/kexec_image.c            |   1 +
->  arch/arm64/kernel/machine_kexec_file.c     |   9 +-
->  arch/loongarch/kernel/kexec_efi.c          |   1 +
->  arch/loongarch/kernel/machine_kexec.c      |   2 +
->  arch/loongarch/kernel/machine_kexec_file.c |  10 +-
->  arch/powerpc/kexec/crash.c                 |   1 +
->  arch/x86/kernel/crash.c                    |  40 +++++---
->  drivers/base/core.c                        |   5 +
->  include/linux/crash_core.h                 |   2 +
->  include/linux/device.h                     |   1 +
->  include/linux/kexec.h                      |   4 +-
->  kernel/crash_core.c                        | 114 +++++++++++++++++----
->  kernel/kexec.c                             |   4 +
->  kernel/kexec_core.c                        |  43 +++++---
->  kernel/kexec_file.c                        |  13 ++-
->  15 files changed, 192 insertions(+), 58 deletions(-)
-> 
-
+diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+index 7663c610fe90..dd1f1d6225b6 100644
+--- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
++++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+@@ -594,3 +594,39 @@ va_kernel_pa_offset
+ 
+ Indicates the offset between the kernel virtual and physical mappings.
+ Used to translate virtual to physical addresses.
++
++LOONGARCH64
++===========
++
++VA_BITS
++-------
++
++The maximum number of bits for virtual addresses. Used to compute the
++virtual memory ranges.
++
++PHYS_OFFSET
++-----------
++
++Indicates the physical address of the start of memory. Used to translate
++virtual to physical addresses.
++
++PAGE_OFFSET
++-----------
++
++Indicates the virtual kernel start address of the direct-mapped RAM region.
++Used together with PHYS_OFFSET to translate between virtual and physical
++addresses.
++
++KERNELOFFSET
++------------
++
++The kernel randomization offset. Used to locate the kernel text in
++virtual memory. If KASLR is disabled, this value is zero.
++
++MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMAP_END
++-----------------------------------------------------------------------------
++
++Used to get the correct ranges:
++	MODULES_VADDR ~ MODULES_END-1 : Kernel module space.
++	VMALLOC_START ~ VMALLOC_END-1 : vmalloc() / ioremap() space.
++	VMEMMAP_START ~ VMEMMAP_END-1 : vmemmap region, used for struct page array.
+diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+index 001924877772..6260c15adaba 100644
+--- a/arch/loongarch/kernel/Makefile
++++ b/arch/loongarch/kernel/Makefile
+@@ -64,6 +64,7 @@ obj-$(CONFIG_RELOCATABLE)	+= relocate.o
+ obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec.o relocate_kernel.o
+ obj-$(CONFIG_KEXEC_FILE)	+= machine_kexec_file.o kexec_efi.o kexec_elf.o
+ obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
++obj-$(CONFIG_VMCORE_INFO)	+= vmcore_info.o
+ 
+ obj-$(CONFIG_UNWINDER_GUESS)	+= unwind_guess.o
+ obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
+diff --git a/arch/loongarch/kernel/vmcore_info.c b/arch/loongarch/kernel/vmcore_info.c
+new file mode 100644
+index 000000000000..e4efc35165b1
+--- /dev/null
++++ b/arch/loongarch/kernel/vmcore_info.c
+@@ -0,0 +1,22 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/vmcore_info.h>
++#include <asm/addrspace.h>
++#include <asm/pgtable.h>
++#include <asm/setup.h>
++
++void arch_crash_save_vmcoreinfo(void)
++{
++	VMCOREINFO_NUMBER(VA_BITS);
++	/* NUMBER(VMALLOC_START) is exported by the generic code */
++	vmcoreinfo_append_str("NUMBER(VMALLOC_END)=0x%lx\n", VMALLOC_END);
++#ifdef CONFIG_64BIT
++	vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=0x%lx\n", MODULES_VADDR);
++	vmcoreinfo_append_str("NUMBER(MODULES_END)=0x%lx\n", MODULES_END);
++	vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=0x%lx\n", (unsigned long)vmemmap);
++	vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=0x%lx\n", VMEMMAP_END + 1);
++#endif
++	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%lx\n", PHYS_OFFSET);
++	vmcoreinfo_append_str("NUMBER(PAGE_OFFSET)=0x%lx\n", PAGE_OFFSET);
++	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
++}
 -- 
-Best regards,
-Jinjie
+2.25.1
 
 
