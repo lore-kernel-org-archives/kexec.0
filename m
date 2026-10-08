@@ -4,77 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AE3EBCA600C
-	for <kexec@archiver.kernel.org>; Thu,  8 Oct 2026 13:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 85868CA600C
+	for <kexec@archiver.kernel.org>; Thu,  8 Oct 2026 13:34:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=oVijSUeLpdQWnKER+UijEtgCAKGDAc7/NKc7zbp415Q=; b=MXOgrD1RZqdpPXewRrWlpoqiTo
-	KZp7roWL4/pWlKSRwKABhqmSXpaVnIDIPKHZDaWIaJ07B0GYkqVVLHWyx6yW7uWoyXsI/sO5DiEyv
-	5lkpM4urXsoXj4e2z67Nq/addQoQaaVZAM/Q0AAEIlFc05a/xKEdi3p14SC8GRYHosHpn1xzMDARF
-	2B+68GhUiWvB8olvlo6d5Ptzof8Q9awkchM+SW9773xJoIkiq5aZJK8DxEaTluZCL+HOrdDifitAd
-	/Xs+AVzb+0wjvqAE+y/kewBsCxjXyYA2pVdd6JhNHyEPXa8dowUrOc31tNgmHWu+M1a4loQkrDhf2
-	wSGhgzwg==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
+	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=EMfIGKHZL2EcuSKE4fetcJKV4ZBxsEiNzCi6Z94i7bs=; b=ZgSXUmp80WyzVOK8mPRvBuEK/k
+	C+zwYLEhnMc2o7WsszTwhZNaO9rP85a/x3brk3iuvDGySVDP6XaaXVXOPsBUHxTKHrIpex5GaQSfY
+	GN9mSa7EvCLXLo7C1TiY8BDD3t7+hnwqmm1NXbloWOTRiqmRhCBW82eqhsUJ2qQyShJ3hKDpXLXES
+	a9UpRE6TVEwgpPPm6sBbo2Jw0eSgFDOr5zBq6sdjfgBR+jLfPAvI8mZhFIcAFlaDkuQHpaWaSB158
+	28+Tzna4R+D7Z8CEMckxhjJEz4NAmrOB/43Wwvt4sRPlHYZhVtVgAXkUNBjkGNrmGKPxoVnFAbhdj
+	YULgm0iw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xEoAY-00000004SfI-2MN8;
-	Thu, 08 Oct 2026 13:28:22 +0000
-Received: from mail-pj1-x1047.google.com ([2607:f8b0:4864:20::1047])
+	id 1xEoG1-00000004T9Q-1Hh6;
+	Thu, 08 Oct 2026 13:34:01 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xEoAV-00000004Sen-3hyd
+	id 1xEoG0-00000004T9K-2Xrf
 	for kexec@lists.infradead.org;
-	Thu, 08 Oct 2026 13:28:21 +0000
-Received: by mail-pj1-x1047.google.com with SMTP id 98e67ed59e1d1-39533bb224cso6229404a91.3
-        for <kexec@lists.infradead.org>; Thu, 08 Oct 2026 06:28:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1791466099; x=1792070899; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=oVijSUeLpdQWnKER+UijEtgCAKGDAc7/NKc7zbp415Q=;
-        b=ZbH4HTY+2I8+UD21x0VvM7mQJmOYYcf0AdbG657s4AX2xVbd+4ndVZ3bTjP5gA9EEJ
-         4HwUwDs8W7YVrW1aWfi86l//bL99k6cpAXPZj+HQhTprTYA/J7lYAX9ZA25wMjmSc/uG
-         xdpny8bD/DY9bJFn/zFsjLXfj7XCjE2AAEqJ2jhbPq0W1PlWryrua2WoyyF9TYEFB2C5
-         8Ju2Nc57LMUKA7yD81vfvb/ubSJeRLZWyliBDn4ss6OCucYrQZH0ESbvNsOZoXkUJZ0t
-         243RFo9X9893Qa2vJRupNdzkhxUGfERo9Z5wT1U2aZlLIy3egVE4gHLs/cuL2/vkxP01
-         H/fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791466099; x=1792070899;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=oVijSUeLpdQWnKER+UijEtgCAKGDAc7/NKc7zbp415Q=;
-        b=umMva9Z47VHbGQNnvFoDeuUctftgXRjHC7BiNoFRLv84UbPcJvM57/POIQSuIKl3QL
-         LSRSANEA0PyoqEemOoUSWPzsabQgXUTlMbwYE55qJ76YrYp8PE5F+EGN/pqQx3cSiwLu
-         ZCx4GaDVxkMFf1DbIOARHCgyMh2+qZOFdI6qR1FFkTzrLA9GwPGG4ZmZ5PAmAPqzWYKi
-         EXL7Xw3Gnx+toEcm0JUs49v/7pG9NJ+IKnfXhtnmPqU9zmGjFuLTE+aVpmv/weLb+Zd7
-         Of2Ntw7gB3iJ2kC0XE0N6bNJ9ooZCKH24iyyJMf0X+XKLS6RkjEm0A//d9GlI83oiJG/
-         +eow==
-X-Gm-Message-State: AFq9FYKEt1IoBvoUUc9wLhvpbeq97APce5uw6ir7LYz+pwlkiOiHrDhh
-	MH8FmFiyT73VryJre9wtOUa9KYEQB3+iLWRj/fbbtvqHaqLfHbHDXL1qvjg54SztbX9CDMpp4g0
-	eQvvZ44ai/ULI2CYmlq6VUQrqBWtjfIhEC/0DroaymXh+wGo2Hn6zpst9KJftqh9pX88gs+5Xh+
-	IDWaQHmXPGQK5Ropn20nvmLnMUdNtDBcBmOcYmU9icUPmwDVVqVXs=
-X-Received: from pgbd22-n2.prod.google.com ([2002:a05:6a02:64d6:20b0:cc7:ec41:d571])
- (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:578c:b0:39d:efa9:cd1a with SMTP id 98e67ed59e1d1-3a8a04d48a8mr4379961a91.4.1791466098010;
- Thu, 08 Oct 2026 06:28:18 -0700 (PDT)
-Date: Thu,  8 Oct 2026 13:28:13 +0000
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.56.0.360.g66cac248cb-goog
-Message-ID: <20261008132813.1966023-1-dmatlack@google.com>
-Subject: [PATCH] selftests/liveupdate: Prefer KVM and HVF over TCG in vmtest.sh
-From: David Matlack <dmatlack@google.com>
-To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Cc: Jordan Richards <jordanrichards@google.com>, Mike Rapoport <rppt@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Shuah Khan <shuah@kernel.org>, David Matlack <dmatlack@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261008_062819_954542_4665CD83 
-X-CRM114-Status: GOOD (  11.61  )
+	Thu, 08 Oct 2026 13:34:00 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id D5A996025A;
+	Thu,  8 Oct 2026 13:33:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15FCA1F00893;
+	Thu,  8 Oct 2026 13:33:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791466439;
+	bh=EMfIGKHZL2EcuSKE4fetcJKV4ZBxsEiNzCi6Z94i7bs=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=B8eMDAx6L9M21p4L4bm3XoG0wYjiHPzh4pUoHd6zVTIn+EQ9VKNLR0Eiw41R2CCok
+	 kK30o0nyNc4Rz/9ptJ0DGGuj6nLT6LkyNLKMUx5MsbnyB6rx024+Ork7+zA8Hwlkjc
+	 TqJ7jDSVlX9mtve4DDRPH2m9RKsqIe+ldoxUZZFdD+Xj9tN6maRT17w+T3uSp/Rg4X
+	 jOUg5Nh6VeQzAmm5SGuiihTMbrU0JSq+AoPDHLUWQla8dwJrWw87TZCZdS23c0A4Cb
+	 00QqAcU8V8gVUFUzKkP9PhfPO6V8/2h7q2fA+LKzembMMVtAvPFPR91uINyDYoy6f1
+	 smig3ElBv0KAg==
+Message-ID: <sashiko-outbox-164218@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] selftests/liveupdate: Prefer KVM and HVF over TCG in
+ vmtest.sh
+To: linux-kernel@vger.kernel.org, "David Matlack" <dmatlack@google.com>, linux-kselftest@vger.kernel.org
+Cc: "Jordan Richards" <jordanrichards@google.com>, "Mike Rapoport" <rppt@kernel.org>, "Pratyush
+ Yadav" <pratyush@kernel.org>, kexec@lists.infradead.org, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Shuah
+ Khan" <shuah@kernel.org>
+In-Reply-To: <20261008132813.1966023-1-dmatlack@google.com>
+References: <20261008132813.1966023-1-dmatlack@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 08 Oct 2026 13:33:58 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,51 +66,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Pass the -accel options to QEMU in the order KVM, HVF, TCG, so that
-vmtest.sh prefers to use KVM and HVF over TCG when they are available.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] selftests: KVM accelerator preference breaks arm64 vmtest on GIC=
+v3 hosts
+--
 
-QEMU uses the first accelerator in the list that initializes, and TCG
-always initializes, so the tests currently always run under TCG, even
-though the commit that added vmtest.sh describes "automatic accelerator
-detection (KVM, HVF, or TCG)".
+commit 5b52122d5a64c0b3471d0fed69b32ec99d464203
+Author: David Matlack <dmatlack@google.com>
 
-Fixes: 89dd1421c554 ("selftests/liveupdate: add end to end test infrastructure and scripts")
-Signed-off-by: David Matlack <dmatlack@google.com>
----
-Tested by running run-vmtests.sh and then observed that arm64 correctly
-fell back to using TCG after trying to use KVM and HVF, and that x86
-reported no warnings.
+selftests/liveupdate: Prefer KVM and HVF over TCG in vmtest.sh
 
-arm64:
-  qemu-system-aarch64: -accel kvm: invalid accelerator kvm
-  qemu-system-aarch64: -accel hvf: invalid accelerator hvf
-  qemu-system-aarch64: falling back to tcg
+This commit reorders the QEMU accelerator options to prefer KVM and HVF over
+TCG. It aims to utilize hardware acceleration when available instead of alw=
+ays
+defaulting to TCG.
 
-x86:
-  (not warnings)
+> Tested by running run-vmtests.sh and then observed that arm64 correctly
+> fell back to using TCG after trying to use KVM and HVF, and that x86
+> reported no warnings.
 
- tools/testing/selftests/liveupdate/vmtest.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Will the arm64 test actually fall back to TCG when run natively on modern a=
+rm64
+hardware?
 
-diff --git a/tools/testing/selftests/liveupdate/vmtest.sh b/tools/testing/selftests/liveupdate/vmtest.sh
-index 64fd2ab55b76..69beda6c961d 100755
---- a/tools/testing/selftests/liveupdate/vmtest.sh
-+++ b/tools/testing/selftests/liveupdate/vmtest.sh
-@@ -180,7 +180,7 @@ function run_qemu() {
- 	echo "# Serial Log: $serial"
- 	timeout 30s \
- 	$qemu_cmd -m 1G -smp 2 -no-reboot -nographic -nodefaults \
--		  -accel tcg -accel hvf -accel kvm \
-+		  -accel kvm -accel hvf -accel tcg \
- 		  -serial file:"$serial" \
- 		  -append "$cmdline" \
- 		  -kernel "$kernel_path" \
+In get_arch_conf(), the arm64 QEMU command is defined without specifying a =
+GIC
+version:
 
-base-commit: 80cf37169daef112b6bea9ae7d9808355a045475
--- 
-2.56.0.360.g66cac248cb-goog
+QEMU_CMD=3D"qemu-system-aarch64 -M virt -cpu max"
 
+Because the virt machine type defaults to GICv2 for backward compatibility,
+running this natively on modern arm64 hardware (which typically only suppor=
+ts
+GICv3) will cause the KVM accelerator to successfully initialize, preventing
+the fallback to TCG. However, KVM will then fail to create the default GICv2
+in-kernel interrupt controller and QEMU will abort with a fatal error.
+
+Was the observation of falling back to TCG made on a cross-compilation host
+where the KVM accelerator itself failed to initialize?
+
+> diff --git a/tools/testing/selftests/liveupdate/vmtest.sh b/tools/testing=
+/selftests/liveupdate/vmtest.sh
+> index 64fd2ab55b765..69beda6c961d7 100755
+> --- a/tools/testing/selftests/liveupdate/vmtest.sh
+> +++ b/tools/testing/selftests/liveupdate/vmtest.sh
+> @@ -180,7 +180,7 @@ function run_qemu() {
+>  	echo "# Serial Log: $serial"
+>  	timeout 30s \
+>  	$qemu_cmd -m 1G -smp 2 -no-reboot -nographic -nodefaults \
+> -		  -accel tcg -accel hvf -accel kvm \
+> +		  -accel kvm -accel hvf -accel tcg \
+
+[Severity: Medium]
+Does this change break native arm64 execution on modern hardware?
+
+Since get_arch_conf() lacks the gic-version=3Dmax parameter for arm64, QEMU=
+ will
+default to GICv2. On modern arm64 hosts, KVM won't be able to emulate GICv2,
+causing a hard failure during machine initialization rather than a fallback=
+ to
+TCG.
+
+Should gic-version=3Dmax be added to the arm64 QEMU_CMD to safely enable KVM
+acceleration on modern hosts?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261008132813.1966=
+023-1-dmatlack@google.com?part=3D1
 
