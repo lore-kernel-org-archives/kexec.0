@@ -4,121 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 50793CA6019
-	for <kexec@archiver.kernel.org>; Fri,  9 Oct 2026 13:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9CDDECA601E
+	for <kexec@archiver.kernel.org>; Fri,  9 Oct 2026 16:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:CC:To:From:Date:Reply-To:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Osfa7JiFUzjs/sviQL8ZEuzhHZIIKxscrQ8XI/ab9X8=; b=OUNmgcKPtZQ1pdYBBEOnj3zu8r
-	NjnytZ+ba/bkRSR2JQ+/ce44lJnhitkLUK5QoG85ANNC3jwnjGsJ6QXxGOldmg6zmVIhc1Mo7cV8c
-	tJRvkSthAmHFbnjb9qnY2auZcWJNnQp2PQHcMUh6WR85pSoH3sP8WloPqV5Hmc1VYBPyVH1jOIVrZ
-	sFF/3mcCFnYGoU8xh42JS7AD4+CHPX/KzmATlblgQCrSV7Be7HBejWlIU3irjOwO41CEbysLG1snF
-	Y2KkN0L1nhROwYp/C37V1QGRVrXurWf2r+d2f0kgj+El7cTQVgh7utU9rXnPlS+aaFdkWyNIYhbnM
-	QoA1Dy/Q==;
+	bh=P1NQHWvgiocrQrohPdZ3lILWGC/DaP8S52W3+7hraoY=; b=kE3XUGdUlrlaENLrGhoT8VNfXl
+	1KA785u86L3qEn3t8Vny9aH69VxuSsANj39KKj0nJiJKdh47s9etTr9TFnJt50I3JGhiYtjhR0ZHm
+	yq8Tmgu/JEgsdsEAQ1+ebLoDw3t8ZfRJGV0YCybwA32s5ixkoO+5tm2ZCaEfYhfMlP04md9+kpb+U
+	NL/uWymU6fp4Rjn1p/BZVIEStsRzfv5Li2TkeOd07tOXDjRM2op2MoQcAAwvtHANyPNvUre7rNdG9
+	U7Fgm2YrqOywazfUai8CQO9vEab9hSnKgH1nqJWZpSscxlwEfzTDD5lUC3OVhWddO21CAOmP12Avj
+	8yRBdgBw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xFB7m-00000006QT1-1e16;
-	Fri, 09 Oct 2026 13:59:02 +0000
-Received: from mail-westus3azon11010001.outbound.protection.outlook.com ([52.101.201.1] helo=PH7PR06CU001.outbound.protection.outlook.com)
+	id 1xFDQn-00000006eOw-3dk6;
+	Fri, 09 Oct 2026 16:26:49 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xFB7j-00000006QSR-0sTX
-	for kexec@lists.infradead.org;
-	Fri, 09 Oct 2026 13:59:01 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=P3KVtM2iSbKSFeFuOJ4nVGMVW1VNT01JoVnMRFROnzaGW0eOOFLEu3FQQSKemrkxbTxE7bMHVVhiATaXwvCvcJO2BHrFyDw6/JiPtb6nXQCwOeRyWzxyQtsHOQfJr93gIu/yftAIXOEr3T1kyRFOo4k9hjNhZWUdV35fVoNh1SVUTcNszZrD2Jo+x7ebw+asmHcewnp7bBHZA69NEfeM9C0kr1Jkd2a5ytpEK7vrBu27+t5mO4mhAXNVtHwWp6b4wiL5mvpmD+ZN0EyObSuaWPytxxo8I6wrmGEcrXpkZf0v6jzNVMTa+uGlSRKY0WaxxIKuMfsRF1XUUg6Bghjebg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Osfa7JiFUzjs/sviQL8ZEuzhHZIIKxscrQ8XI/ab9X8=;
- b=SrSuoQ6IKszkbGnJvYuOoK0SpvO8cIhPfbhv/K3wxaqOhFW4NV9jPRwlVtTaK9s/pFVIgrexo9rbD6wrB+x0PhrMrzdRwVjwu8e/dtMmfzlCOheLddd1pJO8w/xYCbxflJ+2J3Z/S+LhzxA1q86BLgIVaqVXTd7FMBYzp847jUXCGQydqIQWkgdtzp/7QJuhVTCzatSzDKNz0cvLl56RtRYr9Z6ks0UtCcewSDWU/tkPd6cYjM7Jjt7KUfr2zIXlOiXwVrWaKEO6xawolG5e5R4z8hVIUZnl+hqelYkGeEQM5hVf6zY8KPe8Ls/jkMW8AURLraIL4gEY6/wUI/gcJQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Osfa7JiFUzjs/sviQL8ZEuzhHZIIKxscrQ8XI/ab9X8=;
- b=RzQ3eRFqz/nTsyV2JOK5vjMPXXFhdyZKYqzqQmIhu9+JIa/kBVuZLk3pLN7GWNt/3rrE/90MydOmQJyDpr30woEK444E5SFeAqg6zTsL97Yqsgad5HDZK+EOai8xGkGHynMP0SGUBhz11PePbSMTGJrYcUtS8uaN7LWRast+q6s=
-Received: from SJ0PR03CA0193.namprd03.prod.outlook.com (2603:10b6:a03:2ef::18)
- by SJ2PR12MB8651.namprd12.prod.outlook.com (2603:10b6:a03:541::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.496.17; Fri, 9 Oct
- 2026 13:58:50 +0000
-Received: from BY1PEPF00026958.namprd05.prod.outlook.com
- (2603:10b6:a03:2ef:cafe::5d) by SJ0PR03CA0193.outlook.office365.com
- (2603:10b6:a03:2ef::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.472.20 via Frontend Transport; Fri, 9
- Oct 2026 13:58:50 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
-Received: from satlexmb08.amd.com (165.204.84.17) by
- BY1PEPF00026958.mail.protection.outlook.com (10.167.244.168) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.522.6 via Frontend Transport; Fri, 9 Oct 2026 13:58:50 +0000
-Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.49; Fri, 9 Oct
- 2026 08:58:45 -0500
-Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb10.amd.com
- (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.49; Fri, 9 Oct
- 2026 08:58:45 -0500
-Received: from amd.com (10.180.168.240) by satlexmb08.amd.com (10.181.42.217)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.49 via Frontend
- Transport; Fri, 9 Oct 2026 08:58:38 -0500
-Date: Fri, 9 Oct 2026 13:58:38 +0000
-From: Ankit Soni <Ankit.Soni@amd.com>
-To: Mike Rapoport <rppt@kernel.org>
-CC: <iommu@lists.linux.dev>, <joro@8bytes.org>, <will@kernel.org>,
-	<jgg@nvidia.com>, <suravee.suthikulpanit@amd.com>, <vasant.hegde@amd.com>,
-	<robin.murphy@arm.com>, <joao.m.martins@oracle.com>,
-	<alejandro.j.jimenez@oracle.com>, <pasha.tatashin@soleen.com>,
-	<pratyush@kernel.org>, <skhawaja@google.com>, <praan@google.com>,
-	<baolu.lu@linux.intel.com>, <dwmw2@infradead.org>, <kevin.tian@intel.com>,
-	<dmatlack@google.com>, <vipinsh@google.com>, <kexec@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 2/7] liveupdate: parse the incoming handover tree
- before late_time_init()
-Message-ID: <itmq3hzl2thrmx4hsp4q4d73fevfzw7vbcbdvalufksbs2u7pf@ncou6nvcjmsj>
-References: <20261005064018.1558-1-Ankit.Soni@amd.com>
- <20261005064018.1558-3-Ankit.Soni@amd.com>
- <asdNbLNz7zPaQYXX@kernel.org>
+	id 1xFDQm-00000006eOk-1htF;
+	Fri, 09 Oct 2026 16:26:48 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id BDCD942E0B;
+	Fri,  9 Oct 2026 16:26:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A93D1F000FF;
+	Fri,  9 Oct 2026 16:26:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791563207;
+	bh=P1NQHWvgiocrQrohPdZ3lILWGC/DaP8S52W3+7hraoY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=exb8hAaeBUkFUrpnnUkhqLQ5zgFgMWnN/rYINMuBzDs1GNM4i9JO2MPVFhuXRhFo0
+	 bqz3igmYBv7ZBuRWS/kvuYQ5ffUaHTPuDsrkHE/UxTZ8gJOgIGsoInf5FsQ/UB7y3A
+	 g6CVRHuOO5bxRC/opNlTJ4l+8W+7F8avwelRbJO07mkTvjpRefiI3V10A1GVbXs3Go
+	 XiKBGRBT0rS5eYl1YAt1D6JtcC8KFP/8pAvYu+y+q/bNxjXRUhITPA1EQMMGGJt/eI
+	 lisapvQarlC5G9y4IP9ryxp+vI8vfLGLmBHwRi5eyGkWEwhSa/zfu2VmAVl2fAr/CB
+	 DWas7S1aHp1/A==
+Date: Fri, 9 Oct 2026 18:26:36 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Wandun <chenwandun1@gmail.com>
+Cc: robh@kernel.org, baoquan.he@linux.dev, m.szyprowski@samsung.com,
+	catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+	chenhuacai@kernel.org, kernel@xen0n.name, pjw@kernel.org,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+	tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	saravanak@kernel.org, akpm@linux-foundation.org,
+	pasha.tatashin@soleen.com, pratyush@kernel.org,
+	ruirui.yang@linux.dev, robin.murphy@arm.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, kexec@lists.infradead.org,
+	linux-mm@kvack.org, iommu@lists.linux.dev
+Subject: Re: [PATCH v7 0/9] kdump: reduce vmcore size and capture time
+Message-ID: <askVvEPHyrhpF8aw@kernel.org>
+References: <20260922084256.1515554-1-chenwandun1@gmail.com>
+ <ar9ogXc12cLjziHS@kernel.org>
+ <80af60db-8c39-461c-a488-3dfee990bce8@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <asdNbLNz7zPaQYXX@kernel.org>
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY1PEPF00026958:EE_|SJ2PR12MB8651:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7d1ad2ae-dad9-4865-645c-08df260d723f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|23010399003|1800799024|36860700016|376014|82310400026|56012099006|5023799004|11063799006|4143699003|10067099003|22082099003|18002099003|6133799003;
-X-Microsoft-Antispam-Message-Info: kXdGAbgVpE9JG10HS8k748jCtK4ppjmZXoeRhEnbnDMyEP194mSN6z3cCAaDKJXX5elJTv6t8cAOzkFNDVNUr1PGhsHo1lkh4MD4j8vD6+tQwALaJofg40+YOBbnEr415eDin7lln4841RtcQEhHY5sKutH6ktJU1fago8V7IRLd5LkRBy4Qg3/NtpLUFpSS0GTvMWvyV7IbcvSoMyO/ULRWdZ4Dyep6e6MM+QSmxvvz6AWwZhkGDohqn84COZEbhZboBctRZxsynBT6MCwFS/l+LHveCwSfJuZPuTteiF+ovE8C9GitSAhBswR2VhbILbwpG30MU0M+zIR9zctOQvxw6PUwvbEd+n7I5T1X5Sp9GP/1Nm3qJmt8u3QM8IVvghq7xRosm8YnUnB1oQCXqZb+J0P/0XZqZ0WjsEZ4wzBAVBxihhOBLp8f1YxLCTQ7Ryp1+MfTDWehGSW1l1+0LPyjUrjlnSD73EYm7tqrK+w4XGPdEXoYMARVxQgvxjGVWNY00I6RR22+vzeu7XJbItF96+WtVPzOq7japeJNijmkkkm4wgLaJUvswNczEINKQQ65i8COHhnda5nncRVAOPcf8KlZmWzr0EDQ10C4JQwYT3aFeKQMTm9vti06eaNDPao/OxSZZ5twG4yAPFWEvX5FlJFnaJ+BzsBVH5Pjzao9aB2xp8vSbGZSEu7vrHkRpfQmp6VuEE5kTBGBT48RUg==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(23010399003)(1800799024)(36860700016)(376014)(82310400026)(56012099006)(5023799004)(11063799006)(4143699003)(10067099003)(22082099003)(18002099003)(6133799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: pNkpposH5hmlscoCTfRBUmsbmljuHkrXvCN7Wf9mXxeyxCMDT5DaEMMinvjED8Z6T5o/cqe6QbrsIpCheRWW9+y00sQ6bwP+2swd0v/AY9+dB9i9jaSvONvpNzfoml1m1kqnh3ClOaJbjhV0ac0p5w2a3hnS4UFEYN8LLarh3NNafLfE4lAgTHFuPk+7A95m4mt5VwlG0vB9ahBrFhugTLV3+a537uJy8hBJLwH724LMX6/diYbrPO2pW/cwB9jYWRA3uiSabrut0Mn+8woMi6zqYanKG1S7+u3Q42LTjxnAC+CMw9JAL6N43IDE3e+H6NvoyR0cCPaGBgM2ILStaDHZg19HsSG1EvUT1MGF58g4J/oAT3i8MIa/jqFpLalrKMPJ/NuBs55lWaDZEjXAhfL5sArR0Nf6kwDYTXlA8B7fx4OKy8SkvJjVKPiEuJsC
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2026 13:58:50.2074
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d1ad2ae-dad9-4865-645c-08df260d723f
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BY1PEPF00026958.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8651
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261009_065859_663492_37B05398 
-X-CRM114-Status: GOOD (  29.45  )
+In-Reply-To: <80af60db-8c39-461c-a488-3dfee990bce8@gmail.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -133,92 +80,75 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Mike
-
-On Thu, Oct 08, 2026 at 09:59:40AM +0200, Mike Rapoport wrote:
-> Hi,
-> 
-> On Mon, Oct 05, 2026 at 06:40:12AM +0000, Ankit Soni wrote:
-> > LUO parses the handover tree from an early_initcall, which runs inside
-> > rest_init() -- the last statement of start_kernel(). Anything earlier in
-> > start_kernel() cannot see the incoming state, and cannot tell that it
-> > cannot see it: luo_flb_retrieve_one() returns -ENODATA both before the
-> > parse and when the previous kernel handed nothing over.
+On Fri, Oct 09, 2026 at 11:04:47AM +0800, Wandun wrote:
+> On 10/2/26 16:17, Mike Rapoport wrote:
+> > Hi Wandun,
 > > 
-> > On x86 the IOMMU is such a consumer, because it is also the interrupt
-> > remapping provider. amd_iommu_prepare() runs from late_time_init() via
-> > enable_IR_x2apic() -> irq_remapping_prepare(), and reaches
-> > init_iommu_one_late() long before any initcall.
+> > On Tue, Sep 22, 2026 at 04:42:47PM +0800, Wandun Chen wrote:
+> >> From: Wandun Chen <chenwandun@lixiang.com>
+> >>
+> >> On SoCs that carve out large firmware-owned reserved memory (GPU,
+> >> camera ISP, ...), kdump currently dumps those carveouts as part of
+> >> system RAM even though their contents are firmware state that is not
+> >> useful for kernel crash analysis.
+> >>
+> >> This series introduces a MEMBLOCK_NODUMP flag in memblock to filter
+> >> reserved memory on DT-based architectures (arm64, riscv, loongarch).
+> >> Reserved regions are marked MEMBLOCK_NODUMP by default so kdump omits
+> >> them; reusable CMA regions are different because their pages are handed
+> >> back to the buddy allocator and may carry crash-relevant data.
+> >>
+> >> ACPI systems already filter reserved memory out of the vmcore through
+> >> their existing path; only DT-based systems currently fail to filter these
+> >> regions, which is what this series addresses. The flag lives in memblock
+> >> itself rather than in a DT-only structure, so both ACPI and DT systems
+> >> can benefit from it (suggested by Rob, thanks).
 > > 
-> > Fix the ordering rather than teaching each consumer to cope. Call the
-> > parse directly from start_kernel(), immediately before late_time_init().
+> Hi Mike,
 > 
-> Why do you suggest to call it exactly here?
-> Order of the calls in start_kernel() is quite sensitive and placing a call
-> in a certain place needs more elaborate explanation.
+> Thanks for the review.
 > 
-
-Fair, the commit message asserts the placement without justifying it elaborately.
-The slot is bounded on both sides, and within those bounds I took the latest
-point. I will fold commit message in respin.
-
-Earliest:
-  luo_early_startup() ends in kho_restore_free(), which goes through
-  kho_restore_folio() and folio_put(), so it needs struct page and a working
-  page allocator. It also reads a preserved page, and kho_memory_init() is
-  what calls kho_mem_retrieve() to take those pages out of circulation; that
-  runs from mm_core_init(). Reading the handover FDT is not a constraint, as
-  kho_populate() records it from setup_arch() via parse_setup_data().
-
-  Second bound: luo_restore_fail() is a panic(), so running before
-  console_init() would panic a failed handover with nothing on the console,
-  which is exactly when the message is wanted.
-
-Latest: on x86 the IOMMU is the interrupt remapping provider, so both halves
-  of its early init run inside late_time_init():
-
-    x86_late_time_init() -> apic_intr_mode_init() -> x86_64_probe_apic()
-      -> enable_IR_x2apic()
-           -> irq_remapping_prepare() -> amd_iommu_prepare()
-                -> early_amd_iommu_init()
-                     init_iommu_one_late(), __disable_iommus(true)
-           -> irq_remapping_enable()  -> amd_iommu_enable()
-                -> early_enable_iommus() -> reuse_device_table()
-
-  All three sites that ask whether this unit was handed over sit on that path,
-  and all of it is before any initcall.
-
-  So the window is between console_init() and late_time_init(). I placed the
-  call at the end of it, on the grounds that it perturbs the least: every
-  existing call in that window keeps running exactly as before, and the only
-  code that can observe the new call is late_time_init() and later. Nothing in
-  the window consumes LUO state, so moving the call earlier would widen the
-  exposure without buying anything.
-
-Anywhere in that window works for the AMD case, so if you would rather see
-it somewhere else, I am happy to move it.
-
-> > Rename it to liveupdate_init_early() at the same time, since
-> > liveupdate_early_init() was named after the early_initcall that no longer
-> > exists.
+> > Can you elaborate how ACPI systems filter their reserved memory?
 > 
-> No strong feeling about this, but we do have other _early_init() functions
-> unrelated to initcalls.
->  
-
-Will drop this.
-
-Thanks,
-Ankit
-
-> > Signed-off-by: Ankit Soni <Ankit.Soni@amd.com>
-> > ---
-> >  include/linux/liveupdate.h   | 4 ++++
-> >  init/main.c                  | 2 ++
-> >  kernel/liveupdate/luo_core.c | 5 +----
-> >  3 files changed, 7 insertions(+), 4 deletions(-)
+> In the EFI memory map, firmware carveouts are reported with the type
+> EFI_RESERVED_TYPE. This type of memory gets the nomap flag set in
+> memblock.memory (is_usable_memory() returns false in reserve_regions()
+> and mark these regions with nomap flag), during prepare_elf_headers(),
+> for_each_mem_range() filters out these nomap regions. Therefore, the
+> memory reserved on ACPI based systems will not be dumped into the vmcore.
 > 
-> -- 
-> Sincerely yours,
-> Mike.
+> I will add these description in next version.
+> 
+> > With your patches, the memblock flag becomes a part of DT-only
+> > infrastructure, so that claim that both ACPI and DT benefit from it does
+> > not hold, doesn't it?
+> 
+> You are right, the wording was misleading. Let me clarify what I meant.
+> 
+> In this series only DT marks regions as MEMBLOCK_NODUMP:
+> /reserved-memory and /memreserve/ entries are tagged in the OF
+> paths (of_reserved_mem.c, fdt.c). ACPI does not set the flag and
+> keeps filtering its reserved memory through the existing path, as
+> described above.
+> 
+> 
+> What I intended to convey is that the flag itself lives in memblock
+> rather than on the DT-only struct reserved_mem, so it is available
+> for reuse. If an ACPI system ever needed to exclude a firmware-owned
+> region from the vmcore, it could mark that region with MEMBLOCK_NODUMP
+> the same way DT does, instead of having to invent a parallel mechanism.
+> That is a future option, not something this series enables for ACPI
+> today.
+
+So, EFI uses NOMAP for the same purpose, right?
+Why when we need a new memblock flag then?
+ 
+> Also will update these description in next verison.
+> 
+> Best regards,
+> Wandun
+
+-- 
+Sincerely yours,
+Mike.
 
