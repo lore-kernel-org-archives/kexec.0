@@ -4,55 +4,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A2F61CA6019
-	for <kexec@archiver.kernel.org>; Fri,  9 Oct 2026 10:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 50793CA6019
+	for <kexec@archiver.kernel.org>; Fri,  9 Oct 2026 13:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
-	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:CC:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=r3bmrxV+t3fPSMRAU/WJh+2ymAD55jqvxklsd7ARlac=; b=kDsyy5QOut77R4GbzVVRcYJwFz
-	lST5qBTLSFtvsBniKl4Yd9kmVav/IpOB5G9WoNViuFstVDZY7kjlSzVaZfmUp1ZlozFjGxS8v35rK
-	meOJEuZB2WbZjKCrVkdL8rq5ch2kcf66XLEOvGlIrON8xTdl0ZRKQhUP7zaZ82LRc2pBO7rp9r3yu
-	1jifCR5tDqB7ForZTPPPuOT+KDTYkTZKo83aAILWWdfj+a8jewbOpu+ccIt49S+5RFaNLHeqpaDtD
-	ulmtTKhpPRZgATw1btFyziD8Z68y/rstmNBG3spyEzpkGf17x5/oqNEItsk0ODyadaulX+8ghBebX
-	BbdgOIug==;
+	bh=Osfa7JiFUzjs/sviQL8ZEuzhHZIIKxscrQ8XI/ab9X8=; b=OUNmgcKPtZQ1pdYBBEOnj3zu8r
+	NjnytZ+ba/bkRSR2JQ+/ce44lJnhitkLUK5QoG85ANNC3jwnjGsJ6QXxGOldmg6zmVIhc1Mo7cV8c
+	tJRvkSthAmHFbnjb9qnY2auZcWJNnQp2PQHcMUh6WR85pSoH3sP8WloPqV5Hmc1VYBPyVH1jOIVrZ
+	sFF/3mcCFnYGoU8xh42JS7AD4+CHPX/KzmATlblgQCrSV7Be7HBejWlIU3irjOwO41CEbysLG1snF
+	Y2KkN0L1nhROwYp/C37V1QGRVrXurWf2r+d2f0kgj+El7cTQVgh7utU9rXnPlS+aaFdkWyNIYhbnM
+	QoA1Dy/Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xF7zd-000000065Hm-28qj;
-	Fri, 09 Oct 2026 10:38:25 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xFB7m-00000006QT1-1e16;
+	Fri, 09 Oct 2026 13:59:02 +0000
+Received: from mail-westus3azon11010001.outbound.protection.outlook.com ([52.101.201.1] helo=PH7PR06CU001.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xF7zc-000000065HU-08HN;
-	Fri, 09 Oct 2026 10:38:24 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 77A3060534;
-	Fri,  9 Oct 2026 10:38:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 944041F000FF;
-	Fri,  9 Oct 2026 10:38:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791542303;
-	bh=r3bmrxV+t3fPSMRAU/WJh+2ymAD55jqvxklsd7ARlac=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YlW+4jUDLiex4nL+P4RAOpxGR6Dod1U7kBIPCeYPqGluAcRfccw7qBl6o8mmCGGXP
-	 p8Qgk+dTHggYIbeTCZSEWmLRjtVtvfN5T+Rr26hkf9mmoUnIKKQNV2ENhiz+v2oRdD
-	 oVbKyZfOHw/QaUw9jZAAXiOetChEhWh6slfZJ9u/1XPBQ5oqUwgnLfIS8kzSx236VX
-	 vIo3QBvO/orMMsVm+WhBEKAEYYpNFmibO2SOpSquyMIaH46xMFxClxTxgEaLK9ewhy
-	 0onpnFuNEXmz4E68P89210wvyx/ArbFvi4+W/YopRFMy/xXcxC8s/twtjmv6Uz2x6F
-	 vM2Uxql6ODdmg==
-Message-ID: <sashiko-outbox-165245@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 2/2] Drivers: hv: Run VMBus kexec cleanup from
- syscore shutdown
-To: catalin.marinas@arm.com, wei.liu@kernel.org, "Shradha Gupta" <shradhagupta@linux.microsoft.com>, mhklinux@outlook.com, baoquan.he@linux.dev
-Cc: will@kernel.org, broonie@kernel.org, rppt@kernel.org, linux-hyperv@vger.kernel.org, kexec@lists.infradead.org, haiyangz@microsoft.com, pasha.tatashin@soleen.com, tglx@kernel.org, linux-kernel@vger.kernel.org, kees@kernel.org, kys@microsoft.com, hpa@zytor.com, brads@mainlining.org, akpm@linux-foundation.org, mark.rutland@arm.com, bp@alien8.de, namjain@linux.microsoft.com, longli@microsoft.com, mingo@redhat.com, pratyush@kernel.org, x86@kernel.org, maz@kernel.org, linux-arch@vger.kernel.org, dave.hansen@linux.intel.com, decui@microsoft.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20261009102250.3361076-1-shradhagupta@linux.microsoft.com>
-References: <20261009102215.3360863-1-shradhagupta@linux.microsoft.com>
- <20261009102250.3361076-1-shradhagupta@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 09 Oct 2026 10:38:21 +0000
+	id 1xFB7j-00000006QSR-0sTX
+	for kexec@lists.infradead.org;
+	Fri, 09 Oct 2026 13:59:01 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=P3KVtM2iSbKSFeFuOJ4nVGMVW1VNT01JoVnMRFROnzaGW0eOOFLEu3FQQSKemrkxbTxE7bMHVVhiATaXwvCvcJO2BHrFyDw6/JiPtb6nXQCwOeRyWzxyQtsHOQfJr93gIu/yftAIXOEr3T1kyRFOo4k9hjNhZWUdV35fVoNh1SVUTcNszZrD2Jo+x7ebw+asmHcewnp7bBHZA69NEfeM9C0kr1Jkd2a5ytpEK7vrBu27+t5mO4mhAXNVtHwWp6b4wiL5mvpmD+ZN0EyObSuaWPytxxo8I6wrmGEcrXpkZf0v6jzNVMTa+uGlSRKY0WaxxIKuMfsRF1XUUg6Bghjebg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Osfa7JiFUzjs/sviQL8ZEuzhHZIIKxscrQ8XI/ab9X8=;
+ b=SrSuoQ6IKszkbGnJvYuOoK0SpvO8cIhPfbhv/K3wxaqOhFW4NV9jPRwlVtTaK9s/pFVIgrexo9rbD6wrB+x0PhrMrzdRwVjwu8e/dtMmfzlCOheLddd1pJO8w/xYCbxflJ+2J3Z/S+LhzxA1q86BLgIVaqVXTd7FMBYzp847jUXCGQydqIQWkgdtzp/7QJuhVTCzatSzDKNz0cvLl56RtRYr9Z6ks0UtCcewSDWU/tkPd6cYjM7Jjt7KUfr2zIXlOiXwVrWaKEO6xawolG5e5R4z8hVIUZnl+hqelYkGeEQM5hVf6zY8KPe8Ls/jkMW8AURLraIL4gEY6/wUI/gcJQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Osfa7JiFUzjs/sviQL8ZEuzhHZIIKxscrQ8XI/ab9X8=;
+ b=RzQ3eRFqz/nTsyV2JOK5vjMPXXFhdyZKYqzqQmIhu9+JIa/kBVuZLk3pLN7GWNt/3rrE/90MydOmQJyDpr30woEK444E5SFeAqg6zTsL97Yqsgad5HDZK+EOai8xGkGHynMP0SGUBhz11PePbSMTGJrYcUtS8uaN7LWRast+q6s=
+Received: from SJ0PR03CA0193.namprd03.prod.outlook.com (2603:10b6:a03:2ef::18)
+ by SJ2PR12MB8651.namprd12.prod.outlook.com (2603:10b6:a03:541::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.496.17; Fri, 9 Oct
+ 2026 13:58:50 +0000
+Received: from BY1PEPF00026958.namprd05.prod.outlook.com
+ (2603:10b6:a03:2ef:cafe::5d) by SJ0PR03CA0193.outlook.office365.com
+ (2603:10b6:a03:2ef::18) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.472.20 via Frontend Transport; Fri, 9
+ Oct 2026 13:58:50 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
+ is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ BY1PEPF00026958.mail.protection.outlook.com (10.167.244.168) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.522.6 via Frontend Transport; Fri, 9 Oct 2026 13:58:50 +0000
+Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.49; Fri, 9 Oct
+ 2026 08:58:45 -0500
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb10.amd.com
+ (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.49; Fri, 9 Oct
+ 2026 08:58:45 -0500
+Received: from amd.com (10.180.168.240) by satlexmb08.amd.com (10.181.42.217)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.49 via Frontend
+ Transport; Fri, 9 Oct 2026 08:58:38 -0500
+Date: Fri, 9 Oct 2026 13:58:38 +0000
+From: Ankit Soni <Ankit.Soni@amd.com>
+To: Mike Rapoport <rppt@kernel.org>
+CC: <iommu@lists.linux.dev>, <joro@8bytes.org>, <will@kernel.org>,
+	<jgg@nvidia.com>, <suravee.suthikulpanit@amd.com>, <vasant.hegde@amd.com>,
+	<robin.murphy@arm.com>, <joao.m.martins@oracle.com>,
+	<alejandro.j.jimenez@oracle.com>, <pasha.tatashin@soleen.com>,
+	<pratyush@kernel.org>, <skhawaja@google.com>, <praan@google.com>,
+	<baolu.lu@linux.intel.com>, <dwmw2@infradead.org>, <kevin.tian@intel.com>,
+	<dmatlack@google.com>, <vipinsh@google.com>, <kexec@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 2/7] liveupdate: parse the incoming handover tree
+ before late_time_init()
+Message-ID: <itmq3hzl2thrmx4hsp4q4d73fevfzw7vbcbdvalufksbs2u7pf@ncou6nvcjmsj>
+References: <20261005064018.1558-1-Ankit.Soni@amd.com>
+ <20261005064018.1558-3-Ankit.Soni@amd.com>
+ <asdNbLNz7zPaQYXX@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <asdNbLNz7zPaQYXX@kernel.org>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY1PEPF00026958:EE_|SJ2PR12MB8651:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7d1ad2ae-dad9-4865-645c-08df260d723f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|23010399003|1800799024|36860700016|376014|82310400026|56012099006|5023799004|11063799006|4143699003|10067099003|22082099003|18002099003|6133799003;
+X-Microsoft-Antispam-Message-Info: kXdGAbgVpE9JG10HS8k748jCtK4ppjmZXoeRhEnbnDMyEP194mSN6z3cCAaDKJXX5elJTv6t8cAOzkFNDVNUr1PGhsHo1lkh4MD4j8vD6+tQwALaJofg40+YOBbnEr415eDin7lln4841RtcQEhHY5sKutH6ktJU1fago8V7IRLd5LkRBy4Qg3/NtpLUFpSS0GTvMWvyV7IbcvSoMyO/ULRWdZ4Dyep6e6MM+QSmxvvz6AWwZhkGDohqn84COZEbhZboBctRZxsynBT6MCwFS/l+LHveCwSfJuZPuTteiF+ovE8C9GitSAhBswR2VhbILbwpG30MU0M+zIR9zctOQvxw6PUwvbEd+n7I5T1X5Sp9GP/1Nm3qJmt8u3QM8IVvghq7xRosm8YnUnB1oQCXqZb+J0P/0XZqZ0WjsEZ4wzBAVBxihhOBLp8f1YxLCTQ7Ryp1+MfTDWehGSW1l1+0LPyjUrjlnSD73EYm7tqrK+w4XGPdEXoYMARVxQgvxjGVWNY00I6RR22+vzeu7XJbItF96+WtVPzOq7japeJNijmkkkm4wgLaJUvswNczEINKQQ65i8COHhnda5nncRVAOPcf8KlZmWzr0EDQ10C4JQwYT3aFeKQMTm9vti06eaNDPao/OxSZZ5twG4yAPFWEvX5FlJFnaJ+BzsBVH5Pjzao9aB2xp8vSbGZSEu7vrHkRpfQmp6VuEE5kTBGBT48RUg==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(23010399003)(1800799024)(36860700016)(376014)(82310400026)(56012099006)(5023799004)(11063799006)(4143699003)(10067099003)(22082099003)(18002099003)(6133799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: pNkpposH5hmlscoCTfRBUmsbmljuHkrXvCN7Wf9mXxeyxCMDT5DaEMMinvjED8Z6T5o/cqe6QbrsIpCheRWW9+y00sQ6bwP+2swd0v/AY9+dB9i9jaSvONvpNzfoml1m1kqnh3ClOaJbjhV0ac0p5w2a3hnS4UFEYN8LLarh3NNafLfE4lAgTHFuPk+7A95m4mt5VwlG0vB9ahBrFhugTLV3+a537uJy8hBJLwH724LMX6/diYbrPO2pW/cwB9jYWRA3uiSabrut0Mn+8woMi6zqYanKG1S7+u3Q42LTjxnAC+CMw9JAL6N43IDE3e+H6NvoyR0cCPaGBgM2ILStaDHZg19HsSG1EvUT1MGF58g4J/oAT3i8MIa/jqFpLalrKMPJ/NuBs55lWaDZEjXAhfL5sArR0Nf6kwDYTXlA8B7fx4OKy8SkvJjVKPiEuJsC
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2026 13:58:50.2074
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d1ad2ae-dad9-4865-645c-08df260d723f
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BY1PEPF00026958.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8651
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261009_065859_663492_37B05398 
+X-CRM114-Status: GOOD (  29.45  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -64,45 +130,95 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> ARM64 Hyper-V guests do not run the VMBus kexec cleanup before
-> secondary CPUs are stopped. Consequently, the old VMBus connection
-> and SynIC state remain active when the kexec kernel starts.
->=20
-> Run the VMBus kexec handler from the existing VMBus syscore shutdown
-> callback. syscore_shutdown() runs after device shutdown and before
-> machine shutdown, while all CPUs needed by the SynIC CPU hotplug
-> teardown are still available. Guard the callback with
-> kexec_is_in_progress() so normal restart, halt, and poweroff paths are
-> unchanged.
->=20
-> Use the same path on x86 and remove the architecture-specific handler
-> pointer and the weak setup/remove interfaces. VMBus teardown now
-> precedes hv_stimer_global_cleanup() on x86.
->=20
-> The new x86 ordering relies on commit be0cfab740e5 ("clocksource:
-> hyper-v: Remove support for stimer interrupts in message mode"), which
-> removed the synthetic timer's dependency on VMBus message delivery.
-> Older kernels that retain message-mode stimer interrupts must preserve
-> the existing x86 ordering and therefore require an ARM64-specific
-> backport.
->=20
-> Document the VMBus cleanup path and its position in shutdown ordering.
->=20
-> Fixes: 9bbb888824e3 ("arm64: hyperv: Initialize hypervisor on boot")
-> Link: https://lore.kernel.org/all/20260814093133.3191250-1-shradhagupta@l=
-inux.microsoft.com/
-> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-> Suggested-by: Michael Kelley <mhklinux@outlook.com>
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Hi Mike
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+On Thu, Oct 08, 2026 at 09:59:40AM +0200, Mike Rapoport wrote:
+> Hi,
+> 
+> On Mon, Oct 05, 2026 at 06:40:12AM +0000, Ankit Soni wrote:
+> > LUO parses the handover tree from an early_initcall, which runs inside
+> > rest_init() -- the last statement of start_kernel(). Anything earlier in
+> > start_kernel() cannot see the incoming state, and cannot tell that it
+> > cannot see it: luo_flb_retrieve_one() returns -ENODATA both before the
+> > parse and when the previous kernel handed nothing over.
+> > 
+> > On x86 the IOMMU is such a consumer, because it is also the interrupt
+> > remapping provider. amd_iommu_prepare() runs from late_time_init() via
+> > enable_IR_x2apic() -> irq_remapping_prepare(), and reaches
+> > init_iommu_one_late() long before any initcall.
+> > 
+> > Fix the ordering rather than teaching each consumer to cope. Call the
+> > parse directly from start_kernel(), immediately before late_time_init().
+> 
+> Why do you suggest to call it exactly here?
+> Order of the calls in start_kernel() is quite sensitive and placing a call
+> in a certain place needs more elaborate explanation.
+> 
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261009102215.3360=
-863-1-shradhagupta@linux.microsoft.com?part=3D2
+Fair, the commit message asserts the placement without justifying it elaborately.
+The slot is bounded on both sides, and within those bounds I took the latest
+point. I will fold commit message in respin.
 
+Earliest:
+  luo_early_startup() ends in kho_restore_free(), which goes through
+  kho_restore_folio() and folio_put(), so it needs struct page and a working
+  page allocator. It also reads a preserved page, and kho_memory_init() is
+  what calls kho_mem_retrieve() to take those pages out of circulation; that
+  runs from mm_core_init(). Reading the handover FDT is not a constraint, as
+  kho_populate() records it from setup_arch() via parse_setup_data().
+
+  Second bound: luo_restore_fail() is a panic(), so running before
+  console_init() would panic a failed handover with nothing on the console,
+  which is exactly when the message is wanted.
+
+Latest: on x86 the IOMMU is the interrupt remapping provider, so both halves
+  of its early init run inside late_time_init():
+
+    x86_late_time_init() -> apic_intr_mode_init() -> x86_64_probe_apic()
+      -> enable_IR_x2apic()
+           -> irq_remapping_prepare() -> amd_iommu_prepare()
+                -> early_amd_iommu_init()
+                     init_iommu_one_late(), __disable_iommus(true)
+           -> irq_remapping_enable()  -> amd_iommu_enable()
+                -> early_enable_iommus() -> reuse_device_table()
+
+  All three sites that ask whether this unit was handed over sit on that path,
+  and all of it is before any initcall.
+
+  So the window is between console_init() and late_time_init(). I placed the
+  call at the end of it, on the grounds that it perturbs the least: every
+  existing call in that window keeps running exactly as before, and the only
+  code that can observe the new call is late_time_init() and later. Nothing in
+  the window consumes LUO state, so moving the call earlier would widen the
+  exposure without buying anything.
+
+Anywhere in that window works for the AMD case, so if you would rather see
+it somewhere else, I am happy to move it.
+
+> > Rename it to liveupdate_init_early() at the same time, since
+> > liveupdate_early_init() was named after the early_initcall that no longer
+> > exists.
+> 
+> No strong feeling about this, but we do have other _early_init() functions
+> unrelated to initcalls.
+>  
+
+Will drop this.
+
+Thanks,
+Ankit
+
+> > Signed-off-by: Ankit Soni <Ankit.Soni@amd.com>
+> > ---
+> >  include/linux/liveupdate.h   | 4 ++++
+> >  init/main.c                  | 2 ++
+> >  kernel/liveupdate/luo_core.c | 5 +----
+> >  3 files changed, 7 insertions(+), 4 deletions(-)
+> 
+> -- 
+> Sincerely yours,
+> Mike.
 
