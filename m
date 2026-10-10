@@ -4,69 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0A555CA9EBD
-	for <kexec@archiver.kernel.org>; Fri,  9 Oct 2026 17:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B730ECA6004
+	for <kexec@archiver.kernel.org>; Sat, 10 Oct 2026 05:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=kAD7jZL3WT2oDggDD/W1Uk0YnF3NERQV17t5J8hJ8+M=; b=HbZvTFiuULsJI5+oXbM6dmEJpG
-	Jl+TFsE98FtSjK6RVWxIUWQ8csdOjlkayvWtH/0V7+N8ERwEepD5q4BpIKDDSeYhJCGunAa22iaBr
-	OYtxu2jeSewEsAWlQ7I/MoyREDB8aEDymkEw1jx1HctGgI6iwE6DaKpiwTbWyAIgn5M+vD6MelGI/
-	08MW6RuplKgZtArurIu+T0piXpAq5/EgsqenVz6eEVKrX4/JdbeZrct4CcFOle132bLkIZLENRXtj
-	u4RBlR5oV9kd9AqFfxCE68dWvXIUBMCGDPdKj6GvUivNxdzQdJ9Q00hHXg8ND0hq941oWcc9VEoAM
-	0vIhmVAg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=LX4/3/bhqfrjKW0Sv6xuJxsED/g0kQ7KMwLZTlKp/fw=; b=g5XCUAQSkSOCGia721Ksp+QUBI
+	vqGaV8R+s1Tx6XkwfoGNZ3GRtExBuPJ534zjMXCs5ULadhBBOfg3Q1YF3KAsO806MYI1Qvc3ivOGX
+	iSfSJ+xY0q4f4LivPsi8s6p5CPEfaTMIa2N7jNRaQxVTYOYHRmHjZpzzxbfSiAFUjvZPkJg37lSy1
+	QWJEa4jw6XYxHtPL08MowHQ+Ov74mVfJrR027Q4RPphNqTAzPrTVhU816Pm1IOFl1OAFdsS0O/3xi
+	R41n5dAYXBlN6wp2FaCERlWWlGc1iTFGQONDSKeyXriSR1OjKFSIAPM7gp8lRbNDDrCOlzaxc/Wus
+	CPzdiQjQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xFE73-00000006lYT-2Hn3;
-	Fri, 09 Oct 2026 17:10:29 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xFPsB-00000007Yba-3TuE;
+	Sat, 10 Oct 2026 05:43:55 +0000
+Received: from mail-m49198.qiye.163.com ([45.254.49.198])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xFE72-00000006lY7-2T3J;
-	Fri, 09 Oct 2026 17:10:28 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id E468243F04;
-	Fri,  9 Oct 2026 17:10:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86F951F000FF;
-	Fri,  9 Oct 2026 17:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791565827;
-	bh=kAD7jZL3WT2oDggDD/W1Uk0YnF3NERQV17t5J8hJ8+M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Q1Nhseaoa+rDmPgv3RV88Xq/keczcbIu4FLYepJnBvD2cRWQ9lipkpUB7/oP4GWM2
-	 FtecI4n/MNfujCQ2qyTF3wHtE8IruMwItFTLmIBKKeC3vlmY0G1hsyyVZAtoiwWou8
-	 P3DbUqJp9Xmpt/k5D8+TZwqQdKWqiN19Lf+AJ3W0+6UWmvY9NsCpCPQCR2qUhmOLIC
-	 8Ojr7flTBUGp+qSaJwC9QVMRhzWedJSGwa8czVneuywDeGOD4MwdC3oFvmjdVrC/MQ
-	 pQQu6ro5HclX1M3k8qO/i9gCSAbnfYwfDkfc5jGddIzvabPGzItOqeLhZ1tE9Uequ/
-	 TaRWxOs50oK2g==
-Date: Fri, 9 Oct 2026 12:10:27 -0500
-From: Rob Herring <robh@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Wandun <chenwandun1@gmail.com>, baoquan.he@linux.dev,
-	m.szyprowski@samsung.com, catalin.marinas@arm.com, will@kernel.org,
-	mark.rutland@arm.com, chenhuacai@kernel.org, kernel@xen0n.name,
-	pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	alex@ghiti.fr, tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	saravanak@kernel.org, akpm@linux-foundation.org,
-	pasha.tatashin@soleen.com, pratyush@kernel.org,
-	ruirui.yang@linux.dev, robin.murphy@arm.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, kexec@lists.infradead.org,
-	linux-mm@kvack.org, iommu@lists.linux.dev
-Subject: Re: [PATCH v7 0/9] kdump: reduce vmcore size and capture time
-Message-ID: <20261009171027.GA2734758-robh@kernel.org>
-References: <20260922084256.1515554-1-chenwandun1@gmail.com>
- <ar9ogXc12cLjziHS@kernel.org>
- <80af60db-8c39-461c-a488-3dfee990bce8@gmail.com>
- <askVvEPHyrhpF8aw@kernel.org>
+	id 1xFPs6-00000007Yax-07dT
+	for kexec@lists.infradead.org;
+	Sat, 10 Oct 2026 05:43:52 +0000
+Received: from [192.168.5.82] (unknown [125.82.164.183])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 5087e6cba;
+	Sat, 10 Oct 2026 13:43:40 +0800 (GMT+08:00)
+Message-ID: <31cb799c-9a60-4666-adcc-2689262a531b@tsinghua.org.cn>
+Date: Sat, 10 Oct 2026 13:41:58 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <askVvEPHyrhpF8aw@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] LoongArch: kdump: add arch_crash_save_vmcoreinfo()
+ support
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Yangyang Lian <lianyangyang@kylinos.cn>,
+ Andrew Morton <akpm@linux-foundation.org>, Baoquan He
+ <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, Dave Young <ruirui.yang@linux.dev>,
+ WANG Xuerui <kernel@xen0n.name>, kexec@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Haoran Jiang <jianghaoran@kylinos.cn>, Tao Cui <cuitao@kylinos.cn>,
+ George Guo <guodongtai@kylinos.cn>
+References: <20260923060349.146780-1-lianyangyang@kylinos.cn>
+ <20260924075655.375632-1-lianyangyang@kylinos.cn>
+ <CAAhV-H6C=AyS=1AejxxaG-Zri=2=AfMtPzXFxEvzpFdD1_AaAw@mail.gmail.com>
+ <1b9d2426-fe5c-4227-976d-65ceb812c93c@tsinghua.org.cn>
+ <CAAhV-H682iM2DydKK9+o7x93EapKRp=KQXnKQkoAK+yMeup44g@mail.gmail.com>
+Content-Language: en-US, en-GB
+From: Dave Young <yangrr.2009@tsinghua.org.cn>
+In-Reply-To: <CAAhV-H682iM2DydKK9+o7x93EapKRp=KQXnKQkoAK+yMeup44g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0aa12456a36803a2kunm769bc9cb3ffadc
+X-HM-MType: 10
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFKTEtLSjdXWRgWCB1ZQUpXWS1ZQUlXWQ8JGhUIEh9ZQVkZSh8dVkJIHR9JThlCTk5DS1
+	YeHw5VEwETFhoSFyQUDg9ZV1kYEgtZQVlKSU5VQ0lVSk1PVUpDSFlXWRYaDxIVHRRZQVlPS0hVQk
+	JJTktVSktLVUpCS0JZBg++
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261009_224350_292435_43ECE9FA 
+X-CRM114-Status: GOOD (  20.86  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,72 +79,165 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Oct 09, 2026 at 06:26:36PM +0200, Mike Rapoport wrote:
-> On Fri, Oct 09, 2026 at 11:04:47AM +0800, Wandun wrote:
-> > On 10/2/26 16:17, Mike Rapoport wrote:
-> > > Hi Wandun,
-> > > 
-> > > On Tue, Sep 22, 2026 at 04:42:47PM +0800, Wandun Chen wrote:
-> > >> From: Wandun Chen <chenwandun@lixiang.com>
-> > >>
-> > >> On SoCs that carve out large firmware-owned reserved memory (GPU,
-> > >> camera ISP, ...), kdump currently dumps those carveouts as part of
-> > >> system RAM even though their contents are firmware state that is not
-> > >> useful for kernel crash analysis.
-> > >>
-> > >> This series introduces a MEMBLOCK_NODUMP flag in memblock to filter
-> > >> reserved memory on DT-based architectures (arm64, riscv, loongarch).
-> > >> Reserved regions are marked MEMBLOCK_NODUMP by default so kdump omits
-> > >> them; reusable CMA regions are different because their pages are handed
-> > >> back to the buddy allocator and may carry crash-relevant data.
-> > >>
-> > >> ACPI systems already filter reserved memory out of the vmcore through
-> > >> their existing path; only DT-based systems currently fail to filter these
-> > >> regions, which is what this series addresses. The flag lives in memblock
-> > >> itself rather than in a DT-only structure, so both ACPI and DT systems
-> > >> can benefit from it (suggested by Rob, thanks).
-> > > 
-> > Hi Mike,
-> > 
-> > Thanks for the review.
-> > 
-> > > Can you elaborate how ACPI systems filter their reserved memory?
-> > 
-> > In the EFI memory map, firmware carveouts are reported with the type
-> > EFI_RESERVED_TYPE. This type of memory gets the nomap flag set in
-> > memblock.memory (is_usable_memory() returns false in reserve_regions()
-> > and mark these regions with nomap flag), during prepare_elf_headers(),
-> > for_each_mem_range() filters out these nomap regions. Therefore, the
-> > memory reserved on ACPI based systems will not be dumped into the vmcore.
-> > 
-> > I will add these description in next version.
-> > 
-> > > With your patches, the memblock flag becomes a part of DT-only
-> > > infrastructure, so that claim that both ACPI and DT benefit from it does
-> > > not hold, doesn't it?
-> > 
-> > You are right, the wording was misleading. Let me clarify what I meant.
-> > 
-> > In this series only DT marks regions as MEMBLOCK_NODUMP:
-> > /reserved-memory and /memreserve/ entries are tagged in the OF
-> > paths (of_reserved_mem.c, fdt.c). ACPI does not set the flag and
-> > keeps filtering its reserved memory through the existing path, as
-> > described above.
-> > 
-> > 
-> > What I intended to convey is that the flag itself lives in memblock
-> > rather than on the DT-only struct reserved_mem, so it is available
-> > for reuse. If an ACPI system ever needed to exclude a firmware-owned
-> > region from the vmcore, it could mark that region with MEMBLOCK_NODUMP
-> > the same way DT does, instead of having to invent a parallel mechanism.
-> > That is a future option, not something this series enables for ACPI
-> > today.
+
+
+On 10/3/26 5:10 PM, Huacai Chen wrote:
+> On Sat, Oct 3, 2026 at 4:25 PM Dave Young <yangrr.2009@tsinghua.org.cn> wrote:
+>>
+>>
+>>
+>> On 9/28/26 10:28 PM, Huacai Chen wrote:
+>>> Hi, Yangyang,
+>>>
+>>> On Thu, Sep 24, 2026 at 3:58 PM Yangyang Lian <lianyangyang@kylinos.cn> wrote:
+>>>>
+>>>> Since commit 23c85094fe18 ("proc/kcore: add vmcoreinfo note to
+>>>> /proc/kcore") the kernel has exported the vmcoreinfo PT_NOTE on
+>>>> /proc/kcore as wellas /proc/vmcore.
+>>>>
+>>>> LoongArch does not provide arch_crash_save_vmcoreinfo(), so the
+>>>> arch-specific values are missing from the vmcoreinfo PT_NOTE. The
+>>>> generic exporter in kernel/vmcore_info.c already provides
+>>>> NUMBER(VMALLOC_START), but tools like crash cannot derive the module
+>>>> and vmemmap ranges, VA_BITS, or the KASLR offset of a LoongArch dump.
+>>
+>> current crash can get the kaslr offset from the _stext differ, so it just works, but maybe makedumpfile still need the vmcoreinfo export.
+>>
+>>>>
+>>>> Since commit 18210a104bb9 ("LoongArch: Expand module virtual address
+>>>> space to 2GB") the vmalloc and module boundaries are no longer stable
+>>>> across kernel versions either, so vmcoreinfo is the only reliable
+>>>> source for them.
+>>>>
+>>>> Provide this function in a separate file that is built at the same time
+>>>> as its caller in kernel/vmcore_info.c, and add a LOONGARCH64 section to
+>>>> Documentation/admin-guide/kdump/vmcoreinfo.rst.
+>>>>
+>>>> Reported-by: Haoran Jiang <jianghaoran@kylinos.cn>
+>>>> Suggested-by: Haoran Jiang <jianghaoran@kylinos.cn>
+>>>> Tested-by: Tao Cui <cuitao@kylinos.cn>
+>>>> Co-developed-by: George Guo <guodongtai@kylinos.cn>
+>>>> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+>>>> Signed-off-by: Yangyang Lian <lianyangyang@kylinos.cn>
+>>>> ---
+>>>> V2 -> V1: Export VMEMMAP_END + 1 to make it an exclusive bound, matching
+>>>>           what tools like makedumpfile expect.
+>>>>           Add Tested-by tag from Tao Cui.
+>>>>
+>>>>  .../admin-guide/kdump/vmcoreinfo.rst          | 29 +++++++++++++++++++
+>>>>  arch/loongarch/kernel/Makefile                |  1 +
+>>>>  arch/loongarch/kernel/vmcore_info.c           | 21 ++++++++++++++
+>>>>  3 files changed, 51 insertions(+)
+>>>>  create mode 100644 arch/loongarch/kernel/vmcore_info.c
+>>>>
+>>>> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+>>>> index 7663c610fe90..2ff921232616 100644
+>>>> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
+>>>> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+>>>> @@ -594,3 +594,32 @@ va_kernel_pa_offset
+>>>>
+>>>>  Indicates the offset between the kernel virtual and physical mappings.
+>>>>  Used to translate virtual to physical addresses.
+>>>> +
+>>>> +LOONGARCH64
+>>>> +===========
+>>>> +
+>>>> +VA_BITS
+>>>> +-------
+>>>> +
+>>>> +The maximum number of bits for virtual addresses. Used to compute the
+>>>> +virtual memory ranges.
+>>>> +
+>>>> +PHYS_OFFSET
+>>>> +-----------
+>>>> +
+>>>> +Indicates the physical address of the start of memory. Used to translate
+>>>> +virtual to physical addresses.
+>>>> +
+>>>> +KERNELOFFSET
+>>>> +------------
+>>>> +
+>>>> +The kernel randomization offset. Used to locate the kernel text in
+>>>> +virtual memory. If KASLR is disabled, this value is zero.
+>>>> +
+>>>> +MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMAP_END
+>>>> +-----------------------------------------------------------------------------
+>>>> +
+>>>> +Used to get the correct ranges:
+>>>> +       MODULES_VADDR ~ MODULES_END-1 : Kernel module space.
+>>>> +       VMALLOC_START ~ VMALLOC_END-1 : vmalloc() / ioremap() space.
+>>>> +       VMEMMAP_START ~ VMEMMAP_END-1 : vmemmap region, used for struct page array.
+>>>> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+>>>> index 001924877772..6260c15adaba 100644
+>>>> --- a/arch/loongarch/kernel/Makefile
+>>>> +++ b/arch/loongarch/kernel/Makefile
+>>>> @@ -64,6 +64,7 @@ obj-$(CONFIG_RELOCATABLE)     += relocate.o
+>>>>  obj-$(CONFIG_KEXEC_CORE)       += machine_kexec.o relocate_kernel.o
+>>>>  obj-$(CONFIG_KEXEC_FILE)       += machine_kexec_file.o kexec_efi.o kexec_elf.o
+>>>>  obj-$(CONFIG_CRASH_DUMP)       += crash_dump.o
+>>>> +obj-$(CONFIG_VMCORE_INFO)      += vmcore_info.o
+>>>>
+>>>>  obj-$(CONFIG_UNWINDER_GUESS)   += unwind_guess.o
+>>>>  obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
+>>>> diff --git a/arch/loongarch/kernel/vmcore_info.c b/arch/loongarch/kernel/vmcore_info.c
+>>>> new file mode 100644
+>>>> index 000000000000..fb703b716253
+>>>> --- /dev/null
+>>>> +++ b/arch/loongarch/kernel/vmcore_info.c
+>>>> @@ -0,0 +1,21 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>> +
+>>>> +#include <linux/vmcore_info.h>
+>>>> +#include <asm/addrspace.h>
+>>>> +#include <asm/pgtable.h>
+>>>> +#include <asm/setup.h>
+>>>> +
+>>>> +void arch_crash_save_vmcoreinfo(void)
+>>>> +{
+>>>> +       VMCOREINFO_NUMBER(VA_BITS);
+>>>> +       /* NUMBER(VMALLOC_START) is exported by the generic code */
+>>>> +       vmcoreinfo_append_str("NUMBER(VMALLOC_END)=0x%lx\n", VMALLOC_END);
+>>>> +#ifdef CONFIG_64BIT
+>>>> +       vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=0x%lx\n", MODULES_VADDR);
+>>>> +       vmcoreinfo_append_str("NUMBER(MODULES_END)=0x%lx\n", MODULES_END);
+>>>> +       vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=0x%lx\n", (unsigned long)vmemmap);
+>>>> +       vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=0x%lx\n", VMEMMAP_END + 1);
+>>>> +#endif
+>>>> +       vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%lx\n", PHYS_OFFSET);
+>>> I think it is also useful to export PAGE_OFFSET here.
+>>
+>> Hi Huacai,  if it is a fixed value or it can be derived from other known values I'd suggest not to export.
+> Hi, Dave. It is not completely a fixed value, and I found that RISC-V
+> also exports PAGE_OFFSET.
+
+The riscv part is more dynamic:
+#define PAGE_OFFSET_L5          _AC(0xff60000000000000, UL)
+#define PAGE_OFFSET_L4          _AC(0xffffaf8000000000, UL)
+#define PAGE_OFFSET_L3          _AC(0xffffffd600000000, UL)
+#define PAGE_OFFSET             kernel_map.page_offset
+
+But for loongarch64, we need to calculate CACHE_BASE + PHYS_OFFSET, I assumed that CACHE_BASE is a fixed value ..
+
+
 > 
-> So, EFI uses NOMAP for the same purpose, right?
-> Why when we need a new memblock flag then?
+> Huacai
+> 
+>>
+>>>
+>>> Huacai
+>>>> +       vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
+>>>> +}
+>>>> --
+>>>> 2.25.1
+>>>>
+>>>>
+>>>
+>>>
+>>>
+>>
+>>
+> 
+> 
+> 
 
-IIUC, NOMAP implies NODUMP (for EFI and DT), but NODUMP is needed for 
-some mapped (!NOMAP) regions.
-
-Rob
 
