@@ -4,60 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 97100CA6017
-	for <kexec@archiver.kernel.org>; Sat, 10 Oct 2026 13:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1BD7ECA9EC1
+	for <kexec@archiver.kernel.org>; Sat, 10 Oct 2026 20:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
-	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Io44OKtN8L9s20sxzd0rilXBdNQoIbjjjTAYFAepx/w=; b=zWPo18O/ai3/qSuFDxEa+AIosl
-	JNGQYrpgaypXvU/sSMRz0ud5w8zAlAWDeDnVRSH+U4fsdBvj4i6Rn8jM2KH5at6n2+RTRF9NSnG5M
-	WHpQn+N/vaSTx/JgCYCRh/xjHA2Nbhwj8gLx89NYf4uxfAz4c+h1jRw1zP9hCM0/rquD5YmiThazT
-	fyQsQamD9BPxbtbU5U1vRfOgxwaOHpsUTr3eLaHWpRn6bLbu5f/6bdFhHQ8ZRGgLTRlk8f6Uu0q3P
-	NgmP9kv8ck8OT2dSy/kGDSrdJ9dfQLNExJi1p3fP5spyvDd0BQXNXvgynTZi4ffBpj3javD/1ZdsA
-	UTdMgM0g==;
+	bh=D5xIJ77nP8pyKk1j4aNr1bPe3m2dUcpcnAVPDVOA+vg=; b=IMbZ9R5tqvSBMqXxdoVXOriL9+
+	yVq3MYrm6sM+SaZDND93xiiZZfW0aD56HykfRabIteXAOoF7Y7Hlbrxg11SASE/53CRh5BiV3gpPY
+	f8MbrxuIjQ0PQciUCeMMLvIu8bgj/9OKiMezwZ7bT1lyI5tRSn9SDkBsnuH8kvwJCA/JzM8R/ootE
+	4OTKHeOZFk8B0QlMTX8cFd7invTA4lcpeYDRKTOmrkbO42tCrHAQZ5/bSG3vxsoRFn9ccxx797AKG
+	TcnB7XK38mcl9MbBbiU/qzrJG11HstCL9rSFPuwzkmkUd6M6ZJfQFIZ5sYADpOw7oypAX5kaBOgpq
+	Luk/b3aQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xFXJD-0000000883d-2yY0;
-	Sat, 10 Oct 2026 13:40:19 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
-	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xFXJC-0000000883E-35Up
-	for kexec@lists.infradead.org;
-	Sat, 10 Oct 2026 13:40:18 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 19BA343AF7;
-	Sat, 10 Oct 2026 13:40:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4DA71F000FF;
-	Sat, 10 Oct 2026 13:40:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791639618;
-	bh=Io44OKtN8L9s20sxzd0rilXBdNQoIbjjjTAYFAepx/w=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=MW+o7Ge29PerOGxb14B0X9AefCQ/ejSI8q/f+0jfu/GxHBzlOOkubHRyHnjlYwkQE
-	 +Y/3QogWD4tmDUYPi65jf9A86vvCK06LhPX/YH4LP32st9wqjokWuYeFsYCtTCWKIx
-	 fPL5LXXPrVIZyq1e4RjOtJZTYhuDGxoB8zLq6PuCfHPYsg8gg+GA24b2yqVVso3D8R
-	 6xpPoKtG0P8cPcag1pU/OuzsdRM+14x0FQNUt6CJiHVSnTuSN6WKwdqi2OA/wvY6im
-	 oQ4rLgn4OGZNsWng7UvakLZmijI3nSOUjywMOvpFX8dnF2qC5fyk/V7jhi/Ls/sHMp
-	 LpwYcWkO7UOJg==
-Message-ID: <sashiko-outbox-166588@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] PM: QoS: Add a sysfs CPU latency request with a
- boot-time value
-To: "Roman Kagan" <rkagan@amazon.de>, "Pavel Machek" <pavel@kernel.org>, "Jonathan
- Corbet" <corbet@lwn.net>, "Len Brown" <lenb@kernel.org>, "Christian Loehle" <christian.loehle@arm.com>, "Randy
- Dunlap" <rdunlap@infradead.org>, "Daniel Lezcano" <daniel.lezcano@kernel.org>, "Rafael
- J. Wysocki" <rafael@kernel.org>, "Shuah Khan" <skhan@linuxfoundation.org>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, nh-open-source@amazon.com, "Mike
- Rapoport" <rppt@kernel.org>, kexec@lists.infradead.org, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Pratyush
- Yadav" <pratyush@kernel.org>, linux-doc@vger.kernel.org
-In-Reply-To: <20261010-b4-cpuidle-shallow-v2-1-adede7dd9077@amazon.de>
-References: <20261010-b4-cpuidle-shallow-v2-1-adede7dd9077@amazon.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 10 Oct 2026 13:40:16 +0000
+	id 1xFdFz-00000008QFm-0WfH;
+	Sat, 10 Oct 2026 20:01:23 +0000
+Received: from foss.arm.com ([217.140.110.172])
+	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1xFdFu-00000008QEo-0ISD;
+	Sat, 10 Oct 2026 20:01:20 +0000
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC41E1692;
+	Sat, 10 Oct 2026 13:01:08 -0700 (PDT)
+Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A0AC3F882;
+	Sat, 10 Oct 2026 13:00:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1791662472; bh=0ej4w9K2k1nE5MBAzVddXwAyLDwy2dxb36CJ0bopUEc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WRSxdsDg02jA7Wxmfp7hUM+7z5or2VN4zazCFutQjZjCNRVVo7Znbg22CVLNz7YAi
+	 ObuzEMW4ie3Brz5P5fTbQVvsd7oFGit6h9P3YDLOgc08xfbI46WYb8fvEkIjCXqCBo
+	 Fa+IHGI5x3Zu1VuORzdk3Muk8yB8P1D4NRA1la+w=
+Date: Sat, 10 Oct 2026 21:00:51 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: will@kernel.org, mark.rutland@arm.com, chenhuacai@kernel.org,
+	kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au,
+	npiggin@gmail.com, chleroy@kernel.org, ritesh.list@gmail.com,
+	sshegde@linux.ibm.com, tglx@kernel.org, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+	akpm@linux-foundation.org, baoquan.he@linux.dev, rppt@kernel.org,
+	pasha.tatashin@soleen.com, pratyush@kernel.org,
+	ruirui.yang@linux.dev, leitao@debian.org, yeoreum.yun@arm.com,
+	sourabhjain@linux.ibm.com, robh@kernel.org, coxu@redhat.com,
+	kees@kernel.org, tangyouling@kylinos.cn, liukexin@kylinos.cn,
+	zhangtianyang@loongson.cn, guodongtai@kylinos.cn,
+	maqianga@uniontech.com, chao.gao@intel.com, kai.huang@intel.com,
+	vishal.l.verma@intel.com, seanjc@google.com, piliu@redhat.com,
+	thuth@redhat.com, jbouron@amazon.com, me@linux.beauty,
+	mclapinski@google.com, graf@amazon.com, bgwin@google.com,
+	hbathini@linux.ibm.com, eric.devolder@oracle.com,
+	takahiro.akashi@linaro.org, james.morse@arm.com,
+	palmer@rivosinc.com, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	driver-core@lists.linux.dev, kexec@lists.infradead.org
+Subject: Re: [PATCH v6 05/14] arm64: kexec_file: Fix elf_headers memory leak
+ in retry loop
+Message-ID: <asqZcwg99QbA7Sma@arm.com>
+References: <20260921090450.807575-1-ruanjinjie@huawei.com>
+ <20260921090450.807575-6-ruanjinjie@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260921090450.807575-6-ruanjinjie@huawei.com>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261010_130118_343167_0C4BF802 
+X-CRM114-Status: GOOD (  12.92  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -69,90 +86,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] locking: data race on req->node.prio in cpu_latency_qos_update_requ=
-est
---
+On Mon, Sep 21, 2026 at 05:04:41PM +0800, Jinjie Ruan wrote:
+> If load_other_segments() fails after image->elf_headers is assigned,
+> the memory lifecycle is safely managed by the global kimage object
+> and will be freed in arch_kimage_file_post_load_cleanup().
+> 
+> However, during a retry loop in image_load(), a subsequent iteration
+> will allocate a new buffer and overwrite image->elf_headers. This
+> permanently leaks the stale memory from the previous iteration before
+> the global cleanup can track it.
+> 
+> Fix this by explicitly freeing the stale `image->elf_headers` buffer
+> before assigning the newly allocated headers.
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Thomas Huth <thuth@redhat.com>
+> Cc: Breno Leitao <leitao@debian.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Yeoreum Yun <yeoreum.yun@arm.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: stable@vger.kernel.org
+> Fixes: 108aa503657e ("arm64: kexec_file: try more regions if loading segments fails")
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+>  arch/arm64/kernel/machine_kexec_file.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-commit d19f16780c138f4d33dfa7e439454d2244724233
-Author: Roman Kagan <rkagan@amazon.de>
-
-PM: QoS: Add a sysfs CPU latency request with a boot-time value
-
-This commit adds a CPU latency limit requested by user space for all CPUs,
-exposed via a sysfs attribute. It operates similarly to the per-CPU resume
-latency request but acts as a single PM QoS request shared by the entire
-user space.
-
-Link: https://patch.msgid.link/20261008-b4-cpuidle-shallow-v1-1-c19e71127b1=
-4@amazon.de
-
-> diff --git a/kernel/power/qos.c b/kernel/power/qos.c
-> index 1944dbeb0d4c9..f381361939079 100644
-> --- a/kernel/power/qos.c
-> +++ b/kernel/power/qos.c
-
-[ ... ]
-
-> +static ssize_t pm_qos_cpu_latency_us_show(struct device *dev,
-> +					  struct device_attribute *attr,
-> +					  char *buf)
-> +{
-> +	s32 value =3D READ_ONCE(cpu_latency_qos_sysfs_req.node.prio);
-> +
-> +	if (value =3D=3D 0)
-> +		return sysfs_emit(buf, "n/a\n");
-> +	if (value =3D=3D PM_QOS_CPU_LATENCY_DEFAULT_VALUE)
-> +		value =3D 0;
-> +
-> +	return sysfs_emit(buf, "%d\n", value);
-> +}
-> +
-> +static ssize_t pm_qos_cpu_latency_us_store(struct device *dev,
-> +					   struct device_attribute *attr,
-> +					   const char *buf, size_t n)
-> +{
-> +	s32 value;
-> +	int ret;
-> +
-> +	ret =3D cpu_latency_qos_parse(buf, &value);
-> +	if (ret)
-> +		return ret;
-> +
-> +	cpu_latency_qos_update_request(&cpu_latency_qos_sysfs_req, value);
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-[Severity: Low]
-Can concurrent writes to this sysfs attribute trigger a data race?
-
-This calls cpu_latency_qos_update_request() on the globally shared
-cpu_latency_qos_sysfs_req object without external locking. Inside
-cpu_latency_qos_update_request(), there is a fast-path check:
-
-    if (new_value =3D=3D req->node.prio)
-        return;
-
-This performs a plain lockless read of req->node.prio, which concurrently
-races with modifications under pm_qos_lock via plist_node_init() in
-pm_qos_update_target().
-
-The pm_qos_cpu_latency_us_show() function correctly uses READ_ONCE() for
-this field, but the plain read on the update fast-path could cause KCSAN
-warnings or undefined behavior if multiple threads write to the sysfs
-attribute simultaneously.
-
-> +
-> +	return n;
-> +}
-> +
-> +static DEVICE_ATTR_RW(pm_qos_cpu_latency_us);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261010-b4-cpuidle=
--shallow-v2-1-adede7dd9077@amazon.de?part=3D1
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
 
