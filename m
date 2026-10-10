@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D720FCA9EC0
-	for <kexec@archiver.kernel.org>; Sat, 10 Oct 2026 08:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2FBC4CA9EBE
+	for <kexec@archiver.kernel.org>; Sat, 10 Oct 2026 08:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=EMhRMdEboRulS299sQmhaXW+YI7ZYoe1z6XHEW4vJjs=; b=M4Bn5i5Q0SmYK8qo4Io4FyEYg8
-	7i9+kl/D7SXvN8PthS/IAvRpM3TerFAf++badO6gaFek4DPhk5lg1MKvTieogZtqaplOJ1WugAlNM
-	I6MgGG/qFjQFj9IfPipwRI449OwqRxgsP69DWyTZh52QCjTgSHljx7beHA55vwZI1VZT0UI7LJ1ku
-	l/pGc+0/mQTjKuKdYfcEu2edo/AMYnbncB1Lzsssgbi5H/zxW9XmiEneTwR8btlC4c3osF7w75bPK
-	bRkJrtgotgQg61Fw/xUIf6QANyEM9KICJfD20DAZgB8OS08qylcGCFd6WC6EcmxLzR4rFYYDUdYTu
-	H/kZdsDg==;
+	bh=9aAKNdFlAWIBUhCteIbdgam8eQs/tWYWWSOa0TvAgNk=; b=KDmtdRMV7HvLfjOMoIt9JuGY+x
+	Fk9sIXL8tqUaaNUl2n2ms2bkSiTYrJSjPN9kIlDM5ITvc2aXqCfIODF7cl7AaXDxAhiEQB/Mi6qK/
+	i4mLZDZs2jbtyjcs+ozZ4fN6OLqr4RDm3i6PKPi8Uan6zSGQyux6B0WGsNi1B4WpFi+E3ZAx0RHBg
+	kOiX7HG4zk2BH8NZc45dQX+6NYfFZ0c1D5rXUo9jM8LZTtN5uJkBPhwQRE+8FAo/NFVkyE0yin0Jw
+	3Inxz8gybCPJx7Ysxm2jpDvYx7zylv09RuKTpA1zvFrrEnpua7luQWqFbAzEF5nvO4KE8FQpkoQ72
+	pS9oIDYQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xFSgF-00000007hJT-1mwm;
-	Sat, 10 Oct 2026 08:43:47 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xFSkO-00000007hkZ-0R7E;
+	Sat, 10 Oct 2026 08:48:04 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xFSgD-00000007hJ6-3LGU
+	id 1xFSkM-00000007hjW-3eGD
 	for kexec@lists.infradead.org;
-	Sat, 10 Oct 2026 08:43:45 +0000
+	Sat, 10 Oct 2026 08:48:02 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 85DBE60120;
-	Sat, 10 Oct 2026 08:43:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB5161F000FF;
-	Sat, 10 Oct 2026 08:43:35 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 4704143F5E;
+	Sat, 10 Oct 2026 08:48:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93D321F000FF;
+	Sat, 10 Oct 2026 08:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791621824;
-	bh=EMhRMdEboRulS299sQmhaXW+YI7ZYoe1z6XHEW4vJjs=;
+	s=k20260515; t=1791622082;
+	bh=9aAKNdFlAWIBUhCteIbdgam8eQs/tWYWWSOa0TvAgNk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=gjJGCDC+KFlQQ26bxZqDLXuKbl4aNueNBLvuMQMHUN4tKQ0Ex3Ln42ZwAoFIzAPhW
-	 4n4luK6SIuM55oNlIsJpZApLqeE2TcNDmj4froU2AjsK2W0MfdHtxRKsZbuLyGEhnX
-	 czgWTxN73f/MgPDW8s24C0QrAl37lsiYNUj/m8LXdd5+OhLL8P7eUCdXlTir4zjR/4
-	 3G8vXsxdlEo9OJKIS0nL8mr+1S4xUHANWrW4NdhdvZo3BcyyovSeBrZAkVJx0QEFNe
-	 Q2xtPUfHiVmAES+sUYYsLsnH/jsVgcxjYijX4aOkIZNR+jDTVqPHrlfovDe3tAClzu
-	 2CHSoRoF4KnIw==
-Date: Sat, 10 Oct 2026 10:43:32 +0200
+	b=a+QntHaBhv0z8VDbqJJkqrAwEbrFgBRg9/Xdm5ENmSUmHKoLcSJ8FMMZ1gUr4vKt2
+	 kGmnMkcNDCeDjoev+XtP9mnEW/W3AbTtLQlms8kGI99KHAiN8gB4Ms0D0wlymWzpY3
+	 A9bZ3rVrc8o9I5DkUPZn69Dq+TWk/7MmKxXr0QQB+04WP/nEaGg0ZWk5RR+xz+Bss8
+	 7j/ghcFbgoFQw9puG4IAQz8wyGEuft4Vd85CchZXZtPtCYMZJC3Cw2LlLaQBeKgVQW
+	 LkWEQNOgeGNWM1wyUpEfoQkQoV3dm7cHU5Fl9S+m6qv4N2Kw4TOV+2TKCNPET8VLZ9
+	 VReZAo7MXRnpw==
+Date: Sat, 10 Oct 2026 10:47:52 +0200
 From: Mike Rapoport <rppt@kernel.org>
 To: David Matlack <dmatlack@google.com>
 Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
@@ -67,15 +67,15 @@ Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
 	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v9 01/13] PCI: liveupdate: Set up FLB handler for the PCI
- core
-Message-ID: <asn6tKL72RXItqMD@kernel.org>
+Subject: Re: [PATCH v9 03/13] PCI: liveupdate: Track incoming preserved PCI
+ devices
+Message-ID: <asn7uP123pDkdkSm@kernel.org>
 References: <20260918200640.887030-1-dmatlack@google.com>
- <20260918200640.887030-2-dmatlack@google.com>
+ <20260918200640.887030-4-dmatlack@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260918200640.887030-2-dmatlack@google.com>
+In-Reply-To: <20260918200640.887030-4-dmatlack@google.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,121 +92,36 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 Hi David,
 
-On Fri, Sep 18, 2026 at 08:06:27PM +0000, David Matlack wrote:
-> Set up a File-Lifecycle-Bound (FLB) handler so that the PCI core can
-> preserve its own state across a Live Update kexec.
+On Fri, Sep 18, 2026 at 08:06:29PM +0000, David Matlack wrote:
+> During PCI enumeration, the previous kernel might have passed state about
+> devices that were preserved across kexec. The PCI core needs to fetch
+> this state to identify which devices are "incoming" and require special
+> handling.
 > 
-> Preserving a PCI device across kexec requires preserving two independent
-> sets of state:
-> 
->  - Driver state, e.g. everything vfio-pci needs so that userspace can
->    keep using the device in the new kernel. The driver preserves this
->    itself and the PCI core is not involved.
-> 
->  - PCI core state, e.g. which devices are preserved, so that the new
->    kernel knows not to disturb them while they are still running and
->    doing DMA. That is what this commit adds, serialized into struct
->    pci_ser.
- 
-...
-
-> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-> new file mode 100644
-> index 000000000000..66dbee0bd3cf
-> --- /dev/null
-> +++ b/drivers/pci/liveupdate.c
-> @@ -0,0 +1,206 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * Copyright (c) 2026, Google LLC.
-> + * David Matlack <dmatlack@google.com>
-> + */
-> +
-> +/**
-> + * DOC: PCI Live Update
-> + *
-> + * The PCI subsystem participates in the Live Update process to enable drivers
-> + * to preserve their PCI devices across kexec.
-> + *
-> + * Preserving a device requires preserving two independent sets of state: the
-> + * driver's own state, which the driver preserves with no involvement from the
-> + * PCI core, and the PCI core's state about the device, which the next kernel
-> + * needs so that enumeration does not disturb a device that is still running.
-> + * This file implements the latter.
-
-This does not look good in html docs :(
-
-> + *
-> + * :ref:`FLB <flb>` Data
-> + * =====================
-> + *
-> + * Userspace decides which devices are preserved, using :ref:`LUO <luo>` file
-> + * preservation: a driver exposes a file that represents a single PCI device,
-> + * and userspace preserves the device with
-> + * ``ioctl(LIVEUPDATE_SESSION_PRESERVE_FD)`` on that file. Binding preservation
-> + * to a file gives it proper lifecycle management, e.g. the preservation is
-> + * undone if userspace cancels it or goes away. How a driver exposes that file
-> + * is up to the driver and invisible to the PCI core (vfio-pci variant drivers,
-> + * the first intended use-case, use their per-device cdev).
-> + *
-> + * LUO only knows that a file was preserved; it does not know that the file
-> + * represents a PCI device. Drivers therefore register their
-> + * struct liveupdate_file_handler with the PCI core:
-> + *
-> + *  * ``pci_liveupdate_register_flb(driver_file_handler)``
-> + *  * ``pci_liveupdate_unregister_flb(driver_file_handler)``
-> + *
-> + * LUO then refcounts the PCI core's FLB against the files preserved by that
-
-Please spell out reference count
-
-> + * handler, and that refcount drives the lifetime of struct pci_ser:
-
-           and here too  ^
-
-> + * pci_flb_preserve() allocates and preserves it when the first file is
-> + * preserved, and pci_flb_unpreserve() frees it when the last file is
-> + * unpreserved. In the next kernel, pci_flb_retrieve() hands the PCI core the
-> + * struct pci_ser built by the previous kernel, whenever the PCI core asks for
-> + * it (e.g. during enumeration), and pci_flb_finish() frees it once the PCI
-> + * core is done with it.
+> Add pci_liveupdate_setup_device() which is called during device setup
+> to fetch the serialized state (struct pci_ser) from the Live Update
+> Orchestrator. The first time this happens, pci_flb_retrieve() will run
+> and convert the array of pci_dev_ser structs into an xarray so that it
+> can be looked up efficiently.
 
 ...
 
-> diff --git a/include/linux/kho/abi/pci.h b/include/linux/kho/abi/pci.h
-> new file mode 100644
-> index 000000000000..4096e3cd3324
-> --- /dev/null
-> +++ b/include/linux/kho/abi/pci.h
-> @@ -0,0 +1,65 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +/*
-> + * Copyright (c) 2026, Google LLC.
-> + * David Matlack <dmatlack@google.com>
-> + */
-> +
-> +#ifndef _LINUX_KHO_ABI_PCI_H
-> +#define _LINUX_KHO_ABI_PCI_H
-> +
-> +#include <linux/bug.h>
-> +#include <linux/compiler.h>
-> +#include <linux/types.h>
-> +
-> +/**
-> + * DOC: PCI File-Lifecycle Bound (FLB) Live Update ABI
-> + *
-> + * This header defines the ABI for preserving core PCI state across kexec using
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 3781e2b5f095..8af20f558086 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -273,7 +273,7 @@ config VGA_ARB_MAX_GPUS
+>  
+>  config PCI_LIVEUPDATE
+>  	bool "PCI Live Update Support"
+> -	depends on PCI && LIVEUPDATE
+> +	depends on PCI && LIVEUPDATE && 64BIT
 
-This does not look nice in html docs either :(
+This could have been there from the first patch, no? :)
 
-> + * Live Update File-Lifecycle Bound (FLB) data.
-> + *
-> + * This interface is a contract. Any modification to any of the serialization
-> + * structs defined here constitutes a breaking change. Such changes require
-> + * incrementing the version number in the PCI_LUO_FLB_VERSION number.
-> + */
+>  	help
+>  	  Enable PCI core support for preserving PCI devices across Live
+>  	  Update. This, in combination with support in a device's driver,
 
 -- 
 Sincerely yours,
