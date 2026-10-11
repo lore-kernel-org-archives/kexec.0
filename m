@@ -4,71 +4,140 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A452ACA9EC7
-	for <kexec@archiver.kernel.org>; Sun, 11 Oct 2026 14:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 14454CA9EBD
+	for <kexec@archiver.kernel.org>; Sun, 11 Oct 2026 20:13:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=+UhTe7v9a62PlALZJIz+/72zupM4/GB+WgMVaR+OrXk=; b=i7UCXP1ozRDx1iWCNnLzNwaRbO
-	fC0CoyXGpC2tJB2xm1811PPt51/9awMO/xBnqm2Fw9n++35xikvK5AQdjKDO46DxtESaHzW/wCzCV
-	QrReSNL1TczRQ5lXY65PI0trrbjISZVihyRklEgXYbVg12CzinhOQrHK5lmojrfdjMwOQOQKuoiZj
-	0oL3CvZNdgyuJtPjwB5FO2zXeNmoQ4dP3W2T3n0D0acF976crETxX3fPygN1GCeewkujkXNY+os5U
-	eHUf9B8n4BXdbgo+eC8kOJf+IpuYZ89iNBeMMu5iuah78LbmZHs5/Wao3qCN0tZUPfTyyGv5eHCVk
-	AsI1jLKQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=wmAM5xLaftpRNj6Du93N7EC09cIF/yyoTyxPszIgBgw=; b=KewsdQFcpc1Xk3yvUcr9VNHfDN
+	Z7rkA+JLqc+NV/yW24VFEMPB5YUDwonVfLQWg1QfoFKmFxMkDNJV4YvddSRv2+iLX6MFcpA6bLCdx
+	9oiL2qORpnPs7/AARJ97iKRnDkaxAmGtaSZ8ipIHV3dbQ4QPewk2d6u05BZPZZZwWezBCHy0WDgS3
+	cKyUZVp0WKwC7UDeKeqr0xitQIhjqPF/XOEDRCS7VhJZ18+YqkwmKXYeCN002l0vZsC8mqGwvrB3H
+	jBn2CNK3LDu//9A7eS6sCjSCBR+KLMpsOZdCN+4WosEWsGELnzCowj+hzGme8HM1IXkFJePdorB/r
+	VWwWo4yA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xFuVJ-000000097Wk-40HU;
-	Sun, 11 Oct 2026 14:26:21 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xFzvO-00000009Njz-30rW;
+	Sun, 11 Oct 2026 20:13:38 +0000
+Received: from mail-westus3azon11010054.outbound.protection.outlook.com ([52.101.201.54] helo=PH7PR06CU001.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xFuV7-000000097WN-2lLQ
+	id 1xFzvK-00000009Njb-3qIj
 	for kexec@lists.infradead.org;
-	Sun, 11 Oct 2026 14:26:11 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 29AF244001
-	for <kexec@lists.infradead.org>; Sun, 11 Oct 2026 14:26:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E27A1F008A0
-	for <kexec@lists.infradead.org>; Sun, 11 Oct 2026 14:26:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791728769;
-	bh=+UhTe7v9a62PlALZJIz+/72zupM4/GB+WgMVaR+OrXk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=L0N4LcL3MKnHNhKObDTtX6lFimRyRheB/BfPx0CZpTlPRPZeB9U3ybqp6HP3Oxi2S
-	 SB4GJ2UAqruQxqY+ER9SzdrLbpzl4KWERj6wU/YCZ3V9H0E4rngUEgv1d8zEPTr74w
-	 3Z5qzz6X/KP+MkGH+WFEliyUg/7kjwV+cP+IbAeGuS7X69aFQeXVfSPlqxgkcr77a0
-	 PlwNMGr+cbBZrR1XcsyRO61WRtde2E++vNj7JRIp6cDHA9Mm/97/bhWtlzRcd+sFv6
-	 uTJQKUd6F6tXGIEiDCXAz08u9B2GOBrpkDHURN1ZB3M2KGEjMCwtI6ECDN+5QypjPf
-	 L3YdvsEtm8Ubw==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6af9a90e4bbso1143222a12.0
-        for <kexec@lists.infradead.org>; Sun, 11 Oct 2026 07:26:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBwl8IDkEQ7NFQWUXKdhQD8eRch6yO+FgOTO6ZSMg+czSzJ0uBXZeyhttQkassaKZzB50ah1Ng==@lists.infradead.org
-X-Gm-Message-State: AFq9FYJb7urSBnBlxk/+5HDGcO0VfzIbbOcHrspxgF3oUmZnOEa/Zg/s
-	SfxUrZbPOME912QCqUrv5UveJ705Y/DvXgehnMHJWpWndPpAWNqiwcgFhxDQGx2RPLpP3ESrN/6
-	e7AN0wid1pJfBRjwth31vduXCbGrvTu0=
-X-Received: by 2002:a05:6402:50cd:b0:6af:7d49:728e with SMTP id
- 4fb4d7f45d1cf-6b17c24437amr6097984a12.16.1791728767596; Sun, 11 Oct 2026
- 07:26:07 -0700 (PDT)
+	Sun, 11 Oct 2026 20:13:37 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YirTkQewx1mmIn8T/TYgP/l42jtRkXSLdxu7e33fqDnAC9Uiu6fOHztOY0v5YLpTK3bUWlfqGQakTqKezHShqGUpVx4dZxT9aKSBttBZPexMXGI1kFFWKL9NTyiMQuPFF8eNy8dkxH5btoMmuT6tmA94pgZmQrqfscrqMXeE/J4rMo4Zykxdrl9smHP9ujfysq3j3hrfFczeZe2EJD7MVuPas3COyYRrz7h+QIflkmb9Qg8DwI2Jxy6uFCS9TR1EX1JGYXWKh1HCwpK1NrCYevtZhr7mfKMI7thFibMokvrhlNjNrUai0HHrjignZIaNIc7/rYR9IELtQt2rok3hgg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wmAM5xLaftpRNj6Du93N7EC09cIF/yyoTyxPszIgBgw=;
+ b=YpTFetv6ZfVIZiedxmOiY8PjVXY4TTXo6zr16rszPVOELKw0J1sJAoGHy0UeLbMqW6Tm3dUTdQdVdwdeSbamTrSjfs0p4w6M6WMy6ub2B16wK+WgKGC9b/1KBSsqcwiD0VH6B4uo7KHXYL0JXWbwC1LkYVB4337+8sRwafH8nBuYSK8IBzVIWX21rMpuamtXlcyWrQDI1LK+NJ1ziNfFzJ8RTt4dW0R/2N35oOj9e2AdfVn5Grm1K60AoPNZFccKvnLRBOOe4oLpbuzhjJL+PnPhRkSdiJkqQUBni3cYFkP9nMmufzmhUjISQ/ZCTc7rxH7JUNGlUZNZCaSBoDz0WA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wmAM5xLaftpRNj6Du93N7EC09cIF/yyoTyxPszIgBgw=;
+ b=CWgJcuMaTXFYlBV3uDbc347RNWBQbvZOqfzRBeMjo+Gms8tMfKKWzeoW3mRLcl2xPb74m/Db+4OrHkspydq8B+YZFiIUEylo58l9ZS1fIxYR7q4UXvhUCMITTxfzk49+2DHYWBwcxpDYcj+GHDCYSzmT3c+tea9rEjR94Zq61KHgUhNLFUI1MLGnbuAqoN0jRQm86uHCnVZeArN5ADCGxobahrlwkR33G6MVRjSdr9hsmAEUW/fbGbDMm1Tj/avvZftZM8BI1Izd6e48VAhDJtacQ3yvq2btr44Xg8nnmEabBQyhEDnjxOspQZ8LXsRKX8pbS3b7nUgq0aVhDcaXxw==
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CHBPR12MB731189.namprd12.prod.outlook.com
+ (2603:10b6:610:33d::12) by SJ2PR12MB8979.namprd12.prod.outlook.com
+ (2603:10b6:a03:548::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.496.20; Sun, 11 Oct
+ 2026 20:13:26 +0000
+Received: from CHBPR12MB731189.namprd12.prod.outlook.com
+ ([fe80::b0e5:123d:fe06:e10d]) by CHBPR12MB731189.namprd12.prod.outlook.com
+ ([fe80::b0e5:123d:fe06:e10d%6]) with mapi id 15.21.0496.015; Sun, 11 Oct 2026
+ 20:13:26 +0000
+Date: Sun, 11 Oct 2026 17:13:25 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Pingfan Liu <piliu@redhat.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Simon Horman <horms@kernel.org>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Philipp Rudo <prudo@redhat.com>, Viktor Malik <vmalik@redhat.com>,
+	Jan Hendrik Farr <kernel@jfarr.cc>, Baoquan He <bhe@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	kexec@lists.infradead.org, bpf@vger.kernel.org,
+	systemd-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv7 00/13] kexec: Use BPF lskel to enable kexec to load PE
+ format boot image
+Message-ID: <20261011201325.GA918242@nvidia.com>
+References: <20260322014402.8815-1-piliu@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260322014402.8815-1-piliu@redhat.com>
+X-ClientProxiedBy: YT4PR01CA0127.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:d5::29) To CHBPR12MB731189.namprd12.prod.outlook.com
+ (2603:10b6:610:33d::12)
 MIME-Version: 1.0
-References: <20260924075655.375632-1-lianyangyang@kylinos.cn> <20261008023419.118623-1-lianyangyang@kylinos.cn>
-In-Reply-To: <20261008023419.118623-1-lianyangyang@kylinos.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 11 Oct 2026 22:25:56 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7-sRJ76282PVtwr66mLvEzhx+vaWvP5u5C++7zwVwwWw@mail.gmail.com>
-X-Gm-Features: AclHuK_sFAFRkuAykbh-HP4qmaiZ_WqlFu5h1LjeuxXTvJ2ziMzxclLf_HVqQo8
-Message-ID: <CAAhV-H7-sRJ76282PVtwr66mLvEzhx+vaWvP5u5C++7zwVwwWw@mail.gmail.com>
-Subject: Re: [PATCH v3] LoongArch: kdump: add arch_crash_save_vmcoreinfo() support
-To: Yangyang Lian <lianyangyang@kylinos.cn>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Baoquan He <baoquan.he@linux.dev>, 
-	Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Dave Young <ruirui.yang@linux.dev>, 
-	WANG Xuerui <kernel@xen0n.name>, kexec@lists.infradead.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Haoran Jiang <jianghaoran@kylinos.cn>, 
-	Tao Cui <cuitao@kylinos.cn>, George Guo <guodongtai@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CHBPR12MB731189:EE_|SJ2PR12MB8979:EE_
+X-MS-Office365-Filtering-Correlation-Id: 83446118-c180-4a58-ec83-08df27d41ba8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|1800799024|376014|366016|7416014|6133799003|22082099003|18002099003|10067099003|3023799007|11063799006|261009223027099003|56012099006;
+X-Microsoft-Antispam-Message-Info: kh+Z2yfpKPAdMO4xGhyDvVcgfehAmDydMNbvBXruisHW4l05kH7aJbaOOiDIJp0UKgSxaUf9fOap/mGS/muq6t6IlaHWe1RKDpeEOK78B/73T8CAdMzMnojYlFsI0PL46oeJHWWcDMoET9MrrICh/HzgqhM2raWc/bX1ITw31GJdwSkgZ05HGDnECTSUcDCVSPCh/atIlC9dbUsmV2nQyVcyG7t5Uz3wtL/ej8VyDR9SceeStxTheEnrzIWESuhbwk8jq9/4xWRv9y2hXqoktbrOKjKAPJ1NBOwelzs3jGgtGCUG8s5rF1oIhv0wkGUFUiHdcwdNQKIy2ElKyzXcmOUwsVaOiKY2bLmLFRJ9UXz6ASCuQVdPrHfwz0WSvn7zbnJ4cv7nIpewRy9/3inx4zGsGTRhm6lSeR5CyENDXGdIL4sU5esBeedGyt0+KWL87EEZSNGgQkj6LFXlxhZHjNYML2XonokrXL1K/NDaOg9mZsaaK438V2rc9qFJyB0qyLzqZSWK2OUwn/T4ag/o6eMpBpEvGR4B82CHykQswV6xOcaAdddSh1uqaC5yCGqS5Dgzhi6DS0kDcqIEUw/6ORQkaRBqpXFDZgcMsyU5mwwsJlGdceeGxUQpJ3Jr0L9HtfIx4mJz6o7mBpHCRHwTlNIKIQ0n6H7/rRUlsCuNiuc=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CHBPR12MB731189.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(376014)(366016)(7416014)(6133799003)(22082099003)(18002099003)(10067099003)(3023799007)(11063799006)(261009223027099003)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Zo2sO7j5WttnCBXoo9gin6n/r2Zl/ksAvowKUMRnp5KCpNL8aG0oQJyhPpFH?=
+ =?us-ascii?Q?kyK3mH7Tmq5gsiKcP7eqUw65pNXYPPOeLxzKF+5jmo/KOaufhXC3LFnzvByj?=
+ =?us-ascii?Q?PRCTlbwbgAReT5zvRGBW+0jVtgUwrkhtyuZKan1/fhKpOgUYCAyP77tyo78M?=
+ =?us-ascii?Q?IC0OqIe4qFi5jEEIyAkJsAH3bEDKeNKsBeD1LZk5xqGgiapvNJBD6cjGZ0Ju?=
+ =?us-ascii?Q?Z+fUfYxTDhKO9ojy8R3/Lrmfk5QA3iCCLRtWh0ezr/gzrup+nzOwpdtzxv5q?=
+ =?us-ascii?Q?ewaZS/gYK0kqYmRNKW0MSzcAZS/HLVLy29vvIoKxo3HrBljbZSAfttrAg/5i?=
+ =?us-ascii?Q?AErXxD5onRXT95SCUZzqRl8feTjNxnBVIvHB5hrgPZNQeEYBi01/hfZVEtII?=
+ =?us-ascii?Q?XR5Wgrfbf/Gu0qxqKSZhHnM4EZCSm82+CDlcNyBie3DG+uT2RiG4Ommilu6k?=
+ =?us-ascii?Q?D95nWgvr2Uj9c3US5u1SbNoF4EEE2+XmZJrpCdCyMemk0nUFfjbh95sULNER?=
+ =?us-ascii?Q?LDxb65YLp9H0LdvW/w/q1qGqLYSUH7SzUYMRlNH4BPVF1AWNH1tXIW/2OBM+?=
+ =?us-ascii?Q?bs79F+fDum6A8TOBWsu9m3LMI93tYHY2mjnLA4XLFJR49xyGUQLYBT4dEK3Z?=
+ =?us-ascii?Q?1u3wvZyKmRXy3S5lsWRbWaC1z2fdJ2APr1K9lcdj4lg8HBHx8Movc9vrAzLW?=
+ =?us-ascii?Q?eRouZbrX+WNzAVgsS74d5DoM//kZwawVkpPkEkyIKBLcHf2ep/qyX2MEmZH8?=
+ =?us-ascii?Q?QG8emhDIxXbfEvqDOLA6/WIAnfgRW2T0oACYt80mk6Wejy1TpvJB2+vqz/tz?=
+ =?us-ascii?Q?44m5JFqKmigf0AbyiksfmsFD1K8gUz74dPjI0bECkKMlC0GWuvflGubInlLE?=
+ =?us-ascii?Q?k+8QjYchZ1Y4R+ff3lNEXqioJtiwoX54WhbbMC5Aqot+ZbSow7MlRJZd8w1y?=
+ =?us-ascii?Q?5WvUeSrsqjiT92AUeSarrCS325pa9JbffexBF/cdHLsC3Trr/y+3p5Rzx/va?=
+ =?us-ascii?Q?ZYmqcRry4AEZb4aio4aYVtidpdk6kB5fm4J/Z+madzcdMZS1zDWtDInsZ3g3?=
+ =?us-ascii?Q?qdqEi6AYf4eXu+aSjcbvLo3VLJDpp6AHns2CqHu4ZtQKPsugHxYwLNwO5keH?=
+ =?us-ascii?Q?3rFKTVUwHX7JfpXKgu+GE2HlqISmrnfFiIBnEyCoycI2Ix43GT9U19Y7qIcV?=
+ =?us-ascii?Q?BxPk1IGsaI9SWPdgg1GEi/YHbIwdOx6TpcalajWtptDpd/wTGhE396glP8GX?=
+ =?us-ascii?Q?UC2dskZgVLEGcSOjnLL792URNgGXV0j1rXdnP420dxvurh4kohP7CHIZpPxX?=
+ =?us-ascii?Q?cr7/JwP26GL3JjfpAPxxrseruZ1fiNbEAigWWusSFaW+QZM2szmw+SGZVg/n?=
+ =?us-ascii?Q?US1Pt2zsuk/anLGd3aZODZLG+uxx3xYzChlyuTGAmaG25qhevI3+EsntlBFC?=
+ =?us-ascii?Q?jiA9B3L1Hxl8FFc495mE6VGbf6DaHjnvf7VKRf3G78/C5fbW4hY1W53e2dGD?=
+ =?us-ascii?Q?h22echJ6sZhfA1ZXfsnt57m+DKdjzyBvxcIUpj765+aae+xojgA20N6AxiO1?=
+ =?us-ascii?Q?nsuVVzm9xt98lv3RQ5drJY/9Obc0mRgnTeJ/yZqC74fudXsmJnQQi0mOYEcs?=
+ =?us-ascii?Q?skERT9XkWqpugfYuABJxdADF1IKdQCXc1TPeasdrADxxbhn4yDwYnHsGOcUx?=
+ =?us-ascii?Q?JpvrH495MUusfUd/VQLEbpAMrewFgRWL4r0azSbpiAnPU/B/?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 83446118-c180-4a58-ec83-08df27d41ba8
+X-MS-Exchange-CrossTenant-AuthSource: CHBPR12MB731189.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2026 20:13:26.2892
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Az3QIS9LzzUuuGGSJD/fq/axPVkbzY4FI3hSMVn4Nfam/1F/8WbHcQtMbqXKZ8hq
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8979
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261011_131334_997425_4DEBCB42 
+X-CRM114-Status: GOOD (  26.95  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,155 +152,97 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Oct 8, 2026 at 10:35=E2=80=AFAM Yangyang Lian <lianyangyang@kylinos=
-.cn> wrote:
->
-> Since commit 23c85094fe18 ("proc/kcore: add vmcoreinfo note to
-> /proc/kcore") the kernel has exported the vmcoreinfo PT_NOTE on
-> /proc/kcore as wellas /proc/vmcore.
->
-> LoongArch does not provide arch_crash_save_vmcoreinfo(), so the
-> arch-specific values are missing from the vmcoreinfo PT_NOTE. The
-> generic exporter in kernel/vmcore_info.c already provides
-> NUMBER(VMALLOC_START), but tools like crash cannot derive the module
-> and vmemmap ranges, VA_BITS, or the KASLR offset of a LoongArch dump.
->
-> Since commit 18210a104bb9 ("LoongArch: Expand module virtual address
-> space to 2GB") the vmalloc and module boundaries are no longer stable
-> across kernel versions either, so vmcoreinfo is the only reliable
-> source for them.
->
-> Provide this function in a separate file that is built at the same time
-> as its caller in kernel/vmcore_info.c, and add a LOONGARCH64 section to
-> Documentation/admin-guide/kdump/vmcoreinfo.rst.
->
-> Reported-by: Haoran Jiang <jianghaoran@kylinos.cn>
-> Suggested-by: Haoran Jiang <jianghaoran@kylinos.cn>
-> Tested-by: Tao Cui <cuitao@kylinos.cn>
-> Co-developed-by: George Guo <guodongtai@kylinos.cn>
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> Signed-off-by: Yangyang Lian <lianyangyang@kylinos.cn>
-> ---
-> V3 -> V2: Export PAGE_OFFSET, as suggested by Huacai Chen. It is not a
->           fixed value on LoongArch (PAGE_OFFSET =3D CACHE_BASE + PHYS_OFF=
-SET)
->           and RISC-V already exports it.
-Though Dave thought PAGE_OFFSET needn't be exported, I think export is
-also OK (and the fact of fixed value may be changed in future). So I
-applied V3 to loongarch-next.
+On Sun, Mar 22, 2026 at 09:43:49AM +0800, Pingfan Liu wrote:
+> *** The history ***
+> 
+> Nowadays, UEFI PE bootable images are becoming increasingly popular
+> among distributions. Currently, we have several kinds of image format
+> parsers in user space (kexec-tools). However, this approach breaks the
+> integrity protection of the images. To address this integrity protection
+> concern, several approaches have been proposed to resolve this issue,
+> but none of them have been accepted upstream yet.
+> 
+> The summary of those approaches:
+>   -1. UEFI service emulator for UEFI stub
+>   -2. PE format parser in kernel
+>   -3. Signing the arm64/boot/Image
 
-Huacai
+I recently had an interesting discussion with Ard around DRTM for
+kexec and we sort of independently concluded that #1 would be the best
+(only?) option there.
 
-> V2 -> V1: Export VMEMMAP_END + 1 to make it an exclusive bound, matching
->           what tools like makedumpfile expect.
->           Add Tested-by tag from Tao Cui.
->
->  .../admin-guide/kdump/vmcoreinfo.rst          | 36 +++++++++++++++++++
->  arch/loongarch/kernel/Makefile                |  1 +
->  arch/loongarch/kernel/vmcore_info.c           | 22 ++++++++++++
->  3 files changed, 59 insertions(+)
->  create mode 100644 arch/loongarch/kernel/vmcore_info.c
->
-> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentati=
-on/admin-guide/kdump/vmcoreinfo.rst
-> index 7663c610fe90..dd1f1d6225b6 100644
-> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> @@ -594,3 +594,39 @@ va_kernel_pa_offset
->
->  Indicates the offset between the kernel virtual and physical mappings.
->  Used to translate virtual to physical addresses.
-> +
-> +LOONGARCH64
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +VA_BITS
-> +-------
-> +
-> +The maximum number of bits for virtual addresses. Used to compute the
-> +virtual memory ranges.
-> +
-> +PHYS_OFFSET
-> +-----------
-> +
-> +Indicates the physical address of the start of memory. Used to translate
-> +virtual to physical addresses.
-> +
-> +PAGE_OFFSET
-> +-----------
-> +
-> +Indicates the virtual kernel start address of the direct-mapped RAM regi=
-on.
-> +Used together with PHYS_OFFSET to translate between virtual and physical
-> +addresses.
-> +
-> +KERNELOFFSET
-> +------------
-> +
-> +The kernel randomization offset. Used to locate the kernel text in
-> +virtual memory. If KASLR is disabled, this value is zero.
-> +
-> +MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMA=
-P_END
-> +------------------------------------------------------------------------=
------
-> +
-> +Used to get the correct ranges:
-> +       MODULES_VADDR ~ MODULES_END-1 : Kernel module space.
-> +       VMALLOC_START ~ VMALLOC_END-1 : vmalloc() / ioremap() space.
-> +       VMEMMAP_START ~ VMEMMAP_END-1 : vmemmap region, used for struct p=
-age array.
-> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makef=
-ile
-> index 001924877772..6260c15adaba 100644
-> --- a/arch/loongarch/kernel/Makefile
-> +++ b/arch/loongarch/kernel/Makefile
-> @@ -64,6 +64,7 @@ obj-$(CONFIG_RELOCATABLE)     +=3D relocate.o
->  obj-$(CONFIG_KEXEC_CORE)       +=3D machine_kexec.o relocate_kernel.o
->  obj-$(CONFIG_KEXEC_FILE)       +=3D machine_kexec_file.o kexec_efi.o kex=
-ec_elf.o
->  obj-$(CONFIG_CRASH_DUMP)       +=3D crash_dump.o
-> +obj-$(CONFIG_VMCORE_INFO)      +=3D vmcore_info.o
->
->  obj-$(CONFIG_UNWINDER_GUESS)   +=3D unwind_guess.o
->  obj-$(CONFIG_UNWINDER_PROLOGUE) +=3D unwind_prologue.o
-> diff --git a/arch/loongarch/kernel/vmcore_info.c b/arch/loongarch/kernel/=
-vmcore_info.c
-> new file mode 100644
-> index 000000000000..e4efc35165b1
-> --- /dev/null
-> +++ b/arch/loongarch/kernel/vmcore_info.c
-> @@ -0,0 +1,22 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/vmcore_info.h>
-> +#include <asm/addrspace.h>
-> +#include <asm/pgtable.h>
-> +#include <asm/setup.h>
-> +
-> +void arch_crash_save_vmcoreinfo(void)
-> +{
-> +       VMCOREINFO_NUMBER(VA_BITS);
-> +       /* NUMBER(VMALLOC_START) is exported by the generic code */
-> +       vmcoreinfo_append_str("NUMBER(VMALLOC_END)=3D0x%lx\n", VMALLOC_EN=
-D);
-> +#ifdef CONFIG_64BIT
-> +       vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=3D0x%lx\n", MODULES_=
-VADDR);
-> +       vmcoreinfo_append_str("NUMBER(MODULES_END)=3D0x%lx\n", MODULES_EN=
-D);
-> +       vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=3D0x%lx\n", (unsigne=
-d long)vmemmap);
-> +       vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=3D0x%lx\n", VMEMMAP_EN=
-D + 1);
-> +#endif
-> +       vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=3D0x%lx\n", PHYS_OFFSE=
-T);
-> +       vmcoreinfo_append_str("NUMBER(PAGE_OFFSET)=3D0x%lx\n", PAGE_OFFSE=
-T);
-> +       vmcoreinfo_append_str("KERNELOFFSET=3D%lx\n", kaslr_offset());
-> +}
-> --
-> 2.25.1
->
+All the implementations of DRTM today live in the EFI stub and
+intercept the boot process as it goes along. After ExitBootServices
+the DRTM implementation will launch the kernel in a different way.
+Even worse today's x86 version strongly requires EFI boot services to
+connect the Linux stub with a trampoline helper provided earlier in
+the boot chain.
+
+A kexec flow that only works on decompressed vmlinux, with no option
+to run any EFI code, is going to be difficult to support. There is
+enough information and choices involved in DRTM that it is undesirable
+for the predecessor kernel to try and DRTM launch it on behalf of the
+successor, let alone trying to get the insane x86 trampolines into a
+kexec successor kernel.
+
+Given those constraints entering the successor kernel through the
+normal EFI entry point is highly desirable. This would allow x86 to
+continue to provide the DRTM trampolines through an EFI mechanism and
+means the Linux EFI stub always handles the launch with identical code
+in all scenarios.
+
+I reviewed the earlier threads and it wasn't clear why this was
+abandoned? The points Ard raised are legitimate, but I would respond
+to them:
+
+https://lore.kernel.org/lkml/20240819145417.23367-1-piliu@redhat.com/T/#m8519beebccb252861b257db390a1686686b27aeb
+
+> 1)  Implementing UEFI entirely is intractable, and unnecessary.
+
+Yes, I think that is the entire point of the general idea, that we
+should strive to have some limited EFI that is just useful enough to
+boot a UKI through to the kernel EFI entry point.
+
+> 2)  Running the UEFI emulator on bare metal is not going to scale.
+
+Well, I don't think everyone will have that choice. At least DRTM
+requires things like ARM SMCs, and x86 requires ACPI parsing, it would
+be really tricky to get those things into a userspace context.
+
+I would recast this idea as "having the kernel community own a UEFI
+emulator for every kind of bare metal is not scalable"
+
+> 3. We need to figure out how to support TPM and PCRs in the context
+> of kexec.
+
+AFAIK it doesn't really work today. DRTM significantly fixes it, and
+passing more PCR logs fixes it even more. Though I don't see that it
+has much to do with using the EFI entry point.. It is a good question
+what should systemd-shim do in a kexec case, or more generally when
+DRTM is being used. (for drtm it should probably not do anything with
+PCRs)
+
+
+IMHO, the kernel shouldn't get involved. It shouldn't try to integrate
+an EFI emulator. The kexec path in the kernel should allow userspace
+to provide a signed executable which is the emulator it wants to use
+and let other people sort it out in their own projects. Distros can
+sign the emulators they like.
+
+There are already two examples of emulators that can EFI Boot the
+kernel so there is definitely something achievable that many people
+can use. If someone wants to go crazy and support Grub, console,
+userspace EFI, etc, they can do that on their own git :)
+
+Down this path the kernel work should simply be supporting a signed
+executable (not vmlinux), and a robust way to pass more information
+through a FDT to that executable. Such that userspace can get the EFI
+emulator, the UKI, side cars and anything else nicely organized and
+labeled in a FDT so the EFI emulator has an easy job.
+
+In the current AI fueled world this looks much more tractable than it
+did in 2024 when this was last brought up.
+
+Regards,
+Jason
 
