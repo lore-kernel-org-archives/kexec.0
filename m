@@ -4,67 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 78127CC6B03
-	for <kexec@archiver.kernel.org>; Tue, 13 Oct 2026 11:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 14201CC6B12
+	for <kexec@archiver.kernel.org>; Tue, 13 Oct 2026 15:19:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=lwnXpQs8h0RkpXoBgKrIw7VtMxZRGTucGgOpbdPBGLo=; b=g/79aBO++pieYCZTyg85VHZP5I
-	I0kawU9iV2CGaqS8shGLEqFy5P5/s1c+0uqYDU1sm/UUzNUatyCP/6gKgoIfOVNhDXa+Ri4fDT6Mp
-	aMj61fHAOS9g46EtGUi9uXsnlwQR5zx6OZ/ISKJ7wvRTRfzbGwKHqToDaZ6ONmPLikxlcFEfAuG6B
-	yUDtvHhnk9nR3eM97Dutd5uCxmbHjV7kp0cnEiUhXd1fQ0deYF1NqyripYwoTd/LbZxcprzSA99NZ
-	tlf+ibaRKuIgwHQMe6DGbUshTU5DUYCw648nc4ung+eaSxHHkwtt+A0L1B45F1ajUhvK4COIOmuPQ
-	arOMB3sg==;
+	bh=WFCGbaDlX/AVQV6RAFUOj0q1sLZPldXZf8616wSFK2M=; b=YmwAVaBJuRhXd18fq7GIYnsu28
+	nGB5P5M6VpIgT2TnaxosRaET1kfykgL6JjqcBBvMifk3fqfCr6Xct9blkzNFYG+aDmUN7OzBfBHT0
+	UsjkonzqOeRtRGZSMLZnwL3GSiRG0AzJhP/BmFruarAfz9iI+GcDH+TfbJZeql/Hi9KgdhsKtkpyU
+	1CEbLu23FUhjxIYHenSdAr6FIfPF7NH+FKGaw6Pmn7T1PNYaBZpkVVe72HeupH6JeSsZpy7DM6lrQ
+	GvLTCV74RG9nVJQpVyWYTHlnruz/9KAMbApEQMgdj/j4O7yvNVExztfVS3n6WRGu+XzgEmxOcTr6e
+	MFAqDB6A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xGaHV-0000000CetU-1heZ;
-	Tue, 13 Oct 2026 11:02:53 +0000
-Received: from mailgw.kylinos.cn ([124.126.103.232])
+	id 1xGeHN-0000000DGcm-0fHp;
+	Tue, 13 Oct 2026 15:19:01 +0000
+Received: from mail-ed1-x548.google.com ([2a00:1450:4864:20::548])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xGaHS-0000000Cere-3IuQ
+	id 1xGeHB-0000000DGPI-0po2
 	for kexec@lists.infradead.org;
-	Tue, 13 Oct 2026 11:02:53 +0000
-X-UUID: 9b23fc3ac6f511f19a56ed5b684f684d-20261013
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.19,REQID:6db9e078-1538-4d08-8ef9-9329f447ff6b,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:7db8b62,CLOUDID:597e9dc93505a2ad45b7ff19eaf9495b,BulkI
-	D:nil,BulkQuantity:0,SF:80|81|82|83|102|136|850|865|898,TC:nil,Content:0|1
-	5|50|99,EDM:-3|-100,IP:nil,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,C
-	OL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_ULS,TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 9b23fc3ac6f511f19a56ed5b684f684d-20261013
-X-User: duanchenghao@kylinos.cn
-Received: from localhost [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 675544311; Tue, 13 Oct 2026 19:02:39 +0800
-Date: Tue, 13 Oct 2026 19:02:37 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: Luca Boccassi <luca.boccassi@gmail.com>
-Cc: jianghaoran@kylinos.cn, avagin@gmail.com, linux-mm@kvack.org,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	systemd-devel@lists.freedesktop.org
-Subject: Re: Question about obtaining LUO session FD for non-systemd-managed
- service
-Message-ID: <20261013110237.GA836401@chenghao-pc>
-References: <6ac99eb9.6b935c14.1905ce.7c50SMTPIN_ADDED_MISSING@mx.google.com>
- <CAMw=ZnTTUxO2ZCobEDTQUY7OZxmyJUQxg4DkhC9gTWXaDaK1dQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMw=ZnTTUxO2ZCobEDTQUY7OZxmyJUQxg4DkhC9gTWXaDaK1dQ@mail.gmail.com>
+	Tue, 13 Oct 2026 15:18:56 +0000
+Received: by mail-ed1-x548.google.com with SMTP id 4fb4d7f45d1cf-6b1bc2e62d5so2308217a12.2
+        for <kexec@lists.infradead.org>; Tue, 13 Oct 2026 08:18:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1791904727; x=1792509527; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=WFCGbaDlX/AVQV6RAFUOj0q1sLZPldXZf8616wSFK2M=;
+        b=TJr+rvqiFZJWCPB/QwT5HYvmc8eGMtfPkYn0sY2pskOZigKk2Mu1pHNIvbc6nwij62
+         EpJORIYKUJp4eGRws+XkeXfBzN9HXAXMiW4I0JmgwKub1mUzWB/Ihm/iw6fZRPqgJNvO
+         G2Ef2XQGfYr60rraQuAw14Qj3AvSt9sNwRg+IY2GVx5bLLIW0ktFvG6N0aAUryB8bJyJ
+         KyicYYvfnhbO4v1D9nsL3zP2r4WE/zhJ1eJm22g2b3UmelZlIN4GGelPydnhTmyfBDjH
+         LoorVWEpaPWpFRKFafuByr9YP7cytFRP1BPT2fBD66PQddDHQKRSNTn43JBAd7Anuw35
+         Cbsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791904727; x=1792509527;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=WFCGbaDlX/AVQV6RAFUOj0q1sLZPldXZf8616wSFK2M=;
+        b=HHT7j9siS6OxoJJJV9R4cW+LjnPwexkalmB9MjalEA6R3b4q8CUuolILnX1GGg6FCP
+         LZoB3RaVHZSL2faQtjuGPVu5Qq0EpGSnF6BPvK94PeLfXj6C7w3OXKG4e2BoRAyLn7c5
+         nx2akWJ/NSOkiXXbKHdaw2aK3WpWJCUxxUO+zCacqjReId+EYroEJRvW58cGvdsijngg
+         85grRsxobstWoRPPsYMo2J+PyA3h5mUwVulkI6S7G3Wb3VAk4n2x7nsZMxFRL7JnlwzZ
+         XMxzw/rGU6Jzu5iqxfMU+zZeePpxzzIGoVp3npgSsRpDJLSkIQNhJPZSLaEN5bqJizu5
+         3noQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxemTVnF4w+MsJVGiHdPr/IsgqDv2a4wAJfy69JU2TOk4w4v75ypWBq/gdJdsVS7Q+MEAcX5A==@lists.infradead.org
+X-Gm-Message-State: AFq9FYKJtioOmANe2s2pz0M04w761xVAQIW1UZMMHDaj5yJm0FPU3gae
+	gs7uJ0P2Cn4zGMkkFmXjg0gsgOHil5sohDmBMRijL7h/Zs5F5yc3JAWXnT1P3ZxxBI9XlH7YDSF
+	tkv+Bu/37oswlDw0WBw==
+X-Received: from edwl2.prod.google.com ([2002:a05:6402:1242:b0:6b1:a8d5:117d])
+ (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6402:1ed4:b0:6b1:ba86:5f55 with SMTP id 4fb4d7f45d1cf-6b1ba86636dmr5678473a12.35.1791904726451;
+ Tue, 13 Oct 2026 08:18:46 -0700 (PDT)
+Date: Tue, 13 Oct 2026 15:18:45 +0000
+In-Reply-To: <as4EcgiBH5jjww42@kernel.org>
+Mime-Version: 1.0
+References: <20261008190828.3221718-1-tarunsahu@google.com> <as4EcgiBH5jjww42@kernel.org>
+Message-ID: <9huzecdt633e.fsf@tarunix.c.googlers.com>
+Subject: Re: [PATCH v4 1/2] memblock: drop for_each_memblock_type() and open
+ code its users
+From: tarunsahu@google.com
+To: Mike Rapoport <rppt@kernel.org>
+Cc: dmatlack@google.com, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Pratyush Yadav <pratyush@kernel.org>, 
+	kexec@lists.infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261013_040251_154204_6FF80100 
-X-CRM114-Status: GOOD (  27.40  )
+X-CRM114-CacheID: sfid-20261013_081849_262971_9E64231A 
+X-CRM114-Status: GOOD (  19.41  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,82 +91,113 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat, Oct 10, 2026 at 03:05:40PM +0200, Luca Boccassi wrote:
-> On Sat, 10 Oct 2026 at 04:11, Chenghao Duan <duanchenghao@kylinos.cn> wrote:
-> >
-> > Hi Luca,
-> >
-> > I watched your excellent presentation from the LPC conference in Prague.
-> >
-> > I have a question I’d like to consult with you.
-> >
-> > I am currently working on the `memfd_luo` feature in CRIU. My goal is to
-> > leverage the LUO capability to store checkpoint images inside memfds.
-> > After a kexec reboot, the image data will be retrieved directly from
-> > memory instead of from disk.
-> >
-> > Here is my pull request on the CRIU GitHub repository:
-> > https://github.com/checkpoint-restore/criu/pull/3152
-> >
-> > In the PR discussion, avagin suggested using systemd as the CRIU daemon
-> > to centrally manage LUO sessions and access to `/dev/liveupdate`. I have
-> > watched your talk and read parts of the systemd source code.
-> >
-> > From my understanding, systemd currently provides a unit‑based solution
-> > where child processes can inherit LUO session file descriptors. However,
-> > this approach requires the target service to run as a child of a systemd
-> > unit. As far as I know, CRIU does not run as a systemd‑managed service.
-> >
-> > So my question is: for services such as CRIU that are **not systemd‑managed
-> > child services**, how can they obtain LUO‑session‑related file descriptors
-> > managed by systemd?
-> >
-> > Thank you very much for reading this email. My knowledge of systemd is still
-> > limited, so please feel free to correct me if I have misunderstood anything.
-> >
-> > Thanks & best regards,
-> > Chenghao Duan <duanchenghao@kylinos.cn>
-> 
-> Hi,
-> 
-> At some point up in the stack, everything runs as a systemd unit, so
-> it's only a question of figuring out in your setup how to pass the
-> FD(s) up and down the stack.
+Mike Rapoport <rppt@kernel.org> writes:
 
-Hi Luca,
+> Hi Tarun,
+>
+> Please for the next time add the cover-letter when sending more than one
+> patch.
 
-Thanks for your reply.
+Thanks Mike for piking up the patches.
 
-The `LUOSession=` configuration only takes effect for services managed
-by the system manager. If I run the CRIU command from an SSH login shell
-as I am doing now, the environment belongs to a transient unit under the
-user manager. In this case, we cannot use `LUOSession=` to obtain the
-LUO session fd via systemd. Does this mean the process needs to open
-`/dev/liveupdate` by itself to create the session fd?
+Sure, I will take care of adding the cover-letter.
 
-Below is the attached service of the process found via `systemctl status`.
+You had some nit change suggestion, Let me know if you want
+me send v5 or it is alright.
 
-[root@localhost criu]# ps -ef |grep criu
-root       57589    7729  0 18:25 pts/2    00:00:00 ./criu/criu dump -D ../test -t 52922 -j --memfd-images -v4
-root       57784    7571  0 18:27 pts/0    00:00:00 grep --color=auto criu
-[root@localhost criu]# systemctl status 57589
-● session-5.scope - Session 5 of User root
-     Loaded: loaded (/run/systemd/transient/session-5.scope; transient)
-  Transient: yes
-     Active: active (running) since Tue 2026-10-13 10:03:55 CST; 8h ago
-      Tasks: 4
-     Memory: 148.9M (peak: 1.3G)
-        CPU: 47.000s
-     CGroup: /user.slice/user-0.slice/session-5.scope
-             ├─ 7712 "sshd: root [priv]"
-             ├─ 7724 "sshd: root@pts/2"
-             ├─ 7729 -bash
-             └─57589 ./criu/criu dump -D ../test -t 52922 -j --memfd-images -v4
-
-I'm not sure whether my understanding is correct. Could you please
-provide your feedback?
+~Tarun
 
 
-BRs
-Chenghao
+>
+> On Thu, Oct 08, 2026 at 07:08:27PM +0000, Tarun Sahu wrote:
+>> for_each_memblock_type() always starts the iteration at index 0 and its
+>> body is a trivial 'for' loop, so it hides very little. It also gets in
+>> the way of iterating from an arbitrary index, which the next patch
+>> needs.
+>> 
+>> Remove the macro and open code its three users: memblock_add_range(),
+>> memblock_isolate_range() and memblock_dump(). While at it, move the
+>> region pointer into the loop body scope.
+>> 
+>> No functional change.
+>> 
+>> Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+>> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
+>> ---
+>>  mm/memblock.c | 17 ++++++-----------
+>>  1 file changed, 6 insertions(+), 11 deletions(-)
+>> 
+>> diff --git a/mm/memblock.c b/mm/memblock.c
+>> index f5aaa38cfa31..59dda7d085f3 100644
+>> --- a/mm/memblock.c
+>> +++ b/mm/memblock.c
+>> @@ -155,11 +155,6 @@ struct memblock_type physmem = {
+>>   */
+>>  static __refdata struct memblock_type *memblock_memory = &memblock.memory;
+>>  
+>> -#define for_each_memblock_type(i, memblock_type, rgn)			\
+>> -	for (i = 0, rgn = &memblock_type->regions[0];			\
+>> -	     i < memblock_type->cnt;					\
+>> -	     i++, rgn = &memblock_type->regions[i])
+>> -
+>>  #define memblock_dbg(fmt, ...)						\
+>>  	do {								\
+>>  		if (memblock_debug)					\
+>> @@ -615,7 +610,6 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
+>>  	phys_addr_t obase = base;
+>>  	phys_addr_t end = base + memblock_cap_size(base, &size);
+>>  	int idx, nr_new, start_rgn = -1, end_rgn;
+>> -	struct memblock_region *rgn;
+>>  
+>>  	if (!size)
+>>  		return 0;
+>> @@ -651,7 +645,8 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
+>>  	base = obase;
+>>  	nr_new = 0;
+>>  
+>> -	for_each_memblock_type(idx, type, rgn) {
+>> +	for (idx = 0; idx < type->cnt; idx++) {
+>> +		struct memblock_region *rgn = &type->regions[idx];
+>>  		phys_addr_t rbase = rgn->base;
+>>  		phys_addr_t rend = rbase + rgn->size;
+>>  
+>> @@ -815,7 +810,6 @@ static int __init_memblock memblock_isolate_range(struct memblock_type *type,
+>>  {
+>>  	phys_addr_t end = base + memblock_cap_size(base, &size);
+>>  	int idx;
+>> -	struct memblock_region *rgn;
+>>  
+>>  	*start_rgn = *end_rgn = 0;
+>>  
+>> @@ -827,7 +821,8 @@ static int __init_memblock memblock_isolate_range(struct memblock_type *type,
+>>  		if (memblock_double_array(type, base, size) < 0)
+>>  			return -ENOMEM;
+>>  
+>> -	for_each_memblock_type(idx, type, rgn) {
+>> +	for (idx = 0; idx < type->cnt; idx++) {
+>> +		struct memblock_region *rgn = &type->regions[idx];
+>>  		phys_addr_t rbase = rgn->base;
+>>  		phys_addr_t rend = rbase + rgn->size;
+>>  
+>> @@ -2194,11 +2189,11 @@ static void __init_memblock memblock_dump(struct memblock_type *type)
+>>  	phys_addr_t base, end, size;
+>>  	enum memblock_flags flags;
+>>  	int idx;
+>> -	struct memblock_region *rgn;
+>>  
+>>  	pr_info(" %s.cnt  = 0x%lx\n", type->name, type->cnt);
+>>  
+>> -	for_each_memblock_type(idx, type, rgn) {
+>> +	for (idx = 0; idx < type->cnt; idx++) {
+>> +		struct memblock_region *rgn = &type->regions[idx];
+>>  		char nid_buf[32] = "";
+>>  
+>>  		base = rgn->base;
+>> -- 
+>> 2.56.0.385.gd3acb90ef8-goog
+>> 
+>
+> -- 
+> Sincerely yours,
+> Mike.
 
