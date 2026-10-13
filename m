@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D869CCC6B19
-	for <kexec@archiver.kernel.org>; Tue, 13 Oct 2026 16:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2EE45CC6B19
+	for <kexec@archiver.kernel.org>; Tue, 13 Oct 2026 16:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
 	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=onpO8lBHEN85iwssSLMsBRvZRHpOY6vwoIhiGQt1cxQ=; b=sOHFYR5/GhzOgl78v6NM0C3IkH
-	xAD4zq4sucREgjBl6sosIFTUNipMoHHpcaCKEg28jE31Yh1E39kkBHX/QmZrDlwWSVFMP0q6EsJS2
-	lcLZd9eHwu/DdPNvS9+fXnlyKlkE7t69iF1VcIehba2LNv4WDbuJE+b3fANAVdfHIYvxDrVjg7Ulj
-	i9Tj+K/N7OVu9W3JHauzMfdHYo4fORyJ5yfxvcGWk0SKk8loL6nLUMwPNabX/RRkdQyNQEzTV7Gs9
-	TGr7vp5XZuIbyHndc4THIkW9L4RRJlRI7HKmlbzZ11V1W1RWtm878Bp6hDrtYf0uEIxHr/Vt1lfbM
-	7SC1SuWg==;
+	bh=vU9iDpTw6BhQUXTMuwZ7IfGm84e7qgJyw7tFxT1/9fE=; b=PKZ7pz0LDon9/s8x1n/l62fkqv
+	eKaq9hQtPWntVJpATv83XinT+A9p7i2dnL9T8qiWNpMJT81Mx7vZuQ2ukN2t9spycP9ITG1va9RRG
+	K5MRIr4+AS71todfZio5G1dlO4fRdLEgThjvAx/5nl0nYLpZzDWWGFJGxpNcoqloUbzSAa/ELKEJv
+	tt5yC9XXEgLrb6XVkHsxIaq1FNOSkWVeMC36pp97PlUHuS7atg8+y3Zt7D0YWYX4FiOcQhOSTLpFM
+	moeftwh4iEVKp1bVHrVaEBkzG2xI/jstmODhdBm2HlZ33Urs5iVmFOcniCSTq5T3SiJu7yD+5BbD+
+	OuOqBBPg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xGfY2-0000000DZ8q-49Dj;
-	Tue, 13 Oct 2026 16:40:18 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xGfYi-0000000DZKq-0dD6;
+	Tue, 13 Oct 2026 16:41:00 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xGfY1-0000000DZ8E-0xSM
+	id 1xGfYh-0000000DZK7-0kO1
 	for kexec@lists.infradead.org;
-	Tue, 13 Oct 2026 16:40:17 +0000
+	Tue, 13 Oct 2026 16:40:59 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id A799260A59;
-	Tue, 13 Oct 2026 16:40:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B5311F000FF;
-	Tue, 13 Oct 2026 16:40:15 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id D38774071B;
+	Tue, 13 Oct 2026 16:40:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72D411F00893;
+	Tue, 13 Oct 2026 16:40:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791909616;
-	bh=onpO8lBHEN85iwssSLMsBRvZRHpOY6vwoIhiGQt1cxQ=;
+	s=k20260515; t=1791909658;
+	bh=vU9iDpTw6BhQUXTMuwZ7IfGm84e7qgJyw7tFxT1/9fE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YNlQgiKxykUdaNxPXZtWG0oxa6IsM144UcaLaPe226qqU1kDRq0XFsgCT7J8vBOUO
-	 Fh9hndQ8L8LhCb5R4U5MjZBiCC8bWfArpNHUSyzQkB5GUs8CoQzrQKj3NQ5uIfHWAO
-	 WYj3uwzbAsIOSJoIuUmGKFNMYlIR9auXBOowlqXqEHcGhXcFl0jUJqOihiPZIB41VJ
-	 rgyY4zHr2lzfxX0J5sv501jtnKKTGD4/jBA051lwE2lX1H+pqpZqTS2dPX3f40pLUy
-	 t++aA/jkfQzHSNhf1bpXr108kA4y2YzNMCYBq0ebTy1wxSuIXVZXeqDejsN6r2w0eR
-	 e3EXbsT51vPwQ==
-Message-ID: <sashiko-outbox-170133@kernel.org>
+	b=RMRtbK7UcA5SdLsEX5/pelGjDR8F208CZNPjIkSj/2ZD27wPtooimHoiVmLTs12hs
+	 a/w1aTYGmNzA3jcEPaUEUV/ma5629qBG2Mevvul8O37z2AgvliDBxQmqEW6cWlMTe8
+	 tKuKjH5aPQ7ryVQ+SimIKlN1p0e8YBI4aSZBZVJRpwe6DnkHwLZiy2oHr7K/Eoqa4Y
+	 v7jZc1Oy+klAOVHcK0hvCRhJDjYXe9mUVcCrsBI4Wl30XrKQrgwZ1ubnrePlyyGBMV
+	 OalTqaR83FYwW1I5lHOFRT/BaPR8HZ/yX50GtNUTo8pco2//wEoGJsVoYoWbAvmTdP
+	 4+xxTiVqNRXMQ==
+Message-ID: <sashiko-outbox-170134@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 03/13] PCI: liveupdate: Track incoming preserved PCI
- devices
+Subject: Re: [PATCH v10 10/13] PCI: liveupdate: Adopt ARI Forwarding Enable
+ on preserved bridges
 To: "David Matlack" <dmatlack@google.com>, kexec@lists.infradead.org, linux-pci@vger.kernel.org
 Cc: "Adithya Jayachandran" <ajayachandra@nvidia.com>, "Alexander Graf" <graf@amazon.com>, "Alex
  Williamson" <alex@shazbot.org>, "Bjorn Helgaas" <bhelgaas@google.com>, "Chris
@@ -58,12 +58,12 @@ Cc: "Adithya Jayachandran" <ajayachandra@nvidia.com>, "Alexander Graf" <graf@ama
  Mahameed" <saeedm@nvidia.com>, "Samiullah Khawaja" <skhawaja@google.com>, "Shuah
  Khan" <skhan@linuxfoundation.org>, "Vipin Sharma" <vipinsh@google.com>, "William
  Tu" <witu@nvidia.com>, "Yi Liu" <yi.l.liu@intel.com>
-In-Reply-To: <20261013162529.1928093-4-dmatlack@google.com>
+In-Reply-To: <20261013162529.1928093-11-dmatlack@google.com>
 References: <20261013162529.1928093-1-dmatlack@google.com>
- <20261013162529.1928093-4-dmatlack@google.com>
+ <20261013162529.1928093-11-dmatlack@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 16:40:14 +0000
+Date: Tue, 13 Oct 2026 16:40:57 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,79 +79,23 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] pci: liveupdate: silent DMA corruption risk on incoming device cle=
-anup
---
+> Adopt the ARI Forwarding Enable bit on preserved bridges and update
+> pci_dev->ari_enabled accordingly during a Live Update. This ensures that
+> the preserved devices on the bridge's secondary bus can be identified
+> with the same expanded 8-bit function number after a Live Update.
+>=20
+> pci_liveupdate_adopt_ari() updates the bridge's ari_enabled the same way,
+> and from the same context, as pci_configure_ari() already does when it
+> enables or disables ARI Forwarding on the bridge.
+>=20
+> Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+> Reviewed-by: Pranjal Shrivastava <praan@google.com>
+> Signed-off-by: David Matlack <dmatlack@google.com>
 
-commit 30099916ad0bce596acb2541018cac55703694d3
-Author: David Matlack <dmatlack@google.com>
-
-PCI: liveupdate: Track incoming preserved PCI devices
-
-This commit adds tracking for incoming preserved PCI devices during Live
-Update. It introduces pci_liveupdate_setup_device() to fetch the serialized
-state from the previous kernel and marks devices as incoming-preserved until
-drivers call pci_liveupdate_finish().
-
-> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-> index 22d5d177e104d..a1d9b2b1f9e38 100644
-> --- a/drivers/pci/liveupdate.c
-> +++ b/drivers/pci/liveupdate.c
-[ ... ]
-> @@ -382,7 +599,80 @@ void pci_liveupdate_cleanup_device(struct pci_dev *d=
-ev)
->  	 */
->  	if (READ_ONCE(dev->liveupdate.outgoing))
->  		pci_WARN(dev, 1, "Destroying outgoing-preserved device!\n");
-> +
-> +	if (READ_ONCE(dev->liveupdate.incoming))
-> +		pci_WARN(dev, 1, "Destroying incoming-preserved device!\n");
-
-[Severity: High]
-Does this code risk silent memory corruption by only warning instead of
-panicking?
-
-When an incoming preserved device is destroyed, it is dropped from the
-kernel's resource tracking. However, the device may still be live and
-performing DMA if it was handed over by the previous kernel.
-
-If this only warns, it allows the PCI core to proceed and potentially
-reassign the device's bus numbers and MMIO resources to other devices while
-the original device is still active. Although pci_check_all_devices_finishe=
-d()
-panics at the end of the Live Update session for unfinished devices, there =
-is
-a dangerous window where resource conflicts and DMA corruption can occur.
-
-> +}
-[ ... ]
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 2a37e5d3e8e36..ad7fdf0d56b68 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-[ ... ]
-> @@ -2188,6 +2190,7 @@ int pci_setup_device(struct pci_dev *dev)
->  	default:				    /* unknown header */
->  		pci_err(dev, "unknown header type %02x, ignoring device\n",
->  			dev->hdr_type);
-> +		pci_liveupdate_cleanup_device(dev);
-
-[Severity: High]
-Can an incoming preserved device that fails enumeration here cause a resour=
-ce
-conflict?
-
-If pci_setup_device() encounters an unknown header type for an incoming
-device, it calls pci_liveupdate_cleanup_device() and ignores the device.
-Since the cleanup routine only issues a warning, the live device is dropped
-from tracking but might still be performing DMA.
-
->  		pci_release_of_node(dev);
->  		return -EIO;
+Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013162529.1928=
-093-1-dmatlack@google.com?part=3D3
+093-1-dmatlack@google.com?part=3D10
+
 
