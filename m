@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EAC7BCC6B1C
-	for <kexec@archiver.kernel.org>; Tue, 13 Oct 2026 16:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9A45CCC6B1A
+	for <kexec@archiver.kernel.org>; Tue, 13 Oct 2026 16:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
 	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=eamPwVaY6pN93fvXHVUmbGw8UIldf2fAJBG+vjxWeX0=; b=lVwPRK1U7ds3p5ydvHBLZvK+oZ
-	nwTbmwOD9UIP5dZ7HUS1QgSNYNSU3zH2ce4itaXVkAFcPu2Od3xUMfeC9U7LNAh6WpV8X0qokCgx3
-	y/ZnRXC6hlnF2zFe21iK4qxEM74RehNjUcU4o0R7IyGdMAiTInPV58NhvGho/Ywe5vPA5c+TxE5Ri
-	YrOkTRExHqC5haYMl9HWPDvqKksgMS09c+S8D8N9FvJlExKR0azdv8WuKVflOx9QnhLH3eyVSiVp5
-	2ogJi/YAYMLoK25KHSKN8X4rQgwTVE98YSls5OT4whWDDeKHKtIbYndPbLl7G0yRxgRW6TcBH+wWf
-	k1/lVWHQ==;
+	bh=PN+r4VLMhssQCrNV6XPUOMNympjbdTpFLc59Vq+ieEo=; b=rnPURkLrBYS24qgaYBjQHYChaT
+	xitCl12kJU3iexDlS80wO1bCfsYYTu13I/TL6/AI5yBWmx8lrXvva/cWckPnIHpqaOCPrjjUhXM/7
+	eqiVmT1R+M1XWF80CKld2NpOo9my9tao1tEQxTOPbn1RCWWaWTM3ABnxqfoAiI3ChjoU0rf7pIo2Z
+	T5ixMu6C1Lyau+fcl6yD7EWw/7WEklfz3IGMqbeuAkgqUYe1JXRXJr7JZbw7pT57SwMPjXLcrTiop
+	BwRjCZAgFUL5WHMrYOFL2sVOPbn3AqDKFRF7qrFI/jkydaSMIBOzyyKarwofKjxl+iN0Ffx0IukIF
+	ARZsgorw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xGfSw-0000000DXT3-16D5;
-	Tue, 13 Oct 2026 16:35:02 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xGfT5-0000000DXii-2VdC;
+	Tue, 13 Oct 2026 16:35:11 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xGfSt-0000000DXNl-3YrU
+	id 1xGfT2-0000000DXdL-170j
 	for kexec@lists.infradead.org;
-	Tue, 13 Oct 2026 16:34:59 +0000
+	Tue, 13 Oct 2026 16:35:10 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 6EA0E43BAB;
-	Tue, 13 Oct 2026 16:34:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3E5E1F00898;
-	Tue, 13 Oct 2026 16:34:57 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id C9484602C3;
+	Tue, 13 Oct 2026 16:35:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36DE31F000FF;
+	Tue, 13 Oct 2026 16:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791909299;
-	bh=eamPwVaY6pN93fvXHVUmbGw8UIldf2fAJBG+vjxWeX0=;
+	s=k20260515; t=1791909306;
+	bh=PN+r4VLMhssQCrNV6XPUOMNympjbdTpFLc59Vq+ieEo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ntzT+lTWTbiwjB54PNqFtExJY9KfCBZ7v8ywXVFdy+3XeENbQJJHy4A6HxgL6Ocf1
-	 VQXQmrazQPQcsiKYDJhacBSS10a0pSCPGHZ+ZSnIiTsATvr2pfNg4kOtGJOda8cJQM
-	 aBPVEgxyJS3L19ckKyuodos0UkzVZ9P5BURVIJ1cjze+2Fbm/RzV9N54qdS1JswAJG
-	 4ijSneeCb3WJV33vGKXNxmYt1RxfHHImXdVCKDTnt5e2VrS49q4QCZWQkhViaKJvS9
-	 YSTWg2eWZm1zOeywqJZ1kBZGRtsa5rZPteR3LOTcXeSA3mktO5PJE+oi5TFayg6a6V
-	 ckUqz0cc0j7JA==
-Message-ID: <sashiko-outbox-170121@kernel.org>
+	b=igwWydtP9/RJQDJe8CvfELwrsPK91rw9lgxOoWUSEDo2uGjP5nFxSTefsCkr+437D
+	 ThvtAfJOs1wlCkUB7uWlJ95QrPNO+JMEmvT8fP7kn8LoGAetn2I9vUaDWBwn1dldC/
+	 Q2PUIECgt4yJP2sGQUPHHwqeV3kCi0NMe10Kka4lNvrp9lbNyeBgl03Xzfig8+mWVU
+	 s4IJB18EH1hmTJYoKftGr1cchTn0zcDJJf3BJVYl4AVsqeS2s0BZcqO6gbHRQsB5gB
+	 lKpCEpib0iMxGkholpfyROWwC/GFufO37z54hFaoAQNrIYSxkcgvX304iyXdIeqPlK
+	 iTkLzhw68nwYw==
+Message-ID: <sashiko-outbox-170122@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 09/13] PCI: liveupdate: Adopt ACS controls in
- incoming preserved devices
+Subject: Re: [PATCH v10 08/13] PCI: Save and restore the ACS Control
+ register and Egress Control Vector
 To: "David Matlack" <dmatlack@google.com>, kexec@lists.infradead.org, linux-pci@vger.kernel.org
 Cc: "Adithya Jayachandran" <ajayachandra@nvidia.com>, "Alexander Graf" <graf@amazon.com>, "Alex
  Williamson" <alex@shazbot.org>, "Bjorn Helgaas" <bhelgaas@google.com>, "Chris
@@ -58,12 +58,12 @@ Cc: "Adithya Jayachandran" <ajayachandra@nvidia.com>, "Alexander Graf" <graf@ama
  Mahameed" <saeedm@nvidia.com>, "Samiullah Khawaja" <skhawaja@google.com>, "Shuah
  Khan" <skhan@linuxfoundation.org>, "Vipin Sharma" <vipinsh@google.com>, "William
  Tu" <witu@nvidia.com>, "Yi Liu" <yi.l.liu@intel.com>
-In-Reply-To: <20261013162529.1928093-10-dmatlack@google.com>
+In-Reply-To: <20261013162529.1928093-9-dmatlack@google.com>
 References: <20261013162529.1928093-1-dmatlack@google.com>
- <20261013162529.1928093-10-dmatlack@google.com>
+ <20261013162529.1928093-9-dmatlack@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 16:34:57 +0000
+Date: Tue, 13 Oct 2026 16:35:04 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,32 +79,32 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> Adopt Access Control Services (ACS) controls on all incoming preserved
-> devices (endpoints and upstream bridges) during a Live Update.
+> Save the ACS Control register and the ACS Egress Control Vector in
+> pci_save_state() and write them back in pci_restore_state(), instead of
+> recomputing the ACS controls from scratch with pci_enable_acs().
 >=20
-> Inheriting ACS flags avoids changing routing rules while memory
-> transactions are in flight from preserved devices. This is also strictly
-> necessary to ensure that IOMMU group assignments do not change during or
-> after Live Update.
+> This makes ACS symmetric with the rest of a device's saved state. Today
+> pci_save_state() ignores ACS entirely and pci_restore_state() re-enables
+> the ACS controls from the kernel's current ACS policy. As a result, a
+> device can come out of a reset with different ACS controls than it went
+> in with, e.g. any controls programmed outside of pci_enable_acs() are
+> silently dropped.
 >=20
-> The adopted controls are recorded by the pci_save_state() call in
-> pci_bus_add_device(), which runs before drivers bind, so they are
-> automatically reapplied by pci_restore_state() if the device is reset.
-> If that save buffer could not be allocated there is nowhere to record
-> the adopted controls, and they would be silently lost by the first
-> reset. Program ACS from scratch in that case, which is a better outcome
-> than leaving ACS disabled.
+> Notably, this prepares the kernel to be able to adopt the ACS controls
+> established by a previous kernel across a Live Update rather than
+> assigning new ones through pci_enable_acs().
 >=20
-> To simplify ACS inheritance, reject preserving any devices that require
-> quirks to enable ACS as those quirks would also have to take Live Update
-> into account.
+> [ ... ]
+> configuring ACS from scratch for them. Do the same for devices that have
+> no saved ACS state at all.
 >=20
+> Assisted-by: LLM
 > Signed-off-by: David Matlack <dmatlack@google.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013162529.1928=
-093-1-dmatlack@google.com?part=3D9
+093-1-dmatlack@google.com?part=3D8
 
 
