@@ -4,79 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 14201CC6B12
-	for <kexec@archiver.kernel.org>; Tue, 13 Oct 2026 15:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 96EA8CC6B12
+	for <kexec@archiver.kernel.org>; Tue, 13 Oct 2026 16:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=WFCGbaDlX/AVQV6RAFUOj0q1sLZPldXZf8616wSFK2M=; b=YmwAVaBJuRhXd18fq7GIYnsu28
-	nGB5P5M6VpIgT2TnaxosRaET1kfykgL6JjqcBBvMifk3fqfCr6Xct9blkzNFYG+aDmUN7OzBfBHT0
-	UsjkonzqOeRtRGZSMLZnwL3GSiRG0AzJhP/BmFruarAfz9iI+GcDH+TfbJZeql/Hi9KgdhsKtkpyU
-	1CEbLu23FUhjxIYHenSdAr6FIfPF7NH+FKGaw6Pmn7T1PNYaBZpkVVe72HeupH6JeSsZpy7DM6lrQ
-	GvLTCV74RG9nVJQpVyWYTHlnruz/9KAMbApEQMgdj/j4O7yvNVExztfVS3n6WRGu+XzgEmxOcTr6e
-	MFAqDB6A==;
+	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=jeAXIyFq6wDt1DrhCTJh2CZ3Qk782HPpYdtAi65KBOg=; b=MOjXXQx6osYYwQn7d7V4xwHXCZ
+	9C3oHx0aQg/jQCgMP6AXWbFj5Q13SxujDpHJaPqrk7JEz6lcpOu6CJ5zNvi3vm/SuUSmCwF5KB+CV
+	SRi50xlo2HZUOjPGQ8mwleoJ2Lsw2mdlOmRRBrDA1OJFuvjKx/MVlsx4a/VFw/yyGX310m9ejpRn7
+	vvs5uuNp24y6htXWgnD7zRdPVYUuVZyOVcjyBBYRkNuuA8fSRqmFUuPa0OlNy3KGm6onwT6K0Ic2g
+	4OxqMSDR1ZJOBhUJi5mmF50zflZ3eOUag9lxG9wBkjeE2o+kY2KIEClnBtrfuFaWh5MAkdqpmEN5L
+	KVPX2s4A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xGeHN-0000000DGcm-0fHp;
-	Tue, 13 Oct 2026 15:19:01 +0000
-Received: from mail-ed1-x548.google.com ([2a00:1450:4864:20::548])
+	id 1xGfJr-0000000DUa5-3CT6;
+	Tue, 13 Oct 2026 16:25:39 +0000
+Received: from mail-pj1-x1046.google.com ([2607:f8b0:4864:20::1046])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xGeHB-0000000DGPI-0po2
+	id 1xGfJo-0000000DUYw-18Qj
 	for kexec@lists.infradead.org;
-	Tue, 13 Oct 2026 15:18:56 +0000
-Received: by mail-ed1-x548.google.com with SMTP id 4fb4d7f45d1cf-6b1bc2e62d5so2308217a12.2
-        for <kexec@lists.infradead.org>; Tue, 13 Oct 2026 08:18:48 -0700 (PDT)
+	Tue, 13 Oct 2026 16:25:37 +0000
+Received: by mail-pj1-x1046.google.com with SMTP id 98e67ed59e1d1-3ab7f1efe5dso6493660a91.1
+        for <kexec@lists.infradead.org>; Tue, 13 Oct 2026 09:25:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1791904727; x=1792509527; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=WFCGbaDlX/AVQV6RAFUOj0q1sLZPldXZf8616wSFK2M=;
-        b=TJr+rvqiFZJWCPB/QwT5HYvmc8eGMtfPkYn0sY2pskOZigKk2Mu1pHNIvbc6nwij62
-         EpJORIYKUJp4eGRws+XkeXfBzN9HXAXMiW4I0JmgwKub1mUzWB/Ihm/iw6fZRPqgJNvO
-         G2Ef2XQGfYr60rraQuAw14Qj3AvSt9sNwRg+IY2GVx5bLLIW0ktFvG6N0aAUryB8bJyJ
-         KyicYYvfnhbO4v1D9nsL3zP2r4WE/zhJ1eJm22g2b3UmelZlIN4GGelPydnhTmyfBDjH
-         LoorVWEpaPWpFRKFafuByr9YP7cytFRP1BPT2fBD66PQddDHQKRSNTn43JBAd7Anuw35
-         Cbsg==
+        d=google.com; s=20251104; t=1791908735; x=1792513535; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=jeAXIyFq6wDt1DrhCTJh2CZ3Qk782HPpYdtAi65KBOg=;
+        b=WTL6vlcdDMkU2Wo7U3eyvJzbuGuB0iH3y/AEWlPEH/11HHrGzKQ5KLOf640gBmK7LV
+         wNPdufiqNOjWPfHh/nY2z53P4zf4gT8wEN37EShz+qoF86jPRGgK/+RcTromliADzrsN
+         3u8+T8XL881yGeRR7U0cfI7CS7v65DH4etF13WXnc+XTSo2jEQ0S2RdmiQiyH+GBudG0
+         07Jg98bR90gRIFqZQ8xH1w8yFSo5dCmARpgoM5PGBObcFk78VgJwQks4f3jDII+XWsab
+         ns17WrdTWdmtrRDQZzF05avmE4MHNpJtHZZ3yllAp8LiDxZf8dX9DU1JNtNWsTjH06UF
+         hzoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791904727; x=1792509527;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=WFCGbaDlX/AVQV6RAFUOj0q1sLZPldXZf8616wSFK2M=;
-        b=HHT7j9siS6OxoJJJV9R4cW+LjnPwexkalmB9MjalEA6R3b4q8CUuolILnX1GGg6FCP
-         LZoB3RaVHZSL2faQtjuGPVu5Qq0EpGSnF6BPvK94PeLfXj6C7w3OXKG4e2BoRAyLn7c5
-         nx2akWJ/NSOkiXXbKHdaw2aK3WpWJCUxxUO+zCacqjReId+EYroEJRvW58cGvdsijngg
-         85grRsxobstWoRPPsYMo2J+PyA3h5mUwVulkI6S7G3Wb3VAk4n2x7nsZMxFRL7JnlwzZ
-         XMxzw/rGU6Jzu5iqxfMU+zZeePpxzzIGoVp3npgSsRpDJLSkIQNhJPZSLaEN5bqJizu5
-         3noQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxemTVnF4w+MsJVGiHdPr/IsgqDv2a4wAJfy69JU2TOk4w4v75ypWBq/gdJdsVS7Q+MEAcX5A==@lists.infradead.org
-X-Gm-Message-State: AFq9FYKJtioOmANe2s2pz0M04w761xVAQIW1UZMMHDaj5yJm0FPU3gae
-	gs7uJ0P2Cn4zGMkkFmXjg0gsgOHil5sohDmBMRijL7h/Zs5F5yc3JAWXnT1P3ZxxBI9XlH7YDSF
-	tkv+Bu/37oswlDw0WBw==
-X-Received: from edwl2.prod.google.com ([2002:a05:6402:1242:b0:6b1:a8d5:117d])
- (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6402:1ed4:b0:6b1:ba86:5f55 with SMTP id 4fb4d7f45d1cf-6b1ba86636dmr5678473a12.35.1791904726451;
- Tue, 13 Oct 2026 08:18:46 -0700 (PDT)
-Date: Tue, 13 Oct 2026 15:18:45 +0000
-In-Reply-To: <as4EcgiBH5jjww42@kernel.org>
+        d=1e100.net; s=20260707; t=1791908735; x=1792513535;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=jeAXIyFq6wDt1DrhCTJh2CZ3Qk782HPpYdtAi65KBOg=;
+        b=yvaaIJuxx+LEFSPzZKAkhXyzlr5EFohw5jcfw+3dQyvVeBgs1xohWgL9fN+7lHB5up
+         jxFB/IVgprcKgV9ghWpPOfRim3CpxF5Vr50WyPzyXFHZsZcDPMvD3H6pWhPcwV5yFO3H
+         NEx7K306Y7/ALLXvaYI0C5fI3ZUNLBcZKOMndRY6DmV+loXL1qQ2F+IVE2vZvoDyaxzO
+         M21A112SByy7a4q5HQCdR8iDDIk14ySeqrfbHlD58Gy+5r3hKtYlpd9U+JaFdPv9/7r8
+         KpxpzP60rHGiPBNJaObBuALQFmGD36Hm+AoCk9wKsVDElpalTjmK/yGBLCZw9g6yoWfi
+         Xntg==
+X-Gm-Message-State: AFq9FYJTc8httHbOPIjt3TE/Zn80siCp5wquA7em8LhpitK1z6r1a0ek
+	d7GC82obWrHjyOhs0qu37Kay/Tfb4xwOhkix832zFbevXusSeco+9E0cthPjZqzTfWdOlzIadWc
+	3CWDDgerhmlLS2vASHaM6IcNSWToP8xb8v/LoEcH92uU6pg/Mhkt0FvTJbEaQl6FO71TrtGspKI
+	2HpM4B+UGrjjsmOPGzmfXFeRfwGIEizDtJdw4rN7VnFT/qW+n5qSs=
+X-Received: from pgbe27.prod.google.com ([2002:a63:501b:0:b0:cc7:dec6:f87d])
+ (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:1f91:b0:3ac:53e0:4ed5 with SMTP id 98e67ed59e1d1-3ac53e0532fmr683953a91.39.1791908734381;
+ Tue, 13 Oct 2026 09:25:34 -0700 (PDT)
+Date: Tue, 13 Oct 2026 16:25:16 +0000
 Mime-Version: 1.0
-References: <20261008190828.3221718-1-tarunsahu@google.com> <as4EcgiBH5jjww42@kernel.org>
-Message-ID: <9huzecdt633e.fsf@tarunix.c.googlers.com>
-Subject: Re: [PATCH v4 1/2] memblock: drop for_each_memblock_type() and open
- code its users
-From: tarunsahu@google.com
-To: Mike Rapoport <rppt@kernel.org>
-Cc: dmatlack@google.com, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Pratyush Yadav <pratyush@kernel.org>, 
-	kexec@lists.infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
+Message-ID: <20261013162529.1928093-1-dmatlack@google.com>
+Subject: [PATCH v10 00/13] PCI: liveupdate: PCI core support for Live Update
+From: David Matlack <dmatlack@google.com>
+To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org
+Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
+	Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
+	David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
+	Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, Leon Romanovsky <leonro@nvidia.com>, 
+	Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Vipin Sharma <vipinsh@google.com>, 
+	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261013_081849_262971_9E64231A 
-X-CRM114-Status: GOOD (  19.41  )
+X-CRM114-CacheID: sfid-20261013_092536_324098_13A424BD 
+X-CRM114-Status: GOOD (  19.50  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,113 +97,165 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Mike Rapoport <rppt@kernel.org> writes:
+This series can be found on GitHub:
 
-> Hi Tarun,
->
-> Please for the next time add the cover-letter when sending more than one
-> patch.
+  https://github.com/dmatlack/linux/tree/liveupdate/pci/base/v10
 
-Thanks Mike for piking up the patches.
+This series introduces support in the PCI core for Live Update, enabling
+drivers to preserve PCI devices across a kexec-based kernel update
+without interrupting the device. This functionality is critical for
+minimizing downtime in environments where PCI devices (e.g., those
+assigned to VMs via VFIO) must continue operating or maintain state
+across a host kernel upgrade.
 
-Sure, I will take care of adding the cover-letter.
+Specifically, this series allows preserved PCI devices to perform
+uninterrupted memory transactions (DMA) targeting system memory
+(specifically, preserved memfds) across a Live Update. These devices can
+be behind a bridge but must not be VFs. Support for P2P and VF
+preservation will be addressed in future series.
 
-You had some nit change suggestion, Let me know if you want
-me send v5 or it is alright.
+Series Overview
+---------------
 
-~Tarun
+This series implements the following to support PCI device preservation
+across Live Update:
+
+  1. Set up a File-Lifecycle-Bound (FLB) handler to track and preserve
+     PCI-specific state (struct pci_ser) across Live Update using Kexec
+     Handover (KHO).
+
+  2. Add APIs for drivers to register devices for preservation
+     (outgoing) and for the PCI core to identify preserved devices
+     during enumeration (incoming)
+
+  3. Automatically preserve all upstream bridges for any preserved
+     endpoint. Use reference counting to ensure bridges remain preserved
+     as long as any downstream device is preserved.
+
+  4. Guarantee that preserved devices retain the same RequesterID (bus,
+     device, function) for the duration of their preservation by
+     inheriting secondary bus numbers, subordinate bus numbers, and ARI
+     Forwarding Enable on preserved bridges.
+
+  5. Guarantee that memory transactions to/from preserved devices are
+     routed consistently by inheriting Access Control Services (ACS)
+     flags across a Live Update, from the endpoint up to the root port.
+
+  6. Modify the PCI shutdown path to avoid disabling bus mastering on
+     preserved devices, thereby allowing preserved devices to perform
+     uninterrupted during kexec for Live Update.
+
+  7. Provide comprehensive documentation for the FLB API, device
+     tracking mechanisms, and the division of responsibilities between
+     the PCI core, drivers, and userspace.
+
+Merge Plan
+----------
+
+This series will be merged through liveupdate.git, matching the
+agreed-upon tree in the MAINTAINERS entry for PCI LIVE UPDATE.
+
+Testing
+-------
+
+This series was tested in conjunction with v5 of the VFIO PCI driver
+series:
+
+  https://lore.kernel.org/kvm/20260714151505.3466855-1-vipinsh@google.com/
+
+The full set of patches used for testing can be found on GitHub.
+
+  https://github.com/dmatlack/linux/tree/liveupdate/pci/base/v10-with-vfio
+
+Testing was performed using the new VFIO selftests:
+
+  - vfio_pci_liveupdate_uapi_test
+  - vfio_pci_liveupdate_kexec_test
+
+Both tests were run in a QEMU-based VM environment (using a single
+virtio-net PCIe device connected to a root port to exercise bridge
+support) and on bare metal using an Intel EMR server with 8x Intel DSA
+PCIe devices and 1x NVMe device.
+
+Future Work
+-----------
+
+Please see the PCI core Live Update Roadmap:
+
+  https://lore.kernel.org/linux-pci/20261001232133.560284-1-dmatlack@google.com/
+
+Changelog
+---------
+
+v10:
+ - Save and restore the ACS Egress Control Vector along with the ACS
+   Control register, sizing the save buffer from the HwInit Egress
+   Control Vector Size field (Alex) and drop Bjorn's R-b tag
+ - Make CONFIG_PCI_LIVEUPDATE depend on 64BIT from the first patch
+   rather than adding the dependency later in the series (Pratyush,
+   Mike)
+ - Reword kernel-doc comments to read better in the HTML docs and
+   spell out "reference count" (Mike)
+ - Replace the version number at the start of struct pci_ser with
+   required_flags and optional_flags, and record the size of struct
+   pci_dev_ser, so that the PCI FLB ABI can be extended (LPC BoF)
+
+v9: https://lore.kernel.org/linux-pci/20260918200640.887030-1-dmatlack@google.com/
+v8: https://lore.kernel.org/linux-pci/20260728221007.2098560-1-dmatlack@google.com/
+v7: https://lore.kernel.org/linux-pci/20260710212616.1351130-1-dmatlack@google.com/
+v6: https://lore.kernel.org/linux-pci/20260522202410.3104264-1-dmatlack@google.com/
+v5: https://lore.kernel.org/linux-pci/20260512184846.119396-1-dmatlack@google.com/
+v4: https://lore.kernel.org/linux-pci/20260423212316.3431746-1-dmatlack@google.com/
+v3: https://lore.kernel.org/kvm/20260323235817.1960573-1-dmatlack@google.com/
+v2: https://lore.kernel.org/kvm/20260129212510.967611-1-dmatlack@google.com/
+v1: https://lore.kernel.org/kvm/20251126193608.2678510-1-dmatlack@google.com/
+rfc: https://lore.kernel.org/kvm/20251018000713.677779-1-vipinsh@google.com/
 
 
->
-> On Thu, Oct 08, 2026 at 07:08:27PM +0000, Tarun Sahu wrote:
->> for_each_memblock_type() always starts the iteration at index 0 and its
->> body is a trivial 'for' loop, so it hides very little. It also gets in
->> the way of iterating from an arbitrary index, which the next patch
->> needs.
->> 
->> Remove the macro and open code its three users: memblock_add_range(),
->> memblock_isolate_range() and memblock_dump(). While at it, move the
->> region pointer into the loop body scope.
->> 
->> No functional change.
->> 
->> Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
->> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
->> ---
->>  mm/memblock.c | 17 ++++++-----------
->>  1 file changed, 6 insertions(+), 11 deletions(-)
->> 
->> diff --git a/mm/memblock.c b/mm/memblock.c
->> index f5aaa38cfa31..59dda7d085f3 100644
->> --- a/mm/memblock.c
->> +++ b/mm/memblock.c
->> @@ -155,11 +155,6 @@ struct memblock_type physmem = {
->>   */
->>  static __refdata struct memblock_type *memblock_memory = &memblock.memory;
->>  
->> -#define for_each_memblock_type(i, memblock_type, rgn)			\
->> -	for (i = 0, rgn = &memblock_type->regions[0];			\
->> -	     i < memblock_type->cnt;					\
->> -	     i++, rgn = &memblock_type->regions[i])
->> -
->>  #define memblock_dbg(fmt, ...)						\
->>  	do {								\
->>  		if (memblock_debug)					\
->> @@ -615,7 +610,6 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
->>  	phys_addr_t obase = base;
->>  	phys_addr_t end = base + memblock_cap_size(base, &size);
->>  	int idx, nr_new, start_rgn = -1, end_rgn;
->> -	struct memblock_region *rgn;
->>  
->>  	if (!size)
->>  		return 0;
->> @@ -651,7 +645,8 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
->>  	base = obase;
->>  	nr_new = 0;
->>  
->> -	for_each_memblock_type(idx, type, rgn) {
->> +	for (idx = 0; idx < type->cnt; idx++) {
->> +		struct memblock_region *rgn = &type->regions[idx];
->>  		phys_addr_t rbase = rgn->base;
->>  		phys_addr_t rend = rbase + rgn->size;
->>  
->> @@ -815,7 +810,6 @@ static int __init_memblock memblock_isolate_range(struct memblock_type *type,
->>  {
->>  	phys_addr_t end = base + memblock_cap_size(base, &size);
->>  	int idx;
->> -	struct memblock_region *rgn;
->>  
->>  	*start_rgn = *end_rgn = 0;
->>  
->> @@ -827,7 +821,8 @@ static int __init_memblock memblock_isolate_range(struct memblock_type *type,
->>  		if (memblock_double_array(type, base, size) < 0)
->>  			return -ENOMEM;
->>  
->> -	for_each_memblock_type(idx, type, rgn) {
->> +	for (idx = 0; idx < type->cnt; idx++) {
->> +		struct memblock_region *rgn = &type->regions[idx];
->>  		phys_addr_t rbase = rgn->base;
->>  		phys_addr_t rend = rbase + rgn->size;
->>  
->> @@ -2194,11 +2189,11 @@ static void __init_memblock memblock_dump(struct memblock_type *type)
->>  	phys_addr_t base, end, size;
->>  	enum memblock_flags flags;
->>  	int idx;
->> -	struct memblock_region *rgn;
->>  
->>  	pr_info(" %s.cnt  = 0x%lx\n", type->name, type->cnt);
->>  
->> -	for_each_memblock_type(idx, type, rgn) {
->> +	for (idx = 0; idx < type->cnt; idx++) {
->> +		struct memblock_region *rgn = &type->regions[idx];
->>  		char nid_buf[32] = "";
->>  
->>  		base = rgn->base;
->> -- 
->> 2.56.0.385.gd3acb90ef8-goog
->> 
->
-> -- 
-> Sincerely yours,
-> Mike.
+David Matlack (13):
+  PCI: liveupdate: Set up FLB handler for the PCI core
+  PCI: liveupdate: Track outgoing preserved PCI devices
+  PCI: liveupdate: Track incoming preserved PCI devices
+  PCI: liveupdate: Document driver binding responsibilities
+  PCI: liveupdate: Auto-preserve upstream bridges across Live Update
+  PCI: liveupdate: Preserve bus numbers during Live Update
+  PCI: Refactor matching logic for pci_dev_acs_ops
+  PCI: Save and restore the ACS Control register and Egress Control
+    Vector
+  PCI: liveupdate: Adopt ACS controls in incoming preserved devices
+  PCI: liveupdate: Adopt ARI Forwarding Enable on preserved bridges
+  PCI: liveupdate: Freeze preservation status during shutdown
+  PCI: liveupdate: Do not disable bus mastering on preserved devices
+    during kexec
+  Documentation: PCI: Add documentation for Live Update
+
+ Documentation/PCI/index.rst                   |    1 +
+ Documentation/PCI/liveupdate.rst              |   35 +
+ .../admin-guide/kernel-parameters.txt         |    7 +-
+ Documentation/core-api/liveupdate.rst         |    5 +
+ MAINTAINERS                                   |   15 +
+ drivers/pci/Kconfig                           |   15 +
+ drivers/pci/Makefile                          |    1 +
+ drivers/pci/liveupdate.c                      | 1038 +++++++++++++++++
+ drivers/pci/liveupdate.h                      |   62 +
+ drivers/pci/pci-driver.c                      |    9 +-
+ drivers/pci/pci.c                             |  159 ++-
+ drivers/pci/pci.h                             |    5 +
+ drivers/pci/probe.c                           |   16 +-
+ drivers/pci/quirks.c                          |   58 +-
+ include/linux/kho/abi/pci.h                   |   96 ++
+ include/linux/pci.h                           |    7 +
+ include/linux/pci_liveupdate.h                |   72 ++
+ 17 files changed, 1562 insertions(+), 39 deletions(-)
+ create mode 100644 Documentation/PCI/liveupdate.rst
+ create mode 100644 drivers/pci/liveupdate.c
+ create mode 100644 drivers/pci/liveupdate.h
+ create mode 100644 include/linux/kho/abi/pci.h
+ create mode 100644 include/linux/pci_liveupdate.h
+
+
+base-commit: 945d61765894dda2f0344de50cb1ade2e51b66fd
+-- 
+2.56.0.385.gd3acb90ef8-goog
+
 
