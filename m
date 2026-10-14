@@ -4,60 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8D10FCC6B1A
-	for <kexec@archiver.kernel.org>; Wed, 14 Oct 2026 09:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 72912CC6B2A
+	for <kexec@archiver.kernel.org>; Wed, 14 Oct 2026 10:02:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=H5SgPo1HKKa1EEOsG2iecS6xN05Y0dz7KAy0sbsqSs8=; b=gbTisSof2MeExGzAjEL18+gcSf
-	li9egJ9Ol17kyaUwwh7NPVOR66p9ukcTnxyxxS/iETi2ZCaujmOP/WqoKZ3MnmcB/PNAUhlk+s7Lo
-	BiRF6cQH/4IgOZoUDG5eKh59mhixSDfe8HWc1szCtfcKCy7Z03O7XO2s/fss3zyz5YfcZx9eLdbGh
-	ZBc38IzLaxG4jG9YWhgrOPs40bCjilY7ZvFm3z1Bx2QjQmxZkHJrUiEEaTtM2yUHFh3MvAEmFYcb4
-	pvoivx248VaiMrEfyRfpWo8W2R6Nd5xBpjFR7nQe54weChYYsiHvCAqN6bJ5CuuF+MVTA/3ukKLiI
-	4a9mUqkw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=gq9Me0DpRMB/8hAjXFH9qO/hxN6qlQORSNAboh1nE1Q=; b=fD6PxzsVcMj7HGUaz9bco7Plt/
+	0JEU6vx5Z5Qmk+DwocAeiDCrI4dYGFP4NLnX9aYA2zIp3G42iAtTmYN7KbmE0YLaei0wSEi4kuwuf
+	BglEMRRgrcopzTZ4JAJ/VuQPoMgZKj8Fw+o961ZEJL//gWDx6fjGnB5GzqdBQv4RSqX40pQu/rBdn
+	kmoTW6HxvH4bHNyb49PLHg7XLgEa1r/7iOGGCyBC1pRB3al6SUQC43z4JOSKAyp9vmONMkhAOMPuB
+	l461hEkv+TyaAh3VSg2XytmuITsMdlkm1NMncW/e/ZO8B8mSCmBN4RoahkJz0qY84y617N4znhucG
+	0yM1EPZQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xGvW8-0000000F5px-0qn5;
-	Wed, 14 Oct 2026 09:43:24 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xGvo7-0000000F9aY-0RTE;
+	Wed, 14 Oct 2026 10:01:59 +0000
+Received: from m16.mail.163.com ([117.135.210.2])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xGvW1-0000000F5pE-0rHR
+	id 1xGvnt-0000000F9X5-4Ba2
 	for kexec@lists.infradead.org;
-	Wed, 14 Oct 2026 09:43:19 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 8E7BC60214;
-	Wed, 14 Oct 2026 09:43:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3E471F008A4;
-	Wed, 14 Oct 2026 09:43:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791970996;
-	bh=H5SgPo1HKKa1EEOsG2iecS6xN05Y0dz7KAy0sbsqSs8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=TvHMT19cp3VI4WXyMxkIIIl/rLkbwnHjQpC0jxXIXIcVqdL9JKKmVSSbx0r6hV7NC
-	 Vrdpvz6qL4kqmdUa6ndhhBm547HYFlNtakrQ3150VOtqtxUgg/At6OYcKjKBZk+DZv
-	 vTHNv6FZ8qbfem4AYLoZguZfvTOcrfUV67OCW+gFpCPJKpbB99Tqo/D3vKkSz2WuNh
-	 vOWrjJzt4ic8ZI5b/0emBeZqAp8Vv1jjPYP+7Cil/RqS1xO96u9SkfKZBXadyOL6aJ
-	 clD/IfYffLkkLB6aXQpFPDbtUq6WSVhV9vCPzmBbfUcRE4h+1LFv2vb8qkbUou6csD
-	 GdwrM3es/LR9w==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Haolong Wang <18766350203@163.com>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,  Mike Rapoport
- <rppt@kernel.org>,  Pratyush Yadav <pratyush@kernel.org>,  Andrew Morton
- <akpm@linux-foundation.org>,  kexec@lists.infradead.org,
-  linux-mm@kvack.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] mm/memfd_luo: preserve the sealed exec-bit
- state; reject kernel-private shmem files
-In-Reply-To: <20261014035228.473825-1-18766350203@163.com> (Haolong Wang's
-	message of "Wed, 14 Oct 2026 11:52:25 +0800")
-References: <20261014035228.473825-1-18766350203@163.com>
-Date: Wed, 14 Oct 2026 11:43:13 +0200
-Message-ID: <2vxzmrsgipn2.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	Wed, 14 Oct 2026 10:01:57 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=gq
+	9Me0DpRMB/8hAjXFH9qO/hxN6qlQORSNAboh1nE1Q=; b=juTtINBjinqvFI6EKd
+	dt8OA/a8imzLq1g9iBhTpkgSeXT3WQdpHGhAHRXxKEV7WpblCa+VlbvjmDFGmaRZ
+	jAfrI6X1gBzSFB8y6IiNsQFvE4d4gW3o9oeqYRwo1XQ9lq2cWPDdw846sVHGvjDq
+	Nj6NHM8sifcOHDfKcT0v4GSeM=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wD3_y3vUs9q6psGEw--.34516S2;
+	Wed, 14 Oct 2026 18:01:21 +0800 (CST)
+From: Haolong Wang <18766350203@163.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pratyush Yadav <pratyush@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] mm/memfd_luo: preserve the sealed exec-bit state; reject kernel-private shmem files
+Date: Wed, 14 Oct 2026 18:01:11 +0800
+Message-ID: <20261014100111.79353-1-18766350203@163.com>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <2vxzmrsgipn2.fsf@kernel.org>
+References: <2vxzmrsgipn2.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: _____wD3_y3vUs9q6psGEw--.34516S2
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUO9N3UUUUU
+X-Originating-IP: [2001:250:5828:4461:5d0:1f3:be4d:bdab]
+X-CM-SenderInfo: jpryllawtvijiqt6il2tof0z/xtbC9RFfJ2rPUvEgDwAA31
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261014_030156_214436_DB930194 
+X-CRM114-Status: UNSURE (   7.40  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,26 +75,17 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
+Hi Pratyush,
 
-I refuse to review this series. It looks entirely LLM generated with no
-quality controls at all. LLM generated content is fine, but you can't
-just post low quality patches and expect humans to spend time reviewing
-them.
+Understood, and sorry for the noise.  The Assisted-by: trailers are
+accurate: I used an AI assistant to draft these patches, and the quality
+problem is mine -- I did not review the output carefully enough.  I am
+withdrawing the series and will not post another revision until I can explain
+every line myself and have a much smaller patch with a clear use case.
+Please disregard v1-v3.
 
-The commit messages are unreadable LLM ramblings, the code is all over
-the place and makes very little sense, you have made 3 versions in the
-same day, your cover letter doesn't even explain your use case and why
-you make this change, and so on.
+Thanks for taking the time to say it plainly.
 
-Future postings with similar quality will also be ignored.
+Haolong Wang
 
-Please spend time to understand the kernel development process and spend
-_your own_ time understanding your code and polishing it.
-
-[...]
-
--- 
-Regards,
-Pratyush Yadav
 
