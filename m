@@ -4,79 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 48386CC6B1A
-	for <kexec@archiver.kernel.org>; Wed, 14 Oct 2026 03:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A261ECC6B19
+	for <kexec@archiver.kernel.org>; Wed, 14 Oct 2026 04:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:Subject:References:In-Reply-To:Message-Id:Cc:To:From:Date:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=QcEsOUGr21bCUTpVOPyzctLEnKTSYTY97CZFKgs4Ic4=; b=bxKBCpVYpnDa0YU1NDVVPBKiMX
-	eQw0FginZwT8Wla9b1serIko8ykyDsLL3BPuzUZXcLe+SIl5JL45icaUGlwnOfc+huvsi7NnV+ywF
-	omJ2kt1ipICRs4u9AWDvNQ39Yn+rQGwG6zIcT9NssyPyelz3+rP5H4N0vSPeq2SC5pAI81D+WK4Dc
-	soDR4ey2S5Y1rar9PYBoopKYkk29EQYWjqLsoA+iJAx2Re6osR3fp6BsURTDwQZv1XbOA248dVLVJ
-	cgTHNVkmM6RJ1WjphQzW1PUXwt4oORxe6Jf0FAyr0wntc5JH72y1nTVKw5cfO54cEBzNI9mMvqHJ/
-	wwdrXDYw==;
+	bh=mVKkCeEdC/Z3bV5+Gj0QiuZvl6B9f0qk36QBoeLCgSw=; b=CaYzcdOd8oI6qQp1rqn7aq10TG
+	1BMcF/Q2hmGf+kExU6kknmkJIsBtD4KKg55sBesJGFC7QPtUJsLySuXLjC7XTc9CuKbflSJh1P8O+
+	8C1MVd1oM0u5WDaNyOVNSd8CmtJRLg7vEsyjzxJWTImF4N9I+V/I6tOoXXK1OQ9eOy2maxfgjvKP1
+	qOjK/CeyEzQUzb1uGOC+4AlCnfxAhR5YQQknPMGFF5LfmMEJ0245pinVfqY77kMUqmAyLZTSd5eB7
+	ULjnnb9efgpUcN1/hzdhbkB6hF0atnNE/6lJLMX4M5okN0BqgGFXnfCwFVQM21BHYnymnKwHgKwm0
+	lhKrGqbA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xGq3c-0000000ESdA-20RR;
-	Wed, 14 Oct 2026 03:53:36 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1xGqmG-0000000EVwU-2G30;
+	Wed, 14 Oct 2026 04:39:44 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xGq3a-0000000EScX-3KOi
-	for kexec@bombadil.infradead.org;
-	Wed, 14 Oct 2026 03:53:34 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
-	:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description;
-	bh=QcEsOUGr21bCUTpVOPyzctLEnKTSYTY97CZFKgs4Ic4=; b=plk8VcHxZrkJoBtbQfRnpCmXbU
-	WBbLgWjVRWuMhJG5gYEyhZFtP2l0hsAMPcCjudM97WLuuUDc/re1KL+pdpjrJFX3RIxNtb/w0EVLa
-	4tHdRqJlAMc1nzW5QRup1rFNaQII2oizyZFK/2AJklHxRsKcXM1y5o0edCGRfdWNvglDlKFSImnKJ
-	4NST86h+WVnWW3sFr8V5K325KtaRrX+bozKG1rGnrQm1DNZj+mqypwmYvomvBiVrr07cdDsKqi5ea
-	O9y4b+oKty6TXSO+vYfQK9c99ON3zS3WN4O3H1YtRzwXTLYAZrfJSFvoj4ndsbAj5lChy4ObZAMwg
-	eW7GRoAQ==;
-Received: from m16.mail.163.com ([220.197.31.3])
-	by desiato.infradead.org with esmtps (Exim 4.99.5 #2 (Red Hat Linux))
-	id 1xGq3R-0000000GJkD-3WRE
+	id 1xGqmE-0000000EVwL-45DS
 	for kexec@lists.infradead.org;
-	Wed, 14 Oct 2026 03:53:32 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=Qc
-	EsOUGr21bCUTpVOPyzctLEnKTSYTY97CZFKgs4Ic4=; b=iUMPATF1Fun5xKiepj
-	kDdtAGw+EJQpDrOZxQhdsrliaxSvtlj1Rm19PBZa2hsFIIxIFwZhI/wzI+9j33lK
-	ZiNt7VbStip8JNHhaRqkO3RyhiNjpY1XdmpPI36vEHBTQfn6hUAolOaTjQiCVkr+
-	Mi8kGtzE+RahZgdXgIVayAMM4=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgBncnaF_M5qUtfjEQ--.37990S5;
-	Wed, 14 Oct 2026 11:52:42 +0800 (CST)
-From: Haolong Wang <18766350203@163.com>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pratyush Yadav <pratyush@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] mm/memfd_luo: release preserved folios when retrieve fails
-Date: Wed, 14 Oct 2026 11:52:28 +0800
-Message-ID: <20261014035228.473825-4-18766350203@163.com>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261014035228.473825-1-18766350203@163.com>
-References: <20261014035228.473825-1-18766350203@163.com>
+	Wed, 14 Oct 2026 04:39:43 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 658DC4096C;
+	Wed, 14 Oct 2026 04:39:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAA5E1F000FF;
+	Wed, 14 Oct 2026 04:39:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791952782;
+	bh=mVKkCeEdC/Z3bV5+Gj0QiuZvl6B9f0qk36QBoeLCgSw=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=Ve4t7EcLOnzBpcI1YE0/Db/F1QU0KCzu8pjxRHF19QIufyy4I3/TRuZaq2ELtAzt8
+	 GfCAB2fUjoONolJxsJ+1F5Gtmz0yztKMOjHTgqRemlHuHrDMOiP6643ZSBx9Py0qKX
+	 O+scu1BR6iCqPztQz8QgwjTKpjqpujy+oP1cEYzwLs/JsaLqn7BUQLB5uySXTeAV1f
+	 chdAoBd+fqN/fzxdM8rj03xEtKaPpdOfp2t9FcPXZQCp66QID+/PPriT1uvpBACUUN
+	 TdpNc4ZBMqm4ECzgu02nuEkuWyCDzqOEkIiM1BjJ6USZqmmDag+xwBGdLIcsBQ0hH8
+	 DUl1YN7tuCGDg==
+Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
+	by mailfauth.ams.internal (Postfix) with ESMTP id 07529198003A;
+	Wed, 14 Oct 2026 00:39:39 -0400 (EDT)
+Received: from ams-imap-11 ([10.64.2.31])
+  by ams-compute-02.internal (MEProxy); Wed, 14 Oct 2026 00:39:39 -0400
+X-ME-Sender: <xms:hwfPagdIJmelWczr7He8n9KRTjGUR-fo9YTa5G_szGq2dn-OK-yeFA>
+    <xme:hwfPatDIBaRejOSh-km9hQyHvEnn1xC9sD9FZ06z2kHkmj4sDtwTBA92ZqbCeHJn8
+    8zpS7vEzfaCjp4EHJzyhiFPHzewKvVa_xA0KqmYjn5DudIBukDn34eY>
+X-ME-Proxy-Cause: dmFkZTE6pBDUsJEPr0X2GlKwrjjE+OE5kUEHvpuPEEl0/V6y+5kxMhe+G35Lr3HmkzZN1n
+    1lFFtYXYC2zAIFzuXWsk+8iOHgzKsSLuzGH5cnMle49tSzmY4aUJkM5eZBDt2pkFqtSNJC
+    TpsJbwj5DMMioB4ofwJ5JZYJg7X5HLdDvwP6S8efsLSiaRJXVavguBZeGE4D1OAqIV6XKo
+    mVTi3yjX66ip85F6m8Tzbz7LN/y5SOftKGYu2319JkGv8n4sficapx7VyFzw+UBQ+didy6
+    vhAXhECdzhApuikAv5Oh9j0j3YjzEhe36ocpkiExpU21r90LwjF6Wzj+4VCwfDn5BqJFFK
+    JND3vloSJzRw+u3SkcdjK8yHAjYo+fbUy5Ho4F8OP1HP4z+jHQDr8lYZJrygElaGQm05SK
+    JuR5z4C/W44eMwOAFQyyTY2COeXVQDRyt+pxPROFg6V+By4LaEhKQ/KP69wafWMQ1qRc3K
+    nZw0hP0JA68yPYYC/zkwYkpYedjazidjAxmf282AYUKVVUoadYes5U34DDJwN3fYTWVQ76
+    VDYxc1JP8EzGqR9ICTjhoIbcV0WUPX7bAyjWmGz3xHJ5lSUoueeztvQKWxL6d0yAvoDLip
+    HXB3K9f0nPH1ZCiqUUxpq7dOobhlQG8zN6ankyBF/K04OKkt81SMVwfXaj8w
+X-ME-Proxy: <xmx:igfPatadCwlNeP-f7qFvfF2T21Y-b5awskS_Q9cwafrJNmbL13TdGA>
+    <xmx:igfPavaI5NBgoPWMt7PTB__VRt23F7eLY4Ng9ebzf0FACZLh_Mv4ZA>
+    <xmx:igfPammn66nNiMEmtdjxGJGTXyh82YjU4f22HRaxAF3s5ypjKV_GbQ>
+    <xmx:igfPapSv03MzL7AkAKMPLEHBu1nwNc9kSB4a8SBCWaMqh1ortoprdQ>
+    <xmx:igfPajXgQQXszY5jntE4jDgiT2r-VHw3AdfJRA8CgBi4yq1sXz3Rb_Di>
+Feedback-ID: ice86485a:Fastmail
+Received: by mailuser.ams.internal (Postfix, from userid 501)
+	id 23539F8008E; Wed, 14 Oct 2026 00:39:35 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: QCgvCgBncnaF_M5qUtfjEQ--.37990S5
-X-Coremail-Antispam: 1Uf129KBjvJXoW3XF1xuFWxCF4kJF1fAr43Wrg_yoW7uFWUpF
-	W5Gwn8KrW8KF4fA397Za1jv34F93yfAFy5WFW7W3s7A3W5Xr17W3Z0v34DuFW5GrWDGFyx
-	Xw4YkryUZFy5Z37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jLl19UUUUU=
-X-Originating-IP: [2408:8418:c22:8000:1bbd:2550:438b:167e]
-X-CM-SenderInfo: jpryllawtvijiqt6il2tof0z/xtbC0wuvd2rO-ItS4QAA3g
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261014_045330_993261_81AC1C5C 
-X-CRM114-Status: GOOD (  25.12  )
+Date: Wed, 14 Oct 2026 06:39:14 +0200
+From: "Ard Biesheuvel" <ardb@kernel.org>
+To: "Jason Gunthorpe" <jgg@nvidia.com>
+Cc: "Mark Rutland" <mark.rutland@arm.com>,
+ "Alexei Starovoitov" <ast@kernel.org>,
+ "Daniel Borkmann" <daniel@iogearbox.net>,
+ "John Fastabend" <john.fastabend@gmail.com>,
+ "Andrii Nakryiko" <andrii@kernel.org>,
+ "Martin KaFai Lau" <martin.lau@linux.dev>,
+ "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>,
+ "Yonghong Song" <yonghong.song@linux.dev>,
+ "Jeremy Linton" <jeremy.linton@arm.com>,
+ "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
+ "Simon Horman" <horms@kernel.org>, "Gerd Hoffmann" <kraxel@redhat.com>,
+ "Vitaly Kuznetsov" <vkuznets@redhat.com>, "Philipp Rudo" <prudo@redhat.com>,
+ "Viktor Malik" <vmalik@redhat.com>, "Jan Hendrik Farr" <kernel@jfarr.cc>,
+ "Andrew Morton" <akpm@linux-foundation.org>, kexec@lists.infradead.org,
+ bpf@vger.kernel.org, systemd-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <8fb05f13-e770-41a4-af66-d239b4c95201@app.fastmail.com>
+In-Reply-To: <20261014000227.GV13920@nvidia.com>
+References: <20260322014402.8815-1-piliu@redhat.com>
+ <20261011201325.GA918242@nvidia.com>
+ <722bd9d8-5620-498a-a6c2-d9a1f498e0b7@app.fastmail.com>
+ <20261014000227.GV13920@nvidia.com>
+Subject: Re: [PATCHv7 00/13] kexec: Use BPF lskel to enable kexec to load PE format
+ boot image
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,180 +113,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-retrieve() only frees the serialization structure on its error paths, but
-the folios it describes are still preserved at that point:
-memfd_luo_finish() deliberately skips its own cleanup for records whose
-retrieve() failed, since it relies on retrieve() to have released them.
-The folios and the folio array are therefore never handed back and stay
-reserved in the next kernel.
+(removed some bouncing cc'ees)
 
-Release them from retrieve() as well, by sharing the cleanup with
-memfd_luo_finish().  After the record has been validated, the folio array
-is restored before the file is allocated, so a failure from
-memfd_alloc_file() or memfd_add_seals() can release the folios directly
-instead of allocating memory while already handling a failure; a record
-this version does not support is rejected before that and uses the shared
-cleanup too.  The folios may only be released while they are still fully
-preserved: once memfd_luo_retrieve_folios() has run it has consumed every
-folio it touched -- the ones added to the file go away with it, the ones
-that could not be added are released in place -- and releasing them a
-second time would warn and free memory that is in use.
+On Wed, 14 Oct 2026, at 02:02, Jason Gunthorpe wrote:
+> On Tue, Oct 13, 2026 at 09:19:28PM +0200, Ard Biesheuvel wrote:
+>> > Given those constraints entering the successor kernel through the
+>> > normal EFI entry point is highly desirable. This would allow x86 to
+>> > continue to provide the DRTM trampolines through an EFI mechanism and
+>> > means the Linux EFI stub always handles the launch with identical code
+>> > in all scenarios.
+>> 
+>> With some help from my friend Claude, I've prepared a prototype that
+>> reuses my efiloader Rust crate to boot EFI stub images (bare Image,
+>> zboot, UKI) in the kernel: the EFI boot phase is invoked at kexec
+>> load time, and runs under the preceding kernel up until the point
+>> where ExitBootServices() is called. Then, the actual kexec call
+>> will return from ExitBootServices() after shutting down the first
+>> kernel.
+>
+> Running it inside a kthread is such a novel idea, I would have never
+> thought to attempt that!
+>
+> I've asked some folks here to take a look and try to test this with
+> real DRTM capable HW. It seems very promising that it will work to me,
+> and I surmize this is also close to boot a UKI?
+>
 
-Two error paths still cannot release the folios: if
-kho_restore_vmalloc() fails, the array cannot be walked at all, and that
-API is not failure-atomic, so a partial failure cannot be retried either.
-Closing those needs a KHO-side fix or an allocation-free discard/iterator
-API and is left alone here.
+It already works for UKIs as well.
 
-Found by code inspection while extending the preserved record (reported
-by Sashiko AI review).
-
-Fixes: f85b1c6af5bc ("liveupdate: luo_file: remember retrieve() status")
-Assisted-by: Pi:glm-5.3-flash
-Signed-off-by: Haolong Wang <18766350203@163.com>
----
- mm/memfd_luo.c | 78 ++++++++++++++++++++++++++++++++++----------------
- 1 file changed, 53 insertions(+), 25 deletions(-)
-
-diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
-index 333502ea3735..f1f07d90f73d 100644
---- a/mm/memfd_luo.c
-+++ b/mm/memfd_luo.c
-@@ -467,9 +467,31 @@ static void memfd_luo_discard_folios(const struct memfd_luo_folio_ser *folios_se
- 	}
- }
- 
--static void memfd_luo_finish(struct liveupdate_file_op_args *args)
-+/*
-+ * Release a preserved record: return its folios to the page allocator and free
-+ * the record itself.  Only valid for records whose folios were never handed to
-+ * a file -- handing a folio to a file consumes its last reference, and
-+ * memfd_luo_discard_folios() would release it a second time.
-+ */
-+static void memfd_luo_release_ser(struct memfd_luo_ser *ser)
- {
- 	struct memfd_luo_folio_ser *folios_ser;
-+
-+	if (ser->nr_folios) {
-+		folios_ser = kho_restore_vmalloc(&ser->folios);
-+		if (!folios_ser)
-+			goto out;
-+
-+		memfd_luo_discard_folios(folios_ser, ser->nr_folios);
-+		vfree(folios_ser);
-+	}
-+
-+out:
-+	kho_restore_free(ser);
-+}
-+
-+static void memfd_luo_finish(struct liveupdate_file_op_args *args)
-+{
- 	struct memfd_luo_ser *ser;
- 
- 	/*
-@@ -484,17 +506,7 @@ static void memfd_luo_finish(struct liveupdate_file_op_args *args)
- 	if (!ser)
- 		return;
- 
--	if (ser->nr_folios) {
--		folios_ser = kho_restore_vmalloc(&ser->folios);
--		if (!folios_ser)
--			goto out;
--
--		memfd_luo_discard_folios(folios_ser, ser->nr_folios);
--		vfree(folios_ser);
--	}
--
--out:
--	kho_restore_free(ser);
-+	memfd_luo_release_ser(ser);
- }
- 
- static int memfd_luo_retrieve_folios(struct file *file,
-@@ -600,7 +612,7 @@ static int memfd_luo_retrieve_folios(struct file *file,
- 
- static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
- {
--	struct memfd_luo_folio_ser *folios_ser;
-+	struct memfd_luo_folio_ser *folios_ser = NULL;
- 	struct memfd_luo_ser *ser;
- 	struct file *file;
- 	umode_t exec_mode;
-@@ -614,18 +626,28 @@ static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
- 	if ((ser->seals & ~MEMFD_LUO_ALL_SEALS) ||
- 	    (ser->flags & ~MEMFD_LUO_ALL_FLAGS)) {
- 		err = -EOPNOTSUPP;
--		goto free_ser;
-+		goto release_ser;
- 	}
- 
- 	/*
--	 * The seals are preserved. Allow sealing here so they can be added
--	 * later.
-+	 * Restore the folio array before allocating the file.  Once this succeeds,
-+	 * every later error path can release the preserved folios directly instead
-+	 * of allocating memory again while already handling a failure.
- 	 */
-+	if (ser->nr_folios) {
-+		folios_ser = kho_restore_vmalloc(&ser->folios);
-+		if (!folios_ser) {
-+			/* kho_restore_vmalloc() is not safe to retry after failure. */
-+			err = -EINVAL;
-+			goto free_ser;
-+		}
-+	}
-+
- 	file = memfd_alloc_file("", MFD_ALLOW_SEALING);
- 	if (IS_ERR(file)) {
- 		pr_err("failed to setup file: %pe\n", file);
- 		err = PTR_ERR(file);
--		goto free_ser;
-+		goto discard_folios;
- 	}
- 
- 	/*
-@@ -648,15 +670,12 @@ static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
- 	vfs_setpos(file, ser->pos, MAX_LFS_FILESIZE);
- 	i_size_write(file_inode(file), ser->size);
- 
--	if (ser->nr_folios) {
--		folios_ser = kho_restore_vmalloc(&ser->folios);
--		if (!folios_ser) {
--			err = -EINVAL;
--			goto put_file;
--		}
--
--		err = memfd_luo_retrieve_folios(file, folios_ser, ser->nr_folios);
-+	if (folios_ser) {
-+		/* retrieve_folios() consumes every preserved data folio. */
-+		err = memfd_luo_retrieve_folios(file, folios_ser,
-+						ser->nr_folios);
- 		vfree(folios_ser);
-+		folios_ser = NULL;
- 		if (err)
- 			goto put_file;
- 	}
-@@ -668,9 +687,18 @@ static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
- 
- put_file:
- 	fput(file);
-+discard_folios:
-+	if (folios_ser) {
-+		memfd_luo_discard_folios(folios_ser, ser->nr_folios);
-+		vfree(folios_ser);
-+	}
- free_ser:
- 	kho_restore_free(ser);
- 	return err;
-+
-+release_ser:
-+	memfd_luo_release_ser(ser);
-+	return err;
- }
- 
- static bool memfd_luo_can_preserve(struct liveupdate_file_handler *handler,
--- 
-2.56.0
+The next step is to run it deprivileged - I think the arm64 stub code
+is already very close to being runnable in that manner.
 
 
