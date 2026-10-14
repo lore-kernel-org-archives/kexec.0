@@ -4,56 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5EFB4CC6B19
-	for <kexec@archiver.kernel.org>; Wed, 14 Oct 2026 00:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 38F5ACC6B1C
+	for <kexec@archiver.kernel.org>; Wed, 14 Oct 2026 03:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
-	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=qvEKF9cNZOBTm9yAWIh6GxjcIBCC8+Ng5MvyR5xu1bs=; b=OXB98DYyjrsfFsfT21GcNQoHzD
-	ngUtWdB6tAzxVCCwSDRafyZvWOWJwWMBRAJwNMuuxudFHsmDrf4GjlTjAqMaplJ/MRqM+gHrCyNpd
-	/JIVphrTK9mrX/Mh6qa+/fFyiGQWr2rEv9vbrOPJQXntXBcKRSsXLrWN93YvdGo33BLEaJYtF2gim
-	ie2CMX5jzJkwv8o4vNe1iTzT3MHjv6JbxwqLYDqHycuFC1j0vNY9U+xXI9G8o4D4/Hw9Qy8AP6B6z
-	r/52VVH9ngzPHRsiV/dJjfCPB2ng15WYwOM9m1F0tlpwtToA0xINmxDaSBv+Jpnkv9C7u2sslHk68
-	+d1i4I0A==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=7GQ2NJ+XFehaoUKQh9K8T656Nb9kxKH0kwaVt8iqHl4=; b=LTVTDrEYEe2VPBMFCyBeEB7PAN
+	R6L7BLqmRC058i3Ae+qH+xU57wmGapnMHIpBbhmiWo8jbF54dWOF5YCmw55lEr7vBAX1BIoyt/hBq
+	pHt4wJe+a2SmixqsPn3/+4OZJTB78qMGn+I5KMpgkbD7eiTilK0wkycsZ/O1SAAoNvvpR3YQnPeVN
+	JGoo5g4lwYqt+crwZwUtWvED6YY3BKNRtMPtyV5bJYNia8bYUqZzSyjIxjAy7qwWzZzZfuU4XG/de
+	COtDW55pSUwa2q5PBbQi0YXI2MhIuBNf02NJp3t+Ekj0GFomwos7O7KBc3tggiZHX9ks2finfMpnR
+	LwJDSCOA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xGnBK-0000000EIou-0RWe;
-	Wed, 14 Oct 2026 00:49:22 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xGpQd-0000000EPpQ-41Mm;
+	Wed, 14 Oct 2026 03:13:20 +0000
+Received: from m16.mail.163.com ([117.135.210.4])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xGnBH-0000000EIof-2uVk
+	id 1xGpQV-0000000EPof-2nHL
 	for kexec@lists.infradead.org;
-	Wed, 14 Oct 2026 00:49:20 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id BC6B1600CB;
-	Wed, 14 Oct 2026 00:49:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17F3D1F000FF;
-	Wed, 14 Oct 2026 00:49:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791938958;
-	bh=qvEKF9cNZOBTm9yAWIh6GxjcIBCC8+Ng5MvyR5xu1bs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=T9VrKaTwGYctoMcRpPSIG17ZWOUc4lpcLzmZEEg/MMzNJL0QDe8BFZV+5gl3JPfVX
-	 QEbDtNhb6Ch0/ziGyRK1IRZnmR2NYpCYK09aOHdx594Z7nnYSzCWBrDuzuQHAF1D+9
-	 pb61axUxAk3KTNVH7cqhlWUOD9MyYn+nYa4jDMhXMoCcAp+HzD3YqpBL1rokOY/1qn
-	 prkT1In88ZAiYxwnSWlz2558PPBEd2aIl6+z6mYTgvZdyNmFsRTkUORAGGzPRzI+2u
-	 c3SDEvAtShWhkUKHRILPjcczJT2ovCajC7t5/9OMtC+MSrhA3+e482G57ibIoS5EBp
-	 Ov8IMy/TM++lw==
-Message-ID: <sashiko-outbox-170651@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] mm/memfd_luo: carry the exec-bit state in the preserved
- record
-To: "Haolong Wang" <18766350203@163.com>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Mike
- Rapoport" <rppt@kernel.org>, "Pratyush Yadav" <pratyush@kernel.org>
-Cc: "Andrew Morton" <akpm@linux-foundation.org>, kexec@lists.infradead.org
-In-Reply-To: <20261014003558.357783-1-18766350203@163.com>
-References: <20261014003558.357783-1-18766350203@163.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 14 Oct 2026 00:49:17 +0000
+	Wed, 14 Oct 2026 03:13:16 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=7G
+	Q2NJ+XFehaoUKQh9K8T656Nb9kxKH0kwaVt8iqHl4=; b=I/Ve6NtvlPGIqUL+ZA
+	VubSUKBOj9Eh28JifaDZ2YLNsyeYTJB6el9RxdWWhxSUeyfcASGDdcSdR5iVAIDV
+	bv15TNmCIUgBABh7MvzDaB61Bkmbe6cgRNx+WuvX8LKY7XAvnExoO1RyyBcrN2vo
+	ti6xnEcYS9eTsWg/IGNcjw+Q8=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp2 (Coremail) with SMTP id PSgvCgB36cMq885qzbNoEA--.22532S2;
+	Wed, 14 Oct 2026 11:12:43 +0800 (CST)
+From: Haolong Wang <18766350203@163.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pratyush Yadav <pratyush@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/memfd_luo: carry the exec-bit state in the preserved record
+Date: Wed, 14 Oct 2026 11:12:35 +0800
+Message-ID: <20261014031235.432509-1-18766350203@163.com>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <sashiko-outbox-170651@kernel.org>
+References: <sashiko-outbox-170651@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: PSgvCgB36cMq885qzbNoEA--.22532S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXF4fJF13Gw48XrWfAr47Arb_yoWrtFyrpr
+	Z8Kr1Yyw1kGa40vw4xZw1IqryrA3yIyF1rJFs8Kry7A3W5WF1SqFWFga4Y9FyUGrnaga42
+	qa1j9348Za98Zw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Uyq2_UUUUU=
+X-Originating-IP: [2408:8418:c22:8000:1bbd:2550:438b:167e]
+X-CM-SenderInfo: jpryllawtvijiqt6il2tof0z/xtbC1AxWHmrO8yxxJQAA3-
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261013_201315_446280_E2309780 
+X-CRM114-Status: GOOD (  17.19  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -65,118 +73,91 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] mm: TOCTOU race in memfd_luo_preserve loses fchmod and seals updat=
-es
-- [Medium] mm/memfd_luo: leak of preserved folios in memfd_luo_retrieve() e=
-rror paths
---
+Thanks for the review.  Both findings were real.
 
-commit b09cba94dd95aadc45f383b05eb9e6f205bf88e7
-Author: Haolong Wang <18766350203@163.com>
-Subject: mm/memfd_luo: carry the exec-bit state in the preserved record
+On the exec-mode snapshot: the sample itself was atomic -- the mode is
+read under inode_lock, in the same critical section that sets
+SHMEM_F_MAPPING_FROZEN -- but it was taken far too early.  The frozen
+mapping only rejects growing, shrinking and fallocate(); fchmod() of the
+exec bits (until F_SEAL_EXEC is set) and F_ADD_SEALS are not checked on
+that path at all, and freeze() refreshed only f_pos.  v2 closes this from
+both ends: freeze() takes the final sample of the exec mask and the seals
+under the inode lock and, in the same critical section, sets a new
+SHMEM_F_SEAL_STATE_FROZEN inode flag before dropping the lock.  From
+that point on shmem_setattr() rejects exec-bit changes, memfd_add_seals()
+rejects new seals, and shmem_set_acl() rejects access-ACL updates.  The
+flag is cleared by a new .unfreeze callback when the update is rolled
+back, and defensively by unpreserve().
 
-This commit preserves the execution bits of a memfd during a KHO live
-update. It records the exec-bit state in the memfd_luo_ser structure and
-applies it to the fresh inode during restore before re-applying seals,
-ensuring the W^X policy behaves correctly.
+Two more things fell out of that work:
 
-> diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
-> --- a/mm/memfd_luo.c
-> +++ b/mm/memfd_luo.c
-> @@ -299,6 +299,17 @@ static int memfd_luo_preserve(struct liveupdate_file=
-_op_args *args)
->  	ser->size =3D inode_size;
->  	ser->seals =3D seals;
-> =20
-> +	/*
-> +	 * F_SEAL_EXEC freezes the exec bits as they are at sealing time, so
-> +	 * the restore has to reproduce them.  Record whether the inode had
-> +	 * exec bits here; the restore sets the mode of the fresh inode
-> +	 * accordingly before re-applying the seals.  ser is zero-initialized,
-> +	 * so a clear bit means the bits were clear (or the record predates
-> +	 * this flag -- the safe reading for those is also "no exec bits").
-> +	 */
-> +	if (inode->i_mode & 0111)
-> +		ser->flags |=3D MEMFD_LUO_FL_EXEC_BIT;
-> +
+ - A single "some exec bit was set" flag was not enough: an execute mask
+   of 0100 (mode 0700) came back as 0111, which is the inversion this
+   series is about.  The record now carries the three execute bits
+   separately, retrieve() restores the exact mask and rejects unknown flag
+   bits, and luo_kexec_simple.c round-trips an execute mask of 0100 with
+   its full 0x3e seal set, plus a memfd without execute bits
+   (MFD_NOEXEC_SEAL: mask 0000, seal set 0x20, still writable), which is
+   the state the original report was about.
+ - An access ACL rewrites inode->i_mode without going through
+   shmem_setattr(), so the frozen state has to cover that path too.
+   Scope note: F_SEAL_EXEC itself is still bypassable by an access ACL
+   write (posix_acl_update_mode() updates the mode directly, with no seal
+   check anywhere on that path).  That is a pre-existing
+   F_SEAL_EXEC/vm.memfd_noexec issue, deliberately not part of this
+   series; I will report it separately with a minimal repro.
 
-[Severity: High]
-Can a concurrent userspace modification race with this early caching?
+On the folio leak: also real.  retrieve() now releases the preserved
+folios on every failure path by sharing the cleanup with
+memfd_luo_finish().  The folio array is restored before the file is
+allocated, so the later error paths (memfd_alloc_file(),
+memfd_add_seals()) can release the folios directly instead of allocating
+memory while already handling a failure, and memfd_luo_retrieve_folios()
+takes ownership as soon as it runs, so nothing is released twice.  It
+predates the exec-bit work, so it is a separate commit with a Fixes tag.
 
-The i_mode is read and cached here, before dropping the inode_lock. Shortly
-after, shmem_freeze() is called. However, SHMEM_F_MAPPING_FROZEN ignores
-ATTR_MODE in shmem_setattr() and is not checked in memfd_add_seals().
+Two limitations I could not close here, both written down in the patches:
 
-Because memfd_luo_freeze() blindly updates only f_pos without re-evaluating
-the mode or seals:
+ - f_pos can still change after freeze().  The LUO file API has no global
+   userspace quiescence before .freeze() runs, so this needs a
+   framework-level answer rather than a memfd one.
+ - If kho_restore_vmalloc() fails before consuming anything (for example
+   its own kvmalloc() fails), the folio array cannot be walked at all and
+   those folios stay reserved.  That API is not failure-atomic and cannot
+   be retried after a partial failure, so it needs a KHO-side fix or an
+   allocation-free discard/iterator API.
 
-mm/memfd_luo.c:memfd_luo_freeze() {
-    ...
-    ser->pos =3D args->file->f_pos;
-    ...
-}
+On record versions: the record is now written as "memfd-v3", and a
+read-only "memfd-v2" handler is registered next to it.  The compatible
+strings are matched exactly, so the matrix is:
 
-Could userspace modify the mode via fchmod or add seals between the preserve
-and freeze phases, causing the restore process to lose those updates and
-break security policies like the W^X rule?
+  record writer   reading kernel and handler     result
+  old v2          old kernel, v2 handler         default executable mode
+  old v2          new kernel, legacy v2 reader   no execute bits
+  new v3          new kernel, v3 handler         exact exec mask and seals
+  new v3          old kernel                     no handler, -ENOENT
 
-[ ... ]
+Rows two and four are both behaviour changes, and neither direction is
+interoperable: an executable memfd preserved by an older kernel comes back
+without execute bits (row two -- the safe reading; the old reader never
+looked at the flags, it restored the default executable mode), and a new
+record handed to an older kernel finds no matching handler at all, so the
+deserialization fails with -ENOENT instead of the memfd being restored as
+executable again (row four, which is why the version is bumped).  The
+legacy handler only reads records written by an older kernel: its
+.can_preserve() always returns false, so an outgoing preservation is
+always serialized as "memfd-v3".
 
-> @@ -542,6 +556,19 @@ static int memfd_luo_retrieve(struct liveupdate_file=
-_op_args *args)
->  		goto free_ser;
->  	}
-> =20
-> +	/*
-> +	 * Reproduce the exec bits before the seals are re-applied: F_SEAL_EXEC
-> +	 * freezes the bits as they were at sealing time, and the W^X rule in
-> +	 * memfd_add_seals() looks at the mode when it decides whether to imply
-> +	 * the write seals.  Setting the mode here, directly on the fresh
-> +	 * anonymous inode, is safe -- the file has not been published and no
-> +	 * other thread can reach it yet.
-> +	 */
-> +	if (ser->flags & MEMFD_LUO_FL_EXEC_BIT)
-> +		file->f_inode->i_mode |=3D 0111;
-> +	else
-> +		file->f_inode->i_mode &=3D ~0111;
-> +
->  	err =3D memfd_add_seals(file, ser->seals);
->  	if (err) {
->  		pr_err("failed to add seals: %pe\n", ERR_PTR(err));
->  		goto put_file;
->  	}
+v2 will follow as a separate thread.
 
-[Severity: Medium]
-Do these error paths leak the physical folios tracked by ser->folios?
+Both changes are covered by a QEMU live-update run (preserve -> kexec ->
+retrieve) with the liveupdate selftest: the memfd with execute mask 0100
+and seal set 0x3e round-trips exactly, the memfd without execute bits
+comes back with mask 0000, seal set 0x20 and still writable, and the same
+test against a kernel without the change reports "execute mask changed
+across kexec: 0111 != 0100".  The numbers are in the v2 cover letter.
 
-When jumping to free_ser or put_file on failure, kho_restore_free(ser) is
-called, but there is no call to restore the vmalloc metadata via
-kho_restore_vmalloc() and free the physical folios.
-
-Looking at memfd_luo_finish(), the driver explicitly expects retrieve() to
-clean up its own folios on failure:
-
-mm/memfd_luo.c:memfd_luo_finish() {
-    /*
-     * If retrieve was successful, nothing to do. If it failed, retrieve()
-     * already cleaned up everything it could. So nothing to do there
-     * either. Only need to clean up when retrieve was not called.
-     */
-    if (args->retrieve_status)
-        return;
-    ...
-}
-
-Will failing at memfd_alloc_file() or memfd_add_seals() leave these
-KHO-preserved folios permanently reserved in memory?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261014003558.3577=
-83-1-18766350203@163.com?part=3D1
 
