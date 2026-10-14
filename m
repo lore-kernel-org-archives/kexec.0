@@ -4,142 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 669F0CC6B1D
-	for <kexec@archiver.kernel.org>; Wed, 14 Oct 2026 00:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1BFB5CC6B1D
+	for <kexec@archiver.kernel.org>; Wed, 14 Oct 2026 00:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ydIF+NGzq5LdYpg4pBaXHz3znT+yc0+yVkaN6HwJ1iI=; b=msI0X3x8FPRziMSPdiFDQ0pJAw
-	ogntVctMek0M632zjb/4QzboKevwjrp/ybskLkuGt2WJjX50swwmE/8ZoL5GdD3KikLdgveEGULrV
-	k8ypiGJ3sFPDvrf98/+9hSdkJX6FGxKjR0J1Qk2AkdTWIqvWbbeZ9zfhtt/eCRJ86Efsp9mga7rEL
-	f2TqwILuIDdbqdyqJK1oHNYQ0Q2BrWNSkvvT16n68KpHWFu4LQc4H7jQRNwy7+PGTBGVY6Ki8byUI
-	A2gL7CjxpM+eCgfLMzlIhIkkAJNVd0a0mI44wQMzl9loX7gRUoYpenAlxbv8o7pMugBIBemXw42+B
-	ryyu/38Q==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=e8l+LZqu+D+wbZzn73m1duCjP/mzQaKWa6FuilWnWdo=; b=jG92hkzFVNWOOrCAoJK43L2j9m
+	muJyivToV71TemlTzR+aydxQ2XR5ru5Hrv8ZeL6Givc25Xru3UaYGHLON+1kVTgT6thM+TnnXl3JI
+	w6i6cbovE6oavtb39nSVBUuLPkJUhY1X2Jzj4HGwbDZJv6wuyLUfzn9uSkNM0cyuxp6ixKwtrRFkd
+	o3Fq78kIImGEDoFHnKUQ5tUar2H1MWjf9pBD7NirDphenBkTHJm/LAYWZcYJtqLBJt/3Xc7hjUggi
+	0JxPxd7Bhp+/Cp5zT7DVmBMQIl/9eA6umIoR1mXQ5RJcHKbqD36JRrN0Nn0V5mHcrYYlkzqVxSsG6
+	WfyIHlsw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xGmSP-0000000EG8p-0Vh1;
-	Wed, 14 Oct 2026 00:02:57 +0000
-Received: from mail-northcentralusazon11013070.outbound.protection.outlook.com ([40.107.201.70] helo=CH4PR04CU002.outbound.protection.outlook.com)
+	id 1xGmzK-0000000EHte-2yjD;
+	Wed, 14 Oct 2026 00:36:58 +0000
+Received: from m16.mail.163.com ([220.197.31.2])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xGmS3-0000000EG7z-0gje
+	id 1xGmyy-0000000EHqp-2aOw
 	for kexec@lists.infradead.org;
-	Wed, 14 Oct 2026 00:02:37 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jsXQAZbrFzZOMvFck7+zb6CEnyFoCau3ycXJ43sqgtbW2XjcAes8M1r3euzp+Cu2A/+JwhCgcjEZWWQdOzN/LUdkkTGnASN1CPnxqWyGe77ucQpyRn+0CH/ZLoFBHndVzOub0FH1rTL3ET0M79stFihdfHEaFUSEyNtN5WqXICLVmwXCKfZ9DtkRVpkQsAnxxuFImRKgJT58CYQNojW+n2RfYFScTp+eyuYWRzySxeam7/FQsJQuZhDBWToP7rkRH8+zh0cIe21AfcKJ3gkl+ZChi035DTabJc40jc+AQyaNl6qHP1sWobHXNHe9W82xNJOxE953cpWiyaOphdPuKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ydIF+NGzq5LdYpg4pBaXHz3znT+yc0+yVkaN6HwJ1iI=;
- b=KXIGlaNQ4aIhOV68tSOa6DN7iZIhjDYFKNTKvlBB+TugGucPzA1HrkPIrvpnF/evG2jr4ARIOgSEINU8ao1fBvUg1wiNdkVgmd9NdBSFouJWoD9LQVUrIc95yQ00I1B4fDoZGGNI/ej31R3UWyADX7smD8Ue/UX673rMA74RsNs7tExpyHJYTv473Z0EGKr0U3uBvPmRWa2qGh89wrTk4EHAj78iK7EKZ0PUnlamN55v0DkiQFNGCH7KmxMtacn4LWrv7A8pnPTJZcWcdOWZxRulaB4oKJ4jeEOphmknpyKBfzJiK/7eeIwlpT8Fqync1JaTfOzEzDD96E38wFvirA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ydIF+NGzq5LdYpg4pBaXHz3znT+yc0+yVkaN6HwJ1iI=;
- b=j/4jY/5oOsVWvAsvwKOkew9i3IjrgK6Sjb4PLvMyVokotVBnc17hh8sYzTm/gfzaymT5W/FJaPCua+4kzNyvSMP7OfdZmh+JlHOSpbTIhXsx6T1A+/0MFByxz+Mk07qf2DVeDEd/vqO3PBQvHTyjQHFMHp8d7eo85yWIEYH8K/Yje/DozA6lyMSj8PwYG/bjzSfUBD1FarDXxEg7oPTUg24oIf67uAz/x+/HwS8+S1jtjqEnUp+0sycaUhgMxN4y+0geTpay6999JUgvd3o1m19AvdxRdMdgSefC9b1pNm8wzCR74hJiK6rqGQJf7DJKJNqHMw1dloYi+xBUrmSc7g==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CHBPR12MB731189.namprd12.prod.outlook.com
- (2603:10b6:610:33d::12) by BN7PPF0D2C72F0D.namprd12.prod.outlook.com
- (2603:10b6:40f:fc02::6c6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.13; Wed, 14 Oct
- 2026 00:02:28 +0000
-Received: from CHBPR12MB731189.namprd12.prod.outlook.com
- ([fe80::b0e5:123d:fe06:e10d]) by CHBPR12MB731189.namprd12.prod.outlook.com
- ([fe80::b0e5:123d:fe06:e10d%6]) with mapi id 15.21.0496.021; Wed, 14 Oct 2026
- 00:02:28 +0000
-Date: Tue, 13 Oct 2026 21:02:27 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Pingfan Liu <piliu@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Simon Horman <horms@kernel.org>,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Philipp Rudo <prudo@redhat.com>, Viktor Malik <vmalik@redhat.com>,
-	Jan Hendrik Farr <kernel@jfarr.cc>, Baoquan He <bhe@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	kexec@lists.infradead.org, bpf@vger.kernel.org,
-	systemd-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv7 00/13] kexec: Use BPF lskel to enable kexec to load PE
- format boot image
-Message-ID: <20261014000227.GV13920@nvidia.com>
-References: <20260322014402.8815-1-piliu@redhat.com>
- <20261011201325.GA918242@nvidia.com>
- <722bd9d8-5620-498a-a6c2-d9a1f498e0b7@app.fastmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <722bd9d8-5620-498a-a6c2-d9a1f498e0b7@app.fastmail.com>
-X-ClientProxiedBy: YT4P288CA0034.CANP288.PROD.OUTLOOK.COM
- (2603:10b6:b01:d3::20) To CHBPR12MB731189.namprd12.prod.outlook.com
- (2603:10b6:610:33d::12)
+	Wed, 14 Oct 2026 00:36:41 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=e8
+	l+LZqu+D+wbZzn73m1duCjP/mzQaKWa6FuilWnWdo=; b=qULhHkC3lWX1MFXNUu
+	1Nl3gCE4E8ih+XfVGgfuP2T+5bB6eOzKU7TSKmNoIebiDc9wFn2102nWfE8ZnFrt
+	SskUPGz90iJII+OEV/zrPsuqlD07b9POdlqGexSKZMSd4JLGExvw3WrFbLkzHyW/
+	mHV+j3mixKIFDS7So9U1yv3+g=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wD3_3p2zs5q5kSdEg--.1031S2;
+	Wed, 14 Oct 2026 08:36:08 +0800 (CST)
+From: Haolong Wang <18766350203@163.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pratyush Yadav <pratyush@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mm/memfd_luo: carry the exec-bit state in the preserved record
+Date: Wed, 14 Oct 2026 08:35:58 +0800
+Message-ID: <20261014003558.357783-1-18766350203@163.com>
+X-Mailer: git-send-email 2.56.0
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CHBPR12MB731189:EE_|BN7PPF0D2C72F0D:EE_
-X-MS-Office365-Filtering-Correlation-Id: 489c62a3-f4f2-4d06-c31e-08df29866f4c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|366016|376014|23010399003|56012099006|11063799006|5023799004|4143699003|3023799007|10067099003|18002099003|22082099003|6133799003;
-X-Microsoft-Antispam-Message-Info: z9+R0ZxHf6327UIbEHQB4iNxEFlFBypJQNyCiGYEC769bzgOBj6G6GXy8BA9ygWPviiBi+qtu2kfBFcqjlgxxK+bCYXYeP0cfydvpkkCk0Rqgx0rnAiwJel3kDj1U4PYg2p+/YJiDa5qE7U5SIjHuQ3Uxi/OIZFuGYWsU1Be3d1ee+D0IY9bG1w5lcjbASqyOXK+Q5C+ww5lyL2tZkR0cO/aqWEkRIEIJUJtwCxBuvAYi0ieOBH6rf3FjKtoAxwNxeErqoMfym2PpgVLERXeZFX4polXAxTbOQ5yRrqWU+ErA2wtoBzp5DsXLxNgfUgkH4QX9KlP1D5d9+fDcX6wVxoJt55efVXzx34EWvPlabHbyDKjnIgIg96e4enZYQPyvUkeVLqC0Iy0mQc3c8LghOSWNj/RJYw7UBleS8Ip+DDaT9NDqdlyQvCOcCqMlBuP9ST0Qo8WM+AH7PH9JsyEAt7KXq+597PGJIVhn/yaxRGl8/zDSrGbyEXL+yavqEuQT4XjYtizh9J1uf0z8XKA5ROEMywLItFaJN8E0RhT6efa9PDKmNEyCSTqT5edu66dk/7RUlskBmjSaT5DxkJLKoQ8H7CYszfmma9TqcI14BOossT9YddwMFHkQ/HmGpJVZ25KDHXIuJh0jaYviytxvXSm/7Bjtg5AMkfZoHUXQh4=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CHBPR12MB731189.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014)(23010399003)(56012099006)(11063799006)(5023799004)(4143699003)(3023799007)(10067099003)(18002099003)(22082099003)(6133799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?hH2pHYTgSUu6kc/j9FX/Zec4Ex0hw84+N9n8qayP97NhrAwdTZ6QRGml1LZy?=
- =?us-ascii?Q?R1X54N6Nv8t4q9tD9JI45eCKc1lsZYTQujzMIxjRn7i1VspCHJrGV2iisQgg?=
- =?us-ascii?Q?oIztRsXekKL3WMh+nQvxb3fIMsmEDnNNsqvHrIbDtpwNkTD7SH5viO5cOQor?=
- =?us-ascii?Q?OCOqu49yfYUFV/vnG8yMv2zR1+86HVIiZ2yw65F1HooQJJhe/mokfXf3vxjh?=
- =?us-ascii?Q?WPK3I/WET/KoSQyzISF8unWyU72mRxG3+FWLAefOCQjtOzJk3dbrfNHgC015?=
- =?us-ascii?Q?HcuYiVbbpgyC8WSjyA3wJnDv/tvMF4OaI5oG2xmjnqN5CoODTJ2+PUYC+2R6?=
- =?us-ascii?Q?KMZrhTDp2iz502zhzMi40oORHPlt3NSk2LfGomcY5/fDe7v1rAZFDvzZCO1V?=
- =?us-ascii?Q?Y3AonUiKG6a2bk3xxpUJoHM1eZMYdcymtPjLWUsgnKV4ZcqspRQJsmRLCp3G?=
- =?us-ascii?Q?tp8ZQhWtmABbCC/NPvfry/rFEOu1DMpqVJWllwcmwQKHbaBxtDZb3QOpr87I?=
- =?us-ascii?Q?Thp6k66vLRWyfm9xRxLYNwreR6YWmiGZ9vnUdMPAbICSyoAYqq4ZMC60wM8C?=
- =?us-ascii?Q?9ZrF89tllzJmjy1lrQOzAhFOVla1kj8WSbScbGnbFvGVemfNoBksjrqoggW1?=
- =?us-ascii?Q?W3dsoewL5eIzN+nJGNS0tuVxMkarFCnK1U4M3Gsc32tmMOBr6fIj7g/EXEYJ?=
- =?us-ascii?Q?+GJCu7gxuAlEEZ5SV82ugj+Zvmk5tndHKJOLwzn2rqeczbcjcAt6mxi3TK+0?=
- =?us-ascii?Q?xfayqAA6UqbjWxvoTVZr4c6VKGdswaYQsvG3LlL4hlXjXJNTktxPWBgn37c0?=
- =?us-ascii?Q?S8xadTvexFSth03n/5HOJ+EVBDoUWiQeHv7JZUn6cIxOF2uv7KqOsWYgz8p5?=
- =?us-ascii?Q?1QLkIzCNEWiSfF84AI56KNLrC9McMf+E2fXrnC4VzsJt2eLLJH2a3lW7m8Y+?=
- =?us-ascii?Q?nDGBmWDPBomp4fkMt/Mo6XcvVyiVqCpdrc0rnysK/FkBkNyQq+WLfVr8Zzhr?=
- =?us-ascii?Q?urhPGlcPd3Q+zDTM8UQ6SbB+8+Nl4zq2ZlsMjQn4/u9i5VmlXdCefhdbHwh+?=
- =?us-ascii?Q?BtPn488B0SoeMfe9Byr6VvNnutwpHJabA+t1gyOpmD2SI4KxBQGrrE8qFZ3O?=
- =?us-ascii?Q?Ygg+Tf2NL5LG0dAa+DT/F2V37Fb3Oz20qcehdL0b71o+Qr/JCJtS36RtQnQp?=
- =?us-ascii?Q?lMo4CMd1I21Ut1Pb3OF/XGkVoyvxmyw62X7ADqs3QAjQEGIB5+tZuZJVYgp6?=
- =?us-ascii?Q?afvxAT6UG76AGI9T8RlGjMakbsqnXCnXT4luLNZ/39srAkmtZy4OYO78/3uV?=
- =?us-ascii?Q?uFbFAdM594c4wpTX/e5mngzKyD3USw1FfNFJ3TEZ6zgOF8fEJ1VVpmgcyXdN?=
- =?us-ascii?Q?I5f9MC8aHsW1LgP9muYx07vD/umj186KJFy/jIl5LcjnmDI/xVp0c3L0lW5G?=
- =?us-ascii?Q?0ia/yAarw/yTHa5e0KUuyTxTwbVQJRBph/ATeqlNuqAao43D7JOVwPcUnZrO?=
- =?us-ascii?Q?2AY2aEtVXEQrxh/N7NNED16EBENsMZEPX778RyLt3Foj35EpdfYNEBOW9+hd?=
- =?us-ascii?Q?KLa6AyTdhxEY5ENfmVHOItBCSECpf1jqwOXaqF/mt55s7CUwHxVF8ZFJO8JA?=
- =?us-ascii?Q?8YJas7tJFTlj/h5+ZJ3zmG+Vd3uf3+aVoLjgSYdaVq1kNEGqKgZ7cXmPE4z0?=
- =?us-ascii?Q?yCmiUf3GqlFvRtbVDcEaq8rk1dagAyteTmGHO1mlhdkPfhao?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 489c62a3-f4f2-4d06-c31e-08df29866f4c
-X-MS-Exchange-CrossTenant-AuthSource: CHBPR12MB731189.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2026 00:02:28.0744
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pF/plYiUF4Cy37Ch/6zuE+TMJyLwDTysCiUcLuul0EfmF6Q5C8Ywj/TF4MVF8G86
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PPF0D2C72F0D
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: _____wD3_3p2zs5q5kSdEg--.1031S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxuw1rZFyUKryrKryUtw4Utwb_yoW3GF47pr
+	ZxKr1rKr4kAFyIy3s7Zw18ZFyrZw4fJF15JryIgry8C3W5XrnIqF1S9Fy5WFyxAFnaga40
+	qr4Y9rykuayDZa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jFq2NUUUUU=
+X-Originating-IP: [2001:250:5828:4461:5d0:1f3:be4d:bdab]
+X-CM-SenderInfo: jpryllawtvijiqt6il2tof0z/xtbC9hgg52rOznjF7QAA3T
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261013_170236_089280_3CF2ED75 
-X-CRM114-Status: GOOD (  17.24  )
+X-CRM114-CacheID: sfid-20261013_173640_405867_E1C41245 
+X-CRM114-Status: GOOD (  27.90  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -154,29 +74,159 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Oct 13, 2026 at 09:19:28PM +0200, Ard Biesheuvel wrote:
-> > Given those constraints entering the successor kernel through the
-> > normal EFI entry point is highly desirable. This would allow x86 to
-> > continue to provide the DRTM trampolines through an EFI mechanism and
-> > means the Linux EFI stub always handles the launch with identical code
-> > in all scenarios.
-> 
-> With some help from my friend Claude, I've prepared a prototype that
-> reuses my efiloader Rust crate to boot EFI stub images (bare Image,
-> zboot, UKI) in the kernel: the EFI boot phase is invoked at kexec
-> load time, and runs under the preceding kernel up until the point
-> where ExitBootServices() is called. Then, the actual kexec call
-> will return from ExitBootServices() after shutting down the first
-> kernel.
+F_SEAL_EXEC freezes the exec bits as they are at sealing time: a memfd
+becomes either permanently executable or permanently un-executable.
+The preserved state of a memfd (struct memfd_luo_ser) carries the
+seals but not the inode mode, and the restore path creates the file
+with memfd_alloc_file("", MFD_ALLOW_SEALING) -- the default
+(executable) mode -- without consulting the vm.memfd_noexec policy
+(that policy is applied on the memfd_create() syscall path only).
 
-Running it inside a kthread is such a novel idea, I would have never
-thought to attempt that!
+A memfd sealed as un-executable is therefore restored as mode 0777
+with F_SEAL_EXEC re-applied on top of it: the guarantee inverts.
+Because the restored file is executable, memfd_add_seals() also
+implies F_SEAL_WRITE, F_SEAL_FUTURE_WRITE, F_SEAL_SHRINK and
+F_SEAL_GROW (the W^X rule), so the restored memfd comes back with its
+write seals locked and its exec bits permanently irrevocable
+(shmem_setattr() rejects any exec-bit change).  This is a functional
+regression that needs no attacker: the owner's own pwrite() to the
+memfd succeeds before the update and fails with EPERM after it.  The
+inversion is also silent: F_GET_SEALS keeps reporting the seal.
 
-I've asked some folks here to take a look and try to test this with
-real DRTM capable HW. It seems very promising that it will work to me,
-and I surmize this is also close to boot a UKI?
+Carry the fact in the existing ser->flags field, which commit
+8a552d68a86e ("mm: memfd_luo: preserve file seals") added for exactly
+this kind of extension ("Unused flag bits must be set to 0"): preserve
+records whether the inode had exec bits, and retrieve reproduces them
+by setting the mode of the fresh anonymous inode directly, before the
+seals are re-applied -- the W^X rule in memfd_add_seals() looks at the
+mode when it decides whether to imply the write seals, so the mode has
+to be in place first.  The file is not published at that point, so no
+other thread can observe the intermediate state.  Reusing the
+MFD_NOEXEC_SEAL alloc flag was considered and dropped: it would
+silently add F_SEAL_EXEC to memfds that never had it (a plain
+non-executable memfd without the seal would come back with the seal
+attached and its exec bits irrevocable), and it would couple the
+restore to the current policy rather than to the state that was
+preserved.  A record that does not say the bits were set is restored
+without them -- which is what a memfd created under vm.memfd_noexec=2
+looks like, and is also the safe reading for records written before
+this bit existed.
 
-Seems amazing! Thanks a lot for drafting it!
+With this, the round trip is exact: a NX memfd (0666 + 0x20) is
+restored as 0666 + 0x20 and stays writable by its owner; a plain
+non-executable memfd (0666, unsealed) stays 0666 and unsealed, its
+exec bits still chmod-able; the baseline executable memfd stays 0777
+and still execve's; and memfd_create() under vm.memfd_noexec=2 still
+forces NX on fresh memfds.  No seal is invented for any of them.
 
-Jason
+Refusing to preserve memfds with F_SEAL_EXEC was considered and
+rejected: with vm.memfd_noexec >= 1 every memfd created without an
+explicit MFD_EXEC gets MFD_NOEXEC_SEAL forced on it (and = 2 refuses
+the MFD_EXEC opt-out outright), so the refusal would disable the whole
+preservation feature exactly on the systems that harden the most.
+Preserving the full inode mode would be the alternative, but one bit in
+the already-extensible flags field is sufficient and keeps the record
+layout unchanged.
+
+One point for the maintainers: a clear exec bit in a record is
+ambiguous between "written before this bit existed" and "the bits were
+clear", and both readings are safe -- the memfd comes back
+non-executable, which is what a memfd created under vm.memfd_noexec=2
+looks like.  For an old record it does change one case: an executable
+memfd with F_SEAL_EXEC preserved by a kernel without this change is
+restored as permanently non-executable instead of permanently
+executable.  If that is not acceptable, the reading has to be tied to a
+version bump instead: commit 8a552d68a86e ("mm: memfd_luo: preserve
+file seals") already noted that new semantics may require one ("they
+will need another version bump").
+
+Measured on a QEMU live-update run (preserve -> kexec -> retrieve):
+before the fix the restored NX memfd is mode 0777, seals 0x3e, execve
+of its contents succeeds and the owner cannot write to it; with the
+fix the same test reports the round trip exact (mode 0666, seals 0x20,
+still writable, execve -> EACCES), a plain non-executable memfd comes
+back 0666 with no seal and can be chmod'ed executable again, and the
+baseline executable memfd and fresh memfds are unaffected.
+
+Fixes: 8a552d68a86e ("mm: memfd_luo: preserve file seals")
+Assisted-by: Pi:glm-5.3-flash
+Signed-off-by: Haolong Wang <18766350203@163.com>
+---
+ include/linux/kho/abi/memfd.h |  3 +++
+ mm/memfd_luo.c                | 31 +++++++++++++++++++++++++++++--
+ 2 files changed, 32 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/kho/abi/memfd.h b/include/linux/kho/abi/memfd.h
+index 08b10fea2afc..471cfe8a4616 100644
+--- a/include/linux/kho/abi/memfd.h
++++ b/include/linux/kho/abi/memfd.h
+@@ -87,6 +87,9 @@ struct memfd_luo_ser {
+ 	struct kho_vmalloc folios;
+ } __packed;
+ 
++/* The execute bits were set on the memfd when its seals were applied. */
++#define MEMFD_LUO_FL_EXEC_BIT		BIT(0)
++
+ /* The compatibility string for memfd file handler */
+ #define MEMFD_LUO_FH_COMPATIBLE	"memfd-v2"
+ 
+diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
+index 59de210bee5f..950a43a4c328 100644
+--- a/mm/memfd_luo.c
++++ b/mm/memfd_luo.c
+@@ -300,6 +300,17 @@ static int memfd_luo_preserve(struct liveupdate_file_op_args *args)
+ 	ser->size = inode_size;
+ 	ser->seals = seals;
+ 
++	/*
++	 * F_SEAL_EXEC freezes the exec bits as they are at sealing time, so
++	 * the restore has to reproduce them.  Record whether the inode had
++	 * exec bits here; the restore sets the mode of the fresh inode
++	 * accordingly before re-applying the seals.  ser is zero-initialized,
++	 * so a clear bit means the bits were clear (or the record predates
++	 * this flag -- the safe reading for those is also "no exec bits").
++	 */
++	if (inode->i_mode & 0111)
++		ser->flags |= MEMFD_LUO_FL_EXEC_BIT;
++
+ 	err = memfd_luo_preserve_folios(args->file, &ser->folios,
+ 					&folios_ser, &nr_folios);
+ 	if (err)
+@@ -533,8 +544,11 @@ static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
+ 	}
+ 
+ 	/*
+-	 * The seals are preserved. Allow sealing here so they can be added
+-	 * later.
++	 * F_SEAL_EXEC freezes the execute bits as they were when the seal was
++	 * applied, so the restore has to reproduce them.  A record that does
++	 * not say the bits were set is restored without them, which is what a
++	 * memfd created under vm.memfd_noexec=2 looks like and is also the safe
++	 * reading for records written before this flag existed.
+ 	 */
+ 	file = memfd_alloc_file("", MFD_ALLOW_SEALING);
+ 	if (IS_ERR(file)) {
+@@ -543,6 +557,19 @@ static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
+ 		goto free_ser;
+ 	}
+ 
++	/*
++	 * Reproduce the exec bits before the seals are re-applied: F_SEAL_EXEC
++	 * freezes the bits as they were at sealing time, and the W^X rule in
++	 * memfd_add_seals() looks at the mode when it decides whether to imply
++	 * the write seals.  Setting the mode here, directly on the fresh
++	 * anonymous inode, is safe -- the file has not been published and no
++	 * other thread can reach it yet.
++	 */
++	if (ser->flags & MEMFD_LUO_FL_EXEC_BIT)
++		file->f_inode->i_mode |= 0111;
++	else
++		file->f_inode->i_mode &= ~0111;
++
+ 	err = memfd_add_seals(file, ser->seals);
+ 	if (err) {
+ 		pr_err("failed to add seals: %pe\n", ERR_PTR(err));
+-- 
+2.56.0
+
 
