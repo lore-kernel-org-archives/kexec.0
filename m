@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DF433CC6B19
-	for <kexec@archiver.kernel.org>; Wed, 14 Oct 2026 03:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 260EACC6B1A
+	for <kexec@archiver.kernel.org>; Wed, 14 Oct 2026 03:26:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
 	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=nDjUElk5if0m2jgHTjpsjD17usFdMvcgFewB8GpYAq8=; b=CSPi0JBAtMq/07E4MTocffknl2
-	fyjbGT4SQiqGZIYuOfdKmIC4jI7et1OezAPJr8LZZM4zAXXUBAGz1cajOeukCB1XtLAV/dNFeGCVq
-	B4KZInOkjie1sqneKw4XRJJInkvQdvjz8oB7P6H1bQ1/z5Q9+Kl+wN+rvVpLDQY7ye5gT6F8kAKs0
-	X1o+R+u5VhyeY45g4WTaETEHEkalGAmHeK+dbHyllcWVR8Fy3DL1aAbZQiPtecyECo25tUcgL+yzV
-	RvTIlDEpdSXFuyq9YcJJJC+6uaqqTP/51cX33zLG5VrOCnaHwi6yo9tMNX0jHeCxOC2WeE1NExTK9
-	ggD5ZwJg==;
+	bh=V2xM4sOGnuQ/Can5LkbytavW52pzOvPOfwcVmiuN/js=; b=DTxQzJNC1TGxX4f+NJAZoudFcu
+	wwTL2UYZ9ZRsSQgztDREHBmh7sld8tPWbBqAXtLsXDZFKqHHUvPOOLYoHaolz7woTF91aj00Jgbhc
+	slkgeticMRMS64Te+SZUzWc/kNwABmXt+sFFXhF3BGlz2Tk/I4m2Zg4BW45nCQ649MwWpx6Qnd73W
+	5zl7xfICmsze2IPMRIZd8pNdMrSohz7U+QtSDz9qqhEf5TSYecTtz+jphPj5MK2scmpN0HrLZscB3
+	VC6o+1VaCHi6Ap9GJkzXoowa0rtIBJWr+dcd6tqGTmW05XDsRqNLvfMT415aS7j8PjSbQLl5181Sg
+	n6lUUi9g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xGpZt-0000000EQcQ-1jDO;
-	Wed, 14 Oct 2026 03:22:53 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xGpdB-0000000EQne-3XEs;
+	Wed, 14 Oct 2026 03:26:17 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xGpZr-0000000EQc3-3NKy
+	id 1xGpd7-0000000EQn0-3zmS
 	for kexec@lists.infradead.org;
-	Wed, 14 Oct 2026 03:22:51 +0000
+	Wed, 14 Oct 2026 03:26:15 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id D8102601DB;
-	Wed, 14 Oct 2026 03:22:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41ABE1F000FF;
-	Wed, 14 Oct 2026 03:22:50 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 0FC04600CB;
+	Wed, 14 Oct 2026 03:26:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C8F21F000FF;
+	Wed, 14 Oct 2026 03:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791948170;
-	bh=nDjUElk5if0m2jgHTjpsjD17usFdMvcgFewB8GpYAq8=;
+	s=k20260515; t=1791948372;
+	bh=V2xM4sOGnuQ/Can5LkbytavW52pzOvPOfwcVmiuN/js=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=RZM6kLDaaILD9ZwN1Mn8dPRHAzLQz3+fZSRROSkC+G+Tf8oJPuEW9Y8QTW01YURMH
-	 8biQkYCnD40qR4DG8oRIzfJDugCCvsGAmNdWL9IOX6TpCPHsv7bUDbfXFE+ABeQypV
-	 SMDUouXo5Or5nTki4w6EA0QMRocQFGu7Jv3gAfpUg1oM7tiT1/Auv+ZeZpJ362wSKS
-	 i+cactRqgT8SPC1wC5UMa/A1BrpmNNKi79A5ED6jz6wan16fsHhS0guZozpqjHHcal
-	 O/8y0Aal4inSU02W9o8DjqfKWn8PY2w9kVOFzJEvkpaxm3n5Bkk8ZrXLl9enQRlZgr
-	 iLyEjMk9Nf81A==
-Message-ID: <sashiko-outbox-170773@kernel.org>
+	b=HOxaG/DHdPjU/P+AfbuUJ1djCjUY53Oa6LItMmNrwUoUu5l6xnobDCYDmR5le9epP
+	 9d0DkE8KfgJafF0QTZ5a2FliU/NJ832ZeEP/RsYyrIHO95wgYoB4/B8o/vDXnlGjhX
+	 yqbsXH9+fEjAu4cUqZHrdTNZAPZq0sos02neLCzUR5HHRKdT4hjsU6k/uODaqS0kNe
+	 0VpraG4pTXHy4XMgRanZojsj4hCPeq2cmq+40n8pQ9O1IM0hb+fd3hgreepMsUxjT1
+	 njtOScWvHR+ZF78GjtikmI3GbuKIvcgcWkpIjfsfavjQohLlhuBiWzdWrleE5NhW/5
+	 z2TX9oMJZYZPw==
+Message-ID: <sashiko-outbox-170776@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 2/2] mm/memfd_luo: release preserved folios when
- retrieve fails
+Subject: Re: [PATCH v2 1/2] mm/memfd_luo: carry the sealed exec-bit state in
+ the preserved record
 To: "Haolong Wang" <18766350203@163.com>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Mike
  Rapoport" <rppt@kernel.org>, "Pratyush Yadav" <pratyush@kernel.org>
 Cc: "Andrew Morton" <akpm@linux-foundation.org>, kexec@lists.infradead.org
-In-Reply-To: <20261014031254.432582-3-18766350203@163.com>
+In-Reply-To: <20261014031254.432582-2-18766350203@163.com>
 References: <20261014031254.432582-1-18766350203@163.com>
- <20261014031254.432582-3-18766350203@163.com>
+ <20261014031254.432582-2-18766350203@163.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 14 Oct 2026 03:22:49 +0000
+Date: Wed, 14 Oct 2026 03:26:12 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,32 +70,63 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> retrieve() only frees the serialization structure on its error paths, but
-> the folios it describes are still preserved at that point:
-> memfd_luo_finish() deliberately skips its own cleanup for records whose
-> retrieve() failed, since it relies on retrieve() to have released them.
-> The folios and the folio array are therefore never handed back and stay
-> reserved in the next kernel.
->=20
-> Release them from retrieve() as well, by sharing the cleanup with
-> memfd_luo_finish().  After the record has been validated, the folio array
-> is restored before the file is allocated, so a failure from
-> memfd_alloc_file() or memfd_add_seals() can release the folios directly
-> instead of allocating memory while already handling a failure; a record
-> this version does not support is rejected before that and uses the shared
-> cleanup too.  The folios may only be released while they are still fully
-> preserved: once memfd_luo_retrieve_folios() has run it has consumed every
-> [ ... ]
-> by Sashiko AI review).
->=20
-> Fixes: f85b1c6af5bc ("liveupdate: luo_file: remember retrieve() status")
-> Assisted-by: Pi:glm-5.3-flash
-> Signed-off-by: Haolong Wang <18766350203@163.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] mm: data race on SHMEM_I(inode)->flags via SysV SHM LUO preserva=
+tion
+--
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+commit e3ce8882f8b9c8b13e7c221a9ec8a0c481093c2f
+Author: Haolong Wang <18766350203@163.com>
+
+mm/memfd_luo: carry the sealed exec-bit state in the preserved record
+
+This commit extends the memfd live update (LUO) preservation to record
+the exact execute permission bits. This ensures that the restored memfd
+retains its original execution state and seal protection, rather than
+reverting to a default that might invert the W^X guarantee. It also adds
+a compatibility layer for older record versions.
+
+> diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
+> index e729b9b0e38d4..40e1ce87c30e0 100644
+> --- a/include/linux/shmem_fs.h
+> +++ b/include/linux/shmem_fs.h
+[ ... ]
+> @@ -208,6 +214,20 @@ static inline void shmem_freeze(struct inode *inode,=
+ bool freeze)
+>  		SHMEM_I(inode)->flags &=3D ~SHMEM_F_MAPPING_FROZEN;
+>  }
+> =20
+> +/* Must be called with inode lock taken exclusive. */
+> +static inline void shmem_freeze_seal_state(struct inode *inode, bool fre=
+eze)
+> +{
+> +	if (freeze)
+> +		SHMEM_I(inode)->flags |=3D SHMEM_F_SEAL_STATE_FROZEN;
+> +	else
+> +		SHMEM_I(inode)->flags &=3D ~SHMEM_F_SEAL_STATE_FROZEN;
+> +}
+
+[Severity: Medium]
+Is it possible for this non-atomic flag update to race with SysV SHM?
+
+The LUO memfd handler's can_preserve check admits files if they are
+shmem_file() and have no links. SysV SHM files are internally created
+as unlinked shmem files, meaning a user can obtain a file descriptor
+for an attached SysV SHM segment via /proc/self/map_files/ and pass it
+to the LUO preservation ioctl.
+
+If a SysV SHM file reaches this freeze path, shmem_freeze_seal_state()
+modifies SHMEM_I(inode)->flags using non-atomic bitwise operations
+under inode_lock. Concurrently, a user can call shmctl(SHM_LOCK) which
+modifies the exact same flags field via shmem_lock() while holding only
+the ipc_lock_object spinlock.
+
+Could this concurrent read-modify-write cause lost flag updates,
+potentially bypassing the LUO seal freeze state or corrupting the SysV
+SHM locked state?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261014031254.4325=
-82-1-18766350203@163.com?part=3D2
-
+82-1-18766350203@163.com?part=3D1
 
