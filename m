@@ -4,100 +4,142 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3682ACC6B12
-	for <kexec@archiver.kernel.org>; Tue, 13 Oct 2026 19:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 669F0CC6B1D
+	for <kexec@archiver.kernel.org>; Wed, 14 Oct 2026 00:03:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Subject:References:In-Reply-To:Message-Id:Cc:To:From:Date:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=nBu/SOG7f+fTEFPghCxgukAfv2TSNxFqz02iS2imDx4=; b=mXkQ+ADk7rsCGzLarXNhFA1dDd
-	J0kEphX1atlS/6L1YZ4pk6YwZhFJdeLqG+D77QF6Kd0XUkiyIxccAWUsrUrCtnmOk+d8biI8fOor9
-	UJ0KcvYPz9eGQQu7GoUAdDzeLNfZnrYgKm4l3GHqa9Md5XRtGtFMJs+09rjPQsyHj3C5fWe3r5U/u
-	xDKLy6hMC5kyXKfA4UQrKeGS12RG0F/62v/z8z+LgmeWRftGS6yJaj31schEycOl2bg3E2/RwT5HG
-	GnVUCUZ2XwumECiMYfIQQS1v43LSgQTbtCjKC9YXJ+oACi1R6mrQGanmp4JtgYMJNIed+V8KTWz82
-	tYsIqoKQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=ydIF+NGzq5LdYpg4pBaXHz3znT+yc0+yVkaN6HwJ1iI=; b=msI0X3x8FPRziMSPdiFDQ0pJAw
+	ogntVctMek0M632zjb/4QzboKevwjrp/ybskLkuGt2WJjX50swwmE/8ZoL5GdD3KikLdgveEGULrV
+	k8ypiGJ3sFPDvrf98/+9hSdkJX6FGxKjR0J1Qk2AkdTWIqvWbbeZ9zfhtt/eCRJ86Efsp9mga7rEL
+	f2TqwILuIDdbqdyqJK1oHNYQ0Q2BrWNSkvvT16n68KpHWFu4LQc4H7jQRNwy7+PGTBGVY6Ki8byUI
+	A2gL7CjxpM+eCgfLMzlIhIkkAJNVd0a0mI44wQMzl9loX7gRUoYpenAlxbv8o7pMugBIBemXw42+B
+	ryyu/38Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xGi2Y-0000000DuHL-2M0D;
-	Tue, 13 Oct 2026 19:19:58 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xGmSP-0000000EG8p-0Vh1;
+	Wed, 14 Oct 2026 00:02:57 +0000
+Received: from mail-northcentralusazon11013070.outbound.protection.outlook.com ([40.107.201.70] helo=CH4PR04CU002.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xGi2W-0000000DuHD-3fLE
+	id 1xGmS3-0000000EG7z-0gje
 	for kexec@lists.infradead.org;
-	Tue, 13 Oct 2026 19:19:56 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 40A514478A;
-	Tue, 13 Oct 2026 19:19:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BE171F00899;
-	Tue, 13 Oct 2026 19:19:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791919196;
-	bh=nBu/SOG7f+fTEFPghCxgukAfv2TSNxFqz02iS2imDx4=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=dMInvITBUWu18BOgzkTbw/0Vdryo36Fo3yGZtzaxxx1y6/LofNQrSRPIXzC+q5iL6
-	 wqTmd2oM7fkI1UAXregmggCMBzjZlm19Cf/g3falKdxWTTnds4ODojjaYvzZo05nOx
-	 oe2KaNDf1fWqKLsBFFBZF18KgK2cGJuHCifjxJDqqZdLJzpz4AlzfcGxih1QlM/ZhC
-	 XYB6n7JgezAbwTVLACvsnvFGHd2ESLhOFwy5t5l6UyBUa3IHB1dtWyUOyMz0GsH9xx
-	 64/amq+7WHP/w70T6DMXAiPbxCb4Y8YtnF+JRxHoLAps8s8ZYcUpOJqIEhyonp8njN
-	 ylt1QWJK7w51A==
-Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
-	by mailfauth.ams.internal (Postfix) with ESMTP id 78B61198003A;
-	Tue, 13 Oct 2026 15:19:53 -0400 (EDT)
-Received: from ams-imap-11 ([10.64.2.31])
-  by ams-compute-02.internal (MEProxy); Tue, 13 Oct 2026 15:19:53 -0400
-X-ME-Sender: <xms:VITOaqKl52pZNHkpPo8vq2Ye6p9_qNQTQrwEclVqNOzPVLDi9QLwdg>
-    <xme:VITOas_lV6zrn9ir2SIeCEGM-ZgWMH1b52xW0_7EwOi2tmCOucdSlq166n12z_HPt
-    Cq8nevjQLAM1ABMHNgVf6hPZJMZ9gPXfItQZ5V2wTDE7wcsjT1H4l0U9Q>
-X-ME-Proxy-Cause: dmFkZTFDzKl0ELp2oEHzVBwWRQODLbH3awXaTOQ8LNvi6ko20mCD786pZgzvu07nYUzJ+8
-    2MHgaTFAqgjwYW6MeoO97VVBr1YqpZJC0eokGoU1j/I30oUO9e/iBPnXoTTIX16Z71AYI9
-    c45wuloWTMqcMuAsXv/W4KQhXF4Fsa4UndNspcE+Jc0YqcA/sypMHrlsBtTlol4j/NW9SV
-    SDH1qFiD2qjcuXK8U3nUQCMVzmcYb8R9+Psu2Ad0mJTucSzvhcI2lq3SsOvuiKtNhTJnMu
-    QytgnVVJTIDecKvNcISUK5DwtblU9PldILdwS2i2PbqxwY2bpFIHAdtt3aT1nwLQMkMpog
-    h1bdN5nODNlnXXY0opAlXgVuG1iItI1C/KrLcbi4McWhBek6qNp0shHQFpZc11x5q9aDhj
-    I5BLAEu52WQgJ3ei/tFr0ucU16OFIGCdJgOfNPXMcv6ze3GibxBp3uKdWsKnQF2m/XPLNl
-    u2d8vL6AVc3LoNG9JPk6dia/M1HmqhVtXcp9LFRKNXx1LnzCYbH4yHw989oJuzyBj+HdiE
-    /fzYK36ZQC+Pc6h9LK8gJioUXDtJNudCvkqhS4tmSUsf2b4cBAD9WrkAPgiDTnTzDqSQjl
-    vd+Y6bsgqWlgdQXIyhIDEW02CfQm0hmp0HPxOyhRWU0mvAWsy4gbJIkbgLdA
-X-ME-Proxy: <xmx:WYTOatddi5Nc9SeJVUrYS8v9xImrZHI8z4U1EbbnLBG3OS9zPftceA>
-    <xmx:WYTOasuHq0ZwguI9tduc6miqTLvnsLXtKbHTSpuqdgJ84yM7A_naHA>
-    <xmx:WYTOarGSPLDt5EiyCXABcgisz3HNzuJSTA0jj03XKZGF4atlgHvihg>
-    <xmx:WYTOamcls9KeR9mv_QJldCIxJ4hb-jHjyM195oAhGDRnCLe9hXMCSA>
-    <xmx:WYTOanvOzC66MmWXMrTwOo692O0xbGrnEkvk_V_5pBjURKLRpg-PVy3h>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.ams.internal (Postfix, from userid 501)
-	id BD601F80096; Tue, 13 Oct 2026 15:19:48 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-MIME-Version: 1.0
-Date: Tue, 13 Oct 2026 21:19:28 +0200
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Jason Gunthorpe" <jgg@nvidia.com>, "Pingfan Liu" <piliu@redhat.com>,
- "Mark Rutland" <mark.rutland@arm.com>
-Cc: "Alexei Starovoitov" <ast@kernel.org>,
- "Daniel Borkmann" <daniel@iogearbox.net>,
- "John Fastabend" <john.fastabend@gmail.com>,
- "Andrii Nakryiko" <andrii@kernel.org>,
- "Martin KaFai Lau" <martin.lau@linux.dev>,
- "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>,
- "Yonghong Song" <yonghong.song@linux.dev>,
- "Jeremy Linton" <jeremy.linton@arm.com>,
- "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
- "Simon Horman" <horms@kernel.org>, "Gerd Hoffmann" <kraxel@redhat.com>,
- "Vitaly Kuznetsov" <vkuznets@redhat.com>, "Philipp Rudo" <prudo@redhat.com>,
- "Viktor Malik" <vmalik@redhat.com>, "Jan Hendrik Farr" <kernel@jfarr.cc>,
- "Baoquan He" <bhe@redhat.com>, "Dave Young" <dyoung@redhat.com>,
- "Andrew Morton" <akpm@linux-foundation.org>, kexec@lists.infradead.org,
- bpf@vger.kernel.org, systemd-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Message-Id: <722bd9d8-5620-498a-a6c2-d9a1f498e0b7@app.fastmail.com>
-In-Reply-To: <20261011201325.GA918242@nvidia.com>
+	Wed, 14 Oct 2026 00:02:37 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jsXQAZbrFzZOMvFck7+zb6CEnyFoCau3ycXJ43sqgtbW2XjcAes8M1r3euzp+Cu2A/+JwhCgcjEZWWQdOzN/LUdkkTGnASN1CPnxqWyGe77ucQpyRn+0CH/ZLoFBHndVzOub0FH1rTL3ET0M79stFihdfHEaFUSEyNtN5WqXICLVmwXCKfZ9DtkRVpkQsAnxxuFImRKgJT58CYQNojW+n2RfYFScTp+eyuYWRzySxeam7/FQsJQuZhDBWToP7rkRH8+zh0cIe21AfcKJ3gkl+ZChi035DTabJc40jc+AQyaNl6qHP1sWobHXNHe9W82xNJOxE953cpWiyaOphdPuKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ydIF+NGzq5LdYpg4pBaXHz3znT+yc0+yVkaN6HwJ1iI=;
+ b=KXIGlaNQ4aIhOV68tSOa6DN7iZIhjDYFKNTKvlBB+TugGucPzA1HrkPIrvpnF/evG2jr4ARIOgSEINU8ao1fBvUg1wiNdkVgmd9NdBSFouJWoD9LQVUrIc95yQ00I1B4fDoZGGNI/ej31R3UWyADX7smD8Ue/UX673rMA74RsNs7tExpyHJYTv473Z0EGKr0U3uBvPmRWa2qGh89wrTk4EHAj78iK7EKZ0PUnlamN55v0DkiQFNGCH7KmxMtacn4LWrv7A8pnPTJZcWcdOWZxRulaB4oKJ4jeEOphmknpyKBfzJiK/7eeIwlpT8Fqync1JaTfOzEzDD96E38wFvirA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ydIF+NGzq5LdYpg4pBaXHz3znT+yc0+yVkaN6HwJ1iI=;
+ b=j/4jY/5oOsVWvAsvwKOkew9i3IjrgK6Sjb4PLvMyVokotVBnc17hh8sYzTm/gfzaymT5W/FJaPCua+4kzNyvSMP7OfdZmh+JlHOSpbTIhXsx6T1A+/0MFByxz+Mk07qf2DVeDEd/vqO3PBQvHTyjQHFMHp8d7eo85yWIEYH8K/Yje/DozA6lyMSj8PwYG/bjzSfUBD1FarDXxEg7oPTUg24oIf67uAz/x+/HwS8+S1jtjqEnUp+0sycaUhgMxN4y+0geTpay6999JUgvd3o1m19AvdxRdMdgSefC9b1pNm8wzCR74hJiK6rqGQJf7DJKJNqHMw1dloYi+xBUrmSc7g==
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CHBPR12MB731189.namprd12.prod.outlook.com
+ (2603:10b6:610:33d::12) by BN7PPF0D2C72F0D.namprd12.prod.outlook.com
+ (2603:10b6:40f:fc02::6c6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.13; Wed, 14 Oct
+ 2026 00:02:28 +0000
+Received: from CHBPR12MB731189.namprd12.prod.outlook.com
+ ([fe80::b0e5:123d:fe06:e10d]) by CHBPR12MB731189.namprd12.prod.outlook.com
+ ([fe80::b0e5:123d:fe06:e10d%6]) with mapi id 15.21.0496.021; Wed, 14 Oct 2026
+ 00:02:28 +0000
+Date: Tue, 13 Oct 2026 21:02:27 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Pingfan Liu <piliu@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Simon Horman <horms@kernel.org>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Philipp Rudo <prudo@redhat.com>, Viktor Malik <vmalik@redhat.com>,
+	Jan Hendrik Farr <kernel@jfarr.cc>, Baoquan He <bhe@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	kexec@lists.infradead.org, bpf@vger.kernel.org,
+	systemd-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv7 00/13] kexec: Use BPF lskel to enable kexec to load PE
+ format boot image
+Message-ID: <20261014000227.GV13920@nvidia.com>
 References: <20260322014402.8815-1-piliu@redhat.com>
  <20261011201325.GA918242@nvidia.com>
-Subject: Re: [PATCHv7 00/13] kexec: Use BPF lskel to enable kexec to load PE format
- boot image
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+ <722bd9d8-5620-498a-a6c2-d9a1f498e0b7@app.fastmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <722bd9d8-5620-498a-a6c2-d9a1f498e0b7@app.fastmail.com>
+X-ClientProxiedBy: YT4P288CA0034.CANP288.PROD.OUTLOOK.COM
+ (2603:10b6:b01:d3::20) To CHBPR12MB731189.namprd12.prod.outlook.com
+ (2603:10b6:610:33d::12)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CHBPR12MB731189:EE_|BN7PPF0D2C72F0D:EE_
+X-MS-Office365-Filtering-Correlation-Id: 489c62a3-f4f2-4d06-c31e-08df29866f4c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|366016|376014|23010399003|56012099006|11063799006|5023799004|4143699003|3023799007|10067099003|18002099003|22082099003|6133799003;
+X-Microsoft-Antispam-Message-Info: z9+R0ZxHf6327UIbEHQB4iNxEFlFBypJQNyCiGYEC769bzgOBj6G6GXy8BA9ygWPviiBi+qtu2kfBFcqjlgxxK+bCYXYeP0cfydvpkkCk0Rqgx0rnAiwJel3kDj1U4PYg2p+/YJiDa5qE7U5SIjHuQ3Uxi/OIZFuGYWsU1Be3d1ee+D0IY9bG1w5lcjbASqyOXK+Q5C+ww5lyL2tZkR0cO/aqWEkRIEIJUJtwCxBuvAYi0ieOBH6rf3FjKtoAxwNxeErqoMfym2PpgVLERXeZFX4polXAxTbOQ5yRrqWU+ErA2wtoBzp5DsXLxNgfUgkH4QX9KlP1D5d9+fDcX6wVxoJt55efVXzx34EWvPlabHbyDKjnIgIg96e4enZYQPyvUkeVLqC0Iy0mQc3c8LghOSWNj/RJYw7UBleS8Ip+DDaT9NDqdlyQvCOcCqMlBuP9ST0Qo8WM+AH7PH9JsyEAt7KXq+597PGJIVhn/yaxRGl8/zDSrGbyEXL+yavqEuQT4XjYtizh9J1uf0z8XKA5ROEMywLItFaJN8E0RhT6efa9PDKmNEyCSTqT5edu66dk/7RUlskBmjSaT5DxkJLKoQ8H7CYszfmma9TqcI14BOossT9YddwMFHkQ/HmGpJVZ25KDHXIuJh0jaYviytxvXSm/7Bjtg5AMkfZoHUXQh4=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CHBPR12MB731189.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014)(23010399003)(56012099006)(11063799006)(5023799004)(4143699003)(3023799007)(10067099003)(18002099003)(22082099003)(6133799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?hH2pHYTgSUu6kc/j9FX/Zec4Ex0hw84+N9n8qayP97NhrAwdTZ6QRGml1LZy?=
+ =?us-ascii?Q?R1X54N6Nv8t4q9tD9JI45eCKc1lsZYTQujzMIxjRn7i1VspCHJrGV2iisQgg?=
+ =?us-ascii?Q?oIztRsXekKL3WMh+nQvxb3fIMsmEDnNNsqvHrIbDtpwNkTD7SH5viO5cOQor?=
+ =?us-ascii?Q?OCOqu49yfYUFV/vnG8yMv2zR1+86HVIiZ2yw65F1HooQJJhe/mokfXf3vxjh?=
+ =?us-ascii?Q?WPK3I/WET/KoSQyzISF8unWyU72mRxG3+FWLAefOCQjtOzJk3dbrfNHgC015?=
+ =?us-ascii?Q?HcuYiVbbpgyC8WSjyA3wJnDv/tvMF4OaI5oG2xmjnqN5CoODTJ2+PUYC+2R6?=
+ =?us-ascii?Q?KMZrhTDp2iz502zhzMi40oORHPlt3NSk2LfGomcY5/fDe7v1rAZFDvzZCO1V?=
+ =?us-ascii?Q?Y3AonUiKG6a2bk3xxpUJoHM1eZMYdcymtPjLWUsgnKV4ZcqspRQJsmRLCp3G?=
+ =?us-ascii?Q?tp8ZQhWtmABbCC/NPvfry/rFEOu1DMpqVJWllwcmwQKHbaBxtDZb3QOpr87I?=
+ =?us-ascii?Q?Thp6k66vLRWyfm9xRxLYNwreR6YWmiGZ9vnUdMPAbICSyoAYqq4ZMC60wM8C?=
+ =?us-ascii?Q?9ZrF89tllzJmjy1lrQOzAhFOVla1kj8WSbScbGnbFvGVemfNoBksjrqoggW1?=
+ =?us-ascii?Q?W3dsoewL5eIzN+nJGNS0tuVxMkarFCnK1U4M3Gsc32tmMOBr6fIj7g/EXEYJ?=
+ =?us-ascii?Q?+GJCu7gxuAlEEZ5SV82ugj+Zvmk5tndHKJOLwzn2rqeczbcjcAt6mxi3TK+0?=
+ =?us-ascii?Q?xfayqAA6UqbjWxvoTVZr4c6VKGdswaYQsvG3LlL4hlXjXJNTktxPWBgn37c0?=
+ =?us-ascii?Q?S8xadTvexFSth03n/5HOJ+EVBDoUWiQeHv7JZUn6cIxOF2uv7KqOsWYgz8p5?=
+ =?us-ascii?Q?1QLkIzCNEWiSfF84AI56KNLrC9McMf+E2fXrnC4VzsJt2eLLJH2a3lW7m8Y+?=
+ =?us-ascii?Q?nDGBmWDPBomp4fkMt/Mo6XcvVyiVqCpdrc0rnysK/FkBkNyQq+WLfVr8Zzhr?=
+ =?us-ascii?Q?urhPGlcPd3Q+zDTM8UQ6SbB+8+Nl4zq2ZlsMjQn4/u9i5VmlXdCefhdbHwh+?=
+ =?us-ascii?Q?BtPn488B0SoeMfe9Byr6VvNnutwpHJabA+t1gyOpmD2SI4KxBQGrrE8qFZ3O?=
+ =?us-ascii?Q?Ygg+Tf2NL5LG0dAa+DT/F2V37Fb3Oz20qcehdL0b71o+Qr/JCJtS36RtQnQp?=
+ =?us-ascii?Q?lMo4CMd1I21Ut1Pb3OF/XGkVoyvxmyw62X7ADqs3QAjQEGIB5+tZuZJVYgp6?=
+ =?us-ascii?Q?afvxAT6UG76AGI9T8RlGjMakbsqnXCnXT4luLNZ/39srAkmtZy4OYO78/3uV?=
+ =?us-ascii?Q?uFbFAdM594c4wpTX/e5mngzKyD3USw1FfNFJ3TEZ6zgOF8fEJ1VVpmgcyXdN?=
+ =?us-ascii?Q?I5f9MC8aHsW1LgP9muYx07vD/umj186KJFy/jIl5LcjnmDI/xVp0c3L0lW5G?=
+ =?us-ascii?Q?0ia/yAarw/yTHa5e0KUuyTxTwbVQJRBph/ATeqlNuqAao43D7JOVwPcUnZrO?=
+ =?us-ascii?Q?2AY2aEtVXEQrxh/N7NNED16EBENsMZEPX778RyLt3Foj35EpdfYNEBOW9+hd?=
+ =?us-ascii?Q?KLa6AyTdhxEY5ENfmVHOItBCSECpf1jqwOXaqF/mt55s7CUwHxVF8ZFJO8JA?=
+ =?us-ascii?Q?8YJas7tJFTlj/h5+ZJ3zmG+Vd3uf3+aVoLjgSYdaVq1kNEGqKgZ7cXmPE4z0?=
+ =?us-ascii?Q?yCmiUf3GqlFvRtbVDcEaq8rk1dagAyteTmGHO1mlhdkPfhao?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 489c62a3-f4f2-4d06-c31e-08df29866f4c
+X-MS-Exchange-CrossTenant-AuthSource: CHBPR12MB731189.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2026 00:02:28.0744
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pF/plYiUF4Cy37Ch/6zuE+TMJyLwDTysCiUcLuul0EfmF6Q5C8Ywj/TF4MVF8G86
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PPF0D2C72F0D
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261013_170236_089280_3CF2ED75 
+X-CRM114-Status: GOOD (  17.24  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,65 +154,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Jason,
+On Tue, Oct 13, 2026 at 09:19:28PM +0200, Ard Biesheuvel wrote:
+> > Given those constraints entering the successor kernel through the
+> > normal EFI entry point is highly desirable. This would allow x86 to
+> > continue to provide the DRTM trampolines through an EFI mechanism and
+> > means the Linux EFI stub always handles the launch with identical code
+> > in all scenarios.
+> 
+> With some help from my friend Claude, I've prepared a prototype that
+> reuses my efiloader Rust crate to boot EFI stub images (bare Image,
+> zboot, UKI) in the kernel: the EFI boot phase is invoked at kexec
+> load time, and runs under the preceding kernel up until the point
+> where ExitBootServices() is called. Then, the actual kexec call
+> will return from ExitBootServices() after shutting down the first
+> kernel.
 
-Thanks for chiming in.
+Running it inside a kthread is such a novel idea, I would have never
+thought to attempt that!
 
-On Sun, 11 Oct 2026, at 22:13, Jason Gunthorpe wrote:
-> On Sun, Mar 22, 2026 at 09:43:49AM +0800, Pingfan Liu wrote:
->> *** The history ***
->> 
->> Nowadays, UEFI PE bootable images are becoming increasingly popular
->> among distributions. Currently, we have several kinds of image format
->> parsers in user space (kexec-tools). However, this approach breaks the
->> integrity protection of the images. To address this integrity protection
->> concern, several approaches have been proposed to resolve this issue,
->> but none of them have been accepted upstream yet.
->> 
->> The summary of those approaches:
->>   -1. UEFI service emulator for UEFI stub
->>   -2. PE format parser in kernel
->>   -3. Signing the arm64/boot/Image
->
-> I recently had an interesting discussion with Ard around DRTM for
-> kexec and we sort of independently concluded that #1 would be the best
-> (only?) option there.
->
-> All the implementations of DRTM today live in the EFI stub and
-> intercept the boot process as it goes along. After ExitBootServices
-> the DRTM implementation will launch the kernel in a different way.
-> Even worse today's x86 version strongly requires EFI boot services to
-> connect the Linux stub with a trampoline helper provided earlier in
-> the boot chain.
->
-> A kexec flow that only works on decompressed vmlinux, with no option
-> to run any EFI code, is going to be difficult to support. There is
-> enough information and choices involved in DRTM that it is undesirable
-> for the predecessor kernel to try and DRTM launch it on behalf of the
-> successor, let alone trying to get the insane x86 trampolines into a
-> kexec successor kernel.
->
-> Given those constraints entering the successor kernel through the
-> normal EFI entry point is highly desirable. This would allow x86 to
-> continue to provide the DRTM trampolines through an EFI mechanism and
-> means the Linux EFI stub always handles the launch with identical code
-> in all scenarios.
->
+I've asked some folks here to take a look and try to test this with
+real DRTM capable HW. It seems very promising that it will work to me,
+and I surmize this is also close to boot a UKI?
 
-With some help from my friend Claude, I've prepared a prototype that
-reuses my efiloader Rust crate to boot EFI stub images (bare Image,
-zboot, UKI) in the kernel: the EFI boot phase is invoked at kexec
-load time, and runs under the preceding kernel up until the point
-where ExitBootServices() is called. Then, the actual kexec call
-will return from ExitBootServices() after shutting down the first
-kernel.
+Seems amazing! Thanks a lot for drafting it!
 
-https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=efiloader-kexec
-
-There are some limitations (4k pages only, CONTIG_ALLOC support
-required) but it seems to work as expected.
-
-I haven't looked at measured boot or DRTM specifics.
-
-
+Jason
 
