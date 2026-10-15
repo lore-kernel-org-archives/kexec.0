@@ -4,66 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0B07ECC6B3A
-	for <kexec@archiver.kernel.org>; Thu, 15 Oct 2026 13:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BDFC3CC6B34
+	for <kexec@archiver.kernel.org>; Thu, 15 Oct 2026 14:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Noy49yD8e/Ob4wG2MgzxDSK75qjmJvYApwzUtIvu0QU=; b=dWRxqDPDJfI7jQCWX8BCeh/PDV
-	f2kbew1K/XIyMRRltiS8SUpJh/ZTA65JIzpqdn5OMdfvD7EqLdrh3gTVtapuhu1Be1zA3rXS6DzC6
-	6OCdTngAskZjzkdY8fi0DszSIf2ooWmkIXkNe777eRTdABwsBV99E5hQuDIfLH6pAn1P1XNzDG+1p
-	JWt+seCBUSK4o4l4K5GqYyhFtSK6A3nK4hBQ2GGHSq+R9CWdZ6E4xPciQidBFOADmtlcJuFqFBBuy
-	3MxdP3VOJB7y1oUIH2+m5MxuquFAZImj/+fBpdf8c1BFbDmq/8OrCQ5/WYvg7LLbFNYD9Bzt/ItCR
-	9qHRJqFg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=mno5u7ZzRZU/+mTenUA2QzGfL90+kMbsdzEVFvrdQKc=; b=Ak24/cd1uQbG81fzOLUlKrs69h
+	rNNC81CkqdrSBBB/WHMD6GXgyDR7qjztFjqDITqOz8hVnFoVRoNjcU+pvPV5TMe5Jh5t6GF/U14FS
+	jYeAEzHF7H6XtZZLJWXfut55CLqsSrZZKEiQS7TEhlpMaMnP+QxeJm4Pfl/Lh8lvG7GEc59r8RQTm
+	bnXUP98ya9S6TUBEvdro3DF4I6Y5EmWKoxO+iMdTZ+gdfsKxMKPKSkUME9ZV1A9z1RQr1ils4u6ef
+	0XHkEoxJj9ogEcT2iP20mgiE6vtBMYyg979bcieOfXf5kku3wbZslPadJGF70XONb3Wxqyl5ir6im
+	BW/bQzPw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHL9K-00000000DEm-3s0h;
-	Thu, 15 Oct 2026 13:05:34 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xHMiQ-00000000Qny-2P7N;
+	Thu, 15 Oct 2026 14:45:54 +0000
+Received: from pdx-out-005.esa.us-west-2.outbound.mail-perimeter.amazon.com ([52.13.214.179])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHL9J-00000000DEd-0I6x;
-	Thu, 15 Oct 2026 13:05:33 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 3CA41601EF;
-	Thu, 15 Oct 2026 13:05:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 916351F000C4;
-	Thu, 15 Oct 2026 13:05:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792069532;
-	bh=Noy49yD8e/Ob4wG2MgzxDSK75qjmJvYApwzUtIvu0QU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=X11q/huxrkAqwJCmxammjG0KJNkKW/HeV7vwW/AZE/pVPt4r02Y8MELs228K0/yCY
-	 /+HUXERfLkTuOSjrnt/oZ0WlpjAWRdzH/0AyNkiysGhZWcD+btWG0ZGi3IgB8Y3a1s
-	 +S1i6BhGLSMoxQxdZCVvgZ2iwCxrkEk9yxuIKESop73gfhNF9Y0LiK2JkwxnLmx5nm
-	 e6NeKBeY8eX4MVKjA912aq4LlTWdCrk3zgICGY5v5V/GbQlkSUvYxVAe/0iq4cy/MR
-	 nBu9T2bXCvWVziYbkRCLhinBob0P6L5+NrhuTkinqc1qqIkdjaEqwbttACABcjlvBN
-	 w0EuAS2t5oUAw==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Logan Odell <loganodell@google.com>
-Cc: arnd@arndb.de,  pasha.tatashin@soleen.com,  rppt@kernel.org,
-  pratyush@kernel.org,  graf@amazon.com,  akpm@linux-foundation.org,
-  pbonzini@redhat.com,  maz@kernel.org,  oupton@kernel.org,
-  seanjc@google.com,  bhelgaas@google.com,  alex@shazbot.org,
-  jgg@nvidia.com,  kevin.tian@intel.com,  dwmw2@infradead.org,
-  baolu.lu@linux.intel.com,  joro@8bytes.org,  will@kernel.org,
-  robin.murphy@arm.com,  linux-arch@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  kexec@lists.infradead.org,
-  linux-mm@kvack.org,  kvm@vger.kernel.org,
-  linux-arm-kernel@lists.infradead.org,  kvmarm@lists.linux.dev,
-  linux-pci@vger.kernel.org,  iommu@lists.linux.dev
-Subject: Re: [RFC PATCH 2/3] luo: Export feature support to vmlinux section
-In-Reply-To: <20260903023452.721732-3-loganodell@google.com> (Logan Odell's
-	message of "Wed, 2 Sep 2026 19:34:51 -0700")
-References: <20260903023452.721732-1-loganodell@google.com>
-	<20260903023452.721732-3-loganodell@google.com>
-Date: Thu, 15 Oct 2026 15:05:26 +0200
-Message-ID: <2vxzv773glm1.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	id 1xHMiM-00000000Qm9-2EPF
+	for kexec@lists.infradead.org;
+	Thu, 15 Oct 2026 14:45:52 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
+  t=1792075550; x=1823611550;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=mno5u7ZzRZU/+mTenUA2QzGfL90+kMbsdzEVFvrdQKc=;
+  b=JuJRyiy2LgK/B3oqBMc4AcjQZf/MDnKXF3AIksd9BoEKYVgEzMgjkSG+
+   SzWWYvDXhBWEKiIxW6TP86KOzNtkUsHITwL38qZwUyUbv/sWNj7z/Rtan
+   RLbJ+HUx/kMrZXgeZxpHUiq1xx7cFzrPUj9cVsh6PMEsGQYzMDi5tzqUN
+   VwI2s9rAM/d3JnQO32jr4CFOnCgvJy747fAswPcz9aVbL7K0YjBZaQTNd
+   OoCo0E3L9soMfO84WVQG5Mc4Hhl274CS10RFs+oRgMYhnxZ2kwFvoqLRn
+   nULpOePRbXFN5WW3I/soIJ/n1CBVXGB0CqoYIDnmGp+Pj2Buppi6UCTmG
+   w==;
+X-CSE-ConnectionGUID: TQuNEdILSB+qoRk8DsfdOg==
+X-CSE-MsgGUID: AMc/D2JPQk2nJkK7XniR7A==
+X-IronPort-AV: E=Sophos;i="6.27,160,1787011200"; 
+   d="scan'208";a="31325232"
+Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
+  by internal-pdx-out-005.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2026 14:45:43 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [205.251.233.53:25214]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.54.1:2525] with esmtp (Farcaster)
+ id 42897119-f455-4005-98a6-06b7136192d6; Thu, 15 Oct 2026 14:45:43 +0000 (UTC)
+X-Farcaster-Flow-ID: 42897119-f455-4005-98a6-06b7136192d6
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.49;
+ Thu, 15 Oct 2026 14:45:43 +0000
+Received: from dev-dsk-fparola-1b-85ea2014.eu-west-1.amazon.com
+ (10.13.236.104) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.53; Thu, 15 Oct 2026
+ 14:45:41 +0000
+From: Federico Parola <fparola@amazon.de>
+To: <stable@vger.kernel.org>
+CC: Mike Rapoport <rppt@kernel.org>, Pasha Tatashin
+	<pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, "Alexander
+ Graf" <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>,
+	<kexec@lists.infradead.org>, <linux-mm@kvack.org>,
+	<nh-open-source@amazon.com>
+Subject: [PATCH 6.18.y 0/2] kho: free buddy-allocated metadata with free_page()
+Date: Thu, 15 Oct 2026 14:45:27 +0000
+Message-ID: <20261015144529.76911-1-fparola@amazon.de>
+X-Mailer: git-send-email 2.47.3
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-Originating-IP: [10.13.236.104]
+X-ClientProxiedBy: EX19D031UWA002.ant.amazon.com (10.13.139.96) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261015_074550_642376_A279BC93 
+X-CRM114-Status: GOOD (  10.37  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,176 +93,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Logan,
+Commit fa759cd75bce ("kho: allocate metadata directly from the buddy
+allocator"), merged in 6.18, moved the KHO serialization chunks and the
+preserved memory bitmaps from kzalloc() to get_zeroed_page(). Two places
+still release them with kfree(): kho_mem_ser_free() for the chunks and
+__kho_abort() for the bitmaps. kfree() on such a page hits the
+WARN_ON_ONCE() in free_large_kmalloc() and returns without freeing it,
+so each aborted or failed KHO finalization leaks the metadata pages.
 
-On Wed, Sep 02 2026, Logan Odell wrote:
+Patch 1 is a clean backport of the upstream fix for the chunks.
 
-> Create a liveupdate_features section that contains the feature
-> information for a given liveupdate component. Add the LUO component
-> first. These can be compared between two kernels to determine live
-> update compatibility. Features marked as required in the running kernel
-> will need to have that feature marked as supported in the next kernel to
-> be eligible for compatibility.
->
-> Suggested-by: Pratyush Yadav <pratyush@kernel.org>
-> Signed-off-by: Logan Odell <loganodell@google.com>
+Patch 2 fixes the bitmaps and has no upstream counterpart. Upstream
+removed the tracking teardown from __kho_abort() in commit 99cd2ffac697
+("kho: don't unpreserve memory during abort"), which relies on the
+unpreserve interfaces and the notifier removal that came with 6.19. In
+6.18.y, KHO users still preserve memory from the KEXEC_KHO_FINALIZE
+notifier, and the teardown on abort is the only thing that drops those
+preservations. I kept it and changed only the free; patch 2 has the
+details.
 
-I was thinking about this a bit more. We don't really ship the vmlinux
-directly. On x86 it is a PE/COFF image, on arm64 the Image format strips
-ELF information and is a raw binary file.
+Federico Parola (1):
+  kho: free phys_bits bitmaps using free_page() in __kho_abort()
 
-So this information would not be accessible to the kexec loader/luod. So
-perhaps as part of the build we parse the section and output a file with
-the versions? And then it can be packaged with the likes of System.map
-for example?
+Pratyush Yadav (1):
+  kho: free chunks using free_page() instead of kfree()
 
-> ---
->  include/asm-generic/vmlinux.lds.h | 12 +++++++++++
->  include/linux/kho/abi/luo.h       | 34 +++++++++++++++++++++++++++++++
->  include/linux/liveupdate.h        | 12 +++++++++++
->  kernel/liveupdate/luo_core.c      | 16 +++++++++++++++
->  4 files changed, 74 insertions(+)
->
-> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> index 5659f4b5a125..aed4e282a78c 100644
-> --- a/include/asm-generic/vmlinux.lds.h
-> +++ b/include/asm-generic/vmlinux.lds.h
-> @@ -359,6 +359,17 @@
->  #define THERMAL_TABLE(name)
->  #endif
->  
-> +#ifdef CONFIG_LIVEUPDATE
-> +#define LIVEUPDATE_FEATURES						\
-> +	. = ALIGN(8);							\
-> +	.liveupdate_features : AT(ADDR(.liveupdate_features) - LOAD_OFFSET) {	\
-> +		KEEP(*(.liveupdate_sec_hdr))				\
-> +		KEEP(*(.liveupdate_features))				\
-> +	}
-> +#else
-> +#define LIVEUPDATE_FEATURES
-> +#endif
-> +
->  #define KERNEL_DTB()							\
->  	STRUCT_ALIGN();							\
->  	__dtb_start = .;						\
-> @@ -554,6 +565,7 @@
->  	RO_EXCEPTION_TABLE						\
->  	NOTES								\
->  	BTF								\
-> +	LIVEUPDATE_FEATURES						\
->  									\
->  	. = ALIGN((align));						\
->  	__end_rodata = .;
-> diff --git a/include/linux/kho/abi/luo.h b/include/linux/kho/abi/luo.h
-> index 0a7662a0cf9a..5b25e1b48cf5 100644
-> --- a/include/linux/kho/abi/luo.h
-> +++ b/include/linux/kho/abi/luo.h
-> @@ -230,4 +230,38 @@ struct luo_flb_ser {
->  #define LIVEUPDATE_TEST_FLB_COMPATIBLE(i)	"liveupdate-test-flb-v" #i
->  #endif
->  
-> +#define LIVEUPDATE_VER_HDR_MAGIC	0x4c565550 /* 'LVUP' */
-> +#define LIVEUPDATE_VER_HDR_VER		1
-> +
-> +/**
-> + * struct liveupdate_ver_hdr - Header of vmlinux section with version lists
-> + * @magic:     Magic number ('LVUP').
-> + * @version:   Version of the header format.
-> + *
-> + * This struct is the header for the vmlinux section ".liveupdate_features". The
-> + * section contains the list of feature/version entries that the kernel supports.
-> + */
-> +struct liveupdate_ver_hdr {
-> +	u32 magic;
-> +	u32 version;
-
-Should we do feature flags along with the version to extend in
-backwards-compatible way?
-
-> +} __packed;
-> +
-> +/**
-> + * struct liveupdate_feature_entry - Live update feature/version entry
-> + * @name:       Name of the subsystem or feature ("luo" for core).
-> + * @feat_bytes: Number of bytes covered by supp, req, and active bitmaps (e.g. 8).
-> + * @reserved:   Reserved / padding for alignment.
-> + * @supp:       Bitmask of supported features.
-> + * @req:        Bitmask of required features.
-> + * @active:     Bitmask of active features.
-> + */
-
-How should we model FLB dependencies here? And how do we export FLB
-capabilities?
-
-> +struct liveupdate_feature_entry {
-> +	char name[LIVEUPDATE_HNDL_COMPAT_LENGTH];
-> +	u32 feat_bytes;
-> +	u32 reserved;
-> +	u64 supp;
-> +	u64 req;
-> +	u64 active;
-> +} __packed;
-> +
->  #endif /* _LINUX_KHO_ABI_LUO_H */
-> diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
-> index 6051abc0612c..e058df23fed1 100644
-> --- a/include/linux/liveupdate.h
-> +++ b/include/linux/liveupdate.h
-> @@ -229,6 +229,16 @@ struct liveupdate_flb {
->  
->  #ifdef CONFIG_LIVEUPDATE
->  
-> +#define LIVEUPDATE_FEATURE_ENTRY(_id, _name, _supp, _req, _active)	\
-> +	static const struct liveupdate_feature_entry __lu_feat_##_id	\
-> +	__used __section(".liveupdate_features") __aligned(8) = {	\
-> +		.name       = _name,					\
-> +		.feat_bytes = sizeof(u64),				\
-> +		.supp       = (_supp),					\
-> +		.req        = (_req),					\
-> +		.active     = (_active),				\
-> +	}
-> +
->  /* Return true if live update orchestrator is enabled */
->  bool liveupdate_enabled(void);
->  
-> @@ -259,6 +269,8 @@ int liveupdate_get_token_outgoing(struct liveupdate_session *s,
->  
->  #else /* CONFIG_LIVEUPDATE */
->  
-> +#define LIVEUPDATE_FEATURE_ENTRY(_id, _name, _supp, _req, _active)
-> +
->  static inline bool liveupdate_enabled(void)
->  {
->  	return false;
-> diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
-> index 6add1ecc463f..27413f895174 100644
-> --- a/kernel/liveupdate/luo_core.c
-> +++ b/kernel/liveupdate/luo_core.c
-> @@ -64,6 +64,22 @@
->  #include "kexec_handover_internal.h"
->  #include "luo_internal.h"
->  
-> +/*
-> + * This is the header for the ".liveupdate_features" section in vmlinux.
-> + * The linker makes sure that this header precedes the entries.
-> + */
-> +static const struct liveupdate_ver_hdr ver_hdr
-> +	__used __section(".liveupdate_sec_hdr") __aligned(8) = {
-> +	.magic   = LIVEUPDATE_VER_HDR_MAGIC,
-> +	.version = LIVEUPDATE_VER_HDR_VER,
-> +};
-> +
-> +/* Core LUO features */
-> +LIVEUPDATE_FEATURE_ENTRY(luo_core, "luo",
-> +			 LUO_CORE_FEATURES_SUPP,
-> +			 LUO_CORE_FEATURES_REQ,
-> +			 LUO_CORE_FEATURES_ACTIVE);
-> +
->  static struct {
->  	bool enabled;
->  	struct luo_ser *luo_ser_out;
+ kernel/kexec_handover.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 -- 
-Regards,
-Pratyush Yadav
+2.47.3
+
 
