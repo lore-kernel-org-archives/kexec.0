@@ -4,93 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 10D68CCA465
-	for <kexec@archiver.kernel.org>; Thu, 15 Oct 2026 18:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E80E8CC6B38
+	for <kexec@archiver.kernel.org>; Thu, 15 Oct 2026 18:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=fejDPgUdb/iOyoCqBL5K47RANMeJV8pAF9VzuVR2mQg=; b=Hdie/j3VOwINzzbnGlj3vlEPEb
-	1IISYWoAiLiaYkjI+EiJYebDnrTfmVApMaScL/cvf6ijOfPoBPJInewgHRhtjC2UPzXR9jE3PEk+r
-	B1D0SlmoNzfa8CsnEJfv7YIbIyqyM9du6TIsL9vlFS/ftjYEp23nl0nDVwfi5IgKzkZaGS6mrsvzf
-	mREVc/cGHZh9BwNzHiwuhF3DxLIl4c9vLjykLygbqaPXjjgshkWuyxQfmh+WwMC+pVhOpqtIZ2uMe
-	8Gxw5TLs5g+/pDv6jwz3THNv1mKnnlldfZWHC8VBwUYAtyge8qOvyXioC9OFs/1EhiJEb9L0SfjCa
-	Uvi4p5Ew==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=IZyVKQcVTMZmJowGXAGjBXmQ/4SHxcOiPIDUkDLgKCA=; b=zCtAJWyonuVQyO0Cg8yx8I7my8
+	pqG37ovpK3xR9tGGAqu5XkeUU9lhOjT8iuSNMZ0/14B6xZKx+uQn+7zUyFkTHHx9i19n2P3zBL0RV
+	vimkewfr6PT63pYXzsj1nIFwC1jrc6B3OMlkGbRuwvtVU75dQT4vEFHGw30OBR+kAkjA40C4HaR3f
+	naoW5piHv5yfUi2iHldcHWZTehE9iarOiiLKrgBj1AgB+k2U8XizCZT5jKrgFiJQ4BpYDmchsS9Yq
+	DbBzgp/V+yMkkwF94vCkdCVDvwFfVkQnmgjcWjEikQ3m10loG2MBOO1BZ18Yndt42MWm419KuHiVe
+	0MB7a+wA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHQ7Z-000000018yH-3oc7;
-	Thu, 15 Oct 2026 18:24:05 +0000
-Received: from mail-vk1-xa30.google.com ([2607:f8b0:4864:20::a30])
+	id 1xHQYY-00000001CzT-0sTM;
+	Thu, 15 Oct 2026 18:51:58 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHQ7V-000000018wV-19WN
-	for kexec@lists.infradead.org;
-	Thu, 15 Oct 2026 18:24:04 +0000
-Received: by mail-vk1-xa30.google.com with SMTP id 71dfb90a1353d-5e931215e5fso643585e0c.3
-        for <kexec@lists.infradead.org>; Thu, 15 Oct 2026 11:24:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1792088640; x=1792693440; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=fejDPgUdb/iOyoCqBL5K47RANMeJV8pAF9VzuVR2mQg=;
-        b=IG0RinQlFz2x+4h9kEpYVBlMHU9ebvupDNZUqBh2/6rNLlbkUCRFVF1Jaj5zqZ1p3x
-         DzJkfIH35iXLfZkhQ8+5cNsXFm4h50+t8xQIahyrhRfDHAsesc6qQdsDPwDqYrK9Zpdt
-         7V4i910XzP6F08VNkHrPYLUYNg9q+IST/DoKrvemmPA8777YuwF6ymh+QJhibC5KQ0m2
-         ZseUbdsNjCvdgMnkVIiGD4i5p2jYlDVJMY0N7P0k2saPaOdX5OU6DLUYzgyE3ZZa5zSv
-         Ifo6t2byDXbq65wTCl0+JVMVBX/LMUxUU5Y1K9vNwIY6b8n2Aeg01qEgJn7WtQ40Itge
-         SvIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792088640; x=1792693440;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=fejDPgUdb/iOyoCqBL5K47RANMeJV8pAF9VzuVR2mQg=;
-        b=Cxk2Nv7c5fnap2nm/mWkMMapTC6CzUBhtYq/NVdDPAnw1ePHZODK7kosTJCdQ5ywee
-         fEdXh4x8DCJor39s6unrnJd57A+vE9kWYxqB8XAWG1jevGrjIw/LqX+3xr1OVZeGq21j
-         GEYzKqWvEpUlxGmldRJ06MdMH+xEp/ZQQfTBO0q903W9T2CwaakeMejqfHMJ3JRnqdSX
-         31ExYBiUWNZkrfjDtclD62UYn0udVyfmgBPa9hAd2U4mR8U/k70j2xEKPjMqtDBJp0w5
-         Ij9/OP1OJsFGC2+WW/BpizTdmbuP71461gZys+BGJb6gH8oifoZn2ke6VmXQQ8lW8GpN
-         5Pvg==
-X-Forwarded-Encrypted: i=1; AKwUvBykC3UTC0VjYjkfpX09DK8I3FQcUPOLIjIHsnXtZhMSEpH7Kamb5K8fxCRST9iePoFzsXeiNQ==@lists.infradead.org
-X-Gm-Message-State: AFq9FYJ0m9HC8AkL5sPpSMCLwmoQWJBrmpMwXOBna9DF7zQkV/3oZcD6
-	B15PFksXeH7EuClnFGL2HXtfA+YD9874bmIy5wRxwvmmZA+D5FRfGuahA4UGM2Psbmg=
-X-Gm-Gg: AYBFou3ub+ciSXHzpaL0QHoY6AEzPsV8vt3VRZBFpYuGUA724P1fk9zQNVa6H+Epq9/
-	vvxG8p1LaM30YeRhmwGi+Btu3TZNK4gYsoMRuxZMT0ElZ45jdxX8n3Dlf8Sot/AJGfNIDLo6MRZ
-	36MCuiQ8k7O6s2SSDZgTn/zSADGd9qgGO/MTCyGP+GUUzYRUi25VufQW6maKzM4ZXXB0iGbYYlg
-	svdHrh8/wTmYYCA0aMQmLT6VnxyTyI9CCjfAbhXSMK1dYQJ9lxMszwg7AMTbOenFtgvAa0hlrFM
-	/IU+utF/mwEh79+AhXNqxD9RCIkUvA49Lrn27rj5+zsKv6FT+xiqhQo/EGkavqAy4J2beYoaCL0
-	E67xq9ewPv8KXqc/E21zQ6XhfHNMzQ2RsnAUHL4LgTBfhkDcLZmmOzsi22yfG3Lfok3RirY0fOS
-	Uy1uI+nKqeoUSEGJ32ttyJfZQ3U1QpSQlnLwHalsTkvpqc26zWiemDQEZ2y8P2q7VrZEL190JH2
-	iz01ItFh8NS7Z0pyyBEfTx0rb/xRg2hmJME3Foc7cOGNOXxEu3SjtFSVi85qeL/Uvk4696YFuuY
-	TrNKJVe5tw==
-X-Received: by 2002:a05:6123:91:b0:5ce:b65d:22c4 with SMTP id 71dfb90a1353d-5e91f51f7d0mr7511976e0c.16.1792088640045;
-        Thu, 15 Oct 2026 11:24:00 -0700 (PDT)
-Received: from google.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5ea9943d7ffsm331215e0c.3.2026.10.15.11.23.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Oct 2026 11:23:59 -0700 (PDT)
-Date: Thu, 15 Oct 2026 14:23:58 -0400
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: David Matlack <dmatlack@google.com>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
-	linux-kselftest@vger.kernel.org, rppt@kernel.org, shuah@kernel.org,
-	akpm@linux-foundation.org, linux-mm@kvack.org, vipinsh@google.com,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	pratyush@kernel.org, graf@amazon.com
-Subject: Re: [PATCH v1 0/7] liveupdate: tmpfs preservation and early freeze
-Message-ID: <atEaPuWNOm5VLc7A@google.com>
-References: <20261015093816.2438942-1-pasha.tatashin@soleen.com>
- <atESAwf17pJ11S9U@google.com>
+	id 1xHQYW-00000001CzE-3bop;
+	Thu, 15 Oct 2026 18:51:56 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id 830EE429CD;
+	Thu, 15 Oct 2026 18:51:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5D63CC2BCF4;
+	Thu, 15 Oct 2026 18:51:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1792090316;
+	bh=1dzvgxln+eWwNsg9VVLAQoObHp1kZXAmcMPbWrIWUGI=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=BDtQ/H9240qHfpFhXPRul95ldjWLptYIs6WjJgpPhdaSF9HWvF+SPS2lXl3VEO5sc
+	 znwXDqxFYdsomh0zh/Fz3yaANgn8UOocEkEziNgKdjqN2OKF3FXwOvo1VVlPPLSEwW
+	 mQlcBqytx+Uo+6f4EKL8/fhIxrYR6G89V0i9P50rBxfQJTVCxobg/fe/b5SzaUy2cG
+	 ZFh8oJsd0+QIUyB+GJEkQGzG1fEniam95t75cat8uUZPZKGKS+6X7pYrmQUUWV5piT
+	 EaA+hUAIHRQDGQrAXUvIzZDPqcsclNxZ6zJ48NVfVq4Oo69Bkat+R+zlB1ro3m76aN
+	 RZv8LWF1AGHJg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4EACCA465;
+	Thu, 15 Oct 2026 18:51:56 +0000 (UTC)
+From: Igor Velkov via B4 Relay <devnull+iav.iav.lv@kernel.org>
+Date: Thu, 15 Oct 2026 21:51:50 +0300
+Subject: [PATCH v2] genirq/kexec: Do not take the bus lock of an interrupt
+ chip on the crash path
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <atESAwf17pJ11S9U@google.com>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261015_112401_508126_4721F542 
-X-CRM114-Status: GOOD (  53.24  )
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261015-kexec-irq-bus-lock-v2-1-2af15f0757b6@iav.lv>
+X-B4-Tracking: v=1; b=H4sIAMUg0WoC/32NQQ6CMBBFr0Jm7Zi2lEZceQ/DAuhUJhDAVhsM6
+ d2tHMDle8l/f4dAninAtdjBU+TAy5xBnQroh3Z+ELLNDEooI4WocKSNemT/xO4dcFr6EZ2+2Ko
+ 2RuvSQh6unhxvR/TeZB44vBb/OT6i/Nm/uShRoqid6apSldqIG7fxPEVoUkpfIn/K67EAAAA=
+To: Thomas Gleixner <tglx@kernel.org>
+Cc: Radu Rendec <radu@rendec.net>, Marc Zyngier <maz@kernel.org>, 
+ Eliav Farber <farbere@amazon.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, Baoquan He <baoquan.he@linux.dev>, 
+ Heiko Stuebner <heiko@sntech.de>, kexec@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Igor Velkov <iav@iav.lv>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4880; i=iav@iav.lv;
+ h=from:subject:message-id;
+ bh=WElKsqp4WDpVY7lXmV1kTAIN6zD/+3FmBNHjKTykQeU=;
+ b=owGbwMvMwCVmNH1q96v4SmbG02pJDFkXFY7N/8PFuXRta+C1bq24OsHXr/0+nHew+X7/qsvLB
+ EXtxtX3OkpZGMS4GGTFFFkmHNK4lbHk6l9/D/MHMHNYmUCGMHBxCsBEQqIZGToOulXNq9tV/mnJ
+ QY0v0l7PFZpXZJiyGopfF2P7qmNV58/wv1ppX4hiS4gID8/X27mvzI/9sGHfvFCtw3TZpd/aKp8
+ WMwIA
+X-Developer-Key: i=iav@iav.lv; a=openpgp;
+ fpr=90C228DA68A4D5FD4F4837E03297958BEA5F7903
+X-Endpoint-Received: by B4 Relay for iav@iav.lv/default with auth_id=1060
+X-Original-From: Igor Velkov <iav@iav.lv>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,174 +86,146 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: iav@iav.lv
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 10-15 17:48, David Matlack wrote:
-> On 2026-10-15 05:38 AM, Pasha Tatashin wrote:
-> > This series allows preserving files in tmpfs via LUO to survive across a
-> > live update, and allows userspace to decide when to freeze a session
-> > instead of delaying until auto-freeze at kexec time. Once userspace is
-> > done with a session, it can freeze the session immediately (and across
-> > multiple sessions in parallel), reducing blackout time by not postponing
-> > this operation to kexec shutdown where all sessions are frozen serially:
-> > 
-> > 1. Early session freeze (LIVEUPDATE_SESSION_FREEZE):
-> >    Currently, LUO sessions are frozen automatically only inside the
-> >    reboot(LINUX_REBOOT_CMD_KEXEC) path, where luo_session_serialize()
-> >    iterates through all outgoing sessions under global write locks and
-> >    freezes them serially during shutdown.
-> > 
-> >    Add the LIVEUPDATE_SESSION_FREEZE ioctl on session file descriptors so
-> >    userspace can freeze a session as soon as it is done with it (and freeze
-> >    multiple sessions concurrently, since luo_session_freeze() only acquires
-> >    the per-session mutex). During kexec, already-frozen sessions skip the
-> >    late auto-freeze step; if an early-frozen session is closed before
-> >    kexec, its files are rolled back via .unfreeze() before being
-> >    unpreserved.
-> 
-> Thanks for putting this together. I'm on board with driving
-> retrieve-into through a per-handler argument instead of a LUO-level
-> flag. It's what Pratyush suggested on the RFC too (sorry Pratyush, I
-> never replied to that). I still need to review the actual patch but
-> I think the idea is fine.
+From: Igor Velkov <iav@iav.lv>
 
-Yeah, Pratyush and I discussed this at LPC. I've been using this extra
-argument in my cpu_preserve series to launch jobs at a given entry
-address on a preserved CPU, and figured it would be a useful, generic
-interface for others as well. So I decided to send this series now to
-reduce the extra infrastructure I carry in my cpu_preserve series, and
-your tmpfs work was a good reason to land it now :-)
+machine_kexec_mask_interrupts() calls irq_set_irqchip_state() for every
+started interrupt. That function takes the bus lock of the chip and
+desc->lock, and syncs the chip when it drops them. On the crash path
+interrupts are off and the other CPUs are stopped, so a chip whose bus
+transfer is completed by an interrupt never returns from the sync.
 
-> However, nothing ties the arg struct to a handler, it's interpreted by
-> whichever handler owns the token. At LPC we discussed letting userspace
-> pick the handler in PRESERVE_FD/RETRIEVE_FD, so that it controls which
-> one is used when more than one can take a file. If we do that, the
-> handler name would also be the natural key for which arg struct is
-> expected.
-> 
-> > 3. Tmpfs file preservation and retrieval:
-> >    Using the file handler retrieve argument, extend mm/memfd_luo to allow
-> >    preserving generic shmem-backed tmpfs files (not just unlinked memfd
-> >    pseudofiles), recording MEMFD_LUO_FLAG_TMPFS in
-> >    struct memfd_luo_ser.flags so that preserved tmpfs files must be
-> >    retrieved as tmpfs files and preserved memfd files must be retrieved as
-> >    memfd files.
-> 
-> I've been working on a v1 of the tmpfs preservation since LPC. v1 fixes
-> a number of problems in the RFC that I think this series still has
-> (sorry for the wall of text, it is LLM-generated):
-> 
->  - Failures that userspace can fix lose the file. The folios are
->    restored, charged and added one at a time, so if the target's mount
->    is too small (ENOSPC/quota) or the caller hits its memcg limit
->    partway through, the target is truncated, the folios are freed, and
->    the failure is permanent. Only bad-argument errors are retryable.
->    v1 restores all the folios first, charges all the blocks and memcg
->    up front, and adds all the folios to the page cache or none of them.
->    It keeps the restored folios in private_data between attempts (LUO
->    needs to pass private_data to .retrieve() and keep it on failure),
->    so the only permanent failure left is losing the KHO state itself.
+On RK3399 boards with an RK808 PMIC the RTC alarm interrupt belongs to
+the regmap-irq chip of the RK808, which sits on I2C. rk808_irq_chip sets
+init_ack_masked, so regmap_irq_sync_unlock() writes the ack register on
+every unlock, and the I2C controller needs its own interrupt to finish
+the transfer. A panic with a crash kernel loaded prints
 
-I think the current behavior is fine: if the file doesn't fit when
-restoring, I think it is okay to lose the file permanently. We shouldn't
-keep preserved data around in private_data once we have started
-retrieving folios.
+  SMP: stopping secondary CPUs
 
->  - memfd_pin_folios() doesn't require the inode lock, so iommufd can
->    pin folios of the target while they're being added or truncated
->    away. v1 starts with two patches that make iommufd take the lock
->    and make memfd_pin_folios() assert it.
+and then nothing until the watchdog resets the board.
 
-Hm, isn't this mostly orthogonal to the change we're making here?
+machine_kexec_mask_interrupts() takes neither lock for the other
+operations on the descriptor. Move the search for the chip that
+implements irq_set_irqchip_state() into __irq_set_irqchip_state(), which
+takes no locks, and call it from machine_kexec_mask_interrupts().
 
-> 
->  - The target has to be opened for writing (FMODE_WRITE). Since LUO
->    holds a reference to it until finish, that means a restored binary
->    can't be executed until the session is finished (-ETXTBSY). v1
->    instead requires mnt_want_write_file() and file_permission(MAY_WRITE)
->    under the inode lock, like FS_IOC_ENABLE_VERITY. That also rejects
->    immutable files, which a fd opened for writing before chattr +i
->    doesn't.
+Fixes: 78fd584cdec0 ("arm64: kdump: implement machine_crash_shutdown()")
+Suggested-by: Thomas Gleixner <tglx@kernel.org>
+Assisted-by: LLM
+Signed-off-by: Igor Velkov <iav@iav.lv>
+---
+Tested with sysrq-c and kdump-tools on Kobol Helios64 (RK3399, RK808),
+7.3-rc7: the dump is saved 3 of 3. Without a fix it hangs 3 of 3 (7.3-rc5).
+---
+Changes in v2:
+- Clear the active state through a lockless __irq_set_irqchip_state()
+  instead of skipping chips with irq_bus_lock. The manage.c part is
+  Thomas' proposal from the v1 thread.
+- Link to v1: https://lore.kernel.org/r/20261005-kexec-irq-bus-lock-v1-1-09f6b5323460@iav.lv
+---
+ kernel/irq/internals.h |  1 +
+ kernel/irq/kexec.c     |  2 +-
+ kernel/irq/manage.c    | 43 ++++++++++++++++++++++++-------------------
+ 3 files changed, 26 insertions(+), 20 deletions(-)
 
-Ah, good point.
+diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
+index 2c30e7537987..703a062be878 100644
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -83,6 +83,7 @@ enum {
+ #include "settings.h"
+ 
+ extern int __irq_set_trigger(struct irq_desc *desc, unsigned long flags);
++extern int __irq_set_irqchip_state(struct irq_desc *desc, enum irqchip_irq_state which, bool val);
+ extern void __disable_irq(struct irq_desc *desc);
+ extern void __enable_irq(struct irq_desc *desc);
+ 
+diff --git a/kernel/irq/kexec.c b/kernel/irq/kexec.c
+index 1a3deffe6b5b..f245b9876422 100644
+--- a/kernel/irq/kexec.c
++++ b/kernel/irq/kexec.c
+@@ -25,7 +25,7 @@ void machine_kexec_mask_interrupts(void)
+ 			 * First try to remove the active state from an interrupt which is forwarded
+ 			 * to a VM. If the interrupt is not forwarded, try to EOI the interrupt.
+ 			 */
+-			check_eoi = irq_set_irqchip_state(i, IRQCHIP_STATE_ACTIVE, false);
++			check_eoi = __irq_set_irqchip_state(desc, IRQCHIP_STATE_ACTIVE, false);
+ 		}
+ 
+ 		if (check_eoi && chip->irq_eoi && irqd_irq_inprogress(&desc->irq_data))
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 4fbb8f960dbf..94c2e13ddf8d 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -2747,6 +2747,28 @@ int irq_get_irqchip_state(unsigned int irq, enum irqchip_irq_state which, bool *
+ }
+ EXPORT_SYMBOL_GPL(irq_get_irqchip_state);
+ 
++int __irq_set_irqchip_state(struct irq_desc *desc, enum irqchip_irq_state which, bool val)
++{
++	struct irq_data *data = irq_desc_get_irq_data(desc);
++	struct irq_chip *chip;
++
++	do {
++		chip = irq_data_get_irq_chip(data);
++
++		if (WARN_ON_ONCE(!chip))
++			return -ENODEV;
++
++		if (chip->irq_set_irqchip_state)
++			break;
++
++		data = irqd_get_parent_data(data);
++	} while (data);
++
++	if (data)
++		return chip->irq_set_irqchip_state(data, which, val);
++	return -EINVAL;
++}
++
+ /**
+  * irq_set_irqchip_state - set the state of a forwarded interrupt.
+  * @irq:	Interrupt line that is forwarded to a VM
+@@ -2761,25 +2783,8 @@ EXPORT_SYMBOL_GPL(irq_get_irqchip_state);
+  */
+ int irq_set_irqchip_state(unsigned int irq, enum irqchip_irq_state which, bool val)
+ {
+-	scoped_irqdesc_get_and_buslock(irq, 0) {
+-		struct irq_data *data = irq_desc_get_irq_data(scoped_irqdesc);
+-		struct irq_chip *chip;
+-
+-		do {
+-			chip = irq_data_get_irq_chip(data);
+-
+-			if (WARN_ON_ONCE(!chip))
+-				return -ENODEV;
+-
+-			if (chip->irq_set_irqchip_state)
+-				break;
+-
+-			data = irqd_get_parent_data(data);
+-		} while (data);
+-
+-		if (data)
+-			return chip->irq_set_irqchip_state(data, which, val);
+-	}
++	scoped_irqdesc_get_and_buslock(irq, 0)
++		return __irq_set_irqchip_state(scoped_irqdesc, which, val);
+ 	return -EINVAL;
+ }
+ EXPORT_SYMBOL_GPL(irq_set_irqchip_state);
 
->  - There's no file_modified() or fsnotify_modify(), so setuid/setgid
->    bits aren't cleared and timestamps aren't updated. The normal write
->    path does both.
+---
+base-commit: 4351cc74202857f5b85b3573c477c9f798f5cd88
+change-id: 20261005-kexec-irq-bus-lock-f48d5966443d
 
-That is true, though I'm not sure fsnotify_modify() is really needed
-since the whole file is restored at once and I doubt anyone is watching
-for modifications during restore (clearing setuid/setgid via
-file_modified() makes sense, though).
-
->  - f_pos is set through fget() + vfs_setpos() without f_pos_lock, which
->    races with read()/lseek() on the same open file. v1 uses
->    fdget_pos(). (Sashiko called this an ABBA deadlock. I don't think it
->    is one, since vfs_setpos() doesn't take the lock, but the race is
->    real.)
-
-Right, this was reported by Sashiko; I haven't looked into it yet.
-
-> 
->  - Early failures leak the preserved folios. The seals/flags check
->    frees ser and records a permanent error, so .finish() skips the file
->    and the folios are never freed. Sashiko flagged this as well. The
->    new MEMFD_LUO_ALL_FLAGS check adds another way to get there. In v1,
->    early failures don't consume anything and aren't permanent, so
->    .finish() cleans up.
-
-We originally agreed that if retrieve() fails, we fail permanently and
-leak resources until reboot to avoid memory corruption from ongoing DMA
-activity. However, now that we have the retryable option, we can start
-relaxing what is considered a permanent failure vs. a recoverable/early
-failure that .finish() can clean up.
+Best regards,
+-- 
+Igor Velkov <iav@iav.lv>
 
 
->  - If a token was already retrieved, luo_retrieve_file() returns the
->    existing file and ignores arg. Userspace that asks to retrieve into
->    X gets success and an fd for a different file. I think LUO should
->    fail with -EBUSY if an arg is passed for a token that was already
->    retrieved.
-
-Agreed, if an arg is passed for a token that was already retrieved,
-failing with -EBUSY (or -EINVAL if the target file doesn't match the
-originally retrieved struct file) makes sense.
-
-
->  - Sashiko's WARN_ON(liveupdate_claim_file()) report on 3/7 is valid:
->    xa_insert() can fail with -ENOMEM there, and userspace can trigger
->    that.
-
-Yeah, we can address that.
-
-> One place our series are not aligned is MEMFD_LUO_FLAG_TMPFS. My
-> thinking has been that RETRIEVE_FD should support retrieving into any
-> shmem file (including linked files, memfds, and O_TMPFILE). It is
-> userspace's choice at retrieve time. The only thing the kernel enforces
-> are the fundamental requirements such as exceeding the file's mount's
-> limit.  When I think about it that way there is nothing special about
-> retrieving into a memfd and MEMFD_LUO_FLAG_TMPFS is just artificially
-> limiting how a shmem file can be retrieved. WDYT?
-
-I do not want LUO to change the type of a preserved file across live
-update. Take seals, for example: a memfd can be sealed with the
-guarantee that it will never be modified, whereas a regular tmpfs file
-does not support sealing. Allowing a preserved memfd to be retrieved
-into a tmpfs file would create a loophole to strip seals (or bypass
-mount/superblock boundaries). I strongly prefer keeping the file type
-strictly the same across preserve and retrieve.
-
-> One last thing is my v1 also comes with a dedicated tmpfs selftest with
-> much broader positive and negative test coverage that I would like to
-> land (things link O_TMPFILE and read-only targets, executing restored
-> binaries, exact block accounting with statfs() and st_blocks, including
-> large folios that extend past EOF, etc.).
-> 
-> Maybe what we can do is keep your 1-5/7 patches and I'll rebase my v1 on
-> top and send that as a replacement for 6-7/7?
-
-Sure, please go ahead and send the new version.
-
-Pasha
 
