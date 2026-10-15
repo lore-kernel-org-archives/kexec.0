@@ -4,55 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 39674CC6B34
-	for <kexec@archiver.kernel.org>; Thu, 15 Oct 2026 09:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0D086CC6B33
+	for <kexec@archiver.kernel.org>; Thu, 15 Oct 2026 11:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:To:Subject:From
-	:Message-ID:Cc:MIME-Version:Content-ID:Content-Description:Resent-Date:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=iwF7qMRvUs/aGLzXJDofOjX9Pjph2gGhbITBTTJ9FNc=; b=IFJjz483MuthlXwj0Nz+KqF4W+
-	sQVBRFzfthe6EuAS3V9gdftHwjkWi8GAQJIN2lvONB9NLv2HYrpqMSWZHIxdYuQI2mSppb5FG2UPa
-	WGeCHZ5T3mIheGzU/HeFEF6nrGLvoXpm+eqaMMoiIeBisyubsrZj8lNg7BfE66oD5QiXd2oyBtRQd
-	ldtFJU4UzlIoUUzXn9oEsqKHUGbcNmV07i+JG+TRmH8geOoJ4HfEhU7kt4eAR0OK8Bf7R3Zb6LV3i
-	9ipbfzCqq2RfaWWo+mP/fN0Y3EhTmRv2SLlt0R7tCFRm2XERheOKSSsf1UwdfGp2VzgJ17OtO6IA1
-	/qF76JNA==;
+	bh=bIfes0VmGz93Q/D7qKVAipk4bYqd8Rm8ZLiZKuFMUfw=; b=KYKELCIKGcZiRVSFWF2TfFn+ql
+	vtugim7y+6mQvvEQ7PIDHqdy2+PfwCnz/YQkUfCFU1JlNCnD0aCeqs0Spajqm75feWdc9V7T5YLhI
+	bv6F3QB0bKA5JF9OiVpZwme254ZkxUrY7Cc9cidSF8hNOKM9UOZ0LxmMI1g4EM830riXXLKbJ2K6t
+	FJJymfY6BlnLCPOT/+jIFop8oykhNvMV81K2fKVPkRuFrIZcjZydW+Ca5nhFbTrQV5yBqPfbwnBP7
+	M/rzmDN/POP5EBKlYNoBsPz3wcN4tNzfUjH2WFNE3Q0iFehX8FEINw+GLYpU1h1SgJd1kjxXrFIG9
+	SMiGLARg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHIAA-0000000HLo1-0Ury;
-	Thu, 15 Oct 2026 09:54:14 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xHJKe-0000000HXBm-1I0U;
+	Thu, 15 Oct 2026 11:09:08 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHIA5-0000000HLnJ-3er8
+	id 1xHJKZ-0000000HXAv-3qwq
 	for kexec@lists.infradead.org;
-	Thu, 15 Oct 2026 09:54:10 +0000
+	Thu, 15 Oct 2026 11:09:06 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 612FF4082A;
-	Thu, 15 Oct 2026 09:54:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E092F1F000C4;
-	Thu, 15 Oct 2026 09:54:08 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 1C5FB60232;
+	Thu, 15 Oct 2026 11:09:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A6491F000C4;
+	Thu, 15 Oct 2026 11:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792058049;
-	bh=iwF7qMRvUs/aGLzXJDofOjX9Pjph2gGhbITBTTJ9FNc=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=CJOOFm7PaQMvAR57nn02bMXeahBXZFgd7IygUGVcn4kM5Z8s6NdQt/RYUmh5pri2e
-	 l8Lul2Lntcloc7y4WZ0LbdlYTAOorvk3YGS5LuBe6YkAnZ7rmOoBWMfBpX2yUIvR8K
-	 dO0HDdW51MtYFfm6qMtqHBs6nDmEBXHOlyM8/oHzRuP7fvfc2iphS/sLBwBDQpB/Sz
-	 TJcEfpydFS9yoRljz/oBxFg/14xWdlZCshJmH9LkmCFQcjuDxvX88qRlqWkHLF7nLe
-	 qhqlo0pRE3r0adO8tK7Tgljo7khScdWfvlGm5OzXNwaYEYbg9lwqOI34wg5dcAK7Hz
-	 LnsAcU+PEOcEg==
-Message-ID: <sashiko-outbox-172604@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 6/7] mm/memfd_luo: Support tmpfs preservation and
- retrieval
-To: "Pasha Tatashin" <pasha.tatashin@soleen.com>, rppt@kernel.org, shuah@kernel.org, akpm@linux-foundation.org, vipinsh@google.com, dmatlack@google.com, kexec@lists.infradead.org, pratyush@kernel.org, graf@amazon.com
-In-Reply-To: <20261015093816.2438942-7-pasha.tatashin@soleen.com>
-References: <20261015093816.2438942-1-pasha.tatashin@soleen.com>
- <20261015093816.2438942-7-pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 15 Oct 2026 09:54:08 +0000
+	s=k20260515; t=1792062542;
+	bh=bIfes0VmGz93Q/D7qKVAipk4bYqd8Rm8ZLiZKuFMUfw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=i2jp9z9RcjWmzfTFdI2o0RKgNd5lHBSExqJbfVUWMOO3Hqtg8Ocr3XnH8AjA1rE+8
+	 4JOg3mOL71xU17oyCOVQS5D3nzPIUBu7SzLxVt96CbTNjdvz6IUMxyGYg8frUbyE62
+	 Ms9bTFfLVQPNoq4JbZ9vTDdpJB8/5/biHLFU9tXDLucmpQc5I05+e4jZru9aTEpCn4
+	 DjPR2z/M8mfvz1R/8ekpZy+0etF37VzorR8WK8iwKd0M7AftHzPSuvsJHmIJ0WEj3F
+	 5AqSWH/YNaidOXVDE7d+knZY7phLDP9/OtWpltqn9ir8Xnwjns3+7I71a2hISoySxd
+	 SICGxvBZK0p1g==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Pasha Tatashin
+ <pasha.tatashin@soleen.com>,  Alexander Graf <graf@amazon.com>,
+  kexec@lists.infradead.org,  linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org,  Bing Jiao <bingjiao@google.com>
+Subject: Re: [PATCH] kho: do not reserve empty per-node bootmem areas
+In-Reply-To: <atCQqghin0KOyx63@kernel.org> (Mike Rapoport's message of "Thu,
+	15 Oct 2026 11:36:58 +0300")
+References: <20261014131547.259138-1-pratyush@kernel.org>
+	<atCQqghin0KOyx63@kernel.org>
+Date: Thu, 15 Oct 2026 13:08:59 +0200
+Message-ID: <2vxz8q3zi5kk.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -64,199 +69,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] mm: memfd_luo_retrieve drops file seals on tmpfs retrieval causing=
- security bypass
-- [High] mm: memfd_luo_retrieve ABBA deadlock between inode lock and f_pos_=
-lock
-- [High] mm: permanent leak of KHO folios on early memfd_luo_retrieve errors
---
+On Thu, Oct 15 2026, Mike Rapoport wrote:
 
-commit 54190d07831630c2e724ceea33310f62bf42a6dd
-Author: David Matlack <dmatlack@google.com>
+> On Wed, Oct 14, 2026 at 03:15:44PM +0200, Pratyush Yadav wrote:
+>> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+>> 
+>> Some nodes do not allocate any early boot memory. An example is
+>> hotpluggable nodes with movable_node enabled. So the scratch size for
+>
+>                           Let's use the new naming please ^ ;-)
 
-mm/memfd_luo: Support tmpfs preservation and retrieval
+Argh, muscle memory...
 
-This commit relaxes memfd_luo_can_preserve() to support general shmem-backed
-files, allowing userspace to preserve standard tmpfs files across kexec. It
-introduces a new MEMFD_LUO_FLAG_TMPFS flag and a new UAPI struct
-liveupdate_memfd_retrieve_arg to support restoring preserved tmpfs folios
-to a newly created tmpfs file.
+>
+> I'll fix it up when applying.
 
-> diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
-> --- a/mm/memfd_luo.c
-> +++ b/mm/memfd_luo.c
-> @@ -516,10 +519,60 @@ static int memfd_luo_retrieve_folios(struct file *f=
-ile,
->  	return err;
->  }
-> =20
-> +static struct file *memfd_luo_get_tmpfs_file(struct liveupdate_file_op_a=
-rgs *args)
-> +{
-> +	const struct liveupdate_memfd_retrieve_arg *rarg =3D args->arg;
+Thanks!
 
-[ ... ]
+>
+>> them ends up being zero. Zero size allocations normally don't play well
+>> with memblock. Memblock returns an address, but then doesn't actually
+>> reserve anything. This address ends up being recorded in kho_bootmem
+>> with a size of 0. In case of hotpluggable nodes with movable_nodes, the
+>> allocation on the node actually fails because memblock refuses to
+>> allocate there, and so KHO fails to initialize.
+>> 
+>> Skip bootmem reservation for such nodes entirely.
+>> 
+>> To keep the code more robust, avoid overloading kho_bootmem_cnt. use
+>> max_nr_bootmem to store the size of kho_bootmem array. This ensures that
+>> the location of kho_bootmem_cnt assignment does not affect the cleanup
+>> paths.
+[...]
 
-> +	inode =3D file_inode(file);
-> +	inode_lock(inode);
-> +	if (!inode->i_nlink) {
-> +		err =3D -EINVAL;
-> +		goto unlock_inode;
-> +	}
-
-[ ... ]
-
-> +	return file;
-> +
-> +unlock_inode:
-> +	inode_unlock(inode);
-> +put_file:
-> +	fput(file);
-> +	return ERR_PTR(err);
-> +}
-> +
->  static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
->  {
->  	struct memfd_luo_folio_ser *folios_ser;
->  	struct memfd_luo_ser *ser;
-> +	struct inode *inode;
->  	struct file *file;
->  	int err;
-> =20
-> @@ -527,50 +580,75 @@ static int memfd_luo_retrieve(struct liveupdate_fil=
-e_op_args *args)
->  	if (!ser)
->  		return -EINVAL;
-> =20
-> -	/* Make sure the file only has seals supported by this version. */
-> -	if (ser->seals & ~MEMFD_LUO_ALL_SEALS) {
-> +	/* Make sure the file only has seals and flags supported by this versio=
-n. */
-> +	if ((ser->seals & ~MEMFD_LUO_ALL_SEALS) ||
-> +	    (ser->flags & ~MEMFD_LUO_ALL_FLAGS)) {
->  		err =3D -EOPNOTSUPP;
->  		goto free_ser;
->  	}
-
-[Severity: High]
-Does this error path permanently leak the KHO memory?
-
-If memfd_luo_retrieve() encounters a permanent error here (like unsupported
-seals), it jumps to free_ser and returns an error without setting
-args->retryable =3D true. The LUO core then records this negative error code
-in luo_file->retrieve_status.=20
-
-When memfd_luo_finish() is later called:
-
-	if (args->retrieve_status)
-		return;
-
-It returns early because args->retrieve_status !=3D 0, never attempting to
-discard the ser->folios vmalloc array or the underlying physical data
-folios. Those folios would remain permanently reserved in memblock.
-
-> +	if (ser->flags & MEMFD_LUO_FLAG_TMPFS) {
-> +		file =3D memfd_luo_get_tmpfs_file(args);
-> +		if (IS_ERR(file)) {
-> +			args->retryable =3D true;
-> +			return PTR_ERR(file);
-> +		}
-> +		inode =3D file_inode(file);
-> +	} else {
-> +		if (args->arg) {
-> +			args->retryable =3D true;
-> +			return -EINVAL;
-> +		}
-> =20
-> -		/*
-> -		 * The seals are preserved. Allow sealing here so they can be added
-> -		 * later.
-> -		 */
-> -		file =3D memfd_alloc_file("", MFD_ALLOW_SEALING);
-> -		if (IS_ERR(file)) {
-> -			pr_err("failed to setup file: %pe\n", file);
-> -			err =3D PTR_ERR(file);
-> -			goto free_ser;
-> -		}
-> +		/*
-> +		 * The seals are preserved. Allow sealing here so they can be
-> +		 * added later.
-> +		 */
-> +		file =3D memfd_alloc_file("", MFD_ALLOW_SEALING);
-> +		if (IS_ERR(file)) {
-> +			pr_err("failed to setup file: %pe\n", file);
-> +			err =3D PTR_ERR(file);
-> +			goto free_ser;
-> +		}
-> =20
-> -	err =3D memfd_add_seals(file, ser->seals);
-> -	if (err) {
-> -		pr_err("failed to add seals: %pe\n", ERR_PTR(err));
-> -		goto put_file;
-> -	}
-> +		err =3D memfd_add_seals(file, ser->seals);
-> +		if (err) {
-> +			pr_err("failed to add seals: %pe\n", ERR_PTR(err));
-> +			goto put_file;
-> +		}
-> +
-> +		inode =3D file_inode(file);
-> +		inode_lock(inode);
-> +	}
-
-[Severity: High]
-Does this bypass security seals on retrieved tmpfs files?
-
-memfd_luo_preserve() records seals in ser->seals for all files. However,
-the tmpfs branch above entirely skips calling memfd_add_seals(). If an
-immutable or write-sealed memfd was linked to the filesystem prior to kexec,
-it appears it will be restored into the user's empty tmpfs file without any
-seals applied, resulting in a fully writable and modifiable file.
-
->  	if (ser->nr_folios) {
->  		folios_ser =3D kho_restore_vmalloc(&ser->folios);
->  		if (!folios_ser) {
->  			err =3D -EINVAL;
-> -			goto put_file;
-> +			goto unclaim_file;
->  		}
-> =20
->  		err =3D memfd_luo_retrieve_folios(file, folios_ser, ser->nr_folios);
->  		vfree(folios_ser);
->  		if (err)
-> -			goto put_file;
-> +			goto unclaim_file;
->  	}
-> =20
-> +	vfs_setpos(file, ser->pos, MAX_LFS_FILESIZE);
-
-[Severity: High]
-Can this create an ABBA deadlock between inode_lock and f_pos_lock?
-
-For tmpfs files, memfd_luo_get_tmpfs_file() acquires and returns with
-inode_lock(inode) held. Later, vfs_setpos() is called here, which acquires
-mutex_lock(&file->f_pos_lock) while inode_lock is still held.
-
-Since the file is a normal file descriptor passed by userspace, the standard
-VFS write path acquires file->f_pos_lock first via fdget_pos(), and then
-acquires inode_lock(inode) inside the filesystem's write iterator. A
-concurrent write() on the provided file descriptor could trigger a deadlock.
-
-> +	i_size_write(inode, ser->size);
-> +	inode_unlock(inode);
-> +
->  	args->file =3D file;
->  	kho_restore_free(ser);
-> =20
->  	return 0;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261015093816.2438=
-942-1-pasha.tatashin@soleen.com?part=3D6
+-- 
+Regards,
+Pratyush Yadav
 
