@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 211E5CC6B3C
-	for <kexec@archiver.kernel.org>; Thu, 15 Oct 2026 09:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1ECA2CC6B33
+	for <kexec@archiver.kernel.org>; Thu, 15 Oct 2026 09:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
 	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:To:Subject:From
 	:Message-ID:Cc:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=CGdG8TwFl5jlPeq0ZWNrkAMVJaC9oniv4YtTj6Q++SA=; b=i7UP7+bYJh1pPjsXTYC/hskTYc
-	238NCMKTLcNzpgI69iZundQPwHfGZIdM+4Et25MkQpjHorlkXOi+z9aaodEWjwz6yozQ9x5EABaUs
-	tpTZkjLEqb6kROTnxauBdLd3vDXLaxuPa2hx8p/djwl+9tTHY9yau9cWK3cqivOPHWrMEGrFJxn0r
-	j0x0bnB+W/UGCj5wcf9KPrfF1+au6nqatGpxAHqPdhIU3cnm/NlMYaejHxIX3kBLm+MNnJ49azky9
-	cjcYFHAQiPDiohhyJlfMUZDCaMA/+faPDd/2C7BbGqSvzxjYGQ+WOtubjY+AtqBfaDTw/Vp3yvbnc
-	8u/WR9Mw==;
+	bh=47NskKdauNoquauqxDOjGcWM104N9Vqi+OvXXK30120=; b=zJvrD4xjQ05dYenAGqicaaAoZU
+	tX5qUHfiAZrhXldm+DS2WvIE4oXyFVKLSHDZH62fft06zCSBop2QsuYb8Qk2oo6TYrOuOjJ6hxsdb
+	D/2joq/8pCaX5fO0DE8/hnoXZTlefvpZ4ZrkK7+2aiZjwPMd0PxvqnX9U6SmLVeKkaNKgctAWfxqJ
+	GjQhGHDzy9StOf++2e3Tgf/rT0hOELBqQv7AHpl7jlMKlufzr2sMdCcSdOnwqNrh5Qzo+HChCs1k/
+	ow99r9aNyismUBwKMSc+m7iun43qhw4ol98Qd0VLR9Ig3xtUbJVbJTGu4T/kb39xjSSexbq3iDWzL
+	wpSweNlQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHI2R-0000000HJU9-1CIT;
-	Thu, 15 Oct 2026 09:46:15 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xHI3K-0000000HKAS-3lUU;
+	Thu, 15 Oct 2026 09:47:10 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHI2P-0000000HJQJ-11qM
+	id 1xHI3K-0000000HK9r-0cVa
 	for kexec@lists.infradead.org;
-	Thu, 15 Oct 2026 09:46:13 +0000
+	Thu, 15 Oct 2026 09:47:10 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 0178244226;
-	Thu, 15 Oct 2026 09:46:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C6EE1F000C5;
-	Thu, 15 Oct 2026 09:46:12 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id E20EE42AAC;
+	Thu, 15 Oct 2026 09:47:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D3611F000C4;
+	Thu, 15 Oct 2026 09:47:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792057572;
-	bh=CGdG8TwFl5jlPeq0ZWNrkAMVJaC9oniv4YtTj6Q++SA=;
+	s=k20260515; t=1792057629;
+	bh=47NskKdauNoquauqxDOjGcWM104N9Vqi+OvXXK30120=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=ZO3Y9c5TYPasjCBbX3ApFT1y+gx3rbGIng/IjizqyFYQMdltCUGPnG5h1mKEN9Q+R
-	 R1B/1xFbIFAPPZXKimYBw8Z2LJ5Mpr50bcS6/xyv2RAMST9qrMXyFROmp3DdhWdBci
-	 2xZa4iOwMCACe02JjK4QCu7/TQQLntOw/6o+BA9kPBX0v/jFVsPzvwhpCvyL//Dt9a
-	 IpIF4TzuVFrSGwd9fkIwB2jQMeLydXwJkI5HkPN7VF057+VK+PRWY5ymDz2q3MxLQf
-	 rMr7CUCXpkgWNh+jQFvIeYXqXyAhZhIx+KRpO+r2goz/NycXXT6ZeOyG3gTlKPQbUs
-	 Es8bGqDJAu5gA==
-Message-ID: <sashiko-outbox-172593@kernel.org>
+	b=IlaFUYYnLU7R84ZRpG4BkcInAI4Yn2JsMIF5Izkacr4jk8Kd4+zv/z2Gs6y20FKCw
+	 K4BFKjpd0TCJgmkZSCWguOl7nQf6KVpLdYix5h2IsdsafUfZ/lvBmtghPL6PXb0xWB
+	 HsQzG4Wg4p+IccUdI8KJkD/E7zJXyZsdJZdXc4K3P1Cxj7GwwTXQXjolBiebL8M7lF
+	 zlB9y4COrbe39vvS6zhqRirn0NycIgWpmjPTH1a55PMYgv9pz1d0618eYv1iOH72W6
+	 Ix5JZ+5KvADjzWBTjSi3HKzMH7hMjwD5ize6yHId9naEn5tbDhGvDUBiEzT3bzGbx1
+	 sXV/Gr7/Z8tww==
+Message-ID: <sashiko-outbox-172595@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 5/7] liveupdate: Allow file handlers to mark retrieve
- failures as retryable
+Subject: Re: [PATCH v1 7/7] selftests: liveupdate: Add test coverage for
+ tmpfs preservation and retrieval
 To: "Pasha Tatashin" <pasha.tatashin@soleen.com>, rppt@kernel.org, shuah@kernel.org, akpm@linux-foundation.org, vipinsh@google.com, dmatlack@google.com, kexec@lists.infradead.org, pratyush@kernel.org, graf@amazon.com
-In-Reply-To: <20261015093816.2438942-6-pasha.tatashin@soleen.com>
+In-Reply-To: <20261015093816.2438942-8-pasha.tatashin@soleen.com>
 References: <20261015093816.2438942-1-pasha.tatashin@soleen.com>
- <20261015093816.2438942-6-pasha.tatashin@soleen.com>
+ <20261015093816.2438942-8-pasha.tatashin@soleen.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 15 Oct 2026 09:46:11 +0000
+Date: Thu, 15 Oct 2026 09:47:08 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -68,32 +68,64 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> When luo_retrieve_file() invokes a handler's .retrieve() callback and it
-> returns an error, LUO currently records the error in
-> luo_file->retrieve_status and blocks any subsequent retrieve attempts.
-> This is necessary when the handler has already partially consumed or
-> freed the preserved KHO state.
->=20
-> However, with user arguments passed to .retrieve(), a handler may fail
-> early while validating caller-supplied parameters (such as a missing
-> argument, an invalid or read-only target file descriptor, or a non-empty
-> target file) before touching any preserved KHO state. In such cases,
-> userspace should be able to fix the argument and retry
-> LIVEUPDATE_SESSION_RETRIEVE_FD, and if the file is never retrieved,
-> .finish() must still run to release the preserved KHO state.
->=20
-> Add a retryable output flag to struct liveupdate_file_op_args. When a
-> handler sets args->retryable =3D true on error, luo_retrieve_file() leaves
-> luo_file->retrieve_status at 0 so the retrieve operation can be retried
-> and .finish() will still clean up the unconsumed preserved state if the
-> session is finished without retrieving the file.
->=20
-> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] selftests: out-of-bounds read in ksft_print_msg format string
+--
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+commit 6c97b421e43a12b89a960f6a03326dbad1153339
+Author: David Matlack <dmatlack@google.com>
+
+selftests: liveupdate: Add test coverage for tmpfs preservation and retriev=
+al
+
+This extends the multi-session live update test to verify preserving a
+path-backed tmpfs file and retrieving its contents post-kexec. It also
+verifies that retrieve argument validation errors are retryable and allow
+a subsequent valid retrieve call to succeed.
+
+> diff --git a/tools/testing/selftests/liveupdate/lib/lu_utils.c b/tools/te=
+sting/selftests/liveupdate/lib/lu_utils.c
+> index 5c6f8bf80b297..1b1a556287d3a 100644
+> --- a/tools/testing/selftests/liveupdate/lib/lu_utils.c
+> +++ b/tools/testing/selftests/liveupdate/lib/lu_utils.c
+
+[ ... ]
+
+> +int restore_and_verify_tmpfs(int session_fd, int token, int fd,
+> +			     const char *expected_data)
+> +{
+
+[ ... ]
+
+> +	map =3D mmap(NULL, page_size, PROT_READ, MAP_SHARED, fd, 0);
+> +	if (map =3D=3D MAP_FAILED)
+> +		return -errno;
+> +
+> +	if (expected_data && strcmp(expected_data, map) !=3D 0) {
+> +		ksft_print_msg("Data mismatch! Expected '%s', Got '%s'\n",
+> +			       expected_data, (char *)map);
+
+[Severity: Low]
+Does this risk an out-of-bounds read when reporting a data mismatch?
+
+The memory mapped at map is strictly bounded by page_size and not guaranteed
+to be null-terminated. If the restored file contents lack a null terminator
+due to corruption or a failed restore, the %s format specifier could read
+past the page boundary and cause a crash.
+
+Could this be printed with a length limit to ensure it safely prints only
+what is mapped?
+
+> +		munmap(map, page_size);
+> +		return -EINVAL;
+> +	}
+> +
+> +	munmap(map, page_size);
+> +	return 0;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261015093816.2438=
-942-1-pasha.tatashin@soleen.com?part=3D5
-
+942-1-pasha.tatashin@soleen.com?part=3D7
 
