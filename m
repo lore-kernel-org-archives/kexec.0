@@ -4,174 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 59982CCA462
-	for <kexec@archiver.kernel.org>; Thu, 15 Oct 2026 21:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 304CFCCA464
+	for <kexec@archiver.kernel.org>; Thu, 15 Oct 2026 21:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	Content-Type:References:Message-ID:Subject:CC:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=abqK7JjMuXHkA5JRXJKdFjjat/qPQ3psYGWo6Y8Bdsw=; b=4pOCPLYxJs73nUMwW5HK7lkj4R
-	BhPD1f9/aPrS9zTp1x+Qxvn/obY/KHnmOQLdLpYWWzJIOsgf2LIvMNCmEvRys0R/YSsPPjPHpTgUc
-	DdFo+updi+ITfjh8WGEsp1+HLHqUzMxfrS/h4SLW1nKPK427udSXaMwAOt98JO7Ew5eFtiqvlPWoo
-	Ddtkmu+rnZ8E4OeJZ6au4D4nD//nS2RZ9HLhQ327uNd33WmMl85KP75AOETJaJGSM+G5rP4sTlwBo
-	CIKJ05Cn0yg/Ub+OsIenpRDj73YWhR3XctE7X5rVbtq8IrZ4Ajf+FYBC+g+gbf77dg+sT+/iTOTjI
-	gcmoOZRQ==;
+	bh=mI5j2QSx7YHmNnf5OMmNmLr/+3VlhYuDRCjBR0r1XZM=; b=vvFzlJMP/sZhkAtw+uEVzzkRLq
+	CBFCvwMQXEpemy/yxNq6fg0NFZ5vNeYfSBiuigNZd0NBp8BZP5P5vvIhBjbj1uObFd60BFAteHcRI
+	Prxo8nr1jbt5oH3+xqh7Ybp6VkrvwlglPYlVrIklIAS/JlNcLrn1lT0P1csWUmJwCo9dFyI+vCIL4
+	qUBe7zBTnkkOh3YN9CVJBlpjl78Y1G7zFjkmwTqtLhAIyvqmO5Dd3EYDOFUakW7o6FsmP2tEGGxZK
+	XEZhjjks/3B6aUVH8HhKrz7BG1/48wDDC/jAv1CFUSMSyfOMj1wSlXrNqwhRzNNSMt0BoGia8FySq
+	GXozPWEg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHT5c-00000001Rcs-40pL;
-	Thu, 15 Oct 2026 21:34:16 +0000
-Received: from mgamail.intel.com ([198.175.65.16])
+	id 1xHTOK-00000001Sya-05hU;
+	Thu, 15 Oct 2026 21:53:36 +0000
+Received: from mail-pj1-x102f.google.com ([2607:f8b0:4864:20::102f])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHT5a-00000001RcS-3pPN
+	id 1xHTOH-00000001SyG-3vGI
 	for kexec@lists.infradead.org;
-	Thu, 15 Oct 2026 21:34:16 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792100054; x=1823636054;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=/pHOygyuGfSThcZERlpw6akYH/UxO6pbzym2kfgGufI=;
-  b=SB5pa6IWw94ialA40G+m92uJNPUdoqra5h5IG7XJQI6Z9mRlCMz1v9gP
-   slA8puPtXzYk66iDikPBxkgbTCjVd3OidQYir6p7Lflu8xLhcsiITWsx+
-   rZHf18jmT5NgCuheRkTA23DwkrS6luv7sQ0apl8vZXbideOPcg6Xe/BkP
-   QjkpS6e8ej2ZaVau5UYFY0RaTIxc9naZ/DRtfqkaxlPk0NsZOEhSIedRG
-   ciQ/AoZwPtJyFqhrF4TaDFr+orK5rZbBFHUC0dxOOKb99CvkB6qeOU1Jh
-   jUccA69YliAGWyTW2x/XITY2B9Ogal+dYAbyfJ1+LYXy8HKly67XGATuG
-   Q==;
-X-CSE-ConnectionGUID: BY6f3qR9RP2T/5mfqQG7LQ==
-X-CSE-MsgGUID: qfNN0mW9S4mbWY4W7UmByA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11936"; a="874051"
-X-IronPort-AV: E=Sophos;i="6.27,160,1787036400"; 
-   d="scan'208";a="874051"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2026 14:34:13 -0700
-X-CSE-ConnectionGUID: fseNKWmnTc+jdD/fgStDPg==
-X-CSE-MsgGUID: WVazl1W2Q+KCLuY+Li6XDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,160,1787036400"; 
-   d="scan'208";a="2154103"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2026 14:34:13 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49; Thu, 15 Oct 2026 14:34:11 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49 via Frontend Transport; Thu, 15 Oct 2026 14:34:11 -0700
-Received: from BN1PR04CU002.outbound.protection.outlook.com (52.101.56.51) by
- edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49; Thu, 15 Oct 2026 14:34:11 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZiiD/srzptSSS3jL0am4PWkUqJPHtsW8ayY6502UhpGrzBTc7fgMfHMtP9MxcDJcr4KSwTwP5gTxJIyhTqV19EH5qypjok0+NvBnbz7SGIQcfTdNL1ynSBh+FliluvFWFCQg6YjIxvMLYGOtb5XX3m5WIlhBP8ylk9QneJuAgGHFbtMT5wUEjDYZ8IbRBbSKQlG1Px37Orc1iqZZq+Gwh61gWv0FWTSGS6/a8H+RJkOj2BlJMe2O0YE3GkF6z9NSW15qIfupvMKlCg7uWCmGfdmkyh6YsH2yEIVqXOX2moPZDjU/War9cacflX+EUZIXbVnp5Ha6+4Rzoqaj317wpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=abqK7JjMuXHkA5JRXJKdFjjat/qPQ3psYGWo6Y8Bdsw=;
- b=VszV+GSabUYF03yoa863crC7CK+aIgnnM+fQrd8N8lZnprvGalnrjr/nsnlsjiKubrrqSxwg4MbzfZQkHHLzomUgFvXBxM0dLYY5QM3m8ExXJ6DNe2WG3cWUlcRz2qj2zY/oNYnxH8oeH0Ll8dGeln0eurJGj/13SCRqyxUwoXF6wbGN16rFBZTwNlZNeV5/wYbISjPPTB98GXRyM1EeKeZg3xiFhcQKcG+r9QdEGTYOaU/xQuYXcb5wriMY/5+lq2qIDdsoJCR8oPGX32xOOf1q147B0qBLSoDByIIQ42C7IrwU94pl8cE/Cjkl2wf2xedLM0s8Wr5ppDSwzC50Yg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ1PR11MB6083.namprd11.prod.outlook.com (2603:10b6:a03:48a::9)
- by DS6PR11MB139798.namprd11.prod.outlook.com (2603:10b6:8:4a5::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.14; Thu, 15 Oct
- 2026 21:34:03 +0000
-Received: from SJ1PR11MB6083.namprd11.prod.outlook.com
- ([fe80::3454:2577:75f2:60a6]) by SJ1PR11MB6083.namprd11.prod.outlook.com
- ([fe80::3454:2577:75f2:60a6%4]) with mapi id 15.21.0496.021; Thu, 15 Oct 2026
- 21:34:01 +0000
-Date: Thu, 15 Oct 2026 14:33:57 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
+	Thu, 15 Oct 2026 21:53:35 +0000
+Received: by mail-pj1-x102f.google.com with SMTP id 98e67ed59e1d1-3ab3260b2cdso2647082a91.1
+        for <kexec@lists.infradead.org>; Thu, 15 Oct 2026 14:53:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1792101213; x=1792706013; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=mI5j2QSx7YHmNnf5OMmNmLr/+3VlhYuDRCjBR0r1XZM=;
+        b=bvxvbu2qvEJ3ZxdwlyKl9LPDzodf9sl2awRM0Nhwi6QXu8BsSXp7CRgE71HJ6c4YOQ
+         83sWSOfhQeVM4ZKTqQxhdbFWOqc4Z7BHZ+W8YCPYxHEKHE+0pzMx47lB6Gcx87r0g1JQ
+         IDvBB1JtYNASfeKW2MEkH+/abOhIBY9jBRCPw9zuSmaOInoTjPaI3jPcHej5hJRISQDa
+         7lYy/jH1LDSPIBBF9OK+OWqPGye/kvUx+6g8+ELauzLz7HDIMSrCzRZ+Ha6GA9YrLrJo
+         OqxK2MjBQk7Gy71FOhaz5U5SQAfX0Y7lebDNWRXrmAdU0ae7Gupabx2U4MMZbHR2mEAj
+         Tl7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792101213; x=1792706013;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=mI5j2QSx7YHmNnf5OMmNmLr/+3VlhYuDRCjBR0r1XZM=;
+        b=wvExk2oivM2SQk9VKgE6gKtHgSC8fjb37gfNIPVPU2C+FGBnQjOgBMGWdja8oxd+XP
+         eWcBOGy2w5zKRkB328/BhKeai7UCrD0pAgVbGNK19vJWhUwxD9a2x2HZl3e0wQPtkUIs
+         8qlhar+Eqpfx8pYEKlak5Z1eUT2QdAlLV4waI0UWlQ19BDH3YbypoBTx27667JMp7nP1
+         aqUC83WOyFokoiVcQnoZ5fMBuMNp+MnpIZhEBa4jTJVAMzYWM9/djuhyys2kJk3MULV1
+         SfKlCA+yWREMmsbC1KXfLQSpGpNEfq8Bl9cE4lx1o9W96RDQguvH9tuZggc2/7JOOazC
+         P0FQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzU/HcO1SEqxCgG2khWVU04FBVlQ+NqHQh8ETMLGIT8G6b8DgTdPx0JxqdmEvbCughC4t6Q0w==@lists.infradead.org
+X-Gm-Message-State: AFq9FYIUVeOilYW1W5lUswKV0oS8ElHJef/s3pG+QOdI1hSJxlV1DDJU
+	iGATgwKMs+/PF9Lc0M0u6Asb1V60oDxc8bu4ESaFvXruMJl3i3iAyLkjGqmzP5Cbug==
+X-Gm-Gg: AYBFou1+DE/z++IJZL6M3MHgXYcMWkVazF1hl1OGCqh7Pf8oIr7lBsRCpkpo87spK8e
+	wmHFu4SHoGwcdo9L7vtY9nyrMTp88aV3kN8REV4H9NLacRBa6rIQmzSS1/0Up5S/Ss7zS+LRoWD
+	qlWsraljifjA1Tlqqo9smZocgDIA/O079L5nEJ+oqAJBXoRDl+rxuFEqWt/x/RVU8tu49HO7Tr5
+	j7JFddmbNoyNOJvTVTx8K3yv89BbvqOP45BS7kJH4USdTU0X3Mw9mpvYYyjncq+hxt4mGFXp/d3
+	5yqANLn4Cx3CsHq3YRhtWMuuufl8oLDxdOJS9vqFJWlAaGRChao4rm9Cm5mvy9dL2SRp19uxS5y
+	rVmyv9cvjPcwev81sdHvHQtpC8to1zolQuSj4VCncMfgqbi6Hk5NPE2mLlyHJoUF9yMSqDhwtUm
+	ahsdfmWSAJS9W5T2YZV7/3X026TF07FLOkLw7KbuhG9cyj3uzvgTgEHYeWjMyaDZPv8LH0LaNoD
+	jI4fv5OSu4kPlZhINSsdxLLIPTZIMXYL6GdvgDgEbma5g==
+X-Received: by 2002:a17:90b:5343:b0:3ab:188b:c5bc with SMTP id 98e67ed59e1d1-3ab3a94f0dcmr16931016a91.14.1792101212423;
+        Thu, 15 Oct 2026 14:53:32 -0700 (PDT)
+Received: from google.com (64.75.127.34.bc.googleusercontent.com. [34.127.75.64])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3acc48e8646sm865063a91.10.2026.10.15.14.53.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Oct 2026 14:53:31 -0700 (PDT)
+Date: Thu, 15 Oct 2026 21:53:27 +0000
+From: David Matlack <dmatlack@google.com>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>
-CC: <kees@kernel.org>, <rppt@kernel.org>, <juri.lelli@redhat.com>,
-	<nik.borisov@suse.com>, <tglx@kernel.org>, <vschneid@redhat.com>,
-	<kprateek.nayak@amd.com>, <vincent.guittot@linaro.org>, <bp@alien8.de>,
-	<thorsten.blum@linux.dev>, <cgroups@vger.kernel.org>, <david@kernel.org>,
-	<mingo@redhat.com>, <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-	<seanjc@google.com>, <ljs@kernel.org>, <zhangguopeng@kylinos.cn>,
-	<dietmar.eggemann@arm.com>, <mhocko@suse.com>, <vinicius.gomes@intel.com>,
-	<tj@kernel.org>, <vbabka@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<peterz@infradead.org>, <surenb@google.com>, <hpa@zytor.com>,
-	<x86@kernel.org>, <dmatlack@google.com>, <tim.c.chen@linux.intel.com>,
-	<kexec@lists.infradead.org>, <pratyush@kernel.org>,
-	<dave.hansen@linux.intel.com>, <rostedt@goodmis.org>, <gmonaco@redhat.com>,
-	<jgross@suse.com>, <mgorman@suse.de>, <graf@amazon.com>,
-	<linux-edac@vger.kernel.org>, <liam@infradead.org>, <ridong.chen@linux.dev>,
-	<longman@redhat.com>, <bsegall@google.com>
-Subject: Re: [PATCH v1 0/8] x86, sched, mm: Speed up CPU hotplug on large
- systems
-Message-ID: <atFGxagFo50iG6IS@agluck-desk3>
-References: <20261015153331.1872641-1-pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20261015153331.1872641-1-pasha.tatashin@soleen.com>
-X-ClientProxiedBy: BYAPR21CA0013.namprd21.prod.outlook.com
- (2603:10b6:a03:114::23) To SJ1PR11MB6083.namprd11.prod.outlook.com
- (2603:10b6:a03:48a::9)
+Cc: linux-kselftest@vger.kernel.org, rppt@kernel.org, shuah@kernel.org,
+	akpm@linux-foundation.org, linux-mm@kvack.org, vipinsh@google.com,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	pratyush@kernel.org, graf@amazon.com
+Subject: Re: [PATCH v1 0/7] liveupdate: tmpfs preservation and early freeze
+Message-ID: <atFLV3tT0s3y6zMp@google.com>
+References: <20261015093816.2438942-1-pasha.tatashin@soleen.com>
+ <atESAwf17pJ11S9U@google.com>
+ <atEaPuWNOm5VLc7A@google.com>
+ <atEhc20Zawj4D62x@google.com>
+ <atE53vmlDeA4cWD2@google.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PR11MB6083:EE_|DS6PR11MB139798:EE_
-X-MS-Office365-Filtering-Correlation-Id: 315e3d05-9dc3-481b-c16b-08df2b0406d6
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|23010399003|1800799024|366016|376014|10067099003|18002099003|22082099003|261009223027099003|11063799006|56012099006;
-X-Microsoft-Antispam-Message-Info: vhJsuqDroBgMxvwc+k596vtvWF/QvkV2WVXjfpQ3K4jIhUB+n/YMhw5Zxnq7R+bLoexlTl/fpXIPM6AQUty08gHvkah10a6PtpQku/B7V2YJtCvXD2lUevBrA10E8w+EVtr8BHTE0u04/ZaO+eECxRVPAvWwTnuTMsvyIQijFl40rCcs3Wy38s5HeZakWJral1Xis23FI2qIZze6CpwrPGdYJF8skykQ/qzY694A8r343XJY3mg4dwm2wid+pMo342qHg5Y2T83+9t7EOGsoUVDF0zs+iGsbAeDx5stGe2wV10DOmLWWO9nU9n558vaoddlHpPT3nGcudepy+UKhIGvEVEoHxm1JVx21p6HwKd6rcDq0GJBO5A5RvB44isszVCg/vG9YSNLBQ8WOGynxThJAWf8nD3T6XU2WxBv3OrjrZzSVp3AVp808OJSNK7S1gAuLh5MbAeibgzZaVJC442oX7ZQ7HpkZSj3AQFjCMp82SQ3AkPLFWrQ0f1W1eZlCGFq26V5IxlBXT1JxNzMwSnYqjn7lKExT+L2muMawT5Y7lpA2CwWezElTIOBWaWbFWUB040idd0ph7W0bKkORI5ijV0OniGewyGdnoIGgWAfWeJI26LU0h0HiM4FR5f9is7NvSp4+ZbklO3oLy/LOqcf/+noN8cthu9izH+bidlw=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6083.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(23010399003)(1800799024)(366016)(376014)(10067099003)(18002099003)(22082099003)(261009223027099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ihk0zYJfMFn19YdCPmHlnQEI/oRc1ZGTN0WL4BXrPKfBE39g1TrEEgPzxuMo?=
- =?us-ascii?Q?f4sSzHdKeruaO5Kl/ajPU9Q/j36ZeO0QUmrnX+IjHd6jf6Gm8+UFys7qz9wc?=
- =?us-ascii?Q?19mIXT4rGsLlSxU1+XINzjqYVp+gOz0cP48mm7BBreYXINuZP/fALKAlCv9c?=
- =?us-ascii?Q?Z4sFmQYRa78DzcO1qcB3Rw3vNGDr+9JOCGFgfF8A05tcbCCIX0FX81xxs4Nf?=
- =?us-ascii?Q?uSong2BrqzdB/lywKbS0jBudJoFozRs7f+s+IKrtky+DsKvxlirFOBI/HAQR?=
- =?us-ascii?Q?NZ/gFTHOvQKF1vcUIUIuRVfLDX6iZIpAeWYZFSBptSaE5xsJj1/V2F9taYYC?=
- =?us-ascii?Q?WvomljYVE7841xx9FwabTn+jgGpBdumOSdcWfFZ+Vi7f6WLA+jAMDPj9hyVw?=
- =?us-ascii?Q?GTtKrNPdHDAiBbX7Qjb0CVZZlSBPGyWpr7r2+H3bMS2g29N73/u1JhJvDYLS?=
- =?us-ascii?Q?CpfQK8TbDBo6kG4YexOD624cG+6laoLIJeSXFhRbcR7dGe2ChTpL64apUt2X?=
- =?us-ascii?Q?eUPg8rv5FAitY8ApuJFO6a/Cu44IiKkxjL42pxh6fGt4djkgKYxjFwzG0X1N?=
- =?us-ascii?Q?AjG7J9vm+jSnH0TYs7PXaVi08S0hHCHl92kA0U30/LofLj/+seZ9oVXrQHYT?=
- =?us-ascii?Q?k5IdxWbXceTkVhFRKM8akaw6ZamOHvGnzPhMp3PGHVV9jCljXGFiEdB9XOKF?=
- =?us-ascii?Q?2hQxnHdbW+EldusmUfEPZR9Xam8wsAalZL4S4ge4AlbxrqHeQIZgDeE7secy?=
- =?us-ascii?Q?i/Zo+eJE0m1kCxzybRft2/mFI7nmdULmGww3asUqn2QahT1cUV+JUV1dKQ9e?=
- =?us-ascii?Q?le1keFDIlSbPXPBrGL8hWcGVwA31u0YUeP3pThmYzgpSjK0DPomCvWy/mORG?=
- =?us-ascii?Q?nXO1dt0JHfRvPjWONDURJyU4cCQmmC4H18+t2imVbYTui4DF3bC1IycXOl9g?=
- =?us-ascii?Q?SVJxIVykGO4D6aT0BsB8WQre69mGvMQ4tG6mykQI908bI5rOfIPtAdd7dgcT?=
- =?us-ascii?Q?RT1Xc5WyBzGNHvX6yxwFRDi630TvjLkBowgz0GTg63TPOaKEwvoHx2e1LUey?=
- =?us-ascii?Q?Y7TGt1lZ9S4RyDisMAJwN7J+iTU4GU3VXNd3/kZjqd71tiOkljrTm+TOlc/7?=
- =?us-ascii?Q?l3HRY8zhNQtCnpyNbqqIyhTCu3I2vdxwZVQFw/vVhRZJd9MyGEdaPb26j7mQ?=
- =?us-ascii?Q?sQ0Xm4kUGK9kjX8uHfpKz/k92YIXMc2cNuqp9YCT0+FNZe8v3W1Teb5wXsgB?=
- =?us-ascii?Q?YRsz5N+xrfmJbib+TolwS/a3vuZjrE8IAaAs4BF2cm86dCOp7AC3L61PayVY?=
- =?us-ascii?Q?lku6LQXLWU6KAdz621oACMTfLNRIgbovyl2+9YBLY9bJHbbmESH3ltGj7dmU?=
- =?us-ascii?Q?8brOP1ugvssE5jSI+A8kSsttC/+7DEyT+0mC6oEp5RVBlEBA20Hp1wutFV1w?=
- =?us-ascii?Q?Wd17HckYpXbAiImpag80eZNEhZF7lpRChKZQlFHBCryEEuKDbuIqCeREwEq2?=
- =?us-ascii?Q?KT7qtvvE8QMUFThtLD7SZiEhkS4bOmfpilshLTU2aqUyHZDZXh6ruemmU6D/?=
- =?us-ascii?Q?6uYkxJ54EOL5N7K5SNoQrdGPw9D+oDSA/ZHeL3D/a0XXUUoWdarTaJM9S+uH?=
- =?us-ascii?Q?/oGOH1GCQUMM5MZ38veeg9Q2xhHpcw8yVI+kWAziJYgehxaLcz1PNbP6I1qE?=
- =?us-ascii?Q?38X2sfY+AxeLjw9HuT078Yc6Ku2eQdM9d2/H5NLlsowL+/wHX1XGZ95yXMDt?=
- =?us-ascii?Q?fs4rbey6vQ=3D=3D?=
-X-Exchange-RoutingPolicyChecked: vHnxOUiy7Du0sM4YNaZzufDd6xStLhNC/TcSFnQMnArrzEamSi/QZLDGoCjPrkB/s3S4tXafFEgK/lVXQ0p8o8Q/KpPU1oYdEkYivjrYtBmeuC51crRCxbCvs+bsiF4afQy0f8/z82G5Zq9Dxfdc25gDE4HF5PjOWRHndrIhzhHEwRdXyITp5Ku9blUn12eu6zAx5gwwENlH8f/kmARX5qvfefxh6YZqKol6x2s5eCl1+OjP4zs2iUIrInvCw1oFsTPSbVoQ1PpcOZqw77vNxv/qXZaqfH2JVf1DjrOtaNbildaccIqkidfbg4cUQyiHVcLTfXM19c6gFZOlaai3eA==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 315e3d05-9dc3-481b-c16b-08df2b0406d6
-X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6083.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2026 21:34:00.8995
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5MMAdSzimFks0RRaxaf7Hby8kzcQ3wwbev7YLaqjWHBbaZvcbE1rizML+S0RBMSdEeTX1WRCCLGglU/nsMt/yg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS6PR11MB139798
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <atE53vmlDeA4cWD2@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261015_143414_997813_48D5E586 
-X-CRM114-Status: UNSURE (   9.33  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20261015_145333_977623_4BE2BF0D 
+X-CRM114-Status: GOOD (  24.25  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -186,34 +106,73 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Oct 15, 2026 at 11:33:23AM -0400, Pasha Tatashin wrote:
->    - Patch 3 bounds cmci_rediscover() on CPU teardown. Currently,
->      cmci_rediscover() broadcasts an IPI via on_each_cpu() to all online
->      CPUs, serializing them on cmci_discover_lock while reading up to 32
->      MCA MSRs. Because any disabled MCA bank is shared at most with an
->      SMT sibling, L2 cluster peer, or die/package peer, probing a single
->      online topology peer via smp_call_function_single() (or returning
->      immediately when no shared banks were orphaned) reduces 479-CPU
->      offline time on Intel from 11.42 s to 9.63 s (-15.7%) and total time
->      from 22.50 s to 20.74 s (-7.8%).
+On 2026-10-15 04:38 PM, Pasha Tatashin wrote:
 
-I took this series for a spin on a timy 2-socket Icelake (36 cores, 72
-threads per socket). My test was to just offfline/online the 72 logical
-CPUs on socket 1, and I saw some good speedups:
+> What if instead of retrieve-into an existing file FD, userspace passes
+> a dir_fd on the target tmpfs mount where the file should be restored?
 
-	offline: 4.833s -> 3.17s
-	online: 6.157s -> 3.796s
+This is good. This eliminates the pinning race and also eliminates the
+checks v1 had to do on the userspace-provided file.
 
-I noticed that your cmci_rediscover() improvements mean even better
-offline performance if you work from high to low CPU numbers as the
-shared banks are assigned to the lowest numbered CPU within the sharing
-topology domain. So working from high to low avoids creating as many
-orphan banks that then need to find new owners.
+> During preserve we can record the file's basename if the file was linked
+> (or mark that it was unlinked). On retrieve, creates a brand-new file in
+> dir_fd (e.g. starts as an unlinked O_TMPFILE on that tmpfs superblock),
+> populates all the folios and metadata while the file is still unreachable
+> by anyone else, links it into dir_fd under the preserved name at the end
+> (or leaves it unlinked if the original file was unlinked), and returns
+> the FD of the new file to userspace.
 
-	reverse order offline: 2.984s
+I don't think the name should be in the ABI though:
 
-I haven't looked into the code yet. But the general direction seems
-good.
+ - Userspace already has to know what each token is, so it knows the
+   name. And a basename isn't enough anyway, since userspace still has
+   to supply the directory.
 
--Tony
+ - "The name" isn't well defined. A file can have several hard links,
+   and it can be renamed or unlinked between preserve and freeze.
+
+ - Linking in the kernel needs a policy for collisions, and linking at
+   finish() can fail (or find the name taken) at a point where there's
+   no good way to report it.
+
+ - The name isn't the only thing needed to create the file properly.
+   There's also the mode, the owner (fsuid/fsgid, setgid directories,
+   idmapped mounts), default ACLs and LSM labels, the access mode of the
+   fd, and whether the file may be linked at all. If we record those in
+   the ABI it grows a lot.
+
+What if we model the retrieve args on open() directly? RETRIEVE_FD
+behaves like openat(dirfd, ".", O_TMPFILE | flags, mode), then fills the
+file, then returns the fd:
+
+  struct liveupdate_memfd_retrieve_arg {
+  	__u32		size;
+  	__s32		dirfd;
+  	__aligned_u64	flags;	/* subset of O_*, ORed with O_TMPFILE */
+  	__aligned_u64	mode;
+  };
+
+In the kernel this is file_open_root(&dir_path, ".", O_TMPFILE | flags,
+mode), which goes through the same path as open().
+
+Userspace links the file into place with linkat() whenever it wants, the
+usual O_TMPFILE way, or passes O_EXCL to make it unlinkable. Then
+there's no name in the ABI or the uAPI, no linking in the kernel,
+unlinked files are just files userspace never links, and "don't link it
+until it's fully populated" comes for free.
+
+One quirk: open() rejects O_TMPFILE without write access.  With LUO
+holding the file until finish, that brings back the -ETXTBSY problem for
+restored binaries. vfs_tmpfile() itself doesn't need write access, and
+neither does filling the file, so I think we can allow an O_RDONLY |
+O_TMPFILE here.
+
+> I would like file type to stay exactly the same, I really don't want to 
+> play the game where LUO can magically change file from one type to 
+> another even if from Linux internal implementation they share a lot of 
+> code, they are still a different file types from the user perspective.
+
+Ok, I don't feel that strongly. We should just do it based on the
+superblock rather than i_nlink, so that O_TMPFILE and unlinked tmpfs
+files stay on a user mount.
 
