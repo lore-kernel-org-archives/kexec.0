@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BDFC3CC6B34
-	for <kexec@archiver.kernel.org>; Thu, 15 Oct 2026 14:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 89B92CC6B3A
+	for <kexec@archiver.kernel.org>; Thu, 15 Oct 2026 14:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
-	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=mno5u7ZzRZU/+mTenUA2QzGfL90+kMbsdzEVFvrdQKc=; b=Ak24/cd1uQbG81fzOLUlKrs69h
-	rNNC81CkqdrSBBB/WHMD6GXgyDR7qjztFjqDITqOz8hVnFoVRoNjcU+pvPV5TMe5Jh5t6GF/U14FS
-	jYeAEzHF7H6XtZZLJWXfut55CLqsSrZZKEiQS7TEhlpMaMnP+QxeJm4Pfl/Lh8lvG7GEc59r8RQTm
-	bnXUP98ya9S6TUBEvdro3DF4I6Y5EmWKoxO+iMdTZ+gdfsKxMKPKSkUME9ZV1A9z1RQr1ils4u6ef
-	0XHkEoxJj9ogEcT2iP20mgiE6vtBMYyg979bcieOfXf5kku3wbZslPadJGF70XONb3Wxqyl5ir6im
-	BW/bQzPw==;
+	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
+	:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=T8axlsfso4k7syKxUcvyIg6Ym9y5kFkDYTWkZAR8ayk=; b=bzf2rquVn4iz9zy8H6W1wZioPY
+	K6v+ty85o1iGHRfI6L8o7xMV34dTB2Wfzj5X+98GbRGmsBTkxJBT5/iDSVcfZw1T5Vtt5/+dfBHLR
+	UO8n84JkEuol0v2h1MNNvdze3KzK26g8Wz+yJIhmKdzk8ghsUwYxovAjouwnW1nmaxp8VXTJhavNf
+	LxWT3ZNa3CSkIJ2CIOqYdtQNL3IVHQ1XMCcy9BOOAeZWCwBIASvvenXLn5DEqFT3ImwTBkDR7L4/E
+	c01zYbysicM4YGVWbHKCf8DkJthhX1Z/RtSezIiTOjpNFUvSq+C2Nr79SKKBqmIOwU3u516y2xbDA
+	+Li6QUZQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHMiQ-00000000Qny-2P7N;
-	Thu, 15 Oct 2026 14:45:54 +0000
-Received: from pdx-out-005.esa.us-west-2.outbound.mail-perimeter.amazon.com ([52.13.214.179])
+	id 1xHMiT-00000000Qof-24iC;
+	Thu, 15 Oct 2026 14:45:57 +0000
+Received: from pdx-out-013.esa.us-west-2.outbound.mail-perimeter.amazon.com ([34.218.115.239])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHMiM-00000000Qm9-2EPF
+	id 1xHMiO-00000000QnF-3fCW
 	for kexec@lists.infradead.org;
-	Thu, 15 Oct 2026 14:45:52 +0000
+	Thu, 15 Oct 2026 14:45:55 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
-  t=1792075550; x=1823611550;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=mno5u7ZzRZU/+mTenUA2QzGfL90+kMbsdzEVFvrdQKc=;
-  b=JuJRyiy2LgK/B3oqBMc4AcjQZf/MDnKXF3AIksd9BoEKYVgEzMgjkSG+
-   SzWWYvDXhBWEKiIxW6TP86KOzNtkUsHITwL38qZwUyUbv/sWNj7z/Rtan
-   RLbJ+HUx/kMrZXgeZxpHUiq1xx7cFzrPUj9cVsh6PMEsGQYzMDi5tzqUN
-   VwI2s9rAM/d3JnQO32jr4CFOnCgvJy747fAswPcz9aVbL7K0YjBZaQTNd
-   OoCo0E3L9soMfO84WVQG5Mc4Hhl274CS10RFs+oRgMYhnxZ2kwFvoqLRn
-   nULpOePRbXFN5WW3I/soIJ/n1CBVXGB0CqoYIDnmGp+Pj2Buppi6UCTmG
-   w==;
-X-CSE-ConnectionGUID: TQuNEdILSB+qoRk8DsfdOg==
-X-CSE-MsgGUID: AMc/D2JPQk2nJkK7XniR7A==
+  t=1792075552; x=1823611552;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=T8axlsfso4k7syKxUcvyIg6Ym9y5kFkDYTWkZAR8ayk=;
+  b=VsonamoaVmQLZUb/izFyvG1lYijZSIaolt80M3CxlekaBAvq3wT+KxSd
+   rCMhQ1p/civiNw8Yi4vIadn7AAItjbFwdyM7UuJK2TeRNVXgCNpdD6JYJ
+   PgHRA6OVYGoFYnhUOVJyZa8iQ6dk9kDcKGNFQgm/TfVx3sYA01wL+tuan
+   12U7ntQqWFiXIkqPnhAUp3In2FKBHyU1a5KiD3Iyg1xufwx4/+uja4ojv
+   OTtXMI3dlWAyPEFuoFAWO5KpiE3xvff40ribFj7aaht0dgTqwmpOtmUbk
+   zSlfIqa4hx5ADmh9NYI5L62CLI/uGsdtCI/M2sXaboRpEZRyhxgpgRnEs
+   A==;
+X-CSE-ConnectionGUID: opeVRcGqQHGuOktxkplgOg==
+X-CSE-MsgGUID: aF+8dlOhT5+24Ki2k86dnw==
 X-IronPort-AV: E=Sophos;i="6.27,160,1787011200"; 
-   d="scan'208";a="31325232"
-Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
-  by internal-pdx-out-005.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2026 14:45:43 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [205.251.233.53:25214]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.54.1:2525] with esmtp (Farcaster)
- id 42897119-f455-4005-98a6-06b7136192d6; Thu, 15 Oct 2026 14:45:43 +0000 (UTC)
-X-Farcaster-Flow-ID: 42897119-f455-4005-98a6-06b7136192d6
+   d="scan'208";a="31124997"
+Received: from ip-10-5-9-48.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.9.48])
+  by internal-pdx-out-013.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2026 14:45:46 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [205.251.233.48:18197]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.19.38:2525] with esmtp (Farcaster)
+ id f94577a4-6cf0-4788-b26f-4e1b3530fd63; Thu, 15 Oct 2026 14:45:46 +0000 (UTC)
+X-Farcaster-Flow-ID: f94577a4-6cf0-4788-b26f-4e1b3530fd63
 Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.49;
- Thu, 15 Oct 2026 14:45:43 +0000
+ Thu, 15 Oct 2026 14:45:44 +0000
 Received: from dev-dsk-fparola-1b-85ea2014.eu-west-1.amazon.com
  (10.13.236.104) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.53; Thu, 15 Oct 2026
- 14:45:41 +0000
+ 14:45:43 +0000
 From: Federico Parola <fparola@amazon.de>
 To: <stable@vger.kernel.org>
 CC: Mike Rapoport <rppt@kernel.org>, Pasha Tatashin
@@ -66,10 +66,12 @@ CC: Mike Rapoport <rppt@kernel.org>, Pasha Tatashin
  Graf" <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>,
 	<kexec@lists.infradead.org>, <linux-mm@kvack.org>,
 	<nh-open-source@amazon.com>
-Subject: [PATCH 6.18.y 0/2] kho: free buddy-allocated metadata with free_page()
-Date: Thu, 15 Oct 2026 14:45:27 +0000
-Message-ID: <20261015144529.76911-1-fparola@amazon.de>
+Subject: [PATCH 6.18.y 1/2] kho: free chunks using free_page() instead of kfree()
+Date: Thu, 15 Oct 2026 14:45:28 +0000
+Message-ID: <20261015144529.76911-2-fparola@amazon.de>
 X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20261015144529.76911-1-fparola@amazon.de>
+References: <20261015144529.76911-1-fparola@amazon.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -77,8 +79,8 @@ X-Originating-IP: [10.13.236.104]
 X-ClientProxiedBy: EX19D031UWA002.ant.amazon.com (10.13.139.96) To
  EX19D001UWA001.ant.amazon.com (10.13.138.214)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261015_074550_642376_A279BC93 
-X-CRM114-Status: GOOD (  10.37  )
+X-CRM114-CacheID: sfid-20261015_074553_799307_0C4C34FA 
+X-CRM114-Status: GOOD (  11.88  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,34 +95,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Commit fa759cd75bce ("kho: allocate metadata directly from the buddy
-allocator"), merged in 6.18, moved the KHO serialization chunks and the
-preserved memory bitmaps from kzalloc() to get_zeroed_page(). Two places
-still release them with kfree(): kho_mem_ser_free() for the chunks and
-__kho_abort() for the bitmaps. kfree() on such a page hits the
-WARN_ON_ONCE() in free_large_kmalloc() and returns without freeing it,
-so each aborted or failed KHO finalization leaks the metadata pages.
+From: Pratyush Yadav <pratyush@kernel.org>
 
-Patch 1 is a clean backport of the upstream fix for the chunks.
+[ Upstream commit b15515155af735a86e5bcd67ed739162f0de27f5 ]
 
-Patch 2 fixes the bitmaps and has no upstream counterpart. Upstream
-removed the tracking teardown from __kho_abort() in commit 99cd2ffac697
-("kho: don't unpreserve memory during abort"), which relies on the
-unpreserve interfaces and the notifier removal that came with 6.19. In
-6.18.y, KHO users still preserve memory from the KEXEC_KHO_FINALIZE
-notifier, and the teardown on abort is the only thing that drops those
-preservations. I kept it and changed only the free; patch 2 has the
-details.
+Before commit fa759cd75bce5 ("kho: allocate metadata directly from the
+buddy allocator"), the chunks were allocated from the slab allocator using
+kzalloc().  Those were rightly freed using kfree().
 
-Federico Parola (1):
-  kho: free phys_bits bitmaps using free_page() in __kho_abort()
+When the commit switched to using the buddy allocator directly, it missed
+updating kho_mem_ser_free() to use free_page() instead of kfree().
 
-Pratyush Yadav (1):
-  kho: free chunks using free_page() instead of kfree()
+Link: https://lkml.kernel.org/r/20251118182218.63044-1-pratyush@kernel.org
+Fixes: fa759cd75bce5 ("kho: allocate metadata directly from the buddy allocator")
+Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
+Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Cc: Alexander Graf <graf@amazon.com>
+Cc: David Matlack <dmatlack@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Federico Parola <fparola@amazon.de>
+---
+ kernel/kexec_handover.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- kernel/kexec_handover.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
+diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
+index ac9fa7727b5ff..9fe5d14f1ec54 100644
+--- a/kernel/kexec_handover.c
++++ b/kernel/kexec_handover.c
+@@ -365,7 +365,7 @@ static void kho_mem_ser_free(struct khoser_mem_chunk *first_chunk)
+ 		struct khoser_mem_chunk *tmp = chunk;
+ 
+ 		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
+-		kfree(tmp);
++		free_page((unsigned long)tmp);
+ 	}
+ }
+ 
 -- 
 2.47.3
 
