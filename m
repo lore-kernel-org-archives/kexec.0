@@ -4,56 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A7AB5C3DA7A
-	for <kexec@archiver.kernel.org>; Wed, 14 Oct 2026 20:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3EDC4CC6B30
+	for <kexec@archiver.kernel.org>; Thu, 15 Oct 2026 02:03:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
-	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=DjoKhOvkOi4Zu54MYTvGlaBVWzjZuoUwlv0dKQIhKhI=; b=yTPUTJB8xWZI+kwkPKQ1kcoaBO
-	JjmOb3KV7n6Aw5mryT3hRIRcH0dN4GNJgrbTTqlkSFZU7nWJWnksse0An98elCC5p2WY3b5qNHEtX
-	J9ERtM3hnN4d2Nu2TVRgMql9yFPnHoinao45zo+YWg0lvCeNosf2q+nHrIrARelsbJCYRox/z1+Mt
-	QScPsYAJKQ3c2QcBwzaHVJHKD6HBEfoSh/oB4c9wQZoWx4hqiWk7PRa5EblZEebQAaTqCeJnp7A3m
-	Q3cNCSA2QexXenCKJuX57cKCWIXO5bCQQRzXJrhenSofc2ZhUIXD8rAkoWqWoRZfYAeifnvAKzp5Q
-	UL1JOSFA==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=NUNOoS2iIKhfEq8rmR2m7meaweAbFoUqZ53SZ4RiyMU=; b=xaXPEnV48UYl7Q2fRQDWoQhVri
+	jLm2BlpnUSD7wbHN1mhFjMGWMsqtHfpF6KsNXV7cIpkBKutTTi2prD1rl2DQ9Z1R1MmnKGF0a9NRR
+	aXFXmwDSNCS0PQpHEVXdhFS0dWseSOupgGSHGMg06HIxRTVRSV5lb7Q/sDSYtlBdNtfpVUDK+Fcfw
+	U/F4RfXDTHa3iE7fUpzeMslcId3m7oRzlbEooGHUVXZP7PsgDucatG+Ebwygvq4XZ6FGrNmIh7QBt
+	Wsma4Sq1xmF313X73eGqdGLdetvR13YVMlVjatrRMTqmheJmHqeCuEZzSWtJeabriA3PdIZ/hQlC9
+	unCHqN7A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xH5Gd-0000000GFMk-2rGY;
-	Wed, 14 Oct 2026 20:08:03 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xHAoT-0000000Gdl6-483L;
+	Thu, 15 Oct 2026 02:03:21 +0000
+Received: from mail-vk1-xa30.google.com ([2607:f8b0:4864:20::a30])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xH5Gc-0000000GFMe-1u36
+	id 1xHAoR-0000000Gdkj-2Old
 	for kexec@lists.infradead.org;
-	Wed, 14 Oct 2026 20:08:02 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id A16CA6020C;
-	Wed, 14 Oct 2026 20:08:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14FC71F000C4;
-	Wed, 14 Oct 2026 20:08:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792008481;
-	bh=DjoKhOvkOi4Zu54MYTvGlaBVWzjZuoUwlv0dKQIhKhI=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YIFFC3/L4u/L4TBc3NwAZhuR7Q7/VQMDzPaXRo0ED0nUL6xXZamCIFruLhMa9iGP5
-	 /niVIxGs2V5b/k2dVM8Lmtl7TwWzxtA+S1apJQ9uwdZcUcWGrGZfsmY8kLPbi8cNfY
-	 IHmm71yoyFoZF8C96s2cn6t/5wIwVWLe/U00x/vOy3PMjrJjRPcXabtDwYOL/vxq71
-	 9u2lHXBvG+AtMFlLl0wDxTA5fnxZGiMoeqTJJW8RCIqMgQLs/VRSwfb5cdpyCrHV49
-	 ZwQ6zt96W+pyBHAt1bH4XLnFEiY9tYG8vuUbaar7ar+l4CXqgBpOi6Ns2bdJLKiGra
-	 Jwu6n/0ecNXUQ==
-Message-ID: <sashiko-outbox-171823@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 4/5] selftests/kexec: select tests using the target
- compiler
-To: "Sasha Levin" <sashal@kernel.org>, "Shuah Khan" <shuah@kernel.org>
-Cc: "David Woodhouse" <dwmw@amazon.co.uk>, "Nageswara R Sastry" <rnsastry@linux.ibm.com>, kexec@lists.infradead.org
-In-Reply-To: <20261014200127.1363472-5-sashal@kernel.org>
-References: <20261014200127.1363472-1-sashal@kernel.org>
- <20261014200127.1363472-5-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 14 Oct 2026 20:08:00 +0000
+	Thu, 15 Oct 2026 02:03:21 +0000
+Received: by mail-vk1-xa30.google.com with SMTP id 71dfb90a1353d-5e930a11148so2686457e0c.2
+        for <kexec@lists.infradead.org>; Wed, 14 Oct 2026 19:03:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1792029797; x=1792634597; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=NUNOoS2iIKhfEq8rmR2m7meaweAbFoUqZ53SZ4RiyMU=;
+        b=bI9qtm8I/K8X65LwIfSfDb0OFwnZwC1TvpEzazQy0ifG05blxoZ/m0sGGaBADamYzI
+         CLibuk4BHGISJC+tVqM7Ymsy6V3KMJJ6xkrUc+KWC+svOnCYTO7PpQCINF4AYYzkTnWd
+         ezxtg3GX5o26+rVVaZ5cM6fuM7+8Zpk0XXSFJlyYaEd6vkGDs1KiMvOku5HhCVfI0Vy+
+         mspgSBgWxTRXv7SSm7Qva6Ws+YFKh4tGGzIDKudAYaKwTBJuUj/C9bp4KTBVolxTmKP4
+         LeNM9HJprxHxMHqrCE3Ouapn9gkzWgh05BGG64c/lgY9XG5cI6X8tAHi3ULnxdMT313M
+         eDgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792029797; x=1792634597;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=NUNOoS2iIKhfEq8rmR2m7meaweAbFoUqZ53SZ4RiyMU=;
+        b=KagwAHOvLIw4aNoHmsWV6VxMKZ8955UtX1c+H2tyzUg+5ImeRXIG7qLRW+KwSPnvSG
+         Xd769YagJZSQ0NPnvhyG2PR81QkGwPlDc+qjjRtuudK9Eu38fTW/0ft7cRvin+LFPisx
+         HBGh30j2QjliPwE1J+ZObGG7fo/7NvD1ZY4smoV6LpLewp99xu/+P1oG6p4iM77ymrDT
+         8F2Nju+R6Tv9Dg29mCaBqGEWssrOvCCPyE8nq7PNqVX73x1cI4SVMCGIqDhV7yQlwYB8
+         7plvlaHpokbY6LvoMTcEGuZQvh1JFVclgLWm8RhYrQw8+P0FVvXzc/sZYe+Maup8yEoX
+         wqqA==
+X-Forwarded-Encrypted: i=1; AKwUvBxEbps/Z+zzmB76zFOgiFxUlKWPOs3vFu9xfwusIfeJ33e/OhO2xJWQwNARLZnVHODHXkQq7Q==@lists.infradead.org
+X-Gm-Message-State: AFq9FYL7quaeX3gTmm7AWIeB8q/N4GcwPqAOhzH44nUIDBmMIb0eYS4M
+	iyx8Gq/7/EOkrU+0/GRRzHdO2IncUjQg8RbRimqs+9Jcu/tKi2cGNVmoMoFHYy78CnQ=
+X-Gm-Gg: AYBFou2ZD5OVHNIXwBjJI+Ff+Z2hvYM0veCuB4viaPrpbU4F+8zqOfaTH25BDWQ19nM
+	NC8SkxBDDqzWxYwqWOcRV4oJ4k2wjOxMSYkiyswINkWBjquEvCUFxKg1hJWZaDCDAcNXLALoiMm
+	Rgunh9gJCeoZkoV7uNjU8SGjSpNNc1YnFk3UMj8FFOveCO636MvDf6gH4DnMM8nXqbfw0FPTaZN
+	P2//zskPeat6aSxpqprNAAZry04f05mO0gCuwA/YR4oXY1qcxt2vmGXTifXR671687ua0yxLj7L
+	pErMiBCFCS/YYz664RHUHzKElwR8uUoquI/gbqwCHTy0o28qOfXlj/go1DNSu76G3iwEMewkYPO
+	sayN33NITqlqjSqVowSbEuoa5qgI01XgFCR0RqF87dl+paFJu+v2qXp1W4wXtHDUbtSsYbm71UZ
+	cHPOTz6u9zJm+V+SUscAlzSfIkthpGKxBrj/urnAPcpnW+xtLFwZb+oORWytqOsR5xvR83YbOEb
+	2SeKna+Ohk4JUHOUGdWAKYIzY2jNRUzQp7ZVOFhpo83CFM3DtDB3hKVOxniZ0RZmDSvOhiB7wyL
+	vuxN6Nkq2a0NQZst4RfsYg==
+X-Received: by 2002:a05:6122:e213:b0:5de:655e:4056 with SMTP id 71dfb90a1353d-5e91f3f5ff1mr6177997e0c.6.1792029797642;
+        Wed, 14 Oct 2026 19:03:17 -0700 (PDT)
+Received: from soleen.c.googlers.com.com (64.167.245.35.bc.googleusercontent.com. [35.245.167.64])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5e91cb3e435sm12477115e0c.10.2026.10.14.19.03.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Oct 2026 19:03:17 -0700 (PDT)
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: rppt@kernel.org,
+	tudor.ambarus@linaro.org,
+	mchehab+huawei@kernel.org,
+	skhan@linuxfoundation.org,
+	linux-doc@vger.kernel.org,
+	linux@weissschuh.net,
+	linux-kernel@vger.kernel.org,
+	corbet@lwn.net,
+	pasha.tatashin@soleen.com,
+	aleksandr.loktionov@intel.com,
+	kexec@lists.infradead.org,
+	pratyush@kernel.org,
+	rdunlap@infradead.org
+Subject: [PATCH v1] docs: xforms_lists: Handle DECLARE_KHOSER_PTR() struct members
+Date: Wed, 14 Oct 2026 22:03:13 -0400
+Message-ID: <20261015020313.946940-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261014_190319_641001_ABCE35C7 
+X-CRM114-Status: UNSURE (   7.98  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -65,39 +105,44 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> The kexec Makefile recognizes PowerPC only through the ppc64le spelling
-> of ARCH, so the canonical ARCH=3Dpowerpc used for cross builds omits the
-> tests. The x86 jump test is selected with IS_64_BIT from
-> scripts/Makefile.arch, which describes the build host rather than the
-> compiler being used. On other architectures the Makefile includes no
-> lib.mk rules at all, so installation and runlist generation fail with
-> missing targets.
->=20
-> Select x86 and PowerPC from the target ARCH when it is given and from
-> the host's SUBARCH otherwise, without assigning ARCH, so that lib.mk
-> keeps choosing the compiler's native clang target. Ask the selected
-> compiler, including USERCFLAGS, whether it targets a 64-bit x86 ABI
-> and whether it targets little-endian 64-bit PowerPC. lib.mk expands the
-> generated program list before it appends USERCFLAGS to CFLAGS, so the
-> flags are passed explicitly to keep both probes consistent. If the
-> compiler cannot be run, select the jump test so that the build fails
-> instead of silently dropping it. Include lib.mk unconditionally so that
-> unsupported targets build, install and emit an empty runlist.
->=20
-> Fixes: 65e38e32a959 ("selftests/kexec: Enable secureboot tests for PowerP=
-C")
-> Fixes: 7615b94b6371 ("selftests/kexec: Add x86_64 selftest for kexec-jump=
- and exception handling")
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+KHO ABI structures declare their preservation pointers with
+DECLARE_KHOSER_PTR(name, type), which expands to a union of the pointer
+and its physical address. kernel-doc does not know the macro and does
+not see the member: it warns that an unnamed member is not described
+and that the description of the member is excess.
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+Translate DECLARE_KHOSER_PTR(name, type) into "type name", as is done
+for DECLARE_KFIFO_PTR().
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261014200127.1363=
-472-1-sashal@kernel.org?part=3D4
+Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+---
+ tools/lib/python/kdoc/xforms_lists.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/lib/python/kdoc/xforms_lists.py b/tools/lib/python/kdoc/xforms_lists.py
+index e3dda2fe8a537..e81d8a7702cbb 100644
+--- a/tools/lib/python/kdoc/xforms_lists.py
++++ b/tools/lib/python/kdoc/xforms_lists.py
+@@ -45,6 +45,7 @@ class CTransforms:
+         (CMatch("DECLARE_HASHTABLE"), r"unsigned long \1[1 << ((\2) - 1)]"),
+         (CMatch("DECLARE_KFIFO"), r"\2 *\1"),
+         (CMatch("DECLARE_KFIFO_PTR"), r"\2 *\1"),
++        (CMatch("DECLARE_KHOSER_PTR"), r"\2 \1"),
+         (CMatch("(?:__)?DECLARE_FLEX_ARRAY"), r"\1 \2[]"),
+         (CMatch("DEFINE_DMA_UNMAP_ADDR"), r"dma_addr_t \1"),
+         (CMatch("DEFINE_DMA_UNMAP_LEN"), r"__u32 \1"),
+
+base-commit: cee9395acd8043be0644b25c34bfa86623f2b935
+prerequisite-patch-id: 557b4f406b7530b8be07d3e3aa6015ad89ceaa6d
+prerequisite-patch-id: c0430a4f0096e4be93a6200aa4e8a1d392238ca5
+prerequisite-patch-id: 524c71eab38a9175f9920f38717c8ed3b157299f
+prerequisite-patch-id: 61cfc274edef2fb23a1b867c9e0d063578387c45
+prerequisite-patch-id: ac022b05628f8e495a224216352aa037a022aae4
+prerequisite-patch-id: 50668baf257da9873190d08f21538ddc453261a8
+-- 
+2.56.0.385.gd3acb90ef8-goog
 
 
