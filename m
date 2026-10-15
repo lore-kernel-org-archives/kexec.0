@@ -4,86 +4,145 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 96F20CCA462
-	for <kexec@archiver.kernel.org>; Thu, 15 Oct 2026 15:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D5470CC6B39
+	for <kexec@archiver.kernel.org>; Thu, 15 Oct 2026 15:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=IC5Ct3FOhi968am1MRf06lj4teeqkFZmOqPC0DoSw2E=; b=TKyVxRmmWhAvKSOt2aYBahXq5A
-	Y2BgYKEYpKoFhRBX4nN8lDXgIjkMVQGJwPFHHedwBjzcBkWTD9gllwBKrRG0ZZAO8NnKn07A5swl9
-	El8TWNs00GEqBG0MA1DF8/DFGqHZr1KdG0oqATs08OaAPw/oJqxbD/6LqFmWpwuzUlWxyYcRP7rvI
-	dEBcCPetSLw4BhXqJHHhmqqCz3xC/OiLrQWqRGprAhyFYQ2dumy7lQpHVfqsugYs+RUaR+B/ezv0X
-	/wxcPBJtWFHVkkJSFJM4AouLDAAVja5sfRdwmGr9zus1JRXqw0UiFvUoytWydCJaI227TU2enXmG4
-	SCmSWdAA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
+	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=imriAKslpKmc2rOuduOVfwOSxXiBTlYDccI9fjTDxi4=; b=Lr6jkp/FE71nrHzYIe+1wxgrUD
+	qsrx3f33ydfeCOgqazvj5MB4P27YoYxrdzAtqRs1ISBkK6re5tmhxQt7UkwgsmXE3ti5ioZxfMuB+
+	vIw4bmvAkbh7rCEylmnZbh4kczr/RlJ6W19cojbE5NqA2M/YVsMoKS26mgBTV5vaI+yYzeGhixVC0
+	btZAQpz7qPRLPaML4eCn/PoEAZ0MnzmC0CDhFcfv52yq8NZKn/3CbzzyZS4AcNBLaOUMsPjqeOgeJ
+	l9w5XGn/lcYXlPhvY0weS/hssbLDL7mWndGYgMuDR6h2Z9mjf2vucgMhBDBh2pXBgBqT83N83nj2z
+	34k16E/w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHN3Z-00000000W53-1L1E;
-	Thu, 15 Oct 2026 15:07:45 +0000
-Received: from mail-ej1-x648.google.com ([2a00:1450:4864:20::648])
+	id 1xHNSi-00000000ZTs-3HJl;
+	Thu, 15 Oct 2026 15:33:44 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHN3T-00000000W3u-02v1
+	id 1xHNSg-00000000ZTF-2r6r
+	for kexec@bombadil.infradead.org;
+	Thu, 15 Oct 2026 15:33:42 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
+	:References:In-Reply-To:Message-ID:Date:Subject:To:From:Sender:Reply-To:Cc:
+	Content-Type:Content-ID:Content-Description;
+	bh=imriAKslpKmc2rOuduOVfwOSxXiBTlYDccI9fjTDxi4=; b=f0tOjcG20KoqY3zjUi2NV9HLVb
+	lCTvqbMa15hHUPsp1iiuGnYmZwP4n6Csiistgv943V566NXUTF4/Uay3etBrT9e2vlMf43vP2xG9n
+	z5YJDXy69FV98SSx5UuUYlQRmNMEbCRbwVtG7JGa+iaRrC0o9PCHmvYn7Dg6G+BnuXSArWoPUFWzN
+	m2wnQ1pRRk5JvRK1OrhmsDkVHVYy3CQpUvt/80syAN3LtnQTkVH4JvyKPS1b4Nb68cGtQKTegJP1T
+	2yk4IN08lgBn4ervMndAlPTEnc7sf8qj7fBfTngRwpauM5HW0yCtuBOMa9f3uHqyoCUncIjhuZwps
+	9t/DPd/A==;
+Received: from mail-ua1-x935.google.com ([2607:f8b0:4864:20::935])
+	by desiato.infradead.org with esmtps (Exim 4.99.5 #2 (Red Hat Linux))
+	id 1xHNSd-00000000YPM-1zUU
 	for kexec@lists.infradead.org;
-	Thu, 15 Oct 2026 15:07:41 +0000
-Received: by mail-ej1-x648.google.com with SMTP id a640c23a62f3a-c2e47a584edso227052366b.3
-        for <kexec@lists.infradead.org>; Thu, 15 Oct 2026 08:07:37 -0700 (PDT)
+	Thu, 15 Oct 2026 15:33:41 +0000
+Received: by mail-ua1-x935.google.com with SMTP id a1e0cc1a2514c-9907fa1d2d1so92931241.3
+        for <kexec@lists.infradead.org>; Thu, 15 Oct 2026 08:33:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792076856; x=1792681656; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=IC5Ct3FOhi968am1MRf06lj4teeqkFZmOqPC0DoSw2E=;
-        b=hFqclYPbfgr+ulp6B4qw9NG3gEyUA4e54j3wgtugGMY34oVxuWYl7+zlJnE2TGqXR6
-         h+9gBgtKU6Qy5zq0NVdBAMYr7a6tD4vEguVb1Jcofh8aLh4KCd84UzlVOv5aGCaxhMmM
-         ZZjKKPI98v6Xw6K353RZVpzZUYIsIInXc/ofJl0jdwC4wqPXkGGkbXPPa44qizKBgqx+
-         IXkg5YRzdPTz6lM7Z0CaHFrOaIGTcKYGXpG4vlyYUokKp6WHiZUGuIEEzTEkX5QdY/dZ
-         USMLs0N5z+45D3Fh3gQowXUJO/YwwMPOEa8OA18wyIlWxMzn3z25MW5/2swwM2CqoCDo
-         0K7w==
+        d=soleen.com; s=google; t=1792078417; x=1792683217; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=imriAKslpKmc2rOuduOVfwOSxXiBTlYDccI9fjTDxi4=;
+        b=AL/S9gYNfWatnzcecAsxtQCh4ipeCFAcX+USbFzCnN2jmip/t7qrn8fCkuWAVXIX9X
+         f15fkBCHFOf+6Q3QIsqHSwaWa3fptT1wfmDijo1x26SEELkO1bOs6vjOWSpR8ZRKFzN2
+         /PyPSWdPrAWOB9XLJEGvkal4h+64y9kw4JlLh7jUlkJdeBAYCaQFFDJeIWc5PIBB4jCa
+         ZTNGg7G0j1c7WVQhO2R5/ajGr9H3fw/trzRSN+sRmtCMEM0RKG862UqXmFA3I1B52fbA
+         QdavuT7UuZmGulTwKLS1eNAf//U2ENW6EpWngrN3tL3Q9fBwfW16nAzSaI4MV/z2Xo9M
+         Cs3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792076856; x=1792681656;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=IC5Ct3FOhi968am1MRf06lj4teeqkFZmOqPC0DoSw2E=;
-        b=iy8Om/Aii9vicVG6uvnlQiZrc7I4/F5wDsP4lwPxTO2njLhsLwvz9AddxCA7NT6oKM
-         G9JleoieDHyVvHtpxarBX19RogbnSZD/xJKtbBHXw3OQzI5Ti5TfbnLk3t2TUwPLrt6H
-         1k2WWHt/byPA5YcG+V027pDAq8uGkEhonK9oer4AT7DBHtK4QfXK0FZeuW+HMJb6JoyL
-         IAMzfO7vqb60fZC3VIP9uOYj7wWDpD3nZb9/ZxV/hGWfflhIVSFzGGGALlNCCTE5SXdm
-         PSSHVAshgNflxsTcReEkWIkz/hyA7F3DKmwNjvMPWJkXyKbjHfe/mhH1HPtVVE6RzeBJ
-         xmOw==
-X-Forwarded-Encrypted: i=1; AKwUvBwbQlJvclmwQGeY+Uz3C+j4z4XyP3Vox6mTHCMgZc1LAmSzp4JUO+X4pDhrtjn7Nx5T/ALBTg==@lists.infradead.org
-X-Gm-Message-State: AFq9FYLKSerLunId807cJwV9pI3Z+7b+fgEm+OZSB4+FwDQKoZjEToD2
-	WqgJfPjewIw0Tx9OKXMO+5eIgkGR/6Q+velq7GqjTLWrNQdXCh66RnfIrLSZ4SLMTiuhKMOhUYd
-	dkRb31YQkh5qbhhej8g==
-X-Received: from ejbbq18.prod.google.com ([2002:a17:906:d0d2:b0:c2e:1f38:d81a])
- (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:907:9615:b0:c24:adf4:5c73 with SMTP id a640c23a62f3a-c31a9a28825mr1772701566b.1.1792076855746;
- Thu, 15 Oct 2026 08:07:35 -0700 (PDT)
-Date: Thu, 15 Oct 2026 15:07:34 +0000
-In-Reply-To: <2vxzzewfgno2.fsf@kernel.org>
-Mime-Version: 1.0
-References: <20260903023452.721732-1-loganodell@google.com>
- <20260903023452.721732-2-loganodell@google.com> <2vxzzewfgno2.fsf@kernel.org>
-Message-ID: <9huzqzhrhuix.fsf@tarunix.c.googlers.com>
-Subject: Re: [RFC PATCH 1/3] luo: Move to feature flags instead of
- compatibility strings
-From: tarunsahu@google.com
-To: Pratyush Yadav <pratyush@kernel.org>, Logan Odell <loganodell@google.com>
-Cc: arnd@arndb.de, pasha.tatashin@soleen.com, rppt@kernel.org, 
-	pratyush@kernel.org, graf@amazon.com, akpm@linux-foundation.org, 
-	pbonzini@redhat.com, maz@kernel.org, oupton@kernel.org, seanjc@google.com, 
-	bhelgaas@google.com, alex@shazbot.org, jgg@nvidia.com, kevin.tian@intel.com, 
-	dwmw2@infradead.org, baolu.lu@linux.intel.com, joro@8bytes.org, 
-	will@kernel.org, robin.murphy@arm.com, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org, 
-	kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, linux-pci@vger.kernel.org, iommu@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+        d=1e100.net; s=20260707; t=1792078417; x=1792683217;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=imriAKslpKmc2rOuduOVfwOSxXiBTlYDccI9fjTDxi4=;
+        b=vXh3g2WCIclVXx2nbXvsczw3QRJbIF9fn7RFMjjCFwG4aCGWnacc0Goo1L3HtAurmw
+         bekW+Rp0H2z8DgxZgvwd2mN1tyU4/h71nLzsWrHchFRrc5ds6ysNknbcf8ou8DTDa+Yx
+         4m2ie1PFHT8E0xdBPf733f5aCluYjoDtoKIqNQ1vxYSVJalsn2rK3MOzpW5pp9HexNTT
+         L/ekEJgIbC2PZTvTp89ywHTnjxZSzIZxh7iBjHfaWZUltW/hl014sgcVmhwdmmskk6Oc
+         VqZA0cysTQwafAL79YlrhlemQQv1/3FooYP1vwxsDTx/LB/uATpgPXhii6xikiTmeCIQ
+         nYGw==
+X-Forwarded-Encrypted: i=1; AKwUvBw0MiPoImvwuQm5lcZOI9oLzWLS0TUiGsBd98dPLWkVMPQCv1gDvyNejfCgNa9LdQIGCPP09Q==@lists.infradead.org
+X-Gm-Message-State: AFq9FYLev51yK+KTJMx44RtSNu7V5Ts+xOKebKlRMlXxcVTitSu4O4Ml
+	O6B1xUfuEH8I4FTZ16GYy2b4WSavBsLyyDwo4rnj4il9YiDUgkIV+S2cKR+qBsnhClw=
+X-Gm-Gg: AYBFou3yLnRWH4z7CA0nDPL9m1r85vH7DcW2OMtCTYfIACU7GyAd0kAdBkit7iHRnvZ
+	epKXTeweNUb5JfBD17BWItWtBqGc+6X06I++XEUeM7h41JwIvuRvBfNRSQ0NmQl5PZsbJES6ilV
+	8NzdRadr1gY2wUKdR4GxWPCK49srmBD87KovDLWEdBmv9/9I4Lh3hINasodevhthNwOlj9ib/Df
+	E4GnyLAS3dpfTIC/mmN/YsyekBiAiPY2zKVSAksoDHX1GgPvATTdVDIVj5cOU686ErjD6L450ik
+	/BChxTQxyEfJY8Qez9aMI+mMVl1B/uD+r2Fsdkc+sYjF3vUqlc+EbvibpHt/Ino0Vy/9KvNCOxd
+	UEPTF/tTQkD+y3KY0BboPhj/Tj4x7BZ/0q/WIah+HIVdEk1fJw/WYzqfU+pNv6+Z2KsfDjeUqPC
+	KN5jtwRekgWdoCkv0BXiUgRFWsPlEoSUJXOYk8w1fOt6YrbQc/ZJgd+EEbm6051LssZbBd0NO+W
+	iQhGRDesdDb8RjQOLhblt8nbJT/Mvww+j5ChjJiZVQLR4A2lTvDMgFgy0t4mTyBXBQf5jbh35OW
+	kkUBHscsvi8Vc8kSyUp7
+X-Received: by 2002:a05:6102:441e:b0:7c3:263c:511e with SMTP id ada2fe7eead31-7cb36989716mr5308286137.3.1792078417340;
+        Thu, 15 Oct 2026 08:33:37 -0700 (PDT)
+Received: from soleen.c.googlers.com.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-99003f66ad9sm12986347241.10.2026.10.15.08.33.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Oct 2026 08:33:36 -0700 (PDT)
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: kees@kernel.org,
+	rppt@kernel.org,
+	juri.lelli@redhat.com,
+	nik.borisov@suse.com,
+	tglx@kernel.org,
+	vschneid@redhat.com,
+	kprateek.nayak@amd.com,
+	vincent.guittot@linaro.org,
+	bp@alien8.de,
+	thorsten.blum@linux.dev,
+	cgroups@vger.kernel.org,
+	tony.luck@intel.com,
+	david@kernel.org,
+	mingo@redhat.com,
+	akpm@linux-foundation.org,
+	linux-mm@kvack.org,
+	seanjc@google.com,
+	ljs@kernel.org,
+	zhangguopeng@kylinos.cn,
+	dietmar.eggemann@arm.com,
+	mhocko@suse.com,
+	vinicius.gomes@intel.com,
+	tj@kernel.org,
+	vbabka@kernel.org,
+	linux-kernel@vger.kernel.org,
+	peterz@infradead.org,
+	surenb@google.com,
+	hpa@zytor.com,
+	x86@kernel.org,
+	pasha.tatashin@soleen.com,
+	dmatlack@google.com,
+	tim.c.chen@linux.intel.com,
+	kexec@lists.infradead.org,
+	pratyush@kernel.org,
+	dave.hansen@linux.intel.com,
+	rostedt@goodmis.org,
+	gmonaco@redhat.com,
+	jgross@suse.com,
+	mgorman@suse.de,
+	graf@amazon.com,
+	linux-edac@vger.kernel.org,
+	liam@infradead.org,
+	ridong.chen@linux.dev,
+	longman@redhat.com,
+	bsegall@google.com
+Subject: [PATCH v1 1/8] x86/realmode: Remove unnecessary WBINVD from AP startup trampoline
+Date: Thu, 15 Oct 2026 11:33:24 -0400
+Message-ID: <20261015153331.1872641-2-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
+In-Reply-To: <20261015153331.1872641-1-pasha.tatashin@soleen.com>
+References: <20261015153331.1872641-1-pasha.tatashin@soleen.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261015_080739_104330_6D61E2A8 
-X-CRM114-Status: GOOD (  48.67  )
+X-CRM114-CacheID: sfid-20261015_163339_616432_89C51CC1 
+X-CRM114-Status: GOOD (  11.79  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,281 +157,65 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Pratyush Yadav <pratyush@kernel.org> writes:
+trampoline_start executes WBINVD in 16-bit real mode before switching to
+protected mode. This WBINVD was originally added in the 1990s for
+Sequent NUMA-Q hardware (as noted by the comment in trampoline_32.S:
+"Needed for NUMA-Q should be harmless for others"), whose cross-quad
+caches came up non-coherent prior to OS initialization. Sequent NUMA-Q
+support (CONFIG_X86_NUMAQ) was removed in commit b5660ba76b41
+("x86, platforms: Remove NUMAQ").
 
-> Hi Logan,
->
-> On Wed, Sep 02 2026, Logan Odell wrote:
->
->> Define a 128 byte header that can be used by all live update serialized
->> structures. In this header, we reserve room for 64 features with
->> supported, active, and required bits. Update the top level luo struct to
->> use this instead of compatibility strings. Previous versions of the
->> struct had smaller sizes, so add a minimum size check to avoid
->> collisions with older kernels.
->>
->> Signed-off-by: Logan Odell <loganodell@google.com>
->> ---
->>  include/linux/kho/abi/luo.h  | 74 +++++++++++++++++++++++++++++-------
->>  kernel/liveupdate/luo_core.c | 44 +++++++++++++--------
->>  2 files changed, 90 insertions(+), 28 deletions(-)
->>
->> diff --git a/include/linux/kho/abi/luo.h b/include/linux/kho/abi/luo.h
->> index 288076de6d4a..0a7662a0cf9a 100644
->> --- a/include/linux/kho/abi/luo.h
->> +++ b/include/linux/kho/abi/luo.h
->> @@ -13,15 +13,17 @@
->>   * kernel. The ABI is built upon the Kexec HandOver framework and registers
->>   * the central `struct luo_ser` via the KHO raw subtree API.
->>   *
->> - * This interface is a contract. Any modification to the structure fields,
->> - * compatible strings, or the layout of the `__packed` serialization
->> - * structures defined here constitutes a breaking change. Such changes require
->> - * incrementing the version number in the relevant `_COMPATIBLE` string to
->> - * prevent a new kernel from misinterpreting data from an old kernel.
->> + * This interface is a contract. To ensure the stability of moving between
->> + * kernel versions, any changes to the structures should only be additive
->> + * and should utilize the feature flags to denote the supported, active, and
->> + * required status of the feature.
->> + *
->> + * Features that are entirely optional can be added with the supported and
->> + * active flags both asserted, and the required flag cleared. Features that
->> + * require that the next kernel supports the feature should only be added as
->> + * supported to allow compatible transition kernels. At a later time, the
->> + * active and required flag should be asserted.
->>   *
->> - * Changes are allowed provided the compatibility version is incremented;
->> - * however, backward/forward compatibility is only guaranteed for kernels
->> - * supporting the same ABI version.
->>   *
->>   * KHO Structure Overview:
->>   *   The entire LUO state is encapsulated within a single KHO entry named "LUO".
->> @@ -30,7 +32,7 @@
->>   * Serialization Structures:
->>   *   - struct luo_ser:
->>   *     The central ABI structure that contains the overall state of the LUO.
->> - *     It includes the compatibility string, the liveupdate-number, and pointers
->> + *     It includes the feature flags, the liveupdate-number, and pointers
->>   *     to sessions and FLBs.
->>   *
->>   *   - struct luo_session_ser:
->> @@ -58,19 +60,65 @@
->>  #define _LINUX_KHO_ABI_LUO_H
->>  
->>  #include <linux/align.h>
->> +#include <linux/bits.h>
->>  #include <linux/kho/abi/block.h>
->>  #include <uapi/linux/liveupdate.h>
->>  
->> +/**
->> + * struct luo_feature_hdr - Feature negotiation and versioning header.
->> + * @supp:     Bitmask of features supported by the producing subsystem.
->> + * @req:      Bitmask of features required for safe deserialization by the
->> + *            receiving subsystem.
->
-> I think you are mixing two things here: description of the payload and
-> description of the file handler capability.
->
-> The payload that is handed over via KHO should have the active and
-> required bitmasks only. It doesn't need the supported bitmask, because
-> it doesn't matter what the handler that produced the payload supports.
-> It only matters what fields it populated and which ones are mandatory to
-> understand.
->
-> Similarly, the description of the file handler can't really describe
-> "active". Because the capabilities are static and the active bits will
-> depend on a specific file.
->
-> So I reckon we should separate these two. These should be the same bits
-> of course, but expressed in two ways in two different places.
->
->> + * @active:   Bitmask of features actually active/used in the serialized payload.
->> + * @reserved: Reserved for future use.
->> + *
->> + * This header can be embedded at the beginning of any serialized structure to
->> + * provide forward and backward compatibility via feature negotiation across
->> + * live update.
->> + */
->> +struct luo_feature_hdr {
->> +	u64 supp;
->> +	u64 req;
->> +	u64 active;
->> +	u64 reserved[13];
->
-> How do you plan to ever use this? Say I want to extend my bitmaps so I do:
->
->     struct luo_feature_hdr {
->     	u64 supp;
->     	u64 req;
->     	u64 active;
->     	u64 supp2;
->     	u64 req2;
->     	u64 active2;
->     	u64 reserved[10];
+Per the Intel SDM (Vol. 3A, Table 10-1, note 2) and AMD APM, the INIT
+IPI used to wake secondary CPUs preserves cache contents and leaves
+CR0.CD and CR0.NW unchanged (0, as already enabled by firmware or the
+kernel). Neither sev_es_trampoline_start nor trampoline_start64
+executes WBINVD.
 
-I thinking this is too spreaded.
+On modern multi-core processors with large shared last-level caches
+(such as 504 MB shared L3 per socket on Intel Xeon 6985P-C), WBINVD is
+not harmless: each execution flushes and invalidates the entire
+coherence domain's caches and takes ~85-115 ms per CPU while disturbing
+active workloads on online CPUs.
 
-We can do somthing like:
+Remove the obsolete WBINVD from trampoline_start.
 
-struct ABI {
-       u64 size;
-       u64 flags;
-       u64 flags2;
-}
+2-socket, 480-CPU Intel Xeon 6985P-C (N=479, mean of 10 runs):
+  Offline:  40.40 s -> 40.46 s
+  Online:   65.83 s -> 11.14 s (-83.1%)
+  Total:   106.23 s -> 51.60 s (-51.4%)
 
-where flags is extended to flags2 if flags MSB bits is 11.
+Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+---
+ arch/x86/realmode/rm/trampoline_32.S | 2 --
+ arch/x86/realmode/rm/trampoline_64.S | 1 -
+ 2 files changed, 3 deletions(-)
 
-and each flags is formatted like 0b 00 01 11 00 11 10 11 11 00 00 11 ...
+diff --git a/arch/x86/realmode/rm/trampoline_32.S b/arch/x86/realmode/rm/trampoline_32.S
+index 3fad907a179f1..14e56ea954160 100644
+--- a/arch/x86/realmode/rm/trampoline_32.S
++++ b/arch/x86/realmode/rm/trampoline_32.S
+@@ -30,8 +30,6 @@
+ 
+ 	.balign	PAGE_SIZE
+ SYM_CODE_START(trampoline_start)
+-	wbinvd			# Needed for NUMA-Q should be harmless for others
+-
+ 	LJMPW_RM(1f)
+ 1:
+ 	mov	%cs, %ax	# Code and data in the same place
+diff --git a/arch/x86/realmode/rm/trampoline_64.S b/arch/x86/realmode/rm/trampoline_64.S
+index 14d9c7daf90f4..e5a3f03d62217 100644
+--- a/arch/x86/realmode/rm/trampoline_64.S
++++ b/arch/x86/realmode/rm/trampoline_64.S
+@@ -60,7 +60,6 @@
+ 	.balign	PAGE_SIZE
+ SYM_CODE_START(trampoline_start)
+ 	cli			# We should be safe anyway
+-	wbinvd
+ 
+ 	LJMPW_RM(1f)
+ 1:
+-- 
+2.56.0.385.gd3acb90ef8-goog
 
-each pair represents 0b 1 (required) 1 (active)
-Getting the details of the feature is just bit manipulation, so
-proper macro definition similar to the one this patch has implemented.
-
-
-~Tarun
-
-
-
->
-> But when I go back to a kernel that doesn't know about supp2, req2,
-> etc., how does it know how to interpret these? How does it know what the
-> values mean?
->
-> Is your goal only to be able to extend the three types of flags we have?
-> If so, perhaps something like "if bit 63 is set, the flags continue to
-> the next u64"? It is certainly harder for the parser, but seems to at
-> least be extensible. What do you think?
->
->> +} __packed;
->> +
->> +#define LUO_FEATURE_ACTIVE(s, f)		\
->> +	do {					\
->> +		(s)->features.supp |= (u64)(f);	\
->> +		(s)->features.active |= (u64)(f);	\
->> +	} while (0)
->> +#define LUO_FEATURE_SUPPORTED(s, f)	((s)->features.supp |= (u64)(f))
->> +#define LUO_FEATURE_REQUIRED(s, f)	((s)->features.req |= (u64)(f))
->> +#define LUO_FEATURE_IS_ACTIVE(s, f)	(!!((s)->features.active & (u64)(f)))
->> +#define LUO_FEATURE_IS_SUPPORTED(s, f)	(!!((s)->features.supp & (u64)(f)))
->> +#define LUO_FEATURE_IS_REQUIRED(s, f)	(!!((s)->features.req & (u64)(f)))
->> +
->>  /*
->>   * The LUO state is registered under this KHO entry name.
->>   */
->>  #define LUO_KHO_ENTRY_NAME	"LUO"
->> -#define LUO_ABI_COMPATIBLE	"luo-v5"
->> -#define LUO_ABI_COMPAT_LEN	ALIGN(sizeof(LUO_ABI_COMPATIBLE), 8)
->> +
->> +/*
->> + * Bits associated with the luo_feature_hdr values.
->> + */
->> +#define LUO_FEATURE_NUMBER    BIT_ULL(0)
->> +#define LUO_FEATURE_SESSIONS  BIT_ULL(1)
->> +#define LUO_FEATURE_FLBS      BIT_ULL(2)
->
-> Nit: please give the flags full documentation on their semantics.
->
->> +
->> +#define LUO_CORE_FEATURES_SUPP		(LUO_FEATURE_NUMBER | \
->> +					 LUO_FEATURE_SESSIONS | \
->> +					 LUO_FEATURE_FLBS)
->> +#define LUO_CORE_FEATURES_REQ		(LUO_FEATURE_NUMBER | \
->> +					 LUO_FEATURE_SESSIONS | \
->> +					 LUO_FEATURE_FLBS)
->> +#define LUO_CORE_FEATURES_ACTIVE	(LUO_FEATURE_NUMBER | \
->> +					 LUO_FEATURE_SESSIONS | \
->> +					 LUO_FEATURE_FLBS)
->>  
->>  /**
->>   * struct luo_ser - Centralized LUO ABI header.
->> - * @compatible:     Compatibility string identifying the LUO ABI version.
->> + * @features:       Bit mask of supported and active features.
->>   * @liveupdate_num: A counter tracking the number of successful live updates.
->>   * @sessions_pa:    Physical address of the first session block header.
->>   * @flbs_pa:        Physical address of the FLB header.
->> @@ -78,7 +126,7 @@
->>   * This structure is the root of all preserved LUO state.
->>   */
->>  struct luo_ser {
->> -	char compatible[LUO_ABI_COMPAT_LEN];
->> +	struct luo_feature_hdr features;
->
-> Do we still need compatible here? How will we ever do breaking changes
-> if we really need to?
->
->>  	u64 liveupdate_num;
->>  	u64 sessions_pa;
->>  	u64 flbs_pa;
->> diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
->> index 1b2bda22902d..6add1ecc463f 100644
->> --- a/kernel/liveupdate/luo_core.c
->> +++ b/kernel/liveupdate/luo_core.c
->> @@ -107,26 +107,37 @@ static int __init luo_early_startup(void)
->>  		return 0;
->>  	}
->>  
->> -	if (len < sizeof(*luo_ser)) {
->> -		pr_err("LUO state is too small (%zu < %zu)\n", len, sizeof(*luo_ser));
->> -		return -EINVAL;
->> +	luo_ser = phys_to_virt(luo_ser_phys);
->> +
->> +	if (len < sizeof(struct luo_feature_hdr)) {
->> +		pr_err("LUO state is too small (%zu < %zu)\n",
->> +		       len, sizeof(struct luo_feature_hdr));
->> +		err = -EINVAL;
->> +		goto out_free_ser;
->>  	}
->>  
->> -	luo_ser = phys_to_virt(luo_ser_phys);
->> -	if (strncmp(luo_ser->compatible, LUO_ABI_COMPATIBLE, LUO_ABI_COMPAT_LEN)) {
->> -		pr_err("LUO state is incompatible with '%s'\n", LUO_ABI_COMPATIBLE);
->> -		return -EINVAL;
->> +	if (luo_ser->features.req & ~LUO_CORE_FEATURES_SUPP) {
->> +		pr_err("Unsupported required LUO feature (req: 0x%llx, supp: 0x%llx)\n",
->> +		       luo_ser->features.req, (u64)LUO_CORE_FEATURES_SUPP);
->> +		err = -EOPNOTSUPP;
->> +		goto out_free_ser;
->>  	}
->>  
->> -	luo_global.liveupdate_num = luo_ser->liveupdate_num;
->> -	pr_info("Retrieved live update data, liveupdate number: %lld\n",
->> -		luo_global.liveupdate_num);
->> +	if (LUO_FEATURE_IS_ACTIVE(luo_ser, LUO_FEATURE_NUMBER)) {
->> +		luo_global.liveupdate_num = luo_ser->liveupdate_num;
->> +		pr_info("Retrieved live update data, liveupdate number: %lld\n",
->> +			luo_global.liveupdate_num);
->> +	}
->>  
->> -	err = luo_session_setup_incoming(luo_ser->sessions_pa);
->> -	if (err)
->> -		goto out_free_ser;
->>  
->> -	luo_flb_setup_incoming(luo_ser->flbs_pa);
->> +	if (LUO_FEATURE_IS_ACTIVE(luo_ser, LUO_FEATURE_SESSIONS)) {
->> +		err = luo_session_setup_incoming(luo_ser->sessions_pa);
->> +		if (err)
->> +			goto out_free_ser;
->> +	}
->> +
->> +	if (LUO_FEATURE_IS_ACTIVE(luo_ser, LUO_FEATURE_FLBS))
->> +		luo_flb_setup_incoming(luo_ser->flbs_pa);
->>  
->>  	err = 0;
->>  
->> @@ -162,7 +173,10 @@ static int __init luo_state_setup(void)
->>  		return PTR_ERR(luo_ser);
->>  	}
->>  
->> -	strscpy(luo_ser->compatible, LUO_ABI_COMPATIBLE, sizeof(luo_ser->compatible));
->> +	luo_ser->features.supp = LUO_CORE_FEATURES_SUPP;
->> +	luo_ser->features.req = LUO_CORE_FEATURES_REQ;
->> +	luo_ser->features.active = LUO_CORE_FEATURES_ACTIVE;
->> +
->>  	luo_ser->liveupdate_num = luo_global.liveupdate_num + 1;
->>  
->>  	luo_session_setup_outgoing(&luo_ser->sessions_pa);
->
-> -- 
-> Regards,
-> Pratyush Yadav
 
