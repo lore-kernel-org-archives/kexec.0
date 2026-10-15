@@ -4,56 +4,118 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7E64ECC6B33
-	for <kexec@archiver.kernel.org>; Thu, 15 Oct 2026 15:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9ECD2CC6B3A
+	for <kexec@archiver.kernel.org>; Thu, 15 Oct 2026 16:26:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
-	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=wP/OleXvUOPC82wVeHxQZamyYTbsnAEJ57bgkI6UGjg=; b=mgSrRqvUkRlbkuJKbOn2YJKwOz
-	XPQ94A3dD9hHZrNdGgtUjZN8P6Nn5TuXK5oJsMQMKZiIAAez/jZ853OE+zPgiKWoFY38/e0BUFibO
-	gjLyu2bPgRCBgBXf9n15Ra5z65HPHPziO9X9wi7Rl5cP3JfKikqZR4I7jMuQfQTlV0rANPXHmYwYG
-	SHbT5jTWcauL9rd5M6MSsu1RHmYXLcmumncwEIF4fJo+uLhKE/US+X2rdDtGOxV/hMiveTp6DTSJO
-	h1hAU3GyrNdaTPgsDaKhfsi0BDeJTRDapwNGJgBMeRoXmPWlnLdJkfhat6FlQ7cz/4/hopvOwU/Pq
-	doHZDYHw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=p/L6vStTTkLKkbTFW53DI+bTesyu/E9Cvyn6tkFsfkM=; b=Kb9h9jOb1xlHyAvzoYJzDl1qXI
+	0Dsiv3CP+bqzftWrjZMgCmnNcPUe8frDy39W5lYw0wiyPUXzVaCZBptXln0DlS4bVhWeWuTu3gI+B
+	WIVvln/fLgQLCRoVfaHZFndVFeN8NNEfqCNYFq0N0myTG5PE9tegbtSzBlbiB9aNNXa2wqzLoK9Z0
+	WnLkRRA6Q27+3gKjCqACJhNQE+aIJVg+yklu87gFKKV9Q6W+Z0Fi8c/6g6EWf5K6xUaGSEvGSnhTt
+	tnXmRzi2GecveTECAqGIQAcsRFv21Q8RX5VUFB7I/D98ND41dPkYnj4K0fJHDWfUPqI//vwoFhot8
+	Uyds3myQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHNpl-00000000dMS-0TK6;
-	Thu, 15 Oct 2026 15:57:33 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xHOI6-00000000pmZ-2A8m;
+	Thu, 15 Oct 2026 16:26:50 +0000
+Received: from mail-ed1-x52e.google.com ([2a00:1450:4864:20::52e])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHNpj-00000000dMD-1qDK
+	id 1xHOI2-00000000pl3-2P66
 	for kexec@lists.infradead.org;
-	Thu, 15 Oct 2026 15:57:31 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 3191B60120;
-	Thu, 15 Oct 2026 15:57:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAF241F000C5;
-	Thu, 15 Oct 2026 15:57:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792079849;
-	bh=wP/OleXvUOPC82wVeHxQZamyYTbsnAEJ57bgkI6UGjg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=KvXomQEPlVW/8vQI/MVWw8mMdjtTMG8Hsz6xdMk2IDpoAk91t6WSFxlZ3JslTN9Ob
-	 SeQRXvN509c5zvuMdUEJBxcEG5OtY06FRSQt8KKgJhdtstGGrSsOUxgIYjF/7FMkn4
-	 SGU11AUzTbXSHR5UKCQ/eZdxDv3hBiY9cbLoi4GIaMVUvloqjvDX4s83D4EXsIVE6J
-	 eTB7OUSJuju0RJ6g4rlUcoUGIryAgapkYtMAP65C4Hv3vGtH3mGNoK6D/UAA+ed+Am
-	 orDI1rJMbjFrsGIF7UgZr+z9HuxRI0mZc5SgYrCBglypshXxoEZQWU4WyZyunK7k0T
-	 9evgnxO8+GZyA==
-Message-ID: <sashiko-outbox-173118@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 6/8] sched/deadline, topology: Avoid O(N^2) dl_server
- bandwidth walks during root_domain rebuilds
-To: "Pasha Tatashin" <pasha.tatashin@soleen.com>, kees@kernel.org, rppt@kernel.org, juri.lelli@redhat.com, nik.borisov@suse.com, tglx@kernel.org, vschneid@redhat.com, kprateek.nayak@amd.com, vincent.guittot@linaro.org, bp@alien8.de, thorsten.blum@linux.dev, tony.luck@intel.com, david@kernel.org, mingo@redhat.com, akpm@linux-foundation.org, seanjc@google.com, ljs@kernel.org, zhangguopeng@kylinos.cn, dietmar.eggemann@arm.com, mhocko@suse.com, vinicius.gomes@intel.com, tj@kernel.org, vbabka@kernel.org, peterz@infradead.org, surenb@google.com, hpa@zytor.com, x86@kernel.org, dmatlack@google.com, tim.c.chen@linux.intel.com, kexec@lists.infradead.org, pratyush@kernel.org, dave.hansen@linux.intel.com, rostedt@goodmis.org, gmonaco@redhat.com, jgross@suse.com, mgorman@suse.de, graf@amazon.com, liam@infradead.org, ridong.chen@linux.dev, longman@redhat.com, bsegall@google.com
-Cc: hannes@cmpxchg.org, mkoutny@suse.com
-In-Reply-To: <20261015153331.1872641-7-pasha.tatashin@soleen.com>
+	Thu, 15 Oct 2026 16:26:49 +0000
+Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-6b1afcd2d23so6286285a12.1
+        for <kexec@lists.infradead.org>; Thu, 15 Oct 2026 09:26:46 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792081605; cv=none;
+        d=google.com; s=arc-20260327;
+        b=PVZm+KAle2IgrrVT0ztDBnxY7gCbudn8UJNsbyC01gcKNVkBcZW+wIvNCxIOKE8J5V
+         R0lcgP9iQBBY7T9+rzWGih4egCvApi3aR/RmWm1bN7pBWJvBrTckYLF/fo3kIbmwnhXY
+         hVg+2yp0gfi4m1Lg8EwMl4xxPh24FkAA0oJnkPQY8YAFjGwP5mDrv33s0ddXqJgxDu60
+         B/LSpFIxI/KflGicSco9gxBbUsYuaamHCa4ifLwvQqbuEtOb/w/vjI43fK6ufZWCBphq
+         qPVyLLtcQxBn3eIhb/dDaSkAJIJ7sePfq3QZRHioczgCHg+8ngu0FyvdJ2sMKbyQzkmM
+         ++Jg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=p/L6vStTTkLKkbTFW53DI+bTesyu/E9Cvyn6tkFsfkM=;
+        fh=9tdezYOwrz74e52O6nm3kIGbo6kDFJdA2pqu4EZ1+Pw=;
+        b=H9C5axOk/lyFzPZjp2T6RSxc2N/hJIVOLBG94bVDrGjafaoNjiuTMnyrTsJqgfhtkZ
+         Yds3Wn8NzcAXnvc+7AA5hV87AP96FLsUz3pKiSWEPSiPs8oFkk5pib6DuWax4ODF4mL0
+         y/EEqqd1M4ork0aAU5DsMdd/WQUIduolGWr1ZFPivRfDuOteNMXUEfgWoK5ydcFT4hZj
+         HsIMgY5nBUhyzVxawkmUvxcWulq+xtxQTQb95Fx1hG9i3cDeTV41/VVBEGGJqVstkAXP
+         Wz5g3soB9aChkPcZitC/UmxGw++xIwsJSVLvjPCwxHOGIPXlin58heErgcQd3TW+2neI
+         t5nw==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1792081605; x=1792686405; darn=lists.infradead.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=p/L6vStTTkLKkbTFW53DI+bTesyu/E9Cvyn6tkFsfkM=;
+        b=eNTkiEaVFJItGXd2IJRTnC4a+ERwnbEzJUEk4rQyTVj/lZ2wg+gek5OHvPl/ERGcuV
+         NnhCzhddO2v+HATJP0ogKYRYY7Aq+wnhRjp5nyDzXdMTwrrnvR/OP34VMjiQHT8DJXeR
+         gFzqxlfadSWdHzza6TzsY2k/IjrvnYaGoq7x5733Hve7sRSqixjzBviHdG8p0iScXrVH
+         S/rDfiGIxN3SUBbPMvNtEzSO3rsSmu2KOxKfNG0Vqa9Wkj+tmcVdSok89XYfU+sLpnZX
+         KJheEdwrUh8o0Zs2QPk2Mkwru3whMuzr2u8M7s79pvKgkHLS5JNjExOzmzLzhdiJB7dJ
+         8KqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792081605; x=1792686405;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=p/L6vStTTkLKkbTFW53DI+bTesyu/E9Cvyn6tkFsfkM=;
+        b=MAAD+O4V7jsLwfgnUl9jTnFpjfnf7Tu/qo1XDCCcF1JR3BHvFYq7PU0Cn0NbRd+QtN
+         yKxSoahJTZKt326tO+aXmGWNBFLD5479owhhw3qUmA4aWu4YSzbgbNnZ8NFzNlAW8ZbH
+         F8EVlwv+H0wMAYsdDLOMcekxGMKBEnM4TwJVZ7RfrQx6zzArvq1GlY29YiwZq5Y7yBv9
+         GMzK4QU1/4tRB3ydA5GaVO/a4eVqfffOA409u5NP/CkIS0qZ78KqS1YQZcW9R1A+m/HK
+         wSXtV5BhNVVTgmdr0yMk2LcsJBDgA2hNqmGp5Wix5jyeCZz37GbtbrvGgw41G9hvuefx
+         FSYQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzNXEA8lMyMQ3XOkj45r5by9mIE6uZrj7djlDx1JLbRKWs93t1BwBu5+mIfSfECnUZVPl0i7A==@lists.infradead.org
+X-Gm-Message-State: AFq9FYL1AoIJ4xzhpzE6+vG9mlogiN+bCqZUPX1TsC2/YnBIsdFHIWpR
+	Fasl1fs6C2Ri3h8hbgMv7ixMsP0JUjIFTB35RSzsiQcENTjII/WYU4EnVgDJlKI2Z7FjJ/G9YQp
+	vPo1rY9GewE/YUuJJ1O+LnJn3UoJW378YvWyJsg92gg==
+X-Gm-Gg: AYBFou3/rkK06Arp5L7hao+ex0U4GQ0+FZLHSdIX4RCgxCSt8/g6cZx4ihj4s1Ed+FU
+	8HkkqQ1gZp963Tj2Lwu4I6JZE9TdAo8X344D3Cll6Hyef9nXnjrkx0rsYhoXRhBoRe2VEiwCebB
+	/Z9wZ7fAAe1si0AR0Bizi1n9b+9yYVcK9ybcAYk/zOpLU2YHccg1/YcBIY8SNg9LfSgO/hDJHBI
+	D/1ZBeVofeTQI7K6wzbxbkl8Y0rohEkpVEbp34jCn7TuGGpdeVWdGpTTaqqWt76JP/mFog5RxVl
+	x1Qsx6LScPOBxxhyoBbdoCWQNrM6/KlLmz3wahwJI6RxBj9i34SgcurYVeYDv7OPskYnbyXzaNA
+	Ft/megy3dHQ==
+X-Received: by 2002:a05:6402:46d2:b0:6b1:c265:a5ad with SMTP id
+ 4fb4d7f45d1cf-6b1e0afc7a4mr7410229a12.32.1792081604585; Thu, 15 Oct 2026
+ 09:26:44 -0700 (PDT)
+MIME-Version: 1.0
 References: <20261015153331.1872641-1-pasha.tatashin@soleen.com>
- <20261015153331.1872641-7-pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset=utf-8
+ <20261015153331.1872641-3-pasha.tatashin@soleen.com> <sashiko-outbox-173092@kernel.org>
+In-Reply-To: <sashiko-outbox-173092@kernel.org>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Thu, 15 Oct 2026 12:26:07 -0400
+X-Gm-Features: AclHuK_yCJGAu6GoKfWJckPHB9PC9igV5tqeg2m4wPW2Hc_SYuuZdKBt7njfNgY
+Message-ID: <CA+CK2bCCWkP+P6iv9BpJeMB_V0PppeaNcg6TeNzZtu_TtLJLxw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/8] x86/smp: Remove unnecessary WBINVD from mwait_play_dead()
+To: sashiko-reviews@lists.linux.dev
+Cc: kees@kernel.org, rppt@kernel.org, juri.lelli@redhat.com, 
+	nik.borisov@suse.com, tglx@kernel.org, vschneid@redhat.com, 
+	kprateek.nayak@amd.com, vincent.guittot@linaro.org, bp@alien8.de, 
+	thorsten.blum@linux.dev, tony.luck@intel.com, david@kernel.org, 
+	mingo@redhat.com, akpm@linux-foundation.org, seanjc@google.com, 
+	ljs@kernel.org, zhangguopeng@kylinos.cn, dietmar.eggemann@arm.com, 
+	mhocko@suse.com, vinicius.gomes@intel.com, tj@kernel.org, vbabka@kernel.org, 
+	peterz@infradead.org, surenb@google.com, hpa@zytor.com, x86@kernel.org, 
+	dmatlack@google.com, tim.c.chen@linux.intel.com, kexec@lists.infradead.org, 
+	pratyush@kernel.org, dave.hansen@linux.intel.com, rostedt@goodmis.org, 
+	gmonaco@redhat.com, jgross@suse.com, mgorman@suse.de, graf@amazon.com, 
+	liam@infradead.org, ridong.chen@linux.dev, longman@redhat.com, 
+	bsegall@google.com, hannes@cmpxchg.org, mkoutny@suse.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 15 Oct 2026 15:57:27 +0000
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261015_092646_749655_9484653E 
+X-CRM114-Status: GOOD (  28.61  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -65,159 +127,151 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] sched/deadline: Concurrent sched_setattr() during dl_rebuild_rd_ac=
-counting() corrupts bandwidth (!CONFIG_CPUSETS)
-- [Medium] sched/deadline: root domain bandwidth leak for DEAD tasks on off=
-line CPUs
-- [Medium] sched/deadline: lockless u64 write to extra_bw causes data race =
-and torn reads
---
+On Thu, Oct 15, 2026 at 11:44=E2=80=AFAM <sashiko-bot@kernel.org> wrote:
+>
+> Thank you for your contribution! Sashiko AI review found 2 potential issu=
+e(s) to consider:
+> - [Critical] x86/smp: memory corruption during suspend if package offline=
+d at runtime
+> - [High] x86/smp: offline CPUs miss wbinvd_on_all_cpus() flush causing da=
+ta corruption
+> --
+>
+> commit 2579aa1d01a44c8d96bb166fd2ce0dff4493a42a
+> Author: Pasha Tatashin <pasha.tatashin@soleen.com>
+>
+> x86/smp: Remove unnecessary WBINVD from mwait_play_dead()
+>
+> The commit aims to avoid time-consuming WBINVDs during runtime CPU offlin=
+ing
+> by only executing it when cpuhp_tasks_frozen is set (i.e. system sleep).
+>
+> > diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+> > index ba01a9e919b78..60a781dac9991 100644
+> > --- a/arch/x86/kernel/smpboot.c
+> > +++ b/arch/x86/kernel/smpboot.c
+> [ ... ]
+> > @@ -1426,15 +1422,21 @@ void __noreturn mwait_play_dead(unsigned int ea=
+x_hint)
+> >       md->status =3D CPUDEAD_MWAIT_WAIT;
+> >       md->control =3D CPUDEAD_MWAIT_WAIT;
+> >
+> > -     wbinvd();
+> > +     /*
+> > +      * MWAIT C-states keep the caches coherent, so runtime CPU offlin=
+e
+> > +      * does not need to flush them. System sleep, however, may remove
+> > +      * power from this package's caches while all of its CPUs are
+> > +      * offline, and the flush done by the boot CPU before entering th=
+e
+> > +      * sleep state only covers the boot CPU's own package.
+> > +      */
+> > +     if (cpuhp_tasks_frozen)
+> > +             wbinvd();
+>
+> [Severity: Critical]
+> Could this result in memory corruption during a system suspend if an enti=
+re
+> package is offlined at runtime prior to the suspend?
+>
+> If a package is fully offlined at runtime (so cpuhp_tasks_frozen is false=
+),
+> its CPUs enter MWAIT with dirty caches. If the system later suspends,
+> freeze_secondary_cpus() skips CPUs that are already offline:
+>
+> kernel/cpu.c:freeze_secondary_cpus() {
+>         ...
+>         for (cpu =3D nr_cpu_ids - 1; cpu >=3D 0; cpu--) {
+>                 if (!cpu_online(cpu) || cpu =3D=3D primary)
+>                         continue;
+>         ...
+> }
+>
+> Because these CPUs are skipped, they never awaken to check cpuhp_tasks_fr=
+ozen
+> and perform the flush. Since the sleep-entry cache flush on the boot CPU
+> only covers its own package, won't the dirty cache lines of the un-flushe=
+d,
+> offlined package be permanently lost when power is removed?
 
-commit 2fcbfb40fdf44ef2a7ddc6709657336b0c7fb178
-Author: Pasha Tatashin <pasha.tatashin@soleen.com>
+I am not sure if this is actually feasible; nevertheless, I can add
+wbinvd() when the the last CPU in the package (CPU that shares the
+last level cache), enters mwait_play_dead(). That said, also my LLM
+tells me that even:
 
-sched/deadline, topology: Avoid O(N^2) dl_server bandwidth walks during roo=
-t_domain rebuilds
+> > +     if (cpuhp_tasks_frozen)
+> > +             wbinvd();
 
-This commit reduces the O(N^2) complexity of dl_server bandwidth walks duri=
+that I have is not needed because:
+
+1. Multi-socket x86 servers (where a non-boot package exists) do not
+support ACPI S3 suspend-to-RAM.
+2. When all cores of a package enter deep MWAIT (C6), hardware flushes
+L1/L2 to the LLC on core C6 entry, and the package's power management
+unit (PCU) flushes the LLC before removing LLC power in deep package
+C-states (PC6+).
+
+>
+> [Severity: High]
+> Does skipping the flush during runtime offline break the system-wide cach=
+e
+> flush guarantees of wbinvd_on_all_cpus()?
+>
+> If a package is completely offlined at runtime and retains dirty cache li=
+nes
+> in its LLC, wbinvd_on_all_cpus() will miss them entirely because it only
+> targets online CPUs:
+>
+> arch/x86/lib/cache-smp.c:wbinvd_on_all_cpus() {
+>         on_each_cpu(__wbinvd, NULL, 1);
+> }
+>
+> If a system-wide non-coherent operation is later triggered (such as mappi=
 ng
-root_domain rebuilds by accumulating the total bandwidth in a single pass. =
-It
-also introduces a !CONFIG_CPUSETS implementation of dl_rebuild_rd_accountin=
-g()
-to fix an issue where SCHED_DEADLINE task bandwidth was not accounted for on
-rebuilds.
+> memory as Uncacheable or persisting PMEM), the missing flush could lead t=
+o
+> data corruption or Machine Check Exceptions from dirty line evictions.
+>
+> Furthermore, during Kexec, offline CPUs are kicked out of MWAIT:
+>
+> arch/x86/kernel/smpboot.c:smp_kick_mwait_play_dead() {
+>         ...
+>         for_each_cpu_andnot(cpu, cpu_present_mask, cpu_online_mask) {
+>                 ...
+>                 WRITE_ONCE(md->control, newstate);
+>         ...
+> }
+>
+> Will this cause the offlined CPUs to carry unflushed dirty cache lines in=
+to
+> the new kernel's execution context?
 
-> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-> index 857dbe3519a86..01f2f24e3b814 100644
-> --- a/kernel/sched/deadline.c
-> +++ b/kernel/sched/deadline.c
-[ ... ]
-> @@ -3480,26 +3466,32 @@ static u64 dl_server_read_bw(int cpu)
->  	return dl_bw;
->  }
-> =20
-> -void dl_clear_root_domain(struct root_domain *rd)
-> +static void dl_clear_root_domain(struct root_domain *rd)
->  {
-> -	int i;
-> +	u64 total_bw =3D 0;
-> +	s64 extra_bw =3D 0;
-> +	int i, cpus;
-> =20
->  	guard(raw_spinlock_irqsave)(&rd->dl_bw.lock);
-> =20
-[ ... ]
-> +	rd->dl_bw.total_bw =3D total_bw;
-> +	for_each_cpu(i, rd->span) {
-> +		struct rq *rq =3D cpu_rq(i);
-> +
-> +		rq->dl.extra_bw =3D rq->dl.max_bw;
-> +		if (cpu_active(i))
-> +			rq->dl.extra_bw +=3D extra_bw;
+Regarding carrying cachelines through kexec that Sashiko mentioned, my
+LLM also says it does not make sense (and I agree with it):
 
-[Severity: Medium]
-Can this lockless u64 write to extra_bw cause a data race and torn reads wi=
-th
-grub_reclaim()?
+1. Even before our patch, when smp_kick_mwait_play_dead() wakes an
+offline CPU out of __mwait(), that CPU immediately writes to memory
+(WRITE_ONCE(md->status, CPUDEAD_MWAIT_KEXEC_HLT)=E2=80=94dirtying its cache=
+!)
+and enters while (1) native_halt(); (smpboot.c:1461-1463) without
+executing wbinvd().
+2. Even more obviously, all CPUs that are online when kexec runs are
+stopped via native_stop_other_cpus() =E2=86=92 stop_this_cpu(), which simpl=
+y
+executes native_halt() in a loop without wbinvd().
 
-This updates rq->dl.extra_bw remotely holding only rd->dl_bw.lock. Concurre=
-ntly,
-grub_reclaim() reads rq->dl.extra_bw while holding only the local rq->lock.
+Pasha
 
-Because extra_bw is a u64 and can be a negative delta, 32-bit architectures
-process the write as two 32-bit stores. A torn read by grub_reclaim() could
-observe mismatched upper and lower halves, producing an incorrect bandwidth
-value that miscalculates DL task runtime.
-
-Additionally, splitting the update into two distinct non-atomic assignments
-widens the race window.
-
-> +	}
->  }
-> =20
->  void dl_clear_root_domain_cpu(int cpu)
-[ ... ]
-> @@ -3507,6 +3499,33 @@ void dl_clear_root_domain_cpu(int cpu)
->  	dl_clear_root_domain(cpu_rq(cpu)->rd);
->  }
-> =20
-> +#ifndef CONFIG_CPUSETS
-> +void dl_rebuild_rd_accounting(void)
-> +{
-> +	struct task_struct *g, *p;
-> +	u64 cookie =3D ++dl_cookie;
-> +	int cpu;
-> +
-> +	lockdep_assert_cpus_held();
-> +	lockdep_assert_held(&sched_domains_mutex);
-> +
-> +	rcu_read_lock();
-> +	for_each_possible_cpu(cpu) {
-> +		if (dl_bw_visited(cpu, cookie))
-> +			continue;
-> +
-> +		dl_clear_root_domain_cpu(cpu);
-> +	}
-> +	for_each_process_thread(g, p) {
-> +		/* Racy pre-check; dl_add_task_root_domain() rechecks under pi_lock. */
-> +		if (!dl_prio(READ_ONCE(p->prio)))
-> +			continue;
-> +		dl_add_task_root_domain(p);
-
-[Severity: High]
-Does this allow a race with concurrent __sched_setscheduler()?
-
-In a kernel without CONFIG_CPUSETS, cpuset_lock() is an empty no-op stub,
-leaving __sched_setscheduler() completely unsynchronized against this loop.
-
-If sched_setattr() transitions a task to SCHED_DEADLINE concurrently,
-__sched_setscheduler() calls sched_dl_overflow() which acquires dl_b->lock
-and adds the task's bandwidth. Then this iteration loop could observe the n=
-ew
-priority, call dl_add_task_root_domain(), and add the bandwidth a second ti=
-me,
-corrupting rd->dl_bw.total_bw.
-
-Similarly, a task transitioning from SCHED_DEADLINE to SCHED_OTHER could re=
-sult
-in a bandwidth underflow because the rebuild clears the bandwidth, skips the
-task, and later inactive_task_timer() subtracts the bandwidth.
-
-[Severity: Medium]
-Does this leak SCHED_DEADLINE bandwidth in the active root domain for DEAD =
-tasks
-on offline CPUs?
-
-This loop blindly iterates over all tasks, including TASK_DEAD zombies, wit=
-hout
-checking the task state. If a SCHED_DEADLINE task exits and enters TASK_DEAD
-state, its bandwidth is preserved until its 0-lag inactive timer fires.
-
-If its original CPU is hotplugged offline before the timer fires, CPU hotpl=
-ug
-triggers this domain rebuild. Because the task's original CPU is offline,
-dl_add_task_root_domain() picks a new active CPU and adds the task's bandwi=
-dth
-to the new active root domain.
-
-When the 0-lag timer eventually fires, inactive_task_timer() subtracts the
-bandwidth from task_cpu(p)'s root domain (the def_root_domain, since it was
-never migrated), permanently leaking the bandwidth in the active root domai=
-n.
-
-> +	}
-> +	rcu_read_unlock();
-> +}
-> +#endif
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261015153331.1872=
-641-1-pasha.tatashin@soleen.com?part=3D6
+>
+> >
+> >       while (1) {
+> >               /*
+> [ ... ]
+>
+> --
+> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261015153331.18=
+72641-1-pasha.tatashin@soleen.com?part=3D2
 
