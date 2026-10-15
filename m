@@ -4,94 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 304CFCCA464
-	for <kexec@archiver.kernel.org>; Thu, 15 Oct 2026 21:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 31F53CCA462
+	for <kexec@archiver.kernel.org>; Thu, 15 Oct 2026 22:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=mI5j2QSx7YHmNnf5OMmNmLr/+3VlhYuDRCjBR0r1XZM=; b=vvFzlJMP/sZhkAtw+uEVzzkRLq
-	CBFCvwMQXEpemy/yxNq6fg0NFZ5vNeYfSBiuigNZd0NBp8BZP5P5vvIhBjbj1uObFd60BFAteHcRI
-	Prxo8nr1jbt5oH3+xqh7Ybp6VkrvwlglPYlVrIklIAS/JlNcLrn1lT0P1csWUmJwCo9dFyI+vCIL4
-	qUBe7zBTnkkOh3YN9CVJBlpjl78Y1G7zFjkmwTqtLhAIyvqmO5Dd3EYDOFUakW7o6FsmP2tEGGxZK
-	XEZhjjks/3B6aUVH8HhKrz7BG1/48wDDC/jAv1CFUSMSyfOMj1wSlXrNqwhRzNNSMt0BoGia8FySq
-	GXozPWEg==;
+	bh=C8xIcAcbBHZy1mi8Rb1UegUyeiD956DGbti3HZCArR0=; b=uBSpebWtfNEWqEtp6qz4pLBVl8
+	Au9m6hQfRRAXKnfZA0sU6y28/A+uHyYWVImC9Z5mpn7D1mGt5BaIkGM/G3czobeo02RfDeNGi/NYK
+	l3LXNR4fvJNoDvhW8l7PVj7VXK4NsWrjZsVrxlsULcLDgnetQVBEBZqRw66idI7nosKHmcdcUa7KA
+	qeqskVOBbHeFisgDuIRys0broqmIT6k/G3MblwUDrNkya4bGmtmNOI/0a4lzKAOHXfz6y6gZ8IROR
+	H7GXuPk/slgh+eBnAuDZa1chQb0ezF5tEXpCy+wivHOhcjh2qSh6Tqr4ZmQEhK9K0yFqhdR/ya6vM
+	b2yNxNaQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHTOK-00000001Sya-05hU;
-	Thu, 15 Oct 2026 21:53:36 +0000
-Received: from mail-pj1-x102f.google.com ([2607:f8b0:4864:20::102f])
+	id 1xHUCS-00000001VPs-2A2l;
+	Thu, 15 Oct 2026 22:45:24 +0000
+Received: from mail-ej1-x645.google.com ([2a00:1450:4864:20::645])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHTOH-00000001SyG-3vGI
+	id 1xHUCQ-00000001VPU-2Pq8
 	for kexec@lists.infradead.org;
-	Thu, 15 Oct 2026 21:53:35 +0000
-Received: by mail-pj1-x102f.google.com with SMTP id 98e67ed59e1d1-3ab3260b2cdso2647082a91.1
-        for <kexec@lists.infradead.org>; Thu, 15 Oct 2026 14:53:33 -0700 (PDT)
+	Thu, 15 Oct 2026 22:45:23 +0000
+Received: by mail-ej1-x645.google.com with SMTP id a640c23a62f3a-c25edb54d22so700721266b.1
+        for <kexec@lists.infradead.org>; Thu, 15 Oct 2026 15:45:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792101213; x=1792706013; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=mI5j2QSx7YHmNnf5OMmNmLr/+3VlhYuDRCjBR0r1XZM=;
-        b=bvxvbu2qvEJ3ZxdwlyKl9LPDzodf9sl2awRM0Nhwi6QXu8BsSXp7CRgE71HJ6c4YOQ
-         83sWSOfhQeVM4ZKTqQxhdbFWOqc4Z7BHZ+W8YCPYxHEKHE+0pzMx47lB6Gcx87r0g1JQ
-         IDvBB1JtYNASfeKW2MEkH+/abOhIBY9jBRCPw9zuSmaOInoTjPaI3jPcHej5hJRISQDa
-         7lYy/jH1LDSPIBBF9OK+OWqPGye/kvUx+6g8+ELauzLz7HDIMSrCzRZ+Ha6GA9YrLrJo
-         OqxK2MjBQk7Gy71FOhaz5U5SQAfX0Y7lebDNWRXrmAdU0ae7Gupabx2U4MMZbHR2mEAj
-         Tl7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792101213; x=1792706013;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20251104; t=1792104320; x=1792709120; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=mI5j2QSx7YHmNnf5OMmNmLr/+3VlhYuDRCjBR0r1XZM=;
-        b=wvExk2oivM2SQk9VKgE6gKtHgSC8fjb37gfNIPVPU2C+FGBnQjOgBMGWdja8oxd+XP
-         eWcBOGy2w5zKRkB328/BhKeai7UCrD0pAgVbGNK19vJWhUwxD9a2x2HZl3e0wQPtkUIs
-         8qlhar+Eqpfx8pYEKlak5Z1eUT2QdAlLV4waI0UWlQ19BDH3YbypoBTx27667JMp7nP1
-         aqUC83WOyFokoiVcQnoZ5fMBuMNp+MnpIZhEBa4jTJVAMzYWM9/djuhyys2kJk3MULV1
-         SfKlCA+yWREMmsbC1KXfLQSpGpNEfq8Bl9cE4lx1o9W96RDQguvH9tuZggc2/7JOOazC
-         P0FQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzU/HcO1SEqxCgG2khWVU04FBVlQ+NqHQh8ETMLGIT8G6b8DgTdPx0JxqdmEvbCughC4t6Q0w==@lists.infradead.org
-X-Gm-Message-State: AFq9FYIUVeOilYW1W5lUswKV0oS8ElHJef/s3pG+QOdI1hSJxlV1DDJU
-	iGATgwKMs+/PF9Lc0M0u6Asb1V60oDxc8bu4ESaFvXruMJl3i3iAyLkjGqmzP5Cbug==
-X-Gm-Gg: AYBFou1+DE/z++IJZL6M3MHgXYcMWkVazF1hl1OGCqh7Pf8oIr7lBsRCpkpo87spK8e
-	wmHFu4SHoGwcdo9L7vtY9nyrMTp88aV3kN8REV4H9NLacRBa6rIQmzSS1/0Up5S/Ss7zS+LRoWD
-	qlWsraljifjA1Tlqqo9smZocgDIA/O079L5nEJ+oqAJBXoRDl+rxuFEqWt/x/RVU8tu49HO7Tr5
-	j7JFddmbNoyNOJvTVTx8K3yv89BbvqOP45BS7kJH4USdTU0X3Mw9mpvYYyjncq+hxt4mGFXp/d3
-	5yqANLn4Cx3CsHq3YRhtWMuuufl8oLDxdOJS9vqFJWlAaGRChao4rm9Cm5mvy9dL2SRp19uxS5y
-	rVmyv9cvjPcwev81sdHvHQtpC8to1zolQuSj4VCncMfgqbi6Hk5NPE2mLlyHJoUF9yMSqDhwtUm
-	ahsdfmWSAJS9W5T2YZV7/3X026TF07FLOkLw7KbuhG9cyj3uzvgTgEHYeWjMyaDZPv8LH0LaNoD
-	jI4fv5OSu4kPlZhINSsdxLLIPTZIMXYL6GdvgDgEbma5g==
-X-Received: by 2002:a17:90b:5343:b0:3ab:188b:c5bc with SMTP id 98e67ed59e1d1-3ab3a94f0dcmr16931016a91.14.1792101212423;
-        Thu, 15 Oct 2026 14:53:32 -0700 (PDT)
-Received: from google.com (64.75.127.34.bc.googleusercontent.com. [34.127.75.64])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3acc48e8646sm865063a91.10.2026.10.15.14.53.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Oct 2026 14:53:31 -0700 (PDT)
-Date: Thu, 15 Oct 2026 21:53:27 +0000
-From: David Matlack <dmatlack@google.com>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: linux-kselftest@vger.kernel.org, rppt@kernel.org, shuah@kernel.org,
-	akpm@linux-foundation.org, linux-mm@kvack.org, vipinsh@google.com,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	pratyush@kernel.org, graf@amazon.com
-Subject: Re: [PATCH v1 0/7] liveupdate: tmpfs preservation and early freeze
-Message-ID: <atFLV3tT0s3y6zMp@google.com>
-References: <20261015093816.2438942-1-pasha.tatashin@soleen.com>
- <atESAwf17pJ11S9U@google.com>
- <atEaPuWNOm5VLc7A@google.com>
- <atEhc20Zawj4D62x@google.com>
- <atE53vmlDeA4cWD2@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <atE53vmlDeA4cWD2@google.com>
+        bh=C8xIcAcbBHZy1mi8Rb1UegUyeiD956DGbti3HZCArR0=;
+        b=g5U3/8CUOc5ADCxSxFiPEK7JeGrLDyQobyreiEDxGwmQcj39sp6h3pYMKqJ5LV4hFY
+         CtohkjfFfh502t7/k7rAfoaHbZQ80WjUFGUtRyJfO6N/ayIiuRT3j2moGdWko8e8SXQ5
+         GrB9SM16E60CGMkkYKVi4rPZ4fEGo3IbY51+MuvSyn+TSPhO8tyNIcGA0msBOzS2uS6x
+         o5TPhgH3cdB9OGbBFfXBbDunUkQwh8NcavOqobxDjMLWO98k3s0uj90Mx6Sy9Jhnhjx8
+         5TAetdOqltKl82rfIj6DPihTTeBpd5BEyXsKf26e60XXVsVjA6HkFRie3xuFKfMwB1mp
+         GmMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792104320; x=1792709120;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=C8xIcAcbBHZy1mi8Rb1UegUyeiD956DGbti3HZCArR0=;
+        b=hQcPPIpLybcSJcuxhgbC27eJx3JotDT0WHepIkXcajxGDIIIVQ1oyWgVfAu8Yi2xZl
+         i2AYk0+lATgCprO6p4lbmqsNpK4iMoSF/eBGkG5MJ1fYJF+jKvkx5DecrsfscpfmVSgU
+         6iFERarRFNGI9QY/+dBXm4DL2irizwgn8oLshA2181txR5UNym1xExsT8DJrcDvURW/3
+         /SNvAfMou3hWk9k5K55dNEkKo40FMAlZcj3MZGgIpfxXb+P5TKmTOm+2Q3hMDhIGajQH
+         Dcx04LKVpS/aJb2+C2HZ0GzyBE5CcfNsLCncRORhbo3MDvM2Dghm+F7y3KYXnVP6jAoD
+         CqmQ==
+X-Forwarded-Encrypted: i=1; AKwUvBx7bwPPU44xLtucqnbMPipJ//CJsR9FyLEXXPTAv/9e8vgco+OYdeNecyjxypXFHGzvE9aEBA==@lists.infradead.org
+X-Gm-Message-State: AFq9FYKto2rxVxHU6N+jKpi5wVN6tfDzZAki8HNhUahi7poTyX7Vg2vA
+	3s0eg5Ht+YPd04/OnAtACjmoTJm1RtGOLROWfXu8jmWx7dxks9xelVp6qmluJe26PVXLLnPr7cx
+	PdJtLN9S/G1LwE6hVuA==
+X-Received: from ejyb15.prod.google.com ([2002:a17:906:834f:b0:c39:4b00:1781])
+ (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:907:9801:b0:c25:504a:1e25 with SMTP id a640c23a62f3a-c31a9fcf521mr1847005866b.13.1792104319385;
+ Thu, 15 Oct 2026 15:45:19 -0700 (PDT)
+Date: Thu, 15 Oct 2026 22:45:18 +0000
+In-Reply-To: <atB1uG8kLfmZyLIH@kernel.org>
+Mime-Version: 1.0
+References: <20261008190828.3221718-1-tarunsahu@google.com>
+ <as4EcgiBH5jjww42@kernel.org> <9huzecdt633e.fsf@tarunix.c.googlers.com> <atB1uG8kLfmZyLIH@kernel.org>
+Message-ID: <9huzo6cuinwh.fsf@tarunix.c.googlers.com>
+Subject: Re: [PATCH v4 1/2] memblock: drop for_each_memblock_type() and open
+ code its users
+From: tarunsahu@google.com
+To: Mike Rapoport <rppt@kernel.org>
+Cc: dmatlack@google.com, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Pratyush Yadav <pratyush@kernel.org>, 
+	kexec@lists.infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261015_145333_977623_4BE2BF0D 
-X-CRM114-Status: GOOD (  24.25  )
+X-CRM114-CacheID: sfid-20261015_154522_633301_66DF00E7 
+X-CRM114-Status: GOOD (  23.37  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,73 +92,125 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-10-15 04:38 PM, Pasha Tatashin wrote:
+Mike Rapoport <rppt@kernel.org> writes:
 
-> What if instead of retrieve-into an existing file FD, userspace passes
-> a dir_fd on the target tmpfs mount where the file should be restored?
+> On Tue, Oct 13, 2026 at 03:18:45PM +0000, tarunsahu@google.com wrote:
+>> Mike Rapoport <rppt@kernel.org> writes:
+>> 
+>> > Hi Tarun,
+>> >
+>> > Please for the next time add the cover-letter when sending more than one
+>> > patch.
+>> 
+>> Thanks Mike for piking up the patches.
+>> 
+>> Sure, I will take care of adding the cover-letter.
+>> 
+>> You had some nit change suggestion, Let me know if you want
+>> me send v5 or it is alright.
+>
+> I fixed some of it when applying and some right now, no need for v5
 
-This is good. This eliminates the pinning race and also eliminates the
-checks v1 had to do on the userspace-provided file.
+Thanks Mike!
 
-> During preserve we can record the file's basename if the file was linked
-> (or mark that it was unlinked). On retrieve, creates a brand-new file in
-> dir_fd (e.g. starts as an unlinked O_TMPFILE on that tmpfs superblock),
-> populates all the folios and metadata while the file is still unreachable
-> by anyone else, links it into dir_fd under the preserved name at the end
-> (or leaves it unlinked if the original file was unlinked), and returns
-> the FD of the new file to userspace.
-
-I don't think the name should be in the ABI though:
-
- - Userspace already has to know what each token is, so it knows the
-   name. And a basename isn't enough anyway, since userspace still has
-   to supply the directory.
-
- - "The name" isn't well defined. A file can have several hard links,
-   and it can be renamed or unlinked between preserve and freeze.
-
- - Linking in the kernel needs a policy for collisions, and linking at
-   finish() can fail (or find the name taken) at a point where there's
-   no good way to report it.
-
- - The name isn't the only thing needed to create the file properly.
-   There's also the mode, the owner (fsuid/fsgid, setgid directories,
-   idmapped mounts), default ACLs and LSM labels, the access mode of the
-   fd, and whether the file may be linked at all. If we record those in
-   the ABI it grows a lot.
-
-What if we model the retrieve args on open() directly? RETRIEVE_FD
-behaves like openat(dirfd, ".", O_TMPFILE | flags, mode), then fills the
-file, then returns the fd:
-
-  struct liveupdate_memfd_retrieve_arg {
-  	__u32		size;
-  	__s32		dirfd;
-  	__aligned_u64	flags;	/* subset of O_*, ORed with O_TMPFILE */
-  	__aligned_u64	mode;
-  };
-
-In the kernel this is file_open_root(&dir_path, ".", O_TMPFILE | flags,
-mode), which goes through the same path as open().
-
-Userspace links the file into place with linkat() whenever it wants, the
-usual O_TMPFILE way, or passes O_EXCL to make it unlinkable. Then
-there's no name in the ABI or the uAPI, no linking in the kernel,
-unlinked files are just files userspace never links, and "don't link it
-until it's fully populated" comes for free.
-
-One quirk: open() rejects O_TMPFILE without write access.  With LUO
-holding the file until finish, that brings back the -ETXTBSY problem for
-restored binaries. vfs_tmpfile() itself doesn't need write access, and
-neither does filling the file, so I think we can allow an O_RDONLY |
-O_TMPFILE here.
-
-> I would like file type to stay exactly the same, I really don't want to 
-> play the game where LUO can magically change file from one type to 
-> another even if from Linux internal implementation they share a lot of 
-> code, they are still a different file types from the user perspective.
-
-Ok, I don't feel that strongly. We should just do it based on the
-superblock rather than i_nlink, so that O_TMPFILE and unlinked tmpfs
-files stay on a user mount.
+>  
+>> ~Tarun
+>> 
+>> 
+>> >
+>> > On Thu, Oct 08, 2026 at 07:08:27PM +0000, Tarun Sahu wrote:
+>> >> for_each_memblock_type() always starts the iteration at index 0 and its
+>> >> body is a trivial 'for' loop, so it hides very little. It also gets in
+>> >> the way of iterating from an arbitrary index, which the next patch
+>> >> needs.
+>> >> 
+>> >> Remove the macro and open code its three users: memblock_add_range(),
+>> >> memblock_isolate_range() and memblock_dump(). While at it, move the
+>> >> region pointer into the loop body scope.
+>> >> 
+>> >> No functional change.
+>> >> 
+>> >> Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+>> >> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
+>> >> ---
+>> >>  mm/memblock.c | 17 ++++++-----------
+>> >>  1 file changed, 6 insertions(+), 11 deletions(-)
+>> >> 
+>> >> diff --git a/mm/memblock.c b/mm/memblock.c
+>> >> index f5aaa38cfa31..59dda7d085f3 100644
+>> >> --- a/mm/memblock.c
+>> >> +++ b/mm/memblock.c
+>> >> @@ -155,11 +155,6 @@ struct memblock_type physmem = {
+>> >>   */
+>> >>  static __refdata struct memblock_type *memblock_memory = &memblock.memory;
+>> >>  
+>> >> -#define for_each_memblock_type(i, memblock_type, rgn)			\
+>> >> -	for (i = 0, rgn = &memblock_type->regions[0];			\
+>> >> -	     i < memblock_type->cnt;					\
+>> >> -	     i++, rgn = &memblock_type->regions[i])
+>> >> -
+>> >>  #define memblock_dbg(fmt, ...)						\
+>> >>  	do {								\
+>> >>  		if (memblock_debug)					\
+>> >> @@ -615,7 +610,6 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
+>> >>  	phys_addr_t obase = base;
+>> >>  	phys_addr_t end = base + memblock_cap_size(base, &size);
+>> >>  	int idx, nr_new, start_rgn = -1, end_rgn;
+>> >> -	struct memblock_region *rgn;
+>> >>  
+>> >>  	if (!size)
+>> >>  		return 0;
+>> >> @@ -651,7 +645,8 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
+>> >>  	base = obase;
+>> >>  	nr_new = 0;
+>> >>  
+>> >> -	for_each_memblock_type(idx, type, rgn) {
+>> >> +	for (idx = 0; idx < type->cnt; idx++) {
+>> >> +		struct memblock_region *rgn = &type->regions[idx];
+>> >>  		phys_addr_t rbase = rgn->base;
+>> >>  		phys_addr_t rend = rbase + rgn->size;
+>> >>  
+>> >> @@ -815,7 +810,6 @@ static int __init_memblock memblock_isolate_range(struct memblock_type *type,
+>> >>  {
+>> >>  	phys_addr_t end = base + memblock_cap_size(base, &size);
+>> >>  	int idx;
+>> >> -	struct memblock_region *rgn;
+>> >>  
+>> >>  	*start_rgn = *end_rgn = 0;
+>> >>  
+>> >> @@ -827,7 +821,8 @@ static int __init_memblock memblock_isolate_range(struct memblock_type *type,
+>> >>  		if (memblock_double_array(type, base, size) < 0)
+>> >>  			return -ENOMEM;
+>> >>  
+>> >> -	for_each_memblock_type(idx, type, rgn) {
+>> >> +	for (idx = 0; idx < type->cnt; idx++) {
+>> >> +		struct memblock_region *rgn = &type->regions[idx];
+>> >>  		phys_addr_t rbase = rgn->base;
+>> >>  		phys_addr_t rend = rbase + rgn->size;
+>> >>  
+>> >> @@ -2194,11 +2189,11 @@ static void __init_memblock memblock_dump(struct memblock_type *type)
+>> >>  	phys_addr_t base, end, size;
+>> >>  	enum memblock_flags flags;
+>> >>  	int idx;
+>> >> -	struct memblock_region *rgn;
+>> >>  
+>> >>  	pr_info(" %s.cnt  = 0x%lx\n", type->name, type->cnt);
+>> >>  
+>> >> -	for_each_memblock_type(idx, type, rgn) {
+>> >> +	for (idx = 0; idx < type->cnt; idx++) {
+>> >> +		struct memblock_region *rgn = &type->regions[idx];
+>> >>  		char nid_buf[32] = "";
+>> >>  
+>> >>  		base = rgn->base;
+>> >> -- 
+>> >> 2.56.0.385.gd3acb90ef8-goog
+>> >> 
+>> >
+>> > -- 
+>> > Sincerely yours,
+>> > Mike.
+>
+> -- 
+> Sincerely yours,
+> Mike.
 
