@@ -4,124 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 837BFCCA462
-	for <kexec@archiver.kernel.org>; Fri, 16 Oct 2026 06:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 172E2CCA462
+	for <kexec@archiver.kernel.org>; Fri, 16 Oct 2026 06:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
-	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=czSLFUGDMzAFLI3Pr/+hBd+9bUbci1aNuPRSFzs8ryQ=; b=FeNC6KLVFDsYqQ7U8GYkQ7ZHLp
-	doTql8HT2PruTCE/31KTV3Y9N42oUhf6HgDUy27fH0TG2rOyo1io4UvCpJ+Byo61vnren5zfokann
-	22C35q5DasP4fy3hxRaH3+TUlh5n0ddqwQK0gBoZzoRbroVRdw4myZzVKxXuqcyXU3uwvIChrXRUX
-	fNcieS0V0cgEV4+hG/uAWl66EbWytZQ6A6hsrQEDbFgEJcif4acyVQiOrBiwfv7lX8qzPnlVMqpp0
-	7VtxwW9hhqiojtZaQc5UX2xq5bGOmou5nzkf892z8LGomvwa0ut3N8zDP1gjhwcB2rKKc42gDvjo1
-	97yk2iRA==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
+	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=eDnse++/sMMqljy7OgeSWKTJCj07VGRD+6nKCHuobdE=; b=THiffDvICtynwvEteQc1jNjayR
+	ar93BCPq1CR6KRpLemHrRNbbaiULomdyLPVp4g6jFANtpBy7zzTz2nC9ehfodRlMwRMaUpLA6uxUi
+	SMy32f73IB51EyJkJFoF4FaBnGGhh9C0Wilct21x7jLzVudpx9tYEXfITLA2szm4JVon2WBtKdNVY
+	VZ1IvIUjUbG1RGy9g5+9Q3AxMTWundCsqCRyZshhFNHgbsmxYlTd9kxMvDV0ekrc5CqWkRSI6m4nF
+	u22m814CDQRjKmHO/bfHrBN+DGi4Cvrwzv4OTMqewkUnfw4lcZEB0CyCNKyL6jkRGt0K1IR2k1gGy
+	0XP9bfLg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHbMD-000000027DM-01z2;
-	Fri, 16 Oct 2026 06:23:57 +0000
-Received: from mail-eastus2azon11011043.outbound.protection.outlook.com ([52.101.57.43] helo=BN8PR05CU002.outbound.protection.outlook.com)
+	id 1xHbN1-000000027IO-0g9n;
+	Fri, 16 Oct 2026 06:24:47 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHbMA-000000027Ck-31ca
+	id 1xHbN0-000000027II-1Mwa
 	for kexec@lists.infradead.org;
-	Fri, 16 Oct 2026 06:23:56 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vrebuuRzkQ4MJu/AlPvXTlS3ygwTAxJd8L4kdZJ7CpIbjqo8dv5+cfJAmWQxxdUTTOd3tmOIPp+TLKCToxaPT527zRTartl1rTVTDk0JUZ8if4koqeiHtf2+2wEIVUekV90qdL6G/IC1YRKKd0OzB9lArCC+P5+EW+6ozwU075V8Lq4hVruqmlyDRT7Ll7y+kQD3o25p6shrVoyh3gs5CH5Kt7rWxm4ngF6nB6rozmDLA/kVd/a+6hF6medGYUvXoLsd/6WgwSqlq9E82FAM1tQ2nYU8X92Aq5zrLQp7M4ODXyKRhQSTub/tXMc6gkVERPXuDH9VvXHxfkKs0N+lag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=czSLFUGDMzAFLI3Pr/+hBd+9bUbci1aNuPRSFzs8ryQ=;
- b=Y1uOZNmrZ3fIMggBT8fU4rTOGjaURlixroJtIZ5NUcI9iPzlwjjjsET0fGSJSfHgV9qIALNuU7TNcUupg3WfGWXhXyzJF2PT/iJqZ7ZTvQzuzbYLbNsU/xpeF7QHAl6wsC/VzaVklE8ojLAjPiyeE5ARhiZ7Iw4RqR0Ta9SbTZWlB5Tmhzi8pBpEN+3fLC1OGItEf+JWKRBYVpQSxu9m6RtZqmbuIOyLaG638dFdh+BysNYlDmEzcAncxDcIVO7evvYiyz/x1lDS+hs/758nvAql4spS3cFExhR/knqGCTLrqL5LeDcEoECAEb57bHUBOtTUDmm3oufSVrpu4vmCSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=soleen.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=czSLFUGDMzAFLI3Pr/+hBd+9bUbci1aNuPRSFzs8ryQ=;
- b=GZf7LFUzS8MvemknUjhEgE4bhTlxpTZH9a35BqyZ7p8paUjfi46/VDQoIHBiERuKKQDRDx+qPbwsZdlF2uOPVEaVV+Psj8hKz8Uf8ZpHJ+UXIjgCHUVhmJU4l4hsEt53onvzDKskf8sXLBIUrNXhvkX89iSG/DkGUjGYF8/MYh8=
-Received: from BY3PR04CA0017.namprd04.prod.outlook.com (2603:10b6:a03:217::22)
- by SA9PR12MB407125.namprd12.prod.outlook.com (2603:10b6:806:a6::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.496.20; Fri, 16 Oct
- 2026 06:23:45 +0000
-Received: from EA8PEPF00000006.namprd05.prod.outlook.com
- (2603:10b6:a03:217:cafe::3f) by BY3PR04CA0017.outlook.office365.com
- (2603:10b6:a03:217::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.522.4 via Frontend Transport; Fri, 16
- Oct 2026 06:23:45 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- EA8PEPF00000006.mail.protection.outlook.com (10.167.249.229) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.522.6 via Frontend Transport; Fri, 16 Oct 2026 06:23:45 +0000
-Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.53; Fri, 16 Oct
- 2026 01:23:38 -0500
-Received: from [10.136.45.168] (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.53 via Frontend
- Transport; Fri, 16 Oct 2026 01:23:28 -0500
-Message-ID: <b618f528-ba35-4fb3-881b-e0ca12bc9558@amd.com>
-Date: Fri, 16 Oct 2026 11:53:21 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 5/8] sched/topology: Avoid redundant O(N^3) group
- capacity walks and unused allocations in build_sched_domains()
-To: Pasha Tatashin <pasha.tatashin@soleen.com>, <kees@kernel.org>,
-	<rppt@kernel.org>, <juri.lelli@redhat.com>, <nik.borisov@suse.com>,
-	<tglx@kernel.org>, <vschneid@redhat.com>, <vincent.guittot@linaro.org>,
-	<bp@alien8.de>, <thorsten.blum@linux.dev>, <cgroups@vger.kernel.org>,
-	<tony.luck@intel.com>, <david@kernel.org>, <mingo@redhat.com>,
-	<akpm@linux-foundation.org>, <linux-mm@kvack.org>, <seanjc@google.com>,
-	<ljs@kernel.org>, <zhangguopeng@kylinos.cn>, <dietmar.eggemann@arm.com>,
-	<mhocko@suse.com>, <vinicius.gomes@intel.com>, <tj@kernel.org>,
-	<vbabka@kernel.org>, <linux-kernel@vger.kernel.org>, <peterz@infradead.org>,
-	<surenb@google.com>, <hpa@zytor.com>, <x86@kernel.org>,
-	<dmatlack@google.com>, <tim.c.chen@linux.intel.com>,
-	<kexec@lists.infradead.org>, <pratyush@kernel.org>,
-	<dave.hansen@linux.intel.com>, <rostedt@goodmis.org>, <gmonaco@redhat.com>,
-	<jgross@suse.com>, <mgorman@suse.de>, <graf@amazon.com>,
-	<linux-edac@vger.kernel.org>, <liam@infradead.org>, <ridong.chen@linux.dev>,
-	<longman@redhat.com>, <bsegall@google.com>
-References: <20261015153331.1872641-1-pasha.tatashin@soleen.com>
- <20261015153331.1872641-6-pasha.tatashin@soleen.com>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <20261015153331.1872641-6-pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: EA8PEPF00000006:EE_|SA9PR12MB407125:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9b6d24ad-fbb3-4d95-ce32-08df2b4e081a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|23010399003|36860700016|82310400026|921020|11063799006|56012099006|4143699003|261009223027099003|18002099003|22082099003|10067099003;
-X-Microsoft-Antispam-Message-Info: cwyugd9Ar6kwce5wuyRcoWNsxU77MTwwjmePIXiPadVq2WbGRID6tG6CRm9pKlIzwlT5OO5aQoVIMkrXOY7NTPPTkFubpgsnE6PbXXmfG7EpGW4A8Bbh7Eqyirt60CzVeqYiqnUAdfgTY1s7NgJaJVirJ8MJQaQal7CXqeQZ19v/LiAWYBA1GVIrt2bCukyZVKCrvKMj50F+JyDfZ3d7h59LZ4+GYVeEnQoj/P40/hAk2MPNxQ1RB4hSv56PvFFXs3/4n3vnFecoRv4cog1SfFP/ep7qhGeRmRcevQcttZTbIu24uUSZRj2Y+aJZP/vI77Qkt/n3PB7ImHu1ZKFUEzZu7SwLMQ2gTui/lCIm2tKBa+V+iuh058K8NM7JMYCSmaCW34XyysIJu3+wCtbl5Ri8OC3/YkOn4F82TIWW81vdiqJEhdnrEnWnZKBAwx1/mO80pFNNkwxwxpbpiaMSTmLvTFw8DEC90srHmtHP9tW3WftLO+YWUdi6PTtw19cqyGmMPTlSG/ktJV0bcIievwy1snXrSR5E+jKYAOOxt+R66uiKQ4l9l9ON0OLFXxe5mNUGDyaDmxV9RPMFpqj3nrxeB1Dg1IJn5mY9o4DYK7WdqFibz607Ltz60UfPK5wr5C7ngi3ez7LBMgNq7mdvg0zJ2e2n7aQiDTgndrJibLwbiWac0kpHsapMrlnxjpzwBYLktMz2iQ1J47ulZc7pKs2qL4uBuMgTQRj8MCKq5OijHbwuYjeow6jlgyBLPumO
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(23010399003)(36860700016)(82310400026)(921020)(11063799006)(56012099006)(4143699003)(261009223027099003)(18002099003)(22082099003)(10067099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: /HaWa5VmaHTpxA2nn6kKUeGS9PCYyqO2z1eyacGJFLrydEv7+ujDqh5I94fqZ5Qo8mGXvd/Zlgj/sBR6sJKBxNtrQf0F1/oOpesFdtTd13QEYoOtOo692RMgxQ3IEJ4MxBAp91GoW2jprO0r7zydDh3ZauhZlHRCWTIUt4/Ho0b9/C6etvZbmPFx4MN8DydPxxxxMmx71idIp+dtUAP4s/AvfmujzMTjd08e+Bh2cRuWoUoqxTM58B22aT5QqhcMz+Mgg95fYKpJW5B8dMaRWDBN0g74kMHeHEhf4hkpjfPyRxaCBAnPQZbtihdDIQTy5BC6U8IJ+o2CX+WbzwZ6qCHQOQSFfIClq1H19ztV/+bA7Aq+8DOnm7XozfOWz7nfBTOjW8h1/Y0MJ4+ICCFp9K3SET7NB2pqqK1DFaTdMceGopHhJW0FsdDFuKjtMSEE
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2026 06:23:45.1969
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b6d24ad-fbb3-4d95-ce32-08df2b4e081a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: EA8PEPF00000006.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA9PR12MB407125
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261015_232354_815658_74B0A86B 
-X-CRM114-Status: GOOD (  24.02  )
+	Fri, 16 Oct 2026 06:24:46 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 6D7FB601F0;
+	Fri, 16 Oct 2026 06:24:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB85A1F000C4;
+	Fri, 16 Oct 2026 06:24:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792131885;
+	bh=eDnse++/sMMqljy7OgeSWKTJCj07VGRD+6nKCHuobdE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=QQPbnTEi2cx6sBkJRV0fhIULdRwjRm+h3bxF0HIhrrTyxWlWItJwtAta0QpTJUkDb
+	 9a+YD7KYa6YjSJlIWNBrlHuagtf021rdGjN2KxDqv7cGIeqiDPX1V6WH7U+YsbLoZ3
+	 0IcYt8UVRS7/kBzCxUzIYLY4GUefwaYEVDGm+WI/Co25PzkUFIhxPJhc0WKyCu235S
+	 bebY91gBUgvdteZIwDFDC0GHV3+1FDx8nPOYPy47ovgdHCN470STLj1owB5v+xIfBA
+	 3RT64oArDE8Y+jtax2MjirTCebJShE3dZkl20Ha1L1PDL8pIibiblf1YgLwa+x4m2K
+	 nuqPxCNtvqx+A==
+Message-ID: <sashiko-outbox-173855@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [RESEND PATCH v8 6/8] of: reserved_mem: add dumpable flag to
+ opt-in vmcore
+To: "Wandun Chen" <chenwandun1@gmail.com>, robh@kernel.org, baoquan.he@linux.dev, rppt@kernel.org, m.szyprowski@samsung.com
+Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, chenhuacai@kernel.org, kernel@xen0n.name, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, saravanak@kernel.org, akpm@linux-foundation.org, pasha.tatashin@soleen.com, pratyush@kernel.org, ruirui.yang@linux.dev, robin.murphy@arm.com, kexec@lists.infradead.org
+In-Reply-To: <20261016061549.4181390-7-chenwandun1@gmail.com>
+References: <20261016061549.4181390-1-chenwandun1@gmail.com>
+ <20261016061549.4181390-7-chenwandun1@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 16 Oct 2026 06:24:43 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -133,185 +65,30 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello Pasha,
+> From: Wandun Chen <chenwandun@lixiang.com>
+>=20
+> Add a 'dumpable' flag to struct reserved_mem to decide whether a
+> reserved area should be included in the kdump vmcore. Non-dumpable
+> regions are later marked MEMBLOCK_NODUMP; the filtering itself happens
+> in memblock, keeping the arch kdump code independent of the DT API.
+>=20
+> Most reserved regions are owned by devices and do not contain data
+> useful for kernel crash analysis, so dumpable default to false.
+> Reusable CMA regions are different: their pages are handed back to the
+> buddy allocator and may contain key data for crash analysis, so set
+> dumpable to true in rmem_cma_setup().
+>=20
+> Suggested-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
 
-On 10/15/2026 9:03 PM, Pasha Tatashin wrote:
-> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> index 0248227d983a7..02c38089a80c9 100644
-> --- a/kernel/sched/topology.c
-> +++ b/kernel/sched/topology.c
-> @@ -1259,32 +1259,49 @@ build_group_from_child_sched_domain(struct sched_domain *sd, int cpu)
->         return sg;
->  }
-> 
-> -static void init_overlap_sched_group(struct sched_domain *sd,
-> -                                    struct sched_group *sg)
-> +static int init_overlap_sched_group(struct sched_domain *sd,
-> +                                   struct sched_group *sg)
->  {
->         struct cpumask *mask = sched_domains_tmpmask2;
->         struct sd_data *sdd = sd->private;
-> -       struct cpumask *sg_span;
-> -       int cpu;
-> +       struct cpumask *sg_span = sched_group_span(sg);
-> +       struct sched_group_capacity *sgc;
-> +       int cpu = cpumask_first(sg_span);
-> +       struct sched_domain *first_sd = *per_cpu_ptr(sdd->sd, cpu);
-> +
-> +       sgc = *per_cpu_ptr(sdd->sgc, cpu);
-> +       if (sgc && atomic_read(&sgc->ref) > 0 &&
-> +           first_sd && first_sd->child &&
-> +           cpumask_equal(sg_span, sched_domain_span(first_sd->child))) {
-> +               atomic_inc(&sgc->ref);
-> +               sg->sgc = sgc;
-> +               return 0;
-> +       }
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-
-This insanely specific check perhaps can be something like:
-
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 06cc9f6397bd..a7d7a3b51c71 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1203,6 +1203,33 @@ int group_balance_cpu(struct sched_group *sg)
-  */
- 
- 
-+/* Find the group_balance_cpu() */
-+static int find_group_balance_cpu(struct sched_domain *sd, struct sched_group *sg)
-+{
-+	const struct cpumask *sg_span = sched_group_span(sg);
-+	struct sd_data *sdd = sd->private;
-+	struct sched_domain *sibling;
-+	int i;
-+
-+	for_each_cpu(i, sg_span) {
-+		sibling = *per_cpu_ptr(sdd->sd, i);
-+
-+		/*
-+		 * Can happen in the asymmetric case, where these siblings are
-+		 * unused. The mask will not be empty because those CPUs that
-+		 * do have the top domain _should_ span the domain.
-+		 */
-+		if (!sibling->child)
-+			continue;
-+
-+		/* If we would not end up here, we can't continue from here */
-+		if (cpumask_equal(sg_span, sched_domain_span(sibling->child)))
-+			return i;
-+	}
-+
-+	return nr_cpu_ids;
-+}
-+
- /*
-  * Build the balance mask; it contains only those CPUs that can arrive at this
-  * group and should be considered to continue balancing.
-@@ -1212,17 +1239,19 @@ int group_balance_cpu(struct sched_group *sg)
-  * can fully construct this using the sched_domain bits (which are already
-  * complete).
-  */
--static void
--build_balance_mask(struct sched_domain *sd, struct sched_group *sg, struct cpumask *mask)
-+static void build_balance_mask(int group_balance_cpu,
-+			       struct sched_domain *sd,
-+			       struct sched_group *sg,
-+			       struct cpumask *mask)
- {
- 	const struct cpumask *sg_span = sched_group_span(sg);
- 	struct sd_data *sdd = sd->private;
- 	struct sched_domain *sibling;
--	int i;
-+	int i = group_balance_cpu;
- 
- 	cpumask_clear(mask);
- 
--	for_each_cpu(i, sg_span) {
-+	for_each_cpu_from(i, sg_span) {
- 		sibling = *per_cpu_ptr(sdd->sd, i);
- 
- 		/*
-@@ -1281,7 +1310,17 @@ static int init_overlap_sched_group(struct sched_domain *sd,
- 	struct cpumask *sg_span;
- 	int cpu;
- 
--	build_balance_mask(sd, sg, mask);
-+	cpu = find_group_balance_cpu(sd, sg);
-+	if (WARN_ON_ONCE(cpu >= nr_cpu_ids))
-+		return -ENOENT;
-+
-+	sg->sgc = *per_cpu_ptr(sdd->sgc, cpu);
-+	if (sg->sgc && atomic_read(&sg->sgc->ref)) {
-+		atomic_inc(&sg->sgc->ref);
-+		return 0;
-+	}
-+
-+	build_balance_mask(cpu, sd, sg, mask);
- 	cpu = cpumask_first(mask);
- 
- 	sg->sgc = *per_cpu_ptr(sdd->sgc, cpu);
----
-
-We just find the first CPU and reuse the scg. Otherwise, build the
-balance mask.
-
-With those changes ...
-
-> 
->         build_balance_mask(sd, sg, mask);
->         cpu = cpumask_first(mask);
-> 
-> -       sg->sgc = *per_cpu_ptr(sdd->sgc, cpu);
-> -       if (atomic_inc_return(&sg->sgc->ref) == 1)
-> +       sgc = *per_cpu_ptr(sdd->sgc, cpu);
-> +       if (!sgc) {
-> +               sgc = kzalloc_node(sizeof(*sgc) + cpumask_size(),
-> +                                  GFP_KERNEL, cpu_to_node(cpu));
-> +               if (!sgc)
-> +                       return -ENOMEM;
-> +               sgc->id = cpu;
-> +               *per_cpu_ptr(sdd->sgc, cpu) = sgc;
-> +       }
-> +
-> +       sg->sgc = sgc;
-> +       if (atomic_inc_return(&sg->sgc->ref) == 1) {
-
-... we can be sure this is a new sgc and just do an
-atomic_set(&sg->sgc->ref, 1) here and initialize the rest of the
-fields.
-
-Thoughts?
-
->                 cpumask_copy(group_balance_mask(sg), mask);
-> -       else
-> +               sg->sgc->capacity = SCHED_CAPACITY_SCALE * cpumask_weight(sg_span);
-> +               sg->sgc->min_capacity = SCHED_CAPACITY_SCALE;
-> +               sg->sgc->max_capacity = SCHED_CAPACITY_SCALE;
-> +       } else {
->                 WARN_ON_ONCE(!cpumask_equal(group_balance_mask(sg), mask));
-
-Do note this check will be lost with the optimization for the
-fast-path case but that should be okay(?)
-
-> +       }
-> 
-> -       /*
-> -        * Initialize sgc->capacity such that even if we mess up the
-> -        * domains and no possible iteration will get us here, we won't
-> -        * die on a /0 trap.
-> -        */
-> -       sg_span = sched_group_span(sg);
-> -       sg->sgc->capacity = SCHED_CAPACITY_SCALE * cpumask_weight(sg_span);
-> -       sg->sgc->min_capacity = SCHED_CAPACITY_SCALE;
-> -       sg->sgc->max_capacity = SCHED_CAPACITY_SCALE;
-> +       return 0;
->  }
--- 
-Thanks and Regards,
-Prateek
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261016061549.4181=
+390-1-chenwandun1@gmail.com?part=3D6
 
 
