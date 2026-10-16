@@ -4,56 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 994BECC6B38
-	for <kexec@archiver.kernel.org>; Fri, 16 Oct 2026 06:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A0B56CCA462
+	for <kexec@archiver.kernel.org>; Fri, 16 Oct 2026 06:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
 	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=rqRuRjY6SfVPZz6kADAnUqQu2zSeg0i7Rhj36sY7u2Q=; b=sT4GGAVbzV331H/J42SNvwhOPK
-	vFLAxv5+h3pzHfx0aVVAZ09hon3/Tcg1n6Mn+cUs48HO+lCs6uQTr88//iiTmTthowo1F8fJYb4O0
-	QqGmH0oNhbZLQ5U1pY8yn2q3YwmNWjwRUV+4BM7WyO5/0cSsEEIdNPIZWnkk4MrHtZ4XemMSAy21m
-	UVV8sDdhimqj+y3XiYshU/o0K/Sysc3ANoJfnD5980zBUqcTNXMYIgniZRt97RqY+BwPK6GesZcuU
-	hQ4P6K5b9n8Zz3o5zaIfVZIRSg20UZiwijr5duJjiBbyMSs8GWvraEUw1cYbjlZuBAV0oTpIwIemQ
-	Q++zaIHw==;
+	bh=KWG/GLzE2S3ocz1WloUZ5Vv/t61RLBOkn4+vdFrOnXE=; b=ukoRJuzAhIE4+49pabLfw11RAb
+	rDISykTJJTSiM0NEVlbAK0itKrKEVP3l+oAQJwN4sEU+KwRhw27yK7pQgDIeIKbQTaii1Djx6Mijg
+	SsLCz+07Qx9xieRIzz0o4JTrThv/aDwqhXYe08P2wl4Mdr4BZb/wm/6dGPBoEFCcKj+morlHZxP1/
+	R8Xy1G3Kpirx8ZkcwD7InmMTzZkER7U16RQMqgIcZTPXrBKd/8C4oGFmwrxwYwioYFmJjzQuJf2Nz
+	NN0sTvb/Az9CBLdkO6c8KcyHnaPbkn26eKjNnvJIEQ5GMKaxD+HtKZVt6H1C1DSmj5/Vn2EAZ2eAn
+	Q+DrJw4Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHbOA-000000027TH-2sOD;
-	Fri, 16 Oct 2026 06:25:58 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xHbOI-000000027W1-3BoR;
+	Fri, 16 Oct 2026 06:26:06 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHbO9-000000027Sz-1XmZ
+	id 1xHbOH-000000027Ve-1YCc
 	for kexec@lists.infradead.org;
-	Fri, 16 Oct 2026 06:25:57 +0000
+	Fri, 16 Oct 2026 06:26:05 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id CCF62600D4;
-	Fri, 16 Oct 2026 06:25:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98B501F000C4;
-	Fri, 16 Oct 2026 06:25:55 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 6A88F60018;
+	Fri, 16 Oct 2026 06:26:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C29981F000C4;
+	Fri, 16 Oct 2026 06:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792131956;
-	bh=rqRuRjY6SfVPZz6kADAnUqQu2zSeg0i7Rhj36sY7u2Q=;
+	s=k20260515; t=1792131964;
+	bh=KWG/GLzE2S3ocz1WloUZ5Vv/t61RLBOkn4+vdFrOnXE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Jv6oypGhezhuuA4JOWxH4iz0QU6/AV09ZEVn+PYOoNPVWoX7uCF2y4TrxG2kz1jpy
-	 hI2UofEGM/9BdK81x3nqPckJUEpYCiW3fQtutpuNML90aHIMQz3JH8Ku9Ymnsp9vbX
-	 QkQyeX/5DcnS9KdgUKwLIAd85lcaiIpH8yWX31FQPaYRGq8BlP58rJBndqmMGgF8hi
-	 jsxmk7yH2eGkRS1k5jpsSLZ9fUXONViKFr/0segGucqsazqzDtuY49QHSSejGAmyxJ
-	 RkRVtLvAfO9aTdwSWNb17LwiojvSgdsJ3IeJ7Ikl82w4NHAciq0EQx+CDaI1CWm3os
-	 BmKXY68OGjT/w==
-Message-ID: <sashiko-outbox-173857@kernel.org>
+	b=WXKhnGW52ECgiIM0IFflVYy58bv0xGveDVryrW3bdu6k4U+MG2gYR1uZfhcyx7Nww
+	 3Lsl5NdKlVofhf4bMNTnrycYu549Uw80MDlnc8GHeSsFRRSXoIUxYLvqvAxZcp52xp
+	 wKnuQC8vOjZKHbOCSzFY2IDhpuynrxIeCPRvDwTYBRj2dsUnbiuvoliCMY9BEaqiYQ
+	 V3bw6uAgPv3J2ZBVkRhwDgmtQmfiSl0Bu/HzVq/FxFFYB7Zj1soJBmUrW+KDpfuVRw
+	 aPLAQzgcPCBIuHJLKBkrdUhjPPnyhB4gZvZLa94zcdElgb+BjsVm2DwUypBw+Z9IUw
+	 y9Cqjke3rLXsQ==
+Message-ID: <sashiko-outbox-173858@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [RESEND PATCH v8 8/8] crash_core: skip MEMBLOCK_NODUMP regions
- when building vmcore ELF header
+Subject: Re: [RESEND PATCH v8 5/8] memblock: introduce MEMBLOCK_NODUMP flag
 To: "Wandun Chen" <chenwandun1@gmail.com>, robh@kernel.org, baoquan.he@linux.dev, rppt@kernel.org, m.szyprowski@samsung.com
 Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, chenhuacai@kernel.org, kernel@xen0n.name, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, saravanak@kernel.org, akpm@linux-foundation.org, pasha.tatashin@soleen.com, pratyush@kernel.org, ruirui.yang@linux.dev, robin.murphy@arm.com, kexec@lists.infradead.org
-In-Reply-To: <20261016061549.4181390-9-chenwandun1@gmail.com>
+In-Reply-To: <20261016061549.4181390-6-chenwandun1@gmail.com>
 References: <20261016061549.4181390-1-chenwandun1@gmail.com>
- <20261016061549.4181390-9-chenwandun1@gmail.com>
+ <20261016061549.4181390-6-chenwandun1@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Oct 2026 06:25:55 +0000
+Date: Fri, 16 Oct 2026 06:26:02 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -71,17 +70,21 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 > From: Wandun Chen <chenwandun@lixiang.com>
 >=20
-> Reserve regions (for GPU, DSP, ...) carry no data useful for crash
-> analysis. Exclude MEMBLOCK_NODUMP regions from the vmcore ELF header to
-> reduce vmcore size and capture time. crash_should_skip_region() now also
-> returns true for MEMBLOCK_NODUMP.
+> Add MEMBLOCK_NODUMP to mark regions that should be excluded from
+> kdump vmcores.
 >=20
+> The flag is meant for reserved memory that carries no data useful for
+> crash analysis. Reusable reserved regions such as CMA may hold useful
+> data, so these regions must not be marked MEMBLOCK_NODUMP. Subsequent
+> patches wire this up for /reserved-memory entries.
+>=20
+> Suggested-by: Rob Herring <robh@kernel.org>
 > Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261016061549.4181=
-390-1-chenwandun1@gmail.com?part=3D8
+390-1-chenwandun1@gmail.com?part=3D5
 
 
