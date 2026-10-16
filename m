@@ -4,56 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B137DCCA462
-	for <kexec@archiver.kernel.org>; Fri, 16 Oct 2026 06:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C4970CCA462
+	for <kexec@archiver.kernel.org>; Fri, 16 Oct 2026 12:16:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
-	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6w/wAauJG26+DKypdnvFxMcj6PYbuiz11JJWb4JPW+k=; b=YY1mpYg7vDE1LqPGMmnx6ncPgj
-	ItUJchI8UXsS6v/VjvAf0dh7YDFffijkboo3DAlOmdvLi0YFKYXV3kNN7Emz/bfNdXjlxFVsk5llm
-	bqy6qxzOHP9ICG9GTrxWu8WQQMwjjDK0DxxN+yioUwwwJG14hWKXhJmq+qeKZzswwMya97V3BdU5o
-	x7Ltnqn0J/dAYF8ixHL3FR2as1pg5Il5jbN/2/+rHhlqtQC3hFjKkO1EDTNndy9f0srpBOxR33yu5
-	13Hjo+HhdP6ubBYQRMx7ACjyomjj2PQJSqOlojUcA5NmkOfg9TKEACGUb3VoqRUOkxWdqiH7pp3dZ
-	4zOL5vGw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=ojjYtQh43bC+vi04ki8U6V/KKjiHj8BalpRCWljStRA=; b=a2VOXrwtAFU0fuZI5Fb6DfIy4I
+	WmmbXE703dVyAPeXEaqxCdCAdHvC84SpPcazmtFgN+U6SNKr4xLKIhIJ+pSQEueQHrL7B9tdyJlZ6
+	uPjRI7gjc95tPuZZ6RDwB/24DlHizYbm6pkfnDtckXiRZSzdhgY4hGPhTlNse7COyZf47CCf5fFdq
+	LclmV4j85YP97vUGS/iZ8H8asPeFrJ6m5X//gIGmAsN1gyXfjGrjQNYzlzkFSM7ync96B4v6UFf8E
+	AQcWa9yaVQT3CDmHDGx8uMbetlI46j2hDODyoEK7cxkalmvZF3KgBezpOD6zNRui9E1XN7qLNfuv/
+	PxYFKs2A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHbVr-00000002880-3AyC;
-	Fri, 16 Oct 2026 06:33:55 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xHgrE-00000002pno-02Kj;
+	Fri, 16 Oct 2026 12:16:20 +0000
+Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xHbVr-0000000287s-13Wz
-	for kexec@lists.infradead.org;
-	Fri, 16 Oct 2026 06:33:55 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 7823560018;
-	Fri, 16 Oct 2026 06:33:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE5E51F000C4;
-	Fri, 16 Oct 2026 06:33:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792132434;
-	bh=6w/wAauJG26+DKypdnvFxMcj6PYbuiz11JJWb4JPW+k=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fY04TTf6A9HkiPzILEPg2dbgtA1AHZ/2ytUsnN6Ju9+ZC/zv5TASh2nBSTjKQQqBz
-	 oFjUyjDMNDfQEDbOJ9/pOZeGpDvm6eHq09PM7GmpKy7qF8zpTEgF6J4mxuDwFgcNVn
-	 UlHYWcHs+NRqYUngDL0LXOIe2pmTCb3ATid8VMoB9tEaNkmqvZ9fNulWSTcpIps+UP
-	 LKaSqyqZLX8LSEPAbF2vSuGAxuQGabFYjGMp8Jl9/XGcI7l3vQj9W06dhjXHc4OoNd
-	 Hq1QvN/48it3dDJPZGXHKmbYCUVxD4VB6/W5jf2kVX26jOGscrP0O4QodfYwv1sf60
-	 GUV66NDjaCshw==
-Message-ID: <sashiko-outbox-173869@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [RESEND PATCH v8 3/8] crash_core: serialize crash header
- preparation against hotplug
-To: "Wandun Chen" <chenwandun1@gmail.com>, robh@kernel.org, baoquan.he@linux.dev, rppt@kernel.org, m.szyprowski@samsung.com
-Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, chenhuacai@kernel.org, kernel@xen0n.name, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, saravanak@kernel.org, akpm@linux-foundation.org, pasha.tatashin@soleen.com, pratyush@kernel.org, ruirui.yang@linux.dev, robin.murphy@arm.com, kexec@lists.infradead.org
-In-Reply-To: <20261016061549.4181390-4-chenwandun1@gmail.com>
-References: <20261016061549.4181390-1-chenwandun1@gmail.com>
- <20261016061549.4181390-4-chenwandun1@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Oct 2026 06:33:52 +0000
+	id 1xHgrB-00000002pnM-1eOi;
+	Fri, 16 Oct 2026 12:16:18 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:In-Reply-To:References:
+	Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description;
+	bh=ojjYtQh43bC+vi04ki8U6V/KKjiHj8BalpRCWljStRA=; b=TqLQ666WDqV6RUZk6NR3JQVIMB
+	UdPqLqaQASkk+l9mOiFruRm1XgkrHgdxqKrLAJYNh8BfzfsWlEThrehslrsoupb3EXFUGwWFrWAd5
+	2J9KSzBpiZs1o+WxwPv2CHf/b9FFskwTGiuWR0P+4PSDLwdZi+bxukuG3EYekD6bhMwQeNtfp8iGz
+	2o+IIOIAQOM2LZolMMjzEQ661AW4yf/jPtmKAqddXaLIRIh02Xst4Du7pTrNyLfYvWb9M8mPY2RY9
+	02o9+f+bEfG1LYwKIeHcd9nkqKoCIcdGFXgFiaPqkAYJtM+MPUjxhfqqmmAuXrfn8JQcCukHrCg+F
+	HZK98GSA==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1xHgqy-005xSg-2j;
+	Fri, 16 Oct 2026 12:16:05 +0000
+From: Breno Leitao <leitao@debian.org>
+Date: Fri, 16 Oct 2026 05:15:41 -0700
+Subject: [PATCH v6 1/7] mm/memory-failure: efi: add the
+ LINUX_EFI_POISONED_MEMORY configuration table
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261016-hwpoison-kho-v6-1-f304255147da@debian.org>
+References: <20261016-hwpoison-kho-v6-0-f304255147da@debian.org>
+In-Reply-To: <20261016-hwpoison-kho-v6-0-f304255147da@debian.org>
+To: Ard Biesheuvel <ardb@kernel.org>, 
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+ Michal Hocko <mhocko@suse.com>, Miaohe Lin <linmiaohe@huawei.com>, 
+ Naoya Horiguchi <nao.horiguchi@gmail.com>, 
+ Oscar Salvador <osalvador@suse.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, kas@kernel.org, 
+ kexec@lists.infradead.org, Brendan Jackman <brendan.jackman@linux.dev>, 
+ Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
+ shakeel.butt@linux.dev
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-mm@kvack.org, linux-cxl@vger.kernel.org, driver-core@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, rmikey@meta.com, riel@surriel.com, 
+ Breno Leitao <leitao@debian.org>, harry@kernel.org, kernel-team@meta.com
+X-Mailer: b4 0.16-dev-f8e9d
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6024; i=leitao@debian.org;
+ h=from:subject:message-id; bh=TZAZEdFgh6ZrIGE/ZagpHGTrCcQOqwFNn+LakPr479E=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBq0hV0jUKXc63ziNZ+4w5tiGa2kxptbOf6tsMC/
+ PqxCb4wd5uJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCatIVdAAKCRA1o5Of/Hh3
+ bUk8D/sE89175sxKV2NWtklw5VOucGRb/VKl+hHa52CSou+cw8zYPs7yE8HYkKD5mjHiBPV+LO7
+ QVfyTJNPpUW56oD6cPPOY6uzXsnERX+Jm+sF1S7JnCqPgrwQPTh1pEUFAn0vXwZ7FuN5UmVQSvE
+ oUpa9QPFwcFgTktFfvcj+Pz0UaAiTynKIaemLFCkcebZcv+EM5+7Q6I2/iV/mTnpaK1WWFUR2GR
+ +e+HRlwsSuWlIAp+ysmgRIZSYtH64a2pxEioBfaW0+ESjsc55WC/vb944OFJGVmODP3LJh10u4C
+ R5YqREIO4SYuB02HBmxINO3edi9gTCeXinhmAzEHwrTaMilkn9+lUTZVOWr4rlQBJY9X2ehGzyr
+ Cd+jM2ZYkfYT9ThXRK/g0C/iZhaUJ8y7NI6W0Wg3JfVn1vll1xly9e7MUwB+UiOMNjT9y6ScCBN
+ UrdYQQ5ORXV07MfLx9l7rIehodFWrTB1gE28SKL82+WrbjsrLwLAmglTKj6lnmbdHRd/lktnCxc
+ YeZ8YdPCRnU0nGipcoC2VlbW8LiXnCir8IOjCHb3ETponoqXu+teQA7fkgYhUz+BCEfTdK5gT63
+ 8DK58p+CIWKIR1qIX8fTfpFsZzaRGhj02OKUkMBz2JR9SlzS9nV97vl1wxcI/AoiLk3KBgEIli9
+ TWAANAHmG6N2F7Q==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261016_051617_598207_735763ED 
+X-CRM114-Status: GOOD (  21.59  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -65,37 +107,152 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> From: Wandun Chen <chenwandun@lixiang.com>
->=20
-> crash_prepare_headers() counts memory ranges before populating the
-> allocated crash_mem array. The weak implementation used by ARM64,
-> RISC-V and LoongArch walks memblock.memory, while x86 performs the same
-> two-pass operation over system RAM resources. Concurrent memory hotplug
-> can change range source between the two walks and make the populate
-> pass overflow cmem->ranges.
->=20
-> Take device_hotplug_lock when preparing crash headers during
-> kexec_file_load(). The x86/riscv memory hotplug path already takes
-> device_hotplug_lock, so call __crash_prepare_headers() directly
-> to avoid recursive locking.
->=20
-> Sashiko reported this issue in [1].
->=20
-> Fixes: 3751e728cef2 ("arm64: kexec_file: add crash dump support")
-> Fixes: 1bcca8620a91 ("LoongArch: Add crash dump support for kexec_file")
-> Fixes: 8acea455fafa ("RISC-V: Support for kexec_file on panic")
-> Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system =
-call")
-> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
+Hardware-poisoned page frames are tracked only in the running kernel's
+data structures, so a kexec loses them and the next kernel doesn't have
+this information, thus, tripping into them again.
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+Add an EFI configuration table to carry that information across kexec.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261016061549.4181=
-390-1-chenwandun1@gmail.com?part=3D3
+It is a bitmap with one bit per EFI_POISON_UNIT_SIZE (2MiB) of physical
+memory starting at phys_base, modeled on the LINUX_EFI_UNACCEPTED_MEMORY
+table, and it rides the EFI system table to every kernel in the chain.
+Basing the bitmap keeps a machine whose RAM starts high from paying for
+the hole below it.
+
+List the table in the x86 efi_tables[] too, so an SME host maps it
+unencrypted like every other EFI table.
+
+The Kconfig symbol has no prompt. There is nothing for a user to decide,
+so it is on wherever it can be, and it only costs 64K per TiB of RAM on
+a kernel that already has the EFI stub and MEMORY_FAILURE. It is
+restricted to 64BIT because the unit arithmetic divides by a runtime
+unit_size, which needs div_u64() on 32-bit. That combination is
+reachable, X86_32 with FLATMEM selects ARCH_SUPPORTS_MEMORY_FAILURE and
+has an EFI stub, so the dependency is what keeps the division out rather
+than a config nobody can build.
+
+The bitmap is an unsigned long array reached with the native bitops, like
+the unaccepted memory table it copies. That is endian dependent, but
+EFI_STUB && 64BIT is little-endian everywhere: arm64 turns EFI off under
+CPU_BIG_ENDIAN, and no other architecture with the stub is big-endian.
+
+Suggested-by: Kiryl Shutsemau <kas@kernel.org>
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ arch/x86/platform/efi/efi.c  |  3 +++
+ drivers/firmware/efi/Kconfig |  8 ++++++++
+ drivers/firmware/efi/efi.c   |  6 ++++++
+ include/linux/efi.h          | 14 ++++++++++++++
+ 4 files changed, 31 insertions(+)
+
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index 0c39adb96b912b..2b37b96a36e099 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -93,6 +93,9 @@ static const unsigned long * const efi_tables[] = {
+ #ifdef CONFIG_UNACCEPTED_MEMORY
+ 	&efi.unaccepted,
+ #endif
++#ifdef CONFIG_EFI_POISONED_MEMORY
++	&efi.poisoned_memory,
++#endif
+ };
+ 
+ u64 efi_setup;		/* efi setup_data physical address */
+diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
+index 29e0729299f5bd..aafcd41bc00630 100644
+--- a/drivers/firmware/efi/Kconfig
++++ b/drivers/firmware/efi/Kconfig
+@@ -263,6 +263,14 @@ config EFI_COCO_SECRET
+ 	  virt/coco/efi_secret module to access the secrets, which in turn
+ 	  allows userspace programs to access the injected secrets.
+ 
++config EFI_POISONED_MEMORY
++	def_bool y
++	depends on EFI_STUB && MEMORY_FAILURE && 64BIT
++	help
++	  Record page frames that are hardware-poisoned while this kernel runs
++	  into an EFI configuration table, and honor that table early on the
++	  next kernel so a kexec does not hand known-bad RAM back out.
++
+ config OVMF_DEBUG_LOG
+ 	bool "Expose OVMF firmware debug log via sysfs"
+ 	depends on EFI
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index 6d987d7f97781f..af1fa443839c4d 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -55,6 +55,9 @@ struct efi __read_mostly efi = {
+ #ifdef CONFIG_UNACCEPTED_MEMORY
+ 	.unaccepted		= EFI_INVALID_TABLE_ADDR,
+ #endif
++#ifdef CONFIG_EFI_POISONED_MEMORY
++	.poisoned_memory	= EFI_INVALID_TABLE_ADDR,
++#endif
+ };
+ EXPORT_SYMBOL(efi);
+ 
+@@ -677,6 +680,9 @@ static const efi_config_table_type_t common_tables[] __initconst = {
+ #ifdef CONFIG_UNACCEPTED_MEMORY
+ 	{LINUX_EFI_UNACCEPTED_MEM_TABLE_GUID,	&efi.unaccepted,	"Unaccepted"	},
+ #endif
++#ifdef CONFIG_EFI_POISONED_MEMORY
++	{LINUX_EFI_POISONED_MEMORY_TABLE_GUID,	&efi.poisoned_memory,	"POISON"	},
++#endif
+ #ifdef CONFIG_EFI_GENERIC_STUB
+ 	{LINUX_EFI_PRIMARY_DISPLAY_TABLE_GUID,	&primary_display_table			},
+ #endif
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index c35446a0b66fac..efaf63f9a54edd 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -23,6 +23,7 @@
+ #include <linux/pstore.h>
+ #include <linux/range.h>
+ #include <linux/reboot.h>
++#include <linux/sizes.h>
+ #include <linux/uuid.h>
+ 
+ #include <asm/page.h>
+@@ -422,6 +423,7 @@ void efi_native_runtime_setup(void);
+ #define LINUX_EFI_COCO_SECRET_AREA_GUID		EFI_GUID(0xadf956ad, 0xe98c, 0x484c,  0xae, 0x11, 0xb5, 0x1c, 0x7d, 0x33, 0x64, 0x47)
+ #define LINUX_EFI_BOOT_MEMMAP_GUID		EFI_GUID(0x800f683f, 0xd08b, 0x423a,  0xa2, 0x93, 0x96, 0x5c, 0x3c, 0x6f, 0xe2, 0xb4)
+ #define LINUX_EFI_UNACCEPTED_MEM_TABLE_GUID	EFI_GUID(0xd5d1de3c, 0x105c, 0x44f9,  0x9e, 0xa9, 0xbc, 0xef, 0x98, 0x12, 0x00, 0x31)
++#define LINUX_EFI_POISONED_MEMORY_TABLE_GUID	EFI_GUID(0xaf828a15, 0x0ef4, 0x439a,  0xb8, 0x6a, 0xd6, 0xd6, 0x9e, 0xaf, 0xba, 0xfa)
+ 
+ #define RISCV_EFI_BOOT_PROTOCOL_GUID		EFI_GUID(0xccd15fec, 0x6f73, 0x4eec,  0x83, 0x95, 0x3e, 0x69, 0xe4, 0xb9, 0x40, 0xbf)
+ 
+@@ -650,6 +652,7 @@ extern struct efi {
+ 	unsigned long			mokvar_table;		/* MOK variable config table */
+ 	unsigned long			coco_secret;		/* Confidential computing secret table */
+ 	unsigned long			unaccepted;		/* Unaccepted memory table */
++	unsigned long			poisoned_memory;	/* Hardware-poisoned memory table */
+ 
+ 	efi_get_time_t			*get_time;
+ 	efi_set_time_t			*set_time;
+@@ -1272,6 +1275,17 @@ struct linux_efi_memreserve {
+ #define EFI_MEMRESERVE_COUNT(size) (((size) - sizeof(struct linux_efi_memreserve)) \
+ 	/ sizeof_field(struct linux_efi_memreserve, entry[0]))
+ 
++/* Bit N covers the unit at @phys_base + N * @unit_size. */
++struct linux_efi_poisoned_memory {
++	u32		version;
++	u32		unit_size;	/* bytes of phys space per bitmap bit */
++	u64		phys_base;	/* address the first bit covers */
++	u64		size;		/* bitmap size in bytes */
++	unsigned long	bitmap[];
++};
++
++#define EFI_POISON_UNIT_SIZE	SZ_2M
++
+ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size);
+ 
+ /*
+
+-- 
+2.53.0-Meta
 
 
