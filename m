@@ -4,62 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 89E3BCCF2C9
-	for <kexec@archiver.kernel.org>; Sun, 18 Oct 2026 04:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C1838CCF2C4
+	for <kexec@archiver.kernel.org>; Sun, 18 Oct 2026 13:58:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=DYBq7xeKvEEfhwWtcg1/NmSK9WIDoGWbifeYKQ6iaPU=; b=2+jJXpOejIbUBLrhId6dtJR4Jd
-	y53j3336l7KSe50qvoLNUBYEe0MV8gbESb2zoIbfKhKDHFU7g9/QS9DShbAoaU5GkQwKT9PwK5/0A
-	s+qEUccYx7ZeuWnqaBLpmXGrjqlvrKHTDOwZhg3o6dcmHBBMgTDiDzBhdf5wMocM6K74ZYF34JsJP
-	F7YAywLalT5PM1vigV+5ovtoLDCPFGjjmN6chpl1EuL6rvEfAZbRll0pk7+k/sebJaksK4A9XBI8K
-	e9YYIpX9rhsuiCRfXzQUapTFNF1MZBgIQDSr6DNMAeDbNP5S7oDiivVcLjlO1xaakrLFqDrvuhzK1
-	T0EmnK3Q==;
+	bh=ayMWfGshO3UNwVYFCcSN2BNh422miW8cad5xrtcnUvg=; b=CEIoPSDgIVO39TAoY96P6Sfuob
+	RXY0UfHP8jNVPpFCwvN4tMEnJLROG/HZzkpa1bamF/2E1EnkZ/rR+ChTpHy7v4/buKHXfjtJqY7mt
+	gxG8LaF0d0jdbJN5jm73msMJSShyiqzHoJAne599sxQHpkxXA7oykTUc8qi/HgZ0cWQEKH/kgFb10
+	51HMuB2oGUCpKrJW3uCo2r2FSzsb1tCmoU2ChDKcyNEnoI7cyiweYTpl2GGvr9PQ2ZXQpMuC3uy/s
+	DuO0W3KOP0hbSfPqZtD4i5XN+9BWdQ6mJrAECmKxAHHimGkeMdz30AzbqHlyd7bzv7foLX3Uj9Npk
+	wg1mxPzQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xIIYb-00000005Wjk-3U82;
-	Sun, 18 Oct 2026 04:31:37 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xIRPC-00000005uod-3bAV;
+	Sun, 18 Oct 2026 13:58:30 +0000
+Received: from mail-vs1-xe2e.google.com ([2607:f8b0:4864:20::e2e])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xIIYX-00000005WjQ-0Z6z
+	id 1xIRPA-00000005uno-0l6A
 	for kexec@lists.infradead.org;
-	Sun, 18 Oct 2026 04:31:33 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 9610A423BF;
-	Sun, 18 Oct 2026 04:31:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 750251F000C6;
-	Sun, 18 Oct 2026 04:31:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792297892;
-	bh=DYBq7xeKvEEfhwWtcg1/NmSK9WIDoGWbifeYKQ6iaPU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=mb9BXWxt88MpB9qYnzbH95e1QrRQzxEiEgi7/2F/8hxj4Nvv6oj2/BHBk3Qm4gqWL
-	 GWeQP4oq2b0cRa2vq/YWt+VON52QmcgZEKdFhblV4sG21cPhx+3wEiJL7g1rSNBGWZ
-	 DOZEbwSUVAdSZaOr+LHmaj0c+P27fOkNdwnZBKUVKBPukBo5ykBFnYtk4P3++breFR
-	 YZGcdhdHz4Cl+8ot9hRaARiYvlfxC5HqpAX3YTCviIkNyGZ8iborIKNboR1PAQKiyL
-	 zuVTGaL39gigLDweKWhWXmrbSyUlNv6nhWP+3qMkdZIIEuciRIZYaqsahz6mAOn8+W
-	 LWEfQ2qVRcwDw==
-Date: Sun, 18 Oct 2026 07:31:25 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Federico Parola <fparola@amazon.de>
-Cc: stable@vger.kernel.org, Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	kexec@lists.infradead.org, linux-mm@kvack.org,
-	nh-open-source@amazon.com
-Subject: Re: [PATCH 6.18.y 2/2] kho: free phys_bits bitmaps using free_page()
- in __kho_abort()
-Message-ID: <atRLncxeTcA2dRD6@kernel.org>
-References: <20261015144529.76911-1-fparola@amazon.de>
- <20261015144529.76911-3-fparola@amazon.de>
+	Sun, 18 Oct 2026 13:58:29 +0000
+Received: by mail-vs1-xe2e.google.com with SMTP id ada2fe7eead31-7cc0892f92cso301111137.3
+        for <kexec@lists.infradead.org>; Sun, 18 Oct 2026 06:58:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1792331906; x=1792936706; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ayMWfGshO3UNwVYFCcSN2BNh422miW8cad5xrtcnUvg=;
+        b=c6rv7684ICo9IwdgamfwPWWjEIoKo0YgyZA3ZwxoW8KJ4zLN63q/r7IYL69GQgZIrV
+         kqCpm6GVJRTSqA567feqDacziTvBr1bFjfIpUjKbt+YebrU4PHgD2RkAl4zgqvBZJS7m
+         afupJFBRs/5/XkRWYiYmT/bqYhXSMYDHv45esNE+tt471Yx8JZK2KeyhxGy4g3QrSWHG
+         fjCwEj2MLlRfniTXzUloWvSaaPOCLovMsNVR8wSuZoDP2/dSokZZ12ijNhuadbGKd2Sd
+         IjYfzq7Fu4XdoVEhec5JlFZU8G2h7WhtcZCwm/yqTkaSysuucGg3L3M880BYZRsj6B5U
+         EFmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792331906; x=1792936706;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ayMWfGshO3UNwVYFCcSN2BNh422miW8cad5xrtcnUvg=;
+        b=boicPAbI98p5Kt4NCVZiY7jQaD634MIMvfTqzatYJVi5WdOHnL863wppimOHNrty/G
+         zu4ECEm3TS4WhjGNhX6ktGtoFyHW/JC4SeA2U36yC2txvhy4DpTl9VmygyPWJZPbVDIa
+         K6wis0Bp5Yd6FZGU+ChbESpDiUE4VhBLmYTCfpurvppO+VSCPJt/oNu9G+ry76pQk7C/
+         69LiIsIfaVbz2fBX13IH+QQ5lTXiMPboK9Wkigotp97AYB85WCuWn5H7W1sdkMBuyWkv
+         k10jccfJiSekJJOE5aBQCsZdotWOn1IGjneQ/uhBQo2k3vec1f/iTumhsYG0Dwiyqvm8
+         EkBg==
+X-Forwarded-Encrypted: i=1; AKwUvBx8VXATwM+0dkXyw6yn7QR7ISSGbKPRFPCrJGrJIOQ//12comISD1Vk790YGbSPi4DTx9jWGA==@lists.infradead.org
+X-Gm-Message-State: AFq9FYJ+8FO3wQaI/hFOj5UnBudorwD+tJyew4/v02IFG/u+E/F/P9BA
+	IskLaTRUEEnxKk5W285rFjPncwByTZhTPb5hCgOzlot67vpEoOAcWTF2B77N/g/GEJI=
+X-Gm-Gg: AYBFou0v8RteSVQVj82tjD8WLzhkAofHZ8n49l60QPzrGsnyRhvShJA24TeJ0GKbX5s
+	oNtMaMZE3FJfHR7wIX48X6JSqt1Ss/kBX3Zy8KWlR0w4j2ozGsnZm926qXMjoVtvsLrFjOQ8KLH
+	NFjnBuwfiAfWBqFnEHsWy1nm1kAN81122c+bq/Qxh5rdLTetZsJTLH2I2P9rBakW0QSuhKTxRq+
+	P8W7i03ZDHC+QJtFchKfY1FGI+6u4spyVUKx+n059wHDl66Y4fP93pmsObN9ijHeaejXTanAUU3
+	CBBxpCY+aB+867LTiBUgMXb8xID2FM125M9Yg78Vn9FLr+E3w9OP2sMhy/v4MSwiRVyvpNPZGo7
+	bfBI1LPXIdUk+JOCnRYFuEC2RHB6XoxswvzwgFqFaQvOnD7RtxnDM1XgBGeoMFNDBdL5PyVFxqu
+	x5CrsWnrdvPLVP+Zewe+d34jPvHRuvO8IV95xPO7+vSgIixdgvrQlPQ+HIwZj80ZVT+0YMBRppI
+	JzkXy0AJlhxn0lv4iK85t0F1bDbKFx7JAUQRfCF1JRCpuR5fZVQufstTAGBPCq6ysixbn8t518=
+X-Received: by 2002:a05:6102:5809:b0:7a7:19aa:f0d4 with SMTP id ada2fe7eead31-7cc36af7150mr1191922137.33.1792331906038;
+        Sun, 18 Oct 2026 06:58:26 -0700 (PDT)
+Received: from google.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-9908366328dsm6405154241.12.2026.10.18.06.58.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Oct 2026 06:58:25 -0700 (PDT)
+Date: Sun, 18 Oct 2026 09:58:24 -0400
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: "Luck, Tony" <tony.luck@intel.com>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, kees@kernel.org,
+	rppt@kernel.org, juri.lelli@redhat.com, nik.borisov@suse.com,
+	tglx@kernel.org, vschneid@redhat.com, kprateek.nayak@amd.com,
+	vincent.guittot@linaro.org, bp@alien8.de, thorsten.blum@linux.dev,
+	cgroups@vger.kernel.org, david@kernel.org, mingo@redhat.com,
+	akpm@linux-foundation.org, linux-mm@kvack.org, seanjc@google.com,
+	ljs@kernel.org, zhangguopeng@kylinos.cn, dietmar.eggemann@arm.com,
+	mhocko@suse.com, vinicius.gomes@intel.com, tj@kernel.org,
+	vbabka@kernel.org, linux-kernel@vger.kernel.org,
+	peterz@infradead.org, surenb@google.com, hpa@zytor.com,
+	x86@kernel.org, dmatlack@google.com, tim.c.chen@linux.intel.com,
+	kexec@lists.infradead.org, pratyush@kernel.org,
+	dave.hansen@linux.intel.com, rostedt@goodmis.org,
+	gmonaco@redhat.com, jgross@suse.com, mgorman@suse.de,
+	graf@amazon.com, linux-edac@vger.kernel.org, liam@infradead.org,
+	ridong.chen@linux.dev, longman@redhat.com, bsegall@google.com
+Subject: Re: [PATCH v1 0/8] x86, sched, mm: Speed up CPU hotplug on large
+ systems
+Message-ID: <atTQgM72TWSFZ0AX@google.com>
+References: <20261015153331.1872641-1-pasha.tatashin@soleen.com>
+ <atFGxagFo50iG6IS@agluck-desk3>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261015144529.76911-3-fparola@amazon.de>
+In-Reply-To: <atFGxagFo50iG6IS@agluck-desk3>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261018_065828_249365_37E22301 
+X-CRM114-Status: GOOD (  17.46  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,54 +116,46 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Oct 15, 2026 at 02:45:29PM +0000, Federico Parola wrote:
-> Commit fa759cd75bce ("kho: allocate metadata directly from the buddy
-> allocator") switched the allocation of preserved memory bitmaps to
-> get_zeroed_page(), but __kho_abort() still releases them with kfree().
-> kfree() on a buddy page that is not a large kmalloc allocation hits the
-> WARN_ON_ONCE() in free_large_kmalloc() and returns without freeing it,
-> so every aborted finalization leaks all bitmap pages.
+On 10-15 14:33, Luck, Tony wrote:
+> On Thu, Oct 15, 2026 at 11:33:23AM -0400, Pasha Tatashin wrote:
+> >    - Patch 3 bounds cmci_rediscover() on CPU teardown. Currently,
+> >      cmci_rediscover() broadcasts an IPI via on_each_cpu() to all online
+> >      CPUs, serializing them on cmci_discover_lock while reading up to 32
+> >      MCA MSRs. Because any disabled MCA bank is shared at most with an
+> >      SMT sibling, L2 cluster peer, or die/package peer, probing a single
+> >      online topology peer via smp_call_function_single() (or returning
+> >      immediately when no shared banks were orphaned) reduces 479-CPU
+> >      offline time on Intel from 11.42 s to 9.63 s (-15.7%) and total time
+> >      from 22.50 s to 20.74 s (-7.8%).
 > 
-> Free the bitmaps with free_page() instead.
+> I took this series for a spin on a timy 2-socket Icelake (36 cores, 72
+> threads per socket). My test was to just offfline/online the 72 logical
+> CPUs on socket 1, and I saw some good speedups:
 > 
-> This is a stable-only patch. Upstream fixed it as a side effect of
-> commit 99cd2ffac697 ("kho: don't unpreserve memory during abort"), which
-> removes the tracking teardown from __kho_abort() altogether. That change
-> builds on commit 36f8f7ef7fd2 ("kho: add interfaces to unpreserve
-> folios, page ranges, and vmalloc") and commit 70f9133096c8 ("kho: drop
-> notifiers"). In 6.18.y, KHO users still preserve memory from the
-> KEXEC_KHO_FINALIZE notifier and have no interface to unpreserve it, so
-> the teardown on abort is the only way their preservations get dropped.
-> Backporting that commit would make preservations outlive every abort,
-> so keep the teardown and fix only the mismatched free.
+> 	offline: 4.833s -> 3.17s
+> 	online: 6.157s -> 3.796s
 > 
-> Fixes: fa759cd75bce ("kho: allocate metadata directly from the buddy allocator")
-> Signed-off-by: Federico Parola <fparola@amazon.de>
+> I noticed that your cmci_rediscover() improvements mean even better
+> offline performance if you work from high to low CPU numbers as the
+> shared banks are assigned to the lowest numbered CPU within the sharing
+> topology domain. So working from high to low avoids creating as many
+> orphan banks that then need to find new owners.
+> 
+> 	reverse order offline: 2.984s
+> 
+> I haven't looked into the code yet. But the general direction seems
+> good.
 
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Thank you for the data, and your point about the ordering is spot on. 
+However, once single-thread performance is adequate, my end goal is to 
+parallelize the operation so the number of CPUs won't significantly 
+affect the total time it takes to remove them and add them back to the 
+scheduler. This is crucial for the live update work, as transferring CPUs 
+to Caretaker is part of the brownout, and in some configurations, the 
+blackout of the live update process.
 
-> ---
->  kernel/kexec_handover.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
-> index 9fe5d14f1ec54..9691f6bc2fba7 100644
-> --- a/kernel/kexec_handover.c
-> +++ b/kernel/kexec_handover.c
-> @@ -1054,7 +1054,7 @@ static int __kho_abort(void)
->  		unsigned long phys;
->  
->  		xa_for_each(&physxa->phys_bits, phys, bits)
-> -			kfree(bits);
-> +			free_page((unsigned long)bits);
->  
->  		xa_destroy(&physxa->phys_bits);
->  		kfree(physxa);
-> -- 
-> 2.47.3
-> 
+Pasha
 
--- 
-Sincerely yours,
-Mike.
+> 
+> -Tony
 
