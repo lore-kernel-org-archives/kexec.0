@@ -4,55 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D8B1CCCF2C1
-	for <kexec@archiver.kernel.org>; Sat, 17 Oct 2026 16:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 89E3BCCF2C9
+	for <kexec@archiver.kernel.org>; Sun, 18 Oct 2026 04:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Subject:Cc:From:To:Date:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=yaDAKbPnX3HpuNTDLAnNxcR/jGoyDFB1q+z6ycJjZa0=; b=BiKJ7jceCT/owYvd2MU+YVqNDd
-	ANngSJsWEYCx87ya5gEtpeC/G17KuxaAHhp1M2AAQakQXNQVeOVMFD1kg5ZLFVWR/2dMRGaIOyM9S
-	Mhgji9h77aTMDEQK0z4JxNyfzUqTn3Lf1TQRBXgEhkeQ6SjHycPaJqKy9aJi3GY9CkQTB2S5hE12O
-	WmaZZcF4rphUfHsaELUlli526sXNBRX6yhLR2telafrDLoMbsQ5mLlIlyZXhc5REgV7Ef+nw04lAi
-	Kqn95+3wSzNaE2UIGYmNJoM9xKdnJa9BhgcXsDUDiYA3Edwfm2zNgNKblvyjDaIYENukbD/jtS2sz
-	707b4RKQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=DYBq7xeKvEEfhwWtcg1/NmSK9WIDoGWbifeYKQ6iaPU=; b=2+jJXpOejIbUBLrhId6dtJR4Jd
+	y53j3336l7KSe50qvoLNUBYEe0MV8gbESb2zoIbfKhKDHFU7g9/QS9DShbAoaU5GkQwKT9PwK5/0A
+	s+qEUccYx7ZeuWnqaBLpmXGrjqlvrKHTDOwZhg3o6dcmHBBMgTDiDzBhdf5wMocM6K74ZYF34JsJP
+	F7YAywLalT5PM1vigV+5ovtoLDCPFGjjmN6chpl1EuL6rvEfAZbRll0pk7+k/sebJaksK4A9XBI8K
+	e9YYIpX9rhsuiCRfXzQUapTFNF1MZBgIQDSr6DNMAeDbNP5S7oDiivVcLjlO1xaakrLFqDrvuhzK1
+	T0EmnK3Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xI78P-00000004um7-3MyE;
-	Sat, 17 Oct 2026 16:19:49 +0000
-Received: from mail-244116.protonmail.ch ([109.224.244.116])
+	id 1xIIYb-00000005Wjk-3U82;
+	Sun, 18 Oct 2026 04:31:37 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xI78N-00000004ulm-0Bcj
+	id 1xIIYX-00000005WjQ-0Z6z
 	for kexec@lists.infradead.org;
-	Sat, 17 Oct 2026 16:19:48 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail2; t=1792253980; x=1792513180;
-	bh=yaDAKbPnX3HpuNTDLAnNxcR/jGoyDFB1q+z6ycJjZa0=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=ubyZ2Wrq4LqZ5/7guNFCrqMzJvxMK8RL1PM5Vyn+aJD/wnUfKHsvu3qY30yjfCtsc
-	 ZJgPhlX4eGlz+YCTHrfY9wN4q6M5wegRj6Gj/jS8fRSdTQ+ndNX6BzXKDTsZ8JGH70
-	 z1LVnkCD0HzH/Y9r8/Z7GKAfZywq1aSau2iG5Ns2AbDcCkTcYX3EtwZmAu41iCodNS
-	 LsnD8wlB/PXH9bzbrYOc34BGNTw+MUMrPvCfbGqERv1q0HIN1vXUDjjX6IA4kJ9UNk
-	 Y7cRl8abz+ychT2UCfOeTZa6IyXfSIE12CtGNi76uYO9qBaZNdRyJcmYp/jslqe0Wy
-	 NgcP1cXzTvOyA==
-Date: Sat, 17 Oct 2026 16:19:31 +0000
-To: rppt@kernel.org
-From: BernardoGV@proton.me
-Cc: sourabhjain@linux.ibm.com, pratyush@kernel.org, graf@amazon.com, akpm@linux-foundation.org, guodongtai@kylinos.cn, pasha.tatashin@soleen.com, ritesh.list@gmail.com, kexec@lists.infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kho: fix global scratch size calculation
-Message-ID: <d4c253f3-d36f-0253-f22d-43c9f397f6ad@proton.me>
-Feedback-ID: 60703638:user:proton
-X-Pm-Message-ID: 38ba154f675276b492e436a3eb2d748b1c610ceb
+	Sun, 18 Oct 2026 04:31:33 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 9610A423BF;
+	Sun, 18 Oct 2026 04:31:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 750251F000C6;
+	Sun, 18 Oct 2026 04:31:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792297892;
+	bh=DYBq7xeKvEEfhwWtcg1/NmSK9WIDoGWbifeYKQ6iaPU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=mb9BXWxt88MpB9qYnzbH95e1QrRQzxEiEgi7/2F/8hxj4Nvv6oj2/BHBk3Qm4gqWL
+	 GWeQP4oq2b0cRa2vq/YWt+VON52QmcgZEKdFhblV4sG21cPhx+3wEiJL7g1rSNBGWZ
+	 DOZEbwSUVAdSZaOr+LHmaj0c+P27fOkNdwnZBKUVKBPukBo5ykBFnYtk4P3++breFR
+	 YZGcdhdHz4Cl+8ot9hRaARiYvlfxC5HqpAX3YTCviIkNyGZ8iborIKNboR1PAQKiyL
+	 zuVTGaL39gigLDweKWhWXmrbSyUlNv6nhWP+3qMkdZIIEuciRIZYaqsahz6mAOn8+W
+	 LWEfQ2qVRcwDw==
+Date: Sun, 18 Oct 2026 07:31:25 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Federico Parola <fparola@amazon.de>
+Cc: stable@vger.kernel.org, Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Alexander Graf <graf@amazon.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	kexec@lists.infradead.org, linux-mm@kvack.org,
+	nh-open-source@amazon.com
+Subject: Re: [PATCH 6.18.y 2/2] kho: free phys_bits bitmaps using free_page()
+ in __kho_abort()
+Message-ID: <atRLncxeTcA2dRD6@kernel.org>
+References: <20261015144529.76911-1-fparola@amazon.de>
+ <20261015144529.76911-3-fparola@amazon.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Bad-Reply: 'Re:' in Subject but no References or In-Reply-To headers
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261017_091947_245600_882CB821 
-X-CRM114-Status: GOOD (  10.97  )
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261015144529.76911-3-fparola@amazon.de>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -67,56 +74,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Oct 12, 2026, Mike Rapoport wrote:
-> I mean more fundamental code refactoring that takes into the account all
-> cases (and I could miss some)
->
-> - NUMA vs no-NUMA
-> - systems that have global scratch containing lowmem scratch vs those tha=
-t
->   don't
-> - and of course fix global scratch over-allocation
+On Thu, Oct 15, 2026 at 02:45:29PM +0000, Federico Parola wrote:
+> Commit fa759cd75bce ("kho: allocate metadata directly from the buddy
+> allocator") switched the allocation of preserved memory bitmaps to
+> get_zeroed_page(), but __kho_abort() still releases them with kfree().
+> kfree() on a buddy page that is not a large kmalloc allocation hits the
+> WARN_ON_ONCE() in free_large_kmalloc() and returns without freeing it,
+> so every aborted finalization leaks all bitmap pages.
+> 
+> Free the bitmaps with free_page() instead.
+> 
+> This is a stable-only patch. Upstream fixed it as a side effect of
+> commit 99cd2ffac697 ("kho: don't unpreserve memory during abort"), which
+> removes the tracking teardown from __kho_abort() altogether. That change
+> builds on commit 36f8f7ef7fd2 ("kho: add interfaces to unpreserve
+> folios, page ranges, and vmalloc") and commit 70f9133096c8 ("kho: drop
+> notifiers"). In 6.18.y, KHO users still preserve memory from the
+> KEXEC_KHO_FINALIZE notifier and have no interface to unpreserve it, so
+> the teardown on abort is the only way their preservations get dropped.
+> Backporting that commit would make preservations outlive every abort,
+> so keep the teardown and fix only the mismatched free.
+> 
+> Fixes: fa759cd75bce ("kho: allocate metadata directly from the buddy allocator")
+> Signed-off-by: Federico Parola <fparola@amazon.de>
 
-One more case for the list: reservations made before KHO sizes scratch
-that are never served from it. HugeTLB is already excluded. crashkernel
-is the other big one. Sourabh mentioned it in the powerpc thread. Here
-are x86 numbers from a machine that never asked for KHO.
+Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-Ubuntu 26.04's generic kernel (7.0.0-38-generic) ships
-CONFIG_KEXEC_HANDOVER_ENABLE_DEFAULT=3Dy, so scratch is reserved on every
-boot. (26.10 has since turned the default off. I've asked for the same
-in 26.04 [1].) The machine is a single-node Ryzen AI Max+ 395 with
-128 GiB and no hugetlb. kdump is set up the stock Ubuntu way, which gives
-crashkernel 2048M high + 256M low.
+> ---
+>  kernel/kexec_handover.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
+> index 9fe5d14f1ec54..9691f6bc2fba7 100644
+> --- a/kernel/kexec_handover.c
+> +++ b/kernel/kexec_handover.c
+> @@ -1054,7 +1054,7 @@ static int __kho_abort(void)
+>  		unsigned long phys;
+>  
+>  		xa_for_each(&physxa->phys_bits, phys, bits)
+> -			kfree(bits);
+> +			free_page((unsigned long)bits);
+>  
+>  		xa_destroy(&physxa->phys_bits);
+>  		kfree(physxa);
+> -- 
+> 2.47.3
+> 
 
-Three cold boots of the same kernel, KHO on by default:
-
-  kho/out/scratch_len   crashkernel   no crashkernel   delta
-  lowmem                   760 MiB         248 MiB      -512 =3D 2 x 256
-  global                 8,510 MiB       4,414 MiB    -4,096 =3D 2 x 2,048
-  per-node                4,338 MiB       4,338 MiB         0
-  total                 13,608 MiB       9,000 MiB    -4,608 =3D 2 x 2,304
-
-"Memory: ... reserved" goes from 18,849,832K to 11,771,924K. The
-difference, 6,912 MiB, is exactly the crashkernel plus 2x crashkernel of
-scratch. With kho=3Doff it is 4,915,232K.
-
-Both problems show up here. Without crashkernel, lowmem + global is
-2 x 2,331 MiB and per-node is 2 x 2,169 MiB, so on a single node about
-2,169 MiB of reservations get counted twice. That is the over-allocation,
-and the total comes to roughly 4x what was reserved. crashkernel is
-allocated with NUMA_NO_NODE, so it lands only in lowmem/global, at 2x.
-If I read Sourabh's patch right, it would count NUMA_NO_NODE only for
-global. On this machine that leaves crashkernel as nearly all of the
-global scratch (about 2 x (162 + 2,304) MiB).
-
-The cost is not only boot memory. Scratch ends up MIGRATE_CMA, so
-anything that pins can't use it. Here that is amdgpu GTT on an APU. A
-single process tops out at 107 GiB of a 120 GiB GTT limit with KHO on,
-and at 117 GiB with kho=3Doff.
-
-Happy to test patches on this box.
-
-[1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2171297
-
+-- 
+Sincerely yours,
+Mike.
 
