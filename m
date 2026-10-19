@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7285BCCA490
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 866B0CCF2D8
 	for <kexec@archiver.kernel.org>; Mon, 19 Oct 2026 01:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,65 +12,65 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=AG4iCQmCtWMmOqYT8IYP5jpAChTLSZorOObJHVgwpSM=; b=cOq/i4lGkByZBnV6NXgQY/6WYS
-	aU7/XR7aT9dFCQV5C1GR+eacVpdTt9qt4549jIdPl8OHsz0+fwti0M70mTWAlMtLZdD+TvK+dK/eN
-	aVfTjHbeQt5XKoIsDVYeDjvQCBZyCB7txS8/+WxkIdEFFVOHbrcQU/k+zGzVG2JGRR0EKGxrdaNVP
-	pdgekc1Qq9g883ic7GuTeSIVYQMaBVHTMogaow/6+uBATxv8Y08+fEOVybRaACIX7HdDKNLrAg+m0
-	dvyawOIiGxQXwkRVIEKmXzTJTaqxiW5Xqfl+uZ5HHcGVPwI+60GjURjnKuuthGc3WYvbszamQMBSg
-	pgwSZ7MQ==;
+	bh=Cpnp3yMFelG0fvds3XdN1g7x4e9nS7OKWWPDPS530n8=; b=tybGiTCgplAm2p17lm6YX7S5xw
+	NEtY7JfsIE+tIVBZ30Bdt8SH2E74zUtHt6y5cVGhVIPC7fXveOxn9vwnWkS8tFImQaM52EP/pOTHR
+	DEErcZdoaMCKfa1BRhlL9rYOwUusc8fkpe2/68vEeqoJGbq7P9tfln/Ea52lpZj6sNG41SVUTA0Jo
+	7YN55GtbLbCB8QgC61l4kb+gDCsy5P46PlWnVRcxG106T3eVgHG0oTobp5aq4k6heyFoLyAeqHND6
+	wrJlEuAFFr2Ka03B0wVtZhQMOQiGFqstcTGviqYwE6GATodUOZpvFywxopWCVXiDqrsocMSpFT+Uq
+	d4+2p8iA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xIbxt-00000006N6W-2wTJ;
-	Mon, 19 Oct 2026 01:15:01 +0000
-Received: from mail-vk1-xa34.google.com ([2607:f8b0:4864:20::a34])
-	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xIbxq-00000006N4e-46uz
-	for kexec@lists.infradead.org;
+	id 1xIbxs-00000006N5J-1fJJ;
 	Mon, 19 Oct 2026 01:15:00 +0000
-Received: by mail-vk1-xa34.google.com with SMTP id 71dfb90a1353d-5eabf7d5bbeso1054292e0c.1
-        for <kexec@lists.infradead.org>; Sun, 18 Oct 2026 18:14:58 -0700 (PDT)
+Received: from mail-ua1-x930.google.com ([2607:f8b0:4864:20::930])
+	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1xIbxm-00000006N40-1udS
+	for kexec@lists.infradead.org;
+	Mon, 19 Oct 2026 01:14:55 +0000
+Received: by mail-ua1-x930.google.com with SMTP id a1e0cc1a2514c-988bb309c2bso866496241.1
+        for <kexec@lists.infradead.org>; Sun, 18 Oct 2026 18:14:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1792372498; x=1792977298; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1792372493; x=1792977293; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=AG4iCQmCtWMmOqYT8IYP5jpAChTLSZorOObJHVgwpSM=;
-        b=UxjhHwa75MkqZDjcHRKDULmtg9mh6b+WApjSNDnN95RoZAFMALEJ8du5SrLeMFDwK3
-         9Gx6FsCyOUNOg22YA3o67djVHJ++OL2nH1+qtAMlfZAdMJSvD1MNMHx0S2xggIdard5u
-         A7be24w1nS8GYag6JwFBdj4KUtQTjsLEfmJiloB30rXEqKZ/kepQAFQNmPxTmhpA4j+r
-         j8UjyJoioxEYaV06uY1XbJkRKmgmCZZWu5BwisEWE1w4flz/RX21XXFNsqh574u7ScqX
-         dzOmUMKBE/EYRJcobCJSAgSEonIZWlvy86eyZodVKDmZtStDmgNju4qu2BSJeF3L6pM6
-         cVZg==
+        bh=Cpnp3yMFelG0fvds3XdN1g7x4e9nS7OKWWPDPS530n8=;
+        b=MXlJ3YQIkl14LZksByEACuhbOOItU1NyRhwV0/1QDbonoBhSLv/mKiJ9Vvl5jrvZP0
+         8IAbW0z67q86JJUNrtvaMdVstBvp+ZvmMtan3H6TRibccHn5ZIxa+AOtrteGR8Ee9bJN
+         LmwVCiQHnD+FN1EKTGcPJZbR2xh5NWxnenIxpzQ7g7nei2lC8GmFhkFHyNa/RamZZP57
+         HfHZ9c2VtxIzheAluZ99eVWtkunipxylFpxl1yYJPjTLKfk8nN+8RWW4ih3B9Q7NP7nx
+         HJh/Ev0c+emqLLLOhhqxUkyoqHIaA52ZQ6YU5ornbZrEiygb5LUns+GgtKl+nbM3pN0X
+         qpDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792372498; x=1792977298;
+        d=1e100.net; s=20260707; t=1792372493; x=1792977293;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to:content-type;
-        bh=AG4iCQmCtWMmOqYT8IYP5jpAChTLSZorOObJHVgwpSM=;
-        b=YWJQXqY2NZU2/+JnqViPUdkMl50Dvgc2I/agt9Oxo5l0GtFOV12SFnENNFI9L4uQQK
-         CJlPWQO+UCU10A+UQTFJfPgpcjMhURXdmpnCgdVUR6WlcY3SUfk3vUnv2iN0kfiCHxNR
-         rNNfp7kaRppdMw41p3UDuZUDUFaXlL9vBbo6dGDo+lBVnGCLL3voELgj0mIl/JsJXZzG
-         Zt/vPwS4w38rtMvDP90AIgGkwyr46eySTgXxkWxlLMIS33VEiPuQaVn5103l6MYamz3q
-         EGoCtfsxaddg1x8hOk5BH8iGuMbN7J67Xx5KB38tc8wxvBH8oYathR12jiRr/eZsR8Ne
-         ebdw==
-X-Forwarded-Encrypted: i=1; AKwUvBy8ylMIClMZWeBqqRNs4X81J7xvOEVhlfe+khkFugVMao0T4NkPtooYQC1pFqNhZPhsO4P/aA==@lists.infradead.org
-X-Gm-Message-State: AFq9FYJE2eL3VVSgV7RwdJAEy9qgycJTMKEnF5rHI1Ry/a2KVqrOSJJs
-	zKBM3xoJfpaWx/9GT9QOHQMJZL9UrUf82rGKQY4R0wOcQFB4RKu6sHcr8w79PWg9FaI=
-X-Gm-Gg: AYBFou0hO60Y0ovi9FBR9dO46VoMC+jnOKHzyMj5bjDh297oLMARQWpyMioNIk7HgWA
-	lt+vB7TXRizaQ1JD7hZKOdQ0L66eta66wwV2awwZyqiRLhabbOtH7ioelm2nLrO0wMzPJc8MrSm
-	iOlvilM9Be0l9Ur2x7vvKJC+vK9GZcIY3LWggMgi8jOe9miFhiwJhBMLY8jATmybznEAVEgiJQN
-	uHGg2F9KTOSa+lHdE+YACYfo9NGgWpRCWXVoW4C4J18NrLN2Os6OjODE3pMmmnk6U+tPpinaWJ9
-	xtsFH1BAw01xbDEdzlP3i4necJ2lbyOz/gTkHg0PUoMUa//rH3QvP82gG6Ks5b75mS7Q8qsaL+v
-	bVtsZX2nXLIE7BHbr/bBEvIcm3zTic4xx0n9JIIO9HRpbg5wVU5Y2t/u4AMEDka1ZwuF+sZDVHF
-	OGzGiugcN9t8RZ+cHBInop9KS68WXxVntvyOTLIUeNRdRtvrAcY+xxTTpYKcELLLa0th/6bu4Ow
-	p+bxAKJEVG2fSfr0HDNuaTka6r7jRdekGVuOmklu9O5IOjLBmtGkN3Gnd1WqGxJGl+G9sA5faG5
-	Gq9rAgwcXy7RgLCTUbg=
-X-Received: by 2002:a05:6122:d19:b0:5ea:c90d:d1b2 with SMTP id 71dfb90a1353d-5eac90dd9bfmr454444e0c.13.1792372497778;
-        Sun, 18 Oct 2026 18:14:57 -0700 (PDT)
+        bh=Cpnp3yMFelG0fvds3XdN1g7x4e9nS7OKWWPDPS530n8=;
+        b=vJvHJvZVKwyk8rfrtEUIkXtTjv69gwGFEM9t39BPKNBvGnHvLasgOD8Q/77wOSbTcX
+         uzbWh+L6kaQF0eMw2c6q00c7yL6ZeEXzp1yFfCsrLxltKhh6GXDFgKsG6P8RjLKW9uIF
+         s2B2XOSZdHRBEp6LEmqAvrc4IrbHPQvz0szwaWWD3lhna3knNPw4EBoU4Pavvh3/et5b
+         hol8NYtMa6leI6b1BFdjpQD69VCizh+wh9ZuvCmXIROHWfhmPfSffBZUefyqby/rxlnF
+         sQl77T3XVSSw+roD1cX20ryhndHuBNMvGpklyWp/WnD7+0VN6gtm3lAL0FkPuVd5rHXM
+         TJrw==
+X-Forwarded-Encrypted: i=1; AKwUvBxnz/ML6waH3L8hi4PF9k+v+gVqUn5k/D8qbj5qe7OfVaxJN9wg4Z5Cau26VRHANsNmm+gF0A==@lists.infradead.org
+X-Gm-Message-State: AFq9FYIS8uDJCHDby4KcKNwS6cx67ciMBJ+sZyvFabZowwS2yYiuxnYO
+	t22jvcDiaIui1kd0P+bi/kC8W4l2p6OkZ0dKAPxgphi61daJ3/M1iwrrmuCn8pWzZiE=
+X-Gm-Gg: AYBFou31CMAA/7xCrw+GY2VzLh20O9mUvQq1lY93xhZ5yLxcPFZplEVEHZottsRvARC
+	myGubMQ5hc5E1Wkbv3R+sKhMI2pDX8jUVjWVkXmv4/5U1MWlMimBckO93GCs73yovB86JTOHWFK
+	dCCj/YrXVDpg/y8xGjW21Hlp6hPvBldPU7voaOMK9S2HdRtfV4M6kOi/IqFc0xnrF1PQzaE5j9h
+	l7dWnO0AnqAg9PcQEzU/szaCRkJeQqesYM4vCaUOW+eoe+zVYfA3esbpdfHXdy9qAlvO1QHcWV7
+	9dPHM2dvZa/T/aOqtzNNOiNAithyJ/1cJD8Nj7DBNPizjMGPBzvqRGmNIGyN7y30WOZggto8bib
+	83UUZnCRaPrmCCP33X2Lp5zK7/ZvWotD1HrRsph+2neSexu9ClkFw5VwCsXBLCnG5+ivtifTFLW
+	2WTDZN6CdbO2inG4NIhxtbhH8OcK397XDfZ4XkIaTR2M4umY6onUydH2YjvMBCLAsJeyMEXnj0w
+	tgc7NEqzs9L6JCQ/Jw7UcwfVFbKIwaV7aCE0vJfez9n1oi7EmEq6GKAVxpp7hApg32UMZV4psYQ
+	wD6f9iSHXLnxvP+AIsQ=
+X-Received: by 2002:a05:6102:290d:b0:7c7:f976:ea9c with SMTP id ada2fe7eead31-7cc369118cfmr2079452137.13.1792372493221;
+        Sun, 18 Oct 2026 18:14:53 -0700 (PDT)
 Received: from soleen.c.googlers.com.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5ea9b474b2asm8039142e0c.4.2026.10.18.18.14.55
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5ea9b474b2asm8039142e0c.4.2026.10.18.18.14.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Oct 2026 18:14:56 -0700 (PDT)
+        Sun, 18 Oct 2026 18:14:52 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: kees@kernel.org,
 	rppt@kernel.org,
@@ -117,17 +117,17 @@ To: kees@kernel.org,
 	blum@kernel.org,
 	longman@redhat.com,
 	bsegall@google.com
-Subject: [PATCH v2 3/8] x86/mce/intel: Bound cmci_rediscover() to a single topology peer
-Date: Sun, 18 Oct 2026 21:14:41 -0400
-Message-ID: <20261019011446.834487-4-pasha.tatashin@soleen.com>
+Subject: [PATCH v2 1/8] x86/realmode: Remove unnecessary WBINVD from AP startup trampoline
+Date: Sun, 18 Oct 2026 21:14:39 -0400
+Message-ID: <20261019011446.834487-2-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.56.0.176.g3575e65682-goog
 In-Reply-To: <20261019011446.834487-1-pasha.tatashin@soleen.com>
 References: <20261019011446.834487-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261018_181459_342195_4C08C856 
-X-CRM114-Status: GOOD (  19.52  )
+X-CRM114-CacheID: sfid-20261018_181454_503245_6ACBF5E6 
+X-CRM114-Status: GOOD (  10.76  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -142,163 +142,64 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When a CPU goes offline, cmci_clear() disables CMCI on any MCA banks
-owned by that CPU, and mce_cpu_dead() calls cmci_rediscover(). Currently
-cmci_rediscover() invokes on_each_cpu(cmci_rediscover_work_func, NULL, 1),
-sending a synchronous broadcast IPI to every online CPU in the system,
-all of which contend on the global cmci_discover_lock while reading up
-to 32 MSR_IA32_MCx_CTL2 MSRs.
+trampoline_start executes WBINVD in 16-bit real mode before switching to
+protected mode. This WBINVD was originally added in the 1990s for
+Sequent NUMA-Q hardware (as noted by the comment in trampoline_32.S:
+"Needed for NUMA-Q should be harmless for others"), whose cross-quad
+caches came up non-coherent prior to OS initialization. Sequent NUMA-Q
+support (CONFIG_X86_NUMAQ) was removed in commit b5660ba76b41
+("x86, platforms: Remove NUMAQ").
 
-Any bank disabled by cmci_clear() is either thread-private, core-scoped
-(shared between SMT threads of the same physical core), L2-cluster-scoped,
-die-scoped, or package-scoped:
-1. Any bank index that is already owned by the target peer in its own
-   mce_banks_owned bitmap is private to a narrower scope than the shared
-   level and will be skipped by cmci_skip_bank() on the target anyway.
-2. Core- or cluster-shared MCA banks can only be claimed by an online
-   SMT sibling or L2 cluster peer.
-3. Shared die-scoped or package-scoped uncore banks can be claimed in a
-   single pass by one online peer on the same die or package.
+Per the Intel SDM (Vol. 3A, Table 10-1, note 2) and AMD APM, the INIT
+IPI used to wake secondary CPUs preserves cache contents and leaves
+CR0.CD and CR0.NW unchanged (0, as already enabled by firmware or the
+kernel). Neither sev_es_trampoline_start nor trampoline_start64
+executes WBINVD.
 
-Record the bitmap of banks disabled by __cmci_disable_bank() in
-cmci_orphaned_banks, select a single online topology peer
-cmci_orphaned_target (SMT sibling, L2 cluster peer, die peer, or package
-peer) in cmci_clear(), and mask out any bank indices already owned by
-that target peer. In cmci_rediscover(), return immediately when
-cmci_orphaned_banks is empty; otherwise probe only cmci_orphaned_target
-via a single smp_call_function_single() call.
+On modern multi-core processors with large shared last-level caches
+(such as 504 MB shared L3 per socket on Intel Xeon 6985P-C), WBINVD is
+not harmless: each execution flushes and invalidates the entire
+coherence domain's caches and takes ~85-115 ms per CPU while disturbing
+active workloads on online CPUs.
+
+Remove the obsolete WBINVD from trampoline_start.
 
 2-socket, 480-CPU Intel Xeon 6985P-C (N=479, mean of 10 runs):
-  Offline:  11.42 s ->  9.63 s (-15.7%)
-  Online:   11.08 s -> 11.11 s
-  Total:    22.50 s -> 20.74 s (-7.8%)
-  cmci_rediscover() (cpu479 offline):
-    7,720.6 us -> 0.6 us (-99.99%)
+  Offline:  40.40 s -> 40.46 s
+  Online:   65.83 s -> 11.14 s (-83.1%)
+  Total:   106.23 s -> 51.60 s (-51.4%)
 
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/x86/kernel/cpu/mce/intel.c | 57 +++++++++++++++++++++++++++++++--
- 1 file changed, 55 insertions(+), 2 deletions(-)
+ arch/x86/realmode/rm/trampoline_32.S | 2 --
+ arch/x86/realmode/rm/trampoline_64.S | 1 -
+ 2 files changed, 3 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
-index 4655223ba560..f57718b097d9 100644
---- a/arch/x86/kernel/cpu/mce/intel.c
-+++ b/arch/x86/kernel/cpu/mce/intel.c
-@@ -11,6 +11,7 @@
- #include <linux/percpu.h>
- #include <linux/sched.h>
- #include <linux/cpumask.h>
-+#include <linux/topology.h>
- #include <asm/apic.h>
- #include <asm/cpufeature.h>
- #include <asm/cpu_device_id.h>
-@@ -40,6 +41,8 @@
-  * owned by the offlined cpu.
-  */
- static DEFINE_PER_CPU(mce_banks_t, mce_banks_owned);
-+static mce_banks_t cmci_orphaned_banks;
-+static unsigned int cmci_orphaned_target;
+diff --git a/arch/x86/realmode/rm/trampoline_32.S b/arch/x86/realmode/rm/trampoline_32.S
+index 3fad907a179f..14e56ea95416 100644
+--- a/arch/x86/realmode/rm/trampoline_32.S
++++ b/arch/x86/realmode/rm/trampoline_32.S
+@@ -30,8 +30,6 @@
  
- /*
-  * cmci_discover_lock protects against parallel discovery attempts
-@@ -244,6 +247,7 @@ static void cmci_claim_bank(int bank, u64 val, int bios_zero_thresh, int *bios_w
+ 	.balign	PAGE_SIZE
+ SYM_CODE_START(trampoline_start)
+-	wbinvd			# Needed for NUMA-Q should be harmless for others
+-
+ 	LJMPW_RM(1f)
+ 1:
+ 	mov	%cs, %ax	# Code and data in the same place
+diff --git a/arch/x86/realmode/rm/trampoline_64.S b/arch/x86/realmode/rm/trampoline_64.S
+index 14d9c7daf90f..e5a3f03d6221 100644
+--- a/arch/x86/realmode/rm/trampoline_64.S
++++ b/arch/x86/realmode/rm/trampoline_64.S
+@@ -60,7 +60,6 @@
+ 	.balign	PAGE_SIZE
+ SYM_CODE_START(trampoline_start)
+ 	cli			# We should be safe anyway
+-	wbinvd
  
- 	/* This CPU successfully set the enable bit. */
- 	set_bit(bank, (void *)this_cpu_ptr(&mce_banks_owned));
-+	__clear_bit(bank, cmci_orphaned_banks);
- 
- 	if ((val & MCI_CTL2_CMCI_THRESHOLD_MASK) == CMCI_STORM_THRESHOLD) {
- 		pr_notice("CPU%d BANK%d CMCI inherited storm\n", smp_processor_id(), bank);
-@@ -328,6 +332,7 @@ static void __cmci_disable_bank(int bank)
- 	val &= ~MCI_CTL2_CMCI_EN;
- 	wrmsrq(MSR_IA32_MCx_CTL2(bank), val);
- 	__clear_bit(bank, this_cpu_ptr(mce_banks_owned));
-+	__set_bit(bank, cmci_orphaned_banks);
- 
- 	if ((val & MCI_CTL2_CMCI_THRESHOLD_MASK) == CMCI_STORM_THRESHOLD)
- 		cmci_storm_end(bank);
-@@ -339,6 +344,8 @@ static void __cmci_disable_bank(int bank)
-  */
- void cmci_clear(void)
- {
-+	unsigned int cpu = smp_processor_id();
-+	unsigned int target;
- 	unsigned long flags;
- 	int i;
- 	int banks;
-@@ -346,8 +353,31 @@ void cmci_clear(void)
- 	if (!cmci_supported(&banks))
- 		return;
- 	raw_spin_lock_irqsave(&cmci_discover_lock, flags);
-+	bitmap_zero(cmci_orphaned_banks, MAX_NR_BANKS);
-+	/*
-+	 * A bank is shared by the CPUs of one SMT core, L2 cluster, die or
-+	 * package, and these scopes nest. The first online peer found from
-+	 * the innermost scope outwards is therefore part of every sharing
-+	 * scope that still has an online CPU, so it alone can claim every
-+	 * orphaned bank that is still claimable. If it already owns an index,
-+	 * the instance released here is not shared with it, hence not with
-+	 * any online CPU, and that index can be dropped from the rediscovery.
-+	 */
-+	target = cpumask_any_but(topology_sibling_cpumask(cpu), cpu);
-+	if (target >= nr_cpu_ids)
-+		target = cpumask_any_but(topology_cluster_cpumask(cpu), cpu);
-+	if (target >= nr_cpu_ids)
-+		target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
-+	if (target >= nr_cpu_ids)
-+		target = cpumask_any_but(topology_core_cpumask(cpu), cpu);
-+	cmci_orphaned_target = target;
- 	for (i = 0; i < banks; i++)
- 		__cmci_disable_bank(i);
-+	if (target < nr_cpu_ids)
-+		bitmap_andnot(cmci_orphaned_banks, cmci_orphaned_banks,
-+			      per_cpu(mce_banks_owned, target), MAX_NR_BANKS);
-+	else
-+		bitmap_zero(cmci_orphaned_banks, MAX_NR_BANKS);
- 	raw_spin_unlock_irqrestore(&cmci_discover_lock, flags);
- }
- 
-@@ -360,15 +390,38 @@ static void cmci_rediscover_work_func(void *arg)
- 		cmci_discover(banks);
- }
- 
--/* After a CPU went down cycle through all the others and rediscover */
-+/*
-+ * After a CPU went down, rediscover orphaned shared banks on a single
-+ * topology peer (SMT sibling, L2 cluster peer, die peer, or package peer)
-+ * selected in cmci_clear(). Core-private banks whose core is now completely
-+ * offline cannot be claimed by any other core, so probing more than one
-+ * peer is redundant.
-+ */
- void cmci_rediscover(void)
- {
-+	unsigned int target;
-+	unsigned long flags;
-+	bool orphaned;
- 	int banks;
- 
- 	if (!cmci_supported(&banks))
- 		return;
- 
--	on_each_cpu(cmci_rediscover_work_func, NULL, 1);
-+	raw_spin_lock_irqsave(&cmci_discover_lock, flags);
-+	orphaned = !bitmap_empty(cmci_orphaned_banks, MAX_NR_BANKS);
-+	target = cmci_orphaned_target;
-+	raw_spin_unlock_irqrestore(&cmci_discover_lock, flags);
-+
-+	if (!orphaned)
-+		return;
-+
-+	if (target < nr_cpu_ids && cpu_online(target))
-+		smp_call_function_single(target, cmci_rediscover_work_func,
-+					 NULL, 1);
-+
-+	raw_spin_lock_irqsave(&cmci_discover_lock, flags);
-+	bitmap_zero(cmci_orphaned_banks, MAX_NR_BANKS);
-+	raw_spin_unlock_irqrestore(&cmci_discover_lock, flags);
- }
- 
- /*
+ 	LJMPW_RM(1f)
+ 1:
 -- 
 2.56.0.176.g3575e65682-goog
 
