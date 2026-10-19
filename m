@@ -4,108 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 22A3ECCF2D6
-	for <kexec@archiver.kernel.org>; Mon, 19 Oct 2026 12:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9F5D1CCF2E3
+	for <kexec@archiver.kernel.org>; Mon, 19 Oct 2026 14:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=IaMHOaCF9qKahgBmNzjExLM3+cMiS8xPZoJLsbFvUPM=; b=byTOEx6VekS7xrjBtQOyhDSPUR
-	2m/llKXFxKnYX3J6az1r/yx3IHByeiZjmu2gkH7DFJD/aTG831iOd00bUH6OtYPEEQlRhauekAoFh
-	VQte87M40p/6hoabsmMMzWSElq7IQi06J7ZbFNCui0yvzqmXXTzYAnS1DK1EZei1TvcC2TAqdXAJD
-	TKGu86XkjUq+HP/Wilak5buK52tvGmYPLdg2ACZaggSgzniZrScu+S3Fy9q67qGR7/89CUdCPa31k
-	+xCynzfZoeUG1coxU+leDzMr7S+ME/dbPkau31cCx5H0HJUCBF/VO/WXwnQQXv++dzAR7jTDGLQzD
-	qaDaBRwQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=ynTwWaih3UWb7VmKOqAZKdwwEp9nTZ8YKOhE35tWuk0=; b=R3K3TzX3xjUR0hifkay5GWRJhL
+	Hxc0b/5iU2KBQ3hy5Re0qJ0vIM25VAUX7euAppAeg1DEWWKpovAujHnFdaYFjRlswkQ5GhyLmSq1h
+	6oX743i+ZeI68RtegCj9Z+apGLLmriRoRKmjG11axZSufe1dLdWB8AYtFTUqafLlhvI8kG4exi8J3
+	oH0wlleF0pra4KIoCqbRf4pKCUkdfWe4mjkma5lLZ1P05XqRiSqf+3aaUC80Wvlo4lSaPSWDcxMYh
+	k4tQ4y61QO2mPh32mTnC6/md0PUicmuzrqXlxYMSODvhNkghvsx6XCVE6+WF0UzYcljeKKQfyAY3b
+	zY9DNtlA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xImFN-00000007M9g-3baL;
-	Mon, 19 Oct 2026 12:13:45 +0000
-Received: from mail-yw1-x1135.google.com ([2607:f8b0:4864:20::1135])
+	id 1xIoHM-00000007jfT-2uxC;
+	Mon, 19 Oct 2026 14:23:56 +0000
+Received: from mail-vk1-xa2c.google.com ([2607:f8b0:4864:20::a2c])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xImFL-00000007M8Y-0a1j
+	id 1xIoHG-00000007jeg-3i3P
 	for kexec@lists.infradead.org;
-	Mon, 19 Oct 2026 12:13:44 +0000
-Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-8b0a28a720aso14621687b3.2
-        for <kexec@lists.infradead.org>; Mon, 19 Oct 2026 05:13:41 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792412020; cv=none;
-        d=google.com; s=arc-20260327;
-        b=NRj0HLr1jAX3vQJ3ucvO9/Gx6hkyMrzN8MWEiZdXrY6mevS/JYfr65kZyJt9dzbgpB
-         PKCPWLxsVrD9bLXVafHU/4kF486Xu1EmhZqZWwcPbd57hxKf/S8cyw5STNfFJG+TjHwf
-         wklHRgwYOi010crmRAw6FqjG6IOfQTZPqtmMK3qUxxtZlRLyQLsw2hDb2JagIXLgjxGO
-         b3npZBy/0zoSfFNatJDU4ahJ/cfqzUIsK+mKeycqs9fXANGfvw78KMDoFt+B02eCBsno
-         cCnHGMebzDXRwy+cKTE8ESkRbTqDzcyBOI27gk9KQdg0xOFb+kKzUdfIQi1q9vMkevnx
-         H5/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=IaMHOaCF9qKahgBmNzjExLM3+cMiS8xPZoJLsbFvUPM=;
-        fh=eCEdaeUO3AV5TQDmi5YVLEH1otroKljyjDaEelVJhyE=;
-        b=GUCIPOqKrOe++sLAey0xgNHFJHY29RmPbq8x/SjhPm8G6UmEkWfe5pkoBlpEU4ReAH
-         zg1WwWx1mkDH+CD75Rgp+HWl74hwh+5OD5TI4ebRaCIJATjmlRXSvqGiA6hEbTubOSto
-         KFL0QzK9YsdJml0ymwJXXx2NVyoAFyu8usr2yEYY/YGvj3H/+bdLi9cjDlxmTXxDzpyd
-         4z5ij0koQMS5meQN/F6rB2Nb9f5uOhPX6VrBqqQHZ+QFGtedQ7vVfsdZ7kgyqEUBooie
-         6sAsOJU2/6YHmf/ltbw5bo6Fs1eYlbxRa2jQSrBy7UiG2hYCyDMCXlnchviOTeNwvymr
-         aOkA==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	Mon, 19 Oct 2026 14:23:55 +0000
+Received: by mail-vk1-xa2c.google.com with SMTP id 71dfb90a1353d-5e9528732b4so1800880e0c.0
+        for <kexec@lists.infradead.org>; Mon, 19 Oct 2026 07:23:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792412020; x=1793016820; darn=lists.infradead.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+        d=soleen.com; s=google; t=1792419829; x=1793024629; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=IaMHOaCF9qKahgBmNzjExLM3+cMiS8xPZoJLsbFvUPM=;
-        b=nH7Ts2gLyscNCrxT1L9G5lRDOTbOQxvHItrez1V4+3kDhBNr7AaG45i6cET5G6TWJI
-         70CtKf697Sg6Wlu6Pdc4rho/rBPr5OKHBbcPNAgOMVbJCWVB1p5IYjjf91Xce+EkrJBc
-         U5y7nJ4iXSjTRqs8iB4Qaz3b0kP+I7ibbF54mxgUL9IFS4g+HNf2qIYfaHcWBUjjLjG6
-         8N+WDamU7QBL+5g0t26UMkZ+4SM/i/cPLW67iL5JvhnrgG13Ca0bo+erkkYuwShWWr/k
-         Y1l+XMZX/Hi70+QUjJ4G35oG2ZKqFTtfrlCYmCdeN4bLAEMiXjQjbOhU08p8FPb2UHZr
-         NpgQ==
+        bh=ynTwWaih3UWb7VmKOqAZKdwwEp9nTZ8YKOhE35tWuk0=;
+        b=NV/X/DQX2b/f0LSpBE3OhW54UUcedwsSY4rrSiYKi4SbKb0r3vRfbHjKeJ7/APaNfG
+         KwSLDVJ+UgDOGOtKThcCGXJw6nWkOY7ZtOb8+tNn/+XoIUmLgqScekx2aZuMqeKcEcRs
+         J9HF3FlTv8OgkYFUPGYViISItxllToc5ctdh5h/6t/xL2IYHAPOPCgwN4Rz6SQjatbHs
+         T0Udcml9sFVDBm1d5+fVoIGWTpfYmhTCZ9+5QgIHvBVgFgaH2wKdL4mCK12Ts8t18lm4
+         pyCgyZUtQw3svhx/3s+Vf2lYRydEKnxxgP9hdKxu76kPMK5cr3Z5FeiYzKeXcbg5xBBc
+         xhLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792412020; x=1793016820;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
+        d=1e100.net; s=20260707; t=1792419829; x=1793024629;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=IaMHOaCF9qKahgBmNzjExLM3+cMiS8xPZoJLsbFvUPM=;
-        b=R5emKwnUjDRqIzVPfNJqtjHFxOZ84bylWz89GHMYypiCO9OWsCcIukaJqnAU3BEeRA
-         q2I5cT9K9t26pzJnDDl98EAI9zUoN/ZvmC+3Q2qnX2bHc4s6lpDAKC8YMDvJfRGBkEPF
-         YNLJKjVQ7IXhYySVXztNGBBFhBqr+xlik8I9bdu6+WPra67HAv8dkYo0ZBY1C6R3SCNg
-         0T9ArvN8hUM5vDyT90yiHUJ/Ey70X7Z6PU0vxwCOaNO8ByqHV0E+5svoNq031FM4wTkH
-         DLEcYgLImxqNy1C/YprdbaDb9GpNjXfj/MIouxRZQSLtPcTIIDc1kGmDmAn4nDWEvbTQ
-         5wAw==
-X-Forwarded-Encrypted: i=1; AKwUvBycL9DERbn2Rr9XJUnZoJCsp1YmYjKJEpg+2Pbs7hEJaOLBUPVCoAd2Ms1Sqn/3V5x+r+Epsw==@lists.infradead.org
-X-Gm-Message-State: AFq9FYKL592Ei4JpZXhpq8t3ZL72TZd9wkoLuYPQAP5GFJ6H0a0k1ily
-	S0QfqAQG1O5cDXHVaP9nLJ+8/zN64ck3WYowrkxrSAC/mz+dH450KALyjPV54tU/g1rVzQaupdN
-	f/3wVHh/JhcHjAfGN7lgoQMhRDT5G9z4=
-X-Gm-Gg: AYBFou3SlQ/mfsgbdCShjGOF0grb+nXe90Or+g+r5Ej8GVrbHOP+hUYwUuG+qZ5jhrM
-	6VNVtgU0biC+62wC9mlzj4U+z/phTlQHuxlib9p1oLisWhNIhgS1YIjvex97zlZ5AH8AzQHbO7w
-	48fq17czMbypeacH/LuSFvJ9gVHKQPxP/bkmgeJUV25pASw1LaIei5E7AwkLjHXaUpZ42TvXmQO
-	lYic7Wh3013Dl4qTWt2akrEexCOm99FqkWErSEyBI+FXT6IOdQ3uX7FKjAazyijR9eKKWntbzRc
-	49C+t1P9/+dW+pdXWzBHXquIq3jcigAKPUuV06GyZlpbnKvm9Pt5yycNB3xERKXDf3KuwYwZJWE
-	ucnQMF+4pUC0M0Q==
-X-Received: by 2002:a05:690c:4802:b0:8b0:a857:654f with SMTP id
- 00721157ae682-8b0f222e1f1mr24697237b3.63.1792412019904; Mon, 19 Oct 2026
- 05:13:39 -0700 (PDT)
+        bh=ynTwWaih3UWb7VmKOqAZKdwwEp9nTZ8YKOhE35tWuk0=;
+        b=KCrxKpu2lo1lASu3PJpzlzZkqxeBXb6I/u4lNK81/cvQ4XGAJgcRpXdrb4gN9H8/OP
+         KZfdCyYFkj8+1F/mGIHyG59Lij84oiNYOei4va9xk4++b+tnUH7JBcdNnQ0ZQ4PKoagi
+         EKHfmbREo/iKasMykPEPwdSCN0XXPQyv7yWBTYgneZtl4UeOJnpIvVnb/5C/cLoNzA7E
+         os70Zhk9R6h40UdS6yHHm42aHTMVL3pMsFnt+7xynglGZhx1d11ol9azioTM6LWS/N55
+         EmlzzcbC05dvq+YCkQlD3u1kEFgxpjxQyy1urybtthu2lgNwiBuJ8o1C7OvBvxdwGqwM
+         +2Yg==
+X-Forwarded-Encrypted: i=1; AKwUvBy8528nAMraOe/KBCIziRACZcEdCYGkUfNWX+ihBJPeIM1TTd0aHq+s6YKkrQYQPmsd2hJePw==@lists.infradead.org
+X-Gm-Message-State: AFq9FYJUWpp82dTbsfGmVKVmSqiJF9fjCKZszYKXXysw7r2ySwOjDH1S
+	eoNwbEzVMqkLAA++kG4vCmNXOkdkAsHYC0MJ9CyE+vEUj9RMvJEOPIX6bl0k8PeI4HI=
+X-Gm-Gg: AYBFou3LpOCk1VsSawY2OXwP7LIOYwCpw/wqt0+XO/0mric7XMr5bBlkSToj1GhK10y
+	8j5Retmz7y/LKUG60t7obka4z6yQ9uVk+yg6DAM4qYYFdJxLf7q3EceyAeIJWc6x6qYHMDVFAmW
+	SfipYBpqQkAuo7np3kYCDzEJ9nZDgsjcb9/7PO+XmT5z/2lIWKzemeaR5NfqhAUET28eFWV66Tu
+	lbn7CSXPCO4yGMRdx50j3qeksUkXInUQR/LRPfvYUNQMWJMYvb+gXdR3D/Icp736j6DH81ZdsLu
+	TaMpcdqYVKIWOxQ3jEYtRChA+wOos1OEi/WFKWa7TeC/gQPWLDjXtndzFS0Fh4C6J9bnByQa4gp
+	IhkZoqswQB5S3ruUOcanqPRItZWNs7nYMGHgKRgebb0NIGmYn1mlc6KV9MDz+/pZhLyFKjoMsgb
+	p8hIqM333sY0gkL8imadbXyP4iPpJnnyIpAj2RuDHFaVDG1/FcpALmp1z3CUbtNGFd7yPkDwGQa
+	IsCkvYB9vbX8L4wGDk5N6f4M9hb5EuII0XyYidAVF7F124lHu7xwfn6DNwLyuelfn3RA2iiQcE=
+X-Received: by 2002:a05:6122:6d10:b0:5c9:c60e:3a48 with SMTP id 71dfb90a1353d-5eaaa941aebmr2358171e0c.20.1792419829096;
+        Mon, 19 Oct 2026 07:23:49 -0700 (PDT)
+Received: from google.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5eabf0f70ffsm4885498e0c.16.2026.10.19.07.23.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Oct 2026 07:23:48 -0700 (PDT)
+Date: Mon, 19 Oct 2026 10:23:47 -0400
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	linux-kselftest@vger.kernel.org, kuba@kernel.org,
+	enelsonmoore@gmail.com, bp@alien8.de, shuah@kernel.org,
+	david@kernel.org, akpm@linux-foundation.org, linux-mm@kvack.org,
+	ljs@kernel.org, mhocko@suse.com, skhan@linuxfoundation.org,
+	linux-doc@vger.kernel.org, vbabka@kernel.org,
+	dapeng1.mi@linux.intel.com, linux-kernel@vger.kernel.org,
+	corbet@lwn.net, surenb@google.com, kexec@lists.infradead.org,
+	pratyush@kernel.org, rdunlap@infradead.org, elver@google.com,
+	graf@amazon.com, lirongqing@baidu.com, liam@infradead.org,
+	jlayton@kernel.org
+Subject: Re: [PATCH v1 0/8] kho: add read-only Kexec Handover mode
+Message-ID: <atYn87kYpuIhRxLP@google.com>
+References: <20261019021111.990394-1-pasha.tatashin@soleen.com>
+ <atXYMK5tmW8f23gs@kernel.org>
 MIME-Version: 1.0
-References: <6ac99eb9.6b935c14.1905ce.7c50SMTPIN_ADDED_MISSING@mx.google.com>
- <CAMw=ZnTTUxO2ZCobEDTQUY7OZxmyJUQxg4DkhC9gTWXaDaK1dQ@mail.gmail.com> <20261013110237.GA836401@chenghao-pc>
-In-Reply-To: <20261013110237.GA836401@chenghao-pc>
-From: Luca Boccassi <luca.boccassi@gmail.com>
-Date: Mon, 19 Oct 2026 13:13:28 +0100
-X-Gm-Features: AclHuK_bmEUQOsQIU6VRKds3I_yd9xZsuOO4tGVmB2Rnh13ICGRCJP9TMe8I_xk
-Message-ID: <CAMw=ZnTksVT1wuQwAjzz_2tYSCvLSxeUBa3mYQvCFuKUtcydaA@mail.gmail.com>
-Subject: Re: Question about obtaining LUO session FD for non-systemd-managed service
-To: Chenghao Duan <duanchenghao@kylinos.cn>
-Cc: jianghaoran@kylinos.cn, avagin@gmail.com, linux-mm@kvack.org, 
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	systemd-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <atXYMK5tmW8f23gs@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261019_051343_199939_7EFD78D1 
-X-CRM114-Status: GOOD (  34.05  )
+X-CRM114-CacheID: sfid-20261019_072350_961651_416ED452 
+X-CRM114-Status: GOOD (  30.10  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -120,103 +110,111 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, 13 Oct 2026 at 12:02, Chenghao Duan <duanchenghao@kylinos.cn> wrote=
-:
->
-> On Sat, Oct 10, 2026 at 03:05:40PM +0200, Luca Boccassi wrote:
-> > On Sat, 10 Oct 2026 at 04:11, Chenghao Duan <duanchenghao@kylinos.cn> w=
-rote:
-> > >
-> > > Hi Luca,
-> > >
-> > > I watched your excellent presentation from the LPC conference in Prag=
-ue.
-> > >
-> > > I have a question I=E2=80=99d like to consult with you.
-> > >
-> > > I am currently working on the `memfd_luo` feature in CRIU. My goal is=
- to
-> > > leverage the LUO capability to store checkpoint images inside memfds.
-> > > After a kexec reboot, the image data will be retrieved directly from
-> > > memory instead of from disk.
-> > >
-> > > Here is my pull request on the CRIU GitHub repository:
-> > > https://github.com/checkpoint-restore/criu/pull/3152
-> > >
-> > > In the PR discussion, avagin suggested using systemd as the CRIU daem=
-on
-> > > to centrally manage LUO sessions and access to `/dev/liveupdate`. I h=
-ave
-> > > watched your talk and read parts of the systemd source code.
-> > >
-> > > From my understanding, systemd currently provides a unit=E2=80=91base=
-d solution
-> > > where child processes can inherit LUO session file descriptors. Howev=
-er,
-> > > this approach requires the target service to run as a child of a syst=
-emd
-> > > unit. As far as I know, CRIU does not run as a systemd=E2=80=91manage=
-d service.
-> > >
-> > > So my question is: for services such as CRIU that are **not systemd=
-=E2=80=91managed
-> > > child services**, how can they obtain LUO=E2=80=91session=E2=80=91rel=
-ated file descriptors
-> > > managed by systemd?
-> > >
-> > > Thank you very much for reading this email. My knowledge of systemd i=
-s still
-> > > limited, so please feel free to correct me if I have misunderstood an=
-ything.
-> > >
-> > > Thanks & best regards,
-> > > Chenghao Duan <duanchenghao@kylinos.cn>
-> >
-> > Hi,
-> >
-> > At some point up in the stack, everything runs as a systemd unit, so
-> > it's only a question of figuring out in your setup how to pass the
-> > FD(s) up and down the stack.
->
-> Hi Luca,
->
-> Thanks for your reply.
->
-> The `LUOSession=3D` configuration only takes effect for services managed
-> by the system manager. If I run the CRIU command from an SSH login shell
-> as I am doing now, the environment belongs to a transient unit under the
-> user manager. In this case, we cannot use `LUOSession=3D` to obtain the
-> LUO session fd via systemd. Does this mean the process needs to open
-> `/dev/liveupdate` by itself to create the session fd?
->
-> Below is the attached service of the process found via `systemctl status`=
-.
->
-> [root@localhost criu]# ps -ef |grep criu
-> root       57589    7729  0 18:25 pts/2    00:00:00 ./criu/criu dump -D .=
-./test -t 52922 -j --memfd-images -v4
-> root       57784    7571  0 18:27 pts/0    00:00:00 grep --color=3Dauto c=
-riu
-> [root@localhost criu]# systemctl status 57589
-> =E2=97=8F session-5.scope - Session 5 of User root
->      Loaded: loaded (/run/systemd/transient/session-5.scope; transient)
->   Transient: yes
->      Active: active (running) since Tue 2026-10-13 10:03:55 CST; 8h ago
->       Tasks: 4
->      Memory: 148.9M (peak: 1.3G)
->         CPU: 47.000s
->      CGroup: /user.slice/user-0.slice/session-5.scope
->              =E2=94=9C=E2=94=80 7712 "sshd: root [priv]"
->              =E2=94=9C=E2=94=80 7724 "sshd: root@pts/2"
->              =E2=94=9C=E2=94=80 7729 -bash
->              =E2=94=94=E2=94=8057589 ./criu/criu dump -D ../test -t 52922=
- -j --memfd-images -v4
->
-> I'm not sure whether my understanding is correct. Could you please
-> provide your feedback?
+On 10-19 11:43, Mike Rapoport wrote:
+> Hi Pasha,
+> 
+> Some brief comments before digging in.
+> 
+> On Sun, Oct 18, 2026 at 10:11:03PM -0400, Pasha Tatashin wrote:
+> > This series introduces a read-only Kexec Handover mode, enabled at boot
+> > via 'kho_ro=<pa>' pointing to the physical address of the KHO FDT.
+> > 
+> > In standard KHO, the target kernel takes ownership of preserved memory
+> > during early boot, initializes struct pages for preserved folios, and
+> > reclaims KHO metadata and preserved pages back into the page allocator
+> > as they are restored.
+> > 
+> > In some scenarios (such as a caretaker, inspection kernel, firmware), a
+> > kernel needs to inspect and consume preserved KHO subtrees, radix trees,
+> > and serialized metadata without taking ownership of or modifying the KHO
+> > state, leaving the preserved KHO tree intact for a subsequent kernel.
+> > In this mode, the KHO physical memory lies outside the kernel's direct
+> > map.
+> > 
+> > To support this cleanly without duplicating KHO traversal logic:
+> > - Patch 1 exposes the physical address of the outgoing KHO FDT via
+> >   /sys/kernel/debug/kho/out/fdt_phys so userspace tooling can pass it
+> >   to a 'kho_ro=<pa>' kernel.
+> 
+> We already pass the physical address, why adding a boolean kho_ro is not
+> enough?
 
-That's a user unit, and as per the documentation LUOSession=3D is only
-supported for system units. So yes you have to provide your program
-with privileged access to the character device and create the session
-yourself, and then stash it in the FD Store as normal.
+In standard KHO, we pass the physical address as part of the normal 
+kexec_file_load() reboot path. In that flow, the outgoing kernel shuts 
+down or serializes all devices into LUO state, releases machine control, 
+and hands over all machine resources to the next kernel, which becomes the 
+sole "Machine Owner" (MO) and owns all machine resources.
+
+Here, we are using a model where a minimal "Linux Caretaker" (LC) kernel 
+runs concurrently while the MO is still active. We spin off LC on 
+dedicated CPUs that have been offlined from the MO scheduler, giving LC 
+read-only access to KHO so it can temporarily take care of VM while MO 
+undergoes a standard KHO-preserved kexec reboot (i.e. Live Update). Once 
+the new MO kernel boots up, it takes back the resources from LC and 
+retrieves everything normally from LUO/KHO.
+
+LC is never the machine owner: it has no PCI support compiled in, does 
+not handle device interrupts, cannot handle page faults, etc. It only 
+exists as a temporary caretaker. LC is booted entirely inside a small 
+LUO-preserved memfd area (in our use case, LC's RAM is only ~128MB, 
+while the host machine has terabytes of memory). Because LC's direct map 
+only covers its own tiny memory footprint (for isolation reasons, and to 
+save on struct pages), the KHO FDT, radix tree, and preserved VM memory 
+all reside outside of LC's direct map.
+
+LC is configured and launched directly from userspace while MO is still 
+running. Therefore, LC does not receive bootloader handoff data from an 
+outgoing kernel, as MO is not even shutting down yet. Userspace 
+therefore reads needs PA address of KHO FDT and explicitly passes 
+'kho_ro=<pa>' on LC's kernel command line.
+
+> 
+> > - Patch 2 moves the shared radix-tree key encoding and indexing,
+> >   vmalloc flag conversion, and FDT validation and subtree lookup helpers
+> >   to kernel/liveupdate/kexec_handover_internal.h so they can be shared
+> >   between standard and read-only KHO.
+> > - Patch 3 hardens kho_restore_vmalloc() by introducing
+> >   kho_vmalloc_validate() in kernel/liveupdate/kexec_handover_internal.h
+> >   to validate the preservation metadata header and flags before
+> >   restoring the vmalloc area.
+> 
+> The diff for kexec_handover_internal.h 
+> 
+> >  kernel/liveupdate/kexec_handover_internal.h   | 171 +++++++-
+> 
+> seems a wee too large. Maybe some of this should move to a .c file?
+
+Agreed. I originally kept them in the header as static inlines because 
+they are mostly small bit manipulations and helper routines without loops, 
+but moving them into a dedicated kernel/liveupdate/kho_core.c is OK.
+
+Also, for v2, I am planning to allow CONFIG_KEXEC_HANDOVER and 
+CONFIG_KEXEC_HANDOVER_READONLY to co-exist in the same build instead of 
+being mutually exclusive. That way we won't need two different kernels 
+for vmtests. In that model, common KHO API will use function vectors 
+dynamiclly decided at early boot depending on which mode is activated 
+('kho=on' vs 'kho_ro=<pa>').
+
+> > - Patch 4 avoids modifying ser->next and bs->head_pa in kho_block_add()
+> >   and kho_block_set_shrink_one() when operating on an incoming block
+> >   set, as the chain is already linked and incoming blocks must not be
+> >   modified in KHO read-only mode.
+> > - Patch 5 adds CONFIG_KEXEC_HANDOVER_READONLY and
+> >   kernel/liveupdate/kexec_handover_ro.c. When booted with
+> >   'kho_ro=<pa>', preserved KHO metadata is mapped read-only
+> >   (PAGE_KERNEL_RO), with the FDT and radix-tree nodes mapped lazily on
+> >   first visit and kept cached, providing read-only implementations of
+> >   kho_retrieve_subtree(), kho_restore_vmalloc(),
+> >   kho_ro_lookup_folio_order(), kho_ro_map_folio(), and kho_ro_unmap().
+> 
+> What are the expected users of these APIs?
+
+The primary use case is achieving ultra-low disruption Live Update 
+(<30ms VM blackout time) while running a minimal VMM inside the caretaker 
+kernel. This VMM keeps VMs responsive by servicing software-only, fully 
+virtualized devices that do not require host hardware interrupts or global 
+machine state (such as virtio-console, pvpanic, virtio-rng, etc.).
+
+Thanks,
+Pasha
 
