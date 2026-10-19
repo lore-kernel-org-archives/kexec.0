@@ -4,60 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 94C23CCF2D6
-	for <kexec@archiver.kernel.org>; Mon, 19 Oct 2026 10:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AB73BCCF2D5
+	for <kexec@archiver.kernel.org>; Mon, 19 Oct 2026 10:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=sXO2/1ZLYjpyHDjT93fi/BujL9M5/NL5FbbRDOzOStI=; b=eddfuxpkpcvU2xf2LC+995/SO+
-	Z1YXLt2qK6KMRQVi1JtXET3yccfK4MYYEB/qLJmHmakDfe/iiPFtZvIxI1F3g+G2tOD5qVpqeLuVH
-	+XAt0Zo+5d7e0WOdaJWTM1OcFSqK2DxB/Mm3pZI7MrxP1eonlFWH/aunyF5B+MKw/eNnDgjChC1YM
-	4Rmp9+9HZm+leeh+AtUXDc3ZCtRkhtx0SltKwuTQxae73kQB/wi1rBAWzQYLNof2+5oCpmJQFU97R
-	u/Cich/ZnSjkTa8nn2ta7IfuZaYWo3YVIATQiY1WGB0P5FHhXFDHSbEUUNkoiUD+/NpHWavJT5Hak
-	wf6l6IHg==;
+	bh=O+H3ORQrwht0RhH+jV/nG3TxmFwVK7hnaHuDKuALH5U=; b=o0KgDXGxNbayptdw5LN2ccdh9F
+	uB/HWK9tplezp2rvV8Qgky/vAhoRb4SH/kU3HSZNtZ6DE0YU7/JRnGaJ/oMmuqtKfMUFfkmhQkHqq
+	anA/QKCs+wnLao7qSwQH/Xxe4xOUltvE9WXdJFbdcVtT/g4GbG0MZvIYVPhupZhRajDFGRxJ3ZHuF
+	sADEyOd4rVXlZlWaMyhRbv7Ali9StdQ8y1CGXQKVdIGsrlpncPH5MxHOcOwm5ntooIuxn850WY4be
+	8lkHotjOIDGMEWwG/mi+RlXKJ+PbATnc1pcR2DSKdeCyV3cxTM1JeXDLe/qJ8ufcgGVICtyy/EwHC
+	brqnO3jg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xIksz-00000007ELU-2XAQ;
-	Mon, 19 Oct 2026 10:46:33 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xIkta-00000007ERl-3Eee;
+	Mon, 19 Oct 2026 10:47:10 +0000
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xIksy-00000007ELK-0vz3
+	id 1xIktY-00000007EQY-1GOh
 	for kexec@lists.infradead.org;
-	Mon, 19 Oct 2026 10:46:32 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 01CCC4403B;
-	Mon, 19 Oct 2026 10:46:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BFA11F000C4;
-	Mon, 19 Oct 2026 10:46:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792406791;
-	bh=sXO2/1ZLYjpyHDjT93fi/BujL9M5/NL5FbbRDOzOStI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=lSYA73yMQyL4lLb4kPx0Zs3lLN5hldyzT3bd2envsgGUGVBvQEPWXtcmMckyJUUWu
-	 8cZlXxgiJFs10A9wmhW7ZoJ3+cn5Sj8EAzUajflfgdSJFDA/5EUbftljxJ1W1sBT28
-	 Ebr1W9F8TAOa95buU6O0qAHHExPX47+hbcJz6yGdaqvQjBp20HfbqrP+mN1qgsqhen
-	 Jkwm4CCcW3ldfORM667zxYEiF5EMmbbgsf+z9ygLXnP8I9+4wEEGfarhlVm2SOemLW
-	 Htv/UWXBk98wmVc0EwCUeHXTyQLw+Ja6IA7QaTIt051iJQPq4C3InOk5isPktjkx3Q
-	 6kEab0XFecCSA==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: BernardoGV@proton.me
-Cc: rppt@kernel.org,  sourabhjain@linux.ibm.com,  pratyush@kernel.org,
-  graf@amazon.com,  akpm@linux-foundation.org,  guodongtai@kylinos.cn,
-  pasha.tatashin@soleen.com,  ritesh.list@gmail.com,
-  kexec@lists.infradead.org,  linux-mm@kvack.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kho: fix global scratch size calculation
-In-Reply-To: <d4c253f3-d36f-0253-f22d-43c9f397f6ad@proton.me>
-	(BernardoGV@proton.me's message of "Sat, 17 Oct 2026 16:19:31 +0000")
-References: <d4c253f3-d36f-0253-f22d-43c9f397f6ad@proton.me>
-Date: Mon, 19 Oct 2026 12:46:28 +0200
-Message-ID: <2vxzjynege7v.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	Mon, 19 Oct 2026 10:47:09 +0000
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1792406821;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O+H3ORQrwht0RhH+jV/nG3TxmFwVK7hnaHuDKuALH5U=;
+	b=RJrgegDSh31nSEeRaJ40tX9/wCik01AUj23iNKFod8Vpe5ofRKiuMhcPTZ57MmiKpzCWTr
+	XU4gMrQtGXzOXRjA88LaB+n2r4ogDkXj5oj63WGWgGObA+eFOxrV0KiZeRsdMsTOoiqkxP
+	BELJw07TMmdrlW3wiMH3Qddl7ylj1edkuLs2gXy5SwdmiikCP2Z+uUaorINQKT3ar5rdvC
+	WYNGsHTgatQw2BiLOzvd1r/2NIffMdC79bzZ/an4CjVR8p0heUzhn/ksRwNoAbC2KJDoaJ
+	VpNQeXKcaejCw3h6CKqU4g6oJWZ2U0XmV0lsBFakoeL89CdlplLKVBb1Z3cGtQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1792406821;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O+H3ORQrwht0RhH+jV/nG3TxmFwVK7hnaHuDKuALH5U=;
+	b=L3yq5glitizDFhda1Bh5+tTcD0rO1VcMiIZrlrRUvxqJJWdj3FfRuqPmo0KDmfK9TVGTwE
+	I7vKDiEiUZZXqeDw==
+To: Zack Rusin <zack.rusin@broadcom.com>, sashiko-reviews@lists.linux.dev
+Subject: Re: [PATCH v2 2/6] crash: Notify pre-kdump callbacks before
+ switching kernels
+In-Reply-To: <CABQX2QNHSjP+FFppUR1ohthwvCjWNA2ozOuZtnwwdNu7WGaV0g@mail.gmail.com>
+References: <cover.1790014793.git.zack.rusin@broadcom.com>
+ <9ef573cdbbf5e659eea16fa23afeaf2488049198.1790014793.git.zack.rusin@broadcom.com>
+ <20260928180829.3A3461F000FF@smtp.kernel.org>
+ <CABQX2QNHSjP+FFppUR1ohthwvCjWNA2ozOuZtnwwdNu7WGaV0g@mail.gmail.com>
+Date: Mon, 19 Oct 2026 12:53:00 +0206
+Message-ID: <87v76yotln.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261019_034708_485630_557109FE 
+X-CRM114-Status: GOOD (  11.41  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -69,84 +73,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Cc: x86@kernel.org, Ajay Kaher <ajay.kaher@broadcom.com>, Kees Cook <kees@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Young <ruirui.yang@linux.dev>, Stephen Brennan <stephen.s.brennan@oracle.com>, Bo Gan <bo.gan@broadcom.com>, "H.
+ Peter Anvin" <hpa@zytor.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, Brennan Lamoreaux <brennan.lamoreaux@broadcom.com>, linux-doc@vger.kernel.org, Joel Granados <joel.granados@kernel.org>, Alexey Makhalov <alexey.makhalov@broadcom.com>, Eugenio Perez <eperezma@redhat.com>, Ingo Molnar <mingo@redhat.com>, bcm-kernel-feedback-list@broadcom.com, Thomas Gleixner <tglx@kernel.org>, Petr Mladek <pmladek@suse.com>, Randy Dunlap <rdunlap@infradead.org>, Baoquan He <baoquan.he@linux.dev>, virtualization@lists.linux.dev, Steven Rostedt <rostedt@goodmis.org>, Maaz Mombasawala <maaz.mombasawala@broadcom.com>, Borislav Petkov <bp@alien8.de>, Shuah Khan <skhan@linuxfoundation.org>, Michael Kelley <mhklinux@outlook.com>, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ian Forbes <ian.forbes@broadcom.com>, "Michael S. Tsirkin" <mst@redhat.com>, Pratyush Yadav <pratyush@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat, Oct 17 2026, BernardoGV@proton.me wrote:
-
-> On Mon, Oct 12, 2026, Mike Rapoport wrote:
->> I mean more fundamental code refactoring that takes into the account all
->> cases (and I could miss some)
+On 2026-09-28, Zack Rusin <zack.rusin@broadcom.com> wrote:
+>> > @@ -139,6 +140,7 @@ void __noclone __crash_kexec(struct pt_regs *regs)
+>> >                       struct pt_regs fixed_regs;
+>> >
+>> >                       crash_setup_regs(&fixed_regs, regs);
+>> > +                     panic_notify_pre_kdump(NULL);
 >>
->> - NUMA vs no-NUMA
->> - systems that have global scratch containing lowmem scratch vs those that
->>   don't
->> - and of course fix global scratch over-allocation
+>> [Severity: Medium]
+>> Will this cause pre-kdump notifiers to receive a NULL message pointer instead
+>> of the expected panic message?
+>>
+>> If a system panic occurs and kexec is configured with the default setting of
+>> crash_kexec_post_notifiers=0, vpanic() triggers __crash_kexec(NULL) before
+>> reaching its own explicit panic_notify_pre_kdump(buf):
+>>
+>> kernel/panic.c:vpanic() {
+>>     ...
+>>     if (!_crash_kexec_post_notifiers)
+>>         __crash_kexec(NULL);
+>>     ...
+>>     panic_notify_pre_kdump(buf);
+>> }
+>>
+>> When this happens, __crash_kexec() will invoke panic_notify_pre_kdump() with
+>> a NULL message pointer. This permanently consumes the once-per-boot guard,
+>> and any callback relying on the documented msg parameter will experience
+>> data loss or potential NULL dereferences, violating the API contract that
+>> promises the panic message during a panic.
 >
-> One more case for the list: reservations made before KHO sizes scratch
-> that are never served from it. HugeTLB is already excluded. crashkernel
-> is the other big one. Sourabh mentioned it in the powerpc thread. Here
-> are x86 numbers from a machine that never asked for KHO.
->
-> Ubuntu 26.04's generic kernel (7.0.0-38-generic) ships
-> CONFIG_KEXEC_HANDOVER_ENABLE_DEFAULT=y, so scratch is reserved on every
-> boot. (26.10 has since turned the default off. I've asked for the same
-> in 26.04 [1].) The machine is a single-node Ryzen AI Max+ 395 with
-> 128 GiB and no hugetlb. kdump is set up the stock Ubuntu way, which gives
-> crashkernel 2048M high + 256M low.
->
-> Three cold boots of the same kernel, KHO on by default:
->
->   kho/out/scratch_len   crashkernel   no crashkernel   delta
->   lowmem                   760 MiB         248 MiB      -512 = 2 x 256
->   global                 8,510 MiB       4,414 MiB    -4,096 = 2 x 2,048
->   per-node                4,338 MiB       4,338 MiB         0
->   total                 13,608 MiB       9,000 MiB    -4,608 = 2 x 2,304
->
-> "Memory: ... reserved" goes from 18,849,832K to 11,771,924K. The
-> difference, 6,912 MiB, is exactly the crashkernel plus 2x crashkernel of
-> scratch. With kho=off it is 4,915,232K.
->
-> Both problems show up here. Without crashkernel, lowmem + global is
-> 2 x 2,331 MiB and per-node is 2 x 2,169 MiB, so on a single node about
-> 2,169 MiB of reservations get counted twice. That is the over-allocation,
-> and the total comes to roughly 4x what was reserved. crashkernel is
-> allocated with NUMA_NO_NODE, so it lands only in lowmem/global, at 2x.
-> If I read Sourabh's patch right, it would count NUMA_NO_NODE only for
-> global. On this machine that leaves crashkernel as nearly all of the
-> global scratch (about 2 x (162 + 2,304) MiB).
+> afaict Sashiko gets tripped up here by the doc from the previous
+> email. Nothing in this series dereferences the msg. The only callback
+> is the VMware logger in patch 4, which ignores the argument. It reads
+> the printk buffer, where vpanic() has already written the panic line.
 
-To remove crashkernel from scratch calculation, you'd have to allocate
-it from outside of scratch, like the hugetlb pages. Crashkernel is
-usually allocated earlier in boot, so we'd have to call
-kho_extend_scratch() before crashkernel allocations, and I am not sure
-if something will break if we do so. I suspect we at least need to check
-efi_init().
+If you are not using the argument, why are you providing it in your new
+API? Just drop the argument. If any future pre_kdump panic notifiers
+need additional information, they can adjust the API appropriately.
 
-Not saying it can't be done, but it isn't trivial.
-
->
-> The cost is not only boot memory. Scratch ends up MIGRATE_CMA, so
-> anything that pins can't use it. Here that is amdgpu GTT on an APU. A
-> single process tops out at 107 GiB of a 120 GiB GTT limit with KHO on,
-> and at 117 GiB with kho=off.
-
-Well, my pipe dream is to have KHO entirely without scratch. You would
-use the same mechanism that kho_extend_scratch() uses, to discover all
-usable early boot memory, and not pass over any scratch at all (or, a
-very small amount of scratch). The only problem is that it might fall
-prey to fragmentation. If preserved regions are spread apart enough, you
-might end up with _no_ memory to boot from. I am not sure how to make
-this idea reliable yet.
-
->
-> Happy to test patches on this box.
->
-> [1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2171297
->
->
-
--- 
-Regards,
-Pratyush Yadav
+John Ogness
 
