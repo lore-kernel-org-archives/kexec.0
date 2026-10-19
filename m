@@ -4,64 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 63406CCF2DA
-	for <kexec@archiver.kernel.org>; Mon, 19 Oct 2026 08:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 94C23CCF2D6
+	for <kexec@archiver.kernel.org>; Mon, 19 Oct 2026 10:46:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=fy26aZDFXGwTKUczlKhKEkeMGJBaoVyPi8d9QO/iEBg=; b=WGd0rqQKLEM6TqbTKxoKn29ucJ
-	SbTYA2dmfmoJ6qJDDxJxmg8un5DEZtR1vge+HspqD1i2WOLlEs2Z29o/fcbtm5/n3KnzEbPCIjsSp
-	sg3tH2/X7CawuPj4onRWmHBS3vNG/OG504WI+xfxRPN9kbcgvOzRzFqezKM10yr1Ml6eYIaWjHNL4
-	CD/3Af0p12olBYCQqh+YPlATyPTaVhRDH5zwp2FJ5u6BdsgqSStvF1Ucw7BInNE4KExQsOgqqDnGE
-	d/eYCBcB0cOY6RhHZ/krKjWSf4UIyD8dsboGrBD/toIucl21Whs5CPYHiKcWa7h4cdlsEPv0dBAJ6
-	tPjZ4fsw==;
+	bh=sXO2/1ZLYjpyHDjT93fi/BujL9M5/NL5FbbRDOzOStI=; b=eddfuxpkpcvU2xf2LC+995/SO+
+	Z1YXLt2qK6KMRQVi1JtXET3yccfK4MYYEB/qLJmHmakDfe/iiPFtZvIxI1F3g+G2tOD5qVpqeLuVH
+	+XAt0Zo+5d7e0WOdaJWTM1OcFSqK2DxB/Mm3pZI7MrxP1eonlFWH/aunyF5B+MKw/eNnDgjChC1YM
+	4Rmp9+9HZm+leeh+AtUXDc3ZCtRkhtx0SltKwuTQxae73kQB/wi1rBAWzQYLNof2+5oCpmJQFU97R
+	u/Cich/ZnSjkTa8nn2ta7IfuZaYWo3YVIATQiY1WGB0P5FHhXFDHSbEUUNkoiUD+/NpHWavJT5Hak
+	wf6l6IHg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xIiy8-00000006tMk-3kU0;
-	Mon, 19 Oct 2026 08:43:44 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xIksz-00000007ELU-2XAQ;
+	Mon, 19 Oct 2026 10:46:33 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xIiy5-00000006tMS-2YFK
+	id 1xIksy-00000007ELK-0vz3
 	for kexec@lists.infradead.org;
-	Mon, 19 Oct 2026 08:43:41 +0000
+	Mon, 19 Oct 2026 10:46:32 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id B81CD60207;
-	Mon, 19 Oct 2026 08:43:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94B2F1F000C4;
-	Mon, 19 Oct 2026 08:43:32 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 01CCC4403B;
+	Mon, 19 Oct 2026 10:46:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BFA11F000C4;
+	Mon, 19 Oct 2026 10:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792399420;
-	bh=fy26aZDFXGwTKUczlKhKEkeMGJBaoVyPi8d9QO/iEBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=PSqmWsFbqFiDSBjC/53uW07HkSAkEyNdAnioC4t11fPnuQQjqwXCsz5QZxWNzvtKu
-	 s4NT+DDvVz7C79CnHxcyBjU0f4l1lKcg5JTEH0QsCEE+8STWWee65KsizEA7dyjTZ8
-	 rkrYYVcPNOk4KIz5Z/pwmWfNg68KxagnnLostsYKXPvc2hAccesbB0SaU8mDWIty5O
-	 I9JdWqLvfLfMIr1zOwfQVK1YEFlz4FRAdFPltQBGqL4TTTSOZTSQWBe8UD0uxFlE/K
-	 QqHRKz9awTFYvfx42xk5lPAuTxtswSLDF0anNn02GSjw67Aj0OcQsuvULQ0XP4ToYp
-	 XHWqil432b9Uw==
-Date: Mon, 19 Oct 2026 11:43:28 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: linux-kselftest@vger.kernel.org, kuba@kernel.org,
-	enelsonmoore@gmail.com, bp@alien8.de, shuah@kernel.org,
-	david@kernel.org, akpm@linux-foundation.org, linux-mm@kvack.org,
-	ljs@kernel.org, mhocko@suse.com, skhan@linuxfoundation.org,
-	linux-doc@vger.kernel.org, vbabka@kernel.org,
-	dapeng1.mi@linux.intel.com, linux-kernel@vger.kernel.org,
-	corbet@lwn.net, surenb@google.com, kexec@lists.infradead.org,
-	pratyush@kernel.org, rdunlap@infradead.org, elver@google.com,
-	graf@amazon.com, lirongqing@baidu.com, liam@infradead.org,
-	jlayton@kernel.org
-Subject: Re: [PATCH v1 0/8] kho: add read-only Kexec Handover mode
-Message-ID: <atXYMK5tmW8f23gs@kernel.org>
-References: <20261019021111.990394-1-pasha.tatashin@soleen.com>
+	s=k20260515; t=1792406791;
+	bh=sXO2/1ZLYjpyHDjT93fi/BujL9M5/NL5FbbRDOzOStI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=lSYA73yMQyL4lLb4kPx0Zs3lLN5hldyzT3bd2envsgGUGVBvQEPWXtcmMckyJUUWu
+	 8cZlXxgiJFs10A9wmhW7ZoJ3+cn5Sj8EAzUajflfgdSJFDA/5EUbftljxJ1W1sBT28
+	 Ebr1W9F8TAOa95buU6O0qAHHExPX47+hbcJz6yGdaqvQjBp20HfbqrP+mN1qgsqhen
+	 Jkwm4CCcW3ldfORM667zxYEiF5EMmbbgsf+z9ygLXnP8I9+4wEEGfarhlVm2SOemLW
+	 Htv/UWXBk98wmVc0EwCUeHXTyQLw+Ja6IA7QaTIt051iJQPq4C3InOk5isPktjkx3Q
+	 6kEab0XFecCSA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: BernardoGV@proton.me
+Cc: rppt@kernel.org,  sourabhjain@linux.ibm.com,  pratyush@kernel.org,
+  graf@amazon.com,  akpm@linux-foundation.org,  guodongtai@kylinos.cn,
+  pasha.tatashin@soleen.com,  ritesh.list@gmail.com,
+  kexec@lists.infradead.org,  linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kho: fix global scratch size calculation
+In-Reply-To: <d4c253f3-d36f-0253-f22d-43c9f397f6ad@proton.me>
+	(BernardoGV@proton.me's message of "Sat, 17 Oct 2026 16:19:31 +0000")
+References: <d4c253f3-d36f-0253-f22d-43c9f397f6ad@proton.me>
+Date: Mon, 19 Oct 2026 12:46:28 +0200
+Message-ID: <2vxzjynege7v.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261019021111.990394-1-pasha.tatashin@soleen.com>
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,106 +72,81 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Pasha,
+On Sat, Oct 17 2026, BernardoGV@proton.me wrote:
 
-Some brief comments before digging in.
+> On Mon, Oct 12, 2026, Mike Rapoport wrote:
+>> I mean more fundamental code refactoring that takes into the account all
+>> cases (and I could miss some)
+>>
+>> - NUMA vs no-NUMA
+>> - systems that have global scratch containing lowmem scratch vs those that
+>>   don't
+>> - and of course fix global scratch over-allocation
+>
+> One more case for the list: reservations made before KHO sizes scratch
+> that are never served from it. HugeTLB is already excluded. crashkernel
+> is the other big one. Sourabh mentioned it in the powerpc thread. Here
+> are x86 numbers from a machine that never asked for KHO.
+>
+> Ubuntu 26.04's generic kernel (7.0.0-38-generic) ships
+> CONFIG_KEXEC_HANDOVER_ENABLE_DEFAULT=y, so scratch is reserved on every
+> boot. (26.10 has since turned the default off. I've asked for the same
+> in 26.04 [1].) The machine is a single-node Ryzen AI Max+ 395 with
+> 128 GiB and no hugetlb. kdump is set up the stock Ubuntu way, which gives
+> crashkernel 2048M high + 256M low.
+>
+> Three cold boots of the same kernel, KHO on by default:
+>
+>   kho/out/scratch_len   crashkernel   no crashkernel   delta
+>   lowmem                   760 MiB         248 MiB      -512 = 2 x 256
+>   global                 8,510 MiB       4,414 MiB    -4,096 = 2 x 2,048
+>   per-node                4,338 MiB       4,338 MiB         0
+>   total                 13,608 MiB       9,000 MiB    -4,608 = 2 x 2,304
+>
+> "Memory: ... reserved" goes from 18,849,832K to 11,771,924K. The
+> difference, 6,912 MiB, is exactly the crashkernel plus 2x crashkernel of
+> scratch. With kho=off it is 4,915,232K.
+>
+> Both problems show up here. Without crashkernel, lowmem + global is
+> 2 x 2,331 MiB and per-node is 2 x 2,169 MiB, so on a single node about
+> 2,169 MiB of reservations get counted twice. That is the over-allocation,
+> and the total comes to roughly 4x what was reserved. crashkernel is
+> allocated with NUMA_NO_NODE, so it lands only in lowmem/global, at 2x.
+> If I read Sourabh's patch right, it would count NUMA_NO_NODE only for
+> global. On this machine that leaves crashkernel as nearly all of the
+> global scratch (about 2 x (162 + 2,304) MiB).
 
-On Sun, Oct 18, 2026 at 10:11:03PM -0400, Pasha Tatashin wrote:
-> This series introduces a read-only Kexec Handover mode, enabled at boot
-> via 'kho_ro=<pa>' pointing to the physical address of the KHO FDT.
-> 
-> In standard KHO, the target kernel takes ownership of preserved memory
-> during early boot, initializes struct pages for preserved folios, and
-> reclaims KHO metadata and preserved pages back into the page allocator
-> as they are restored.
-> 
-> In some scenarios (such as a caretaker, inspection kernel, firmware), a
-> kernel needs to inspect and consume preserved KHO subtrees, radix trees,
-> and serialized metadata without taking ownership of or modifying the KHO
-> state, leaving the preserved KHO tree intact for a subsequent kernel.
-> In this mode, the KHO physical memory lies outside the kernel's direct
-> map.
-> 
-> To support this cleanly without duplicating KHO traversal logic:
-> - Patch 1 exposes the physical address of the outgoing KHO FDT via
->   /sys/kernel/debug/kho/out/fdt_phys so userspace tooling can pass it
->   to a 'kho_ro=<pa>' kernel.
+To remove crashkernel from scratch calculation, you'd have to allocate
+it from outside of scratch, like the hugetlb pages. Crashkernel is
+usually allocated earlier in boot, so we'd have to call
+kho_extend_scratch() before crashkernel allocations, and I am not sure
+if something will break if we do so. I suspect we at least need to check
+efi_init().
 
-We already pass the physical address, why adding a boolean kho_ro is not
-enough?
+Not saying it can't be done, but it isn't trivial.
 
-> - Patch 2 moves the shared radix-tree key encoding and indexing,
->   vmalloc flag conversion, and FDT validation and subtree lookup helpers
->   to kernel/liveupdate/kexec_handover_internal.h so they can be shared
->   between standard and read-only KHO.
-> - Patch 3 hardens kho_restore_vmalloc() by introducing
->   kho_vmalloc_validate() in kernel/liveupdate/kexec_handover_internal.h
->   to validate the preservation metadata header and flags before
->   restoring the vmalloc area.
+>
+> The cost is not only boot memory. Scratch ends up MIGRATE_CMA, so
+> anything that pins can't use it. Here that is amdgpu GTT on an APU. A
+> single process tops out at 107 GiB of a 120 GiB GTT limit with KHO on,
+> and at 117 GiB with kho=off.
 
-The diff for kexec_handover_internal.h 
+Well, my pipe dream is to have KHO entirely without scratch. You would
+use the same mechanism that kho_extend_scratch() uses, to discover all
+usable early boot memory, and not pass over any scratch at all (or, a
+very small amount of scratch). The only problem is that it might fall
+prey to fragmentation. If preserved regions are spread apart enough, you
+might end up with _no_ memory to boot from. I am not sure how to make
+this idea reliable yet.
 
->  kernel/liveupdate/kexec_handover_internal.h   | 171 +++++++-
-
-seems a wee too large. Maybe some of this should move to a .c file?
-
-> - Patch 4 avoids modifying ser->next and bs->head_pa in kho_block_add()
->   and kho_block_set_shrink_one() when operating on an incoming block
->   set, as the chain is already linked and incoming blocks must not be
->   modified in KHO read-only mode.
-> - Patch 5 adds CONFIG_KEXEC_HANDOVER_READONLY and
->   kernel/liveupdate/kexec_handover_ro.c. When booted with
->   'kho_ro=<pa>', preserved KHO metadata is mapped read-only
->   (PAGE_KERNEL_RO), with the FDT and radix-tree nodes mapped lazily on
->   first visit and kept cached, providing read-only implementations of
->   kho_retrieve_subtree(), kho_restore_vmalloc(),
->   kho_ro_lookup_folio_order(), kho_ro_map_folio(), and kho_ro_unmap().
-
-What are the expected users of these APIs?
-
-> - Patch 6 updates kho_block to map incoming serialized blocks read-only
->   via kho_ro_map_folio() and unmap them via kho_ro_unmap() in read-only
->   KHO mode.
-> - Patches 7 and 8 extend test_kho and tools/testing/selftests/kho/vmtest.sh
->   to test read-only KHO handover when preserved memory lies outside
->   the boot kernel's initial memory range on both x86_64 and arm64.
-> 
-> Pasha Tatashin (8):
->   kho: expose physical address of outgoing FDT
->   kho: move radix tree, vmalloc, and FDT helpers to internal header
->   kho: validate preservation metadata in kho_restore_vmalloc()
->   kho: do not modify incoming serialized blocks
->   kho: add read-only Kexec Handover mode
->   kho: support read-only KHO mode in kho_block
->   kho: test: support read-only KHO mode in test_kho
->   selftests: kho: add read-only KHO test to vmtest.sh
-> 
->  .../admin-guide/kernel-parameters.txt         |   6 +
->  Documentation/admin-guide/mm/kho.rst          |   3 +
->  include/linux/kexec_handover.h                |  53 ++-
->  kernel/liveupdate/Kconfig                     |  16 +
->  kernel/liveupdate/Makefile                    |   4 +-
->  kernel/liveupdate/kexec_handover.c            | 142 +------
->  kernel/liveupdate/kexec_handover_debugfs.c    |  22 +-
->  kernel/liveupdate/kexec_handover_internal.h   | 171 +++++++-
->  kernel/liveupdate/kexec_handover_ro.c         | 378 ++++++++++++++++++
->  kernel/liveupdate/kho_block.c                 |  92 +++--
->  lib/Kconfig.debug                             |   2 +-
->  lib/test_kho.c                                |  68 +++-
->  tools/testing/selftests/kho/arm64.conf        |   3 +
->  tools/testing/selftests/kho/init.c            |  38 +-
->  tools/testing/selftests/kho/vmtest.sh         | 103 +++--
->  tools/testing/selftests/kho/x86.conf          |   1 +
->  16 files changed, 881 insertions(+), 221 deletions(-)
->  create mode 100644 kernel/liveupdate/kexec_handover_ro.c
-> 
-> 
-> base-commit: 27be83a12b246b6b3783e7d3ac5c378ff7520f25
-> -- 
-> 2.56.0.176.g3575e65682-goog
-> 
+>
+> Happy to test patches on this box.
+>
+> [1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2171297
+>
+>
 
 -- 
-Sincerely yours,
-Mike.
+Regards,
+Pratyush Yadav
 
