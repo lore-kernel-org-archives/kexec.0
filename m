@@ -2,149 +2,103 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D371D606A329
-	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 18:36:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F37D606A31A
+	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 19:23:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ZrMnOHRT;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=MqIbdFJz
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=gyrBHe76;
+	dkim=fail reason="signature verification failed" (1024-bit key, unprotected) header.d=broadcom.com header.i=@broadcom.com header.a=rsa-sha256 header.s=google header.b=R+nRAeYv
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:To:
+	Subject:Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=bk7jnHkCaTC6apRDhn9sV5M02QmCrnv+VHnvjh6o6qg=; b=ZrMnOHRToZIevD24H0SJdmisGh
-	iUsZkspEIIFWMqAFCuVpffIx35KA8scZ6WLNNYVGIwjeXgL9G6jTNn8AXUDnNVtiwbSPGP47/Pu3T
-	0q6v7SBDFvDH0vc7GTUziIIF0wVS4XIGTsIRCBNWDINYInh+1OeqIzs0rAAFX7sqBp1VpvesOkw71
-	Zz6cWrMuJbPos2PueK70CjO6mCP0suAMm63ESRtmMm5926nz6KKAu3FmbCoBCcXBkuZ6BQte3vdge
-	xKZpnwphWmchJxOLNaccer5PhOOzFPmP0szEsJ6tMJWtVsr0H8+EFdi1Q5iFJAslEBTA5k0yHyEGz
-	pZSZBXTQ==;
+	bh=WGRlMhTHrXOTTyluJhCdEqzTwaqKFboZ80xpT2HFv7A=; b=gyrBHe76jIss6baYyC3DEJcWJm
+	/Fm/NAeR3m1vE+i3LwT/7+VJ3w0FWnuVCCd8D5PZNlxrsAF0pJ8SVom6LxCROYhIczgHfHXpA1lW7
+	u+DalU+aXaRIgAe3hKfU6FB8K/gJN93qbZsdvQyzzLsiEETzoac7Cxv7E6EObQKdIeYUK4bfnGW/c
+	qp4H50pc01qY+HnqVkPlDyiHznzK8dQ9zMaRF4BCCVTGFrA9UDF/7jJzN44PfeGqDi5E0E92hyNe2
+	bDNCMLuYpy2xIz2vTXqJBAKMOPlnXXy09r903Q3Rfp/Rg/+j2qRxrkhWA32MKSsxR8/wWNbCoCYqw
+	gLvDohVg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJEhD-0000000ASsI-3Jab;
-	Tue, 20 Oct 2026 18:36:23 +0000
-Received: from mail-southcentralusazon11011045.outbound.protection.outlook.com ([40.93.194.45] helo=SN4PR0501CU005.outbound.protection.outlook.com)
+	id 1xJFQu-0000000AX2l-2g6F;
+	Tue, 20 Oct 2026 19:23:36 +0000
+Received: from mail-yx1-xb162.google.com ([2607:f8b0:4864:20::b162])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJEhB-0000000ASrk-06lD
+	id 1xJFQs-0000000AX2H-15zo
 	for kexec@lists.infradead.org;
-	Tue, 20 Oct 2026 18:36:22 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Fes33Vb5bVLa8XJddrFIjcBBTUwtajjaRvlffgDQ75lPnC+08QizS12KEMt7QTT9h+gjrTK2KRPoAala+Wa0z+u09gtsWHF+vbn+hspSukZMBePtE4O6/n/nf47fJMsMR5Nfz5fTXPROtF+zTHIboGDrEazSRajYnYxcWPg9Q7gAGp9AkVqgvPsfFYo3begpjbq65KOrBA0DhgDGqywatG9221nriSxITXYS2f+82uVDVFqQ/ttrIAfLsIUGLmYhVptZu8DuQzRDhrjLfDcI/0wA7+ir/sSUGhEHPXqJgki6KnQTNkHlmke5akVfC+2wIxMAmvBUs0MsPm4bz8s3og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bk7jnHkCaTC6apRDhn9sV5M02QmCrnv+VHnvjh6o6qg=;
- b=ewj+LSIvP/qUYmSWWn0k/4mS/JTyplm8pJkKZ3txZ07vNJYFFBZ78Fqi8th+PTljU4QIW9hLK+kAhhZyF+OR+EjpAkFBwDMT8PQvEEFMxi4nESTRwr2lhd0Xht5Avg+FIKh7fLpKLLVKk1JyoDsev7x5tQDJVf4sjnLKZON//bTH9vQV4vbOaetHgo55PPtMK3oTWCanBUDMvqsqTOlZ0w7tsr/4Je/48bS/UF5mOl3B3pEW+fEV4lQugbazPexdbg5D5YT5FOzCxUfFai3M67UfflcCilB64n4FjYPcs7NapEX9geHTdKQtqAk4brCnWDDKrrg4B5i7F13rU12cEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bk7jnHkCaTC6apRDhn9sV5M02QmCrnv+VHnvjh6o6qg=;
- b=MqIbdFJz2O+uKA1RQvKlyZ1nz2oX1//etAzoTK6UAwBfVXC6rS1nHh6gTXJrrImlHrrtCUuXV17hcUFDMyU52NbfEU5unNnKoqYOoIHqiNaY8TmzkKT6mzY6H1YVfIM3rV7LaFoEW7UXdLxvUH3g98PMniEwONaQuPrVfuzNbF++xZ3wxtTUvjH2gwjJzOI1Ac0VMSUgSDbzG1i4qLCoajvnwJuC6ilM9LB544tUN2cEmRoKvT/8wJWdGem8nrgZ1+zw3x60byBYm7+jlWJILI+zsDAEvp8U79doVmwLe08rEUkF/kFr8RENLlMtE6YMRAN3CG3as7f1YLlGqVOn1Q==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CHBPR12MB731189.namprd12.prod.outlook.com
- (2603:10b6:610:33d::12) by CHBPR12MB443627.namprd12.prod.outlook.com
- (2603:10b6:610:36c::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.14; Tue, 20 Oct
- 2026 18:36:10 +0000
-Received: from CHBPR12MB731189.namprd12.prod.outlook.com
- ([fe80::b0e5:123d:fe06:e10d]) by CHBPR12MB731189.namprd12.prod.outlook.com
- ([fe80::b0e5:123d:fe06:e10d%6]) with mapi id 15.21.0546.012; Tue, 20 Oct 2026
- 18:36:10 +0000
-Date: Tue, 20 Oct 2026 15:36:09 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Philipp Rudo <prudo@redhat.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Pingfan Liu <atlarge80@qq.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Simon Horman <horms@kernel.org>,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Viktor Malik <vmalik@redhat.com>,
-	Jan Hendrik Farr <kernel@jfarr.cc>,
-	Baoquan He <baoquan.he@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	kexec@lists.infradead.org, bpf@vger.kernel.org,
-	systemd-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	Dave Young <ruirui.yang@linux.dev>
-Subject: Re: [PATCHv7 00/13] kexec: Use BPF lskel to enable kexec to load PE
- format boot image
-Message-ID: <20261020183609.GI3008132@nvidia.com>
-References: <20260322014402.8815-1-piliu@redhat.com>
- <20261011201325.GA918242@nvidia.com>
- <722bd9d8-5620-498a-a6c2-d9a1f498e0b7@app.fastmail.com>
- <20261020194719.4fbd4e4a@rotkaeppchen>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261020194719.4fbd4e4a@rotkaeppchen>
-X-ClientProxiedBy: BL1PR13CA0302.namprd13.prod.outlook.com
- (2603:10b6:208:2c1::7) To CHBPR12MB731189.namprd12.prod.outlook.com
- (2603:10b6:610:33d::12)
+	Tue, 20 Oct 2026 19:23:35 +0000
+Received: by mail-yx1-xb162.google.com with SMTP id 956f58d0204a3-676804a3a22so3566598d50.1
+        for <kexec@lists.infradead.org>; Tue, 20 Oct 2026 12:23:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792524212; x=1793129012;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:dkim-signature:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=WGRlMhTHrXOTTyluJhCdEqzTwaqKFboZ80xpT2HFv7A=;
+        b=CM6sEP9cEEbt0LanTqxwDRyD33w+9P4H5plgZB3FHxWgLH/Rq1hNG0vNOQdJLHFEL3
+         JUt/eWNqjW9sAnvUmFcl14LmigRYLPbZUbbug9l6v3gMMTydgEZ2CRXffkPeJWgcyTns
+         GfqiJI7uBPPmz0ODm2yv5cMgMDPO2hxX2N1C9UzWoFL6X1LOcZ7D7aKYGa8DA67+5sKg
+         v3afYg4kdfUHOY+9vuT5nVu925wmh55ATY8oLcRzIeHpT1oFE9kKDsdAqoWkOMDmR9bw
+         PtGcnV4JiXm3OpuSZBGjJpoVppaFKxUW0ZcKfsrRiXrvibVWX+13dqUmZcSl9ZBCw821
+         t85g==
+X-Forwarded-Encrypted: i=1; AKwUvBwK3GpdAkMhSE+VoGhbIUZc3NI4phhkkqgqf/MwlnmOBIcfj8azYwWxEllQwuqJn8b7MdvgzA==@lists.infradead.org
+X-Gm-Message-State: AFq9FYKzXbhBxmC9MuIyTxVV3xMI5WYQzYshY++usBE7k6QsfcR8LaTZ
+	tKR9mGiaQr542MjuNyiV1QgseDNgTg/8ny8aH67BhNHycvx03at8KZDRNVUmDGdI5MUpmvZPaKC
+	g0aGYwjztSAIqffgt7YwPTRWi9Xpmkkdfberir3KqtQyyh6aWdt4GcSlmIF+ZU8PW8ts3iQR+ZO
+	M8XI83WsYIc6GtjEZ+vvbC9dAo/r58lPLVa3RL/hgNjldKsRjDPlghb4O75hvly/p3BKLWaSROb
+	tlzRicc/1pl
+X-Gm-Gg: AYBFou3v2HIDWA57iW3QIdPR1zzgqUw4xsOTtHvYBhMsDPweONg7AJZlsRc+7RNcAPA
+	3A/P64CeEEnz1CdLHwdX0m15o9l/HHOESLpEmOIcNwWyDMe0W7phSRa8OC8dW+42T4Azfn1kbD+
+	vMdVbvxLqimr1HXl3ZLHnwCjgNUVdKsyGxa5Rzh7AHFoJlHSPhY7ZXQ3V30oyXsUOfC+1wKaWmc
+	MzmHgwt4F5yjZT40FQkk6ZQwD6qiP677Ol55jTsonHxfIm/LwJgy/bDn9cs2/lofD3SPbkB27V6
+	2gWIRvlEqSBylEI/0nAMBQf8Ubx9yVUilFFGMH3dv6YJl92lLTkVeBR3xwoa0pqW0KVPBHOGe49
+	/XEaM1d1q9wiP8cVHXShfSryQN127lrRVmVghJq8Sh0Ht5TjPUifvLvSVJk8bsOdL2rvWTBOfiA
+	NMVmtr7+YgxstAlGxBVBbdCncKxC+wiNJN
+X-Received: by 2002:a53:ac93:0:b0:679:9c43:8594 with SMTP id 956f58d0204a3-67a0e02a8famr109131d50.12.1792524211893;
+        Tue, 20 Oct 2026 12:23:31 -0700 (PDT)
+Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-17.dlp.protect.broadcom.com. [144.49.247.17])
+        by smtp-relay.gmail.com with ESMTPS id 956f58d0204a3-67a0e50b647sm4921d50.27.2026.10.20.12.23.31
+        for <kexec@lists.infradead.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 Oct 2026 12:23:31 -0700 (PDT)
+X-Relaying-Domain: broadcom.com
+X-CFilter-Loop: Reflected
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-3ab117eba28so107471fa.2
+        for <kexec@lists.infradead.org>; Tue, 20 Oct 2026 12:23:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1792524210; x=1793129010; darn=lists.infradead.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=WGRlMhTHrXOTTyluJhCdEqzTwaqKFboZ80xpT2HFv7A=;
+        b=R+nRAeYvYfS/tSznAbNcctpxfuxscu49Zde9TXnJp4ZiOOteTB4kvGBAS6weDAHrpn
+         0qrw6Gtf3YJ7jlLQEdQ8vKvUvu09FTc9UxDestjKorXiypO6ZcJrz5eBQCTfSaXfOC6H
+         fqNIFuAEs7f7wLSYEdBfikMNHDLHIkxd5p5ws=
+X-Forwarded-Encrypted: i=1; AKwUvByrcOJpjMRtd9dmBeyqNEapzkSY5HjJtXrEXogMv8zRhDe2qn1tF9jhcF7EM/BX3nU3vBDSwQ==@lists.infradead.org
+X-Received: by 2002:a05:6512:a91:b0:5bc:d39d:b451 with SMTP id 2adb3069b0e04-5be509f6638mr4064196e87.9.1792524210034;
+        Tue, 20 Oct 2026 12:23:30 -0700 (PDT)
+X-Received: by 2002:a05:6512:a91:b0:5bc:d39d:b451 with SMTP id
+ 2adb3069b0e04-5be509f6638mr4064176e87.9.1792524209462; Tue, 20 Oct 2026
+ 12:23:29 -0700 (PDT)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CHBPR12MB731189:EE_|CHBPR12MB443627:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4d3a841d-6153-4fbc-cf58-08df2ed90324
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|23010399003|1800799024|6133799003|22082099003|18002099003|10067099003|4143699003|11063799006|56012099006;
-X-Microsoft-Antispam-Message-Info: JeAXw9a+mn8LyJe/njYKMpNN/PPk2t/IyBWkbWzOKF2ISpR40ZME0J7zZQdiwaGeDIfhXJtA1Mwv9rvurV8psjYx0vK6o1xeKXj3WAxx7ql1eA3YdF8E4zmRJVmP0W98JV6boE22bl5HCP84bywGo0aAvmhybU1noczIkR+ydwZahIh6AA6zLRGo84kjAaybP24fPNDDdHaAvxF0WY4j0VtKXyOKKRAtdOM/8f/qU4gAHX/FKg93b40ILLbUJS1t/hIvnclu3TOu0xIwx0BnepRwHPh/LjVblRa5Vh1PPH0h7jeYbgLv6hl+c1gy03YDvxRWaAYk4sexoQj/Be7iDKh5elkQ6m14TELX1N9wM4ILe2v/9CTBByRKgEZgD9xIcfPl/g4NG6W9eiG4JKPi82xxBlw1PiC3iIewE5vNQU6o8sa3cEwssl/n9CLRg6iWmrto0S5ez0NYKMdEAysIOZlIVVgy170ziHuWAhJZ4129UZ9RbcP7vvEeq63Z4PS1vOrKi0cOff3rtUByIXhMJhA2d4OuGBtXv35RHmopRLcF0MQ3L/bUonGXYOVi4RxgaLFM8wy7OQhmzedgWyUMdClFqpz07np4SRdfvbPuQ22/sqNNDCudfFlHh6/jZrjYbvmbC+FCxkf8dVL0VHgOpOsyx+1Nz6x5hJW3qZdRcGg=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CHBPR12MB731189.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(23010399003)(1800799024)(6133799003)(22082099003)(18002099003)(10067099003)(4143699003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?v3+H6yWAyfD5DNL5jPyCA2q3JE99nw6kysQGYRtbH+5DKzy875lLrkIEJ793?=
- =?us-ascii?Q?2NuWok1ZKkyLnEe1Yn8opIaUcGQovf2z5tavvwSlWVGK/96ZHwguHGj0hOSi?=
- =?us-ascii?Q?5REkdJdUw8hhioBF5MyUaj1DmkMOUlWMFud/BE/uHN8xoZP3c872ST3MUe5v?=
- =?us-ascii?Q?trKb5lo0TETfrV6i7ngVnh7EpkpKE3XDwoxi5IGoh1REMxq3SUe16d1omRXr?=
- =?us-ascii?Q?5C85D8KcbgK7Il5PDxVWB/EfklxIY2tS27gjH+pO4CkEanP53wBK/rXJ6RPV?=
- =?us-ascii?Q?v0oI5A1BjHBD5g6fd14nMclLd22vuAlj62kluwH05rIqk31Mya2NtPnSVrHm?=
- =?us-ascii?Q?qeXu/750Tl/I/9nZTJFhGeWaWUF1it8biMXRVsZ3RdLqZwRAlfIC7uhTN2lH?=
- =?us-ascii?Q?dH9CGktIYnn0FaHn6gD3ZOAuxnOiSjxs8sF8Km1+ELt2c2QRuMm1adfqPDPC?=
- =?us-ascii?Q?G7k7GWGlxgYfnFoK6VEcoaxh7rc/GjTKoY8M1lek7Lt16R1iVGRZgm6WXcmN?=
- =?us-ascii?Q?16vOhVWHAcqegFpGAuuhrrsX5j5xDAxIHr2Hc7ZiwCAJrI8i1E1jtx/Q7mek?=
- =?us-ascii?Q?IgZM5AQdUi15Vh/QdOIXJziorSL0AfpyiEDFsiNx3dLE1HzEDkS5WOsd+Vjm?=
- =?us-ascii?Q?3LuHFrDunQ53rnDAciEvpJPRogbED85qQuobyZzJHA2SBadlZQeWabDZi2KP?=
- =?us-ascii?Q?YTEJ7o/Emv/ficNkWz47vAdyGOMNzdefiqI67DQIvcMLl0svzLFEetRtGK3A?=
- =?us-ascii?Q?VT/oku9uQoUscaQbJU25qVqEQSK4sJZS5q7WfhXFwcoxXAeAJk5WwtaXI0S3?=
- =?us-ascii?Q?qiQ5+4CCCPnaU1EDshSEt8uYW1L+5iv+x/7CB1p8UQg76Mmy/0wSd35EfTxM?=
- =?us-ascii?Q?ZuDXEEjoQIdq4QNPpmHWDxdkAIxZaxbdiKF+FbzB73hqASIdANGwVmCthUHi?=
- =?us-ascii?Q?h7XX2Sd0v8EcrdcwDGRshEZprZauVP4NsPwTzUHrokSPE11oo9TvgN6ZmNGm?=
- =?us-ascii?Q?+4JQEzsFyIKaR9xOfxF//4RyQmMtrcE8R8PBqTZIQiz1HfCH+bjWNRa5k89X?=
- =?us-ascii?Q?qDKcWqEzG/bvyvpf4AMKmVqh9krqR2mBovqupukEK91ZX7UHlN+iie5fTATi?=
- =?us-ascii?Q?rLxVsgSlulbzO2LLWC0T0k5Miiwka70pwkbU6X0jPJ3vmChJb5ZKPA0x9l5k?=
- =?us-ascii?Q?FifOiYdx/l79mwfHCMaTZcHxzgBkoRI4SKmEwIJ4nS/pLKnfsZdQM36UNsoH?=
- =?us-ascii?Q?+VtqEaT8k6SPUVQXKzXY/7EK9URChamxdpvh75mwvOyuPxtoHmqiVN8tmhL3?=
- =?us-ascii?Q?aNhQPxHtLdLh2aQMkYNtjBdHIfYr9UMB4WrYyFiau8s4b5/kIvszpCGAlhFo?=
- =?us-ascii?Q?OzQPDi2Mk6yFOtmoxcc2FFTfFf2U7F183JndFWiP+gip1bPJmHryZl3zv5Du?=
- =?us-ascii?Q?lBxd9gy74pUMz//BrpAdTRsW/JVnq28vDIDbbU6xsGorJJHfOQei/ZgEcSQP?=
- =?us-ascii?Q?r6543fyAkOZmQsIvnmNLZJTN0l6TJDTo73Pxj7tTCHuys7ubmAHA6ES0OwqR?=
- =?us-ascii?Q?Bfx1mhtEPnfeoZgpXN8ONWxlvziR4g8ZrPkuwBzLxIt0sFnH8usBEINiLNZQ?=
- =?us-ascii?Q?FUahMTPdC0IIQJdrK+OOu5hYhpyOkgNCm1YnvPVWNGXQNV0kAbRPr8aSYSu0?=
- =?us-ascii?Q?eTO2UUme/lzrtvKpr1GCBYqK4nZCvuLsYhzdqbHwrr4Qnymb?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d3a841d-6153-4fbc-cf58-08df2ed90324
-X-MS-Exchange-CrossTenant-AuthSource: CHBPR12MB731189.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Oct 2026 18:36:10.6932
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uOQ6QQFnT+g7MMZRiFdXnM9tOCTXM63RzmSbna/Al1OKLUYK7hM2ANG8db84OWbR
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CHBPR12MB443627
+References: <cover.1790014793.git.zack.rusin@broadcom.com> <81cb85568b36273a8e66215b3e6d671b8488d402.1790014793.git.zack.rusin@broadcom.com>
+ <bc783856-9480-3944-67fb-675e4c11d8c2@igalia.com> <atdYIxwz8ksYNty6@pathway.suse.cz>
+ <atd7GInNurGWLUha@pathway.suse.cz> <ateYxCu63pRY9EGq@pathway.suse.cz>
+In-Reply-To: <ateYxCu63pRY9EGq@pathway.suse.cz>
+From: Zack Rusin <zack.rusin@broadcom.com>
+Date: Tue, 20 Oct 2026 15:23:15 -0400
+X-Gm-Features: AclHuK9M32-EdHA1PszLB6Y1IscuEU7zjL5tmXKU0jHcFstdblGuIKRQsty0q34
+Message-ID: <CABQX2QOKCpoUY_ObhFif7xN7OF-NzcxEM0JABAXo9n9KaacO7A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] panic: Add a notifier chain for pre-kdump callbacks
+To: Petr Mladek <pmladek@suse.com>
+X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000cf2569065e4a9028"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261020_113621_066378_B4BC7DE3 
-X-CRM114-Status: GOOD (  17.06  )
+X-CRM114-CacheID: sfid-20261020_122334_366822_82B961ED 
+X-CRM114-Status: GOOD (  26.47  )
 X-Spam-Score: -2.4 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -155,56 +109,207 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Cc: Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, Kees Cook <kees@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Young <ruirui.yang@linux.dev>, Stephen Brennan <stephen.s.brennan@oracle.com>, Bo Gan <bo.gan@broadcom.com>, "H. Peter Anvin" <hpa@zytor.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, Brennan Lamoreaux <brennan.lamoreaux@broadcom.com>, x86@kernel.org, Joel Granados <joel.granados@kernel.org>, Alexey Makhalov <alexey.makhalov@broadcom.com>, Ingo Molnar <mingo@redhat.com>, bcm-kernel-feedback-list@broadcom.com, Ajay Kaher <ajay.kaher@broadcom.com>, Baoquan He <baoquan.he@linux.dev>, John Ogness <john.ogness@linutronix.de>, virtualization@lists.linux.dev, Steven Rostedt <rostedt@goodmis.org>, Maaz Mombasawala <maaz.mombasawala@broadcom.com>, Borislav Petkov <bp@alien8.de>, Mike Rapoport <rppt@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, Michael Kelley <mhklinux@outlook.com>, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ian Forbes <ian.forbes@broadcom.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, Thomas Gleixner <tglx@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Pratyush Yadav <pratyush@kernel.org>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Tue, Oct 20, 2026 at 07:47:19PM +0200, Philipp Rudo wrote:
+--000000000000cf2569065e4a9028
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> The reason why I and Pingfan abandoned this approach and went for eBPF
-> instead was due to security concerns. Our premise is/was that the EFI
-> stub must not be able to harm the running kernel. Be it intentional or
-> not. That's a guarantee eBPF with its verifier can give but a simple
-> file signature can't.
+Hi, Petr.
 
-This seems too much to me, I think the approach of signature
-verification is sufficient. If you can load a module then you don't
-need to fiddle with some covoluted EFI attack. Distros should include
-their EFI signing key in the kernel keyring so a standard UKI passes
-the test.
+First of all I really appreciate you going over this. Thanks!
 
-The eBPF approach fails from my perspective because it never actually
-runs the stub code or using the EFI entry point. My interest is to
-actually use the EFI entry point, not just treat it as some convoluted
-zip file.
+On Tue, Oct 20, 2026 at 12:37=E2=80=AFPM Petr Mladek <pmladek@suse.com> wro=
+te:
+> Approach B: Three lists: platform, smp_safe, and smp_unsafe()
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> It is similar to approach A. We would just add an extra:
+>
+>      + panic_notifiers_platform_list
+>      + disable_panic_notifiers_platform_list
+>
+> This list would be used for smp-safe notifiers which are
+> required be some platform. It would be the notifiers which
+> are crucial. Which are currently the reason to set
+> "_crash_kexec_post_notifiers".
+>
+> It might be called also when __crash_kexec() is called
+> outside panic().
+[...]
+> This patchset, adding vmware_log_notifier, might implement just
+> the panic_notifiers_platform_list. The rest might be
+> added by another volunteer.
+>
+> How does this sounds, please?
 
-> But that still leaves the "unintentional malicious" case. Meaning,
-> that someone tries to be "smart" and does weird stuff in the EFI stub
+That sounds good to me. For v3 I'd do just the platform list:
 
-Buggy modules exist too, it is up the signer to take a position on
-that, IMHO. How can you have an "out of tree stub" if the only things
-loaded are signed by the kernel builder?
+- One call in vpanic(), right after kgdb_panic() and before the first
+__crash_kexec(), whatever crash_kexec_post_notifiers is set to. The
+list runs before kdump and before the other CPUs are stopped.
+- One call in __crash_kexec(), after it has taken the kexec lock,
+found a crash image and saved the registers, for paths that enter
+kdump without panic(), like oops_end() or Hyper-V's hv_crash_handle().
+Once the early panic call has run the list, the guard makes this one a
+no-op. That removes the dependence on crash_kexec_post_notifiers you
+pointed out before.
+- A once-only guard shared by both, so the list also runs only once
+when a callback panics.
+- disable_panic_notifiers_platform_list as a boot and runtime switch,
+checked in the same helper, replacing panic_pre_kdump_postpone.
+- Kernel-doc with your definition: smp-safe callbacks a platform
+needs, which would otherwise be a reason to set
+crash_kexec_post_notifiers.
 
-Regardles, Ard's suggestion to move the execution from a kthread to a
-user thread could provide enough isolation to mititgate even this..
+Roughly:
+        kgdb_panic(buf);
 
-> Two more comments with my distro head on.
-> 
-> First, kdump is extremely important to us. So the final solution needs
-> to be able to load a crash kernel as well.
+        panic_notify_platform();
 
-And you want this to be a UKI too?
+        if (!_crash_kexec_post_notifiers)
+                __crash_kexec(NULL);
 
-I'm not sure it is so good for crash robustness to have so much more
-complexity in the boot path..
+and in __crash_kexec():
 
-Though I wonder if you can run the EFI flow when initially loading and
-staging the crash kernel? Then stop at the exit boot services and wait
-for a crash before jumping back into the flow.
+        crash_setup_regs(&fixed_regs, regs);
+        /* Direct entry outside panic() */
+        panic_notify_platform();
+        crash_save_vmcoreinfo();
 
-Jason
+I'd keep the second call in __crash_kexec() rather than crash_kexec(),
+because afaict crash_kexec() can return without a crash image, e.g.
+from the BPF kfunc, or from oops_end() before it panics. Calling the
+list there would use up the guard even when no kdump follows.
+
+crash_kexec_post_notifiers, the existing list and the kmsg dumpers
+stay as they are, and moving other platforms over can come later.
+
+The VMware log copy would be the only user, and it's still best-effort
+diagnostics: kdump and the reboot don't depend on it. It copies the
+log tail into an 8 KiB buffer. On panic() that happens after the panic
+message and any local backtrace; on direct entry from an oops, after
+the exception output. With the list enabled throughout, the copy
+precedes the later panic notifiers, sys_info() and the all-CPU
+backtrace step. The guest-crash report stays a late kmsg dumper that's
+skipped while a crash kernel is loaded, because the host can power off
+the VM inside that call.
+
+If that matches what you had in mind, I'll do it that way in v3.
+
+Guilherme, Stephen, Baoquan, does that work for you too?
+
+z
+
+--000000000000cf2569065e4a9028
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+6U6qgI8F5eiKsQyE0HgYrQJx/sDs9LLVZlaNiA3U8M8CgEnb8VhuH3BN/yXphhEQdJXb1TyaJA60
+SmHcZdEQZbl4EjwUcs3UIowmI/Mhi7ADQB7VNsO/BaOVBEQk53xH+4djY/cg7jvqTTeliY05j2Yx
+uwwXcDC4mWjGzxAT5DVqC8fKQvon1uc2heorHb555+sLdwYxAgMBAAGjggHYMIIB1DAOBgNVHQ8B
+Af8EBAMCBaAwgZMGCCsGAQUFBwEBBIGGMIGDMEYGCCsGAQUFBzAChjpodHRwOi8vc2VjdXJlLmds
+b2JhbHNpZ24uY29tL2NhY2VydC9nc2djY3I2c21pbWVjYTIwMjMuY3J0MDkGCCsGAQUFBzABhi1o
+dHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3I2c21pbWVjYTIwMjMwZQYDVR0gBF4wXDAJ
+BgdngQwBBQMBMAsGCSsGAQQBoDIBKDBCBgorBgEEAaAyCgMCMDQwMgYIKwYBBQUHAgEWJmh0dHBz
+Oi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwQQYDVR0fBDowODA2
+oDSgMoYwaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3I2c21pbWVjYTIwMjMuY3JsMCIG
+A1UdEQQbMBmBF3phY2sucnVzaW5AYnJvYWRjb20uY29tMBMGA1UdJQQMMAoGCCsGAQUFBwMEMB8G
+A1UdIwQYMBaAFAApNp5ceroPry1QLdugI4UYsKCSMB0GA1UdDgQWBBQNDn2m/OLuDx9YjEqPLCDB
+s/VKNTANBgkqhkiG9w0BAQsFAAOCAgEAF463syOLTQkWZmEyyR60W1sM3J1cbnMRrBFUBt3S2NTY
+SJ2NAvkTAxbPoOhK6IQdaTyrWi8xdg2tftr5FC1bOSUdxudY6dipq2txe7mEoUE6VlpJid/56Mo4
+QJRb6YiykQeIfoJiYMKsyuXWsTB1rhQxlxfnaFxi8Xy3+xKAeX68DcsHG3ZU0h1beBURA44tXcz6
+fFDNPQ2k6rWDFz+XNN2YOPqfse2wEm3DXpqNT79ycU7Uva7e51b8XdbmJ6XVzUFmWzhjXy5hvV8z
+iF+DvP+KT1/bjO6aNL2/3PWiy1u6xjnWvobHuAYVrXxQ5wzk8aPOnED9Q8pt2nqk/UIzw2f67Cn9
+3CxrVqXUKm93J+rupyKVTGgKO9T1ODVPo665aIbM72RxSI9Wsofatm2fo8DWOkrfs29pYfy6eECl
+91qfFMl+IzIVfDgIrEX6gSngJ2ZLaG6L+/iNrUxHxxsaUmyDwBbTfjYwr10H6NKES3JaxVRslnpF
+06HTTciJNx2wowbYF1c+BFY4r/19LHygijIVa+hZEgNuMrVLyAamaAKZ1AWxTdv8Q/eeNN3Myq61
+b1ykTSPCXjBq/03CMF/wT1wly16jYjLDXZ6II/HYyJt34QeqnBENU9zXTc9RopqcuHD2g+ROT7lI
+VLi5ffzC8rVliltTltbYPc7F0lAvGKAxggJXMIICUwIBATBiMFIxCzAJBgNVBAYTAkJFMRkwFwYD
+VQQKExBHbG9iYWxTaWduIG52LXNhMSgwJgYDVQQDEx9HbG9iYWxTaWduIEdDQyBSNiBTTUlNRSBD
+QSAyMDIzAgxhPxw+eieHWB40hPkwDQYJYIZIAWUDBAIBBQCggccwLwYJKoZIhvcNAQkEMSIEIJgn
+CNxVL33+iqpOJLjSQE+fI6/B7+bT9NdTrK/5e0egMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEw
+HAYJKoZIhvcNAQkFMQ8XDTI2MTAyMDE5MjMzMFowXAYJKoZIhvcNAQkPMU8wTTALBglghkgBZQME
+ASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQcwCwYJ
+YIZIAWUDBAIBMA0GCSqGSIb3DQEBAQUABIIBABXeJ4Zi7Hx37m/4xuENMuaBIjI5g8sV098DSsuq
+GGOgFSRS+bPdWT+JQ5Th/CRo3u1z6eeXt3O18LZ2WHsM7+gUEGWy2LigXj16/Vkx7Wf6bIJ7OGyM
+gvgMvpksvF0e8Er257K13eJFI8y1wyIM9EjupE87WC0j6Qrso26z6FVa4oCd/WIQj6LmheoX6BiI
+4uqtLF21GGeLkrrv/qVwvyNXTsCZlii5gIifsGkS1Wu4/p1Q3YKmXStgF8+LfwpsBnWKCAoU59+U
+DzxSNhTpQDkXXuTb+stS9jFKvjaPK3Dks11VMG88eqDfHIw71W2iGOuYqt/iCDJAGZhokJecljo=
+--000000000000cf2569065e4a9028--
 
