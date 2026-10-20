@@ -2,84 +2,58 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59705606A31B
-	for <kexec@archiver.kernel.org>; Mon, 19 Oct 2026 22:08:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D23606A31A
+	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 01:15:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=forVSlVS;
-	dkim=pass (2048-bit key, unprotected) header.d=igalia.com header.i=@igalia.com header.a=rsa-sha256 header.s=20170329 header.b=AB7itP/F
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=KQFOTWLR;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XsPEwVCY
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=quSCbZZ7Mq3acy8cy5BNYZd6wRzHmwo845Fz4abnb/A=; b=forVSlVSV04Ij1pPwzyCptX4x1
-	TEA6GgAK2XtxkyVLiqH3AJj94Vg4KWLrYMGCAH4A1dA7yuIdxca7Nwjjrj5tuN4Dnqtu2ynrRssSU
-	jxi7zgDHdynwxYnqZWtLHYrFu/TnjEHGQAiwtZfaFpUEzkyvsBBnMcBV+wsi1ILufEPT2+v6h/DSe
-	NVtcTZYdtZ0wDKv0pFwgvRhAKp0M24vl2ZhDbex1QZYaes7n1JBA7rcbQRXoF0b/hYzjCZ8lzykbc
-	qGuEwgjyjxIxKky2hDYl6TUdRUqSO9dFxxr6K+hKWFTcrx8NMWY2Nnz7FwUG1FhI1Jofiwb32h/nV
-	hjASoCTQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:To:Subject:From
+	:Message-ID:Cc:MIME-Version:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=SrYg+4IxYYwBTzHh7PTz0/BsfWinhw4uhwnWLlCjA3c=; b=KQFOTWLRopJhH0U5/9Vqmzev4Z
+	yyItaUwrHSj9Z3Tga2h13IsEsYjfmI20GIsfA2GIWFPh/dG92uafaYnC2ATAOpGV8tUFOUkuhkeyM
+	jx4xIeLHQAYL0FAOhUT0eryvq/bFaZP0io3C8T4GG4kpbOkN1h27FYIIjfSpoi7FdPS5mW2X8Jcmq
+	IYaI82gLcaid/vmy0t3lksKSPe0otIdxq0dFAZzRiU5whFpX/2XGOuwAFlyRyaDvyN6llhnRiTGT+
+	idEmVB8TyHrgst8pQc4NN1Xnscz4rVYU1+PHjvROlcUhLHyZ4akZ5gO4m4a0lZhqkPDACa1TUf+Ts
+	sGPtKouA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xIvWy-00000008SLN-2U7P;
-	Mon, 19 Oct 2026 22:08:32 +0000
-Received: from fanzine2.igalia.com ([213.97.179.56])
+	id 1xIySA-00000008bHQ-2lVK;
+	Tue, 20 Oct 2026 01:15:46 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xIvWu-00000008SFK-1OKF
+	id 1xIyS9-00000008bHJ-33fG
 	for kexec@lists.infradead.org;
-	Mon, 19 Oct 2026 22:08:32 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:From:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:From:Reply-To;
-	bh=quSCbZZ7Mq3acy8cy5BNYZd6wRzHmwo845Fz4abnb/A=; b=AB7itP/Fnc1oPYnH5pd4YSH42o
-	2OY2m5EgkaQnfXK0/3PmNPIU1DjOHBAryL3MUewZ5eykRJ74om7LFh0usOxBn8u6osDqFIavDj7CQ
-	gx6WCXTpe6bnGYQ7zn6VVbcbGLvQC/BumAliiMSGK5a7baOU7JR13kmW2s/CyZej4JkN9LgFzL0ig
-	k0yoWzQcahjgjPUW76eQs8ofehz8dtgF8QC7mWzfdGwIPz4+tT+r1UcignhPisvESnru+Z2+izyVz
-	j6UNVO8oMNmimLr3j74WHCsE799kWxWjmKmxEz1rycK/5Sm+xDxAH1O/PDx5zXL8tfb33LoT/fHtc
-	C0M4XrmA==;
-Received: from [177.189.74.83] (helo=[192.168.15.93])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1xIvWX-003vJs-Sr; Tue, 20 Oct 2026 00:08:06 +0200
-Message-ID: <609273bd-83d2-7a58-7c88-7e4e01461c1a@igalia.com>
-Date: Mon, 19 Oct 2026 19:07:56 -0300
-X-Archived-By: <archiver.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 3/6] panic: Allow postponing pre-kdump notifiers
-Content-Language: en-US
-To: Zack Rusin <zack.rusin@broadcom.com>
-Cc: Borislav Petkov <bp@alien8.de>, Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.makhalov@broadcom.com>, x86@kernel.org,
- Joel Granados <joel.granados@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
- Baoquan He <baoquan.he@linux.dev>, Andrew Morton
- <akpm@linux-foundation.org>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Dave Young <ruirui.yang@linux.dev>,
- Pratyush Yadav <pratyush@kernel.org>, virtualization@lists.linux.dev,
- bcm-kernel-feedback-list@broadcom.com, Mike Rapoport <rppt@kernel.org>,
- linux-kernel@vger.kernel.org, John Ogness <john.ogness@linutronix.de>,
- Steven Rostedt <rostedt@goodmis.org>,
- Sergey Senozhatsky <senozhatsky@chromium.org>, Kees Cook <kees@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Bo Gan <bo.gan@broadcom.com>,
- Brennan Lamoreaux <brennan.lamoreaux@broadcom.com>,
- kexec@lists.infradead.org, linux-doc@vger.kernel.org,
- Maaz Mombasawala <maaz.mombasawala@broadcom.com>,
- Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap
- <rdunlap@infradead.org>, Stephen Brennan <stephen.s.brennan@oracle.com>,
- Michael Kelley <mhklinux@outlook.com>, Ian Forbes <ian.forbes@broadcom.com>,
- Petr Mladek <pmladek@suse.com>
-References: <cover.1790014793.git.zack.rusin@broadcom.com>
- <52183acf25209275a9a57fe5d746f82d3b7efc3c.1790014793.git.zack.rusin@broadcom.com>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <52183acf25209275a9a57fe5d746f82d3b7efc3c.1790014793.git.zack.rusin@broadcom.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261019_150828_395787_9EE1F699 
-X-CRM114-Status: GOOD (  12.78  )
-X-Spam-Score: -4.5 (----)
+	Tue, 20 Oct 2026 01:15:45 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 644A260098;
+	Tue, 20 Oct 2026 01:15:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8CAB1F000C4;
+	Tue, 20 Oct 2026 01:15:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792458944;
+	bh=SrYg+4IxYYwBTzHh7PTz0/BsfWinhw4uhwnWLlCjA3c=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=XsPEwVCYnNTEG89vLNC+f/KM1ivegM8emhaoX9lGdQ4zqkwSClS7xFVRQ4Lo0BL16
+	 Lkce1/tdnIWljMY9rQCxUsg0CixVgBbV3UwUPB3ochiNeSHyuvpzRZSj1Zt6s4GMdY
+	 DoR5BneRdAATusGwJvS8hRzLF1agwW17xpN4x+7kkM7E9bbZhEORWKNmG80o5IikmP
+	 ZK+SMha/hvBDsd5VGDgaJ7Ukg07spk2dHMXK/Z8LQPBlgrRtPfOLXyCurok0B9cOMf
+	 /GxGSDMyvKPp1nQuE4QfQAcB5nOrvu9ypJxZ+x2EPEn6VE9tYoBSX9iRq0NFowLs+s
+	 Lx818b2r10Dkg==
+Message-ID: <sashiko-outbox-178402@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 1/8] x86/realmode: Remove unnecessary WBINVD from AP
+ startup trampoline
+To: "Pasha Tatashin" <pasha.tatashin@soleen.com>, kees@kernel.org, rppt@kernel.org, juri.lelli@redhat.com, nik.borisov@suse.com, tglx@kernel.org, vschneid@redhat.com, kprateek.nayak@amd.com, vincent.guittot@linaro.org, bp@alien8.de, jpoimboe@kernel.org, tony.luck@intel.com, david@kernel.org, mingo@redhat.com, akpm@linux-foundation.org, seanjc@google.com, ljs@kernel.org, zhangguopeng@kylinos.cn, dietmar.eggemann@arm.com, mhocko@suse.com, vinicius.gomes@intel.com, vbabka@kernel.org, peterz@infradead.org, surenb@google.com, hpa@zytor.com, x86@kernel.org, dmatlack@google.com, tim.c.chen@linux.intel.com, kexec@lists.infradead.org, pratyush@kernel.org, dave.hansen@linux.intel.com, rostedt@goodmis.org, gmonaco@redhat.com, jgross@suse.com, mgorman@suse.de, graf@amazon.com, liam@infradead.org, ridong.chen@linux.dev, blum@kernel.org, longman@redhat.com, bsegall@google.com
+In-Reply-To: <20261019011446.834487-2-pasha.tatashin@soleen.com>
+References: <20261019011446.834487-1-pasha.tatashin@soleen.com>
+ <20261019011446.834487-2-pasha.tatashin@soleen.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 20 Oct 2026 01:15:41 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,44 +63,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-19.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
+X-Archived-By: <archiver.kernel.org>
 
-On 28/09/2026 14:55, Zack Rusin wrote:
-> Provide an escape hatch for debugging kdump failures that may involve
-> pre-kdump callbacks. Add panic_pre_kdump_postpone to skip their early
-> invocation in crash core without consuming the once-only guard.
-> 
-> When enabled, the chain runs before kdump only when
-> crash_kexec_post_notifiers is also enabled. Leave the late panic call
-> unchanged so callbacks remain eligible if that path is reached.
-> Skipping the callbacks may prevent hypervisor crash handling.
-> 
-> Suggested-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> Link: https://lore.kernel.org/r/bc0bdd14-5e6a-0676-cd04-14fb0bb93cd5@igalia.com
-> Signed-off-by: Zack Rusin <zack.rusin@broadcom.com>
-> ---
-> New in v2: optional postponement policy suggested by Guilherme.
-> 
->  Documentation/admin-guide/kernel-parameters.txt | 14 ++++++++++++++
->  include/linux/panic_notifier.h                  |  1 +
->  kernel/crash_core.c                             |  3 ++-
->  kernel/panic.c                                  |  2 ++
->  4 files changed, 19 insertions(+), 1 deletion(-)
-> 
+> trampoline_start executes WBINVD in 16-bit real mode before switching to
+> protected mode. This WBINVD was originally added in the 1990s for
+> Sequent NUMA-Q hardware (as noted by the comment in trampoline_32.S:
+> "Needed for NUMA-Q should be harmless for others"), whose cross-quad
+> caches came up non-coherent prior to OS initialization. Sequent NUMA-Q
+> support (CONFIG_X86_NUMAQ) was removed in commit b5660ba76b41
+> ("x86, platforms: Remove NUMAQ").
+>=20
+> Per the Intel SDM (Vol. 3A, Table 10-1, note 2) and AMD APM, the INIT
+> IPI used to wake secondary CPUs preserves cache contents and leaves
+> CR0.CD and CR0.NW unchanged (0, as already enabled by firmware or the
+> kernel). Neither sev_es_trampoline_start nor trampoline_start64
+> executes WBINVD.
+>=20
+> On modern multi-core processors with large shared last-level caches
+> (such as 504 MB shared L3 per socket on Intel Xeon 6985P-C), WBINVD is
+> not harmless: each execution flushes and invalidates the entire
+> coherence domain's caches and takes ~85-115 ms per CPU while disturbing
+> active workloads on online CPUs.
+>=20
+> Remove the obsolete WBINVD from trampoline_start.
+>=20
+> 2-socket, 480-CPU Intel Xeon 6985P-C (N=3D479, mean of 10 runs):
+>   Offline:  40.40 s -> 40.46 s
+>   Online:   65.83 s -> 11.14 s (-83.1%)
+>   Total:   106.23 s -> 51.60 s (-51.4%)
+>=20
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 
-Thanks for implementing this! It makes sense to me...though I have some
-"conflicting" comments in patch #2 heh
+Sashiko has reviewed this patch and found no issues.
 
-Cheers,
-
-
-Guilherme
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261019011446.8344=
+87-1-pasha.tatashin@soleen.com?part=3D1
 
 
