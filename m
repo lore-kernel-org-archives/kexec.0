@@ -2,50 +2,50 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBCD606A32C
-	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 08:34:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F125606A319
+	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 08:42:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2KqDV07U;
-	dkim=pass (1024-bit key, unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=Kk+jgumG
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=K25W6xL+;
+	dkim=pass (1024-bit key, unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=025hmGKr
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=vBKNWH+6fXgb7uSlyDkZ/sbNDxzLeASFOGVrmanI1ag=; b=2KqDV07UbYHo+hVneDs/Ur9cjm
-	HQrFqcDSMGiJGYsF2npPygvepjlWUikFx6V0EL1ABjhtXMsn4xI3x1crl9IIoIqaJkPBmixp9UjKg
-	1XxIzm+/FLY//fsY2N8BUsEMus6gyAli9viUno7vopmLsVU9zENVjzqOkOPfdQe5XqyyR5EvQiuTI
-	jYUl1ZSRfyq8Myj1NUR09AZCaP3QVv5UOS/iTGIvpOH6+Qk7RCD5L04s0jXdRjGdJoTMAd4PMC2cl
-	mNY2/sx6P+L+ZNMbU725Rf1gqp3NKzeVj+ak2jtD87WL96WyWHQlRTok2II51eypXHFPcRi4K1FGh
-	TSSX2Nfg==;
+	bh=eRsANuJnPqOE4Wj3tiehoMvQqcYK+mSj3Cw9/PCh2hs=; b=K25W6xL+l7Dd6mr6bn0q6UcHC3
+	C7kUI5Q8eXVwKTPzC7+Z4jEbXvKB5PybjLzqG46TP5M0HVUN0e8smQ5tr2DZ/OFM2zMoooKtzEUrW
+	Ar7psxtBuhjubbztv9svPwh8q+YM7LX2h1ooXHuEMzFg9g4l+8Gra2apHNEtY6W6rRZU2VpOvPl5V
+	OAWruMfL85B9TZz1wgEgb+ZI79HHPsf3UEGW/GUmNbaLpm9klJAAFgO4i9tiCx81lv7d7KhFXGnzw
+	IqobNI5bi7RL0dLjfrGoffvQCK+XbMh8WmF2dkwM5kwsSatt9aNZ0Zl3AMTwp2r1HuIuNGee9Zfy8
+	JEBVE3Tw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJ5Ih-00000009CAq-1BFF;
-	Tue, 20 Oct 2026 08:34:27 +0000
-Received: from canpmsgout10.his.huawei.com ([113.46.200.225])
+	id 1xJ5Qq-00000009Dfp-0GG5;
+	Tue, 20 Oct 2026 08:42:52 +0000
+Received: from canpmsgout05.his.huawei.com ([113.46.200.220])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJ5Id-00000009C8J-3hEI;
-	Tue, 20 Oct 2026 08:34:25 +0000
+	id 1xJ5Qm-00000009Deu-39rd;
+	Tue, 20 Oct 2026 08:42:50 +0000
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=vBKNWH+6fXgb7uSlyDkZ/sbNDxzLeASFOGVrmanI1ag=;
-	b=Kk+jgumG+pv7XnaPZDeeAU8MQ3LXTfm6oVnCbW8jazUZnqZ/ORtrC7JgFvxdnO+cDQzOI4t2U
-	7vALOi9vHSSqoltGoZVUZISYSqkFZA0i7RhDVImMBjBBYnv3lpqm+y9AiV7PJ3swzXlcKzvnvXx
-	8keUXFd5fYMskZHOl9KyGJI=
-Received: from mail.maildlp.com (unknown [172.19.163.163])
-	by canpmsgout10.his.huawei.com (SkyGuard) with ESMTPS id 4j85L156ycz1K9Xh;
-	Tue, 20 Oct 2026 16:34:01 +0800 (CST)
+	bh=eRsANuJnPqOE4Wj3tiehoMvQqcYK+mSj3Cw9/PCh2hs=;
+	b=025hmGKrN+QZiKfKk4CvMhbfukHdUUN7geXfiPjgluCJuZBPjCIfgCpEh2Alr5rnWzL2ZnYwN
+	zP1/fkmrTQRQoHpYGCTWembsgsp2yHLnATyrHv5q15C53+q27QslhyGi1JB1NO1j8V6Bpm2++av
+	+isRXcbNUthqnmgDVVXQsnk=
+Received: from mail.maildlp.com (unknown [172.19.162.223])
+	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4j85X13M1lz12LHp;
+	Tue, 20 Oct 2026 16:42:41 +0800 (CST)
 Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0A9C04048B;
-	Tue, 20 Oct 2026 16:34:05 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id D1DE940575;
+	Tue, 20 Oct 2026 16:42:40 +0800 (CST)
 Received: from [10.67.110.68] (10.67.110.68) by kwepemk200008.china.huawei.com
  (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Tue, 20 Oct
- 2026 16:34:02 +0800
-Message-ID: <d7dc6528-4ec8-46d0-b21e-8a4c38edd4ce@huawei.com>
-Date: Tue, 20 Oct 2026 16:34:02 +0800
+ 2026 16:42:38 +0800
+Message-ID: <5c3ba82b-606b-4dd1-b265-4b567c646895@huawei.com>
+Date: Tue, 20 Oct 2026 16:42:37 +0800
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
@@ -83,8 +83,8 @@ Content-Transfer-Encoding: 8bit
 X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
  kwepemk200008.china.huawei.com (7.202.194.74)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261020_013424_378059_496A25CC 
-X-CRM114-Status: UNSURE (   8.41  )
+X-CRM114-CacheID: sfid-20261020_014248_942745_8C87E4AD 
+X-CRM114-Status: UNSURE (   7.13  )
 X-CRM114-Notice: Please train this message.
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
@@ -122,14 +122,11 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 > That's true, but since commit 751c263bb74f ("arm64: remove TEXT_OFFSET
 > randomization") TEXT_OFFSET is always zero. This is upstream from v5.8,
 > so no LTS kernels has non-zero TEST_OFFSET.
-
-Yes, My concern is what if the kdump kernel is an old one without this
-patch?
-
-Should we just add a WARN_ON_ONCE(text_offset != 0); here?
-
 > 
 > Maybe we should rather start deprecating .text_offset in arm64?
+
+I completely agree. This will save us from a lot of unnecessary changes.
+
 > 
 
 -- 
