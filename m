@@ -2,118 +2,99 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14208606A31C
-	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 14:30:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86C7B60A2600
+	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 14:47:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=LK8GrFYt;
-	dkim=pass (2048-bit key, unprotected) header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=google header.b=ZEd6uQeb
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Ina8HKg8;
+	dkim=pass (2048-bit key, unprotected) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=S6FSJc/M
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=2CniGtgnti6KdC6pQIvauHlETM08FpIVgz45KXnuEH4=; b=LK8GrFYtr/1UEtn/EYHqUz20++
-	UIll85fE19ISOYbIqPQg2aJT5zfmmYSJSmYKtOKDTeMslgh+uqtMUYB3GHd73NwRueL59Qms39GXG
-	fwVENWO8AAxnUxtgRBb3O4LpqUvooruD0FaAhhLkocl4PJfaKyoqfniKHq7QAfFob/EBBUkFU6+P7
-	QtoMfQ4n6NARJLq6i7kr/KG56Lbsk4SHZErFdxtcxsdvEtU1jXwsOc11QO82YUbUDN3h5Ri8ROX26
-	eGXjTHfBtISClSUcoJa7FnnlJ8lU1aMr57M8bPX+gGpizGlOd49oJIjnbUYVsHByRefrNVm+khj3n
-	wET6NtCw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=mML0rlUQf2leT75dFk0AVhURG3XCgO5T9MI2E8M1gKk=; b=Ina8HKg84X9rp1qAUXNdpKAcvR
+	3e4n/jn1Vf+XnaA1a8GGMRAAXWzohSbEs/F5R3RxB+Irp6d9q2lwB0HyahtL1DzrSKkWATAiuyB6P
+	JQ3zhAjvXTRGWfEIFj0RMuH11RoSf/UfnXhtAP1kD1K4n4yzyyHOSGh9KyskYm51b2NQxRzpc+E7I
+	5DpySaE7A738I0szBCRbmEhOzslU40/Ms79KofgHAMKpvciK5wBckgsm37KbPTS6mdwSOWB67d5k/
+	6blxqJkOBH7wfhnUDmQ7emohuFxmaK3mdot7BEoaOWgecREv8hMjr6vldjyRD6LXgOdfZEAVR3Rh6
+	RYiSTxnA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJAri-00000009wtW-0Rti;
-	Tue, 20 Oct 2026 14:30:58 +0000
-Received: from mail-wr1-x430.google.com ([2a00:1450:4864:20::430])
+	id 1xJB7f-00000009zAm-3qR4;
+	Tue, 20 Oct 2026 14:47:27 +0000
+Received: from mail-vk1-xa33.google.com ([2607:f8b0:4864:20::a33])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJArf-00000009wsU-1ZAZ
+	id 1xJB7c-00000009z9e-3pHX
 	for kexec@lists.infradead.org;
-	Tue, 20 Oct 2026 14:30:56 +0000
-Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-48c4be28b82so2576724f8f.2
-        for <kexec@lists.infradead.org>; Tue, 20 Oct 2026 07:30:54 -0700 (PDT)
+	Tue, 20 Oct 2026 14:47:26 +0000
+Received: by mail-vk1-xa33.google.com with SMTP id 71dfb90a1353d-5ead9f60e26so648302e0c.1
+        for <kexec@lists.infradead.org>; Tue, 20 Oct 2026 07:47:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1792506653; x=1793111453; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=2CniGtgnti6KdC6pQIvauHlETM08FpIVgz45KXnuEH4=;
-        b=ZEd6uQebxBPtV4Ecx4Y0zQUGzmwBhnkVlDxKtnndaFmvGX7VofMJ559thjn3Wfksqi
-         KWARGsbfzlWogh9ieDZ0jKUwt64kFTLaSV8ncoxIaBY6ns3amCWgBsX7nFOcDQFnGHz1
-         ZHn2pF/E8KujtfKnewP89ADtsblBvaF4ezq0zihYlSjQ6bFgKs6nmuKM3eOb1SwPieAL
-         xuu+oeEPi0HRxYACiUAsA7X1Jd6Olh62sohscagEXtB9B6Gqdgtk7Mo5h1eAYJzT2Gtm
-         +8RwIb9xkdIO1D2KQK28MGIASGZFCmBWkuucIsX/GGHDTDgyVrslIJcL65fUNBfWZLa2
-         aZAw==
+        d=soleen.com; s=google; t=1792507643; x=1793112443; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=mML0rlUQf2leT75dFk0AVhURG3XCgO5T9MI2E8M1gKk=;
+        b=S6FSJc/MNP5/ne4isKD5DBFFgTIcV4wf/W0CB4Jl/HcOZX2kkES2HJBl5ztur4c35P
+         rZIQM+aIvq4te5Oj1Wjg0Ja5Cu7rx4GOQZWbr3st8yoz+vKkn6MK+6PXzMGQT28mVPdV
+         36FLI+2uRitMMlaBcKx9mHfdeXY7Ht6CXqxUeZI1jBc0VJeVEevmxRDPl25JmPbVbZ7s
+         0JleVJ+WrLMpHJ+jLSMhLkcm0Xcpj3vuP9FPtdVbQUnZXA1OWuU9Yb1fOk2tC8K7R6Xn
+         MRrVXYbsjCRHWzj5QqDYQG2cbGRxcrxx3aQ/n17V3T56Jn82IfCyJe7MtoP9+oI3zD5L
+         Q4og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792506653; x=1793111453;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=2CniGtgnti6KdC6pQIvauHlETM08FpIVgz45KXnuEH4=;
-        b=YHpXQcuybV6XnwWeQWXJQv7mj21foPxKKFODbKa2/OiRcbjNOIC/RS2AdbdTNJIZkh
-         JAWpKa1+r93jW/kwQibpXnI+uCs6V4fmsyidXH7oAfF6sHFWz75FbkaTT3U6aK3tYM1P
-         medWqzBcsg/lqDZ1dWP+MPWGg8o8bBKpCxc5BUEh4cUS2zUBOj9+s3iJx5NS0xDFvxYf
-         ahxhjK3qhYl/IDMfliCuVTPnvnbWV5/6JP04Vl20zK6Z8kbGIOiucc9QcSy/N3hHTshA
-         x2cV07VtlR0P+IG5QJoW23Pmc31/w/rWS/hXe5FR2Tfoed+IZBpMjF/PCrmCIb2ZZnsT
-         Wrew==
-X-Forwarded-Encrypted: i=1; AKwUvByVIbBRX8FAoY93ulrJ6t54/1AmNNVcL3DvYpSyvBBblCxF2lRtzxXDa4CLYJtr9BojHdl9bg==@lists.infradead.org
-X-Gm-Message-State: AFq9FYLUYjRrOoWRoaWP30Ko1mpkdq/KIKbL3Qa9KCu3fcpg4Ku7VpqL
-	nGvqPmeV5ZDlGlzDSwemXhO9tqUiarYtxpNd4+7zkSQr7bsdkmdF9cYhDKXOE8BZsSs=
-X-Gm-Gg: AYBFou0M9mpc03aYR9W41NA8p7TaFqGgPlu3ahG1+RTj5AvLsna2OrVANPvSQwe11tI
-	yl102z5Z83D/EEECq5wiPOPUQG6ziBHYFTgKPx32pordykMSjyqPrAJY2Kvx0STNNYlHATSFSSK
-	f+zNBJe/+EEnYmEoVqfktZW9/ckokmrgQ75fnJJE6MnXKEUiSNYw3eBOMamjCPqCFxLnJdfx2ob
-	I4ZDQmRg+jnfk2dbMjLTsC5OudebngWRRhWgOfIArxZiUGk7GkN3ZxhbyzmOKUzElYSHzg82jVa
-	ra5dV6jtcGL4OMH5/gj8BfyKJWXn6isf6xUCr1aI5XHhBXF0K2tTGFrikoSthsLoCFhAjNj1pB7
-	inTMOLkFJ+lQzqLLe+VTnqHXn1smXpZvxSOCLVBR4lzcuADSZrtYQwBuNo7xUXGGzJtJz95O9IN
-	no0Eh2Qyj+RL30vSvYnIH3tYu+dFs2Rswyp/5ZOUPZBNxrsDizmbv/ARzhSv6xhoHe5GeBwbQo
-X-Received: by 2002:a05:6000:2887:b0:48c:571a:a1aa with SMTP id ffacd0b85a97d-48e07bbc6e6mr23535312f8f.19.1792506653058;
-        Tue, 20 Oct 2026 07:30:53 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e1d8214e1sm6395924f8f.37.2026.10.20.07.30.50
+        d=1e100.net; s=20260707; t=1792507643; x=1793112443;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=mML0rlUQf2leT75dFk0AVhURG3XCgO5T9MI2E8M1gKk=;
+        b=lnKYFYFg1ATdmbTGdCH2fKVihFyIdMr209OQFNI5RQGzyYoDhr8w8Pvp8c6vW8XNBg
+         PBpsXhPY/SRLjJbJpCbzVKxo0OXU4OU65kUoiq2eALW7cprHCYnLabyPxZ4Tgzd7aeF5
+         WOgBH7s/kGMmUD1rabEJjIcvKzNDIoSlowsHnmA8uhcnQoDvnYxLOc8KU451MTuy/TbU
+         dPxaCp3F3+iM2DPUx/sGS/eEh1qTEvb0cHBnvJkC60NtXyVnhl9v2XpL2bLNa/SvEXR+
+         zouociyiP1R17Wlqeh1ybL9fHnVF2sKAC14JEghpr6aMbAAtjexsHNtP+XsXEP00fFON
+         Ofaw==
+X-Forwarded-Encrypted: i=1; AKwUvBx59/to5YcUHjnotPNLE8tweEK3Sf1r0eubhRXDPjIzm0AkLEWoYnx/y26fDdX3G5c8u6lgbA==@lists.infradead.org
+X-Gm-Message-State: AFq9FYJvrjeMJx+ZcdCFl9W/BKhEUZfJ7qtw3U+BoeigojnkHcLIyEL7
+	SfOdAje+2l6RiBvT3DMZ8XPTVz111DJm4yKHKuiQLwblAKTMPvR+PfYa1Ec64jSTl3M=
+X-Gm-Gg: AYBFou0KrdKdzgJkH7tD9IwtQd4PPipGUTc7u44LCgLZSjSAW2ljg8HhES8riiYgJb6
+	HSLqzWR0WsrEZuzu2LJbKVlI+GsFCE77BwFu3Dfu7AVa4jbrkTjqctG4duw+evDEetAd0gm6CN4
+	U+oWzBoGozk/3M3IM0o4LD5p5oL37X2V0a2E5WzGfB1pvSf/H68iVpIVAtBs/8r8AeeNsy1fkPn
+	4AzP+5VH1O75JjW+mhTDUaxab/hcbQFsuBNQfLrd34C0Fhpg6VzTcwE5mnUTVH3qItA3+INCU0t
+	74dnDjL8X1f2QvOL+EPEdwsT/olFVqBXVO9ZqAK8a4HWk8stDJm/oiMHW2UEPPRZvVwtb7kVw2x
+	B//ozm1jdt2MuKgxDNMdAVMGUK1lcduF+LXQch9pFdpIly/Q8s8Q/OTR3f4J8a9Bgwuj9CQzL0H
+	DMqiARhE/b7wJxa07hP49GOClG0hKjebUyA6SZFeSFMuAof0Fj7wVXsyZ51nmLGIP00HayjACVB
+	kcxr5SmZDF7tTAbElwo++nR3objRNS7K4eCCgCTT2AXI97s4EA8jEjMryOGTzKUSU7RvYwRYEly
+	VrWu1xxm4bYgDnJCwcAi0kMTARlHxXTHWF55Am3FK1yMyhEowDYa+fsZ3lV0gGsDil8G5Ujif2T
+	J
+X-Received: by 2002:a05:6122:1790:b0:5e9:5e79:aa5 with SMTP id 71dfb90a1353d-5eadcb1713cmr603117e0c.7.1792507643385;
+        Tue, 20 Oct 2026 07:47:23 -0700 (PDT)
+Received: from soleen.c.googlers.com.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5ea9b536ccdsm12920421e0c.13.2026.10.20.07.47.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Oct 2026 07:30:52 -0700 (PDT)
-Date: Tue, 20 Oct 2026 16:30:48 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Zack Rusin <zack.rusin@broadcom.com>, Borislav Petkov <bp@alien8.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>, x86@kernel.org,
-	Joel Granados <joel.granados@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, virtualization@lists.linux.dev,
-	Dave Young <ruirui.yang@linux.dev>,
-	bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org,
-	John Ogness <john.ogness@linutronix.de>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Pratyush Yadav <pratyush@kernel.org>, Kees Cook <kees@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Bo Gan <bo.gan@broadcom.com>,
-	Brennan Lamoreaux <brennan.lamoreaux@broadcom.com>,
-	kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	Maaz Mombasawala <maaz.mombasawala@broadcom.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Ian Forbes <ian.forbes@broadcom.com>
-Subject: Re: [PATCH v2 1/6] panic: Add a notifier chain for pre-kdump
- callbacks
-Message-ID: <atd7GInNurGWLUha@pathway.suse.cz>
-References: <cover.1790014793.git.zack.rusin@broadcom.com>
- <81cb85568b36273a8e66215b3e6d671b8488d402.1790014793.git.zack.rusin@broadcom.com>
- <bc783856-9480-3944-67fb-675e4c11d8c2@igalia.com>
- <atdYIxwz8ksYNty6@pathway.suse.cz>
+        Tue, 20 Oct 2026 07:47:20 -0700 (PDT)
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: linux-kselftest@vger.kernel.org,
+	rppt@kernel.org,
+	shuah@kernel.org,
+	akpm@linux-foundation.org,
+	linux-mm@kvack.org,
+	vipinsh@google.com,
+	linux-kernel@vger.kernel.org,
+	pasha.tatashin@soleen.com,
+	dmatlack@google.com,
+	kexec@lists.infradead.org,
+	pratyush@kernel.org,
+	graf@amazon.com
+Subject: [PATCH v2 0/2] liveupdate: Add LIVEUPDATE_SESSION_FREEZE ioctl
+Date: Tue, 20 Oct 2026 10:47:02 -0400
+Message-ID: <20261020144710.4154339-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.56.0.212.g129ede20d9-goog
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <atdYIxwz8ksYNty6@pathway.suse.cz>
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261020_073055_495721_ADCCB4BA 
-X-CRM114-Status: GOOD (  50.64  )
+X-CRM114-CacheID: sfid-20261020_074724_960192_8341CB19 
+X-CRM114-Status: GOOD (  10.87  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -125,235 +106,76 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-16.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Tue 2026-10-20 14:01:43, Petr Mladek wrote:
-> On Mon 2026-10-19 19:05:21, Guilherme G. Piccoli wrote:
-> > On 28/09/2026 14:55, Zack Rusin wrote:
-> > > Selected crash callbacks should not require running every panic notifier
-> > > before kdump. Add a separate atomic chain with an at-most-once dispatch
-> > > helper, and invoke it before panic reaches the kmsg dumpers.
-> > > 
-> > > The helper permits another call from the crash path without repeating
-> > > callbacks or recursing into them. Document that callbacks may run in NMI
-> > > context, with other CPUs running and the kexec lock held.
-> > > 
-> > > Link: https://lore.kernel.org/r/aquttpMVKX8e6zGB@pathway.suse.cz
-> > > Signed-off-by: Zack Rusin <zack.rusin@broadcom.com>
-> > > ---
-> > > New in v2: separate pre-kdump chain, with a set-once dispatch guard.
-> > > 
-> > >  include/linux/panic_notifier.h |  3 +++
-> > >  kernel/panic.c                 | 26 ++++++++++++++++++++++++++
-> > >  2 files changed, 29 insertions(+)
-> > > 
-> > > diff --git a/include/linux/panic_notifier.h b/include/linux/panic_notifier.h
-> > > index 41e32483d7a7..3ad390764a41 100644
-> > > --- a/include/linux/panic_notifier.h
-> > > +++ b/include/linux/panic_notifier.h
-> > > @@ -6,6 +6,9 @@
-> > >  #include <linux/types.h>
-> > >  
-> > >  extern struct atomic_notifier_head panic_notifier_list;
-> > > +extern struct atomic_notifier_head panic_pre_kdump_list;
-> > > +
-> > > +void panic_notify_pre_kdump(char *msg);
-> > >  
-> > >  extern bool crash_kexec_post_notifiers;
-> > >  
-> > > diff --git a/kernel/panic.c b/kernel/panic.c
-> > > index 213725b612aa..d78e90abb192 100644
-> > > --- a/kernel/panic.c
-> > > +++ b/kernel/panic.c
-> > > @@ -82,6 +82,10 @@ ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
-> > >  
-> > >  EXPORT_SYMBOL(panic_notifier_list);
-> > >  
-> > > +struct atomic_notifier_head panic_pre_kdump_list =
-> > > +	ATOMIC_NOTIFIER_INIT(panic_pre_kdump_list);
-> > > +EXPORT_SYMBOL_GPL(panic_pre_kdump_list);
-> > > +
-> > >  static void panic_print_deprecated(void)
-> > >  {
-> > >  	pr_info_once("Kernel: The 'panic_print' parameter is now deprecated. Please use 'panic_sys_info' and 'panic_console_replay' instead.\n");
-> > > @@ -567,6 +571,27 @@ static void panic_other_cpus_shutdown(bool crash_kexec)
-> > >  		crash_smp_send_stop();
-> > >  }
-> > >  
-> > > +/**
-> > > + * panic_notify_pre_kdump - invoke selected callbacks before kdump
-> > > + * @msg: Panic message, or NULL for direct crash-kexec entry
-> > > + *
-> > > + * Dispatch at most once per boot, including recursive entry. Callbacks run
-> > > + * with interrupts disabled, possibly in NMI context, before other CPUs have
-> > > + * necessarily stopped. The kexec lock may be held. They must not sleep,
-> > > + * allocate, wait for other CPUs, or call into kexec management operations.
-> > > + * The message is read-only and may only be used during the callback.
-> > > + */
-> > > +void panic_notify_pre_kdump(char *msg)
-> > > +{
-> > > +	static atomic_t started = ATOMIC_INIT(0);
-> > > +	unsigned long flags;
-> > > +
-> > > +	local_irq_save(flags);
-> > > +	if (!atomic_xchg(&started, 1))
-> 
-> It is far from clear why this is needed. It would deserve a comment in
-> the code and explanation in the commit message.
-> 
-> Well, I am not even sure whether this synchronization is enough.
-> If __crash_exec() and vpanic() are running in parallel on two CPUS
-> then one path will skip the notifiers but it will not wait until
-> they are finished.
-> 
-> But I think that the problem is the explicitly called __crash_exec()
-> is not synchronized against vpanic() in the first place. IMHO,
-> it is an existing problem which probably should get fixed.
-> 
-> > > +		atomic_notifier_call_chain(&panic_pre_kdump_list, 0, msg);
-> > > +	local_irq_restore(flags);
-> > > +}
-> > > +
-> > >  /**
-> > >   * vpanic - halt the system
-> > >   * @fmt: The text string to print
-> > > @@ -682,6 +707,7 @@ void vpanic(const char *fmt, va_list args)
-> > >  
-> > >  	sys_info(panic_print);
-> > >  
-> > > +	panic_notify_pre_kdump(buf);
-> > >  	kmsg_dump_desc(KMSG_DUMP_PANIC, buf);
-> > >  
-> > >  	/*
-> > 
-> > Hi Zack, thanks for trying to improve this conundrum called panic
-> > notifiers heh
-> > 
-> > I confess at first sight I got a bit confused, and only after reading
-> > patch 1 and 2 twice, things made sense to me: you're hooking
-> > __crash_kexec() directly!
-> > 
-> > So, in my head, 2 things that would make sense upfront: merge patches #1
-> > and #2, and comment a bit about it in the code.
-> 
-> +1
-> 
-> But honestly, the semantic and ordering of all the variables and
-> functions is very complicated. It is very hard to follow and
-> understand all the rules.
+Currently, LUO sessions are frozen automatically only inside the
+reboot(LINUX_REBOOT_CMD_KEXEC) path, where luo_session_serialize()
+iterates through all outgoing sessions under global write locks and
+freezes them serially during shutdown.
 
-Warning: You might skip the first part about my confusion.
-	Maybe, I am the only one who is a bit lost this way.
+This series introduces the LIVEUPDATE_SESSION_FREEZE ioctl on session
+file descriptors so userspace can freeze a session as soon as it is done
+with it, rather than delaying until auto-freeze at kexec time. Because
+luo_session_freeze() only acquires the per-session mutex, userspace can
+also freeze multiple sessions concurrently in advance, reducing kexec
+blackout time.
 
-	My motivation is to do not repeat the mess which I saw in
-	the printk registration code. People added many features
-	there for over two decades. Each change made sense on its own.
-	But, for me, it was really hard to understand and distinguish
-	what were the wanted and unwanted effects.
+Once frozen, no further files can be preserved in the session and
+subsequent freeze attempts return -EBUSY (or -EINVAL on incoming
+sessions). During kexec, already-frozen sessions skip the late
+auto-freeze step; if an early-frozen session is closed before kexec, its
+files are rolled back via .unfreeze() before being unpreserved.
+
+This series is based on liveupdate/next commit 27be83a12b24 ("Merge
+branch 'lu-pci-preservation' into next").
+
+Changelog:
+v2:
+- Rebased onto liveupdate/next (commit 27be83a12b24 ("Merge branch
+  'lu-pci-preservation' into next")) and split out early session freeze
+  into a standalone series (tmpfs preservation and its per-file user
+  argument plumbing were spun out into a separate series).
+- Patch 1:
+  - Drop struct luo_file_set_ser * from luo_file_freeze() and
+    luo_file_unfreeze(), and rename the session helpers to
+    luo_session_serialize_one() / luo_session_unserialize_one() so all
+    of struct luo_session_ser is populated and cleared in one place
+    (Suggested by Pratyush Yadav).
+  - Unfreeze the session's files if luo_ucmd_respond() fails in
+    luo_session_freeze().
+  - Update remaining reboot-only wording in luo_file.c kernel-doc
+    comments.
+- Patch 2:
+  - Add checks verifying that non-zero reserved bits and freezing an
+    incoming post-kexec session fail with -EINVAL.
+Link: https://lore.kernel.org/all/20261015093816.2438942-1-pasha.tatashin@soleen.com/ # v1
+
+Pasha Tatashin (2):
+  liveupdate: Add LIVEUPDATE_SESSION_FREEZE ioctl to freeze sessions
+    early
+  selftests: liveupdate: Add tests for LIVEUPDATE_SESSION_FREEZE
+
+ include/linux/liveupdate.h                    |  3 +-
+ include/uapi/linux/liveupdate.h               | 25 ++++++
+ kernel/liveupdate/luo_file.c                  | 73 ++++++++---------
+ kernel/liveupdate/luo_internal.h              |  9 +-
+ kernel/liveupdate/luo_session.c               | 82 +++++++++++++++----
+ mm/memfd_luo.c                                |  5 +-
+ .../liveupdate/lib/include/libliveupdate.h    |  1 +
+ .../selftests/liveupdate/lib/lu_utils.c       | 10 +++
+ .../testing/selftests/liveupdate/liveupdate.c | 49 +++++++++++
+ .../selftests/liveupdate/luo_kexec_simple.c   |  8 ++
+ 10 files changed, 202 insertions(+), 63 deletions(-)
 
 
-I trying to understans why I am confused by the panic notifiers code.
-There are several aspects:
+base-commit: 27be83a12b246b6b3783e7d3ac5c378ff7520f25
+-- 
+2.56.0.212.g129ede20d9-goog
 
-1. I was involved in many mail threads where we discussed calling:
-
-	notifiers  before/after  kdump
-
-   but the variable "crash_kexec_post_notifiers" defines calling:
-
-	kdump   before/after  notifiers
-
-   It actually matches the code because __crash_kexec() is called
-   twice in vpanic() before and after the notifiers.
-
-   Sigh, it looks like a trivial mental switch. But it is not
-   that trivial when we though about splitting the notifiers
-   into more lists and discussed where to call them.
-
-   The discussion always was where to call notifiers and not where to
-   call kdump.
-
-   And we are also discussing about disabling notifiers. Not about
-   disabling kdump.
-
-
-2. We call the new list "panic_pre_kdump" and this patchset calls
-   it in both vpanic() and __crash_kexec() code paths.
-
-   The name "pre_kdump" suggests that it is needed only when kdump
-   is called. But we want to call it in panic() even when
-   kdump is not called.
-
-
-3. The new "pre_kdump" notifiers are called before stopping CPUs.
-   While the rest is called in the more safe environment
-   with stopped CPUs.
-
-
-4. I am a bit confused by this patch set because it allows
-   dumping printk log before kdump. It does not fit with
-   my understanding of having "pre_kdump" list only for
-   the strictly needed operations.
-
-
-5. There is the idea of splitting the remainig notifiers into
-   _safe and _unsafe lists, see
-   https://lore.kernel.org/r/atcjhe4329sYHWvZ@pathway.suse.cz
-
-   It would complicate the design even more. But it might help
-   with the endless war whether "crash_kexec_post_notifiers"
-   should be "true" or "false" by a platform-specific default.
-
-   I wonder how all this fits together.
-
-
-Top-level look:
-===============
-
-Sigh, one problem is that the notifiers have different purpose:
-
-   1. Notify hypervisor (platform). This looks like a must-to-have.
-
-   2. Platform specific dump of printk messages. This is
-      nice-to-have. But note that we also have kmsg_dump API
-      for this, see kmsg_dump_desc().
-
-   3. Print extra info. Also this is nice-to-have.
-
-      Some is optional when kdump is created because it might be
-      read from there. Some can't be found in crash dump, e.g.
-      dumping lowlevel HW state.
-
-      In addition, there is sys_info() info API which allows to
-      dump state of various subsystems.
-
-   4. Some notifiers are smp-safe and some just a best effort
-      and more safe after disabling other CPUs.
-
-      In addition, I guess that it is better to call crash_kexec()
-      without stopping other CPUs because stopping is not reliable
-      without NMI. And it would create extra noise in the backtrace.
-      And ???
-
-
-Now, different people have different preferences but mainly:
-
-   + the more safe kdump the better
-   + the more safe reboot the better
-   + the more info the better
-
-
-Now, the question is how to satisfy the various requirements
-and keep the design sane. We need a compromise but where.
-
-Continue thinking...
-
-Best Regards,
-Petr
 
