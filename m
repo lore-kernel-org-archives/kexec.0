@@ -2,40 +2,39 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4ED560A3806
-	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 16:52:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCC7606A31C
+	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 16:54:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=SgTSIDoo
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=AxjJZzOy
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
 	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Rt0zUPmsZBDr4u6HGmjEAGMqawHcJkNqKKDZ6PeFX9Q=; b=SgTSIDoofWXCmmsDyDUiDLC4i5
-	F3sOY0WSaTCMdXXAY9xj/BWpIGl7tJrepqqfK5SjUEbe4VU4PqbbjooylTEEGrpiL80FYBQuENwqU
-	2Rk4z5qTWMvuT5smgtcRfETAjJA34EedeqS7d0YEyfXl6n1JPEXvtTGPj+EW6DI9E2IjgFSX5mWsK
-	ckJWdAAWW0m+d7tdgGG+vx04DylkVqUP9ofoNYkPauUZlSEJ10gGJ6KlFm/Ld1XC/igHwoJSEJJii
-	cGzXalLuGkEOS99/qikTf/OBEx6aNgNb2rJqFtZoGcxpJuDfx55q/7mNkfREVKgFUvCl+R5OWJNBy
-	zE/AD+mw==;
+	bh=rUsaUhwHeiQf3xBbIOzTemfd4ixtkr1Kys8NIsISdFY=; b=AxjJZzOyhXoGHPs6IZOHLnchvh
+	wTsOWeaA4TMv9wtiYC9VJHB6Rdz2xCqTJFgBSe3O9nQjBSERirqTU751pt7Zs6xhJjIbBwgNfmFmH
+	T+6FA0v1+O5CsLY5cNDHkp/ILFFdk55Mz1LItCjaJQUV3nUSOXAFO2nnIfk9vDuyjNa2f1C6Xx1Ly
+	LiEjUcAJIA8dlyrZKXGgc6/V19ggSMyOWCQri0PqsYhwQjcdZWRcRrt6dymbhxaFpeYozAZ3x5W2P
+	E1OyAALjolpAp0mCKdcaDvkRex0naDbI7eLbeE6nDQEzfWorb3d29UfPp5Hs7gyig8aTWFNO2iWI5
+	41ergWyQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJD4j-0000000AG9E-2x1y;
-	Tue, 20 Oct 2026 16:52:33 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xJD6u-0000000AH90-1g8V;
+	Tue, 20 Oct 2026 16:54:48 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJD4i-0000000AG8J-3PUQ
+	id 1xJD6s-0000000AH8f-2Ikr
 	for kexec@lists.infradead.org;
-	Tue, 20 Oct 2026 16:52:32 +0000
+	Tue, 20 Oct 2026 16:54:47 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 8F170411EE;
-	Tue, 20 Oct 2026 16:52:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79EC71F000C9;
-	Tue, 20 Oct 2026 16:52:31 +0000 (UTC)
-Message-ID: <sashiko-outbox-179382@kernel.org>
+	by tor.source.kernel.org (Postfix) with ESMTP id D8F3C601F9;
+	Tue, 20 Oct 2026 16:54:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A1C91F000C9;
+	Tue, 20 Oct 2026 16:54:44 +0000 (UTC)
+Message-ID: <sashiko-outbox-179385@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 7/9] PCI: Link a virtual function to its physical
- function
+Subject: Re: [PATCH 8/9] PCI: Enable async shutdown support
 To: "David Jeffery" <djeffery@redhat.com>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael
  J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>
 Cc: linux-pci@vger.kernel.org, "Tarun Sahu" <tarunsahu@google.com>, "Stuart
@@ -44,13 +43,14 @@ Cc: linux-pci@vger.kernel.org, "Tarun Sahu" <tarunsahu@google.com>, "Stuart
  Meneghini" <jmeneghi@redhat.com>, =?utf-8?b?TG9tYmFyZGksIE1hdXJpemlv?= <mlombard@redhat.com>, "Bart
  Van Assche" <bvanassche@acm.org>, "John Garry" <john.g.garry@oracle.com>, "Jeremy
  Allison" <jallison@ciq.com>, "Martin K . Petersen" <martin.petersen@oracle.com>, "Pasha
- Tatashin" <tatashin@google.com>, "Bjorn Helgaas" <bhelgaas@google.com>
-In-Reply-To: <20261020164435.80499-8-djeffery@redhat.com>
+ Tatashin" <tatashin@google.com>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Bjorn
+ Helgaas" <bhelgaas@google.com>
+In-Reply-To: <20261020164435.80499-9-djeffery@redhat.com>
 References: <20261020164435.80499-1-djeffery@redhat.com>
- <20261020164435.80499-8-djeffery@redhat.com>
+ <20261020164435.80499-9-djeffery@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 20 Oct 2026 16:52:01 +0000
+Date: Tue, 20 Oct 2026 16:54:14 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,22 +70,16 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> With a PCI virtual function having the same bus for its parent
-> as the physical function it is associated with, there is no
-> explicit dependency between the two in the device tree. With
-> async shutdown, this can result in the PF being shutdown before the
-> VF has an opportunity to shutdown.
+> Like its async suspend support, allow PCI device shutdown to be performed
+> asynchronously to reduce shutdown time.
 >=20
-> Link the VF as a consumer of the PF to note its dependency and
-> ensure clean shutdown ordering.
->=20
-> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
 > Signed-off-by: David Jeffery <djeffery@redhat.com>
+> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261020164435.8049=
-9-1-djeffery@redhat.com?part=3D7
+9-1-djeffery@redhat.com?part=3D8
 
 
