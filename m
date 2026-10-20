@@ -2,40 +2,40 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62CB6606D54D
-	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 16:48:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F5DB606D54F
+	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 16:49:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=hA3lWUQ8
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=lzv00s0C
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
 	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=z1SzUBquWHQZ3C1Z4lcH1uTSKaB93rIIgbHYk7esgOk=; b=hA3lWUQ8gdpcllthButblsxSNS
-	+dxCcabpuof9NOZkCle2+l712igBm5WYE9jrSnaXUiubGTpCk7VlE2QkCdL4YnCXxnpuYUUwaHT/j
-	oqRgr6gGNbkwv4pnRh/xyAA/38WiTv+nlZLb9XGdUwQm0T+I4Gbvqy8jiiIjpARveIDJet19NT5BL
-	y1ZurhwAscVoTAKERrxZZoJKIMaSe2w1g4KuM60vvgRr7tGcYmVE2q122rU8bAvJpl/dbmRzSjp9e
-	QNnHPA/PoXvVZ4xtLhCF1zDL1vrOCaZXAUgUSX7TBKqesEKd+QtxYDzPgIZgcDl6wwXksUGEfcS5w
-	ZkKzBDkQ==;
+	bh=TMQGJ5fJ9MCh2/Z4MJkdTHs79RpV7IxXJFfpO1AlsOs=; b=lzv00s0Ce3A9ZhA60J1UYB4KyW
+	zeJ5EvRVClX+4fTDOKXbUeBJ/94ttuNxmxjLPeekvMoZn7pdBLICTUtoF+IWuMGElPIdBCMqQXM9O
+	G0iHPxHe3715bmplq+TnqGk5noBOC59DMs5WSzhODa6MbwAX8SNZ0zc9iBrlxJDf59gfpMLs4W0YB
+	YLnn5boeZT46dXZp1AddBs/XNgqj3qeYeViRuCczGyZzIaTJsFIS0hfxYZl6olGKmGw9/2ROzIZsm
+	fJpHYIDifqLeSdYGU6XdF/Ezt0oh2Y7vTZiZZI6PUzYFWLLQRinOnVSlXXyY+BxAdWwybNDkB9is6
+	TkJfSb1Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJD0b-0000000AEpH-2Pya;
-	Tue, 20 Oct 2026 16:48:17 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xJD1h-0000000AF3j-2zOT;
+	Tue, 20 Oct 2026 16:49:25 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJD0a-0000000AEoy-2XNz
+	id 1xJD1g-0000000AF3T-1tUD
 	for kexec@lists.infradead.org;
-	Tue, 20 Oct 2026 16:48:16 +0000
+	Tue, 20 Oct 2026 16:49:24 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 0F7A44387E;
-	Tue, 20 Oct 2026 16:48:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 538EB1F000D3;
-	Tue, 20 Oct 2026 16:48:15 +0000 (UTC)
-Message-ID: <sashiko-outbox-179376@kernel.org>
+	by tor.source.kernel.org (Postfix) with ESMTP id 569B86020C;
+	Tue, 20 Oct 2026 16:49:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20C001F000C9;
+	Tue, 20 Oct 2026 16:49:22 +0000 (UTC)
+Message-ID: <sashiko-outbox-179378@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 4/9] driver core: separate function to shutdown one
- device
+Subject: Re: [PATCH 3/9] driver core: warn should device_move try to move a
+ need_parent_lock device
 To: "David Jeffery" <djeffery@redhat.com>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael
  J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>
 Cc: linux-pci@vger.kernel.org, "Tarun Sahu" <tarunsahu@google.com>, "Stuart
@@ -44,13 +44,13 @@ Cc: linux-pci@vger.kernel.org, "Tarun Sahu" <tarunsahu@google.com>, "Stuart
  Meneghini" <jmeneghi@redhat.com>, =?utf-8?b?TG9tYmFyZGksIE1hdXJpemlv?= <mlombard@redhat.com>, "Bart
  Van Assche" <bvanassche@acm.org>, "John Garry" <john.g.garry@oracle.com>, "Jeremy
  Allison" <jallison@ciq.com>, "Martin K . Petersen" <martin.petersen@oracle.com>, "Pasha
- Tatashin" <tatashin@google.com>, "Pasha Tatashin" <pasha.tatashin@soleen.com>
-In-Reply-To: <20261020164435.80499-5-djeffery@redhat.com>
+ Tatashin" <tatashin@google.com>
+In-Reply-To: <20261020164435.80499-4-djeffery@redhat.com>
 References: <20261020164435.80499-1-djeffery@redhat.com>
- <20261020164435.80499-5-djeffery@redhat.com>
+ <20261020164435.80499-4-djeffery@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 20 Oct 2026 16:47:44 +0000
+Date: Tue, 20 Oct 2026 16:48:51 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,17 +70,22 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Make a separate function for the part of device_shutdown() that does the
-> shutown for a single device.  This is in preparation for making device
-> shutdown asynchronous.
+> Currently, no device has need_parent_lock set and is moved by
+> device_move. need_parent_lock is only set by the usb bus and very
+> few device types ever use device_move.
 >=20
-> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+> Add a warning to device_move to catch should it ever be used on a
+> device with need_parent_lock set. The combination would break
+> the immutable relationship needed between parent and child for
+> need_parent_lock when locking and unlocking both.
+>=20
+> Suggested-by: Tarun Sahu <tarunsahu@google.com>
 > Signed-off-by: David Jeffery <djeffery@redhat.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261020164435.8049=
-9-1-djeffery@redhat.com?part=3D4
+9-1-djeffery@redhat.com?part=3D3
 
 
