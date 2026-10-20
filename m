@@ -2,58 +2,84 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0365606A319
-	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 01:16:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1F0606A31B
+	for <kexec@archiver.kernel.org>; Tue, 20 Oct 2026 01:40:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=3oaRtzn5;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ibnw2b6Z
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=NMd8KqkJ;
+	dkim=pass (2048-bit key, unprotected) header.d=igalia.com header.i=@igalia.com header.a=rsa-sha256 header.s=20170329 header.b=gz3Y0cld
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:To:Subject:From
-	:Message-ID:Cc:MIME-Version:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=jOZ6xK7gPKz+7mr2Ctq9XJ42zWxJ6XJWSknxthBp88M=; b=3oaRtzn5eVaPZMYZNtpDKQMluN
-	MRcWeLvX3iRGl1vRGk0XbJk9u4TMQ9eHmdnCxOe4t3MzpXOGAyGtHsaDfXgYwZ/HEKDmxeEY5bNMr
-	LfX+zywNJGaQLTLg3JrEQSx83yo1FpxU2qnu9vHn7Pv5poAs5ughsr9wHljHWVNlfCTg2i02eborE
-	W3+ts+SpTT9FNgZ12JSm58GT4Qxd55QjyzflhsXMXNQE6n+2lMiEMbTyrpGy/WFIo6NWQc4hTxsc0
-	co8OhpTBnh6G49zYRSAuv2bOMLNXPQg7kchn3Xfao2TKu2ZVZ3UslyHDDpoNcLBtC5H1klIYTrvkB
-	3xqDlKMg==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=Y/v52Nt7wua3/Hqh2/eSRWr2zKr9agsfw3+QaI3Wh7o=; b=NMd8KqkJGn9bLKV6gkk5SVaqFA
+	O+X03vmG4/1zTplYZCwc90MBzp9iv9bYYskflsbgGAVn8962kspHDnRBZIrMjn/X2hEWzgOnxXuDJ
+	5gD5LchMvFpXaZgMslUnHSbEist05UCiJMYZ1mpG8uEdCky7uNvTuUQX6JLPZhUeLuKvFIlA8iS/b
+	AyTlTpfoVWaUXTuqABGssPrL3KvnoDa5UqiJTtnUw/ABDitUiOd7cB1SRlZNbsrxcJ0nLvQCwbfXY
+	13N6A/fnoWFlRLPNudOr+NOB5+sTgrYQ4erC44sRL5Gi83Ud+Wz7jvo3WKyohZ06iaRHDKI2fPsx7
+	a2J121sQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xIySW-00000008bU4-19dP;
-	Tue, 20 Oct 2026 01:16:08 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xIyqI-00000008dOO-45D6;
+	Tue, 20 Oct 2026 01:40:42 +0000
+Received: from fanzine2.igalia.com ([213.97.179.56])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xIyST-00000008bRZ-0J8C
+	id 1xIyqG-00000008dNi-2YLu
 	for kexec@lists.infradead.org;
-	Tue, 20 Oct 2026 01:16:05 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id C3ED741262;
-	Tue, 20 Oct 2026 01:16:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75B881F000C4;
-	Tue, 20 Oct 2026 01:16:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792458964;
-	bh=jOZ6xK7gPKz+7mr2Ctq9XJ42zWxJ6XJWSknxthBp88M=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=ibnw2b6ZA7nuemzUk6cZUflsY9eR9KsWpFGzsQfYyVkfJsJYvbGyZxSvTDmFl7W89
-	 rLRQc8K4a6ObmWafEkfjijW3WYVATjT8m+OOYFuoUNwhSD081wMEQgpAZ8yZwxnZma
-	 Gq3PiPpY+X2CX9fUoJSiFPLNLKIRzl17gtUWx2NcK9qwHdp3tXMi5rvHjDVRvBKDkF
-	 3/gWsyXQUoUZOh1Q0iQhYso+GpXF0BNYQQhE+Ctkr5+xDcT8UhGlzwnqJrmK7KkLQ0
-	 KbNMJ9jjygr4W4KTWBwlQt9ckTGT7MbB3q82csckRE/2Wj/TUCI0dGkEMu0UZVRJiR
-	 tWKpJoBNDvaKg==
-Message-ID: <sashiko-outbox-178409@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 8/8] mm/vmstat: Avoid redundant per-CPU
- stat_threshold writes in refresh_zone_stat_thresholds()
-To: "Pasha Tatashin" <pasha.tatashin@soleen.com>, kees@kernel.org, rppt@kernel.org, juri.lelli@redhat.com, nik.borisov@suse.com, tglx@kernel.org, vschneid@redhat.com, kprateek.nayak@amd.com, vincent.guittot@linaro.org, bp@alien8.de, jpoimboe@kernel.org, tony.luck@intel.com, david@kernel.org, mingo@redhat.com, akpm@linux-foundation.org, seanjc@google.com, ljs@kernel.org, zhangguopeng@kylinos.cn, dietmar.eggemann@arm.com, mhocko@suse.com, vinicius.gomes@intel.com, vbabka@kernel.org, peterz@infradead.org, surenb@google.com, hpa@zytor.com, x86@kernel.org, dmatlack@google.com, tim.c.chen@linux.intel.com, kexec@lists.infradead.org, pratyush@kernel.org, dave.hansen@linux.intel.com, rostedt@goodmis.org, gmonaco@redhat.com, jgross@suse.com, mgorman@suse.de, graf@amazon.com, liam@infradead.org, ridong.chen@linux.dev, blum@kernel.org, longman@redhat.com, bsegall@google.com
-In-Reply-To: <20261019011446.834487-9-pasha.tatashin@soleen.com>
-References: <20261019011446.834487-1-pasha.tatashin@soleen.com>
- <20261019011446.834487-9-pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 20 Oct 2026 01:16:02 +0000
+	Tue, 20 Oct 2026 01:40:42 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:From:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:From:Reply-To;
+	bh=Y/v52Nt7wua3/Hqh2/eSRWr2zKr9agsfw3+QaI3Wh7o=; b=gz3Y0cldVWyCo401TUdb94v8wa
+	YoSB0h8baJhpIXaCi9PlSKT+G0Ap571CVXBDOFWQnrW1IXDQY2olHhBiDqAs8u0baPqzVYPzsAcDc
+	FzGtkjvYOjmHF6SUB8pFSNuwMObtBQOQd7Flb8gBocyw1DyA5fjgKE0qBfhyclWFTfwxTxjHTKv5p
+	zXjPNqwA+XUlZCu50sJcr3fyf0qN9IjtiBlZ8hU69wnf2hTYoaVQn9aQe4fd8X2miull6Un5xUhQq
+	QO9/s4noupNuak9u8vOqWLS3ze7ZAmWHZZCzpL9QYM5ooDl36WVwy2Ovx/qhD/4YMPnyiu6x62FFF
+	2EcCKf8g==;
+Received: from [177.189.74.83] (helo=[192.168.15.93])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1xIypa-0044FE-6B; Tue, 20 Oct 2026 03:39:58 +0200
+Message-ID: <83dffabb-c702-eec9-a992-ba5b9530a8cc@igalia.com>
+Date: Mon, 19 Oct 2026 22:39:49 -0300
+X-Archived-By: <archiver.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v1 4/4] x86/vmware: Run panic diagnostics before kdump by
+ default
+Content-Language: en-US
+To: Stephen Brennan <stephen.s.brennan@oracle.com>,
+ Petr Mladek <pmladek@suse.com>, Zack Rusin <zack.rusin@broadcom.com>
+Cc: Borislav Petkov <bp@alien8.de>, Ajay Kaher <ajay.kaher@broadcom.com>,
+ Alexey Makhalov <alexey.makhalov@broadcom.com>, x86@kernel.org,
+ Joel Granados <joel.granados@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
+ <hpa@zytor.com>, virtualization@lists.linux.dev,
+ bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org,
+ John Ogness <john.ogness@linutronix.de>, Steven Rostedt
+ <rostedt@goodmis.org>, Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Kees Cook <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, Dave Young <ruirui.yang@linux.dev>,
+ Jonathan Corbet <corbet@lwn.net>, Bo Gan <bo.gan@broadcom.com>,
+ Brennan Lamoreaux <brennan.lamoreaux@broadcom.com>,
+ kexec@lists.infradead.org, linux-doc@vger.kernel.org
+References: <cover.1788414671.git.zack.rusin@broadcom.com>
+ <7487011dfb95aadda9515b22a5852680df1982c5.1788414671.git.zack.rusin@broadcom.com>
+ <aquttpMVKX8e6zGB@pathway.suse.cz>
+ <CABQX2QPJVg-dZB9f4ydRU_5W7nyWwVCQtDoRGoe1+9cA7wyUDw@mail.gmail.com>
+ <bc0bdd14-5e6a-0676-cd04-14fb0bb93cd5@igalia.com> <87v77p9t4h.fsf@oracle.com>
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <87v77p9t4h.fsf@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261019_184040_998141_9B14112E 
+X-CRM114-Status: GOOD (  26.72  )
+X-Spam-Score: -4.5 (----)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -63,43 +89,78 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
-X-Archived-By: <archiver.kernel.org>
 
-> During CPU hotplug, vmstat_cpu_online() and vmstat_cpu_dead() invoke
-> refresh_zone_stat_thresholds() on every CPU transition. Currently,
-> refresh_zone_stat_thresholds() first zeroes
-> per_cpu_nodestats->stat_threshold across all online CPUs and all online
-> nodes, and then unconditionally writes per_cpu_zonestats->stat_threshold
-> and per_cpu_nodestats->stat_threshold inside the zone loop for every
-> populated zone and every online CPU.
->=20
-> However, calculate_normal_threshold(zone) only changes when
-> fls(num_online_cpus()) changes (at powers of 2) and is clamped at 125
-> for large normal zones (>=3D 16 GB) once num_online_cpus() >=3D 64.
-> Unconditionally zeroing and rewriting every CPU's per-CPU stat_threshold
-> on every hotplug step repeatedly dirties remote per-CPU cachelines with
-> identical values (and briefly exposes stat_threshold =3D=3D 0 on live CPU=
-s).
->=20
-> [ ... ]
->   Total:     3.46 s ->  3.38 s (-2.3%)
->   refresh_zone_stat_thresholds() (cpu511 offline / online):
->     104.6 us -> 50.7 us (-51.6%) / 109.3 us -> 53.5 us (-51.1%)
->=20
-> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+On 28/09/2026 14:35, Stephen Brennan wrote:
+> [...]
+> Hi Guilherme, thanks for CCing me! You're right, I'm interested too :D
+> Your email arrived on the first day of my vacation, so I'm sorry for the
+> delayed response.
 
-Sashiko has reviewed this patch and found no issues.
+Hi Stephen! Nice talking to you =)
+No worries at all, this is also conference season heh
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261019011446.8344=
-87-1-pasha.tatashin@soleen.com?part=3D8
+> [...] 
+> I do think we're going to have trouble articulating exactly what are the
+> criteria for a "pre_kdump" notifier vs a "panic" notifier? Anyone
+> submitting a patch believes their notifier is important, so of course
+> they believe it belongs on the pre_kdump list! How will we draw the line
+> in the future?
+> 
+> - Is it safety? As in "the notifier doesn't take any locks"? I feel
+>   this should be part of the criteria. (Though I have never been
+>   successful in predicting what code would cause a kdump/panic failure)
+> - Is it urgency? As in "without this, the expected behavior of the
+>   system during a panic will not occur".
+> - Is it the fact that the notifier is communicating with the hypervisor?
+> 
+> From my perspective: informing the hypervisor of a panic is both safe
+> and urgent. If the hypervisor is configured to immediately halt and do
+> its own panic handling, great.
+> 
+
+This is a very good point. What is the criteria? I honestly don't
+know...I think hypervisor-related things, that are safe (as you put)
+makes sense. Anything that might also make kdump work more reliably, and
+is safe as well...but everyone will judge their notifier important, in
+the end heh
+
+
+> Providing the last 4KB of logs seems less safe and less urgent (though
+> obviously still immensely helpful). The kernel provides a huge variety
+> of consoles through which the hypervisor could have already received
+> these logs. If the system is configured not to use them... it seems the
+> tradeoff to not be debuggable has already been made :P
+> To me, that logic belongs in a standard panic notifier.
+> 
+> Plenty of people will likely disagree with me on that, but that's why it
+> would be helpful to have clarity on what separates pre_kdump from
+> standard panic notifiers.
+> 
+
+But at the same time ... there's something else, the "self-contained"
+nature of hypervisor-related notifiers. This one is restricted for
+vmware only, so personally, I think it's not a super biggie to run it
+early. It is, in the end, a decision of vmware stakeholders. If that
+would be an arch notifier, something that all arm64 users would
+necessarily run, for example, I'd be way more skeptic on putting it early.
+
+Anyway, not sure if I helped or if I contributed nothing to the criteria
+discussion heheh
+
+But I hope to see this discussion happening, maybe should also gets
+documented as part of future Zach's patch iteration as well.
+Cheers,
+
+
+Guilherme
+
 
 
