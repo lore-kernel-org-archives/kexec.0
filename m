@@ -2,67 +2,77 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B8C606A324
-	for <kexec@archiver.kernel.org>; Wed, 21 Oct 2026 02:05:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026B7606A322
+	for <kexec@archiver.kernel.org>; Wed, 21 Oct 2026 03:34:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=dlwiCdY6;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=GmtlhePM
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=FjwOVo/I;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=HuUipxgR
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zgK2/EbQq4Wko0fal9WMxNMt30UIOgXg5MWzZwgJ9rg=; b=dlwiCdY6HbNhN8p/QeXl8W9O8Y
-	Hkhi5E0SAsiE/sd4xAMchckhJF9iL/ngBXMKB1nNqAuWspCUCFa7jav4yau06uEkhqCG63dVaeL82
-	vwOsm87u93di4UZBJeV/JNeB2K3shV24qw2buvxXNyuSmSUHRdKpiNwGUeFEaoi37v8F4MDGczGGQ
-	bdGZ1yxlCqGKG5xUNzj0HL5QwRTI+iqOG263ShuRRNVF4ywfQfO2jdwYw/NvjSb7nL3e/SEGAYCMZ
-	yPS4+0/HKIqZVD8+ZX9mhoaQb/LpGAy8/Rx8z6ZhAl7R0NqGZTw3R5hTeKJdPa1clCt5azXQRK5Xh
-	lVow/wfQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=RbLlIDBzxSpd5cJfPOd2N3zvhSlGP9L2jcWxKocz/10=; b=FjwOVo/IFwr9nUOaoai4vTKHqy
+	Nehkg5wLAE8vQWKUKCI85XqaqW+7yLmc2rcb33L+IALk96LQmTZqdxG57YJ0LOE4UdGrKfu2No3cw
+	mJQkfgUMQYAIl7tCu2zWPOSyTp6fZ/Ufry/x7gIaVfXcD95NsZ3hhLsCMhbvmsKKFdFGUUeDzeDSU
+	ArbPEIrwMQpVNmVyOAyPMaZvWpltq/QXyq4RudYO8YT9lB2t54y5LEgeoEVGZO3JxX9QoL8MsLLME
+	yWsDvQ8h4/3uEHo4nD88/L7FraPlmYF3A1dBOdPKmqOwUoSiQtV9evGwO74nhxydW7W3cS0PXTa8M
+	+nmhOIhQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJLhS-0000000AvTe-48uT;
-	Wed, 21 Oct 2026 02:05:06 +0000
-Received: from out-59.mta0.migadu.com ([2001:41d0:1004:224b::3b] helo=mta0.migadu.com)
+	id 1xJN5S-0000000B0qe-2VPw;
+	Wed, 21 Oct 2026 03:33:58 +0000
+Received: from out-248.mta0.migadu.com ([2001:41d0:1004:224b::f8] helo=mta0.migadu.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJLhP-0000000AvSe-1k1E
+	id 1xJN5P-0000000B0pG-1xV2
 	for kexec@lists.infradead.org;
-	Wed, 21 Oct 2026 02:05:05 +0000
+	Wed, 21 Oct 2026 03:33:57 +0000
 X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=ysiCbX/B8PX9EOlUItfenqtvSRkF3eedWpo/CA62AIo=;
+DKIM-Signature: a=rsa-sha256; bh=y927hDeFwTRi1uuF8AFccBXiuWM2sJNn4YnO+caicLI=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1792548297; v=1; x=1793153097;
- b=GmtlhePMFLdrntnHY5IPjUDWGSrQcGrTO35U95TTrNNnNz9J3TiVfT4UB3wem69JM1iP46yT
- 0wRetimE/NesrwcF2HXjMwuPJiuLIW6LjqBGyWoJZ+vgWQzvyX9oOINlhiEtYsdnKH0UnQpHi4X
- Pqnj1N0vlPbJ+zB7vW1eblb4=
+ t=1792553630; v=1; x=1793158430;
+ b=HuUipxgRWS3e7sDvPB7ilyEUPgRtTmYZ+Pmv+0G7aSfoBB64N9Ezdvggr7cyCJYhNYRoNABQ
+ 1NIALLv0lL+pT7s1Ta2HlXtIcSDzHQRv1LjU8Bz41eNK1xug9eM3nBz5/ICuWBm7aW60JdMJAdN
+ h6MPK5xaXrRLUQqt3HGTojB0=
 X-Envelope-To: kexec@lists.infradead.org
-Received: by mta11.migadu.com with ESMTPS id 186e51eaaad1686a;
-	Wed, 21 Oct 2026 02:04:57 +0000
-X-Mizu-Trace-ID: 186e51eaaad1686a
+Received: by smtp.migadu.com with ESMTPS id 071bc8b21379f3c8;
+	Wed, 21 Oct 2026 03:33:50 +0000
+X-Mizu-Trace-ID: 071bc8b21379f3c8
 X-Migadu-Flow: FLOW_OUT
-Date: Wed, 21 Oct 2026 10:04:50 +0800
-From: Baoquan He <baoquan.he@linux.dev>
-To: Zack Rusin <zack.rusin@broadcom.com>
-Subject: Re: [PATCH v2 1/6] panic: Add a notifier chain for pre-kdump
- callbacks
-Message-ID: <atgdwrSbsZD5iWsX@fedora>
-References: <cover.1790014793.git.zack.rusin@broadcom.com>
- <81cb85568b36273a8e66215b3e6d671b8488d402.1790014793.git.zack.rusin@broadcom.com>
- <bc783856-9480-3944-67fb-675e4c11d8c2@igalia.com>
- <atdYIxwz8ksYNty6@pathway.suse.cz>
- <atd7GInNurGWLUha@pathway.suse.cz>
- <ateYxCu63pRY9EGq@pathway.suse.cz>
- <CABQX2QOKCpoUY_ObhFif7xN7OF-NzcxEM0JABAXo9n9KaacO7A@mail.gmail.com>
+From: George Guo <dongtai.guo@linux.dev>
+To: pratyush@kernel.org
+Cc: rppt@kernel.org,
+	pasha.tatashin@soleen.com,
+	chenhuacai@kernel.org,
+	ardb@kernel.org,
+	shuah@kernel.org,
+	ilias.apalodimas@linaro.org,
+	akpm@linux-foundation.org,
+	baoquan.he@linux.dev,
+	ruirui.yang@linux.dev,
+	guodongtai@kylinos.cn,
+	kernel@xen0n.name,
+	graf@amazon.com,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-efi@vger.kernel.org
+Subject: Re: [PATCH v5 1/5] efi: add a KHO configuration table channel
+Date: Wed, 21 Oct 2026 11:33:42 +0800
+Message-ID: <20261021033342.3110-1-dongtai.guo@linux.dev>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <2vxza4p95v6e.fsf@kernel.org>
+References: <2vxza4p95v6e.fsf@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABQX2QOKCpoUY_ObhFif7xN7OF-NzcxEM0JABAXo9n9KaacO7A@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261020_190503_693170_6428984A 
-X-CRM114-Status: GOOD (  46.88  )
+X-CRM114-CacheID: sfid-20261020_203355_718462_25D3A0E9 
+X-CRM114-Status: GOOD (  36.33  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -73,165 +83,133 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, Ajay Kaher <ajay.kaher@broadcom.com>, Kees Cook <kees@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Young <ruirui.yang@linux.dev>, Stephen Brennan <stephen.s.brennan@oracle.com>, Bo Gan <bo.gan@broadcom.com>, "H. Peter Anvin" <hpa@zytor.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, Brennan Lamoreaux <brennan.lamoreaux@broadcom.com>, x86@kernel.org, Joel Granados <joel.granados@kernel.org>, Alexey Makhalov <alexey.makhalov@broadcom.com>, Ingo Molnar <mingo@redhat.com>, bcm-kernel-feedback-list@broadcom.com, Petr Mladek <pmladek@suse.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, John Ogness <john.ogness@linutronix.de>, virtualization@lists.linux.dev, Steven Rostedt <rostedt@goodmis.org>, Maaz Mombasawala <maaz.mombasawala@broadcom.com>, Borislav Petkov <bp@alien8.de>, Shuah Khan <skhan@linuxfoundation.org>, Michael Kelley <mhklinux@outlook.com>, Pratyush Yadav <pratyush@kernel.org>, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ian Forbes <ian.forbes@broadcom.com>, Thomas Gleixner <tglx@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 10/20/26 at 03:23pm, Zack Rusin wrote:
-> Hi, Petr.
-> 
-> First of all I really appreciate you going over this. Thanks!
-> 
-> On Tue, Oct 20, 2026 at 12:37 PM Petr Mladek <pmladek@suse.com> wrote:
-> > Approach B: Three lists: platform, smp_safe, and smp_unsafe()
-> > =============================================================
-> >
-> > It is similar to approach A. We would just add an extra:
-> >
-> >      + panic_notifiers_platform_list
-> >      + disable_panic_notifiers_platform_list
-> >
-> > This list would be used for smp-safe notifiers which are
-> > required be some platform. It would be the notifiers which
-> > are crucial. Which are currently the reason to set
-> > "_crash_kexec_post_notifiers".
-> >
-> > It might be called also when __crash_kexec() is called
-> > outside panic().
-> [...]
-> > This patchset, adding vmware_log_notifier, might implement just
-> > the panic_notifiers_platform_list. The rest might be
-> > added by another volunteer.
-> >
-> > How does this sounds, please?
-> 
-> That sounds good to me. For v3 I'd do just the platform list:
-> 
-> - One call in vpanic(), right after kgdb_panic() and before the first
-> __crash_kexec(), whatever crash_kexec_post_notifiers is set to. The
-> list runs before kdump and before the other CPUs are stopped.
-> - One call in __crash_kexec(), after it has taken the kexec lock,
-> found a crash image and saved the registers, for paths that enter
-> kdump without panic(), like oops_end() or Hyper-V's hv_crash_handle().
-> Once the early panic call has run the list, the guard makes this one a
-> no-op. That removes the dependence on crash_kexec_post_notifiers you
-> pointed out before.
-> - A once-only guard shared by both, so the list also runs only once
-> when a callback panics.
-> - disable_panic_notifiers_platform_list as a boot and runtime switch,
-> checked in the same helper, replacing panic_pre_kdump_postpone.
-> - Kernel-doc with your definition: smp-safe callbacks a platform
-> needs, which would otherwise be a reason to set
-> crash_kexec_post_notifiers.
-> 
-> Roughly:
->         kgdb_panic(buf);
-> 
->         panic_notify_platform();
-> 
->         if (!_crash_kexec_post_notifiers)
->                 __crash_kexec(NULL);
-> 
-> and in __crash_kexec():
-> 
->         crash_setup_regs(&fixed_regs, regs);
->         /* Direct entry outside panic() */
->         panic_notify_platform();
->         crash_save_vmcoreinfo();
-> 
-> I'd keep the second call in __crash_kexec() rather than crash_kexec(),
-> because afaict crash_kexec() can return without a crash image, e.g.
-> from the BPF kfunc, or from oops_end() before it panics. Calling the
-> list there would use up the guard even when no kdump follows.
-> 
-> crash_kexec_post_notifiers, the existing list and the kmsg dumpers
-> stay as they are, and moving other platforms over can come later.
-> 
-> The VMware log copy would be the only user, and it's still best-effort
-> diagnostics: kdump and the reboot don't depend on it. It copies the
-> log tail into an 8 KiB buffer. On panic() that happens after the panic
-> message and any local backtrace; on direct entry from an oops, after
-> the exception output. With the list enabled throughout, the copy
-> precedes the later panic notifiers, sys_info() and the all-CPU
-> backtrace step. The guest-crash report stays a late kmsg dumper that's
-> skipped while a crash kernel is loaded, because the host can power off
-> the VM inside that call.
-> 
-> If that matches what you had in mind, I'll do it that way in v3.
-> 
-> Guilherme, Stephen, Baoquan, does that work for you too?
+Hi Pratyush,
 
-Hi Zack,
+Thanks for the detailed review. I've rewriten the comments and commit messages
+myself for v6. Replies inline.
 
-Sorry I didn't check this series before, just trying to catch up.
+On Tue, Sep 22 2026, Pratyush Yadav wrote:
+> > +config EFI_KHO
+> > +	bool
+> > +	depends on EFI_STUB && EFI_GENERIC_STUB && KEXEC_HANDOVER
+> > +	help
+[...]
+> I don't like adding a config for this sort of thing. Do we really need
+> this? Why not just have the code always compiled and only used by
+> loongarch? I don't really see we need a user decision for this sort of
+> thing.
 
-I like the Approach B direction: one panic_notifiers_platform_list for
-platform callbacks that must run before kdump. While I have one concern
-about the long term.
+Agreed, v6 drops it.
 
-Today the list has only the VMware log sender. Later, more handlers may join
-(for example pvpanic, Hyper-V, Xen, gsmi, SNP). When the list grows, someone
-will want to run only their handler, or to skip some handlers. The easy
-answer is "add a new list for my handler". I think this will be a problem too
-in the future. Every new list adds a new global ordering rule and a new disable
-switch. Petr already said we should keep the number of lists small.
+> > +		/*
+> > +		 * Reserve the stub-allocated table so it is neither handed
+> > +		 * out by the buddy allocator nor placed on by kexec
+> > +		 * segments, mirroring the memreserve handling above.  This
+> > +		 * runs on every boot, so it also protects the table in the
+> > +		 * next kernel until it reads it.
+> > +		 */
+>
+> Nit: this comment is too wordy. Can you please make it more concise and
+> to the point?
 
-Currently, atomic_notifier_call_chain() runs all registered callbacks. There
-is no per-handler enable/disable and no filter. NOTIFY_STOP_MASK can stop the
-chain, but we must not use it here, because one handler could hide all the
-later handlers. The list-level disable_panic_notifiers_platform_list can
-only disable the whole list.
+v6:
 
-I have some rough though, just for reference:
+	/* Keep the buddy allocator and kexec segments off the table. */
 
-1. Keep one panic_notifiers_platform_list.
+> > +			if (kho->fdt_addr)
+>
+> When can kho->fdt_addr be NULL? Also, perhaps print a warning if
+> early_memremap() fails?
 
-2. Give each handler a small wrapper with a name and an enabled flag:
+It is 0 when there is nothing to restore:
 
-   struct panic_pre_kdump_notifier {
-           struct notifier_block nb;
-           const char *name;
-           bool enabled;
-   };
+  - on a cold boot, because the stub installs the table zeroed;
+  - after a kexec into an image without KHO state, such as a crash
+    kernel, because the table is zeroed just before that kexec.
 
-3. In the dispatch, skip a handler when enabled is false. Print the name
-   before calling it. This also helps when a handler hangs and we want to
-   know which one it was.
+v6 says this in the struct documentation, and adds a pr_warn() when
+early_memremap() fails.
 
-4. Add a boot parameter to disable handlers by name, for example:
+> > +	/*
+> > +	 * Keep a persistent mapping of the table, the same way
+> > +	 * efi_memreserve_root_init() keeps the memreserve root mapped:
+> > +	 * efi_kho_update() is also called on the crash kexec path, where
+> > +	 * memremap() is no longer an option.
+> > +	 */
+>
+> No need to mention memreserve. Just explain the reason here. And keep it
+> as short and to the point as possible.
 
-           panic_pre_kdump.disable=vmware_log,hyperv_crash
+v6:
 
-   Parse it early. At panic time we only read the flag. We do not parse
-   strings in the panic path.
+	/* Map it now: the table is also written at panic time. */
 
-5. Keep the list-level disable_panic_notifiers_platform_list. It is still
-   useful to disable the whole list for debugging.
+> This is unreadable. Please add a human touch to this.
+>
+> And once again, the fact that it mirrors efi_mem_reserve_persistent()
+> isn't important.
 
-6. If the list is still too broad later, we can add a reason/class argument
-   (for example PANIC, OOPS_DIRECT). A handler can then decide if it cares.
-   This is better than adding a new list.
+v6:
 
-So with them:
+	/*
+	 * Write the KHO addresses the next kernel should use, or zeroes
+	 * if it should boot without KHO.
+	 */
 
-- We keep one place to register, one ordering rule, and one place to look
-  when something goes wrong.
-- "Run only my handler" becomes a debug switch (disable the others), not a
-  new global list. Or vice versa.
-- We do not change the general struct notifier_block.
-- The panic path only reads a bool, so it is safe and cheap.
+> Why ENODEV? Wouldn't ENOENT be a tiny bit better?
 
-just some rough thoughts, maybe not well polished, just for reference.
-Thinking of these becasue I do meet requirement in real use case where
-they really want to run their own one specific panic handler before
-kdump while not easy to make it.
+Neither, in v6. No table is the normal case outside LoongArch, so
+efi_kho_update() now returns 0. The only error left is a table that
+could not be mapped at boot, which returns -ENOMEM.
+
+> This has too much information. You need to make it more to the point.
+> For example, "without a device tree" already implies there is no /chosen
+> property in the first place. No need to mention the function either.
+>
+> The lifetime of the table is certainly useful information but again,
+> should be much more clear and to the point.
+>
+> Also, you should document what each of the members of the struct mean.
+
+Agreed. v6:
+
+	/**
+	 * struct linux_efi_kho_data - KHO state passed to the next kernel
+	 * @fdt_addr: physical address of the KHO FDT, 0 if there is none
+	 * @fdt_size: size of the KHO FDT
+	 * @bootmem_addr: physical address of the bootmem area list
+	 * @bootmem_size: size of the bootmem area list
+	 *
+	 * Pointed to by the LINUX_EFI_KEXEC_HANDOVER_GUID configuration table.
+	 *
+	 * The EFI stub installs this table zeroed on a cold boot. It stays
+	 * in place across kexec; the running kernel rewrites it just before
+	 * each kexec, and the next kernel reads it during early boot.
+	 *
+	 * The layout is fixed. Changing it requires a new GUID.
+	 */
+
+> Note: I recently sent a series that renames scratch to bootmem [0]. It
+> looks close to landing. So you likely need to rename this to
+> bootmem_{addr,size}.
+
+Thanks for the heads-up. It is in liveupdate/next now, so v6 is based
+on it and uses bootmem_{addr,size}.
+
+> Why __packed?
+
+No good reason. All four members are u64, so there is no padding
+and __packed changes nothing. Dropped.
 
 Thanks,
-Baoquan
-
+George
 
