@@ -2,71 +2,75 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06DF60A2634
-	for <kexec@archiver.kernel.org>; Wed, 21 Oct 2026 15:25:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C27360A3825
+	for <kexec@archiver.kernel.org>; Wed, 21 Oct 2026 15:25:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Btojwain;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=Kx0m8UXf
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Xro9HxES;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=JaKvrs/o
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=W0oLRP7RmrwK+s1WyDoN9zSSlBczsPl1G7flMYO8vs0=; b=BtojwainjBKDWjMvPwtPVYR5gk
-	PLXVCR6pQB8xRm3QjIW7mr37VB7MX/NtFRvwBNqEi4Q1UMNYQtiIZbJO6GWVZjqvNwut7mvbNNhgD
-	efd/R4W+Z22F8gAuCIAFQyhNPZs50cQq3qIgGlSAhWnrZzhLkJY3gtFxGF4NlxZSynA7uVkBqkEjo
-	HZ7cj/5f8lF0exDiv6nDG8AGYuWUm2046UCaS12x7bKW+93ygFRSJT59d9R4AePOBxlfSs7L1y+w7
-	UnGhtwN92uuQ4cVNDkLB6MxkyUde5xQVs0WOoac66UVc1VSslaxRioyEeSorHNBvlrs1x6vz8wgwh
-	eSYfn9gw==;
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=eF6EuxU5y/OwYzc2Wn37QAO5vY1XkAXoeRxwHLACs2w=; b=Xro9HxESblU+sPS6x4G7HFQMFU
+	dRZ11t012YXcEeGaTMES48riDFFltD83lyFy75hJ8J4nGB5w0wzKlz8tPK06PRz8sdhYGEj+0MmsQ
+	BHBpAsDq7oFFW3FfObK663MSrK2L9Qc7BgLo1dEFMoT6Etol5Y8bTVJzIvTBPfG33P6H/r/E7E0/o
+	5kMWFRNrWSqUz3bh24SlihLCH6hkFFpbycj9ZMHufOTq6RPF1F6lZPuwyEP9qiExWGjHip184m+Kg
+	66mK1gIqhA9RQRGGBDCYSwt4m2AZ+R5Fdticl5gJrTXjDkDeKWpj4/IataxNxVAzUCGiMdUA7Ol2E
+	pyP4/c7A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJYC6-0000000CFXl-30fN;
-	Wed, 21 Oct 2026 15:25:34 +0000
-Received: from mail-ej1-x646.google.com ([2a00:1450:4864:20::646])
+	id 1xJYC8-0000000CFZQ-1msr;
+	Wed, 21 Oct 2026 15:25:36 +0000
+Received: from mail-ej1-x648.google.com ([2a00:1450:4864:20::648])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJYC4-0000000CFW1-0mfe
+	id 1xJYC5-0000000CFWS-3dGR
 	for kexec@lists.infradead.org;
-	Wed, 21 Oct 2026 15:25:33 +0000
-Received: by mail-ej1-x646.google.com with SMTP id a640c23a62f3a-c4048584447so75607466b.1
-        for <kexec@lists.infradead.org>; Wed, 21 Oct 2026 08:25:30 -0700 (PDT)
+	Wed, 21 Oct 2026 15:25:35 +0000
+Received: by mail-ej1-x648.google.com with SMTP id a640c23a62f3a-c3a4da6437bso84034666b.1
+        for <kexec@lists.infradead.org>; Wed, 21 Oct 2026 08:25:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792596329; x=1793201129; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=W0oLRP7RmrwK+s1WyDoN9zSSlBczsPl1G7flMYO8vs0=;
-        b=Kx0m8UXf1E+ATGk4ByIjfTqzskcn8U3nD3RH/Jpxd3dE/or1PlTj1DyjIf87u0pehq
-         ESrJngLkkXxb5byhYIcSxh3xPUn6vt7wp6ovgqZfMTyXLnkn1zOMDX3RzkeiPAHKwvWq
-         b3WaA9iEGscmI0bO0h6FG9cD7aM8Of5M5KcSV9VEjwPIpjD4izaCyhCJ49EFy3l2B+fH
-         swl6j32SazkKXNzrlm3GfFlA6RBgzUVPge529Evyxhdmo1iW62oN+ZB3SoIqZKkXP/6Y
-         usQkCI7yi8xPw6vewL/kR86Tod22ea9BvGU/ISDuQwNSu0nVUFpdKlMVSM1BCcVobZLZ
-         DAeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792596329; x=1793201129;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20251104; t=1792596332; x=1793201132; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=W0oLRP7RmrwK+s1WyDoN9zSSlBczsPl1G7flMYO8vs0=;
-        b=x+AoDkziCL2y+rBEmHq6eIcAXztRCDs/GN7nIDkvkno+mDj8QAbKPlEpnNU2UG6COY
-         u0uAcMG2vEW95BB03F7R5EDCKXwpdKeEC62tEAoclGAIqqpYtlRYLdLgPwR+XBHtmVnH
-         wwauWPkXu21GhN/oVBuJ2JxC3vBi3GPTGdRDSmnZFlZ1H8wLxd6dowpn59ZX4KWmW9Il
-         xX+PlLMZcJTXYkFgKL68qzXwXwybCkClZk9UnHitscveeVjHom2rHScPpi2P6ZUwk45z
-         RrFxhKrk4DQOzJAmJhccP4FXfXQ/Y6Ecbx2GId/E3SJuQWX58K6MHpKCuhl4lVkUnUUY
-         y+3A==
-X-Forwarded-Encrypted: i=1; AKwUvBwthEMohLMqJc2Kp2RA3FaE6WweK8CuE/1ZL1D6i3zunrnke/95jKAA21zKhtj8Ho8tBfWKxA==@lists.infradead.org
-X-Gm-Message-State: AFq9FYIVfPGLi7zoSbbH+9f5ZrdhLo1mT1YIrEPmCSxbuPsi6TiZpW4q
-	N/syKrI5HRa9L5fITNdnO6mB4VHJxFGWSj2vFUGNIN8Qb6dnh3XlcD2JiO+RlRr2LpRRI7c3UQb
-	skcMYH4H0wPgbRNMf5Q==
-X-Received: from edqo20.prod.google.com ([2002:aa7:c514:0:b0:6b1:dfff:2ee9])
+        bh=eF6EuxU5y/OwYzc2Wn37QAO5vY1XkAXoeRxwHLACs2w=;
+        b=JaKvrs/oADM+EV/z325Gf1Ri0kxboH53xhU/TUDfQvg4IgViQQq/2ZRvV7GTSrnuAa
+         3zQNE2VE+KqXTiayuj9Fo97Hv4YEAMdp3SAvMmori0r9zoyzyTGp2kOLFrQiUhSoZfNI
+         VWOsSGD3SwjwzIg+TqriJbUEXut8UsEZ+Owzwhutgt1HQjJiDbOcfyeKIU51KBcOq58/
+         Ei3N21zOqhxzRFCRProbhehsi6wz2umtIFDQtTZkxQkjHfR7JlLAoat/HEiEmUEFhywL
+         DlecEeq925y8DRwU9G5cRRssLYIIuFlHr4vIMflCX3lOyeevQspLM9yWxIJXUwI0SGOf
+         ZAnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792596332; x=1793201132;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=eF6EuxU5y/OwYzc2Wn37QAO5vY1XkAXoeRxwHLACs2w=;
+        b=jrTqP9JsP8ZfFMMRLTkPL6OVkVpCTMpYTKvGebDnb9MXJakj9DyYjruDBn6znCb+Dj
+         U1UgrjI6X7cmsOwdnMIqjy9WQju70F/PEql6lH/2FbCpwdIXFU3s4TKmpxpbOusIboZM
+         yRQehHq0Bvg95A2iH4XY1XraScPROcFyewUs9vIJeoxvS6YvObJrPJ+OWZ1jhXUAlH6v
+         C279dUUMVhGTn4BfZ2PGAjV2SA+7/I9K8U0tN3sS5tuHXITo9c9DEb6ew9yVZ19mTL/5
+         5cQVpQjCVIwYd5vWT9C5maIijPFoR6Gd0LH19wJLRj/smoXeS8zwHF/jBeRbgJ2NRxws
+         VvCg==
+X-Forwarded-Encrypted: i=1; AKwUvBybko3VfVlxrQ8LYa3N/OAWeq1uIow3TRlG2ZKKmvEg20cKQz4vODfG0pVfBdmw3SLmw8GJ1Q==@lists.infradead.org
+X-Gm-Message-State: AFq9FYKhe/npjvqs2pSmzOODeF3+WH0gp4gFvsHj4PPx2zhERZfNn4OY
+	NaSZ29EWT0wMFw4CIinWnty7EDQfh1eW5GZDTS49s1/uPUXhNBfi36GXy3SL5FSwuAolV+GVSrC
+	gOcY6QIggKCCRTf8g6w==
+X-Received: from ejbgw26.prod.google.com ([2002:a17:906:f15a:b0:c3f:b33c:8124])
  (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:906:dc8e:b0:c44:14d:d95d with SMTP id a640c23a62f3a-c46796ec9bcmr208718966b.23.1792596329153;
- Wed, 21 Oct 2026 08:25:29 -0700 (PDT)
-Date: Wed, 21 Oct 2026 15:25:23 +0000
+ 2002:a17:907:d40a:b0:c45:d8aa:6ae5 with SMTP id a640c23a62f3a-c46799bdbb7mr204058966b.42.1792596331473;
+ Wed, 21 Oct 2026 08:25:31 -0700 (PDT)
+Date: Wed, 21 Oct 2026 15:25:25 +0000
+In-Reply-To: <20261021152527.375070-1-tarunsahu@google.com>
 X-Archived-By: <archiver.kernel.org>
 Mime-Version: 1.0
+References: <20261021152527.375070-1-tarunsahu@google.com>
 X-Mailer: git-send-email 2.56.0.212.g129ede20d9-goog
-Message-ID: <20261021152527.375070-1-tarunsahu@google.com>
-Subject: [RFC PATCH v2 0/4] liveupdate: Feature header ABI and named handler
+Message-ID: <20261021152527.375070-3-tarunsahu@google.com>
+Subject: [RFC PATCH v2 2/4] liveupdate: Select file handler by name in the
+ preserve ioctl
 From: Tarun Sahu <tarunsahu@google.com>
 To: Andrew Morton <akpm@linux-foundation.org>, joro@8bytes.org, 
 	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, maz@kernel.org, arnd@arndb.de, 
@@ -82,8 +86,8 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
 	Tarun Sahu <tarunsahu@google.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261021_082532_254899_FD0459CB 
-X-CRM114-Status: GOOD (  18.32  )
+X-CRM114-CacheID: sfid-20261021_082533_952913_31102DAB 
+X-CRM114-Status: GOOD (  21.36  )
 X-Spam-Score: -9.5 (---------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -95,134 +99,165 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-21.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-26.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Live Update Orchestrator (LUO) and its file handlers currently validate
-handed-over KHO state using monolithic compatibility strings ("luo-v5",
-"memfd-v2"). Any change to a serialized structure, even an optional
-additive field, requires bumping the compatibility string, breaking live
-update between adjacent kernel versions across both forward updates and
-rollbacks. This series introduces the feature flags per serialized
-struct to communicate between the kernel about their active and required
-features. Having feature flags increase the compatibility matching
-granularity.
+Currently luo_preserve_file() iterates over luo_file_handler_list and
+picks the first registered handler whose .can_preserve() callback
+returns true. When a subsystem introduces a new, backwards-incompatible
+file handler alongside an existing one for the same file type, userspace
+has no way to choose which handler preserves a file descriptor, nor can
+the kernel keep the existing rollback-safe handler as the default while
+allowing callers to opt into the new handler.
 
-This series also renames the file-handler and FLB compatible identifier to
-name, extends LIVEUPDATE_SESSION_PRESERVE_FD so userspace can
-optionally select which registered file handler preserves a file
-descriptor by name, and replaces monolithic version strings in serialized
-payloads with a fixed-size 2-bit pair feature header
-(struct luo_feature_hdr). So in future, If a change to a subsystem
-preservation can not be handled with feature flags, we can attach a new
-handler to support the preservation.
+Append char handler[LIVEUPDATE_HNDL_NAME_LENGTH] to struct
+liveupdate_session_preserve_fd immediately after token, keeping
+IOCTL_OP min_size at offsetofend(..., token) so callers passing the
+original 16-byte structure continue to work:
+- When handler is empty (all-zero, or zero-filled when userspace
+  passes the 16-byte structure), luo_preserve_file() selects the first
+  registered handler whose .can_preserve() callback accepts the fd.
+- When handler is non-empty, it must be null-terminated within
+  LIVEUPDATE_HNDL_NAME_LENGTH bytes (returning -EINVAL otherwise);
+  luo_preserve_file() looks up the registered handler with that exact
+  name (returning -ENOENT if unknown) and verifies that its
+  .can_preserve() callback accepts the fd (returning -EINVAL if not).
 
-This change is motivated by the LPC discussion.
+The retrieve ioctl is unchanged because the handler is identified by the
+name stored in the serialized payload from the source kernel.
 
-Named File Handler Selection
-============================
-With fine-grained compatibility tracked via feature headers, the
-handler and FLB compatible field is renamed to name. When a subsystem
-needs a genuinely incompatible new handler alongside an existing one for
-the same file type, struct liveupdate_session_preserve_fd now includes
-char handler[LIVEUPDATE_HNDL_NAME_LENGTH] after token (keeping
-min_size at 16 bytes for backward compatibility):
-- Empty handler (or 16-byte struct): selects the first registered
-  handler whose .can_preserve() accepts the fd, keeping default callers
-  on the original rollback-safe handler.
-- Non-empty handler: selects the registered handler with that exact
-  name and verifies .can_preserve() accepts the fd.
+Signed-off-by: Tarun Sahu <tarunsahu@google.com>
+---
+ include/uapi/linux/liveupdate.h  | 12 +++++++++---
+ kernel/liveupdate/luo_file.c     | 21 ++++++++++++++++++---
+ kernel/liveupdate/luo_internal.h |  3 ++-
+ kernel/liveupdate/luo_session.c  |  7 ++++++-
+ 4 files changed, 35 insertions(+), 8 deletions(-)
 
-2-Bit Pair Feature Header (struct luo_feature_hdr)
-==================================================
-Each serialized ABI structure (struct luo_ser, struct memfd_luo_ser)
-starts with a fixed 128-byte struct luo_feature_hdr containing:
-- size: byte size of the enclosing serialized structure from the source
-  kernel.
-- flags[15]: 15 chained 64-bit feature flags entries. Each entry
-  encodes up to 31 features as 2-bit pair (req, active) states
-  (enum luo_feat_state: LUO_FEAT_DISABLED = 0b00,
-  LUO_FEAT_OPTIONAL = 0b01, LUO_FEAT_REQUIRED = 0b11) plus
-  LUO_FEAT_EXT_MASK (bits[63:62] = 0b11) chaining to the next entry
-  (up to 465 features total). Because the header is fixed at 128 bytes,
-  payload field offsets never shift when extended flags entries are used.
-
-Each subsystem defines its feature states as a static const u8 array
-indexed by its feature enum, which luo_feature_hdr_init() packs into
-the payload feature header. During deserialization,
-luo_feature_hdr_validate() checks the header from the source kernel
-against the feature array in the target kernel according to the
-per-feature (req, active) truth table:
-
-  Source Target Action
-  (1,0)  (x,x)  Reject -EINVAL: invalid source kernel (req without active)
-  (x,x)  (1,0)  Reject -EINVAL + WARN_ON_ONCE: invalid target kernel
-  (0,0)  (0,0)  Accept: feature absent
-  (0,0)  (0,1)  Accept: feature absent
-  (0,0)  (1,1)  Reject -EOPNOTSUPP: target kernel requires the feature
-  (0,1)  (0,0)  Accept: ignore payload data
-  (1,1)  (0,0)  Reject -EOPNOTSUPP: source kernel requires the feature
-  (x,1)  (x,1)  Accept: use payload data
-
-Structure Evolution
-===================
-The relative order and offsets of fields in serialized structures must
-remain unchanged as features are added or retired. New fields are always
-appended at the end of the structure under a new feature flag, and
-retired fields are kept in place so that the offsets of subsequent
-fields never shift. If the type or format of a field needs to change,
-the existing field and feature are kept intact (and retired when no
-longer needed) and a new feature flag with a new appended field of the
-new type is added.
-
-In the target kernel, fields of a LUO_FEAT_REQUIRED feature are
-guaranteed to be present once luo_feature_hdr_validate() succeeds,
-whereas fields of a LUO_FEAT_OPTIONAL feature should be accessed only
-after verifying that the feature is active in the source kernel header:
-
-  if (luo_feature_is_active(&ser->features, FEAT_X))
-          val = ser->x_field;
-
-Changes since RFC v1 [1]:
-- Renamed file-handler and FLB compatible to name and added optional
-  handler selection by name in LIVEUPDATE_SESSION_PRESERVE_FD.
-- Replaced the 3-mask (supp, req, active) + variable-length FDT and
-  feature-section design with a fixed 128-byte struct luo_feature_hdr
-  embedding size and 15 chained 64-bit 2-bit pair (req, active)
-  flags entries directly in struct luo_ser and struct memfd_luo_ser.
-- Replaced compile-time bitmask macros with a static const u8 feature
-  array per subsystem packed by luo_feature_hdr_init() and validated
-  in a single pass by luo_feature_hdr_validate().
-
-[1] https://lore.kernel.org/all/20260903023452.721732-1-loganodell@google.com/
-
-Tarun Sahu (4):
-  liveupdate: Rename handler compatible to name
-  liveupdate: Select file handler by name in the preserve ioctl
-  liveupdate: Replace compatibility string with a 2-bit pair feature
-    header
-  mm: memfd_luo: Add the 2-bit pair feature header
-
- drivers/pci/liveupdate.c         |  10 +-
- include/linux/kho/abi/luo.h      | 367 +++++++++++++++++++++++++++----
- include/linux/kho/abi/memfd.h    |  39 +++-
- include/linux/kho/abi/pci.h      |   2 +-
- include/linux/liveupdate.h       |  18 +-
- include/uapi/linux/liveupdate.h  |  15 +-
- kernel/liveupdate/luo_core.c     |  27 ++-
- kernel/liveupdate/luo_file.c     |  64 ++++--
- kernel/liveupdate/luo_flb.c      |  16 +-
- kernel/liveupdate/luo_internal.h |   3 +-
- kernel/liveupdate/luo_session.c  |   7 +-
- lib/tests/liveupdate.c           |  22 +-
- mm/memfd_luo.c                   |  16 +-
- 13 files changed, 481 insertions(+), 125 deletions(-)
-
+diff --git a/include/uapi/linux/liveupdate.h b/include/uapi/linux/liveupdate.h
+index 509c6236720d..2413b19dabc1 100644
+--- a/include/uapi/linux/liveupdate.h
++++ b/include/uapi/linux/liveupdate.h
+@@ -126,9 +126,14 @@ struct liveupdate_ioctl_retrieve_session {
+ 
+ /**
+  * struct liveupdate_session_preserve_fd - ioctl(LIVEUPDATE_SESSION_PRESERVE_FD)
+- * @size:  Input; sizeof(struct liveupdate_session_preserve_fd)
+- * @fd:    Input; The user-space file descriptor to be preserved.
+- * @token: Input; An opaque, unique token for preserved resource.
++ * @size:    Input; sizeof(struct liveupdate_session_preserve_fd)
++ * @fd:      Input; The user-space file descriptor to be preserved.
++ * @token:   Input; An opaque, unique token for preserved resource.
++ * @handler: Input; Optional null-terminated file handler name (max length
++ *           %LIVEUPDATE_HNDL_NAME_LENGTH including null terminator) selecting
++ *           which registered handler preserves @fd. If empty (all-zero, or
++ *           omitted when passing the 16-byte structure), the kernel selects
++ *           the first registered handler whose .can_preserve() accepts @fd.
+  *
+  * Holds parameters for preserving a file descriptor.
+  *
+@@ -152,6 +157,7 @@ struct liveupdate_session_preserve_fd {
+ 	__u32		size;
+ 	__s32		fd;
+ 	__aligned_u64	token;
++	char		handler[LIVEUPDATE_HNDL_NAME_LENGTH];
+ };
+ 
+ #define LIVEUPDATE_SESSION_PRESERVE_FD					\
+diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
+index fb81239bedf3..be20e0f1e0aa 100644
+--- a/kernel/liveupdate/luo_file.c
++++ b/kernel/liveupdate/luo_file.c
+@@ -207,6 +207,8 @@ static bool luo_token_is_used(struct luo_file_set *file_set, u64 token)
+  * @file_set: The file_set to which the preserved file will be added.
+  * @token:    A unique, user-provided identifier for the file.
+  * @fd:       The file descriptor to be preserved.
++ * @handler:  Optional NUL-terminated handler name. If NULL or empty, the first
++ *            registered handler whose .can_preserve() accepts @fd is selected.
+  *
+  * This function orchestrates the first phase of preserving a file. Upon entry,
+  * it takes a reference to the 'struct file' via fget(), effectively making LUO
+@@ -238,11 +240,13 @@ static bool luo_token_is_used(struct luo_file_set *file_set, u64 token)
+  *         -EBUSY if the file descriptor is already preserved by another session.
+  *         -EBADF if the file descriptor is invalid.
+  *         -ENOSPC if the file_set is full.
+- *         -ENOENT if no compatible handler is found for the file type.
++ *         -ENOENT if no matching handler is registered or accepts @fd.
++ *         -EINVAL if the named handler cannot preserve @fd.
+  *         -ENOMEM on memory allocation failure.
+  *         Other erros might be returned by .preserve().
+  */
+-int luo_preserve_file(struct luo_file_set *file_set, u64 token, int fd)
++int luo_preserve_file(struct luo_file_set *file_set, u64 token, int fd,
++		      const char *handler)
+ {
+ 	struct liveupdate_file_op_args args = {0};
+ 	struct liveupdate_file_handler *fh;
+@@ -266,6 +270,18 @@ int luo_preserve_file(struct luo_file_set *file_set, u64 token, int fd)
+ 	err = -ENOENT;
+ 	down_read(&luo_register_rwlock);
+ 	list_private_for_each_entry(fh, &luo_file_handler_list, list) {
++		if (handler && handler[0]) {
++			if (strcmp(fh->name, handler))
++				continue;
++			if (!fh->ops->can_preserve(fh, file)) {
++				err = -EINVAL;
++				break;
++			}
++			if (try_module_get(fh->ops->owner))
++				err = 0;
++			break;
++		}
++
+ 		if (fh->ops->can_preserve(fh, file)) {
+ 			if (try_module_get(fh->ops->owner))
+ 				err = 0;
+@@ -274,7 +290,6 @@ int luo_preserve_file(struct luo_file_set *file_set, u64 token, int fd)
+ 	}
+ 	up_read(&luo_register_rwlock);
+ 
+-	/* err is still -ENOENT if no handler was found */
+ 	if (err)
+ 		goto err_fput;
+ 
+diff --git a/kernel/liveupdate/luo_internal.h b/kernel/liveupdate/luo_internal.h
+index dac6644bfb18..911ffedec9f3 100644
+--- a/kernel/liveupdate/luo_internal.h
++++ b/kernel/liveupdate/luo_internal.h
+@@ -101,7 +101,8 @@ int __init luo_session_setup_incoming(u64 sessions_pa);
+ int luo_session_serialize(void);
+ int luo_session_deserialize(void);
+ 
+-int luo_preserve_file(struct luo_file_set *file_set, u64 token, int fd);
++int luo_preserve_file(struct luo_file_set *file_set, u64 token, int fd,
++		      const char *handler);
+ void luo_file_unpreserve_files(struct luo_file_set *file_set);
+ int luo_file_freeze(struct luo_file_set *file_set,
+ 		    struct luo_file_set_ser *file_set_ser);
+diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
+index f48e9a4185f9..194ef45907c1 100644
+--- a/kernel/liveupdate/luo_session.c
++++ b/kernel/liveupdate/luo_session.c
+@@ -266,8 +266,13 @@ static int luo_session_preserve_fd(struct luo_session *session,
+ 	struct liveupdate_session_preserve_fd *argp = ucmd->cmd;
+ 	int err;
+ 
++	if (strnlen(argp->handler, sizeof(argp->handler)) ==
++	    sizeof(argp->handler))
++		return -EINVAL;
++
+ 	guard(mutex)(&session->mutex);
+-	err = luo_preserve_file(&session->file_set, argp->token, argp->fd);
++	err = luo_preserve_file(&session->file_set, argp->token, argp->fd,
++				argp->handler);
+ 	if (err)
+ 		return err;
+ 
 -- 
 2.56.0.212.g129ede20d9-goog
 
