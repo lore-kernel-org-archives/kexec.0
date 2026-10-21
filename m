@@ -2,103 +2,103 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E8B606A324
-	for <kexec@archiver.kernel.org>; Wed, 21 Oct 2026 17:18:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2200A606A319
+	for <kexec@archiver.kernel.org>; Wed, 21 Oct 2026 17:28:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Hn29aBU4;
-	dkim=pass (2048-bit key, unprotected) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=ObzTRRDk
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=LbGZNzmu;
+	dkim=pass (2048-bit key, unprotected) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=h8DdaPIx
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=elbAOUhGKDzUinaTQ0302ZCYZ7inGoSdWd2JTt/hv+g=; b=Hn29aBU4RHpNfLGRZalftAzCXU
-	QwWOH6MqP7OJujJMF/5X6ljI9PFasFpkBBRPn0DsjWsLMV7bDfLhgiM9J0shHTBZLgQh2QCkOllmF
-	+5qjOJDTvf/W/HyekzOX4+L7dw38tMydtToZLbnQrgOXmIS2tXaNGOq0ZjIJkZXEifxAikOwLuoQm
-	0d0+GgeuwEY/uXnbKk9c0/OU80NzrQGStYbaHTeh4AwCf7Z2/L51HZyhZo7Psw6iUj0cokuEemZCb
-	/q7CaAZoubJE5cGXktMjxTaU+E2rCkdKM+RObimZb5V4VY7ikiVzbL11MujUiYiDnBgaqddVRpb+5
-	lZxyXn/g==;
+	bh=ATB87aCd6j+g+5XwXpIsJ9vvLP6d9ZfYn5z6fPjTfwE=; b=LbGZNzmuh5sRVxwvWsdreDRCGx
+	8Oo+wHpLFyyrZUq6reNW25XGPap/f5vo1qMmMAP2dPCtBmWRYBhWvI6z1jYYOWRnA35Z5O0LweeJl
+	WA8bkNNlGkl9UfVuYQ8pSFcUo8JH9X/detFIFCCXmj9eLub+aryrlDHxrkTPW/2DMkpZifor+KZPR
+	tCezTRqgYYSa9xET0q+vYNlAjPygoeSjkPoHHxK2xVpmiKVJgdjQrxS07Ntc/eCnD32v6k/rJCOsw
+	g5KF+r8LX5CpT6TkfSXW76kjYKlEwiH9fHtg8BGcoHElloNGm7aXttNTXzqDO8v4aTCdW1pS0mEw7
+	bGCbyaHg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJZww-0000000CXL7-27lm;
-	Wed, 21 Oct 2026 17:18:02 +0000
-Received: from mail-ej1-x629.google.com ([2a00:1450:4864:20::629])
+	id 1xJa6g-0000000CY1B-40lC;
+	Wed, 21 Oct 2026 17:28:06 +0000
+Received: from mail-lj1-x22e.google.com ([2a00:1450:4864:20::22e])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJZws-0000000CXJU-3Gte
+	id 1xJa6d-0000000CY0X-2YQG
 	for kexec@lists.infradead.org;
-	Wed, 21 Oct 2026 17:18:01 +0000
-Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-c3fd91337baso138587566b.3
-        for <kexec@lists.infradead.org>; Wed, 21 Oct 2026 10:17:58 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792603077; cv=none;
+	Wed, 21 Oct 2026 17:28:05 +0000
+Received: by mail-lj1-x22e.google.com with SMTP id 38308e7fff4ca-3a1f628b1d1so10057671fa.0
+        for <kexec@lists.infradead.org>; Wed, 21 Oct 2026 10:28:02 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792603681; cv=none;
         d=google.com; s=arc-20260327;
-        b=l7X5imiy0DrP1Y4Wp1T2H7siKP1isH6z+K6NE50uZikg4TBzAWV0wp71CAlj5k8xxW
-         A8o2M7HCgclAQPRf3ohOmC3nXYUwFEG2jFQwXVeoVR2ACRtVc2w5jfmipuKPtMPFkN89
-         CheVmyZ5dBAdHQZOgnJwd7jOcOQKdQZRXh+uFM0PTXTZLhYLJzl4FpaXvUqUBydtuPVd
-         NZUjD31kI0GTLOkFzYpH9+beBfzMAWc0+eBmyyBTsq1POLXbV4IqKUL7gK7HVZtvli9z
-         QbufTlBGFSMCq6rC3mkfBBpl0cMCRPPewli6lm73PcXIMJI+dGfmnxh75zneGQh9uiKL
-         UZfw==
+        b=UnnKhTRvAKgl2rqu2tMJc6bLYpf/UHPNLcd60PDkahAfxkRoMPTc89clknZPaaQt+y
+         JfxyRXQWiyb4o4T00Bkcs1f7FRBVuoGpT2Qnba5ZxHGDA7W+TR+L/A3uUYYhSMIsR27Z
+         EHVqi/mCeCPJS9Vqf9YmMrVwEB49IGrmm6GVziBRot5qgpqIJ0Lf6x1z3vgtBFyhEA2m
+         aKDk44EbANE28mPr+XzpDrCRqfbEmRi6ehpkEZ+2+W/1/8sHeniYHB6ed+Wvfs6vqShW
+         cBUmTqyzRdrKNoplLlo2v9V9qlMxrfGWXoFQzpBc4nRrh3dP7/6hPzFWPxiTaMVoTay9
+         mEuA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=elbAOUhGKDzUinaTQ0302ZCYZ7inGoSdWd2JTt/hv+g=;
-        fh=rEcu85+IkHKsca1ZlU9egh7etcO4JQZSPzfwReunzas=;
-        b=HDAd3AKD+M4Slq2Sc3kVJPO2ucjJMR92K1OpVLefT5STsye89UcuINH26chsbAc2XQ
-         Dly1X0L1sel+P01NgYKOiIuFxXAYdzEnIayXGK5l2R5KztAsO7T8DRgZaiM34TcWFEgw
-         WsU5qh0OCD/JicaeMYLfmNV5zDznzOyNkK3KpSvON4er66sGMKjBG1A+A45UZvOHzLQD
-         UYWnm+mz1dXzIB1uZtfO5aSFqVNc6pR7mUs+NpEfV7jaIiy92+/NX12V0yKvXeUDL9OS
-         Q9yVPxAsecAHDkfzppQZmSEDxC2V9zZcBUEJwE/2R3+7x/75th6KWbtL1mkmEOKSobTd
-         MHUg==;
+        bh=ATB87aCd6j+g+5XwXpIsJ9vvLP6d9ZfYn5z6fPjTfwE=;
+        fh=vPdTIwo0VlpEz+xc3g3ZqyaNl2oX9ctjdVJZMUDuqQ4=;
+        b=f59ODkjMmOPmnW3pxmIkzPA6XSCA0xAzQF6O4j1q4DjfNULh6DN0eIq37pfJ52nF2y
+         M+g7djF2brQHodbWzxHrZ8X1B4k4QDrfcV8pcqub6/WI9KkdHSJI+qaOmC6BBejq+B8s
+         xGiJI0zkX0hXh37Gwd9nw3x2X0snp4T5K7d6xphW9V4EX3cjwqjr77gu4/pONazHAQaY
+         TWplTYUzJs1W4Vt8q/le25CASrLO+2up7+7FebqVsbPBN78fwwEp7xM8hHy5YWKXXQfO
+         gTBkQc5elpBlprgRvngBMCv2lKLx26t+b8uks1CYM0IK5sFhd5yOeLBudMNWuOI0AIbC
+         IsSQ==;
         darn=lists.infradead.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1792603077; x=1793207877; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1792603681; x=1793208481; darn=lists.infradead.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=elbAOUhGKDzUinaTQ0302ZCYZ7inGoSdWd2JTt/hv+g=;
-        b=ObzTRRDkCvX+leRLl0LWibecMFebyxX93xwwRwdjTG+Ha7EKU6PqU5bFw1hKa0Jfdk
-         GVk8bxD0qpMw8ZdAx5q04evqfhWlWEs+AgNCYwL/i0uhHvVPOzYg6aqUa53DUyZLWiy6
-         IrdUMrWz5+Pki8eU2xX5JmDxrOOOd7n9VPyma1aWjhYGtRXFp1zaFpWrcJUrweHvOzNT
-         M/af7NE8qLTpuBkRNXwuKFLipT5CGl2jzT7EYUmyh8FrejsSraJab9MdZuKSPIz39REe
-         PNUWFSJVqfnxgd9/JAJ+PYIrTtF0xjtX2cKOYt4cWHlYJlVuccObGOHabKiv62udYkdi
-         F+wA==
+        bh=ATB87aCd6j+g+5XwXpIsJ9vvLP6d9ZfYn5z6fPjTfwE=;
+        b=h8DdaPIxBk1oBtk+etkO3l7g1rDgnmW1S04XmNiUp+AAMZl54ZsOJyi3TTEfNzwNSc
+         VvNx2wtmb4l4BvO4OIVIo48I7+b0TPOaDFU01+fIxj0dYzcJpb2/qhn0BRVOrcmaiEJC
+         8QxKwG1dpe/te2jb3Ko5+heOAkE4n1vJs7+i+VnzDgZ5JshFukHdii59VrsoVMgezQ2D
+         hInHSDb2YuBQmIp7VLAbaeWtCwDz6Z/NZDztW/dNkie7vm7L6eBIzlvwLIIFcT0Cak4P
+         +27c9jo8Q301iOq8I0ky771LcIEU1MNkyx8EGVe/J/KKsiNwZEihphTQgwRTkNUDdE8l
+         8v2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792603077; x=1793207877;
+        d=1e100.net; s=20260707; t=1792603681; x=1793208481;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=elbAOUhGKDzUinaTQ0302ZCYZ7inGoSdWd2JTt/hv+g=;
-        b=zm6lYkLHsOnszBakj3zhQANwMG/Rq/ERDlZsmXqgDiSpA/WPAQz3zs52F/vnBCa6vZ
-         JsnIfMhkHPuHCKwVMnnFhDn/S+nYsE9DPCQP7CYt4RZl5uCgrdYibGOdgSV518plea+R
-         SAB/2LOXAU2v96t0CXZC2LiGMBvfFYJV+e28rR4YAquwt5du5COPPtgNh395g9/3WT36
-         bOfYG7odiVVfI1ZeJlhkqtde02PeGJ8MKSrNeS/Q5r/JOLVYMqPJSKpFo/eOZXxFq/7Y
-         /hsJj6pAsad34aQ4Cp5+vdV8L92e/M+chcYkHY3dkEzP0HH/FMmMvXaeaAumPQerb5cJ
-         C2wQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzcTaRhIDH5Tssqp4Gv4oeRigs/nL7SriB3L9oJTc9NzOnzgqBOwn9aqV4f+p6tRhGXIXAJsQ==@lists.infradead.org
-X-Gm-Message-State: AFq9FYK5iKp/cToKcLOZKjtfv/X/nSwNcZDdBsHYGDOJDu6MhxwtpV4v
-	JBXhUd6n9HsULtGpxpBWNF2SmhKNx+OGpKEcEmR9WRgXtRtt/84UUWUkh6w6mOKWAB33aCP5CoF
-	5FaWJVLP3uF4OOwCfDtxrI9IMud281tZ0jNdZo2mryQ==
-X-Gm-Gg: AYBFou3v8UyjQMI3kTK8XULF0ugSzGD+SAr6mk4QlnujZNZX1/hzP1np9k7x6cXLD20
-	KmRvqG7pucRj+F3aV0Wy0JhPWseTeX8u7JhhOZ106UsZNFSCYzNWA8uLvOnSuxC+j1QsM4whDb8
-	U2qNpp3Zx63TEVd4jABQedA1ox+vzxg2gPkoBW703tw/funxEpIeRPs6TQbhstqgtdUkahGAJwO
-	dAgDe3duoTQ2PM12btdnI2uathmfy86Qxyr0+XZEqflWJ9sIurZcaHaOH6WT9ITIWIN5zJ4gQNj
-	U6N/nrGt1Cxxhy/y+5VenmdlqpQYPs9a5VvN3AKkN6lP67OJNgq2AvKF14EVl2dFPVQGtivJ8+e
-	Un7D4h6726B6ILlN4jQxSRoZ992b0KoWWUGhgqFCTCu06uWyXnZctEFOZvNQ5d6/LDf4=
-X-Received: by 2002:a17:906:f597:b0:c3e:f39b:2286 with SMTP id
- a640c23a62f3a-c4678f7c6cemr225893866b.0.1792603076743; Wed, 21 Oct 2026
- 10:17:56 -0700 (PDT)
+        bh=ATB87aCd6j+g+5XwXpIsJ9vvLP6d9ZfYn5z6fPjTfwE=;
+        b=FNX/infA1ZnOxkFB78fLBjbVaXaLLMwc4UIQ0u2SHYNOUl670nAEOQYti9cwghfcKs
+         SsxXHsa/qzXmBYxdjh0t9vpkPGWA7LqCIAGigD6B1801ALPMruFcn69z/wbLRKoTU67A
+         eFEyXXL3fp9WMSHm0qWhlpXENXSHJWawSzwUhpsmrew9kdmxDBUVgHojr2STQjbGd+nE
+         Sp7GFltSiqsSsLU67bj8FBbExF+ww9UgGFIJfsiYf0EaijraVfh/dHU/Vz4L7IG1UK/r
+         6xZsgz9dlrQ9vQm9W7s++DNNb6QxP6TNG2gprKxy3uY/FekVsqU5UxmF+d8rzrdL4s57
+         1D4w==
+X-Forwarded-Encrypted: i=1; AKwUvByAH2D12bFqgLd9p8620asz2p//1J98HJYFmCpM/z8dhw1fCWc6cgL4KJ1cdMDaDZPRC9x7VA==@lists.infradead.org
+X-Gm-Message-State: AFq9FYId7wK8Vk5pqCFGNWdQwcj3bv3dNrO2PFh3tdIvSWssn2xRYjaq
+	mbAhmaF+nWjqgw8pNSmKO5uCKedqTConrailG28Gw8mDm0NV5WDtkLx+OsQqttjzaNxgTME8CLi
+	smrMqZBynRCHX4j9NmEkRlw4rYM/XFhqHu5yHCka6vw==
+X-Gm-Gg: AYBFou1bLZLj+tF/dB+0crDJKJifHX35ZX9chPVbMnUL5wQAlcWbmy3fkLnixqjiBaw
+	vmldsMGXcKw9GYwSygQrCWHtp59Pb/XTNN72XlGB3S7f86iWWuH7vikWwwaui5XL5cODDWySy9C
+	LgNpRzWDGEaKhoKaygg83YkTMm1rJ2ek9BH5m1z6iuy2CNcS54ZRShRKhH/wMIs4anJdA2rfXQO
+	R+GwkLSNLhl/8tA98C1IxeL1tDaHXbFuZQEuiBx3FHsjIFA9iDJbTOGtoOjg8q/cPxzHCyvLZ5w
+	Qy9wJPr/vX7/4enogHoxTywWW4Z1gcNWYtxzbliUh3CaxIlBohB1yBpKL1Ija96heSm3DBwNri3
+	5So9NldLkfQBUnvmDg+/2B+zqdcKCLj5EXwnbw09VFuFivGq6DVe8Zs6PNDjFxAlRUJ0=
+X-Received: by 2002:a2e:bea4:0:b0:3a9:ddd6:d820 with SMTP id
+ 38308e7fff4ca-3ac441e1f3fmr8894321fa.29.1792603681065; Wed, 21 Oct 2026
+ 10:28:01 -0700 (PDT)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-References: <20261021152527.375070-1-tarunsahu@google.com> <20261021152527.375070-3-tarunsahu@google.com>
-In-Reply-To: <20261021152527.375070-3-tarunsahu@google.com>
+References: <20261021152527.375070-1-tarunsahu@google.com> <20261021152527.375070-4-tarunsahu@google.com>
+In-Reply-To: <20261021152527.375070-4-tarunsahu@google.com>
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Wed, 21 Oct 2026 13:17:19 -0400
-X-Gm-Features: AclHuK-IkiswuL9j-om2-Yvi6ZhWxvxntziJi6QKVuLB1ELR4YcI0vWO7hzjpeA
-Message-ID: <CA+CK2bCnS8wcVDbOymBGeJB6pDUkknOpF22EynbwSV=D5=J4ow@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 2/4] liveupdate: Select file handler by name in the
- preserve ioctl
+Date: Wed, 21 Oct 2026 13:27:22 -0400
+X-Gm-Features: AclHuK-WBKHeqPjK3TFDH7FIxwj-s0SfsTYZy4-2_LVQqDo3KQno9mB27NKpnh0
+Message-ID: <CA+CK2bAQbmq3ArP3XMErF_8RC2CUwvgpLY0H83D0nCJTaVKYyA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 3/4] liveupdate: Replace compatibility string with
+ a 2-bit pair feature header
 To: Tarun Sahu <tarunsahu@google.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, joro@8bytes.org, 
 	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, maz@kernel.org, arnd@arndb.de, 
@@ -114,8 +114,8 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, joro@8bytes.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261021_101758_877168_68BDBF11 
-X-CRM114-Status: GOOD (  36.74  )
+X-CRM114-CacheID: sfid-20261021_102803_900004_59C17882 
+X-CRM114-Status: GOOD (  40.32  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -130,7 +130,7 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-16.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
@@ -138,194 +138,663 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 On Wed, Oct 21, 2026 at 11:25=E2=80=AFAM Tarun Sahu <tarunsahu@google.com> =
 wrote:
 >
-> Currently luo_preserve_file() iterates over luo_file_handler_list and
-> picks the first registered handler whose .can_preserve() callback
-> returns true. When a subsystem introduces a new, backwards-incompatible
-> file handler alongside an existing one for the same file type, userspace
-> has no way to choose which handler preserves a file descriptor, nor can
-> the kernel keep the existing rollback-safe handler as the default while
-> allowing callers to opt into the new handler.
-
-That is not how it will work. If we are in the .can_preserve() call,
-it means the user has already decided which file handlers to use. We
-need to do that before any preservation happens; otherwise, we could
-run into conflicts on FLBs i.e. FH of different version require
-different FLBs.
-
-Therefore, there should be a luoctl call (i.e via a new ioctl to set
-compatability) that provides the kernel with the specs file of the
-target kernel we are updating to, allowing the kernel to select the
-compatible file handlers. Since .can_preserve() is called when the
-user is already preserving files, the specification must have already
-been supplied, or the kernel should fall back to using the default
-(i.e., latest) file handlers.
-
+> LUO and its file handlers validate handed-over state with monolithic
+> compatibility strings ("luo-v5", "memfd-v2"). Any change to a serialized
+> structure, even an optional additive one, must bump the string, which
+> breaks live update between adjacent kernels. Replace the string in
+> struct luo_ser with a feature header, so that the target kernel can
+> accept or reject the source kernel state per feature.
 >
-> Append char handler[LIVEUPDATE_HNDL_NAME_LENGTH] to struct
-> liveupdate_session_preserve_fd immediately after token, keeping
-> IOCTL_OP min_size at offsetofend(..., token) so callers passing the
-> original 16-byte structure continue to work:
-> - When handler is empty (all-zero, or zero-filled when userspace
->   passes the 16-byte structure), luo_preserve_file() selects the first
->   registered handler whose .can_preserve() callback accepts the fd.
-> - When handler is non-empty, it must be null-terminated within
->   LIVEUPDATE_HNDL_NAME_LENGTH bytes (returning -EINVAL otherwise);
->   luo_preserve_file() looks up the registered handler with that exact
->   name (returning -ENOENT if unknown) and verifies that its
->   .can_preserve() callback accepts the fd (returning -EINVAL if not).
+> struct luo_feature_hdr is a fixed 128-byte header: the serialized
+
+This patch is all wrong; 128 bytes is far too large. For every _ser
+struct, we only need 8 bytes instead.
+
+The first 4 bytes are the size, and the next 4 bytes are flags (i.e.,
+30 feature flags + 2 reserved bits for flags extension). The last two
+bits of the flags indicate whether an extended flags field is present.
+Each extended flags field is 8 bytes, and its last two bits indicate
+that yet another extended flags field follows.
+
+> structure size from the source kernel followed by 15 chained u64 feature
+> flags entries. The fixed size keeps payload field offsets identical in
+> every kernel, regardless of how many flags entries a source kernel uses.
 >
-> The retrieve ioctl is unchanged because the handler is identified by the
-> name stored in the serialized payload from the source kernel.
+> Each feature has a 2-bit pair (req, active) state (enum luo_feat_state:
+> LUO_FEAT_DISABLED, LUO_FEAT_OPTIONAL, LUO_FEAT_REQUIRED). A flags entry
+> holds 31 features, and bits [63:62] =3D 0b11 chain to the next entry (465
+> features in total). Each subsystem defines its feature states as a
+> static const u8 array indexed by its feature enum, which
+> luo_feature_hdr_init() packs into 64-bit flags entries with
+> LUO_FEAT_EXT_MASK chain bits. The target kernel validates the header from
+> the source kernel against its own feature array via
+> luo_feature_hdr_validate() according to the per-feature (req, active)
+> truth table:
 >
+>   Source Target Action
+>   (1,0)  (x,x)  Reject -EINVAL: invalid source kernel (req without active=
+)
+>   (x,x)  (1,0)  Reject -EINVAL + WARN_ON_ONCE: invalid target kernel
+>   (0,0)  (0,0)  Accept: feature absent
+>   (0,0)  (0,1)  Accept: feature absent
+>   (0,0)  (1,1)  Reject -EOPNOTSUPP: target kernel requires the feature
+>   (0,1)  (0,0)  Accept: ignore payload data
+>   (1,1)  (0,0)  Reject -EOPNOTSUPP: source kernel requires the feature
+>   (x,1)  (x,1)  Accept: use payload data
+>
+> The relative order and offsets of fields in serialized structures must
+> remain unchanged as features are added or retired. New fields are always
+> appended at the end of the structure under a new feature flag, and
+> retired fields are kept in place so that the offsets of subsequent
+> fields never shift. If the type or format of a field needs to change, the
+> existing field and feature are kept intact (and retired when no longer
+> needed) and a new feature flag with a new appended field of the new type
+> is added.
+>
+> In the target kernel, fields of a LUO_FEAT_REQUIRED feature are
+> guaranteed to be present once luo_feature_hdr_validate() succeeds,
+> whereas fields of a LUO_FEAT_OPTIONAL feature should be accessed only
+> after verifying that the feature is active in the source kernel header:
+>
+>   if (luo_feature_is_active(&ser->features, FEAT_X))
+>           val =3D ser->x_field;
+>
+> All current struct luo_ser fields (liveupdate_num, sessions_pa, flbs_pa)
+> belong to LUO_CORE_FEAT_CORE (LUO_FEAT_REQUIRED in luo_core_features).
+> Future changes add new entries to enum luo_core_feature before
+> LUO_CORE_FEAT_MAX.
+>
+> Signed-off-by: Logan Odell <loganodell@google.com>
 > Signed-off-by: Tarun Sahu <tarunsahu@google.com>
 > ---
->  include/uapi/linux/liveupdate.h  | 12 +++++++++---
->  kernel/liveupdate/luo_file.c     | 21 ++++++++++++++++++---
->  kernel/liveupdate/luo_internal.h |  3 ++-
->  kernel/liveupdate/luo_session.c  |  7 ++++++-
->  4 files changed, 35 insertions(+), 8 deletions(-)
+>  include/linux/kho/abi/luo.h  | 345 +++++++++++++++++++++++++++++++----
+>  kernel/liveupdate/luo_core.c |  27 ++-
+>  2 files changed, 332 insertions(+), 40 deletions(-)
 >
-> diff --git a/include/uapi/linux/liveupdate.h b/include/uapi/linux/liveupd=
-ate.h
-> index 509c6236720d..2413b19dabc1 100644
-> --- a/include/uapi/linux/liveupdate.h
-> +++ b/include/uapi/linux/liveupdate.h
-> @@ -126,9 +126,14 @@ struct liveupdate_ioctl_retrieve_session {
+> diff --git a/include/linux/kho/abi/luo.h b/include/linux/kho/abi/luo.h
+> index 5fb2f46425d7..be35cfbfdb2b 100644
+> --- a/include/linux/kho/abi/luo.h
+> +++ b/include/linux/kho/abi/luo.h
+> @@ -9,19 +9,53 @@
+>   * DOC: Live Update Orchestrator ABI
+>   *
+>   * Live Update Orchestrator uses the stable Application Binary Interface
+> - * defined below to pass state from a pre-update kernel to a post-update
+> - * kernel. The ABI is built upon the Kexec HandOver framework and regist=
+ers
+> - * the central `struct luo_ser` via the KHO raw subtree API.
+> + * defined below to pass state from a source kernel to a target kernel.
+> + * The ABI is built upon the Kexec HandOver framework and registers the
+> + * central `struct luo_ser` via the KHO raw subtree API.
+>   *
+> - * This interface is a contract. Any modification to the structure field=
+s,
+> - * compatible strings, or the layout of the `__packed` serialization
+> - * structures defined here constitutes a breaking change. Such changes r=
+equire
+> - * incrementing the version number in the relevant `_COMPATIBLE` string =
+to
+> - * prevent a new kernel from misinterpreting data from an old kernel.
+> + * This interface is a contract. Serialized structures start with a fixe=
+d
+> + * 128-byte feature header (`struct luo_feature_hdr`) holding the source
+> + * kernel's structure `size` and 15 chained 64-bit feature flags entries
+> + * (`flags[LUO_FEAT_NR_FLAGS]`). Each entry encodes up to 31 features as
+> + * 2-bit `0b<req><active>` pairs (`enum luo_feat_state`), with
+> + * `LUO_FEAT_EXT_MASK` in bits `[63:62]` chaining to the next entry (up =
+to
+> + * 465 features total). Because the header size is fixed at 128 bytes,
+> + * payload field offsets do not depend on how many flags entries a sourc=
+e
+> + * kernel uses.
+>   *
+> - * Changes are allowed provided the compatibility version is incremented=
+;
+> - * however, backward/forward compatibility is only guaranteed for kernel=
+s
+> - * supporting the same ABI version.
+> + * Truth table (`(req,active)` pairs per feature)::
+> + *
+> + *   Source Target Action
+> + *   (1,0)  (x,x)  Reject -EINVAL: invalid source kernel (req without ac=
+tive)
+> + *   (x,x)  (1,0)  Reject -EINVAL: invalid target kernel (req without ac=
+tive)
+> + *   (0,0)  (0,0)  Accept: feature absent
+> + *   (0,0)  (0,1)  Accept: feature absent
+> + *   (0,0)  (1,1)  Reject -EOPNOTSUPP: target kernel requires the featur=
+e
+> + *   (0,1)  (0,0)  Accept: ignore payload data
+> + *   (1,1)  (0,0)  Reject -EOPNOTSUPP: source kernel requires the featur=
+e
+> + *   (x,1)  (x,1)  Accept: use payload data
+> + *
+> + * The relative order and offsets of fields in serialized structures mus=
+t
+> + * remain unchanged as features are added or retired. New fields are alw=
+ays
+> + * appended at the end of the structure under a new feature flag, and
+> + * retired fields are kept in place so that the offsets of subsequent
+> + * fields never shift. If a field's type or format needs to change, the
+> + * existing field and feature are kept intact (and retired when no longe=
+r
+> + * needed) and a new feature flag with a new appended field of the new t=
+ype
+> + * is added.
+> + *
+> + * In the target kernel, fields of a `LUO_FEAT_REQUIRED` feature are
+> + * guaranteed to be present once `luo_feature_hdr_validate()` succeeds,
+> + * whereas fields of a `LUO_FEAT_OPTIONAL` feature should be accessed on=
+ly
+> + * after verifying that the feature is active in the source kernel's hea=
+der::
+> + *
+> + *   if (luo_feature_is_active(&ser->features, FEAT_X))
+> + *           val =3D ser->x_field;
+> + *
+> + * All current `struct luo_ser` fields (`liveupdate_num`, `sessions_pa`,
+> + * `flbs_pa`) belong to `LUO_CORE_FEAT_CORE` (`LUO_FEAT_REQUIRED` in
+> + * `luo_core_features`). Future changes add new entries to
+> + * `enum luo_core_feature` before `LUO_CORE_FEAT_MAX`.
+>   *
+>   * KHO Structure Overview:
+>   *   The entire LUO state is encapsulated within a single KHO entry name=
+d "LUO".
+> @@ -30,8 +64,9 @@
+>   * Serialization Structures:
+>   *   - struct luo_ser:
+>   *     The central ABI structure that contains the overall state of the =
+LUO.
+> - *     It includes the compatibility string, the liveupdate-number, and =
+pointers
+> - *     to sessions and FLBs.
+> + *     It includes the feature header (with struct size and 2-bit featur=
+e flag
+> + *     pairs), and the core feature (`LUO_CORE_FEAT_CORE`) fields: the
+> + *     liveupdate-number and pointers to sessions and FLBs.
+>   *
+>   *   - struct luo_session_ser:
+>   *     Metadata for a single session, including its name and a physical =
+pointer
+> @@ -40,8 +75,9 @@
+>   *
+>   *   - struct luo_file_ser:
+>   *     Metadata for a single preserved file. Contains the handler `name`=
+ string
+> - *     to find the correct handler in the new kernel, a user-provided `t=
+oken`
+> - *     for identification, and an opaque `data` handle for the handler t=
+o use.
+> + *     to find the correct handler in the target kernel, a user-provided
+> + *     `token` for identification, and an opaque `data` handle for the h=
+andler
+> + *     to use.
+>   *
+>   *   - struct luo_flb_header_ser:
+>   *     Header for the FLB array. Contains the total page count of the
+> @@ -57,20 +93,265 @@
+>  #ifndef _LINUX_KHO_ABI_LUO_H
+>  #define _LINUX_KHO_ABI_LUO_H
 >
->  /**
->   * struct liveupdate_session_preserve_fd - ioctl(LIVEUPDATE_SESSION_PRES=
-ERVE_FD)
-> - * @size:  Input; sizeof(struct liveupdate_session_preserve_fd)
-> - * @fd:    Input; The user-space file descriptor to be preserved.
-> - * @token: Input; An opaque, unique token for preserved resource.
-> + * @size:    Input; sizeof(struct liveupdate_session_preserve_fd)
-> + * @fd:      Input; The user-space file descriptor to be preserved.
-> + * @token:   Input; An opaque, unique token for preserved resource.
-> + * @handler: Input; Optional null-terminated file handler name (max leng=
-th
-> + *           %LIVEUPDATE_HNDL_NAME_LENGTH including null terminator) sel=
-ecting
-> + *           which registered handler preserves @fd. If empty (all-zero,=
- or
-> + *           omitted when passing the 16-byte structure), the kernel sel=
-ects
-> + *           the first registered handler whose .can_preserve() accepts =
-@fd.
->   *
->   * Holds parameters for preserving a file descriptor.
->   *
-> @@ -152,6 +157,7 @@ struct liveupdate_session_preserve_fd {
->         __u32           size;
->         __s32           fd;
->         __aligned_u64   token;
-> +       char            handler[LIVEUPDATE_HNDL_NAME_LENGTH];
->  };
+> -#include <linux/align.h>
+> +#include <linux/array_size.h>
+> +#include <linux/bits.h>
+> +#include <linux/bug.h>
+> +#include <linux/build_bug.h>
+> +#include <linux/errno.h>
+>  #include <linux/kho/abi/block.h>
+> +#include <linux/types.h>
+>  #include <uapi/linux/liveupdate.h>
 >
->  #define LIVEUPDATE_SESSION_PRESERVE_FD                                 \
-> diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
-> index fb81239bedf3..be20e0f1e0aa 100644
-> --- a/kernel/liveupdate/luo_file.c
-> +++ b/kernel/liveupdate/luo_file.c
-> @@ -207,6 +207,8 @@ static bool luo_token_is_used(struct luo_file_set *fi=
-le_set, u64 token)
->   * @file_set: The file_set to which the preserved file will be added.
->   * @token:    A unique, user-provided identifier for the file.
->   * @fd:       The file descriptor to be preserved.
-> + * @handler:  Optional NUL-terminated handler name. If NULL or empty, th=
-e first
-> + *            registered handler whose .can_preserve() accepts @fd is se=
-lected.
->   *
->   * This function orchestrates the first phase of preserving a file. Upon=
- entry,
->   * it takes a reference to the 'struct file' via fget(), effectively mak=
-ing LUO
-> @@ -238,11 +240,13 @@ static bool luo_token_is_used(struct luo_file_set *=
-file_set, u64 token)
->   *         -EBUSY if the file descriptor is already preserved by another=
- session.
->   *         -EBADF if the file descriptor is invalid.
->   *         -ENOSPC if the file_set is full.
-> - *         -ENOENT if no compatible handler is found for the file type.
-> + *         -ENOENT if no matching handler is registered or accepts @fd.
-> + *         -EINVAL if the named handler cannot preserve @fd.
->   *         -ENOMEM on memory allocation failure.
->   *         Other erros might be returned by .preserve().
+>  /*
+>   * The LUO state is registered under this KHO entry name.
 >   */
-> -int luo_preserve_file(struct luo_file_set *file_set, u64 token, int fd)
-> +int luo_preserve_file(struct luo_file_set *file_set, u64 token, int fd,
-> +                     const char *handler)
->  {
->         struct liveupdate_file_op_args args =3D {0};
->         struct liveupdate_file_handler *fh;
-> @@ -266,6 +270,18 @@ int luo_preserve_file(struct luo_file_set *file_set,=
- u64 token, int fd)
->         err =3D -ENOENT;
->         down_read(&luo_register_rwlock);
->         list_private_for_each_entry(fh, &luo_file_handler_list, list) {
-> +               if (handler && handler[0]) {
-> +                       if (strcmp(fh->name, handler))
-> +                               continue;
-> +                       if (!fh->ops->can_preserve(fh, file)) {
-> +                               err =3D -EINVAL;
-> +                               break;
-> +                       }
-> +                       if (try_module_get(fh->ops->owner))
-> +                               err =3D 0;
-> +                       break;
-> +               }
+>  #define LUO_KHO_ENTRY_NAME     "LUO"
+> -#define LUO_ABI_COMPATIBLE     "luo-v5"
+> -#define LUO_ABI_COMPAT_LEN     ALIGN(sizeof(LUO_ABI_COMPATIBLE), 8)
 > +
->                 if (fh->ops->can_preserve(fh, file)) {
->                         if (try_module_get(fh->ops->owner))
->                                 err =3D 0;
-> @@ -274,7 +290,6 @@ int luo_preserve_file(struct luo_file_set *file_set, =
-u64 token, int fd)
->         }
->         up_read(&luo_register_rwlock);
->
-> -       /* err is still -ENOENT if no handler was found */
->         if (err)
->                 goto err_fput;
->
-> diff --git a/kernel/liveupdate/luo_internal.h b/kernel/liveupdate/luo_int=
-ernal.h
-> index dac6644bfb18..911ffedec9f3 100644
-> --- a/kernel/liveupdate/luo_internal.h
-> +++ b/kernel/liveupdate/luo_internal.h
-> @@ -101,7 +101,8 @@ int __init luo_session_setup_incoming(u64 sessions_pa=
-);
->  int luo_session_serialize(void);
->  int luo_session_deserialize(void);
->
-> -int luo_preserve_file(struct luo_file_set *file_set, u64 token, int fd);
-> +int luo_preserve_file(struct luo_file_set *file_set, u64 token, int fd,
-> +                     const char *handler);
->  void luo_file_unpreserve_files(struct luo_file_set *file_set);
->  int luo_file_freeze(struct luo_file_set *file_set,
->                     struct luo_file_set_ser *file_set_ser);
-> diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_sess=
-ion.c
-> index f48e9a4185f9..194ef45907c1 100644
-> --- a/kernel/liveupdate/luo_session.c
-> +++ b/kernel/liveupdate/luo_session.c
-> @@ -266,8 +266,13 @@ static int luo_session_preserve_fd(struct luo_sessio=
-n *session,
->         struct liveupdate_session_preserve_fd *argp =3D ucmd->cmd;
->         int err;
->
-> +       if (strnlen(argp->handler, sizeof(argp->handler)) =3D=3D
-> +           sizeof(argp->handler))
+> +#define LUO_FEAT_PER_FLAGS     31
+> +#define LUO_FEAT_NR_FLAGS      15
+> +#define LUO_FEAT_MAX           (LUO_FEAT_NR_FLAGS * LUO_FEAT_PER_FLAGS)
+> +#define LUO_FEAT_EXT_MASK      GENMASK_ULL(63, 62)
+> +#define LUO_FEAT_ACTIVE_MASK   (0x5555555555555555ULL & ~LUO_FEAT_EXT_MA=
+SK)
+> +#define LUO_FEAT_REQ_MASK      (0xaaaaaaaaaaaaaaaaULL & ~LUO_FEAT_EXT_MA=
+SK)
+> +
+> +#define LUO_FEAT_FLAGS_IDX(f)  ((unsigned int)(f) / LUO_FEAT_PER_FLAGS)
+> +#define LUO_FEAT_SLOT(f)       ((unsigned int)(f) % LUO_FEAT_PER_FLAGS)
+> +
+> +#define LUO_FEAT_ACTIVE(f)     BIT_ULL(2 * LUO_FEAT_SLOT(f))
+> +#define LUO_FEAT_REQ(f)                BIT_ULL(2 * LUO_FEAT_SLOT(f) + 1)
+> +
+> +/**
+> + * enum luo_feat_state - 2-bit state of a LUO feature (`0b<req><active>`=
+).
+> + * @LUO_FEAT_DISABLED: Feature is inactive (`req=3D0, active=3D0`).
+> + * @LUO_FEAT_OPTIONAL: Feature is active and optional (`req=3D0, active=
+=3D1`).
+> + * @LUO_FEAT_REQUIRED: Feature is active and required (`req=3D1, active=
+=3D1`).
+> + */
+> +enum luo_feat_state {
+> +       LUO_FEAT_DISABLED =3D 0b00,
+> +       LUO_FEAT_OPTIONAL =3D 0b01,
+> +       LUO_FEAT_REQUIRED =3D 0b11,
+> +};
+> +
+> +/**
+> + * struct luo_feature_hdr - Fixed 128-byte header for serialized LUO ABI=
+ structures.
+> + * @size:  Size in bytes of the source kernel's enclosing serialized str=
+ucture.
+> + * @flags: Chained 64-bit feature flags entries (`0 .. LUO_FEAT_NR_FLAGS=
+ - 1`).
+> + *         Each entry holds 31 2-bit feature pairs (`[2*slot + 1 : 2*slo=
+t]`)
+> + *         plus %LUO_FEAT_EXT_MASK in bits `[63:62]` when the next entry=
+ is
+> + *         active.
+> + */
+> +struct luo_feature_hdr {
+> +       u64 size;
+> +       u64 flags[LUO_FEAT_NR_FLAGS];
+> +} __packed;
+
+
+> +
+> +static_assert(sizeof(struct luo_feature_hdr) =3D=3D 128);
+> +
+> +/**
+> + * luo_feature_hdr_for_each_flags - Iterate over chained flags entries i=
+n @hdr.
+> + * @hdr: Pointer to the &struct luo_feature_hdr to iterate.
+> + * @idx: Loop cursor of type `unsigned int` (`0 .. LUO_FEAT_NR_FLAGS - 1=
+`).
+> + */
+> +#define luo_feature_hdr_for_each_flags(hdr, idx)                       \
+> +       for ((idx) =3D 0; (idx) < LUO_FEAT_NR_FLAGS;                     =
+ \
+> +            (idx) =3D (((hdr)->flags[idx] & LUO_FEAT_EXT_MASK) =3D=3D   =
+     \
+> +                     LUO_FEAT_EXT_MASK) ? (idx) + 1 : LUO_FEAT_NR_FLAGS)
+> +
+> +/**
+> + * luo_feature_hdr_get_flags - Get the flags entry containing feature @f=
+eat.
+> + * @hdr:  Pointer to the source kernel's feature header.
+> + * @feat: Feature index (`0 .. LUO_FEAT_MAX - 1`).
+> + *
+> + * Return: The u64 flags entry containing @feat if the extension chain r=
+eaches
+> + *         it, or 0 otherwise.
+> + */
+> +static inline u64
+> +luo_feature_hdr_get_flags(const struct luo_feature_hdr *hdr,
+> +                         unsigned int feat)
+> +{
+> +       unsigned int target_idx =3D LUO_FEAT_FLAGS_IDX(feat);
+> +       unsigned int idx;
+> +
+> +       if (target_idx >=3D LUO_FEAT_NR_FLAGS)
+> +               return 0;
+> +
+> +       luo_feature_hdr_for_each_flags(hdr, idx) {
+> +               if (idx =3D=3D target_idx)
+> +                       return hdr->flags[idx];
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +/**
+> + * luo_feature_is_active - Test whether feature @feat is active in @hdr.
+> + * @hdr:  Pointer to the source kernel's feature header.
+> + * @feat: Feature index (`0 .. LUO_FEAT_MAX - 1`).
+> + *
+> + * Return: true if the source kernel marked @feat active, false otherwis=
+e.
+> + */
+> +static inline bool luo_feature_is_active(const struct luo_feature_hdr *h=
+dr,
+> +                                        unsigned int feat)
+> +{
+> +       return luo_feature_hdr_get_flags(hdr, feat) & LUO_FEAT_ACTIVE(fea=
+t);
+> +}
+> +
+> +/**
+> + * luo_feature_is_req - Test whether feature @feat is required in @hdr.
+> + * @hdr:  Pointer to the source kernel's feature header.
+> + * @feat: Feature index (`0 .. LUO_FEAT_MAX - 1`).
+> + *
+> + * Return: true if the source kernel marked @feat required, false otherw=
+ise.
+> + */
+> +static inline bool luo_feature_is_req(const struct luo_feature_hdr *hdr,
+> +                                     unsigned int feat)
+> +{
+> +       return luo_feature_hdr_get_flags(hdr, feat) & LUO_FEAT_REQ(feat);
+> +}
+> +
+> +/**
+> + * luo_feature_pack_entry - Pack up to 31 feature states into a flags en=
+try.
+> + * @features:    Array of &enum luo_feat_state values indexed by feature=
+ ID.
+> + * @nr_features: Number of elements in @features.
+> + * @idx:         Flags entry index (`0 .. LUO_FEAT_NR_FLAGS - 1`).
+> + *
+> + * Return: The packed 64-bit flags entry for @idx (without %LUO_FEAT_EXT=
+_MASK).
+> + */
+> +static inline u64
+> +luo_feature_pack_entry(const u8 *features, size_t nr_features,
+> +                      unsigned int idx)
+> +{
+> +       unsigned int base =3D idx * LUO_FEAT_PER_FLAGS;
+> +       unsigned int slot;
+> +       u64 flags =3D 0;
+> +
+> +       for (slot =3D 0; slot < LUO_FEAT_PER_FLAGS && base + slot < nr_fe=
+atures;
+> +            slot++)
+> +               flags |=3D (u64)(features[base + slot] & 0b11) << (2 * sl=
+ot);
+> +
+> +       return flags;
+> +}
+> +
+> +/**
+> + * __luo_feature_hdr_init - Initialize a serialized LUO feature header.
+> + * @hdr:         Pointer to the feature header to initialize.
+> + * @size:        Byte size of the enclosing serialized structure.
+> + * @features:    Array of &enum luo_feat_state values for the source ker=
+nel.
+> + * @nr_features: Number of elements in @features (`<=3D LUO_FEAT_MAX`).
+> + */
+> +static inline void
+> +__luo_feature_hdr_init(struct luo_feature_hdr *hdr, u64 size,
+> +                      const u8 *features, size_t nr_features)
+> +{
+> +       bool ext =3D false;
+> +       int idx;
+> +
+> +       hdr->size =3D size;
+> +       for (idx =3D LUO_FEAT_NR_FLAGS - 1; idx >=3D 0; idx--) {
+> +               u64 flags =3D luo_feature_pack_entry(features, nr_feature=
+s, idx);
+> +
+> +               WARN_ON_ONCE(((flags & LUO_FEAT_REQ_MASK) >> 1) &
+> +                            ~(flags & LUO_FEAT_ACTIVE_MASK));
+> +               if (ext)
+> +                       flags |=3D LUO_FEAT_EXT_MASK;
+> +               else if (flags)
+> +                       ext =3D true;
+> +               hdr->flags[idx] =3D flags;
+> +       }
+> +}
+> +
+> +/**
+> + * luo_feature_hdr_init - Initialize a serialized LUO feature header.
+> + * @hdr:      Pointer to the feature header to initialize.
+> + * @size:     Byte size of the enclosing serialized structure.
+> + * @features: Fixed-size `u8` array of &enum luo_feat_state entries.
+> + */
+> +#define luo_feature_hdr_init(hdr, size, features)                      \
+> +({                                                                     \
+> +       BUILD_BUG_ON(ARRAY_SIZE(features) > LUO_FEAT_MAX);              \
+> +       __luo_feature_hdr_init(hdr, size, features,                     \
+> +                              ARRAY_SIZE(features));                   \
+> +})
+> +
+> +/**
+> + * __luo_feature_hdr_validate - Validate a source kernel's LUO feature h=
+eader
+> + *                              against the target kernel's feature arra=
+y.
+> + * @hdr:         Pointer to the feature header from the source kernel.
+> + * @features:    Array of &enum luo_feat_state values for the target ker=
+nel.
+> + * @nr_features: Number of elements in @features (`<=3D LUO_FEAT_MAX`).
+> + *
+> + * Return: 0 if compatible, -EINVAL on malformed header or `(req=3D1, ac=
+tive=3D0)`
+> + *         feature state, or -EOPNOTSUPP on required feature mismatch.
+> + */
+> +static inline int
+> +__luo_feature_hdr_validate(const struct luo_feature_hdr *hdr,
+> +                          const u8 *features, size_t nr_features)
+> +{
+> +       bool src_ext =3D true, target_ext =3D (nr_features > 0);
+> +       unsigned int idx;
+> +
+> +       if (hdr->size < sizeof(*hdr))
 > +               return -EINVAL;
 > +
->         guard(mutex)(&session->mutex);
-> -       err =3D luo_preserve_file(&session->file_set, argp->token, argp->=
-fd);
-> +       err =3D luo_preserve_file(&session->file_set, argp->token, argp->=
-fd,
-> +                               argp->handler);
->         if (err)
->                 return err;
+> +       for (idx =3D 0; idx < LUO_FEAT_NR_FLAGS && (src_ext || target_ext=
+); idx++) {
+> +               u64 src =3D src_ext ? hdr->flags[idx] : 0;
+> +               u64 target =3D target_ext ?
+> +                       luo_feature_pack_entry(features, nr_features, idx=
+) : 0;
+> +               u64 ext =3D src & LUO_FEAT_EXT_MASK;
+> +               u64 src_act =3D src & LUO_FEAT_ACTIVE_MASK;
+> +               u64 src_req =3D (src & LUO_FEAT_REQ_MASK) >> 1;
+> +               u64 target_act =3D target & LUO_FEAT_ACTIVE_MASK;
+> +               u64 target_req =3D (target & LUO_FEAT_REQ_MASK) >> 1;
+> +
+> +               if (ext && (ext !=3D LUO_FEAT_EXT_MASK ||
+> +                           idx =3D=3D LUO_FEAT_NR_FLAGS - 1))
+> +                       return -EINVAL;
+> +               if (src_req & ~src_act)
+> +                       return -EINVAL;
+> +               if (WARN_ON_ONCE(target_req & ~target_act))
+> +                       return -EINVAL;
+> +               if ((src_req & ~target_act) || (target_req & ~src_act))
+> +                       return -EOPNOTSUPP;
+> +
+> +               src_ext =3D (ext =3D=3D LUO_FEAT_EXT_MASK);
+> +               target_ext =3D ((idx + 1) * LUO_FEAT_PER_FLAGS < nr_featu=
+res);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +/**
+> + * luo_feature_hdr_validate - Validate a source kernel's LUO feature hea=
+der
+> + *                            against the target kernel's feature array.
+> + * @hdr:      Pointer to the feature header from the source kernel.
+> + * @features: Fixed-size `u8` array of &enum luo_feat_state entries.
+> + *
+> + * Return: 0 if compatible, -EINVAL on malformed header or feature state=
+, or
+> + *         -EOPNOTSUPP on required feature mismatch.
+> + */
+> +#define luo_feature_hdr_validate(hdr, features)                         =
+       \
+> +({                                                                     \
+> +       BUILD_BUG_ON(ARRAY_SIZE(features) > LUO_FEAT_MAX);              \
+> +       __luo_feature_hdr_validate(hdr, features,                       \
+> +                                  ARRAY_SIZE(features));               \
+> +})
+> +
+> +/**
+> + * enum luo_core_feature - Feature indices for &struct luo_ser.
+> + * @LUO_CORE_FEAT_CORE: Core feature covering `liveupdate_num`, `session=
+s_pa`,
+> + *                      and `flbs_pa`.
+> + * @LUO_CORE_FEAT_MAX:  Number of defined &enum luo_core_feature feature=
+s.
+> + */
+> +enum luo_core_feature {
+> +       LUO_CORE_FEAT_CORE =3D 0,
+> +       LUO_CORE_FEAT_MAX,
+> +};
+> +
+> +static_assert((int)LUO_CORE_FEAT_MAX <=3D LUO_FEAT_MAX);
 >
+>  /**
+>   * struct luo_ser - Centralized LUO ABI header.
+> - * @compatible:     Compatibility string identifying the LUO ABI version=
+.
+> + * @features:       ABI feature and size header for luo_ser.
+>   * @liveupdate_num: A counter tracking the number of successful live upd=
+ates.
+>   * @sessions_pa:    Physical address of the first session block header.
+>   * @flbs_pa:        Physical address of the FLB header.
+> @@ -78,7 +359,7 @@
+>   * This structure is the root of all preserved LUO state.
+>   */
+>  struct luo_ser {
+> -       char compatible[LUO_ABI_COMPAT_LEN];
+> +       struct luo_feature_hdr features;
+>         u64 liveupdate_num;
+>         u64 sessions_pa;
+>         u64 flbs_pa;
+> @@ -90,7 +371,7 @@ struct luo_ser {
+>   * @data:        Private data
+>   * @token:       User provided token for this file
+>   *
+> - * If this structure is modified, `LUO_ABI_COMPATIBLE` must be updated.
+> + * Layout changes must be gated by a required feature in &enum luo_core_=
+feature.
+>   */
+>  struct luo_file_ser {
+>         char name[LIVEUPDATE_HNDL_NAME_LENGTH];
+> @@ -121,10 +402,10 @@ struct luo_file_set_ser {
+>   *
+>   * This structure is used to package session-specific metadata for trans=
+fer
+>   * between kernels via Kexec Handover. An array of these structures (one=
+ per
+> - * session) is created and passed to the new kernel, allowing it to reco=
+nstruct
+> - * the session context.
+> + * session) is created and passed to the target kernel, allowing it to
+> + * reconstruct the session context.
+>   *
+> - * If this structure is modified, `LUO_ABI_COMPATIBLE` must be updated.
+> + * Layout changes must be gated by a required feature in &enum luo_core_=
+feature.
+>   */
+>  struct luo_session_ser {
+>         char name[LIVEUPDATE_SESSION_NAME_LENGTH];
+> @@ -145,7 +426,7 @@ struct luo_session_ser {
+>   * This structure is located at the physical address specified by the
+>   * flbs_pa in luo_ser.
+>   *
+> - * If this structure is modified, `LUO_ABI_COMPATIBLE` must be updated.
+> + * Layout changes must be gated by a required feature in &enum luo_core_=
+feature.
+>   */
+>  struct luo_flb_header_ser {
+>         u64 pgcnt;
+> @@ -155,19 +436,19 @@ struct luo_flb_header_ser {
+>  /**
+>   * struct luo_flb_ser - Represents the serialized state of a single FLB =
+object.
+>   * @name:    The unique name string of the FLB object, used to find the
+> - *           corresponding &struct liveupdate_flb handler in the new ker=
+nel.
+> + *           corresponding &struct liveupdate_flb in the target kernel.
+>   * @data:    The opaque u64 handle returned by the FLB's .preserve() ope=
+ration
+> - *           in the old kernel. This handle encapsulates the entire stat=
+e needed
+> - *           for restoration.
+> + *           in the source kernel. This handle encapsulates the entire s=
+tate
+> + *           needed for restoration.
+>   * @count:   The reference count at the time of serialization; i.e., the=
+ number
+>   *           of preserved files that depended on this FLB. This is used =
+by the
+> - *           new kernel to correctly manage the FLB's lifecycle.
+> + *           target kernel to correctly manage the FLB's lifecycle.
+>   *
+>   * An array of these structures is created in a preserved memory region =
+and
+> - * passed to the new kernel. Each entry allows the LUO core to restore o=
+ne
+> - * global, shared object.
+> + * passed to the target kernel. Each entry allows the LUO core to restor=
+e
+> + * one global, shared object.
+>   *
+> - * If this structure is modified, `LUO_ABI_COMPATIBLE` must be updated.
+> + * Layout changes must be gated by a required feature in &enum luo_core_=
+feature.
+>   */
+>  struct luo_flb_ser {
+>         char name[LIVEUPDATE_FLB_NAME_LENGTH];
+> diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
+> index 1b2bda22902d..3627a206a79c 100644
+> --- a/kernel/liveupdate/luo_core.c
+> +++ b/kernel/liveupdate/luo_core.c
+> @@ -70,6 +70,10 @@ static struct {
+>         u64 liveupdate_num;
+>  } luo_global;
+>
+> +static const u8 luo_core_features[LUO_CORE_FEAT_MAX] =3D {
+> +       [LUO_CORE_FEAT_CORE] =3D LUO_FEAT_REQUIRED,
+> +};
+> +
+>  /*
+>   * luo_register_rwlock - Protects registration of file handlers and FLBs=
+.
+>   */
+> @@ -107,15 +111,21 @@ static int __init luo_early_startup(void)
+>                 return 0;
+>         }
+>
+> -       if (len < sizeof(*luo_ser)) {
+> -               pr_err("LUO state is too small (%zu < %zu)\n", len, sizeo=
+f(*luo_ser));
+> -               return -EINVAL;
+> +       luo_ser =3D phys_to_virt(luo_ser_phys);
+> +       if (len < sizeof(luo_ser->features) || luo_ser->features.size > l=
+en) {
+> +               pr_err("LUO state size invalid (source kernel header size=
+=3D%llu, KHO len=3D%zu)\n",
+> +                      len >=3D sizeof(luo_ser->features) ? luo_ser->feat=
+ures.size : 0,
+> +                      len);
+> +               err =3D -EINVAL;
+> +               goto out_free_ser;
+>         }
+>
+> -       luo_ser =3D phys_to_virt(luo_ser_phys);
+> -       if (strncmp(luo_ser->compatible, LUO_ABI_COMPATIBLE, LUO_ABI_COMP=
+AT_LEN)) {
+> -               pr_err("LUO state is incompatible with '%s'\n", LUO_ABI_C=
+OMPATIBLE);
+> -               return -EINVAL;
+> +       err =3D luo_feature_hdr_validate(&luo_ser->features, luo_core_fea=
+tures);
+> +       if (err) {
+> +               pr_err("LUO state feature header validation failed (size=
+=3D%llu, flags[0]=3D%#llx): %pe\n",
+> +                      luo_ser->features.size, luo_ser->features.flags[0]=
+,
+> +                      ERR_PTR(err));
+> +               goto out_free_ser;
+>         }
+>
+>         luo_global.liveupdate_num =3D luo_ser->liveupdate_num;
+> @@ -162,7 +172,8 @@ static int __init luo_state_setup(void)
+>                 return PTR_ERR(luo_ser);
+>         }
+>
+> -       strscpy(luo_ser->compatible, LUO_ABI_COMPATIBLE, sizeof(luo_ser->=
+compatible));
+> +       luo_feature_hdr_init(&luo_ser->features, sizeof(*luo_ser),
+> +                            luo_core_features);
+>         luo_ser->liveupdate_num =3D luo_global.liveupdate_num + 1;
+>
+>         luo_session_setup_outgoing(&luo_ser->sessions_pa);
 > --
 > 2.56.0.212.g129ede20d9-goog
 >
