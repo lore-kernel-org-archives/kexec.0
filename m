@@ -2,76 +2,76 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78EE1606A31A
-	for <kexec@archiver.kernel.org>; Wed, 21 Oct 2026 04:58:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14565606A31B
+	for <kexec@archiver.kernel.org>; Wed, 21 Oct 2026 04:59:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=06uwV/am;
-	dkim=pass (2048-bit key, unprotected) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=J0MKqCQ2
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=uXLRRBk2;
+	dkim=pass (2048-bit key, unprotected) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=cRHqsxcP
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=0dsTghYJdYyXlr964iy4q3c+0pF5MB8OiLCrCAX4yUE=; b=06uwV/amAFGnhlPbdv9Ceetizm
-	lcjpJ6wxOTxpXZ1xRTXZ6dQZzJsusD2o2NjEpcwv+qXSADDMsxMQv3nm9eHNjHquKjJEZ57Qj63Hp
-	3hos2GNzBvaHms61RWkuWh2OsfrxdDQvzPlJRMfoeJ4OTsLlmUpsBntq9ZVJGiCAnP8V19xGNMoU1
-	2XhX53jM31giCDfEz0GabxNgCvqRmkEi7rmlAQU2NjgEbcnxKUFgMtIROI6TxWR25YwLstbIlN9hi
-	0Vui+9TTPJeLW+TARKmf99H/4eqGIOzkEUFVimUy1kNkQLHoyPF1is9aRI/AN0twVBrPYuRwyZtJD
-	DXBeKIpg==;
+	bh=sfAFk4B+vei+3elSopsi8ObDtXDl01aMMTMLoHAY6zY=; b=uXLRRBk2SK4ZSVXQA+ULQvm7SF
+	Am2S3bBI3Zx49AId6mkq57QEZpUKQxW5p8Hpy7NObtzcInKUhwJ3y5VRpn56l2bWN75VyVzSsbon7
+	AXANx2Lllhe0MJsDwJa6haFm24ZJgMxKpR5WLZJRRaZD2BW6OidjkZpV86MXyXoztXbIIfLobBrAU
+	/v5l1I8/7Pk0k6geYI88FHCHKU0+EEshQwnSnjtuQKzQHzPSTmwoVi63yZ8MyjpE3cpY9KH8MQl/Z
+	iTXxZynjaxcobGGDiN8xtTCdM7p5xEFFQz5TobRslTbxOfrEp/MShhVPs60fmu82REI7Y6U3hPp+N
+	7H7KyIFA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJOOm-0000000B4Ed-3Taj;
-	Wed, 21 Oct 2026 04:58:00 +0000
+	id 1xJOPz-0000000B4K6-0AuG;
+	Wed, 21 Oct 2026 04:59:15 +0000
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJOOj-0000000B4EE-2BPl
+	id 1xJOPx-0000000B4Jl-08aD
 	for kexec@lists.infradead.org;
-	Wed, 21 Oct 2026 04:57:59 +0000
+	Wed, 21 Oct 2026 04:59:14 +0000
 Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69L2E3Zx061697;
-	Wed, 21 Oct 2026 04:57:44 GMT
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69L2F1BR064986;
+	Wed, 21 Oct 2026 04:59:01 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=0dsTgh
-	YJdYyXlr964iy4q3c+0pF5MB8OiLCrCAX4yUE=; b=J0MKqCQ2tjsAQy9LvEq2MV
-	8AcNRxpEUgcP2il2kfn9a7kzJraMzUxfd5P+Nn7z1tuZRkpoddy5WMSCcRi+Qd/M
-	4uKGKKbqlCV1NsXWJZUwaHfzjK1lRCwzD6TtW5slUWuSz4jZo+J4+VzMu4m2c+HZ
-	S+ImFk091dCLdnyhdXCG2fU0c0YqfR+uVNLf5/ppnsMfGZ02SaK7Zvzfmphvm48M
-	kulJ+ixNCpQeEQ4RVSNFJny9BWLg3sA8d7NaGFVL27cB9GuwffciBynrmWavLrye
-	vUZPSg1b6a8NdlpEyFbSJTrujkd6xwXWf1/pCE2Pm7vU5Ypjp6oqEJ1oL8GrjA/Q
+	:message-id:mime-version:references:subject:to; s=pp1; bh=sfAFk4
+	B+vei+3elSopsi8ObDtXDl01aMMTMLoHAY6zY=; b=cRHqsxcP5dhOrCbCl2Ls33
+	kA18CiwiE9c+4Fmw2XGI8JFKQduEVtf3JqDeSmZvgvMzehEvCM/LR8wRBrdUHJX+
+	K2EeFDwgTJTPu0slwpOcM1RMPFr1caS0wq2x8AWE4+5/24TBN7H4EjUHMVXFv6NK
+	9i/5Xxzoz8ucvJCStx+OTxFo+E0C97GoA1x9uAailgfQNufnIzT5RjqXNoYu6MU2
+	MIM7W506wPnLEnzfU4qBYSvRZ85XEKU48P5ogUtump2Et/KF430Zo2n821boCdeS
+	aCaKtaQvZuWnCOsclQXWlUxbnrpS+DwiNUru9CdJf34cikehX0wrZYvlUapT5KPA
 	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4hdw58q0v4-1
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4hdw58q106-1
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Wed, 21 Oct 2026 04:57:43 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 69L2JrrA2374699;
-	Wed, 21 Oct 2026 04:57:42 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4he7bs3khy-1
+	Wed, 21 Oct 2026 04:59:00 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 69L2JqUJ1230282;
+	Wed, 21 Oct 2026 04:59:00 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4hefss1dnj-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 Oct 2026 04:57:42 +0000 (GMT)
+	Wed, 21 Oct 2026 04:59:00 +0000 (GMT)
 Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 69L4vcGG23855828
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 69L4wuS045941058
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 21 Oct 2026 04:57:38 GMT
+	Wed, 21 Oct 2026 04:58:56 GMT
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2487420089;
-	Wed, 21 Oct 2026 04:57:38 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 3A99D20085;
+	Wed, 21 Oct 2026 04:58:56 +0000 (GMT)
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CAA0920082;
-	Wed, 21 Oct 2026 04:57:34 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id B316220082;
+	Wed, 21 Oct 2026 04:58:52 +0000 (GMT)
 Received: from [9.123.14.142] (unknown [9.123.14.142])
 	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 21 Oct 2026 04:57:34 +0000 (GMT)
-Message-ID: <6394334a-b8d5-4729-843a-1601182e173f@linux.ibm.com>
-Date: Wed, 21 Oct 2026 10:30:15 +0530
+	Wed, 21 Oct 2026 04:58:52 +0000 (GMT)
+Message-ID: <3d342c03-f12f-462d-b3c6-510f155ff267@linux.ibm.com>
+Date: Wed, 21 Oct 2026 10:31:27 +0530
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v1 1/2] kho: check scratch vs CMA alignment at runtime
-To: Mike Rapoport <rppt@kernel.org>
+To: Pratyush Yadav <pratyush@kernel.org>
 Cc: kexec@lists.infradead.org, Aditya Gupta <adityag@linux.ibm.com>,
         Alexander Graf <graf@amazon.com>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -80,39 +80,38 @@ Cc: kexec@lists.infradead.org, Aditya Gupta <adityag@linux.ibm.com>,
         Hari Bathini <hbathini@linux.ibm.com>,
         Madhavan Srinivasan <maddy@linux.ibm.com>,
         Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Ellerman <mpe@ellerman.id.au>, Mike Rapoport <rppt@kernel.org>,
         Nicholas Piggin <npiggin@gmail.com>,
         Pasha Tatashin <pasha.tatashin@soleen.com>,
-        Pratyush Yadav <pratyush@kernel.org>,
         "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
         Shivang Upadhyay <shivangu@linux.ibm.com>,
         Shrikanth Hegde <sshegde@linux.ibm.com>, linux-kernel@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org
 References: <20260928083226.107807-1-sourabhjain@linux.ibm.com>
  <20260928083226.107807-2-sourabhjain@linux.ibm.com>
- <asC15ISMMbHMwnHi@kernel.org>
+ <2vxzfqybj8it.fsf@kernel.org>
 Content-Language: en-US
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <asC15ISMMbHMwnHi@kernel.org>
+In-Reply-To: <2vxzfqybj8it.fsf@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-GUID: 1Ag3-4et4_vcswAII1d4cO_ZdVunaa3k
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDIxMDAxOCBTYWx0ZWRfX+WUyRk+4Kjne
- 0EdzLTIgDfcxRBnB30wA8HPh3JRlxRX/FAHCmSYTpkPxhgZAwEv8mPRhvFRHjyHTXAb7Bpr3hQ0
- jUxHH8aHVApntTxLITB98Hs/YJZ3Sk4=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDIxMDAxOCBTYWx0ZWRfX5fEJzFNW15yr
- pLQSPCPz/qxWaHbWNxCcTDCsfo9M9dLYhkgAUdqiu07cET5Bn0pAsY8D/OGK2yOfs7Is9ZdQMbQ
- WGfVrcJR40VlzA+n+o31m2VOvQLgUcsw5VhKOL0y06E8NzgD26n49OHyxG8InkhRvZvUW7SuD3Z
- HiEHO4PlxgS7Egef7hBmdxFVkLHQQcc+2lx7GODQlP74geZeveBNcUEwcksmgeb9OshKCiuCnnD
- C5eSt4rGyg029altpW7qZhvQNnlLz5X2ET9EzMWROmRRdXqSmGK/tVbjzMZR26f3PrTL/g6n/jI
- w+vzqeu83YHI/XNeaN+RIKdF2JCA8vQyxOuyQMQTWHJ9fN3D4UukoYMixWeeUFlfAV+WheOdGKX
- mct4s5bd4dYvbhKR6cBbfWoTmm/3pHgyMtYeMc3UbuM4zRuHyV2IWl2AqpYyfsrlRm6ks493t4N
- yxI9L+3rLcl+L/Q+w1A==
-X-Proofpoint-ORIG-GUID: UekKh77U18D1_mgqPP7FelDhuaXoCyLg
-X-Authority-Analysis: v=2.4 cv=Ob4NnRTY c=1 sm=1 tr=0 ts=6ad84648 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+X-Proofpoint-GUID: aN4T9DGkggG4gTSFxpsFy0li-llBHITp
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDIxMDAxOCBTYWx0ZWRfX4/ekYuLP0jTS
+ gfp9csY5GMnBqfzt50/Jn0pvXDa/D3GQiPkoyfw9lrPWTCQCTznGBLoDZKAB8z7LbHQzxOdf0UD
+ ZdXJvkKI5gb/WQKn38y5OeTcQRu3DsA=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDIxMDAxOCBTYWx0ZWRfX5YLm0P8pI1zz
+ RNMCP7xdAfJDzf6yT+bJ8sqjcs6HWse3K0afsDQVQAkCCAvwv+Ixqc95IjdBlLrlD7y6H8va/jH
+ EisrwZ+tOCB4MBQribT3Ihbg3mfRHwdKCFc4X8bZwSgvKkAxo/gEtxwmmIhnoPQSQg1+pVLg0ge
+ p1i2cfPBHjvApCj/NXfv5/7HddSbCpoeznez/Ffmy/F1xZn8B6uSluPEFydSDLHSYrLRPQU0/9P
+ a9ZDMYfTb62gPBJIi07HTVB+rtfBKVgLQl4xRdx43mjuqqgztl9Ff3tv9QDfRV669HE2KalqMSO
+ y0tc7po+mOHLZux8FuHF/c6SVgufpcer4Aciw5qLNWozZvW9686//g1I+1QpSm9zIE/7/pow6tW
+ uLrfiLZXzIQIqoV3YSpb2C6i08R/VV2pmlEKHzsXGELNEkR51PlQdVXmfujpRXg7RIDVYiYMi1J
+ D+UmGl+6+95y29KzsYA==
+X-Proofpoint-ORIG-GUID: 3_2FMnQbRqIzSRLEGfDujs0GFUx0wl7r
+X-Authority-Analysis: v=2.4 cv=Ob4NnRTY c=1 sm=1 tr=0 ts=6ad84695 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
  a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=VkNPw1HP01LnGYTKEx00:22
  a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8
  a=vggBfdFIAAAA:8 a=Z4Rwk6OoAAAA:8 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8
@@ -128,8 +127,8 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2610190000
  definitions=main-2610210018
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261020_215757_576711_A191A17F 
-X-CRM114-Status: GOOD (  27.78  )
+X-CRM114-CacheID: sfid-20261020_215913_106702_A080AFEB 
+X-CRM114-Status: GOOD (  26.01  )
 X-Spam-Score: -2.6 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -151,10 +150,9 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 
 
 
-On 03/10/26 13:29, Mike Rapoport wrote:
-> Hi,
+On 12/10/26 20:00, Pratyush Yadav wrote:
+> On Mon, Sep 28 2026, Sourabh Jain wrote:
 >
-> On Mon, Sep 28, 2026 at 02:02:25PM +0530, Sourabh Jain wrote:
 >> KHO requires the scratch alignment to be at least CMA_MIN_ALIGNMENT_BYTES,
 >> and this is currently enforced with a static_assert().
 >>
@@ -179,25 +177,7 @@ On 03/10/26 13:29, Mike Rapoport wrote:
 >> kho_reserve_scratch(), before any scratch memory is reserved. If the
 >> scratch alignment is smaller than the CMA minimum alignment, warn once
 >> and disable KHO rather than continue with a misaligned reservation.
-> Can we keep static_assert() for everything !powerpc please?
-> Like something along these lines:
->
-> #ifndef CONFIG_HUGETLB_PAGE_SIZE_VARIABLE
-> #define check_scratch_alignment static_assert(...)
-> #else
-> static inline bool check_scratch_alignment()
-> {
-> ...
-> }
-> #endif
-
-Sure I will address this in the next version.
-
-Thanks,
-Sourabh Jain
-
->
->   
+>>
 >> Cc: Aditya Gupta <adityag@linux.ibm.com>
 >> Cc: Alexander Graf <graf@amazon.com>
 >> Cc: Andrew Morton <akpm@linux-foundation.org>
@@ -253,6 +233,19 @@ Sourabh Jain
 >> +	 * struct pages, which can cause a crash.
 >> +	 */
 >> +	if (WARN_ON_ONCE(SCRATCH_ALIGNMENT_BYTES < CMA_MIN_ALIGNMENT_BYTES)) {
+> Nit: do we need both the WARN_ON_ONCE() and the pr_err()? Can't we drop
+> the WARN and keep the pr_err only?
+
+Yes pr_err is good enough. I will remove WARN_ON_ONCE()...
+
+>
+> LGTM otherwise.
+
+Thanks for the review.
+
+- Sourabh Jain
+
+>
 >> +		pr_err("scratch alignment %lu < CMA minimum %lu, disabling\n",
 >> +		       (unsigned long)SCRATCH_ALIGNMENT_BYTES,
 >> +		       (unsigned long)CMA_MIN_ALIGNMENT_BYTES);
@@ -263,8 +256,5 @@ Sourabh Jain
 >>   	scratch_size_update();
 >>   
 >>   	/* FIXME: deal with node hot-plug/remove */
->> -- 
->> 2.55.0
->>
 
 
