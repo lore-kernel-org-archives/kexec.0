@@ -2,92 +2,84 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A48A606A32F
-	for <kexec@archiver.kernel.org>; Wed, 21 Oct 2026 15:26:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94BB4606A323
+	for <kexec@archiver.kernel.org>; Wed, 21 Oct 2026 17:03:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ZF+c6LBw;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=eF1BhjNM
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Kg0G/Qas;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XkZmtTC5
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=yVHoNG/F+MSh1AvSZ4DFO2pLKQWPL8PGoHBteE3nowI=; b=ZF+c6LBwLIvu3oNvydc99scv0x
-	qrGcSKBvkEgXjrq0G2h0po13t/dZ77Pe8WR1smPycks8/Z2slthgBFQ0Ctttt2qpliU/wtgo7do6I
-	diHoonlPunj/XIA62FL/p/xvWWgKgAaA1nhjXyeLEADNJYFNonV+PuBx5egIMjXlkbFnQuf0Aq/oZ
-	IQqTvN4P3zldnwSsEKsSutyVOPdxWZF3wz/R8OqA4YkGml/cxdscN43BUURTx901jUpagTcwoKECO
-	5z+F1NXyeYzNOZWTcYChvVDjbbzdmSSOrM9pJdYwMn9/9Ut8l6HgZYRf8mza3Vj/pry7UjuH5kqG2
-	LJQVbaNQ==;
+	bh=G2Wb2r2zAu+yNNCY0UufSECh98Xmgt4eIzLuEewJe74=; b=Kg0G/QasfmDr+pWvFyVvQESHi5
+	Z7NC/44bf1tEa6dOwvIriyZehY4hX0hPZXdXXb1TPiQzX0aahAFsTSYbmnoSmTdDCGwqtthP4pFhf
+	7FbF9TBBZaR39V8HC/0VC/yFL/ASgHi93k9Xo2b5rCMbTzwKi6q7tMpIAXAdxJIkF61Fm4+Ps98+Z
+	jNMS3QEXdZA4wzDdQUHFV6txHVuGoCgLVBY2K2ZRe+9/RAocF0hBkW8r7nry+I0f8EIDUwwB1G0lA
+	jScxHc2bVfPA46ppjSPQj673PI8f7aTiajuA1ZNuDKUTDSbmn8+Q1JDkDZdClypm6EUq9AhJ7azFT
+	qOFr4w6w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJYCY-0000000CFqh-1Ij0;
-	Wed, 21 Oct 2026 15:26:02 +0000
-Received: from mail-ej1-f69.google.com ([209.85.218.69])
+	id 1xJZiP-0000000CVW6-3Fgy;
+	Wed, 21 Oct 2026 17:03:01 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJYC9-0000000CFY6-04y1
-	for kexec@lists.infradead.org;
-	Wed, 21 Oct 2026 15:25:38 +0000
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-c41b03cd1dcso79611866b.3
-        for <kexec@lists.infradead.org>; Wed, 21 Oct 2026 08:25:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792596334; x=1793201134; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=yVHoNG/F+MSh1AvSZ4DFO2pLKQWPL8PGoHBteE3nowI=;
-        b=eF1BhjNMjTbU4dmFm4v0FZ7LPD7D9LO2vM02XRNCoexLNh3DNNE+gEhFIF1fB9ZHPU
-         3PMEZGgftkFIT6P0BgYEktTaUPPlHPDYxEF84cTXQQEOXuG8uDxQaQA1rlYMkZA4jtOQ
-         VRiyBJ1uaEUj7QV4MRgiUsLdYD3NP02KObYH0oPDqEeqCL8hajzgDOjEBQPOQW3CFPng
-         hCmuU6P63lPt7kpSrYmgy76HfoLb+HjZr4Uc86uCGcMttFb+j39ct+rQFC31bqFzv1mE
-         nfiR6bOLZsoYw/oo8b3d2Yi16A0MaNyZg/oROuGx2wPRs6oW2tVdNMALjYc0482VswGE
-         85kQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792596334; x=1793201134;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=yVHoNG/F+MSh1AvSZ4DFO2pLKQWPL8PGoHBteE3nowI=;
-        b=HpIEwSfPRKY9nDmRlup1K/r9tJ1yAtjcNY4UuB2DgUJXAqcAN+ZqPcGZKbUB/hhXkm
-         5G1wAGwu3bP26TNqLN8Wa4Lfrw+v47mWqFQxP2jVRZCxmHdKKRWi/zudtH5BcQRdzc3h
-         bkcPszL9c9ATfTENqYyD5gsORWezT0A/8dND5u5E3RW2/0XpVK1r30IJn4nQI+gxkAfo
-         2J3GsjYgutTxkRZHCEBUcdKlQUkWg991PrMlMYvIrElU9c1DB9pVGKOfVHUR3QMu8bne
-         betPPYF9a0grOFCrbJvGp6ouQbL69lUEw96oMBEyG/TFT0F4VAkiRtsH9psoeHx6RjHE
-         d4pA==
-X-Forwarded-Encrypted: i=1; AKwUvByXYqPmb6mU+JzIhbfyD8ltCZEyc/8LBuQk6EDl6iYij9HFo6jCD9G6vbXQGQeSSZK5wHYMcA==@lists.infradead.org
-X-Gm-Message-State: AFq9FYKGBMqjVAp+ZtQMPCbH/sN3m84+pR/5PBSS5EHHIWG39fuOJ+Wq
-	f/d/ELSguPezJ2C4A4JMieyQ9BtixnvAj5maNGq8p0TvOorcqHRz7v8BhDVmkz1UEvQ7bBJhbev
-	Absz87Nw04A+Grjdcig==
-X-Received: from ejeck13-n2.prod.google.com ([2002:a17:907:e1cd:20b0:c2e:8317:2af9])
- (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:907:c64b:10b0:c46:7fa4:922b with SMTP id a640c23a62f3a-c467fa4a587mr117629166b.33.1792596333890;
- Wed, 21 Oct 2026 08:25:33 -0700 (PDT)
-Date: Wed, 21 Oct 2026 15:25:27 +0000
-In-Reply-To: <20261021152527.375070-1-tarunsahu@google.com>
+	id 1xJZiO-0000000CVVq-2New;
+	Wed, 21 Oct 2026 17:03:00 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 95CC7601F6;
+	Wed, 21 Oct 2026 17:02:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02E8A1F000C2;
+	Wed, 21 Oct 2026 17:02:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792602179;
+	bh=G2Wb2r2zAu+yNNCY0UufSECh98Xmgt4eIzLuEewJe74=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=XkZmtTC5S9VoCPJxFs4W6Nn32XI/9WoARvotlczkWiK/fgzgwYL9NUWAK7/UhnQEw
+	 a1MYNEG5gxgpbR2AQ8HOvf2u77T2OoEh+uQ+8KH8kkqu9M6qNPFMHb3odoRABgD7Ap
+	 NnodJhbm6ewhuPWrdg4aRCufKPtO6ImN+QeiSpm9UuwQ8G4sqwyM9cGunrUVZET1fe
+	 iB/Xx90Gq5wHuIal2BskYPHW7DSAIz5Ou5XSEYxbM7t+DIM43d3o92T/rvQYbv8iqc
+	 2gRzy6gh91csitC9FU1hYjhGrPDhvVMMsEaVVT2NkeBGm6hBefegTkk1IWRLAzmMa/
+	 iStvlOMozH3IQ==
+Date: Wed, 21 Oct 2026 20:02:39 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+	chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com,
+	mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org,
+	ritesh.list@gmail.com, sshegde@linux.ibm.com, tglx@kernel.org,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+	dakr@kernel.org, akpm@linux-foundation.org, baoquan.he@linux.dev,
+	pasha.tatashin@soleen.com, pratyush@kernel.org,
+	ruirui.yang@linux.dev, leitao@debian.org, yeoreum.yun@arm.com,
+	sourabhjain@linux.ibm.com, robh@kernel.org, coxu@redhat.com,
+	kees@kernel.org, tangyouling@kylinos.cn, liukexin@kylinos.cn,
+	zhangtianyang@loongson.cn, guodongtai@kylinos.cn,
+	maqianga@uniontech.com, chao.gao@intel.com, kai.huang@intel.com,
+	vishal.l.verma@intel.com, seanjc@google.com, piliu@redhat.com,
+	thuth@redhat.com, jbouron@amazon.com, me@linux.beauty,
+	mclapinski@google.com, graf@amazon.com, bgwin@google.com,
+	hbathini@linux.ibm.com, eric.devolder@oracle.com,
+	takahiro.akashi@linaro.org, james.morse@arm.com,
+	palmer@rivosinc.com, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	driver-core@lists.linux.dev, kexec@lists.infradead.org
+Subject: Re: [PATCH v6 09/14] x86/crash: Fix massive out-of-bounds write on
+ 32-bit Highmem
+Message-ID: <atjwL407guk-76DK@kernel.org>
+References: <20260921090450.807575-1-ruanjinjie@huawei.com>
+ <20260921090450.807575-10-ruanjinjie@huawei.com>
+ <179248377976.302547.17579416672238014424.b4-review@b4>
+ <b729d819-39c9-42a1-8f9c-49019091b81f@huawei.com>
 X-Archived-By: <archiver.kernel.org>
-Mime-Version: 1.0
-References: <20261021152527.375070-1-tarunsahu@google.com>
-X-Mailer: git-send-email 2.56.0.212.g129ede20d9-goog
-Message-ID: <20261021152527.375070-5-tarunsahu@google.com>
-Subject: [RFC PATCH v2 4/4] mm: memfd_luo: Add the 2-bit pair feature header
-From: Tarun Sahu <tarunsahu@google.com>
-To: Andrew Morton <akpm@linux-foundation.org>, joro@8bytes.org, 
-	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, maz@kernel.org, arnd@arndb.de, 
-	David Matlack <dmatlack@google.com>, jgg@nvidia.com, robin.murphy@arm.com, 
-	loganodell@google.com, oupton@kernel.org, kevin.tian@intel.com, 
-	alex@shazbot.org, dwmw2@infradead.org, pbonzini@redhat.com, seanjc@google.com, 
-	will@kernel.org, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Alexander Graf <graf@amazon.com>, Bjorn Helgaas <bhelgaas@google.com>, baolu.lu@linux.intel.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org, 
-	sagis@google.com, linux-mm@kvack.org, kvmarm@lists.linux.dev, 
-	iommu@lists.linux.dev, linux-pci@vger.kernel.org, kexec@lists.infradead.org, 
-	skhawaja@google.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Tarun Sahu <tarunsahu@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261021_082537_126457_AC7484B0 
-X-CRM114-Status: GOOD (  21.24  )
-X-Spam-Score: -9.5 (---------)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b729d819-39c9-42a1-8f9c-49019091b81f@huawei.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,150 +90,159 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-26.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+X-Spam-Status: No, score=-16.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=4.0.1
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Embed the fixed-size 128-byte struct luo_feature_hdr at the start of
-struct memfd_luo_ser and define enum memfd_luo_feature
-(MEMFD_LUO_FEAT_CORE and MEMFD_LUO_FEAT_MAX) for memfd preservation.
+On Wed, Oct 21, 2026 at 04:28:31PM +0800, Jinjie Ruan wrote:
+> 
+> 
+> 在 2026/10/20 16:09, Mike Rapoport 写道:
+> > Hi Jinjie,
+> > 
+> >> On 32-bit x86 systems with HIGHMEM, kmap_local_page() only maps a single
+> >> 4KB page. However, the elfcorehdr segment can span several pages (up to
+> >> hundreds of kilobytes).
+> >>
+> >> The original code blindly copies 'elfsz' bytes at once via
+> >> memcpy_flushcache(), overwriting adjacent fixmap entries or critical
+> >> virtual addresses.
+> >>
+> >> Fix this by copying the new elfcorehdr page by page.
+> > 
+> > This is independed of other fixes and can be sent as a separate x86b fix.
+> 
+> Yes
+> 
+> > 
+> >> Cc: Thomas Gleixner <tglx@kernel.org>
+> >> Cc: Ingo Molnar <mingo@redhat.com>
+> >> Cc: Borislav Petkov <bp@alien8.de>
+> >> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> >> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> >> Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> >> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> >> Cc: Baoquan He <baoquan.he@linux.dev>
+> >> Cc: Chao Gao <chao.gao@intel.com>
+> >> Cc: Sean Christopherson <seanjc@google.com>
+> >> Cc: Eric DeVolder <eric.devolder@oracle.com>
+> >> Cc: Hari Bathini <hbathini@linux.ibm.com>
+> >> Cc: Andrew Morton <akpm@linux-foundation.org>
+> >> Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
+> >> Cc: stable@vger.kernel.org
+> >> Fixes: ea53ad9cf73b ("x86/crash: add x86 crash hotplug support")
+> >> Link: https://sashiko.dev/#/patchset/20260907125404.922123-1-ruanjinjie%40huawei.com
+> >> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> >> ---
+> >>  arch/x86/kernel/crash.c | 26 +++++++++++++-------------
+> >>  1 file changed, 13 insertions(+), 13 deletions(-)
+> >>
+> >> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> >> index e681ec9cf1dc8..3c9f4fbbe7ff0 100644
+> >> --- a/arch/x86/kernel/crash.c
+> >> +++ b/arch/x86/kernel/crash.c
+> >> @@ -447,9 +447,10 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
+> >>   */
+> >>  void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
+> >>  {
+> >> -	void *elfbuf = NULL, *old_elfcorehdr;
+> >>  	unsigned long mem, memsz;
+> >>  	unsigned long elfsz = 0;
+> >> +	void *elfbuf = NULL;
+> >> +	unsigned long done;
+> >>  
+> >>  	/*
+> >>  	 * As crash_prepare_elf64_headers() has already described all
+> >> @@ -484,21 +485,20 @@ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
+> >>  
+> >>  	/*
+> >>  	 * Copy new elfcorehdr over the old elfcorehdr at destination.
+> >> -	 */
+> >> -	old_elfcorehdr = kmap_local_page(pfn_to_page(mem >> PAGE_SHIFT));
+> >> -	if (!old_elfcorehdr) {
+> >> -		pr_err("mapping elfcorehdr segment failed\n");
+> >> -		goto out;
+> >> -	}
+> >> -
+> >> -	/*
+> >> -	 * Temporarily invalidate the crash image while the
+> >> -	 * elfcorehdr is updated.
+> >> +	 * The segment is physically contiguous but can span several pages.
+> >> +	 * On 32-bit Highmem architectures, kmap_local_page() maps only a
+> >> +	 * single page at a time, so copy page by page.
+> >>  	 */
+> >>  	xchg(&kexec_crash_image, NULL);
+> >> -	memcpy_flushcache(old_elfcorehdr, elfbuf, elfsz);
+> >> +	for (done = 0; done < elfsz; ) {
+> >> +		size_t chunk = min_t(size_t, PAGE_SIZE, elfsz - done);
+> >> +		void *dst = kmap_local_page(pfn_to_page((mem + done) >> PAGE_SHIFT));
+> >> +
+> >> +		memcpy_flushcache(dst, elfbuf + done, chunk);
+> >> +		kunmap_local(dst);
+> >> +		done += chunk;
+> >> +	}
+> > 
+> > HIGMEM is only enabled on 32-bit and there elfsz cannot be "massive"
+> > because it is the size of the headers just built for the CPUs and RAM
+> > ranges actually present, not the large memsz reserved for hotplug.
+> > On x86_32 (NR_CPUS <= 64) that is a few KiB at most.
+> > 
+> > Also, crashkernel is capped at CRASH_ADDR_HIGH_MAX = SZ_512M on X86_32,
+> > which is below the default lowmem limit. For lowmem pages,
+> > kmap_local_page() returns the contiguous direct-map address, so the old
+> 
+> Hi Mike,
+> 
+> x86 32-bit doesn't support memory hotplug, and NR_CPUS is capped at 8.
+> 
+> config NR_CPUS_RANGE_END
+>     int
+>     depends on X86_32
+>     default    8 if  SMP
+>     default    1 if !SMP
+> 
+> According to the elf header size calculation in
+> crash_prepare_elf64_headers():
+> 
+> - nr_phdr = num_possible_cpus() + nr_mem_ranges + 2
+> - sizeof(Elf64_Ehdr) = 64
+> - sizeof(Elf64_Phdr) = 56
+> 
+> so:
+>     elf_sz = 64 + (num_possible_cpus() + nr_mem_ranges + 2) * 56
+> 
+> To exceed 4K:
+> 
+>     64 + (num_possible_cpus() + nr_ranges + 2) * 56 > 4096
+> 
+> 
+> So we'd need at least 60+ RAM ranges, which seems unlikely on real
+> hardware without memory hotplug. I think this problem can't actually be
+> triggered in practice, so we can safely drop this patch.
 
-All current struct memfd_luo_ser fields (pos, size, seals, flags,
-nr_folios, folios) and MEMFD_LUO_ALL_SEALS belong to
-MEMFD_LUO_FEAT_CORE (LUO_FEAT_REQUIRED in memfd_luo_features). Future
-changes add new entries to enum memfd_luo_feature before
-MEMFD_LUO_FEAT_MAX and append any new fields to the end of struct
-memfd_luo_ser so existing field offsets never shift.
+I think you are right and my LLM overestimated the amount of memory used :)
+ 
+> > code was already fine.
+> > 
+> > So the overflow needs the crash region to be in highmem, either through
+> > crashkernel=size@offset above lowmem or through a large vmalloc=
+> > setting, and an elfcorehdr larger than one page.
+> > 
+> > It is still worth fixing, but please drop "massive" from the subject.
+> > 
+> > The changelog should also mention the conditions when this could happen.
+> > 
+> 
+> -- 
+> Best regards,
+> Jinjie
+> 
 
-Signed-off-by: Logan Odell <loganodell@google.com>
-Signed-off-by: Tarun Sahu <tarunsahu@google.com>
----
- include/linux/kho/abi/memfd.h | 35 ++++++++++++++++++++++++++++++-----
- mm/memfd_luo.c                | 14 ++++++++++++++
- 2 files changed, 44 insertions(+), 5 deletions(-)
-
-diff --git a/include/linux/kho/abi/memfd.h b/include/linux/kho/abi/memfd.h
-index 371ffd108a79..f0b5235a408d 100644
---- a/include/linux/kho/abi/memfd.h
-+++ b/include/linux/kho/abi/memfd.h
-@@ -13,6 +13,7 @@
- 
- #include <linux/types.h>
- #include <linux/kho/abi/kexec_handover.h>
-+#include <linux/kho/abi/luo.h>
- 
- /**
-  * DOC: memfd Live Update ABI
-@@ -21,11 +22,20 @@
-  * reboot using the LUO.
-  *
-  * The state is serialized into a packed structure `struct memfd_luo_ser`
-- * which is handed over to the next kernel via the KHO mechanism.
-+ * which is handed over to the target kernel via the KHO mechanism.
-  *
-- * This interface is a contract. Any modification to the structure layout
-- * constitutes a breaking change. Such changes require incrementing the
-- * version number in the MEMFD_LUO_FH_COMPATIBLE string.
-+ * This interface is a contract. `struct memfd_luo_ser` starts with a fixed
-+ * 128-byte `struct luo_feature_hdr`. The relative order and offsets of
-+ * fields must remain unchanged as features are added or retired: new fields
-+ * are appended at the end of `struct memfd_luo_ser` under a new feature
-+ * flag in `enum memfd_luo_feature` (before `MEMFD_LUO_FEAT_MAX`), and
-+ * retired fields are kept in place so subsequent offsets never shift. In
-+ * the target kernel, fields of a `LUO_FEAT_REQUIRED` feature are guaranteed
-+ * present once `luo_feature_hdr_validate()` succeeds, whereas fields of a
-+ * `LUO_FEAT_OPTIONAL` feature should be accessed only after checking
-+ * `luo_feature_is_active()`. All current fields (`pos`, `size`, `seals`,
-+ * `flags`, `nr_folios`, `folios`) and `MEMFD_LUO_ALL_SEALS` belong to
-+ * `MEMFD_LUO_FEAT_CORE` (`LUO_FEAT_REQUIRED` in `memfd_luo_features`).
-  */
- 
- /**
-@@ -58,7 +68,7 @@ struct memfd_luo_folio_ser {
- 
- /*
-  * The set of seals this version supports preserving. If support for any new
-- * seals is needed, add it here and bump version.
-+ * seals is needed, gate them behind a new feature flag.
-  */
- #define MEMFD_LUO_ALL_SEALS (F_SEAL_SEAL | \
- 			     F_SEAL_SHRINK | \
-@@ -67,8 +77,22 @@ struct memfd_luo_folio_ser {
- 			     F_SEAL_FUTURE_WRITE | \
- 			     F_SEAL_EXEC)
- 
-+/**
-+ * enum memfd_luo_feature - Feature indices for &struct memfd_luo_ser.
-+ * @MEMFD_LUO_FEAT_CORE: Core feature covering `pos`, `size`, `seals`, `flags`,
-+ *                       `nr_folios`, `folios`, and %MEMFD_LUO_ALL_SEALS.
-+ * @MEMFD_LUO_FEAT_MAX:  Number of defined &enum memfd_luo_feature features.
-+ */
-+enum memfd_luo_feature {
-+	MEMFD_LUO_FEAT_CORE = 0,
-+	MEMFD_LUO_FEAT_MAX,
-+};
-+
-+static_assert((int)MEMFD_LUO_FEAT_MAX <= LUO_FEAT_MAX);
-+
- /**
-  * struct memfd_luo_ser - Main serialization structure for a memfd.
-+ * @features:  ABI feature and size header for memfd_luo_ser.
-  * @pos:       The file's current position (f_pos).
-  * @size:      The total size of the file in bytes (i_size).
-  * @seals:     The seals present on the memfd. The seals are uABI so it is safe
-@@ -79,6 +103,7 @@ struct memfd_luo_folio_ser {
-  *             struct memfd_luo_folio_ser.
-  */
- struct memfd_luo_ser {
-+	struct luo_feature_hdr features;
- 	u64 pos;
- 	u64 size;
- 	u32 seals;
-diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
-index 64f8b8cb75bd..ea1f4c8cd259 100644
---- a/mm/memfd_luo.c
-+++ b/mm/memfd_luo.c
-@@ -84,6 +84,10 @@
- 
- #include "internal.h"
- 
-+static const u8 memfd_luo_features[MEMFD_LUO_FEAT_MAX] = {
-+	[MEMFD_LUO_FEAT_CORE] = LUO_FEAT_REQUIRED,
-+};
-+
- static int memfd_luo_preserve_folios(struct file *file,
- 				     struct kho_vmalloc *kho_vmalloc,
- 				     struct memfd_luo_folio_ser **out_folios_ser,
-@@ -284,6 +288,8 @@ static int memfd_luo_preserve(struct liveupdate_file_op_args *args)
- 		goto err_free_ser;
- 	}
- 
-+	luo_feature_hdr_init(&ser->features, sizeof(*ser),
-+			     memfd_luo_features);
- 	ser->pos = args->file->f_pos;
- 	inode_size = i_size_read(inode);
- 
-@@ -525,6 +531,14 @@ static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
- 	if (!ser)
- 		return -EINVAL;
- 
-+	err = luo_feature_hdr_validate(&ser->features, memfd_luo_features);
-+	if (err) {
-+		pr_err("memfd_luo_ser feature header validation failed (size=%llu, flags[0]=%#llx): %pe\n",
-+		       ser->features.size, ser->features.flags[0],
-+		       ERR_PTR(err));
-+		goto free_ser;
-+	}
-+
- 	/* Make sure the file only has seals supported by this version. */
- 	if (ser->seals & ~MEMFD_LUO_ALL_SEALS) {
- 		err = -EOPNOTSUPP;
 -- 
-2.56.0.212.g129ede20d9-goog
-
+Sincerely yours,
+Mike.
 
