@@ -2,70 +2,55 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5F7606A31A
-	for <kexec@archiver.kernel.org>; Wed, 21 Oct 2026 09:05:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACDA606A31F
+	for <kexec@archiver.kernel.org>; Wed, 21 Oct 2026 09:13:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=26u4Le0T;
-	dkim=fail reason="signature verification failed" (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=EE/OeHk1;
-	dkim=pass (1024-bit key, unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=VNIuT+eZ
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=f84LS2V6;
+	dkim=pass (1024-bit key, unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=qy05oNmy
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=qly2ZXVqJU8mRHFencdxpDDot1stjgFFpJM+J90ArtI=; b=26u4Le0T2iCaN8oyQY5rkIOph6
-	NmGaVGipysU/+5N34pgpMnre3E+6mXcOG7tbofTVqnbxLoDXvHo9KV9Pf51JOfjtnCeAbcxP6JVs8
-	HXjBG1LMIu5k8y4fQ+673bq0YMFRIrI/0IycO+RoKPPFO+8IR0TR5dS4P98EmSvCucE3Pqb4kISEe
-	uJPydcUYxGkvbVEI4nWtBJJ8uNSVfPgKQXEuvbHRtRBQHn6V5Qpvw+hgK/3aH0zWpIHneSvb/G6V9
-	vmFN+uQRC0appB/c2spPcmZ//EMGixMOGFZ7Ip2qNTVJ8aIEmBuJLve0dFAN7JU9dPSSZuoEiLYkd
-	d0a1Hu0A==;
+	bh=nzADmYKv4GpvdMxYyHHtqrTYHk3osWUIWqWnEfBwJ1o=; b=f84LS2V6K5TWgDheLYzu7Dc40R
+	yguVB7IFfMh1rQv1PUWXlJWppXHRR99jX7XNUACMPIsIP5hkP5jauqqcU2l/agmQG/ooCei8xDm0W
+	8UIlJkARm1VFDPlVGB8aBjG5WtwuZ56qvK5H42zGhbCr0COtZRhETJIJPuLG5mV1F9dW2MKyMKpQf
+	G7OBhvoiJI1CMLkrnAHgvD99okZZbs8UZ73mJAgiV5CnPEfxZWW/fOGx8qMsb3GR5JXQCQAefZJIN
+	vQ6Dzr+prJ11w7R8AMCoFzKXSjlIFd/hYiYeistm4DWRLh2Ke0pE/TJoIKXrEoCIB6+rkcL5di5wX
+	YukouFPg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJSGf-0000000BR1I-36Jt;
-	Wed, 21 Oct 2026 09:05:53 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJSGb-0000000BR0s-3DTr;
-	Wed, 21 Oct 2026 09:05:50 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=qly2ZXVqJU8mRHFencdxpDDot1stjgFFpJM+J90ArtI=; b=EE/OeHk1rF0+dtB8vBwQ76ixey
-	f7Tf1oFYzWIJ9yNOELL2C8OgWUafv71mEn+bVqI3FLksOphPCyzbW27EEs5AMxjqTp36+XA78zic8
-	DxqErRdQkRhw4F9u3YREb04aB1HJTxwMnYv0zOOyU7BrZdK8PeXyF0z9ViS5ICWWObVk2jguVzOBt
-	qN7LeMI1hptb0qbeM4/QqPG+80irxYe5i6lj1VN3tfi4TioF058xI8EnAqX/8hC5fqMraildazcnz
-	+cswG0ctBNiWHw1L6GnhMGCeb04U0hNUBsBa7pbJx43UlLXPf0P2RxPmZ3vTRLE4xi3862mgnHuJJ
-	FGpPRoYA==;
+	id 1xJSNv-0000000BSd6-4Bt4;
+	Wed, 21 Oct 2026 09:13:24 +0000
 Received: from canpmsgout09.his.huawei.com ([113.46.200.224])
-	by desiato.infradead.org with esmtps (Exim 4.99.5 #2 (Red Hat Linux))
-	id 1xJSGW-00000005d87-3WUk;
-	Wed, 21 Oct 2026 09:05:48 +0000
+	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1xJSNs-0000000BSba-3EkO;
+	Wed, 21 Oct 2026 09:13:23 +0000
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=qly2ZXVqJU8mRHFencdxpDDot1stjgFFpJM+J90ArtI=;
-	b=VNIuT+eZ75BYq5bEgDxPMwxDJad0LsRd2qh8O5xIl6lSkVcMxoMw0iYMTpsMxZj6Jahuezyk/
-	yCYxoyiTPQ7Vzfr1pjBJxOpwsIQj3XOgI1W9mckRnRaKJwL0kZrJRME/xKwgmPeH9Mbs9PUKvqW
-	U5k8YRQq520iy9kJHkZbWqo=
-Received: from mail.maildlp.com (unknown [172.19.163.15])
-	by canpmsgout09.his.huawei.com (SkyGuard) with ESMTPS id 4j8jks5JQPz1cySH;
-	Wed, 21 Oct 2026 16:54:13 +0800 (CST)
+	bh=nzADmYKv4GpvdMxYyHHtqrTYHk3osWUIWqWnEfBwJ1o=;
+	b=qy05oNmy3wvcAipAQKL4DCStOriRWTyczBtLbfPzPytLSmCWdRpIYENADIsJu88KlAJj0hmjc
+	e1p5428X8KTeWUYB9Vrw2GOPKCj13drNhfpLlgpoC2Z/ybSXrCDzqgJdySA25ihc7Us9rMXLO2x
+	ua/h/PISSyjS5+zO8Dkln2g=
+Received: from mail.maildlp.com (unknown [172.19.163.200])
+	by canpmsgout09.his.huawei.com (SkyGuard) with ESMTPS id 4j8jvf2rLvz1cySH;
+	Wed, 21 Oct 2026 17:01:50 +0800 (CST)
 Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 682B34058E;
-	Wed, 21 Oct 2026 17:05:33 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 1B4A840563;
+	Wed, 21 Oct 2026 17:13:10 +0800 (CST)
 Received: from [10.67.110.68] (10.67.110.68) by kwepemk200008.china.huawei.com
  (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Wed, 21 Oct
- 2026 17:05:32 +0800
-Message-ID: <6d4ba1c2-b672-465b-9683-0aa1ad8dee73@huawei.com>
-Date: Wed, 21 Oct 2026 17:05:31 +0800
+ 2026 17:13:08 +0800
+Message-ID: <12e4e687-1ff0-41b2-bdf8-7f48b29e1f2f@huawei.com>
+Date: Wed, 21 Oct 2026 17:13:07 +0800
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 1/8] riscv: build crash_mem ranges from memblock
- instead of resource tree
+Subject: Re: [PATCH v9 3/8] crash_core: serialize crash header preparation
+ against hotplug
 To: Wandun Chen <chenwandun1@gmail.com>, <robh@kernel.org>,
 	<baoquan.he@linux.dev>, <rppt@kernel.org>, <m.szyprowski@samsung.com>
 CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
@@ -80,17 +65,17 @@ CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
 	<kexec@lists.infradead.org>, <linux-mm@kvack.org>, <iommu@lists.linux.dev>
 References: <20261021083011.2170525-1-chenwandun1@gmail.com>
- <20261021083011.2170525-2-chenwandun1@gmail.com>
+ <20261021083011.2170525-4-chenwandun1@gmail.com>
 From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20261021083011.2170525-2-chenwandun1@gmail.com>
+In-Reply-To: <20261021083011.2170525-4-chenwandun1@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
  kwepemk200008.china.huawei.com (7.202.194.74)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261021_100546_082397_A33A8784 
-X-CRM114-Status: GOOD (  16.23  )
-X-Spam-Score: -0.1 (/)
+X-CRM114-CacheID: sfid-20261021_021321_115371_E3AD9508 
+X-CRM114-Status: GOOD (  19.77  )
+X-Spam-Score: -2.0 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -114,97 +99,124 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 在 2026/10/21 16:30, Wandun Chen 写道:
 > From: Wandun Chen <chenwandun@lixiang.com>
 > 
-> Replace walk_system_ram_res() with for_each_mem_range(). A later patch
-> introduces MEMBLOCK_NODUMP in memblock, the reserved-memory regions
-> marked with MEMBLOCK_NODUMP can be excluded from the vmcore by walking
-> memblock.
+> crash_prepare_headers() counts memory ranges before populating the
+> allocated crash_mem array. The weak implementation used by ARM64,
+> RISC-V and LoongArch walks memblock.memory, while x86 performs the same
+> two-pass operation over system RAM resources. Concurrent memory hotplug
+> can change range source between the two walks and make the populate
+> pass overflow cmem->ranges.
 > 
-> for_each_mem_range() iterates memblock.memory, which is freed after
-> init unless ARCH_KEEP_MEMBLOCK is selected. riscv needs ARCH_KEEP_MEMBLOCK
-> to filter reserved memory from the vmcore, so extend its condition
-> (ACPI || KEXEC) with CRASH_DUMP. arm64 and loongarch already select
-> ARCH_KEEP_MEMBLOCK unconditionally.
+> Take device_hotplug_lock when preparing crash headers during
+> kexec_file_load(). The x86/riscv memory hotplug path already takes
+> device_hotplug_lock, so call __crash_prepare_headers() directly
+> to avoid recursive locking.
 > 
+> Sashiko reported this issue in [1].
+> 
+> Fixes: 3751e728cef2 ("arm64: kexec_file: add crash dump support")
+> Fixes: 1bcca8620a91 ("LoongArch: Add crash dump support for kexec_file")
+> Fixes: 8acea455fafa ("RISC-V: Support for kexec_file on panic")
+> Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
 > Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
-> Tested-by: Meijing Zhao <zhaomeijing@lixiang.com>
+> Link: https://sashiko.dev/#/message/20260806101002.1F84E1F000E9@smtp.kernel.org [1]
 > Acked-by: Baoquan He <baoquan.he@linux.dev>
 > ---
->  arch/riscv/Kconfig                     |  2 +-
->  arch/riscv/kernel/machine_kexec_file.c | 31 ++++++++++----------------
->  2 files changed, 13 insertions(+), 20 deletions(-)
+>  arch/riscv/kernel/crash.c  |  2 +-
+>  arch/x86/kernel/crash.c    |  2 +-
+>  include/linux/crash_core.h |  2 ++
+>  kernel/crash_core.c        | 17 +++++++++++++++--
+>  4 files changed, 19 insertions(+), 4 deletions(-)
 > 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index e7891a2a89da..e21d0bab77ee 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -58,7 +58,7 @@ config RISCV
->  	select ARCH_HAS_UBSAN
->  	select ARCH_HAS_VDSO_ARCH_DATA
->  	select ARCH_HAVE_NMI_SAFE_CMPXCHG
-> -	select ARCH_KEEP_MEMBLOCK if ACPI || KEXEC
-> +	select ARCH_KEEP_MEMBLOCK if ACPI || KEXEC || CRASH_DUMP
->  	select ARCH_MHP_MEMMAP_ON_MEMORY_ENABLE	if 64BIT && MMU
->  	select ARCH_OPTIONAL_KERNEL_RWX if ARCH_HAS_STRICT_KERNEL_RWX
->  	select ARCH_OPTIONAL_KERNEL_RWX_DEFAULT
-> diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
-> index 26cd2a8bd0cd..808e872f4063 100644
-> --- a/arch/riscv/kernel/machine_kexec_file.c
-> +++ b/arch/riscv/kernel/machine_kexec_file.c
-> @@ -37,39 +37,32 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
->  }
+> diff --git a/arch/riscv/kernel/crash.c b/arch/riscv/kernel/crash.c
+> index fe5a4b306aae..ac8df2edf2a7 100644
+> --- a/arch/riscv/kernel/crash.c
+> +++ b/arch/riscv/kernel/crash.c
+> @@ -70,7 +70,7 @@ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
+>  	 * Create the new elfcorehdr reflecting the changes to CPU and/or
+>  	 * memory resources.
+>  	 */
+> -	if (crash_prepare_headers(true, &elfbuf, &elfsz, NULL)) {
+> +	if (__crash_prepare_headers(true, &elfbuf, &elfsz, NULL)) {
+>  		pr_err("unable to create new elfcorehdr");
+>  		goto out;
+>  	}
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index e6f23933a6df..bef008a0cb22 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -465,7 +465,7 @@ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
+>  	 * Create the new elfcorehdr reflecting the changes to CPU and/or
+>  	 * memory resources.
+>  	 */
+> -	if (crash_prepare_headers(IS_ENABLED(CONFIG_X86_64), &elfbuf, &elfsz, NULL)) {
+> +	if (__crash_prepare_headers(IS_ENABLED(CONFIG_X86_64), &elfbuf, &elfsz, NULL)) {
+>  		pr_err("unable to create new elfcorehdr");
+>  		goto out;
+>  	}
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index bc087124cd78..28e7a81cf263 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -61,6 +61,8 @@ extern int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_ma
+>  				       void **addr, unsigned long *sz);
+>  extern int crash_prepare_headers(int need_kernel_map, void **addr,
+>  				 unsigned long *sz, unsigned long *nr_mem_ranges);
+> +int __crash_prepare_headers(int need_kernel_map, void **addr, unsigned long *sz,
+> +			    unsigned long *nr_mem_ranges);
+>  extern int crash_exclude_core_ranges(struct crash_mem **cmem);
 >  
->  #ifdef CONFIG_CRASH_DUMP
-> -static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
-> -{
-> -	unsigned int *nr_ranges = arg;
-> -
-> -	(*nr_ranges)++;
-> -	return 0;
-> -}
-> -
->  unsigned int arch_get_system_nr_ranges(void)
->  {
->  	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* For exclusion of crashkernel region */
-> +	u64 i;
-> +	phys_addr_t start, end;
-
-The kernel prefers the reverse Christmas tree layout for local variables.
-
->  
-> -	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
-> +	for_each_mem_range(i, &start, &end)
-> +		nr_ranges++;
->  
->  	return nr_ranges;
->  }
->  
-> -static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
-> +int arch_crash_populate_cmem(struct crash_mem *cmem)
->  {
-> -	struct crash_mem *cmem = arg;
-> +	u64 i;
-> +	phys_addr_t start, end;
->  
-> -	cmem->ranges[cmem->nr_ranges].start = res->start;
-> -	cmem->ranges[cmem->nr_ranges].end = res->end;
-> -	cmem->nr_ranges++;
-> +	for_each_mem_range(i, &start, &end) {
-> +		cmem->ranges[cmem->nr_ranges].start = start;
-> +		cmem->ranges[cmem->nr_ranges].end = end - 1;
-> +		cmem->nr_ranges++;
-> +	}
->  
+>  struct kimage;
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index faa0f22dbb41..8a861a946e26 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/mm.h>
+>  #include <linux/cpuhotplug.h>
+>  #include <linux/memblock.h>
+> +#include <linux/device.h>
+>  #include <linux/kmemleak.h>
+>  #include <linux/crash_core.h>
+>  #include <linux/reboot.h>
+> @@ -344,8 +345,8 @@ int crash_exclude_core_ranges(struct crash_mem **cmem)
 >  	return 0;
 >  }
 >  
-> -int arch_crash_populate_cmem(struct crash_mem *cmem)
-> -{
-> -	return walk_system_ram_res(0, -1, cmem, prepare_elf64_ram_headers_callback);
-> -}
-> -
->  static char *setup_kdump_cmdline(struct kimage *image, char *cmdline,
->  				 unsigned long cmdline_len)
+> -int crash_prepare_headers(int need_kernel_map, void **addr, unsigned long *sz,
+> -			  unsigned long *nr_mem_ranges)
+> +int __crash_prepare_headers(int need_kernel_map, void **addr, unsigned long *sz,
+> +			    unsigned long *nr_mem_ranges)
 >  {
+>  	unsigned int max_nr_ranges;
+>  	struct crash_mem *cmem;
+> @@ -382,6 +383,18 @@ int crash_prepare_headers(int need_kernel_map, void **addr, unsigned long *sz,
+>  	return ret;
+>  }
+>  
+> +int crash_prepare_headers(int need_kernel_map, void **addr, unsigned long *sz,
+> +			  unsigned long *nr_mem_ranges)
+> +{
+> +	int ret;
+> +
+> +	lock_device_hotplug();
+> +	ret = __crash_prepare_headers(need_kernel_map, addr, sz, nr_mem_ranges);
+> +	unlock_device_hotplug();
+
+I think this patch conflicts with my changes and would also conflict
+with the implementation of arm64 crash hotplug.
+
+https://lore.kernel.org/all/20260921090450.807575-15-ruanjinjie@huawei.com/
+
+arm64 crash hotplug:
+https://lore.kernel.org/all/20260918100442.3841135-18-ruanjinjie@huawei.com/
+
+> +
+> +	return ret;
+> +}
+> +
+>  /**
+>   * crash_exclude_mem_range - exclude a mem range for existing ranges
+>   * @mem: mem->range contains an array of ranges sorted in ascending order
 
 -- 
 Best regards,
