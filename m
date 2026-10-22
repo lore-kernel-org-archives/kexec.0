@@ -2,122 +2,100 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11AB1606A31A
-	for <kexec@archiver.kernel.org>; Thu, 22 Oct 2026 01:26:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13AA9606A31F
+	for <kexec@archiver.kernel.org>; Thu, 22 Oct 2026 01:45:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=dCoJAyHl;
-	dkim=pass (2048-bit key, unprotected) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=Lv1WrTr1
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=3rpC7Tf4;
+	dkim=pass (2048-bit key, unprotected) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=Ri4ujepF
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=o28ydFuUHHD4c/U0AkyEgOljfI5EK57zWWg+tuRSc8Y=; b=dCoJAyHlASlZLaslIIuNJzNl0O
-	TXcu9zJNcr7Dg+/MIvEZiwSQjjm3mGg2UJAK62G0rV+r3NNDEv/Y/fr4h17lFdfSK1VS9+zMs0x2+
-	UN11q4RMRl8LKqjeUUgbnsmoh1rixFvePtedm/i5Rq74WisPovoTg7jKDm8XTFhBXJ3+gWJInchp5
-	5I+etHp+SyxCAav6YlAISRh45QpSsedUB/trjEOw7+B0JoRUtZA5Tk9XU88RgQPD+OrFNjv4LcwZh
-	yjes1y6rnSaH8elhXav6NMtQ/Pi3PJokKv3O7U6yceON7mz+Wi+SWsbj9UY8LRvT44cf+RuM+IOmZ
-	/sjKFpyg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=LS+EicQQq2YSXAcv/CHPjd9x8RnM4wjQksgtpzHAKuY=; b=3rpC7Tf48Cc/BFFcJAEeYIsq3s
+	JLL6PqeaglmG5jvF8wmd3dRBxWn4ewgQhAvGK0bwK74flXn9bStD8VzRpTbFZicylpJEirdmAuX3u
+	nWArtizKnZJlsHYqePzFhCQhn3TlvEFH6GwWugjKx43jBqOYVOcUBSTIk24tE/Xg8rXvKXmG8Q8d2
+	YWdW64VHotnaluiy0/cPR27vWfxXlBHMUgHCveb8l2DDUP3vMe4gZ/pfZae/xflMDaEZWEW1PhDNA
+	dL97xbD77SCLF5WpvQtWMn2tvrNPxcGf6+Q0+OyI6hkmENW/hDH2CTEnHS5rh069GI/MUmAprn/ns
+	xBlrN26A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJhZx-0000000D8jb-0O0S;
-	Thu, 22 Oct 2026 01:26:49 +0000
-Received: from mail-ed1-x533.google.com ([2a00:1450:4864:20::533])
+	id 1xJhrZ-0000000D9Zj-2LPf;
+	Thu, 22 Oct 2026 01:45:01 +0000
+Received: from mail-ua1-x929.google.com ([2607:f8b0:4864:20::929])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJhZu-0000000D8iv-2hpt
+	id 1xJhrW-0000000D9Z5-3p91
 	for kexec@lists.infradead.org;
-	Thu, 22 Oct 2026 01:26:47 +0000
-Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-6b1f4d8e09aso1997399a12.1
-        for <kexec@lists.infradead.org>; Wed, 21 Oct 2026 18:26:45 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792632405; cv=none;
-        d=google.com; s=arc-20260327;
-        b=SIz0Xaf8vhfddQ/aZHPM0/7uIV0Ua8ais/2iUn5TvhSkE4wpC7XncCRhBYBy/ZJeJi
-         c1BSLp3X6wT3bNRhF/vYUWAhd7DGvH1UE80SzG/U3rEg8LFFv2/uzXQAIAZcRCIRKeXC
-         XABmqtEgHDmNh0p2pMFLctX6OiQZoblfjWrED7B98/xxOv2EyUS138AUAbRyaWuidZ85
-         0swC3WVJ3QxDZmCspOD0RfgALNFCFRUqAnrynKEqXKx9CA4ptPN7dPCg7jq3Tt/e57n+
-         UAzSdL0WDRd3ACtv9D4qs+P+mGHUAYCZUf0jYToYzegLrd3uCpA/7M9/XHy5yMbyHwjm
-         bnpA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=o28ydFuUHHD4c/U0AkyEgOljfI5EK57zWWg+tuRSc8Y=;
-        fh=O8iW1/fvNQCwnsi8aEcRZonzc1jKj+q7bVNUhNr6eM4=;
-        b=KgiAZh8HufHayIFo/bZBC5BusjUDN0FwXy3DhPhMfI88gdcT1gf0UcbmiyCCGtZ6ZQ
-         ULIX0Mm1AYCE9G3bqfHaIUZZHjXVYzifx8nK5I3cLPGeXHpaQAsX/DejyZKQL9QduJPI
-         8dXWK6HdAgwZv4sq3lYQuKIp8jdQPLuSN9ZKF+0gXceKTn7PjZZ1jUAfqvdrFSJ8wE8Y
-         anFQEMmkSAWoE9gueyfEYg7Yni7CiaW4aC5ZkmbYcCU87+VFGiZrE9tcHQWKr17QQc8w
-         hfhsEVkD+C1Nuc9p7Zi/2qjiy9nGmnenDd91y6bkXxWlbbdjdXCeagtts83J6xQRqOl0
-         xHvQ==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	Thu, 22 Oct 2026 01:45:00 +0000
+Received: by mail-ua1-x929.google.com with SMTP id a1e0cc1a2514c-98c78660542so876453241.1
+        for <kexec@lists.infradead.org>; Wed, 21 Oct 2026 18:44:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1792632405; x=1793237205; darn=lists.infradead.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+        d=soleen.com; s=google; t=1792633497; x=1793238297; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=o28ydFuUHHD4c/U0AkyEgOljfI5EK57zWWg+tuRSc8Y=;
-        b=Lv1WrTr1wf2ytyBByBupvCuRLIlIHh6osAoZBJQXCr0P8S2M9mPaKqA4rNe9VSWQj1
-         OonLEKVPxT9fu4qGWdIJK6U7tf8/nSnc0OuHyJIr9UsbLFum3wcpcDoAlRO8HrPzrUyz
-         ye/wW7ilhVM+r30l78nT0rT0FLtGkPDkNiVXiMn5FLPt7TCojrd7oVF6cQW6uldk5TgV
-         pzb5kCUX9NPuEApqnlTh+++jbLuoYlTCq0NNVQszjdEIMeHXG7rIv+KV7I899p+S/bri
-         9XebrhH9K5UR2P8f25M1ZuS6gBBtKPm4MXZ2tmAWssQiynr884fmemjUF+32RBpbC9eW
-         pslg==
+        bh=LS+EicQQq2YSXAcv/CHPjd9x8RnM4wjQksgtpzHAKuY=;
+        b=Ri4ujepF/d4XyLG9xgv1EzwGCaQ0uhX9WfCIZCKPdqNgq4tRjh0aqZncKyiYticDmW
+         hI5v2BXKvnELigmtgJhMVQI6fKCO28Fy9zpAZneH0wkpEOGAgi8jAson2tNmoU847ofI
+         dib2/SsL7dukuPkc+xbdMEYL1kNq2QvyOaqGAKzncLmVpy1OSVyZyQnPoKNv04jzG4TZ
+         ik30Fn9PLjNfWpaokHKtWM/7g9V84NJECiIQPo15je6kSDB9nwZsq012LtP+p/ooxU7k
+         ejkllOb9Z4d/cyaMgvON9kTeUBzEsmohfwXLSjJBJFG5X4TdNrRc6OCABPTlYqo7EKE0
+         EQOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792632405; x=1793237205;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
+        d=1e100.net; s=20260707; t=1792633497; x=1793238297;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=o28ydFuUHHD4c/U0AkyEgOljfI5EK57zWWg+tuRSc8Y=;
-        b=A/RWISCHlNBD0DuhQ4ucYsKLLefAtlAj9BAGWrhYebxWWPFQFV6f/9l+92xX94nqhx
-         KndI0VaCu9yA+5fn54LR1GYGtJ7EfG4Nlz+zBZIlDZ3newRsHB6K6e322mjezLTfZsC0
-         2bcFYlPE3hHSFy/RETL+aWY47uOzzng+5YwHqXQD2CUHHnC1Sh+hj7PIRgWZS+n+fJXL
-         f4o1db6Btg+4y0uTIbdPVIzx/ZLtOjcgvoPzA5oEKH82XE4miJsfv93dVwhIW+CCR5Wq
-         rz/3CoiEnzW/BI5VpdK6JT62XiKCksc+kKMgJahdpWvzuUK5cdKR3XXeYBKQkEQ+i3m5
-         VUeg==
-X-Forwarded-Encrypted: i=1; AKwUvBzbrZTUjNO6n7alL4Ha90PappQ5L5C/D21dCyA3gBjDpD2LuGqwE3qPQw4N6KCB+okuBqotDA==@lists.infradead.org
-X-Gm-Message-State: AFq9FYIXJUH4RH1zV1XbSfmDU1edBgJF8/kRhBIMyLPTKpf7Tb//84hK
-	0a8s1FpzTFjmb/QgM+zYgCZ7Jly71Rb33rWtyD+x3gJ2bqgzQC/ty9180HCMD3fr7shxJp1GNlq
-	n8JSKkqU3laxRJViY6sC4EMKgJaIKmx7C4g730clorw==
-X-Gm-Gg: AYBFou2GI+gNpioYWU5iX8uPtkAiuc+a1SIKXIA0IJ0gkcYiVQN7bqQzjVH7jjY7j+k
-	0znMY6JDi/He7l0dTsdeJcoLxOrFxUdhN9PF/o60J/2OtU3bsbUvjEnHYUbrKDdasr5tQshOo+M
-	Xa6dHvCsjn+10m6exYIRW89PLWXNwBNC3+8zRjGvjXx+/nvOrG782kgxFck0qVTbtQPVFuXdzf7
-	UhW+A8+xSFya0Mz7SaQ9hXbJM1RoLzNHOmgFUBh3uG/joi/KpnFog43iOPWovfrO011W7h2GY8D
-	LR3XmVe04MQWddPa8jeq9rK/BiF6NvM5Ujy89fvJVMQ0tlgYvC9EI+FFBHcEqGUpwS/w3j3zNz3
-	JQOzrqltDWuvhEr2wAe7fs6DkJC232epJ9MMjNzL4MxQ6KEFanhn6PtjvaIwR7bbento=
-X-Received: by 2002:a05:6402:2801:b0:6b3:a1ad:ef6d with SMTP id
- 4fb4d7f45d1cf-6b408dcce19mr2969744a12.6.1792632404378; Wed, 21 Oct 2026
- 18:26:44 -0700 (PDT)
+        bh=LS+EicQQq2YSXAcv/CHPjd9x8RnM4wjQksgtpzHAKuY=;
+        b=sFDFfhZmTIArzlVof1qp1Yt6+af+hGo0wafmmpaC1l/dZGfM+ApjuQnkxwKpXiOzTt
+         +moZmUUtj17BuWsZ0qhRPCCtfJWJJQ5efzKl7JACCFE03NJMTVxCbe0P27MPDpmyZBzk
+         ipd+YuZqd3dMrGCzGJ55WZlLDfObQXmsbxccg+gXptDMeg4OoMOh3zIdHhCN5herJ2Ox
+         AH8rHqbD/ogK1kDlJccj++ryPwYXa8ZYUcUGa5eIfxW6fy2TgqXCjt9/n8wRxHASWfma
+         buXIzOyMTmLP9biDo7wQ7RkkSgXAHXlQ7a8INotKrfBb7vSka54ERcK+v1rATnsuD7Wk
+         FEqA==
+X-Forwarded-Encrypted: i=1; AKwUvBx/CmRxKPeYavoW6l9evx+If2qFinBZ/YOVRQU4F/T9DvGDoGrYoj1XqGHiPwBRLcy0+HVMrQ==@lists.infradead.org
+X-Gm-Message-State: AFq9FYKiAKILMBQzKQECiGPMrCGSwwPHDZmiDg8AnFxyhKVFogAJfn7L
+	0Jj3/A6A4Aj+7/QFzFgphh479JsjjcT5kTyP0xJGYGPAtwarcZRwW2iTnF4zZDdW37k=
+X-Gm-Gg: AYBFou2J0RjKXKvlk1l1TnXa5jhh/fqxdua+c4cX3shEt9D7N/jg+kkbYkRsYDZk1wy
+	wUs3CsvLpHsqYxhS6VDYElLfBmtMgqKLUy2Wf7MoQcfNn0NGFTP3O1UR18YtL+BZ31y2oOm5Yh7
+	Qt2U0v+OWT8O5ULvhz3lb7/t9cO4ZAGUPjiInl/sFygbjURwCJP/rWF1iyQc3uSWTcVeSRaTmN9
+	aI63gdWoC7lIxZNFWqbj9WFA2bXDYd5TxI8CXe2+o4Pp/nbB/BbNaCFn2WLy6tabDISjp5hUbca
+	UGLPZj9RPuU8C0y8ItLAf6jXCumlzGFJfbFygclq7KjqM6oSWL1DiGp5tlOuXTqsubtslO6MT++
+	ULHR1Eq2nJwQd8N7BNABb7P3tllkNszXywC/c3VyhC47tPjYyCOMa5ehLo1azCKwyshut2bUpH5
+	3gcB35jSz+w3eoMEYEUfeH9Du7BsBWy1VJax59ixFreZXA3TBtBFkggjSaY0+Wg3swoQ/P4rfha
+	xV89K3eLCdAyu8wIvw6akzOotl792Urr7zz6frcYTq1yLBkg6AG+9tS/jrb5S60R43QJEt6aYiN
+	sj6JXroQOJPCkQ/dR9yeh8BR9uqoVucnIH8YNU19VKeSGgPRj6Sh8xWW3RKTfHuZ1S1qMosziSr
+	Xbw==
+X-Received: by 2002:a05:6102:418a:b0:7be:25d4:7ff0 with SMTP id ada2fe7eead31-7cc92469ecdmr1660230137.4.1792633497085;
+        Wed, 21 Oct 2026 18:44:57 -0700 (PDT)
+Received: from google.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-990d104017bsm4933026241.4.2026.10.21.18.44.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Oct 2026 18:44:55 -0700 (PDT)
+Date: Wed, 21 Oct 2026 21:44:55 -0400
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	linux-kselftest@vger.kernel.org, rppt@kernel.org, shuah@kernel.org,
+	akpm@linux-foundation.org, linux-mm@kvack.org, vipinsh@google.com,
+	linux-kernel@vger.kernel.org, dmatlack@google.com,
+	kexec@lists.infradead.org, graf@amazon.com
+Subject: Re: [PATCH v2 1/2] liveupdate: Add LIVEUPDATE_SESSION_FREEZE ioctl
+ to freeze sessions early
+Message-ID: <atlql8V0YcXGRxS3@google.com>
+References: <20261020144710.4154339-1-pasha.tatashin@soleen.com>
+ <20261020144710.4154339-2-pasha.tatashin@soleen.com>
+ <2vxz4iefgy36.fsf@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-References: <20261021152527.375070-1-tarunsahu@google.com> <20261021152527.375070-4-tarunsahu@google.com>
- <CA+CK2bAQbmq3ArP3XMErF_8RC2CUwvgpLY0H83D0nCJTaVKYyA@mail.gmail.com>
- <9huzecdi6go0.fsf@tarunix.c.googlers.com> <CALzav=dLdJoVy=B1pv0FAurD9OhAzLSTjJNbtjTdJRmSqaB0yw@mail.gmail.com>
- <CA+CK2bAQRMAEXZyHTEuUN0_Fo59Sn0hBmYbme_J9ewjx6gPyJQ@mail.gmail.com> <atlKsD-aJB3mJr2j@google.com>
-In-Reply-To: <atlKsD-aJB3mJr2j@google.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Wed, 21 Oct 2026 21:26:06 -0400
-X-Gm-Features: AclHuK8Appp8OBdUFGLxu0V1hBTCm-a-9f142JZiexa4wOQOsDrRrU21F_J0R34
-Message-ID: <CA+CK2bABt4OZO31TenVF2+uBUWVwViWbvfE00=0xbAw=f7K9SA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 3/4] liveupdate: Replace compatibility string with
- a 2-bit pair feature header
-To: David Matlack <dmatlack@google.com>
-Cc: tarunsahu@google.com, Andrew Morton <akpm@linux-foundation.org>, joro@8bytes.org, 
-	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, maz@kernel.org, arnd@arndb.de, 
-	jgg@nvidia.com, robin.murphy@arm.com, loganodell@google.com, 
-	oupton@kernel.org, kevin.tian@intel.com, alex@shazbot.org, 
-	dwmw2@infradead.org, pbonzini@redhat.com, seanjc@google.com, will@kernel.org, 
-	Alexander Graf <graf@amazon.com>, Bjorn Helgaas <bhelgaas@google.com>, baolu.lu@linux.intel.com, 
-	linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org, 
-	sagis@google.com, linux-mm@kvack.org, kvmarm@lists.linux.dev, 
-	iommu@lists.linux.dev, linux-pci@vger.kernel.org, kexec@lists.infradead.org, 
-	skhawaja@google.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2vxz4iefgy36.fsf@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261021_182646_739401_2EFDC887 
-X-CRM114-Status: GOOD (  32.28  )
+X-CRM114-CacheID: sfid-20261021_184459_000231_7C9E81A9 
+X-CRM114-Status: GOOD (  26.20  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -129,102 +107,153 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Wed, Oct 21, 2026 at 7:28=E2=80=AFPM David Matlack <dmatlack@google.com>=
- wrote:
->
-> On 2026-10-21 02:50 PM, Pasha Tatashin wrote:
-> > On Wed, Oct 21, 2026 at 2:47=E2=80=AFPM David Matlack <dmatlack@google.=
-com> wrote:
-> > >
-> > > On Wed, Oct 21, 2026 at 11:40=E2=80=AFAM <tarunsahu@google.com> wrote=
-:
-> > > >
-> > > > Pasha Tatashin <pasha.tatashin@soleen.com> writes:
-> > > >
-> > > > > On Wed, Oct 21, 2026 at 11:25=E2=80=AFAM Tarun Sahu <tarunsahu@go=
-ogle.com> wrote:
-> > > > >>
-> > > > >> LUO and its file handlers validate handed-over state with monoli=
-thic
-> > > > >> compatibility strings ("luo-v5", "memfd-v2"). Any change to a se=
-rialized
-> > > > >> structure, even an optional additive one, must bump the string, =
-which
-> > > > >> breaks live update between adjacent kernels. Replace the string =
-in
-> > > > >> struct luo_ser with a feature header, so that the target kernel =
-can
-> > > > >> accept or reject the source kernel state per feature.
-> > > > >>
-> > > > >> struct luo_feature_hdr is a fixed 128-byte header: the serialize=
-d
-> > > > >
-> > > > > This patch is all wrong; 128 bytes is far too large. For every _s=
-er
-> > > > > struct, we only need 8 bytes instead.
-> > > >
-> > > > NOO, It is not. It is intended to avoid complex mess with unnecessa=
-ry
-> > > > over-engineering.
+On 10-21 12:14, Pratyush Yadav wrote:
+> On Tue, Oct 20 2026, Pasha Tatashin wrote:
+> 
+> > Currently, LUO sessions are frozen automatically only inside the
+> > reboot(LINUX_REBOOT_CMD_KEXEC) pathway, where luo_session_serialize()
+> > iterates through all outgoing sessions under global write locks and
+> > freezes them serially during shutdown. Allowing userspace to decide when
+> > to freeze a session once it is done with it (and to freeze multiple
+> > sessions in parallel, since luo_session_freeze() only acquires the
+> > per-session mutex) avoids postponing this work to kexec shutdown and
+> > reduces blackout time.
 > >
-> > 128-byte per serialized struct is not starter.
+> > Introduce LIVEUPDATE_SESSION_FREEZE on session file descriptors to freeze
+> > a session early. The ioctl runs .freeze() across all preserved files in the
+> > session and serializes their metadata. Once frozen, no additional files can
+> > be added to the session, and subsequent freeze calls return -EBUSY. Freeze
+> > is only valid on outgoing sessions and returns -EINVAL on incoming ones.
 > >
-> > > >
-> > > > >
-> > > > > The first 4 bytes are the size, and the next 4 bytes are flags (i=
-.e.,
-> > > > > 30 feature flags + 2 reserved bits for flags extension). The last=
- two
-> > > > > bits of the flags indicate whether an extended flags field is pre=
-sent.
-> > > > > Each extended flags field is 8 bytes, and its last two bits indic=
-ate
-> > > > > that yet another extended flags field follows.
-> > > >
-> > > > If we will have dynamic extension of flags, Think about this.
-> > >
-> > > To support dynamic extensions in a backward compatible way you want
-> > > something like this:
-> > >
-> > > struct luo_feature_hdr {
-> > >    size
-> > >    flags
+> > During kexec, sessions that were already frozen early are skipped, while
+> > sessions that did not invoke this ioctl auto-freeze as before. If an
+> > early-frozen session is released before kexec, its files are rolled back
+> > via .unfreeze() before being unpreserved.
 > >
-> > __u32 size
-> > __u32 flags
-> >
-> > >    extensions  // offset of first luo_feature_extensions (or 0)
-> >
-> > __u64 extensions[0]  --> but the size should be specificed in
-> > declaration macro that I showed in the next patch.
->
-> I think you may have misunderstood what I meant. In my proposal,
-> extensions is an offset to the first extension, not an array of
-> extensions that immediately follow the header.
->
-> If the extensions immediately follow the header, then the number of
-> extensions is baked into the struct layout. Every field after them sits
-> at an offset that depends on how many extensions there are. If we ever
-> need one more extension, all the fields shift and old and new kernels
-> can no longer read each other's struct. That is the problem Tarun
+> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> [...]
+> > @@ -218,18 +219,33 @@ static int luo_session_finish_one(struct luo_session *session)
+> >  	return luo_file_finish(&session->file_set);
+> >  }
+> >  
+> > -static void luo_session_unfreeze_one(struct luo_session *session,
+> > -				     struct luo_session_ser *ser)
+> > +static void luo_session_unserialize_one(struct luo_session *session,
+> > +					struct luo_session_ser *ser)
+> >  {
+> >  	guard(mutex)(&session->mutex);
+> > -	luo_file_unfreeze(&session->file_set, &ser->file_set_ser);
+> > +	if (!session->frozen)
+> > +		luo_file_unfreeze(&session->file_set);
+> 
+> "Wait, this looks wrong. If session is not frozen then unfreeze it?
+> Should be the other way round, right?"
+> 
+> This was my first reaction until I realized that you only unfreeze
+> _automatically_ frozen sessions. User-frozen sessions stay frozen. Which
+> makes sense, but is not obvious at all.
+> 
+> Perhaps rename this to session->user_frozen and add a comment here?
+> 
+> With that fixed, feel free to add
+> 
+> Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
 
-We can structure it cleanly by nesting the payload: something like
-struct { struct header {...}h; struct serialize_data { ... }p; };
-That way, the header can expand dynamically at the front, while all
-fields inside `serialize_data` stay at fixed offsets relative to the
-start
-of the payload.
+Thank you, I am going to send out a new version soon.
 
-Since the header size is self-describing via continuation bits (e.g.,
-the last two bits indicating whether another flag word follows), LUO
-can
-easily compute where the payload begins in the incoming blob. This
-keeps the implementation simple, avoids linked lists of offsets.
+Pasha
+
+> 
+> > +	memset(ser, 0, sizeof(*ser));
+> >  }
+> >  
+> > -static int luo_session_freeze_one(struct luo_session *session,
+> > -				  struct luo_session_ser *ser)
+> > +static int luo_session_serialize_one(struct luo_session *session,
+> > +				     struct luo_session_ser *ser)
+> >  {
+> > +	int err;
+> > +
+> >  	guard(mutex)(&session->mutex);
+> > -	return luo_file_freeze(&session->file_set, &ser->file_set_ser);
+> > +	if (!session->frozen) {
+> > +		err = luo_file_freeze(&session->file_set);
+> > +		if (err)
+> > +			return err;
+> > +	}
+> > +
+> > +	strscpy(ser->name, session->name, sizeof(ser->name));
+> > +	ser->file_set_ser.count = session->file_set.count;
+> > +	ser->file_set_ser.files =
+> > +		kho_block_set_head_pa(&session->file_set.block_set);
+> > +
+> > +	return 0;
+> >  }
+> >  
+> >  static int luo_session_release(struct inode *inodep, struct file *filep)
+> [...]
+> > @@ -267,6 +286,9 @@ static int luo_session_preserve_fd(struct luo_session *session,
+> >  	int err;
+> >  
+> >  	guard(mutex)(&session->mutex);
+> > +	if (session->frozen)
+> > +		return -EBUSY;
+> > +
+> >  	err = luo_preserve_file(&session->file_set, argp->token, argp->fd);
+> >  	if (err)
+> >  		return err;
+> > @@ -340,11 +362,40 @@ static int luo_session_get_name(struct luo_session *session,
+> >  	return luo_ucmd_respond(ucmd, sizeof(*argp));
+> >  }
+> >  
+> > +static int luo_session_freeze(struct luo_session *session,
+> > +			      struct luo_ucmd *ucmd)
+> > +{
+> > +	struct liveupdate_session_freeze *argp = ucmd->cmd;
+> > +	int err;
+> > +
+> > +	if (argp->reserved)
+> > +		return -EINVAL;
+> > +
+> > +	guard(mutex)(&session->mutex);
+> > +	if (session->frozen)
+> > +		return -EBUSY;
+> > +
+> > +	err = luo_file_freeze(&session->file_set);
+> > +	if (err)
+> > +		return err;
+> > +
+> > +	err = luo_ucmd_respond(ucmd, sizeof(*argp));
+> > +	if (err) {
+> > +		luo_file_unfreeze(&session->file_set);
+> > +		return err;
+> > +	}
+> > +
+> > +	session->frozen = true;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  union ucmd_buffer {
+> >  	struct liveupdate_session_finish finish;
+> >  	struct liveupdate_session_preserve_fd preserve;
+> >  	struct liveupdate_session_retrieve_fd retrieve;
+> >  	struct liveupdate_session_get_name get_name;
+> > +	struct liveupdate_session_freeze freeze;
+> >  };
+> >  
+> >  /* Type of sessions the ioctl applies to. */
+> [...]
+> 
+> -- 
+> Regards,
+> Pratyush Yadav
 
