@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1885760A2617
-	for <kexec@archiver.kernel.org>; Thu, 22 Oct 2026 22:50:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DFF760A2611
+	for <kexec@archiver.kernel.org>; Thu, 22 Oct 2026 22:51:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Dk72NntD;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=tkXdJJel
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=t7hvoZw9;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=Vv1nj7fu
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
@@ -14,63 +14,63 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=XQzlgw3emE84DnnF0oN4ahYTo145Q34I7Y43hlPChX4=; b=Dk72NntDY0+lSIrHTseJBw7W1g
-	uH7WbK4dK0Mb6b90IE9t50QaSSzsWZe2+VI0VtYAsswyL5XOB95FBMZ76mIXcFqnvmhJwmWqpSooc
-	K5WkzH4rq1fS0EjiOn6h5L+EWeFryG2QYCJ279kYB0SOLlW7Yy4un7VC9zJ1arnlamVzWkf+P519M
-	6+EWPJmYnhWrYiP0HgwQfDhX5Xkk1+b6v02rF2aNxcR2HSImwSUEgZXiiD36BI+NgrQeKkteWXr7A
-	ssaTtO75bxjXhV8Ynq2gEI1/VgeuQ95r06OGWR4Diy0B0aBoCa6IXWAkDI/Rjx2tJH6PGNcYIgdd5
-	0FhVeJOA==;
+	bh=tveVWO7bpJoIkcGyu5OICWvMrLDi2sKmFxgN2k+RxPA=; b=t7hvoZw9+eckH9DaAQaUyripV7
+	WPxfR9t62mFEUrDO0+tzHIcPvvayy74Zwpl2SkLxKjsf4fOPHAT8eUjvPAjAC+rULbEezYPOv95Bx
+	lnf6sWlLvH8cfaVjngVrbF69qCbvd7qK1gv53E+3sezGqZpEwD5jPuCIXJc7hfkevZux+5s/T0Nkt
+	pTLiwrBCdSIK/QjrOSaUFSA8OJdwFxe/koTq76i6NAmgRpHy/m8ltCmNk8NO3sfXrWln7Wejlw2fc
+	ka0rTrcqZ9HEIWG7x7O6YHz9MNUKxoyJaGWo80ywAbG64xGoHM0tZg6+pIyPdCHJsAL0T3zBml4Gq
+	rrIaRnDA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xK1cW-0000000F5xZ-3Nll;
-	Thu, 22 Oct 2026 22:50:48 +0000
-Received: from mail-pj1-x1046.google.com ([2607:f8b0:4864:20::1046])
+	id 1xK1ck-0000000F67F-0UOD;
+	Thu, 22 Oct 2026 22:51:02 +0000
+Received: from mail-pf1-x447.google.com ([2607:f8b0:4864:20::447])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xK1cS-0000000F5sy-428p
+	id 1xK1ch-0000000F64Y-31zt
 	for kexec@lists.infradead.org;
-	Thu, 22 Oct 2026 22:50:46 +0000
-Received: by mail-pj1-x1046.google.com with SMTP id 98e67ed59e1d1-3ab868fe362so394287a91.2
-        for <kexec@lists.infradead.org>; Thu, 22 Oct 2026 15:50:44 -0700 (PDT)
+	Thu, 22 Oct 2026 22:51:01 +0000
+Received: by mail-pf1-x447.google.com with SMTP id d2e1a72fcca58-8a030e0f9c1so336393b3a.2
+        for <kexec@lists.infradead.org>; Thu, 22 Oct 2026 15:50:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792709443; x=1793314243; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1792709458; x=1793314258; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=XQzlgw3emE84DnnF0oN4ahYTo145Q34I7Y43hlPChX4=;
-        b=tkXdJJel1RedL1xg9qqI2B5DdrxAgfjcRrr2vNuZEfhhHTuH9mHOdH5h+TSpWMmvjk
-         hLUEEBwsyCKtzEk5SGqLddAlx83mH+JgvdPT5Lwa3pqHTCYzbBTIYTdfCzYCwOrhfZfA
-         IC1gQqZCkNkyhU+v2c52L0KSBpw1x5EfgXmVe5icHflcUJmD4/vlV1lcEMiPkyXqYcN9
-         WWDwY+crKw0Cxpnepbrew2p6XIIq9A16nxJ5N6Og8YdIXj3ldhfuzaZnwG5nLOTDuYnr
-         BTNOyh0RNznM6JR49nq70xaNHxhoCxeflEU08iwDfad+unHJ75LXjSOx+py9BSkN5odP
-         S7/g==
+        bh=tveVWO7bpJoIkcGyu5OICWvMrLDi2sKmFxgN2k+RxPA=;
+        b=Vv1nj7fuWYKHn93RBltDEnHLkRsJcX9yppyeSoXz/oR9JkCD3Bg1tOf6tH/PpgGejZ
+         6M26Ne1C2poPQ5JX08tLVZmmAIw+vYu2I+eSpU0ak1MREeRZ+xFEoJ3jJjjkoQZ+J/+V
+         cdOUQ1m6X/vq84wxnn1dMzvPCAyzWCmkQFjKcwpUj9qfvjWtbAuySyyggljdmoB/k77V
+         VFAXKTRqUdyr82y1J3NWEu26nGLhFYHZFkdWkkdXNzO2GfivQvLSw9rtk+56R3Nqnkok
+         mDrRH91K54WNOekhEm1ywujAYOQ/8k0/CGqyTspACNJ+leC9TI9fhxe1EzpfwTA4dopg
+         dclw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792709443; x=1793314243;
+        d=1e100.net; s=20260707; t=1792709458; x=1793314258;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=XQzlgw3emE84DnnF0oN4ahYTo145Q34I7Y43hlPChX4=;
-        b=T9ZdOAA0EDWaTWG9MV4L0i5LSz3A/nVPufIZouXjg9HamX8nAv/ydfRQwdd4/Ok4nj
-         YIPfLEfJvUNCsBv8J/4qkVz8KgiXniw6esZJF2aCUuy3aUma3OZt+OoxZUkeWn8TZnYQ
-         2rFtqi176kN4N2l1xLmfJLzlv52jOdc/0/hf/NHZRVn5u2HveXksS3NUXaLoXOB6eq6B
-         rtr1lspLLQcg/3Lw3wZSu11OVDrYCgeSPRBSIky3Hcak5GCozpGUVfRqMpZ7+JjK5a2J
-         LMVhb0nsOIJqqXCl6LgmtULdwMs9ekGFm1rY68gYc0X4t0EEtvriGXSU2klFZfgJ+5KW
-         YP1g==
-X-Gm-Message-State: AFq9FYII8tQrxKTo8F8Z+begsCMkxvFOQ/iGi6ee4i09FX69OvTu+HEW
-	45uah6oYacxGuiF6LByeyaONAE8gbBZ2MgDL3TcNI0e+bM7NPUdMU81Ctnzutm/EOAn1ggcXkiZ
-	oPpocGLxH0JHoHLn6r0MTaSOD0V7iawkx6D3T2vOsJggvoDJt+QnDVVPKTSkCmdoHnFX8+lgjFg
-	Mi2FOQRL+c71Hix7av7KHHOi4lzqJi6gwBoJChO5aZKbYireCggvg=
-X-Received: from pglu36.prod.google.com ([2002:a63:1424:0:b0:cd6:b233:e4aa])
+        bh=tveVWO7bpJoIkcGyu5OICWvMrLDi2sKmFxgN2k+RxPA=;
+        b=OZYSBS8b20bti/5wDT7uhlKqHsiDektx85gevImHkXlzqF2MMUUC5svOdjC4T6xo5Z
+         Lo00FmSDOjZPBkEcPeewuSrVPtxViq+5q176WuQnUoxd+Fk9eb4A7TPadS3/+0G1N+q3
+         TMQcfhTjgF4F4x+z8awxSuvAqGuSN8+7wEhOyLojXaC4NVWuX16JJqyi09RIg5q3HmSu
+         AMYpz6m5EMN8gX6s8vBOftWN5TIV5MTJFLpq5mfZYENVN7UMqvFo/UsAFlv1TkIVG5qY
+         jEduHBcdEbN7V6EhupsZD4dhoreYWC+WXfnesd6MMhvkZ3AhBO8I+7ng34tB3ZceDMut
+         goWg==
+X-Gm-Message-State: AFq9FYJdGuzE8M7ydvoedu2i9jNwESnUl95O9Q2BB4A7tq0w69P9r1aS
+	KkMHSoP8GpJ4Y08Np84rMyVlpuRX2aFQ+t5+huKgY+WPpAD3Jr5bB9tO0WGmGUa7ALW5qzVJY8y
+	FSeNFV/BzV5Po9nRth8wiz/rqVdZqMZ+eQMBVx4uW3aGTMS+KnzTRHN4XgkFDVzJdUuEibnZ9MR
+	QgCk3rD4Xy6V9H8lLKylK23wVG36hc/UrFgzHFMQvh5rJGaISy6kg=
+X-Received: from pgww26-n1.prod.google.com ([2002:a05:6a02:2c9a:10b0:cd6:1195:61cb])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:2785:b0:3ac:d39d:ee4f with SMTP id 98e67ed59e1d1-3adce45d4b2mr203170a91.44.1792709443059;
- Thu, 22 Oct 2026 15:50:43 -0700 (PDT)
-Date: Thu, 22 Oct 2026 22:50:31 +0000
+ 2002:a05:6a21:8a0e:b0:3e2:335b:1a5d with SMTP id adf61e73a8af0-3e3767c3067mr249935637.71.1792709458271;
+ Thu, 22 Oct 2026 15:50:58 -0700 (PDT)
+Date: Thu, 22 Oct 2026 22:50:34 +0000
 In-Reply-To: <20261022225035.377445-1-dmatlack@google.com>
 X-Archived-By: <archiver.kernel.org>
 Mime-Version: 1.0
 References: <20261022225035.377445-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.56.0.257.gf7497c7d27-goog
-Message-ID: <20261022225035.377445-7-dmatlack@google.com>
-Subject: [PATCH v2 06/10] mm/shmem_luo: Don't make early retrieve failures permanent
+Message-ID: <20261022225035.377445-10-dmatlack@google.com>
+Subject: [PATCH v2 09/10] mm/shmem_luo: Allow retrieving tmpfs files with O_RDONLY
 From: David Matlack <dmatlack@google.com>
 To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
@@ -86,8 +86,8 @@ Cc: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>,
 	David Matlack <dmatlack@google.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261022_155045_060428_FE4FB107 
-X-CRM114-Status: GOOD (  20.32  )
+X-CRM114-CacheID: sfid-20261022_155100_375947_1BDE8B2B 
+X-CRM114-Status: GOOD (  22.10  )
 X-Spam-Score: -9.5 (---------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -99,116 +99,116 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-26.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,T_SPF_HELO_TEMPERROR,USER_AGENT_GIT,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-If shmem_luo_retrieve() fails before it starts restoring the folios,
-mark the failure as retryable and return the error without freeing the
-serialized state. Nothing has consumed the preserved state at that
-point, so the retrieve can be tried again. If no retrieve succeeds,
-finish() frees the preserved folios, like it does for a file that was
-never retrieved.
+Allow userspace to pass O_RDONLY in struct liveupdate_shmem_retrieve_arg
+to retrieve a tmpfs file read-only.
 
-This fixes leaking the preserved folios when one of these early steps
-fails, e.g. because the file has seals that this kernel doesn't support.
-The retrieve freed the serialized state but not the folios, and finish()
-then skipped the file because its retrieve had failed.
+open() requires write access for O_TMPFILE, so create the file writable
+like before, then reopen it read-only with dentry_open() using the same
+flags, and drop the writable file. Like open(), which grants the
+requested access to a new file regardless of its mode, don't check
+permission for the read-only open.
+
+Retrieving a file read-only allows a restored binary to be executed
+before the session is finished. LUO keeps the retrieved file open until
+then, and executing a binary that is open for writing fails with
+-ETXTBSY. Being able to execute restored binaries right away matters
+when they are needed to finish restoring the system, e.g. to bring up
+the services that retrieve and finish the remaining sessions.
 
 Assisted-by: LLM
 Signed-off-by: David Matlack <dmatlack@google.com>
 ---
- mm/shmem_luo.c | 33 ++++++++++++++++++++-------------
- 1 file changed, 20 insertions(+), 13 deletions(-)
+ include/uapi/linux/liveupdate.h |  6 +++---
+ mm/shmem_luo.c                  | 28 +++++++++++++++++++++-------
+ 2 files changed, 24 insertions(+), 10 deletions(-)
 
+diff --git a/include/uapi/linux/liveupdate.h b/include/uapi/linux/liveupdate.h
+index a9dcc4fcc87b..790742a247e8 100644
+--- a/include/uapi/linux/liveupdate.h
++++ b/include/uapi/linux/liveupdate.h
+@@ -265,9 +265,9 @@ struct liveupdate_session_get_name {
+  *
+  * The kernel creates a new file as if by openat(@dirfd, ".", O_TMPFILE |
+  * @flags, @mode), fills it with the preserved contents, and returns it in
+- * &struct liveupdate_session_retrieve_fd.fd. Like any O_TMPFILE file, the file
+- * is not linked into the filesystem. Userspace can link it with linkat(),
+- * unless @flags contains O_EXCL.
++ * &struct liveupdate_session_retrieve_fd.fd. Unlike open(), O_RDONLY is
++ * allowed. Like any O_TMPFILE file, the file is not linked into the filesystem.
++ * Userspace can link it with linkat(), unless @flags contains O_EXCL.
+  *
+  * If @flags contains unknown flags or O_PATH, if @mode contains unknown mode
+  * bits, or if @dirfd is not on a tmpfs mount, the retrieve fails with -EINVAL.
 diff --git a/mm/shmem_luo.c b/mm/shmem_luo.c
-index b8d86055912d..bcac1bbb3db3 100644
+index aba2bc1f18c5..0b4a9d6e2968 100644
 --- a/mm/shmem_luo.c
 +++ b/mm/shmem_luo.c
-@@ -390,9 +390,9 @@ static void shmem_luo_finish(struct liveupdate_file_op_args *args)
- 	struct shmem_luo_ser *ser;
+@@ -112,9 +112,10 @@
+  *
+  * Like any ``O_TMPFILE`` file, the new file is not linked into the filesystem.
+  * Userspace can link it at the path it wants with ``linkat()``, unless it asked
+- * for ``O_EXCL``. Like with ``open()``, the file must be opened for writing.
+- * LUO keeps the file open until the session is finished, so a retrieved binary
+- * can't be executed until then.
++ * for ``O_EXCL``. Unlike ``open()``, the file can be retrieved with
++ * ``O_RDONLY``. LUO keeps the file open until the session is finished, so a
++ * binary retrieved with ``O_RDWR`` or ``O_WRONLY`` can't be executed until
++ * then.
+  *
+  * The blocks of the file are charged to the target mount, so the size limit
+  * and quotas of the mount apply. If the file doesn't fit, the retrieve fails
+@@ -649,7 +650,9 @@ static struct file *shmem_luo_create_memfd(const struct liveupdate_shmem_retriev
+ static struct file *shmem_luo_create_tmpfs_file(const struct liveupdate_shmem_retrieve_arg *arg,
+ 						unsigned int seals)
+ {
+-	struct file *file;
++	struct file *file, *ro_file;
++	bool rdonly;
++	int flags;
+ 	int err;
+ 
+ 	if (!arg)
+@@ -673,10 +676,16 @@ static struct file *shmem_luo_create_tmpfs_file(const struct liveupdate_shmem_re
  
  	/*
--	 * If retrieve was successful, nothing to do. If it failed, retrieve()
--	 * already cleaned up everything it could. So nothing to do there
--	 * either. Only need to clean up when retrieve was not called.
-+	 * If retrieve was successful, nothing to do. If it failed permanently,
-+	 * retrieve() already cleaned up everything it could. So nothing to do
-+	 * there either. Only need to clean up when the file was not retrieved.
+ 	 * Create the file like open(O_TMPFILE) does, so that it gets the same
+-	 * flag checks, permission checks, owner and security labels.
++	 * flag checks, permission checks, owner and security labels. open()
++	 * requires write access for O_TMPFILE, so create the file writable and
++	 * reopen it read-only below if that is what userspace asked for. LUO
++	 * keeps the file until the session is finished, and a file opened for
++	 * writing couldn't be executed until then.
  	 */
- 	if (args->retrieve_status)
- 		return;
-@@ -526,11 +526,16 @@ static int shmem_luo_retrieve(struct liveupdate_file_op_args *args)
- 	if (!ser)
- 		return -EINVAL;
++	flags = O_TMPFILE | O_LARGEFILE | arg->flags;
++	rdonly = (flags & O_ACCMODE) == O_RDONLY;
+ 	file = file_open_root(&fd_file(dir)->f_path, ".",
+-			      O_TMPFILE | O_LARGEFILE | arg->flags, arg->mode);
++			      flags | (rdonly ? O_RDWR : 0), arg->mode);
+ 	if (IS_ERR(file))
+ 		return file;
  
-+	/*
-+	 * Nothing has consumed the preserved state until the folios are
-+	 * restored below, so failures before that can be retried. If no
-+	 * retrieve succeeds, finish() frees the preserved state.
-+	 */
-+	args->retryable = true;
-+
- 	/* Make sure the file only has seals supported by this version. */
--	if (ser->seals & ~SHMEM_LUO_ALL_SEALS) {
--		err = -EOPNOTSUPP;
--		goto free_ser;
--	}
-+	if (ser->seals & ~SHMEM_LUO_ALL_SEALS)
-+		return -EOPNOTSUPP;
- 
- 	/*
- 	 * The seals are preserved. Allow sealing here so they can be added
-@@ -539,8 +544,7 @@ static int shmem_luo_retrieve(struct liveupdate_file_op_args *args)
- 	file = memfd_alloc_file("", MFD_ALLOW_SEALING);
- 	if (IS_ERR(file)) {
- 		pr_err("failed to setup file: %pe\n", file);
--		err = PTR_ERR(file);
--		goto free_ser;
-+		return PTR_ERR(file);
+@@ -694,7 +703,12 @@ static struct file *shmem_luo_create_tmpfs_file(const struct liveupdate_shmem_re
  	}
+ 	SHMEM_I(file_inode(file))->seals = seals;
  
- 	err = memfd_add_seals(file, ser->seals);
-@@ -552,17 +556,20 @@ static int shmem_luo_retrieve(struct liveupdate_file_op_args *args)
- 	vfs_setpos(file, ser->pos, MAX_LFS_FILESIZE);
- 	i_size_write(file_inode(file), ser->size);
- 
-+	/* The preserved state is consumed from here on. */
-+	args->retryable = false;
+-	return file;
++	if (!rdonly)
++		return file;
 +
- 	if (ser->nr_folios) {
- 		folios_ser = kho_restore_vmalloc(&ser->folios);
- 		if (!folios_ser) {
- 			err = -EINVAL;
--			goto put_file;
-+			goto free_ser;
- 		}
- 
- 		err = shmem_luo_retrieve_folios(file, folios_ser, ser->nr_folios);
- 		vfree(folios_ser);
- 		if (err)
--			goto put_file;
-+			goto free_ser;
- 	}
- 
- 	args->file = file;
-@@ -570,10 +577,10 @@ static int shmem_luo_retrieve(struct liveupdate_file_op_args *args)
- 
- 	return 0;
- 
--put_file:
--	fput(file);
- free_ser:
- 	kho_restore_free(ser);
-+put_file:
++	ro_file = dentry_open(&file->f_path, flags, current_cred());
 +	fput(file);
- 	return err;
++	return ro_file;
  }
  
+ static int shmem_luo_retrieve(struct liveupdate_file_op_args *args)
 -- 
 2.56.0.257.gf7497c7d27-goog
 
