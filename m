@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96625606A32A
-	for <kexec@archiver.kernel.org>; Thu, 22 Oct 2026 08:33:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D04F606A31A
+	for <kexec@archiver.kernel.org>; Thu, 22 Oct 2026 08:33:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=N+K/ptm9;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TzHphjC1
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=0u6Ng/xC;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LZrSs76d
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,48 +14,48 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=VZdBy6i5lIJKyk5P4+SaXB0tFCu0VDYrKWVreM/8iH8=; b=N+K/ptm9qjFvvrjMiajuXodr7R
-	mv3+LXsKkyjOKqLzMpM0597YOgHRngzJkr2sxlypMrKcB2Z2E/58zmrg1+1+wbW/lBHLQmzr6dwEf
-	+IyKnjIZWY5puJHvA78yQ6Y8v03smqD1coYg+Xz7XjIiGZYZn0ol9n42tMkYC2ubp14x8dE1sztHG
-	i+FF5fqr/HuCAicOQVL2WiwajGTWfdNXN0b9ZLKLV5dxYHQ/pqwoekgNGXM4zTkZ4AZsZJLMjINZI
-	AsIzEty/U0lkdf8fl8YM/ibQf598WtT4vroMgy0Y/Zc8B8hdiWZjTVeZnYW+ju/TWcOHWTDVGRtfK
-	kvTB0gRg==;
+	bh=GXaVA2LAu1vsxhqsq/5vo6h5j5FyVTLOBrROqT7Ch/I=; b=0u6Ng/xCCjF+GU433XNkGTkj0W
+	OO0QJ3Iu2y70VMUfku7mDawFKLwW0Rx9vCpBmMWOaYo+riQyxxurWTscv7txFkFPs7n7CyOAIZaiu
+	TY0ZrtAar0m4IzaNh+YcUH2gNdtLbAh483imUBpyzv65ajtx2FOoQEjrYfQqzmeNIWeqNEh4I8NK+
+	9jLSOvnNfchuoa5IEsElWrGNZuv+/Mm/jmNmR+qWq+7HL1E95gjUX0XVRqLA+sGuc3xkvTSOWIKhQ
+	opWAwM9zb/g0v1PeTkLYr/fsisZTfzViDK+t0QbOzOz3aOTWiotyc4t8tA8ghMMGylKtsiRphQL9J
+	swSSjZbA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJoEZ-0000000DfsW-0sZV;
-	Thu, 22 Oct 2026 08:33:11 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xJoEc-0000000Dfu4-3imO;
+	Thu, 22 Oct 2026 08:33:14 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJoEU-0000000Dfrw-2UCU
+	id 1xJoEW-0000000DfsS-3DUl
 	for kexec@lists.infradead.org;
-	Thu, 22 Oct 2026 08:33:06 +0000
+	Thu, 22 Oct 2026 08:33:11 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id C3EA8601F1;
-	Thu, 22 Oct 2026 08:33:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E59491F000C6;
-	Thu, 22 Oct 2026 08:33:03 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id E046960235;
+	Thu, 22 Oct 2026 08:33:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1451A1F000C4;
+	Thu, 22 Oct 2026 08:33:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792657985;
-	bh=VZdBy6i5lIJKyk5P4+SaXB0tFCu0VDYrKWVreM/8iH8=;
+	s=k20260515; t=1792657987;
+	bh=GXaVA2LAu1vsxhqsq/5vo6h5j5FyVTLOBrROqT7Ch/I=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TzHphjC1FEkvZqhiswdYWr5jyP0TvikruguwMkbG8zpZQ2ew3Hk1eCBX7+fdtyr35
-	 rH0Sa9/d0EkqyIYxnB39bXt8ExAyqiStZmDnVEPCr62Gi1OlGQyxKhKAGkED4DlwTt
-	 ELEJUvCZCzKF4zLx0MvE9/cDlASHaF6prVq2NWGn8jbPs7da8ByMWGetXp0PxFg/mG
-	 a4Ne2QdM3EZhQhdzD6oWZXWWEF96zpWWyrMpho5ZIGzg5YIRzH7sQXTkQ7dVkR7ZlY
-	 J1JSh2lnewfkwcbpRJ5/asIcWORIe92QA1HqtrV7aBhR2yu90yo6YaZ4r7eiqAOfRK
-	 qsywaydXtLK0Q==
-Message-ID: <sashiko-outbox-181177@kernel.org>
+	b=LZrSs76dMqlnPgW0yrIQO8bDzQ9+V23pysjz3lI5FFw+TDOe7YkP66fncj5jjZtAq
+	 CZq0B4WPHukEn1E9aJV2m4BfbFMV3o2/rhLFzquASjnAxKuQqFiRO0i7fPPv5x47K3
+	 msXFsThMiyxPv3lAJ1BeSGdR0/+tQ3NZ7/+p6njpvoyc2eiVbKHxqp7G4ikkaC60cE
+	 4tLX8QAUd+eGDjF17ag2VsWGFwHtpYAk39vthkNsvrrmyDPdD7T5bCCdvWVzGaE7mF
+	 nhz2ll3UAGxqafZ+OZiYgGCRBPkqyxNqOkDQYmay24XhNgsexnUuPTdq7OFeYQoLM+
+	 OhGZpTNNkZpOQ==
+Message-ID: <sashiko-outbox-181178@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 1/8] riscv: build crash_mem ranges from memblock
- instead of resource tree
+Subject: Re: [PATCH v9 2/8] crash_core: fold duplicated memblock arch hooks
+ into the weak default
 To: "Wandun Chen" <chenwandun1@gmail.com>, robh@kernel.org, baoquan.he@linux.dev, rppt@kernel.org, m.szyprowski@samsung.com
 Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, chenhuacai@kernel.org, kernel@xen0n.name, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, saravanak@kernel.org, akpm@linux-foundation.org, pasha.tatashin@soleen.com, pratyush@kernel.org, ruirui.yang@linux.dev, robin.murphy@arm.com, kexec@lists.infradead.org
-In-Reply-To: <20261021083011.2170525-2-chenwandun1@gmail.com>
+In-Reply-To: <20261021083011.2170525-3-chenwandun1@gmail.com>
 References: <20261021083011.2170525-1-chenwandun1@gmail.com>
- <20261021083011.2170525-2-chenwandun1@gmail.com>
+ <20261021083011.2170525-3-chenwandun1@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 22 Oct 2026 08:33:03 +0000
+Date: Thu, 22 Oct 2026 08:33:05 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,16 +77,11 @@ X-Archived-By: <archiver.kernel.org>
 
 > From: Wandun Chen <chenwandun@lixiang.com>
 >=20
-> Replace walk_system_ram_res() with for_each_mem_range(). A later patch
-> introduces MEMBLOCK_NODUMP in memblock, the reserved-memory regions
-> marked with MEMBLOCK_NODUMP can be excluded from the vmcore by walking
-> memblock.
+> arm64, loongarch and riscv open-code the same memblock walk in
+> arch_get_system_nr_ranges() and arch_crash_populate_cmem(). Move it into
+> the __weak defaults in kernel/crash_core.c and delete the arch copies.
 >=20
-> for_each_mem_range() iterates memblock.memory, which is freed after
-> init unless ARCH_KEEP_MEMBLOCK is selected. riscv needs ARCH_KEEP_MEMBLOCK
-> to filter reserved memory from the vmcore, so extend its condition
-> (ACPI || KEXEC) with CRASH_DUMP. arm64 and loongarch already select
-> ARCH_KEEP_MEMBLOCK unconditionally.
+> No functional change.
 >=20
 > Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
 
@@ -94,6 +89,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261021083011.2170=
-525-1-chenwandun1@gmail.com?part=3D1
+525-1-chenwandun1@gmail.com?part=3D2
 
 
