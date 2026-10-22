@@ -2,70 +2,121 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E525606A31E
-	for <kexec@archiver.kernel.org>; Thu, 22 Oct 2026 01:11:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5447606A319
+	for <kexec@archiver.kernel.org>; Thu, 22 Oct 2026 01:14:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=suondFzR;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=Zl6kbnlb
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=jONkr2v+;
+	dkim=pass (2048-bit key, unprotected) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=HaSnxvQj
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=3Y36cJrGfm0nAc8Wmqdrcv/voRViXSaKg8Lp3TDSNEQ=; b=suondFzR2K1pmbjfinXDKDWLVZ
-	ifvRSeYBLJAUO8MNOwWAxzFW9rJqiBVC5ttUyvqvg65z/6ksnyTiW4RoeurGwJ6prcN+gydHhHshK
-	s3jwjF1MSlWT+KC4rzbSMPck3aP9HQemN0OsJzg+ihwM3lnGKyI9rIPr/W2IAnN9udWZqijq4A12l
-	1I8YrIlSGgUEntR2wl7RtM5mTthXo3ZvZ6SMYMyW6X9fPqLxelOD3XCi4fKsH8NER95VZ8Exclsn9
-	x8c/Fz824svuVu2Ui/Xv/46g2QwVZGMPbLvryqVLLOsXEOXKczyun85L1v1NTLDT9gZeECVD+8a0K
-	ZcSVxnWw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=a8oVHE7uhvQM0uF0tb8qagzI2B8K9hhXgyXmbesBuqk=; b=jONkr2v+5/ykCKfswcUeGWxYyY
+	Xwj+TduuPeNIGYlgokybpbgI+qoze7XM0XIUi3R5iNfco3z94DRstHv12qxVcG1KvAdxj/bDnPCS7
+	pBzhCT9QQtIZlxIkLUo6zGc7ICVEd6C9yi0U4oXFWUjf00IqrSnL3RCld9ij16t+QwBPJ7UxN7Oxz
+	3G/Devjs+gl8L6SABBVrg/NPmquKmXNaRxGO8s9C5mf18MvqmSeqbcVWVvZQ7RmGkW8BBiYuVVL8Z
+	wb9srr9/kGs1eqluMU/JGAs1C1CtsZeF9Po3BGFDXe/KKllP90YN3ekXrlxXuRFIN9RBev4sdZsww
+	4zovT4qA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJhLW-0000000D88i-2aly;
-	Thu, 22 Oct 2026 01:11:54 +0000
-Received: from out-27.mta1.migadu.com ([2001:41d0:203:375::1b] helo=mta1.migadu.com)
+	id 1xJhON-0000000D8GO-0G0z;
+	Thu, 22 Oct 2026 01:14:51 +0000
+Received: from mail-ed1-x52b.google.com ([2a00:1450:4864:20::52b])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJhLT-0000000D88I-3RzT
+	id 1xJhOK-0000000D8FX-0l1Q
 	for kexec@lists.infradead.org;
-	Thu, 22 Oct 2026 01:11:53 +0000
-X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=MZEjInp2ddcRxgm7ccCZwPxHcYRwDLMGllQTsvOicec=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1792631508; v=1; x=1793236308;
- b=Zl6kbnlbrg74N/9P86yMpt7QPIZbsUt3z3XFOmlwc9tm5UDaxWa4xJoUAJ9T7RPO4sxTGFy1
- stb4J1nxH/rhSlQsPjPauA0oEUbi8Ps9xR9vx0m4mJLTDuFxLUcEStVQJIMo+A/b3dU6AkUZoR3
- 66r5Pztit7rolv2Op73ap7VQ=
-X-Envelope-To: kexec@lists.infradead.org
-Received: by mta11.migadu.com with ESMTPS id defcd29a0076fd96;
-	Thu, 22 Oct 2026 01:11:48 +0000
-X-Mizu-Trace-ID: defcd29a0076fd96
-X-Migadu-Flow: FLOW_OUT
-Date: Thu, 22 Oct 2026 09:11:40 +0800
-From: Baoquan He <baoquan.he@linux.dev>
-To: Petr Mladek <pmladek@suse.com>, Zack Rusin <zack.rusin@broadcom.com>
-Subject: Re: [PATCH v2 1/6] panic: Add a notifier chain for pre-kdump
- callbacks
-Message-ID: <atlizIy3lb0sjVEJ@MiWiFi-R3L-srv>
-References: <cover.1790014793.git.zack.rusin@broadcom.com>
- <81cb85568b36273a8e66215b3e6d671b8488d402.1790014793.git.zack.rusin@broadcom.com>
- <bc783856-9480-3944-67fb-675e4c11d8c2@igalia.com>
- <atdYIxwz8ksYNty6@pathway.suse.cz>
- <atd7GInNurGWLUha@pathway.suse.cz>
- <ateYxCu63pRY9EGq@pathway.suse.cz>
- <CABQX2QOKCpoUY_ObhFif7xN7OF-NzcxEM0JABAXo9n9KaacO7A@mail.gmail.com>
- <atgdwrSbsZD5iWsX@fedora>
- <CABQX2QO6fwvKZwG34uOYDU_ae4M4_n2SMsYmqoLgOPnWkao02w@mail.gmail.com>
- <atiDsmnUM7v2UJkY@pathway.suse.cz>
+	Thu, 22 Oct 2026 01:14:49 +0000
+Received: by mail-ed1-x52b.google.com with SMTP id 4fb4d7f45d1cf-6af9a9451daso1950651a12.0
+        for <kexec@lists.infradead.org>; Wed, 21 Oct 2026 18:14:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792631686; cv=none;
+        d=google.com; s=arc-20260327;
+        b=O1ucl+bZdB1P2DgqUZT9ZXzPg7mhDe5hiXPKRmVBiw0XPlM0Ob6+kS6drrAZzRY48Q
+         K9mrYlcQUfHf3F5pT95GikzmiAcl7dScTuRhTlgzgfNx0C+h+zgrjalK12DLx35HdlNx
+         JmGE59DOHeUx0qgaORYgSZjE3lQWLkvio8yaZmCZFqsbnCQZziJsvzxDCDuluu65aK0j
+         qjbUetSUTA19BkZsD1VgsMBjsQI3R8rbOvheVO09EUvywMxn6OH6LWFp8Q+oDy+0Ov3P
+         g2UaI5Ld2lQw+sosr2F9buO7NS3/cetEyq96lYSZ28kZL0Fx/73eEDMFHQVy/hIb5B82
+         fKaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=a8oVHE7uhvQM0uF0tb8qagzI2B8K9hhXgyXmbesBuqk=;
+        fh=cddgzLlMYxpUs35T3x/2hOZoAeO+QVg1azFMHt1Lz1k=;
+        b=sLTn4m7LM+/WZwY/bsuojLBErN22S8dQLRB906Hid8+64Q3mQDWi7YgdJS3xPfU7sr
+         OWARtjr92zoZdiyGei4VK/goYU7kJsfxIF7fdK/KbbDFGk3Wmp8KiweyG1wGLXVJ+KRa
+         aHGJG9mpoLPjbw7ylmK1ceK/+5haTAchLdjOTnmPu7JiDoXG3on5EzRu4b/szsacWqkX
+         4mh+OihGf+0bYqtVhCqebag/v9ugTkZ9H9TYgN7RedeXRdjS3Eyl+EMRmViIIhlWCwSo
+         Lj1TZfq3hy5PgHumkWGx/YtOqLUSuGpQd1bF+FKdtAZyFq/2xtyZmk6VSkfbKTyG2+zU
+         Uq1g==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1792631686; x=1793236486; darn=lists.infradead.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=a8oVHE7uhvQM0uF0tb8qagzI2B8K9hhXgyXmbesBuqk=;
+        b=HaSnxvQjBDXRJAt+ucu1+XERJnveEDM2QUydot0EAtwb+U0lD7J8UsSe5x21UoDvBl
+         MGt8pj5r6zv/vixqYkAsp7/Wb6aPAunT7PQgBBs2VA+2vVIbwxwR7wY8n2hfjwCBPqOQ
+         KllqZ6npkWJFcuDGhDxf4+86+4NlGlnWBhFRUjS8rGwV7yBZfLKgivSPjb/9YC7AXWT/
+         qi5Hs3/4dAOVt0k/m6S2GN22WdxAaZ+OO+3FXWZBw9XOBQ1rBjZv0iPvOGPwPZPozKlk
+         Ix8dN0RXpn9+eBKCwmka6HT4WwKPAr66U9XwGBcfhsm4JqpiAe2h5Z1rU52q458ucv97
+         P5Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792631686; x=1793236486;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=a8oVHE7uhvQM0uF0tb8qagzI2B8K9hhXgyXmbesBuqk=;
+        b=vsyo5/Opu4TKl8CD+HWKVWcIN/MUjs9e6L23/kUEg3NRv/ue8+e6BWnDfQ4uZehvZx
+         /PN5Eel4y6CRrK3XlrleHIYnDYt0NAGpxtlvsbBBmn56fhwU6YkhymtI3irgTiDoSn4V
+         c2knm0M8cUiNgnJejIYvdgzkQCpIlF0L1+M/Mvrq8mgDn24dq+5PCBjTjFJN01fU5R0r
+         S/EAa5c24nB+sGo5KGqSXPGAUiNXeCv+ZyAIPQl1DkaO/WIZLOr26z2J6CPIxF2T0hlu
+         UlfjlEwtyr67J1He6W7UjgTMO3iCgup4DiDCEhEaTsdMCHW/sjbqCVPyXaO09S2URzgq
+         3lnQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzmDPm1cZkQevSdw97nRKE7hhJIJ+DK/2/7wpAwk6Kl48ODDMrb/4Kh4rGJYDHW/W/LRp+TLg==@lists.infradead.org
+X-Gm-Message-State: AFq9FYKleio8VtN21KTizhzj9reRSlXgHB5HiFmotGQA1fgBpi79whqn
+	3RVvd1LNXIG0RML8+04GkaanDndbOBkBfinEIJldL94z8JOZRi/HsTJY9fbnzHOeASqK4q6HBfa
+	xrdamdNeSJPjHF+J6TM0ktpV7g5AIsIY41GVHy39Grg==
+X-Gm-Gg: AYBFou2E+VV3evZAMA52ps+WjlZtqngBqj/TL6Zg/Mf/IcoJunEWNXjFbprvsEgpG9h
+	D6TzTCA8o66cl++aYvG9s0iG0jjK6jHLFYtrklCq4Xj/Sl/OkCGmYR3Lu/Rtx56SMjeX0dg7n5O
+	FYl+/efWpr00LM7eyycIsxWFoVlUOCOico4KLRRYmc8Y457KWo/AotUHinUTo9pgLuhURXsf8NX
+	ncZF8CRWvnpHdkgaLEe0vqGQDYfFr28UyXAkKagW76f79UoVidWNg04zQFBCgsdTZS4744w5YWJ
+	1a/bBlIzKAq3gSldfdjMmB7YzVUk+iAgJVIZUr/HIc+gALJt4RKXtR9lJR+zdtpzljAS1zM/wBk
+	mHuxzovjg3fH1WLNuA/Wqtu04qopSYiXLTpDCCodM2GlVxHLjKQlzX4/IRbBUh9VCrTXXg7TyXZ
+	Bx84/+tRXmth/z
+X-Received: by 2002:a05:6402:428d:b0:6b1:b5b8:b696 with SMTP id
+ 4fb4d7f45d1cf-6b408eba0a5mr2764546a12.23.1792631685748; Wed, 21 Oct 2026
+ 18:14:45 -0700 (PDT)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <atiDsmnUM7v2UJkY@pathway.suse.cz>
+References: <20261021152527.375070-1-tarunsahu@google.com> <20261021152527.375070-3-tarunsahu@google.com>
+ <CA+CK2bCnS8wcVDbOymBGeJB6pDUkknOpF22EynbwSV=D5=J4ow@mail.gmail.com> <atlEdhPjlyTPDWmG@google.com>
+In-Reply-To: <atlEdhPjlyTPDWmG@google.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Wed, 21 Oct 2026 21:14:09 -0400
+X-Gm-Features: AclHuK8ceakYR2BnO2tCnQU3MVfSYSSwRjvSGLmyMHhBXtZBiFnzxvM1Bfsv7Tk
+Message-ID: <CA+CK2bAxgtx2gZ-UE2HqwAU8=h9K5RE3xozBs1njgLo1-CaPvA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 2/4] liveupdate: Select file handler by name in the
+ preserve ioctl
+To: David Matlack <dmatlack@google.com>
+Cc: Tarun Sahu <tarunsahu@google.com>, Andrew Morton <akpm@linux-foundation.org>, joro@8bytes.org, 
+	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, maz@kernel.org, arnd@arndb.de, 
+	jgg@nvidia.com, robin.murphy@arm.com, loganodell@google.com, 
+	oupton@kernel.org, kevin.tian@intel.com, alex@shazbot.org, 
+	dwmw2@infradead.org, pbonzini@redhat.com, seanjc@google.com, will@kernel.org, 
+	Alexander Graf <graf@amazon.com>, Bjorn Helgaas <bhelgaas@google.com>, baolu.lu@linux.intel.com, 
+	linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org, 
+	sagis@google.com, linux-mm@kvack.org, kvmarm@lists.linux.dev, 
+	iommu@lists.linux.dev, linux-pci@vger.kernel.org, kexec@lists.infradead.org, 
+	skhawaja@google.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261021_181152_088775_9F4A3B1C 
-X-CRM114-Status: GOOD (  56.44  )
+X-CRM114-CacheID: sfid-20261021_181448_288082_16EB46AE 
+X-CRM114-Status: GOOD (  42.52  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -76,7 +127,6 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, Kees Cook <kees@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Young <ruirui.yang@linux.dev>, Stephen Brennan <stephen.s.brennan@oracle.com>, Bo Gan <bo.gan@broadcom.com>, "H. Peter Anvin" <hpa@zytor.com>, Brennan Lamoreaux <brennan.lamoreaux@broadcom.com>, x86@kernel.org, Joel Granados <joel.granados@kernel.org>, Alexey Makhalov <alexey.makhalov@broadcom.com>, Ingo Molnar <mingo@redhat.com>, bcm-kernel-feedback-list@broadcom.com, Ajay Kaher <ajay.kaher@broadcom.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, John Ogness <john.ogness@linutronix.de>, virtualization@lists.linux.dev, Steven Rostedt <rostedt@goodmis.org>, Maaz Mombasawala <maaz.mombasawala@broadcom.com>, Borislav Petkov <bp@alien8.de>, Shuah Khan <skhan@linuxfoundation.org>, Michael Kelley <mhklinux@outlook.com>, Pratyush Yadav <pratyush@kernel.org>, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ian Forbes <ian.forbes@broadcom.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, Thomas Gleixner <tglx@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
@@ -85,138 +135,120 @@ X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 10/21/26 at 11:19am, Petr Mladek wrote:
-> On Wed 2026-10-21 01:10:25, Zack Rusin wrote:
-> > On Tue, Oct 20, 2026 at 10:04 PM Baoquan He <baoquan.he@linux.dev> wrote:
+On Wed, Oct 21, 2026 at 7:02=E2=80=AFPM David Matlack <dmatlack@google.com>=
+ wrote:
+>
+> On 2026-10-21 01:17 PM, Pasha Tatashin wrote:
+> > On Wed, Oct 21, 2026 at 11:25=E2=80=AFAM Tarun Sahu <tarunsahu@google.c=
+om> wrote:
 > > >
-> > > On 10/20/26 at 03:23pm, Zack Rusin wrote:
-...snip...
-> > > > I'd keep the second call in __crash_kexec() rather than crash_kexec(),
-> > > > because afaict crash_kexec() can return without a crash image, e.g.
-> > > > from the BPF kfunc, or from oops_end() before it panics. Calling the
-> > > > list there would use up the guard even when no kdump follows.
-> > > >
-> > > > crash_kexec_post_notifiers, the existing list and the kmsg dumpers
-> > > > stay as they are, and moving other platforms over can come later.
-> > > >
-> > > > The VMware log copy would be the only user, and it's still best-effort
-> > > > diagnostics: kdump and the reboot don't depend on it. It copies the
-> > > > log tail into an 8 KiB buffer. On panic() that happens after the panic
-> > > > message and any local backtrace; on direct entry from an oops, after
-> > > > the exception output. With the list enabled throughout, the copy
-> > > > precedes the later panic notifiers, sys_info() and the all-CPU
-> > > > backtrace step. The guest-crash report stays a late kmsg dumper that's
-> > > > skipped while a crash kernel is loaded, because the host can power off
-> > > > the VM inside that call.
-> > > >
-> > > > If that matches what you had in mind, I'll do it that way in v3.
-> > > >
-> > > > Guilherme, Stephen, Baoquan, does that work for you too?
-> > >
-> > > Hi Zack,
-> > >
-> > > Sorry I didn't check this series before, just trying to catch up.
-> > >
-> > > I like the Approach B direction: one panic_notifiers_platform_list for
-> > > platform callbacks that must run before kdump. While I have one concern
-> > > about the long term.
-> > >
-> > > Today the list has only the VMware log sender. Later, more handlers may join
-> > > (for example pvpanic, Hyper-V, Xen, gsmi, SNP). When the list grows, someone
-> > > will want to run only their handler, or to skip some handlers. The easy
-> > > answer is "add a new list for my handler". I think this will be a problem too
-> > > in the future. Every new list adds a new global ordering rule and a new disable
-> > > switch. Petr already said we should keep the number of lists small.
-> 
-> My hope is most of the potential users won't be registered at the same
-> time or will be a NOP in the real life. Because each particular system
-> will actively used only some technology.
-> 
-> But maybe I am naive and there will be selection and ordering problems.
+> > > Currently luo_preserve_file() iterates over luo_file_handler_list and
+> > > picks the first registered handler whose .can_preserve() callback
+> > > returns true. When a subsystem introduces a new, backwards-incompatib=
+le
+> > > file handler alongside an existing one for the same file type, usersp=
+ace
+> > > has no way to choose which handler preserves a file descriptor, nor c=
+an
+> > > the kernel keep the existing rollback-safe handler as the default whi=
+le
+> > > allowing callers to opt into the new handler.
+> >
+> > That is not how it will work. If we are in the .can_preserve() call,
+> > it means the user has already decided which file handlers to use. We
+> > need to do that before any preservation happens; otherwise, we could
+> > run into conflicts on FLBs i.e. FH of different version require
+> > different FLBs.
+> >
+> > Therefore, there should be a luoctl call (i.e via a new ioctl to set
+> > compatability) that provides the kernel with the specs file of the
+> > target kernel we are updating to, allowing the kernel to select the
+> > compatible file handlers. Since .can_preserve() is called when the
+> > user is already preserving files, the specification must have already
+> > been supplied, or the kernel should fall back to using the default
+> > (i.e., latest) file handlers.
+>
+> I don't think that is the right direction. IMO the kernel should not be
+> choosing which file handler to use, userspace should be. If userspace
+> gets it wrong and chooses a file handler the next kernel does not
+> support, that's on them.
+>
+> The problem with the kernel making a decision about file handlers is
+> then userspace does not know what arguments to pass in. We are adding
+> custom per-file handler arguments to PRESERVE_FD and RETRIEVE_FD. If the
+> kernel is picking which file handler to use, say for a memfd, then
+> userspace doesn't know which arguments to pass in.
 
-When I revisited this thread, I suddenly realize I may made mistake on
-comments. You folks seem to discussing the platform relatd handlers and
-list, but not generic handlers and list. If so, I am not sure if my
-suggestion is suitable because I didn't know these platforms well, esp
-the various virt platforms and their correspondent handlers.
+It is not the kernel deciding on its own which handler to use; it is
+the system admin (or host orchestrator) that configures LUO before the
+LU process starts, because the sysadmin knows what kernel we are
+rebooting into and the LUO specs of that target kernel. Meanwhile, the
+process calling PRESERVE_FD (e.g., a VMM) only knows about its own FDs
+and should not have to track target kernel serialization versions.
 
-If the next steps also involve the generic handler part, my suggestions
-may be relevant and could be of some reference value.
+Also, the PRESERVE_FD and RETRIEVE_FD arguments are uABI tied to the
+FD type, not to a specific internal handler version. They are stable,
+and we can expand them the same way any ioctl argument is expanded
+(via size and flags), without ever shrinking or breaking them. We
+should not play the game of providing completely different uABI
+argument structs for different versions of a file handler. If a caller
+passes a new feature in the uABI args that the currently configured
+file handler version does not support, PRESERVE_FD simply returns
+-EOPNOTSUPP, just like any other extensible ioctl.
 
-Thanks
-Baoquan
+> Sure you could add some method where userspace could query which file
+> handlers are active and decide arguments based on that. But it feels
+> backwards.
+>
+> I think a much cleaner solution is that userspace chooses file handler
+> during PRESERVE_FD. I would even require it for RETRIEVE_FD so that we
+> are guaranteed that the args the user is passing in are being sent to
+> the right file handler. Passing to RETRIEVE_FD also opens the door to
+> transforming across Live Update (similar to how AWS did LU from Xen to
+> KVM as discussed at LPC).
 
-> 
-> > > Currently, atomic_notifier_call_chain() runs all registered callbacks. There
-> > > is no per-handler enable/disable and no filter. NOTIFY_STOP_MASK can stop the
-> > > chain, but we must not use it here, because one handler could hide all the
-> > > later handlers. The list-level disable_panic_notifiers_platform_list can
-> > > only disable the whole list.
-> > >
-> > > I have some rough though, just for reference:
-> > >
-> > > 1. Keep one panic_notifiers_platform_list.
-> > >
-> > > 2. Give each handler a small wrapper with a name and an enabled flag:
-> > >
-> > >    struct panic_pre_kdump_notifier {
-> > >            struct notifier_block nb;
-> > >            const char *name;
-> > >            bool enabled;
-> > >    };
-> 
-> This looks good to me.
-> 
-> > > 3. In the dispatch, skip a handler when enabled is false. Print the name
-> > >    before calling it. This also helps when a handler hangs and we want to
-> > >    know which one it was.
-> > >
-> > > 4. Add a boot parameter to disable handlers by name, for example:
-> > >
-> > >            panic_pre_kdump.disable=vmware_log,hyperv_crash
-> 
-> I like this. I think that we just would want to do s/_pre_dump/_notifiers_platform/.
-> 
-> > >    Parse it early. At panic time we only read the flag. We do not parse
-> > >    strings in the panic path.
-> > >
-> > > 5. Keep the list-level disable_panic_notifiers_platform_list. It is still
-> > >    useful to disable the whole list for debugging.
-> > >
-> > > 6. If the list is still too broad later, we can add a reason/class argument
-> > >    (for example PANIC, OOPS_DIRECT). A handler can then decide if it cares.
-> > >    This is better than adding a new list.
-> > 
-> > Thanks for looking at it. I agree we shouldn't add a separate list for
-> > each handler, and named handlers with their own switch on the one list
-> > sound like the right way to grow it.
-> > 
-> > For v3 I'd like to keep the series to the list itself. With VMware as
-> > the only callback, the list-wide boot switch already lets us disable
-> > platform logging. The sender also has its own sysctl,
-> > kernel.vmware_record_panic_msg. We can add per-handler selection with
-> > the next user, when there's an actual choice between handlers. I'm
-> > happy to help with that when it comes up.
-> 
-> Sound good to me. I would like to start simple. We could add the selection
-> later when it is needed in the real life.
-> 
-> > Two of your points do fit in v3 as documentation. I'll change the
-> > panic_notify_platform() kernel-doc to also say that:
-> > - callbacks must return NOTIFY_DONE, because NOTIFY_STOP would skip
-> > the callbacks after them
-> > - the notifier value is 0.
-> 
-> Great catch!
-> 
-> > The VMware callback ignores that value, which leaves room to add
-> > reason information later.
-> > 
-> > Petr, does keeping v3 to that sound right to you?
-> 
-> Sounds good to me. But you might want to wait few more days for
-> more potential feedback.
-> 
-> Best Regards,
-> Petr
+On RETRIEVE_FD, the preserved metadata already identifies what format
+was preserved. Validating that the user is passing the right argument
+struct only requires checking the compatable string, not selecting a
+serialization version on every call. And if we ever want to support
+cross-subsystem transformations on retrieve, that is a retrieve-side
+conversion capability.
+
+> Regarding FLB conflicts, today we don't support multiple FLBs for the
+> same global state, so there is nothing to conflict. Selecting a file
+> handler during PRESERVE_FD doesn't change that.
+>
+> If we ever need to support multiple FLBs for the same global state
+> (e.g. an incompatible change to the PCI FLB), we can add an ioctl that
+> lets userspace select which FLB to use before preserving any files.
+> After that, only file handlers registered with the selected FLB can be
+> used to preserve files. PRESERVE_FD with any other file handler fails.
+>
+> That keeps the FLB decision up front and global, like you want, while
+> still letting userspace pick the file handler for each fd. I'd also
+> expect this to be rare, since FLB serialized state can use the same
+> feature flags as everything else in this series.
+
+Userspace owns FDs, not FLBs. Whether a subsystem uses one FLB, two
+FLBs, or no FLB to coordinate state across FDs is internal kernel
+plumbing. Exposing an ioctl for userspace to select FLBs leaks kernel
+internals into the uABI.
+
+Therefore, I think we should not select FLBs from userspace at all.
+FLBs are an internal kernel mechanism for sharing state across FDs;
+from userspace, we only preserve FDs, so that is what should be
+configurable, and the kernel should resolve the dependencies and pick
+the FLB versions accordingly.
+
+Changing one file handler may require changing another file handler
+because they share an FLB. We can't have a situation where one VMM
+preserves using FH_A and another uses FH_B for the same FD type,
+trying to use different FLBs for the same data (since we can't
+preserve the same page into KHO twice). More generally, we are
+rebooting the host into a single target kernel, so compatibility is a
+session-level property, not a per-FD property. If we need an upfront
+global ioctl anyway, configuring the target compatibility upfront in
+one place is much cleaner than exposing FLBs to userspace and
+splitting version selection between a global ioctl and per-FD
+PRESERVE_FD calls.
 
