@@ -2,113 +2,117 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8808A606A31B
-	for <kexec@archiver.kernel.org>; Thu, 22 Oct 2026 16:34:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD149606A319
+	for <kexec@archiver.kernel.org>; Thu, 22 Oct 2026 17:51:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=U/+nTijQ;
-	dkim=pass (2048-bit key, unprotected) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=aXIXm0Cf
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=dyj4Id/S;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=Zpk3otvd
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=KdgvyfyGLF6xVqvT4lRhkOaHE+7q7+9ylmI+jmCxxss=; b=U/+nTijQZ1fT2B
-	haO24JudCNPBDdqgfNYxnNSRllX78auJT6NeChW9MiQg6Nvj2Nej7jWRyBcQJ9aF/s1LK5lB8Zz3B
-	v7F/r0vbzSpLucmJmBJ3UG4MVFcLNNnok5+6fpA2DRg2ELX85UxwzIzIbiyUOSPIwhOA38ZAAqhP9
-	qBoW2y1O/B86Qf+ryxK++2yXl6NBqPIL5Z7BVRgqytz5FczDyUUBHCmj9yYoPTNQHEqLZLEg3a13O
-	L7EcKKoOzgsdGgKlQRNl3ZRwRrBC9Yes1bQDxO7Pcy1GRpRPJ9+OcQfPHjJdByZE9Od7ucaZJqsaT
-	0w1EsUeceesqG+CNb00A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=VXuE27163XQs95Y17MHXQoRtZevE9c0I3KUjJaU7M5M=; b=dyj4Id/SZDqZ+6lTeukeYfmwfR
+	K23FaiVwxJzQeH42GvvPBT8RIYVuyJogynCpErBO7ZJYnxlWFHt61XkrWhxy3cZG5oFYv/yKZS6hw
+	KRYC8Gnwbm6NnBKFygyPGuOr5FmyUJV8F32F12vqd8L8HEmNYAJ3FjZN5JMObOVaEBNXLS/abZX2+
+	yFZ/PKFnCVquHr7AGxmYg8YNK9p6kBJ0X5ZF8nRKtoQEfdoCWnVxhhHyYbglZaPwrtOOlYC9782Ub
+	9lnLr36zmnaDXwykLL13g3TxbEKkq7A20muiY6XIY0m9qhzscjiKw1st1QWhHQ+Cv6thvOZzoUNld
+	FIa7i52g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xJvkR-0000000EV7v-17er;
-	Thu, 22 Oct 2026 16:34:35 +0000
-Received: from mail-ed1-x532.google.com ([2a00:1450:4864:20::532])
+	id 1xJwwp-0000000EeLe-0oro;
+	Thu, 22 Oct 2026 17:51:27 +0000
+Received: from mail-pl1-x634.google.com ([2607:f8b0:4864:20::634])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xJvkP-0000000EV7U-2FLh
+	id 1xJwwk-0000000EeKH-3kM2
 	for kexec@lists.infradead.org;
-	Thu, 22 Oct 2026 16:34:34 +0000
-Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-6acb57c2b88so2434553a12.2
-        for <kexec@lists.infradead.org>; Thu, 22 Oct 2026 09:34:32 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792686871; cv=none;
-        d=google.com; s=arc-20260327;
-        b=cgm+w6tSTlVADbNRj1SQy4XkxeFMDMReMYhyz+x8idghk31m+gU/NOZvWB/ptDsmZQ
-         SPEzwNrVcsnExV6KH2bDyUub9loxPurSDls/lJUnYe3dTOFlhBzYj5Od7Tj5vaxmrAOA
-         ClNrSzvRXDmZJnXNDs7iKjIrKeBvEajNrnKyu6saqRrCT0FWJZep+gaGVhjlS/2/LVZ4
-         Wc41aPG7wnogitz3VeeTOqCXXHIEOxPtZAAPTCYOGhzssKrFaTvbpXqWVul7abDInkHG
-         6WMgBAkraKBG8W1K786ROz96TinxpBDxsyK4nikZh6jAxxyAxJD9A2YEE88hWAQbEUMT
-         Oztg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=KdgvyfyGLF6xVqvT4lRhkOaHE+7q7+9ylmI+jmCxxss=;
-        fh=jUc/kpxVhdasWMuKCPLg606/7ICJnUKjMaIb9NyMXrI=;
-        b=MU0EgjsD6mFVIUrXbQzpOI465GjwyDHOLL7mEDb9cx3L3DSuS7b+xncH637bvPQckf
-         hhXHelJHa8MFUOlrnb5T7GGMPfV1BxMJci8wdfa49FQgbn4ZxDBuVkLbpu9c7Wmkp8CY
-         LRD0SgdCmse9skjEKQx9EcWLo8REXb4n5OYY0mszlgiQ5rhYGSBJYRj37tkD0E9iIJti
-         Q10o9XE/XDBV2B+0ZhTxRsvkjNKIf+6Gsjwf66jVEbMayGexPGinSU4briAW53EAMLk0
-         RIedb/5B8YZ4krn8vJsFLSIKVq5pa+wBPkqWLLUn/FP0tSw9Iqb7lQRcIr3zl+rJ3KoV
-         58BQ==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	Thu, 22 Oct 2026 17:51:25 +0000
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-2e60f9af6e6so4875ad.3
+        for <kexec@lists.infradead.org>; Thu, 22 Oct 2026 10:51:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1792686871; x=1793291671; darn=lists.infradead.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=KdgvyfyGLF6xVqvT4lRhkOaHE+7q7+9ylmI+jmCxxss=;
-        b=aXIXm0Cfi6lVi8e4RQQJblqaGofE34icGgJnqIo89SIRg+IdVjP3grBAXHpRJ15T6I
-         1L9hfmsLXuj6+2I16OiWcRWAFvFRFcHBD/lRUHUOWT5lCWTJJ3C8P1XPPBrKQ9Kqr0jt
-         B0n7UW7SW+TZLalwGTqOlqMhmBkuBPK0wGZa+Rr80K7TMrQfSFDODLXrq3LOD8uDfBYS
-         QPIoAS3TvXb5UgntIxjkuTPGilCN1m6Uiyh5If8nDBDwkwq+m9Ks0vV0VLMLjAXUJUh6
-         BY1plYVL/yyl1zDDD5vmrfREq+ARkGlLry6gEv85J13Es7pQpmoOS4pLjTtbwubiApQb
-         UgWw==
+        d=google.com; s=20251104; t=1792691481; x=1793296281; darn=lists.infradead.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=VXuE27163XQs95Y17MHXQoRtZevE9c0I3KUjJaU7M5M=;
+        b=Zpk3otvdf8B7tTCFtPbGpvNIz/dvDG5O1mLIlHzD8sPaSccQ0XaVJpHqkkSNYHMITd
+         s1P3oJM/uA2XU3pX7TFnw/5Hx39fWrZcQpMaROAH3Pu3JvsY0ssGiQ7GUMxrcjPT2JGI
+         Yh959XpkC6uvmxvLiBSbGrnIqUPzlyi2yISHzF2dHn8KMh/cMRe49Cp8RoDymZDP5D6A
+         BvOxrAMNPZaRtgPasTQutYV8a7pCPV9RMCQSW38aeBPwvDaMADlTvyJyAvyajyXDt1qg
+         Je4QszBoxKca+2MceBbqQbnTMhIm/q6/u/2NAquA99uBYt9bBAMMFHTXK03wrsV8dZrA
+         FSfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792686871; x=1793291671;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=KdgvyfyGLF6xVqvT4lRhkOaHE+7q7+9ylmI+jmCxxss=;
-        b=ETfuX3x4no2REwpgV+dKV3GcbBY4wwbkxJ7vG+dm7yTF2ELCe7IkxrENbelreGoysA
-         b1chCGIfqGcRP7KuqSJiVRpLQdBkb4G5yUin2Vmo94+TdCkjew08lKRHimr1HiflLSWd
-         Z7xoZk5/gWb6gZjECaOVw9+4zkrwqgWkOXA5cmou9GDfYrldbPEqEZC0tHxj5MaNm2CD
-         pEIvlIx62EjFLx7HCjv2Bca5Bq5c/+1ZpkHZPzI7g4V8stpuUI6/JRGolXj+KrqY2oK+
-         z+JLUSdZ8Xkgj44Jy4eJW3hz4KMtDQr0FH9EX+5Yc0lnmWfIdYn5bCtR0JyM6Frr69xU
-         s8GA==
-X-Forwarded-Encrypted: i=1; AKwUvBxQzdfT35jIwgCF6pOe1HO8S5NSqu+AdYY3cQUEhsWO9uLcfHQy3uAQcyrkuvliSD6K5/puMg==@lists.infradead.org
-X-Gm-Message-State: AFq9FYJQGvth13zrs7oICVutmmoB9BCl6+BXsSXWRohUQO11mKtlJBqb
-	x9YbUhaqItiO4AuGd1kH+Nh6kA5gEqRoaqvD5zElmcXdz8zCX3Xm/q0jEeQYY+uxv3f5ow07cOQ
-	mTsyqSV8gUWwmtXAxHrcHqXmFfL+z1yLAQPicK91nE5+rbbMG0XdVAII=
-X-Gm-Gg: AYBFou32NTJzndXEVboigU/3MV11en5V/AsS5kqJpXuV/ivjfvuxXRj5QepP/0F0EfE
-	6Wbd1r31R3nN7qh+fDvbrh/1QmJ2RqzCdm/+yK9GVO5CPQJM80vXWuWiQ9XxkGplgkyQnJq6BK3
-	aUDaPEsD+0WvtKMgUvexf2cNpqgX3YaUEOwYhrNN42dGVpEhz/HJn0rojQgMIlwamouFXznTfR+
-	+bk+ONylVaoOo212/rG0u9tx5wWhQ9AoJ18qHv1oyIj+2xfSJfe1GPeVu7vJaT2FOuJ5KKhrhJ/
-	DrURZVgJPFxx5dgXkLfZF1GNzJJsRk+IibUlUiNbQQTSJXHZQCFcf4lRx59p9CBVjmkbL81vf+m
-	nDFwl71x/SSzvGbdDXgnfCMJzydkcXyWX6T/4qotlaEJNlvSS6dqur7H2Bjv5xQY61WxI
-X-Received: by 2002:a05:6402:21c3:b0:6ac:8dce:5a8a with SMTP id
- 4fb4d7f45d1cf-6b408e97bc7mr4806912a12.9.1792686871349; Thu, 22 Oct 2026
- 09:34:31 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1792691481; x=1793296281;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=VXuE27163XQs95Y17MHXQoRtZevE9c0I3KUjJaU7M5M=;
+        b=0ohWR46g/HqrmSn3jocr/1DlqCZ8JKOcuhJlLiP6XMO38LAz2vsZqQ0LkFdWibqjw9
+         7eYY+/j9FQkMQUpccN1YuGTZ563+tKN6n6PKRsABhZK85AskVA22B7216uslwu+5nlUU
+         cBwjBEoAlBP8XM8TveaEB6hdRktWaS+SnWRe0GfzlZtTkn5jRXCB75Kn5iS63UmPiyny
+         x8/7QC5T5IDUW0RE9TCqkNEbCMMeWDqXPG5MnqJHzEW5NC7p26HqPLHqdonRUaQYuRyy
+         ROYysqNKrXF8KeD2XOWY+2S64NJmeX3v6N0IF+fkTLKFyU6ItPY8evOYMdOX07M2auHY
+         mXIA==
+X-Forwarded-Encrypted: i=1; AKwUvBxPuqZdzzH/vx0tm7O9lEbItsq+lmXJzGFarc64dZMj61bTAIslP7zB5uv2ghViTHeWO3VZIw==@lists.infradead.org
+X-Gm-Message-State: AFq9FYJkqx7uQFwYInSln9R4MgJn/D81JlWiW2WykIO31TmDsd35ORvW
+	vrHbSpbG2ZUAL8wkW1zRHPblWbv6YJ/K9wUDMzKIk5jObcZcTvA1K28V4f9cq75gkw==
+X-Gm-Gg: AYBFou3jfGi5N2CSckQS3EKHMhz/kze5ZyG3sEiXXyRgFxuw19dHCfBPO4BFykeHoXw
+	pLkxpOh+YpKbcUwvsV38LZKITJipTxnCzQ1kXce69S9SvrugJEdauIdoVcL9wN5igNUTIkFrvjN
+	kv40pAGsYZ6VXqTGUsK1nUlriWq09EjqjMDqfoKnPCBN+L3FvUskyuD9qv1fT1VssEInVHUafUl
+	FfT1tQEhDN1d21K/jcb6B8maYSOzLIoywzkFH80s2SImZ3ap97Da/P4MleioTPAbb0FCYClz7s2
+	KIoBdCj22Y+ktqjB+Bi6w+zcr58FvmEQi5AsuoocGeUEhZrioJI37Jqe21nm5j9o9Hr/m4XZnd3
+	0o5/wcpjmhfs2iPvK0ZBXqaHJ/BzFeHljPPylsyc+BsG7e5nk7HX+kx4EoHs9X6iYDGUrx/n+yQ
+	IEM1XeER60Hcfin/ST5me+R+7RPs2svla8cu3LL4MkHRIsYrpi4A9feehBwQxykwsZbIWKVXuEy
+	s/3B55mzboVjJlW1OTg4VyaSxxPisJjy3vYKQngQpSt/PmLn7GBlO++Nk2nY8/qumqQyfImCbuN
+	lPtUYOHTwcpLzv+B
+X-Received: by 2002:a17:902:e547:b0:2e9:502a:ddbb with SMTP id d9443c01a7336-2ea43c9f6bcmr53298445ad.45.1792691480085;
+        Thu, 22 Oct 2026 10:51:20 -0700 (PDT)
+Received: from google.com (64.75.127.34.bc.googleusercontent.com. [34.127.75.64])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ea7b346c43sm1644745ad.13.2026.10.22.10.51.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Oct 2026 10:51:19 -0700 (PDT)
+Date: Thu, 22 Oct 2026 17:51:16 +0000
+From: David Matlack <dmatlack@google.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: tarunsahu@google.com, Andrew Morton <akpm@linux-foundation.org>,
+	joro@8bytes.org, Mike Rapoport <rppt@kernel.org>,
+	Pratyush Yadav <pratyush@kernel.org>, maz@kernel.org, arnd@arndb.de,
+	jgg@nvidia.com, robin.murphy@arm.com, loganodell@google.com,
+	oupton@kernel.org, kevin.tian@intel.com, alex@shazbot.org,
+	dwmw2@infradead.org, pbonzini@redhat.com, seanjc@google.com,
+	will@kernel.org, Alexander Graf <graf@amazon.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, baolu.lu@linux.intel.com,
+	linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+	sagis@google.com, linux-mm@kvack.org, kvmarm@lists.linux.dev,
+	iommu@lists.linux.dev, linux-pci@vger.kernel.org,
+	kexec@lists.infradead.org, skhawaja@google.com, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 3/4] liveupdate: Replace compatibility string with
+ a 2-bit pair feature header
+Message-ID: <atpNFEFIlqAoYIwH@google.com>
+References: <CA+CK2bAQbmq3ArP3XMErF_8RC2CUwvgpLY0H83D0nCJTaVKYyA@mail.gmail.com>
+ <9huzecdi6go0.fsf@tarunix.c.googlers.com>
+ <CALzav=dLdJoVy=B1pv0FAurD9OhAzLSTjJNbtjTdJRmSqaB0yw@mail.gmail.com>
+ <CA+CK2bAQRMAEXZyHTEuUN0_Fo59Sn0hBmYbme_J9ewjx6gPyJQ@mail.gmail.com>
+ <atlKsD-aJB3mJr2j@google.com>
+ <CA+CK2bABt4OZO31TenVF2+uBUWVwViWbvfE00=0xbAw=f7K9SA@mail.gmail.com>
+ <atl7peoVHdP5hz7z@google.com>
+ <CA+CK2bBFXnJA1kddbLKGq0DAHDgjYhsTSQQay-xeX7jJC1V_UQ@mail.gmail.com>
+ <CALzav=e=ho2gVrn+7KpZ3ZyasvH2u15-pC-RSRSS7KcMfKqUJQ@mail.gmail.com>
+ <CA+CK2bAJo8dnTOyKMgnnMnk-SCXbTsv+JCLEOWkjyj-wqtEkHg@mail.gmail.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-References: <20261015020313.946940-1-pasha.tatashin@soleen.com> <87y0bp20pn.fsf@trenco.lwn.net>
-In-Reply-To: <87y0bp20pn.fsf@trenco.lwn.net>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 22 Oct 2026 12:33:53 -0400
-X-Gm-Features: AclHuK8Otm0xJpYhkHmHhBvYvdF9NjZJWWHbtCPr-MhhnCbHqDLRJoujsYa2diA
-Message-ID: <CA+CK2bCj9mSc5xu0B3QtxgRd=P1fo910pO_fx6f5o_Wu2YDTbw@mail.gmail.com>
-Subject: Re: [PATCH v1] docs: xforms_lists: Handle DECLARE_KHOSER_PTR() struct members
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: rppt@kernel.org, tudor.ambarus@linaro.org, mchehab+huawei@kernel.org, 
-	skhan@linuxfoundation.org, linux-doc@vger.kernel.org, linux@weissschuh.net, 
-	linux-kernel@vger.kernel.org, aleksandr.loktionov@intel.com, 
-	kexec@lists.infradead.org, pratyush@kernel.org, rdunlap@infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+CK2bAJo8dnTOyKMgnnMnk-SCXbTsv+JCLEOWkjyj-wqtEkHg@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261022_093433_602598_95B1DB71 
-X-CRM114-Status: GOOD (  15.20  )
-X-Spam-Score: -2.1 (--)
+X-CRM114-CacheID: sfid-20261022_105123_020300_F74AB40E 
+X-CRM114-Status: GOOD (  22.65  )
+X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -119,60 +123,123 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Thu, Oct 22, 2026 at 11:51=E2=80=AFAM Jonathan Corbet <corbet@lwn.net> w=
-rote:
->
-> Pasha Tatashin <pasha.tatashin@soleen.com> writes:
->
-> > KHO ABI structures declare their preservation pointers with
-> > DECLARE_KHOSER_PTR(name, type), which expands to a union of the pointer
-> > and its physical address. kernel-doc does not know the macro and does
-> > not see the member: it warns that an unnamed member is not described
-> > and that the description of the member is excess.
+On 2026-10-22 12:11 AM, Pasha Tatashin wrote:
+> On Wed, Oct 21, 2026 at 11:53 PM David Matlack <dmatlack@google.com> wrote:
+
+> > > #define DECLARE_LUO_SER(name, expected_size, ext_flags_count, payload_type) \
+> > >     struct name {                                                           \
+> > >         __u32 size;                                                         \
+> > >         __u32 flags;                                                        \
+> > >         __u64 ext_flags[ext_flags_count];                                   \
+> > >         payload_type payload;                                               \
+> > >     };                                                                      \
+> > >     static_assert(sizeof(struct name) == (expected_size),                   \
+> > >                   "LUO struct " #name " size mismatch!")
+> > >
+> > > For example:
+> > >
+> > > struct luo_memfd_payload {
+> > >     __u64 pos;
+> > >     __u64 size;
+> > > };
+> > >
+> > > DECLARE_LUO_SER(luo_memfd_ser, 24, 0, struct luo_memfd_payload);
 > >
-> > Translate DECLARE_KHOSER_PTR(name, type) into "type name", as is done
-> > for DECLARE_KFIFO_PTR().
-> >
-> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> > ---
-> >  tools/lib/python/kdoc/xforms_lists.py | 1 +
-> >  1 file changed, 1 insertion(+)
->
-> Applied, thanks.
+> > This looks pretty reasonable but I would name the payload
+> > luo_memfd_ser. The combined struct that DECLARE_LUO_SER() creates
+> > should never be used directly since the offset of the payload in that
+> > struct is only valid in the current kernel. So I would give that
+> > struct a special name that makes it obvious you shouldn't be using it.
+> 
+> Lets drop the fourth macro argument and generate the combined struct name:
+> 
+> #define DECLARE_LUO_SER(name, expected_size, ext_flags_count)              \
+>     struct name##_hdr {                                                    \
+>         __u32 size;                                                        \
+>         __u32 flags;                                                       \
+>         __u64 ext_flags[ext_flags_count];                                  \
+>         struct name payload;                                               \
+>     };                                                                     \
+>     static_assert(sizeof(struct name##_hdr) == (expected_size),            \
+>                   "LUO struct " #name " size mismatch!")
+> 
+> For example:
+> 
+> struct luo_memfd_ser {
+>     __u64 pos;
+>     __u64 size;
+> };
+> 
+> DECLARE_LUO_SER_HDR(luo_memfd_ser, 24, 0);
 
-Thanks!
+I think we are getting close, bu I have two remaining concerns:
 
->
-> One note... these:
->
-> > base-commit: cee9395acd8043be0644b25c34bfa86623f2b935
-> > prerequisite-patch-id: 557b4f406b7530b8be07d3e3aa6015ad89ceaa6d
-> > prerequisite-patch-id: c0430a4f0096e4be93a6200aa4e8a1d392238ca5
-> > prerequisite-patch-id: 524c71eab38a9175f9920f38717c8ed3b157299f
-> > prerequisite-patch-id: 61cfc274edef2fb23a1b867c9e0d063578387c45
-> > prerequisite-patch-id: ac022b05628f8e495a224216352aa037a022aae4
-> > prerequisite-patch-id: 50668baf257da9873190d08f21538ddc453261a8
->
-> ...make b4 go off on a wild goose chase and caused the application to
-> fail.  They aren't prerequisites at all, I'm curious about how they came
-> to be here?
+ * Reserving bits in each flags word for continuation leaves gaps
+   in the flag space that users have to know to skip.
 
-Sorry about that. I had this patch as part of a larger tree with a
-bunch of dependent branches, and I generated it with "--base=3Dv7.3-rc1"
-without first rebasing the patch onto v7.3-rc1.
+ * struct name##_hdr only matches structs written by the current kernel
+   (in terms of length of array and offset of payload).
 
-Pasha
+How about this instead:
 
->
-> Thanks,
->
-> jon
+struct luo_ser_hdr {
+    __u32 size;        /* Size of header + payload in bytes */
+    __u32 nr_flags;    /* Number of features encoded in flags[] */
+    __u64 flags[];
+};
+
+Each feature occupies 2 bits of flags[], so feature N is always bits
+[2N+1:2N] of flags[N / 32], with no gaps:
+
+  00: Feature not present
+  01: Feature present, safe to ignore if not supported
+  11: Feature present, must be supported by the next kernel
+  10: Invalid
+
+The length of flags[] and the header size are computed directly rather
+than by walking continuation bits:
+
+static inline u32 luo_ser_nr_flag_words(const struct luo_ser_hdr *hdr)
+{
+    return DIV_ROUND_UP(hdr->nr_flags, 32);
+}
+
+static inline size_t luo_ser_hdr_size(const struct luo_ser_hdr *hdr)
+{
+    return struct_size(hdr, flags, luo_ser_nr_flag_words(hdr));
+}
+
+static inline void *luo_ser_payload(const struct luo_ser_hdr *hdr)
+{
+    return (void *)hdr + luo_ser_hdr_size(hdr);
+}
+
+and bounds checking is just luo_ser_hdr_size(hdr) <= hdr->size. The
+payload is always 8-byte aligned.
+
+Payload structs are then declared on their own, with no header:
+
+struct luo_memfd_ser {
+    __u64 pos;
+    __u64 size;
+};
+LUO_SER_ASSERT_SIZE(luo_memfd_ser, 16);
+
+The static_assert covers the payload to catch embedded structs changing
+size.  Asserting the header doesn't add anything since its size varies
+by kernel. And because flags[] is a flexible array, the header can't be
+embedded in front of a payload in a combined struct; it can only be
+reached through luo_ser_payload().
+
+I think the only downside is that the header increases to 16-bytes when
+there is at least 1 flag. But I don't think we need to be so concerned
+about an 8 byte difference...
 
