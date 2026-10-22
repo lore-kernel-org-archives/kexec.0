@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01138606A32E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F46606A328
 	for <kexec@archiver.kernel.org>; Thu, 22 Oct 2026 08:33:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=D0Tarjvl;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iNN9pxJF
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=IBikKg2H;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CLPxSJLu
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,48 +14,48 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=flFPZllbaKoBIHFswczsH7CR5as1Rw0sc8rUxUyOmGI=; b=D0Tarjvl2CjYGh/CxCLaVWPChf
-	YHS5rrkPsAVsNI3/jQbrSnGN+PUnhSd4txiMxfA1l+M0pA04wyYjhxVDSsFPWGw0Qm7taH/4WXGWY
-	cdSPia6Ll7G4LYHRc+QmVQNtzo4WZ5pFj0tpOEDovYCGkABgB6yHQyEX36pjFcIN0cntb5JOSfyDG
-	3o4q9hBY6Qy7kouM4EZRT3UeLkQg9sNdjeS6L9rlWeZ1Qn5UJPMUqmk0Dit/AgYMZ4wh7EdIg7+jm
-	lh6AxEIQdNlKE1XoDru8GFtjpoM6ltzsEaXG/n9/0K26nN8oP2PNcq+CXGRgrEO0K4AhHJcnN+gKl
-	vSGuzdgg==;
+	bh=zxfh/bVyc6luYNg6f0sqJGtSpFedqQg0oJhjzoT/Dxg=; b=IBikKg2HD+me22ODag1N8zRxsg
+	AusCsQFvFfxEp7Hvg4c1js8IWkONJjeDFnB4U1+GpdmDWSKOqgxzWI3GvdCTZFZY9tBTfAUzFa+eC
+	upoJF0s9a9OB7WH/+lDTczECFo8b1MgQn0znIM9UOwxzwvI5v+dkwORngcd+uELQFGgyJUnwCE5nt
+	nBwPZqtDyuGouP54PkSPbmBBXQhLhM6rZHnZkZ5ZlCqpyG9j75qT9X89YOMepN1P0N1rgrGP/b4N9
+	sejdFoq1KUNRX4dZzMoruu87nthe61MIpRA1H9WXnio1Upu0wHakdStwQNSrkBhguCd8IpzTy7fro
+	IhU8tQbg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJoEl-0000000Dg23-3elo;
+	id 1xJoEl-0000000Dg2L-44Wy;
 	Thu, 22 Oct 2026 08:33:23 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xJoEi-0000000Dg0P-1Eo5
+	id 1xJoEj-0000000Dg0t-3lkx
 	for kexec@lists.infradead.org;
-	Thu, 22 Oct 2026 08:33:20 +0000
+	Thu, 22 Oct 2026 08:33:21 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id B8EA3601F1;
+	by sea.source.kernel.org (Postfix) with ESMTP id 9553643583;
+	Thu, 22 Oct 2026 08:33:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 061111F000C1;
 	Thu, 22 Oct 2026 08:33:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7E4B1F000C2;
-	Thu, 22 Oct 2026 08:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792657999;
-	bh=flFPZllbaKoBIHFswczsH7CR5as1Rw0sc8rUxUyOmGI=;
+	s=k20260515; t=1792658001;
+	bh=zxfh/bVyc6luYNg6f0sqJGtSpFedqQg0oJhjzoT/Dxg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=iNN9pxJF/9PFRFCBOoaXQOn8ujjifNb20yGhbn2HabesYdauaidzpm/MkGmUUFCyy
-	 bE80P2WRFeGrj5ltvDXJVQQTy/i0/9MlWgJHD7XtemlXn0qec6E8ETp6L6Ieds9N30
-	 1O8kDzFxKbu713xi5/fU0j2Tg1chVMArbx7aOpw+Cwmlb+hr6kRPKnE36QGLhspWoT
-	 B7BpQvDA57hXsFMsy1NqMIkqcOsp9NuM+IYIckpuzqKuK7VAZEUZ3DiNl21ZzFLVHO
-	 lPEl7wm2qZYg7m0XifQ38ufLdsKeh+BQdnfINwPZjZXB57PkNf9XIYopp1SrVowRjL
-	 1xiGL7CycOLRA==
-Message-ID: <sashiko-outbox-181183@kernel.org>
+	b=CLPxSJLu3dVzVG6rmiyxzHQ34n3rM+eWI+GASmkyfbyZ1b4fKLJvg3k30i1QUHQbX
+	 2V2JYetvj43lIyE+zsAxktSDLxfuMorQzpl9B8PY1KvRZ1VfAGbQPFfLhkII/Dkb75
+	 8pIFqQF7eCdraRWoW7Ip3EaoqJABGwEBbTVuQmjvBoAZjiHZBKY+dseP8sJifpXf40
+	 cDidlZDTIjwrsBfMfW7YIN/XmJejmZVQEA2Im+hI3RCoEWY3v/CmqiuFH32HyBLfj/
+	 SFV7M74LC0/2uo94g7cjUNUkKBYkg7uG+oWKmIzOSywsF3vRFvRHM7giXebxv2Q+v0
+	 OPzgy2tPv29ag==
+Message-ID: <sashiko-outbox-181184@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 7/8] of: reserved_mem: mark /reserved-memory entries
- with MEMBLOCK_NODUMP
+Subject: Re: [PATCH v9 8/8] crash_core: skip MEMBLOCK_NODUMP regions when
+ building vmcore ELF header
 To: "Wandun Chen" <chenwandun1@gmail.com>, robh@kernel.org, baoquan.he@linux.dev, rppt@kernel.org, m.szyprowski@samsung.com
-Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, chenhuacai@kernel.org, kernel@xen0n.name, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, saravanak@kernel.org, akpm@linux-foundation.org, pasha.tatashin@soleen.com, pratyush@kernel.org, ruirui.yang@linux.dev, robin.murphy@arm.com, devicetree@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org, conor+dt@kernel.org
-In-Reply-To: <20261021083011.2170525-8-chenwandun1@gmail.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, chenhuacai@kernel.org, kernel@xen0n.name, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, saravanak@kernel.org, akpm@linux-foundation.org, pasha.tatashin@soleen.com, pratyush@kernel.org, ruirui.yang@linux.dev, robin.murphy@arm.com, kexec@lists.infradead.org
+In-Reply-To: <20261021083011.2170525-9-chenwandun1@gmail.com>
 References: <20261021083011.2170525-1-chenwandun1@gmail.com>
- <20261021083011.2170525-8-chenwandun1@gmail.com>
+ <20261021083011.2170525-9-chenwandun1@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 22 Oct 2026 08:33:17 +0000
+Date: Thu, 22 Oct 2026 08:33:19 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -69,171 +69,25 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] of: reserved_mem: unaligned memblock split in fdt_mark_reserve_mem=
-_nodump()
-- [Medium] of: reserved_mem: fdt_mark_reserve_mem_nodump() marks failed res=
-ervations
---
+> From: Wandun Chen <chenwandun@lixiang.com>
+>=20
+> Reserve regions (for GPU, DSP, ...) carry no data useful for crash
+> analysis. Exclude MEMBLOCK_NODUMP regions from the vmcore ELF header to
+> reduce vmcore size and capture time. crash_should_skip_region() now also
+> returns true for MEMBLOCK_NODUMP.
+>=20
+> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
 
-commit a452b9d1fad838de511c25fe48e4541c58357355
-Author: Wandun Chen <chenwandun@lixiang.com>
-
-of: reserved_mem: mark /reserved-memory entries with MEMBLOCK_NODUMP
-
-This commit adds fdt_mark_reserve_mem_nodump() to mark non-dumpable
-reserved-memory regions in memblock.memory so kdump omits them from the
-vmcore when crash dump support is enabled.
-
-> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> index 8c9d6395d6a39..db2bf76000d23 100644
-> --- a/drivers/of/of_reserved_mem.c
-> +++ b/drivers/of/of_reserved_mem.c
-> @@ -677,6 +677,24 @@ static void __init fdt_init_reserved_mem_node(unsign=
-ed long node, const char *un
->  	reserved_mem_count++;
->  }
-> =20
-> +void __init fdt_mark_reserve_mem_nodump(void)
-> +{
-> +	struct reserved_mem *rmem;
-> +	int i;
-> +
-> +	if (!IS_ENABLED(CONFIG_CRASH_DUMP))
-> +		return;
-> +
-> +	if (!IS_ENABLED(CONFIG_KEXEC_FILE) && !IS_ENABLED(CONFIG_CRASH_HOTPLUG))
-> +		return;
-> +
-> +	for (i =3D 0; i < reserved_mem_count; i++) {
-> +		rmem =3D &reserved_mem[i];
-> +		if (rmem->size && !rmem->dumpable)
-> +			memblock_mark_nodump(rmem->base, rmem->size);
-> +	}
-
-[Severity: High]
-What happens here when rmem->base or rmem->size is not page-aligned, or
-when rmem->size is smaller than a page?
-
-Previously, mapped reserved-memory regions were only recorded in
-memblock.reserved and did not split memblock.memory. Calling
-memblock_mark_nodump() splits memblock.memory at rmem->base and
-rmem->base + rmem->size, but reserved-memory regions are not guaranteed to
-be page-aligned:
-
-drivers/of/of_reserved_mem.c:early_init_dt_alloc_reserved_memory_arch() {
-	end =3D !end ? MEMBLOCK_ALLOC_ANYWHERE : end;
-	align =3D !align ? SMP_CACHE_BYTES : align;
-	base =3D memblock_phys_alloc_range(size, align, start, end);
-}
-
-Static device tree regions without no-map can also be smaller than a page
-or unaligned to the page size (for example, cfe-stub@0 in
-arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi with a 0x1000 size under
-16k or 64k page configurations).
-
-When memblock.memory is split at an unaligned or sub-page boundary,
-__next_mem_pfn_range() rounds each region inward to page boundaries and
-skips sub-page regions:
-
-mm/memblock.c:__next_mem_pfn_range() {
-	while (++*idx < type->cnt) {
-		r =3D &type->regions[*idx];
-		r_nid =3D memblock_get_region_node(r);
-
-		if (PFN_UP(r->base) >=3D PFN_DOWN(r->base + r->size))
-			continue;
-}
-
-This drops any page frame straddling an unaligned split boundary from
-for_each_mem_pfn_range() and the page allocator.
-
-In addition, request_standard_resources() in arch/arm64/kernel/setup.c and
-init_resources() in arch/riscv/kernel/setup.c register each mapped
-memblock.memory region using memblock_region_memory_base_pfn() and
-memblock_region_memory_end_pfn():
-
-arch/riscv/kernel/setup.c:init_resources() {
-		res->start =3D __pfn_to_phys(memblock_region_memory_base_pfn(region));
-		res->end =3D __pfn_to_phys(memblock_region_memory_end_pfn(region)) - 1;
-
-		ret =3D add_resource(&iomem_resource, res);
-		if (ret < 0)
-			goto error;
-}
-
-For a sub-page region where PFN_UP(base) >=3D PFN_DOWN(base + size), res->e=
-nd
-becomes smaller than res->start (or underflows when end_pfn is 0), causing
-add_resource() on riscv to fail and tear down iomem_resource, and producing
-an inverted or underflowed resource on arm64.
-
-Splitting memblock.memory also splits hyp_memory[] on arm64 pkvm, where
-check_range_allowed_memory() in arch/arm64/kvm/hyp/nvhe/mem_protect.c
-requires checked ranges to fall within a single region:
-
-arch/arm64/kvm/hyp/nvhe/mem_protect.c:check_range_allowed_memory() {
-	reg =3D find_mem_range(start, &range);
-	if (!is_in_mem_range(end - 1, &range))
-		return -EINVAL;
-}
-
-Could memblock_mark_nodump() corrupt resource registration, drop straddling
-pages, or break pkvm range checks when regions are not page-aligned?
-
-[Severity: Medium]
-Can fdt_mark_reserve_mem_nodump() also end up marking active kernel memory
-as non-dumpable if an early static reservation failed?
-
-During early boot in fdt_scan_reserved_mem(), __reserved_mem_reserve_reg()
-logs an error if early_init_dt_reserve_memory() fails (for example, if a
-static region overlaps the kernel image or initrd), but still returns 0:
-
-drivers/of/of_reserved_mem.c:__reserved_mem_reserve_reg() {
-	if (size && early_init_dt_reserve_memory(base, size, nomap) =3D=3D 0) {
-		fdt_fixup_reserved_mem_node(node, base, size);
-		pr_debug("Reserved memory: reserved region for node '%s': base %pa, size =
-%lu MiB\n",
-			 uname, &base, (unsigned long)(size / SZ_1M));
-	} else {
-		pr_err("Reserved memory: failed to reserve memory for node '%s': base %pa=
-, size %lu MiB\n",
-		       uname, &base, (unsigned long)(size / SZ_1M));
-	}
-	return 0;
-}
-
-Later, fdt_scan_reserved_mem_late() scans all available static nodes in
-/reserved-memory and passes them to fdt_init_reserved_mem_node(), recording
-them in reserved_mem[] regardless of whether the early reservation
-succeeded:
-
-drivers/of/of_reserved_mem.c:fdt_scan_reserved_mem_late() {
-		if (size) {
-			uname =3D fdt_get_name(fdt, child, NULL);
-			fdt_init_reserved_mem_node(child, uname, base, size);
-		}
-}
-
-Wouldn't fdt_mark_reserve_mem_nodump() then mark that unreserved range in
-memblock.memory, causing kdump to omit memory that is actually in use by
-the kernel?
-
-> +}
-> +
->  struct rmem_assigned_device {
->  	struct device *dev;
->  	struct reserved_mem *rmem;
+Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261021083011.2170=
-525-1-chenwandun1@gmail.com?part=3D7
+525-1-chenwandun1@gmail.com?part=3D8
+
 
