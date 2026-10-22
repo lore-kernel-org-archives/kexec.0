@@ -2,126 +2,94 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17C4606A32A
-	for <kexec@archiver.kernel.org>; Thu, 22 Oct 2026 20:54:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56EFD60A261B
+	for <kexec@archiver.kernel.org>; Thu, 22 Oct 2026 22:50:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=1zhFEfql;
-	dkim=pass (2048-bit key, unprotected) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=W54FOMcl
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=xx3twlGs;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=HDlXTrq9
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=q7AHGxYo2F1tyAP4/knTgDUev2PNwFvE7RNfo85FnlQ=; b=1zhFEfqlJzkLuL
-	s44CoBDhQnel80ZTJYBcw7iu1VJnVZt6UfTyuvWXDp2RLxnTuHVAPkDhGpBlkarC13FoDVr3AJIvj
-	nXFBUrK354pHb9g7Y0k15SBxkqLwTvVSlzb6aSmasTe/Pi/eHkE26QYGx1sSWOUVmlAa0aKpcBIgb
-	x2ikoxpzfJgVYOZqROKcH4mYLIHewpmJgSGO4nS92fciAISQgROjaZRB5TXy/wsHIQfof06ogwwr0
-	Vp+KrQRjqkXbRzJOBC3PuVUpr2NzhpWFo+ABugFnjccTTHthkAoCx8fEqloG6bgP8sgbQeMP0avhs
-	WzZ3GzI1ST/XexwaCO4g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=ZxtqEGpizmVFkbAIWqB2ioSJ0+pXS1WhHyAhjSgL0fY=; b=xx3twlGsT7Jni45uboLEhUeN0n
+	RzTI/uHoffUKSe4U4FqBMlkPqYc6FLOa12ECfkg7NSHyz2uVUZcu1Xx0mGAOaLPlp8tAeEO0JgK4L
+	AyKdcK5IAbOeaPuUu2c+dbhcaL8VcdKR6wDfgKceM84txA1lK9CT7FBNk3gHvbUrPKPUH1kyfAlL4
+	YJsHKebEvjPEYJ+T5eJ7w3OkNpbCq7euFbGbkIyE8huzuTMeN4LWs7DDf+GLr5i2F86yCG4zKvj8q
+	szZoRMBGRtLpguJjC6sQuArWVwLbuwn2pV4xqcFEtD4PVplaRo3OGH+3XlVSN5iNVbf1M6Rmo3YdT
+	gjr/cfzA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xJznf-0000000ExmM-0HSu;
-	Thu, 22 Oct 2026 20:54:11 +0000
-Received: from mail-ed1-x532.google.com ([2a00:1450:4864:20::532])
+	id 1xK1cS-0000000F5tg-2xdS;
+	Thu, 22 Oct 2026 22:50:44 +0000
+Received: from mail-pf1-x447.google.com ([2607:f8b0:4864:20::447])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xJznc-0000000ExkX-0899
+	id 1xK1cQ-0000000F5s0-2BPK
 	for kexec@lists.infradead.org;
-	Thu, 22 Oct 2026 20:54:09 +0000
-Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-6afafc89b48so235839a12.2
-        for <kexec@lists.infradead.org>; Thu, 22 Oct 2026 13:54:07 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792702446; cv=none;
-        d=google.com; s=arc-20260327;
-        b=nMpRAddrxuG40UABmrTj75qcW8HGQoWnBs6tW5sdN371lDHxwNWgH6PpyU7EZQSG0O
-         QC/ULqi5L44l3zA14CkfI0POjnpkFOPiW3OCLucGXoEIaB4z9IeTEfR88mHY2gBNliGi
-         ceHR80pYRsun59W58kkBc2xHMlh+bG98XXyJ7BS8+OJt5VpwABGYDT5yDhAlMslXCmmx
-         CVTw6WrUCry610AJPi6LQ3aduQNZ0pypTpGWUocnLsJ+7CYXJOZYEscniwlQHN+DOCSb
-         QkVG482H7ZmnBaNgfMOftIExfTVbs6IdnaN18BePRxeLHBnB6yYQGvmO9r2sFfyYHux4
-         trfQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=q7AHGxYo2F1tyAP4/knTgDUev2PNwFvE7RNfo85FnlQ=;
-        fh=uLnEo45UJoUNKNfptmiROImK6xt/uAaa45JWXVFjy64=;
-        b=sfASYg8csJZx5FZBDe13fR74r/MQ2cXHCCH8YLyvKGiIeEfofp5Bw8SMZKYTRXSWwU
-         CZGrePDrYhWZRiKzO4kUmumPf8bzIyU3RMvIWtZLYu2fFb5Dn5VVchkYzpi8qjguNljC
-         UtH1kT9rih0aTv4lpZ5894FgSnQADP3VTY7dHhjPng+YCQ84H/Zu+HTlTlFGpT3MRRLl
-         S4dpiJ+LZUOywKVwI0d7IabSKTLACdVLCvDUaTHT79Zi91SFwkczELQz2dYVuTXAJs0P
-         UrutMAQB5CWeCLWGxHUaGcHAOtI4R0hIT1CBRiWnkJxdRpq8x2t4e5ziuXh67ywvX4PD
-         Q45Q==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	Thu, 22 Oct 2026 22:50:43 +0000
+Received: by mail-pf1-x447.google.com with SMTP id d2e1a72fcca58-89e6ddd4554so212301b3a.3
+        for <kexec@lists.infradead.org>; Thu, 22 Oct 2026 15:50:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1792702446; x=1793307246; darn=lists.infradead.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=q7AHGxYo2F1tyAP4/knTgDUev2PNwFvE7RNfo85FnlQ=;
-        b=W54FOMcl3MAuOcUGdlr5PxBfeUlJb36wVZ1rlAO6i/W+ynJKk3SqVoorf0uHV+WlwD
-         Mat7eH7JGaqrDe5dYUS0AOW/gwprEyipTWeObMF08JFc6luP2/f4zK9FQfmbNLs5GO6y
-         mSDD9wAFTpO3N/e8zzPWIQnzAFttETlXQaLMqdhvovnlUrWxb3STdFhFUE9bfD/zNOWw
-         zCX9TXOPqBU1bHiptJB29PDZZ2Slt6MUPc1M40zgZjr441djP2++A8/pHodLEDYhqix1
-         C20knvsDZsLko9b3IDHny7BWRKphS6SaQ0T0J9/nfwlhiiR7IXUfTYeHXt7Wz/YFILcS
-         MVkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792702446; x=1793307246;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20251104; t=1792709441; x=1793314241; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=q7AHGxYo2F1tyAP4/knTgDUev2PNwFvE7RNfo85FnlQ=;
-        b=sPiJ6lcraaEB3jqho7uFpN3AQKBp/XzhF3jqhP2Ogpb3YneEqorNPYrf4sP2EG2gF/
-         zeGxxz8Nyn1HHSe/V1QvTPSa2BGTulH89z82DZjQwoVo5LtRzwwXjU3Dds43oLj8AKt0
-         6P6NjFbbT483Nn0/+d9swO7gbVX2G2nCfZBq8yiih5Gp8ELWN27uhqhhWI6Y7DHXaNH0
-         5GmqP7Em76ykYokegv9ARFHlTttLIaabAyRTIPPLxHAK1ILDUJYGmB+vzBRxLmvXvtqJ
-         G0pphZ8TtolGqytQ6ruTxyABEpIobvN8Rdshfe7xaADR8u+yaX+7ac44YIBHyHyZ004P
-         dnFA==
-X-Forwarded-Encrypted: i=1; AKwUvBwlKdHqy+QHU2ifjd7wW3bLbzS4C0uFIFh7acwjxQOqf2snjr8/ot8YsLN1DC8g/DZ357Y/cw==@lists.infradead.org
-X-Gm-Message-State: AFq9FYIhWwAs/d2oSBVlLS8e2GKJ88y5nntAPUxp553yTTyCPGKFlTBe
-	Ewdz73L1hLaWkp46IfFa3Qxdkp6fed892HcYZKI3npzAzTKhBX5J/MHZyZZr/o9DwHtQt1F68ug
-	GiJGbIx/8O5GxQ4eZ8pq1VpNfSkd233JgWxV5tMahiA==
-X-Gm-Gg: AYBFou0t1jpZgqFff30iJ0Jfm2/I9x/cXTwMpuDyuqOlMoKe6V/M7TBx7S8z/0tielo
-	0s4CZcly7iGAN44Spaf73xnAjZ1T5Jo6lqlY/dizShsGlhbeTmcv3RfsRPCafX7UhedGoaHN0ba
-	Kdk8Vakw4ZKJBiH+7vmp021WlN/Zz7oOr4xyoCR8ekUfoVVCYb2eBD+g7XiW5hq1E6aiMAp3dMF
-	ViuvdRnzVzwR3whokmn+y0uw6z6+AKGpyN/x8H3qnIg1ddRraMYe8hY1y84sKOuXHymO/DuR07M
-	qgGX0PrPSx8nEpgInydmLgt+pUDVYwS26XdLdONL/AtReNXsYo3sVM3cGStuZt0Q1P2/JPZIIOp
-	E+izvoLzTZFmQYCWnT+JyB5lakXN0WIMZKX0tyyoyuYRwedqPiUTcnoiDN510Kgrd0gCZ
-X-Received: by 2002:a05:6402:321c:b0:6b1:c299:b3f8 with SMTP id
- 4fb4d7f45d1cf-6b432c1a486mr859420a12.33.1792702445990; Thu, 22 Oct 2026
- 13:54:05 -0700 (PDT)
+        bh=ZxtqEGpizmVFkbAIWqB2ioSJ0+pXS1WhHyAhjSgL0fY=;
+        b=HDlXTrq9uNWdnYil06Rp3/EVPDX48v2o0j/gdo6dGTRJhbx0p2vH6csJpdMbBQVfab
+         kw4B+qwGVG3691elm44odetVucPiFyViDG77FUeh31oHcH+PBnFKciCBOoPF6RhHVz5h
+         KJn4hkVwGIS80CmEA1fD+mRAF9mjAbacsQUQP2qH9BBhAkLAg7vCnNLuRnWyPQGYtNEH
+         BqSuJEoD33Nb/iSd09BzHJggw/mom20orhGl2BgGVgfpswdyxZlrnlWo6QchtHAo0Lgq
+         TdOkImVH03tMiaEuIR2p9hpYdugz6YPyv9ubTctzQYZ8iok5BsSGCAYJwd1TJE8oa5GL
+         7doQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792709441; x=1793314241;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ZxtqEGpizmVFkbAIWqB2ioSJ0+pXS1WhHyAhjSgL0fY=;
+        b=rrF5hLxw92xoWeeuCHZrT22XL000jn+NixfrP7FAYZVByVm9T3baKmTOu6xAl0rC5W
+         sUayJ3OAk1nWEqlZ3ZbHBYr+X26DZjlApi8h7RPDcTwlu7sUrXGI2pmoQ+Fbgwy2Cv/D
+         ZU6iUjqzbMl5coYOb3lrWCHrJm1GpKgubrBsrH8DQqaZfSo6+Na/jbjXh79FtO79/diM
+         v1N18Thny3yXFzQnqgTH5uJ7gfO1HafkipOJH6xiWskSYztN6H3zHZ64l2+6OsA/GTlo
+         pKlaoNmuvPzbppUW8NKmOMt8reO0cBcjwU7IZ75eZRfalhgX/Cr4n3AXiFQLxQrELrqG
+         Mxtg==
+X-Gm-Message-State: AFq9FYJJSbdQuyJcyIDpDAqtljTkFkJ5LYzv/6LekgODPfmNGawcBdDV
+	4XC2vty5A/RhKMSiVpYjDlhyH9r3TICeTedyiITCSUvC7etyk5+fo/nLST/VvJQgLE5PoIK8c4Y
+	tEmkCbzUKLtS8dyWqKQMPpEJLpw95KTN5EUIc3GKmrNb1dTssK46bKWnV7rnaAtsxNPGArCPfyu
+	kM1dckrlWDZHWHvdgR9EwaaXaaJSb77+8CpCfPS4Wys/oH20xO+Wo=
+X-Received: from pgfd7-n1.prod.google.com ([2002:a05:6a02:6547:10b0:cc7:d1fb:4ccd])
+ (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a20:d81a:b0:3e2:6825:beec with SMTP id adf61e73a8af0-3e369227d0bmr279978637.19.1792709440800;
+ Thu, 22 Oct 2026 15:50:40 -0700 (PDT)
+Date: Thu, 22 Oct 2026 22:50:28 +0000
+In-Reply-To: <20261022225035.377445-1-dmatlack@google.com>
 X-Archived-By: <archiver.kernel.org>
-MIME-Version: 1.0
-References: <CA+CK2bAQbmq3ArP3XMErF_8RC2CUwvgpLY0H83D0nCJTaVKYyA@mail.gmail.com>
- <9huzecdi6go0.fsf@tarunix.c.googlers.com> <CALzav=dLdJoVy=B1pv0FAurD9OhAzLSTjJNbtjTdJRmSqaB0yw@mail.gmail.com>
- <CA+CK2bAQRMAEXZyHTEuUN0_Fo59Sn0hBmYbme_J9ewjx6gPyJQ@mail.gmail.com>
- <atlKsD-aJB3mJr2j@google.com> <CA+CK2bABt4OZO31TenVF2+uBUWVwViWbvfE00=0xbAw=f7K9SA@mail.gmail.com>
- <atl7peoVHdP5hz7z@google.com> <CA+CK2bBFXnJA1kddbLKGq0DAHDgjYhsTSQQay-xeX7jJC1V_UQ@mail.gmail.com>
- <CALzav=e=ho2gVrn+7KpZ3ZyasvH2u15-pC-RSRSS7KcMfKqUJQ@mail.gmail.com>
- <CA+CK2bAJo8dnTOyKMgnnMnk-SCXbTsv+JCLEOWkjyj-wqtEkHg@mail.gmail.com> <atpNFEFIlqAoYIwH@google.com>
-In-Reply-To: <atpNFEFIlqAoYIwH@google.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 22 Oct 2026 16:53:28 -0400
-X-Gm-Features: AclHuK_o-bcMo-_bEmG9OJEk39HO6mWdZ96jtolFahfwsqDnw1LYQXgLWQ4gcJk
-Message-ID: <CA+CK2bB2C3Am5ssRuzYpfiU7_vB81vxMGc19HQLq7N=_7YrbTg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 3/4] liveupdate: Replace compatibility string with
- a 2-bit pair feature header
-To: David Matlack <dmatlack@google.com>
-Cc: tarunsahu@google.com, Andrew Morton <akpm@linux-foundation.org>, joro@8bytes.org, 
-	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, maz@kernel.org, arnd@arndb.de, 
-	jgg@nvidia.com, robin.murphy@arm.com, loganodell@google.com, 
-	oupton@kernel.org, kevin.tian@intel.com, alex@shazbot.org, 
-	dwmw2@infradead.org, pbonzini@redhat.com, seanjc@google.com, will@kernel.org, 
-	Alexander Graf <graf@amazon.com>, Bjorn Helgaas <bhelgaas@google.com>, baolu.lu@linux.intel.com, 
-	linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org, 
-	sagis@google.com, linux-mm@kvack.org, kvmarm@lists.linux.dev, 
-	iommu@lists.linux.dev, linux-pci@vger.kernel.org, kexec@lists.infradead.org, 
-	skhawaja@google.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+References: <20261022225035.377445-1-dmatlack@google.com>
+X-Mailer: git-send-email 2.56.0.257.gf7497c7d27-goog
+Message-ID: <20261022225035.377445-4-dmatlack@google.com>
+Subject: [PATCH v2 03/10] liveupdate: Allow file handlers to mark retrieve
+ failures as retryable
+From: David Matlack <dmatlack@google.com>
+To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org
+Cc: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Christian Brauner <brauner@kernel.org>, 
+	David Hildenbrand <david@kernel.org>, Hugh Dickins <hughd@google.com>, Jonathan Corbet <corbet@lwn.net>, 
+	"Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>, Michal Hocko <mhocko@suse.com>, 
+	Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@kernel.org>, 
+	David Matlack <dmatlack@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261022_135408_184011_0E575533 
-X-CRM114-Status: GOOD (  34.90  )
-X-Spam-Score: -2.1 (--)
+X-CRM114-CacheID: sfid-20261022_155042_585534_3E91E658 
+X-CRM114-Status: GOOD (  28.39  )
+X-Spam-Score: -9.5 (---------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -132,180 +100,137 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-26.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Thu, Oct 22, 2026 at 1:51=E2=80=AFPM David Matlack <dmatlack@google.com>=
- wrote:
->
-> On 2026-10-22 12:11 AM, Pasha Tatashin wrote:
-> > On Wed, Oct 21, 2026 at 11:53=E2=80=AFPM David Matlack <dmatlack@google=
-.com> wrote:
->
-> > > > #define DECLARE_LUO_SER(name, expected_size, ext_flags_count, paylo=
-ad_type) \
-> > > >     struct name {                                                  =
-         \
-> > > >         __u32 size;                                                =
-         \
-> > > >         __u32 flags;                                               =
-         \
-> > > >         __u64 ext_flags[ext_flags_count];                          =
-         \
-> > > >         payload_type payload;                                      =
-         \
-> > > >     };                                                             =
-         \
-> > > >     static_assert(sizeof(struct name) =3D=3D (expected_size),      =
-             \
-> > > >                   "LUO struct " #name " size mismatch!")
-> > > >
-> > > > For example:
-> > > >
-> > > > struct luo_memfd_payload {
-> > > >     __u64 pos;
-> > > >     __u64 size;
-> > > > };
-> > > >
-> > > > DECLARE_LUO_SER(luo_memfd_ser, 24, 0, struct luo_memfd_payload);
-> > >
-> > > This looks pretty reasonable but I would name the payload
-> > > luo_memfd_ser. The combined struct that DECLARE_LUO_SER() creates
-> > > should never be used directly since the offset of the payload in that
-> > > struct is only valid in the current kernel. So I would give that
-> > > struct a special name that makes it obvious you shouldn't be using it=
-.
-> >
-> > Lets drop the fourth macro argument and generate the combined struct na=
-me:
-> >
-> > #define DECLARE_LUO_SER(name, expected_size, ext_flags_count)          =
-    \
-> >     struct name##_hdr {                                                =
-    \
-> >         __u32 size;                                                    =
-    \
-> >         __u32 flags;                                                   =
-    \
-> >         __u64 ext_flags[ext_flags_count];                              =
-    \
-> >         struct name payload;                                           =
-    \
-> >     };                                                                 =
-    \
-> >     static_assert(sizeof(struct name##_hdr) =3D=3D (expected_size),    =
-        \
-> >                   "LUO struct " #name " size mismatch!")
-> >
-> > For example:
-> >
-> > struct luo_memfd_ser {
-> >     __u64 pos;
-> >     __u64 size;
-> > };
-> >
-> > DECLARE_LUO_SER_HDR(luo_memfd_ser, 24, 0);
->
-> I think we are getting close, bu I have two remaining concerns:
->
->  * Reserving bits in each flags word for continuation leaves gaps
->    in the flag space that users have to know to skip.
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
 
-Yes, but callers should never manipulate the raw flag words directly,
-and we can provide simple accessor macros or inlines that take a
-contiguous feature ID (0, 1, 2, ...)
+When luo_retrieve_file() invokes a handler's .retrieve() callback and it
+returns an error, LUO currently records the error in
+luo_file->retrieve_status and blocks any subsequent retrieve attempts.
+This is necessary when the handler has already partially consumed or
+freed the preserved KHO state.
 
-enum luo_memfd_feats {
-    LUO_MEMFD_FEAT_HUGETLB =3D 0,
-    LUO_MEMFD_FEAT_SEALS   =3D 1,
-    /* ... */
-    LUO_MEMFD_FEAT_FOO     =3D 15, /* Automatically lands in
-ext_flags[0] bits 0:1 */
-    LUO_MEMFD_NR_FEATS
-};
+However, with user arguments passed to .retrieve(), a handler may fail
+early while validating caller-supplied parameters (such as a missing
+argument, an invalid or read-only target file descriptor, or a non-empty
+target file) before touching any preserved KHO state. In such cases,
+userspace should be able to fix the argument and retry
+LIVEUPDATE_SESSION_RETRIEVE_FD, and if the file is never retrieved,
+.finish() must still run to release the preserved KHO state.
 
-if (luo_ser_get_feat(hdr, LUO_MEMFD_FEAT_HUGETLB)) {
-    /* handle hugetlb */
-}
+Add a retryable output flag to struct liveupdate_file_op_args. When a
+handler sets args->retryable = true on error, luo_retrieve_file() leaves
+luo_file->retrieve_status at 0 so the retrieve operation can be retried
+and .finish() will still clean up the unconsumed preserved state if the
+session is finished without retrieving the file.
 
->  * struct name##_hdr only matches structs written by the current kernel
->    (in terms of length of array and offset of payload).
+Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+Signed-off-by: David Matlack <dmatlack@google.com>
+---
+ include/linux/liveupdate.h      | 11 ++++++++---
+ include/uapi/linux/liveupdate.h |  7 ++++---
+ kernel/liveupdate/luo_file.c    | 20 ++++++++++++++------
+ 3 files changed, 26 insertions(+), 12 deletions(-)
 
-This is not an issue on the incoming path, we never cast incoming data
-to struct name##_hdr or access ->payload directly. Instead, we parse
-the incoming buffer, dynamically compute the header size from the
-continuation bits, and cast the payload offset to "struct name *"
-based on the negotiated feature flags.
+diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
+index 7543f5d648d3..e4ad0bf78a5c 100644
+--- a/include/linux/liveupdate.h
++++ b/include/linux/liveupdate.h
+@@ -58,9 +58,13 @@ struct liveupdate_arg_spec {
+  * @session:          The session this file belongs to.
+  * @retrieve_status:  The retrieve status for the 'can_finish / finish'
+  *                    operation. A value of 0 means the retrieve has not been
+- *                    attempted, a positive value means the retrieve was
+- *                    successful, and a negative value means the retrieve failed,
+- *                    and the value is the error code of the call.
++ *                    attempted (or only failed with a retryable error), a
++ *                    positive value means the retrieve was successful, and a
++ *                    negative value means the retrieve permanently failed, and
++ *                    the value is the error code of the call.
++ * @retryable:        For .retrieve(): [OUT] Set to true by the callback on
++ *                    error when the preserved state has not been consumed and
++ *                    retrieval may be retried.
+  * @file:             The file object. For retrieve: [OUT] The callback sets
+  *                    this to the new file. For other ops: [IN] The caller sets
+  *                    this to the file being operated on.
+@@ -83,6 +87,7 @@ struct liveupdate_file_op_args {
+ 	struct liveupdate_file_handler *handler;
+ 	struct liveupdate_session *session;
+ 	int retrieve_status;
++	bool retryable;
+ 	struct file *file;
+ 	u64 serialized_data;
+ 	void *private_data;
+diff --git a/include/uapi/linux/liveupdate.h b/include/uapi/linux/liveupdate.h
+index e806752c2fc6..953ffe0823be 100644
+--- a/include/uapi/linux/liveupdate.h
++++ b/include/uapi/linux/liveupdate.h
+@@ -174,9 +174,10 @@ struct liveupdate_session_preserve_fd {
+  * associated with the token and populates the @fd field with a new file
+  * descriptor referencing the restored resource in the current (new) kernel.
+  * This operation must be performed *before* signaling completion via
+- * %LIVEUPDATE_IOCTL_FINISH. If a retrieve of a token fails, subsequent
+- * attempts to retrieve the token fail with the same error code. Failed
+- * retrieves are not retried.
++ * %LIVEUPDATE_IOCTL_FINISH. If a retrieve of a token fails after consuming
++ * preserved state, subsequent attempts to retrieve the token fail with the
++ * same error code. Early argument or target validation errors before
++ * preserved state is consumed leave the token intact and may be retried.
+  *
+  * Retrieving a token that was already retrieved successfully returns a new file
+  * descriptor for the same file. The @arg only applies to the retrieve that
+diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
+index eeeb3b5ff2fa..908ae124ea5e 100644
+--- a/kernel/liveupdate/luo_file.c
++++ b/kernel/liveupdate/luo_file.c
+@@ -152,9 +152,10 @@ static DEFINE_XARRAY(luo_preserved_files);
+  * @retrieve_status: Status code indicating whether a user/kernel in the new kernel has
+  *                 successfully called retrieve() on this file. This prevents
+  *                 multiple retrieval attempts. A value of 0 means a retrieve()
+- *                 has not been attempted, a positive value means the retrieve()
+- *                 was successful, and a negative value means the retrieve()
+- *                 failed, and the value is the error code of the call.
++ *                 has not been attempted (or only failed with a retryable
++ *                 error), a positive value means the retrieve() was successful,
++ *                 and a negative value means the retrieve() permanently failed,
++ *                 and the value is the error code of the call.
+  * @mutex:         A mutex that protects the fields of this specific instance
+  *                 (e.g., @retrieved, @file), ensuring that operations like
+  *                 retrieving or finishing a file are atomic.
+@@ -604,7 +605,9 @@ void luo_file_unfreeze(struct luo_file_set *file_set,
+  * The operation is idempotent: if a file has already been successfully
+  * retrieved, this function will simply return a pointer to the existing
+  * 'struct file' and report success without re-executing the retrieve
+- * operation. This is handled by checking the 'retrieved' flag under a lock.
++ * operation. If a previous retrieve failed permanently, it returns that
++ * saved error code; if a previous retrieve failed with a retryable error
++ * before consuming preserved state, the retrieve operation is re-attempted.
+  *
+  * File retrieval can happen in any order; it is not bound by the order of
+  * preservation.
+@@ -671,8 +674,13 @@ int luo_retrieve_file(struct luo_file_set *file_set, u64 token, u64 arg,
+ 	err = luo_file->fh->ops->retrieve(&args);
+ 	kfree(args.arg);
+ 	if (err) {
+-		/* Keep the error code for later use. */
+-		luo_file->retrieve_status = err;
++		/*
++		 * Keep the error code for later use unless the handler marked
++		 * the failure as retryable (e.g. invalid user argument before
++		 * preserved state was consumed).
++		 */
++		if (!args.retryable)
++			luo_file->retrieve_status = err;
+ 		return err;
+ 	}
+ 
+-- 
+2.56.0.257.gf7497c7d27-goog
 
->
-> How about this instead:
->
-> struct luo_ser_hdr {
->     __u32 size;        /* Size of header + payload in bytes */
->     __u32 nr_flags;    /* Number of features encoded in flags[] */
->     __u64 flags[];
-> };
->
-> Each feature occupies 2 bits of flags[], so feature N is always bits
-> [2N+1:2N] of flags[N / 32], with no gaps:
->
->   00: Feature not present
->   01: Feature present, safe to ignore if not supported
->   11: Feature present, must be supported by the next kernel
->   10: Invalid
->
-> The length of flags[] and the header size are computed directly rather
-> than by walking continuation bits:
->
-> static inline u32 luo_ser_nr_flag_words(const struct luo_ser_hdr *hdr)
-> {
->     return DIV_ROUND_UP(hdr->nr_flags, 32);
-> }
->
-> static inline size_t luo_ser_hdr_size(const struct luo_ser_hdr *hdr)
-> {
->     return struct_size(hdr, flags, luo_ser_nr_flag_words(hdr));
-> }
->
-> static inline void *luo_ser_payload(const struct luo_ser_hdr *hdr)
-> {
->     return (void *)hdr + luo_ser_hdr_size(hdr);
-> }
->
-> and bounds checking is just luo_ser_hdr_size(hdr) <=3D hdr->size. The
-> payload is always 8-byte aligned.
->
-> Payload structs are then declared on their own, with no header:
->
-> struct luo_memfd_ser {
->     __u64 pos;
->     __u64 size;
-> };
-> LUO_SER_ASSERT_SIZE(luo_memfd_ser, 16);
->
-> The static_assert covers the payload to catch embedded structs changing
-> size.  Asserting the header doesn't add anything since its size varies
-> by kernel. And because flags[] is a flexible array, the header can't be
-> embedded in front of a payload in a combined struct; it can only be
-> reached through luo_ser_payload().
->
-> I think the only downside is that the header increases to 16-bytes when
-> there is at least 1 flag. But I don't think we need to be so concerned
-> about an 8 byte difference...
-
-I would prefer to keep the default header at 8 bytes. With 15 features
-fitting directly inside the base __u32 flags word, adding the first 15
-features to a struct keeps the header at 8 bytes and does not shift
-the payload.
-
-Computation-wise it is also very similar: for the 99% of structs that
-have <=3D 15 features, LUO_FLAGS_CONT is 0, so computing the header size
-is just a single bit test with no loop. Even if a struct ever needs
-ext_flags, the loop will walk at most one or two extra words.
-
-Pasha
 
