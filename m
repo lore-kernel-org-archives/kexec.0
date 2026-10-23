@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244FE606A31B
-	for <kexec@archiver.kernel.org>; Fri, 23 Oct 2026 22:51:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37599606A31A
+	for <kexec@archiver.kernel.org>; Fri, 23 Oct 2026 22:51:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=jNt+emTN;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iuAJbYMr
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=tbZ81OUj;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DLyWoM0h
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=GygIZUeQPDgjzcgayWtCyGqakcgizYpxe/r2dAOwyD8=; b=jNt+emTNUv0Wvopr6/xJT7+5jc
-	vcsoRdj0scZgxBydjxscfEaTi1qwbfZqozDzX9z1bxKH7zOlGdtLm9vJsO3T5jFL+Wefs4MLePmaL
-	hJ4/UJ+3Kx3GTN2hSGOnZ1UeqloLRJbQySsMvOdBkvYoC1U2VxZYIri5DCIj2NLEOGwQpmHkhFaeX
-	COAyIVgR6z/Q07zfke0JyjfM2hap32NMuLmfyoCwl/FnbGJNBqT9PyGQfGJeY3NvArFzYVIuMK1Rf
-	VZfzZmUe4+n9bH63tQIfpScNPhjOvloWTUUzhlqD2hmhFNFS0/RvobhkYqvpqcCaaMzpQPByNL3RN
-	BGMz/LxQ==;
+	bh=pYSp2c5otvQVKlsDqkCmWYdFvd1mbuUyoJ7Y+WxC2N4=; b=tbZ81OUjb2GmpL1ku8Lt1xMt6j
+	u3SuANc8oQd6kiGnkQNNRzfkgAR0IdIL7zt7zXmCwRWLyNPjhiUWXDDdcFIrX/vxLKMWgPCOQTFy/
+	l4rKm6+BtrZP5BdgdS94FtsiphsVb5wglWk+luuMfVPkne+fjBHKNRaS5YWEKwmLzJHQf8VCGe8if
+	UbOdFz+a6uQK53NA5W83v/VDH+dwPx6RYjjJ+U15kvYdZLyG2Pniynk0Tz9jXrNow7ki9lilO54EP
+	UzACsMK8TAWXKJJ06B+6y2pBWniruYVtdzeEdocnXL7PI0+e4j8fzxvSV4LG0bjMLQDPByQavWYl3
+	X4bXWiug==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xKO6u-0000000H4kv-3CeX;
-	Fri, 23 Oct 2026 22:51:40 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xKO6w-0000000H4ox-3mOc;
+	Fri, 23 Oct 2026 22:51:42 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xKO6t-0000000H4jm-3iFv
+	id 1xKO6v-0000000H4mJ-3Y5s
 	for kexec@lists.infradead.org;
-	Fri, 23 Oct 2026 22:51:39 +0000
+	Fri, 23 Oct 2026 22:51:41 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id A08BF43DAD;
+	by tor.source.kernel.org (Postfix) with ESMTP id 2ECE56022B;
+	Fri, 23 Oct 2026 22:51:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 034841F01829;
 	Fri, 23 Oct 2026 22:51:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C9E61F01825;
-	Fri, 23 Oct 2026 22:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792795899;
-	bh=GygIZUeQPDgjzcgayWtCyGqakcgizYpxe/r2dAOwyD8=;
+	s=k20260515; t=1792795900;
+	bh=pYSp2c5otvQVKlsDqkCmWYdFvd1mbuUyoJ7Y+WxC2N4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=iuAJbYMrOFitokghd/i8WqShNvfHSVeplcNPAl2bRFES2mGns/4cnCzywolAeCVIc
-	 UYgDYjPumQAVpF2UO6tjvz+MQeUUpQv3NrRV8AC+Iu1WW0HtG3Vvd8sLKGp6Uz4kaX
-	 nmrbsMxaz0mKsPxvOQbsJOzfqCAQOuEFrbrJfG23xcOAxVT10xklAMdpZ99qk9dinq
-	 Ni9IeToJrNd+vZ/XLQcLnzKDPdn7uGin9jDapQxFmJHhGnbF0H2VYEuNXAQH2MnzRi
-	 J+3a4wVZtMpz64b9u//RMXAEYGw3TR3K7jUNFwIp8iiW0aJjaG/05p8bm0Xyrn+FXq
-	 s5wUt6UkSYVsg==
-Message-ID: <sashiko-outbox-183327@kernel.org>
+	b=DLyWoM0hycKXz03W3ktmcZtB/2Qv8F+pJD3BgZOgUuE7HMl3adGV7L4jNniZeZycn
+	 tGZrN/dN7JBjneaErv/0SctPf/Q3RW2rZqrzxokpc3yLvdVU3CT6J9HCCSDRHj59U9
+	 JuDwuubQprNLM8c7UYK+wgY+4m6T6xRRPkQdsK7izcrNnGcAavG/2KCPy5g2naT6NM
+	 HswQj1PWWoq1FjYapWeVJw7d5D+PUqKGmssqYXXQAO8NIEmH6PQQn8z5j42HOAOi53
+	 7PVToV3ougoNDe5+gOw6ZMPJDoOrtISLjLjL9vHXwMqEvCnGZJIIkB0OEJxYzuHBSo
+	 Cf9N51nA419/Q==
+Message-ID: <sashiko-outbox-183328@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 08/10] mm/shmem_luo: Allow preserving tmpfs files
- that are still linked
+Subject: Re: [PATCH v2 09/10] mm/shmem_luo: Allow retrieving tmpfs files
+ with O_RDONLY
 To: "David Matlack" <dmatlack@google.com>, kexec@lists.infradead.org, linux-mm@kvack.org
 Cc: "Alexander Graf" <graf@amazon.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Baolin
  Wang" <baolin.wang@linux.alibaba.com>, "Christian Brauner" <brauner@kernel.org>, "David
@@ -58,12 +58,12 @@ Cc: "Alexander Graf" <graf@amazon.com>, "Andrew Morton" <akpm@linux-foundation.o
  Dunlap" <rdunlap@infradead.org>, "Samiullah Khawaja" <skhawaja@google.com>, "Shuah
  Khan" <skhan@linuxfoundation.org>, "Suren Baghdasaryan" <surenb@google.com>, "Vlastimil
  Babka" <vbabka@kernel.org>
-In-Reply-To: <20261022225035.377445-9-dmatlack@google.com>
+In-Reply-To: <20261022225035.377445-10-dmatlack@google.com>
 References: <20261022225035.377445-1-dmatlack@google.com>
- <20261022225035.377445-9-dmatlack@google.com>
+ <20261022225035.377445-10-dmatlack@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 23 Oct 2026 22:51:38 +0000
+Date: Fri, 23 Oct 2026 22:51:39 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,152 +83,114 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] mm/shmem_luo: missing FMODE_READ and MAY_READ check in shmem_luo_m=
-ay_preserve()
-- [Medium] mm/shmem_luo: missing IS_APPEND() check in shmem_luo_may_preserv=
-e()
+- [Medium] mm/shmem_luo: unnormalized flags passed to dentry_open() on O_RD=
+ONLY reopen
 --
 
-commit c078673247a58afcd0e7d24e1253ad5aeb43414c
+commit 18d00c8fbd0dd510d3e12bc0fbf7c761642eaf15
 Author: David Matlack <dmatlack@google.com>
 
-mm/shmem_luo: Allow preserving tmpfs files that are still linked
+mm/shmem_luo: Allow retrieving tmpfs files with O_RDONLY
 
-This commit allows preserving tmpfs files that still have links in the
-filesystem by removing the !inode->i_nlink restriction in
-shmem_luo_can_preserve(). Because preserving a file freezes its size for all
-users, it adds shmem_luo_may_preserve() to require write permission (or
-ownership when the file is immutable or on a read-only superblock) and
-documents the new behavior.
+This commit allows userspace to retrieve preserved tmpfs files read-only by
+passing O_RDONLY in struct liveupdate_shmem_retrieve_arg. It creates the
+temporary file as writable via file_open_root() and then reopens it read-on=
+ly
+with dentry_open().
 
 > diff --git a/mm/shmem_luo.c b/mm/shmem_luo.c
-> index ecbeb37d33a8a..aba2bc1f18c52 100644
+> index aba2bc1f18c52..0b4a9d6e2968c 100644
 > --- a/mm/shmem_luo.c
 > +++ b/mm/shmem_luo.c
-
 [ ... ]
-
-> @@ -298,6 +315,34 @@ static void shmem_luo_unpreserve_folios(struct kho_v=
-malloc *kho_vmalloc,
->  	vfree(folios_ser);
+> @@ -649,7 +650,9 @@ static struct file *shmem_luo_create_memfd(const stru=
+ct liveupdate_shmem_retriev
+>  static struct file *shmem_luo_create_tmpfs_file(const struct liveupdate_=
+shmem_retrieve_arg *arg,
+>  						unsigned int seals)
+>  {
+> -	struct file *file;
+> +	struct file *file, *ro_file;
+> +	bool rdonly;
+> +	int flags;
+>  	int err;
+> =20
+>  	if (!arg)
+> @@ -673,10 +676,16 @@ static struct file *shmem_luo_create_tmpfs_file(con=
+st struct liveupdate_shmem_re
+> =20
+>  	/*
+>  	 * Create the file like open(O_TMPFILE) does, so that it gets the same
+> -	 * flag checks, permission checks, owner and security labels.
+> +	 * flag checks, permission checks, owner and security labels. open()
+> +	 * requires write access for O_TMPFILE, so create the file writable and
+> +	 * reopen it read-only below if that is what userspace asked for. LUO
+> +	 * keeps the file until the session is finished, and a file opened for
+> +	 * writing couldn't be executed until then.
+>  	 */
+> +	flags =3D O_TMPFILE | O_LARGEFILE | arg->flags;
+> +	rdonly =3D (flags & O_ACCMODE) =3D=3D O_RDONLY;
+>  	file =3D file_open_root(&fd_file(dir)->f_path, ".",
+> -			      O_TMPFILE | O_LARGEFILE | arg->flags, arg->mode);
+> +			      flags | (rdonly ? O_RDWR : 0), arg->mode);
+>  	if (IS_ERR(file))
+>  		return file;
+> =20
+> @@ -694,7 +703,12 @@ static struct file *shmem_luo_create_tmpfs_file(cons=
+t struct liveupdate_shmem_re
+>  	}
+>  	SHMEM_I(file_inode(file))->seals =3D seals;
+> =20
+> -	return file;
+> +	if (!rdonly)
+> +		return file;
+> +
+> +	ro_file =3D dentry_open(&file->f_path, flags, current_cred());
+> +	fput(file);
+> +	return ro_file;
 >  }
 > =20
-> +/*
-> + * Check whether the caller may preserve @file. Preserving the file free=
-zes its
-> + * size until it is unpreserved, for all users of the file, so require
-> + * permission to write to the file. Like FS_IOC_ENABLE_VERITY, don't req=
-uire a
-> + * file opened for writing, so that e.g. a binary that is being executed=
- can be
-> + * preserved, nor a writable mount. If the size of the file can't change
-> + * anyway, because it is on a read-only superblock or immutable, its own=
-er may
-> + * also preserve it. The size could only change again after the file is =
-made
-> + * writable, which is up to the owner or root.
-> + *
-> + * Preserving the file also fills its holes, but that doesn't need any
-> + * permission: Anyone who can read the file can fill its holes by faulti=
-ng
-> + * them in through a read-only mapping.
-> + */
-> +static int shmem_luo_may_preserve(struct file *file)
-> +{
-> +	struct mnt_idmap *idmap =3D file_mnt_idmap(file);
-> +	struct inode *inode =3D file_inode(file);
-> +	int err;
-> +
-> +	err =3D inode_permission(idmap, inode, MAY_WRITE);
-
-[Severity: High]
-Should shmem_luo_may_preserve() in mm/shmem_luo.c also verify that the file
-is open for reading (file->f_mode & FMODE_READ) or that the caller has
-MAY_READ permission?
-
-The comment above notes that anyone who can read the file can fill its holes
-through a read-only mapping, and models the check on FS_IOC_ENABLE_VERITY.
-However, fsverity_ioctl_enable() in fs/verity/enable.c explicitly checks
-FMODE_READ in addition to MAY_WRITE:
-
-    err =3D file_permission(filp, MAY_WRITE);
-    if (err)
-        return err;
-    if (!(filp->f_mode & FMODE_READ))
-        return -EBADF;
-
-Similarly, do_mmap() in mm/mmap.c rejects mapping a file when FMODE_READ is
-not set:
-
-    if (!(file->f_mode & FMODE_READ))
-        return -EACCES;
-
-Without a read check in shmem_luo_may_preserve(), a user who opens a
-write-only tmpfs file (for example, mode 0622 or 0222 in /dev/shm owned by
-another user) with O_WRONLY, or who holds an ioctl-only mode-3 file
-descriptor lacking FMODE_READ, can pass it to LIVEUPDATE_SESSION_PRESERVE_F=
-D:
-
-    luo_preserve_file()
-      -> shmem_luo_preserve()
-        -> shmem_luo_may_preserve()
-        -> shmem_luo_preserve_folios()
-          -> memfd_pin_folios()
-
-This faults in and pins folios for the entire file (including holes), and on
-LIVEUPDATE_SESSION_RETRIEVE_FD, shmem_luo_retrieve() ->
-shmem_luo_create_tmpfs_file() in mm/shmem_luo.c places those folios into a
-new tmpfs file opened with caller-chosen flags (such as O_RDWR or O_RDONLY)
-and mode:
-
-    file =3D file_open_root(&fd_file(dir)->f_path, ".",
-                          O_TMPFILE | O_LARGEFILE | arg->flags, arg->mode);
-
-Wouldn't that allow a caller with only write access to read the file's
-contents after retrieval?
-
-> +	if (err && (sb_rdonly(inode->i_sb) || IS_IMMUTABLE(inode)) &&
-> +	    inode_owner_or_capable(idmap, inode))
-> +		return 0;
-> +
-> +	return err;
-> +}
+>  static int shmem_luo_retrieve(struct liveupdate_file_op_args *args)
 
 [Severity: Medium]
-What happens if shmem_luo_may_preserve() in mm/shmem_luo.c is called on an
-append-only (S_APPEND) tmpfs inode?
+When userspace retrieves a tmpfs file via LIVEUPDATE_SESSION_RETRIEVE_FD wi=
+th
+O_RDONLY in arg->flags, does passing the raw flags variable to dentry_open()
+in shmem_luo_create_tmpfs_file() in mm/shmem_luo.c bypass the flag
+normalization performed by file_open_root() -> build_open_flags()?
 
-Tmpfs supports setting S_APPEND via FS_IOC_SETFLAGS in
-shmem_fileattr_set() -> shmem_set_inode_flags() in mm/shmem.c:
+In fs/open.c, build_open_flags() strips O_CLOEXEC and ensures O_DSYNC is set
+when __O_SYNC is present:
 
-    if (fsflags & FS_APPEND_FL)
-        i_flags |=3D S_APPEND;
+    u64 flags =3D how->flags;
+    u64 strip =3D O_CLOEXEC;
+    ...
+    flags &=3D ~strip;
+    ...
+    if (flags & __O_SYNC)
+        flags |=3D O_DSYNC;
 
-Unlike IS_IMMUTABLE(inode), inode_permission(idmap, inode, MAY_WRITE) does
-not reject S_APPEND inodes. In fs/verity/enable.c, fsverity_ioctl_enable()
-explicitly checks IS_APPEND(inode) after checking MAY_WRITE:
+Because dentry_open() -> alloc_empty_file() -> init_file() initializes
+ro_file->f_flags directly from the passed flags and do_dentry_open() only
+clears:
 
-    if (IS_APPEND(inode))
-        return -EPERM;
+    f->f_flags &=3D ~(O_CREAT | O_EXCL | O_NOCTTY | O_TRUNC | __O_REGULAR);
+    f->f_iocb_flags =3D iocb_flags(f);
 
-When a caller with MAY_WRITE permission on an S_APPEND tmpfs file preserves
-it via LIVEUPDATE_SESSION_PRESERVE_FD -> luo_preserve_file() ->
-shmem_luo_preserve(), shmem_freeze(inode, true) sets SHMEM_F_MAPPING_FROZEN.
-Because all writes to an S_APPEND file extend past i_size,
-shmem_write_begin() and shmem_fallocate() in mm/shmem.c will then fail with
--EPERM:
+passing O_RDONLY | O_CLOEXEC in arg->flags leaves O_CLOEXEC in
+ro_file->f_flags (visible via fcntl(fd, F_GETFL) and /proc/<pid>/fdinfo/<fd=
+>),
+and passing O_RDONLY | __O_SYNC without O_DSYNC leaves O_DSYNC and IOCB_DSY=
+NC
+unset on ro_file.
 
-    if (unlikely((info->flags & SHMEM_F_MAPPING_FROZEN) &&
-                 pos + len > inode->i_size))
-        return -EPERM;
-
-Should shmem_luo_may_preserve() also reject IS_APPEND(inode) with -EPERM so
-an append-only writer cannot freeze the file and block future appends by all
-users?
+Should dentry_open() be passed (file->f_flags & ~O_ACCMODE) | O_RDONLY inst=
+ead
+of flags so that ro_file uses the normalized flags from file?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261022225035.3774=
-45-1-dmatlack@google.com?part=3D8
+45-1-dmatlack@google.com?part=3D9
 
