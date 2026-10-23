@@ -2,88 +2,85 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643A360A2601
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D107660A2607
 	for <kexec@archiver.kernel.org>; Fri, 23 Oct 2026 07:33:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ybmhTeKb;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RC1vF3/M
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=SX7Iy8OH;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MkuXtjy1
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Message-Id:Date:Subject:
-	From:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
+	Content-Transfer-Encoding:Cc:To:In-Reply-To:References:Message-Id:
+	Content-Type:MIME-Version:Subject:Date:From:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=S6XKfn92IyUJY1cSUHMeiE49TgcbF+Rpj7AMk6zxFsI=; b=ybmhTeKbTtNWb6pIgDtZffu+XH
-	OnDx1LFTWE8rJW2OTnpQ2sZNW+XM5PH8WeVZC8RyFmlJgSmCLUTKCrPTAcQ6LUgcxv0KuBhI6/ca9
-	1Ir9dopbyVe41VU5hwVRn7T4BGZiRi/u3pmhKlkzgUO/sBrxXXd0SXI7yEfAiSPnh/pufD0rHTwK1
-	O31eRWns/IA+roTmK7Pw7UWrgOJSMWRJvunUU+Qo0zRm1KEFEmqm612xaAm0D2hqjUgGCkhU7hkaA
-	kawTFHbz9nwHjD+ZsLRotAFwQEeVYebhHj9G6ha5bCW2HuQzA64QiaWOz+T06FTEr8Ndh3Qy1R6PD
-	bLjfgMKQ==;
+	bh=KUj2wD1kfsmWk13djYVHAZbCTEuU9wsxHyV80zm6Q7M=; b=SX7Iy8OHFJUfj2lSdWEReS4U1r
+	SrMuouAc1Wc6huBBl5Zpc09OOt2Jo2d2it6zHAckjtdYAuSh1Y+96L25VGl39LFW63PDPbssg/Sys
+	9CvQ0ScUpKKqBU5HVkBlAZRu1REeMAT7ERJOAyqccgEQ9ym5gQlsAKgIOeSp9H3wb5os3m+6jwd5y
+	M7xXRrjXlBg1D/pGdCQkHdLx6BVPgXjTugW/HiSDTYExK9HYTlyldip0vO5ToJj6eXRQuHnnGM1yk
+	1tClULCdRIWTq4Svi8dNnFXVVXKB3OOVlX0DS8/9OF8yStF+w0wRgY/FHThWDUvyLDZwrGLAbGnMy
+	Q/84HB7A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xK9mE-0000000Fl75-3gsm;
-	Fri, 23 Oct 2026 07:33:22 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xK9mF-0000000Fl7V-11n6;
+	Fri, 23 Oct 2026 07:33:23 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xK9mD-0000000Fl4l-0zvO;
+	id 1xK9mD-0000000Fl4j-14DN;
 	Fri, 23 Oct 2026 07:33:21 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id CC261602BA;
-	Fri, 23 Oct 2026 07:33:18 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 51B3960A80;
+	Fri, 23 Oct 2026 07:33:19 +0000 (UTC)
 Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
 ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1792740798;
-	b=EX7r0MqEBQ3EKUMQVw6PNM62Gu25262KXddPBfIKvCPw6l5gt+J2XYSlUF7+IAK1X4EC
-	 vIsZoM1lMS873yZa9FRiaoHUKdsEMs1HPeZWJD0830dbLfCvI7GyYBQoIAc84K31Y9cR8
-	 Wj19OF2wYcRbCu7tJaVLNascvjDqstdXvdsfw9QsvlwhVJHspssaJ+leMRoZ4jKd6Or/0
-	 qzK4TgNHZbApJvtnuIIlblwVy1vk9U7MIXiXGCETzM9J6o6LWu9xilosnKYhPV0Vg5NdO
-	 KsIGt5Sb/FZVnyUvO3iSC4JDx4kPfjcmIlDgzzTB6ZBRcRnYr6pHJrtYcH/ulcjGtjQ==
+	t=1792740799;
+	b=QwzEhnGzAyaOj5mIr7jiYBIlo5ngKCq2wCE69zr9mOB1a1h3Fq2fMMKNLNRnYFVGAIG7
+	 Q61v3EPch0vmGrniKZLyJqFWdla5vv5GqOZgWXEGq3ck9A+7Mq7+dStJlNC1lqnIa/KbK
+	 d3njWXi2Q2HfmpwoYbrvLaAXnk6iT6Fisks80V0fB5zEp4NbYqOTk//hdAOnx9yshFDro
+	 3FhqlYkSSQlTQm1qLWZimMx3LtMgcdmrmZZ139DkmpOqFa9hTMONRppYAl9/nXMdgt9J1
+	 agK1UpQk7eMu3duGvUuysaJSNwMnA/TM7fuykSHC3RFnueEY2g83OKcRk+O5wOMLJ1w==
 ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1792740798;
-	h=DKIM-Signature:Received:From:Subject:Date:Message-Id:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:
-	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To;
-	bh=S6XKfn92IyUJY1cSUHMeiE49TgcbF+Rpj7AMk6zxFsI=;
-	b=jjobU7+XIz2co1vB/y1gABkIsPGh0Mw+X7ahMcAVsTGk2f7wTAfwrvBoTZonVaDgxf+m
-	 CbDg39WUyAyKr3c26nxh0WRl9q5wqXHveFIXhzF4BK2DIqUSg1ewNNynUEHd+3uKHnbEI
-	 lydc9My8sagjem+e3Xr56jZ0dBImLlVeeeswpGldybTlYyUamBokBsulpMapLyy+XGk2w
-	 ClfcuHNbuq5pECTdKoVwBEbvbOVZ0E4TkAYRW4ndvX3f3LRS64RwtNYgn0r4ks+jc/SGJ
-	 BGBxNxMXHCcseKBs1OoGIdrmFHwfmnKnRcMLhiva6RzC0UiJ2basahpikd6A+WkORMQ==
+	c=relaxed/relaxed; t=1792740799;
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=KUj2wD1kfsmWk13djYVHAZbCTEuU9wsxHyV80zm6Q7M=;
+	b=WScygSanCYIH5/fmkHwhaOroi9Frtludr+C1GOu8ZMF5tEJtBcRfLl4BEPFomumKRdHO
+	 iRdYYWaqy2MMYjNxwpanMXPQyXz9x3onevNxVBuL9aAdJPKvBb6mSgb88z8Jr7/CTGN3Z
+	 2Me4oAFt/RsCTK06sTXIsdGojRwXQ3Xbym7uC60iNr1GlMWLF7E3k42y5VwrZmugdc2hy
+	 nsol3no48/CnLFB2WXNFNioYWnlpZyAiJ9s3YrpIloVTtjkErFDxI+EumtKdumjWsM8a+
+	 xRFUMWowPaizCKxxzavnpYik50uNWP5lM6D50HU1H9abyZVEU9tWYJm05WPEhDPkxWw==
 ARC-Authentication-Results: i=1; smtp.kernel.org; 
 	arc=none smtp.remote-ip=100.80.115.77
 Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id DF4F01F031E3;
+	by smtp.kernel.org (Postfix) with ESMTPS id DF1DD1F031E1;
 	Fri, 23 Oct 2026 07:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792740798;
-	bh=S6XKfn92IyUJY1cSUHMeiE49TgcbF+Rpj7AMk6zxFsI=;
-	h=From:Subject:Date:To:Cc:Reply-To;
-	b=RC1vF3/MeAsKuTUVszHXQ5ECvxszAtQ9gABEdCdXJN6Yo3mq6naaPTPW5yxJ6ZDAL
-	 Q1W8JtK4oJCPLRLFy6W9VWACqpoPhUssNCBIj2L5dpc0NkdDL8uEY5eowHAklPOkNW
-	 NlRniTrMgX8sPizXhtmji753xvVBDlPIname+Y/5UBqIjfazbBzyu9qCSIkqpCuRgZ
-	 EGs66NbTOc6uv+cFyj9yGD1gjeeUNDpWTgUrudmMxTwaCD+SUhLSYW/Twstu6vhvHs
-	 1GgD6XY+XDSIlzGgYWuU2keYv1HJMkhIfrw9zY7P7X9CqmncFF6dmiKy/BEGLQbOjW
-	 CjHuA+3IpadrQ==
+	s=k20260515; t=1792740799;
+	bh=KUj2wD1kfsmWk13djYVHAZbCTEuU9wsxHyV80zm6Q7M=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
+	b=MkuXtjy1qcLNm4KOIX0Un8yaV7ALrVBccEi1dic/3zTwfAPdIDFW2U4JIojjIN912
+	 bChLfVpknqmtKeZ0+LRUNYCDdTV/dHUHYrv3T6bK8KdbuWqsN0QyiXItwdbRDUqJY0
+	 LSv4Bz0HXTz3Qp352AsT5Cqju+2ktGSkk8BxrKs1c5IPkV815zlvQcnURtxEA5cICl
+	 p0AqAaBr/IVtztIuWmfLNfKoZqTl3qihy+LYG9M1iRYGWfc+/n/AlGA+fwWEegqUpo
+	 d2FDZKHoRmTKbhIJvOtGp5l5cHsUfwer2wd8L8Qzxu4LIDdKi6DRQA2xg5bA7Bb8hA
+	 NXn0A/mVJyY9Q==
 Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 3C65D443E6;
+	by lkml.kernel.org (Postfix) with ESMTP id 63515443F2;
 	Fri, 23 Oct 2026 07:33:17 +0000 (UTC)
 From: Han Gao via B4 Relay <devnull+gaohan.iscas.ac.cn@kernel.org>
-Subject: [PATCH 0/5] riscv: kexec: fix kexec_file with CMA-backed segments
-Date: Fri, 23 Oct 2026 15:33:13 +0800
-Message-Id: <20261023-riscv-kexec-cma-fixes-v1-0-825b90ea23c4@iscas.ac.cn>
+Date: Fri, 23 Oct 2026 15:33:17 +0800
+Subject: [PATCH 4/5] kexec_core: Clear the unused part of CMA segments
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXM0QqCQBCF4VeRuW5AV9S2V4ku1vGYU2SxkyKI7
- 95qlx+H/6xkiAqjS7ZSxKym7zGhOGUkQxjvYO2SyeWuLnJXclSTmZ9YICyvwL0uMPat1L7x51B
- JT6n9RBxDSq+3v21qH5Dvfkbb9gOHEL0ueQAAAA==
-X-Change-ID: 20261023-riscv-kexec-cma-fixes-9bc69798a5cf
+Message-Id: <20261023-riscv-kexec-cma-fixes-v1-4-825b90ea23c4@iscas.ac.cn>
+References: <20261023-riscv-kexec-cma-fixes-v1-0-825b90ea23c4@iscas.ac.cn>
+In-Reply-To: <20261023-riscv-kexec-cma-fixes-v1-0-825b90ea23c4@iscas.ac.cn>
 To: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
  Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
  Nathan Chancellor <nathan@kernel.org>, 
@@ -97,16 +94,17 @@ Cc: Han Gao <rabenda.cn@gmail.com>, Han Gao <gaohan@iscas.ac.cn>,
  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
  llvm@lists.linux.dev, kexec@lists.infradead.org
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1792740795; l=1990;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1792740795; l=1247;
  i=gaohan@iscas.ac.cn; s=20261021; h=from:subject:message-id;
- bh=Thjxfmu56NJtgVUdSnPeX0m3Ki7icxN2HFTUo0uN07Y=;
- b=XDRVxrg/MPvhZsdxIHy3UA8cSlaAZoQOXZCJXfFOxKsAnZAwNXDEMiirk3dJXJ0NxyUn3KHzz
- ALTRjBPSRlUDwLRKSoyIDI9T86UgT2itnhAauIZ2jOmBuocOu7ukC1r
+ bh=WsDVC64bHfydftrHjB9ROmcnpvLdDMLm7LAG2iAtKWU=;
+ b=DHa8l1upqFe8GF0mr/wI7BJo0OZLh4M+VDC9vtw7ebm3LQOk9dhQ/R3IcFgCVQ3BmqCnUxdFj
+ 9V4k04q5zHwBlic6h3xu2XScMsBcX0ln1yqzAgLHbr//OOGGibK8100
 X-Developer-Key: i=gaohan@iscas.ac.cn; a=ed25519;
  pk=J8WHEK3filS86QaCaIHDGafqhxKyQ4K7+vFgRirTIiY=
 X-Endpoint-Received: by B4 Relay for gaohan@iscas.ac.cn/20261021 with
  auth_id=1262
 X-Original-From: Han Gao <gaohan@iscas.ac.cn>
+Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -118,54 +116,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Reply-To: gaohan@iscas.ac.cn
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-19.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-I ran into these while doing kexec_file reboots in a loop on a Zhihe
-A210 board. Things mostly worked, but every few rounds the next kernel
-would hang or purgatory would spin, depending on where the segments and
-the DTB happened to land. Most of it goes back to segments now being
-allocated from CMA, which exposed a few assumptions that no longer hold.
-They are separate bugs, so each one gets its own patch.
+From: Han Gao <gaohan@iscas.ac.cn>
 
-Patch 1 lets the RISC-V relocation code turn the MMU off even when the
-entry list has no indirection page, which is the normal case with CMA.
-Patch 2 fixes the purgatory relocations, which assumed a PC-relative low
-part always sits right after its high part. Patches 3 and 4 are in the
-generic code: CMA quietly caps the alignment below what the RISC-V
-kernel needs, and the tail of CMA segment pages was never cleared even
-though the purgatory digest expects zeroes there. Patch 5 reserves the
-DTB early enough that a CMA pool cannot be placed on top of it.
+kimage_load_cma_segment() copies the source data into pages that are not
+cleared, but zeroes nothing after it: the final memset() runs once the
+loop has consumed all of memsz. The tail of the last source page and
+every page beyond bufsz keep stale data, while the purgatory digest
+covers them as zeroes.
 
-With all five applied, the board survives repeated kexec_file reboots,
-including the layouts where every segment comes from CMA.
+A kexec_file reboot then stops in purgatory on a digest mismatch, for
+instance when the DTB lands in a reused CMA page.
 
+Zero the remainder of each page instead.
+
+Fixes: 07d24902977e ("kexec: enable CMA based contiguous allocation")
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 ---
-Han Gao (5):
-      riscv: kexec: Disable the MMU before walking the entry list
-      riscv: kexec_file: Pair PC-relative low parts with their high parts
-      kexec_file: Honor the segment alignment for CMA allocations
-      kexec_core: Clear the unused part of CMA segments
-      riscv: mm: Reserve the DTB before scanning reserved memory
+ kernel/kexec_core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- arch/riscv/kernel/kexec_relocate.S     | 29 ++++++------
- arch/riscv/kernel/machine_kexec_file.c | 84 ++++++++++++++++++++++++++--------
- arch/riscv/mm/init.c                   | 18 ++++----
- kernel/kexec_core.c                    |  6 +--
- kernel/kexec_file.c                    |  7 +++
- 5 files changed, 99 insertions(+), 45 deletions(-)
----
-base-commit: c03c1a14507dfaf8b856c2608f9ac216021fc222
-change-id: 20261023-riscv-kexec-cma-fixes-9bc69798a5cf
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index dc770b9a6d05..0d6e10bea4e4 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -780,15 +780,15 @@ static int kimage_load_cma_segment(struct kimage *image, int idx)
+ 			goto out;
+ 		}
+ 
++		/* CMA pages are not cleared: zero the part without source data */
++		memset(ptr + uchunk, 0, mchunk - uchunk);
++
+ 		ptr    += mchunk;
+ 		mbytes -= mchunk;
+ 
+ 		cond_resched();
+ 	}
+ 
+-	/* Clear any remainder */
+-	memset(ptr, 0, mbytes);
+-
+ out:
+ 	return result;
+ }
 
-Best regards,
---  
-Han Gao <gaohan@iscas.ac.cn>
+-- 
+2.55.0
 
 
 
