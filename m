@@ -2,67 +2,116 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAEC606A321
-	for <kexec@archiver.kernel.org>; Fri, 23 Oct 2026 11:16:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F097D606A320
+	for <kexec@archiver.kernel.org>; Fri, 23 Oct 2026 13:50:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=mlLJ0VZb;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=sfIz+CvI
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=EUVjRShf;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=kwfX6exM
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=fYZBu3LeiIKSBKKb9aemA6XX/JPZ7pVsvOrhAujfcC8=; b=mlLJ0VZbexCC2D
-	sN/OQpdJi8jh6JUkwKXaRLwogJ8zfZFYJVg0UGsu+bFBt6eqt3offs+KhGiZo5XzjlJQuvSGhJ60/
-	ZVtBB4Xmw/dA2LRgVTMYSRJ0IOLL+7eYZcQf6ZjnOuLD5aNemU4wnX3qa9z9ySQMqqcoxsmWlT/oB
-	xLTHXpt+1KybjJLMmrjUavNpxWbTUCrTLIXdj/g+pynmhKN9tQsmwN63Ft+uAqZjpoZ6izbMnZXt5
-	fgdLSZT0FSyh+LOZqnxauX1pv9KlI5Y4akGZLzgOyVBC3FzGgPFKh1KqRocLB+iMH8Y1lq252GDQx
-	wQZEi/e5RlWPiaVc6Fyg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=8FyuJnnll3uJwbR+wT99CVBO9fzREsmjzeqnUECMRTY=; b=EUVjRShfLOUhYiRQLiAeCu1RCF
+	JBu+ThQtzOUpaVRxH1L6V9+V3IgcQ6JTFqLBBhmGX+nM0BlODa/28y5Hb6sBmTzH0HxSgT4yKOOM6
+	jpQGlRIfBvp19Kg/rfJ6DmEdpVm1JPYilBMiVraB9JR9uQ2tGQhKqPW78txlSP3R+XRTD/HH1f3+V
+	ALhgwWD1TCxFxBKhfownXKAY8GNUnyLZ/TWi9U6RaNyorIkW3CPAqPpA9mK+OMdJQJtjUctDqC+6G
+	62VTrTGbwCN0dwyKIo4vjbYViKi51kTseDUFnyTRSZLBGNB3LeLDUP2bMkTC3M35pulvM5Yul1df+
+	tX/B9tLQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xKDGI-0000000GDUB-22lR;
-	Fri, 23 Oct 2026 11:16:38 +0000
-Received: from out30-110.freemail.mail.aliyun.com ([115.124.30.110])
+	id 1xKFf7-0000000GRVk-3YPE;
+	Fri, 23 Oct 2026 13:50:25 +0000
+Received: from mail-pg1-x530.google.com ([2607:f8b0:4864:20::530])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xKDG9-0000000GDMu-2L4p;
-	Fri, 23 Oct 2026 11:16:32 +0000
+	id 1xKFf1-0000000GRUm-1WmQ
+	for kexec@lists.infradead.org;
+	Fri, 23 Oct 2026 13:50:21 +0000
+Received: by mail-pg1-x530.google.com with SMTP id 41be03b00d2f7-cd6028ff33fso385802a12.0
+        for <kexec@lists.infradead.org>; Fri, 23 Oct 2026 06:50:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1792754184; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=fYZBu3LeiIKSBKKb9aemA6XX/JPZ7pVsvOrhAujfcC8=;
-	b=sfIz+CvINKysQ0fn3PCOIoNtk8juVb1Y/RxWXT150XgYEcf8xe6N7D4iz0MP4i0rN/hzMbN8U7Xo6oA9n/UyxlegRma4zbDOSPr2dKL63EbOnhJswUZ0CrvCuwMcez0Yu7bj5LN5Yxx077p2MZSwXUH8wd/uTwAE7NxvdFB+ssg=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0XDM1n61_1792754183;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0XDM1n61_1792754183 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 23 Oct 2026 19:16:23 +0800
-From: Chen Pei <cp0613@linux.alibaba.com>
-To: pjw@kernel.org,
-	palmer@dabbelt.com,
-	alex@ghiti.fr,
-	rppt@kernel.org,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	graf@amazon.com,
-	shuah@kernel.org
-Cc: guoren@kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	kexec@lists.infradead.org
-Subject: [PATCH 4/4] selftests: liveupdate: Add riscv support
-Date: Fri, 23 Oct 2026 19:16:12 +0800
-Message-ID: <20261023111612.2134-5-cp0613@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261023111612.2134-1-cp0613@linux.alibaba.com>
-References: <20261023111612.2134-1-cp0613@linux.alibaba.com>
+        d=google.com; s=20251104; t=1792763418; x=1793368218; darn=lists.infradead.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=8FyuJnnll3uJwbR+wT99CVBO9fzREsmjzeqnUECMRTY=;
+        b=kwfX6exMMhD5t9WU8x+8MW+gWvrzhX3L/ozRGngZWfDl5OwoqfbY5R0hPqRSPnSmJv
+         60v2sXfXX8uaBjBzwr810ZfZ0Af4c6PKMwSHxSIOAu2ddkUi7ELdQp3eU9fvSLEokCue
+         i5VmpB5XfPdqLjq7+1Gl6uBIn0P6pU66fQCfOO1ZadRSciamtl3524NONzNXJoRwtArY
+         a6cXTD56sTwnrp1zAaqbvXC7TULnC0CTW3hZHIhTS5uXeFa2/fllxwaGKHAAruAwpB0X
+         cuUWXu5CMqSwlN3oKQ2X5MhO71l1Zz23ZENfGhhKm5qS82AVvM2euRb7XCf3lU5zzTuy
+         oLvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792763418; x=1793368218;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=8FyuJnnll3uJwbR+wT99CVBO9fzREsmjzeqnUECMRTY=;
+        b=P11EjZJj81GP8ghCPMXtPDPgRVGDTL7P5Hq9bPo5ItiGcWmuxF0ZtmB7ZrSIYkbWP7
+         PPUOAhte2ohmq8janWjOyOakYSB73rAb0L+/k+NO14y77iVgR/DdVNaVtDL7sEToMV2h
+         ddCZwCnEHe2gXIIZtGEX4pj6fBKPlPpRKD5OW9KXAhOd9OLeqG99ABMVre4UUoxQQwOd
+         XUU4dfcZt1TRXM7Z/lphHKIQQvbZ1bKcrEnOwtCh7309cT787QZ+o9m+L0Tq9FgMZWoI
+         1yq+x31HXzvng+URICFH7pwOD6cwpLw7el9HbwBPi9vsPVyBt3oI3HDQVAvaonNfd6GL
+         9gTg==
+X-Forwarded-Encrypted: i=1; AKwUvBxoVAChUGPNTuEZTR1ohp/jpEN8Za2UT2KsinnyPyDC5Y67u4oQ+hJpiZr3UloBcBvVk+/66A==@lists.infradead.org
+X-Gm-Message-State: AFq9FYKCgVf/YDOc/IkrUQ+uG+TwrcpD3oE3MCggw31vPJJ/OhzkLohh
+	E1RKCHRpd2hBCdAmg4CCrpasrumaaXJXtzOwQJ/pKvD7bvQiZDixRvvS5su41++vMg==
+X-Gm-Gg: AYBFou1AefA9GDni9Aeeo8909uka4yxxKCE/FWsglU4idegbQxxEEqdetUIALyoptIn
+	+8PyIjqmVich85bLEpMiHk+3p0RFzQFJZKeCLaveBxW9oHG7DL9v6i1s0oVE99NnG06L1Ffz0QK
+	/EzlPmFzhR/+DmL6WhQtK8h1aXnwb9JEA8CJsyiGkOLNN3IWfu28NxGDwlPurLBC+vgSl6Kg8nQ
+	mYava7AWp6njQDKxFq4QZmVQuPtlNq7skN2pk7C/rjpBonDUuOBF0RhtNnV2NZnTI6pGvvgvwVM
+	D+kPx+Zf5itfacyw43GXWtKC0OwpMukhQkmbmOWkLAvs1l0z26OLvf/JUMOx0kzH1OmQ6K9OudN
+	UZEu2JK0cJ2PPbBlBR+D5N8+zJtE3HV3Dzl3yzQ0RsASjfiliZHwW19fxAY+kJK+RB2jK9eUb6W
+	OReq3vFAmcch6LeKnEftpGlqL5Ukqo44I/4tQCSu5r9QHmYnxP6froP9R3fvZn003c4jD35EF8W
+	TW+F/pEz4oGM4QjWMwOXOR7N94NuYoWYoJuSxQCtTSv59fflLsubW7KnXpziLUTLxQxFyVOxgjx
+	Ycj+rH/vkUU2hVp7FH77anOxFi4DId7+OAAZ4w==
+X-Received: by 2002:a17:90b:5906:b0:3ab:3437:554f with SMTP id 98e67ed59e1d1-3adce0073a2mr1983207a91.29.1792763417701;
+        Fri, 23 Oct 2026 06:50:17 -0700 (PDT)
+Received: from google.com (64.75.127.34.bc.googleusercontent.com. [34.127.75.64])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ea94677c91sm545015ad.4.2026.10.23.06.50.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Oct 2026 06:50:16 -0700 (PDT)
+Date: Fri, 23 Oct 2026 13:50:13 +0000
+From: David Matlack <dmatlack@google.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: tarunsahu@google.com, Andrew Morton <akpm@linux-foundation.org>,
+	joro@8bytes.org, Mike Rapoport <rppt@kernel.org>,
+	Pratyush Yadav <pratyush@kernel.org>, maz@kernel.org, arnd@arndb.de,
+	jgg@nvidia.com, robin.murphy@arm.com, loganodell@google.com,
+	oupton@kernel.org, kevin.tian@intel.com, alex@shazbot.org,
+	dwmw2@infradead.org, pbonzini@redhat.com, seanjc@google.com,
+	will@kernel.org, Alexander Graf <graf@amazon.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, baolu.lu@linux.intel.com,
+	linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+	sagis@google.com, linux-mm@kvack.org, kvmarm@lists.linux.dev,
+	iommu@lists.linux.dev, linux-pci@vger.kernel.org,
+	kexec@lists.infradead.org, skhawaja@google.com, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 3/4] liveupdate: Replace compatibility string with
+ a 2-bit pair feature header
+Message-ID: <attmFVIFU_mS0Y7p@google.com>
+References: <CALzav=dLdJoVy=B1pv0FAurD9OhAzLSTjJNbtjTdJRmSqaB0yw@mail.gmail.com>
+ <CA+CK2bAQRMAEXZyHTEuUN0_Fo59Sn0hBmYbme_J9ewjx6gPyJQ@mail.gmail.com>
+ <atlKsD-aJB3mJr2j@google.com>
+ <CA+CK2bABt4OZO31TenVF2+uBUWVwViWbvfE00=0xbAw=f7K9SA@mail.gmail.com>
+ <atl7peoVHdP5hz7z@google.com>
+ <CA+CK2bBFXnJA1kddbLKGq0DAHDgjYhsTSQQay-xeX7jJC1V_UQ@mail.gmail.com>
+ <CALzav=e=ho2gVrn+7KpZ3ZyasvH2u15-pC-RSRSS7KcMfKqUJQ@mail.gmail.com>
+ <CA+CK2bAJo8dnTOyKMgnnMnk-SCXbTsv+JCLEOWkjyj-wqtEkHg@mail.gmail.com>
+ <atpNFEFIlqAoYIwH@google.com>
+ <CA+CK2bB2C3Am5ssRuzYpfiU7_vB81vxMGc19HQLq7N=_7YrbTg@mail.gmail.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+CK2bB2C3Am5ssRuzYpfiU7_vB81vxMGc19HQLq7N=_7YrbTg@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261023_041629_766453_902A2662 
-X-CRM114-Status: GOOD (  14.81  )
+X-CRM114-CacheID: sfid-20261023_065020_777170_A9E55AC5 
+X-CRM114-Status: GOOD (  39.82  )
 X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -74,115 +123,158 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-26.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Teach the live update vmtest runner about riscv64: map the target to ARCH
-riscv, describe the QEMU virt machine, the kernel image and its console,
-and add the arch config fragment holding the three symbols needed to get
-a console on the virt machine's 16550A port.
+On 2026-10-22 04:53 PM, Pasha Tatashin wrote:
+> On Thu, Oct 22, 2026 at 1:51 PM David Matlack <dmatlack@google.com> wrote:
+> > On 2026-10-22 12:11 AM, Pasha Tatashin wrote:
 
-KHO is the only dependency of LIVEUPDATE (kernel/liveupdate/Kconfig), so
-now that riscv has KHO the LUO tests only need the runner to stop
-rejecting the architecture.
+> > > Lets drop the fourth macro argument and generate the combined struct name:
+> > >
+> > > #define DECLARE_LUO_SER(name, expected_size, ext_flags_count)              \
+> > >     struct name##_hdr {                                                    \
+> > >         __u32 size;                                                        \
+> > >         __u32 flags;                                                       \
+> > >         __u64 ext_flags[ext_flags_count];                                  \
+> > >         struct name payload;                                               \
+> > >     };                                                                     \
+> > >     static_assert(sizeof(struct name##_hdr) == (expected_size),            \
+> > >                   "LUO struct " #name " size mismatch!")
+> > >
+> > > For example:
+> > >
+> > > struct luo_memfd_ser {
+> > >     __u64 pos;
+> > >     __u64 size;
+> > > };
+> > >
+> > > DECLARE_LUO_SER_HDR(luo_memfd_ser, 24, 0);
+> >
+> > I think we are getting close, bu I have two remaining concerns:
+> >
+> >  * Reserving bits in each flags word for continuation leaves gaps
+> >    in the flag space that users have to know to skip.
+> 
+> Yes, but callers should never manipulate the raw flag words directly,
+> and we can provide simple accessor macros or inlines that take a
+> contiguous feature ID (0, 1, 2, ...)
+> 
+> enum luo_memfd_feats {
+>     LUO_MEMFD_FEAT_HUGETLB = 0,
+>     LUO_MEMFD_FEAT_SEALS   = 1,
+>     /* ... */
+>     LUO_MEMFD_FEAT_FOO     = 15, /* Automatically lands in
+> ext_flags[0] bits 0:1 */
+>     LUO_MEMFD_NR_FEATS
+> };
+> 
+> if (luo_ser_get_feat(hdr, LUO_MEMFD_FEAT_HUGETLB)) {
+>     /* handle hugetlb */
+> }
 
-Add riscv64 to the CROSS_COMPILE auto-detection list and to the target
-list of the batch runner as well, matching the existing aarch64/x86_64
-entries.
+Sure but why deal with all the complexity just to save 8 bytes? All of
+these structs are allocated on folios and there are kilobytes of unused
+space to fit this header. And even if we optimize that we are talking
+about 8 bytes per FH/FLB... or 16 bytes for structs with arch-specific
+sub-structs like the KVM ones.
 
-Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
----
-Test: qemu-system-riscv64 (virt, -cpu max, -m 1G, -smp 2, TCG), in-tree
-runner "tools/testing/selftests/liveupdate/vmtest.sh -t riscv64 -T <suite>",
-all four suites:
+> >  * struct name##_hdr only matches structs written by the current kernel
+> >    (in terms of length of array and offset of payload).
+> 
+> This is not an issue on the incoming path, we never cast incoming data
+> to struct name##_hdr or access ->payload directly. Instead, we parse
+> the incoming buffer, dynamically compute the header size from the
+> continuation bits, and cast the payload offset to "struct name *"
+> based on the negotiated feature flags.
 
-  luo_kexec_simple:    SIMPLE KEXEC TEST PASSED
-  luo_multi_session:   MULTI-SESSION KEXEC TEST PASSED
-  luo_stress_files:    MANY-FILES KEXEC TEST PASSED (500 files)
-  luo_stress_sessions: MANY-SESSIONS KEXEC TEST PASSED (2000 sessions)
+How?
 
-The simple suite's serial log shows the full handover round trip:
+This is the only data structure that describes the header. Are you
+saying the incoming path will parse the header purely with a void *? Or
+use this header but just be careful not to access payload?
 
-  KHO: found kexec handover data.
-  luo: Retrieved live update data, liveupdate number: 1
-  # [STAGE 2] Test data verified successfully.
-  --- SIMPLE KEXEC TEST PASSED ---
+We should have one header structure that can be used on the incoming and
+outgoing path. We should not have one header data structure that can be
+used on the outgoing path and one that can be used on the incoming
+path.
 
- tools/testing/selftests/liveupdate/config.riscv64 | 3 +++
- tools/testing/selftests/liveupdate/run-vmtests.sh | 2 +-
- tools/testing/selftests/liveupdate/vmtest.sh      | 8 +++++++-
- 3 files changed, 11 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/selftests/liveupdate/config.riscv64
+Also we need a standard header that can be shared across all structs,
+not a per struct header. Otherwise you will need to do weird casting and
+overlays to implement the shared helper routines that parse it.
 
-diff --git a/tools/testing/selftests/liveupdate/config.riscv64 b/tools/testing/selftests/liveupdate/config.riscv64
-new file mode 100644
-index 000000000000..edbc551199b0
---- /dev/null
-+++ b/tools/testing/selftests/liveupdate/config.riscv64
-@@ -0,0 +1,3 @@
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SERIAL_OF_PLATFORM=y
-diff --git a/tools/testing/selftests/liveupdate/run-vmtests.sh b/tools/testing/selftests/liveupdate/run-vmtests.sh
-index d656ce58c5a7..2e3f5f6f96b3 100755
---- a/tools/testing/selftests/liveupdate/run-vmtests.sh
-+++ b/tools/testing/selftests/liveupdate/run-vmtests.sh
-@@ -4,7 +4,7 @@
- SCRIPT_DIR=$(dirname "$(realpath "$0")")
- TEST_RUNNER="$SCRIPT_DIR/vmtest.sh"
- 
--TARGETS=("x86_64" "aarch64")
-+TARGETS=("x86_64" "aarch64" "riscv64")
- 
- GREEN='\033[0;32m'
- RED='\033[0;31m'
-diff --git a/tools/testing/selftests/liveupdate/vmtest.sh b/tools/testing/selftests/liveupdate/vmtest.sh
-index 64fd2ab55b76..ee554d889e1b 100755
---- a/tools/testing/selftests/liveupdate/vmtest.sh
-+++ b/tools/testing/selftests/liveupdate/vmtest.sh
-@@ -25,6 +25,10 @@ function get_arch_conf() {
- 		QEMU_CMD="qemu-system-x86_64"
- 		KERNEL_IMAGE="bzImage"
- 		KERNEL_CMDLINE="console=ttyS0"
-+	elif [[ "$arch" == "riscv" ]]; then
-+		QEMU_CMD="qemu-system-riscv64 -M virt -cpu max"
-+		KERNEL_IMAGE="Image"
-+		KERNEL_CMDLINE="console=ttyS0"
- 	else
- 		echo "Unsupported architecture: $arch"
- 		exit 1
-@@ -37,7 +41,7 @@ $0 [-d build_dir] [-j jobs] [-t target_arch] [-T test_name] [-w workspace_dir] [
- Options:
- 	-d)	path to the kernel build directory (default: .luo_test_build.<arch>)
- 	-j)	number of jobs for compilation
--	-t)	run test for target_arch (aarch64, x86_64)
-+	-t)	run test for target_arch (aarch64, x86_64, riscv64)
- 	-T)	test name to run (default: luo_kexec_simple)
- 	-w)	custom workspace directory (default: creates temp dir)
- 	-k)	keep workspace directory after successful test
-@@ -87,6 +91,7 @@ function detect_cross_compile() {
- 	case "$target" in
- 		aarch64) candidate="aarch64-linux-gnu-" ;;
- 		x86_64)  candidate="x86_64-linux-gnu-" ;;
-+		riscv64) candidate="riscv64-linux-gnu-" ;;
- 		*)       skip "Auto-detection for target '$target' not supported. Please set CROSS_COMPILE manually." ;;
- 	esac
- 
-@@ -194,6 +199,7 @@ function target_to_arch() {
- 	case $target in
- 	     aarch64) echo "arm64" ;;
- 	     x86_64) echo "x86" ;;
-+	     riscv64) echo "riscv" ;;
- 	     *) skip "architecture $target is not supported"
- 	esac
- }
--- 
-2.50.1
+> > How about this instead:
+> >
+> > struct luo_ser_hdr {
+> >     __u32 size;        /* Size of header + payload in bytes */
+> >     __u32 nr_flags;    /* Number of features encoded in flags[] */
+> >     __u64 flags[];
+> > };
+> >
+> > Each feature occupies 2 bits of flags[], so feature N is always bits
+> > [2N+1:2N] of flags[N / 32], with no gaps:
+> >
+> >   00: Feature not present
+> >   01: Feature present, safe to ignore if not supported
+> >   11: Feature present, must be supported by the next kernel
+> >   10: Invalid
+> >
+> > The length of flags[] and the header size are computed directly rather
+> > than by walking continuation bits:
+> >
+> > static inline u32 luo_ser_nr_flag_words(const struct luo_ser_hdr *hdr)
+> > {
+> >     return DIV_ROUND_UP(hdr->nr_flags, 32);
+> > }
+> >
+> > static inline size_t luo_ser_hdr_size(const struct luo_ser_hdr *hdr)
+> > {
+> >     return struct_size(hdr, flags, luo_ser_nr_flag_words(hdr));
+> > }
+> >
+> > static inline void *luo_ser_payload(const struct luo_ser_hdr *hdr)
+> > {
+> >     return (void *)hdr + luo_ser_hdr_size(hdr);
+> > }
+> >
+> > and bounds checking is just luo_ser_hdr_size(hdr) <= hdr->size. The
+> > payload is always 8-byte aligned.
+> >
+> > Payload structs are then declared on their own, with no header:
+> >
+> > struct luo_memfd_ser {
+> >     __u64 pos;
+> >     __u64 size;
+> > };
+> > LUO_SER_ASSERT_SIZE(luo_memfd_ser, 16);
+> >
+> > The static_assert covers the payload to catch embedded structs changing
+> > size.  Asserting the header doesn't add anything since its size varies
+> > by kernel. And because flags[] is a flexible array, the header can't be
+> > embedded in front of a payload in a combined struct; it can only be
+> > reached through luo_ser_payload().
+> >
+> > I think the only downside is that the header increases to 16-bytes when
+> > there is at least 1 flag. But I don't think we need to be so concerned
+> > about an 8 byte difference...
+> 
+> I would prefer to keep the default header at 8 bytes. With 15 features
+> fitting directly inside the base __u32 flags word, adding the first 15
+> features to a struct keeps the header at 8 bytes and does not shift
+> the payload.
+> 
+> Computation-wise it is also very similar: for the 99% of structs that
+> have <= 15 features, LUO_FLAGS_CONT is 0, so computing the header size
+> is just a single bit test with no loop. Even if a struct ever needs
+> ext_flags, the loop will walk at most one or two extra words.
 
+Please explain why it is so important to keep the header 8 bytes that we
+have to jump through all these hoops to map a contiguous flag space
+onto a u32 + u64[] array structure where certain bits are reserved and
+have to be skipped.
 
