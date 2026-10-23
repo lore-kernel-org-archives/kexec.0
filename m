@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7BD606A337
-	for <kexec@archiver.kernel.org>; Fri, 23 Oct 2026 07:33:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7693D606A326
+	for <kexec@archiver.kernel.org>; Fri, 23 Oct 2026 07:33:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=PKwWY5ne;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZNfQvBY2
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=u1O1Y2Te;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W+0kF2YT
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
@@ -14,72 +14,72 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Type:MIME-Version:Subject:Date:From:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=DXlkibDr0eUyUlFexrKUMNsRMFOBJ97mIZORHlS7eX0=; b=PKwWY5neJ5YpJL1GFMSZmSACeq
-	4OoQJnIBzw/c76GEFP2dlzdzd2y7kLUz7D7wj7mhUt9ok1TnPCngv5Gr9NYWLJT18ycIHyUeHWOX+
-	LmS+uL0A5XasgmTUxxI0KgnwtFSc5u/9IYKXIrdpF6TARUsz/l4iuaMeP/lmoMMKVs2Q6lj1RCGQt
-	U3XOBsdeoKdENgTCHhURql/J4pbB819QD+eEyTo+PLqP+5W/6Af64GfS+t94Qx4g4S6tg1q0kpSpl
-	w2FXzajzSVSc7KqjrLEampT+BtnT/RdQ2LLEzAUW9pePM+n2pSl0KDr7wJsurPucG9VlTIz3xetop
-	1I01r/8w==;
+	bh=+OjyAynH0oD0HVraX7bbem/k32aJw3On3UPimsYKksQ=; b=u1O1Y2TezPlWKZj14Dd+9iGIvu
+	64r31xi2HzVBPZmmB0LPfmY919zaU7uaY1/Qq6Vjzk0INj87Bau8YEPhVXWX/XX/UPuFneqjTLKx7
+	jFMDcGxRkvne9OO/FuwYQInOK0RketVh5E/2ciyd58tB+SopAxHsPQztgS25dFw06tnkm/epPJ59t
+	nUNhpXgOaHbCVXvmOLmWEk6IZ7+2OQTw1tI1w5b5/PM1HdubKcVAbXY7+9TNd2/j7MNh6PcDVNqAO
+	p0dYMLNMiVQ7wBSdcF3y14zbKL03yyylm2EvshXLfAb+VOYdY5oAADAfZrhld52V9JUrhsrOy51DV
+	jMh1+ObQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xK9mD-0000000Fl4q-0Ku4;
-	Fri, 23 Oct 2026 07:33:21 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xK9mR-0000000FlIP-0e2C;
+	Fri, 23 Oct 2026 07:33:35 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xK9mB-0000000Fl4D-2SI5;
-	Fri, 23 Oct 2026 07:33:19 +0000
+	id 1xK9mD-0000000Fl4m-16T2;
+	Fri, 23 Oct 2026 07:33:21 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 40BFA43F12;
+	by tor.source.kernel.org (Postfix) with ESMTP id 2CD2860A60;
 	Fri, 23 Oct 2026 07:33:19 +0000 (UTC)
 Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
 ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1792740799;
-	b=rd7ue05xxdSpH4/mCZSXwKw66p1zO4BLOzmEWnMfSZkBKTVSdDoZxM0owAnUmhJy9gZc
-	 +t2gALfQ5IY6uiVFWgogQyvvMf97UHQVvtOutfs2csrwsxivmaenpJMHzwOJ2rLJkYifA
-	 WvfA+IFE+byaUYj39I/VoeFyn+V5PiBDbSpoURVrn/8AlNg7HicKo0sTdnH6F7UcDi6LA
-	 Yh7F3DjVH1+r3aNM3ynfUCRHTYJzWc/c2/07R7vMXvJ3/NK0lhxYY7UZru7NadmPJ7u09
-	 iZdOK00fhVnqF0hRzNmcazSZgltsWZXVbqxarFy0zicjA4URs0FjC1Ap6Z4qrcTmXjA==
+	t=1792740798;
+	b=n1EU+14t85857+Zc2Dk/i6a6lASF6iMg9If4UzpKJOgYCN7blibvkSazDxH6b+qYEMyY
+	 uMIUC4RSabbaCP+C2oqZlewjoO+QbLKxuJT4ARd0Vlb+09G8Dk0FIAKMlPOnBIe8Xx70W
+	 ohK+N06N63tdh6F3CAysG7h84pz+Sfnf7/FQSAbc7OwpVrXDd2ZwiFHEAzv3TJJ0MvYY7
+	 49pN9L21BFqO0Kg2fy/2NICTy40K9SAjIoMGYfYM/pdr2kYzSMuw1U++NzhWTwaZ7jwiO
+	 4cDro00sNSnVzDV5IuDp/CZmmk9nyZIl+G47jtMgM3V5sXS8ZdbBiOY4qggIFLahUoQ==
 ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1792740799;
+	c=relaxed/relaxed; t=1792740798;
 	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=DXlkibDr0eUyUlFexrKUMNsRMFOBJ97mIZORHlS7eX0=;
-	b=MIo5Bm1knn8mQVToCCMd4Jn3pzQxoPhOWW29I9ErcfFKlcLWM+hm63lF1+MeKEva1Qd6
-	 NCzS4qBqAWGxe5c20Ri2wx6My9peuNvxUOGlah4VXZDXa8JJzpJ9oB8TVRgv8juL+QZCG
-	 68sqlFA8oAszWLYc8MO5rC67HN94oqZPtEenoSm2nz+SST4U8UPZdsgDPS5Eb7roOVWQw
-	 APV6sUe9kh5IFgBh9a8lkzfxyiwjiX2QubNlT4N75taFTvDyDUufMEChEXcczGs50Khhv
-	 Z4ISzpJWImX5QCqtyJ+m5l15KDEqyYX1osgG+tZuBuYjsccqWk4vzfN1dryos0UlSmw==
+	bh=+OjyAynH0oD0HVraX7bbem/k32aJw3On3UPimsYKksQ=;
+	b=KIf8c4X67EwOUTXEq6w1KIR5GFe2nXozAnQZMR4wwWe5jvLqWoufmgpeL4QYAmUUBfeo
+	 BJ0FExe+B1XtKbvsM088QPNUk5VXg5+zOMO0qGu1vH7kC3jOV3kxQasHlkVlCHPpcXBsB
+	 ggV2YfkOShIXPfOOQZinXYuCYilVf1JP0Kq+AJzSS2sUJyWnG8aqbEVltt8HmvjKYZaJO
+	 zmaMZA24S/bthpB0lUxFv9E3zsF5NiyoQFfz3+2742OFDcuuC0nt8onPSlVaAz0m1C9yx
+	 kLRMqChBYLg/ALMTAT6ohUK+w3Vao96Pc+KSYD43N5BfnO12H39kHRaXf8QwfjYP28Q==
 ARC-Authentication-Results: i=1; smtp.kernel.org; 
 	arc=none smtp.remote-ip=100.80.115.77
 Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id DF2971F031E2;
+	by smtp.kernel.org (Postfix) with ESMTPS id DF62B1F031E4;
 	Fri, 23 Oct 2026 07:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792740799;
-	bh=DXlkibDr0eUyUlFexrKUMNsRMFOBJ97mIZORHlS7eX0=;
+	s=k20260515; t=1792740798;
+	bh=+OjyAynH0oD0HVraX7bbem/k32aJw3On3UPimsYKksQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
-	b=ZNfQvBY2vmAQxxDMUzg3DBouLY9zqbB9yRtJuBS913YQL7RJZ8HKzQyrDDZM+72Pu
-	 ujvLKC7nkfPZUrLE2hpWBpUB0aNy1oVsyetC1Bo5OfhGumjbldEDv8a1JH3eqE1A2v
-	 buTwZ4TtFqvfmU1wFsiLXUbK6tC07yJRA7yzqUCjf1a/R8Lm6ttPHl00Emuyab9EPE
-	 v3ok1tvJapb3dRtG1PTdtpy733a3xI4RAluumV0vmQj2moqfNh7dxX8EVcNBctCd0J
-	 ypCnbMddeEXK6gh1C/znp9o0CD+grXlOuIPJTGLZrfx0O1ZZ0hNfQpHSHh/tCPOfWT
-	 kb/1MFbLb6+XQ==
+	b=W+0kF2YTSD2UlZjSeo4uBf4oN3rq6GlCPjDSJLxhvOxfwIR0q294PxqqRRgZxI4cu
+	 3EwsOG/3tFSyJPtqOzLmVrEkWQA3zOuC/4aUObctJFdWGH7AhD2aACaahrGyHV+bNp
+	 DPNomSiUbDwQ4fcm91SmQeLSAtm3aYCWEVFcAvsDyqJ8CQjTzzCPpOn7n7j/msHVWm
+	 sz3c1et1VhI1TO/Yi+hWNA6idSHZRY5IMKubvJC/jGkU2de+9I4kp24PNNIvyyylnX
+	 9cm12cLkZ7PRgu6c9aMJiYSqrQ0JqEWX492krPcEaYs15SkDKPeDtPG56uJlQj65aO
+	 +5OnIdSr+inOw==
 Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 5AC29443EE;
+	by lkml.kernel.org (Postfix) with ESMTP id 48838421CE;
 	Fri, 23 Oct 2026 07:33:17 +0000 (UTC)
 From: Han Gao via B4 Relay <devnull+gaohan.iscas.ac.cn@kernel.org>
-Date: Fri, 23 Oct 2026 15:33:16 +0800
-Subject: [PATCH 3/5] kexec_file: Honor the segment alignment for CMA
- allocations
+Date: Fri, 23 Oct 2026 15:33:14 +0800
+Subject: [PATCH 1/5] riscv: kexec: Disable the MMU before walking the entry
+ list
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261023-riscv-kexec-cma-fixes-v1-3-825b90ea23c4@iscas.ac.cn>
+Message-Id: <20261023-riscv-kexec-cma-fixes-v1-1-825b90ea23c4@iscas.ac.cn>
 References: <20261023-riscv-kexec-cma-fixes-v1-0-825b90ea23c4@iscas.ac.cn>
 In-Reply-To: <20261023-riscv-kexec-cma-fixes-v1-0-825b90ea23c4@iscas.ac.cn>
 To: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
@@ -95,11 +95,11 @@ Cc: Han Gao <rabenda.cn@gmail.com>, Han Gao <gaohan@iscas.ac.cn>,
  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
  llvm@lists.linux.dev, kexec@lists.infradead.org
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1792740795; l=1480;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1792740795; l=2405;
  i=gaohan@iscas.ac.cn; s=20261021; h=from:subject:message-id;
- bh=qJEDPA0ppewD/2akK6SOlKkXPbYM3Y6vYk6RoryMxR0=;
- b=k2WWS6RTJ6LmCg0h1zKhwYN75d0Cz5RFyTNujkDVbhWiDu1L84xl9pr9j0UyBeqXCXktEAl1S
- b8+pMaOPh4vB3By4HbvwIG+rIw9MQ2jqBYyRbEonik0/PRAt8W4WIsi
+ bh=EJAmc1LhiOIaPfBoanoCTj1bfUwyzJ9NpP/6hMQvfHg=;
+ b=HLOjXket0TJYHSjizcezuxCYXNT1wamHy7x02PGGvb9bpIIlzpofSThrWyW6LG0iwUaelhZT9
+ ertk9LY+oWQCK+TpyWDObtpYQmdHgxIQWiAwAV1oGrsKG+MLqHRx8Zi
 X-Developer-Key: i=gaohan@iscas.ac.cn; a=ed25519;
  pk=J8WHEK3filS86QaCaIHDGafqhxKyQ4K7+vFgRirTIiY=
 X-Endpoint-Received: by B4 Relay for gaohan@iscas.ac.cn/20261021 with
@@ -120,47 +120,79 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-19.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,T_SPF_TEMPERROR,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=4.0.1
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
 From: Han Gao <gaohan@iscas.ac.cn>
 
-dma_alloc_from_contiguous() limits the requested alignment to
-CONFIG_CMA_ALIGNMENT without reporting it. kexec_alloc_contig() can
-therefore place a segment at a less aligned address than buf_align. On
-RISC-V with 4 KiB pages, the default 1 MiB limit is below the 2 MiB
-kernel alignment, and the new kernel stops at the setup_vm() BUG_ON for
-a misaligned physical address.
+riscv_kexec_relocate() only switches satp to Bare when it meets an
+IND_INDIRECTION entry. Since segments may be allocated from CMA at their
+destination, an image can have no indirection pages, and its list then
+holds only IND_DONE. The relocation code jumps to the physical entry
+point with the MMU still enabled and loops on instruction page faults.
 
-Release such a block and fall back to the regular memory hole search,
-which honors the alignment.
+Switch to Bare mode before reading the first entry, converting the list
+pointer from its linear-map address.
 
 Fixes: 07d24902977e ("kexec: enable CMA based contiguous allocation")
 Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 ---
- kernel/kexec_file.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/riscv/kernel/kexec_relocate.S | 29 +++++++++++++----------------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 59fb9d71e9d8..6ce10e01414e 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -690,6 +690,13 @@ static int kexec_alloc_contig(struct kexec_buf *kbuf)
+diff --git a/arch/riscv/kernel/kexec_relocate.S b/arch/riscv/kernel/kexec_relocate.S
+index de0a4b35d01e..419b56600550 100644
+--- a/arch/riscv/kernel/kexec_relocate.S
++++ b/arch/riscv/kernel/kexec_relocate.S
+@@ -34,24 +34,22 @@ SYM_CODE_START(riscv_kexec_relocate)
+ 	csrw	CSR_SIP, zero
  
- 	mem = page_to_boot_pfn(p) << PAGE_SHIFT;
+ 	/*
+-	 * When we switch SATP.MODE to "Bare" we'll only
+-	 * play with physical addresses. However the first time
+-	 * we try to jump somewhere, the offset on the jump
+-	 * will be relative to pc which will still be on VA. To
+-	 * deal with this we set stvec to the physical address at
+-	 * the start of the loop below so that we jump there in
+-	 * any case.
++	 * Switch SATP.MODE to "Bare" before reading any entry. An image
++	 * whose segments were allocated from CMA at their destination has
++	 * no indirection pages, so its list may hold only IND_DONE.
++	 *
++	 * pc is still a VA here: set stvec to the physical address of the
++	 * loop below, so that we get there even if the next instruction
++	 * fetch faults. The entry list starts at image->head, in the
++	 * linear mapping.
+ 	 */
+ 	la	s6, 1f
+ 	sub	s6, s6, s4
++	sub	s0, s0, s4
+ 	csrw	CSR_STVEC, s6
+-
+-	/*
+-	 * With C-extension, here we get 42 Bytes and the next
+-	 * .align directive would pad zeros here up to 44 Bytes.
+-	 * So manually put a nop here to avoid zeros padding.
+-	*/
+-	nop
++	csrw	CSR_SATP, zero
++	sfence.vma
++	jr	s6
  
-+	/* dma_alloc_from_contiguous() caps the alignment at CONFIG_CMA_ALIGNMENT. */
-+	if (!IS_ALIGNED(mem, kbuf->buf_align)) {
-+		pr_debug("CMA block 0x%lx is not aligned to 0x%lx\n", mem, kbuf->buf_align);
-+		dma_release_from_contiguous(NULL, p, nr_pages);
-+		return -EINVAL;
-+	}
-+
- 	if (kimage_is_destination_range(kbuf->image, mem, mem + kbuf->memsz)) {
- 		/* Our region is already in use by a statically defined one. Bail out. */
- 		pr_debug("CMA overlaps existing mem: 0x%lx+0x%lx\n", mem, kbuf->memsz);
+ 	/* Process entries in a loop */
+ .align 2
+@@ -70,8 +68,7 @@ SYM_CODE_START(riscv_kexec_relocate)
+ 	andi	t1, t0, 0x2
+ 	beqz	t1, 2f
+ 	andi	s0, t0, ~0x2
+-	csrw	CSR_SATP, zero
+-	jr	s6
++	j	1b
+ 
+ 2:
+ 	/* IND_DONE entry ? -> jump to done label */
 
 -- 
 2.55.0
