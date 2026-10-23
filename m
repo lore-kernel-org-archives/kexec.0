@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B92A606A31A
-	for <kexec@archiver.kernel.org>; Fri, 23 Oct 2026 22:51:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750E3606A31A
+	for <kexec@archiver.kernel.org>; Fri, 23 Oct 2026 22:51:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=L1Ka3A6V;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kdGjX9G6
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=AFvwSexN;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lHliKmTh
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Q6Cd7TzPBNXDsTOgHaJ7GKYn8drnRuYtj9JPk6+qt18=; b=L1Ka3A6VvcdRqbVSIj0oOa4gQT
-	sSqoBxVbtnlKwrLTvLarOUrdpRuyH3hyGeV+PAy1iK8vv904UEtydKhzE7r1jKoeTbNP0JKsB/Zha
-	2F34rASwfhyatGXKW1kSEjFkJZolwrQ81kQyNEDRzS/HD69DXgHOWAboXqT90rusmh5Dwyr+oZIXe
-	dTnYyW3bEiq4GxRk8Tb75LBSYCkhDVN4j27Lp96mD4ms35IPnmVb5QaR8f2BQUFAzQO66s4G6C+cG
-	f8kLE8BZUyH6h6yHH6RBIKgtHZvzEe5EqCpQCxHjCU8TaY8Npo7lrQFHdb153yAVt5SM4RJQ1Z9n6
-	hs/26bOA==;
+	bh=o1eiAmLiUrM+aetJBQhIwsa3bKlxO5rdsXJcBgTi1ck=; b=AFvwSexNPIEV6SV4WjXsShR8qX
+	NLylecNfLYIcxsEkimMlL0Y53qim2Su5gZR45eet4wlr4g7A7wI/50B8sDPaISLEjn725po6hi+HI
+	JPoSIOfDz3M9yUj4pfpZbyfzFrurD7g+BTW/53JOUR74IzWKjKAd5pkzdhfFtYT6oEtrzYzZhN5My
+	i83m64G7aHyIp0bRA1La1Pp5axY5NBWcDlHW4ZW244JrfGoOLwYHPAzm2PRIoX0B/FTAF1H8eWBAB
+	8Wpagpmmc5X810GHT2J+kZzyKFBCCLK6dxtzEuaFEjojM4uujB1ReJ0hIeJW46t9M/DUiMSdHUdh8
+	iHJmB3QQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xKO6n-0000000H4cG-0J4l;
-	Fri, 23 Oct 2026 22:51:33 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xKO6p-0000000H4dz-0hea;
+	Fri, 23 Oct 2026 22:51:35 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xKO6l-0000000H4bt-2XIs
+	id 1xKO6n-0000000H4cE-0xTf
 	for kexec@lists.infradead.org;
-	Fri, 23 Oct 2026 22:51:31 +0000
+	Fri, 23 Oct 2026 22:51:33 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 58E7541957;
+	by sea.source.kernel.org (Postfix) with ESMTP id B1B8A43EAC;
+	Fri, 23 Oct 2026 22:51:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFA111F01825;
 	Fri, 23 Oct 2026 22:51:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 530241F01825;
-	Fri, 23 Oct 2026 22:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792795891;
-	bh=Q6Cd7TzPBNXDsTOgHaJ7GKYn8drnRuYtj9JPk6+qt18=;
+	s=k20260515; t=1792795892;
+	bh=o1eiAmLiUrM+aetJBQhIwsa3bKlxO5rdsXJcBgTi1ck=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kdGjX9G6F1cOqGH4ax3E8Yyc5+J9JNf+wnvMf8gwelC0oZvbopsrX3/QZ3Rajysrv
-	 jG0FAWpRYzykrz57lJcfIXP2FI1x0xECtOT8cLUNtHWtev3ShMEKQk/1NeWhXWrXt/
-	 SzUyaA7VLICkwl858YQjVFMZ8SkasFr7AjvJVtc1TlD/M/ri2ElJQH3fwehfGLLkwT
-	 Jq/SSGPVoT+ulMSdeDi8oHTzzvnglbksWMVAvKaRKdyVJDAibJzzI46PFJeBPpDOgz
-	 1but8U2dBgz9VHqK3/v75ILE7KprvAJf7abLorNm0cmElYJamksfnlWZTOyBfHIIvE
-	 Kb3LUabWGVQJg==
-Message-ID: <sashiko-outbox-183321@kernel.org>
+	b=lHliKmThzv7puCnVKns1TF+85LLjWwSIU40irir4qR+PYoi7QYkR3BfZNtXq39XHW
+	 k0iMUV3kSw/YYSNqZ3e8+6xYW8d4s+p67yOEAr5yXs4rQ5Xk9Cq/QGvB1mv2/qV1dx
+	 BZHTLZ/EpHhd8i5+JU7KrXcKXddpv2octSaiHCAbmMEwaGq8U/AEg1zMXHRlpIcPmK
+	 8JE2KiP3GwlwaO1D9URjSgOd1TdlG7lPHgqCzqM8UJ5R/5sqWDPcPD0W1Lcew5lCH7
+	 WYYxTKW/ioDjnBzkVKCmkEy54igkHypJ06k0Zb0p3OVh13WqJ+xeDifVvzOmEdpzF9
+	 4v4OrTtgIG61A==
+Message-ID: <sashiko-outbox-183322@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 02/10] selftests: liveupdate: Add tests for preserve
- and retrieve user argument
+Subject: Re: [PATCH v2 03/10] liveupdate: Allow file handlers to mark
+ retrieve failures as retryable
 To: "David Matlack" <dmatlack@google.com>, kexec@lists.infradead.org
 Cc: "Alexander Graf" <graf@amazon.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Baolin
  Wang" <baolin.wang@linux.alibaba.com>, "Christian Brauner" <brauner@kernel.org>, "David
@@ -58,12 +58,12 @@ Cc: "Alexander Graf" <graf@amazon.com>, "Andrew Morton" <akpm@linux-foundation.o
  Dunlap" <rdunlap@infradead.org>, "Samiullah Khawaja" <skhawaja@google.com>, "Shuah
  Khan" <skhan@linuxfoundation.org>, "Suren Baghdasaryan" <surenb@google.com>, "Vlastimil
  Babka" <vbabka@kernel.org>
-In-Reply-To: <20261022225035.377445-3-dmatlack@google.com>
+In-Reply-To: <20261022225035.377445-4-dmatlack@google.com>
 References: <20261022225035.377445-1-dmatlack@google.com>
- <20261022225035.377445-3-dmatlack@google.com>
+ <20261022225035.377445-4-dmatlack@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 23 Oct 2026 22:51:29 +0000
+Date: Fri, 23 Oct 2026 22:51:31 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,15 +85,25 @@ X-Archived-By: <archiver.kernel.org>
 
 > From: Pasha Tatashin <pasha.tatashin@soleen.com>
 >=20
-> Verify the user argument support in LIVEUPDATE_SESSION_PRESERVE_FD and
-> LIVEUPDATE_SESSION_RETRIEVE_FD. Add luo_session_preserve_fd_arg() and
-> luo_session_retrieve_fd_arg() helpers to libliveupdate so tests can pass
-> a handler-specific argument.
+> When luo_retrieve_file() invokes a handler's .retrieve() callback and it
+> returns an error, LUO currently records the error in
+> luo_file->retrieve_status and blocks any subsequent retrieve attempts.
+> This is necessary when the handler has already partially consumed or
+> freed the preserved KHO state.
 >=20
-> Add a preserve_memfd_with_arg test case to verify that memfd
-> preservation rejects a non-zero argument with -EOPNOTSUPP, accepts an
-> explicit zero argument, and remains compatible with callers passing the
-> legacy struct size up to the token field.
+> However, with user arguments passed to .retrieve(), a handler may fail
+> early while validating caller-supplied parameters (such as a missing
+> argument, an invalid or read-only target file descriptor, or a non-empty
+> target file) before touching any preserved KHO state. In such cases,
+> userspace should be able to fix the argument and retry
+> LIVEUPDATE_SESSION_RETRIEVE_FD, and if the file is never retrieved,
+> .finish() must still run to release the preserved KHO state.
+>=20
+> Add a retryable output flag to struct liveupdate_file_op_args. When a
+> handler sets args->retryable =3D true on error, luo_retrieve_file() leaves
+> luo_file->retrieve_status at 0 so the retrieve operation can be retried
+> and .finish() will still clean up the unconsumed preserved state if the
+> session is finished without retrieving the file.
 >=20
 > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 > Signed-off-by: David Matlack <dmatlack@google.com>
@@ -102,6 +112,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261022225035.3774=
-45-1-dmatlack@google.com?part=3D2
+45-1-dmatlack@google.com?part=3D3
 
 
