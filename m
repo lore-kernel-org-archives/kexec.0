@@ -2,61 +2,58 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB9060A260C
-	for <kexec@archiver.kernel.org>; Mon, 26 Oct 2026 13:19:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4081606A31A
+	for <kexec@archiver.kernel.org>; Mon, 26 Oct 2026 13:23:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=cU1l+msa;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=HadoDkGA
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=IovjD5sH;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XvZ1ThUx
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
+	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=NBoEGBnT7tSwydHsRLRvuOQ+mNAaOzQ2uf7Uk5l8xaA=; b=cU1l+msaDY/RUzNo/IS9mUcp7o
-	McBwBHUE+3IUhGG64HaiyyhmrWRAGKDU1tgumfzGpa8gyGQz8bgBe7gfNScPAy758ekY4VRlO57zh
-	xC2h01rIV6UrF5gBDGhQaEtPRqTAGIZoDT51lutEQH9RXXJX87edtXc0om1APQ9GCkXz7VWNd1wqg
-	A40n5TsCTRW4D189gcWHZDc+8x6F3DI7J8Z1qQLrXFpDifURrZs3W9eftwUQj0I0K3B4APXgooXOm
-	gIFvTSlJc64VhExK6qDhN+USM7kq0givxXBFl89i6mY3teFDH9YLYrV17kJ9HPb18dyOqBuaLlg8/
-	yRRWmIuw==;
+	bh=zmBU/BalInOhBYK/tDt+bnfp+LN03MxL8kvPERCRG9Y=; b=IovjD5sHnjh0GbM22M2UYlx8Rs
+	KBpdCG01BRB2AngpJQE5SbeUiOCymxjE0Zqpcxlw7+sgBGPJCboIrO3bKiLDlploTYzEQD2Yyjbq3
+	PB/Sb+4dn+FbQvtfdRjnXUhRjBDutwNUZIVQIx/rqTWQwSWvD7GPY33g+k1GPjbDi1U6cwowmg4O5
+	vJMnqd+tKXghAsVM6/16JUTjoWO5vbEfEE527G15wn9vmZjNDEUPC162zRDP8YiY/ckqzplUmdkYR
+	G1EG5+oVI29n6DIkhHeJAv6MXk3tDNVhg0OR/fhFhpaJY7p34NibzfF9WJNXHLTiy5JTbjEQlPsNK
+	S9LpToTw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLKbN-00000002aPI-3NRk;
-	Mon, 26 Oct 2026 13:19:01 +0000
-Received: from out30-112.freemail.mail.aliyun.com ([115.124.30.112])
+	id 1xLKfU-00000002asi-2TvF;
+	Mon, 26 Oct 2026 13:23:16 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLKbK-00000002aOf-3S8I
+	id 1xLKfT-00000002asY-3Cqd
 	for kexec@lists.infradead.org;
-	Mon, 26 Oct 2026 13:19:00 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1793020736; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=NBoEGBnT7tSwydHsRLRvuOQ+mNAaOzQ2uf7Uk5l8xaA=;
-	b=HadoDkGAFmWAMLai2uUm3T7JlfLeQemCTwksRS6S+tn7tskHW63KrgjUOBt2EUk2dA5Au8PtX7yeKLqFKoGXTq8kmOcRzu+ET4iwyE5uuThC0Lyn8gJ5o+i5hG1lEbs/ghHY6Cie8dvC5tUSHo7W7Mu6vKBYY35SFF1YKVQ4ou0=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R911e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0XDYkXyw_1793020730;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0XDYkXyw_1793020730 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 26 Oct 2026 21:18:54 +0800
-From: Chen Pei <cp0613@linux.alibaba.com>
-To: rppt@kernel.org,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	graf@amazon.com
-Cc: kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] kho: Skip zero-sized bootmem areas
-Date: Mon, 26 Oct 2026 21:18:51 +0800
-Message-ID: <20261026131851.9942-1-cp0613@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
-X-Archived-By: <archiver.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261026_061859_401759_692E17CB 
-X-CRM114-Status: GOOD (  10.77  )
-X-Spam-Score: -17.6 (-----------------)
+	Mon, 26 Oct 2026 13:23:15 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id B3FC1601FB;
+	Mon, 26 Oct 2026 13:23:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 253901F01825;
+	Mon, 26 Oct 2026 13:23:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793020994;
+	bh=zmBU/BalInOhBYK/tDt+bnfp+LN03MxL8kvPERCRG9Y=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=XvZ1ThUxilPhbR6A9DTH9rs2b8HmanQpYpEjiczA2X+XCY2Z2KUvEFI1tDio3If6l
+	 4C1UT7gQzd/CSfe7gCTSBEPJUAtCptx9gQ0J654qScRW3fWcLZjZbjetoXJL/c1XTO
+	 5T25Ryz+eFkb4dflzrMKz3fOUmYlg0g4pPbGBgJtryRjVPMjm+y210HivwAt4AdtCf
+	 9eehk304F0YLoS0x2N00FCabWXjaTWuN9z1qzaduChTjU51E/Uss/8ZWctISGIVrOE
+	 q5BkUnAYw9LHWY8MLXqFtCWXbEEIb+tORM+sWupx4qYEjd9rXUB4BcNFn2sOKor0Ig
+	 SrTF/OS7Qy0yQ==
+Message-ID: <sashiko-outbox-185302@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] kho: Skip zero-sized bootmem areas
+To: "Chen Pei" <cp0613@linux.alibaba.com>, rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org, graf@amazon.com
+Cc: kexec@lists.infradead.org
+In-Reply-To: <20261026131851.9942-1-cp0613@linux.alibaba.com>
+References: <20261026131851.9942-1-cp0613@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 26 Oct 2026 13:23:13 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -66,99 +63,45 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-26.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
+X-Archived-By: <archiver.kernel.org>
 
-The lowmem and the global bootmem area are reserved unconditionally,
-while the per-node loop below already skips nodes whose size works out
-to 0. Either can legitimately be 0: the global size is the scaled total
-minus the lowmem one, so it is 0 whenever all measured reservations fit
-below ARCH_LOW_ADDRESS_LIMIT.
+> The lowmem and the global bootmem area are reserved unconditionally,
+> while the per-node loop below already skips nodes whose size works out
+> to 0. Either can legitimately be 0: the global size is the scaled total
+> minus the lowmem one, so it is 0 whenever all measured reservations fit
+> below ARCH_LOW_ADDRESS_LIMIT.
+>=20
+> Reserving 0 bytes still succeeds, so an area covering nothing gets
+> recorded with a valid address. That is not neutral:
+> kho_bootmem_overlap() reports an overlap for any request straddling
+> that address, and memblock_alloc_hugetlb() aligns a request to its page
+> size, so a 1G hugetlb allocation retries a free candidate on account of
+> an area that holds nothing.
+>=20
+> A machine whose memory all starts at or above ARCH_LOW_ADDRESS_LIMIT
+> hits the other side of the same code: the lowmem size is 0, the range
+> below the limit is empty, the allocation fails and KHO is disabled
+> although no lowmem area was needed.
+>=20
+> Skip a zero-sized area instead, as the per-node loop does. The
+> descriptor count stays consistent, as kho_populate() derives it from
+> the segment length that kho_fill_kimage() serialises.
+>=20
+> Fixes: 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation helpers")
+> Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
 
-Reserving 0 bytes still succeeds, so an area covering nothing gets
-recorded with a valid address. That is not neutral:
-kho_bootmem_overlap() reports an overlap for any request straddling
-that address, and memblock_alloc_hugetlb() aligns a request to its page
-size, so a 1G hugetlb allocation retries a free candidate on account of
-an area that holds nothing.
+Sashiko has reviewed this patch and found no issues.
 
-A machine whose memory all starts at or above ARCH_LOW_ADDRESS_LIMIT
-hits the other side of the same code: the lowmem size is 0, the range
-below the limit is empty, the allocation fails and KHO is disabled
-although no lowmem area was needed.
-
-Skip a zero-sized area instead, as the per-node loop does. The
-descriptor count stays consistent, as kho_populate() derives it from
-the segment length that kho_fill_kimage() serialises.
-
-Fixes: 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation helpers")
-Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
----
- kernel/liveupdate/kexec_handover.c | 38 +++++++++++++++++-------------
- 1 file changed, 21 insertions(+), 17 deletions(-)
-
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 6f1f55fe3..c9c9fdfac 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -853,28 +853,32 @@ static void __init kho_reserve_bootmem(void)
- 	 * next kernel
- 	 */
- 	size = bootmem_size_lowmem;
--	addr = memblock_phys_alloc_range(size, BOOTMEM_ALIGNMENT_BYTES, 0,
--					 ARCH_LOW_ADDRESS_LIMIT);
--	if (!addr) {
--		pr_err("Failed to reserve lowmem bootmem\n");
--		goto err_free_bootmem_desc;
--	}
-+	if (size) {
-+		addr = memblock_phys_alloc_range(size, BOOTMEM_ALIGNMENT_BYTES,
-+						 0, ARCH_LOW_ADDRESS_LIMIT);
-+		if (!addr) {
-+			pr_err("Failed to reserve lowmem bootmem\n");
-+			goto err_free_bootmem_desc;
-+		}
- 
--	kho_bootmem[i].addr = addr;
--	kho_bootmem[i].size = size;
--	i++;
-+		kho_bootmem[i].addr = addr;
-+		kho_bootmem[i].size = size;
-+		i++;
-+	}
- 
- 	/* reserve large contiguous area for allocations without nid */
- 	size = bootmem_size_global;
--	addr = memblock_phys_alloc(size, BOOTMEM_ALIGNMENT_BYTES);
--	if (!addr) {
--		pr_err("Failed to reserve global bootmem\n");
--		goto err_free_bootmem_areas;
--	}
-+	if (size) {
-+		addr = memblock_phys_alloc(size, BOOTMEM_ALIGNMENT_BYTES);
-+		if (!addr) {
-+			pr_err("Failed to reserve global bootmem\n");
-+			goto err_free_bootmem_areas;
-+		}
- 
--	kho_bootmem[i].addr = addr;
--	kho_bootmem[i].size = size;
--	i++;
-+		kho_bootmem[i].addr = addr;
-+		kho_bootmem[i].size = size;
-+		i++;
-+	}
- 
- 	/*
- 	 * Loop over nodes that have both memory and are online. Skip
--- 
-2.50.1
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261026131851.9942=
+-1-cp0613@linux.alibaba.com?part=3D1
 
 
