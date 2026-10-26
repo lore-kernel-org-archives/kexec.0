@@ -2,55 +2,56 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51BC9606A322
-	for <kexec@archiver.kernel.org>; Mon, 26 Oct 2026 23:26:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC11606A32F
+	for <kexec@archiver.kernel.org>; Mon, 26 Oct 2026 23:27:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=1bpBKf5R;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NqxXcyZ5
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ZWv2X9Rd;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=I+9XM0dI
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=JD3h3UamRh59QcjyL8J1MuE/w/u1X5RZ3DOsE1wllXg=; b=1bpBKf5RDRA59k
-	Zas256qEHlDV7RdTYRaN8lb+tStn0iIU2R7/2Wi7jbujDHL+AGrtxmSvhVLFk6aX965EochYKlX0Y
-	vzt3DIWWuzGJOPZdPP/Z3u9fgTpygA84GS5fFP6axm3mk1xQP0+jmlSFcbbjVcp6hkslNagoLKLOp
-	Z0KQ/RtqZ6nthlN6Fd4de4KWYSdtynvQn0k/UHBVH8PDQn8T5eFUYLMxA7Le1D/ds3T7a+y9zdWaM
-	hdfTa9/2ru1kwmzat0YY+GQgHUN6Qdc/qOPUb679Q8w7vQJaTVhwzeJT99CrCgf13VQFSIkgdYxlq
-	ZorGjDPFxVvZJDOJBvkQ==;
+	List-Owner; bh=YyBvhh+qxm8IviEeyZzcz2JUI2QeD2dbSMePHEZqV6g=; b=ZWv2X9RdprS8HL
+	feM4bJJkDrZzVarbumd5ey4ax3zAxafu4EJ/WGO71vilTW50IigZls66SJr/31kkvGTgbtL7/6Z3m
+	h8PkXUerWal4Gm8XJt+lekBB31JZmjimmB8DXi1ddWlNRSMNv8lGHn/d/sSDOKTpxna2i/8vbQ8++
+	v5NHHkwhAV0DtYyZ5Jl7CfedxTyZR04EKVkCLXLDRKImOFiF7a2nc+/WM+qKp2Zf8ajX5FPJcFp2F
+	e8FaRONwdVZ+04G8RYsh8zHpt7UiXrGYitOKO8Ck8uQsrz2C9a/o0t8hWLADTayKJ6Auvfr9fIyeC
+	J6wyg22eibxipdpeDmpw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLU5R-00000003QrA-06lU;
-	Mon, 26 Oct 2026 23:26:41 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xLU5k-00000003Qvp-0b0O;
+	Mon, 26 Oct 2026 23:27:00 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLU5P-00000003Qqx-1Rta
+	id 1xLU5i-00000003Qvf-2580
 	for kexec@lists.infradead.org;
-	Mon, 26 Oct 2026 23:26:39 +0000
+	Mon, 26 Oct 2026 23:26:58 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 19E2F411CF;
+	by sea.source.kernel.org (Postfix) with ESMTP id 3F3C5400F8;
+	Mon, 26 Oct 2026 23:26:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4BEB1F01828;
 	Mon, 26 Oct 2026 23:26:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06A8C1F01825;
-	Mon, 26 Oct 2026 23:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793057199;
-	bh=JD3h3UamRh59QcjyL8J1MuE/w/u1X5RZ3DOsE1wllXg=;
+	s=k20260515; t=1793057218;
+	bh=YyBvhh+qxm8IviEeyZzcz2JUI2QeD2dbSMePHEZqV6g=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=NqxXcyZ5B7hNxVICB8D7ZuTu2KTFj1aY/wZHjWEHcrphKUZXEhErMydzk2Pzo1mLO
-	 KXsakbOlKadHDvCpmoPg4VdpWYop82udMmVVbnJSsa/yNZfnIpnc7zXVJuFxKNqzsX
-	 XXtyntURfV0Gyys700YmRUpcZNsNBwSVXZSPdu5SAf1AyhwNb3x1lfgitOWD3HGdQS
-	 vWS7Cl3Pan8Rn7XnMFij0eGv/K6IbU4S0Jzeq3EhdCV3hZuhxaFbAcpEYOR+STaAHN
-	 NiDWgUxmVXVvm5yitg/azM9C5yVHptICOOnN2qnAup6cV1VLBTsoFalfWOvsoe9Zzc
-	 roonF+qboPgYw==
+	b=I+9XM0dIDhfLQ2IrtZ5HzQkq2PPp0DrM/8mAfIcMw64Ptq/qajsTS2DA7ZdMXfeBV
+	 KzWRZNQLeE1HtCF7Z8+s0hifNhI+1Vb/Kt6BUn3Vzgl6a/5dx3x0sQc+O5SblrAtSz
+	 +609RXnj1OExUGqYPa4rMeLnQrLnCkVpRmEgfst771GTthyyEI3P6b50QzcHCt5Inn
+	 8aD6kz6gF+uAMC3YoWmHKMAIojnOGVgj0WTqcxRfcUio0DEXIBjwW9P6PVQau07EcY
+	 ylPS2tKtf/f2VVVAyPiXJ/UuIahnYmRJjSvJza9HqLkBdFlMGdC78NMSHtXKSQfz7S
+	 D5Vhc4PJLlP1Q==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Tue, 27 Oct 2026 00:17:48 +0100
-Subject: [PATCH 28/46] mm/mmu_notifier: set ->mm only after mmgrab()
+Date: Tue, 27 Oct 2026 00:17:49 +0100
+Subject: [PATCH 29/46] mm/mremap: use pudp_huge_get_and_clear() when moving
+ huge PUDs
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261027-fixes_core-v1-28-6f74bec9a5bb@kernel.org>
+Message-Id: <20261027-fixes_core-v1-29-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
 In-Reply-To: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -88,15 +89,14 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
- Chris Mason <mason@kernel.org>, stable@vger.kernel.org, 
- "David Hildenbrand (Arm)" <david@kernel.org>
+ stable@vger.kernel.org, "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1928; i=david@kernel.org;
- h=from:subject:message-id; bh=x0mKttz+HwDvoeWV/WYBCh6ori+6WykC26zRhsHss7s=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLLu358WvjBTPacmt4dPIdDk5tcpn+01cwTchGfUrDY2m
- /szsutzRykLgxgHg6yYIktQ8H2Dly/X1Va78THDzGFlAhnCwMUpABOZdZHhf0TH64MXTnQzGVbk
- qRb3zPUxmqEu+rl0VcOt4H8i+Tv3tjEyTI9WCD+789mjnlXPFlqk3zA4dezK72lrV9nE/lCeLr9
- WlhcA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1206; i=david@kernel.org;
+ h=from:subject:message-id; bh=cg7qBpNaGh8akN6A4ocFJLR+o1S7mJxz4pw8YGNdmxg=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLLu35+2dMmjj5wJt/b/2rBVb8VCfdHGdoG7atodUvpiU
+ 579O/O/p6OUhUGMg0FWTJElKPi+wcuX62qr3fiYYeawMoEMYeDiFICJdL1i+MOvLx18KeX/IZmV
+ AomWG35PMl3v83hldAmj3k4h2cZL35sZGZ59ZNuk6JnsFWOZJBjTdbvBWGBOhrf6ZQ1T04xI01P
+ nWAA=
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -117,56 +117,38 @@ X-Spam-Status: No, score=-19.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-From: Chris Mason <mason@kernel.org>
+move_huge_pud() reads the old PUD and clears it in separate operations.
+Hardware accessed or dirty updates between those operations can be lost
+when the saved entry is installed at the new address.
 
-Radeon uses a non-NULL notifier->mm to decide whether to call
-mmu_interval_notifier_remove() when freeing a buffer object.
-__mmu_interval_notifier_insert() sets ->mm before validating the range,
-so a wrapping userptr range can leave ->mm set after insertion fails.
-Cleanup then tries to remove an unregistered notifier for which no mm
-reference was acquired.
+The raw pud_clear() also bypasses page_table_check_pud_clear(), while
+set_pud_at() accounts for the destination mapping. This leaves the
+checker counts unbalanced for mappings tracked by page table checking.
 
-Set ->mm only after mmgrab(), once insertion can no longer fail. While
-we could fix radeon's code instead, setting ->mm on success only makes
-the code more robust.
+To fix it, simply use pudp_huge_get_and_clear().
 
-Fix generated by an LLM and sent by Chris Mason in private.
-
-Fixes: 3506ff69c3ec ("drm/radeon: use mmu_interval_notifier_insert")
+Fixes: 7d846db7d0e2 ("mm/mremap: convert huge PUD move to separate helper")
 Cc: stable@vger.kernel.org
-Signed-off-by: Chris Mason <mason@kernel.org>
-[ david: simplify description ]
+Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/mmu_notifier.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ mm/mremap.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
-index 2e20f88e162d7..a7bae5de5fedc 100644
---- a/mm/mmu_notifier.c
-+++ b/mm/mmu_notifier.c
-@@ -947,7 +947,6 @@ static int __mmu_interval_notifier_insert(
- 	struct mmu_notifier_subscriptions *subscriptions, unsigned long start,
- 	unsigned long length, const struct mmu_interval_notifier_ops *ops)
- {
--	interval_sub->mm = mm;
- 	interval_sub->ops = ops;
- 	RB_CLEAR_NODE(&interval_sub->interval_tree.rb);
- 	interval_sub->interval_tree.start = start;
-@@ -964,8 +963,12 @@ static int __mmu_interval_notifier_insert(
- 	if (WARN_ON(atomic_read(&mm->mm_users) <= 0))
- 		return -EINVAL;
+diff --git a/mm/mremap.c b/mm/mremap.c
+index 0d06d7f37f19a..16e736c72d9cb 100644
+--- a/mm/mremap.c
++++ b/mm/mremap.c
+@@ -509,8 +509,7 @@ static bool move_huge_pud(struct pagetable_move_control *pmc,
+ 		spin_lock_nested(new_ptl, SINGLE_DEPTH_NESTING);
  
--	/* pairs with mmdrop in mmu_interval_notifier_remove() */
-+	/*
-+	 * Pairs with mmdrop in mmu_interval_notifier_remove(). Drivers take a
-+	 * non-NULL ->mm for "registered", so set it only with the reference.
-+	 */
- 	mmgrab(mm);
-+	interval_sub->mm = mm;
+ 	/* Clear the pud */
+-	pud = *old_pud;
+-	pud_clear(old_pud);
++	pud = pudp_huge_get_and_clear(mm, pmc->old_addr, old_pud);
  
- 	/*
- 	 * If some invalidate_range_start/end region is going on in parallel
+ 	VM_BUG_ON(!pud_none(*new_pud));
+ 
 
 -- 
 2.43.0
