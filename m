@@ -2,56 +2,56 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC2D606A31A
-	for <kexec@archiver.kernel.org>; Mon, 26 Oct 2026 23:23:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF126606A31B
+	for <kexec@archiver.kernel.org>; Mon, 26 Oct 2026 23:23:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=VcrOTnSN;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PbgM5nER
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=fAOrjRQq;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oDfG8JRC
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=9ghLBkppx9o1pzNOIkyHYAlxKpBzprLGe09MAo7VESI=; b=VcrOTnSNrfVKoa
-	9oMKuJhEqFWbizlQ4dZFjygjI88hU3MhLCeUTDQmVYmKfNsjIuSc0ZSqAWoOTIepPEtZHXypW0tFH
-	JaS6H1gcJTPC6TRnGmqkqxCqgDPLkuCbxWjlzk3qEXiOrg9QbA429OPdGZi9wtJOR0dACyO7fyErr
-	Pd/Ao9H2lGsuhkTtWon1I0/9YJ+j5LhBeSl0tc23cvy4BTiCg+V8NcKaU0sX2fSLkK/GsWMctV8ax
-	StcWORVVlCMvMBIRRpQJsrtdpwnAai3tgS7NSihsR5bU1gy8SUsAUbxCFHgrV4ETWepNnpVH6t9cR
-	AaI9Zc/nkpWLVudbEGRw==;
+	List-Owner; bh=yrWRwWI1TX1mcUZCYDX7YGV/LWEOTto0e1Zbca5EuMo=; b=fAOrjRQqGKTZHf
+	0cGyBDlW3O/XcfkwtaDF15m2zthtTo2aUcZQzv4MpPP8JoIL5UEDBkHDfalSmm5UQnYR4l3hRkGI0
+	yQkONVm5XI9l4jYAVNqx8mFazK4HRe+RpJI4knUly8g8HEjbQNTEYMWyTX0jo6bGQTaSSkkLEwCVn
+	UJVbEbkdABAOPrtFF+pzlhzNRCf0ip/kt8rMI1i4fbvntfWb/jZifSzfX4/sh6gUSgiIXgr7x4+GE
+	DFsTy578IcVKlBDfd9lN34+uFEeTUmGkQ7R0RHBCPpAK6VcVXW3pb/ogO4rdlyF1gj0NJ5rl3kTrA
+	h5toBhW7+eYRAgp/0J4g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLU2S-00000003Q6V-1gKG;
-	Mon, 26 Oct 2026 23:23:36 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xLU2j-00000003QA4-25oL;
+	Mon, 26 Oct 2026 23:23:53 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLU2Q-00000003Q6I-25mD
+	id 1xLU2i-00000003Q9j-0bo6
 	for kexec@lists.infradead.org;
-	Mon, 26 Oct 2026 23:23:34 +0000
+	Mon, 26 Oct 2026 23:23:52 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id B530B601F9;
+	by sea.source.kernel.org (Postfix) with ESMTP id A570E40C2A;
+	Mon, 26 Oct 2026 23:23:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 167181F01829;
 	Mon, 26 Oct 2026 23:23:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 541741F01825;
-	Mon, 26 Oct 2026 23:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793057013;
-	bh=9ghLBkppx9o1pzNOIkyHYAlxKpBzprLGe09MAo7VESI=;
+	s=k20260515; t=1793057031;
+	bh=yrWRwWI1TX1mcUZCYDX7YGV/LWEOTto0e1Zbca5EuMo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=PbgM5nERw3dhz4H5Dx9e87PKvv2YyQhWlLTY9OxNjtJYEM7nn/ZuhTcjU1MrcHIWN
-	 pBgbrO56mec/pIE1fyAZvH7HrvAsbuNqo5qh6M5tzowYd7p3y1G8xKRoQtb8GfBVgM
-	 ByI1GHKBu5k+ZDRBHK1UHKKIxpwPSGQjhlfkyBo34U9jhKg8+vy2oMjz62tFqrACPf
-	 3wMlXWWaPRJ3wV0jHp9+Dhd/GGIWNfjqPUIJonptqBAEZBWNkQcK5j8U7qWgxJI6xW
-	 FgzdNPHCIsrQz00H2YKv8v6WJQt9/0htHvZYhLqRX3YAQDIHHu71V0h2hBW7HuorAG
-	 jELF3w+ixIuxQ==
+	b=oDfG8JRCj/HnI05JYJpdQeNsDVitwtOPsqwFt+Y3DiM5wFzRClDxE6A11o1/HZEfq
+	 h14PPV5dH6x2rp1uZyFJOu841a10mxF/gCFopjhJg0X8cKhgjQFXxAMV+QRg5lD4V2
+	 H9cn6S0rxc+ey7SCMwJe6uHugFTfTIZon+3EBRBaAQhBh+BZivcerCauhQJPkOFwq5
+	 E8UaueuP28d3TSNTE4s0mf+KsJgxtw1fQ3t77075G5E1QAx7rIVJR0W1igJSkKKfOj
+	 x9kkm86s2G0a5xY6JVZdpqPt7JLURP7bhcdXnG4ab/tq3//Tx9cB7jFElNIecScCS/
+	 D3pNbzACczyFQ==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Tue, 27 Oct 2026 00:17:38 +0100
-Subject: [PATCH 18/46] mm/khugepaged: check if PTE table is empty in
- try_collapse_pte_mapped_thp()
+Date: Tue, 27 Oct 2026 00:17:39 +0100
+Subject: [PATCH 19/46] mm/gup: recheck the PUD under PTL in
+ follow_pud_mask()
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261027-fixes_core-v1-18-6f74bec9a5bb@kernel.org>
+Message-Id: <20261027-fixes_core-v1-19-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
 In-Reply-To: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -89,14 +89,15 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
  "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5530; i=david@kernel.org;
- h=from:subject:message-id; bh=EsD8ZlRQvAEJtfiiEkh+iJ41o7HnIWnYdXqeUX1m2uE=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLLu35/68IKvRf+nzZv6FtVNl2nVTRT+UcG1Jp3v/B73r
- C+ZhcWpHaUsDGIcDLJiiixBwfcNXr5cV1vtxscMM4eVCWQIAxenAEzE/Tkjw+tLZfx3W3S8Hvkq
- 7b+tY61bdOaqpYfRYo//2zaYBpoo+zEyHHsUVaK369iafwXRBzUMmhcGfHm9LM3JXrly+/vCwrh
- 6fgA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3797; i=david@kernel.org;
+ h=from:subject:message-id; bh=fBfRL/hNgbZlBR9ozQBVYIeZUTHsd1pHD95a8NK5vT4=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLLu358qaqN8TWk+X4z5G7PV95qeTBPYdKVqHs+8GVlSn
+ Zs3Z/+M6ChlYRDjYJAVU2QJCr5v8PLlutpqNz5mmDmsTCBDGLg4BWAiLK8ZGVa90jZ9XaiRe6wx
+ UIDvpS/zseWK071r3z9OWBMnUfRSyp/hf6pW8DKR59oeHRuNv/kx/XzHZGF/3eTr79k1uXvqY1Z
+ +5gQA
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -117,160 +118,116 @@ X-Spam-Status: No, score=-19.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-The existing code is rather horrible and already resulted in bugs in the
-past: we special-case UFFD inserting anonymous folios by grabbing the PMD
-lock early, but ignore any other markers (guard, poison through uffd) that
-could have been inserted into the page table in the meantime, effectively
-dropping them.
+follow_pud_mask() reads the PUD without a lock. If it is a leaf, it takes
+the lock and calls follow_huge_pud(), which reads the entry again, but
+only tests whether it is present.
 
-Let's just unify and simplify the locking: try to grab the PMD table
-lock and if that fails, flush the TLB, drop the PTE lock, take PT locks in
-the right order and check if the page table is still empty.
+A leaf can be zapped concurrently and a page fault can fill the empty
+entry with a page table.
 
-We still perform the heavy lifting (zapping the folio ptes) under PTE table
-lock only.
+This currently only applies when device-dax makes use of PUD entries,
+and the fault after e.g., MADV_DONTNEED would find THPs to be disabled.
 
-Include <linux/hugetlb.h> for now, as x86's flush_tlb_range() macro
-depends on hugetlb helpers. This dependency needs a separate cleanup.
+That requires a sequence like
 
-Both issues this fixes are rather corner cases. Let's not CC stable for
-now.
+1) Fault in the PUD
+2) Disable THP
+3) Have GUP race against concurrent MADV_DONTNEED + refault
 
-Fixes: f807123d578d ("mm: allow guard regions in file-backed and read-only mappings")
-Fixes: 1043173eb5eb ("mm/khugepaged: collapse_pte_mapped_thp() with mmap_read_lock()")
+Which is rather unlikely to happen in practice, which is why we never
+received a report about such a problem.
+
+Before commit 1b1676180246 ("mm/gup: handle huge pud for
+follow_pud_mask()"), we performed that check in follow_devmap_pud() by
+testing for pud_devmap().
+
+Let's fix it by just structuring follow_pud_mask() similar to
+follow_pmd_mask(), minus protnone stuff that does not apply and minus
+FOLL_SPLIT_PMD handling. That makes it much easier to spot any such
+inconsistencies.
+
+Perform the pud_bad() check early in follow_pmd_mask() and just forward
+the PUD value. We can drop the pud_present() check in follow_huge_pud(),
+just like we have in follow_huge_pmd().
+
+Even though we are performing more changes than strictly necessary, the
+fix should be easy to backport.
+
+Fixes: 1b1676180246 ("mm/gup: handle huge pud for follow_pud_mask()")
+Cc: stable@vger.kernel.org
+Reported-by: Josef Bacik <josef@toxicpanda.com>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/khugepaged.c | 64 ++++++++++++++++++++++++++++-----------------------------
- 1 file changed, 31 insertions(+), 33 deletions(-)
+ mm/gup.c | 32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index dd17c3dae8006..4313abf9cfcb9 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -10,6 +10,7 @@
- #include <linux/mm_inline.h>
- #include <linux/kthread.h>
- #include <linux/khugepaged.h>
-+#include <linux/hugetlb.h>
- #include <linux/freezer.h>
- #include <linux/mman.h>
- #include <linux/hashtable.h>
-@@ -1832,6 +1833,17 @@ static enum scan_result set_huge_pmd(struct vm_area_struct *vma, unsigned long a
- 	return SCAN_SUCCEED;
+diff --git a/mm/gup.c b/mm/gup.c
+index f166acf794e30..efc9aa2654625 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -658,9 +658,6 @@ static struct page *follow_huge_pud(struct vm_area_struct *vma,
+ 
+ 	assert_spin_locked(pud_lockptr(mm, pudp));
+ 
+-	if (!pud_present(pud))
+-		return NULL;
+-
+ 	if ((flags & FOLL_WRITE) &&
+ 	    !can_follow_write_pud(pud, pfn_to_page(pfn), vma, flags))
+ 		return NULL;
+@@ -896,15 +893,17 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
  }
  
-+static bool pte_table_empty(pte_t *pte)
-+{
-+	int i;
-+
-+	for (i = 0; i < HPAGE_PMD_NR; i++, pte++) {
-+		if (!pte_none(ptep_get(pte)))
-+			return false;
-+	}
-+	return true;
-+}
-+
- static enum scan_result try_collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr,
- 		bool install_pmd)
+ static struct page *follow_pmd_mask(struct vm_area_struct *vma,
+-				    unsigned long address, pud_t *pudp,
+-				    unsigned int flags,
+-				    unsigned long *page_mask)
++		unsigned long address, pud_t *pudp, pud_t pud,
++		unsigned int flags, unsigned long *page_mask)
  {
-@@ -1935,33 +1947,14 @@ static enum scan_result try_collapse_pte_mapped_thp(struct mm_struct *mm, unsign
- 	}
+ 	pmd_t *pmd, pmdval;
+ 	spinlock_t *ptl;
+ 	struct page *page;
+ 	struct mm_struct *mm = vma->vm_mm;
  
- 	pte_unmap_unlock(start_pte, ptl);
--	ptl = NULL;
- 	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm,
- 				haddr, haddr + HPAGE_PMD_SIZE);
- 	mmu_notifier_invalidate_range_start(&range);
- 	notified = true;
- 
--	/*
--	 * pmd_lock covers a wider range than ptl, and (if split from mm's
--	 * page_table_lock) ptl nests inside pml. The less time we hold pml,
--	 * the better; but userfaultfd's mfill_atomic_pte() on a private VMA
--	 * inserts a valid as-if-COWed PTE without even looking up page cache.
--	 * So page lock of folio does not protect from it, so we must not drop
--	 * ptl before pgt_pmd is removed, so uffd private needs pml taken now.
--	 */
--	if (userfaultfd_armed(vma) && !(vma->vm_flags & VM_SHARED))
--		pml = pmd_lock(mm, pmd);
--
--	start_pte = pte_offset_map_rw_nolock(mm, pmd, haddr, &pgt_pmd, &ptl);
-+	start_pte = pte_offset_map_lock(mm, pmd, haddr, &ptl);
- 	if (!start_pte)
- 		goto abort;
--	if (!pml)
--		spin_lock(ptl);
--	else if (ptl != pml)
--		spin_lock_nested(ptl, SINGLE_DEPTH_NESTING);
--
--	if (unlikely(!pmd_same(pgt_pmd, pmdp_get_lockless(pmd))))
--		goto abort;
- 
- 	/* step 2: clear page table and adjust rmap */
- 	for (i = 0, addr = haddr, pte = start_pte; i < HPAGE_PMD_NR;
-@@ -1992,10 +1985,7 @@ static enum scan_result try_collapse_pte_mapped_thp(struct mm_struct *mm, unsign
- 
- 		nr_batch_ptes = folio_pte_batch(folio, pte, ptent, max_nr_batch_ptes);
- 
--		/*
--		 * Must clear entry, or a racing truncate may re-remove it.
--		 * TLB flush can be left until pmdp_collapse_flush() does it.
--		 */
-+		/* Must clear entry, or a racing truncate may re-remove it. */
- 		ptent = get_and_clear_ptes(mm, addr, pte, nr_batch_ptes);
- 		if (pte_dirty(ptent))
- 			folio_mark_dirty(folio);
-@@ -2003,25 +1993,33 @@ static enum scan_result try_collapse_pte_mapped_thp(struct mm_struct *mm, unsign
- 		nr_mapped_ptes += nr_batch_ptes;
- 	}
- 
--	if (!pml)
--		spin_unlock(ptl);
--
- 	/* step 3: set proper refcount and mm_counters. */
- 	if (nr_mapped_ptes) {
- 		folio_ref_sub(folio, nr_mapped_ptes);
- 		add_mm_counter(mm, mm_counter_file(folio), -nr_mapped_ptes);
- 	}
- 
--	/* step 4: remove empty page table */
--	if (!pml) {
-+	/* step 4: acquire the PMD lock and remove the empty page table */
-+	pml = pmd_lockptr(mm, pmd);
-+	if (ptl != pml && !spin_trylock(pml)) {
-+		/* We must flush before dropping the PTL. */
-+		if (nr_mapped_ptes)
-+			flush_tlb_range(vma, haddr, end);
-+		pte_unmap_unlock(start_pte, ptl);
-+		ptl = NULL;
++	if (unlikely(pud_bad(pud)))
++		return no_page_table(vma, flags, address);
 +
- 		pml = pmd_lock(mm, pmd);
-+		start_pte = pte_offset_map_rw_nolock(mm, pmd, haddr, &pgt_pmd, &ptl);
-+		if (!start_pte)
-+			goto unlock;
- 		if (ptl != pml)
- 			spin_lock_nested(ptl, SINGLE_DEPTH_NESTING);
--		if (unlikely(!pmd_same(pgt_pmd, pmdp_get_lockless(pmd)))) {
--			flush_tlb_mm(mm);
+ 	pmd = pmd_offset(pudp, address);
+ 	pmdval = pmdp_get_lockless(pmd);
+ 	if (pmd_none(pmdval))
+@@ -953,18 +952,23 @@ static struct page *follow_pud_mask(struct vm_area_struct *vma,
+ 	pud = pudp_get(pudp);
+ 	if (!pud_present(pud))
+ 		return no_page_table(vma, flags, address);
+-	if (pud_leaf(pud)) {
+-		ptl = pud_lock(mm, pudp);
+-		page = follow_huge_pud(vma, address, pudp, flags, page_mask);
++	if (!pud_leaf(pud))
++		return follow_pmd_mask(vma, address, pudp, pud, flags, page_mask);
 +
-+		if (!pte_table_empty(start_pte))
- 			goto unlock;
--		}
++	ptl = pud_lock(mm, pudp);
++	pud = *pudp;
++	if (unlikely(!pud_present(pud))) {
+ 		spin_unlock(ptl);
+-		if (page)
+-			return page;
+ 		return no_page_table(vma, flags, address);
  	}
-+
-+	/* This also flushes the zapped folio ptes properly. */
- 	pgt_pmd = pmdp_collapse_flush(vma, haddr, pmd);
- 	pmdp_get_lockless_sync();
- 	pte_unmap_unlock(start_pte, ptl);
-@@ -2042,7 +2040,7 @@ static enum scan_result try_collapse_pte_mapped_thp(struct mm_struct *mm, unsign
- 	goto drop_folio;
- abort:
- 	if (nr_mapped_ptes) {
--		flush_tlb_mm(mm);
-+		flush_tlb_range(vma, haddr, end);
- 		folio_ref_sub(folio, nr_mapped_ptes);
- 		add_mm_counter(mm, mm_counter_file(folio), -nr_mapped_ptes);
- 	}
+-	if (unlikely(pud_bad(pud)))
+-		return no_page_table(vma, flags, address);
++	if (unlikely(!pud_leaf(pud))) {
++		spin_unlock(ptl);
++		return follow_pmd_mask(vma, address, pudp, pud, flags, page_mask);
++	}
+ 
+-	return follow_pmd_mask(vma, address, pudp, flags, page_mask);
++	page = follow_huge_pud(vma, address, pudp, flags, page_mask);
++	spin_unlock(ptl);
++	return page;
+ }
+ 
+ static struct page *follow_p4d_mask(struct vm_area_struct *vma,
 
 -- 
 2.43.0
