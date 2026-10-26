@@ -2,66 +2,88 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA4B606A322
-	for <kexec@archiver.kernel.org>; Mon, 26 Oct 2026 03:46:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83789606A334
+	for <kexec@archiver.kernel.org>; Mon, 26 Oct 2026 07:53:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=WcqSQJEI;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iud6+Tsz
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=SlGHmGT6;
+	dkim=pass (1024-bit key, unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=G/+jqQij
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:Date:Message-Id:
-	References:In-Reply-To:From:Subject:Reply-To:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
+	:Subject:To:From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=SsagISxi0qI49SXgbaqHMJnTeQEJUrT8R+ZKkwxfnp0=; b=WcqSQJEI4Qa+t+266pFsjziLeR
-	0yBikZawXn2ax5G28OYFA4TIg2bMgQ13q/YFYdswohcoqh5wPvHe/3vYQGZhzS+NWRuRrnE65ccwn
-	V3AfVganB1uQuDrXSmP76lGmE0leLggFy5ZWhfsLF6qZAbvBYZyjN6cMAeOIMwOLj8eGOyFHa+OaP
-	f/iCz66ZA6PPs5lV7N0JZ50Kwe1ZQdBnHl+ajpeKfRGu2FZfhhzJKCE2K5hmpvYSMj0mAdwmBHFOY
-	MWTx39uLV8KOmKIYHMFVu9V81h1PdrgHP1mTAQGN2VPF5CbwQTqcJZZKybReQ78tN4u+7NiTMpjF3
-	Ef/KIX3Q==;
+	bh=Sv1n1GDC9f/Q6SJrbxr/k0Y3hZa21S+Ex7Ye+wx5xKM=; b=SlGHmGT66Aeas30nt13tEWp2IJ
+	6t/6o5gH/JsxXrjbzN3VfGMWYrskP4rCp7XgOU9xJIAElMhlL/w17Cb8Ft8Xuey1NOlyhXlZ6C72Y
+	S0WG9dAIMU+wzDKxZ11zzrkQpbum3G47cNyrTCv42LHLboZjma45tjKzrGybYAYryS/y1fiWorLbQ
+	K04omx6Hc5E+k5rTOJf1xF8zoN8iAUmLxIx5Z4Bx/Cxn1Tf2x9dQELK+mK01xBVBVacKJfZnSjocW
+	MVWyuy9hG9EKwn4w8/P3F1oNZj0w2dR1TgNmCha0bWlR36gM80hd0d8MW2YN8SYliEG0xOcObRN3k
+	T5Irx4bw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLBfF-00000001gKB-2qvi;
-	Mon, 26 Oct 2026 03:46:25 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xLFWC-00000001sIP-49xl;
+	Mon, 26 Oct 2026 07:53:20 +0000
+Received: from [113.46.200.221] (helo=canpmsgout06.his.huawei.com)
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLBfE-00000001gJm-0eWk
-	for kexec@lists.infradead.org;
-	Mon, 26 Oct 2026 03:46:24 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 9878360120;
-	Mon, 26 Oct 2026 03:46:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E1551F01825;
-	Mon, 26 Oct 2026 03:46:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792986383;
-	bh=SsagISxi0qI49SXgbaqHMJnTeQEJUrT8R+ZKkwxfnp0=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc;
-	b=iud6+TszJtUxwQspZzhQJExY2oUs0SRKiAVJRuYeyMY888SK4n1J/cPhayyEBa49Z
-	 GzGvBSTRFNulBVdbYyW7iqx8xD3/CKxIollZV2+drt2bI0jJZon1z2RwNfE4vLfn5F
-	 ruGwELzQTvN6dtpXXuDHIobBILCWZZBP9p81GptuiJtyLZKNWc9PLvj5Kk6LqKiA0v
-	 MBZm+CtpiVK9102vqVPyc0Aslg6kzisyiKr13+QVNCB3FuopZOi95G3C3El+qD/++b
-	 sdk7OwJ7f10ylC9KapC810uIq3HwTdv2vcsrC2Y9U8SjTb0xRwadD4p/lAo294umHC
-	 bEpC0mYkM8YYA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 447C939EA761;
-	Mon, 26 Oct 2026 03:46:23 +0000 (UTC)
-Subject: Re: [GIT PULL] liveupdate: updates for 7.4-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20261024112228.3384682-1-rppt@kernel.org>
-References: <20261024112228.3384682-1-rppt@kernel.org>
-X-PR-Tracked-List-Id: <kexec.lists.infradead.org>
-X-PR-Tracked-Message-Id: <20261024112228.3384682-1-rppt@kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git liveupdate-v7.4-rc1
-X-PR-Tracked-Commit-Id: 9a6a70aefe77f6fb9ff2b3037dcf87f6dff65c8c
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 126ad898a6e97fcb4c3fbe6d979829f72b8c348c
-Message-Id: <179298638199.2442679.15503618075883442316.pr-tracker-bot@kernel.org>
-Date: Mon, 26 Oct 2026 03:46:21 +0000
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+	id 1xLFW8-00000001sEJ-2hb4;
+	Mon, 26 Oct 2026 07:53:19 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=Sv1n1GDC9f/Q6SJrbxr/k0Y3hZa21S+Ex7Ye+wx5xKM=;
+	b=G/+jqQijgRmlpTCqlNiruKZ4rNQolrOWXL7muPb8iCaXKckrvrYGgAFDzA1IqqjiXuplSdmnq
+	JuQSSIqCDPrqXsV95d/dwJQ5YZJIu/3X960fyx/fTrtRHiNxvvsSjeB6Hg6SinQkRncyEvldKYI
+	p/rdm19gH+TX7NnbpMn6hP0=
+Received: from mail.maildlp.com (unknown [172.19.162.140])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4jCm7k0yYqzRhXR;
+	Mon, 26 Oct 2026 15:52:50 +0800 (CST)
+Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6BA1A202E6;
+	Mon, 26 Oct 2026 15:52:57 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemk200008.china.huawei.com
+ (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Mon, 26 Oct
+ 2026 15:52:55 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
+	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
+	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
+	<ritesh.list@gmail.com>, <sshegde@linux.ibm.com>, <pjw@kernel.org>,
+	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
+	<tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
+	<baoquan.he@linux.dev>, <rppt@kernel.org>, <pasha.tatashin@soleen.com>,
+	<pratyush@kernel.org>, <thuth@redhat.com>, <ruanjinjie@huawei.com>,
+	<leitao@debian.org>, <yeoreum.yun@arm.com>, <robh@kernel.org>,
+	<sourabhjain@linux.ibm.com>, <kees@kernel.org>, <coiby.xu@gmail.com>,
+	<Yeking@Red54.com>, <tangyouling@kylinos.cn>, <maqianga@uniontech.com>,
+	<zhangtianyang@loongson.cn>, <guodongtai@kylinos.cn>, <blum@kernel.org>,
+	<adityag@linux.ibm.com>, <hui.wang@canonical.com>, <sohammetha01@gmail.com>,
+	<guoren@kernel.org>, <gaohan@iscas.ac.cn>, <kai.huang@intel.com>,
+	<kas@kernel.org>, <vishal.l.verma@intel.com>, <piliu@redhat.com>,
+	<jbouron@amazon.com>, <mclapinski@google.com>, <me@linux.beauty>,
+	<graf@amazon.com>, <bgwin@google.com>, <x86@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-riscv@lists.infradead.org>, <kexec@lists.infradead.org>
+Subject: [PATCH v7 04/15] arm64: kexec_file: Fix elf_headers memory leak in retry loop
+Date: Mon, 26 Oct 2026 15:51:50 +0800
+Message-ID: <20261026075201.699550-5-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20261026075201.699550-1-ruanjinjie@huawei.com>
+References: <20261026075201.699550-1-ruanjinjie@huawei.com>
+X-Archived-By: <archiver.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemk200008.china.huawei.com (7.202.194.74)
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261026_005317_046855_52B7BAA9 
+X-CRM114-Status: UNSURE (   7.86  )
+X-CRM114-Notice: Please train this message.
+X-Spam-Score: -1.3 (-)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,24 +94,48 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-19.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
-X-Archived-By: <archiver.kernel.org>
 
-The pull request you sent on Sat, 24 Oct 2026 14:22:27 +0300:
+A retry allocates new elf headers and overwrites image->elf_headers,
+leaking the previous buffer.  Free it before assigning.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git liveupdate-v7.4-rc1
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Thomas Huth <thuth@redhat.com>
+Cc: Breno Leitao <leitao@debian.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 108aa503657e ("arm64: kexec_file: try more regions if loading segments fails")
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+---
+ arch/arm64/kernel/machine_kexec_file.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/126ad898a6e97fcb4c3fbe6d979829f72b8c348c
-
-Thank you!
-
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index e48f29167b38..2f750e5f4fcc 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -112,6 +112,10 @@ int load_other_segments(struct kimage *image,
+ 			vfree(headers);
+ 			goto out_err;
+ 		}
++
++		if (unlikely(image->elf_headers))
++			vfree(image->elf_headers);
++
+ 		image->elf_headers = headers;
+ 		image->elf_load_addr = kbuf.mem;
+ 		image->elf_headers_sz = headers_sz;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.34.1
+
 
