@@ -2,56 +2,56 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB5C606A339
-	for <kexec@archiver.kernel.org>; Mon, 26 Oct 2026 23:32:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F99606A32C
+	for <kexec@archiver.kernel.org>; Mon, 26 Oct 2026 23:32:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=lmSvf/hV;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eAAUXl2F
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=H+Lzwa6L;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=L9akpim6
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=g9Kj7YHK/vFxzWo8upMpJmyx4xo85TgB6aMFH+6OL8o=; b=lmSvf/hVTWI6BC
-	WWU99VQiDZ8ZSIESj6jdcp0Vm9RzhWBqPfMUPmVFInUAqBR6qBh6jvWs4a9w7qH1hnmo/MRmigtni
-	EwzmnlPnrcedlmn9tjpDAA2IvuBX73q881jXdM4C+vqa5MZV+3RSB/S8yUZJo1Yk7ytqzULpP2skV
-	axBKEndilN0jiS5C1Q/JUM1ZcCQ+xqgL9TU3VBhdO6PAbsX0ghSD9ShYyedvNsd86eJm/67Hei4JX
-	CiOgBlyTQkyNjxISFDW1hDBjosNLv+vb/wKKcc96dM0PoaQUSncK6hXaDIPxEjbCXR0F2yQ3mFbd5
-	X7beZBFkzp1A1O8M/Kkg==;
+	List-Owner; bh=leDMySoi7QnuGrXCT7kUTF7p3M2NeDPBgSV/0vbZ0BI=; b=H+Lzwa6LL+5kGe
+	JGOPJyOiJ8Q7mOtvM/BJtVjBfilNzwWaQheDkc9BQgz40ss6bQkEZHDprdznHSXmwtxX7mplF8/OE
+	VwX9b7AO2PS8IXloJ/t/Tje++FkyW2CbOwKPx7mb2Tm7lWfedresoa7loiaMb1rTmiffwrIzGHMZi
+	nYjZJoiP2cWI+Sqn/09xqIVj1+RjUZgs/M8VvJCdNxjGiqM6K4+cDvZiYQ3o/AhdXIxx9dRUVbIra
+	s4N2eFw0lZo2p79aCgSAORXWGEBH440FisYPrYPn4UG6OhHyMwxnwJCpQ1ioKrvCqGwZDxH+AuQyf
+	uKhcHpju2NtMwqFm8Hmg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUAd-00000003SEk-3y5b;
-	Mon, 26 Oct 2026 23:32:03 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xLUAw-00000003SHN-0ANt;
+	Mon, 26 Oct 2026 23:32:22 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUAc-00000003SEc-2Vlq
+	id 1xLUAu-00000003SHG-3X3e
 	for kexec@lists.infradead.org;
-	Mon, 26 Oct 2026 23:32:02 +0000
+	Mon, 26 Oct 2026 23:32:20 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 4A25E41988;
+	by tor.source.kernel.org (Postfix) with ESMTP id 45A1E60213;
+	Mon, 26 Oct 2026 23:32:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C72011F01825;
 	Mon, 26 Oct 2026 23:32:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE89B1F031E4;
-	Mon, 26 Oct 2026 23:31:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793057522;
-	bh=g9Kj7YHK/vFxzWo8upMpJmyx4xo85TgB6aMFH+6OL8o=;
+	s=k20260515; t=1793057540;
+	bh=leDMySoi7QnuGrXCT7kUTF7p3M2NeDPBgSV/0vbZ0BI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=eAAUXl2Fv5GKOM7MwK2afRhIql+v43hRuiFMsyyr826M/I0/zzX/QoAh89jifpJfI
-	 v1h87y90NWXH3G+Skzk7UcVX4m3g3W4YHwjNgyjd1Yaz5yU7aCb1icJ13Nw+U1wmtC
-	 Kb9RPkFR6vXSasTDqyogu8qGQbl7zk76Oiidwg8y6E6VzRx8gz2T+JVilpLvNDInzx
-	 +Zmhjhsml8/Ry5oByyop5y5ViyFWiKeH7hMIwSBTkt/4jAvpuzZclQPR9gbx2V20Fq
-	 vxrSN8N7qWPJWt8kOP6NEIqNU2YHlqBg2gQLZPUGq+HOSPkTNLbGXDN2OooFguG9xB
-	 UACjYB1hhSFiQ==
+	b=L9akpim6QbyBegiqBFdq/baFvmFgEdwCFWOYawuBvlzKXZmVSx0OXUe0vIKVc29Kq
+	 qFDhmjhE2XC8r2UET7MbseG82Yrlr5rl8uhm+FWZXg9zSHHjcPx6jOzdtkZAUAd57/
+	 SUaqIU3cTuXQ5rkuIOkuugP4Oddi+rqpi0RzyFZcXrXMvV1AJRJeL0Ka60cc/6lFzl
+	 3aj7CVp9NxQgtlAVViDSO2yiUZAwQ3wkx24AZ9ntSDPW+IGf2vjdQTXbtW5e5vPduc
+	 PYBh4bWzA7jbOLzBvw10CaUrJ2jvgAzk/WB3Tm80LB/7B3bjWitIFuSzSjELUy2vBJ
+	 OVrw1PteZgGXQ==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Tue, 27 Oct 2026 00:18:05 +0100
-Subject: [PATCH 45/46] mm/memory-tiers: unregister empty tiers outside
- memory_tier_lock
+Date: Tue, 27 Oct 2026 00:18:06 +0100
+Subject: [PATCH 46/46] fs/proc/task_mmu: refuse addresses beyond 32 bits on
+ 32bit
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261027-fixes_core-v1-45-6f74bec9a5bb@kernel.org>
+Message-Id: <20261027-fixes_core-v1-46-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
 In-Reply-To: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -89,15 +89,15 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
- stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
+ Josef Bacik <josef@toxicpanda.com>, 
  "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3012; i=david@kernel.org;
- h=from:subject:message-id; bh=GK45sNqq0Okgc4Cym/ZaeHTnABd3IPthztUBcQAaOBo=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLLu35/ZcGvOxE3d+ff7dizU7jP4xcLXfbkjrCPlkSC/7
- q0Q3ZawjlIWBjEOBlkxRZag4PsGL1+uq61242OGmcPKBDKEgYtTACZy5xUjw62fZi37JRqEY+Ib
- Lk0qWXgm7vexr8nCzbWyW2aL835eBVRxQWB6qu8u76sSvi8rXlfHO6RcNZv/5OTSWYdiGsNEP/t
- xAgA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1648; i=david@kernel.org;
+ h=from:subject:message-id; bh=+RaX15JldLvyrOg9i/7002o3Wko+CCA0o+GE3n4B9o0=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLLu3595P/+VmdMlLqcHjo7hx5XfCereZwuyfqL6dWnoT
+ tPbz1nLO0pZGMQ4GGTFFFmCgu8bvHy5rrbajY8ZZg4rE8gQBi5OAZjIuT2MDAtnL/pcH+sjlak6
+ xTFMq1Epryj302Srs5J1+1ufKrr0T2FkuFqsNvv532l6H9VM/3dH69amCF5+VDmd8zXP8lDXW2x
+ ruQE=
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -118,96 +118,46 @@ X-Spam-Status: No, score=-19.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-When offlining a node's last memory empties its tier,
-clear_node_memory_tier() calls device_unregister() while holding
-memory_tier_lock. A concurrent sysfs read can hold a kernfs active
-reference and block in nodelist_show() on that mutex. device_unregister()
-then waits in kernfs_drain() for the read to finish and release its active
-reference, while the reader waits for the offlining task to release the
-mutex.
+From: Josef Bacik <josef@toxicpanda.com>
 
-Return the node's former tier from clear_node_memory_tier(), making the
-helper more similar to set_node_memory_tier(), which also returns a
-memory_tier pointer. Let the caller unlink an empty tier under
-memory_tier_lock before rebuilding demotion targets, then unregister its
-device after dropping the lock.
+The addresses in struct pm_scan_arg are 64 bits wide.  The first thing
+pagemap_scan_get_args() does with them is to cast them to unsigned
+long.  On a 32-bit kernel the upper half is dropped without a word:
+PAGEMAP_SCAN of 0x100001000-0x100002000 scans, and with
+PM_SCAN_WP_MATCHING write-protects, 0x1000-0x2000, stores the result
+at the lower half of vec, and reports success.
 
-Fixes: 9832fb87834e ("mm/demotion: expose memory tier details via sysfs")
-Cc: stable@vger.kernel.org
-Reported-by: Josef Bacik <josef@toxicpanda.com>
+Return -EFAULT, as for other addresses outside of the address space.
+
+This is probably not worth CCing stable.
+
+Fix generated by an LLM and sent by Josef Bacik in private.
+
+Fixes: 52526ca7fdb9 ("fs/proc/task_mmu: implement IOCTL to get and optionally clear info about PTEs")
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/memory-tiers.c | 29 +++++++++++++----------------
- 1 file changed, 13 insertions(+), 16 deletions(-)
+ fs/proc/task_mmu.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
-index 25e121851b586..8eda313cf6192 100644
---- a/mm/memory-tiers.c
-+++ b/mm/memory-tiers.c
-@@ -572,21 +572,14 @@ static struct memory_tier *set_node_memory_tier(int node)
- 	return memtier;
- }
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index 7452b695fdaec..762b6dbb81e4a 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -3032,6 +3032,12 @@ static int pagemap_scan_get_args(struct pm_scan_arg *arg,
+ 	     arg->category_anyof_mask | arg->return_mask) & ~PM_SCAN_CATEGORIES)
+ 		return -EINVAL;
  
--static void destroy_memory_tier(struct memory_tier *memtier)
-+static struct memory_tier *clear_node_memory_tier(int node)
- {
--	list_del(&memtier->list);
--	device_unregister(&memtier->dev);
--}
--
--static bool clear_node_memory_tier(int node)
--{
--	bool cleared = false;
- 	pg_data_t *pgdat;
- 	struct memory_tier *memtier;
- 
- 	pgdat = NODE_DATA(node);
- 	if (!pgdat)
--		return false;
-+		return NULL;
- 
- 	/*
- 	 * Make sure that anybody looking at NODE_DATA who finds
-@@ -604,14 +597,10 @@ static bool clear_node_memory_tier(int node)
- 		synchronize_rcu();
- 		memtype = node_memory_types[node].memtype;
- 		node_clear(node, memtype->nodes);
--		if (nodes_empty(memtype->nodes)) {
-+		if (nodes_empty(memtype->nodes))
- 			list_del_init(&memtype->tier_sibling);
--			if (list_empty(&memtier->memory_types))
--				destroy_memory_tier(memtier);
--		}
--		cleared = true;
- 	}
--	return cleared;
-+	return memtier;
- }
- 
- static void release_memtype(struct kref *kref)
-@@ -884,13 +873,21 @@ static int __meminit memtier_hotplug_callback(struct notifier_block *self,
- {
- 	struct memory_tier *memtier;
- 	struct node_notify *nn = _arg;
-+	bool empty = false;
- 
- 	switch (action) {
- 	case NODE_REMOVED_LAST_MEMORY:
- 		mutex_lock(&memory_tier_lock);
--		if (clear_node_memory_tier(nn->nid))
-+		memtier = clear_node_memory_tier(nn->nid);
-+		if (memtier) {
-+			empty = list_empty(&memtier->memory_types);
-+			if (empty)
-+				list_del(&memtier->list);
- 			establish_demotion_targets();
-+		}
- 		mutex_unlock(&memory_tier_lock);
-+		if (empty)
-+			device_unregister(&memtier->dev);
- 		break;
- 	case NODE_ADDED_FIRST_MEMORY:
- 		mutex_lock(&memory_tier_lock);
++	/* Don't cut 64-bit numbers down to addresses that happen to work. */
++	if (arg->start != (unsigned long)arg->start ||
++	    arg->end != (unsigned long)arg->end ||
++	    arg->vec != (unsigned long)arg->vec)
++		return -EFAULT;
++
+ 	arg->start = untagged_addr((unsigned long)arg->start);
+ 	arg->end = untagged_addr((unsigned long)arg->end);
+ 	arg->vec = untagged_addr((unsigned long)arg->vec);
 
 -- 
 2.43.0
