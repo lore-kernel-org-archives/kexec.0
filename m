@@ -2,56 +2,55 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FEC606A32E
-	for <kexec@archiver.kernel.org>; Mon, 26 Oct 2026 23:18:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B167A606A322
+	for <kexec@archiver.kernel.org>; Mon, 26 Oct 2026 23:18:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=DN6Kvemy;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=N0Io6SX8
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=YzuivSnI;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iytSdu3W
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=NUBP2xRnXTWkvkzljjau88QTTUDveY6Hz9RAZJBGdTA=; b=DN6Kvemy7vS9CM
-	DIh0/eSS0qC1i1YXt/E+xrsikWTMhaCL5K3HYlcNAHc73V/VE+OHFWPfqm5PkSVmRMXcv/EnHFbR3
-	OMUEHwJ898ZGBydejbzlxB6DUV+zI8wgkhoc4XlZrRXuXIB2awrFvkxT8vnGdU0Xd5Fsn5q0M+AQS
-	N2u3DUl4vaFXEatUvaluRNlhfo74NoHgTJYAEFXFmlA3c+n3/h0iFysEndKJGJy5+Id5jnS6lcLTf
-	jKJQFXVHTBLGDtOx2EXWsVKJuyqvr2PLKARUhgvxfb3mHONMHEbCanYnKArvThT8qzL6TRhVThtfS
-	gw/bdl/qtOguCqBtULfQ==;
+	List-Owner; bh=SxHPlHEX6J1Jb0GTlHUy6KXWfE7ZloX8JtCL08WPSIA=; b=YzuivSnINzcEHE
+	H84GTm4a3Q7L1H46+g48oZEKzVxSjVhOxEHUanhtzTZHIU5SLp5qkGdkJ5smaY8/gXBIwWKFHfkEf
+	KX7f+4dsHVbTYAYHRZT2U3TZQzpgreFFW+s2RFC2gvzZYtsCZ4tjvN+zRp+UuewEnF6w5K6dRZ4AS
+	MKzhbSD7U2K1gAmJThpfcADLADhGEwxXI/eDpf1XRawDVZ3TWoSWD+lxuc02JxU6oKOsMpPIlSrTl
+	vVSdUqUTGAfW2Dz2TO79yQGVm0mPLfSiNUQh5gWKnCgg0mpkIojSVHBVEey82zJewb4MbTnlUF+us
+	F9oHZPSoqn1AfDF2gbLQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLTxI-00000003OyZ-0wi5;
-	Mon, 26 Oct 2026 23:18:16 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xLTxa-00000003P2j-1lSN;
+	Mon, 26 Oct 2026 23:18:34 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLTxH-00000003OyD-0P96
+	id 1xLTxY-00000003P2K-1Xly
 	for kexec@lists.infradead.org;
-	Mon, 26 Oct 2026 23:18:15 +0000
+	Mon, 26 Oct 2026 23:18:32 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 7390C4095A;
+	by tor.source.kernel.org (Postfix) with ESMTP id 87DC4600DA;
+	Mon, 26 Oct 2026 23:18:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE8A31F01825;
 	Mon, 26 Oct 2026 23:18:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4034A1F01828;
-	Mon, 26 Oct 2026 23:18:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793056694;
-	bh=NUBP2xRnXTWkvkzljjau88QTTUDveY6Hz9RAZJBGdTA=;
+	s=k20260515; t=1793056711;
+	bh=SxHPlHEX6J1Jb0GTlHUy6KXWfE7ZloX8JtCL08WPSIA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=N0Io6SX8cBzzTDOb7cpNCY6FTZU/h+KZanqCjpiuERrlKcwqPUmds2XacPzDJEdk4
-	 PYZRLj+AoUQoLE6z+36JUW94y4Bp88f3cJod9gQlvbGbNdqQlAhw18OBaLdHFRSS/q
-	 AmNfMdre4JdR5YYAE/k4Rm8QdRbDk1YvBQqj3ljM08SjJ/W5VLEH6Of+WTIkuE7YcM
-	 aAnkYNndmFBxnm4FtuLiESvFhlCip+lgP5vzefuhDl3xbxXkMESzxxRjpavTYuronn
-	 umBEwX+v+06COBgPtWP50OU+jEh3Dd9mcFm9RqijNKNh6N3UEEBuJYsTMOvJ5UqGVT
-	 OMLDSeCDpWsOA==
+	b=iytSdu3WRKSm0AWi2Dcs1aQDb7RNBqjiDDM0NMUZJrtMNx0GYDkBNwa8EwDjkQUW8
+	 NPbYuIl9oSbAcWnHairzTpeef2xfSPI1Fjz0L0snR6L9W9kHDS4/03QjrUx+hdcUsx
+	 TsGtwLu2PjpRCZOqaobcS5D1lKHM9Q3/3/2ULRbPw/u8NFjDoXW4Cfh7A3aG/WNFRL
+	 OK4XPzFSPDzZj+JCrE5AsvtSgTyK76yB3xbAI/hSWXiPfGeP7fPNpdsu85wrYjMAJY
+	 RI2ArgsZdB4dstUqZYknWhn64iwP2jU4+koGLpGHKT3sa36fke4yYD2aG3fJfb9A5j
+	 fhpWjZm43KDVw==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Tue, 27 Oct 2026 00:17:21 +0100
-Subject: [PATCH 01/46] mm/mglru: don't use stack pointers when walking PUD
- and PMD tables
+Date: Tue, 27 Oct 2026 00:17:22 +0100
+Subject: [PATCH 02/46] fork: take mmap_lock before copying mm_struct
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261027-fixes_core-v1-1-6f74bec9a5bb@kernel.org>
+Message-Id: <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
 In-Reply-To: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -89,15 +88,15 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
- Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org, 
+ stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
  "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2223; i=david@kernel.org;
- h=from:subject:message-id; bh=35PvaXKWWy0wg30tuDie4oWbed0+71n+0SGauq9bLs4=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLLu35+kxCFy6tE/r17VSuMD+w0ueUdwpk73e7hsKZNdZ
- IP9v4zojlIWBjEOBlkxRZag4PsGL1+uq61242OGmcPKBDKEgYtTACZyJ5nhD5c65/fu+Q1lbuVX
- lQuzF8Wx5tbVeTgvc1zKKt+8aWesCiPDfdkuFpbL603lW0oeZNmsVj9stXrGL6G3u6s954V9rgn
- hAwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3444; i=david@kernel.org;
+ h=from:subject:message-id; bh=NBxDvFwe3/BSRK4CxO/FpUhlaAcubfwNoo3/Au7L+uo=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLLu35+cYVIv0hn0/rU9e7fQ4nX+s6dkL4zkTL727Utjr
+ raB6cdpHaUsDGIcDLJiiixBwfcNXr5cV1vtxscMM4eVCWQIAxenAExEw4Lhf7xhWuB7Q+czL40a
+ fzNvW6J487uYXJ1UVNKSN7uvi+0/c5CRYd0ahbcf82ZNkK0tOF/RatTn52YiyyG9q+OuI7ML8xo
+ 3HgA=
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -118,60 +117,115 @@ X-Spam-Status: No, score=-19.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-From: Josef Bacik <josef@toxicpanda.com>
+dup_mm() copies the parent's mm_struct before dup_mmap() takes the
+mmap_lock. A concurrent brk() can leave the child with a stale mm->brk
+and newer heap mappings, causing later brk() requests to fail.
 
-MGLRU passes stack copies of page-table entries in walk_pud_range() and
-walk_pmd_range() when walking to the next level. These copies can become
-stale when khugepaged or MADV_DONTNEED (CONFIG_PT_RECLAIM) removes a PTE
-table concurrently.
+Other operations (e.g., PR_SET_MM) on the parent's mm_struct can similarly
+cause inconsistencies.
 
-This pattern dates back to commit bd74fdaea146 ("mm: multi-gen LRU:
-support page table walks"). Likely, earlier locking masked the latent
-bug. Later changes exposed it: commit 1d65b771bc08 ("mm/khugepaged:
-retract_page_tables() without mmap or vma lock") allowed concurrent
-retraction, and commit cf4a65539c13 ("memcg-v1: no need for memcg locking
-for MGLRU") dropped the walker's outer RCU protection.
+As a simple and robust fix, grab the parent's mmap_lock earlier. This
+way we don't need to update individual mm fields in dup_mmap() and
+keep missing ones. Stop updating the 4 existing members (total_vm, data_vm,
+exec_vm, stack_vm), as that is now no longer required.
 
-The fix is simple, so just fix the original commit so we don't have to
-speculate. To fix it, pass the actual PMD/PUD pointers. This restores the
-RCU-protected lookup and validation against the live PMD. Note that the PUD
-handling is required as well to handle folded page tables correctly in all
-cases.
+Keep releasing the parent's mmap_lock in dup_mmap(), before
+userfaultfd completion, to avoid moving the userfaultfd handling into the
+caller. This should get cleaned up later.
 
-Fix generated by an LLM and sent by Josef Bacik in private.
+Move uprobe_start_dup_mmap() to preserve the lock ordering.
 
-Fixes: bd74fdaea146 ("mm: multi-gen LRU: support page table walks")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Cc: stable@vger.kernel.org
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-[ david: handle walk_pud_range() as well, clarify+simplify description,
-         adjust Fixes: ]
+Reported-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/vmscan.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/fork.c | 20 ++++++++++++++------
+ mm/mmap.c     |  8 +-------
+ mm/nommu.c    |  2 +-
+ 3 files changed, 16 insertions(+), 14 deletions(-)
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 9959ca158ce83..6a1af9b92349f 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -3911,7 +3911,7 @@ static void walk_pmd_range(pud_t *pud, unsigned long start, unsigned long end,
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 22eaf5fb844d0..c8948cadccf71 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1532,12 +1532,19 @@ static struct mm_struct *dup_mm(struct task_struct *tsk,
+ 	if (!mm)
+ 		goto fail_nomem;
  
- 		walk->mm_stats[MM_NONLEAF_FOUND]++;
++	uprobe_start_dup_mmap();
++	if (mmap_write_lock_killable(oldmm)) {
++		free_mm(mm);
++		goto fail_uprobe;
++	}
++
+ 	memcpy(mm, oldmm, sizeof(*mm));
  
--		if (!walk_pte_range(&val, addr, next, args))
-+		if (!walk_pte_range(pmd + i, addr, next, args))
- 			continue;
+-	if (!mm_init(mm, tsk))
+-		goto fail_nomem;
++	if (!mm_init(mm, tsk)) {
++		mmap_write_unlock(oldmm);
++		goto fail_uprobe;
++	}
  
- 		walk->mm_stats[MM_NONLEAF_ADDED]++;
-@@ -3947,7 +3947,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned long start, unsigned long end,
- 		if (!pud_present(val) || WARN_ON_ONCE(pud_leaf(val)))
- 			continue;
+-	uprobe_start_dup_mmap();
+ 	err = dup_mmap(mm, oldmm);
+ 	if (err)
+ 		goto free_pt;
+@@ -1556,9 +1563,10 @@ static struct mm_struct *dup_mm(struct task_struct *tsk,
+ 	mm->binfmt = NULL;
+ 	mm_init_owner(mm, NULL);
+ 	mmput(mm);
+-	if (err)
+-		uprobe_end_dup_mmap();
+-
++	if (!err)
++		return NULL;
++fail_uprobe:
++	uprobe_end_dup_mmap();
+ fail_nomem:
+ 	return NULL;
+ }
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 148ba01c03739..7618e72766a52 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -1713,8 +1713,7 @@ __latent_entropy int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+ 	LIST_HEAD(uf);
+ 	VMA_ITERATOR(vmi, mm, 0);
  
--		walk_pmd_range(&val, addr, next, args);
-+		walk_pmd_range(pud + i, addr, next, args);
+-	if (mmap_write_lock_killable(oldmm))
+-		return -EINTR;
++	mmap_assert_write_locked(oldmm);
+ 	flush_cache_dup_mm(oldmm);
+ 	uprobe_dup_mmap(oldmm, mm);
+ 	/*
+@@ -1725,11 +1724,6 @@ __latent_entropy int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+ 	/* No ordering required: file already has been exposed. */
+ 	dup_mm_exe_file(mm, oldmm);
  
- 		if (need_resched() || walk->batched >= MAX_LRU_BATCH) {
- 			end = (addr | ~PUD_MASK) + 1;
+-	mm->total_vm = oldmm->total_vm;
+-	mm->data_vm = oldmm->data_vm;
+-	mm->exec_vm = oldmm->exec_vm;
+-	mm->stack_vm = oldmm->stack_vm;
+-
+ 	/* Use __mt_dup() to efficiently build an identical maple tree. */
+ 	retval = __mt_dup(&oldmm->mm_mt, &mm->mm_mt, GFP_KERNEL);
+ 	if (unlikely(retval))
+diff --git a/mm/nommu.c b/mm/nommu.c
+index ed44510e37707..6e0f9c7da2364 100644
+--- a/mm/nommu.c
++++ b/mm/nommu.c
+@@ -1926,7 +1926,7 @@ subsys_initcall(init_admin_reserve);
+ 
+ int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+ {
+-	mmap_write_lock(oldmm);
++	mmap_assert_write_locked(oldmm);
+ 	dup_mm_exe_file(mm, oldmm);
+ 	mmap_write_unlock(oldmm);
+ 	return 0;
 
 -- 
 2.43.0
