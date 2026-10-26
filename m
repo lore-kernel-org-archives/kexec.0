@@ -2,56 +2,56 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ABCA606A31D
-	for <kexec@archiver.kernel.org>; Mon, 26 Oct 2026 23:21:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDBB606A322
+	for <kexec@archiver.kernel.org>; Mon, 26 Oct 2026 23:21:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=JjKiLGE2;
-	dkim=temperror header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IQ31o5OD
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=L8uc1DeU;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=isKtS/2A
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=A7gX/m+u4UMJmVyrb0f8N/TE7LE/A9ZKgusas0I4Rm4=; b=JjKiLGE2zyYS16
-	psmti8qoo4aNtbyXNIrnCdvVerDn1s6HLEgVo89iriBneREYZkAWGmuRSKMP/v5SAjuX1kR+JZ08J
-	Q9K67Ig+Txc4jSEal/n0VPf6fH6zp1LZA5dGZGy3yAD/OEDv0zrMTEKcCFliVf5mFbzcLCu6rKBFn
-	bkImZKRMsXzWZUY3v4syOnePKzP09DUs6i+3PsZxI8X9dgAcHt5ZWxWLSxE+Vw0Pk4qtrvbjw64BB
-	VATZBgYAxXwcTNoMVtjL9HvsUUlc/jAft4MDK+aLlxv2qJxU/Nrbkk0C067jjY5DcM3NcFLFDkmxs
-	uvJKRklO7Q4ylVpUtgnw==;
+	List-Owner; bh=Sa8tfvVw1l57KNfiSIe1Yios+sToK3uLi/AwjZJQ8/k=; b=L8uc1DeUoIaK+a
+	xFCuepm+S2fQbkjTpwMoOM+D+mVwyT/ML5sKSek6uMSf/ISM8zk30hi6Gdw60gDF9X+TVVoDNHq/s
+	T96RD0co5JS/iF0oQqOigWYzW8ncZCQy4qsvayIxFSJ3EhibXfoPCjkv/brt2Eb4d8YCGX+cB7EY5
+	Akay88NP/Tlx+5UVvcgFSOEHZNdUF6KceZKvgUA4NXvSQL+EeK6fGjgbhCKrzUi4lbkktuZTduVV6
+	THtzL+6btdGz/wr1xzNwYmRORubcrw+5rRZxd+XaJouAJ7JFzplDQfWY4ZtMRkcUSj0t/X0vm0E7X
+	DOADPMAke0a1/axY8/uA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLTzz-00000003PYQ-1SVg;
-	Mon, 26 Oct 2026 23:21:03 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xLU0I-00000003Pby-1qwM;
+	Mon, 26 Oct 2026 23:21:22 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLTzy-00000003PYI-204T
+	id 1xLU0H-00000003Pbr-2El2
 	for kexec@lists.infradead.org;
-	Mon, 26 Oct 2026 23:21:02 +0000
+	Mon, 26 Oct 2026 23:21:21 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id D9C7160213;
+	by tor.source.kernel.org (Postfix) with ESMTP id E2761601EF;
+	Mon, 26 Oct 2026 23:21:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 214011F01825;
 	Mon, 26 Oct 2026 23:21:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 787021F01829;
-	Mon, 26 Oct 2026 23:20:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793056861;
-	bh=A7gX/m+u4UMJmVyrb0f8N/TE7LE/A9ZKgusas0I4Rm4=;
+	s=k20260515; t=1793056880;
+	bh=Sa8tfvVw1l57KNfiSIe1Yios+sToK3uLi/AwjZJQ8/k=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=IQ31o5ODFi1TCvdbW/Fvb4z47yUoIHd+cPWP+ynS5r1WhTWrbETdppp6UQPnNBNxh
-	 z31WeGR52qpW+2aGvMOZCs5WeWoxLP88gk4YFAygcZc4ACUUX8DD2shjSLjzIEH4ww
-	 m1+drTX7t/Pun8PbB7rJzwuns6/ninmkX9gfO2PwPlzwVjxssBxEQSKGnBVGupyQVY
-	 /ojkBuUvvCBPKQq4m1tQZnwUwQmb1uRNIn7es3b6LdJo5PDEmJVN+FqgnyDzSBqZfC
-	 JwiCAmYGedA2dLQJeDo2dtw5ETmwWJu0F1Chd28YsiHToKFXf9A+np6osHuygNVyd6
-	 Ml1ekzN/YzLGw==
+	b=isKtS/2A5NeaRQguaTYvUDnrgIFDJ17wHL59PMobMO6g7ZHpMetE7kei1Ps/bb1A8
+	 xu8Kim7UlEZy2SixWOhdZcUGjChz41ApzfH4YoyAhImQGE0gAIm7Ih+fV60o4n0lO4
+	 au5Viyp2kQyAhWJ8Vf1IKb58qD8iTw3kTdFjKBT8sR2Qn0B1S5PGt7goGve+sPNjtw
+	 PJ4vGRk87GzyiEoh+gCcqdKSkFh9uR9s0cjDeyAORlo3WZL+RRCPtskfA+aeNUSg9k
+	 AVucltVdLCDF9pjdvNZU4izy3JOQFzSQyCkg23um0pmIDKdbJ5Pyi5i+GSDV1lXIV7
+	 ryNKJIL0dRfkw==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Tue, 27 Oct 2026 00:17:30 +0100
-Subject: [PATCH 10/46] mm/huge_memory: fix list corruption when
- deferred_split_scan() races with deferred_split_folio()
+Date: Tue, 27 Oct 2026 00:17:31 +0100
+Subject: [PATCH 11/46] mm/huge_memory: properly handle refcounted PUD
+ mappings on fork
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261027-fixes_core-v1-10-6f74bec9a5bb@kernel.org>
+Message-Id: <20261027-fixes_core-v1-11-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
 In-Reply-To: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -89,15 +89,14 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
- stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
- "David Hildenbrand (Arm)" <david@kernel.org>
+ stable@vger.kernel.org, "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3458; i=david@kernel.org;
- h=from:subject:message-id; bh=r5BGBHRo9GSa/DI+t01ntFYVkxTFpvO09xLdXSpMdfA=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLLu35+idE7fMCKc/77ImbcKCVumnHE/1+sj9KHswaGDn
- hZPGvZc7ihlYRDjYJAVU2QJCr5v8PLlutpqNz5mmDmsTCBDGLg4BWAiHl8Z/octV9g4Uyis7u5F
- jiNybMWLTzh+1J55SfB7xavkONmzCfMYGRaeXdJmm+57kjNUJnZjr+fGhxucxVWlCw78WmCp27T
- wGxMA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4336; i=david@kernel.org;
+ h=from:subject:message-id; bh=f7xOz6s1fqGaUW9pRJrQ/Dq0ncEqYAqNRmBLRgpR3rQ=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLLu35+ikxnOfLW3cJ+r9Kcba3b/iP8n/sGm/rpQsk3ZI
+ v3uKs/wjlIWBjEOBlkxRZag4PsGL1+uq61242OGmcPKBDKEgYtTACYSuZuR4UfI7J7vjVFP2mQ9
+ Cr6e0DVaf80t323DefHZLZ6r7B+c3MjI8G7LP29Dx6glK793rG9a7879mFXy//+1eikfq5jXXZk
+ YyQoA
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -118,86 +117,113 @@ X-Spam-Status: No, score=-19.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Since the deferred split queue became a list_lru, the isolate callback
-moves the folios it took a reference on to an on-stack list, linked
-through folio->_deferred_list, and deferred_split_scan() takes them off
-that list with list_del_init() without holding the list_lru lock.
+copy_huge_pud() copies device-DAX entries without taking a folio reference
+or updating mapcounts and the child's RSS.
 
-deferred_split_folio() does not know about the on-stack list. It only
-holds the list_lru lock when it looks at the same list_head, and it can
-run for such a folio: a THP is queued when it is mapped, as a candidate
-for the underused check, and is queued "again" when a part of it gets
-unmapped:
+For example, MADV_GUARD_INSTALL sets VM_MAYBE_GUARD on a device-DAX VMA,
+forcing copy_page_range() to traverse the whole VMA on fork. Any remaining
+huge PUDs are then copied without accounting for the new mappings.
+Unmapping them in the child decrements accounting that was never added.
 
-  CPU0 deferred_split_scan()          CPU1 deferred_split_folio()
-  list_del_init(&folio->_deferred_list)
-    next->prev = prev
-    prev->next = next
-    entry->next = entry
-                                      list_lru_lock_irqsave()
-                                      folio_set_partially_mapped()
-                                      __list_lru_add()
-                                        list_empty(item)  -> true
-                                        list_add_tail(item, &l->list)
-                                          item->next = &l->list
-                                          item->prev = tail
-    entry->prev = entry
+Use vm_normal_page_pud() to identify refcounted mappings. Take a folio
+reference and add the child's PUD rmap and RSS accounting before installing
+the copied entry. Pass src and dst VMAs consistently instead of src and
+dst MM. Move the TODO.
 
-The folio now sits on the list_lru with ->prev pointing to itself. The
-next removal leaves the neighbours pointing to it, and they still do so
-after the folio has been freed. With CONFIG_DEBUG_LIST:
-
-  list_del corruption. prev->next should be ffd4000000270090, but was
-  ffd4000000278090. (prev=ffd4000000270090)
-
-Fix it by grabbing the lock around list_del_init() so
-deferred_split_folio() cannot race with it.
-
-Fixes: fafaeceb89a5 ("mm: switch deferred split shrinker to list_lru")
+Fixes: aed877c2b4257 ("device/dax: properly refcount device dax pages when mapping")
 Cc: stable@vger.kernel.org
-Reported-by: Josef Bacik <josef@toxicpanda.com>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/huge_memory.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ include/linux/huge_mm.h |  5 ++---
+ mm/huge_memory.c        | 27 +++++++++++++++++++--------
+ mm/memory.c             |  4 +---
+ 3 files changed, 22 insertions(+), 14 deletions(-)
 
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index c745f7ad22987..fac05120ab774 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -12,9 +12,8 @@ int copy_huge_pmd(struct mm_struct *dst_mm, struct mm_struct *src_mm,
+ 		  pmd_t *dst_pmd, pmd_t *src_pmd, unsigned long addr,
+ 		  struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma);
+ bool huge_pmd_set_accessed(struct vm_fault *vmf);
+-int copy_huge_pud(struct mm_struct *dst_mm, struct mm_struct *src_mm,
+-		  pud_t *dst_pud, pud_t *src_pud, unsigned long addr,
+-		  struct vm_area_struct *vma);
++int copy_huge_pud(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma,
++		pud_t *dst_pud, pud_t *src_pud, unsigned long addr);
+ 
+ #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
+ void huge_pud_set_accessed(struct vm_fault *vmf, pud_t orig_pud);
 diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index bd44d58e86845..4c0194af9016d 100644
+index 4c0194af9016d..283c4bc8b927c 100644
 --- a/mm/huge_memory.c
 +++ b/mm/huge_memory.c
-@@ -4522,8 +4522,7 @@ int split_folio_to_list(struct folio *folio, struct list_head *list)
-  *
-  * It is unsafe to call folio_unqueue_deferred_split() until folio refcount is
-  * zero: because even when the list_lru lock is held, a non-empty
-- * _deferred_list might be in use on deferred_split_scan()'s unlocked
-- * on-stack list.
-+ * _deferred_list might be in use on deferred_split_scan()'s on-stack list.
-  *
-  * The list_lru sublist is determined by folio's memcg: it is therefore
-  * important to unqueue deferred split before changing folio memcg.
-@@ -4665,10 +4664,22 @@ static unsigned long deferred_split_scan(struct shrinker *shrink,
- 					    deferred_split_isolate, &dispose);
+@@ -2072,11 +2072,13 @@ void touch_pud(struct vm_area_struct *vma, unsigned long addr,
+ 		update_mmu_cache_pud(vma, addr, pud);
+ }
  
- 	list_for_each_entry_safe(folio, next, &dispose, _deferred_list) {
-+		struct mem_cgroup *memcg;
-+		struct list_lru_one *lru;
- 		bool did_split = false;
- 		bool underused = false;
+-int copy_huge_pud(struct mm_struct *dst_mm, struct mm_struct *src_mm,
+-		  pud_t *dst_pud, pud_t *src_pud, unsigned long addr,
+-		  struct vm_area_struct *vma)
++int copy_huge_pud(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma,
++		pud_t *dst_pud, pud_t *src_pud, unsigned long addr)
+ {
++	struct mm_struct *dst_mm = dst_vma->vm_mm;
++	struct mm_struct *src_mm = src_vma->vm_mm;
+ 	spinlock_t *dst_ptl, *src_ptl;
++	struct page *page;
+ 	pud_t pud;
+ 	int ret;
  
+@@ -2089,11 +2091,20 @@ int copy_huge_pud(struct mm_struct *dst_mm, struct mm_struct *src_mm,
+ 	if (unlikely(!pud_trans_huge(pud)))
+ 		goto out_unlock;
+ 
+-	/*
+-	 * TODO: once we support anonymous pages, use
+-	 * folio_try_dup_anon_rmap_*() and split if duplicating fails.
+-	 */
+-	if (vma_is_cow_mapping(vma) && pud_write(pud)) {
++	page = vm_normal_page_pud(src_vma, addr, pud);
++	if (page) {
++		struct folio *folio = page_folio(page);
++
++		folio_get(folio);
 +		/*
-+		 * Sync with deferred_split_folio(), which can requeue the
-+		 * folio once list_empty() is true, and sets PG_partially_mapped.
++		 * TODO: once we support anonymous pages, use
++		 * folio_try_dup_anon_rmap_*() and split if duplicating fails.
 +		 */
-+		rcu_read_lock();
-+		memcg = folio_memcg(folio);
-+		lru = list_lru_lock_irq(&deferred_split_lru, folio_nid(folio),
-+					&memcg);
- 		list_del_init(&folio->_deferred_list);
-+		list_lru_unlock_irq(lru);
-+		rcu_read_unlock();
++		folio_add_file_rmap_pud(folio, page, dst_vma);
++		add_mm_counter(dst_mm, mm_counter_file(folio), HPAGE_PUD_NR);
++	}
++
++	if (vma_is_cow_mapping(src_vma) && pud_write(pud)) {
+ 		pudp_set_wrprotect(src_mm, addr, src_pud);
+ 		pud = pud_wrprotect(pud);
+ 	}
+diff --git a/mm/memory.c b/mm/memory.c
+index 5d6d695675bce..0f4db5080e371 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -1463,7 +1463,6 @@ copy_pud_range(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma,
+ 	       unsigned long end)
+ {
+ 	struct mm_struct *dst_mm = dst_vma->vm_mm;
+-	struct mm_struct *src_mm = src_vma->vm_mm;
+ 	pud_t *src_pud, *dst_pud;
+ 	unsigned long next;
  
- 		if (!folio_test_partially_mapped(folio)) {
- 			/*
+@@ -1477,8 +1476,7 @@ copy_pud_range(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma,
+ 			int err;
+ 
+ 			VM_BUG_ON_VMA(next-addr != HPAGE_PUD_SIZE, src_vma);
+-			err = copy_huge_pud(dst_mm, src_mm,
+-					    dst_pud, src_pud, addr, src_vma);
++			err = copy_huge_pud(dst_vma, src_vma, dst_pud, src_pud, addr);
+ 			if (err == -ENOMEM)
+ 				return -ENOMEM;
+ 			if (!err)
 
 -- 
 2.43.0
