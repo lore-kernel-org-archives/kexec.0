@@ -2,59 +2,66 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4F7606A31B
-	for <kexec@archiver.kernel.org>; Mon, 26 Oct 2026 01:54:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49533606A321
+	for <kexec@archiver.kernel.org>; Mon, 26 Oct 2026 03:46:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=zHq2jwRT;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SpObzaeO
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=RQ+2Z57O;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m1cg3drI
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:To:Subject:From
-	:Message-ID:Cc:MIME-Version:Content-ID:Content-Description:Resent-Date:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:Date:Message-Id:
+	References:In-Reply-To:From:Subject:Reply-To:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=0gwt6Ynp33uPT9qKYNGSAYnSSq3jTikCgaJyvlI74z0=; b=zHq2jwRTvYEHtuLGPTL11YxO1C
-	ZzG588tyeM6ozFFAoqvEZ28aJ0kNJQm6X80DgU3a8/wx+S4yK9DAFfOijnVsm6xPeHm24eMKF5mOe
-	UDuTRv+QVB3PecTnWOG0kyPirvRw14QBql1S2DS9fgJ0mF1GrmFapOkgRmmIEArsXfa1weE0qRAie
-	0EtsKakFTlf8hEC5I0AVufRV5F6btNM2KiHmj8wBJdADjIMy/5ljuuT9R4zahWw8sOJAZ11HyYv0j
-	jfe96Ko7eUoFnQDEyYZdQ5SnSrYG7LznpV16Pk5WLaOtljjOPxYeTZs5Gx/YZxIjkRTSkX8ciXdHO
-	KQztd2yw==;
+	bh=8PA9GkfQf2cFoS0ayw2916W2lJqjiT1U9quZNhALY7M=; b=RQ+2Z57OV/nCSioeifDncnphGD
+	dL7XgR8rODg3qTxmYVjkR4iwPYmHokoT/YhEfcqmGx50I0aksVVBXqt5JAwUzQ3ybpAIkohkHGxKi
+	cw6J9w/o2S/UJdkP824Agm4nw1mm+A058TCd47i5+lfV7XYqjVyGYUmGmgcTOO1ev2PQOokIVl5o/
+	aXbuM8SBlbzuOBHTrDVrU3eybx0DD8/G2zqf+IuaBNNL3ccTmJhTAF+4eaSXhYAfruLtxdk9Vx9CP
+	jXiUCgaBU6PYBrpJlGyES4Ef8Ii9jR+oT1Epf12DxLJ3YisbXuuFl8IjknLdHPDdjP2SmXJ8Z5oxL
+	XqVVbNqg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xL9vN-00000001aRK-0bKN;
-	Mon, 26 Oct 2026 01:54:57 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xLBfD-00000001gJd-2PAD;
+	Mon, 26 Oct 2026 03:46:23 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xL9vL-00000001aQc-3YM7
+	id 1xLBfC-00000001gJG-1uWg
 	for kexec@lists.infradead.org;
-	Mon, 26 Oct 2026 01:54:55 +0000
+	Mon, 26 Oct 2026 03:46:22 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 99F5F43693;
-	Mon, 26 Oct 2026 01:54:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 141CD1F01825;
-	Mon, 26 Oct 2026 01:54:55 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 96D58600CB;
+	Mon, 26 Oct 2026 03:46:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D72A1F01825;
+	Mon, 26 Oct 2026 03:46:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792979695;
-	bh=0gwt6Ynp33uPT9qKYNGSAYnSSq3jTikCgaJyvlI74z0=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=SpObzaeOflt9vuWb9uM92IB8v3iDGc6qlUPP291C0ztsyeE+TJ28xVpzCS3KqiSXy
-	 JcI+DTmgjdKea7rsDo6DzREJe9VYlR+JIOZvy+0KFwwTcM/Ugse3ruuLmeeI6VEB5G
-	 VPk1Oq/HEGUIbqsmWZqS/XI/OBwrK1XlMfQcReMC+RZy1aHyZ8iGJWoXqK4HuUvOpw
-	 b65FNAisMb6Vq+pCk/CXtpRErZlnKbf5z8yXRm08BgECJ6oKP+jgnaRiSdOirKkKdN
-	 D6Kj9sR7blLGZaQPBuD/mBx0ppeSxOjho42R6te2ns+ITvExrr741NSQNHuHAtwDr8
-	 aYVs4hMqLxBQA==
-Message-ID: <sashiko-outbox-184591@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 3/3] selftests: liveupdate: Add tests for
- LIVEUPDATE_SESSION_FREEZE
-To: "Pasha Tatashin" <pasha.tatashin@soleen.com>, rppt@kernel.org, shuah@kernel.org, akpm@linux-foundation.org, vipinsh@google.com, dmatlack@google.com, kexec@lists.infradead.org, pratyush@kernel.org, graf@amazon.com
-In-Reply-To: <20261026014948.162559-4-pasha.tatashin@soleen.com>
-References: <20261026014948.162559-1-pasha.tatashin@soleen.com>
- <20261026014948.162559-4-pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 26 Oct 2026 01:54:54 +0000
+	s=k20260515; t=1792986381;
+	bh=8PA9GkfQf2cFoS0ayw2916W2lJqjiT1U9quZNhALY7M=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc;
+	b=m1cg3drIxo1khfwcePEIMT5l54AnUfXw6BRWhRgw1NG5ndhvC/r5UpDepyry8rOta
+	 R+pUN+PZhVp2p2JnPF6Yqa2LQi0EppKeoOAdk36FWrUHiYD7qgwfFxy4dMzRwTe30x
+	 QDO5Y+oqDMuQAL6JKCHkOL/TSxQ7MIRq2uxSQ/PXXMz+xSpDegkYvlBcdZ8VD7MoW8
+	 ErRwqUfdp6LUuSktyi2VzqBIH/ipDlNLYxhrdeMqecBImbdqeUCwrY9g2s171zVsCF
+	 xUR4XAZmJ/vD6duPwS96tL67qTrhGB8FPGiUGxixrzQH8ozdC5yw9/0vrd2zKMP00J
+	 p9P/duBXu+KXQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 4463439EA761;
+	Mon, 26 Oct 2026 03:46:21 +0000 (UTC)
+Subject: Re: [GIT PULL] kexec: updates for 7.4-rc1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20261024112155.3384616-1-rppt@kernel.org>
+References: <20261024112155.3384616-1-rppt@kernel.org>
+X-PR-Tracked-List-Id: <kexec.lists.infradead.org>
+X-PR-Tracked-Message-Id: <20261024112155.3384616-1-rppt@kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git tags/kexec-v7.4-rc1
+X-PR-Tracked-Commit-Id: 833d2b79ed9520e77c5d83eb11644e5239b2c5bb
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b3593aba315322d875f295eef8b1a19e24658ba6
+Message-Id: <179298637979.2442679.15289838186801073122.pr-tracker-bot@kernel.org>
+Date: Mon, 26 Oct 2026 03:46:19 +0000
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -64,27 +71,25 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Add a luo_session_freeze() helper and selftests for the
-> LIVEUPDATE_SESSION_FREEZE ioctl, including freezing a session before a
-> kexec reboot in luo_kexec_simple.c.
->=20
-> Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
-> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+The pull request you sent on Sat, 24 Oct 2026 14:21:54 +0300:
 
-Sashiko has reviewed this patch and found no issues.
+> https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git tags/kexec-v7.4-rc1
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261026014948.1625=
-59-1-pasha.tatashin@soleen.com?part=3D3
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b3593aba315322d875f295eef8b1a19e24658ba6
 
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
