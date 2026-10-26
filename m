@@ -2,56 +2,56 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409EF606A31F
-	for <kexec@archiver.kernel.org>; Mon, 26 Oct 2026 23:22:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92003606A335
+	for <kexec@archiver.kernel.org>; Mon, 26 Oct 2026 23:22:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=PLcuLLki;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PVvbRksS
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=a//gIzza;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UGGzr8wX
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=9PONecBNGwAC37JtDon9HRvZi6sk21qH9zGaaJ3qYwM=; b=PLcuLLkiKJ+YIX
-	ZQbcSWKD9xoJUjS0sLwVTVq0pi6RqDecH2bxez4a8ZoNAU1AEdQjKa6CDqdUpsIl/6a8TR9/6V1q4
-	0GpC97t6SsD4L9128gqVdZSWt3WoWnnHQrZ+9l3F7d10g+f16S04+6j7Q5SImg0IuGcEQ4WRbVsZg
-	oEv5xc+/W1IsLTMMc7AjY7WutVvQ/wQ38dz6/IDXFRZOlMa/5umZVSFBGuUGcJnX0Qja39D+Ypwt7
-	8LC7RBo2aiXA/j/HnHW9b6YtkFrIo9HlWmF8WYWG0CWkNFXp13KyuExVADumnX36nQReERdTPqIsW
-	rOHAMwY0BPGIiBOfn64w==;
+	List-Owner; bh=reZzVNI4A/Jr+bC2MZiSR78czx3ygjp7lEPtfND7Hn0=; b=a//gIzzaTfYTtX
+	WEU+3bl64r5hUhUQDoppcVPGaT794FA0fH1r69POMYxhJzkVnCj/FjxbVSq7e8/cNwGaC92m+iEyz
+	z8DuN+xmvkN2zQQTBPj3ZAdo6OQoYPUMH/MlZOf1MyZtqk9uNmMkgb66WyT/R/Vnt/RqLkERFqTa+
+	2NWOPJKjWNDhBiZoHUYA0wQuj5VvOhXqv98uEKKpwYJMCg2qLPunQyIwxo94G2xPrK8g5X7RGD0QF
+	Z/6aqYbDfdHoFQb7r8iG5Lg15y84v0BwsvPxF7I9V3p71Q42caiUVxEcdpAFlWBdZwK5TRugPKeWK
+	xyD64Qcl/EvSWCH6jbIA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLU1V-00000003PuP-42Do;
-	Mon, 26 Oct 2026 23:22:37 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xLU1p-00000003Pyp-0OWZ;
+	Mon, 26 Oct 2026 23:22:57 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLU1U-00000003PuA-3PB8
+	id 1xLU1o-00000003Pyj-0g2R
 	for kexec@lists.infradead.org;
-	Mon, 26 Oct 2026 23:22:36 +0000
+	Mon, 26 Oct 2026 23:22:56 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 7AACC4017C;
+	by sea.source.kernel.org (Postfix) with ESMTP id D47334017C;
+	Mon, 26 Oct 2026 23:22:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D9C51F031E2;
 	Mon, 26 Oct 2026 23:22:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33E7D1F01825;
-	Mon, 26 Oct 2026 23:22:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793056956;
-	bh=9PONecBNGwAC37JtDon9HRvZi6sk21qH9zGaaJ3qYwM=;
+	s=k20260515; t=1793056975;
+	bh=reZzVNI4A/Jr+bC2MZiSR78czx3ygjp7lEPtfND7Hn0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=PVvbRksSFwPLqVK97JfuGRK/yyQ7vgKqfwNLBuwg7tRyER/6D481w8uhIlExbvJlF
-	 3Bu3BiC6oN4wuYX83Y+otwZqJERUGRe1XFi0KZ7UsLHZ/O4mJV3ZcTn/vc9WZT9EJX
-	 wPLTosWMrpja6FYcetEEULvCUUTsRwH1Wx4GCZRVT5tvL3HyQE+itWahkkZ0Dz60Ct
-	 XlR6V2Yu3twGvjCbCxFmeWQT5axPeMCrXg6qf9ZLt0Dkzq7EMrgWGUq4VcoD45xmNI
-	 0JiJEmKhSJUPzB+HtPGHZQbcS0lXuOgWw7vLR2o9H5MUKaVvozkgATVGIROQa8biF8
-	 hMVaFTFvhIV7Q==
+	b=UGGzr8wX/g8GZ9SFIoq0C/I/5mPwnV0HghDWeu54SifXDSCR3TUH+tv2sLf3to4FV
+	 eVjgLWM6JQTJZxq4p+d2XJnK3hUtgQuaXKEBOKZatmZEPp4KRCWWT55wBWLeUY68Q8
+	 QLsAcUK0QMIYVDDvOrVcya/a8ucdM9+JAS2CrnIlQ/7WYoPaq5bRdoEmbG3Cw8+KUL
+	 uctg3F9yHVCoCzUZdwGTxIKFVGrBf1WFQEHil89WvsvfUWekxvcRYZxhg7pAwfCjKR
+	 MwWIYTVXeIBgtLxWDHeCJy4ZFqIYoKtQG/g3wUqOoc4TIl8CUacM1aW5rMSHpr1J8M
+	 JO5QoXq6LztMA==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Tue, 27 Oct 2026 00:17:35 +0100
-Subject: [PATCH 15/46] mm/khugepaged: always recheck the pmd in
+Date: Tue, 27 Oct 2026 00:17:36 +0100
+Subject: [PATCH 16/46] mm/khugepaged: fix PMD table lock leak in
  try_collapse_pte_mapped_thp()
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261027-fixes_core-v1-15-6f74bec9a5bb@kernel.org>
+Message-Id: <20261027-fixes_core-v1-16-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
 In-Reply-To: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -92,12 +92,12 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org, 
  "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1502; i=david@kernel.org;
- h=from:subject:message-id; bh=tUVUPC0JtoDS0vcvc31VLhuGDhArP2SMJJKTyHtlpxc=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLLu359SPM9j88bSt686WqQe8L9xbvg+r1Tw8tRHcz37n
- s7RmJFY1FHKwiDGwSArpsgSFHzf4OXLdbXVbnzMMHNYmUCGMHBxCsBE5jcx/BU29ki5fl+GO4jN
- wXS6x7vf0VKJzI6z82R5Fk6a9kRS25nhv2NW248SjrK9fx+kGgX4OdfM0y+eYzZ9l+uy4BN7Is4
- 9ZAAA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2280; i=david@kernel.org;
+ h=from:subject:message-id; bh=UXoBnlCMAf+wGbJLfiFGKUQg+DKe15pWriilK/O7tD8=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLLu35/6Qa9JT8qTS+xv1eW+fONpAS8+8S9fd+4wL3NK8
+ d2Xf/y2d5SyMIhxMMiKKbIEBd83ePlyXW21Gx8zzBxWJpAhDFycAjCRsimMDPvDCy7yrdKY/OJO
+ s3D01Ye377da50sqHgh1qIq22/Z5mxPD/4B9cToayy4/KGz/dKT3bIbO+7Jlz7S2dVz7J2UVLlv
+ 0iwEA
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -120,47 +120,60 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 
 From: Josef Bacik <josef@toxicpanda.com>
 
-try_collapse_pte_mapped_thp() drops the PTE lock after it has cleared the
-page table, and takes the PMD lock and the PTE lock to remove it.
+For a private mapping with userfaultfd, try_collapse_pte_mapped_thp()
+takes the PMD table lock before it maps the page table for the second time.
+If that (pte_offset_map_rw_nolock) fails, because the page table vanished
+in the meantime due to concurrent page table reclaim, it leaves through
+the abort label, where the PMD table lock is unlocked if it differs from
+PTE table lock.
 
-In between, MADV_DONTNEED with CONFIG_PT_RECLAIM can reclaim the
-page table. The pmd_same() check is supposed to handle this, but it is
-only done with CONFIG_SPLIT_PTE_PTLOCKS.
+In case the PMD table lock and the PTE table lock match, which is the
+case without CONFIG_SPLIT_PTE_PTLOCKS after pte_offset_map_rw_nolock()
+failed, we miss to unlock the PMD table.
 
-Fix it by performing the check unconditionally.
+To fix it, forget the PTE table lock when we unmap+unlock the PTE table.
 
 Fix generated by an LLM and sent by Josef Bacik in private.
 
 Fixes: 6375e95f381e ("mm: pgtable: reclaim empty PTE page in madvise(MADV_DONTNEED)")
 Cc: stable@vger.kernel.org
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-[ david: adjust description ]
+[ david: move the ptl = NULL handling; rewrite description, drop wrong comments ]
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/khugepaged.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ mm/khugepaged.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 4b71d010b2aff..f53c50507c83d 100644
+index f53c50507c83d..04d9bb21ff524 100644
 --- a/mm/khugepaged.c
 +++ b/mm/khugepaged.c
-@@ -2013,12 +2013,11 @@ static enum scan_result try_collapse_pte_mapped_thp(struct mm_struct *mm, unsign
- 	/* step 4: remove empty page table */
- 	if (!pml) {
- 		pml = pmd_lock(mm, pmd);
--		if (ptl != pml) {
-+		if (ptl != pml)
- 			spin_lock_nested(ptl, SINGLE_DEPTH_NESTING);
--			if (unlikely(!pmd_same(pgt_pmd, pmdp_get_lockless(pmd)))) {
--				flush_tlb_mm(mm);
--				goto unlock;
--			}
-+		if (unlikely(!pmd_same(pgt_pmd, pmdp_get_lockless(pmd)))) {
-+			flush_tlb_mm(mm);
-+			goto unlock;
- 		}
+@@ -1904,7 +1904,7 @@ static enum scan_result try_collapse_pte_mapped_thp(struct mm_struct *mm, unsign
+ 
+ 	result = SCAN_FAIL;
+ 	start_pte = pte_offset_map_lock(mm, pmd, haddr, &ptl);
+-	if (!start_pte)		/* mmap_lock + page lock should prevent this */
++	if (!start_pte)
+ 		goto drop_folio;
+ 
+ 	/* step 1: check all mapped PTEs are to the right huge page */
+@@ -1935,6 +1935,7 @@ static enum scan_result try_collapse_pte_mapped_thp(struct mm_struct *mm, unsign
  	}
- 	pgt_pmd = pmdp_collapse_flush(vma, haddr, pmd);
+ 
+ 	pte_unmap_unlock(start_pte, ptl);
++	ptl = NULL;
+ 	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm,
+ 				haddr, haddr + HPAGE_PMD_SIZE);
+ 	mmu_notifier_invalidate_range_start(&range);
+@@ -1952,7 +1953,7 @@ static enum scan_result try_collapse_pte_mapped_thp(struct mm_struct *mm, unsign
+ 		pml = pmd_lock(mm, pmd);
+ 
+ 	start_pte = pte_offset_map_rw_nolock(mm, pmd, haddr, &pgt_pmd, &ptl);
+-	if (!start_pte)		/* mmap_lock + page lock should prevent this */
++	if (!start_pte)
+ 		goto abort;
+ 	if (!pml)
+ 		spin_lock(ptl);
 
 -- 
 2.43.0
