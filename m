@@ -2,79 +2,92 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DBC606A31F
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 18:59:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C00606A320
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 19:06:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2fmMjgrC;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GBUKEafI
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=VlxXa6M5;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cje2C2JW
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=JGUNZ2N4izt2BrjI89y42KzCgR2U1rTdgd6e4ryL5is=; b=2fmMjgrCuHHj9o
-	EVmOXec/7C8GLeexX2Yh2/Q5wn+hvPxUQaSRzyQAmCB/t98vEbDzhDBpfydRush2r+sEcXCBgnZVS
-	1SSpyZKk0sBl7+L2Dwn7swCKvRWASiY5qIX7AvKZPAedt6oVlgA8yYNRfvy5kdQu5pK2Wq0KmlGNn
-	GOzT8rKqC2skhi55uBC89TuprAsFZ+m2QIStfHB/Rx7LvcuBhoiHTxp1muwpcs31pCv8WcV5cN2hr
-	+qk2YoC3USSq+qr9ldAXQCgA4sezJOnGSqwxW7NaJO4ADelv/xOqv52dBvaYITIQBhplEz8NVFiLF
-	pYrXTTtZjsCEcFKEb64g==;
+	List-Owner; bh=lf2Hoc/RWmB0/QlKnoJRvWNvn+6TzYwCnLWNzrsTcSk=; b=VlxXa6M5GNcP5d
+	xeHepQdTdxL+4LBNdkwd1KCkF7IMPhqwwZpMXbE6IuhLRnXs28w+HNXFH01oh30AwSRe3MSdBW0G7
+	Rr7CKbYpQ+MakhhT+eoH3tmXvIqD2nJLw4Jl6yF37szOkxDEnB/vasTQZ040S6b4+9krPeRj/5Kbx
+	bef7EjufoPYWCPpVaxoLaq0fRpXRDpTl2nQsbZ+K3/PgQ/VGV/E7gEIah74+TVs57A2z/lk/jo1Dv
+	K8UaG16uIomfXBbg7nieruWpmNHjUFN/47yKuJ5gy1djj2+J217AiqJ9ERBAb1gNnil+PRNdD2HGC
+	H11jGyfHxu/XbXUXBxAw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLmOn-00000005c1Q-2Bnl;
-	Tue, 27 Oct 2026 18:59:53 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xLmVG-00000005ciM-1w6R;
+	Tue, 27 Oct 2026 19:06:34 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLmOm-00000005c1I-0pqk
+	id 1xLmVE-00000005ci7-3Q5N
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 18:59:52 +0000
+	Tue, 27 Oct 2026 19:06:32 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 8E991416C8;
-	Tue, 27 Oct 2026 18:59:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC0381F01829;
-	Tue, 27 Oct 2026 18:59:40 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 5D6DD601FE;
+	Tue, 27 Oct 2026 19:06:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB4261F01825;
+	Tue, 27 Oct 2026 19:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793127591;
-	bh=JGUNZ2N4izt2BrjI89y42KzCgR2U1rTdgd6e4ryL5is=;
+	s=k20260515; t=1793127991;
+	bh=lf2Hoc/RWmB0/QlKnoJRvWNvn+6TzYwCnLWNzrsTcSk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=GBUKEafIXma8eeUkgoEONyZfmNLHZnhPQGFQVsuGfRdY9VxaySeTjrdbFW7ptRbVA
-	 hUEQkqET62H91eVZkZHyk53nOcf57mTBeILoQULyVkmZdRFQE8p7MRFMwmd+fPmc9J
-	 ghDxtYg6zcgW2VQrPPTm9KAWwlBvZE60LX3I0qdY9gv6WNhMqeEXyjo1hnMJB/82OI
-	 sSPJxhjQSWHFk+C5WoYca/OBl84+pWIDaJqrLB5vwBtxFAH6uVOWKdffQL2T3lEUaB
-	 i9dIVYjiU8JXt/LM47PVuhVicGWXoiNSosxfwgnxShpV8V3Fk269UOgTPIvsaNyBUs
-	 tdAPnvoh++tOg==
-Message-ID: <94116d0a-3b79-42c9-bb31-0ebdbd00effa@kernel.org>
-Date: Tue, 27 Oct 2026 19:59:37 +0100
+	b=cje2C2JW/W5/9ZEii8/tlACEPvMOnEjtWQcEG9HwUfuEGalcwYmRITtkhIzXgtM0F
+	 zVZPSg6MqWG1EXqB5aEm/UM1ZGW6AUvIBMETQt4ATO4Biy4ylKhaNWcc3aETkNrUX0
+	 +Rs2xhiojhULts3grC2OreKYDtZWNa7jmYsfkJOEIajVofwPjCJtjn26J2BasBa3/1
+	 FBvLrtI8WsnLL8X/8SZDyxn+URbO+XTS1C7Oaenryfso2BZULJrKXufHYlcMtbRIRU
+	 EO59ufQ81gNQ6SJ2yjHXTkjfgMYx5Sqa+hoHZTfCdWqAvmQc93hgNF4B+H7JFr5lqG
+	 E8VnnHkkgYw3w==
+Message-ID: <e5766fe2-6cbb-45bc-bc57-87314c130de8@kernel.org>
+Date: Tue, 27 Oct 2026 20:06:09 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] mm: allow freezing mappings
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Hugh Dickins <hughd@google.com>, Baolin Wang
- <baolin.wang@linux.alibaba.com>, Andrew Morton <akpm@linux-foundation.org>,
- Zi Yan <ziy@nvidia.com>, "Liam R. Howlett" <liam@infradead.org>,
- Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>,
- Kiryl Shutsemau <kas@kernel.org>, Pasha Tatashin
- <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>,
- Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Byungchul Park <byungchul@sk.com>,
- Gregory Price <gourry@gourry.net>, Ying Huang
- <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>,
- Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>,
+Subject: Re: [PATCH 01/46] mm/mglru: don't use stack pointers when walking PUD
+ and PMD tables
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>,
  Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
  Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Lorenzo Stoakes <ljs@kernel.org>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, kexec@lists.infradead.org
-References: <20261027173031.763213-1-pratyush@kernel.org>
- <fcb7b786-53e5-49bb-8505-63eb8bb4e836@kernel.org>
- <2vxz33troxg3.fsf@kernel.org>
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
+ Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
+ <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
+ Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>,
+ Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
+ Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
+ Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
+ Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+ stable@vger.kernel.org
+References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-1-6f74bec9a5bb@kernel.org> <auBbKP8UNI9talDL@gremlin>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -121,7 +134,7 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <2vxz33troxg3.fsf@kernel.org>
+In-Reply-To: <auBbKP8UNI9talDL@gremlin>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
@@ -134,36 +147,51 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 10/27/26 18:38, Pratyush Yadav wrote:
-> On Tue, Oct 27 2026, David Hildenbrand (Arm) wrote:
-> 
->> On 10/27/26 18:30, Pratyush Yadav wrote:
->>> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
->>>
->>> Hi,
+On 10/27/26 09:06, Lorenzo Stoakes (ARM) wrote:
+> On Tue, Oct 27, 2026 at 12:17:21AM +0100, David Hildenbrand (Arm) wrote:
+>> From: Josef Bacik <josef@toxicpanda.com>
 >>
->> Hi,
+>> MGLRU passes stack copies of page-table entries in walk_pud_range() and
+>> walk_pmd_range() when walking to the next level. These copies can become
+>> stale when khugepaged or MADV_DONTNEED (CONFIG_PT_RECLAIM) removes a PTE
+>> table concurrently.
 >>
->> we're in the merge windows and focused on fixing things (apparently all of the
->> kernel). This is not the right time to discuss new changes.
+>> This pattern dates back to commit bd74fdaea146 ("mm: multi-gen LRU:
+>> support page table walks"). Likely, earlier locking masked the latent
+>> bug. Later changes exposed it: commit 1d65b771bc08 ("mm/khugepaged:
+>> retract_page_tables() without mmap or vma lock") allowed concurrent
+>> retraction, and commit cf4a65539c13 ("memcg-v1: no need for memcg locking
+>> for MGLRU") dropped the walker's outer RCU protection.
+>>
+>> The fix is simple, so just fix the original commit so we don't have to
+>> speculate. To fix it, pass the actual PMD/PUD pointers. This restores the
+>> RCU-protected lookup and validation against the live PMD. Note that the PUD
+>> handling is required as well to handle folded page tables correctly in all
+>> cases.
+>>
+>> Fix generated by an LLM and sent by Josef Bacik in private.
+>>
+>> Fixes: bd74fdaea146 ("mm: multi-gen LRU: support page table walks")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+>> [ david: handle walk_pud_range() as well, clarify+simplify description,
+>>          adjust Fixes: ]
+>> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+>> ---
 > 
-> Sorry. I thought the MM tree was open to changes in the merge window.
+> God, terrible. And why does MGLRU feel it needs its own independent page
+> walking mechanism?...
 
-We usually prefer to get stuff outside the merge window, but right now we have
-our hands full with fixes.
-
-So I just wanted to set the expectation that this will likely be ignored and
-might need a ping or a resend after the merge window.
-
-(I'm afraid the fix party will not end before the merge window ends)
+It's all a big mess. I think at LSF/MM there was some talk of using that also
+for traditional LRU, but I guess it might take a while ...
 
 -- 
 Cheers,
