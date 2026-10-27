@@ -2,61 +2,61 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6289606A31A
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 19:23:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C19606A31D
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 19:23:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=hLKwjCjx;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ftRU37dy
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=zTLKZt5L;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=j3ud/ZuJ
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=HoOcwxnYW5BPsnbBpyOUUjSJrZpAEuBUDQ6Rytj43SI=; b=hLKwjCjx7lTYP+
-	H3HsRSi6EwYeFhCFldn8ILk2gtHv3H8+iUKN9rsTRL8bQK6SuQBxwKqNl6o0e5b4Qf4UUpFybAutQ
-	Y/ZsUT2sV8l8Nbju16g5r5axeAPJKe80D2VVdbIKQl0yc9bzgr3L50yb1DhJkVTFefATGM4OlUOT2
-	2CkYzK6erdxIPFizUXHUkzfe8q6bX0Jhvs8unDeqMDCCcM1k8ZFqquNjSCjhqNrriD7QZvJ7aZUul
-	/UZ2ZhEFaAJkAk/cTN7kOnhqat1dbY102srP0Y9cGeOZEaPcckOosiXDmTjH/JzewB0Y4gXdy401o
-	OvY7iBGENVDMVDdEHXsA==;
+	List-Owner; bh=J9gSRb3D7ogtqu1SdrAnawsdd8oVJY1XtzaSrPDBAaU=; b=zTLKZt5LeNpfXB
+	LcKwtn9ZzXMvFqansKsAYYEXoa+eiHx/07Zoc1FfLIPCcrC2Zeby2QtKfheLhJTVUqhhyiDDQ91rz
+	4wQS5qjJ6rdgwtjt9VC8BP2gfW7dxUm//wAYUXzut5h/BHGLAQS1kZl2fu8RkSzrmqj4U76y9IA4Y
+	eqmHtzmnQVhyn/rJ226HwRz96QSYyGC4o0mTfY7OUVt+gQWC3CsZsHpuk4h5+q5eedD4nF286tDks
+	MGc4NdDcUAgckpR8G7fG61QQCOchouvc4QGlIAOaK/rwtgYub3+2Vfzh/ATBMy9ZjlMZMzzenfAXK
+	GoAoylVmYdUeSFybrTXA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLmlL-00000005doe-2CPa;
-	Tue, 27 Oct 2026 19:23:11 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xLmld-00000005dtu-2XxD;
+	Tue, 27 Oct 2026 19:23:29 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLmlK-00000005doS-2obK
+	id 1xLmlc-00000005dtN-0hOZ
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 19:23:10 +0000
+	Tue, 27 Oct 2026 19:23:28 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id CD91E6022E;
-	Tue, 27 Oct 2026 19:23:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 331471F031E6;
-	Tue, 27 Oct 2026 19:22:54 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 3B474601F6;
+	Tue, 27 Oct 2026 19:23:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D6CD1F01825;
+	Tue, 27 Oct 2026 19:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793128989;
-	bh=HoOcwxnYW5BPsnbBpyOUUjSJrZpAEuBUDQ6Rytj43SI=;
+	s=k20260515; t=1793129006;
+	bh=J9gSRb3D7ogtqu1SdrAnawsdd8oVJY1XtzaSrPDBAaU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ftRU37dyB4p0fpCveWi8u9OzVVMH+c9jVXZBnjJEcbX+3eUtHh0Bpvj0EPoUXVaPi
-	 0QIZG6aMCRRp9b8cz1jyaC4I/RPv5oyxP0gLO6UnDAB0wFu8xZJKIBLAV8TY4tp2Zs
-	 V90tZ5gdhOHNZIuy4O8LU/EauDhEGQ1e41/XKUoUv+VeND2ArLOaAradJIZSY1HXf1
-	 4HUN70NN0Glr6awt8YHNGO19R2ozNFjPj7mGG/v7TegGd0qz55IDN87LZJ/bb9e51c
-	 XNnTusUt2bSy/KdE3hQfe6e0wG0LfmdjZ9rOOnLn6PNHQxl3T0uu0eA167PkncXzMF
-	 vWwdNA1FTwpXg==
-Message-ID: <ec55c760-f099-48e1-900b-9f8e2e5315da@kernel.org>
-Date: Tue, 27 Oct 2026 20:20:43 +0100
+	b=j3ud/ZuJbVW9Ht6RBnRGEDrT32arwt0VIBU0qKDUNIniXzHqRWI+D+aEx8+VeUx89
+	 HqHfaNjLOyNGKRWV6YgOkr68n3/qo9W0eMTZKINy2npz5GIar9UTvOFFdcSrtP0vv5
+	 4jBkpsSuk2SY0/VYo17xyO/vRjQmaJgmQ0ymbf30GmQWIepsYBU+WJr0/di38WoRq+
+	 kqm7EYhMmPqKzwKCAnGfYtn00aLBJbManBRnsv0Wg6USpxdVWqOa63F7st/2+ucXEw
+	 SHdY9czvzINbUIfc9qTtV8eJv4VO6GuzywLfFvmEu/vIFmsGBnaOmiDW2PK2xQnMZa
+	 1n5n8XUqi4ceg==
+Message-ID: <ba37b2a3-201e-4cd5-a992-c3ec6ab2aadb@kernel.org>
+Date: Tue, 27 Oct 2026 20:21:33 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 20/46] mm/gup: fix clearing folios in memfd_pin_folios()
-To: Pratyush Yadav <pratyush@kernel.org>
+Subject: Re: [PATCH 23/46] mm/userfaultfd: write-lock the VMA before waking
+ waiters when unregistering
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
  Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
  Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
- Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
- Baoquan He <baoquan.he@linux.dev>,
+ Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
  Baolin Wang <baolin.wang@linux.alibaba.com>,
  "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
  Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
@@ -64,6 +64,7 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>,
  Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>,
  Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>,
  "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
  Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
  Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
@@ -83,11 +84,11 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org,
  linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
  linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-cxl@vger.kernel.org, Chris Mason <mason@kernel.org>,
- stable@vger.kernel.org
+ linux-cxl@vger.kernel.org, stable@vger.kernel.org,
+ Josef Bacik <josef@toxicpanda.com>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-20-6f74bec9a5bb@kernel.org>
- <2vxzbj8fp4sn.fsf@kernel.org>
+ <20261027-fixes_core-v1-23-6f74bec9a5bb@kernel.org>
+ <auBityGTDQjXURWg@gremlin>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -134,7 +135,7 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <2vxzbj8fp4sn.fsf@kernel.org>
+In-Reply-To: <auBityGTDQjXURWg@gremlin>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
@@ -147,70 +148,28 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-17.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 10/27/26 16:00, Pratyush Yadav wrote:
-> On Tue, Oct 27 2026, David Hildenbrand (Arm) wrote:
+On 10/27/26 09:43, Lorenzo Stoakes (ARM) wrote:
+> On Tue, Oct 27, 2026 at 12:17:43AM +0100, David Hildenbrand (Arm) wrote:
+>> userfaultfd_unregister() wakes pending missing faults before clearing the
+>> VMA's userfaultfd registration. With per-VMA fault locking, holding
+>> mmap_lock for write does not prevent another fault from queuing after
+>> the wakeup but before userfaultfd_clear_vma() write-locks the VMA. That
+>> waiter can then remain asleep indefinitely.
 > 
->> From: Chris Mason <mason@kernel.org>
->>
->> memfd_pin_folios() pins folios obtained directly from the page cache
->> without checking whether they are uptodate. However, shmem fallocate()
->> can leave newly allocated folios uncleared and not uptodate. Callers
->> such as udmabuf can then expose uninitialized memory to userspace.
->>
->> Clear non-uptodate folios and mark them uptodate under the folio lock
->> before returning them to the caller.
->>
->> Fix generated by an LLM and sent by Chris Mason in private.
->>
->> Fixes: 89c1905d9c14 ("mm/gup: introduce memfd_pin_folios() for pinning memfd folios")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Chris Mason <mason@kernel.org>
->> [ david: simplify description and comment ]
->> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
->> ---
->>  mm/gup.c | 14 ++++++++++++++
->>  1 file changed, 14 insertions(+)
->>
->> diff --git a/mm/gup.c b/mm/gup.c
->> index efc9aa2654625..47e7ae152cdf1 100644
->> --- a/mm/gup.c
->> +++ b/mm/gup.c
->> @@ -3516,6 +3516,20 @@ long memfd_pin_folios(struct file *memfd, loff_t start, loff_t end,
->>  					goto err;
->>  				}
->>  
->> +				/*
->> +				 * fallocate() can leave folios in the
->> +				 * page cache that were never cleared.
->> +				 */
->> +				if (!folio_test_uptodate(folio)) {
->> +					folio_lock(folio);
->> +					if (!folio_test_uptodate(folio)) {
->> +						folio_zero_range(folio, 0, folio_size(folio));
->> +						flush_dcache_folio(folio);
->> +						folio_mark_uptodate(folio);
->> +					}
->> +					folio_unlock(folio);
->> +				}
->> +
+> Oof.
 > 
-> Nit: this logic is repeated in a couple places in shmem.c and in
-> memfd_luo.c. Perhaps it deserves a helper?
-> 
-> Anyway, sounds like an important fix so don't make my nitpick stop you
-> from landing this if you don't want to bother.
+> I guess userfaultfd_clear_vma() only implicitly takes the VMA write lock via
+> vma_modify_flags_uffd().
 
-Thanks! yeah, I had the same thought when trying to improve this. We should have
-an easier way to just not hand out unzeroed folios outside of shmem core
-functions in the first place ...
+Yes. And the original AI fix wanted to reshuffle waiting because of that (stupid).
 
 -- 
 Cheers,
