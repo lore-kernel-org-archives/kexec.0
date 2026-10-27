@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37262606A327
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:12:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589BB606A31B
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:12:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=g61CasbH;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lZtXD8ew
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=k4Yw73hd;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=U6aX/Mc1
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=ZqEdHj9SpWceidheOE1bPXmyrnympSvqGH0UJxfFWnA=; b=g61CasbH+wrXQdIOMpH2ftZT/f
-	/aSV2dAfQLHCNm03F9MWNl4WglIVjmeZ4OIM4qX0KK6zg2plz/VdOYiw9lEbdSUs7pX24a8AiG+cf
-	v3cl6v2bLOfta7qJwIJGRNFJQ9zhCqNifaglf3HWguGjd/xVJsi5L/tPdZeWGOG456se+UnhvTKtN
-	YeiSs5uF+7heinwI9mtZ269+yf78mCFKTa09Ms/cm7SymYg4SLuhpy0aKMs/GmYXCvcF6LX66msAj
-	XusTf/d4qkACzL+0m0x1pH7jsA91IivhTwsBGKJIZ7ZOzQzxSBKf6Z6m236KbKZ/gIP4YSzh1S4ER
-	yyHVipNQ==;
+	bh=xl+lnIz22yv+dylM+iND4dJU9HljvViAFRhFII06DTw=; b=k4Yw73hdHUZd3S1+a3RSOcJtgf
+	YA1knVsQdk4Fz9stMpW6Aatf3sL5Q78LDeg3VEaAz+sr93qh/hLHWeErjBH6sQ7f136agvZEaAiGh
+	Gg56v0EYTNzeMNG3iZX9X9qg+Vf0IKxgg2QIuYCFyVle7SLdRMNHdtrJKEKofKcYX6SjD6jfL1fo9
+	lOpFXaSJLL+Rujre3VVEXqD3uwq8tNebUd8nBx1NhUs+piV2JncKdcpHTDLFS3IPFm4jS1yWM59Ao
+	4LhtMiXF6EUQRtPH2+sEWcoYDQOwRg1iM6g2vJ0cWweJlHg4Y9Lh5VfeATClGkADq93s3NujALhbX
+	cT6VBB2g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUnp-00000003UrO-3ms3;
-	Tue, 27 Oct 2026 00:12:33 +0000
+	id 1xLUnt-00000003UuJ-0AEK;
+	Tue, 27 Oct 2026 00:12:37 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUno-00000003Uqj-3dQI
+	id 1xLUnr-00000003Usy-3ZCr
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 00:12:32 +0000
+	Tue, 27 Oct 2026 00:12:35 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 4D413600CB;
+	by tor.source.kernel.org (Postfix) with ESMTP id 499DF600DA;
+	Tue, 27 Oct 2026 00:12:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76BBB1F01825;
 	Tue, 27 Oct 2026 00:12:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C45B1F01825;
-	Tue, 27 Oct 2026 00:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793059952;
-	bh=ZqEdHj9SpWceidheOE1bPXmyrnympSvqGH0UJxfFWnA=;
+	s=k20260515; t=1793059955;
+	bh=xl+lnIz22yv+dylM+iND4dJU9HljvViAFRhFII06DTw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=lZtXD8ewPZmu2QxDYUP3TcpKcra95u/e0/eq5iaLDP1spV21Qb3sDgBeEo0kOSIu7
-	 HSlysKPS4mZhbsnhs3iDgSPdQj0t+mxiQJj76j4jNe9P+iICCuhS+mbO2L2yaDeoCi
-	 hp3eO6ZkA5KE3vszFL5uC1QvqffhGPzxj1DPhHWpVOUDikAqOX+3/Ta0cFRzBx8A61
-	 Gs0iTfp/tJbY8CS6r3GCLmeJszLjWuSwnm8GVI0Rb5Y2s+DWINF5RXII44P0jMbHpw
-	 KlZr7s7g4IOc4516eEzfYMALpzmGrQQ51fkMO4xUV4PbJoUNgEx+cZ10ydIXhx2hGS
-	 UVSWaxV8Qk3BA==
-Message-ID: <sashiko-outbox-185891@kernel.org>
+	b=U6aX/Mc1CEWj9cXl8yu64bquQqMm2m52cvjp/vBP4NRNBObXnjYgl607wKum2H+wy
+	 SIpDQ8iJp85BtuLA7lnQdDfqLAa6878oordA6i2xCZbpGKYeQLgRLi8n31MxSmuM/K
+	 eMIwuo5JSkBmhkNt3OEUvNgOm6kPfKwPCwDJmr5kepKRB7uEi/6jOQElFckWWGYN/s
+	 END+JveeOHPdnzWrR3zkl9sXsHUgZrMmKvRA/KvsfMmj45eUYpCmoWKttfMpsjbnwI
+	 hlEgznPvfPrNBspjpWyD0XG6kl7+xK/Uv9Q6BAk4zJUDEDVAh4ekkdQ2hCtmvAkN3J
+	 2EdZfi48IFtjA==
+Message-ID: <sashiko-outbox-185892@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 09/46] mm/rmap: handle device-exclusive entries in
- folio_referenced_one()
+Subject: Re: [PATCH 10/46] mm/huge_memory: fix list corruption when
+ deferred_split_scan() races with deferred_split_folio()
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -75,12 +75,12 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
 Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261027-fixes_core-v1-9-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-10-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-9-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-10-6f74bec9a5bb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 00:12:29 +0000
+Date: Tue, 27 Oct 2026 00:12:32 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,27 +100,24 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> page_vma_mapped_walk() can return non-present device-exclusive entries,
-> but folio_referenced_one() passes them to PTE young-bit accessors that
-> require present PTEs.
+> Since the deferred split queue became a list_lru, the isolate callback
+> moves the folios it took a reference on to an on-stack list, linked
+> through folio->_deferred_list, and deferred_split_scan() takes them off
+> that list with list_del_init() without holding the list_lru lock.
 >=20
-> We must neither call clear_flush_young_ptes_notify() nor
-> folio_pte_batch() with non-present entries. For example, clearing the
-> young bit on non-present PTEs can corrupt the entry: on arm64
-> PTE_AF overlaps the swap type, so clearing it turns a device-exclusive
-> entry into an ordinary swap entry.
+> deferred_split_folio() does not know about the on-stack list. It only
+> holds the list_lru lock when it looks at the same list_head, and it can
+> run for such a folio: a THP is queued when it is mapped, as a candidate
+> for the underused check, and is queued "again" when a part of it gets
+> unmapped:
 >=20
-> folio_pte_batch() will VM_WARN_ON_FOLIO.
+>   CPU0 deferred_split_scan()          CPU1 deferred_split_folio()
+>   list_del_init(&folio->_deferred_list)
+>     next->prev =3D prev
+>     prev->next =3D next
+> [ ... ]
 >=20
-> Apply the same approach as the previous fixes to e.g., damon_ptep_mkold():
-> treat these entries as old from the CPU's perspective and obtain their
-> young state through the MMU notifier.
->=20
-> Skip PTE batching and MGLRU look-around for non-present entries, and
-> don't modify non-present PTEs.
->=20
-> Fixes: b756a3b5e7ea ("mm: device exclusive memory access")
-> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> Fixes: fafaeceb89a5 ("mm: switch deferred split shrinker to list_lru")
 > Cc: stable@vger.kernel.org
 > Reported-by: Josef Bacik <josef@toxicpanda.com>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
@@ -129,6 +126,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027-fixes_core=
--v1-0-6f74bec9a5bb@kernel.org?part=3D9
+-v1-0-6f74bec9a5bb@kernel.org?part=3D10
 
 
