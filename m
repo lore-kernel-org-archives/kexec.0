@@ -2,54 +2,54 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA656606A323
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 19:07:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2C7606A31D
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 19:10:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=oV1NrIGh;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jf1fDspo
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=whII9K9+;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=es2eEKk+
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=4JNAgIKFjPRpfv1PgOMbYf97LYfRcFa+6eIVMdPRyjw=; b=oV1NrIGhNvTVqe
-	eikz9Aw1bIjAYEWigt6WPwzqV3PGu2Jy1DIC+4GmNlkz19QRCG9TOQT7ofFoGL2pDRo/MrtUGC4yR
-	VoVSJqc/07PEqPYfxCsElYFUYevGWNuCxTzSNvoXUzvgTn9EvyOy5lfnEAoJIeB11li8Ijz78epPj
-	o4N4EVzcIs36xbYD6xd++d8rEbOrxVCnxExGMuA+A9V5BtwmDObyMdbnRRw7MqwM6SlpQ3+FUYePE
-	nYQx4RycdvAYbR7pOIUu5U1658KiEgXI7hkTsGVvHdXUsJsAMkhfg6xU10HUCO6cveRwQNpKqDDlG
-	Ujc8qGWrSTRMzGE5xi/g==;
+	List-Owner; bh=kkvfEtwgKNH/KsYhrOsWJWMTyAP67vGHRSRe8u51NyU=; b=whII9K9+bOZ8mp
+	DDFn6nbY88GxWQ9tuTzW0A5KYpQgyR8wczYgWhgkZ0Guhr21yd5Dn2PFXp6ILhz6JomUEAO8zHsPb
+	yij3kiP0DRFIPfd8QpUu1W4H1jHyM2vRmBmNmCvcOnFmn7J5ylnKJuhym3nJKQcWDLRqi0kCdE4xG
+	kgUh7paioow9Wg19J3OHbdtoTi8XRrPfaOpiuWcAPpjQ/UwQfGsc6CXcxd+2/GIqhxQjTBVUXEq2p
+	ykjfGdHiw/9zD0wySCrKYIsuXFqOLUR316/L/H89p8NQ6uG6+DTDOAe+rTcGsxQ0iuHIHqE0Oo46B
+	x+1u9PM1t+AAfoyCU0kw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLmW8-00000005cnH-2Yja;
-	Tue, 27 Oct 2026 19:07:28 +0000
+	id 1xLmYb-00000005cwq-3ohf;
+	Tue, 27 Oct 2026 19:10:01 +0000
 Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLmW6-00000005cn1-3ooE
+	id 1xLmYZ-00000005cwM-3p2n
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 19:07:27 +0000
+	Tue, 27 Oct 2026 19:10:00 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 5779E60136;
-	Tue, 27 Oct 2026 19:07:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 729AC1F01825;
-	Tue, 27 Oct 2026 19:07:09 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id CB35A60142;
+	Tue, 27 Oct 2026 19:09:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 197B11F01825;
+	Tue, 27 Oct 2026 19:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793128046;
-	bh=4JNAgIKFjPRpfv1PgOMbYf97LYfRcFa+6eIVMdPRyjw=;
+	s=k20260515; t=1793128198;
+	bh=kkvfEtwgKNH/KsYhrOsWJWMTyAP67vGHRSRe8u51NyU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=jf1fDspo2NgWYuI74LdGEBcYt8altR6P9yRUKqtzDSTFSAnWIf4GPYCpU6SCH2cR4
-	 kLKqYwz07l5Zxzm/sG06VNfh8M3YEXLg0g/xDRdxPgQdpFPjuVEjR01moMhjRlhF+T
-	 pjPpXSza1JiJ6vbP0VDvf6JnPlSg5bHKRMHCf8gjvuKNvnjEbklK28yyR7bqqPh8uC
-	 LRmuSQyxUKj9WGQhuRHWgrbDg7s+hLnc2B2yj63yqn4Wai5qpm3fBCxoqPXWBL+olg
-	 28HWBF3L63ZWkWwiog+dmsXfZtM+0ZeN1bDPXJhSyQqkRos7H6AArQhBQMI6vYISQY
-	 8xVSAIg2hJR+Q==
-Message-ID: <22b819a2-631d-468e-b724-770caf9f94e4@kernel.org>
-Date: Tue, 27 Oct 2026 20:07:06 +0100
+	b=es2eEKk+bUcpnare1MMH51MzJ56RMYhJHCJ4BbctEiBx+OTKwVt98ZYvFRoK2s802
+	 7zEK/2ivxgL2Z2lGDn9QxlCzi4S3oV1kfpOid34xAz5jxDFltH8xfEeJp9M+7/Ptz3
+	 ZE8XAUsU66F9fKYfgRjOUGIK8VrdX7t9QDm8O3gjYy/vNY6XRXPLq1oT35R7IfhNm6
+	 vfwa47AhjF15KgJ4OPPZLClvSNtHPclXBuu0DOKz/kQ3wVHCLyxglh19i1lO5umlq1
+	 7M+LKT4FNl3GB5zrB/ijPxIInk/P+8QS2D4Fk1N0Zv8kpezBwrOu3C7LY5oNXwaWnb
+	 JBUMmaM0Rvp7A==
+Message-ID: <c4be5787-c519-4fc5-8e58-743b30bb6692@kernel.org>
+Date: Tue, 27 Oct 2026 20:09:36 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/46] fork: take mmap_lock before copying mm_struct
-To: Pedro Falcato <pfalcato@suse.de>
+Subject: Re: [PATCH 04/46] mm/memfd: make f_pos accesses atomic
+To: Gregory Price <gourry@gourry.net>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
  Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
  Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
@@ -62,7 +62,8 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
  Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>,
  Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>,
- Hugh Dickins <hughd@google.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
  Pratyush Yadav <pratyush@kernel.org>,
  "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
  Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
@@ -78,16 +79,15 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
  Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
  Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
- Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
- Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
  linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-cxl@vger.kernel.org, stable@vger.kernel.org,
- Josef Bacik <josef@toxicpanda.com>
+ linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+ stable@vger.kernel.org
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org>
- <auB-3BQn_rR6IfY8@pedro-suse.tail5790ac.ts.net>
+ <20261027-fixes_core-v1-4-6f74bec9a5bb@kernel.org>
+ <179307206859.1171062.6841971971647864368.b4-reply@b4>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -134,7 +134,7 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <auB-3BQn_rR6IfY8@pedro-suse.tail5790ac.ts.net>
+In-Reply-To: <179307206859.1171062.6841971971647864368.b4-reply@b4>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
@@ -155,38 +155,34 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 10/27/26 11:38, Pedro Falcato wrote:
-> On Tue, Oct 27, 2026 at 12:17:22AM +0100, David Hildenbrand (Arm) wrote:
->> dup_mm() copies the parent's mm_struct before dup_mmap() takes the
->> mmap_lock. A concurrent brk() can leave the child with a stale mm->brk
->> and newer heap mappings, causing later brk() requests to fail.
+On 10/27/26 04:34, Gregory Price wrote:
+> On 2026-10-27 00:17 +0100, David Hildenbrand (Arm) wrote:
+>> From: Josef Bacik <josef@toxicpanda.com>
 >>
->> Other operations (e.g., PR_SET_MM) on the parent's mm_struct can similarly
->> cause inconsistencies.
+>> Commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per POSIX") made
+>> read(), write() and lseek() on a shared open file description of a regular
+>> file serialize on ->f_pos_lock.  The flag that asks for it,
+>> FMODE_ATOMIC_POS, is set in do_dentry_open().  A memfd is a regular file
+>> too, but its struct file comes from alloc_file_pseudo() and never passes
+>> through do_dentry_open(), so it does not get the flag:
 >>
->> As a simple and robust fix, grab the parent's mmap_lock earlier. This
->> way we don't need to update individual mm fields in dup_mmap() and
->> keep missing ones. Stop updating the 4 existing members (total_vm, data_vm,
->> exec_vm, stack_vm), as that is now no longer required.
+> ... snip ...
 >>
->> Keep releasing the parent's mmap_lock in dup_mmap(), before
->> userfaultfd completion, to avoid moving the userfaultfd handling into the
->> caller. This should get cleaned up later.
->>
->> Move uprobe_start_dup_mmap() to preserve the lock ordering.
->>
->> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+>> Fixes: 9183df25fe7b ("shm: add memfd_create() syscall")
 >> Cc: stable@vger.kernel.org
->> Reported-by: Josef Bacik <josef@toxicpanda.com>
->> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+>> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+>> [ david: minor description tweaks ]
 >> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 > 
-> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
-> 
-> FWIW, strictly speaking malloc() isn't usable in a forked
-> (multi-threaded) child, but glibc/musl provide this in a best-effort way.
+> Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+> Tested-by: Gregory Price (Meta) <gourry@gourry.net>
 
-Yeah, I'm more concerned about other things that can race ... :)
+Thanks!
+
+> 
+> This one arguably should have at least a trivial selftest.
+
+Yes, best to bundle some of these and send them out after the fixes landed. Thanks!
 
 -- 
 Cheers,
