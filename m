@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F578606A31A
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:14:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233D4606A31A
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:14:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=WWMwwWKG;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X7SMplnL
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=3VJ1oXhL;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PzxpxL2y
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,39 +14,39 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=w68zYkQOy3WmZccxDgV99fq/k2lUTuWnaa1zclXv+/I=; b=WWMwwWKGqzaQyXonyD7EHs7LfD
-	40jFdguePZx1h3D05EiyNE8Vyyj/Mt/7fbXzdbW29ulZRiEoLNgWf14Zsv78AosgAu+6RltngP8gm
-	+8TisOrDoTGD8+Cxu6M9rl1H8FyKxNUFFcYzB/vaH5KEfaCEU163grPYPnQYstylKt3HnBud1gcJZ
-	MDxITI+4xovs2wBdFvTgMAjLdANdy7jZyOiOhS4Km9wgX+kpuj0Jo1YxAyJP/SOSRNLfQeB5cE5ce
-	WmabzSjnfJvWsr9M9vZCT2bNIKgsokCsRZF0d6v55f1t+X8CjhX4YyUnkr+Jgx/cnxrbJiiMw8fDy
-	NSGCL2Kg==;
+	bh=YpzkqCxD9DEJ3+8L+1f3oPsu/K9fgP/1r9EgKpJF98Q=; b=3VJ1oXhLzzKVV3kVcnIr4YhXPQ
+	R49AZGA83GGGM0JScpch7lzoGvmeG1tZF0G23kpVPoGU44avRMfDBOMOR1Jnp0hgjdpgLYRv9VCf/
+	8YbOdW2mu/gskEoHZXXTSbcxzO3nqtylvHOaFNeM8cm9KIsXjGfQfBkRik+fWdOgMURSWF7C50B4x
+	EpeGKe14AQY4xqsXPIQcRIf88AT/b8UGQ+HpjX9MP916whBKYQYikND1x3JOydx+EkOtfe2KC0XNN
+	ngXNulhFOFTi0CiooCvFdUfo399QGcwm2SOZ3kI5povTX73D6BTDLuNyIR7fd936N7HVo2YGcm3IP
+	zCzsbp9A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUpM-00000003W44-2ufs;
-	Tue, 27 Oct 2026 00:14:08 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xLUpP-00000003W6q-3RCi;
+	Tue, 27 Oct 2026 00:14:11 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUpL-00000003W2u-1ffk
+	id 1xLUpO-00000003W5Z-2cNC
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 00:14:07 +0000
+	Tue, 27 Oct 2026 00:14:10 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id CF4F660213;
+	by tor.source.kernel.org (Postfix) with ESMTP id 0F416600CB;
+	Tue, 27 Oct 2026 00:14:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 028BE1F01825;
 	Tue, 27 Oct 2026 00:14:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 047C31F01825;
-	Tue, 27 Oct 2026 00:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793060046;
-	bh=w68zYkQOy3WmZccxDgV99fq/k2lUTuWnaa1zclXv+/I=;
+	s=k20260515; t=1793060049;
+	bh=YpzkqCxD9DEJ3+8L+1f3oPsu/K9fgP/1r9EgKpJF98Q=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=X7SMplnLDLNHa4l4dX2hqT1DVrjwCz1df4DTrOW13XR/5ocBpim7Wx63gsomsE6cE
-	 gbGhxLu2RO1dnHkJeI+Eqm2msYvY8KBEq+Beuwn3TqUET3Hq8R29hGVpktLiR4dJhJ
-	 P0t/Pc+GgSunsTjhhdQvF6DhapG+do/k8qwoAX6ng0cP3QeySyZAZpc5+Crzpv/2t7
-	 AsOTe5qYD2G2bzlbncPYcpkWPltuOaSvb+2BX7zrzPwuAw9Ly+6MQPvCGdPBTmIicg
-	 HDlfZ15pghThMUKYGtJ5pytF5GLrK234dEF6yH+7yrpo2ReCVuHmmxNqqvOzwseEjh
-	 iMHpZgydtGSIQ==
-Message-ID: <sashiko-outbox-185920@kernel.org>
+	b=PzxpxL2y5D+nZTDUIkLsqW9eIEL4SVXlFOdVCOcvGC/9RJBNEN3Qb7BfuVdUf/0or
+	 W5tRc8CQjMREKYknNpX39aDtaEd+v6Imsuk7zvTdmFgQNH1dh1H1TJsTq10raLwnfZ
+	 nYqdAEPhNT0/hZUECASNYAs02tySXoS/X32G//dNbpqwzdlI+7Ns28Qnqt11LinXeX
+	 C+qcilIRv6mqLECDaNr9I2HutJPacdQ5ags/J6s1CoEXpW5k2iRP9v43MKuKDIk1iU
+	 Q2Yyu9oM+yWVQfQBztgm4e/nNJWv/0ekkzuVZj+wACVAr55BwX5EUagyliZGSZ47o4
+	 Op3MJCMQ24lHg==
+Message-ID: <sashiko-outbox-185921@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 38/46] mm/ksm: reset the unstable trees of all nodes
+Subject: Re: [PATCH 39/46] mm/ksm: fix use of a freed anon_vma at swap-in
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -73,13 +73,13 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261027-fixes_core-v1-38-6f74bec9a5bb@kernel.org>
+Cc: kexec@lists.infradead.org, "Chris Mason" <mason@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-39-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-38-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-39-6f74bec9a5bb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 00:14:03 +0000
+Date: Tue, 27 Oct 2026 00:14:06 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,35 +99,32 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Each full scan resets ksm_nr_node_ids unstable tree roots. Enabling
-> merge_across_nodes resets this count to 1, even if per-node roots were
-> previously allocated.
+> A folio read from a swap slot previously shared by KSM can remain in the
+> swap cache after the process that first mapped it exits. Its anon_vma
+> can then be freed, so ksm_might_need_to_copy() must not dereference it
+> to compare roots.
 >=20
-> So when toggling "merge_across_nodes" 0 -> 1 -> 0, a scan that starts
-> while the setting is 1 and continues after switching back to 0 can
-> encounter stale unstable tree roots, resulting in UAF.
+> Doing so can result in some false-positives, resulting in the reverse
+> mapping missing the new folio mapping, preventing migration and reclaim.
 >=20
-> Only root is allowed to change "merge_across_nodes", and the documented
-> sequence is: "merge_across_nodes setting can be changed only when there
-> are no ksm shared pages in the system: set run 2 to unmerge pages first,
-> then to 1 after changing merge_across_nodes, to remerge according to the
-> new setting."
+> SLAB_TYPESAFE_BY_RCU allows individual anon_vma objects to be reused
+> immediately after freeing. A stale pointer can then refer to another
+> anon_vma whose root matches, even though the target VMA is not linked
+> to that anon_vma.
 >=20
-> Let's fix it by tracking in ksm_nr_node_ids the actual number of
-> allocated tree roots.
->=20
-> remove_all_stable_nodes() and ksm_check_stable_tree() will now scan
-> more tree roots (skipping the empty ones), which is harmless.
->=20
-> Fixes: ef53d16cded7 ("ksm: allocate roots when needed")
+> Move the anonymous rmap compatibility checks into
+> folio_anon_rmap_compatible(). Keep the page-index check and compare the
+> [ ... ]
+> Fixes: ba6f0ff3981e ("ksm: fix ksm swapin time optimization")
 > Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
+> Reported-by: Chris Mason <mason@kernel.org>
+> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027-fixes_core=
--v1-0-6f74bec9a5bb@kernel.org?part=3D38
+-v1-0-6f74bec9a5bb@kernel.org?part=3D39
 
 
