@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB10606A31B
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:14:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF441606A31A
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:14:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=hmboVRqb;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gGjiBpH9
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=4wKe9SsX;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aHMDeZQe
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=6+Qn83otNkpPLLetvOkPpEarChsgTvrJSByi11bVmzY=; b=hmboVRqbc3a6EZouK5yIsI2zMt
-	3Dhu8P0hyryThBVFdVlanpJ9UM3R6866IfHmJOT/xa19QpbcpDWu5RH2RyGuH6ZFYHZnouD3Ne129
-	83L2DQAGgY7IXH9CIerxD76R4YfpjRyHbdFj+bYQ7bqrWyWxLQFvgzOlyVl8UFtF4IqgDRkYcfoCF
-	Aqt+mc2QK5lBWvVndqmqD3JynfvD14OmjcY4a/r8GVdduBR79tC5a/rm89UpRSx5IdUueKr3AnJ/v
-	dmvxSTSFN2ceEPlfP6MSlmXjWfH4G7rlVJnGkrnzWH7fZleBrKAgt+gkiRRR8OAd8E5kMBEQJSoa+
-	vaUYOIig==;
+	bh=sIDxvGKxBxTe6Ad/BrR857SoVGNUjzBFHwzFN3NoBG4=; b=4wKe9SsXg1mFTZ+FIfkJJnKSmu
+	VIMRs1XrSdXAxK23bjqwz4SOH44qbUicLf238e96GhprHYnINg45uJSBYDZF5D03BJ/Wa73XhcUin
+	DC96c/ln6zv7O/0spCUh3XCVDQevSXsVVzg4xS8WlrJ+iFMmibUsb4mLwTj3F6jD08XlrXvF4nZX3
+	IiaSaHNjna0bZORdEElpF1Jf9pkR+rX9CL8Pv39Z44BGQgwpwB3QBBE5PdJgUFaklvWDt8tdF5sIq
+	QFLYyKuCv+iD1XwRmwidyiRpph4uhjTG6Lx7i/Mx8h4s8Xi0vbHPKJ4ZrGNfN/Zq2p3DuMGsa9buI
+	B+uGQqcA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUpi-00000003WKm-2CC8;
-	Tue, 27 Oct 2026 00:14:30 +0000
+	id 1xLUpl-00000003WN8-2oza;
+	Tue, 27 Oct 2026 00:14:33 +0000
 Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUph-00000003WJj-22rN
+	id 1xLUpk-00000003WMB-2cEW
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 00:14:29 +0000
+	Tue, 27 Oct 2026 00:14:32 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 251BE414D3;
+	by sea.source.kernel.org (Postfix) with ESMTP id 532FB42DD3;
+	Tue, 27 Oct 2026 00:14:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95BF31F01825;
 	Tue, 27 Oct 2026 00:14:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 097761F01825;
-	Tue, 27 Oct 2026 00:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793060069;
-	bh=6+Qn83otNkpPLLetvOkPpEarChsgTvrJSByi11bVmzY=;
+	s=k20260515; t=1793060072;
+	bh=sIDxvGKxBxTe6Ad/BrR857SoVGNUjzBFHwzFN3NoBG4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=gGjiBpH9zEHAOaJeynoRMGOMQzuVPBvmdCO/C176mh23wovy+6zQxACCP6Cb7cOse
-	 ch2a88j5AT8zZ9gKSIt4kesZBVN0TiRM8A5xcbbjZwG2Bju6HIKkWaHzDxQnX0+xzT
-	 JsOHz6wZfdGEggCecg5q0oMeAfU11/pLkCSWAnSu9s/ikx+d4hYab2z/bU74rZuuq/
-	 0vs0pbrfEqXvgIyRwJifaP80HJqvtnyXPzJocdtSAB6pJsePFNcv+lb4Dcyw7QcnM9
-	 oqioli5GTEfYduTxzna+Ef4lQqjYXSabIWDl87Id3UYlQW0x8nptvKZF9SrxxpNGyy
-	 CFyhHWgLsHyQw==
-Message-ID: <sashiko-outbox-185927@kernel.org>
+	b=aHMDeZQeFRY8wcJBOTwwUK4/rpen7T2VrODE1/egcOVqd+2GjcgESXY9m6zZ3Jdwd
+	 94ZtGgriWZH3+zoThQUEs2TUU5ppo+QoVoyxfMDou6E0ECOftrCfB0nveCEmb8drqb
+	 XUZ9N69mbcetAVXDd0LzsJSyZlIhwbNcgwdpt6rrt8T0ZmH1PwUfpOGHYNiCKBHb9O
+	 gZzw5KwdVRNl7Rue+WWv+li+qvnss7lQ4ZokItc9fR3VWCwGm1rwpm0kdAfRRi3R16
+	 C5BWnVOjAkMyniRDOiuRGrdv+tLcRz0sgN7/qZNoDcX74dwGHFECbwfNsvkbTBq+D9
+	 idMDaZf52XFfA==
+Message-ID: <sashiko-outbox-185928@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 45/46] mm/memory-tiers: unregister empty tiers outside
- memory_tier_lock
+Subject: Re: [PATCH 46/46] fs/proc/task_mmu: refuse addresses beyond 32 bits
+ on 32bit
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -75,12 +75,12 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
 Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261027-fixes_core-v1-45-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-46-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-45-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-46-6f74bec9a5bb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 00:14:25 +0000
+Date: Tue, 27 Oct 2026 00:14:29 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,29 +100,31 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> When offlining a node's last memory empties its tier,
-> clear_node_memory_tier() calls device_unregister() while holding
-> memory_tier_lock. A concurrent sysfs read can hold a kernfs active
-> reference and block in nodelist_show() on that mutex. device_unregister()
-> then waits in kernfs_drain() for the read to finish and release its active
-> reference, while the reader waits for the offlining task to release the
-> mutex.
+> From: Josef Bacik <josef@toxicpanda.com>
 >=20
-> Return the node's former tier from clear_node_memory_tier(), making the
-> helper more similar to set_node_memory_tier(), which also returns a
-> memory_tier pointer. Let the caller unlink an empty tier under
-> memory_tier_lock before rebuilding demotion targets, then unregister its
-> device after dropping the lock.
+> The addresses in struct pm_scan_arg are 64 bits wide.  The first thing
+> pagemap_scan_get_args() does with them is to cast them to unsigned
+> long.  On a 32-bit kernel the upper half is dropped without a word:
+> PAGEMAP_SCAN of 0x100001000-0x100002000 scans, and with
+> PM_SCAN_WP_MATCHING write-protects, 0x1000-0x2000, stores the result
+> at the lower half of vec, and reports success.
 >=20
-> Fixes: 9832fb87834e ("mm/demotion: expose memory tier details via sysfs")
-> Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
+> Return -EFAULT, as for other addresses outside of the address space.
+>=20
+> This is probably not worth CCing stable.
+>=20
+> Fix generated by an LLM and sent by Josef Bacik in private.
+>=20
+> Fixes: 52526ca7fdb9 ("fs/proc/task_mmu: implement IOCTL to get and option=
+ally clear info about PTEs")
+> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027-fixes_core=
--v1-0-6f74bec9a5bb@kernel.org?part=3D45
+-v1-0-6f74bec9a5bb@kernel.org?part=3D46
 
 
