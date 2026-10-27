@@ -2,92 +2,93 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5419F606A326
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 19:10:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F319606A329
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 19:18:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=FmxWjFaE;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JLRsA5zy
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=KcYC35oZ;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YLTdJU5x
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=gxw22+dUBVHsNmkwZBBvZhpzn7DjpEcijhpCagz+H44=; b=FmxWjFaEV0Da+l
-	Dnz5/K1eLvS0iAqDKKxDB4sdmZemeUx6Hs2NhoVSxn/7rWHZNnOVEIlDZxk7QhoQqbr+BrBl/5MyY
-	DgqZ6YSCuVi1GJa44AQapDuZ99vIO/qYy33z0pEKkzMbyQZNMzfVRdwhIyPBgwPt13W5L+fgNb87+
-	h94oPEj39cPA8hQfMdP95WfBzzh6hG5w3K1OVeTzwDi1ST/Od5nTy9h8GWNxRYEXowUvcJ00/6HWb
-	c64QRf1Wof1vhFur0h8K4T9BbB41KXYjkJ8opHJfeoRvK+4dfY6rCfr8Ux92E9f3Ybt2IDLlEOgb5
-	B95n+E86Z4wCDJku7Yeg==;
+	List-Owner; bh=RZNM0QAvkjv2toljsz6cT0DUeLHvWGObkljY6MMux0Q=; b=KcYC35oZE/K9S2
+	2pOzeaYK16SesVrxbq5yVdF70wid+Mr4TfhqnKeT3BxNeQdI5C1KIbzOtvOjA2Kscty0O5OwAooLI
+	0t2v+G6ZZQ4mFvuUR9PFWtwiwwrXxdBYQ1dCmAPlHExZtaGHI0/ZHZJj6jeJCV6eaTn337Q+guXh3
+	dL1qsil1Pe/s5asT14NER1o3lpkcTlE1vfjdkFlb/yChRhr8M9ZMZZDHOkMSIPI0PaHcmm/iH+kzO
+	XKOuEb8FefHu2aYZXroY9vPhrYE9nXAMvbA5pkePbs6l+lSMBZQJal0ubWChTqnuwNwCM+bjg/I5G
+	rPZagqnv9tJU2vJe3h6A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLmZP-00000005d24-0FfG;
-	Tue, 27 Oct 2026 19:10:51 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xLmgt-00000005dR5-3zhQ;
+	Tue, 27 Oct 2026 19:18:35 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLmZN-00000005d1r-2dPy
+	id 1xLmgt-00000005dQx-0yOF
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 19:10:49 +0000
+	Tue, 27 Oct 2026 19:18:35 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id A5BE46021D;
-	Tue, 27 Oct 2026 19:10:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DF241F01829;
-	Tue, 27 Oct 2026 19:10:30 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id A989140A09;
+	Tue, 27 Oct 2026 19:18:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16F571F01828;
+	Tue, 27 Oct 2026 19:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793128248;
-	bh=gxw22+dUBVHsNmkwZBBvZhpzn7DjpEcijhpCagz+H44=;
+	s=k20260515; t=1793128714;
+	bh=RZNM0QAvkjv2toljsz6cT0DUeLHvWGObkljY6MMux0Q=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=JLRsA5zy6lBMaJmnj1OuZDWK7USr/fw9H52uehWRrOa/1j8WudtcfkokPA36DPpQP
-	 S0rcY4Q/4pP+YF+byKiwleEgDfpZwaUDVDm4L7dPRJIfN292VDlcwOc90kWkBxY6b1
-	 Mi8DZt6gPGhhyfK5+ZRUlwvd29AYr89em87D8L5KbOI1ZjOc3pnjoO99WUhQdMSkwB
-	 Kd8v2WIYlELKJVpxwWEEssNQoRGjucCE81+gjs5//M4+n2M/ral1GW4g4bdGx/h0lV
-	 9ntzmhQGFkbsCzUTDYBHkrEOBWleeXSGrd95OomWvfwcKf7/2yVImSsxRlxqZR1HRK
-	 AiDKFUxA3cIPA==
-Message-ID: <3d5e6a17-3ca5-4e87-baab-f349073ab8e4@kernel.org>
-Date: Tue, 27 Oct 2026 20:10:27 +0100
+	b=YLTdJU5x4o/hyyOxOFwqDIU1Y1ZNR6KV42KTsOrPC3aE7fsc7yxHnDHmlusk1ZAbc
+	 7WbghDU5l1NvCkEtJodjasUhWzXCgfr9Vha9UktQimiDcYzzLg0LinN4/zyoZDs/d3
+	 xfVJdoPYVZikMrjRBlxg3rIShOQQ8xtdT4qpb5cOTugMevkB5DTpGK+9lx5QKKrr3s
+	 RyHvkSeezsGEWBuWOGF0Wz9rAaW4YKD2jM7O1WA/e7eicq1Lz93J6oO28CTPO/D4Pd
+	 RVDg5X3Wj+ZwE0ZbdDEia09ullo9NdzzRIZxY/uH0ERFDqHqyUI36UAodcWUnV9aDO
+	 Dxn7IlIn18beQ==
+Message-ID: <11b91d57-85e6-47d0-87ab-5fa8624e8068@kernel.org>
+Date: Tue, 27 Oct 2026 20:18:18 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/46] mm/filemap: read mapping->a_ops->free_folio under
- i_lock
-To: Rik van Riel <riel@surriel.com>, Andrew Morton
- <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>,
- Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>,
- Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
+Subject: Re: [PATCH 07/46] mm/filemap: don't lose a folio lock wakeup to a
+ signal
+To: Pedro Falcato <pfalcato@suse.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
+ Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+ Baoquan He <baoquan.he@linux.dev>,
  Baolin Wang <baolin.wang@linux.alibaba.com>,
  "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
  Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
  Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>,
  Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Hugh Dickins <hughd@google.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
  Pratyush Yadav <pratyush@kernel.org>,
  "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
  Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
- Harry Yoo <harry@kernel.org>, Alistair Popple <apopple@nvidia.com>,
- Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Usama Arif <usama.arif@linux.dev>,
- Kiryl Shutsemau <kas@kernel.org>, Matthew Brost <matthew.brost@intel.com>,
- John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
- Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
+ Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
+ <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
  Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>,
  Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
  Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
  Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
  Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
  Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
- Jason Gunthorpe <jgg@ziepe.ca>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
- Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org
+ Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+ stable@vger.kernel.org
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-6-6f74bec9a5bb@kernel.org>
- <f12ffd4cf8933452ef13adae55d6d238a3069235.camel@surriel.com>
+ <20261027-fixes_core-v1-7-6f74bec9a5bb@kernel.org>
+ <auDM5mvsb5ilIdsg@pedro-suse.lan>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -134,9 +135,9 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <f12ffd4cf8933452ef13adae55d6d238a3069235.camel@surriel.com>
+In-Reply-To: <auDM5mvsb5ilIdsg@pedro-suse.lan>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -155,20 +156,34 @@ X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 10/27/26 03:43, Rik van Riel wrote:
-> On Tue, 2026-10-27 at 00:17 +0100, David Hildenbrand (Arm) wrote:
+On 10/27/26 17:10, Pedro Falcato wrote:
+> On Tue, Oct 27, 2026 at 12:17:27AM +0100, David Hildenbrand (Arm) wrote:
 >> From: Josef Bacik <josef@toxicpanda.com>
 >>
->> The bug was found by code inspection and has not been reproduced.
+>> An exclusive waiter in folio_wait_bit_common() can leave the wait loop
+>> because of a fatal signal, then be woken by folio_unlock() before
+>> finish_wait(). If the waker did not hand over the lock, the waiter returns
+>> -EINTR without trying to acquire it.
 >>
-> I can't say I'm surprised ;)
+>> folio_wake_bit() stops after waking the first exclusive waiter, so this
+>> loses the wakeup and can leave other waiters asleep indefinitely on an
+>> unlocked folio.
+>>
+>> After finish_wait(), let a waiter woken without a lock handoff try once
+>> more to acquire the lock. If successful, return success so the caller's
+>> eventual unlock wakes the next waiter. Otherwise, the current lock owner
+>> will do so.
 > 
-> I see clues that a most bunch of these issues
-> occasionally happen in our (rather large) fleet, 
-> but not this one.
+> Has this been reproduced? I feel like this would've been found out by now?
 
-IIRC it's mostly memory_failure() only that can trigger this today ... so not
-surprised :)
+Let me dig ... I don't find mention in the notes, but I was told that most of
+these things have reproducers.
+
+I guess it's harder to hit in practice, because you need a fatal signal and then
+keep the other waiter alive while nobody else will take that lock in a timely
+fashion.
+
+I asked codex to try writing one but it refuses for security reasons :)
 
 -- 
 Cheers,
