@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C81606A31A
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:12:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B940606A31B
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:12:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=To2weeVY;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JTRFZWEN
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Q1luDjsp;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=J+iP5PZb
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=GPbSDE+rH+T/JVinJss4hKIico2LfSk0gjJyp1HqzCo=; b=To2weeVYWMnUAIeszF5z0Ewqnl
-	MpTHCCrH/E9Cmrqnm6XHM6OryWBslPuV9kgM8X9tDbsk4yoZlcRAjljpxvkdmPAROy5jakJa8A2cI
-	An/1LnlilU0a3DHErSOLjQkeRTZvwYY6vW77jk8ipjwO4CuW8NhLHDfaZE8va/uQfsCLb5hUBbj6f
-	KDcMRniDGOazu/0bJhvwEJKIZzh7gdLdXbbNKRl+hL4t8+5nn+sdgFtJugokq3ZxBS2xeNWyyEKOV
-	2cr29T+yhSwQmNk3K7djg3qr4koqfuZeQNebtGgkLUQI9Bqs8FI4xw+kPLT5J8hvhFojoLiQQ6whq
-	EcNMnEQw==;
+	bh=zj/Mv6aXUjBoMZYd0eJh9B44Dd/H6hlsZebSXD3UVfU=; b=Q1luDjspXg0QHSEAqW2CzcAPks
+	HhsM7nDxBT3KJ15pcPQysJ4SCxXX/gIS6LsnRFMyLGSGWLjV2aMHVebdEuqzJHYkdyCmyWdN0//Nv
+	9eJXosSKXVVJkJ7uwloCteHeRCUJ5VRwXJsN210wH5/Uh9SpVludXdhI/HADsyJ1Tzs8RcVYYMdSO
+	aazb1Qo2ZcW9/orlkW3GwgyRpyxDhrMwHKmK3khJZ2Q11/mJyXz0fpe4B3eJreAbh2MsR/zMK8M7U
+	MTFsAMFjwob4F5EfLILkcYQll8g56jgjxhdsHmw5zOTvJfQUYrV0EyxaYyygilC2PlOZYUmgfjE6p
+	BmhdSUTQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUnj-00000003Umy-2xxh;
-	Tue, 27 Oct 2026 00:12:27 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xLUnn-00000003UqG-3Jsp;
+	Tue, 27 Oct 2026 00:12:31 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUni-00000003UmW-3fsX
+	id 1xLUnm-00000003UoX-0Vrx
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 00:12:26 +0000
+	Tue, 27 Oct 2026 00:12:30 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 4F710600CB;
+	by tor.source.kernel.org (Postfix) with ESMTP id 521A6601FE;
+	Tue, 27 Oct 2026 00:12:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 791881F01828;
 	Tue, 27 Oct 2026 00:12:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B2F81F01828;
-	Tue, 27 Oct 2026 00:12:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793059946;
-	bh=GPbSDE+rH+T/JVinJss4hKIico2LfSk0gjJyp1HqzCo=;
+	s=k20260515; t=1793059949;
+	bh=zj/Mv6aXUjBoMZYd0eJh9B44Dd/H6hlsZebSXD3UVfU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=JTRFZWENfK/UYblfOu614TAx43ENZ/ta3feZh2ClN4YgONy5kx8/aGGZ3yfLBqYhd
-	 T5t5dLZadlYOUoTT+tZbDnDCu3aqp6TcPiknU+1LZszHyhg0cwuGrMouNeHmphgHAg
-	 /7fk6QjR/SiodhWeD/aqNNE9UhsRC9KaubYRap4sH/bmCitrnxJ6yDc34jcB4WKIR9
-	 JpXoMppSCCoirZg82ANUL+TPeW/aWAWl/gMFL0V9lq+8fIEIvxRtzzEUAVYdYsgoxq
-	 /qg8K1zFCX/884FWWeG+yf+iEqj5AYmdjkERtaSqZ2wX5Z+oOHF5gYUlrs22/buVqR
-	 Jez5CTABwkyRQ==
-Message-ID: <sashiko-outbox-185889@kernel.org>
+	b=J+iP5PZbrXnlg8USL0R94A+LcSIf47hNeL368w3Ux2ctXr7HSwaUcS/eY3ngJp/ah
+	 NCw9moego/a0kRQUel+YVHWz9viJ8k0GiubRn6HKMKkJoy1BoHmALwOF/VcWuJdZzA
+	 xKMGjUJdQrr0lR2KgmQyGmQmMCWgaJA5YaNw4lhO9dLeFQDxzSe6jt1cQ0bk29AI5b
+	 2Wjt77PXW4uZPocnFy1hjWsN7sK474jAbncRM51QpH1d0xqIh6wQ0t+VJUuN9h+abs
+	 BX7o4HhM5clc2xZG83bf1RTYvloo+P3lQuyB2VyoYxo66tcvQgrV6oub9K1bv7NQC8
+	 PMNjgjxRHPCrg==
+Message-ID: <sashiko-outbox-185890@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 07/46] mm/filemap: don't lose a folio lock wakeup to a
- signal
+Subject: Re: [PATCH 08/46] mm/filemap: finish fault cleanup before dropping
+ the fault lock
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -74,13 +74,13 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261027-fixes_core-v1-7-6f74bec9a5bb@kernel.org>
+Cc: kexec@lists.infradead.org, "Chris Mason" <mason@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-8-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-7-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-8-6f74bec9a5bb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 00:12:23 +0000
+Date: Tue, 27 Oct 2026 00:12:26 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,35 +100,27 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> From: Josef Bacik <josef@toxicpanda.com>
+> On a retried fault, a fatal signal interrupting the folio lock wait
+> makes lock_folio_maybe_drop_mmap() drop the fault lock without pinning
+> the file. However, filemap_fault() may still need to release
+> mapping->invalidate_lock. A concurrent munmap() can release the last
+> file reference and free the mapping before that unlock.
 >=20
-> An exclusive waiter in folio_wait_bit_common() can leave the wait loop
-> because of a fatal signal, then be woken by folio_unlock() before
-> finish_wait(). If the waker did not hand over the lock, the waiter returns
-> -EINTR without trying to acquire it.
+> Defer dropping the fault lock to filemap_fault()'s retry cleanup, after
+> releasing invalidate_lock. If the fault lock was already dropped for
+> I/O, release the existing file reference instead. Keep the fault lock
+> held for FAULT_FLAG_RETRY_NOWAIT as before.
 >=20
-> folio_wake_bit() stops after waking the first exclusive waiter, so this
-> loses the wakeup and can leave other waiters asleep indefinitely on an
-> unlocked folio.
->=20
-> After finish_wait(), let a waiter woken without a lock handoff try once
-> more to acquire the lock. If successful, return success so the caller's
-> eventual unlock wakes the next waiter. Otherwise, the current lock owner
-> will do so.
->=20
-> Fix generated by an LLM and sent by Josef Bacik in private.
->=20
-> Fixes: 5ef64cc8987a ("mm: allow a controlled amount of unfairness in the =
-page lock")
+> Fixes: 730633f0b7f9 ("mm: Protect operations adding pages to page cache w=
+ith invalidate_lock")
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: clarify and simplify comment + description ]
+> Reported-by: Chris Mason <mason@kernel.org>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027-fixes_core=
--v1-0-6f74bec9a5bb@kernel.org?part=3D7
+-v1-0-6f74bec9a5bb@kernel.org?part=3D8
 
 
