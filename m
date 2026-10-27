@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118CF606A31A
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:13:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CF8606A31B
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:13:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=3qRnYWHc;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DMSCWcI/
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=nI328k5j;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZRyUjmLK
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,39 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=JF1pnqbXKSWwSGl+DNK/4b0ZXzkJHdp0SgzkvV9vFQE=; b=3qRnYWHcL+lPbvaYOzoaHsKECP
-	ZdtgKRn723zTSjeIogPK+G3F2Wye/8fcevGdMpAtWRkmNXR6UnEh3fWf/cdcO39Y1F5SNlBmfz1Hq
-	niYEIbyt2YoL0pLfQMGAZoCW0345R9NgxbOIOXEcYsfZFB+5RsfxU92D4pfuNCmaX8GzD6rOv2rjD
-	QmaD0e4VChAOb1AEvRvdrOB2c0lTdHOlfh8lF3Lf2Mup1km28HiV4GaWtKdfO2gXZxpCuWS2todlc
-	lPeHXp1deP+1knKvyczTMYfDj9D1RgGBk0RJd5/I47yCcQ8Q71hGlmrSBGOaCI5jr9Mds8DOrlXJD
-	Cjej+LiQ==;
+	bh=152UiJQPSd0WWhRV/RFm1y/NO86IHZgmxHUUAdsl+ps=; b=nI328k5jWF9t3jX3kbbZ+1Hkz2
+	BmGJRghXmN3X9qQPCEXBUy/O6IZhICHvKjAr9LvqJh6pIu0fGX90Z6N/ln2eqf4eXNo7faRUnxie0
+	CNAfENxQ1bEsG8kuCoSzHDjzlG1SOrRiWZCKH9z9iOm1+j2E5lIVTSJz51B1Ql3y8vhgSbDdEy+Y3
+	8JetXdm8fB3MB8RIhtBFkUSngACgyJFl03ebMx3zLB3mKuajK8PgRJ52Z3evrFJgluhh4X6IEQVG0
+	8NiOu8VUQKU3Ls0dKRsdIiJziHBtjkYqtcQJWLhv7eJ5AjiIYHc0jFNnwGxj+SHbt6lUamaB3pqbe
+	nT2FN35g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUot-00000003ViT-3C3P;
-	Tue, 27 Oct 2026 00:13:39 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xLUow-00000003VkV-3leC;
+	Tue, 27 Oct 2026 00:13:42 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUor-00000003VhG-40Wd
+	id 1xLUov-00000003VjH-24dQ
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 00:13:38 +0000
+	Tue, 27 Oct 2026 00:13:41 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 63991600CB;
+	by tor.source.kernel.org (Postfix) with ESMTP id E5834601F9;
+	Tue, 27 Oct 2026 00:13:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96C671F01829;
 	Tue, 27 Oct 2026 00:13:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6DB31F01828;
-	Tue, 27 Oct 2026 00:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793060017;
-	bh=JF1pnqbXKSWwSGl+DNK/4b0ZXzkJHdp0SgzkvV9vFQE=;
+	s=k20260515; t=1793060020;
+	bh=152UiJQPSd0WWhRV/RFm1y/NO86IHZgmxHUUAdsl+ps=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DMSCWcI/LXq6xezPOD50Fq/K7eij4grdi+M2W53YKw3qj9e3En0uoqPqK8FmFxxXm
-	 NYtbARTFW+554+inMCNmeJgFfHLrLuAuhiYvFAGyKnsnDimxXrCFrp6YX4ilKNbIA9
-	 ZDpUgMByPEbWP2srln+vRi5RBnSA4vLiH54y5in0m3UlS2kXMuUrFv9W/wk6vKYx0X
-	 GRCUdwFOdXMJWB4SgA7aLLK4Gcz3HIhY0ART2qB4HeGjGqoq/Ni3tXyWtbT2lLyjPr
-	 Fb7KduKFCxTDu9On+tb7GpKiR8IhYAL6O6gA3SSuxPaLsl4O+02Eofk32e9ysZoZM4
-	 EnTdLdrqkekjg==
-Message-ID: <sashiko-outbox-185911@kernel.org>
+	b=ZRyUjmLKO6p0ajm1auFxv4ji+h3ZpFgw9G26JhXbCIZX8HX7qXp36SwEgggVVFmKv
+	 vKBhqOSmKsU8O5ihXgosnp7WZq8hLaoIGnjdzJU0rxubBqb05OCbCO/kN8wY+hPDhL
+	 6l0ETjoc10eM5gJdwHodtu1vN9IsfI53ZFyimEOIoPQFPYYfeMj/4aBXRrRY7To8KN
+	 2AZJ1YdnI7p3OqbivDYMZNhlkci3c2vK0D1yjJc3ErNtXZ9EUALKQGVyK1C4jKueqh
+	 H1q661lzNkebcTERMagaCqqPkVLvXKMTJVE/e35lvHmw+lA2h8+So3tJuaDxRG+q3g
+	 M606/DjuWl3Fg==
+Message-ID: <sashiko-outbox-185912@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 29/46] mm/mremap: use pudp_huge_get_and_clear() when
- moving huge PUDs
+Subject: Re: [PATCH 30/46] mm/mremap: recheck PUDs under the page table lock
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -75,12 +74,12 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
 Cc: kexec@lists.infradead.org
-In-Reply-To: <20261027-fixes_core-v1-29-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-30-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-29-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-30-6f74bec9a5bb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 00:13:34 +0000
+Date: Tue, 27 Oct 2026 00:13:37 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,18 +99,29 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> move_huge_pud() reads the old PUD and clears it in separate operations.
-> Hardware accessed or dirty updates between those operations can be lost
-> when the saved entry is installed at the new address.
+> Once get_old_pud() is fixed to accept PUD leaves, unmap_mapping_range() c=
+an
+> clear a leaf between the lookup and the move. Holding mmap_lock in write
+> mode does not prevent this.
 >=20
-> The raw pud_clear() also bypasses page_table_check_pud_clear(), while
-> set_pud_at() accounts for the destination mapping. This leaves the
-> checker counts unbalanced for mappings tracked by page table checking.
+> If the zap happens before move_page_tables() tests the entry, an empty
+> PUD can reach move_normal_pud(), where pud_populate() turns it into a
+> present page table entry. If it happens after the test, move_huge_pud()
+> can instead try to move an empty entry, triggering CONFIG_DEBUG_VM
+> warnings on powerpc.
 >=20
-> To fix it, simply use pudp_huge_get_and_clear().
+> Recheck the source under the page table lock in both helpers. Treat an
+> empty source in move_normal_pud() as a completed move, and use
+> __pud_trans_huge_lock() in move_huge_pud().
 >=20
-> Fixes: 7d846db7d0e2 ("mm/mremap: convert huge PUD move to separate helper=
-")
+> In the future we should likely have the code lookup a PUD/PMD lockless
+> once, instead of multiple times, because one of the problematic bits
+> here is the:
+>=20
+> 	pud_trans_huge(*old_pud)
+>=20
+> Fixes: 0881ace292b6 ("mm/mremap: use pmd/pud_poplulate to update page tab=
+le entries")
 > Cc: stable@vger.kernel.org
 > Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
@@ -120,6 +130,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027-fixes_core=
--v1-0-6f74bec9a5bb@kernel.org?part=3D29
+-v1-0-6f74bec9a5bb@kernel.org?part=3D30
 
 
