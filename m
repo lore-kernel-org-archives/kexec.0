@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8423606A31B
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:12:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C81606A31A
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:12:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=kIB53WeB;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=k9IScvKf
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=To2weeVY;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JTRFZWEN
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=gb/1bbxcMbIHteWU8oNZytTv52FHzyDRDEb/Cge1uPQ=; b=kIB53WeB7tybakJuga6+qXROrZ
-	DtTOM2DEQmeYiyhDz80BuHLknTwopuhYv2Nofbwj/rsuixENTN6NBK4Nt1XhNtqyx7Sm6dYKmovTl
-	avZI8XmgrBsMTJs6D7PiWOburkWjQPuCYbuZJzOkfDoDO85uA69dIS1OymRajQmMrKd5ggyNyEiFK
-	bKvc4OUPuulFO3QK0zhNyJ1VcgyVgb3e2EfDPmEr4yV/ssECsOYrthTdP/rCt4GuZV7GFgx3RuzpN
-	wPgsFhH6OJqtQDbDQq7QwDQP1kUtpvFGHqrgzY9VYw0dwT0d3kSQ+MoQ6/OtTou25zLZvxNGJTQkf
-	etc8/mFw==;
+	bh=GPbSDE+rH+T/JVinJss4hKIico2LfSk0gjJyp1HqzCo=; b=To2weeVYWMnUAIeszF5z0Ewqnl
+	MpTHCCrH/E9Cmrqnm6XHM6OryWBslPuV9kgM8X9tDbsk4yoZlcRAjljpxvkdmPAROy5jakJa8A2cI
+	An/1LnlilU0a3DHErSOLjQkeRTZvwYY6vW77jk8ipjwO4CuW8NhLHDfaZE8va/uQfsCLb5hUBbj6f
+	KDcMRniDGOazu/0bJhvwEJKIZzh7gdLdXbbNKRl+hL4t8+5nn+sdgFtJugokq3ZxBS2xeNWyyEKOV
+	2cr29T+yhSwQmNk3K7djg3qr4koqfuZeQNebtGgkLUQI9Bqs8FI4xw+kPLT5J8hvhFojoLiQQ6whq
+	EcNMnEQw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUng-00000003UlG-2fCq;
-	Tue, 27 Oct 2026 00:12:24 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xLUnj-00000003Umy-2xxh;
+	Tue, 27 Oct 2026 00:12:27 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUnf-00000003Uk3-1kZS
+	id 1xLUni-00000003UmW-3fsX
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 00:12:23 +0000
+	Tue, 27 Oct 2026 00:12:26 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 2254640A3E;
+	by tor.source.kernel.org (Postfix) with ESMTP id 4F710600CB;
+	Tue, 27 Oct 2026 00:12:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B2F81F01828;
 	Tue, 27 Oct 2026 00:12:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BAF01F01828;
-	Tue, 27 Oct 2026 00:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793059943;
-	bh=gb/1bbxcMbIHteWU8oNZytTv52FHzyDRDEb/Cge1uPQ=;
+	s=k20260515; t=1793059946;
+	bh=GPbSDE+rH+T/JVinJss4hKIico2LfSk0gjJyp1HqzCo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=k9IScvKfAKljpKlN0EOWCqfU+DgWdAu9Gs6f8R44C+LAIZA+aNgu8aWbFEh7W9M6l
-	 3Z17WcJZKY5jZWyHtiPomLfjjajgVb5FPkqD4ix2QGwoWipZ8Iv/0dkTcoDiM65vMr
-	 Hr/3tm6PpRx8ZufUyY+lc2DWReV+nSWY1BmEGVw7+eFR86ks0cOPbNOsUtV+F/MFMa
-	 hC8sILrjiLVA3ab0N1D6SRGo09NID7JWS+2uZBan5FurZyGL3FQZ/5w1IV7K97kNib
-	 3lIeqxqqyM2QeHc60AxZ64JJAyFX/xpzEwuYdwriSkE+9/Ot5eZM2pwQ4s+4leFmcB
-	 8D4MOGSbJOtnA==
-Message-ID: <sashiko-outbox-185888@kernel.org>
+	b=JTRFZWENfK/UYblfOu614TAx43ENZ/ta3feZh2ClN4YgONy5kx8/aGGZ3yfLBqYhd
+	 T5t5dLZadlYOUoTT+tZbDnDCu3aqp6TcPiknU+1LZszHyhg0cwuGrMouNeHmphgHAg
+	 /7fk6QjR/SiodhWeD/aqNNE9UhsRC9KaubYRap4sH/bmCitrnxJ6yDc34jcB4WKIR9
+	 JpXoMppSCCoirZg82ANUL+TPeW/aWAWl/gMFL0V9lq+8fIEIvxRtzzEUAVYdYsgoxq
+	 /qg8K1zFCX/884FWWeG+yf+iEqj5AYmdjkERtaSqZ2wX5Z+oOHF5gYUlrs22/buVqR
+	 Jez5CTABwkyRQ==
+Message-ID: <sashiko-outbox-185889@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 06/46] mm/filemap: read mapping->a_ops->free_folio under
- i_lock
+Subject: Re: [PATCH 07/46] mm/filemap: don't lose a folio lock wakeup to a
+ signal
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -75,12 +75,12 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
 Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261027-fixes_core-v1-6-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-7-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-6-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-7-6f74bec9a5bb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 00:12:19 +0000
+Date: Tue, 27 Oct 2026 00:12:23 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,40 +102,33 @@ X-Archived-By: <archiver.kernel.org>
 
 > From: Josef Bacik <josef@toxicpanda.com>
 >=20
-> memory_failure() -> ... -> filemap_remove_folio() can read mapping->a_ops
-> after the inode has been freed. Once the folio is deleted from the
-> pagecache it no longer pins the mapping, so after i_lock is dropped
-> e.g., a concurrent final iput() can evict and free the inode before
-> filemap_free_folio() looks up mapping->a_ops->free_folio.
+> An exclusive waiter in folio_wait_bit_common() can leave the wait loop
+> because of a fatal signal, then be woken by folio_unlock() before
+> finish_wait(). If the waker did not hand over the lock, the waiter returns
+> -EINTR without trying to acquire it.
 >=20
-> Most callers hold a reference on the inode, but not all.
+> folio_wake_bit() stops after waking the first exclusive waiter, so this
+> loses the wakeup and can leave other waiters asleep indefinitely on an
+> unlocked folio.
 >=20
-> Documentation/filesystems/vfs.rst explicitly states that ->free_folio()
-> must not assume the original address_space mapping still exists.
->=20
-> Fix it by loading ->free_folio while i_lock is still held, similar to
-> what folio_unmap_invalidate() does.
->=20
-> Inline filemap_free_folio() into its remaining caller such that
-> delete_from_page_cache_batch() also just loads the callback before
-> dropping the i_lock.
->=20
-> The bug was found by code inspection and has not been reproduced.
+> After finish_wait(), let a waiter woken without a lock handoff try once
+> more to acquire the lock. If successful, return success so the caller's
+> eventual unlock wakes the next waiter. Otherwise, the current lock owner
+> will do so.
 >=20
 > Fix generated by an LLM and sent by Josef Bacik in private.
 >=20
-> Fixes: 59c66c5f8c4f ("mm: factor out page cache page freeing into a separ=
-ate function")
+> Fixes: 5ef64cc8987a ("mm: allow a controlled amount of unfairness in the =
+page lock")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: get rid of filemap_free_folio() entirely; improve patch descript=
-ion ]
+> [ david: clarify and simplify comment + description ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027-fixes_core=
--v1-0-6f74bec9a5bb@kernel.org?part=3D6
+-v1-0-6f74bec9a5bb@kernel.org?part=3D7
 
 
