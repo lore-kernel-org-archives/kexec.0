@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645D8606A31A
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:13:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A66606A31A
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:13:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=lKeU7871;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=U70lx+73
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=q2a3EIzB;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XEvdcOcP
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=VTvU6qW9g7JLlCdqmBcDVKZfOal5ZUhUhwQCM6u7o48=; b=lKeU7871ky0Ze7BsxgeGmof0s3
-	SUxFVTTvkRxBSE19BpY8sqE3/rr+GqhfnrPNjA6Id7jUt3YDpwep00xpfkWCQGRe2CvGaBRSKaGRF
-	yNgVlkFeLRxSOonYxvehZvWHXZNSkISqwUnMfEYlPAnzXfjSpWsyXIOh4zzhZ56hS6+mQiNq4no8R
-	hFV9/OGzafiafeYrYOzoL1T7XJG+nSME/1Tq+WX/0ABC5w/Xwe5gJEdV941KSbui2FUm4F4CZF2TU
-	q8fB4dqvsm5aVrDarlg5c7HT7af6jim/YLd6IqDtb7FnS1qzdOYKY6hIPAvm7goEKDNnCPk2o5Msh
-	mxDtv1TQ==;
+	bh=+uHPiiVOPEX6TlBwZCkGi/vjJP+isOItNI0C4y+ID4I=; b=q2a3EIzBTL9JuHg8zSqXIMoiE2
+	JyH668JzCz6OD+Yk4jExuUHzrfJbXgky7/WGlsDzSq2BrS6EAcarugzxLyL9gMo8EKqt2yuYO2qfs
+	z51nUcO4ZS6J4MMuU4rcoQhyRLMFHDuzIzQUjW+8X3IjE0w/EurTUTy3TqD+7h/jvYwfa+hO0EpSr
+	1FGIYn/xSjG5h9vRkfQwb8HwaYMjtRCFXzBGSCSISYl75LIUA3aDhize/89YODP0li1ZyWF8/Wtbp
+	TxtPwhlobOGdHH7h1ciHdICvtptI5h1WmBhW9GwWuAm4POZAA8EP3pHQ6Tsh6ZrwzCILnEKfZqxpY
+	tWpZAO2g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUof-00000003VYG-0DzS;
-	Tue, 27 Oct 2026 00:13:25 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xLUoj-00000003Vb8-0lh3;
+	Tue, 27 Oct 2026 00:13:29 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUoe-00000003VXi-1FFV
+	id 1xLUoh-00000003Va8-2lbC
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 00:13:24 +0000
+	Tue, 27 Oct 2026 00:13:27 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id B8643600DA;
+	by sea.source.kernel.org (Postfix) with ESMTP id 5A14A42A40;
+	Tue, 27 Oct 2026 00:13:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E89921F01825;
 	Tue, 27 Oct 2026 00:13:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEF6E1F01825;
-	Tue, 27 Oct 2026 00:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793060003;
-	bh=VTvU6qW9g7JLlCdqmBcDVKZfOal5ZUhUhwQCM6u7o48=;
+	s=k20260515; t=1793060007;
+	bh=+uHPiiVOPEX6TlBwZCkGi/vjJP+isOItNI0C4y+ID4I=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=U70lx+73oMWUbz1Zk/6binrbPvLhUei/UTb0qakokdSgC9LwVL+lVXKAQ9ZCghgjm
-	 oRSlXtPzkfDPLshMIEfalsGadMa4V8wjV9MY00sUcACbDHqNtMy5PLe744M/essBXe
-	 JjBYh6tI8Aeyw95VUpJQ1NXW9kSdPWuIBwwjXd5GeKEJ8WYpbErXuNUskRVsiMz2Ow
-	 CXoxdT3lDIFJ53rlKOgQJ4TTycDwum0jJN0neIHcgbEUzIQKbKKugP4PQ5bxB6Z7lT
-	 yxqgOfOAFgWSFhCfeETWLBk/Jl7zDQxM62b+oYqcdrQfS9+2c02lveex6QT206DYF/
-	 OsINmKxMRqJEQ==
-Message-ID: <sashiko-outbox-185907@kernel.org>
+	b=XEvdcOcPPUs0wZQmklC94L2LNGguGfA8FiNmMOudhD8QyycpgtxqwBpp8TZ6975iT
+	 +5DLP0A5uFMz4OKXItdsQLHFvpHBUwvor93+8pqYMWOxph6LOBSlw6Nl4KZlbDJKJV
+	 8q7RrpKdTzBmWFyJwmFYCeL0QrAPozdZ/kZoz01BLu3xL+2KqgnE5jQeQtaFXZlROu
+	 Lg7k3kw+/jh/M10t5GSYhUV5xCpcd8Jh4AOXHPHbtCrZOHIbs2xtg47yKiaW4WzFFW
+	 PktnPyj5r5Mh5h/2jwB882gCddaOdYob2GzDUlOzl3WlvYRFpcD6+Nj/bWvpVlyd0O
+	 EoRQ6PkzejXNg==
+Message-ID: <sashiko-outbox-185908@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 25/46] mm/userfaultfd: wake waiters when registration
- modes are removed
+Subject: Re: [PATCH 26/46] mm/mmu_gather: fix flushing ranges with 4 GiB or
+ larger
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -74,13 +74,13 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org
-In-Reply-To: <20261027-fixes_core-v1-25-6f74bec9a5bb@kernel.org>
+Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
+In-Reply-To: <20261027-fixes_core-v1-26-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-25-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-26-6f74bec9a5bb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 00:13:20 +0000
+Date: Tue, 27 Oct 2026 00:13:23 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,29 +100,35 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> UFFDIO_REGISTER can replace MISSING or MINOR tracking without waking
-> faults that are already queued. For example, switching an anonymous
-> range from MISSING to WP leaves a missing-fault waiter asleep until
-> userspace explicitly wakes it.
+> From: Josef Bacik <josef@toxicpanda.com>
 >=20
-> When a registration change removes a UFFD mode, wake waiters in the
-> affected interval after updating the VMA. The VMA is write-locked at
-> this point, so no new faults can queue under the old modes and woken
-> threads cannot retry until mmap_write_unlock(). Waiters for retained
-> modes in the same interval may also wake and refault.
+> __tlb_adjust_range() takes the size of the range which has to be flushed
+> as an unsigned int. Its callers, tlb_flush_{pte,pmd,pud,p4d}_range(), get
+> and pass an unsigned long. Consequently, a range that is 4 GiB or larger
+> gets truncated, possibly to 0.
 >=20
-> The hang reproduces for MISSING-to-WP and MINOR-to-MISSING transitions,
-> with both read and unread fault events.
+> On arm64 with hugetlb, a 64k kernel can flush 16 GiB hugetlb PMDs, and a
+> 16k kernel can flush 64 GiB PUDs through tlb_unshare_pmd_ptdesc(). So
+> at least these two scenarios are affected.
 >=20
-> Fixes: 63b2d4174c4a ("userfaultfd: wp: add the writeprotect API to userfa=
-ultfd ioctl")
+> Fix it by flushing the proper range instead of the truncated one.
+>=20
+> Fix generated by an LLM and sent by Josef Bacik in private.
+>=20
+> Fixes: b528e4b6405b ("mm/hugetlb: add tlb_remove_hugetlb_entry for handli=
+ng hugetlb pages")
+> Fixes: 8ce720d5bd91 ("mm/hugetlb: fix excessive IPI broadcasts when unsha=
+ring PMD tables using mmu_gather")
 > Cc: stable@vger.kernel.org
+> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> [ david: use two-tab indent, simplify description ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027-fixes_core=
--v1-0-6f74bec9a5bb@kernel.org?part=3D25
+-v1-0-6f74bec9a5bb@kernel.org?part=3D26
 
 
