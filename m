@@ -2,88 +2,139 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D86606A334
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 08:51:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16571606A31A
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 08:52:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=vfte8Ljy;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cLX5cty9
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=j3FrXccQ;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Reqkf6cL
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Unsubscribe-Post:List-Owner;
-	bh=lc0U5Ze+hBCT9T6cAf8QTcqfqTu5UwDLhLRH+Lp9NjM=; b=vfte8LjylkejJ2pqIv4SOOISGw
-	Q0QcDYUW2QFQqIDeOOLTiHeig0nlLkBYTFwAZEv/L290wlIgQrhBJjsLRocFPqv1dg0rucJTyOuFF
-	62SODePLUs66s3VzS/os+nR4ohUR11af9DmaGDVfU1CHYQw4+Zmg92lACx1uX640zKhpA1pH+otfs
-	noSkDY2g1kaIURgj3c7OhLCwEAaXFsJ2ErU8I/shx3FkdLMnbaknM0Dswg3hJPcfLH6qsR4ly60Gl
-	6ruId5GnAT1zAMUfwM1b1ioyYc0jq+z2+ZGYkSmlmAzfFm57bDXf7Rl5A2Tm5SvY8hh3xS/eVXZrj
-	vvBmkG8g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=H4uQku64KgXUJNfYEY0MKCka2gtiYaG22BFRUPfvLhU=; b=j3FrXccQxNJTzW
+	f9Ej1F1xdeBYk+HX2gNsIcCQ6YAxrmERd3bhPWP1dIvnLj+8ICAZBWmG/ieqTGBwRDfX9t7x/Hb6G
+	/fDj5k+WDn92lYRxOiqpZ5c38a7ujoOVHGm4Yuhmb88nI1o3lY2UdWEw48VEri7kiwr6jPF01ON/f
+	iJ5GJEzpxnnl3XFpRvWR+SK6LjH9o1Q6HNLnP3T9nl2eQ7aNHJtJ5hbfHpgjXhLMurHnnrngeIXQq
+	WsHSPy/odruHym4vcp/Ll2gPih2390UuNqgniV9RE636K47ryQeaaKG0Dx9z+0RGggFnvIasAMBB8
+	w/OmkapY1ZfHuhNJGZcg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLcte-000000046Cj-24uF;
-	Tue, 27 Oct 2026 08:51:06 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xLcvH-000000046R2-3M1O;
+	Tue, 27 Oct 2026 08:52:47 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLctd-000000046CN-3BeX
+	id 1xLcvG-000000046Qa-14w4
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 08:51:05 +0000
+	Tue, 27 Oct 2026 08:52:46 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 54517601F9;
-	Tue, 27 Oct 2026 08:51:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 370ED1F01825;
-	Tue, 27 Oct 2026 08:50:49 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id A2E7D4179A;
+	Tue, 27 Oct 2026 08:52:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A76E1F01829;
+	Tue, 27 Oct 2026 08:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793091064;
-	bh=lc0U5Ze+hBCT9T6cAf8QTcqfqTu5UwDLhLRH+Lp9NjM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=cLX5cty9Fes4nyGOhdTXTwUi4CjHh2d6Exjv+rOUNmJ1hOpq301ah/59VYJa3KAfa
-	 0JAFnIYv5q6uCZJiWZ7/JnzC3pOPhPL5VdEq05fzYEQAfU8x5PjoaLGCbo4oJkSshy
-	 aEyuswfa3kOJCEFW345rfcWjsyhvaijqqaHgik6uB7QOrxdB7sJV1oJ6I3Q0c1V+Ry
-	 Cf3Ekq4j3MW2BWPpctWVOXD4r4MRy4tI0wpG7A71nGLVk4q5d74j9EcT8h6eyujZ5T
-	 xnvfCFG95f/Qz4H2P0ATu2ppTZylFpdC3r3f636dunxIG7AvtZ7dC6rCzDfglAN4g9
-	 pK7u8ZerdMAkQ==
-Date: Tue, 27 Oct 2026 08:50:46 +0000
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Hugh Dickins <hughd@google.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
-	Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
-	Oscar Salvador <osalvador@suse.de>, Minchan Kim <minchan@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Chris Li <chrisl@kernel.org>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Youngjun Park <youngjun.park@lge.com>, Gregory Price <gourry@gourry.net>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, Chris Mason <mason@kernel.org>, 
-	stable@vger.kernel.org
-Subject: Re: [PATCH 28/46] mm/mmu_notifier: set ->mm only after mmgrab()
-Message-ID: <auBl3iJyp0RQ-tEA@gremlin>
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-28-6f74bec9a5bb@kernel.org>
+	s=k20260515; t=1793091165;
+	bh=H4uQku64KgXUJNfYEY0MKCka2gtiYaG22BFRUPfvLhU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=Reqkf6cLUo47ByHdJHPu47JBgsXyfv03O05ygNtH/1uEb5Zhddy/ZsnNO0UElblzo
+	 mgmZT9zzzD8my5fdzGV4tMVDTUvKGt7OsqtNzeSV80JmoMTNqsSYnekKt4n0YG6TzW
+	 JPT/KXAUpyZzRZELwgHqpNAYmqFRsPE733dOUeCnNY67dtyPY9oIdzHEoIclGTyyRh
+	 OVPdS4ZaRNv0cv3sDiwpb5LcsnjEl46WcqBh9BceHAXVS2/1+1iL9XiksmDHOo+7Ps
+	 Om5aPqe815FZIKNmO+ZY2efasAaPLbQegShObJdcYpdu5oiPW+qReDofiwjgjEAquc
+	 BuJqgG6zaydWw==
+Message-ID: <da2a2acf-f9da-489d-97c3-829b6f73fa52@kernel.org>
+Date: Tue, 27 Oct 2026 09:52:27 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261027-fixes_core-v1-28-6f74bec9a5bb@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/46] mm/mglru: don't use stack pointers when walking PUD
+ and PMD tables
+To: sashiko-reviews@lists.linux.dev, Andrew Morton
+ <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
+ Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
+ <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
+ Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>,
+ Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
+ Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
+ Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
+ Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Roman Gushchin <roman.gushchin@linux.dev>
+Cc: kexec@lists.infradead.org, Josef Bacik <josef@toxicpanda.com>
+References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-1-6f74bec9a5bb@kernel.org>
+ <sashiko-outbox-185883@kernel.org>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <sashiko-outbox-185883@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,73 +145,60 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-16.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Tue, Oct 27, 2026 at 12:17:48AM +0100, David Hildenbrand (Arm) wrote:
-> From: Chris Mason <mason@kernel.org>
->
-> Radeon uses a non-NULL notifier->mm to decide whether to call
-> mmu_interval_notifier_remove() when freeing a buffer object.
-> __mmu_interval_notifier_insert() sets ->mm before validating the range,
-> so a wrapping userptr range can leave ->mm set after insertion fails.
-> Cleanup then tries to remove an unregistered notifier for which no mm
-> reference was acquired.
->
-> Set ->mm only after mmgrab(), once insertion can no longer fail. While
-> we could fix radeon's code instead, setting ->mm on success only makes
-> the code more robust.
->
-> Fix generated by an LLM and sent by Chris Mason in private.
->
-> Fixes: 3506ff69c3ec ("drm/radeon: use mmu_interval_notifier_insert")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Chris Mason <mason@kernel.org>
-> [ david: simplify description ]
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+On 10/27/26 01:12, sashiko-bot@kernel.org wrote:
+>> From: Josef Bacik <josef@toxicpanda.com>
+>>
+>> MGLRU passes stack copies of page-table entries in walk_pud_range() and
+>> walk_pmd_range() when walking to the next level. These copies can become
+>> stale when khugepaged or MADV_DONTNEED (CONFIG_PT_RECLAIM) removes a PTE
+>> table concurrently.
+>>
+>> This pattern dates back to commit bd74fdaea146 ("mm: multi-gen LRU:
+>> support page table walks"). Likely, earlier locking masked the latent
+>> bug. Later changes exposed it: commit 1d65b771bc08 ("mm/khugepaged:
+>> retract_page_tables() without mmap or vma lock") allowed concurrent
+>> retraction, and commit cf4a65539c13 ("memcg-v1: no need for memcg locking
+>> for MGLRU") dropped the walker's outer RCU protection.
+>>
+>> The fix is simple, so just fix the original commit so we don't have to
+>> speculate. To fix it, pass the actual PMD/PUD pointers. This restores the
+>> RCU-protected lookup and validation against the live PMD. Note that the PUD
+>> handling is required as well to handle folded page tables correctly in all
+>> cases.
+>>
+>> Fix generated by an LLM and sent by Josef Bacik in private.
+>>
+>> Fixes: bd74fdaea146 ("mm: multi-gen LRU: support page table walks")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+>> [ david: handle walk_pud_range() as well, clarify+simplify description,
+>>          adjust Fixes: ]
+>> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> 
+> Sashiko has reviewed this patch and found no issues.
+> 
 
-Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+@Roman 46 useless emails from Sashiko.
 
-> ---
->  mm/mmu_notifier.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
-> index 2e20f88e162d7..a7bae5de5fedc 100644
-> --- a/mm/mmu_notifier.c
-> +++ b/mm/mmu_notifier.c
-> @@ -947,7 +947,6 @@ static int __mmu_interval_notifier_insert(
->  	struct mmu_notifier_subscriptions *subscriptions, unsigned long start,
->  	unsigned long length, const struct mmu_interval_notifier_ops *ops)
->  {
-> -	interval_sub->mm = mm;
->  	interval_sub->ops = ops;
->  	RB_CLEAR_NODE(&interval_sub->interval_tree.rb);
->  	interval_sub->interval_tree.start = start;
-> @@ -964,8 +963,12 @@ static int __mmu_interval_notifier_insert(
->  	if (WARN_ON(atomic_read(&mm->mm_users) <= 0))
->  		return -EINVAL;
->
-> -	/* pairs with mmdrop in mmu_interval_notifier_remove() */
-> +	/*
-> +	 * Pairs with mmdrop in mmu_interval_notifier_remove(). Drivers take a
-> +	 * non-NULL ->mm for "registered", so set it only with the reference.
-> +	 */
->  	mmgrab(mm);
-> +	interval_sub->mm = mm;
->
->  	/*
->  	 * If some invalidate_range_start/end region is going on in parallel
->
-> --
-> 2.43.0
->
+Why can another list overwrite something that is more restrictive?
 
---
-Cheers, Lorenzo
+I guess I can teach my filters to throw all of these mails into the trash, where
+they belong. Unless we keep changing their content.
+
+But there is literally 0 value in these per-patch "no found issues" mails.
+
+There are just entirely stupid.
+
+-- 
+Cheers,
+
+David
 
