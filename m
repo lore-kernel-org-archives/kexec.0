@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA8E606A31A
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:13:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645D8606A31A
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:13:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=3Ww+FN9B;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RGdu2NbG
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=lKeU7871;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=U70lx+73
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,39 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=jAyrHUYfBAnH2BNQmpx089cMnjdmu5oEYRovd0YZNSA=; b=3Ww+FN9BQjgwE1yUBEkiKWxAKu
-	zswbb1VQFoiAMwxh/QYIMNf4i8w2w6WXQhdYAmOeuc+KFSR7lHfNnDv0n3+PPlmHigqeG3oSevjOQ
-	YeAc64/8EiM1IU/8oCLUX6M1nEgnmaLLaawIcvxy36S0fc85Si07bFKPjJJFvRf4BOMSan7Z7pbD7
-	DnA/peochtAT4pGZjlYmDsfkDIcVm+Z8JHYVbNc5d4kLQfnJhiJHdaw+/vZDM6a8D6dN8tZcfT7qz
-	NSdzRWohg25Rfz978yq7jpmLhff/sF5GRklatiT0sNB92O+Qd5eKCuZMyTaA9iE1mkH2jP9d6B1cT
-	/t6e0/Ow==;
+	bh=VTvU6qW9g7JLlCdqmBcDVKZfOal5ZUhUhwQCM6u7o48=; b=lKeU7871ky0Ze7BsxgeGmof0s3
+	SUxFVTTvkRxBSE19BpY8sqE3/rr+GqhfnrPNjA6Id7jUt3YDpwep00xpfkWCQGRe2CvGaBRSKaGRF
+	yNgVlkFeLRxSOonYxvehZvWHXZNSkISqwUnMfEYlPAnzXfjSpWsyXIOh4zzhZ56hS6+mQiNq4no8R
+	hFV9/OGzafiafeYrYOzoL1T7XJG+nSME/1Tq+WX/0ABC5w/Xwe5gJEdV941KSbui2FUm4F4CZF2TU
+	q8fB4dqvsm5aVrDarlg5c7HT7af6jim/YLd6IqDtb7FnS1qzdOYKY6hIPAvm7goEKDNnCPk2o5Msh
+	mxDtv1TQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUob-00000003VWF-41ss;
-	Tue, 27 Oct 2026 00:13:21 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xLUof-00000003VYG-0DzS;
+	Tue, 27 Oct 2026 00:13:25 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUoa-00000003VVA-2fn3
+	id 1xLUoe-00000003VXi-1FFV
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 00:13:20 +0000
+	Tue, 27 Oct 2026 00:13:24 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 62D09401AC;
+	by tor.source.kernel.org (Postfix) with ESMTP id B8643600DA;
+	Tue, 27 Oct 2026 00:13:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEF6E1F01825;
 	Tue, 27 Oct 2026 00:13:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CB491F01828;
-	Tue, 27 Oct 2026 00:13:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793060000;
-	bh=jAyrHUYfBAnH2BNQmpx089cMnjdmu5oEYRovd0YZNSA=;
+	s=k20260515; t=1793060003;
+	bh=VTvU6qW9g7JLlCdqmBcDVKZfOal5ZUhUhwQCM6u7o48=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=RGdu2NbGf10kuSJVzVqYu9h2nQ6j0KGfl2bV4qlcBoaKtkbZQrpIF96l8wUogi+TQ
-	 k7yB4OCNXggnCYX0Bm47u587sWmLqUTLO/gijkrGLHv13tTsE0LFemBAi+Z24JecJS
-	 nzM5cyQt8tvx3qbkWd9A6F+y9I3cN3aTu4M/i2/F5R1+VlpXXr0yGUGEzAtgBjcR/9
-	 YG1jlPiGs27AoC/977ptqnIWpYRgIQSthW3aKSf9IAMJcuYfs6a8vhQgDWPeCPSpRJ
-	 a7Otd3f7ObBEUgeET+NqAtKtxj3722Q7k8GqmjYNiHVh0d/og0FBLEfitoYkH8W6aG
-	 ape5SOUVrdlsA==
-Message-ID: <sashiko-outbox-185906@kernel.org>
+	b=U70lx+73oMWUbz1Zk/6binrbPvLhUei/UTb0qakokdSgC9LwVL+lVXKAQ9ZCghgjm
+	 oRSlXtPzkfDPLshMIEfalsGadMa4V8wjV9MY00sUcACbDHqNtMy5PLe744M/essBXe
+	 JjBYh6tI8Aeyw95VUpJQ1NXW9kSdPWuIBwwjXd5GeKEJ8WYpbErXuNUskRVsiMz2Ow
+	 CXoxdT3lDIFJ53rlKOgQJ4TTycDwum0jJN0neIHcgbEUzIQKbKKugP4PQ5bxB6Z7lT
+	 yxqgOfOAFgWSFhCfeETWLBk/Jl7zDQxM62b+oYqcdrQfS9+2c02lveex6QT206DYF/
+	 OsINmKxMRqJEQ==
+Message-ID: <sashiko-outbox-185907@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 24/46] mm/userfaultfd: wake all waiters on unregister
+Subject: Re: [PATCH 25/46] mm/userfaultfd: wake waiters when registration
+ modes are removed
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -73,13 +74,13 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261027-fixes_core-v1-24-6f74bec9a5bb@kernel.org>
+Cc: kexec@lists.infradead.org
+In-Reply-To: <20261027-fixes_core-v1-25-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-24-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-25-6f74bec9a5bb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 00:13:16 +0000
+Date: Tue, 27 Oct 2026 00:13:20 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,30 +100,29 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> From: Josef Bacik <josef@toxicpanda.com>
+> UFFDIO_REGISTER can replace MISSING or MINOR tracking without waking
+> faults that are already queued. For example, switching an anonymous
+> range from MISSING to WP leaves a missing-fault waiter asleep until
+> userspace explicitly wakes it.
 >=20
-> UFFDIO_UNREGISTER only wakes pending faults if VM_UFFD_MISSING is set.
-> Threads waiting on write-protect, minor or RWP faults can therefore remain
-> asleep after unregistering a range that does not track missing faults.
+> When a registration change removes a UFFD mode, wake waiters in the
+> affected interval after updating the VMA. The VMA is write-locked at
+> this point, so no new faults can queue under the old modes and woken
+> threads cannot retry until mmap_write_unlock(). Waiters for retained
+> modes in the same interval may also wake and refault.
 >=20
-> Wake pending faults regardless of the registration mode so they can retry
-> without an explicit UFFDIO_WAKE or closing the userfaultfd. This matches
-> the existing behavior for missing faults, including removing unread fault
-> messages for the woken waiters.
->=20
-> Fix generated by an LLM and sent by Josef Bacik in private.
+> The hang reproduces for MISSING-to-WP and MINOR-to-MISSING transitions,
+> with both read and unread fault events.
 >=20
 > Fixes: 63b2d4174c4a ("userfaultfd: wp: add the writeprotect API to userfa=
 ultfd ioctl")
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: rebase; simplify description ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027-fixes_core=
--v1-0-6f74bec9a5bb@kernel.org?part=3D24
+-v1-0-6f74bec9a5bb@kernel.org?part=3D25
 
 
