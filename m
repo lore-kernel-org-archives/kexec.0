@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F5F606A31F
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 02:44:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DDB606A31F
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 03:05:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=0Va/NDy1;
-	dkim=fail reason="signature verification failed" (2048-bit key, unprotected) header.d=surriel.com header.i=@surriel.com header.a=rsa-sha256 header.s=mail header.b=iBq+nqKL
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=vGwjBDaB;
+	dkim=fail reason="signature verification failed" (2048-bit key, unprotected) header.d=surriel.com header.i=@surriel.com header.a=rsa-sha256 header.s=mail header.b=RGgw4ROk
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=jD8NrEF10P2VtaMB8bhjtU6NtVeQsEVr6wPPMXQfP+A=; b=0Va/NDy1fZJQ9DK7CC1P+b0WjE
-	JyjXo5vNhGEQmp4CP5SPfRDpYJIszBuXIxYHHB437fpM4SpFYabC1UTM2bDLnR2MOfaAwmWKTdcMh
-	h9p91x9Ct+h9QokVbuozLIi2LNzBqta00G5LGYWrlTvmXEhT6Wd8m9OWAgeZUv1qTZB+EasEui4d0
-	wT6Ls4NP/4G/nMkFUfSggqhATTr5/grh1MLusqcGg1dGkpiTfPEQh5TzzpiDc+xsdQ9dkmItzzDeQ
-	yUFKpQIYoOnba+F3XJ3KJES0I0s8M1z4xUpybD/kbgUN9fcZWZ3Xf7GmTwwCbmYKICx1HZ/Izu2ow
-	jnMmaYww==;
+	bh=+m6MAN4UT0/EHYIpxyVZqteSVMfVdSNgFL/Qz2Lnr3Y=; b=vGwjBDaBTO5oGafRIH35NabmwH
+	PnD7MZzwG25vM8xgQKMYpE2qv10pI2VfzUR29mrD/4P9a2xeUbjV30w+rokuYLmUtZKo7keFgfJr2
+	d2aPetb6pYcZ5XOG2aK5ZAQmbiaOhgkEGRfBeKnnOmbCGxqfuy8osAHk8Wdlemst0+ZgQDQfTigK7
+	oxaINBY9o1q6KsO9fc0ieFgBCEryRtLzv4OlnsAPGt7Ja/8gqzh9AH1LiARHgAu93yMYaLcV/R7Xf
+	uYsw+s61e2V6MKY0pXRgpQ5snSf3qFXV8XMhL6i9AFDAQzD/49uzetMsCQwosAvgqx2+j6ur/KbFZ
+	CBFUSwCA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLXAw-00000003exR-3iLb;
-	Tue, 27 Oct 2026 02:44:34 +0000
+	id 1xLXUz-00000003gRP-1xFc;
+	Tue, 27 Oct 2026 03:05:17 +0000
 Received: from shelob.surriel.com ([96.67.55.147])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLXAu-00000003ewg-15Ky
+	id 1xLXUx-00000003gR1-1aTQ
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 02:44:33 +0000
+	Tue, 27 Oct 2026 03:05:16 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
 	; s=mail; h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:
 	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID; bh=jD8NrEF10P2VtaMB8bhjtU6NtVeQsEVr6wPPMXQfP+A=; b=iBq+nq
-	KLOEjbYYdUAPAEsZwkrsVlsMbau8sPaQUcFxapsXRqkp5x7L0HKbiz1V+JwuKcTR/GBqgaCvr71vs
-	Azl5exRlAEe+DimTQWh8fS0vwDU2CsiljZsMdUYZDAPvE5/hwXnoNhMGxlXeqfF7JYCSjK6mmcfeW
-	BfiPVgT3S4zTiGr3VU359pUEU7q0FHXgB6OThiw+NTjQPpMdcwrnSU5ZEyXwFVFYW0t+NalyqESRH
-	CfKP89P11ExVsiA3ldtFd1nVlkbgGl6/jisI5NTNJX9ju733TLXV4llbeM7Mjm7VlOJ93SU0QV4F4
-	bX5UR21h5xQnnQD/hzqAbQwGl8zw==;
+	:Resent-Message-ID; bh=+m6MAN4UT0/EHYIpxyVZqteSVMfVdSNgFL/Qz2Lnr3Y=; b=RGgw4R
+	OkD3cg0cf6P6MGLfRM+m5MvS+GJTc7UdWM+UQ6RguBHrPalIxkK7wcfHFWNFj7sZKNtnLm1zdBkgs
+	N8lTiw3w08GyTbklL3MkANvd0R5Vpa/l+ULy2OKc5dDDmCb0BJtK8atoHOWEbl0wIQckJdOqYAXI0
+	0pditX8YqoUTyxfvs46eYWQm0tlaMerwC9JI7aOGv9A3zaGQonfYqGEe8qQno7ZJP78jH6v4/N2JX
+	pNCEHk4WoVbuUeWjg1nuN86duV8apM2UIYOylgwQ0mmHgNptwLsypcm1xsZq+bvglC4XcRpdoLXKz
+	zVSK2VHrwJ/eQJhc2JFuU0IjUvoA==;
 Received: from [2601:18c:8100:a0e0:2541:b86e:2586:d219]
 	by shelob.surriel.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
 	(Exim 4.99.5)
 	(envelope-from <riel@surriel.com>)
-	id 1xLX9Q-0000000B2wR-2Z6a;
-	Tue, 27 Oct 2026 02:43:00 +0000
-Message-ID: <f12ffd4cf8933452ef13adae55d6d238a3069235.camel@surriel.com>
-Subject: Re: [PATCH 06/46] mm/filemap: read mapping->a_ops->free_folio under
- i_lock
+	id 1xLXTa-0000000B5QX-1toX;
+	Tue, 27 Oct 2026 03:03:50 +0000
+Message-ID: <8b09a67e95975a23d3a1eb9446030d758a1b5afe.camel@surriel.com>
+Subject: Re: [PATCH 07/46] mm/filemap: don't lose a folio lock wakeup to a
+ signal
 From: Rik van Riel <riel@surriel.com>
 To: "David Hildenbrand (Arm)" <david@kernel.org>, Andrew Morton	
  <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, Michal
@@ -82,10 +82,10 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  kexec@lists.infradead.org, 	linux-fsdevel@vger.kernel.org,
  linux-arch@vger.kernel.org, 	linux-cxl@vger.kernel.org, Josef Bacik
  <josef@toxicpanda.com>, 	stable@vger.kernel.org
-Date: Mon, 26 Oct 2026 22:43:00 -0400
-In-Reply-To: <20261027-fixes_core-v1-6-6f74bec9a5bb@kernel.org>
+Date: Mon, 26 Oct 2026 23:03:50 -0400
+In-Reply-To: <20261027-fixes_core-v1-7-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
-	 <20261027-fixes_core-v1-6-6f74bec9a5bb@kernel.org>
+	 <20261027-fixes_core-v1-7-6f74bec9a5bb@kernel.org>
 Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
  keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
  eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
@@ -116,9 +116,8 @@ User-Agent: Evolution 3.60.2 (3.60.2-2.fc44)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261026_194432_301685_9F9797F6 
-X-CRM114-Status: UNSURE (   8.37  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20261026_200515_423710_5C14A5D0 
+X-CRM114-Status: GOOD (  11.57  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -140,24 +139,35 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 On Tue, 2026-10-27 at 00:17 +0100, David Hildenbrand (Arm) wrote:
 > From: Josef Bacik <josef@toxicpanda.com>
 >=20
-> The bug was found by code inspection and has not been reproduced.
+> An exclusive waiter in folio_wait_bit_common() can leave the wait
+> loop
+> because of a fatal signal, then be woken by folio_unlock() before
+> finish_wait(). If the waker did not hand over the lock, the waiter
+> returns
+> -EINTR without trying to acquire it.
 >=20
-I can't say I'm surprised ;)
-
-I see clues that a most bunch of these issues
-occasionally happen in our (rather large) fleet,=C2=A0
-but not this one.
-
+> folio_wake_bit() stops after waking the first exclusive waiter, so
+> this
+> loses the wakeup and can leave other waiters asleep indefinitely on
+> an
+> unlocked folio.
+>=20
+> After finish_wait(), let a waiter woken without a lock handoff try
+> once
+> more to acquire the lock. If successful, return success so the
+> caller's
+> eventual unlock wakes the next waiter. Otherwise, the current lock
+> owner
+> will do so.
+>=20
 > Fix generated by an LLM and sent by Josef Bacik in private.
 >=20
-> Fixes: 59c66c5f8c4f ("mm: factor out page cache page freeing into a
-> separate function")
+> Fixes: 5ef64cc8987a ("mm: allow a controlled amount of unfairness in
+> the page lock")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: get rid of filemap_free_folio() entirely; improve patch
-> description ]
+> [ david: clarify and simplify comment + description ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
->=20
 
 Reviewed-by: Rik van Riel <riel@surriel.com>
 
