@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FE3606A31A
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 14:41:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95829606BA88
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 15:00:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=EmGON7eD;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F/aE3Kg9
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Ql7Vbd6M;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UnXLdq3k
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
@@ -14,36 +14,36 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Cxbcd97TigLbOc2nsbdYTtwGKr7cyQITuDlutqpOwp0=; b=EmGON7eDyiWPGr6eJHBizUN11D
-	jTwcJngMDG3xJtlYG/jT7pVz3ZFLMLj1sHeTFtoQGcK5rv+w1q3Wcs4T8lBE7tuKLhXPEIZ0daYUS
-	2NQJUMBKaq0qDElGiyhQXeYHA7kYNHuH8gYH6enIqvtEuvsYID145wArIaOl6d7DgsBCg9Q3mCc8r
-	dW8RJuMfJWuVXw4aVS0nFGbbxRdCybnMqr2H4T/Uwb/TJNAOJ5G0QtuLuDoNd6Q/9ou3WAz4NVjt3
-	/LFoLVKWJn5qPwAxRAYhqdw081BsXDbSRyJziQxS5zDd8VRfxZJqn75oYcjZdRkv1Y+PdohBAhNOo
-	5pN90Hdw==;
+	bh=qp+fSXor3rJtw8hGRhqYEuRFppHYbzFfezBhq/ClTY8=; b=Ql7Vbd6MiT9CgRBHq4y46Ot6HB
+	PfL/831vE9/7C8WfKhQu4Pr416QyDOQiweDWbtZHLAqoDQbhBNk5xg4cd2X9rTLpwXfMhKDeLSgwG
+	Z5JDMQx7m/ta+mB85tRhBOPRwawOcSGFgeYRq4HTHPTSS4Bd4z4WXz05QSzQzvLZrabU//RINmcnJ
+	r5XCOQdklapLIOCdktL8ChkrhGa5cARogSUugOmcIyq10Nme+rL2tysfyaJ3SUDicrUxGsvJyAo/w
+	2xYZU/7goYzfv+QH5W8xbfPA2zxb3k4xskyOrAh7RlvNUfWS9Yqc/tNN0Cc0KT3rzKlqmO8GmUTub
+	Bawe2feg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLiN2-000000053js-2WRy;
-	Tue, 27 Oct 2026 14:41:48 +0000
+	id 1xLiez-000000056AF-1NAc;
+	Tue, 27 Oct 2026 15:00:21 +0000
 Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLiN0-000000053jT-361H
+	id 1xLiex-0000000569l-42xp
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 14:41:46 +0000
+	Tue, 27 Oct 2026 15:00:20 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 1495641A3F;
-	Tue, 27 Oct 2026 14:41:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61A8B1F01825;
-	Tue, 27 Oct 2026 14:41:36 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 5EB4140AA7;
+	Tue, 27 Oct 2026 15:00:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C0151F01825;
+	Tue, 27 Oct 2026 15:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793112105;
-	bh=Cxbcd97TigLbOc2nsbdYTtwGKr7cyQITuDlutqpOwp0=;
+	s=k20260515; t=1793113219;
+	bh=qp+fSXor3rJtw8hGRhqYEuRFppHYbzFfezBhq/ClTY8=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=F/aE3Kg94sj9fXVFeMOGEhnFPh7IPM73CFA/LmgAAZfItP5Nw7PY1j3LmhUrie3RF
-	 WWOkZE/CrqgRjQtrY5czn2Xyhnu7Jhr5cpxZIRN6ucwFL7953eyR9cc+xJIfYeqrtx
-	 x427FQ040+6sFoWm3ZQYEETyJqIrMT+OQrZXuAnXJaqqyPl1iBQjI9L2UIFGYkQFmj
-	 rXT+tzW5xd2XQNYXVDL7CnDknr0SBZMXfP2tLX56GVF5sYE25tWUnjur3LSUQsNAM/
-	 e9FZ57Wpnn2LjlHGFOu9V+hCx07zuXfQscJu7g4AtCiXI1sCKypZwCMKvsYpJoK5pk
-	 vtVZ2ljYGxZvA==
+	b=UnXLdq3klaC+tZ2+JX6PBI45P7W7nF48+f9ADm70UzXvPsh4+dY2WhOicztPbMw7F
+	 SARjt9Oczq92TzB6tsLTcFdVUo5032qKNP4oINRE/Q8ajIBJ3KPA69x6ct5ZyaPihb
+	 dzmgq7TcIx1PWaY/d5t1JPP1sQw/8RZHDucCg/R/QFCmyDP2NXPW+F6S6AUKz2W+3t
+	 Dpk7PNOGHdNngY66tF6fRyZEMJsZsML0o3pMjD/NKndJzXXBZJwiuvk6Lr6JNZpq0X
+	 Vrc6vg4zteKiAqZrKEoQENifIVt/YUhXNNs100l6gLc3ci49cX4el5JejC4ULazFv4
+	 Ph+fkkfmpEbLw==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>,  Johannes Weiner
@@ -78,17 +78,16 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,  Johannes Weiner
  <ying.huang@linux.alibaba.com>,  Jason Gunthorpe <jgg@ziepe.ca>,
   linux-mm@kvack.org,  linux-kernel@vger.kernel.org,
   kexec@lists.infradead.org,  linux-fsdevel@vger.kernel.org,
-  linux-arch@vger.kernel.org,  linux-cxl@vger.kernel.org,
-  stable@vger.kernel.org,  Chris Mason <mason@kernel.org>
-Subject: Re: [PATCH 03/46] mm/memfd: check for real shmem inodes before
- accessing shmem state
-In-Reply-To: <20261027-fixes_core-v1-3-6f74bec9a5bb@kernel.org> (David
-	Hildenbrand's message of "Tue, 27 Oct 2026 00:17:23 +0100")
+  linux-arch@vger.kernel.org,  linux-cxl@vger.kernel.org,  Chris Mason
+ <mason@kernel.org>,  stable@vger.kernel.org
+Subject: Re: [PATCH 20/46] mm/gup: fix clearing folios in memfd_pin_folios()
+In-Reply-To: <20261027-fixes_core-v1-20-6f74bec9a5bb@kernel.org> (David
+	Hildenbrand's message of "Tue, 27 Oct 2026 00:17:40 +0100")
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
-	<20261027-fixes_core-v1-3-6f74bec9a5bb@kernel.org>
-Date: Tue, 27 Oct 2026 15:41:34 +0100
-Message-ID: <2vxzh5i7p5nl.fsf@kernel.org>
+	<20261027-fixes_core-v1-20-6f74bec9a5bb@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
+Date: Tue, 27 Oct 2026 16:00:08 +0100
+Message-ID: <2vxzbj8fp4sn.fsf@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -110,118 +109,62 @@ X-Spam-Status: No, score=-17.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Hi David,
-
 On Tue, Oct 27 2026, David Hildenbrand (Arm) wrote:
 
-> shmem_file() only checks a file's backing mapping. That mapping can belong
-> to another file, as with a Coda file backed by a tmpfs container after
-> mmap(). It does not establish that file_inode(file) is a shmem inode.
+> From: Chris Mason <mason@kernel.org>
 >
-> Seal handling and memfd preservation use this check before accessing
-> shmem inode state, so they can access an inode of the wrong type.
+> memfd_pin_folios() pins folios obtained directly from the page cache
+> without checking whether they are uptodate. However, shmem fallocate()
+> can leave newly allocated folios uncleared and not uptodate. Callers
+> such as udmabuf can then expose uninitialized memory to userspace.
 >
-> Add file_inode_is_shmem() to check the inode's file operations in both
-> paths. This identifies regular shmem inodes, including those used by
-> memfds and ordinary tmpfs files, independently of wrapper file operations.
-
-Why not update shmem_file() to do this check instead? Having a
-shmem_file() that might not always return the right result on a file
-seems like a landmine.
-
-For example, you missed check_memfd_seals() in udmabuf or
-memfd_pin_folios() in gup. Plus, someone later down the line might use
-shmem_file() without knowing this subtle problem, and we probably would
-miss it in review.
-
-For callers that only care about the mapping should then use
-shmem_mapping(). Perhaps that would be collapse_file() but TBH I don't
-really understand khugepaged all that much. All other callers of
-shmem_file() seem to care about the actual inode.
-
+> Clear non-uptodate folios and mark them uptodate under the folio lock
+> before returning them to the caller.
 >
-> Fixes: c49fcfcda8b5 ("mm/shmem: update file sealing comments and file checking")
-> Fixes: b3749f174d68 ("mm: memfd_luo: allow preserving memfd")
+> Fix generated by an LLM and sent by Chris Mason in private.
+>
+> Fixes: 89c1905d9c14 ("mm/gup: introduce memfd_pin_folios() for pinning memfd folios")
 > Cc: stable@vger.kernel.org
-> Reported-by: Chris Mason <mason@kernel.org>
+> Signed-off-by: Chris Mason <mason@kernel.org>
+> [ david: simplify description and comment ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 > ---
->  include/linux/shmem_fs.h | 6 ++++++
->  mm/memfd.c               | 8 +++++---
->  mm/memfd_luo.c           | 2 +-
->  mm/shmem.c               | 5 +++++
->  4 files changed, 17 insertions(+), 4 deletions(-)
+>  mm/gup.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 >
-> diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
-> index a7c7a96a7cbf9..2ceca7993e4f5 100644
-> --- a/include/linux/shmem_fs.h
-> +++ b/include/linux/shmem_fs.h
-> @@ -117,8 +117,14 @@ extern unsigned long shmem_get_unmapped_area(struct file *, unsigned long addr,
->  		unsigned long len, unsigned long pgoff, unsigned long flags);
->  extern int shmem_lock(struct file *file, int lock, struct ucounts *ucounts);
->  #ifdef CONFIG_SHMEM
-> +bool file_inode_is_shmem(const struct inode *inode);
->  bool shmem_mapping(const struct address_space *mapping);
->  #else
-> +static inline bool file_inode_is_shmem(const struct inode *inode)
-> +{
-> +	return false;
-> +}
+> diff --git a/mm/gup.c b/mm/gup.c
+> index efc9aa2654625..47e7ae152cdf1 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -3516,6 +3516,20 @@ long memfd_pin_folios(struct file *memfd, loff_t start, loff_t end,
+>  					goto err;
+>  				}
+>  
+> +				/*
+> +				 * fallocate() can leave folios in the
+> +				 * page cache that were never cleared.
+> +				 */
+> +				if (!folio_test_uptodate(folio)) {
+> +					folio_lock(folio);
+> +					if (!folio_test_uptodate(folio)) {
+> +						folio_zero_range(folio, 0, folio_size(folio));
+> +						flush_dcache_folio(folio);
+> +						folio_mark_uptodate(folio);
+> +					}
+> +					folio_unlock(folio);
+> +				}
 > +
->  static inline bool shmem_mapping(const struct address_space *mapping)
->  {
->  	return false;
-> diff --git a/mm/memfd.c b/mm/memfd.c
-> index 0f6fff004f5e4..7d2da23157003 100644
-> --- a/mm/memfd.c
-> +++ b/mm/memfd.c
-> @@ -211,12 +211,14 @@ static int memfd_wait_for_pins(struct address_space *mapping)
->  
->  static unsigned int *memfd_file_seals_ptr(struct file *file)
->  {
-> -	if (shmem_file(file))
-> -		return &SHMEM_I(file_inode(file))->seals;
-> +	struct inode *inode = file_inode(file);
-> +
-> +	if (file_inode_is_shmem(inode))
-> +		return &SHMEM_I(inode)->seals;
->  
->  #ifdef CONFIG_HUGETLBFS
->  	if (is_file_hugepages(file))
-> -		return &HUGETLBFS_I(file_inode(file))->seals;
-> +		return &HUGETLBFS_I(inode)->seals;
->  #endif
->  
->  	return NULL;
-> diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
-> index 59de210bee5f9..c0811407ce397 100644
-> --- a/mm/memfd_luo.c
-> +++ b/mm/memfd_luo.c
-> @@ -582,7 +582,7 @@ static bool memfd_luo_can_preserve(struct liveupdate_file_handler *handler,
->  {
->  	struct inode *inode = file_inode(file);
->  
-> -	return shmem_file(file) && !inode->i_nlink;
-> +	return file_inode_is_shmem(inode) && !inode->i_nlink;
->  }
->  
->  static unsigned long memfd_luo_get_id(struct file *file)
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index fadf23f9e21ed..0d41aac125df9 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -275,6 +275,11 @@ static const struct vm_operations_struct shmem_vm_ops;
->  static const struct vm_operations_struct shmem_anon_vm_ops;
->  static struct file_system_type shmem_fs_type;
->  
-> +bool file_inode_is_shmem(const struct inode *inode)
-> +{
-> +	return inode->i_fop == &shmem_file_operations;
-> +}
-> +
->  bool shmem_mapping(const struct address_space *mapping)
->  {
->  	return mapping->a_ops == &shmem_aops;
+
+Nit: this logic is repeated in a couple places in shmem.c and in
+memfd_luo.c. Perhaps it deserves a helper?
+
+Anyway, sounds like an important fix so don't make my nitpick stop you
+from landing this if you don't want to bother.
+
+Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+
+>  				if (nr_folios == 0)
+>  					*offset = offset_in_folio(folio, start);
 
 -- 
 Regards,
