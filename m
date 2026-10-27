@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE340606A322
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:14:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F578606A31A
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:14:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=qOtZvdKn;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=V8D5TG2q
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=WWMwwWKG;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X7SMplnL
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,39 +14,39 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=V4AbOjSd8nLqrtcumv1Oed6an9beVtdQXmRt91Erfqw=; b=qOtZvdKngqg2F6F1jpFAnx58j3
-	DzMh2ajkT3WsBpn+nwmv3oQgEhbqGedyric054cG/ERlBx4wAjnuko+sRtMBHQVftgW/Y3Z1zK/4N
-	Q3YAp8J6VQJ+On4stHKJ7BYCpnoFkHHzXIOW4z2ESwTFLAJ/dL215+W3H14eVllTpxoIOZ0FLtIXO
-	njsmXrdK4pv7hGXiMV6DP2o+cVu7VxWMvbH93srQ1av0wHPjg7SGdVeLjo6J3jH/FkUdh5EPHvsOl
-	1ok1YDDNyTiUA7920/lK/WXyuSWwGTXfvVXmhK79dIrgX6W+vOzaeIaImKPWvkusLH7ZH3lQwJKlZ
-	hhHnQE+Q==;
+	bh=w68zYkQOy3WmZccxDgV99fq/k2lUTuWnaa1zclXv+/I=; b=WWMwwWKGqzaQyXonyD7EHs7LfD
+	40jFdguePZx1h3D05EiyNE8Vyyj/Mt/7fbXzdbW29ulZRiEoLNgWf14Zsv78AosgAu+6RltngP8gm
+	+8TisOrDoTGD8+Cxu6M9rl1H8FyKxNUFFcYzB/vaH5KEfaCEU163grPYPnQYstylKt3HnBud1gcJZ
+	MDxITI+4xovs2wBdFvTgMAjLdANdy7jZyOiOhS4Km9wgX+kpuj0Jo1YxAyJP/SOSRNLfQeB5cE5ce
+	WmabzSjnfJvWsr9M9vZCT2bNIKgsokCsRZF0d6v55f1t+X8CjhX4YyUnkr+Jgx/cnxrbJiiMw8fDy
+	NSGCL2Kg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUpJ-00000003W1e-2TJH;
-	Tue, 27 Oct 2026 00:14:05 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xLUpM-00000003W44-2ufs;
+	Tue, 27 Oct 2026 00:14:08 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUpH-00000003W11-3sEm
+	id 1xLUpL-00000003W2u-1ffk
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 00:14:03 +0000
+	Tue, 27 Oct 2026 00:14:07 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id A4BA44322E;
+	by tor.source.kernel.org (Postfix) with ESMTP id CF4F660213;
+	Tue, 27 Oct 2026 00:14:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 047C31F01825;
 	Tue, 27 Oct 2026 00:14:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEC951F01828;
-	Tue, 27 Oct 2026 00:14:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793060043;
-	bh=V4AbOjSd8nLqrtcumv1Oed6an9beVtdQXmRt91Erfqw=;
+	s=k20260515; t=1793060046;
+	bh=w68zYkQOy3WmZccxDgV99fq/k2lUTuWnaa1zclXv+/I=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=V8D5TG2qYUAIB/BlTBUWx2qDQG4CnM5GhxgZiAzJlj6IHivJaSx5Lgpeb2H48flyJ
-	 gyDT6Ax27niFQCd1BQGb2TvrnuX12snyi9r8mj2/9iw0OJQhIbL4PbzbxNzJMcGdqH
-	 m0YHTjDArzysFONEjqiKHtF8ouQ3zwjgijdQcVKU34O63uMABKWxvzT2NiFhjDckFV
-	 iwHTVcke7B48plSr3pgS01pUaQRm8jsGvGWfu6ujIzc5cEicBPRFLhuPw9JjfzmTp9
-	 ODigG+4f9+YxGh+zqvwbbYW0eqXcE16s/1AI12+65ij3EwdOKXUiO6aSl0rOiJSahl
-	 QMZ6+Y9Q3Up0w==
-Message-ID: <sashiko-outbox-185919@kernel.org>
+	b=X7SMplnLDLNHa4l4dX2hqT1DVrjwCz1df4DTrOW13XR/5ocBpim7Wx63gsomsE6cE
+	 gbGhxLu2RO1dnHkJeI+Eqm2msYvY8KBEq+Beuwn3TqUET3Hq8R29hGVpktLiR4dJhJ
+	 P0t/Pc+GgSunsTjhhdQvF6DhapG+do/k8qwoAX6ng0cP3QeySyZAZpc5+Crzpv/2t7
+	 AsOTe5qYD2G2bzlbncPYcpkWPltuOaSvb+2BX7zrzPwuAw9Ly+6MQPvCGdPBTmIicg
+	 HDlfZ15pghThMUKYGtJ5pytF5GLrK234dEF6yH+7yrpo2ReCVuHmmxNqqvOzwseEjh
+	 iMHpZgydtGSIQ==
+Message-ID: <sashiko-outbox-185920@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 37/46] mm: fix deadlock of mremap() against UFFDIO_MOVE
+Subject: Re: [PATCH 38/46] mm/ksm: reset the unstable trees of all nodes
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -73,13 +73,13 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org, "Chris Mason" <mason@kernel.org>
-In-Reply-To: <20261027-fixes_core-v1-37-6f74bec9a5bb@kernel.org>
+Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
+In-Reply-To: <20261027-fixes_core-v1-38-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-37-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-38-6f74bec9a5bb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 00:14:00 +0000
+Date: Tue, 27 Oct 2026 00:14:03 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,38 +99,35 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> From: Chris Mason <mason@kernel.org>
+> Each full scan resets ksm_nr_node_ids unstable tree roots. Enabling
+> merge_across_nodes resets this count to 1, even if per-node roots were
+> previously allocated.
 >=20
-> With per-VMA locks, UFFDIO_MOVE can run concurrently with mremap()
-> on different VMAs in the same mm. Those VMAs can share page tables, so
-> both operations can acquire the same pair of page-table locks.
+> So when toggling "merge_across_nodes" 0 -> 1 -> 0, a scan that starts
+> while the setting is 1 and continues after switching back to 0 can
+> encounter stale unstable tree roots, resulting in UAF.
 >=20
-> UFFDIO_MOVE orders the locks by address, while mremap() takes the source
-> lock first. These conflicting orders can deadlock; mremap() holding
-> mmap_lock for writing no longer helps.
+> Only root is allowed to change "merge_across_nodes", and the documented
+> sequence is: "merge_across_nodes setting can be changed only when there
+> are no ksm shared pages in the system: set run 2 to unmerge pages first,
+> then to 1 after changing merge_across_nodes, to remerge according to the
+> new setting."
 >=20
-> Move double_pt_lock() and double_pt_unlock() to mm/internal.h and use
-> them for all page-table moves in mremap(). Preserve the source entry
-> checks after acquiring both locks. Remove the comments claiming that
-> exclusive mmap_lock makes lock ordering irrelevant.
+> Let's fix it by tracking in ksm_nr_node_ids the actual number of
+> allocated tree roots.
 >=20
-> In move_ptes(), make sure to just recheck source and destination PMD
-> after taking the locks and drop the overly-long comment.
+> remove_all_stable_nodes() and ksm_check_stable_tree() will now scan
+> more tree roots (skipping the empty ones), which is harmless.
 >=20
-> Fix generated by an LLM and sent by Chris Mason in private.
->=20
-> Fixes: 867a43a34ff8 ("userfaultfd: use per-vma locks in userfaultfd opera=
-tions")
+> Fixes: ef53d16cded7 ("ksm: allocate roots when needed")
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Chris Mason <mason@kernel.org>
-> [ david: use new helpers consistently; simplify description and comments;
->          move_ptes() fixup ]
+> Reported-by: Josef Bacik <josef@toxicpanda.com>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027-fixes_core=
--v1-0-6f74bec9a5bb@kernel.org?part=3D37
+-v1-0-6f74bec9a5bb@kernel.org?part=3D38
 
 
