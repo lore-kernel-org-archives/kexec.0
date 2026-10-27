@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5036606A323
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 02:06:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E88606A321
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 02:08:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=jPB5a+4t;
-	dkim=fail reason="signature verification failed" (2048-bit key, unprotected) header.d=surriel.com header.i=@surriel.com header.a=rsa-sha256 header.s=mail header.b=CWZKUMOl
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=BlGpRB6I;
+	dkim=fail reason="signature verification failed" (2048-bit key, unprotected) header.d=surriel.com header.i=@surriel.com header.a=rsa-sha256 header.s=mail header.b=I4TZvnuF
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
@@ -14,40 +14,39 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=BbcsaSvYmqsc1/PGogALmAlsxQ4NtVNgPQ1FxMhmi+A=; b=jPB5a+4tE21PFGGqr5PfpEz385
-	wJKznwlEBrHvQpUZInN4Wb41KZVe64556PchHBbxKIqDClfFXLLJFH2NFjWXw7dWXVgid6EViLoiA
-	iT1MVAGjkd/Qz5FJsDjt3A3m99Slu+O/G7snZPkkUV0kV4E6wZ40zQ2NBrPMoZEwhLbC7W+6BLT6U
-	iTxoF+RyWMnHC1DbeCeirKKUlPh1oqCscG2715FDK3fC9Yx9qmRzeXk7vwJnlfz4MpdBwmYk9KY0V
-	Z4RlNsZKasdjEekEb6IUkUQ84qwFDVm9XsmvTKSAyovB9vSvIfRSiAY4uGjbrU1IL95wIa9d4GcKU
-	gwAFv5hw==;
+	bh=oLq4wxz5oEh5R1sh+VJJCccBAQfxGPFlpx22HnajP3g=; b=BlGpRB6IAizzgGy9JdC75mffOl
+	bfmdvX/FHeiCDgY1b46bp/E5B11Ks9KHyR6rqSa80IwkbhD0hudRQq+P+MXJl3FlI1phrvA5eWXhn
+	akp/iMPpKruoWFH0Q+ygHEMUC3/jA2hxzvp8IPa2w7w04dLuBpR1VN5/IcGo3x6ekcIG1g/l5GE9L
+	/H9jJUNzSWQFD5B2E1B3xZVcZqlPFDwFh89AJRIRclSn59MUCG27mk6uBymtpXGooIuXR47KGcZP8
+	myIM2fFjl5I+xXk08V/cDciGE5a/t9zEJRNzfOwpZUaddkrT2SSS7cFv9Phc4MnzPpkiz2hyk/4vH
+	YCJkySUw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLWZl-00000003d32-3Bty;
-	Tue, 27 Oct 2026 02:06:09 +0000
+	id 1xLWbf-00000003d95-3yzL;
+	Tue, 27 Oct 2026 02:08:07 +0000
 Received: from shelob.surriel.com ([96.67.55.147])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLWZj-00000003d2c-0Gu0
+	id 1xLWbe-00000003d8e-2lfl
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 02:06:08 +0000
+	Tue, 27 Oct 2026 02:08:07 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
 	; s=mail; h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:
 	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID; bh=BbcsaSvYmqsc1/PGogALmAlsxQ4NtVNgPQ1FxMhmi+A=; b=CWZKUM
-	Olnx3u/Gk5d/OR91etCdue5a5CeEvh9PUqUSqSygUk5of/q0VBUBLnXBtQ2IAvjkhbniPBjcGJ5AJ
-	zBfQQUrA0ZeKI7TGX302NhHs/ur3FPzRcq5M6b0MbQR0vP9icJJX5f5CLh/ck9GLTlhxJTH3OYQdd
-	WvMY6xVWwNwR+GZMzxMuGji7f82nyk0ZKOcdh6DgF0SppBH9V107GJT6RjHLvk6VFYHa2mO8AqRKg
-	r0D6xxl2JO9boBueLIeID4FZrS8rSfqex+cOpROWqy4bTb6t0CjFI5zmTuuIJNeHNGcWzLHLf97l7
-	vOiE2PSWsmxrt/oipmdtcnhFJauQ==;
+	:Resent-Message-ID; bh=oLq4wxz5oEh5R1sh+VJJCccBAQfxGPFlpx22HnajP3g=; b=I4TZvn
+	uFx5nXaNn5b4N6dTFJOZnQFvfCyMSRe1WmZf0oJ6ac5FdYlGx4P4oZcraSi6f8oHxdUKQRL2hhMv2
+	k1T8Qhk4DMEliLIEGV8Z9vwg9OjZR0LHm1fw7Q4EGvmnlyqmSPcCxJDJVd3+v/SvoT1lDE5OhhWJh
+	bB0TywZtbrrrqxcpI/RWp69SqjcAEJ93TnMT1V6Mt8msESZgTNg0CoUeCX2noFZdIztNs0cPT7B/y
+	9e9Au7mlP2j0PqR5y1+9tf4+O0p9v7VEND/Q6vD2t3xAaX7LNz89F3FQppIO6jBl/Ye+nt7mv8PxY
+	jNU/oTDZc+eq68lcC1MXDWmrSHAA==;
 Received: from [2601:18c:8100:a0e0:2541:b86e:2586:d219]
 	by shelob.surriel.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
 	(Exim 4.99.5)
 	(envelope-from <riel@surriel.com>)
-	id 1xLWY0-0000000B0qk-3U0e;
-	Tue, 27 Oct 2026 02:04:20 +0000
-Message-ID: <35420f2a3d5f3af10cd88fd9e3a977b4e17a0476.camel@surriel.com>
-Subject: Re: [PATCH 03/46] mm/memfd: check for real shmem inodes before
- accessing shmem state
+	id 1xLWaN-0000000B10v-3TRT;
+	Tue, 27 Oct 2026 02:06:47 +0000
+Message-ID: <639cb6dca4ab423272e05b90562ec49c7bdb12f9.camel@surriel.com>
+Subject: Re: [PATCH 04/46] mm/memfd: make f_pos accesses atomic
 From: Rik van Riel <riel@surriel.com>
 To: "David Hildenbrand (Arm)" <david@kernel.org>, Andrew Morton	
  <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, Michal
@@ -80,12 +79,12 @@ To: "David Hildenbrand (Arm)" <david@kernel.org>, Andrew Morton
  <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  kexec@lists.infradead.org, 	linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, 	linux-cxl@vger.kernel.org,
- stable@vger.kernel.org, Chris Mason <mason@kernel.org>
-Date: Mon, 26 Oct 2026 22:04:20 -0400
-In-Reply-To: <20261027-fixes_core-v1-3-6f74bec9a5bb@kernel.org>
+ linux-arch@vger.kernel.org, 	linux-cxl@vger.kernel.org, Josef Bacik
+ <josef@toxicpanda.com>, 	stable@vger.kernel.org
+Date: Mon, 26 Oct 2026 22:06:47 -0400
+In-Reply-To: <20261027-fixes_core-v1-4-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
-	 <20261027-fixes_core-v1-3-6f74bec9a5bb@kernel.org>
+	 <20261027-fixes_core-v1-4-6f74bec9a5bb@kernel.org>
 Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
  keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
  eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
@@ -116,8 +115,8 @@ User-Agent: Evolution 3.60.2 (3.60.2-2.fc44)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261026_190607_109599_98A81DC7 
-X-CRM114-Status: GOOD (  10.78  )
+X-CRM114-CacheID: sfid-20261026_190806_706543_44E8D9B1 
+X-CRM114-Status: GOOD (  10.79  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -137,26 +136,26 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
 On Tue, 2026-10-27 at 00:17 +0100, David Hildenbrand (Arm) wrote:
-> shmem_file() only checks a file's backing mapping. That mapping can
-> belong
-> to another file, as with a Coda file backed by a tmpfs container
-> after
-> mmap(). It does not establish that file_inode(file) is a shmem inode.
+> From: Josef Bacik <josef@toxicpanda.com>
 >=20
-> Seal handling and memfd preservation use this check before accessing
-> shmem inode state, so they can access an inode of the wrong type.
 >=20
-> Add file_inode_is_shmem() to check the inode's file operations in
-> both
-> paths. This identifies regular shmem inodes, including those used by
-> memfds and ordinary tmpfs files, independently of wrapper file
-> operations.
+> Set the flag when the memfd is created.=C2=A0 As for any other regular
+> file the
+> lock is only taken if the file is reachable in more than one way, and
+> nothing a memfd does in read or write waits for another operation on
+> the
+> same file.=C2=A0 This cannot be done for all alloc_file_pseudo() files:
+> anon
+> inode files such as eventfd are S_IFREG as well, and a blocked read
+> holding
+> ->f_pos_lock would lock out the write that is supposed to wake it.
 >=20
-> Fixes: c49fcfcda8b5 ("mm/shmem: update file sealing comments and file
-> checking")
-> Fixes: b3749f174d68 ("mm: memfd_luo: allow preserving memfd")
+> Fix generated by an LLM and sent by Josef Bacik in private.
+>=20
+> Fixes: 9183df25fe7b ("shm: add memfd_create() syscall")
 > Cc: stable@vger.kernel.org
-> Reported-by: Chris Mason <mason@kernel.org>
+> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+> [ david: minor description tweaks ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Reviewed-by: Rik van Riel <riel@surriel.com>
