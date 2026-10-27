@@ -2,61 +2,61 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C19606A31D
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 19:23:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4117606A31D
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 19:25:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=zTLKZt5L;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=j3ud/ZuJ
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=4Ld4vpSv;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mHRKmN4W
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=J9gSRb3D7ogtqu1SdrAnawsdd8oVJY1XtzaSrPDBAaU=; b=zTLKZt5LeNpfXB
-	LcKwtn9ZzXMvFqansKsAYYEXoa+eiHx/07Zoc1FfLIPCcrC2Zeby2QtKfheLhJTVUqhhyiDDQ91rz
-	4wQS5qjJ6rdgwtjt9VC8BP2gfW7dxUm//wAYUXzut5h/BHGLAQS1kZl2fu8RkSzrmqj4U76y9IA4Y
-	eqmHtzmnQVhyn/rJ226HwRz96QSYyGC4o0mTfY7OUVt+gQWC3CsZsHpuk4h5+q5eedD4nF286tDks
-	MGc4NdDcUAgckpR8G7fG61QQCOchouvc4QGlIAOaK/rwtgYub3+2Vfzh/ATBMy9ZjlMZMzzenfAXK
-	GoAoylVmYdUeSFybrTXA==;
+	List-Owner; bh=9KEB8qgzoIeFNOGcSLHLXb2uottvsKzkUwf/j7rEZPA=; b=4Ld4vpSvbibj18
+	fJYO6VcC/BkNJcPoT8p9T8Kp8Ba8sqWY+3yTADio2zSITEl042avqgvrUAHWEKJrXEDLnVksdw4Gd
+	9GMZbuk2ctw+qMudT2qTEf7ku7G+8ELI2Bs7uObT9Nb45s7SdczaFuoqT2sTQnEJU1vQCKfUENqeu
+	oA83fwbem6S2NsQCL2Ri7xW5X3EziZth60w9SGc7wpq7vXc8AmplFm0e3c3UcjxGs6m23Q73xqHFI
+	HZuXFpySSDXYi+DRhxIG7+4lP8+KECOL93LbbmTsNSu9u0ribpGVrpBMQoMi21pp7Qxrc4MqGME1U
+	gwJJxHsHrByc3oVKVxYQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLmld-00000005dtu-2XxD;
-	Tue, 27 Oct 2026 19:23:29 +0000
+	id 1xLmnl-00000005eBq-0Pfo;
+	Tue, 27 Oct 2026 19:25:41 +0000
 Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLmlc-00000005dtN-0hOZ
+	id 1xLmnj-00000005eBg-1Lqn
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 19:23:28 +0000
+	Tue, 27 Oct 2026 19:25:39 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 3B474601F6;
-	Tue, 27 Oct 2026 19:23:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D6CD1F01825;
-	Tue, 27 Oct 2026 19:23:11 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 4F209601FA;
+	Tue, 27 Oct 2026 19:25:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7550B1F01825;
+	Tue, 27 Oct 2026 19:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793129006;
-	bh=J9gSRb3D7ogtqu1SdrAnawsdd8oVJY1XtzaSrPDBAaU=;
+	s=k20260515; t=1793129138;
+	bh=9KEB8qgzoIeFNOGcSLHLXb2uottvsKzkUwf/j7rEZPA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=j3ud/ZuJbVW9Ht6RBnRGEDrT32arwt0VIBU0qKDUNIniXzHqRWI+D+aEx8+VeUx89
-	 HqHfaNjLOyNGKRWV6YgOkr68n3/qo9W0eMTZKINy2npz5GIar9UTvOFFdcSrtP0vv5
-	 4jBkpsSuk2SY0/VYo17xyO/vRjQmaJgmQ0ymbf30GmQWIepsYBU+WJr0/di38WoRq+
-	 kqm7EYhMmPqKzwKCAnGfYtn00aLBJbManBRnsv0Wg6USpxdVWqOa63F7st/2+ucXEw
-	 SHdY9czvzINbUIfc9qTtV8eJv4VO6GuzywLfFvmEu/vIFmsGBnaOmiDW2PK2xQnMZa
-	 1n5n8XUqi4ceg==
-Message-ID: <ba37b2a3-201e-4cd5-a992-c3ec6ab2aadb@kernel.org>
-Date: Tue, 27 Oct 2026 20:21:33 +0100
+	b=mHRKmN4WFGzQCMXXXAobAssayAt6MJNEX4XFML8kScSLR0RWj5iHQU4HOkyVdbrZ1
+	 FAfkNQPNnukyYwievxpTrmJxM+E+k2Z82hK7ve6KZYqVtg7FqawBBiMhHOxJxjEa2p
+	 bYzJkytrLPqqJ7CYJwvxS2bJELBhxTcauV4K9skmwI9vhz22V6zo1hQGN2pFq2jDUl
+	 M7zoVMj2QRdGuUHWMrC7ZKykJhi9OVby5oo7z14LhbLEi2LRbLMRkqAZMODrWoiBbH
+	 30E/CpCuG78KvyVtCKRteVs6ztPzOyHgprRt7kzAGfAfwY3zw6sGBJP1Q4vQ9OAjhg
+	 ELl7I7hL0bT0w==
+Message-ID: <2f436ecf-70fa-42f7-a0e2-8a27d179d1b2@kernel.org>
+Date: Tue, 27 Oct 2026 20:25:19 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 23/46] mm/userfaultfd: write-lock the VMA before waking
- waiters when unregistering
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
+Subject: Re: [PATCH 26/46] mm/mmu_gather: fix flushing ranges with 4 GiB or
+ larger
+To: Dev Jain <dev.jain@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
  Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
  Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
+ Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
+ Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+ Baoquan He <baoquan.he@linux.dev>,
  Baolin Wang <baolin.wang@linux.alibaba.com>,
  "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
  Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
@@ -69,26 +69,25 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
  Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
  Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>,
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
- Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
- Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
- <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
+ Ryan Roberts <ryan.roberts@arm.com>, Usama Arif <usama.arif@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Matthew Brost <matthew.brost@intel.com>,
+ John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
+ Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
  Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>,
  Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
  Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
  Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
  Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
  Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
- linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-cxl@vger.kernel.org, stable@vger.kernel.org,
- Josef Bacik <josef@toxicpanda.com>
+ Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
+ Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-23-6f74bec9a5bb@kernel.org>
- <auBityGTDQjXURWg@gremlin>
+ <20261027-fixes_core-v1-26-6f74bec9a5bb@kernel.org>
+ <21091d4e-0afb-4b5b-84ac-b36bac58e40f@arm.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -135,7 +134,7 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <auBityGTDQjXURWg@gremlin>
+In-Reply-To: <21091d4e-0afb-4b5b-84ac-b36bac58e40f@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
@@ -156,20 +155,32 @@ X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 10/27/26 09:43, Lorenzo Stoakes (ARM) wrote:
-> On Tue, Oct 27, 2026 at 12:17:43AM +0100, David Hildenbrand (Arm) wrote:
->> userfaultfd_unregister() wakes pending missing faults before clearing the
->> VMA's userfaultfd registration. With per-VMA fault locking, holding
->> mmap_lock for write does not prevent another fault from queuing after
->> the wakeup but before userfaultfd_clear_vma() write-locks the VMA. That
->> waiter can then remain asleep indefinitely.
+On 10/27/26 08:35, Dev Jain wrote:
 > 
-> Oof.
 > 
-> I guess userfaultfd_clear_vma() only implicitly takes the VMA write lock via
-> vma_modify_flags_uffd().
+> On 27/10/26 4:47 am, David Hildenbrand (Arm) wrote:
+>> From: Josef Bacik <josef@toxicpanda.com>
+>>
+>> __tlb_adjust_range() takes the size of the range which has to be flushed
+>> as an unsigned int. Its callers, tlb_flush_{pte,pmd,pud,p4d}_range(), get
+>> and pass an unsigned long. Consequently, a range that is 4 GiB or larger
+>> gets truncated, possibly to 0.
+>>
+>> On arm64 with hugetlb, a 64k kernel can flush 16 GiB hugetlb PMDs, and a
+> 
+> Nit: this wasn't obvious to me. Better expressed as:
+> "a 64K kernel can have 16 GiB hugepage mapped contiguously at the PMD level"
+> 
+> 
+>> 16k kernel can flush 64 GiB PUDs through tlb_unshare_pmd_ptdesc(). So
+>> at least these two scenarios are affected.
+>>
+>> Fix it by flushing the proper range instead of the truncated one.
+> 
+> Nit: after reading this I thought you are passing some other parameter now.
+> But that is just a type change.
 
-Yes. And the original AI fix wanted to reshuffle waiting because of that (stupid).
+I fixed both up, thanks!
 
 -- 
 Cheers,
