@@ -2,52 +2,52 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF79E606A31B
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 03:05:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD3E606A329
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 03:06:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=NJgaq/BS;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=c65rOCZf
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=VW/iqzBh;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=OmJvHkyF
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=S2fYp0D+kux7GkOrzGv4DxJUQ1pHehCh6wWsm9VP8mw=; b=NJgaq/BSWI9QxA
-	avbnKRMMmkRJvHrvzmftQdpnUzQ7zzcWg4UvvhRvVd7aAuHnG8EzA8iZPxpJJ/sNatAYuRy3CeU/O
-	Q/yO1fHi+8MI2rRO7mOM8eYUSxklmhK8jNYEgbWYRCxXnTxWOMiHwGvj55KJLzkIRkIexEGhXwJ3j
-	sKGjSiGdfQ0/G0RaosqsaLYJ05b5ileeniJJpUiJWBtqj/7fBtMZAgF67+FdMIoC6w8ceDX6xXdIk
-	RI5xU6NibyAZ3H1u6vTXrirI0SPmI0u6eC3Yadx36BPViRmLfxw922FdGnoaXfA3bUjFA4QUaf8eX
-	YMH56SNGyYcevFn41wAg==;
+	List-Owner; bh=NfiBYouQ7SUxOIRjsg6uwpg+DvPUrarmQVPVZOSrssU=; b=VW/iqzBh+f6s92
+	TfdIdp72l3OSL+a8uBf8MSIMk/UArLapHuDgaoYOFbLntoh1GWN5k2BLrd1KK1p0hLkx2Wvs6IbCr
+	OxcBFtf713/05e7RiY9dymdlTf2aidddF344koLPcWv/jkxlwFYfxwhBbOUB2fRLQCIZJ0uYIe0H0
+	h+vcdOYm4Ublf+g+CvOtf/9xVlcfKI4FNtx5I48lXaDKUJu7tD7jzjIVIuWvwVJT8r9ksyW3gHAxP
+	JbyV6LMg0f39DtJAuhuLNcugpVbqRxDyAxQpZXoEyMAB6P5JeB7RnQWJ2iWByYYFOb1qzLM/Y10yI
+	5JSoRG6DV6sV50hjx3qQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLXVJ-00000003gU9-2Lrg;
-	Tue, 27 Oct 2026 03:05:37 +0000
-Received: from out-222.mta0.migadu.com ([2001:41d0:1004:224b::de] helo=mta0.migadu.com)
+	id 1xLXWV-00000003gZ9-2yIO;
+	Tue, 27 Oct 2026 03:06:51 +0000
+Received: from out-248.mta0.migadu.com ([2001:41d0:1004:224b::f8] helo=mta0.migadu.com)
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLXVH-00000003gTV-0ub4
+	id 1xLXWT-00000003gYj-3AWD
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 03:05:36 +0000
+	Tue, 27 Oct 2026 03:06:51 +0000
 X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=PpgTbepyGCQbdry0Tl9jwBnnjb4CaWXJ3ss5elRPGCc=;
+DKIM-Signature: a=rsa-sha256; bh=AqI8n299OICKahJhyCKFqs0u3m8/ZWmCuQo8Rk556kA=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793070330; v=1; x=1793675130;
- b=c65rOCZf1Vlq0GQPAQmQqm5wf83ltLhRtUxYonNAqk4jRy4mWveQ6FYHE0z2KgSx0vBBuhwh
- I5BSaMM8kbNm5zMj9kh6fIQDiuHKd5Weox4bLMD3rtVDFQIbo7eTm65U5091811U3kGr9K6AGAx
- 2ioEyZte5hznqL0+wFow5F8A=
+ t=1793070407; v=1; x=1793675207;
+ b=OmJvHkyFxsfeKypToUZ7LSGC2sUxdtwI3R9o6a19BnFlQ/VY2YusuFobH1ESXjXmdW4D/0v1
+ 2U+cDF/TlFIvOXWIa+BCKSj8lSkeCR2P5jwvU83YvE2C4LcKuDnPaa1N3Qp/AhtOyPyWtF6jp0r
+ X5a1YWHseL+TPDdj7Y10H9cA=
 X-Envelope-To: kexec@lists.infradead.org
-Received: by smtp.migadu.com with ESMTPS id 9170fb527649b4ac;
-	Tue, 27 Oct 2026 03:05:20 +0000
-X-Mizu-Trace-ID: 9170fb527649b4ac
+Received: by smtp.migadu.com with ESMTPS id fa452c266040fd6e;
+	Tue, 27 Oct 2026 03:06:46 +0000
+X-Mizu-Trace-ID: fa452c266040fd6e
 X-Migadu-Flow: FLOW_OUT
-Message-ID: <62dfb28c-1078-440e-ba23-9068f4958570@linux.dev>
-Date: Tue, 27 Oct 2026 11:05:01 +0800
+Message-ID: <b0f16e9c-691a-4ab1-9ac4-d76b92c58b60@linux.dev>
+Date: Tue, 27 Oct 2026 11:06:27 +0800
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/46] mm/mglru: don't use stack pointers when walking PUD
- and PMD tables
+Subject: Re: [PATCH 26/46] mm/mmu_gather: fix flushing ranges with 4 GiB or
+ larger
 To: "David Hildenbrand (Arm)" <david@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
@@ -85,14 +85,14 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
  Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-1-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-26-6f74bec9a5bb@kernel.org>
 From: Qi Zheng <qi.zheng@linux.dev>
-In-Reply-To: <20261027-fixes_core-v1-1-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-26-6f74bec9a5bb@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261026_200535_404065_F9528436 
-X-CRM114-Status: GOOD (  14.67  )
+X-CRM114-CacheID: sfid-20261026_200649_948047_71A230F9 
+X-CRM114-Status: GOOD (  18.97  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -117,39 +117,50 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 On 10/27/26 7:17 AM, David Hildenbrand (Arm) wrote:
 > From: Josef Bacik <josef@toxicpanda.com>
 > 
-> MGLRU passes stack copies of page-table entries in walk_pud_range() and
-> walk_pmd_range() when walking to the next level. These copies can become
-> stale when khugepaged or MADV_DONTNEED (CONFIG_PT_RECLAIM) removes a PTE
-> table concurrently.
+> __tlb_adjust_range() takes the size of the range which has to be flushed
+> as an unsigned int. Its callers, tlb_flush_{pte,pmd,pud,p4d}_range(), get
+> and pass an unsigned long. Consequently, a range that is 4 GiB or larger
+> gets truncated, possibly to 0.
 > 
-> This pattern dates back to commit bd74fdaea146 ("mm: multi-gen LRU:
-> support page table walks"). Likely, earlier locking masked the latent
-> bug. Later changes exposed it: commit 1d65b771bc08 ("mm/khugepaged:
-> retract_page_tables() without mmap or vma lock") allowed concurrent
-> retraction, and commit cf4a65539c13 ("memcg-v1: no need for memcg locking
-> for MGLRU") dropped the walker's outer RCU protection.
+> On arm64 with hugetlb, a 64k kernel can flush 16 GiB hugetlb PMDs, and a
+> 16k kernel can flush 64 GiB PUDs through tlb_unshare_pmd_ptdesc(). So
+> at least these two scenarios are affected.
 > 
-> The fix is simple, so just fix the original commit so we don't have to
-> speculate. To fix it, pass the actual PMD/PUD pointers. This restores the
-> RCU-protected lookup and validation against the live PMD. Note that the PUD
-> handling is required as well to handle folded page tables correctly in all
-> cases.
+> Fix it by flushing the proper range instead of the truncated one.
 > 
 > Fix generated by an LLM and sent by Josef Bacik in private.
 > 
-> Fixes: bd74fdaea146 ("mm: multi-gen LRU: support page table walks")
+> Fixes: b528e4b6405b ("mm/hugetlb: add tlb_remove_hugetlb_entry for handling hugetlb pages")
+> Fixes: 8ce720d5bd91 ("mm/hugetlb: fix excessive IPI broadcasts when unsharing PMD tables using mmu_gather")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: handle walk_pud_range() as well, clarify+simplify description,
->           adjust Fixes: ]
+> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> [ david: use two-tab indent, simplify description ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 > ---
->   mm/vmscan.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+>   include/asm-generic/tlb.h | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+> index fbe1114e9a443..3f4a180b48f3c 100644
+> --- a/include/asm-generic/tlb.h
+> +++ b/include/asm-generic/tlb.h
+> @@ -350,8 +350,7 @@ struct mmu_gather {
+>   void tlb_flush_mmu(struct mmu_gather *tlb);
+>   
+>   static inline void __tlb_adjust_range(struct mmu_gather *tlb,
+> -				      unsigned long address,
+> -				      unsigned int range_size)
+> +		unsigned long address, unsigned long range_size)
+>   {
+>   	tlb->start = min(tlb->start, address);
+>   	tlb->end = max(tlb->end, address + range_size);
 
 Reviewed-by: Qi Zheng <qi.zheng@linux.dev>
 
 Thanks,
 Qi
+
+> 
 
 
