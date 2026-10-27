@@ -2,61 +2,62 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4117606A31D
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 19:25:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17039606A31D
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 19:32:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=4Ld4vpSv;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mHRKmN4W
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=AUhmBd73;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=J2KOffh9
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=9KEB8qgzoIeFNOGcSLHLXb2uottvsKzkUwf/j7rEZPA=; b=4Ld4vpSvbibj18
-	fJYO6VcC/BkNJcPoT8p9T8Kp8Ba8sqWY+3yTADio2zSITEl042avqgvrUAHWEKJrXEDLnVksdw4Gd
-	9GMZbuk2ctw+qMudT2qTEf7ku7G+8ELI2Bs7uObT9Nb45s7SdczaFuoqT2sTQnEJU1vQCKfUENqeu
-	oA83fwbem6S2NsQCL2Ri7xW5X3EziZth60w9SGc7wpq7vXc8AmplFm0e3c3UcjxGs6m23Q73xqHFI
-	HZuXFpySSDXYi+DRhxIG7+4lP8+KECOL93LbbmTsNSu9u0ribpGVrpBMQoMi21pp7Qxrc4MqGME1U
-	gwJJxHsHrByc3oVKVxYQ==;
+	List-Owner; bh=pdMKQRVfPao2Y0l/0sEvsr0YaDZON+7McqaGQOdPdzM=; b=AUhmBd73RYiOji
+	A56u7mq6oeF6JbrAoPNbX2TOBH0LnihDrogj+sbK9OdoRmqqaTSyJ+0qGkMFb58WjrbiaIhjMhTLC
+	eLrWKTAIYTHQPgWAwx7SPeRiDTAU6ZcXnmr6wIlZgt7MmruHkmkb4w+k40SZeScRLkweDLDYxpaHY
+	WASndT5X16i4uVj7AdYynqg50CMBTwX3n7dliqba/LKz2YMUqG94DrjUXiWLC1BcqPOqMEOOFL/YP
+	VOivNEnnSaui1mxPSOODlEpGZdFsOW5E1adxZzoMc+cMFQmFJLxzRQbOfsgliFot6TmIocbCO2SBu
+	trJB02xDfrBKV1rFW1AA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLmnl-00000005eBq-0Pfo;
-	Tue, 27 Oct 2026 19:25:41 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xLmu3-00000005edl-0aZ5;
+	Tue, 27 Oct 2026 19:32:11 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLmnj-00000005eBg-1Lqn
+	id 1xLmu1-00000005eda-0LL5
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 19:25:39 +0000
+	Tue, 27 Oct 2026 19:32:09 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 4F209601FA;
-	Tue, 27 Oct 2026 19:25:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7550B1F01825;
-	Tue, 27 Oct 2026 19:25:22 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 75A134019F;
+	Tue, 27 Oct 2026 19:32:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 256D31F01825;
+	Tue, 27 Oct 2026 19:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793129138;
-	bh=9KEB8qgzoIeFNOGcSLHLXb2uottvsKzkUwf/j7rEZPA=;
+	s=k20260515; t=1793129528;
+	bh=pdMKQRVfPao2Y0l/0sEvsr0YaDZON+7McqaGQOdPdzM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=mHRKmN4WFGzQCMXXXAobAssayAt6MJNEX4XFML8kScSLR0RWj5iHQU4HOkyVdbrZ1
-	 FAfkNQPNnukyYwievxpTrmJxM+E+k2Z82hK7ve6KZYqVtg7FqawBBiMhHOxJxjEa2p
-	 bYzJkytrLPqqJ7CYJwvxS2bJELBhxTcauV4K9skmwI9vhz22V6zo1hQGN2pFq2jDUl
-	 M7zoVMj2QRdGuUHWMrC7ZKykJhi9OVby5oo7z14LhbLEi2LRbLMRkqAZMODrWoiBbH
-	 30E/CpCuG78KvyVtCKRteVs6ztPzOyHgprRt7kzAGfAfwY3zw6sGBJP1Q4vQ9OAjhg
-	 ELl7I7hL0bT0w==
-Message-ID: <2f436ecf-70fa-42f7-a0e2-8a27d179d1b2@kernel.org>
-Date: Tue, 27 Oct 2026 20:25:19 +0100
+	b=J2KOffh9t5THz/aVV9AXm+zRNrOFDoRwtp977EUo1PAOBknoI8V3BnNjjtRLAE4Ru
+	 GY5GDPTQ+/81Ar3+hzwrjA0JeTMSAd3xgLXkkWNIOh4w5qNGRaWbYHgigxK1BSB0q7
+	 ly8wspHWyvxYXk9F43GT7SewL7fEGQ0Hpa7OJz1VbSrP8w/Wv8rLA0NKXANgiBfMrD
+	 TTqIJu5xLE1Ab2vB6aGL8JXJt7kYBWgxH7cJ5Z/fmQvZq4f73ADggruc/guEar+TGR
+	 HrC4fv0DA8YODO90lZnMcUoWInit/GOljN2R28H+dA2gPH4zQmKtMA4c2HYGyd/lsp
+	 d3rkBUoXQHNBg==
+Message-ID: <e894d61c-9b99-4fdd-bf88-c4efd77a75ff@kernel.org>
+Date: Tue, 27 Oct 2026 20:31:50 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 26/46] mm/mmu_gather: fix flushing ranges with 4 GiB or
- larger
-To: Dev Jain <dev.jain@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
+Subject: Re: [PATCH 25/46] mm/userfaultfd: wake waiters when registration
+ modes are removed
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>,
+ Gregory Price <gourry@gourry.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
  Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
  Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
- Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
- Baoquan He <baoquan.he@linux.dev>,
+ Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
  Baolin Wang <baolin.wang@linux.alibaba.com>,
  "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
  Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
@@ -69,25 +70,25 @@ To: Dev Jain <dev.jain@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
  Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
  Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
  Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>,
- Ryan Roberts <ryan.roberts@arm.com>, Usama Arif <usama.arif@linux.dev>,
- Kiryl Shutsemau <kas@kernel.org>, Matthew Brost <matthew.brost@intel.com>,
- John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
- Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
+ <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
  Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>,
  Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
  Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
  Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
- Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
- Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
- Jason Gunthorpe <jgg@ziepe.ca>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
- Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-cxl@vger.kernel.org, stable@vger.kernel.org
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-26-6f74bec9a5bb@kernel.org>
- <21091d4e-0afb-4b5b-84ac-b36bac58e40f@arm.com>
+ <20261027-fixes_core-v1-25-6f74bec9a5bb@kernel.org>
+ <179307782442.2301705.17273288326330283268.b4-reply@b4>
+ <auBcES74Q5M3MWCW@gremlin>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -134,7 +135,7 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <21091d4e-0afb-4b5b-84ac-b36bac58e40f@arm.com>
+In-Reply-To: <auBcES74Q5M3MWCW@gremlin>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
@@ -147,40 +148,135 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 10/27/26 08:35, Dev Jain wrote:
-> 
-> 
-> On 27/10/26 4:47 am, David Hildenbrand (Arm) wrote:
->> From: Josef Bacik <josef@toxicpanda.com>
+On 10/27/26 09:24, Lorenzo Stoakes (ARM) wrote:
+> On Mon, Oct 26, 2026 at 10:10:24PM -0700, Gregory Price wrote:
+>> From: Gregory Price <gourry@gourry.net>
+>> Subject: [PATCH] mm/userfaultfd: compare exact registration modes before skipping
 >>
->> __tlb_adjust_range() takes the size of the range which has to be flushed
->> as an unsigned int. Its callers, tlb_flush_{pte,pmd,pud,p4d}_range(), get
->> and pass an unsigned long. Consequently, a range that is 4 GiB or larger
->> gets truncated, possibly to 0.
+>> Changing registration from MISSING|WP to WP returns success but leaves
+>> MISSING enabled. The no-op check sees that WP is already set and skips
+>> the update, so later accesses to missing pages still wait for userspace.
 >>
->> On arm64 with hugetlb, a 64k kernel can flush 16 GiB hugetlb PMDs, and a
-> 
-> Nit: this wasn't obvious to me. Better expressed as:
-> "a 64K kernel can have 16 GiB hugepage mapped contiguously at the PMD level"
-> 
-> 
->> 16k kernel can flush 64 GiB PUDs through tlb_unshare_pmd_ptdesc(). So
->> at least these two scenarios are affected.
+>> Skip the update only when the current and requested UFFD modes match
+>> exactly.
 >>
->> Fix it by flushing the proper range instead of the truncated one.
+>> Fixes: 63b2d4174c4a ("userfaultfd: wp: add the writeprotect API to userfaultfd ioctl")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
+>> ---
+>>  mm/userfaultfd.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+>> index 669f71d485d02..0a28130cebc99 100644
+>> --- a/mm/userfaultfd.c
+>> +++ b/mm/userfaultfd.c
+>> @@ -2299,7 +2299,7 @@ static int userfaultfd_register_range(struct userfaultfd_ctx *ctx,
+>>  		 * userfaultfd and with the right tracking mode too.
+>>  		 */
+>>  		if (vma->vm_userfaultfd_ctx.ctx == ctx &&
+>> -		    vma_test_all_mask(vma, vma_flags))
+>> +		    (vma->vm_flags & __VM_UFFD_FLAGS) == vm_flags)
 > 
-> Nit: after reading this I thought you are passing some other parameter now.
-> But that is just a type change.
+> Would be better not to regress to the legacy API. I realise we don't use it for
+> backported fixes in general, but this patch obviously won't apply to older
+> versions anyway, so we should use the correct API now, and this for older
+> versions.
+> 
+> I'll add a better predicate probably to do this in one go, but for the fix,
+> I put the correct patch below.
+> 
+> 
+>>  			goto skip;
+>>
+>>  		/*
+>>
+>> --
+>> Gregory Price <gourry@gourry.net>
+> 
+> diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> index 777bf122d32a..c71cb9179913 100644
+> --- a/mm/userfaultfd.c
+> +++ b/mm/userfaultfd.c
+> @@ -2288,6 +2288,9 @@ static int userfaultfd_register_range(struct userfaultfd_ctx *ctx,
+>  		prev = vma;
+> 
+>  	for_each_vma_range(vmi, vma, end) {
+> +		const vma_flags_t curr_vma_flags =
+> +			vma_flags_and_mask(&vma->flags, __VMA_UFFD_FLAGS);
+> +
+>  		cond_resched();
+> 
+>  		VM_WARN_ON_ONCE(!vma_can_userfault(vma, vm_flags, wp_async));
+> @@ -2300,7 +2303,7 @@ static int userfaultfd_register_range(struct userfaultfd_ctx *ctx,
+>  		 * userfaultfd and with the right tracking mode too.
+>  		 */
+>  		if (vma->vm_userfaultfd_ctx.ctx == ctx &&
+> -		    vma_test_all_mask(vma, vma_flags))
+> +		    vma_flags_same_pair(&curr_vma_flags, &vma_flags))
+>  			goto skip;
+> 
+>  		/*
+> 
+> --
+> Cheers, Lorenzo
 
-I fixed both up, thanks!
+I now have:
+
+From e2cb5867bd46dd6c601dfa5f0415bf7c8e12600a Mon Sep 17 00:00:00 2001
+From: Gregory Price <gourry@gourry.net>
+Date: Tue, 27 Oct 2026 20:27:52 +0100
+Subject: [PATCH] mm/userfaultfd: compare exact registration modes before
+ skipping
+
+Changing registration from MISSING|WP to WP returns success but leaves
+MISSING enabled. The no-op check sees that WP is already set and skips
+the update, so later accesses to missing pages still wait for userspace.
+
+Skip the update only when the current and requested UFFD modes match
+exactly.
+
+Fixes: 63b2d4174c4a ("userfaultfd: wp: add the writeprotect API to userfaultfd ioctl")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
+[ david: apply fixup from Lorenzo ]
+Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+---
+ mm/userfaultfd.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+index 710e913c73bf..24b7a2612469 100644
+--- a/mm/userfaultfd.c
++++ b/mm/userfaultfd.c
+@@ -2291,6 +2291,7 @@ static int userfaultfd_register_range(struct userfaultfd_ctx *ctx,
+ 
+ 	for_each_vma_range(vmi, vma, end) {
+ 		const bool any_mode_removed = vma->vm_flags & __VM_UFFD_FLAGS & ~vm_flags;
++		const vma_flags_t curr_vma_flags = vma_flags_and_mask(&vma->flags, __VMA_UFFD_FLAGS);
+ 
+ 		cond_resched();
+ 
+@@ -2304,7 +2305,7 @@ static int userfaultfd_register_range(struct userfaultfd_ctx *ctx,
+ 		 * userfaultfd and with the right tracking mode too.
+ 		 */
+ 		if (vma->vm_userfaultfd_ctx.ctx == ctx &&
+-		    vma_test_all_mask(vma, vma_flags))
++		    vma_flags_same_pair(&curr_vma_flags, &vma_flags))
+ 			goto skip;
+ 
+ 		/*
+-- 
+2.43.0
+
 
 -- 
 Cheers,
