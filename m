@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E60606A31B
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:12:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85641606A31A
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:12:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2wXfkL2Q;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NiIpFKQO
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=gVqrNU9m;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=frD00LxY
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,39 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=oPuR62lqNbstsPCcerripn9NQDxY2gjYBYYalbloVnw=; b=2wXfkL2Q9OIiD+gmPY3xtNS3gc
-	EpJZDI7iqZe5T9jT2N+70/UW6Fqh8YbDe6tjRkMS0CiJ2ut7duHLVlb0/unV34a6aJWXjwMVSNBjs
-	yuRlWoqHH5sbZviWu1rrICpsjasW8ncrRt9vpeHKV/jZ+0lNW7SWQlO1MtHBrx8eF8TwWoEdzggcd
-	wsOjUlPjruUNxgFc3toI2M5irPCBbvNPEljW3aHOoNUxPnGTakc9rl3hvAWH9Wrm9T1keklh8tF9c
-	7gdMp+hf9Ongd3bOZxKWvdzLT/tYvf5SZrDChpLM8ayg0hXivaK9RHwuBfijdlEWX+fYQ7nxUcAnw
-	+gYXSHEA==;
+	bh=Uy/vArX+eYFyPGW9N+BUXYcTQV9D34TXxudYrYLMgXI=; b=gVqrNU9mWy5+PukCWepjr7QhX7
+	rAp06AvmrxeaumuYGaXMtWt5QVW6KFNI/SdWUO06TSd3DahSH6ZiRGar8kfH9Cw5ZJYVmOPb01lWC
+	/fewiDaPJVrAdHFjzzLUU0Gldp4KbldVOYMHyUaDGB7ISyVcfDV3qOXY8zjRsn3M5/Kon0ZyWigLi
+	eEbXgdrGMR6GinzzUzJgRkY0BvI2TwNHaaxtb2WTngoz3L27VSYsZ8XJ5fvCFGbW9HDd3ieG8LpuD
+	5amdueglnL04YpYxJv3aGqLSFGhGyQMESBH4eXoiSoXczm15rN/aEjiDdmflRBFh0xysW8STKVNhx
+	b8E+yUHA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUnS-00000003Ub6-0iUo;
-	Tue, 27 Oct 2026 00:12:10 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xLUnU-00000003UcD-11V2;
+	Tue, 27 Oct 2026 00:12:12 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUnQ-00000003Uav-0leD
+	id 1xLUnT-00000003UbV-0jzC
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 00:12:08 +0000
+	Tue, 27 Oct 2026 00:12:11 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 1744D600CB;
+	by sea.source.kernel.org (Postfix) with ESMTP id 6337B40D59;
+	Tue, 27 Oct 2026 00:12:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47AAC1F01825;
 	Tue, 27 Oct 2026 00:12:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21C431F01825;
-	Tue, 27 Oct 2026 00:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793059926;
-	bh=oPuR62lqNbstsPCcerripn9NQDxY2gjYBYYalbloVnw=;
+	s=k20260515; t=1793059930;
+	bh=Uy/vArX+eYFyPGW9N+BUXYcTQV9D34TXxudYrYLMgXI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=NiIpFKQOGZ6bWWHbwD6oJy8hVYlCY7D0FtkA6AOg/IhFax9QZ+xj6uy9ZXYKYFa8O
-	 terG61y5FHtiL4zsUv7JRSOwsjcWnDBId0Sq+Vnf9qnWUDAyJHtSlK2KNgiq4OO3Wu
-	 qolEbU99OMjpx87c2/EoA1lkH63/wfdS9JGe/0ZmAtfGJwr2G87i079xT9aLY229mW
-	 tC56VAgiXXkN1sdG/T2WSICYbdXR//xnhKiepDdKOHnphLJPGrs2iW5aqu1uN4anX9
-	 GPqeZm+oRngipSLP+uit8OURcERpFhEkjKy75XXJNbUREl2jvmcFIMSXcd/FKK9Znn
-	 N8hIsXBxvEpYw==
-Message-ID: <sashiko-outbox-185883@kernel.org>
+	b=frD00LxYilFTz7Ibu5BBVrWfrqTd1OMkh6oCEec7/4k/eoIaB+IlDE2wk+hVxeeHy
+	 Y5Effqs2hY5ptrC1723VEe5QEc6HZ3KnxjhGtECoOCKfWc5BXkT5kLVr22j/1IPpse
+	 YG8IBwPYr4kcnOdxsp+CLi/9GIzJCjzCmOZpauDnxX2VfHPYosvvm2gWP2pm0in4UH
+	 /3Go3wczQyxHXCl65lBTMzUZuVwGgP5G8dXUprzeFn9afbHJ1AAc/a5DuqyI+bI6NK
+	 0Q3itf+q/3mYNCJc/PrI9pJrMjbfWweweItSyjSfhOO/43L7ZnAqFqLhVjxBPnHmg+
+	 Ty/eBgOBpAn0g==
+Message-ID: <sashiko-outbox-185884@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 01/46] mm/mglru: don't use stack pointers when walking
- PUD and PMD tables
+Subject: Re: [PATCH 02/46] fork: take mmap_lock before copying mm_struct
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -75,12 +74,12 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
 Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261027-fixes_core-v1-1-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-1-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 00:12:03 +0000
+Date: Tue, 27 Oct 2026 00:12:06 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,40 +99,35 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> From: Josef Bacik <josef@toxicpanda.com>
+> dup_mm() copies the parent's mm_struct before dup_mmap() takes the
+> mmap_lock. A concurrent brk() can leave the child with a stale mm->brk
+> and newer heap mappings, causing later brk() requests to fail.
 >=20
-> MGLRU passes stack copies of page-table entries in walk_pud_range() and
-> walk_pmd_range() when walking to the next level. These copies can become
-> stale when khugepaged or MADV_DONTNEED (CONFIG_PT_RECLAIM) removes a PTE
-> table concurrently.
+> Other operations (e.g., PR_SET_MM) on the parent's mm_struct can similarly
+> cause inconsistencies.
 >=20
-> This pattern dates back to commit bd74fdaea146 ("mm: multi-gen LRU:
-> support page table walks"). Likely, earlier locking masked the latent
-> bug. Later changes exposed it: commit 1d65b771bc08 ("mm/khugepaged:
-> retract_page_tables() without mmap or vma lock") allowed concurrent
-> retraction, and commit cf4a65539c13 ("memcg-v1: no need for memcg locking
-> for MGLRU") dropped the walker's outer RCU protection.
+> As a simple and robust fix, grab the parent's mmap_lock earlier. This
+> way we don't need to update individual mm fields in dup_mmap() and
+> keep missing ones. Stop updating the 4 existing members (total_vm, data_v=
+m,
+> exec_vm, stack_vm), as that is now no longer required.
 >=20
-> The fix is simple, so just fix the original commit so we don't have to
-> speculate. To fix it, pass the actual PMD/PUD pointers. This restores the
-> RCU-protected lookup and validation against the live PMD. Note that the P=
-UD
-> handling is required as well to handle folded page tables correctly in all
-> cases.
+> Keep releasing the parent's mmap_lock in dup_mmap(), before
+> userfaultfd completion, to avoid moving the userfaultfd handling into the
+> caller. This should get cleaned up later.
 >=20
-> Fix generated by an LLM and sent by Josef Bacik in private.
+> Move uprobe_start_dup_mmap() to preserve the lock ordering.
 >=20
-> Fixes: bd74fdaea146 ("mm: multi-gen LRU: support page table walks")
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: handle walk_pud_range() as well, clarify+simplify description,
->          adjust Fixes: ]
+> Reported-by: Josef Bacik <josef@toxicpanda.com>
+> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027-fixes_core=
--v1-0-6f74bec9a5bb@kernel.org?part=3D1
+-v1-0-6f74bec9a5bb@kernel.org?part=3D2
 
 
