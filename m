@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9DCE606A31A
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:12:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB20F606A31A
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:12:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=VDt2TuLa;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HRjv44oZ
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=GCCE3ie0;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=V6bCLeoz
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,39 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=hOt9i3fWrCvkhLM2HLoloHasQR3qmOkD8911902uNT4=; b=VDt2TuLafoxb3vIsfIu++BCGYc
-	qU6NfYf0psJIxF4jOpzSGzurJalzQLbjkaNtRsyEunADW/m7k8XK5CVdUgAhO3PV16QzH2hd3AwTG
-	P1qbJLCu+23BZlGgJfN6X+xzia6sy0qLsy6ucqvZ+KELaRWpThGz2bm+pg7IlRPg+MLC4TP8qHr9l
-	WcjOvA99nvThnPRTOGU/RIYLVfjTegTd7ogASTgxew/AQthtQBjdGrRDXUUKkcZIqRCz0/AvTu4et
-	Tx8wbVNkbcTh3GbK86WUuvpsQDSD5EXrT6Vku6aDXVpDh7nzDRdpamTiMqHIOc03Y5ZTL0c9p8zTk
-	CYtmNa3w==;
+	bh=QdO0SnE9yGuk3cL0hO0NHvTRdSQK2SvEIYj250tV2tQ=; b=GCCE3ie09+f3U08gZog6kGYAA0
+	XKOcdr2mFwrVkiz+ndk/T4Kw/1MFqZ4oI5FcqT6osx/+plLQqodIZiU9jhuSykTsW1hg+eaX3a2Aw
+	ZCY9hIo/BMSTrMhEfFreeqLvcx4JKJ8ibVyvpxNMXxWWSt2QhyA6IvCCgiiiUPSaH2kPo61AccP3q
+	lNKAzLk9AHFul8+ak9EmneMsv4oTLVxdDEyZLlQ3OaXQ76rB3aKDXwIwEhskgQYpwGMEPRTrR1RhO
+	yghLCB0XK2lhPNqpGMdGf3x9cH/7ILdQAO322Tw1c70DAeT1+VePefE2cgK1YES72wmAfmDtHzehW
+	VNVNK/rA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUna-00000003UgH-1ttI;
-	Tue, 27 Oct 2026 00:12:18 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xLUnd-00000003UiT-2Df2;
+	Tue, 27 Oct 2026 00:12:21 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUnZ-00000003UfW-2jvV
+	id 1xLUnc-00000003Uha-2Yl1
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 00:12:17 +0000
+	Tue, 27 Oct 2026 00:12:20 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 1426B601F9;
+	by sea.source.kernel.org (Postfix) with ESMTP id F4024407A6;
+	Tue, 27 Oct 2026 00:12:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 425081F01825;
 	Tue, 27 Oct 2026 00:12:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1066C1F01825;
-	Tue, 27 Oct 2026 00:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793059936;
-	bh=hOt9i3fWrCvkhLM2HLoloHasQR3qmOkD8911902uNT4=;
+	s=k20260515; t=1793059939;
+	bh=QdO0SnE9yGuk3cL0hO0NHvTRdSQK2SvEIYj250tV2tQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HRjv44oZj+AaychSTycZqoFxmxnPiaNJrfKXXjWbP5N/i3a2CxrktuS2DUb4L/RDj
-	 ApBt80Z5xT79bRozCtIh5rYcUom/ln40Q77g2Kas5woJPLF+25jYSidiKDt40n6avr
-	 p2u/lDt1uhWCecAFVbAAkXAjS5zBVQQURNrVTQOVMvndvkHSy7dyb8PKLDc44vNTIp
-	 or3wkvJGPgVQ5/CHVWhQeV3Mp+2ovFuCEjquobNgS/8ba26j9JaxYg1rSWA7bAmhNC
-	 bbaVvxBVuXSEPzjDqihZPj0XeK799FvzdpWyZG6HZygc9tm5u/dsDPk5SK3YIm2SYr
-	 QSd/zIt25O3rw==
-Message-ID: <sashiko-outbox-185886@kernel.org>
+	b=V6bCLeozQgRLoMgjVDJQKkjPhO9Zsrsy7buMZVNqUnmG1uRw1Xegv4ub70Bt12rRa
+	 u6TAinnHxFsAndwjZI605dKkBZVoJhnn3qpRW3w0gqKdMLDOvwhtVyXjrxHsVDBeq3
+	 VybeCtheT+93vkyLE2AoRWMYU5ch3SaSd8diGEZU869ifQDDeU90QRbr4enhRFhiiS
+	 YpQF+/708PrEMaAohc9grwBpj6hmU9iCfYNhogE4PUVIsu2WE/tXNxFjCxEiRc2btV
+	 lGa8j3uTco1PLFSVFPCnKkDgpyArRzTM3nDGES1ld4ji1hoeqTOnZPtLq+ZjjsbFRl
+	 oGA7CZ6KL51cQ==
+Message-ID: <sashiko-outbox-185887@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 04/46] mm/memfd: make f_pos accesses atomic
+Subject: Re: [PATCH 05/46] mm/truncate: look again if a folio left the
+ mapping
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -74,12 +75,12 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
 Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261027-fixes_core-v1-4-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-5-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-4-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-5-6f74bec9a5bb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 00:12:13 +0000
+Date: Tue, 27 Oct 2026 00:12:16 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,32 +100,34 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> From: Josef Bacik <josef@toxicpanda.com>
+> invalidate_inode_pages2_range() skips a folio which no longer belongs to
+> the mapping by the time it has got the folio lock, on the assumption
+> that somebody else has removed it from the page cache. But the folio may
+> have been replaced, and then there is a new folio with the same data at
+> that index.
 >=20
-> Commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per POSIX") made
-> read(), write() and lseek() on a shared open file description of a regular
-> file serialize on ->f_pos_lock.  The flag that asks for it,
-> FMODE_ATOMIC_POS, is set in do_dentry_open().  A memfd is a regular file
-> too, but its struct file comes from alloc_file_pseudo() and never passes
-> through do_dentry_open(), so it does not get the flag:
+> For most cases, like folio migration, that is impossible. However,
+> collapse_file() only checks the refcount of the old folios, under the
+> i_pages lock, and relies on their folio locks from there on. That works f=
+or
+> users which repeat the lookup when they find folio->mapping changed.
+> The following scenario is, however, possible:
 >=20
->   CPU0                                CPU1
->   write(memfd, "a", 1)                write(memfd, "b", 1)
->     pos =3D file->f_pos  (=3D 0)
->                                         pos =3D file->f_pos  (=3D 0)
->     vfs_write(..., &pos)
->                                         vfs_write(..., &pos)
+>   CPU0 pwrite(O_DIRECT)               CPU1 collapse_file()
+>   kiocb_invalidate_pages()
+>                                       read the folio (old data), lock it
 > [ ... ]
-> Fixes: 9183df25fe7b ("shm: add memfd_create() syscall")
+>=20
+> Fixes: 1b6444331beb ("mm/khugepaged: enable clean pagecache folio collaps=
+e for writable files")
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: minor description tweaks ]
+> Reported-by: Josef Bacik <josef@toxicpanda.com>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027-fixes_core=
--v1-0-6f74bec9a5bb@kernel.org?part=3D4
+-v1-0-6f74bec9a5bb@kernel.org?part=3D5
 
 
