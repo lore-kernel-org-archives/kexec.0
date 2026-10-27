@@ -2,53 +2,54 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 082E8606A31A
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 09:48:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84F3606A326
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 09:51:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=RTdU/Nfs;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=M5HfFoAj
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=4CHCc2za;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=IK7uwDYg
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:To:References:Message-Id:
 	Content-Transfer-Encoding:Cc:Date:In-Reply-To:From:Subject:Mime-Version:
 	Content-Type:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=w+/m5TRiUEroTYi/JhU/ZMYvRJ27fL3IgAeL8IYLhOs=; b=RTdU/Nfse9qyOB
-	mdv+xWq9nPGngp1k+IiJ3wnU8elrnbzgvD8wcz4+mDkpDgARVRDl1fKzgrFR/K1u2Lp/FhSFzWfKU
-	FqUa8eV7VKqRSNjwL56KblylIHijGoaR1HVWhENl4kVhh0OwQI3teOr8ToTn9fBVZdTqQFqTLxgqX
-	VZhFxXVJFDWT8gN5m1HC/ljAbjB+EegqVf+QQ8gWhr9/ptIoa1ZVZKVvon71LVCV5w7bArgIW7Fsj
-	9BylwKKp0fur2RXqtyQ4uW6h4IfMte6u6Y6jGQH/KB5gU0bgcVdnj3FOdbRzVSQPvCTLpLCaJT6cd
-	HcbmeQSB8iUQQA7zALyA==;
+	List-Owner; bh=YikRuHrgcQQEQeNLoopicKeEponOUqqAXOCmGgP7bMc=; b=4CHCc2zaJsrsEJ
+	iiS/sn6/gSSdOpJMJLi9b7XF+28l05AbyyFgKDSSTv6/pULOZk+unL3k7NT07Ys9Wb24B2q/g7PGl
+	YpKQt6fUC71i53c/n3kZFbtJOjemZGLFI9C0aXtZlpb8roWsvQp5iDw6/zLngAkPDsl03QYp/yLiw
+	JggLPqr50NJDJBo193w4wlKtKFE23EBxf/XYipUMTXbS7JZT3gdASm4NcdfB7OpBBEASqPA20SPqK
+	aV3FgzPzIxEiA8VGulm31dCeistj0idFENMD6Sel383g8C1lH5Foin6khWOZTAO/15vwm0W60iAa5
+	iLSFcgkkxBhqRnHpS0Yw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLdnb-00000004DKA-2pd8;
-	Tue, 27 Oct 2026 09:48:55 +0000
-Received: from out-135.mta1.migadu.com ([95.215.58.135] helo=mta1.migadu.com)
+	id 1xLdpk-00000004Dr3-1x5y;
+	Tue, 27 Oct 2026 09:51:08 +0000
+Received: from out-126.mta0.migadu.com ([2001:41d0:1004:224b::7e] helo=mta0.migadu.com)
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLdnX-00000004DJM-1Lt1
+	id 1xLdpf-00000004Doc-1A4P
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 09:48:54 +0000
+	Tue, 27 Oct 2026 09:51:04 +0000
 X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=w+/m5TRiUEroTYi/JhU/ZMYvRJ27fL3IgAeL8IYLhOs=;
+DKIM-Signature: a=rsa-sha256; bh=YikRuHrgcQQEQeNLoopicKeEponOUqqAXOCmGgP7bMc=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793094529; v=1; x=1793699329;
- b=M5HfFoAjUDnRgQrtlqwxlCzg/yUz3ct1gnJFOAIpEV4mZEEV3dK1BLmaugjdYXhR6Y1192oO
- bvxwaI9qa6LHkm0LAQTLWGbPluusZ6PGzBIq6PiGDoL/kcvoOndbK+wUxRwtkmmdvKO7NuAJ/E3
- CZvZDj4wGfkHNKwOBZvMDrNc=
+ t=1793094661; v=1; x=1793699461;
+ b=IK7uwDYgWnddzMvKWJw3ya6jd1O95pxiSUka2B+d5LCvMVJF0eAMpUph7VCpo576csv7uSk+
+ RkWa1+WT24INtT8JnumhbrIqAEhPNriR3IJ5BOtfXhCFSYVDbHBk/S3Oe6w++M3F5lyKhOZXvxs
+ 0YEaxOC7g+vVBRZSfwe0o1YE=
 X-Envelope-To: kexec@lists.infradead.org
-Received: by mta11.migadu.com with ESMTPS id 74e52af488cb4c06;
-	Tue, 27 Oct 2026 09:48:48 +0000
-X-Mizu-Trace-ID: 74e52af488cb4c06
+Received: by mta12.migadu.com with ESMTPS id 7697935976e69603;
+	Tue, 27 Oct 2026 09:50:59 +0000
+X-Mizu-Trace-ID: 7697935976e69603
 X-Migadu-Flow: FLOW_OUT
 Content-Type: text/plain;
 	charset=us-ascii
 X-Archived-By: <archiver.kernel.org>
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3901.100.1.1.12\))
-Subject: Re: [PATCH 44/46] mm/cma: don't release CMA pages still in use
+Subject: Re: [PATCH 26/46] mm/mmu_gather: fix flushing ranges with 4 GiB or
+ larger
 From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20261027-fixes_core-v1-44-6f74bec9a5bb@kernel.org>
-Date: Tue, 27 Oct 2026 17:48:18 +0800
+In-Reply-To: <20261027-fixes_core-v1-26-6f74bec9a5bb@kernel.org>
+Date: Tue, 27 Oct 2026 17:50:32 +0800
 Cc: Andrew Morton <akpm@linux-foundation.org>,
  Johannes Weiner <hannes@cmpxchg.org>,
  Michal Hocko <mhocko@kernel.org>,
@@ -111,17 +112,18 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  linux-fsdevel@vger.kernel.org,
  linux-arch@vger.kernel.org,
  linux-cxl@vger.kernel.org,
+ Josef Bacik <josef@toxicpanda.com>,
  stable@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <C94DBF32-62A3-4010-808D-DEB2E17DC552@linux.dev>
+Message-Id: <377FB184-1E61-4BF8-AC3E-33A79EC56658@linux.dev>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-44-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-26-6f74bec9a5bb@kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: Apple Mail (2.3901.100.1.1.12)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261027_024851_903505_663E5835 
-X-CRM114-Status: GOOD (  14.01  )
-X-Spam-Score: -2.8 (--)
+X-CRM114-CacheID: sfid-20261027_025103_551592_281F65FE 
+X-CRM114-Status: GOOD (  11.59  )
+X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -142,41 +144,40 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 
 
 
-> On Oct 27, 2026, at 07:18, David Hildenbrand (Arm) <david@kernel.org> =
+> On Oct 27, 2026, at 07:17, David Hildenbrand (Arm) <david@kernel.org> =
 wrote:
 >=20
-> From: Rik van Riel <riel@surriel.com>
+> From: Josef Bacik <josef@toxicpanda.com>
 >=20
-> When a driver calls dma_free_contiguous() before quiescing DMA, the
-> page might still have a reference from the device.
-> put_page_testzero() there returns false, WARN fires, but the code =
-proceeds
-> to free_contig_frozen_range() putting a live page onto buddy and =
-clearing
-> the bitmap. A subsequent allocation can hand the same PFN to a new
-> owner while the original holder still references it.
+> __tlb_adjust_range() takes the size of the range which has to be =
+flushed
+> as an unsigned int. Its callers, tlb_flush_{pte,pmd,pud,p4d}_range(), =
+get
+> and pass an unsigned long. Consequently, a range that is 4 GiB or =
+larger
+> gets truncated, possibly to 0.
 >=20
-> A concurrent put_page() that drops the last reference between the
-> testzero loop and free_contig_frozen_range() can double-queue the page
-> via page->lru, corrupting buddy lists.
+> On arm64 with hugetlb, a 64k kernel can flush 16 GiB hugetlb PMDs, and =
+a
+> 16k kernel can flush 64 GiB PUDs through tlb_unshare_pmd_ptdesc(). So
+> at least these two scenarios are affected.
 >=20
-> Avoid the corruption by not freeing a CMA region if any of the
-> pages inside are still in use.
+> Fix it by flushing the proper range instead of the truncated one.
 >=20
-> Make it explicit in the warning that the driver allowed a leak.
+> Fix generated by an LLM and sent by Josef Bacik in private.
 >=20
-> While at it, use page_ref_freeze() to make the semantics clearer and
-> switch to pr_warn_ratelimited().
->=20
-> Fixes: 9bda131c6093 ("mm: cma: add cma_alloc_frozen{_compound}()")
+> Fixes: b528e4b6405b ("mm/hugetlb: add tlb_remove_hugetlb_entry for =
+handling hugetlb pages")
+> Fixes: 8ce720d5bd91 ("mm/hugetlb: fix excessive IPI broadcasts when =
+unsharing PMD tables using mmu_gather")
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Rik van Riel <riel@surriel.com>
-> Link: https://patch.msgid.link/20260811132045.5f114772@fangorn
-> [ david: use page_ref_freeze() + pr_warn_ratelimited() ]
+> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> [ david: use two-tab indent, simplify description ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
-Acked-by: Muchun Song <muchun.song@linux.dev>
+Reviewed-by: Muchun Song <muchun.song@linux.dev>
 
-Thanks
+Thanks.
 
 
