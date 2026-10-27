@@ -2,139 +2,96 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A52E606A32E
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 14:10:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FE3606A31A
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 14:41:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=G0zHmHpq;
-	dkim=pass (2048-bit key, unprotected) header.d=cmpxchg.org header.i=@cmpxchg.org header.a=rsa-sha256 header.s=google header.b=N24stHU4
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=EmGON7eD;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F/aE3Kg9
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=5jxF6/4/W+A1WjrCqJd2E9d0nCbxdlQgcbJ/7pkC9T0=; b=G0zHmHpq4h4gPBNMsHVf1O4V8H
-	JVgSm2YCKR1gFahMMhdcc/r7EEFGzrvuSlA6YtDefQHVBwZgcQ0gVzZQB68gAMLevISfYc2xSnazX
-	ELovsyOIXILSZt6CEikrZfGz6R2DNgACzk2cThs4gRjSlnYrRJCtvjMSNUKPXKuKVkOqkE7rJ0Djm
-	es6Xku6Ws71HrXgMKD1rQkXsnPlPJpTl0in3xXpzFBTKD030Gfqlg5jqFiipZK17xSWhp9LWtpYbJ
-	/DAxkTVlW8JDwVBqBr0ReYrifiNmyQJixA1ckbO1/gE6S0LCu+4LbaePEa52cJLTVf7etX2rutjoX
-	PihzeV6g==;
+	bh=Cxbcd97TigLbOc2nsbdYTtwGKr7cyQITuDlutqpOwp0=; b=EmGON7eDyiWPGr6eJHBizUN11D
+	jTwcJngMDG3xJtlYG/jT7pVz3ZFLMLj1sHeTFtoQGcK5rv+w1q3Wcs4T8lBE7tuKLhXPEIZ0daYUS
+	2NQJUMBKaq0qDElGiyhQXeYHA7kYNHuH8gYH6enIqvtEuvsYID145wArIaOl6d7DgsBCg9Q3mCc8r
+	dW8RJuMfJWuVXw4aVS0nFGbbxRdCybnMqr2H4T/Uwb/TJNAOJ5G0QtuLuDoNd6Q/9ou3WAz4NVjt3
+	/LFoLVKWJn5qPwAxRAYhqdw081BsXDbSRyJziQxS5zDd8VRfxZJqn75oYcjZdRkv1Y+PdohBAhNOo
+	5pN90Hdw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLhsy-00000004zbe-27wM;
-	Tue, 27 Oct 2026 14:10:44 +0000
-Received: from mail-yw1-x1129.google.com ([2607:f8b0:4864:20::1129])
+	id 1xLiN2-000000053js-2WRy;
+	Tue, 27 Oct 2026 14:41:48 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLhst-00000004zaD-0o4l
+	id 1xLiN0-000000053jT-361H
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 14:10:43 +0000
-Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-8565d77c277so34902917b3.0
-        for <kexec@lists.infradead.org>; Tue, 27 Oct 2026 07:10:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg.org; s=google; t=1793110237; x=1793715037; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=5jxF6/4/W+A1WjrCqJd2E9d0nCbxdlQgcbJ/7pkC9T0=;
-        b=N24stHU4sgsnh+XbigMm+9p/FRf8VA8bM7eHcF9pGl2bxJFObwNvHdDbKjTxXd8/HI
-         JAQJwecS1nbXMcpOWAWzw2AY1OoSNVlR9K7SXrfzouu2jiz38usnRqCC5ypA6z2oN42U
-         xs98jON59Zxgfb8m0Oj7T/w05CbvSTFnmol5x6sExYQ/hu7W1EkriSYOn8cA8hs4jUZE
-         a8S6ImTWzHuR806gB3XlFfWIP9HWa3onaxlHC42P2FuLElEYOcTkZRg7Ya0sFrbT1+8I
-         Z/+FmOODAmJCRPV73ysKtQZtg9vyzPuc6PUpgCFfapKLmdFKocAoI5j8Wam2g7tK7GJt
-         43LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793110237; x=1793715037;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=5jxF6/4/W+A1WjrCqJd2E9d0nCbxdlQgcbJ/7pkC9T0=;
-        b=nSv6cYF0rdntZjEHBlGx1WGuU5DR+DGthcrGwvIVyThcMNa+TXMpyMfJS2W5brZuJN
-         NESmij+6JuWg+KWQ8SPXBI9K3YzPAhZvWS4zWJEnXHW2W0R62P8pVArUpJIIkxsYWv9F
-         p80Wp5WZSXG1VsGJpz/NdNl7X5KpGO8h1MoyHE7O/iGL9x/EMVArIDjzpBLTmly0DefI
-         NLv8uXGacaUN5kWTMvus7+9zwR8Dq0cs/VeuAid4vHtfiB6d+BLeEPUHZ1vAiSqT5dKX
-         2+I23e8qkZ1YyVibdeQ4muG6vbomm7SXthNcBAnj42iAjoy8A1WBiIs4dWi/b1D74N9w
-         y6Og==
-X-Forwarded-Encrypted: i=1; AKwUvBwP7VQSxIxpMeJwZRjFvolp5y602f/KY9gbNaKczbgwnDoOiWlVeeNx1cQI7ZwKRrEXrf11tA==@lists.infradead.org
-X-Gm-Message-State: AFq9FYK4zzPnBOEVg3/AFN0aSRhDjUG6FFUxmrrvfzvO4/ULIo7dhv/A
-	N8KcJLsZvq4mFnEKUPvNPJB886vBOF/4VULzw1uHHkdbenDYMqv10zGs7LSdOm3AzQg=
-X-Gm-Gg: AYBFou2IeCgfBGuousahukjmK2PX7pWpeztGoTmPJ3OBU78McYGaJgLDigKXlWyaC5m
-	52dxGzk4egPQcdYBEtKW/p8bah8dfUoF2ef+b3rJhJWILwJCXnxbIdn4FWGrpXGUxqtmiDCD3+o
-	2hM1s7SS6gVkxPEwQESyi/TI/NRDEYPIvyK/Qsfjegd5DFgKBm9t/J3pAgqP6kLMhvXJaSnrXb7
-	3Ihu5X1nQNl9/gClsPcP7rQ1yhURbYuYwq5ef21Pnt3x3B6LWYkepgULWHfdiEOaQS7ghCGI3dX
-	MBWO3FDfLTXY2HjwKNcBrMCHPmkBBS/5KhVPIe3ZGdJ8xoEUlcu9a/+IZRsrSXBosLCgGGuBTOT
-	YhPpRj+o0RLk9yQOuBaT1uSnEeDmqpDicvZJcYpP52sq2ixJhI+h1wPuzfUBmG1zFRqeMhUCR2N
-	WdIYSxoBzygtQGKqrnLgk2EgzdLsvs741aM57SB0nmKxW8N21Lr5hoWQvcQFlL95E91mM4xfmDA
-	r507xY3ohXWSbV/siuNxifMBB8UUdxgwM9pfY1mH8DQNv3gjYaxqRo=
-X-Received: by 2002:a05:690e:bcf:b0:678:907b:3014 with SMTP id 956f58d0204a3-67a6b942174mr1866452d50.63.1793110236828;
-        Tue, 27 Oct 2026 07:10:36 -0700 (PDT)
-Received: from localhost ([2605:8600:200:14e3:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-67a7a07daf6sm127367d50.7.2026.10.27.07.10.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Oct 2026 07:10:36 -0700 (PDT)
-Date: Tue, 27 Oct 2026 10:10:35 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
+	Tue, 27 Oct 2026 14:41:46 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 1495641A3F;
+	Tue, 27 Oct 2026 14:41:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61A8B1F01825;
+	Tue, 27 Oct 2026 14:41:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793112105;
+	bh=Cxbcd97TigLbOc2nsbdYTtwGKr7cyQITuDlutqpOwp0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=F/aE3Kg94sj9fXVFeMOGEhnFPh7IPM73CFA/LmgAAZfItP5Nw7PY1j3LmhUrie3RF
+	 WWOkZE/CrqgRjQtrY5czn2Xyhnu7Jhr5cpxZIRN6ucwFL7953eyR9cc+xJIfYeqrtx
+	 x427FQ040+6sFoWm3ZQYEETyJqIrMT+OQrZXuAnXJaqqyPl1iBQjI9L2UIFGYkQFmj
+	 rXT+tzW5xd2XQNYXVDL7CnDknr0SBZMXfP2tLX56GVF5sYE25tWUnjur3LSUQsNAM/
+	 e9FZ57Wpnn2LjlHGFOu9V+hCx07zuXfQscJu7g4AtCiXI1sCKypZwCMKvsYpJoK5pk
+	 vtVZ2ljYGxZvA==
+From: Pratyush Yadav <pratyush@kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
-	Barry Song <baohua@kernel.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
-	Baoquan He <baoquan.he@linux.dev>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>,
-	Lance Yang <lance.yang@linux.dev>, Rik van Riel <riel@surriel.com>,
-	Harry Yoo <harry@kernel.org>, Alistair Popple <apopple@nvidia.com>,
-	Nico Pache <nico.pache@linux.dev>,
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
-	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
-	Matthew Brost <matthew.brost@intel.com>,
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
-	Minchan Kim <minchan@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Chris Li <chrisl@kernel.org>,
-	Kemeng Shi <shikemeng@huaweicloud.com>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Youngjun Park <youngjun.park@lge.com>,
-	Gregory Price <gourry@gourry.net>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-cxl@vger.kernel.org, stable@vger.kernel.org,
-	Josef Bacik <josef@toxicpanda.com>
-Subject: Re: [PATCH 10/46] mm/huge_memory: fix list corruption when
- deferred_split_scan() races with deferred_split_folio()
-Message-ID: <auCw2-_yjh1_RjiO@cmpxchg.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,  Johannes Weiner
+ <hannes@cmpxchg.org>,  Michal Hocko <mhocko@kernel.org>,  Qi Zheng
+ <qi.zheng@linux.dev>,  Shakeel Butt <shakeel.butt@linux.dev>,  Lorenzo
+ Stoakes <ljs@kernel.org>,  Kairui Song <kasong@tencent.com>,  Barry Song
+ <baohua@kernel.org>,  Axel Rasmussen <axelrasmussen@google.com>,  Yuanchu
+ Xie <yuanchu@google.com>,  Wei Xu <weixugc@google.com>,  Baoquan He
+ <baoquan.he@linux.dev>,  Baolin Wang <baolin.wang@linux.alibaba.com>,
+  "Liam R. Howlett" <liam@infradead.org>,  Vlastimil Babka
+ <vbabka@kernel.org>,  Mike Rapoport <rppt@kernel.org>,  Suren Baghdasaryan
+ <surenb@google.com>,  Michal Hocko <mhocko@suse.com>,  Kees Cook
+ <kees@kernel.org>,  Peter Zijlstra <peterz@infradead.org>,  Jann Horn
+ <jannh@google.com>,  Pedro Falcato <pfalcato@suse.de>,  Hugh Dickins
+ <hughd@google.com>,  Pasha Tatashin <pasha.tatashin@soleen.com>,  Pratyush
+ Yadav <pratyush@kernel.org>,  "Matthew Wilcox (Oracle)"
+ <willy@infradead.org>,  Jan Kara <jack@suse.cz>,  Zi Yan <ziy@nvidia.com>,
+  Lance Yang <lance.yang@linux.dev>,  Rik van Riel <riel@surriel.com>,
+  Harry Yoo <harry@kernel.org>,  Alistair Popple <apopple@nvidia.com>,
+  Nico Pache <nico.pache@linux.dev>,  Ryan Roberts <ryan.roberts@arm.com>,
+  Dev Jain <dev.jain@arm.com>,  Usama Arif <usama.arif@linux.dev>,  Kiryl
+ Shutsemau <kas@kernel.org>,  Matthew Brost <matthew.brost@intel.com>,
+  John Hubbard <jhubbard@nvidia.com>,  Peter Xu <peterx@redhat.com>,  Will
+ Deacon <will@kernel.org>,  "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+  Nick Piggin <npiggin@gmail.com>,  Oscar Salvador <osalvador@suse.de>,
+  Minchan Kim <minchan@kernel.org>,  Muchun Song <muchun.song@linux.dev>,
+  Xu Xin <xu.xin@linux.dev>,  Chengming Zhou <chengming.zhou@linux.dev>,
+  Chris Li <chrisl@kernel.org>,  Kemeng Shi <shikemeng@huaweicloud.com>,
+  Nhat Pham <nphamcs@gmail.com>,  Youngjun Park <youngjun.park@lge.com>,
+  Gregory Price <gourry@gourry.net>,  Joshua Hahn
+ <joshua.hahnjy@gmail.com>,  Rakie Kim <rakie.kim@sk.com>,  Ying Huang
+ <ying.huang@linux.alibaba.com>,  Jason Gunthorpe <jgg@ziepe.ca>,
+  linux-mm@kvack.org,  linux-kernel@vger.kernel.org,
+  kexec@lists.infradead.org,  linux-fsdevel@vger.kernel.org,
+  linux-arch@vger.kernel.org,  linux-cxl@vger.kernel.org,
+  stable@vger.kernel.org,  Chris Mason <mason@kernel.org>
+Subject: Re: [PATCH 03/46] mm/memfd: check for real shmem inodes before
+ accessing shmem state
+In-Reply-To: <20261027-fixes_core-v1-3-6f74bec9a5bb@kernel.org> (David
+	Hildenbrand's message of "Tue, 27 Oct 2026 00:17:23 +0100")
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-10-6f74bec9a5bb@kernel.org>
+	<20261027-fixes_core-v1-3-6f74bec9a5bb@kernel.org>
+Date: Tue, 27 Oct 2026 15:41:34 +0100
+Message-ID: <2vxzh5i7p5nl.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261027-fixes_core-v1-10-6f74bec9a5bb@kernel.org>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261027_071039_541840_90FBC089 
-X-CRM114-Status: GOOD (  18.29  )
-X-Spam-Score: -2.1 (--)
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -145,54 +102,128 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Tue, Oct 27, 2026 at 12:17:30AM +0100, David Hildenbrand (Arm) wrote:
-> Since the deferred split queue became a list_lru, the isolate callback
-> moves the folios it took a reference on to an on-stack list, linked
-> through folio->_deferred_list, and deferred_split_scan() takes them off
-> that list with list_del_init() without holding the list_lru lock.
-> 
-> deferred_split_folio() does not know about the on-stack list. It only
-> holds the list_lru lock when it looks at the same list_head, and it can
-> run for such a folio: a THP is queued when it is mapped, as a candidate
-> for the underused check, and is queued "again" when a part of it gets
-> unmapped:
-> 
->   CPU0 deferred_split_scan()          CPU1 deferred_split_folio()
->   list_del_init(&folio->_deferred_list)
->     next->prev = prev
->     prev->next = next
->     entry->next = entry
->                                       list_lru_lock_irqsave()
->                                       folio_set_partially_mapped()
->                                       __list_lru_add()
->                                         list_empty(item)  -> true
->                                         list_add_tail(item, &l->list)
->                                           item->next = &l->list
->                                           item->prev = tail
->     entry->prev = entry
-> 
-> The folio now sits on the list_lru with ->prev pointing to itself. The
-> next removal leaves the neighbours pointing to it, and they still do so
-> after the folio has been freed. With CONFIG_DEBUG_LIST:
-> 
->   list_del corruption. prev->next should be ffd4000000270090, but was
->   ffd4000000278090. (prev=ffd4000000270090)
-> 
-> Fix it by grabbing the lock around list_del_init() so
-> deferred_split_folio() cannot race with it.
-> 
-> Fixes: fafaeceb89a5 ("mm: switch deferred split shrinker to list_lru")
-> Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+Hi David,
 
-Reviewed-by: Johannes Weiner <hannes@cmpxchg.org>
+On Tue, Oct 27 2026, David Hildenbrand (Arm) wrote:
+
+> shmem_file() only checks a file's backing mapping. That mapping can belong
+> to another file, as with a Coda file backed by a tmpfs container after
+> mmap(). It does not establish that file_inode(file) is a shmem inode.
+>
+> Seal handling and memfd preservation use this check before accessing
+> shmem inode state, so they can access an inode of the wrong type.
+>
+> Add file_inode_is_shmem() to check the inode's file operations in both
+> paths. This identifies regular shmem inodes, including those used by
+> memfds and ordinary tmpfs files, independently of wrapper file operations.
+
+Why not update shmem_file() to do this check instead? Having a
+shmem_file() that might not always return the right result on a file
+seems like a landmine.
+
+For example, you missed check_memfd_seals() in udmabuf or
+memfd_pin_folios() in gup. Plus, someone later down the line might use
+shmem_file() without knowing this subtle problem, and we probably would
+miss it in review.
+
+For callers that only care about the mapping should then use
+shmem_mapping(). Perhaps that would be collapse_file() but TBH I don't
+really understand khugepaged all that much. All other callers of
+shmem_file() seem to care about the actual inode.
+
+>
+> Fixes: c49fcfcda8b5 ("mm/shmem: update file sealing comments and file checking")
+> Fixes: b3749f174d68 ("mm: memfd_luo: allow preserving memfd")
+> Cc: stable@vger.kernel.org
+> Reported-by: Chris Mason <mason@kernel.org>
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> ---
+>  include/linux/shmem_fs.h | 6 ++++++
+>  mm/memfd.c               | 8 +++++---
+>  mm/memfd_luo.c           | 2 +-
+>  mm/shmem.c               | 5 +++++
+>  4 files changed, 17 insertions(+), 4 deletions(-)
+>
+> diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
+> index a7c7a96a7cbf9..2ceca7993e4f5 100644
+> --- a/include/linux/shmem_fs.h
+> +++ b/include/linux/shmem_fs.h
+> @@ -117,8 +117,14 @@ extern unsigned long shmem_get_unmapped_area(struct file *, unsigned long addr,
+>  		unsigned long len, unsigned long pgoff, unsigned long flags);
+>  extern int shmem_lock(struct file *file, int lock, struct ucounts *ucounts);
+>  #ifdef CONFIG_SHMEM
+> +bool file_inode_is_shmem(const struct inode *inode);
+>  bool shmem_mapping(const struct address_space *mapping);
+>  #else
+> +static inline bool file_inode_is_shmem(const struct inode *inode)
+> +{
+> +	return false;
+> +}
+> +
+>  static inline bool shmem_mapping(const struct address_space *mapping)
+>  {
+>  	return false;
+> diff --git a/mm/memfd.c b/mm/memfd.c
+> index 0f6fff004f5e4..7d2da23157003 100644
+> --- a/mm/memfd.c
+> +++ b/mm/memfd.c
+> @@ -211,12 +211,14 @@ static int memfd_wait_for_pins(struct address_space *mapping)
+>  
+>  static unsigned int *memfd_file_seals_ptr(struct file *file)
+>  {
+> -	if (shmem_file(file))
+> -		return &SHMEM_I(file_inode(file))->seals;
+> +	struct inode *inode = file_inode(file);
+> +
+> +	if (file_inode_is_shmem(inode))
+> +		return &SHMEM_I(inode)->seals;
+>  
+>  #ifdef CONFIG_HUGETLBFS
+>  	if (is_file_hugepages(file))
+> -		return &HUGETLBFS_I(file_inode(file))->seals;
+> +		return &HUGETLBFS_I(inode)->seals;
+>  #endif
+>  
+>  	return NULL;
+> diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
+> index 59de210bee5f9..c0811407ce397 100644
+> --- a/mm/memfd_luo.c
+> +++ b/mm/memfd_luo.c
+> @@ -582,7 +582,7 @@ static bool memfd_luo_can_preserve(struct liveupdate_file_handler *handler,
+>  {
+>  	struct inode *inode = file_inode(file);
+>  
+> -	return shmem_file(file) && !inode->i_nlink;
+> +	return file_inode_is_shmem(inode) && !inode->i_nlink;
+>  }
+>  
+>  static unsigned long memfd_luo_get_id(struct file *file)
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index fadf23f9e21ed..0d41aac125df9 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -275,6 +275,11 @@ static const struct vm_operations_struct shmem_vm_ops;
+>  static const struct vm_operations_struct shmem_anon_vm_ops;
+>  static struct file_system_type shmem_fs_type;
+>  
+> +bool file_inode_is_shmem(const struct inode *inode)
+> +{
+> +	return inode->i_fop == &shmem_file_operations;
+> +}
+> +
+>  bool shmem_mapping(const struct address_space *mapping)
+>  {
+>  	return mapping->a_ops == &shmem_aops;
+
+-- 
+Regards,
+Pratyush Yadav
 
