@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E786F606A31D
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 09:35:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CEF606A31B
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 09:37:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=0sgZXX0/;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Z3V2ir1f
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=O5o/J06T;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=U7+fBT3l
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -14,37 +14,37 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=GyDf/T3A99e/UK5Tx0KKev7xPaxEfXMruyrCYj6de1U=; b=0sgZXX0/lWq84BytmHeYjLLH+e
-	vSDg+sSo3y1Ws+mc5A/DVTLKbl8VAptozCKkEy8s3QPIIpMNe0BHNa0XESWvnbis254GOrhauPrWV
-	Dr+kYKrGkE0l0E5dw2iWYXhEsJBJBiGbwIHURGlBAfdiW/JYoi3dJfuqLP+g+uOy6dAg216Ns0rVK
-	KhpG80N/XaasWsc8QnRTWo3HgAMxw4Cq5XteI9peoM7pb9ShVTvqH/9/jfj1J6qtHYrPNncNbNKWZ
-	FmZHyCtXdc8vZM4RsfBBwmL5wHB8lIoAuZlk57ZHaF/WnMlK3WFwrFh9DKoldsf0YcUivk3FlurXx
-	VuQwI41A==;
+	bh=+rNSdhvOTHmuEN3Ml/bfsrTqF8UwvJdcqDi4DNQ6sTg=; b=O5o/J06TZlSPQ/TwnR5f0sf9qc
+	GyBTkJ1lWRmnzMiguNFwMoCT5xEOfW6xxK7I9EJCV7ERiDXdAy4mNs3ZB7ruZ9wEyEBbjfw/B/KbJ
+	I73dqlrRPU1uAc7XocJXT589pnDWHZyYxivtwSyJ0L4qkd7PAeiZpVLwct/K8PcK7sJO8tz4vB6/v
+	2f962l8vWhPm3zAbowHPNAdnPIuqcUcWRSRbGBE6dHTFhdNZsQR+s2foPDgkvB43MR0mIRDMKGsYH
+	Tc+LN99cJKcGABoE6aT2Uyeef80LuUgZ8aqy7LP1+pXweppS7FXNEMV7Wl/w048DnSntS7jkUaEUo
+	iaBiwYvA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLdaO-00000004Alq-2emi;
-	Tue, 27 Oct 2026 09:35:16 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xLdcw-00000004BSy-42e4;
+	Tue, 27 Oct 2026 09:37:54 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLdaN-00000004AlP-2IqL
+	id 1xLdcv-00000004BSj-04on
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 09:35:15 +0000
+	Tue, 27 Oct 2026 09:37:53 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 2E4E460052;
-	Tue, 27 Oct 2026 09:35:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CD641F01825;
-	Tue, 27 Oct 2026 09:35:00 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 6CCF042CE9;
+	Tue, 27 Oct 2026 09:37:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 490C11F01825;
+	Tue, 27 Oct 2026 09:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793093713;
-	bh=GyDf/T3A99e/UK5Tx0KKev7xPaxEfXMruyrCYj6de1U=;
+	s=k20260515; t=1793093872;
+	bh=+rNSdhvOTHmuEN3Ml/bfsrTqF8UwvJdcqDi4DNQ6sTg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Z3V2ir1fhLjLEOG38tPqPyKd7K/FHGfPC09OfR7eOlE/pdqk+8s3kVa1i4DQbH+Qx
-	 MZ32NLc7julvf25Egjxt2K1dVEewhL3Of9L8IHSEkMikSMuPsfkdtPqT3BAFRQIx4l
-	 I2aocqwSNzVOB8HXoD0iEYYGXcOv8ZXfRuVth/j1TS6G/Q38VWONKl+4C7n5MEPxNA
-	 MdDQY8Y20j6O/Wno2AqROjn/Br7ZnF59rm1EwFzdyTg2TjL0F8dx2lgZTIglHC5tyA
-	 DHYvTnMV0DHzDPWwpSElNE8EW4/oPBEyMA8Gm39jeV4/zgUOyB58UgoLt0XQBoz9Do
-	 0CxG7SV58ggfg==
-Date: Tue, 27 Oct 2026 09:34:57 +0000
+	b=U7+fBT3lehpQpFc3uJKZHtVpRgi1GtGHT6z3b8kE2S6FeF6bFDBDYsG/DhyOz1wlU
+	 gkZvgV/b8GwC5hBF2vuMNqTpih+mBOGm/magVJ+5tlmYMUc8rC0HgDbxkq4C2ZdX7/
+	 ykFSl8AC+Hlev3LyWJ5Ey8IgtYvUDz6NSxnqxhKKoOE4gmRJYKRD4ktRxpkFHa/N0B
+	 GZx6g/C9Es4dpnIsGGa84PHZ4w1B6j/LHsH9niHHf9ry4zHK8ev9PN5ziVl0zIXEG7
+	 p4yl/pvZrQHfp2KrQDErkAMPWJNescqIgRyziMHz4MrRviwMpP912C23Dpz/85S7eu
+	 i5GpXe5pXwalg==
+Date: Tue, 27 Oct 2026 09:37:34 +0000
 From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
@@ -73,17 +73,18 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
 	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 22/46] mm/gup: check for overflow when converting
- nr_pages to bytes in GUP-fast
-Message-ID: <auBwBYzcs-segDVk@gremlin>
+	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, Chris Mason <mason@kernel.org>, 
+	stable@vger.kernel.org
+Subject: Re: [PATCH 21/46] mm/gup: fix out-of-bounds write for nr_pages == 0
+ in GUP-fast
+Message-ID: <auBwudfT22AZ82GB@gremlin>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-22-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-21-6f74bec9a5bb@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261027-fixes_core-v1-22-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-21-6f74bec9a5bb@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,45 +103,47 @@ X-Spam-Status: No, score=-16.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Tue, Oct 27, 2026 at 12:17:42AM +0100, David Hildenbrand (Arm) wrote:
-> The overflow check in gup_fast_fallback() only covers the addition to
-> start. The preceding nr_pages << PAGE_SHIFT can already have truncated
-> the length on 32bit.
-
-Insert rant about 32-bit kernels here :)
-
+On Tue, Oct 27, 2026 at 12:17:41AM +0100, David Hildenbrand (Arm) wrote:
+> From: Chris Mason <mason@kernel.org>
 >
-> Users such as RapidIO's rio_dma_transfer() can derive such page counts
-> from a 64-bit userspace length.
+> With nr_pages == 0, GUP-fast still enters its page table walk and can
+> write past the caller's page array. The old end <= start check caught
+> empty ranges, but was replaced with an overflow check.
 >
-> Let's just check_shl_overflow() to reject any such overflow with
-> -EOVERFLOW early.
+> Users such as OrangeFS can pass a zero page count derived from a
+> userspace-supplied length. So let's return zero for nr_pages == 0 before
+> starting the walk, just like GUP-slow.
+>
+> Fix generated by an LLM and sent by Chris Mason in private.
 >
 > Fixes: c28b1fc70390 ("mm/gup: reorganize internal_get_user_pages_fast()")
 > Cc: stable@vger.kernel.org
+> Signed-off-by: Chris Mason <mason@kernel.org>
+> [ david: simplify description ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+
+LGTM so:
 
 Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
 > ---
->  mm/gup.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  mm/gup.c | 3 +++
+>  1 file changed, 3 insertions(+)
 >
 > diff --git a/mm/gup.c b/mm/gup.c
-> index 9906965893431..48e1bfe5ab9a9 100644
+> index 47e7ae152cdf1..9906965893431 100644
 > --- a/mm/gup.c
 > +++ b/mm/gup.c
-> @@ -3214,8 +3214,8 @@ static int gup_fast_fallback(unsigned long start, unsigned long nr_pages,
->  		might_lock_read(&current->mm->mmap_lock);
+> @@ -3204,6 +3204,9 @@ static int gup_fast_fallback(unsigned long start, unsigned long nr_pages,
+>  				       FOLL_PCI_P2PDMA | FOLL_HONOR_NUMA_FAULT)))
+>  		return -EINVAL;
 >
->  	start = untagged_addr(start) & PAGE_MASK;
-> -	len = nr_pages << PAGE_SHIFT;
-> -	if (check_add_overflow(start, len, &end))
-> +	if (check_shl_overflow(nr_pages, PAGE_SHIFT, &len) ||
-> +	    check_add_overflow(start, len, &end))
->  		return -EOVERFLOW;
->  	if (end > TASK_SIZE_MAX)
->  		return -EFAULT;
+> +	if (unlikely(!nr_pages))
+> +		return 0;
+> +
+>  	if (gup_flags & FOLL_PIN)
+>  		mm_set_has_pinned_flag(current->mm);
+>
 >
 > --
 > 2.43.0
