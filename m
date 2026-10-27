@@ -2,122 +2,106 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F98606A31D
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 10:23:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43816606A326
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 10:38:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=FQesHFM2;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=KSHdJQDi
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=LoJ9oj3n;
+	dkim=pass (1024-bit key, unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=BpGgmKPY;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=JWtkTaQe;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=BpGgmKPY;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=JWtkTaQe
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=HuWBfUhRw2eXbrJVRrdIsgOVF/qwEOWqwz0sZ/JDeUA=; b=FQesHFM2mFsLxD
-	f3TfYE2sJpW3pt0TIwMLKX01lsZdobLotwBCXjtohPrMPBK0gLV0ZAz7Js3hrTp6jsoD/zQTrZU0+
-	11vFUMaU+c4FpgjAC1IlNyTl7R5J/LuAoP8Lq8fp4FzdC8MB6b9IaQcLmXQzVPpOtgv+9mnlwJL8P
-	ygfhWTEdS1Y3vzOJxC+VNb5/OOHV19x9Eyhah00S/Fiam+T6PGWomOWF5YNuMf7Ob9YEbeovVtBLq
-	RdYhwxvNPXvUX7KWxAluouiOnQ8adxtB7vJiswUE9x0XGrHwcYyCvq/VEf0OoatbpLiUV9cr2gydD
-	4uAtxdBcdQu9p9O42BNQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=thOdz49DJmOvWZo66WX+p09a9NHT1DFOX3BcLmDx8JY=; b=LoJ9oj3n1T3DDkyyNCcLbYTrcz
+	jtBeWMm7uRUuppFDa7oHMfNxUD5/pMFUWhojLr3vpwfRvgx1dgbBQi5AyFzeWpJuYdI5TkdEZDk5V
+	8JZ7prqJsGWHfR9h8F6VUDxD8KqBkgSW3Ce5kyxUNVSv3kV23ghQZZfeln3RQ1iM6CN0fNVmFNV9A
+	IIDO8q+nEbaMklH72C3VDPeAPiXOI76IS+zHbAGDJFIKn0vqrz3Hp1NKIh9+Eqe64yzGXX7hKXRwf
+	glnsj0qbJ6zl+xx2jQE+1/Fx6CBN97JwIh6vZTBsMmK7sXZ91V1QiLXXAmyqI/xyTA9FAj1pSPfhz
+	gmkrUQzA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLeKm-00000004I9R-2twS;
-	Tue, 27 Oct 2026 10:23:12 +0000
-Received: from mail-ej1-x632.google.com ([2a00:1450:4864:20::632])
+	id 1xLeZd-00000004JGI-128j;
+	Tue, 27 Oct 2026 10:38:33 +0000
+Received: from smtp-out1.suse.de ([2a07:de40:b251:101:10:150:64:1])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLeKk-00000004I8v-2VFh
+	id 1xLeZa-00000004JEO-41y2
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 10:23:12 +0000
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-c34bff61551so580856666b.2
-        for <kexec@lists.infradead.org>; Tue, 27 Oct 2026 03:23:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1793096588; cv=none;
-        d=google.com; s=arc-20260327;
-        b=GEI4OPxAKfIzfvypj70K1GehGZtWoiYFJQ4/cuLWS+iAETsIQSSFK14u8wxF3h5QGt
-         2FV/ChHEpS7x+4kwNnapROWwWlK9eVveCeFO9GTQ/rLpv+45Q1UN9OHxMYYlsUWshYGr
-         B4ckJGRxWeepUYee79+blRnVJ/Yl02puKGuBuN/6JqJYXvqboamY8VE3y3v9ABJaIpA4
-         0Ue5oHSce38jgi18sH3LS8rf97EccumbEBEEBkj0DOMrPiX246/bEDEPpCVhX9UezBVh
-         1MtioEceQdW0MLOL7PzdA0ynGflnCJFy13KRfPSnSwTSb1TeAzejX0GxNsVVJTEnLJMz
-         7e3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=HuWBfUhRw2eXbrJVRrdIsgOVF/qwEOWqwz0sZ/JDeUA=;
-        fh=p8ytX6WhralnpZr8wxDnje19GH4Muon+vbzXA6A7uHU=;
-        b=hrgwWLI5j+xNwoZ0rthlkkHi6xq1se2SZNQP97G6aeEYKsD+sVEVcChS/mKlTCBoEQ
-         uxl6ai76P48JeQ5a9wK+Wzeb6L+4xH2i2/DcaWbMP4QChZsBwEf33pwOGQxyBGdijEBh
-         VnbAbz3LWqf00Z/oc5bNEEHVlh3wt7e7GQMAzn+qDnwHE1V8js+azMRSGVXUS/FEBy9t
-         1/5QAXMJVvUA61d84umbrH9LEkqn2W7hX9YRNcHHCn+BIthcJB+CM3Fnq7CPKIxuusmN
-         OkkyTVHbU0WCSUPjFEmvEmVeBU4W5zY9LGCwpZ63aFzQTeLW86vcAa0zvz5lkmzu8pz1
-         ioYg==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1793096588; x=1793701388; darn=lists.infradead.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=HuWBfUhRw2eXbrJVRrdIsgOVF/qwEOWqwz0sZ/JDeUA=;
-        b=KSHdJQDi30FpwQr0SXlS9NocMXvYzGXVMczW2qfbAwIc1Kf+9y2+bp3cQ9n7MbhcDJ
-         10+EnLlkHT2zAQ4WMF4ufgaF7T9JHfGQLhiGhqjVJIVkH27o6kXOY6aoRMNwMb2R3o0i
-         TokCEmoIL/3hmqyfIihjqaW86epAa5USlKpzEB0Hr0HEVtkqBbEGF5wb1nQ/oPgViUuJ
-         fQ7ixnfTzfnFyq5qv5pf00zr5jcfEwxyFbyq4QIOOCvq1M7d5dn6M+naGRBGfxVnDBdj
-         jfYfaL1xvyvs92/DML7yGKnxdCIi2n+Zmn/Eo6OKE+VXEw4DfYCTw/RT8Ww5UtteEMoU
-         dIXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793096588; x=1793701388;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=HuWBfUhRw2eXbrJVRrdIsgOVF/qwEOWqwz0sZ/JDeUA=;
-        b=E0GaSATOCF5tBKQ+3hlpVgf2VjikCwJBQyq/ny7AWiA7esUDh8/H3AsOEIXN+Mx+4b
-         hK/O8cyb6oaIXQanCrPqxR54OyHoYMwmXoNleJlM0CHEUOTW9gzXPuFVI+Yiqhx1qnj3
-         oQ7YXvJfK3DXMzjA1Y9zGUTWhi9Lz+nNE9gRgaTdLyHoQivxjuJM14RN7lqTcP+CkerQ
-         +emVYOcfKnQgCk6uh0kNSHeEw8erQkbXRlviqnUYRzhKl629LD/iFwAZ8E6sinAavxGX
-         QhBoMzRR6wySS3ZwdAVo1R3KITFv2B38AhwYfwYD9SvqJTZxQiu98ddRSR+YewgQxMRM
-         fhZA==
-X-Forwarded-Encrypted: i=1; AKwUvBy2a/LZT3FDdAAjb9wxKa15MxSdyndivy49KKKfajqhwGC/uzmaB4YpNwnfxOKFQz8NXqShlg==@lists.infradead.org
-X-Gm-Message-State: AFq9FYJKDiTpCmnVpKhXxHhxgz2T+VPUH5Jgv0e8J4G+ieqGb0wVviij
-	kAPjcjXIzMFEAcZyIIuTosxn0xcm34tsALO/dv9DSR5HVIIQaIPGRVkOoVMfs6vnUs4FBSKB5up
-	qmNaPl6d4OtA6+keujwPSzMHKvNbeyRQ=
-X-Gm-Gg: AYBFou3MtwVsadLhanTeVoLa2jKNBcbqf5RzNGwpFteWxQCYhu6H477Dkrmwrgk/MOV
-	QqWUGHl/lI7Hl0HKUdN2b/vnh++pg434MO9vsyLmVwjoaGHrYEN+7rPWYuflu2osziQ6MQtQvKN
-	AeHHhCJ802lDwOJLYRL5fBXxSVza7U4sMaAkBifSB9amSAc30vwJFSP9rAeLIj8LtCUTM0eHtbv
-	INymmuU9vp6tOt/z1pAdSTz6Kzj3iqS3HG1cDT9oUt6NIFp1A0yN8cfn3QvKgV/rcKGo0GLvD9O
-	8ghYOO/N5CJpUdx+M7p+DT4nt2kf0AKgl5UOX0ais9o5hA2qNQ+g0/NylW2dvnnJTrFweX9YRFk
-	z4FpuP5hxenroUPk6ZdG+7Bh0nd9CQbP6uQzWnjzhATIVWf/rzMBICnxumZO9lncYyDl9Kw==
-X-Received: by 2002:a17:907:86a3:b0:c31:5bb8:4b3b with SMTP id
- a640c23a62f3a-c46bdaf85e3mr1028439166b.2.1793096587718; Tue, 27 Oct 2026
- 03:23:07 -0700 (PDT)
-X-Archived-By: <archiver.kernel.org>
-MIME-Version: 1.0
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org> <20261027-fixes_core-v1-1-6f74bec9a5bb@kernel.org>
-In-Reply-To: <20261027-fixes_core-v1-1-6f74bec9a5bb@kernel.org>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Tue, 27 Oct 2026 18:22:29 +0800
-X-Gm-Features: AclHuK-sc-Sst_xgCP0rWexz2ICrmdMlmxE50eDjh8zWXXtcyxqz8s5Avp5yS-o
-Message-ID: <CAMgjq7CgeA5OYUuXAQF-PQ_LkmsLw2V3VzRwPUdMYTcGCmYCbA@mail.gmail.com>
-Subject: Re: [PATCH 01/46] mm/mglru: don't use stack pointers when walking PUD
- and PMD tables
+	Tue, 27 Oct 2026 10:38:32 +0000
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id CB00E21E9F;
+	Tue, 27 Oct 2026 10:38:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1793097507; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=thOdz49DJmOvWZo66WX+p09a9NHT1DFOX3BcLmDx8JY=;
+	b=BpGgmKPYTeSncqrm7zxPBRHnG/u5ryzZ9r1jVo6ID6wD1bxwm2J4KpOavjan4G7kyDB/4e
+	O1lrASYiwPI0/JJMTkmqjkkX6Er6miQd/Gew8mKhMIAa5YJNkLFiGwnnc4zAPLYnDbkQQg
+	88Z4X0NIdKihF27ZPrcLU67e93uVpEM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1793097507;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=thOdz49DJmOvWZo66WX+p09a9NHT1DFOX3BcLmDx8JY=;
+	b=JWtkTaQe8pEI5uGyjL0X8b2nwfsW21hp7IHkL0SvfCfpVJnRH0y9gc9gMfbD5rgrLKCnhs
+	5PvGRnQ/ESJixYDw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1793097507; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=thOdz49DJmOvWZo66WX+p09a9NHT1DFOX3BcLmDx8JY=;
+	b=BpGgmKPYTeSncqrm7zxPBRHnG/u5ryzZ9r1jVo6ID6wD1bxwm2J4KpOavjan4G7kyDB/4e
+	O1lrASYiwPI0/JJMTkmqjkkX6Er6miQd/Gew8mKhMIAa5YJNkLFiGwnnc4zAPLYnDbkQQg
+	88Z4X0NIdKihF27ZPrcLU67e93uVpEM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1793097507;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=thOdz49DJmOvWZo66WX+p09a9NHT1DFOX3BcLmDx8JY=;
+	b=JWtkTaQe8pEI5uGyjL0X8b2nwfsW21hp7IHkL0SvfCfpVJnRH0y9gc9gMfbD5rgrLKCnhs
+	5PvGRnQ/ESJixYDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AB7171321C;
+	Tue, 27 Oct 2026 10:38:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id qws4HB5/4Gp7GQAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Tue, 27 Oct 2026 10:38:22 +0000
+Date: Tue, 27 Oct 2026 10:38:20 +0000
+From: Pedro Falcato <pfalcato@suse.de>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, 
-	Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>, 
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, Hugh Dickins <hughd@google.com>, 
 	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
 	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>, 
 	Lance Yang <lance.yang@linux.dev>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
 	Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
-	Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, 
-	Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Usama Arif <usama.arif@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
 	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
 	Oscar Salvador <osalvador@suse.de>, Minchan Kim <minchan@kernel.org>, 
 	Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>, 
@@ -126,14 +110,47 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.o
 	Youngjun Park <youngjun.park@lge.com>, Gregory Price <gourry@gourry.net>, 
 	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
 	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, stable@vger.kernel.org, 
+	Josef Bacik <josef@toxicpanda.com>
+Subject: Re: [PATCH 02/46] fork: take mmap_lock before copying mm_struct
+Message-ID: <auB-3BQn_rR6IfY8@pedro-suse.tail5790ac.ts.net>
+References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org>
+X-Archived-By: <archiver.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-11.80 / 50.00];
+	SUSE_INTERNAL_BYPASS(-9.00)[];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,cmpxchg.org,kernel.org,linux.dev,tencent.com,google.com,linux.alibaba.com,infradead.org,suse.com,soleen.com,suse.cz,nvidia.com,surriel.com,arm.com,intel.com,redhat.com,gmail.com,suse.de,huaweicloud.com,lge.com,gourry.net,sk.com,ziepe.ca,kvack.org,vger.kernel.org,lists.infradead.org,toxicpanda.com];
+	R_RATELIMIT(0.00)[to_ip_from(RL8d8xedm6iu8o66torxsk6bwd)];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[65];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,toxicpanda.com:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -11.80
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261027_032310_666821_9807DBC8 
-X-CRM114-Status: GOOD (  17.17  )
+X-CRM114-CacheID: sfid-20261027_033831_181160_29BEB320 
+X-CRM114-Status: GOOD (  13.26  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -145,51 +162,44 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Tue, Oct 27, 2026 at 7:18=E2=80=AFAM David Hildenbrand (Arm)
-<david@kernel.org> wrote:
->
-> From: Josef Bacik <josef@toxicpanda.com>
->
-> MGLRU passes stack copies of page-table entries in walk_pud_range() and
-> walk_pmd_range() when walking to the next level. These copies can become
-> stale when khugepaged or MADV_DONTNEED (CONFIG_PT_RECLAIM) removes a PTE
-> table concurrently.
->
-> This pattern dates back to commit bd74fdaea146 ("mm: multi-gen LRU:
-> support page table walks"). Likely, earlier locking masked the latent
-> bug. Later changes exposed it: commit 1d65b771bc08 ("mm/khugepaged:
-> retract_page_tables() without mmap or vma lock") allowed concurrent
-> retraction, and commit cf4a65539c13 ("memcg-v1: no need for memcg locking
-> for MGLRU") dropped the walker's outer RCU protection.
->
-> The fix is simple, so just fix the original commit so we don't have to
-> speculate. To fix it, pass the actual PMD/PUD pointers. This restores the
-> RCU-protected lookup and validation against the live PMD. Note that the P=
-UD
-> handling is required as well to handle folded page tables correctly in al=
-l
-> cases.
->
-> Fix generated by an LLM and sent by Josef Bacik in private.
->
-> Fixes: bd74fdaea146 ("mm: multi-gen LRU: support page table walks")
+On Tue, Oct 27, 2026 at 12:17:22AM +0100, David Hildenbrand (Arm) wrote:
+> dup_mm() copies the parent's mm_struct before dup_mmap() takes the
+> mmap_lock. A concurrent brk() can leave the child with a stale mm->brk
+> and newer heap mappings, causing later brk() requests to fail.
+> 
+> Other operations (e.g., PR_SET_MM) on the parent's mm_struct can similarly
+> cause inconsistencies.
+> 
+> As a simple and robust fix, grab the parent's mmap_lock earlier. This
+> way we don't need to update individual mm fields in dup_mmap() and
+> keep missing ones. Stop updating the 4 existing members (total_vm, data_vm,
+> exec_vm, stack_vm), as that is now no longer required.
+> 
+> Keep releasing the parent's mmap_lock in dup_mmap(), before
+> userfaultfd completion, to avoid moving the userfaultfd handling into the
+> caller. This should get cleaned up later.
+> 
+> Move uprobe_start_dup_mmap() to preserve the lock ordering.
+> 
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: handle walk_pud_range() as well, clarify+simplify description,
->          adjust Fixes: ]
+> Reported-by: Josef Bacik <josef@toxicpanda.com>
+> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
-> ---
->  mm/vmscan.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
 
-Reviewed-by: Kairui Song <kasong@tencent.com>
+Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+
+FWIW, strictly speaking malloc() isn't usable in a forked
+(multi-threaded) child, but glibc/musl provide this in a best-effort way.
+
+-- 
+Pedro
 
