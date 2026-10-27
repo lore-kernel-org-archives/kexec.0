@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B50606A31A
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:14:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765D2606A31A
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:14:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=NIZVwQla;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MhUkoy7C
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=OQ+We7uY;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=keQktUEi
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,39 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=8ufwMc1LOu0NsDl3uCV5aR+huyjgjHnELJ5CXPaVCc8=; b=NIZVwQlavG27Aebvjg1jVrc8Lv
-	znl9DFs6yhML/eSDAnyfGOfhqavXM5pJ9szIJe+KeKsi3nJk1tX0/n9w22HDkrMC4975sMVenAvOE
-	b0bqmohHBDt69FcPBvEebwlgEYqtJ08HjF2rPMUmX9J5oIO5F4qbiRjm8dqb1REBlYvjGGzsJ6oRX
-	mrYsRucOznVOkFp+v0YlOo8eud1t6MRSsQcSzkLfybm9X6Q/eEgRRFj5b7sKF7EtGzccAo/h15zBl
-	QBYglXlS89cFwkrHr2TVKAmlxYwa1rA2rsWj/hMhuxQp2eEAzLe1erGEQ1UYVll/uCf7zaqPkypJB
-	arXXYorA==;
+	bh=92om4cyZcJpqr3L77YFqbIjA36tUUkwmvjaLJ3OsVp8=; b=OQ+We7uYnd2TroK6nhzqLudz2W
+	V/cOv1SlGz3+b1JjECh/RtNJiPvGoM2CSNRMbTwpDFp6MLgxRERMfmun0//0UWxJz+BnxqMZGHvYu
+	YoV7CQoHljDO0KD6mrJ81rSEl/u0jODS9Y3MHOmCgScVk6L8M4PCz/bFNblj1/6d8HUI5eje5pCvv
+	pBe8Nn3zN62i17UQ92nhzTHv9e6ueYYxxE5v7aKZen1xHUrFNTKCvvZSZFQiMWpK2xBhkHxun2Lha
+	UZRi8Vs/2VyKJkHia13G+WiwYh6tcGG3cBqAHCiETk9A6WzVsaLzIpfqWDA5CU0FcOHUvL56X2vGk
+	L+fRC+QA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUpW-00000003WCE-0RE7;
-	Tue, 27 Oct 2026 00:14:18 +0000
+	id 1xLUpZ-00000003WEK-0ks7;
+	Tue, 27 Oct 2026 00:14:21 +0000
 Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUpU-00000003WBQ-3VRf
+	id 1xLUpX-00000003WDR-4931
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 00:14:16 +0000
+	Tue, 27 Oct 2026 00:14:20 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 45E95601F9;
+	by tor.source.kernel.org (Postfix) with ESMTP id 6C84B600CB;
+	Tue, 27 Oct 2026 00:14:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7544D1F01825;
 	Tue, 27 Oct 2026 00:14:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 491431F01825;
-	Tue, 27 Oct 2026 00:14:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793060056;
-	bh=8ufwMc1LOu0NsDl3uCV5aR+huyjgjHnELJ5CXPaVCc8=;
+	s=k20260515; t=1793060059;
+	bh=92om4cyZcJpqr3L77YFqbIjA36tUUkwmvjaLJ3OsVp8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=MhUkoy7CwwgTJUnS6aUNsoYySQYXTA7dwTZHM4ACnoWVtMtZvSFU7L2jmM0iJTyZT
-	 WFYaniVWs7Rds0CLxGqAKSZ3VRr3dEjXcT4YrQAAzlu6N//BBg1wnDTQ6FnWNT+qW7
-	 Oce0iJXzgTolf/ZGJawJV5RtAM7QJurXQK9lreaAeOyYbmaP64omijxZUCQBXxxHAN
-	 fonBVpvQU5VlYbZWVjHCOS3onIzoQGL7jx3LGgpXegBQX8ybh2bq3/gbL12f1MUxIZ
-	 cy3adAFpFi5+61BuWtYQduzmy4l4wGZFpEkYfPMrcIX9nvOfOmSD/MwM1tS1bTVrtS
-	 qKXvPKx/NEDWA==
-Message-ID: <sashiko-outbox-185923@kernel.org>
+	b=keQktUEieUxwAGgkqA/QF4EPqs58kVC8yG5jl6IszjL69B8Jl9t2JXFuY4cJi9Wzx
+	 bQmB2KhLlgH4dGpzH8vkCmydTkrCiLkB8qpOl+bdNMdEKbB+oMhkhyvRtPAdK/Dtkh
+	 p8EoW+oUmmBUzZth+SI96hefL9EaDoN1qNaZyD7hVYjBN6PnUmIxVzskV9JHPEhrhC
+	 mKDlwSD313ir4N9oZ7COz9hmjpgc4cZeN30ZeT+UsuSCk91Y7/k72GhLYdVlmVtMsA
+	 v4qpTjgnDbgYGfSDSuIN1g4MNbmSUBiYrFJGlvIujGdRMQmTaz1hpNYDLxutOPPd3l
+	 arcKQarPGOeag==
+Message-ID: <sashiko-outbox-185924@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 41/46] mm/vma: call ->may_split() before a partial merge
+Subject: Re: [PATCH 42/46] mm/huge_memory: split huge PUDs when adjusting
+ VMA boundaries
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -73,13 +74,13 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org, "Chris Mason" <mason@kernel.org>
-In-Reply-To: <20261027-fixes_core-v1-41-6f74bec9a5bb@kernel.org>
+Cc: kexec@lists.infradead.org
+In-Reply-To: <20261027-fixes_core-v1-42-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-41-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-42-6f74bec9a5bb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 00:14:12 +0000
+Date: Tue, 27 Oct 2026 00:14:16 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,32 +100,27 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> From: Chris Mason <mason@kernel.org>
+> PFN mappings such as VFIO PCI BAR mappings can use PUD leaves while
+> allowing VMA splits at page granularity. However, vma_adjust_trans_huge()
+> only handles PMDs.
 >=20
-> A driver can use the ->may_split() hook to forbid a VMA boundary at
-> certain addresses.
+> After faulting a writable PUD-sized VFIO BAR mapping, changing its first
+> page to read-only with mprotect() makes the PMD walk treat the PUD leaf
+> as a PMD table. Applying MADV_DONTFORK to the first PMD-sized chunk leaves
+> the PUD spanning two VMAs: the PMD-aligned boundary skips splitting.
 >=20
-> A device-dax device is a character device that gives raw access to a
-> range of memory through mmap(). device-dax refuses any address that is not
-> a multiple of the device's alignment through vm_ops->may_split.
+> Walk the page tables once at each adjusted boundary and split a huge
+> PUD or PMD leaf as needed. Handle PUD leaves even when the boundary is
+> PMD-aligned.
 >=20
-> vma_merge_existing_range() can move boundaries, but does not call
-> vm_ops->may_split.
->=20
-> If a range at the edge of a VMA gets the attributes of the adjacent VMA,
-> the function moves only that range over to the neighbour: one VMA shrinks
-> and the other grows. This is a partial merge, and vma_modify() tries it
-> [ ... ]
+> Fixes: f9e54c3a2f5b7 ("vfio/pci: implement huge_fault support")
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Chris Mason <mason@kernel.org>
-> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> [ david: improve description; cleanup the code ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027-fixes_core=
--v1-0-6f74bec9a5bb@kernel.org?part=3D41
+-v1-0-6f74bec9a5bb@kernel.org?part=3D42
 
 
