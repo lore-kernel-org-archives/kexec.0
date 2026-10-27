@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176AB606A335
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 01:34:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC2B606A321
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 01:40:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=1JWJXCw9;
-	dkim=fail reason="signature verification failed" (2048-bit key, unprotected) header.d=surriel.com header.i=@surriel.com header.a=rsa-sha256 header.s=mail header.b=P6A7cpQQ
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=LJbRMWaO;
+	dkim=fail reason="signature verification failed" (2048-bit key, unprotected) header.d=surriel.com header.i=@surriel.com header.a=rsa-sha256 header.s=mail header.b=hLHADdJY
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
@@ -14,40 +14,39 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=kdbWZsvYj0rKy4CApupNo75UEMIwmD/zLLPrgjCeTQg=; b=1JWJXCw99xlQfGNheDVFRUt1ER
-	ReFCDaARXv8azCjcvMg+dp9LrDqatyXoHQywLIMcBW5TIyuzgzFDfda+o6ruyods804WsNz0k547+
-	VpAdn4oyiUOGmfXHhnQ5cbBJ8zFIe+dnELYygzDCyjA+YETDuFchKlBXkIgNHjP/Rmm5z1H9N6U4P
-	kuw/3kYl///8t+BuQzJIDaKrKMlJMcsDoWX6vty9Z79yMc3mi8eG/pixxwmI5BGmUeGTq8Djuwl3W
-	vT0S7ZBeQibsSolWFlVySE/HtI2XR8KdUDo5ygo7EAsNwI/SKYxXl59KzpeBneua5ehvdtzE6ByFd
-	Gittsuaw==;
+	bh=lUuA7+chWIhLu+qX3DDV5gWAGrlrfczNAdJpLXe+OFs=; b=LJbRMWaOXHHQhCj9/3vWKMQ1Ew
+	Ya/zhtSiFbK7v3ewO6gtA7inSsdQ2MPgkImlC6ZHyGXiV2gUVJmujeiM5JJSxs9/Ib8sQDNI/aiUn
+	Q86Zj7+eNCzsZSb+tbWe6FhvQe+FclzPUj2OPT336JH+2LA3tHVKwTFBrq/7UUB3DGUH9Fotdq0ZB
+	tmS5dCgRlfQPYW0BlZqZVs7gfGHueFX215SStnWqoqCYuFfTKaU3LQv9dwo77FlOPNMZoKt4rFPrb
+	qxcYzyZR0DNTvQmTy7uzvmjsSGbSDOSjKZyXXOAl3gTI9WM3Tbcw8AoXHp6mDM1/HRV7gfsu+VwI2
+	vSWESMPw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLW4e-00000003b41-35Ed;
-	Tue, 27 Oct 2026 01:34:00 +0000
+	id 1xLWAe-00000003bTY-0HZ6;
+	Tue, 27 Oct 2026 01:40:12 +0000
 Received: from shelob.surriel.com ([96.67.55.147])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLW4c-00000003b3R-3C79
+	id 1xLWAa-00000003bSu-0TPz
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 01:34:00 +0000
+	Tue, 27 Oct 2026 01:40:09 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
 	; s=mail; h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:
 	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID; bh=kdbWZsvYj0rKy4CApupNo75UEMIwmD/zLLPrgjCeTQg=; b=P6A7cp
-	QQ/mw34219jr1ZuLpn4iamDW/lpfHuUQAejSgfd9BCQ+6dbG1jEIeTK/B5qrfXMwDQwiwYopkVf89
-	RDL48DJQKppMXWlSLowCroa4B9N8NkB9so/a/O1EdaipGzthBuOgtQ6miY+TQlLi0Gc23kaqDGhbz
-	hFAg6QHgsWRPBKIc9fgHYDIRtSnzsVLvNkBDVBSRTMzZkClyzjAiC+5YQ76L8OgzEtrHYkiog8Bon
-	SZNOnQbqg0yUwWcATv7qxtnIAKScTap8K5B6T16gJc3jQ3eRGg74sK4y2Ml94noRb+siX7pAMTbQ7
-	ytwibybZeR87iCV38mXRV3hUtenw==;
+	:Resent-Message-ID; bh=lUuA7+chWIhLu+qX3DDV5gWAGrlrfczNAdJpLXe+OFs=; b=hLHADd
+	JYpcXFYTdIkRnelJUktscfivm4kwDbjgCJ3oKz+6xIqeSecb3hHKgagunNCrtnoqN8IQD6/REH25s
+	oHxZyQSCr0OSEiqSi9Os1mhnjxwRqGWFbbumNQDd1oEhret8XLlNZtgONJZyTclZm5WpxtQmyWuhS
+	8hjwzAqfRD5ea3cepZRKgnVd38mXxeU0fx0Vvpx5yXaqmpkPi1NIPFAjqK1QEievZKt7FLcbA0WoV
+	A1CkwiQYO2zNKD8dQNoCPMBm3AxtWxJpcVyZPk1xkQAUCCyI93gHTEygLADW11NuQ+67ga/vRCIlp
+	DGjTDp5ID1o5evE+HPpbi2ITaPpg==;
 Received: from [2601:18c:8100:a0e0:2541:b86e:2586:d219]
 	by shelob.surriel.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
 	(Exim 4.99.5)
 	(envelope-from <riel@surriel.com>)
-	id 1xLW2j-0000000AyHo-2cK7;
-	Tue, 27 Oct 2026 01:32:01 +0000
-Message-ID: <03495f2191fe78352042d859b6825e7231239de1.camel@surriel.com>
-Subject: Re: [PATCH 01/46] mm/mglru: don't use stack pointers when walking
- PUD and PMD tables
+	id 1xLW99-0000000AyaG-17xt;
+	Tue, 27 Oct 2026 01:38:39 +0000
+Message-ID: <26a54fb0de70f23951e524dccd7c905807278deb.camel@surriel.com>
+Subject: Re: [PATCH 02/46] fork: take mmap_lock before copying mm_struct
 From: Rik van Riel <riel@surriel.com>
 To: "David Hildenbrand (Arm)" <david@kernel.org>, Andrew Morton	
  <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, Michal
@@ -80,12 +79,12 @@ To: "David Hildenbrand (Arm)" <david@kernel.org>, Andrew Morton
  <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  kexec@lists.infradead.org, 	linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, 	linux-cxl@vger.kernel.org, Josef Bacik
- <josef@toxicpanda.com>, 	stable@vger.kernel.org
-Date: Mon, 26 Oct 2026 21:32:00 -0400
-In-Reply-To: <20261027-fixes_core-v1-1-6f74bec9a5bb@kernel.org>
+ linux-arch@vger.kernel.org, 	linux-cxl@vger.kernel.org,
+ stable@vger.kernel.org, Josef Bacik	 <josef@toxicpanda.com>
+Date: Mon, 26 Oct 2026 21:38:39 -0400
+In-Reply-To: <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
-	 <20261027-fixes_core-v1-1-6f74bec9a5bb@kernel.org>
+	 <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org>
 Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
  keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
  eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
@@ -116,8 +115,9 @@ User-Agent: Evolution 3.60.2 (3.60.2-2.fc44)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261026_183358_826307_64A30BEE 
-X-CRM114-Status: GOOD (  10.39  )
+X-CRM114-CacheID: sfid-20261026_184008_150888_09E8EFB4 
+X-CRM114-Status: UNSURE (   5.35  )
+X-CRM114-Notice: Please train this message.
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -137,29 +137,15 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
 On Tue, 2026-10-27 at 00:17 +0100, David Hildenbrand (Arm) wrote:
-> From: Josef Bacik <josef@toxicpanda.com>
 >=20
-
-> The fix is simple, so just fix the original commit so we don't have
-> to
-> speculate. To fix it, pass the actual PMD/PUD pointers. This restores
-> the
-> RCU-protected lookup and validation against the live PMD. Note that
-> the PUD
-> handling is required as well to handle folded page tables correctly
-> in all
-> cases.
+> Move uprobe_start_dup_mmap() to preserve the lock ordering.
 >=20
-> Fix generated by an LLM and sent by Josef Bacik in private.
->=20
-> Fixes: bd74fdaea146 ("mm: multi-gen LRU: support page table walks")
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: handle walk_pud_range() as well, clarify+simplify
-> description,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 adjust Fixes: ]
+> Reported-by: Josef Bacik <josef@toxicpanda.com>
+> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
->=20
+
 Reviewed-by: Rik van Riel <riel@surriel.com>
 
 --=20
