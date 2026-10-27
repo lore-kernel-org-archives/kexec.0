@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85641606A31A
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:12:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935DC606A31A
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:12:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=gVqrNU9m;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=frD00LxY
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=KJEityoE;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bcdaxrUQ
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,39 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Uy/vArX+eYFyPGW9N+BUXYcTQV9D34TXxudYrYLMgXI=; b=gVqrNU9mWy5+PukCWepjr7QhX7
-	rAp06AvmrxeaumuYGaXMtWt5QVW6KFNI/SdWUO06TSd3DahSH6ZiRGar8kfH9Cw5ZJYVmOPb01lWC
-	/fewiDaPJVrAdHFjzzLUU0Gldp4KbldVOYMHyUaDGB7ISyVcfDV3qOXY8zjRsn3M5/Kon0ZyWigLi
-	eEbXgdrGMR6GinzzUzJgRkY0BvI2TwNHaaxtb2WTngoz3L27VSYsZ8XJ5fvCFGbW9HDd3ieG8LpuD
-	5amdueglnL04YpYxJv3aGqLSFGhGyQMESBH4eXoiSoXczm15rN/aEjiDdmflRBFh0xysW8STKVNhx
-	b8E+yUHA==;
+	bh=VzGqrIaDDc4OWkrbqYY89wgtWb7+exe7hddS1SL1Bto=; b=KJEityoE8v4oB9juVWbC7fcWv7
+	6SJcNn03VuhxP5YYEUvkK/X/d/zGsXJBnQtaPflBOa4QXhEgZdnl1Dpo3DoYpUeDWVB7ldu55Dv4B
+	HwPTcXY/YQjUDuWbb7MD6EdmAUv6SL/SOCjBoL8rVvqBMqlVyvT8JdzuvL3iYd8u1i37gj7fVX0ZC
+	Qj+iagCnp/BH5srvQdKhoi0H3J8rn4Ea2mHDdfF9z2ZjZ/Ulw0mhlKtsvClgRGs1M25i3z3fzOe+K
+	wQmnDYb6rLsD3e6IKqhAPdLm39PgsZ7Ty+ohx19GgS8910Z1FqiTlM33kqFrQFNyJZ/fIpfJyNZ1G
+	NBLwR4Ug==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUnU-00000003UcD-11V2;
-	Tue, 27 Oct 2026 00:12:12 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xLUnX-00000003Ue2-1LwZ;
+	Tue, 27 Oct 2026 00:12:15 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUnT-00000003UbV-0jzC
+	id 1xLUnW-00000003UdN-1ouH
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 00:12:11 +0000
+	Tue, 27 Oct 2026 00:12:14 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 6337B40D59;
+	by tor.source.kernel.org (Postfix) with ESMTP id D5022600CB;
+	Tue, 27 Oct 2026 00:12:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D41221F01825;
 	Tue, 27 Oct 2026 00:12:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47AAC1F01825;
-	Tue, 27 Oct 2026 00:12:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793059930;
-	bh=Uy/vArX+eYFyPGW9N+BUXYcTQV9D34TXxudYrYLMgXI=;
+	s=k20260515; t=1793059933;
+	bh=VzGqrIaDDc4OWkrbqYY89wgtWb7+exe7hddS1SL1Bto=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=frD00LxYilFTz7Ibu5BBVrWfrqTd1OMkh6oCEec7/4k/eoIaB+IlDE2wk+hVxeeHy
-	 Y5Effqs2hY5ptrC1723VEe5QEc6HZ3KnxjhGtECoOCKfWc5BXkT5kLVr22j/1IPpse
-	 YG8IBwPYr4kcnOdxsp+CLi/9GIzJCjzCmOZpauDnxX2VfHPYosvvm2gWP2pm0in4UH
-	 /3Go3wczQyxHXCl65lBTMzUZuVwGgP5G8dXUprzeFn9afbHJ1AAc/a5DuqyI+bI6NK
-	 0Q3itf+q/3mYNCJc/PrI9pJrMjbfWweweItSyjSfhOO/43L7ZnAqFqLhVjxBPnHmg+
-	 Ty/eBgOBpAn0g==
-Message-ID: <sashiko-outbox-185884@kernel.org>
+	b=bcdaxrUQI+GNALLS6bFwM8ujwEjUF/BC7/J6hIj98mkMImT5qXgLNjQiLzIzsMP4S
+	 lZqJlFwbKjaCEBz4FNQC1CD9fStfcWPGpbBdUQ1SjFqqZ8xmoS/RTIr2XuGNFDJAIF
+	 5Mv32JbySxxhMVOLJL8Yat7+NbkagBzPtMAJSSMcvFwMdiIUNRIRFmNGXIh7N6rCMj
+	 xjQ/kis4ii2t3RrfFB9SR+2dDDvBD0h2ECEVU/izxFSSa63rXI0tgErSA09GybbiKV
+	 pUiPjV6zrC7t56Mu1dR0KcvipshqB30LZsrs9fRiLPrdhNZttB+hte2vXn/Ib5hZ94
+	 cR3Vmv4+gcYMw==
+Message-ID: <sashiko-outbox-185885@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 02/46] fork: take mmap_lock before copying mm_struct
+Subject: Re: [PATCH 03/46] mm/memfd: check for real shmem inodes before
+ accessing shmem state
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -73,13 +74,13 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org>
+Cc: kexec@lists.infradead.org, "Chris Mason" <mason@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-3-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-3-6f74bec9a5bb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 00:12:06 +0000
+Date: Tue, 27 Oct 2026 00:12:10 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,35 +100,28 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> dup_mm() copies the parent's mm_struct before dup_mmap() takes the
-> mmap_lock. A concurrent brk() can leave the child with a stale mm->brk
-> and newer heap mappings, causing later brk() requests to fail.
+> shmem_file() only checks a file's backing mapping. That mapping can belong
+> to another file, as with a Coda file backed by a tmpfs container after
+> mmap(). It does not establish that file_inode(file) is a shmem inode.
 >=20
-> Other operations (e.g., PR_SET_MM) on the parent's mm_struct can similarly
-> cause inconsistencies.
+> Seal handling and memfd preservation use this check before accessing
+> shmem inode state, so they can access an inode of the wrong type.
 >=20
-> As a simple and robust fix, grab the parent's mmap_lock earlier. This
-> way we don't need to update individual mm fields in dup_mmap() and
-> keep missing ones. Stop updating the 4 existing members (total_vm, data_v=
-m,
-> exec_vm, stack_vm), as that is now no longer required.
+> Add file_inode_is_shmem() to check the inode's file operations in both
+> paths. This identifies regular shmem inodes, including those used by
+> memfds and ordinary tmpfs files, independently of wrapper file operations.
 >=20
-> Keep releasing the parent's mmap_lock in dup_mmap(), before
-> userfaultfd completion, to avoid moving the userfaultfd handling into the
-> caller. This should get cleaned up later.
->=20
-> Move uprobe_start_dup_mmap() to preserve the lock ordering.
->=20
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Fixes: c49fcfcda8b5 ("mm/shmem: update file sealing comments and file che=
+cking")
+> Fixes: b3749f174d68 ("mm: memfd_luo: allow preserving memfd")
 > Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
-> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> Reported-by: Chris Mason <mason@kernel.org>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027-fixes_core=
--v1-0-6f74bec9a5bb@kernel.org?part=3D2
+-v1-0-6f74bec9a5bb@kernel.org?part=3D3
 
 
