@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CF8606A31B
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:13:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4883A606A327
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:13:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=nI328k5j;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZRyUjmLK
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ZlxDbZXd;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jw/grf2m
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,39 +14,39 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=152UiJQPSd0WWhRV/RFm1y/NO86IHZgmxHUUAdsl+ps=; b=nI328k5jWF9t3jX3kbbZ+1Hkz2
-	BmGJRghXmN3X9qQPCEXBUy/O6IZhICHvKjAr9LvqJh6pIu0fGX90Z6N/ln2eqf4eXNo7faRUnxie0
-	CNAfENxQ1bEsG8kuCoSzHDjzlG1SOrRiWZCKH9z9iOm1+j2E5lIVTSJz51B1Ql3y8vhgSbDdEy+Y3
-	8JetXdm8fB3MB8RIhtBFkUSngACgyJFl03ebMx3zLB3mKuajK8PgRJ52Z3evrFJgluhh4X6IEQVG0
-	8NiOu8VUQKU3Ls0dKRsdIiJziHBtjkYqtcQJWLhv7eJ5AjiIYHc0jFNnwGxj+SHbt6lUamaB3pqbe
-	nT2FN35g==;
+	bh=QHo9JMDis/nNK6J8U8zRMdKCromwj/kyHvEHOdJ+mKk=; b=ZlxDbZXd52px735743DM9zdH5g
+	IIvkZ7NFz7PjtAgnQwsDE+VVzWa9ddUh6Emg+ZWKzQqvKojlMQg+IbhEWr/K0nPKuVyUDQiNbl8vF
+	1dkiaQGdJkP4gszanYpVZI7mC9Kw80z1fkSZZet9HZszD5FZk5scNwtJ//wuoR/TBC3CYqclD1h1G
+	qik7yNIUQb4p0meGxRgvfQMXnOGlJOePiLeGcyiBVv6DswERXXAl3IuWtVVhmDp/CXh3dP7Dl/KO8
+	oBV+0w1CpFduk0YqxuWDEVcHTLta0ODM/I30zBgwsacKOZZiYDkK+1jlZBIqbr3/OHFSI5RslNSQn
+	v5LKSa5A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUow-00000003VkV-3leC;
-	Tue, 27 Oct 2026 00:13:42 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xLUoy-00000003Vm0-4Apa;
+	Tue, 27 Oct 2026 00:13:44 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUov-00000003VjH-24dQ
+	id 1xLUoy-00000003VlV-09uK
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 00:13:41 +0000
+	Tue, 27 Oct 2026 00:13:44 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id E5834601F9;
-	Tue, 27 Oct 2026 00:13:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96C671F01829;
-	Tue, 27 Oct 2026 00:13:37 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id C496A40E59;
+	Tue, 27 Oct 2026 00:13:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2137C1F01825;
+	Tue, 27 Oct 2026 00:13:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793060020;
-	bh=152UiJQPSd0WWhRV/RFm1y/NO86IHZgmxHUUAdsl+ps=;
+	s=k20260515; t=1793060023;
+	bh=QHo9JMDis/nNK6J8U8zRMdKCromwj/kyHvEHOdJ+mKk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ZRyUjmLKO6p0ajm1auFxv4ji+h3ZpFgw9G26JhXbCIZX8HX7qXp36SwEgggVVFmKv
-	 vKBhqOSmKsU8O5ihXgosnp7WZq8hLaoIGnjdzJU0rxubBqb05OCbCO/kN8wY+hPDhL
-	 6l0ETjoc10eM5gJdwHodtu1vN9IsfI53ZFyimEOIoPQFPYYfeMj/4aBXRrRY7To8KN
-	 2AZJ1YdnI7p3OqbivDYMZNhlkci3c2vK0D1yjJc3ErNtXZ9EUALKQGVyK1C4jKueqh
-	 H1q661lzNkebcTERMagaCqqPkVLvXKMTJVE/e35lvHmw+lA2h8+So3tJuaDxRG+q3g
-	 M606/DjuWl3Fg==
-Message-ID: <sashiko-outbox-185912@kernel.org>
+	b=jw/grf2maZc1TDDZ7AlMdDeSI0WYjK8ofD3p9WzL0KO0Asexwu1PDk8uOfAmQMqbN
+	 /Mzzanmki5dPReaDjAFjKEPzvhl1kuPqxQCXIKa3ub/49OGK64ajBQzOpE0biwrDC8
+	 DPxeCgm1IQvbj4b0zLb8xKrHqVln0+39ubnwRbmCiW6yXE5ne5qPlsb4M6ADzgaFs0
+	 9GHKzuVXob2Jza5n+QGSPJqsvl2LTsDsYKrGmnDbXaIPVDfpKRvvYKulMpVlUkqzU6
+	 mq7IcjTfQtEbbwAQudqafuLf7mJyp1Rl72iFjnVhnt9nQsRA7S+XKquL8a9CjP/RdR
+	 xpAnyKF930HVQ==
+Message-ID: <sashiko-outbox-185913@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 30/46] mm/mremap: recheck PUDs under the page table lock
+Subject: Re: [PATCH 31/46] mm/mremap: fix moving PUD leaves
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -73,13 +73,13 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org
-In-Reply-To: <20261027-fixes_core-v1-30-6f74bec9a5bb@kernel.org>
+Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
+In-Reply-To: <20261027-fixes_core-v1-31-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-30-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-31-6f74bec9a5bb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 00:13:37 +0000
+Date: Tue, 27 Oct 2026 00:13:40 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,37 +99,38 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Once get_old_pud() is fixed to accept PUD leaves, unmap_mapping_range() c=
-an
-> clear a leaf between the lookup and the move. Holding mmap_lock in write
-> mode does not prevent this.
+> From: Josef Bacik <josef@toxicpanda.com>
 >=20
-> If the zap happens before move_page_tables() tests the entry, an empty
-> PUD can reach move_normal_pud(), where pud_populate() turns it into a
-> present page table entry. If it happens after the test, move_huge_pud()
-> can instead try to move an empty entry, triggering CONFIG_DEBUG_VM
-> warnings on powerpc.
+> pud_none_or_clear_bad() only really works on page tables. PUD leaves
+> confuse the check and make us clear the page table entry and print a
+> warning.
 >=20
-> Recheck the source under the page table lock in both helpers. Treat an
-> empty source in move_normal_pud() as a completed move, and use
-> __pud_trans_huge_lock() in move_huge_pud().
+> Since commit aed877c2b4257 ("device/dax: properly refcount device dax pag=
+es
+> when mapping"), this also leaks device-DAX folio references, mapcounts
+> and RSS accounting, resulting in "Bad rss-counter state" warnings on exit.
 >=20
-> In the future we should likely have the code lookup a PUD/PMD lockless
-> once, instead of multiple times, because one of the problematic bits
-> here is the:
+> Allow PUD leaves in get_old_pud(). If a PUD leaf cannot be moved as a
+> whole or the move fails, split it. This unmaps it with proper accounting
+> instead of treating the leaf entry as a PMD table.
 >=20
-> 	pud_trans_huge(*old_pud)
+> Keep using pud_trans_huge() for now, in the future this code should be
+> cleaned up to just check for PUD leaves.
 >=20
-> Fixes: 0881ace292b6 ("mm/mremap: use pmd/pud_poplulate to update page tab=
-le entries")
+> Fix generated by an LLM and sent by Josef Bacik in private.
+>=20
+> Fixes: a00cc7d9dd93 ("mm, x86: add support for PUD-sized transparent huge=
+pages")
 > Cc: stable@vger.kernel.org
+> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 > Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> [ david: fallthrough after splitting ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027-fixes_core=
--v1-0-6f74bec9a5bb@kernel.org?part=3D30
+-v1-0-6f74bec9a5bb@kernel.org?part=3D31
 
 
