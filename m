@@ -2,122 +2,125 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CABB60A6F7A
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 11:07:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB3A606A32F
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 12:13:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=oQXtvibO;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=lr4DWPOG
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Ez0cJ7LW;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=iCJeniYz
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=IxgxM40qKppYkcLvHablg0AyarVMw7TsPIYnNClTEMI=; b=oQXtvibOJO6UT0
-	hglK1zxUeO/VffYW9YPXFMsGbETQ7F4lmV/AJku0XMS0tqm9gjDQnL8BjV19yym3koaquywgjAH9V
-	TaiieqAVG2aLNAqNPQJ17KVw5p3+Sl7Bh/Ovp8yorozqFjv+IzdjVEoEHKTV93RcOF3ZODaKk6A7X
-	10tZ68b7vxvMFhzrvd3DTu2OKyljbh7eVD6Nn+3SqP8dWzjn1nUwsrURrl6r8PYqFHvFNhYuEtNtC
-	z6sC192pCB7bXMo7mQ7aFLurAFNYqWfGCPQa+MiFkIclpssNvvSdvxy4gs6Do0SF2Tfk0GUPd5Xm8
-	F6wUEjdmRWb1D4jSFxog==;
+	List-Owner; bh=31R7IkymhbZDSeMb1sPHaT1Pw064ctHxU7ykW6z0bv8=; b=Ez0cJ7LW5WEGkQ
+	3FG7JsLvVdwE0qqz17CnE2HrzXCfhcDfawQSFizHlpH3MkSorwv2CurE24c2XZ+0n+YCoUPtQ0fh3
+	LYMGJiwwQsa+34xrdadSfP8JfQEB2ZOO6wFBq6IufxaC18nEV3ddK1qHwD0ioxc0+eEkFtW1eUp+T
+	6+UkFu287rrRNxKJxm3rXubF7eIMnT7QNCvqHx2pQKlJSOwfYGBTgZoe2t9ZR4HR28MpqHcABkUrf
+	iI9zYeFsnHWkwsBHRBT6Dy7ZSVn7sFmgng9mk8zjQU0VuMdnvWf8cqi3yxE20rRZwq4ocmHT2j6GM
+	ZitNm7DGjxtKepr0WdoQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLf1h-00000004OgL-3JzH;
-	Tue, 27 Oct 2026 11:07:33 +0000
-Received: from mail-yw1-x112f.google.com ([2607:f8b0:4864:20::112f])
+	id 1xLg3P-00000004aKd-3wpc;
+	Tue, 27 Oct 2026 12:13:23 +0000
+Received: from out-180.mta1.migadu.com ([95.215.58.180] helo=mta1.migadu.com)
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLf1f-00000004Oex-1btr
+	id 1xLg3L-00000004aH1-2e2p
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 11:07:32 +0000
-Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-8ad98c3fb15so32937777b3.2
-        for <kexec@lists.infradead.org>; Tue, 27 Oct 2026 04:07:31 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1793099250; cv=none;
-        d=google.com; s=arc-20260327;
-        b=TjVQeF1H3XmuU9lNuHJN66PbN7gAW0F/ESncTaGC4wRuyWvrO0PU5v1BJVLRAWoeSZ
-         zusLNCyILqa8hk26Khv0HNfcUJ1CUxgAfgXJeSQVuMTF+Au1KSxBkcTdTa3SvbjQH3RU
-         FGx61GUVwk0A/bdwZETVdBJHqR5mH0xm8DrrPRJFByYm9wesOOwepma+xE+lIFyu0kUV
-         z7ejnhXcIbYuYZRbPFkNIr8L56yh8M9JVau1ytiXgFmpZWCGjz1qIzBgBHrmfnRJYNcV
-         GAvK+TgXTD/fwFMdyFdmFsQ66vLKnr8MLxLqbQ14a7I5rV9UiqGoybj+3gJWmQPNXRAW
-         uSyg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=IxgxM40qKppYkcLvHablg0AyarVMw7TsPIYnNClTEMI=;
-        fh=BMzndAHsrR3cTSD7gtyxwBkpPeQ2ykInJqG0vyx7uDI=;
-        b=ZbwmPg1mqqFACySU66msDuywh3ZwDYqFMuyDcHCPMhNIlotlBhaT+eBylGMoRppyse
-         YNMgmVpwsyUXwBE1Hdz7YZFnTf9BXr76z6p4v33kM3/UJJkIlRoLF10+/pnyxpay7oUP
-         U/4AnGqOdhf+oiAUKM/9LTppnLm84WRsyf3h2+e+156Ht3MykdkQmk9cBCacM4/fpm2+
-         HXnvDAIbp3nTswpW3A/Dvn/VJUYIkbwgwHzDdKW0xHnl+XfEVtbDMqvGhR0diD+T5T+a
-         3m+2bDh3qnpJb2BEykhkSkak0cKhcUClntSs4xl74IBdWPoAaVoog9Rxup0fzBaiVCLL
-         FTfw==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1793099250; x=1793704050; darn=lists.infradead.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=IxgxM40qKppYkcLvHablg0AyarVMw7TsPIYnNClTEMI=;
-        b=lr4DWPOGhAvLIl9O6JND7QEshrwEoeXHHo5XDQl53BxcH7VMj/B5EkJrBxK4omdU4u
-         dctmM48GocGis7ljkxdHW+DGrQixTItvZScCU5vy4osHh6vxKeHNYPIJVApGDZV76+Lw
-         sFac2H+/LIoKu/Ip2gkdescmiBcONijTVkfII3maTJw+4mdsk/rnmleeRqkPKmrJrJVf
-         SrkcwO6YpSD2N6YSYF+9ETJGuUPVrvZnvUacT/hxJicGwSaES4QSR/EB25butR4bkEsM
-         wFY8XUf33NFIwFj3fkADHhzGX8xbOgTjgC5zeERmNES+wsBR1CJcNSNRVlN6gxagYhSX
-         DwsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793099250; x=1793704050;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=IxgxM40qKppYkcLvHablg0AyarVMw7TsPIYnNClTEMI=;
-        b=RodaLz+h1VOrAWKm1/KSz5BtMu/+6J+CcFsQqElf6WiXOrijF2WM8Ap52IK4m2LYrW
-         4cKeO5d++030fMQ4Sbfp7EguoJPqC+qrDQi98tje4DCHm1ZH/3ewQwlKywErC4sxScQb
-         iZTnxET0TUbKufTk5kGE141tmsXiUcfwMTOXrCCxG44shMCkd2kL41UH2PNFmmS4C/2E
-         au1jwvYkDY2hqFx5kVJsaMIdwOf3xGEDtH+dKdTHv5RgIqfju3w8qYoMACI4jcKFlQDM
-         FgpfuqiAdjV9bkVLdSi/8WUKJBB6w+a0eRQxtbp6F3ykSOXQ+DpqAJgOrxLKa5CiEbAP
-         YjFw==
-X-Forwarded-Encrypted: i=1; AKwUvBy9lNYkpwjf6KbflbnTK9WipO4bqeMSs9CA3MnLoHMDxSu4u0eD3lvC2wSeGZDhbnAePfrwBg==@lists.infradead.org
-X-Gm-Message-State: AFq9FYLsMJP2907cws3rDZfbZxPJ2vMAD0H93gbJxNuQLP59q64QkYAb
-	LrGmBgg2g6RA7oyJZbHBUC/Wj1LC3FD2wByVt+Jm+c8VUj51WhjS+8TQQRcNAkw6yf/c4zg5Atk
-	NR/GQZFShXiCS1RodqKIKW4irhow/lsU=
-X-Gm-Gg: AYBFou3FNzWvKUqaHSnikkpxG+2ZrG7QVjmVlSm6wVt79TuNFxYZ4zWkC5amGcVH6io
-	JYWMk8aXTy+NDQsGfcxcIzI8TySz+KrZYImjXyc/vlEkTkbaIyk1JYuQ/9G4+bvK3XR55ro0QmY
-	gT4L1MYxobmSAS79ibftT5WRo8IwBe6BtDO5WuudBoFPT1ZentjnNq4H3KP+G7kQ/QmETctxu8E
-	f+bCGrI3AxXkVqJ2f+neBHdnseyzhIRUqa4SonH8hDN8wYwZfZ4s/0ibGCYa2o7WMkTNRlxl+za
-	YnAH8XgeAWMMLie7pQmlm4glPMYaOlPf4tUgMWyy+B9PxX4KMCLBgeC8RKn0+ZgpcI0dK+VZn4u
-	fJnwOoQ2Xo2nXtzoIB4Qv+ogktCJJq5C/Poi2zEbNRszuZ0ViJYUCLBesaXiptRhxqLuf3A==
-X-Received: by 2002:a05:690c:89:b0:8b0:e13c:2854 with SMTP id
- 00721157ae682-8b1669e55a4mr81209407b3.5.1793099249996; Tue, 27 Oct 2026
- 04:07:29 -0700 (PDT)
+	Tue, 27 Oct 2026 12:13:22 +0000
+X-Envelope-To: kexec@lists.infradead.org
+DKIM-Signature: a=rsa-sha256; bh=HldebiX4v8c7RjwCxJgdnN1Xxuzre2SESHSjUs+s7LU=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793103197; v=1; x=1793707997;
+ b=iCJeniYzOeQbcAQXI5BCvajlY+VMzjI76dvLPSVfX2sneLffZcubV1o9wLRVYrcjxnZws7cN
+ FEK1oO5Pmqg6ZAJRDivxs0RExlDmP+L+juUuH1Ht7QFL6BSk1ePWhJPiBiK/aV4HigQKrbvy3iw
+ 5t9ksfvI0x6DDXWi2CE/eTlY=
+X-Envelope-To: kexec@lists.infradead.org
+Received: by smtp.migadu.com with ESMTPS id 05d4f9fd0d387be9;
+	Tue, 27 Oct 2026 12:13:17 +0000
+X-Mizu-Trace-ID: 05d4f9fd0d387be9
+X-Migadu-Flow: FLOW_OUT
+From: Lance Yang <lance.yang@linux.dev>
+To: david@kernel.org
+Cc: akpm@linux-foundation.org,
+	hannes@cmpxchg.org,
+	mhocko@kernel.org,
+	qi.zheng@linux.dev,
+	shakeel.butt@linux.dev,
+	ljs@kernel.org,
+	kasong@tencent.com,
+	baohua@kernel.org,
+	axelrasmussen@google.com,
+	yuanchu@google.com,
+	weixugc@google.com,
+	baoquan.he@linux.dev,
+	baolin.wang@linux.alibaba.com,
+	liam@infradead.org,
+	vbabka@kernel.org,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	kees@kernel.org,
+	peterz@infradead.org,
+	jannh@google.com,
+	pfalcato@suse.de,
+	hughd@google.com,
+	pasha.tatashin@soleen.com,
+	pratyush@kernel.org,
+	willy@infradead.org,
+	jack@suse.cz,
+	ziy@nvidia.com,
+	lance.yang@linux.dev,
+	riel@surriel.com,
+	harry@kernel.org,
+	apopple@nvidia.com,
+	nico.pache@linux.dev,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	usama.arif@linux.dev,
+	kas@kernel.org,
+	matthew.brost@intel.com,
+	jhubbard@nvidia.com,
+	peterx@redhat.com,
+	will@kernel.org,
+	aneesh.kumar@kernel.org,
+	npiggin@gmail.com,
+	osalvador@suse.de,
+	minchan@kernel.org,
+	muchun.song@linux.dev,
+	xu.xin@linux.dev,
+	chengming.zhou@linux.dev,
+	chrisl@kernel.org,
+	shikemeng@huaweicloud.com,
+	nphamcs@gmail.com,
+	youngjun.park@lge.com,
+	gourry@gourry.net,
+	joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com,
+	ying.huang@linux.alibaba.com,
+	jgg@ziepe.ca,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	josef@toxicpanda.com
+Subject: Re: [PATCH 32/46] mm/memory_hotplug: avoid races in pfn_to_online_page() with dying pgmap
+Date: Tue, 27 Oct 2026 20:13:07 +0800
+Message-ID: <20261027121307.40431-1-lance.yang@linux.dev>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20261027-fixes_core-v1-32-6f74bec9a5bb@kernel.org>
+References: <20261027-fixes_core-v1-32-6f74bec9a5bb@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-References: <20261019-b4-ipe-keyring-rfc-v1-0-156f0b93e843@nvidia.com>
- <20261019-b4-ipe-keyring-rfc-v1-1-156f0b93e843@nvidia.com>
- <702ade20-a2f3-4919-97e6-c72faa89399a@kernel.org> <20261021-groll-donnerstag-erfuhren-ce34a0ed4e97@brauner>
- <CAHC9VhTHUU0h9k74CMT6wYhMwyY3YhbSSFwJoDTvoFRyTFVZwg@mail.gmail.com>
- <20261022-hausbank-dozent-hurtig-9443f3777475@brauner> <CAHC9VhQ4sdCRvJ+YPZoiQzR_hgQN6-=84qvnTDDGPf=7=L9-jA@mail.gmail.com>
- <5143896100674c9fd744c4d7d6ce12232910e789.camel@gmail.com>
-In-Reply-To: <5143896100674c9fd744c4d7d6ce12232910e789.camel@gmail.com>
-From: Luca Boccassi <luca.boccassi@gmail.com>
-Date: Tue, 27 Oct 2026 11:07:17 +0000
-X-Gm-Features: AclHuK-M6AykdLUZqQa3ChCCBvY0LYTQ7GR53YsAPnqddFlyo8iJeyhlphI-4Do
-Message-ID: <CAMw=ZnR54hMBwGTps23t9Mm_VO1bAvmeX8uTf_VJ0rJsFNMLuw@mail.gmail.com>
-Subject: Re: [PATCH RFC 1/4] ipe: add the .ipe policy keyring
-To: Paul Moore <paul@paul-moore.com>, Christian Brauner <brauner@kernel.org>
-Cc: Fan Wu <wufan@kernel.org>, Manuel Huber <manuelh@nvidia.com>, 
-	David Howells <dhowells@redhat.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	Andrew Halaney <andrew@amutable.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, linux-security-module@vger.kernel.org, 
-	keyrings@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, Mike Rapoport <rppt@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Alexander Graf <graf@amazon.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261027_040731_438363_58E7FB8F 
-X-CRM114-Status: GOOD (  28.61  )
-X-Spam-Score: -2.1 (--)
+X-CRM114-CacheID: sfid-20261027_051319_837937_540C84E6 
+X-CRM114-Status: GOOD (  20.19  )
+X-Spam-Score: -2.8 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -128,67 +131,149 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-19.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Mon, 26 Oct 2026 at 12:57, <luca.boccassi@gmail.com> wrote:
->
-> On Thu, 2026-10-22 at 13:18 -0400, Paul Moore wrote:
-> > On Thu, Oct 22, 2026 at 6:19=E2=80=AFAM Christian Brauner
-> > <brauner@kernel.org> wrote:
-> > > On Wed, Oct 21, 2026 at 12:51:35PM -0400, Paul Moore wrote:
-> > >
-> >
-> > ...
-> >
-> > >
-> > > > Of course, fitting in with existing norms is important,
-> > > > but if it causes IPE or existing IPE uses a lot of pain, that can
-> > > > a
-> > > > good reason to diverge from those solutions.
-> > >
-> > > Which pain?
-> >
-> > As I said before, (emphasis now added for claification) "... *if* it
-> > causes IPE or existing IPE uses a lot of pain ...".  I intentionally
-> > did not make a claim either way.  Once again, I wanted to provide Fan
-> > some support in case there was an issue and he found himself in a
-> > position where he had to push back to preserve IPE's model.
->
-> I think there is one issue with the design pattern where keyrings are
-> set up in userspace, that I have mentioned a few times already and I
-> got documented in
-> https://www.freedesktop.org/software/systemd/man/latest/systemd-system.co=
-nf.html#RestrictFileSystemAccess=3D
-> as well: they are trivially bypassable if the kernel has kexec enabled
-> and it is signed. The security model relies on the "good" userspace
-> running first, but if kexec is enabled, there's no guarantee that will
-> be the case, and as far as I can tell it gives root trivial capability
-> of overriding it and extending the trust chain as the attacker wishes.
->
-> IPE specifically was designed to avoid exactly that, and ensure
-> userspace could not execute untrusted code, even with root privileges.
-> With this enabled by default, userspace can just load the same signed
-> kernel image, passing in compromised initrd and command line, and gain
-> arbitrary code execution on the host, since only the kernel binary
-> itself is verified, and anything goes for the rest of the kexec
-> parameters.
->
-> This is of course not to say this new IPE keyring shouldn't be added.
-> But perhaps it would be nicer if the default build flag was mutually
-> exclusive with kexec being enabled? Not sure if that can be expressed
-> in Kconfig though? default: yes-if-kexec-off, no-if-kexec-on
->
-> At the very least IMHO this relationship should be documented
-> explicitly in the kconfig blurb, as it seems to me it's a major footgun
-> to leave laying around, and users might not necessarily be aware of it.
 
-KHO/keyring folks, what would you think about preserving sealed
-keyrings across kexec via KHO so that the chain of trust can't be
-reset by userspace? Good idea/bad idea/yes send patches/no go
-away/etc?
+On Tue, Oct 27, 2026 at 12:17:52AM +0100, David Hildenbrand (Arm) wrote:
+>From: Josef Bacik <josef@toxicpanda.com>
+>
+>If ZONE_DEVICE memory shares a memory section with ordinary memory, the
+>section is online and the pfns of the device are valid.
+>pfn_to_online_page() tells them apart by asking get_dev_pagemap() whether
+>the pfn belongs to a dev_pagemap.
+>
+>get_dev_pagemap() only returns a dev_pagemap whose reference is alive.
+>memunmap_pages() kills the reference first, waits until all pages are
+>idle, and then removes the memmap. During all that time the function
+>finds nothing, and pfn_to_online_page() hands out the struct pages of the
+>device as if they were online memory. A pfn walker reads them while they
+>are poisoned and freed.
+>
+>The entry in pgmap_array is only deleted after the pages have been
+>removed. Look at that instead of trying to get a reference.
+>
+>This is probably not worth CCing stable.
+>
+>Fix generated by an LLM and sent by Josef Bacik in private.
+>
+>Fixes: 1f90a3477df3 ("mm: teach pfn_to_online_page() about ZONE_DEVICE section collisions")
+>Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+>Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+>---
+> include/linux/memremap.h |  6 ++++++
+> mm/memory_hotplug.c      | 13 +++++--------
+> mm/memremap.c            | 13 +++++++++++++
+> 3 files changed, 24 insertions(+), 8 deletions(-)
+>
+>diff --git a/include/linux/memremap.h b/include/linux/memremap.h
+>index e3c2ccf872a8a..b5e5e626c7a59 100644
+>--- a/include/linux/memremap.h
+>+++ b/include/linux/memremap.h
+>@@ -231,6 +231,7 @@ void memunmap_pages(struct dev_pagemap *pgmap);
+> void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap);
+> void devm_memunmap_pages(struct device *dev, struct dev_pagemap *pgmap);
+> struct dev_pagemap *get_dev_pagemap(unsigned long pfn);
+>+bool pfn_has_dev_pagemap(unsigned long pfn);
+> bool pgmap_pfn_valid(struct dev_pagemap *pgmap, unsigned long pfn);
+> 
+> unsigned long memremap_compat_align(void);
+>@@ -284,6 +285,11 @@ static inline struct dev_pagemap *get_dev_pagemap(unsigned long pfn)
+> 	return NULL;
+> }
+> 
+>+static inline bool pfn_has_dev_pagemap(unsigned long pfn)
+>+{
+>+	return false;
+>+}
+>+
+> static inline bool pgmap_pfn_valid(struct dev_pagemap *pgmap, unsigned long pfn)
+> {
+> 	return false;
+>diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+>index 796af1028ee23..5a972d7a9e478 100644
+>--- a/mm/memory_hotplug.c
+>+++ b/mm/memory_hotplug.c
+>@@ -342,7 +342,6 @@ static int check_pfn_span(unsigned long pfn, unsigned long nr_pages)
+> struct page *pfn_to_online_page(unsigned long pfn)
+> {
+> 	unsigned long nr = pfn_to_section_nr(pfn);
+>-	struct dev_pagemap *pgmap;
+> 	struct mem_section *ms;
+> 
+> 	BUILD_BUG_ON(IS_ENABLED(CONFIG_HAVE_ARCH_PFN_VALID));
+>@@ -363,14 +362,12 @@ struct page *pfn_to_online_page(unsigned long pfn)
+> 	/*
+> 	 * Slowpath: when ZONE_DEVICE collides with
+> 	 * ZONE_{NORMAL,MOVABLE} within the same section some pfns in
+>-	 * the section may be 'offline' but 'valid'. Only
+>-	 * get_dev_pagemap() can determine sub-section online status.
+>+	 * the section may be 'offline' but 'valid'. Only the presence of a
+>+	 * pgmap can determine sub-section online status: it indicates a
+>+	 * ZONE_DEVICE offline pfn. That includes a pgmap whose reference has
+>+	 * been killed, its memmap is about to go away.
+> 	 */
+>-	pgmap = get_dev_pagemap(pfn);
+>-	put_dev_pagemap(pgmap);
+>-
+>-	/* The presence of a pgmap indicates ZONE_DEVICE offline pfn */
+>-	if (pgmap)
+>+	if (pfn_has_dev_pagemap(pfn))
+> 		return NULL;
+> 
+> 	return pfn_to_page(pfn);
+
+
+LLM stumbled upon a possible race in kpage_read() ... 
+
+Say the reader passes pfn_section_valid() for a device PFN in a section
+shared with online RAM, gets preempted, and resumes after
+pgmap_array_delete(). We'd then find no pgmap and return pfn_to_page(pfn),
+even though the subsection is no longer valid ...
+
+Could we take the memory hotplug read lock in kpage_read(), covering both
+the lookup and the metadata reads? We can drop it before put_user(), once
+we're done with the page.
+
+Maybe along these lines?
+
+---8<---
+diff --git a/fs/proc/page.c b/fs/proc/page.c
+index 6aa99e42ec22..12bed36d76dc 100644
+--- a/fs/proc/page.c
++++ b/fs/proc/page.c
+@@ -12,6 +12,7 @@
+ #include <linux/hugetlb.h>
+ #include <linux/memremap.h>
+ #include <linux/memcontrol.h>
++#include <linux/memory_hotplug.h>
+ #include <linux/mmu_notifier.h>
+ #include <linux/page_idle.h>
+ #include <linux/kernel-page-flags.h>
+@@ -77,6 +78,8 @@ static ssize_t kpage_read(struct file *file, char __user *buf,
+ 	count = min_t(unsigned long, count, (max_dump_pfn * KPMSIZE) - src);
+
+ 	while (count > 0) {
++		/* Prevent memory removal while inspecting the memmap. */
++		get_online_mems();
+ 		/*
+ 		 * TODO: ZONE_DEVICE support requires to identify
+ 		 * memmaps that were actually initialized.
+@@ -101,6 +104,8 @@ static ssize_t kpage_read(struct file *file, char __user *buf,
+ 		} else
+ 			info = 0;
+
++		put_online_mems();
++
+ 		if (put_user(info, out)) {
+ 			ret = -EFAULT;
+ 			break;
+--
+
+Cheers, Lance
 
