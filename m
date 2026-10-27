@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209C1606A32A
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 08:15:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D04606A31E
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 08:16:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=V0c+hcJV;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TohUlqMB
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=suskpTIW;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DqgW1ogH
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -14,37 +14,37 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=5kxHiEVY3AkdeOmkiyMicYxXOYN4StpWVAs8/ArHz0o=; b=V0c+hcJVbZ9lUXsayJ6sIORlmO
-	QJzr0ZWhr8jd92aA14Z66HTK+NcDwBQqF49TTti/9u+ecSxOIEQnV9KYgwqzZii1n5I/wKZZHJvwL
-	dy6Qe5eRlz39KwoU04G7/J/Ullv+862AhaNz6XEbpFxEvOuFhXKZ1+TCaPuThTIzAXTXjYPIzByuY
-	mSwWu8PewJPi5PRw0bLXwoSwsZU9L9bzpazzlWRcIkBriYth//4MnMobBHKZqUELAlZZs+idV/BnM
-	VR94X5fMubS+qEbrwEzOExkLyjGsvsANfL4CqKUzmB8f7EVwg00ANID6e/wBSIviV1ohe+ngv7+b7
-	aNDCYZqA==;
+	bh=25JoUd0Ca4DSucyqp8VdpaHvYyD4L6ugc8HcJwXmagI=; b=suskpTIWDRE7wcx8ianG3cezWm
+	8jHHYTZU2ZSWtKYQURjKCtV6fVwAlD5inGd03zq4sVGkcI+nrFREMztzIFEW6VyTzGg1dEDMrwRAt
+	9CQKS/eksUpuz498FtORtXQekP14O84+cLCpDOjpWYBSidQHVdCNmJFbz9Lnd3G13ZV3SrPFylzLY
+	lGdsI0hrhJ7eBsFDxRcYcY6nH5Hbz67/CJi+YFij9zJwt5A29S5/k6AttWEkfGC9ODTWcBniLJM/G
+	Mm1atuIwD1cvTFGKygSjt33hF8RcsRy3SMq6vPRaHKUaUdGVsvn1q/lUTy7BnRJHtKJMv4PngMw9R
+	sYxuGzfw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLcLD-000000040yv-3bno;
-	Tue, 27 Oct 2026 08:15:31 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xLcMT-0000000415T-03zY;
+	Tue, 27 Oct 2026 08:16:49 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLcLC-000000040yj-2nFw
+	id 1xLcMS-0000000415M-1uuK
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 08:15:30 +0000
+	Tue, 27 Oct 2026 08:16:48 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id EB7F9601F0;
-	Tue, 27 Oct 2026 08:15:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AC241F01825;
-	Tue, 27 Oct 2026 08:15:11 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 14E1740DBA;
+	Tue, 27 Oct 2026 08:16:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB6EE1F01825;
+	Tue, 27 Oct 2026 08:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793088929;
-	bh=5kxHiEVY3AkdeOmkiyMicYxXOYN4StpWVAs8/ArHz0o=;
+	s=k20260515; t=1793089008;
+	bh=25JoUd0Ca4DSucyqp8VdpaHvYyD4L6ugc8HcJwXmagI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=TohUlqMBXvTV6SqJFuiC+dqJjW/ij05cgrKtKEOfYxV88J5WLixwsYKmPfpSGBA2B
-	 C+OmR9z5ZQPvnP70HVJyU7RC/CroJIV4UeBShTJu8eqdqUxUaoqOarZFm1dzPQXqFd
-	 9tm6W7ZBJjPSXKIvNDqJIqzVvCngxMhyCkgQuyeGljrVxcZZ6+6MOELxqy231soY3X
-	 GqAKIoz4S+Xnh6OouG5YutTdPxrxAOYEgd5VJ3AkybBIYVwdQ4Zz9O/MVH8vdiCTjr
-	 p4b/83kRK763X0IwAQe+MCH3KJ3GHP5MK8a903LLNXFYeAbx5wprUZo5Jf2y+jOZpP
-	 WoD4aFVO/XgLQ==
-Date: Tue, 27 Oct 2026 10:15:07 +0200
+	b=DqgW1ogHskC3KjpnvkmfF/B2DYXhDZoPDNeziDRz5NYseOTPq/Bt3d/gR2uwOi5tt
+	 l0FKm0+vSEXyriWPhPAPthXH1Up+UF+85+8a4DRAWSbZRYMnvjqZUBuxtSS9VhexcH
+	 QjEToIVl39sflEhmYe9ziXX5NCu06RELjf5E7IRB4kHtHZXSvXfgKEoP26dOW1+9IE
+	 ffVmPh+WFa/36AqcOLOz1lEuekRW0rjPES5+SXPWLU9gfjD0+35/LrvlH8duWv+GbJ
+	 RuWAou4+YDgaZUIhlBwjRnVkYYWwTrj2jlqPucPxJ4gaehaWDjNNziTUjRRUgWOZSb
+	 cgzDt4LnM1kJg==
+Date: Tue, 27 Oct 2026 10:16:25 +0200
 From: Mike Rapoport <rppt@kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
@@ -90,17 +90,18 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
 	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 04/46] mm/memfd: make f_pos accesses atomic
-Message-ID: <auBdixo2E9rqB_vN@kernel.org>
+	linux-cxl@vger.kernel.org, stable@vger.kernel.org,
+	Josef Bacik <josef@toxicpanda.com>
+Subject: Re: [PATCH 23/46] mm/userfaultfd: write-lock the VMA before waking
+ waiters when unregistering
+Message-ID: <auBd2RS7buo-Aa5I@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-4-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-23-6f74bec9a5bb@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261027-fixes_core-v1-4-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-23-6f74bec9a5bb@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -119,63 +120,42 @@ X-Spam-Status: No, score=-16.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Tue, Oct 27, 2026 at 12:17:24AM +0100, David Hildenbrand (Arm) wrote:
-> From: Josef Bacik <josef@toxicpanda.com>
+On Tue, Oct 27, 2026 at 12:17:43AM +0100, David Hildenbrand (Arm) wrote:
+> userfaultfd_unregister() wakes pending missing faults before clearing the
+> VMA's userfaultfd registration. With per-VMA fault locking, holding
+> mmap_lock for write does not prevent another fault from queuing after
+> the wakeup but before userfaultfd_clear_vma() write-locks the VMA. That
+> waiter can then remain asleep indefinitely.
 > 
-> Commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per POSIX") made
-> read(), write() and lseek() on a shared open file description of a regular
-> file serialize on ->f_pos_lock.  The flag that asks for it,
-> FMODE_ATOMIC_POS, is set in do_dentry_open().  A memfd is a regular file
-> too, but its struct file comes from alloc_file_pseudo() and never passes
-> through do_dentry_open(), so it does not get the flag:
+> Call vma_start_write() before waking waiters. Existing fault handlers
+> queue themselves before dropping the VMA read lock, and new readers are
+> excluded until mmap_write_unlock().
 > 
->   CPU0                                CPU1
->   write(memfd, "a", 1)                write(memfd, "b", 1)
->     pos = file->f_pos  (= 0)
->                                         pos = file->f_pos  (= 0)
->     vfs_write(..., &pos)
->                                         vfs_write(..., &pos)
->     file->f_pos = pos  (= 1)
->                                         file->f_pos = pos  (= 1)
-> 
-> One of the two bytes is overwritten.  Two threads writing 100000 bytes
-> each, one at a time, to a memfd end up with a file that is far shorter than
-> 200000 bytes, while the same program on a tmpfs file never loses a byte.
-> 
-> Set the flag when the memfd is created.  As for any other regular file the
-> lock is only taken if the file is reachable in more than one way, and
-> nothing a memfd does in read or write waits for another operation on the
-> same file.  This cannot be done for all alloc_file_pseudo() files: anon
-> inode files such as eventfd are S_IFREG as well, and a blocked read holding
-> ->f_pos_lock would lock out the write that is supposed to wake it.
-> 
-> Fix generated by an LLM and sent by Josef Bacik in private.
-> 
-> Fixes: 9183df25fe7b ("shm: add memfd_create() syscall")
+> Fixes: 29a22b9e08d7 ("mm: handle userfaults under VMA lock")
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: minor description tweaks ]
+> Reported-by: Josef Bacik <josef@toxicpanda.com>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
 > ---
->  mm/memfd.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  mm/userfaultfd.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/mm/memfd.c b/mm/memfd.c
-> index 7d2da23157003..6f5fbce74f21e 100644
-> --- a/mm/memfd.c
-> +++ b/mm/memfd.c
-> @@ -484,6 +484,8 @@ struct file *memfd_alloc_file(const char *name, unsigned int flags)
->  	}
+> diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> index 669f71d485d02..7e30b5ff17be1 100644
+> --- a/mm/userfaultfd.c
+> +++ b/mm/userfaultfd.c
+> @@ -3991,6 +3991,9 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
+>  			start = vma->vm_start;
+>  		vma_end = min(end, vma->vm_end);
 >  
->  	file->f_mode |= FMODE_LSEEK | FMODE_PREAD | FMODE_PWRITE;
-> +	/* a regular file like any other: POSIX.1-2008/SUSv4 Section XSI 2.9.7 */
-> +	file->f_mode |= FMODE_ATOMIC_POS;
->  	file->f_flags |= O_LARGEFILE;
->  
->  	if (flags & MFD_NOEXEC_SEAL) {
+> +		/* Prevent new userfaults from being queued after the wakeup. */
+> +		vma_start_write(vma);
+> +
+>  		if (userfaultfd_missing(vma)) {
+>  			/*
+>  			 * Wake any concurrent pending userfault while
 > 
 > -- 
 > 2.43.0
