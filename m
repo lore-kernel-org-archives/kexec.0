@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B2F60A2610
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 08:46:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D86606A334
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 08:51:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=mrMDyfwo;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MIHfOMOJ
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=vfte8Ljy;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cLX5cty9
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -14,37 +14,37 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=x/YAccCPR+QDBod9TtDEo8/GkjTX2DKJZMvCayiMInU=; b=mrMDyfwoBKpbc6RRVLEQcix1zg
-	2TkNeMPVUTfdt1R2+Ox177Bw26xc+OwJj7dKMQ5HcHgb7rhmUmrL8y+T90q9Bv1mAxnn78weRArcl
-	3BPI27+BXr83iegMHzWdZTh9DuHvJZ6GYEi8z/g8+ffw884KsfVFETdLTihuCh64XJTZmca8MDq0g
-	LnGaO09R/iZlkJ2LZPjJtijxi8Q3AIWSnxp5726BV7AZBuWY7P24BxcbsxLa/2IupvMoZBwbyUR1B
-	rdEVVYCgHzZ6C9oXPVMD+iTvKaY16bZQfKZBtuDR+8g348rhF6JpbYTNWMxAZlNxR6C3WSTLiFyip
-	AexW+0gw==;
+	bh=lc0U5Ze+hBCT9T6cAf8QTcqfqTu5UwDLhLRH+Lp9NjM=; b=vfte8LjylkejJ2pqIv4SOOISGw
+	Q0QcDYUW2QFQqIDeOOLTiHeig0nlLkBYTFwAZEv/L290wlIgQrhBJjsLRocFPqv1dg0rucJTyOuFF
+	62SODePLUs66s3VzS/os+nR4ohUR11af9DmaGDVfU1CHYQw4+Zmg92lACx1uX640zKhpA1pH+otfs
+	noSkDY2g1kaIURgj3c7OhLCwEAaXFsJ2ErU8I/shx3FkdLMnbaknM0Dswg3hJPcfLH6qsR4ly60Gl
+	6ruId5GnAT1zAMUfwM1b1ioyYc0jq+z2+ZGYkSmlmAzfFm57bDXf7Rl5A2Tm5SvY8hh3xS/eVXZrj
+	vvBmkG8g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLcp5-000000045R0-1PER;
-	Tue, 27 Oct 2026 08:46:23 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xLcte-000000046Cj-24uF;
+	Tue, 27 Oct 2026 08:51:06 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLcp3-000000045P2-3gyO
+	id 1xLctd-000000046CN-3BeX
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 08:46:21 +0000
+	Tue, 27 Oct 2026 08:51:05 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 3EF5A60210;
-	Tue, 27 Oct 2026 08:46:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3898B1F01825;
-	Tue, 27 Oct 2026 08:46:07 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 54517601F9;
+	Tue, 27 Oct 2026 08:51:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 370ED1F01825;
+	Tue, 27 Oct 2026 08:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793090780;
-	bh=x/YAccCPR+QDBod9TtDEo8/GkjTX2DKJZMvCayiMInU=;
+	s=k20260515; t=1793091064;
+	bh=lc0U5Ze+hBCT9T6cAf8QTcqfqTu5UwDLhLRH+Lp9NjM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=MIHfOMOJNGtvK/bOljqxWLAHcLixYnsRYXCAHtUQcunjVDLnNyeo97KX3xAMoJr0Z
-	 5SfJAbFdkjKREw+q9Mtl0ffuKASWKcn7N0F0BmgFbcVUy46FHcanqfHr21qQWcr5jW
-	 pN5brAKAoAMh9KQ2wKajox7TxwfMs/QXMXRrm6/pCm731qJU0brAVO4+ppYe1VSs4W
-	 QVZYWrlfndxZlKOun9t4YN97qlLu70ioNm4z4BQTX+PWQAgemaKean1qRUpkEbbfK2
-	 Ylrgvy+1T3A3hOJGk4nx9jTZUzT20nRhHgy1MV+6HzvLQExySYnOpZQXYHoPDsoTcO
-	 4j7djgWhTTvDQ==
-Date: Tue, 27 Oct 2026 08:46:04 +0000
+	b=cLX5cty9Fes4nyGOhdTXTwUi4CjHh2d6Exjv+rOUNmJ1hOpq301ah/59VYJa3KAfa
+	 0JAFnIYv5q6uCZJiWZ7/JnzC3pOPhPL5VdEq05fzYEQAfU8x5PjoaLGCbo4oJkSshy
+	 aEyuswfa3kOJCEFW345rfcWjsyhvaijqqaHgik6uB7QOrxdB7sJV1oJ6I3Q0c1V+Ry
+	 Cf3Ekq4j3MW2BWPpctWVOXD4r4MRy4tI0wpG7A71nGLVk4q5d74j9EcT8h6eyujZ5T
+	 xnvfCFG95f/Qz4H2P0ATu2ppTZylFpdC3r3f636dunxIG7AvtZ7dC6rCzDfglAN4g9
+	 pK7u8ZerdMAkQ==
+Date: Tue, 27 Oct 2026 08:50:46 +0000
 From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
@@ -73,17 +73,17 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
 	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
+	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, Chris Mason <mason@kernel.org>, 
 	stable@vger.kernel.org
-Subject: Re: [PATCH 04/46] mm/memfd: make f_pos accesses atomic
-Message-ID: <auBkxrOz882zhhZ5@gremlin>
+Subject: Re: [PATCH 28/46] mm/mmu_notifier: set ->mm only after mmgrab()
+Message-ID: <auBl3iJyp0RQ-tEA@gremlin>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-4-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-28-6f74bec9a5bb@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261027-fixes_core-v1-4-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-28-6f74bec9a5bb@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,63 +102,60 @@ X-Spam-Status: No, score=-16.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Tue, Oct 27, 2026 at 12:17:24AM +0100, David Hildenbrand (Arm) wrote:
-> From: Josef Bacik <josef@toxicpanda.com>
+On Tue, Oct 27, 2026 at 12:17:48AM +0100, David Hildenbrand (Arm) wrote:
+> From: Chris Mason <mason@kernel.org>
 >
-> Commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per POSIX") made
-> read(), write() and lseek() on a shared open file description of a regular
-> file serialize on ->f_pos_lock.  The flag that asks for it,
-> FMODE_ATOMIC_POS, is set in do_dentry_open().  A memfd is a regular file
-> too, but its struct file comes from alloc_file_pseudo() and never passes
-> through do_dentry_open(), so it does not get the flag:
+> Radeon uses a non-NULL notifier->mm to decide whether to call
+> mmu_interval_notifier_remove() when freeing a buffer object.
+> __mmu_interval_notifier_insert() sets ->mm before validating the range,
+> so a wrapping userptr range can leave ->mm set after insertion fails.
+> Cleanup then tries to remove an unregistered notifier for which no mm
+> reference was acquired.
 >
->   CPU0                                CPU1
->   write(memfd, "a", 1)                write(memfd, "b", 1)
->     pos = file->f_pos  (= 0)
->                                         pos = file->f_pos  (= 0)
->     vfs_write(..., &pos)
->                                         vfs_write(..., &pos)
->     file->f_pos = pos  (= 1)
->                                         file->f_pos = pos  (= 1)
+> Set ->mm only after mmgrab(), once insertion can no longer fail. While
+> we could fix radeon's code instead, setting ->mm on success only makes
+> the code more robust.
 >
-> One of the two bytes is overwritten.  Two threads writing 100000 bytes
-> each, one at a time, to a memfd end up with a file that is far shorter than
-> 200000 bytes, while the same program on a tmpfs file never loses a byte.
+> Fix generated by an LLM and sent by Chris Mason in private.
 >
-> Set the flag when the memfd is created.  As for any other regular file the
-> lock is only taken if the file is reachable in more than one way, and
-> nothing a memfd does in read or write waits for another operation on the
-> same file.  This cannot be done for all alloc_file_pseudo() files: anon
-> inode files such as eventfd are S_IFREG as well, and a blocked read holding
-> ->f_pos_lock would lock out the write that is supposed to wake it.
->
-> Fix generated by an LLM and sent by Josef Bacik in private.
->
-> Fixes: 9183df25fe7b ("shm: add memfd_create() syscall")
+> Fixes: 3506ff69c3ec ("drm/radeon: use mmu_interval_notifier_insert")
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: minor description tweaks ]
+> Signed-off-by: Chris Mason <mason@kernel.org>
+> [ david: simplify description ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
-Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
 > ---
->  mm/memfd.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  mm/mmu_notifier.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 >
-> diff --git a/mm/memfd.c b/mm/memfd.c
-> index 7d2da23157003..6f5fbce74f21e 100644
-> --- a/mm/memfd.c
-> +++ b/mm/memfd.c
-> @@ -484,6 +484,8 @@ struct file *memfd_alloc_file(const char *name, unsigned int flags)
->  	}
+> diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
+> index 2e20f88e162d7..a7bae5de5fedc 100644
+> --- a/mm/mmu_notifier.c
+> +++ b/mm/mmu_notifier.c
+> @@ -947,7 +947,6 @@ static int __mmu_interval_notifier_insert(
+>  	struct mmu_notifier_subscriptions *subscriptions, unsigned long start,
+>  	unsigned long length, const struct mmu_interval_notifier_ops *ops)
+>  {
+> -	interval_sub->mm = mm;
+>  	interval_sub->ops = ops;
+>  	RB_CLEAR_NODE(&interval_sub->interval_tree.rb);
+>  	interval_sub->interval_tree.start = start;
+> @@ -964,8 +963,12 @@ static int __mmu_interval_notifier_insert(
+>  	if (WARN_ON(atomic_read(&mm->mm_users) <= 0))
+>  		return -EINVAL;
 >
->  	file->f_mode |= FMODE_LSEEK | FMODE_PREAD | FMODE_PWRITE;
-> +	/* a regular file like any other: POSIX.1-2008/SUSv4 Section XSI 2.9.7 */
-> +	file->f_mode |= FMODE_ATOMIC_POS;
->  	file->f_flags |= O_LARGEFILE;
+> -	/* pairs with mmdrop in mmu_interval_notifier_remove() */
+> +	/*
+> +	 * Pairs with mmdrop in mmu_interval_notifier_remove(). Drivers take a
+> +	 * non-NULL ->mm for "registered", so set it only with the reference.
+> +	 */
+>  	mmgrab(mm);
+> +	interval_sub->mm = mm;
 >
->  	if (flags & MFD_NOEXEC_SEAL) {
+>  	/*
+>  	 * If some invalidate_range_start/end region is going on in parallel
 >
 > --
 > 2.43.0
