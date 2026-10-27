@@ -2,14 +2,14 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC482606A31B
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 16:11:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5646606A329
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 16:13:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=dnMc6nJb;
-	dkim=pass (1024-bit key, unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=CWV+pd7v;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=dH0yVuWP;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=CWV+pd7v;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=dH0yVuWP
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=D8dB0TYw;
+	dkim=pass (1024-bit key, unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=Pf9TMmXl;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=CvY1UKHl;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=Pf9TMmXl;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=CvY1UKHl
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -17,72 +17,73 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=YfHrAfI9Raij9s83r70SYcL5s7BnI9+K8vQC+GWWGI8=; b=dnMc6nJbxRxb/oF3qmqLM+PqxI
-	hk9KVXAox7MVmq4zVsQmW/pWNVWag/I3NwsA41GZXCd0SAtNXxN7kySQJ7T3i/7ghCU5vCL1MSwzl
-	hnyoMDdnOlOTxv1jBAjnLW1b12z/PR3sw7nGf8GHA62aAP/B+vX0Os1nsdC1qOF3PUovTKEjTWVt4
-	mptRkjm5H8a/jkAaRDTJd5npnARoeY0GsiZBVqgvLZZ4Cl1qTshqJL6N2qWGN86PrWT1yeflCUFgp
-	GfSwL/C6zwPfsIql+vJyVsnQ0D4sa5wHEtcNFbbuvl0V7FO9fuqm1+Av9dgcp4+qM96xlXn7wOB/U
-	ElPNCz9Q==;
+	bh=MBEQAycQgkIcEKsq6ztpW2tH5GM0tXm64sgJ8VgKzao=; b=D8dB0TYwGZTxvKhG0k8CFtGyuX
+	2cdjmN8PhVwWa2kTwkmqy35kPSC7Y5zzhot2DPdHeaT1bGxZcWwEAR9QA9rTyvHyomDZ0Xh1EFqNB
+	RWKx/wf+S4BUyNPIIPw5DNVEnbG8Yks0OwH07B27zfIsxgkyyrDz/BxeQ3knj//HuJPP57A5+woP8
+	N7bo3pMHeUz7WwDr+6yDS16FpLrESe/RfZKs/Xwte01u9vwDJHoTk3W5M649v15K1c13+jD0+SXLX
+	8SRj2sIXNNxNe9D0mKWqD7HDh9g80qVkajZV0PtSRHmaUTLcdHMWLA5ibGkKl2p/Dh5XgZL0CFp7v
+	Xzsi8xFA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLjlV-00000005JUX-38Ak;
-	Tue, 27 Oct 2026 16:11:09 +0000
+	id 1xLjoF-00000005JvX-240Y;
+	Tue, 27 Oct 2026 16:13:59 +0000
 Received: from smtp-out2.suse.de ([2a07:de40:b251:101:10:150:64:2])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLjlS-00000005JRX-1Qza
+	id 1xLjoB-00000005Jua-3bRD
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 16:11:08 +0000
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	Tue, 27 Oct 2026 16:13:58 +0000
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 7C9131F456;
-	Tue, 27 Oct 2026 16:11:03 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A72371F7A0;
+	Tue, 27 Oct 2026 16:13:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1793117463; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1793117633; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=YfHrAfI9Raij9s83r70SYcL5s7BnI9+K8vQC+GWWGI8=;
-	b=CWV+pd7vX6TrUdMXNaxESYJ1slGQOcP06ic+g4xxjnPvWnvKsCWHc5jQdxIPIQbRLzO9R/
-	diRP0hoJuL/mI0KQkpa3xxmXRWeSg74DGGEU77lFzSpCYYlDj7PdkWYefoW4nkJgVCUPf3
-	QaNpFGuQxCzB3SqNtBvKB0BxwcTkqYc=
+	bh=MBEQAycQgkIcEKsq6ztpW2tH5GM0tXm64sgJ8VgKzao=;
+	b=Pf9TMmXlDhCO4ynIeOuzNkis0rtWRzFwFx2jgiRQmuRDnln2k7nvVvhmkcP0jEP7dIidfr
+	Bk9Z91c21pllbjuaaPr2fgK73IzUBOFhJWiWnPXD6TINWJnxzMN0TQKPGVdS/+GbDA8Z3m
+	W8oQyc3pYUvTbT9+XEhV6lxyovFdl3I=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1793117463;
+	s=susede2_ed25519; t=1793117633;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=YfHrAfI9Raij9s83r70SYcL5s7BnI9+K8vQC+GWWGI8=;
-	b=dH0yVuWPJUPJUjY+esjPpF+hgG8gt8lOiUDib4DBNfyZ2FqTmjKurTJ9mNNDDjXKRirJJN
-	V99f8i/6XejizRBw==
+	bh=MBEQAycQgkIcEKsq6ztpW2tH5GM0tXm64sgJ8VgKzao=;
+	b=CvY1UKHlmsc3sDkKp60Jh/ntQBcPqvbbbFSuHsUIh7jEbt5Go2TV2gTcqvAb3Q7XhLiFBT
+	DMyyXxV3RhKSHVDw==
 Authentication-Results: smtp-out2.suse.de;
-	none
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Pf9TMmXl;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=CvY1UKHl
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1793117463; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1793117633; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=YfHrAfI9Raij9s83r70SYcL5s7BnI9+K8vQC+GWWGI8=;
-	b=CWV+pd7vX6TrUdMXNaxESYJ1slGQOcP06ic+g4xxjnPvWnvKsCWHc5jQdxIPIQbRLzO9R/
-	diRP0hoJuL/mI0KQkpa3xxmXRWeSg74DGGEU77lFzSpCYYlDj7PdkWYefoW4nkJgVCUPf3
-	QaNpFGuQxCzB3SqNtBvKB0BxwcTkqYc=
+	bh=MBEQAycQgkIcEKsq6ztpW2tH5GM0tXm64sgJ8VgKzao=;
+	b=Pf9TMmXlDhCO4ynIeOuzNkis0rtWRzFwFx2jgiRQmuRDnln2k7nvVvhmkcP0jEP7dIidfr
+	Bk9Z91c21pllbjuaaPr2fgK73IzUBOFhJWiWnPXD6TINWJnxzMN0TQKPGVdS/+GbDA8Z3m
+	W8oQyc3pYUvTbT9+XEhV6lxyovFdl3I=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1793117463;
+	s=susede2_ed25519; t=1793117633;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=YfHrAfI9Raij9s83r70SYcL5s7BnI9+K8vQC+GWWGI8=;
-	b=dH0yVuWPJUPJUjY+esjPpF+hgG8gt8lOiUDib4DBNfyZ2FqTmjKurTJ9mNNDDjXKRirJJN
-	V99f8i/6XejizRBw==
+	bh=MBEQAycQgkIcEKsq6ztpW2tH5GM0tXm64sgJ8VgKzao=;
+	b=CvY1UKHlmsc3sDkKp60Jh/ntQBcPqvbbbFSuHsUIh7jEbt5Go2TV2gTcqvAb3Q7XhLiFBT
+	DMyyXxV3RhKSHVDw==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7B83C1321C;
-	Tue, 27 Oct 2026 16:10:59 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8A7221321C;
+	Tue, 27 Oct 2026 16:13:49 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id qrX6BxPN4GrwdAAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Tue, 27 Oct 2026 16:10:59 +0000
-Date: Tue, 27 Oct 2026 16:10:57 +0000
+	id dzfmFb3N4GrrdwAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Tue, 27 Oct 2026 16:13:49 +0000
+Date: Tue, 27 Oct 2026 16:13:47 +0000
 From: Pedro Falcato <pfalcato@suse.de>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
@@ -111,47 +112,54 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
 	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
-	stable@vger.kernel.org
-Subject: Re: [PATCH 07/46] mm/filemap: don't lose a folio lock wakeup to a
- signal
-Message-ID: <auDM5mvsb5ilIdsg@pedro-suse.lan>
+	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>
+Subject: Re: [PATCH 46/46] fs/proc/task_mmu: refuse addresses beyond 32 bits
+ on 32bit
+Message-ID: <auDNot5mks8D_TJq@pedro-suse.lan>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-7-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-46-6f74bec9a5bb@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261027-fixes_core-v1-7-6f74bec9a5bb@kernel.org>
-X-Spamd-Result: default: False [-11.80 / 50.00];
+In-Reply-To: <20261027-fixes_core-v1-46-6f74bec9a5bb@kernel.org>
+X-Rspamd-Queue-Id: A72371F7A0
+X-Spam-Level: 
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-12.01 / 50.00];
 	SUSE_INTERNAL_BYPASS(-9.00)[];
 	BAYES_HAM(-3.00)[100.00%];
 	SUSPICIOUS_RECIPS(1.50)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,cmpxchg.org,kernel.org,linux.dev,tencent.com,google.com,linux.alibaba.com,infradead.org,suse.com,soleen.com,suse.cz,nvidia.com,surriel.com,arm.com,intel.com,redhat.com,gmail.com,suse.de,huaweicloud.com,lge.com,gourry.net,sk.com,ziepe.ca,kvack.org,vger.kernel.org,lists.infradead.org,toxicpanda.com];
+	RCVD_TLS_ALL(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
 	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
 	FROM_EQ_ENVFROM(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,cmpxchg.org,kernel.org,linux.dev,tencent.com,google.com,linux.alibaba.com,infradead.org,suse.com,soleen.com,suse.cz,nvidia.com,surriel.com,arm.com,intel.com,redhat.com,gmail.com,suse.de,huaweicloud.com,lge.com,gourry.net,sk.com,ziepe.ca,kvack.org,vger.kernel.org,lists.infradead.org,toxicpanda.com];
-	R_RATELIMIT(0.00)[to_ip_from(RL8d8xedm6iu8o66torxsk6bwd)];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[65];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[toxicpanda.com:email,suse.de:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -11.80
-X-Spam-Level: 
+	R_RATELIMIT(0.00)[to_ip_from(RL89xh3ijk4gdpeanxbepagf1s)];
+	RCPT_COUNT_GT_50(0.00)[64];
+	TAGGED_RCPT(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:email,toxicpanda.com:email]
+X-Spam-Score: -12.01
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261027_091106_589262_7B6C530D 
-X-CRM114-Status: GOOD (  13.49  )
+X-CRM114-CacheID: sfid-20261027_091356_265337_29EEC090 
+X-CRM114-Status: GOOD (  12.78  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -171,35 +179,28 @@ X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Tue, Oct 27, 2026 at 12:17:27AM +0100, David Hildenbrand (Arm) wrote:
+On Tue, Oct 27, 2026 at 12:18:06AM +0100, David Hildenbrand (Arm) wrote:
 > From: Josef Bacik <josef@toxicpanda.com>
 > 
-> An exclusive waiter in folio_wait_bit_common() can leave the wait loop
-> because of a fatal signal, then be woken by folio_unlock() before
-> finish_wait(). If the waker did not hand over the lock, the waiter returns
-> -EINTR without trying to acquire it.
+> The addresses in struct pm_scan_arg are 64 bits wide.  The first thing
+> pagemap_scan_get_args() does with them is to cast them to unsigned
+> long.  On a 32-bit kernel the upper half is dropped without a word:
+> PAGEMAP_SCAN of 0x100001000-0x100002000 scans, and with
+> PM_SCAN_WP_MATCHING write-protects, 0x1000-0x2000, stores the result
+> at the lower half of vec, and reports success.
 > 
-> folio_wake_bit() stops after waking the first exclusive waiter, so this
-> loses the wakeup and can leave other waiters asleep indefinitely on an
-> unlocked folio.
+> Return -EFAULT, as for other addresses outside of the address space.
 > 
-> After finish_wait(), let a waiter woken without a lock handoff try once
-> more to acquire the lock. If successful, return success so the caller's
-> eventual unlock wakes the next waiter. Otherwise, the current lock owner
-> will do so.
-
-Has this been reproduced? I feel like this would've been found out by now?
-
+> This is probably not worth CCing stable.
 > 
 > Fix generated by an LLM and sent by Josef Bacik in private.
 > 
-> Fixes: 5ef64cc8987a ("mm: allow a controlled amount of unfairness in the page lock")
-> Cc: stable@vger.kernel.org
+> Fixes: 52526ca7fdb9 ("fs/proc/task_mmu: implement IOCTL to get and optionally clear info about PTEs")
 > Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: clarify and simplify comment + description ]
+> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
-Acked-by: Pedro Falcato <pfalcato@suse.de>
+Reviewed-by: Pedro Falcato <pfalcato@suse.de> 
 
 -- 
 Pedro
