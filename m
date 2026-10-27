@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233D4606A31A
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:14:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D90E606A31A
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:14:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=3VJ1oXhL;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PzxpxL2y
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=dDlKQWVt;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FIt7QM+L
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,39 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=YpzkqCxD9DEJ3+8L+1f3oPsu/K9fgP/1r9EgKpJF98Q=; b=3VJ1oXhLzzKVV3kVcnIr4YhXPQ
-	R49AZGA83GGGM0JScpch7lzoGvmeG1tZF0G23kpVPoGU44avRMfDBOMOR1Jnp0hgjdpgLYRv9VCf/
-	8YbOdW2mu/gskEoHZXXTSbcxzO3nqtylvHOaFNeM8cm9KIsXjGfQfBkRik+fWdOgMURSWF7C50B4x
-	EpeGKe14AQY4xqsXPIQcRIf88AT/b8UGQ+HpjX9MP916whBKYQYikND1x3JOydx+EkOtfe2KC0XNN
-	ngXNulhFOFTi0CiooCvFdUfo399QGcwm2SOZ3kI5povTX73D6BTDLuNyIR7fd936N7HVo2YGcm3IP
-	zCzsbp9A==;
+	bh=ynZeVp4GE9gMyAxS9d+MxTL5L2L0Jem+z5pMoQXOO9g=; b=dDlKQWVtm7lAxvhiF+9NwBFnBQ
+	TkeSzqTli1D8P15y3RmpwVw84M3Qc/h2bmylqOPQzhfg5kwBXNr3ngk9Crp/evm5k4qk/65Ug9LZV
+	oGuOvG4hVDk5A+sJgY44UMhUggpSbPpk+BS0Y6Wve7w+nD5BIQHc2PE5jeRVabSiayxzeHzjU6FYW
+	YhZ6BOqFyOOrr/KpmvN5TFGqGNvhYByRqyIrMJXNhfY60J++qs+8qeMSV4DwzOxg/H+uG9oXcbyw8
+	7i5jD7iflhbUHJ07AmRW1FSgD6ZlPNwXwFfQufYgl0yDmD6/ODWpCSjN7vejyrnK7ictwqBXWrk0h
+	EFOKcJlA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUpP-00000003W6q-3RCi;
-	Tue, 27 Oct 2026 00:14:11 +0000
+	id 1xLUpS-00000003WAG-493G;
+	Tue, 27 Oct 2026 00:14:14 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUpO-00000003W5Z-2cNC
+	id 1xLUpR-00000003W8g-35xU
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 00:14:10 +0000
+	Tue, 27 Oct 2026 00:14:13 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 0F416600CB;
+	by tor.source.kernel.org (Postfix) with ESMTP id 13A51600DA;
+	Tue, 27 Oct 2026 00:14:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B2211F01825;
 	Tue, 27 Oct 2026 00:14:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 028BE1F01825;
-	Tue, 27 Oct 2026 00:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793060049;
-	bh=YpzkqCxD9DEJ3+8L+1f3oPsu/K9fgP/1r9EgKpJF98Q=;
+	s=k20260515; t=1793060052;
+	bh=ynZeVp4GE9gMyAxS9d+MxTL5L2L0Jem+z5pMoQXOO9g=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=PzxpxL2y5D+nZTDUIkLsqW9eIEL4SVXlFOdVCOcvGC/9RJBNEN3Qb7BfuVdUf/0or
-	 W5tRc8CQjMREKYknNpX39aDtaEd+v6Imsuk7zvTdmFgQNH1dh1H1TJsTq10raLwnfZ
-	 nYqdAEPhNT0/hZUECASNYAs02tySXoS/X32G//dNbpqwzdlI+7Ns28Qnqt11LinXeX
-	 C+qcilIRv6mqLECDaNr9I2HutJPacdQ5ags/J6s1CoEXpW5k2iRP9v43MKuKDIk1iU
-	 Q2Yyu9oM+yWVQfQBztgm4e/nNJWv/0ekkzuVZj+wACVAr55BwX5EUagyliZGSZ47o4
-	 Op3MJCMQ24lHg==
-Message-ID: <sashiko-outbox-185921@kernel.org>
+	b=FIt7QM+LtoZk/9BMUyqAGkEqusx4YtcgVhjZHuLbQmkAPmFpiKHoj50I5rfGlpTUB
+	 I/6yCj4jjbNg4pykPFfQk0rZ2IF2lljJtXWDOkmFls6j0GbQnSEEll/RcW7WW67y03
+	 qMDPxlxH4NLZeeC4OI9nt5oRHqRef9ggF/dC554M9peo2dQY6WGEAcx73ubuNhcCTY
+	 VTRYZ2o90gMMhYOcnjUVKRAMUVWW3l+CrIHX5zJ5ulJCmJkhbSOdPo6u+x/K6NEp6X
+	 8bpNgG24anMGUNmhGCJdidIRmTUtTwqZ+yTh2bwdl2B4QWpXN3+ji30NhkIeVcyFbJ
+	 eQVTNmGLEDqEg==
+Message-ID: <sashiko-outbox-185922@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 39/46] mm/ksm: fix use of a freed anon_vma at swap-in
+Subject: Re: [PATCH 40/46] mm/ksm: check large swap-cache folios before
+ mapping them
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -74,12 +75,12 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
 Cc: kexec@lists.infradead.org, "Chris Mason" <mason@kernel.org>
-In-Reply-To: <20261027-fixes_core-v1-39-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-40-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-39-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-40-6f74bec9a5bb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 00:14:06 +0000
+Date: Tue, 27 Oct 2026 00:14:09 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,32 +100,31 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> A folio read from a swap slot previously shared by KSM can remain in the
-> swap cache after the process that first mapped it exits. Its anon_vma
-> can then be freed, so ksm_might_need_to_copy() must not dereference it
-> to compare roots.
+> From: Chris Mason <mason@kernel.org>
 >=20
-> Doing so can result in some false-positives, resulting in the reverse
-> mapping missing the new folio mapping, preventing migration and reclaim.
+> KSM folios are always small, but their shared swap slots can be read
+> back as part of a large folio in the swap cache. ksm_might_need_to_copy()
+> skips large folios, so another process can map a page with an incompatible
+> anon_vma or page index. Reverse mapping then cannot find the new
+> mapping, preventing migration or reclaim.
 >=20
-> SLAB_TYPESAFE_BY_RCU allows individual anon_vma objects to be reused
-> immediately after freeing. A stale pointer can then refer to another
-> anon_vma whose root matches, even though the target VMA is not linked
-> to that anon_vma.
+> Apply the same compatibility checks to large folios as to small ones.
+> Pass the page corresponding to the swap entry and copy only that page
+> when necessary. In do_swap_page()'s copy path, decrement only that slot's
+> swap count, because the source swap-cache folio can now be large.
 >=20
-> Move the anonymous rmap compatibility checks into
-> folio_anon_rmap_compatible(). Keep the page-index check and compare the
-> [ ... ]
-> Fixes: ba6f0ff3981e ("ksm: fix ksm swapin time optimization")
+> Fix generated by an LLM and sent by Chris Mason in private.
+>=20
+> Fixes: f1879e8a0c60 ("mm, swap: never bypass the swap cache even for SWP_=
+SYNCHRONOUS_IO")
 > Cc: stable@vger.kernel.org
-> Reported-by: Chris Mason <mason@kernel.org>
-> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> Signed-off-by: Chris Mason <mason@kernel.org>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027-fixes_core=
--v1-0-6f74bec9a5bb@kernel.org?part=3D39
+-v1-0-6f74bec9a5bb@kernel.org?part=3D40
 
 
