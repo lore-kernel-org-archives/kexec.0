@@ -2,68 +2,67 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C00606A320
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 19:06:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA656606A323
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 19:07:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=VlxXa6M5;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cje2C2JW
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=oV1NrIGh;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jf1fDspo
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=lf2Hoc/RWmB0/QlKnoJRvWNvn+6TzYwCnLWNzrsTcSk=; b=VlxXa6M5GNcP5d
-	xeHepQdTdxL+4LBNdkwd1KCkF7IMPhqwwZpMXbE6IuhLRnXs28w+HNXFH01oh30AwSRe3MSdBW0G7
-	Rr7CKbYpQ+MakhhT+eoH3tmXvIqD2nJLw4Jl6yF37szOkxDEnB/vasTQZ040S6b4+9krPeRj/5Kbx
-	bef7EjufoPYWCPpVaxoLaq0fRpXRDpTl2nQsbZ+K3/PgQ/VGV/E7gEIah74+TVs57A2z/lk/jo1Dv
-	K8UaG16uIomfXBbg7nieruWpmNHjUFN/47yKuJ5gy1djj2+J217AiqJ9ERBAb1gNnil+PRNdD2HGC
-	H11jGyfHxu/XbXUXBxAw==;
+	List-Owner; bh=4JNAgIKFjPRpfv1PgOMbYf97LYfRcFa+6eIVMdPRyjw=; b=oV1NrIGhNvTVqe
+	eikz9Aw1bIjAYEWigt6WPwzqV3PGu2Jy1DIC+4GmNlkz19QRCG9TOQT7ofFoGL2pDRo/MrtUGC4yR
+	VoVSJqc/07PEqPYfxCsElYFUYevGWNuCxTzSNvoXUzvgTn9EvyOy5lfnEAoJIeB11li8Ijz78epPj
+	o4N4EVzcIs36xbYD6xd++d8rEbOrxVCnxExGMuA+A9V5BtwmDObyMdbnRRw7MqwM6SlpQ3+FUYePE
+	nYQx4RycdvAYbR7pOIUu5U1658KiEgXI7hkTsGVvHdXUsJsAMkhfg6xU10HUCO6cveRwQNpKqDDlG
+	Ujc8qGWrSTRMzGE5xi/g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLmVG-00000005ciM-1w6R;
-	Tue, 27 Oct 2026 19:06:34 +0000
+	id 1xLmW8-00000005cnH-2Yja;
+	Tue, 27 Oct 2026 19:07:28 +0000
 Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLmVE-00000005ci7-3Q5N
+	id 1xLmW6-00000005cn1-3ooE
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 19:06:32 +0000
+	Tue, 27 Oct 2026 19:07:27 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 5D6DD601FE;
-	Tue, 27 Oct 2026 19:06:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB4261F01825;
-	Tue, 27 Oct 2026 19:06:12 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 5779E60136;
+	Tue, 27 Oct 2026 19:07:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 729AC1F01825;
+	Tue, 27 Oct 2026 19:07:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793127991;
-	bh=lf2Hoc/RWmB0/QlKnoJRvWNvn+6TzYwCnLWNzrsTcSk=;
+	s=k20260515; t=1793128046;
+	bh=4JNAgIKFjPRpfv1PgOMbYf97LYfRcFa+6eIVMdPRyjw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=cje2C2JW/W5/9ZEii8/tlACEPvMOnEjtWQcEG9HwUfuEGalcwYmRITtkhIzXgtM0F
-	 zVZPSg6MqWG1EXqB5aEm/UM1ZGW6AUvIBMETQt4ATO4Biy4ylKhaNWcc3aETkNrUX0
-	 +Rs2xhiojhULts3grC2OreKYDtZWNa7jmYsfkJOEIajVofwPjCJtjn26J2BasBa3/1
-	 FBvLrtI8WsnLL8X/8SZDyxn+URbO+XTS1C7Oaenryfso2BZULJrKXufHYlcMtbRIRU
-	 EO59ufQ81gNQ6SJ2yjHXTkjfgMYx5Sqa+hoHZTfCdWqAvmQc93hgNF4B+H7JFr5lqG
-	 E8VnnHkkgYw3w==
-Message-ID: <e5766fe2-6cbb-45bc-bc57-87314c130de8@kernel.org>
-Date: Tue, 27 Oct 2026 20:06:09 +0100
+	b=jf1fDspo2NgWYuI74LdGEBcYt8altR6P9yRUKqtzDSTFSAnWIf4GPYCpU6SCH2cR4
+	 kLKqYwz07l5Zxzm/sG06VNfh8M3YEXLg0g/xDRdxPgQdpFPjuVEjR01moMhjRlhF+T
+	 pjPpXSza1JiJ6vbP0VDvf6JnPlSg5bHKRMHCf8gjvuKNvnjEbklK28yyR7bqqPh8uC
+	 LRmuSQyxUKj9WGQhuRHWgrbDg7s+hLnc2B2yj63yqn4Wai5qpm3fBCxoqPXWBL+olg
+	 28HWBF3L63ZWkWwiog+dmsXfZtM+0ZeN1bDPXJhSyQqkRos7H6AArQhBQMI6vYISQY
+	 8xVSAIg2hJR+Q==
+Message-ID: <22b819a2-631d-468e-b724-770caf9f94e4@kernel.org>
+Date: Tue, 27 Oct 2026 20:07:06 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/46] mm/mglru: don't use stack pointers when walking PUD
- and PMD tables
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Subject: Re: [PATCH 02/46] fork: take mmap_lock before copying mm_struct
+To: Pedro Falcato <pfalcato@suse.de>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
  Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
  Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
+ Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
+ Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+ Baoquan He <baoquan.he@linux.dev>,
  Baolin Wang <baolin.wang@linux.alibaba.com>,
  "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
  Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
  Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>,
  Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Hugh Dickins <hughd@google.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
  Pratyush Yadav <pratyush@kernel.org>,
  "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
  Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
@@ -84,10 +83,11 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org,
  linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
  linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
- stable@vger.kernel.org
+ linux-cxl@vger.kernel.org, stable@vger.kernel.org,
+ Josef Bacik <josef@toxicpanda.com>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-1-6f74bec9a5bb@kernel.org> <auBbKP8UNI9talDL@gremlin>
+ <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org>
+ <auB-3BQn_rR6IfY8@pedro-suse.tail5790ac.ts.net>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -134,7 +134,7 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <auBbKP8UNI9talDL@gremlin>
+In-Reply-To: <auB-3BQn_rR6IfY8@pedro-suse.tail5790ac.ts.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
@@ -155,43 +155,38 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 10/27/26 09:06, Lorenzo Stoakes (ARM) wrote:
-> On Tue, Oct 27, 2026 at 12:17:21AM +0100, David Hildenbrand (Arm) wrote:
->> From: Josef Bacik <josef@toxicpanda.com>
+On 10/27/26 11:38, Pedro Falcato wrote:
+> On Tue, Oct 27, 2026 at 12:17:22AM +0100, David Hildenbrand (Arm) wrote:
+>> dup_mm() copies the parent's mm_struct before dup_mmap() takes the
+>> mmap_lock. A concurrent brk() can leave the child with a stale mm->brk
+>> and newer heap mappings, causing later brk() requests to fail.
 >>
->> MGLRU passes stack copies of page-table entries in walk_pud_range() and
->> walk_pmd_range() when walking to the next level. These copies can become
->> stale when khugepaged or MADV_DONTNEED (CONFIG_PT_RECLAIM) removes a PTE
->> table concurrently.
+>> Other operations (e.g., PR_SET_MM) on the parent's mm_struct can similarly
+>> cause inconsistencies.
 >>
->> This pattern dates back to commit bd74fdaea146 ("mm: multi-gen LRU:
->> support page table walks"). Likely, earlier locking masked the latent
->> bug. Later changes exposed it: commit 1d65b771bc08 ("mm/khugepaged:
->> retract_page_tables() without mmap or vma lock") allowed concurrent
->> retraction, and commit cf4a65539c13 ("memcg-v1: no need for memcg locking
->> for MGLRU") dropped the walker's outer RCU protection.
+>> As a simple and robust fix, grab the parent's mmap_lock earlier. This
+>> way we don't need to update individual mm fields in dup_mmap() and
+>> keep missing ones. Stop updating the 4 existing members (total_vm, data_vm,
+>> exec_vm, stack_vm), as that is now no longer required.
 >>
->> The fix is simple, so just fix the original commit so we don't have to
->> speculate. To fix it, pass the actual PMD/PUD pointers. This restores the
->> RCU-protected lookup and validation against the live PMD. Note that the PUD
->> handling is required as well to handle folded page tables correctly in all
->> cases.
+>> Keep releasing the parent's mmap_lock in dup_mmap(), before
+>> userfaultfd completion, to avoid moving the userfaultfd handling into the
+>> caller. This should get cleaned up later.
 >>
->> Fix generated by an LLM and sent by Josef Bacik in private.
+>> Move uprobe_start_dup_mmap() to preserve the lock ordering.
 >>
->> Fixes: bd74fdaea146 ("mm: multi-gen LRU: support page table walks")
+>> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 >> Cc: stable@vger.kernel.org
->> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
->> [ david: handle walk_pud_range() as well, clarify+simplify description,
->>          adjust Fixes: ]
+>> Reported-by: Josef Bacik <josef@toxicpanda.com>
+>> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 >> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
->> ---
 > 
-> God, terrible. And why does MGLRU feel it needs its own independent page
-> walking mechanism?...
+> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+> 
+> FWIW, strictly speaking malloc() isn't usable in a forked
+> (multi-threaded) child, but glibc/musl provide this in a best-effort way.
 
-It's all a big mess. I think at LSF/MM there was some talk of using that also
-for traditional LRU, but I guess it might take a while ...
+Yeah, I'm more concerned about other things that can race ... :)
 
 -- 
 Cheers,
