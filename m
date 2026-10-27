@@ -2,116 +2,127 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBB9606A31E
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 17:33:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B548606A31D
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 17:36:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=SfmAiA1o;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=bXKiyzgj
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2lw66Ank;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eJm2d3nw
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Unsubscribe-Post:List-Owner;
-	bh=Glhm1d7B/bXe7XSf6a+44KZYpto2vUedcbuSuK5V4mM=; b=SfmAiA1oHmBCTNg3CjBhIQJJlr
-	Lee8B6elpDev2I2KZjDrNVGPxF35LV76jOHnFUNgQLKc1hF0DeBnxEtIiaeNwJWVvXSjDLQUbXdYu
-	dddO4pPPheRV7q72CPzpWpRtSz/TLI6/X5gpdaFfW4h6VXNmrGH4+CEtlY9689KUANgE3DaOlIfSq
-	e2QdC6SmUL1H/Aa/BgO+ovuHD+uDSqtEN9qiFI6G+DdpJa0AjYNNqKD9CuhLwK8ASApAEGyBSDNpz
-	oDrmPVnWXWqXQUm7UJnzTcDTOgL2RrJYe+W/+M7oMJ0VLx9c16F/064/Ygh9V9I6QVaIhctSjyIj/
-	MAIOXj0g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=7tn+ocp8Z0Pv5iXA3uYeoDAMsUVuEMuroDimQAuxM4E=; b=2lw66Anki5bN30
+	x8iwfosJnxri/O9si4D0MS3V4/EzhgsjR3xfmMv+V16pfs+f0dLnvTJsfuRCgEoEHfOPS9+s3TFY1
+	4mG4pHI/tSTDe2ofJ/Luv+6lgywBwrRKNze+2Z6THKFc0re2m/rVbNyS3iaFm3laHmy8xg5RdMBAE
+	lbX0ve08lwgvxWzl4MHnEzxp/eZfyRZAf7dSrIyfHC037AmdafYC7sPH/twrSrNsYGvAMFMQWnpJD
+	Wcn/dvYk0zdshjLl5qevLaKKOM0bgCInCtycVj+yKhtsKWjUqCLe2U21sc0YbaSZ1O686wQx3mJIb
+	Tzh6RCEHyu4TS94p9eDw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLl3X-00000005THn-03cQ;
-	Tue, 27 Oct 2026 17:33:51 +0000
-Received: from mail-pl1-x634.google.com ([2607:f8b0:4864:20::634])
+	id 1xLl5j-00000005Tfl-2Q7r;
+	Tue, 27 Oct 2026 17:36:07 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLl3V-00000005TGw-0EcU
+	id 1xLl5i-00000005Tfc-0inY
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 17:33:50 +0000
-Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-2e8b20a899fso289465ad.1
-        for <kexec@lists.infradead.org>; Tue, 27 Oct 2026 10:33:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793122428; x=1793727228; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Glhm1d7B/bXe7XSf6a+44KZYpto2vUedcbuSuK5V4mM=;
-        b=bXKiyzgj3+isrqQEiPr2XDXPMW7qGTl7gTMY/O+d0zsjOOUr2K6q01UeSd977TA5DL
-         BsQKJQlkzqiirrSscHiZbptu7A2I/9+uWYzwHdSdzgQYXA4m4zEsg7bM1EzhfyEdGNLY
-         vnBPT6/0hWVLsk6NlMDkj5igu2GeZjyaTiJioGE4UKtvExaQ/RFLXQ+PRruaj1j2kgNa
-         2gvvvvfuCrARIC29dEAdGq7rx/mJ4yDnUDslcacWzpxiYPxAsW7DUrY8Dt776qz/Ncl+
-         Z6t8TH4l/FY5magMW2LHdvTTxgVJYZQ5kvqsdpoQp/plWX0RWrK8OcblDamoF0EWzT1Y
-         M+aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793122428; x=1793727228;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Glhm1d7B/bXe7XSf6a+44KZYpto2vUedcbuSuK5V4mM=;
-        b=zo+mMx3tilOrksrnvMUe65wEvhSDtzQ0Bcwnp7oMlpXrInom7Ms36CTj654a7pVQvh
-         iDcLbuMMoXcQA8sm9ZM7tql2QSq9L97EvAQqcX0kDSBR/mG/PNCs1Ep/smxmmPaY/JyJ
-         WTb4NI+mVvrIBWtdGNG2Y6RxqX8H9SZxENu6wijLH7QFzh1UJLIrbXutd982rHwVjVSx
-         LGNUkxo8RLAMPmFpszsvKaJhwZX6f6Tl5/wjueJb5Vds6S9CGBfXFICV2y4bJVbqWyxj
-         K8Te8X/GPgYCqtGIIzRgZynv+g3+lOE5KCY9Xiz/sDXkdzh8drFvSB1sqjwqUXB0BqwU
-         zbXw==
-X-Forwarded-Encrypted: i=1; AKwUvBz2WDIF4dtswt5lAPhebJq3afJJ268oJeHESo+O/AoHfd6cLoEtN8U875se1TKL7QjFls4hpA==@lists.infradead.org
-X-Gm-Message-State: AFq9FYLbOgSd5t4aSYDZ8Ktewt0mp4dQwed1TTi6FmAEvsQxS2Uz+dQc
-	bHasaE69ZuPOYavBnnSzizmYO9kyYoPqdFYjd3QUcUDcNA3iOW/XeKQML/8+mLgtig==
-X-Gm-Gg: AYBFou3uPNX6qWYaSnGw5BMgkuZKBsOJYPakWnj6yfqALK4VD+ohHg/jmcFt9kng6EA
-	+4k3dbauRRGAAtKnxVLpclm+XkiM+O2iwxuWmSsnXzAN2cfZPPoF9YQI3s9HyZWmEK7cu51k0PD
-	wFOzyAAhs3VScOorYqUnBh8/NbCYi0koD6j8AYOKv03SmQBLsjE8m5biL0jIDX0ANxrI6xDT9Ln
-	rs2IT8VaeyPKdJSyPw9wVju6Itbz2bH/sHZH4ZFGAW/3MNJqUAmTO7/1wylaA6RzGN/01UMofGt
-	sm9MBajF0nYLdqIg5Efw53UezRo3bXGFpeAFc3eejCtE670Pdc5b8UCPOqdLoGEtDK+lsloKGEP
-	r+nZcUTfB3ZTV1D5QQ/R2l0LMmEspn5tsfjTIuB3MSx5hBz2RdDv/d5cxG/qJDw7aZg4xsL7bG6
-	JdvWSTBKPG5E3zl+kcWzZWfsDykTFQiSUCGh+x6XimC7tQk5025tQ6BwcOs5gDsOh182dPJLsvp
-	BAkhmQjLomUkXe2zfOHAKVOhoh9pbvTqUengeuVg2pCjtkPskp+TSSP+Q09HTZTauMnQ2yMAb1H
-	HmHE71bMQ/jI60EpztM7SL17ny2sN3LmBIg4mPqDYEVJyDYvOPdo0Gh3ZovkIH2QkA==
-X-Received: by 2002:a17:903:3d0d:b0:2e9:5507:b52e with SMTP id d9443c01a7336-2eb005a6905mr454945ad.50.1793122427469;
-        Tue, 27 Oct 2026 10:33:47 -0700 (PDT)
-Received: from google.com (64.75.127.34.bc.googleusercontent.com. [34.127.75.64])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eae6bddae0sm12585675ad.35.2026.10.27.10.33.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Oct 2026 10:33:44 -0700 (PDT)
-Date: Tue, 27 Oct 2026 17:33:41 +0000
-From: David Matlack <dmatlack@google.com>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: tarunsahu@google.com, Andrew Morton <akpm@linux-foundation.org>,
-	joro@8bytes.org, Mike Rapoport <rppt@kernel.org>,
-	Pratyush Yadav <pratyush@kernel.org>, maz@kernel.org, arnd@arndb.de,
-	jgg@nvidia.com, robin.murphy@arm.com, loganodell@google.com,
-	oupton@kernel.org, kevin.tian@intel.com, alex@shazbot.org,
-	dwmw2@infradead.org, pbonzini@redhat.com, seanjc@google.com,
-	will@kernel.org, Alexander Graf <graf@amazon.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, baolu.lu@linux.intel.com,
-	linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-	sagis@google.com, linux-mm@kvack.org, kvmarm@lists.linux.dev,
-	iommu@lists.linux.dev, linux-pci@vger.kernel.org,
-	kexec@lists.infradead.org, skhawaja@google.com, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 3/4] liveupdate: Replace compatibility string with
- a 2-bit pair feature header
-Message-ID: <auDgdUb3y_ricEq9@google.com>
-References: <atl7peoVHdP5hz7z@google.com>
- <CA+CK2bBFXnJA1kddbLKGq0DAHDgjYhsTSQQay-xeX7jJC1V_UQ@mail.gmail.com>
- <CALzav=e=ho2gVrn+7KpZ3ZyasvH2u15-pC-RSRSS7KcMfKqUJQ@mail.gmail.com>
- <CA+CK2bAJo8dnTOyKMgnnMnk-SCXbTsv+JCLEOWkjyj-wqtEkHg@mail.gmail.com>
- <atpNFEFIlqAoYIwH@google.com>
- <CA+CK2bB2C3Am5ssRuzYpfiU7_vB81vxMGc19HQLq7N=_7YrbTg@mail.gmail.com>
- <attmFVIFU_mS0Y7p@google.com>
- <CA+CK2bDXDWbww_d3sD6OZqpo37V1a3t76_ubbrXLQS=9DB3dWA@mail.gmail.com>
- <at-8vkVpN2SF3XgB@google.com>
- <auDPd6tjzACQVszf@google.com>
+	Tue, 27 Oct 2026 17:36:06 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id D7AD743BEE;
+	Tue, 27 Oct 2026 17:36:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B631A1F01825;
+	Tue, 27 Oct 2026 17:35:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793122565;
+	bh=7tn+ocp8Z0Pv5iXA3uYeoDAMsUVuEMuroDimQAuxM4E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=eJm2d3nwlX8eIZXNWqaL2i7CW0VVze0Ad0V2NfYtR9MZ4ZxW46fjMgelwFfLUWZZU
+	 BlysjogYaO4f3rgGGm2l/ebR0XluuHEktbFWLIU8+is917srBP28ecO0+KYfPN/mJx
+	 7nQ+0rCZT2mhfguFnz6gZjpDp4II2jvMq0/RsEMm8IKCDPTT9vEa2YN2v/ZPyUaWwY
+	 ZFMQ06hyEE+vQLY4DIETxwrfrYq6ZnVczkd5qFpDUQyPxE12D0XQRKEyhamRbNjIhm
+	 ZRIEOOZXjl49VJCFM9/rMjbdII6KcaorWO9rqGMznNIOOWHwbdjG9fKQdUfkgxbH+X
+	 ZigaJgbrPET8A==
+Message-ID: <fcb7b786-53e5-49bb-8505-63eb8bb4e836@kernel.org>
+Date: Tue, 27 Oct 2026 18:35:51 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <auDPd6tjzACQVszf@google.com>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261027_103349_152858_23B69249 
-X-CRM114-Status: GOOD (  18.41  )
-X-Spam-Score: -17.6 (-----------------)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] mm: allow freezing mappings
+To: Pratyush Yadav <pratyush@kernel.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Hugh Dickins <hughd@google.com>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Zi Yan <ziy@nvidia.com>, "Liam R. Howlett" <liam@infradead.org>,
+ Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Pasha Tatashin
+ <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Byungchul Park <byungchul@sk.com>,
+ Gregory Price <gourry@gourry.net>, Ying Huang
+ <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>,
+ Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
+ Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Lorenzo Stoakes <ljs@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, kexec@lists.infradead.org
+References: <20261027173031.763213-1-pratyush@kernel.org>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20261027173031.763213-1-pratyush@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -122,84 +133,26 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 2026-10-27 12:21 PM, Pasha Tatashin wrote:
-
-> My main requirement is that DECLARE_KHO_SER() in include/linux/kho/abi/ 
-> must be enforced by the compiler rather than being just a bare 
-> static_assert() that someone could forget to add. Since kho/abi/ headers 
-> contain both versioned structs and unversioned sub-structs, it must be 
-> mandatory to declare versioned structs in kho/abi/ with their 
-> static_assert size check before the kho_ser_*() helpers can be used on 
-> them.
+On 10/27/26 18:30, Pratyush Yadav wrote:
+> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 > 
-> So, how about adding enum names like this, that are going to be required 
-> in accessor functions later:
-> 
-> #define DECLARE_KHO_SER(name, payload_size, nr_feats)             \
->     static_assert(sizeof(struct name) == (payload_size),          \
->                   "struct " #name " size mismatch");              \
->     enum {                                                        \
->         __KHO_SER_SIZE_##name = (payload_size),                   \
->         __KHO_SER_NR_FEATS_##name = (nr_feats),                   \
->     }
+> Hi,
 
-Sounds good. Since you're also on board with splitting required
-and optional features [1], this would take both counts:
+Hi,
 
-#define DECLARE_KHO_SER(name, payload_size, nr_required, nr_optional) \
-    static_assert(sizeof(struct name) == (payload_size),              \
-                  "struct " #name " size mismatch");                  \
-    enum {                                                            \
-        __KHO_SER_SIZE_##name = (payload_size),                       \
-        __KHO_SER_NR_REQUIRED_##name = (nr_required),                 \
-        __KHO_SER_NR_OPTIONAL_##name = (nr_optional),                 \
-    }
+we're in the merge windows and focused on fixing things (apparently all of the
+kernel). This is not the right time to discuss new changes.
 
-  DECLARE_KHO_SER(memfd_luo_ser, 16, MEMFD_LUO_NR_REQUIRED, MEMFD_LUO_NR_OPTIONAL);
+-- 
+Cheers,
 
-The incoming path can also use __KHO_SER_NR_OPTIONAL_##name to validate
-the incoming header only contains required features that it knows how to
-handle:
-
-#define kho_ser_validate(hdr, name) \
-    __kho_ser_validate(hdr, __KHO_SER_NR_REQUIRED_##name)
-
-> > Plus helpers that allocate and initialize the header and return the
-> > payload as a typed pointer. Both the outgoing and incoming paths find
-> > the payload the same way, by computing its offset from the header,
-> > rather than through a struct with a fixed payload offset:
-> > 
-> >   /* outgoing */
-> >   hdr = kho_ser_alloc(luo_memfd_ser, LUO_MEMFD_NR_FEATS);
-> >   ser = kho_ser_payload(hdr, luo_memfd_ser);
-> > 
-> >   /* incoming */
-> >   hdr = phys_to_virt(args->serialized_data);
-> >   ser = kho_ser_payload(hdr, luo_memfd_ser);
-> 
-> These would become, where without enum, the init would fail:
-> 
-> #define kho_ser_init(buf, name)                                     \
->       __kho_ser_init(buf, __KHO_SER_SIZE_##name,                    \
->                           __KHO_SER_NR_FEATS_##name)
-> 
-> And payload can also check the existance of DECLARE_KHO_SER, using 
-> (expr1, expr2):
-> 
-> #define kho_ser_payload(hdr, name)                                  \
->       ((void)__KHO_SER_SIZE_##name,                                 \
->        (struct name *)__kho_ser_payload(hdr))
-> 
-> We can also add an optional kho_ser_alloc(name) to allocate, init, and 
-> preserve.
-
-+1
+David
 
