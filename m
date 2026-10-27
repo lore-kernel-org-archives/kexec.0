@@ -2,166 +2,122 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27EE606A329
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 10:39:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CABB60A6F7A
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 11:07:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=gVcBP7tV;
-	dkim=pass (1024-bit key, unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=jMAe2coB;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=ThWU3S/l;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=jMAe2coB;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=ThWU3S/l
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=oQXtvibO;
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=lr4DWPOG
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Unsubscribe-Post:List-Owner;
-	bh=GHXfa6R9kyvi48QCk+MS91fHFKbn6ETqPD7CVuiGV4E=; b=gVcBP7tVo/mKYbRAdhDvjPq4Ei
-	NGPs6bKLZZtnUS2DJ1bLoB795yL0e9zA1HizLF43ch6xwc8DN3ck+TcqmQL/WxCZep86uJk5+kNLy
-	Rz18+cW+kHPI2xKVgItlk41/35+CZjiPeNLWEvUeih2XX2SrGUQFKR4fTnYQYuZuSdvXOwbLUJ3MN
-	ou2OOzREvpbB3351NAOKCbk/qDqRzeKDSV0bZ/mt4qb+crzRF/tGuRo/CUgi/gcsmkT2Kohj9QDk4
-	yv895CvdeX1RFNZ3t+3djxm8d1qsxpGh3T/qbmvVWb7hTbEnY6fd3lkkZ1WthfwEsf3XpK7CLVLv0
-	iWAY/TFA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=IxgxM40qKppYkcLvHablg0AyarVMw7TsPIYnNClTEMI=; b=oQXtvibOJO6UT0
+	hglK1zxUeO/VffYW9YPXFMsGbETQ7F4lmV/AJku0XMS0tqm9gjDQnL8BjV19yym3koaquywgjAH9V
+	TaiieqAVG2aLNAqNPQJ17KVw5p3+Sl7Bh/Ovp8yorozqFjv+IzdjVEoEHKTV93RcOF3ZODaKk6A7X
+	10tZ68b7vxvMFhzrvd3DTu2OKyljbh7eVD6Nn+3SqP8dWzjn1nUwsrURrl6r8PYqFHvFNhYuEtNtC
+	z6sC192pCB7bXMo7mQ7aFLurAFNYqWfGCPQa+MiFkIclpssNvvSdvxy4gs6Do0SF2Tfk0GUPd5Xm8
+	F6wUEjdmRWb1D4jSFxog==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLeaf-00000004JsB-2HwZ;
-	Tue, 27 Oct 2026 10:39:37 +0000
-Received: from smtp-out2.suse.de ([195.135.223.131])
+	id 1xLf1h-00000004OgL-3JzH;
+	Tue, 27 Oct 2026 11:07:33 +0000
+Received: from mail-yw1-x112f.google.com ([2607:f8b0:4864:20::112f])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLeac-00000004JpX-3aFr
+	id 1xLf1f-00000004Oex-1btr
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 10:39:36 +0000
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 0C4381F7D5;
-	Tue, 27 Oct 2026 10:39:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1793097573; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GHXfa6R9kyvi48QCk+MS91fHFKbn6ETqPD7CVuiGV4E=;
-	b=jMAe2coBUlccty3WHc8e5eFbxGa/FQ2n05z85wuM0uaTiaKhJdl7ZM93Izvk+dMu+SIVP7
-	SuAVTUjb87RyCHK0ewstc6yfcUCkiry0A71eE1ZaAONOd+4FRscZSDEBSmxEttk4iK9uBP
-	BFGgiIC9hZRc75BpwrdNUNGp5cR5iSE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1793097573;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GHXfa6R9kyvi48QCk+MS91fHFKbn6ETqPD7CVuiGV4E=;
-	b=ThWU3S/ly60GNL1To5OVEGzTl7xGFF0ft9/lW1WdUqqvby+qiJh4XfliFTrN0TZPcLVbcA
-	00sIFGt5kj9La7Cw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=jMAe2coB;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="ThWU3S/l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1793097573; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GHXfa6R9kyvi48QCk+MS91fHFKbn6ETqPD7CVuiGV4E=;
-	b=jMAe2coBUlccty3WHc8e5eFbxGa/FQ2n05z85wuM0uaTiaKhJdl7ZM93Izvk+dMu+SIVP7
-	SuAVTUjb87RyCHK0ewstc6yfcUCkiry0A71eE1ZaAONOd+4FRscZSDEBSmxEttk4iK9uBP
-	BFGgiIC9hZRc75BpwrdNUNGp5cR5iSE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1793097573;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GHXfa6R9kyvi48QCk+MS91fHFKbn6ETqPD7CVuiGV4E=;
-	b=ThWU3S/ly60GNL1To5OVEGzTl7xGFF0ft9/lW1WdUqqvby+qiJh4XfliFTrN0TZPcLVbcA
-	00sIFGt5kj9La7Cw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 588A81321C;
-	Tue, 27 Oct 2026 10:39:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id wIn6B19/4GprGgAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Tue, 27 Oct 2026 10:39:27 +0000
-Date: Tue, 27 Oct 2026 10:39:25 +0000
-From: Pedro Falcato <pfalcato@suse.de>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, Hugh Dickins <hughd@google.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>, 
-	Lance Yang <lance.yang@linux.dev>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
-	Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
-	Oscar Salvador <osalvador@suse.de>, Minchan Kim <minchan@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Chris Li <chrisl@kernel.org>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Youngjun Park <youngjun.park@lge.com>, Gregory Price <gourry@gourry.net>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
-	stable@vger.kernel.org
-Subject: Re: [PATCH 04/46] mm/memfd: make f_pos accesses atomic
-Message-ID: <auB_QkUwsP6sRfYS@pedro-suse.tail5790ac.ts.net>
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-4-6f74bec9a5bb@kernel.org>
+	Tue, 27 Oct 2026 11:07:32 +0000
+Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-8ad98c3fb15so32937777b3.2
+        for <kexec@lists.infradead.org>; Tue, 27 Oct 2026 04:07:31 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1793099250; cv=none;
+        d=google.com; s=arc-20260327;
+        b=TjVQeF1H3XmuU9lNuHJN66PbN7gAW0F/ESncTaGC4wRuyWvrO0PU5v1BJVLRAWoeSZ
+         zusLNCyILqa8hk26Khv0HNfcUJ1CUxgAfgXJeSQVuMTF+Au1KSxBkcTdTa3SvbjQH3RU
+         FGx61GUVwk0A/bdwZETVdBJHqR5mH0xm8DrrPRJFByYm9wesOOwepma+xE+lIFyu0kUV
+         z7ejnhXcIbYuYZRbPFkNIr8L56yh8M9JVau1ytiXgFmpZWCGjz1qIzBgBHrmfnRJYNcV
+         GAvK+TgXTD/fwFMdyFdmFsQ66vLKnr8MLxLqbQ14a7I5rV9UiqGoybj+3gJWmQPNXRAW
+         uSyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=IxgxM40qKppYkcLvHablg0AyarVMw7TsPIYnNClTEMI=;
+        fh=BMzndAHsrR3cTSD7gtyxwBkpPeQ2ykInJqG0vyx7uDI=;
+        b=ZbwmPg1mqqFACySU66msDuywh3ZwDYqFMuyDcHCPMhNIlotlBhaT+eBylGMoRppyse
+         YNMgmVpwsyUXwBE1Hdz7YZFnTf9BXr76z6p4v33kM3/UJJkIlRoLF10+/pnyxpay7oUP
+         U/4AnGqOdhf+oiAUKM/9LTppnLm84WRsyf3h2+e+156Ht3MykdkQmk9cBCacM4/fpm2+
+         HXnvDAIbp3nTswpW3A/Dvn/VJUYIkbwgwHzDdKW0xHnl+XfEVtbDMqvGhR0diD+T5T+a
+         3m+2bDh3qnpJb2BEykhkSkak0cKhcUClntSs4xl74IBdWPoAaVoog9Rxup0fzBaiVCLL
+         FTfw==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1793099250; x=1793704050; darn=lists.infradead.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=IxgxM40qKppYkcLvHablg0AyarVMw7TsPIYnNClTEMI=;
+        b=lr4DWPOGhAvLIl9O6JND7QEshrwEoeXHHo5XDQl53BxcH7VMj/B5EkJrBxK4omdU4u
+         dctmM48GocGis7ljkxdHW+DGrQixTItvZScCU5vy4osHh6vxKeHNYPIJVApGDZV76+Lw
+         sFac2H+/LIoKu/Ip2gkdescmiBcONijTVkfII3maTJw+4mdsk/rnmleeRqkPKmrJrJVf
+         SrkcwO6YpSD2N6YSYF+9ETJGuUPVrvZnvUacT/hxJicGwSaES4QSR/EB25butR4bkEsM
+         wFY8XUf33NFIwFj3fkADHhzGX8xbOgTjgC5zeERmNES+wsBR1CJcNSNRVlN6gxagYhSX
+         DwsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793099250; x=1793704050;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=IxgxM40qKppYkcLvHablg0AyarVMw7TsPIYnNClTEMI=;
+        b=RodaLz+h1VOrAWKm1/KSz5BtMu/+6J+CcFsQqElf6WiXOrijF2WM8Ap52IK4m2LYrW
+         4cKeO5d++030fMQ4Sbfp7EguoJPqC+qrDQi98tje4DCHm1ZH/3ewQwlKywErC4sxScQb
+         iZTnxET0TUbKufTk5kGE141tmsXiUcfwMTOXrCCxG44shMCkd2kL41UH2PNFmmS4C/2E
+         au1jwvYkDY2hqFx5kVJsaMIdwOf3xGEDtH+dKdTHv5RgIqfju3w8qYoMACI4jcKFlQDM
+         FgpfuqiAdjV9bkVLdSi/8WUKJBB6w+a0eRQxtbp6F3ykSOXQ+DpqAJgOrxLKa5CiEbAP
+         YjFw==
+X-Forwarded-Encrypted: i=1; AKwUvBy9lNYkpwjf6KbflbnTK9WipO4bqeMSs9CA3MnLoHMDxSu4u0eD3lvC2wSeGZDhbnAePfrwBg==@lists.infradead.org
+X-Gm-Message-State: AFq9FYLsMJP2907cws3rDZfbZxPJ2vMAD0H93gbJxNuQLP59q64QkYAb
+	LrGmBgg2g6RA7oyJZbHBUC/Wj1LC3FD2wByVt+Jm+c8VUj51WhjS+8TQQRcNAkw6yf/c4zg5Atk
+	NR/GQZFShXiCS1RodqKIKW4irhow/lsU=
+X-Gm-Gg: AYBFou3FNzWvKUqaHSnikkpxG+2ZrG7QVjmVlSm6wVt79TuNFxYZ4zWkC5amGcVH6io
+	JYWMk8aXTy+NDQsGfcxcIzI8TySz+KrZYImjXyc/vlEkTkbaIyk1JYuQ/9G4+bvK3XR55ro0QmY
+	gT4L1MYxobmSAS79ibftT5WRo8IwBe6BtDO5WuudBoFPT1ZentjnNq4H3KP+G7kQ/QmETctxu8E
+	f+bCGrI3AxXkVqJ2f+neBHdnseyzhIRUqa4SonH8hDN8wYwZfZ4s/0ibGCYa2o7WMkTNRlxl+za
+	YnAH8XgeAWMMLie7pQmlm4glPMYaOlPf4tUgMWyy+B9PxX4KMCLBgeC8RKn0+ZgpcI0dK+VZn4u
+	fJnwOoQ2Xo2nXtzoIB4Qv+ogktCJJq5C/Poi2zEbNRszuZ0ViJYUCLBesaXiptRhxqLuf3A==
+X-Received: by 2002:a05:690c:89:b0:8b0:e13c:2854 with SMTP id
+ 00721157ae682-8b1669e55a4mr81209407b3.5.1793099249996; Tue, 27 Oct 2026
+ 04:07:29 -0700 (PDT)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261027-fixes_core-v1-4-6f74bec9a5bb@kernel.org>
-X-Spamd-Result: default: False [-12.01 / 50.00];
-	SUSE_INTERNAL_BYPASS(-9.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_CC(0.00)[linux-foundation.org,cmpxchg.org,kernel.org,linux.dev,tencent.com,google.com,linux.alibaba.com,infradead.org,suse.com,soleen.com,suse.cz,nvidia.com,surriel.com,arm.com,intel.com,redhat.com,gmail.com,suse.de,huaweicloud.com,lge.com,gourry.net,sk.com,ziepe.ca,kvack.org,vger.kernel.org,lists.infradead.org,toxicpanda.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	MIME_TRACE(0.00)[0:+];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RL89xh3ijk4gdpeanxbepagf1s)];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_GT_50(0.00)[65];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[toxicpanda.com:email,suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -12.01
-X-Spam-Level: 
-X-Rspamd-Queue-Id: 0C4381F7D5
+References: <20261019-b4-ipe-keyring-rfc-v1-0-156f0b93e843@nvidia.com>
+ <20261019-b4-ipe-keyring-rfc-v1-1-156f0b93e843@nvidia.com>
+ <702ade20-a2f3-4919-97e6-c72faa89399a@kernel.org> <20261021-groll-donnerstag-erfuhren-ce34a0ed4e97@brauner>
+ <CAHC9VhTHUU0h9k74CMT6wYhMwyY3YhbSSFwJoDTvoFRyTFVZwg@mail.gmail.com>
+ <20261022-hausbank-dozent-hurtig-9443f3777475@brauner> <CAHC9VhQ4sdCRvJ+YPZoiQzR_hgQN6-=84qvnTDDGPf=7=L9-jA@mail.gmail.com>
+ <5143896100674c9fd744c4d7d6ce12232910e789.camel@gmail.com>
+In-Reply-To: <5143896100674c9fd744c4d7d6ce12232910e789.camel@gmail.com>
+From: Luca Boccassi <luca.boccassi@gmail.com>
+Date: Tue, 27 Oct 2026 11:07:17 +0000
+X-Gm-Features: AclHuK-M6AykdLUZqQa3ChCCBvY0LYTQ7GR53YsAPnqddFlyo8iJeyhlphI-4Do
+Message-ID: <CAMw=ZnR54hMBwGTps23t9Mm_VO1bAvmeX8uTf_VJ0rJsFNMLuw@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/4] ipe: add the .ipe policy keyring
+To: Paul Moore <paul@paul-moore.com>, Christian Brauner <brauner@kernel.org>
+Cc: Fan Wu <wufan@kernel.org>, Manuel Huber <manuelh@nvidia.com>, 
+	David Howells <dhowells@redhat.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	Andrew Halaney <andrew@amutable.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, linux-security-module@vger.kernel.org, 
+	keyrings@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kexec@lists.infradead.org, Mike Rapoport <rppt@kernel.org>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Alexander Graf <graf@amazon.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261027_033935_063292_1B1F0D2B 
-X-CRM114-Status: GOOD (  20.05  )
-X-Spam-Score: -4.4 (----)
+X-CRM114-CacheID: sfid-20261027_040731_438363_58E7FB8F 
+X-CRM114-Status: GOOD (  28.61  )
+X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -172,53 +128,67 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Tue, Oct 27, 2026 at 12:17:24AM +0100, David Hildenbrand (Arm) wrote:
-> From: Josef Bacik <josef@toxicpanda.com>
-> 
-> Commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per POSIX") made
-> read(), write() and lseek() on a shared open file description of a regular
-> file serialize on ->f_pos_lock.  The flag that asks for it,
-> FMODE_ATOMIC_POS, is set in do_dentry_open().  A memfd is a regular file
-> too, but its struct file comes from alloc_file_pseudo() and never passes
-> through do_dentry_open(), so it does not get the flag:
-> 
->   CPU0                                CPU1
->   write(memfd, "a", 1)                write(memfd, "b", 1)
->     pos = file->f_pos  (= 0)
->                                         pos = file->f_pos  (= 0)
->     vfs_write(..., &pos)
->                                         vfs_write(..., &pos)
->     file->f_pos = pos  (= 1)
->                                         file->f_pos = pos  (= 1)
-> 
-> One of the two bytes is overwritten.  Two threads writing 100000 bytes
-> each, one at a time, to a memfd end up with a file that is far shorter than
-> 200000 bytes, while the same program on a tmpfs file never loses a byte.
-> 
-> Set the flag when the memfd is created.  As for any other regular file the
-> lock is only taken if the file is reachable in more than one way, and
-> nothing a memfd does in read or write waits for another operation on the
-> same file.  This cannot be done for all alloc_file_pseudo() files: anon
-> inode files such as eventfd are S_IFREG as well, and a blocked read holding
-> ->f_pos_lock would lock out the write that is supposed to wake it.
-> 
-> Fix generated by an LLM and sent by Josef Bacik in private.
-> 
-> Fixes: 9183df25fe7b ("shm: add memfd_create() syscall")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: minor description tweaks ]
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+On Mon, 26 Oct 2026 at 12:57, <luca.boccassi@gmail.com> wrote:
+>
+> On Thu, 2026-10-22 at 13:18 -0400, Paul Moore wrote:
+> > On Thu, Oct 22, 2026 at 6:19=E2=80=AFAM Christian Brauner
+> > <brauner@kernel.org> wrote:
+> > > On Wed, Oct 21, 2026 at 12:51:35PM -0400, Paul Moore wrote:
+> > >
+> >
+> > ...
+> >
+> > >
+> > > > Of course, fitting in with existing norms is important,
+> > > > but if it causes IPE or existing IPE uses a lot of pain, that can
+> > > > a
+> > > > good reason to diverge from those solutions.
+> > >
+> > > Which pain?
+> >
+> > As I said before, (emphasis now added for claification) "... *if* it
+> > causes IPE or existing IPE uses a lot of pain ...".  I intentionally
+> > did not make a claim either way.  Once again, I wanted to provide Fan
+> > some support in case there was an issue and he found himself in a
+> > position where he had to push back to preserve IPE's model.
+>
+> I think there is one issue with the design pattern where keyrings are
+> set up in userspace, that I have mentioned a few times already and I
+> got documented in
+> https://www.freedesktop.org/software/systemd/man/latest/systemd-system.co=
+nf.html#RestrictFileSystemAccess=3D
+> as well: they are trivially bypassable if the kernel has kexec enabled
+> and it is signed. The security model relies on the "good" userspace
+> running first, but if kexec is enabled, there's no guarantee that will
+> be the case, and as far as I can tell it gives root trivial capability
+> of overriding it and extending the trust chain as the attacker wishes.
+>
+> IPE specifically was designed to avoid exactly that, and ensure
+> userspace could not execute untrusted code, even with root privileges.
+> With this enabled by default, userspace can just load the same signed
+> kernel image, passing in compromised initrd and command line, and gain
+> arbitrary code execution on the host, since only the kernel binary
+> itself is verified, and anything goes for the rest of the kexec
+> parameters.
+>
+> This is of course not to say this new IPE keyring shouldn't be added.
+> But perhaps it would be nicer if the default build flag was mutually
+> exclusive with kexec being enabled? Not sure if that can be expressed
+> in Kconfig though? default: yes-if-kexec-off, no-if-kexec-on
+>
+> At the very least IMHO this relationship should be documented
+> explicitly in the kconfig blurb, as it seems to me it's a major footgun
+> to leave laying around, and users might not necessarily be aware of it.
 
-Reviewed-by: Pedro Falcato <pfalcato@suse.de> 
-
--- 
-Pedro
+KHO/keyring folks, what would you think about preserving sealed
+keyrings across kexec via KHO so that the chain of trust can't be
+reset by userspace? Good idea/bad idea/yes send patches/no go
+away/etc?
 
