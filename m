@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10D2606A31D
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:12:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E45606A320
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:12:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=L+8xWqYn;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=D4IjNm97
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ulDG2bRb;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ioCBkCyH
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=wWznlW56BSTL0Eu75Sj/9RCSS36Y1BuLcw5xAkLI7/Y=; b=L+8xWqYnoVsuQ6IwMGm0LXr4yN
-	ym3KTGtN4Bm08Xmb8SGE4V/E8BsrdxrKFz+ciD9YtXBVEFccqy9W2y+BSc3p/KhxMpcEVF4aiGGNG
-	Eqjb3/KkBg+sE9FdqlL8TV42hYjBbASVMxbH9Lvt4IDtDsj40UM/eXVALLaS+BJOkeWoKnLV7Broz
-	4YnuSzXzXNkxQ2n9OnBSA9M0lzBoJAT3OcuGR7ipkczHWLI+Oonz2c6FQwCIiSp3KfqSsgVXVSSBH
-	sTvwUabSSgfp7hG8XLG8uOkEqV4UCBbR2ycOR1zFib8bbzpGVCt/Lwd5bTpW+72onAB6JF03pW5wb
-	xq30F8Jw==;
+	bh=8109zT9QaNveAzmrZS7Qvw3psYal/ky3X+aDMpbIogw=; b=ulDG2bRbbdTl3ESb1e6evNh8Lo
+	OI3iZHki9QJToWMxzgeGa2QIVdPHgB2btINpx6S455SYYyZ+16W+kOosOt2um39GC9xdCRUIw4Oei
+	WPMRhRu8FUCjxdQWlXoYdG/tYqlCYs6HLGdxYL6VcXjRbnGbKnrm0VtyuqIIGxYztht3uIZJgWcD/
+	cpHk4x7s65p9kos5UAOGwomTHc3AfN6Iq83C5bN3hoslXTgGfkCZS7u7lW0/YADqnZ9RsJXIv18e/
+	cOvAhq1Q9Eg7J/PlyOQp8BG2AurqkbztyZdC5PDnlJGrVhbgkOYmW/qy6fOHK/IFvQUMsGzhUg9w1
+	0iodSriQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUo2-00000003V34-1iAp;
-	Tue, 27 Oct 2026 00:12:46 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xLUo5-00000003V5Z-254H;
+	Tue, 27 Oct 2026 00:12:49 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUo1-00000003V20-0W0k
+	id 1xLUo4-00000003V4o-2Pm0
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 00:12:45 +0000
+	Tue, 27 Oct 2026 00:12:48 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id CA5AD40141;
-	Tue, 27 Oct 2026 00:12:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79FBB1F01828;
-	Tue, 27 Oct 2026 00:12:41 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 4962840AA7;
+	Tue, 27 Oct 2026 00:12:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 309DA1F01829;
+	Tue, 27 Oct 2026 00:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793059964;
-	bh=wWznlW56BSTL0Eu75Sj/9RCSS36Y1BuLcw5xAkLI7/Y=;
+	s=k20260515; t=1793059968;
+	bh=8109zT9QaNveAzmrZS7Qvw3psYal/ky3X+aDMpbIogw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=D4IjNm97WtwDr9dvhiqRb5JZ5ExQ+p+VQaFRUAeFCLX99FvNhZ6AuwwiXBJm4UM55
-	 xZiVqpvSuvPbnFci/YcL7xGU0UNTENFaR/PjGjFsjE2TW6bg7iJJFgdACyeo3VTEiU
-	 FjAgs2RxOqLU37aQiDkPEtqi8ZfZQPybf2CXkGnWMeoQTGC4k1zfqg2KdNFypUo4Ik
-	 IeTdYnOS1J/4rSGGz2dzEnPZE/JXHS+MvYjlW7CzsszbQRbAhMg/ITZrdNuN8RbaJw
-	 T29XgGJhioFw/BimC/o0Jm+LEnO0C30HCp93CHM3w4xsjE0j1zqyJnuHObxN0Rskjo
-	 ChD8j/WqsBzXg==
-Message-ID: <sashiko-outbox-185895@kernel.org>
+	b=ioCBkCyHH0FZMIvPlKqabluAYXKmquKeXgTC8MZeJPuB/nCxtQt1eVuTQO5+CAwV7
+	 G4w/hCMwhkYhYuCMgitewYHNEuO5PddADcw/vsVD8wGIUSw6VWIbkOZi+H+ygTh6Pp
+	 GSgvmnjnHLuJSj2/ar860MuUb7W7DyM+dtjF0wwsz37nZsyDroif2Jxsf7fzlkrH3r
+	 z4nUTLo2p6LLxCgG4LbkTNLDCFMT5hS/omgGPKGvh529PQ0ILi1D3Fgid0mp352ifY
+	 LKuxOr+2MvfPEiW0e3k5QBb25PgwD1oQ6bjOn2LJtnv6cBPl4i/nnTW+K8DMk66NRI
+	 JRx7pNQu5Vkpw==
+Message-ID: <sashiko-outbox-185896@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 13/46] mm/huge_memory: fix truncate racing with PMD
- zapping
+Subject: Re: [PATCH 14/46] mm/huge_memory: fix zapping migration entries for
+ device-private THPs
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -75,12 +75,12 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
 Cc: kexec@lists.infradead.org, "Chris Mason" <mason@kernel.org>
-In-Reply-To: <20261027-fixes_core-v1-13-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-14-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-13-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-14-6f74bec9a5bb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 00:12:41 +0000
+Date: Tue, 27 Oct 2026 00:12:44 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,31 +102,30 @@ X-Archived-By: <archiver.kernel.org>
 
 > From: Chris Mason <mason@kernel.org>
 >=20
-> zap_huge_pmd_folio() removes the rmap before calling folio_mark_dirty().
-> If this was the last mapping, truncation can skip unmapping the folio
-> and proceed without waiting for the PMD lock, racing with dirtying.
+> A PMD migration entry can refer to a device-private folio.
+> zap_huge_pmd_folio() checks the folio type instead of the entry type,
+> so it treats such a migration entry as a device-private entry.
 >=20
-> ifs_set_range_dirty() can oops if MADV_DONTNEED races with
-> ftruncate() on XFS, when we get the folio set dirty after it was found
-> to not be mapped anymore.
+> Installing the migration entry already removed the reverse mapping and
+> dropped the mapping reference. Zapping it must not repeat those
+> operations. Concurrent MADV_DONTNEED during migration back to system
+> memory can trigger this.
 >=20
-> Move folio_mark_dirty() and folio_mark_accessed() before rmap removal,
-> matching the PTE zap path. This keeps the folio mapped while updating
-> its state, so truncation must wait for the page table lock.
+> Check the PMD entry type using pmd_is_device_private_entry().
 >=20
 > Fix generated by an LLM and sent by Chris Mason in private.
 >=20
-> Fixes: fe6cf984939d ("mm/huge_memory: transfer the pmd dirty bit to the f=
-olio on zap")
+> Fixes: 368076f52ebe ("mm/huge_memory: add device-private THP support to P=
+MD operations")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Chris Mason <mason@kernel.org>
-> [ david: simplify comment and description ]
+> [ david: simplify description ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027-fixes_core=
--v1-0-6f74bec9a5bb@kernel.org?part=3D13
+-v1-0-6f74bec9a5bb@kernel.org?part=3D14
 
 
