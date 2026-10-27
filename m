@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A66606A31A
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:13:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A4E606A31A
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:13:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=q2a3EIzB;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XEvdcOcP
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=k021WUeV;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=brGcxURp
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=+uHPiiVOPEX6TlBwZCkGi/vjJP+isOItNI0C4y+ID4I=; b=q2a3EIzBTL9JuHg8zSqXIMoiE2
-	JyH668JzCz6OD+Yk4jExuUHzrfJbXgky7/WGlsDzSq2BrS6EAcarugzxLyL9gMo8EKqt2yuYO2qfs
-	z51nUcO4ZS6J4MMuU4rcoQhyRLMFHDuzIzQUjW+8X3IjE0w/EurTUTy3TqD+7h/jvYwfa+hO0EpSr
-	1FGIYn/xSjG5h9vRkfQwb8HwaYMjtRCFXzBGSCSISYl75LIUA3aDhize/89YODP0li1ZyWF8/Wtbp
-	TxtPwhlobOGdHH7h1ciHdICvtptI5h1WmBhW9GwWuAm4POZAA8EP3pHQ6Tsh6ZrwzCILnEKfZqxpY
-	tWpZAO2g==;
+	bh=+DSZywh5EFbfU/d0cC1YRtz7IDUUXYFc3HL4otefIkE=; b=k021WUeVVubOHy4KShld0wMdk2
+	xKJ8dUh5nFwKoTBT4vuarMXhSTK/eZFejb4bMWoZuWtx8R4LBWpYXCdLSdxv1bef56FgpRorfLuAh
+	w4F7X9P4dd/mtRXoZnhUotWQsQSrvNXVs6WGV1SrsLDt00VCB/J/Gtd3Ci10s/aogS9I+zMI90EkJ
+	6V4EY/yO2dKY31hbNWVZxFgt0jvonxay/MuTrTq9b8P+rtG6tMzQJpDmh9xHLlwVStSOZUC/sUwm5
+	o56trE0jtJr4uGzfvpzej8JJ8+kgYaux0dD5T+931AeQccSnRlRtCEm85kz5bNKAXUJ1hwxe6BIHJ
+	lqRlW8Dw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUoj-00000003Vb8-0lh3;
-	Tue, 27 Oct 2026 00:13:29 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xLUom-00000003Vcj-14mL;
+	Tue, 27 Oct 2026 00:13:32 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUoh-00000003Va8-2lbC
+	id 1xLUol-00000003Vc1-08PT
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 00:13:27 +0000
+	Tue, 27 Oct 2026 00:13:31 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 5A14A42A40;
+	by sea.source.kernel.org (Postfix) with ESMTP id C464240E54;
+	Tue, 27 Oct 2026 00:13:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4D061F01825;
 	Tue, 27 Oct 2026 00:13:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E89921F01825;
-	Tue, 27 Oct 2026 00:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793060007;
-	bh=+uHPiiVOPEX6TlBwZCkGi/vjJP+isOItNI0C4y+ID4I=;
+	s=k20260515; t=1793060010;
+	bh=+DSZywh5EFbfU/d0cC1YRtz7IDUUXYFc3HL4otefIkE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=XEvdcOcPPUs0wZQmklC94L2LNGguGfA8FiNmMOudhD8QyycpgtxqwBpp8TZ6975iT
-	 +5DLP0A5uFMz4OKXItdsQLHFvpHBUwvor93+8pqYMWOxph6LOBSlw6Nl4KZlbDJKJV
-	 8q7RrpKdTzBmWFyJwmFYCeL0QrAPozdZ/kZoz01BLu3xL+2KqgnE5jQeQtaFXZlROu
-	 Lg7k3kw+/jh/M10t5GSYhUV5xCpcd8Jh4AOXHPHbtCrZOHIbs2xtg47yKiaW4WzFFW
-	 PktnPyj5r5Mh5h/2jwB882gCddaOdYob2GzDUlOzl3WlvYRFpcD6+Nj/bWvpVlyd0O
-	 EoRQ6PkzejXNg==
-Message-ID: <sashiko-outbox-185908@kernel.org>
+	b=brGcxURpvj5J0/vSUUUzj7QnqBrWv9L0qGg4ykto2FqBhAcfd1ZkC4I5c33KKeAPg
+	 tswtwWOe4ysPgS1TRUTUTQ84KqDxy9h/W+FHUojNHo7dbTlfnL2cedhhZhGOZiFxf7
+	 RirN9Nh8kKNW1+iqvVtCh9DXOY4Zxc/KmGVlRGF+97X1sbhYtEnjhcEP3qNL+LO9J8
+	 88ODZnGjdNMcMjTGf9SySskajfcTwcAvj/Vw5GSeL55r4IfngFHO2JiXSgUcOtwLcI
+	 pe54h0n8bFr32Tt0jD6BunsqWarKXMp/MzCwvxARsXRZ0lhzVPBb40XxaD5QeOzqV1
+	 ZXv5IaRMmpY1A==
+Message-ID: <sashiko-outbox-185909@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 26/46] mm/mmu_gather: fix flushing ranges with 4 GiB or
- larger
+Subject: Re: [PATCH 27/46] mm/mmu_notifier: finish non-blocking interval
+ invalidation on error
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -75,12 +75,12 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
 Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261027-fixes_core-v1-26-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-27-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-26-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-27-6f74bec9a5bb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 00:13:23 +0000
+Date: Tue, 27 Oct 2026 00:13:27 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,33 +102,34 @@ X-Archived-By: <archiver.kernel.org>
 
 > From: Josef Bacik <josef@toxicpanda.com>
 >=20
-> __tlb_adjust_range() takes the size of the range which has to be flushed
-> as an unsigned int. Its callers, tlb_flush_{pte,pmd,pud,p4d}_range(), get
-> and pass an unsigned long. Consequently, a range that is 4 GiB or larger
-> gets truncated, possibly to 0.
+> When an ordinary MMU notifier rejects a non-blocking invalidation, the
+> interval invalidation started beforehand is left unfinished: the caller
+> skips mmu_notifier_invalidate_range_end(). Subsequent interval notifier
+> operations can then wait forever.
 >=20
-> On arm64 with hugetlb, a 64k kernel can flush 16 GiB hugetlb PMDs, and a
-> 16k kernel can flush 64 GiB PUDs through tlb_unshare_pmd_ptdesc(). So
-> at least these two scenarios are affected.
+> The only in-tree trigger is nouveau SVM, which uses both notifier types
+> and rejects non-blocking invalidations. Reaping via the OOM reaper or
+> process_mrelease() can therefore leave the GPU fault worker stuck,
+> holding a reference that prevents the dying process's address space
+> and memory from being freed.
 >=20
-> Fix it by flushing the proper range instead of the truncated one.
+> End the interval invalidation when an ordinary notifier fails a
+> non-blocking invalidation, like mn_itree_invalidate() already does when
+> an interval notifier fails. Make that handling clearer in the
+> documentation of mmu_notifier_invalidate_range_start_nonblock().
 >=20
 > Fix generated by an LLM and sent by Josef Bacik in private.
 >=20
-> Fixes: b528e4b6405b ("mm/hugetlb: add tlb_remove_hugetlb_entry for handli=
-ng hugetlb pages")
-> Fixes: 8ce720d5bd91 ("mm/hugetlb: fix excessive IPI broadcasts when unsha=
-ring PMD tables using mmu_gather")
+> Fixes: 99cb252f5e68 ("mm/mmu_notifier: add an interval tree notifier")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> [ david: use two-tab indent, simplify description ]
+> [ david: simplify description, update function doc ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027-fixes_core=
--v1-0-6f74bec9a5bb@kernel.org?part=3D26
+-v1-0-6f74bec9a5bb@kernel.org?part=3D27
 
 
