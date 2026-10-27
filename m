@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A4E606A31A
-	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:13:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFEA2606A31A
+	for <kexec@archiver.kernel.org>; Tue, 27 Oct 2026 00:13:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=k021WUeV;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=brGcxURp
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=b7MQibd0;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RTdzx5Bb
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,39 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=+DSZywh5EFbfU/d0cC1YRtz7IDUUXYFc3HL4otefIkE=; b=k021WUeVVubOHy4KShld0wMdk2
-	xKJ8dUh5nFwKoTBT4vuarMXhSTK/eZFejb4bMWoZuWtx8R4LBWpYXCdLSdxv1bef56FgpRorfLuAh
-	w4F7X9P4dd/mtRXoZnhUotWQsQSrvNXVs6WGV1SrsLDt00VCB/J/Gtd3Ci10s/aogS9I+zMI90EkJ
-	6V4EY/yO2dKY31hbNWVZxFgt0jvonxay/MuTrTq9b8P+rtG6tMzQJpDmh9xHLlwVStSOZUC/sUwm5
-	o56trE0jtJr4uGzfvpzej8JJ8+kgYaux0dD5T+931AeQccSnRlRtCEm85kz5bNKAXUJ1hwxe6BIHJ
-	lqRlW8Dw==;
+	bh=nkwBi9BJ0TSBIw3smCm3mz+RdUrBBbs6DBCZo7EjNis=; b=b7MQibd0xlWPInt74FZ9/ihg+O
+	kCu10Cgn7+UH0Pwckqk4bOyMiWHWOfFBRZaj7EMbPy0obnLJIfkDSaMKRFN0YggQUIkibyGq0sIbN
+	GPVpBeA+DRw4V5QGvyiKK8YBE8GyUmIeXs/dhySSff/Lx2wgBpQ6pTgNZKbNRDtLBpRSKTgdNJUXM
+	MySd3tr46//BQY34McTmGdi2c4eCiw86V4fBpRK/38SqWkD87YWi2xjHfcQPR/qW6mU6qmXzlUMOE
+	LZ5X2XObgcAihoAHr1v65sJ94fGlrTzigDdyv8CNVJ1c5Frw9MzmtAg5GjlfweJS+guu+uSN445FV
+	PVBiueWQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUom-00000003Vcj-14mL;
-	Tue, 27 Oct 2026 00:13:32 +0000
+	id 1xLUop-00000003VfP-2h51;
+	Tue, 27 Oct 2026 00:13:35 +0000
 Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLUol-00000003Vc1-08PT
+	id 1xLUoo-00000003VeN-2APZ
 	for kexec@lists.infradead.org;
-	Tue, 27 Oct 2026 00:13:31 +0000
+	Tue, 27 Oct 2026 00:13:34 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id C464240E54;
-	Tue, 27 Oct 2026 00:13:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4D061F01825;
-	Tue, 27 Oct 2026 00:13:27 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 3B1F140E59;
+	Tue, 27 Oct 2026 00:13:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27B591F01825;
+	Tue, 27 Oct 2026 00:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793060010;
-	bh=+DSZywh5EFbfU/d0cC1YRtz7IDUUXYFc3HL4otefIkE=;
+	s=k20260515; t=1793060014;
+	bh=nkwBi9BJ0TSBIw3smCm3mz+RdUrBBbs6DBCZo7EjNis=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=brGcxURpvj5J0/vSUUUzj7QnqBrWv9L0qGg4ykto2FqBhAcfd1ZkC4I5c33KKeAPg
-	 tswtwWOe4ysPgS1TRUTUTQ84KqDxy9h/W+FHUojNHo7dbTlfnL2cedhhZhGOZiFxf7
-	 RirN9Nh8kKNW1+iqvVtCh9DXOY4Zxc/KmGVlRGF+97X1sbhYtEnjhcEP3qNL+LO9J8
-	 88ODZnGjdNMcMjTGf9SySskajfcTwcAvj/Vw5GSeL55r4IfngFHO2JiXSgUcOtwLcI
-	 pe54h0n8bFr32Tt0jD6BunsqWarKXMp/MzCwvxARsXRZ0lhzVPBb40XxaD5QeOzqV1
-	 ZXv5IaRMmpY1A==
-Message-ID: <sashiko-outbox-185909@kernel.org>
+	b=RTdzx5Bbv9ksnSKgBJc06mGY5D1dujpHOZ3MOUujvvoklon9ejOcb9OeKWaiEMYX6
+	 QrudYtplZqzV9b9J3FUUOaTbGZS6hC5i5kfnJyCrssFty9nAjaDsFlLzin4EfEvwfz
+	 ml4fJeQcwl2p77V+nUYJLhOsKxImGO8SmuRXz3FE7w7HBVYKy4nb6cWDcOSv7SJjSS
+	 VJOAh4x6I9gPMnd3ZRhT0/gHaJm450+im04+xuANmwO7kWtFTdqyp+jNrXJnSiB0yj
+	 7Yla6MRYY4G487L+VY5f5sU3RdO7Y6aM9mY+fmhDK2quNWeIiGarbX0/RUoYtxQaqF
+	 uUPLlTmwgL2+g==
+Message-ID: <sashiko-outbox-185910@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 27/46] mm/mmu_notifier: finish non-blocking interval
- invalidation on error
+Subject: Re: [PATCH 28/46] mm/mmu_notifier: set ->mm only after mmgrab()
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -74,13 +73,13 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261027-fixes_core-v1-27-6f74bec9a5bb@kernel.org>
+Cc: kexec@lists.infradead.org, "Chris Mason" <mason@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-28-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-27-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-28-6f74bec9a5bb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 00:13:27 +0000
+Date: Tue, 27 Oct 2026 00:13:30 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,36 +99,31 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> From: Josef Bacik <josef@toxicpanda.com>
+> From: Chris Mason <mason@kernel.org>
 >=20
-> When an ordinary MMU notifier rejects a non-blocking invalidation, the
-> interval invalidation started beforehand is left unfinished: the caller
-> skips mmu_notifier_invalidate_range_end(). Subsequent interval notifier
-> operations can then wait forever.
+> Radeon uses a non-NULL notifier->mm to decide whether to call
+> mmu_interval_notifier_remove() when freeing a buffer object.
+> __mmu_interval_notifier_insert() sets ->mm before validating the range,
+> so a wrapping userptr range can leave ->mm set after insertion fails.
+> Cleanup then tries to remove an unregistered notifier for which no mm
+> reference was acquired.
 >=20
-> The only in-tree trigger is nouveau SVM, which uses both notifier types
-> and rejects non-blocking invalidations. Reaping via the OOM reaper or
-> process_mrelease() can therefore leave the GPU fault worker stuck,
-> holding a reference that prevents the dying process's address space
-> and memory from being freed.
+> Set ->mm only after mmgrab(), once insertion can no longer fail. While
+> we could fix radeon's code instead, setting ->mm on success only makes
+> the code more robust.
 >=20
-> End the interval invalidation when an ordinary notifier fails a
-> non-blocking invalidation, like mn_itree_invalidate() already does when
-> an interval notifier fails. Make that handling clearer in the
-> documentation of mmu_notifier_invalidate_range_start_nonblock().
+> Fix generated by an LLM and sent by Chris Mason in private.
 >=20
-> Fix generated by an LLM and sent by Josef Bacik in private.
->=20
-> Fixes: 99cb252f5e68 ("mm/mmu_notifier: add an interval tree notifier")
+> Fixes: 3506ff69c3ec ("drm/radeon: use mmu_interval_notifier_insert")
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: simplify description, update function doc ]
+> Signed-off-by: Chris Mason <mason@kernel.org>
+> [ david: simplify description ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027-fixes_core=
--v1-0-6f74bec9a5bb@kernel.org?part=3D27
+-v1-0-6f74bec9a5bb@kernel.org?part=3D28
 
 
