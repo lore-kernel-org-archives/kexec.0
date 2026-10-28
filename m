@@ -2,14 +2,14 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F353C606A32A
-	for <kexec@archiver.kernel.org>; Wed, 28 Oct 2026 13:28:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE572606A32C
+	for <kexec@archiver.kernel.org>; Wed, 28 Oct 2026 13:30:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=vIcVkgyH;
-	dkim=temperror header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=ALg7S6VN;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=ZnY+bcNZ;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=ALg7S6VN;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=ZnY+bcNZ
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ih0GtoKX;
+	dkim=pass (1024-bit key, unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=mRyYh38z;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=Pfvj/4IU;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=mRyYh38z;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=Pfvj/4IU
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -17,72 +17,73 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=I1RNhY463TlUij+3G3iMbvuChAlQ+OLmz5YWd+MK6CA=; b=vIcVkgyH+ei9J/K1/3395rfpNP
-	fO/RyqbmqZGH57yGCwJG9XlJHXiP3QDscpiEA43wBCFy/jJs10XZp3gNGyss3CTgOzPvaSqPB0XfV
-	U/uJu6ZrcBUwOd/gpWiw90bdI5GLITBMzciRHdCH9q4w52aQFkR7je7sy0P4bsx3KvyP+FEnESHKe
-	ecuzfMEPxBybfxyS2xMM++FcIc10WZdib6piroXHtT3z6X2WhpJR1D0f/L7MWjyfOQsIayaJEk9tk
-	TDjGdg8FFzl3qyoEQsmY+lqVuCyYuwb3x3m5ZVPpMe+lwIw2Wt1w9LslkPo4SapILOYXzVHxdSFCp
-	OjqhVVXQ==;
+	bh=2uDU7TgA2jvFg6264ATbsfhpdhHYSRjVLVOATZ2t540=; b=ih0GtoKXhj8SFYY+QOD0jYwuuq
+	3Cv6NRJDIgMkdALWACAYCKJzNAcTYLvETpp+ttGJfnOMNL47vPsrt9bJyd+wh1g++yYEjo2Od7yfU
+	eH0hGySo9j/O+X+Ypk5G7VDUG5k5Mp8AgGnypPmYXN69D0Z9HLoMRohOAizF0UpZZUsMxogg7zFY7
+	Q4+l7V1SakW9JuKsTPGBeIqDaqR3th/6iIz7oBTb1o25kaXCcMITUm0+PCarhmeXlQPcKgMOzvXqV
+	Dq2wCDCLMp7TnqrPCJ04Av8rPCiYMt1grHuMHE4pfCf+PERTjZbINM0rSk9zck+m5ZAx2BBHCuWD6
+	MNKLinYA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xM3hO-000000073Wn-2r6L;
-	Wed, 28 Oct 2026 13:28:14 +0000
+	id 1xM3jG-0000000741J-1fuG;
+	Wed, 28 Oct 2026 13:30:10 +0000
 Received: from smtp-out1.suse.de ([2a07:de40:b251:101:10:150:64:1])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xM3hM-000000073VN-25x8
+	id 1xM3jD-000000073zv-3VWD
 	for kexec@lists.infradead.org;
-	Wed, 28 Oct 2026 13:28:13 +0000
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	Wed, 28 Oct 2026 13:30:09 +0000
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A1CC42211D;
-	Wed, 28 Oct 2026 13:28:10 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 110FA2211F;
+	Wed, 28 Oct 2026 13:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1793194090; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1793194206; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=I1RNhY463TlUij+3G3iMbvuChAlQ+OLmz5YWd+MK6CA=;
-	b=ALg7S6VNVeN7jO6Z7rlet/HLuKH1zkhEgjQR2Xvm4DkhHKhTBLq53hW/xC+fT4PpUaiCNz
-	B9QXxj/DluV0nfi3hKw4vzd/L6Iy1o9tCnhLX2zduQQH0uhF/uKi8emqpuWoDssyk2EeP7
-	FPOU2p73i8PKM79PYL3ibH89LPsH9Rg=
+	bh=2uDU7TgA2jvFg6264ATbsfhpdhHYSRjVLVOATZ2t540=;
+	b=mRyYh38zGNqTdDzU2IBgubLvN6qxwLaC4yFWHklZIKqU26TyZ4oRQY7PAOrHeC8vFtNPfh
+	tcu52wSZ2Uc0egE7xLAaTMsq7kNtqVi5AcopCj8oycgRjtrCAgktm5lNVefPGRrF3AzCBi
+	EJzcNw70UCWj9ijZwZO8mecYSsw/20I=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1793194090;
+	s=susede2_ed25519; t=1793194206;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=I1RNhY463TlUij+3G3iMbvuChAlQ+OLmz5YWd+MK6CA=;
-	b=ZnY+bcNZGtDLLTNjb64cdXLVrUWCI/Uuh2kNnd+cr7Tj56tawriBozgiH7MF4GNYbyz8E9
-	1a1ICcFS7uYeiiCA==
+	bh=2uDU7TgA2jvFg6264ATbsfhpdhHYSRjVLVOATZ2t540=;
+	b=Pfvj/4IUnhBaGC3rOJuYYnvHJWbGlsw4oQr9Z6uxVKVb+noUK+iNaGhZ7KFB1kZMqC9m+b
+	WQDtLt4MDXAFB/Cg==
 Authentication-Results: smtp-out1.suse.de;
-	none
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=mRyYh38z;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="Pfvj/4IU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1793194090; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1793194206; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=I1RNhY463TlUij+3G3iMbvuChAlQ+OLmz5YWd+MK6CA=;
-	b=ALg7S6VNVeN7jO6Z7rlet/HLuKH1zkhEgjQR2Xvm4DkhHKhTBLq53hW/xC+fT4PpUaiCNz
-	B9QXxj/DluV0nfi3hKw4vzd/L6Iy1o9tCnhLX2zduQQH0uhF/uKi8emqpuWoDssyk2EeP7
-	FPOU2p73i8PKM79PYL3ibH89LPsH9Rg=
+	bh=2uDU7TgA2jvFg6264ATbsfhpdhHYSRjVLVOATZ2t540=;
+	b=mRyYh38zGNqTdDzU2IBgubLvN6qxwLaC4yFWHklZIKqU26TyZ4oRQY7PAOrHeC8vFtNPfh
+	tcu52wSZ2Uc0egE7xLAaTMsq7kNtqVi5AcopCj8oycgRjtrCAgktm5lNVefPGRrF3AzCBi
+	EJzcNw70UCWj9ijZwZO8mecYSsw/20I=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1793194090;
+	s=susede2_ed25519; t=1793194206;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=I1RNhY463TlUij+3G3iMbvuChAlQ+OLmz5YWd+MK6CA=;
-	b=ZnY+bcNZGtDLLTNjb64cdXLVrUWCI/Uuh2kNnd+cr7Tj56tawriBozgiH7MF4GNYbyz8E9
-	1a1ICcFS7uYeiiCA==
+	bh=2uDU7TgA2jvFg6264ATbsfhpdhHYSRjVLVOATZ2t540=;
+	b=Pfvj/4IUnhBaGC3rOJuYYnvHJWbGlsw4oQr9Z6uxVKVb+noUK+iNaGhZ7KFB1kZMqC9m+b
+	WQDtLt4MDXAFB/Cg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9661213419;
-	Wed, 28 Oct 2026 13:28:06 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B299213419;
+	Wed, 28 Oct 2026 13:30:01 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 4DfdGGb44WoUOQAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Wed, 28 Oct 2026 13:28:06 +0000
-Date: Wed, 28 Oct 2026 13:28:04 +0000
+	id R8HKH9n44WrwOgAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Wed, 28 Oct 2026 13:30:01 +0000
+Date: Wed, 28 Oct 2026 13:30:00 +0000
 From: Pedro Falcato <pfalcato@suse.de>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
@@ -111,46 +112,55 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
 	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 29/46] mm/mremap: use pudp_huge_get_and_clear() when
- moving huge PUDs
-Message-ID: <auH4NKaWuE0-8XBk@pedro-suse.tail5790ac.ts.net>
+	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, Chris Mason <mason@kernel.org>, 
+	stable@vger.kernel.org
+Subject: Re: [PATCH 17/46] mm/khugepaged: preserve dirty bits when collapsing
+ PTE-mapped THPs
+Message-ID: <auH4sb2pq-LpAUI3@pedro-suse.tail5790ac.ts.net>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-29-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-17-6f74bec9a5bb@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261027-fixes_core-v1-29-6f74bec9a5bb@kernel.org>
-X-Spamd-Result: default: False [-11.80 / 50.00];
+In-Reply-To: <20261027-fixes_core-v1-17-6f74bec9a5bb@kernel.org>
+X-Rspamd-Queue-Id: 110FA2211F
+X-Spam-Level: 
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-12.01 / 50.00];
 	SUSE_INTERNAL_BYPASS(-9.00)[];
 	BAYES_HAM(-3.00)[100.00%];
 	SUSPICIOUS_RECIPS(1.50)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,cmpxchg.org,kernel.org,linux.dev,tencent.com,google.com,linux.alibaba.com,infradead.org,suse.com,soleen.com,suse.cz,nvidia.com,surriel.com,arm.com,intel.com,redhat.com,gmail.com,suse.de,huaweicloud.com,lge.com,gourry.net,sk.com,ziepe.ca,kvack.org,vger.kernel.org,lists.infradead.org];
 	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
 	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
 	FROM_EQ_ENVFROM(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,cmpxchg.org,kernel.org,linux.dev,tencent.com,google.com,linux.alibaba.com,infradead.org,suse.com,soleen.com,suse.cz,nvidia.com,surriel.com,arm.com,intel.com,redhat.com,gmail.com,suse.de,huaweicloud.com,lge.com,gourry.net,sk.com,ziepe.ca,kvack.org,vger.kernel.org,lists.infradead.org];
-	R_RATELIMIT(0.00)[to_ip_from(RL8d8xedm6iu8o66torxsk6bwd)];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[64];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email]
-X-Spam-Score: -11.80
-X-Spam-Level: 
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCPT_COUNT_GT_50(0.00)[65];
+	TAGGED_RCPT(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:email]
+X-Spam-Score: -12.01
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261028_062812_689354_A8405BD8 
-X-CRM114-Status: GOOD (  11.90  )
+X-CRM114-CacheID: sfid-20261028_063008_023340_368CA6D3 
+X-CRM114-Status: GOOD (  14.86  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -169,25 +179,36 @@ X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Tue, Oct 27, 2026 at 12:17:49AM +0100, David Hildenbrand (Arm) wrote:
-> move_huge_pud() reads the old PUD and clears it in separate operations.
-> Hardware accessed or dirty updates between those operations can be lost
-> when the saved entry is installed at the new address.
+On Tue, Oct 27, 2026 at 12:17:37AM +0100, David Hildenbrand (Arm) wrote:
+> From: Chris Mason <mason@kernel.org>
 > 
-> The raw pud_clear() also bypasses page_table_check_pud_clear(), while
-> set_pud_at() accounts for the destination mapping. This leaves the
-> checker counts unbalanced for mappings tracked by page table checking.
+> try_collapse_pte_mapped_thp() clears PTEs without transferring their dirty
+> bits to the folio. A shmem read fault can map a clean folio writable, so
+> a later store only dirties the PTE. Losing that dirty bit allows reclaim
+> to discard modified data.
 > 
-> To fix it, simply use pudp_huge_get_and_clear().
+> The assumption that regular files are read-only is also obsolete since
+> commit 1b6444331bebb ("mm/khugepaged: enable clean pagecache folio collapse
+> for writable files"). In any case, transferring PTE dirty bits to the folio
+> when removing mappings (and while the folio is still mapped) is the right
+> thing to do.
 > 
-> Fixes: 7d846db7d0e2 ("mm/mremap: convert huge PUD move to separate helper")
+> Use get_and_clear_ptes() to collect the dirty bits and mark the folio
+> dirty before unmapping it. Update the comment.
+> 
+> This was reproduced with shmem using MADV_COLLAPSE followed by
+> MADV_PAGEOUT.
+> 
+> Fix generated by an LLM and sent by Chris Mason in private.
+> 
+> Fixes: 27e1f8273113 ("khugepaged: enable collapse pmd for pte-mapped THP")
+> Fixes: 1b6444331bebb ("mm/khugepaged: enable clean pagecache folio collapse for writable files")
 > Cc: stable@vger.kernel.org
-> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> Signed-off-by: Chris Mason <mason@kernel.org>
+> [ david: adjust comment; simplify description; cover file-thp as well ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Reviewed-by: Pedro Falcato <pfalcato@suse.de>
-
-At what point do we ban straight up clearing a PTE/PMD/PUD/etc? :)
 
 -- 
 Pedro
