@@ -2,53 +2,55 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D8D606A322
-	for <kexec@archiver.kernel.org>; Wed, 28 Oct 2026 07:52:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCA1606A324
+	for <kexec@archiver.kernel.org>; Wed, 28 Oct 2026 08:08:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=riQJWQmy;
-	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=qAO7tgcE
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=QNNj/NF1;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dZ686wUN
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=C2MebSDm+AGzraIelTihisR4wHMyVkbMMbZmgrZJ7WY=; b=riQJWQmylXlzRq
-	2a/92kknk8qutdjH8F4qZwjjLBMkcBOMz/WdZuZ6ULkx8kPzRZ4xXFPFRU6h0gHKc8/JGXh8ZV+Re
-	e5fVALXuw1A24YA6kmyyhzWSAT0KZTDGjQ4+/7mRbk+ERpE6491BP+Pnja4iTNUWeyf/mOcVR4h3O
-	hC3QgmqmsmSt5SxFltizsyG+YsgUX4Qxx0b1T+6eIRIqKgthil49JoJ1K95KyjhzAsOkPPm/CW7Q2
-	xsNI82F8OUv5LCDOu1lpnVmjF3U71MvCDV9P8uuZFxg8QMdWFKia0/XDL+NEUPqlcBTvXCt/+QV8t
-	u7Aesrvq+JwTaIc1HwIQ==;
+	List-Owner; bh=YMhIQCmPp2kb7swtobccIXYat54/CLD8sSk/wH59+ic=; b=QNNj/NF1vg7ybx
+	lJ2HS7JmNekNsgKRt4Ch0GAUZEMjoW0Dcfxj5B/FuLVS7YlrvRDu4MVerKYAY0dsEix9p4LEv/Phz
+	Uf9+3xuRz9gfj8yI87lw8tEPJSHzb2QPbXX+1Cp7QvGKlALjyY/HVmzPyb+zU5ARh00R7lYkGCVR5
+	GgkCXv7vwuyjDSHjgw7yM8/LcKWkiRd70l6QWIMQXFjEIweu6wtfayg3F56NyAao5rQatGAZMgRXn
+	byoD5y3Tf6B5tSqi+Ym8mVApj/BM3VRkp7xgkhftoUdUu2Q1zDk09mON9rBUkFhOAVidyBUWDmxFd
+	eUQxrWCyAEyumLqvPaIw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLySO-00000006UfY-42am;
-	Wed, 28 Oct 2026 07:52:24 +0000
-Received: from foss.arm.com ([217.140.110.172])
-	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLySM-00000006UeQ-1Wvu
+	id 1xLyhr-00000006Vvk-37YZ;
+	Wed, 28 Oct 2026 08:08:23 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
+	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xLyhr-00000006Vve-0PK3
 	for kexec@lists.infradead.org;
-	Wed, 28 Oct 2026 07:52:23 +0000
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 091D81756;
-	Wed, 28 Oct 2026 00:52:16 -0700 (PDT)
-Received: from [10.163.164.200] (unknown [10.163.164.200])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 046D23F673;
-	Wed, 28 Oct 2026 00:51:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1793173939; bh=wGe8fo0LsEeNmyXuE7t5RJoQX1lGKJltqCDxnR+anGM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qAO7tgcEvyo0Q3H3HaTM1nwzy8/QBeW1tnF4JOXa8qF71VXcIH8niSLEX8yBfM9DY
-	 y3XuPsTISI5OiWjvg0v6LudaMoMHfe0T+fQRVNRKQDaWP3kjmosTINe/S2/q5eMvvF
-	 XylgVFbGPVK2/y+rwaLieJ3EjGQdsqqHDKUNnM9o=
-Message-ID: <e32a19c4-76c4-40ba-83a4-781333af7b0a@arm.com>
-Date: Wed, 28 Oct 2026 13:21:55 +0530
+	Wed, 28 Oct 2026 08:08:23 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id C784C43047;
+	Wed, 28 Oct 2026 08:08:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34A6A1F01825;
+	Wed, 28 Oct 2026 08:08:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793174902;
+	bh=YMhIQCmPp2kb7swtobccIXYat54/CLD8sSk/wH59+ic=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=dZ686wUNZbeecaUUWhZqyDq+oCgkRoB4kXRKTaERp4XUiBer361hBYqWjPHFR+M1F
+	 9WmGi/Rexa0QNinbE+89muvmYBicfuIj8K6BQyKOXON1Z/yJ9rHvknTBFjZqoQajDD
+	 YtiL5Md9P+qPqzqquZO8ghitcvonnnx14OGMNUYh/49Y9Mmu37+z3GYNVoOjoy9Dcu
+	 W3Td4vVeq4N4cnYDJ51H1XGG589ESoqxem7USKOTKvn3jc4P42kCq6J1SWKfEhu6xe
+	 /NM90F0ua/vaf9NYyBwgiunmcNPylFsU43oJGbRHrjJdWitClABpXe+oQVU4j0qO6Q
+	 weAHsNtGpH+fQ==
+Message-ID: <f5b90920-5923-45a6-be2b-f558801781c5@kernel.org>
+Date: Wed, 28 Oct 2026 09:08:04 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 09/46] mm/rmap: handle device-exclusive entries in
  folio_referenced_one()
-To: "David Hildenbrand (Arm)" <david@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
+To: Dev Jain <dev.jain@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
  Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
  Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
  Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
@@ -85,15 +87,56 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
  <20261027-fixes_core-v1-9-6f74bec9a5bb@kernel.org>
+ <e32a19c4-76c4-40ba-83a4-781333af7b0a@arm.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <20261027-fixes_core-v1-9-6f74bec9a5bb@kernel.org>
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <e32a19c4-76c4-40ba-83a4-781333af7b0a@arm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261028_005222_480629_510DE398 
-X-CRM114-Status: GOOD (  21.88  )
-X-Spam-Score: -4.4 (----)
+Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,108 +147,37 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-
-
-On 27/10/26 4:47 am, David Hildenbrand (Arm) wrote:
-> page_vma_mapped_walk() can return non-present device-exclusive entries,
-> but folio_referenced_one() passes them to PTE young-bit accessors that
-> require present PTEs.
+>> -		if (lru_gen_enabled() && !lru_gen_switching() && pvmw.pte) {
+>> +		if (lru_gen_enabled() && !lru_gen_switching() && pvmw.pte &&
+>> +		    pte_present(pteval)) {
+>>  			if (lru_gen_look_around(&pvmw, nr))
+>>  				referenced++;
+>>  		} else if (pvmw.pte) {
+>> -			if (clear_flush_young_ptes_notify(vma, address, pvmw.pte, nr))
+>> +			bool young = false;
+>> +
+>> +			/*
+>> +			 * PFN swap PTEs, such as device-exclusive ones, that
 > 
-> We must neither call clear_flush_young_ptes_notify() nor
-> folio_pte_batch() with non-present entries. For example, clearing the
-> young bit on non-present PTEs can corrupt the entry: on arm64
-> PTE_AF overlaps the swap type, so clearing it turns a device-exclusive
-> entry into an ordinary swap entry.
-> 
-> folio_pte_batch() will VM_WARN_ON_FOLIO.
-> 
-> Apply the same approach as the previous fixes to e.g., damon_ptep_mkold():
-> treat these entries as old from the CPU's perspective and obtain their
-> young state through the MMU notifier.
-> 
-> Skip PTE batching and MGLRU look-around for non-present entries, and
-> don't modify non-present PTEs.
-> 
-> Fixes: b756a3b5e7ea ("mm: device exclusive memory access")
-> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
-> ---
+> You mean "PFN softleaf PTEs"? Better expressed as "softleaf PTEs embedding a PFN" ...
 
-Reviewed-by: Dev Jain <dev.jain@arm.com>
+Lorenzo raised this off-list as well; I'm using the existing text we use
+elsewhere for consistency.
 
-But nit below.
+This needs a cleanup that adjusts all of them :)
 
+Thanks!
 
->  mm/rmap.c | 23 +++++++++++++++++++----
->  1 file changed, 19 insertions(+), 4 deletions(-)
-> 
-> diff --git a/mm/rmap.c b/mm/rmap.c
-> index 1131b76bbbc28..0faef46806e5c 100644
-> --- a/mm/rmap.c
-> +++ b/mm/rmap.c
-> @@ -924,6 +924,7 @@ static bool folio_referenced_one(struct folio *folio,
->  	DEFINE_FOLIO_VMA_WALK(pvmw, folio, vma, address, 0);
->  	int ptes = 0, referenced = 0;
->  	unsigned int nr;
-> +	pte_t pteval;
->  
->  	while (page_vma_mapped_walk(&pvmw)) {
->  		address = pvmw.address;
-> @@ -968,10 +969,12 @@ static bool folio_referenced_one(struct folio *folio,
->  			return false;
->  		}
->  
-> -		if (pvmw.pte && folio_test_large(folio)) {
-> +		if (pvmw.pte)
-> +			pteval = ptep_get(pvmw.pte);
-> +
-> +		if (pvmw.pte && pte_present(pteval) && folio_test_large(folio)) {
->  			const unsigned long end_addr = pmd_addr_end(address, vma->vm_end);
->  			const unsigned int max_nr = (end_addr - address) >> PAGE_SHIFT;
-> -			pte_t pteval = ptep_get(pvmw.pte);
->  
->  			nr = folio_pte_batch(folio, pvmw.pte, pteval, max_nr);
->  		}
-> @@ -981,11 +984,23 @@ static bool folio_referenced_one(struct folio *folio,
->  		 * are. —they could be on active/inactive lists or on MGLRU. So the
->  		 * simplest approach is to disable this look-around optimization.
->  		 */
-> -		if (lru_gen_enabled() && !lru_gen_switching() && pvmw.pte) {
-> +		if (lru_gen_enabled() && !lru_gen_switching() && pvmw.pte &&
-> +		    pte_present(pteval)) {
->  			if (lru_gen_look_around(&pvmw, nr))
->  				referenced++;
->  		} else if (pvmw.pte) {
-> -			if (clear_flush_young_ptes_notify(vma, address, pvmw.pte, nr))
-> +			bool young = false;
-> +
-> +			/*
-> +			 * PFN swap PTEs, such as device-exclusive ones, that
+-- 
+Cheers,
 
-You mean "PFN softleaf PTEs"? Better expressed as "softleaf PTEs embedding a PFN" ...
-
-
-> +			 * actually map pages are "old" from a CPU perspective.
-> +			 * The MMU notifier takes care of any device aspects.
-> +			 */
-> +			if (pte_present(pteval))
-> +				young = clear_flush_young_ptes(vma, address, pvmw.pte, nr);
-> +			young |= mmu_notifier_clear_flush_young(vma->vm_mm, address,
-> +								address + nr * PAGE_SIZE);
-> +			if (young)
->  				referenced++;
->  		} else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
->  			if (pmdp_clear_flush_young_notify(vma, address,
-> 
-
+David
 
