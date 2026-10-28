@@ -2,126 +2,91 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52487606A31F
-	for <kexec@archiver.kernel.org>; Wed, 28 Oct 2026 08:39:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3599606A323
+	for <kexec@archiver.kernel.org>; Wed, 28 Oct 2026 09:10:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=O9ZRlnoX;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mie8jh39
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=VrSIrRys;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IQLvv5Vy
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=EuSPBpfPiwDzYLE9j3bMQIok2xPGQVDesPuFSULAs28=; b=O9ZRlnoXdg4g3N
-	6sYgrAkdMFpjXEbGuXwoycX7aWmpQLBrTeffDdSl4HYEcvJVYIbMPLOJ4vTIScrZZDq4T7oOIQOfS
-	cIIkT1+9yogSTd92GfRodGqnAKvKP1ZP+0WqYvLqY1cX9fVfryPg3Oe83b9TH+0QVvIW6RyOadBz4
-	fdu4+uydOxSIb8t61Use+7ruNQrRktKb3w8lgA2HhbnasFYzYzb42hOritnefSYHcnzaTT0P/sr3w
-	LxO4JrYG2zAt4prI56sdJuCUoOC9e2LZ5worC7cuYv2nvrnDbj4w0JZUrGUda/0wZO6iq6aA7JdQm
-	I700LpnH+ZYniB4ubN6g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=bLZSl7G53VjRTMzaR+4ybREso2p4MLSxqwNzQhyf3As=; b=VrSIrRysdV9u70aqug5inUGzAg
+	MZZcBFH4VXcLbm4p8yQqJ6fd7g+hCLl+NuAjeGM28o2+hTJQbNP7rA2flUyQyBpXdR6SJ0jgNzbD7
+	pnzBnA1RDbJROemOTlDFVpOdAPUO7w33JInDHRzRlJ1s1AOUe9r/bTM9fbU0ZQocC7p5OsaqiCHsw
+	q3A+2P+iJWN2y+egVzig5DlnvWb6L74yuPi2XG/4oSjjP4NEL6fHWwJUUnxiNLoXP1tYkBoiv5//X
+	hhd2YVB94DKjyBu0FCoCt8sTVmuHtZiWUxde95L7WzXj2RheFwKsrHBNQRpZL7qrbc2b+s4aw85A3
+	iVain3Rg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLzCP-00000006Zde-2XI4;
-	Wed, 28 Oct 2026 08:39:57 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xLzfU-00000006cze-2Oax;
+	Wed, 28 Oct 2026 09:10:00 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLzCN-00000006ZdS-45Ob;
-	Wed, 28 Oct 2026 08:39:56 +0000
+	id 1xLzfT-00000006cyu-1SQ3
+	for kexec@lists.infradead.org;
+	Wed, 28 Oct 2026 09:09:59 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 1A46060120;
-	Wed, 28 Oct 2026 08:39:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0C5C1F01825;
-	Wed, 28 Oct 2026 08:39:45 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 7A5B1416AD;
+	Wed, 28 Oct 2026 09:09:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61CEF1F01825;
+	Wed, 28 Oct 2026 09:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793176794;
-	bh=EuSPBpfPiwDzYLE9j3bMQIok2xPGQVDesPuFSULAs28=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=mie8jh39y/BQE69uPA+3u6b6UyI8Nt1ralfAIWhFNNTRSMdv0XI1QmX/FC3Ny7Qhc
-	 ZhQ9zZCJWtKIugv7K14H8T+1uM1GyTD2K+4besn4VLQgQkW0azexi8qFk91TF3cfTh
-	 W9sNM5Dbkm4U6TAmERY2uj+6WxDmECEAcWSNnpza1ypv+e+bAHytezpfAPK4IflUL5
-	 jgnR5HSXmZ7J/8+Y6XMGRBhEhR4u8Ie9eq1TsMurpfZOGG3BEhRgQYQuQy05WH3QLU
-	 lsPjzcgAhHRLG8M9IZ0wwLs9qt3S+cNesJUmdjM1eCXsrG6MUKIAfMCaOzb4Q9OrCD
-	 yVBzjZZdFzzVg==
-Message-ID: <524ee7d9-790d-48b6-8613-841da042c32a@kernel.org>
-Date: Wed, 28 Oct 2026 09:39:42 +0100
+	s=k20260515; t=1793178598;
+	bh=bLZSl7G53VjRTMzaR+4ybREso2p4MLSxqwNzQhyf3As=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=IQLvv5VyEW9W822k4mht+xeLq3S4XizAu+yULPQZsw/IVShZGFw4v2DipYDdBsIDM
+	 ZuO9nCZm9CpX8w5ml0a91JdjeCai4IiV9QbHxDf8RJ5flGZR1CGm3IoGtSym8UApk4
+	 Csg/F36qW6LxKG3+BIRu5428gBcRYr7WkphITq9nSu15oEzQk7PBodVhHzdvwyKAsU
+	 L0DDpJRkU7kCsCA8XIudNovrwViAworRTX8BBm8mzz3lW+kK0r+b10tnjOyJB2Z4jA
+	 ml2WMykb/ecw+qvzqKMXuJLLemM/U4ijkpfsw/rwxPj03zXiSs2jn466I+8Fyr4hbl
+	 WjWlEy8zwut6w==
+Date: Wed, 28 Oct 2026 09:09:42 +0000
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Dev Jain <dev.jain@arm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	Hugh Dickins <hughd@google.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>, 
+	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
+	Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Usama Arif <usama.arif@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
+	Oscar Salvador <osalvador@suse.de>, Minchan Kim <minchan@kernel.org>, 
+	Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Chris Li <chrisl@kernel.org>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
+	Youngjun Park <youngjun.park@lge.com>, Gregory Price <gourry@gourry.net>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
+	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, stable@vger.kernel.org, 
+	Josef Bacik <josef@toxicpanda.com>
+Subject: Re: [PATCH 09/46] mm/rmap: handle device-exclusive entries in
+ folio_referenced_one()
+Message-ID: <auG7p94aT3SynuWy@gremlin>
+References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-9-6f74bec9a5bb@kernel.org>
+ <e32a19c4-76c4-40ba-83a4-781333af7b0a@arm.com>
+ <f5b90920-5923-45a6-be2b-f558801781c5@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/7] mm/memblock: add a reserved-region flag for
- poisoned frames
-To: Mike Rapoport <rppt@kernel.org>, Breno Leitao <leitao@debian.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi
- <nao.horiguchi@gmail.com>, Oscar Salvador <osalvador@suse.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, kas@kernel.org,
- kexec@lists.infradead.org, Brendan Jackman <brendan.jackman@linux.dev>,
- Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
- shakeel.butt@linux.dev, linux-efi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org,
- driver-core@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- rmikey@meta.com, riel@surriel.com, harry@kernel.org, kernel-team@meta.com
-References: <20261016-hwpoison-kho-v6-0-f304255147da@debian.org>
- <20261016-hwpoison-kho-v6-4-f304255147da@debian.org>
- <ato62palTbNjLwN7@kernel.org>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <ato62palTbNjLwN7@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f5b90920-5923-45a6-be2b-f558801781c5@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -132,39 +97,38 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=4.0.1
+	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 10/22/26 18:33, Mike Rapoport wrote:
-> Hi Breno,
-> 
-> On Fri, Oct 16, 2026 at 05:15:44AM -0700, Breno Leitao wrote:
->> memblock allocates from and frees to buddy whatever is not reserved, and
->> knows nothing about frames an earlier kernel found hardware-poisoned.
->> Such a frame can back the memmap, a page table or a percpu area before
->> any hwpoison code runs, and otherwise reaches the buddy allocator like
->> any other free frame.
->>
->> Add MEMBLOCK_RSRV_HWPOISON for a reserved range holding those frames.
-> 
-> How much this would fragment memblock.reserved?
-> 
-> memblock is not very scalable, to say the least, and each new flag
-> increases the size of memblock arrays which obviously hurts performance.
+On Wed, Oct 28, 2026 at 09:08:04AM +0100, David Hildenbrand (Arm) wrote:
+> >> -		if (lru_gen_enabled() && !lru_gen_switching() && pvmw.pte) {
+> >> +		if (lru_gen_enabled() && !lru_gen_switching() && pvmw.pte &&
+> >> +		    pte_present(pteval)) {
+> >>  			if (lru_gen_look_around(&pvmw, nr))
+> >>  				referenced++;
+> >>  		} else if (pvmw.pte) {
+> >> -			if (clear_flush_young_ptes_notify(vma, address, pvmw.pte, nr))
+> >> +			bool young = false;
+> >> +
+> >> +			/*
+> >> +			 * PFN swap PTEs, such as device-exclusive ones, that
+> >
+> > You mean "PFN softleaf PTEs"? Better expressed as "softleaf PTEs embedding a PFN" ...
+>
+> Lorenzo raised this off-list as well; I'm using the existing text we use
+> elsewhere for consistency.
+>
+> This needs a cleanup that adjusts all of them :)
 
-I assume that if you have too many regions there, you have different problems
-than scalability problems.
+*like a proud dad of his softleaf name :P*
 
-We should cut out larger chunks, and if they are all over your address space you
-should scrap that machine.
+Yeah, agreed, not a big deal, and easier for me to just do a bigger pass
+finishing off what I started :P
 
--- 
-Cheers,
-
-David
+--
+Cheers, Lorenzo
 
