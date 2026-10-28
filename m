@@ -2,131 +2,84 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2F7606A332
-	for <kexec@archiver.kernel.org>; Wed, 28 Oct 2026 22:54:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9C8606A325
+	for <kexec@archiver.kernel.org>; Wed, 28 Oct 2026 23:04:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=sdru9gqk;
-	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=cK/QCDvS
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=mHavGiRG;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KNqOZbIU
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
-	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=1nzL/A4OIGWxPEaAp0V3O0CBZ7XOASlD1R5vK61L67g=; b=sdru9gqkuqM/lv
-	vCB3grALHXwJm/V/WvW5L/+nSu+FyS9qc8qjL/wAm81pNDis7Qhe2F7vNJ/SgfEqB3vomOcwXX91P
-	gdAPdW6MqTnnKzxfNro4vafyqGo06pSWsW1mkhMI9eYI06MCMmS2eo+O/bMs3bRFqqF3h3GvKbbi6
-	2txVNjhjQgVKRg73DLWZ0COVWM2MawslwLDm70Q3RlwrtHzWkEOK9kf9hmFchj5SXavAmV/dvTmWp
-	tLYrwnOAlMZGO/O/f3JgQcD05LbaNKe3m18qATXKHfoKQfNS1Mb8jM59N01Smwen2a5vKNwPX3hnN
-	CsUysJQQx5PkFBpF9Tzw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=yWahGggqBAzZZ1F2MkgON1x5Ts+WaoFBXhlIZHQR+vo=; b=mHavGiRGHHpkZ4YFI21Q5Hm6Qn
+	KIepokvmhZDWIc6RiXD8i5hg+uEM40O1Nw9StNRLa/qSBcqz00Q3yZgJaiYZ4kn75yjb6ko4eXFHS
+	o4jWtBUHRz7xATMUgrl8eb+A5aP7EXVuCC36kT2nTbe9mRFEPD/zw9jLNnV2PSRE9vvOEdyN63fuM
+	o11bNbVzh3ow9Qq2ZBoY+mmt94GBXkanpDq60KSRAJLeShdjqO45ZSN7+dAPnvqUzluGCZm94MTHi
+	iDpEkuB60FCdzG5NfoxyA3A5rhFO/9xcNbsNlYuLlIEtHpkkFDjmVsS5KXvruGXeNLhuCu/r9yhtQ
+	6FVZ8xWQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMCXC-000000082vb-3ECW;
-	Wed, 28 Oct 2026 22:54:18 +0000
-Received: from mail-ed1-x529.google.com ([2a00:1450:4864:20::529])
+	id 1xMCgm-000000083Dw-3y6V;
+	Wed, 28 Oct 2026 23:04:12 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMCX9-000000082ua-47W7
+	id 1xMCgm-000000083Dm-01ld
 	for kexec@lists.infradead.org;
-	Wed, 28 Oct 2026 22:54:17 +0000
-Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-6ae14eecc64so2253289a12.1
-        for <kexec@lists.infradead.org>; Wed, 28 Oct 2026 15:54:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1793228053; x=1793832853; darn=lists.infradead.org;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=1nzL/A4OIGWxPEaAp0V3O0CBZ7XOASlD1R5vK61L67g=;
-        b=cK/QCDvSmdLrkWnSQ5wc+pSU2gXzdtbo/VovqIXwUTI+svh/6GH3DQZC4zMf3MXwWB
-         cUK06EoFv10PQNdqH4TY08qITBpMkTm/nPpU5sFNUWesf71C4Ud/zSCNCj5nRohwqbJc
-         GAfXfiHvxHkUQQZQAPc0+MMFqlMYMV+OnoXbJjShfQKYrPtalJQhrucUylktoH/ybQwe
-         C5oM1ZSf2EkHvJcBF7T15U2ToLmGpwVpAIGhKUtwTsHN5nDjxRXXJQVpNOIB3QJKEEJo
-         4C7G6g7sZcDMLt0ufayx9Jrzxup0kyhnm1oBRUa5b0/XPs77EdXmodycnNctO3jGRVEA
-         kzOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793228053; x=1793832853;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=1nzL/A4OIGWxPEaAp0V3O0CBZ7XOASlD1R5vK61L67g=;
-        b=yerc0FsFPfecBxzAYqz4W/BvFCPG95zZB895FILq1I4I3OKMwBjdwaBJ6ooTGPrqW6
-         Mq94UDxYNClk+FfRuMdrBpbt9GNXfKa+RcotJnGEfgQBkhf5WSa6iNOHQWhlbIxxylbQ
-         eq+V7sWBSqav9gsRR171pa6XrM3dD6fL9bHKtZ4XP3nqTYCVATccGZJICP6CUvpUaF0m
-         GSH/a4xaM1PvG2Dt5aZrV0+aSDJwcXh31ldk+bOjNaPEaQfo/DHxnvTIPLl/lXHWLOC7
-         ouhLR6wO1UOIVkHWccUVQ8Qg70x9pub9qodwln5IgnU06oweIctt5d0Iu5JmZRl6YoE1
-         pyHw==
-X-Forwarded-Encrypted: i=1; AKwUvBz/olRcqhj2QryKlPfzRC+vF3audKDMQHIr78QQyAg7+m0bMjIDJLDLi6QuvllN2RDPx4/CXg==@lists.infradead.org
-X-Gm-Message-State: AFq9FYL946bBUTRBeQ+Sdx2PlTiEg6o8ezcoUPC+DvEr5kr5hoAAcMGu
-	ufJZCTsQaxx0ao4rNhWUgXGZ8NA49LcXS04fgpNT4LW/QcJIxvSTorvkLtXfFxi3AFU=
-X-Gm-Gg: AYBFou3DYN5F/xNFnaPEiuYATR7Sv/D4yXNauDDjN7Lh986n+tUiH0qVn/ylDE7snjL
-	QhpvVdhdIH4Jk6XB/GwWnZL82PNE2zAprhnPBfVfI5WqhEnZwJF7ODo1c2vVQjAb4qUP/C9w509
-	J4LBOvn5/tn1+CDOaB/LNQrBnsEWk1QrXqiURu1TpgFur89dnc8ZvH+K2NH/vE83IhzBoVqXgS3
-	n7Mba/KZ3JPJDH7XhKNE4DBRB4w3Qrgp+utKy6oVIwezo3ZV97rk3nbjukgTFjczeKXoyzBcaj1
-	jGgtbpOBD1CN/ntXvKZydHgmwKUuMaoHxXOONzNpNBGglpRQ+AJtWAYa+ldTuil17pTfJVWWXYU
-	3VZTIXp+kC8GN++qdBDTQNBQeqDEPGTlWOcxzy3fWj7D3Bd/1Z4Je+ffc+pu+l50obtSn5LA5XX
-	EcY/dDnGLYrpvAkfv4cP1/HGeDX7LRKMnAer+5KjrNA1nm/SODTO+EyHCWtVxi1sKraQ8e/wVgs
-	8kxCYtfYdbPCpgsn2obvs9BHAy5q5JNMbJXupzJVIBCsN/3bA3XM703JEQ3kRR4k+h1eQH/qUiM
-	P9TqEJ/Qzij6K7FE8qOmcAhsi/0uLx908PpG37LpFyE=
-X-Received: by 2002:aa7:d0d3:0:b0:6b4:78c3:b8bf with SMTP id 4fb4d7f45d1cf-6b49cbfe65cmr2043596a12.26.1793228053385;
-        Wed, 28 Oct 2026 15:54:13 -0700 (PDT)
-Received: from localhost ([2a03:2880:32ff:49::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b4964601f2sm1991741a12.37.2026.10.28.15.54.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2026 15:54:12 -0700 (PDT)
+	Wed, 28 Oct 2026 23:04:12 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id E245A409C8;
+	Wed, 28 Oct 2026 23:04:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6C601F01825;
+	Wed, 28 Oct 2026 23:04:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793228650;
+	bh=yWahGggqBAzZZ1F2MkgON1x5Ts+WaoFBXhlIZHQR+vo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=KNqOZbIURlmWF8VcvD8mRkm1HnRRbtmWbwKy9abPnYENuciE+fk/k3MTfo8pGyvte
+	 LaYii0YidCo1CDVUe0bSDPr2vH04VR7ZmXl7uZx2kSW2QqRZkoVhbfeXgPXdhLv1xq
+	 w2NCKn2T0TwUdIT4NGGIbJsCXvAZE84LeeL5q9GmqESxWLvFq3bUx+7M7wMjX67c5k
+	 d+/lSbFJGE6+yBAemzswM6MQIdkH40nSa2pHPYGfvOoJNA4FEyebvRTs9fm/U3tZCM
+	 Sj2+s9T/YkNbmY9izzYzRDl54rzQiuF8p++cz6VnsHux8HFu+jOFJEfQA+vhy2bhRi
+	 xVBiqrGRlIHBA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Alexander Viro
+ <viro@zeniv.linux.org.uk>,  Christian Brauner <brauner@kernel.org>,  Jan
+ Kara <jack@suse.cz>,  "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+  Hugh Dickins <hughd@google.com>,  Baolin Wang
+ <baolin.wang@linux.alibaba.com>,  Andrew Morton
+ <akpm@linux-foundation.org>,  David Hildenbrand <david@kernel.org>,  Zi
+ Yan <ziy@nvidia.com>,  "Liam R. Howlett" <liam@infradead.org>,  Nico Pache
+ <nico.pache@linux.dev>,  Ryan Roberts <ryan.roberts@arm.com>,  Dev Jain
+ <dev.jain@arm.com>,  Barry Song <baohua@kernel.org>,  Lance Yang
+ <lance.yang@linux.dev>,  Usama Arif <usama.arif@linux.dev>,  Kiryl
+ Shutsemau <kas@kernel.org>,  Mike Rapoport <rppt@kernel.org>,  Matthew
+ Brost <matthew.brost@intel.com>,  Joshua Hahn <joshua.hahnjy@gmail.com>,
+  Byungchul Park <byungchul@sk.com>,  Gregory Price <gourry@gourry.net>,
+  Ying Huang <ying.huang@linux.alibaba.com>,  Alistair Popple
+ <apopple@nvidia.com>,  Kairui Song <kasong@tencent.com>,  Qi Zheng
+ <qi.zheng@linux.dev>,  Shakeel Butt <shakeel.butt@linux.dev>,  Axel
+ Rasmussen <axelrasmussen@google.com>,  Yuanchu Xie <yuanchu@google.com>,
+  Wei Xu <weixugc@google.com>,  Baoquan He <baoquan.he@linux.dev>,
+  Johannes Weiner <hannes@cmpxchg.org>,  Michal Hocko <mhocko@kernel.org>,
+  Lorenzo Stoakes <ljs@kernel.org>,  linux-fsdevel@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,
+  kexec@lists.infradead.org
+Subject: Re: [PATCH 1/3] mm/memfd_luo: don't use memfd_pin_folios()
+In-Reply-To: <179321872100.1775665.6881420026761127422.b4-review@b4> (Pasha
+	Tatashin's message of "Wed, 28 Oct 2026 16:18:41 -0400")
+References: <20261027173031.763213-1-pratyush@kernel.org>
+	<20261027173031.763213-2-pratyush@kernel.org>
+	<179321872100.1775665.6881420026761127422.b4-review@b4>
+Date: Thu, 29 Oct 2026 00:04:03 +0100
+Message-ID: <2vxz4ie5o2ak.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 45/46] mm/memory-tiers: unregister empty tiers outside
- memory_tier_lock
-From: Gregory Price <gourry@gourry.net>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
- Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>, 
- Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, 
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
- Baoquan He <baoquan.he@linux.dev>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
- Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
- Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, 
- Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
- Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>, 
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
- Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
- Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
- Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, 
- Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
- Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
- Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
- Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>, 
- Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>, 
- Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>, 
- Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
- Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>, 
- Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
- linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
- linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
- linux-cxl@vger.kernel.org, stable@vger.kernel.org, 
- Josef Bacik <josef@toxicpanda.com>
-In-Reply-To: <20261027-fixes_core-v1-45-6f74bec9a5bb@kernel.org>
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-45-6f74bec9a5bb@kernel.org>
-Date: Wed, 28 Oct 2026 15:54:10 -0700
-Message-Id: <179322805093.453251.8441529644965692562.b4-reply@b4>
-X-Mailer: b4 0.17-dev
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261028_155416_041979_C476CC51 
-X-CRM114-Status: GOOD (  10.72  )
-X-Spam-Score: -2.1 (--)
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -137,36 +90,158 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 2026-10-27 00:18 +0100, David Hildenbrand (Arm) wrote:
-> When offlining a node's last memory empties its tier,
-> clear_node_memory_tier() calls device_unregister() while holding
-> memory_tier_lock. A concurrent sysfs read can hold a kernfs active
-> reference and block in nodelist_show() on that mutex. device_unregister()
-> then waits in kernfs_drain() for the read to finish and release its active
-> reference, while the reader waits for the offlining task to release the
-> mutex.
-> 
-> Return the node's former tier from clear_node_memory_tier(), making the
-> helper more similar to set_node_memory_tier(), which also returns a
-> memory_tier pointer. Let the caller unlink an empty tier under
-> memory_tier_lock before rebuilding demotion targets, then unregister its
-> device after dropping the lock.
-> 
-> Fixes: 9832fb87834e ("mm/demotion: expose memory tier details via sysfs")
-> Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+On Wed, Oct 28 2026, Pasha Tatashin wrote:
 
-Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+>> memfd_luo takes a snapshot of the folios in the file's mapping. To make
+>> sure the snapshot does not go out of sync, it pins the folios in the
+>> file via memfd_pin_folios(). The pinning also migrates the folios out of
+>> MIGRATE_MOVABLE to make sure doesn't land in KHO boot memory or in a CMA
+>> region.
+>> 
+>> memfd_pin_folios() does not lock the folios. So it can race with
+>> shmem_writeout(). A folio returned by memfd_pin_folios() might already
+>> be in swap cache. This happens to work but is fragile. memfd_luo looks
+>> at folio flags and index on a folio that isn't in the memfd's page
+>> cache.
+>> 
+>> In addition, memfd_pin_folios() needs the caller to allocate an array of
+>> folios. memfd_luo does not really need that since it will vmalloc
+>> folios_ser and store the information there anyway. The folios array is
+>> unnecessary overhead.
+>> 
+>> Finally, memfd_pin_folios() fills in holes in the memfd. This makes
+>> preserving sparse memfds very expensive in both compute and memory.
+>> While this patch doesn't yet stop filling in the holes, it sets up the
+>> infrastructure to make it simpler.
+>
+> +1, this is problematic and should be resolved. In some setups, VMMs 
+> leave holes for PCI/IO space; with the current approach, single memfd 
+> preservation does not work for such use cases.
+
+Yep, agreed. There are a couple parts to this. First is this patch. Next
+is KHO xarray. The patchset is ready, I'll send it after -rc1.
+
+I think I will move this patch to that series and then make the series
+also support holes.
+
+>
+>> Fix all this by walking the page cache directly using shmem_get_folio()
+>> with SGP_CACHE. This returns a locked folio with an elevated refcount.
+>> memfd_luo holds that reference until the memfd is unpreserved. This
+>> blocks compaction, migration, etc.
+>> 
+>> There is still a need to migrate folios out of MIGRATE_MOVABLE page
+>> blocks. This is because those might be CMA or KHO scratch. memfd_luo
+>> will hold a longterm reference to the folios so it will block migration
+>> in that pageblock. Introduce memfd_luo_migrate_folio() to do this.
+>> 
+>> Also factor out folio unpreservation logic into memfd_luo_put_folios()
+>> and use it from memfd_luo_unpreserve_folios() and from error paths in
+>> memfd_luo_preserve_folios().
+>> 
+>> Since shmem_get_folio() always returns uptodate folios, drop the folio
+>> zeroing logic.
+>> 
+>> This change also improves preservation performance, shown in the table
+>> below.
+>> 
+>> |------------------+----------+------------+-------|
+>> | memfd            | baseline | this patch | delta |
+>> |------------------+----------+------------+-------|
+>> | 4K pages, 32 GiB | 748 ms   | 600 ms     |  -20% |
+>> | THP, 4 GiB       | 0.59 ms  | 0.59 ms    |    0% |
+>> | THP, 16 GiB      | 2.99 ms  | 2.61 ms    |  -13% |
+>> | THP, 32 GiB      | 4.83 ms  | 5.21 ms    |   +8% |
+>> | sparse, 32 GiB   | 8695 ms  | 7269 ms    |  -16% |
+>> |------------------+----------+------------+-------|
+>
+> For THP 16 GiB / 32 GiB, the -13% / +8% swings look like high run-to-run 
+> variance. However, maybe not: is it because vmalloc_array() is 
+> overallocating memory for folios_ser?
+
+Could be, I only did a handful of runs. But I also reckon this is
+vmalloc_array() over-allocating. It over-allocated before this patch
+too, for the folios array, but that allocation was half as big since
+folios_ser is 16 bytes each.
+
+>
+> Also, could you clarify what "sparse, 32 GiB" means in this benchmark? 
+> Was the memfd completely unfaulted before preserve (so preserve faults 
+> in all 4K pages), or partially populated?
+
+It was completely unfaulted. Size was set via ftruncate() and then
+preserved. So it is the worse case of "sparse".
+
+[...]
+>> @@ -113,99 +213,77 @@ static int memfd_luo_preserve_folios(struct file *file,
+>>  	 * Guess the number of folios based on inode size. Real number might end
+>>  	 * up being smaller if there are higher order folios.
+>>  	 */
+>> -	max_folios = PAGE_ALIGN(size) / PAGE_SIZE;
+>> -	folios = kvmalloc_objs(*folios, max_folios);
+>> -	if (!folios)
+>> +	end = DIV_ROUND_UP_ULL(size, PAGE_SIZE);
+>> +	max_folios = end;
+>> +	folios_ser = vmalloc_array(max_folios, sizeof(*folios_ser));
+>> +	if (!folios_ser)
+>>  		return -ENOMEM;
+>
+> I bet in practice memfds almost always contain folios of the same size, 
+> so why not estimate the folios_ser size based on the first folio's 
+> order, and only if that ends up being too small, vrealloc() to match the 
+> maximum possible remaining size?
+
+That's a good idea! But I think the switch to KHO Xarray will remove the
+need for this.
+
+>
+> It would be a different change though.
+>
+[...]
+>> +
+>> +		if (unlikely(!folio_is_longterm_pinnable(folio))) {
+>> +			folio_unlock(folio);
+>> +			err = memfd_luo_migrate_folio(folio);
+>> +			/* Someone else might have it isolated, retry a bit. */
+>> +			if (err == -EBUSY && ++busy_retries < MEMFD_LUO_MIGRATE_RETRIES)
+>> +				continue;
+>> +			if (err)
+>> +				goto err_restore;
+>> +			continue;
+>>  		}
+>
+> Nit:
+>
+> I would suggest adding another helper, memfd_luo_get_folio(inode, index, 
+> &folio), that wraps:
+>
+> - shmem_get_folio()
+> - The !folio_is_longterm_pinnable() migration retry loop logic
+>
+> I think this would make the final code a bit more manageable.
+
+Sounds good, will do.
+
+>
+> Other than that the patch looks alright, feel free to add
+> Acked-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> Once the nit is addressed.
+
+Thanks!
+
+I think the MM side might take some time to gather reviews so I will
+send this out as part of a liveupdate-only series. This patch is useful
+on its own anyway.
 
 -- 
-Gregory Price (Meta) <gourry@gourry.net>
+Regards,
+Pratyush Yadav
 
