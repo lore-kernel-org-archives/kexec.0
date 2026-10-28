@@ -2,55 +2,55 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCA1606A324
-	for <kexec@archiver.kernel.org>; Wed, 28 Oct 2026 08:08:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95604606A325
+	for <kexec@archiver.kernel.org>; Wed, 28 Oct 2026 08:16:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=QNNj/NF1;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dZ686wUN
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=SiWn8c8x;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jCDyC8ok
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=YMhIQCmPp2kb7swtobccIXYat54/CLD8sSk/wH59+ic=; b=QNNj/NF1vg7ybx
-	lJ2HS7JmNekNsgKRt4Ch0GAUZEMjoW0Dcfxj5B/FuLVS7YlrvRDu4MVerKYAY0dsEix9p4LEv/Phz
-	Uf9+3xuRz9gfj8yI87lw8tEPJSHzb2QPbXX+1Cp7QvGKlALjyY/HVmzPyb+zU5ARh00R7lYkGCVR5
-	GgkCXv7vwuyjDSHjgw7yM8/LcKWkiRd70l6QWIMQXFjEIweu6wtfayg3F56NyAao5rQatGAZMgRXn
-	byoD5y3Tf6B5tSqi+Ym8mVApj/BM3VRkp7xgkhftoUdUu2Q1zDk09mON9rBUkFhOAVidyBUWDmxFd
-	eUQxrWCyAEyumLqvPaIw==;
+	List-Owner; bh=2SbShK97MZ85y0KD6EulcgImPc0M61Sq9vGvevV4OQY=; b=SiWn8c8xoSmfS8
+	xuUVtin99uXJSjMNuhNasnzz7CLIWDv+9DaQQs2yNEsjauPUg/YzyHs4c8nXR01v6qLsYHP0dLZwx
+	wRvxgW5dhoL7Zr8FIeD1nTfxe8etfcFDXz1P6ZV4QGgeVWFBszklKYkvb8F2IiOZwEhBg12FIePTN
+	L/5y77+2N064/VYcN8kiWnvNMLaPzVjHXSF9huuFKYgx4eNG7nB4FQLBY89RPucuA2uMBrE7z0Sh6
+	g1H9yL4A0mmdutpWLMywM5Kb7Y/ZpoWt1ImLjEbEJVJEgzmV6FDUxKwpGZ8Ud9pRhbHKqCuuLMA4l
+	VmZKBj+ErGgIyObn7rEA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLyhr-00000006Vvk-37YZ;
-	Wed, 28 Oct 2026 08:08:23 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xLyq3-00000006WON-3mRr;
+	Wed, 28 Oct 2026 08:16:51 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xLyhr-00000006Vve-0PK3
+	id 1xLyq3-00000006WO7-1vVw
 	for kexec@lists.infradead.org;
-	Wed, 28 Oct 2026 08:08:23 +0000
+	Wed, 28 Oct 2026 08:16:51 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id C784C43047;
-	Wed, 28 Oct 2026 08:08:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34A6A1F01825;
-	Wed, 28 Oct 2026 08:08:08 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id B7FC142208;
+	Wed, 28 Oct 2026 08:16:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66B7C1F01825;
+	Wed, 28 Oct 2026 08:16:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793174902;
-	bh=YMhIQCmPp2kb7swtobccIXYat54/CLD8sSk/wH59+ic=;
+	s=k20260515; t=1793175410;
+	bh=2SbShK97MZ85y0KD6EulcgImPc0M61Sq9vGvevV4OQY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=dZ686wUNZbeecaUUWhZqyDq+oCgkRoB4kXRKTaERp4XUiBer361hBYqWjPHFR+M1F
-	 9WmGi/Rexa0QNinbE+89muvmYBicfuIj8K6BQyKOXON1Z/yJ9rHvknTBFjZqoQajDD
-	 YtiL5Md9P+qPqzqquZO8ghitcvonnnx14OGMNUYh/49Y9Mmu37+z3GYNVoOjoy9Dcu
-	 W3Td4vVeq4N4cnYDJ51H1XGG589ESoqxem7USKOTKvn3jc4P42kCq6J1SWKfEhu6xe
-	 /NM90F0ua/vaf9NYyBwgiunmcNPylFsU43oJGbRHrjJdWitClABpXe+oQVU4j0qO6Q
-	 weAHsNtGpH+fQ==
-Message-ID: <f5b90920-5923-45a6-be2b-f558801781c5@kernel.org>
-Date: Wed, 28 Oct 2026 09:08:04 +0100
+	b=jCDyC8ok1EAtBemPTyE0fEaa8zBu8wdILXDuDlpXS9nnr+VVOWOsINKYRo0N2twMr
+	 xVJ3b6czM53QXz06HU/Eb9nkPGbrgrb96WXdGDd7kqo000v7zbKenf3euRolPgTN5D
+	 0GH5kIUbRcDn3KhovrrLfbOjYbIeO65d0eK0SO8S/0Qc/7eEA9FqKbxAWx3tHaN+0O
+	 b9EEoHYN49L9Hk3N7i9dpabSSf8s5Zj/VOKbJ/ZpjQaAyA7h+1dKAMfwjAQP/Gvb6p
+	 cNBn8nXLmRSE5/VmahsYgyjtVPBc3vVMJ/vfR9rM4LOLQnYvedSEg9WTh2qXSaoJpa
+	 LPh8rswVKh3TQ==
+Message-ID: <032c036d-f80e-4b3b-b650-2b30b7a2f3fb@kernel.org>
+Date: Wed, 28 Oct 2026 09:16:31 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/46] mm/rmap: handle device-exclusive entries in
- folio_referenced_one()
-To: Dev Jain <dev.jain@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
+Subject: Re: [PATCH 13/46] mm/huge_memory: fix truncate racing with PMD
+ zapping
+To: Zi Yan <ziy@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>,
  Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
  Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
  Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
@@ -66,10 +66,10 @@ To: Dev Jain <dev.jain@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
  Pasha Tatashin <pasha.tatashin@soleen.com>,
  Pratyush Yadav <pratyush@kernel.org>,
  "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
- Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>,
- Ryan Roberts <ryan.roberts@arm.com>, Usama Arif <usama.arif@linux.dev>,
+ Lance Yang <lance.yang@linux.dev>, Rik van Riel <riel@surriel.com>,
+ Harry Yoo <harry@kernel.org>, Alistair Popple <apopple@nvidia.com>,
+ Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Usama Arif <usama.arif@linux.dev>,
  Kiryl Shutsemau <kas@kernel.org>, Matthew Brost <matthew.brost@intel.com>,
  John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
  Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
@@ -84,10 +84,10 @@ To: Dev Jain <dev.jain@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
- stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>
+ Chris Mason <mason@kernel.org>, stable@vger.kernel.org
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-9-6f74bec9a5bb@kernel.org>
- <e32a19c4-76c4-40ba-83a4-781333af7b0a@arm.com>
+ <20261027-fixes_core-v1-13-6f74bec9a5bb@kernel.org>
+ <DMG4RXAC0531.1TP9FSMKUMZS0@nvidia.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -134,7 +134,7 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <e32a19c4-76c4-40ba-83a4-781333af7b0a@arm.com>
+In-Reply-To: <DMG4RXAC0531.1TP9FSMKUMZS0@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
@@ -147,34 +147,46 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
->> -		if (lru_gen_enabled() && !lru_gen_switching() && pvmw.pte) {
->> +		if (lru_gen_enabled() && !lru_gen_switching() && pvmw.pte &&
->> +		    pte_present(pteval)) {
->>  			if (lru_gen_look_around(&pvmw, nr))
->>  				referenced++;
->>  		} else if (pvmw.pte) {
->> -			if (clear_flush_young_ptes_notify(vma, address, pvmw.pte, nr))
->> +			bool young = false;
->> +
->> +			/*
->> +			 * PFN swap PTEs, such as device-exclusive ones, that
+On 10/28/26 03:54, Zi Yan wrote:
+> On Mon Oct 26, 2026 at 7:17 PM EDT, David Hildenbrand (Arm) wrote:
+>> From: Chris Mason <mason@kernel.org>
+>>
+>> zap_huge_pmd_folio() removes the rmap before calling folio_mark_dirty().
+>> If this was the last mapping, truncation can skip unmapping the folio
+>> and proceed without waiting for the PMD lock, racing with dirtying.
+>>
+>> ifs_set_range_dirty() can oops if MADV_DONTNEED races with
+>> ftruncate() on XFS, when we get the folio set dirty after it was found
+>> to not be mapped anymore.
+>>
+>> Move folio_mark_dirty() and folio_mark_accessed() before rmap removal,
+>> matching the PTE zap path. This keeps the folio mapped while updating
+>> its state, so truncation must wait for the page table lock.
+>>
+>> Fix generated by an LLM and sent by Chris Mason in private.
+>>
+>> Fixes: fe6cf984939d ("mm/huge_memory: transfer the pmd dirty bit to the folio on zap")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Chris Mason <mason@kernel.org>
+>> [ david: simplify comment and description ]
+>> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+>> ---
+>>  mm/huge_memory.c | 14 ++++++++------
+>>  1 file changed, 8 insertions(+), 6 deletions(-)
+>>
 > 
-> You mean "PFN softleaf PTEs"? Better expressed as "softleaf PTEs embedding a PFN" ...
+> It seems to me that moving the rmap removal code after folio_mark_*()
+> matches zap_present_folio_ptes() closer. 
 
-Lorenzo raised this off-list as well; I'm using the existing text we use
-elsewhere for consistency.
-
-This needs a cleanup that adjusts all of them :)
-
-Thanks!
+Yes, can do that! Thanks!
 
 -- 
 Cheers,
