@@ -2,84 +2,112 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9C8606A325
-	for <kexec@archiver.kernel.org>; Wed, 28 Oct 2026 23:04:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0A9606A321
+	for <kexec@archiver.kernel.org>; Wed, 28 Oct 2026 23:09:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=mHavGiRG;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KNqOZbIU
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=PaS9UFR6;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=HaHjfyXg
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=yWahGggqBAzZZ1F2MkgON1x5Ts+WaoFBXhlIZHQR+vo=; b=mHavGiRGHHpkZ4YFI21Q5Hm6Qn
-	KIepokvmhZDWIc6RiXD8i5hg+uEM40O1Nw9StNRLa/qSBcqz00Q3yZgJaiYZ4kn75yjb6ko4eXFHS
-	o4jWtBUHRz7xATMUgrl8eb+A5aP7EXVuCC36kT2nTbe9mRFEPD/zw9jLNnV2PSRE9vvOEdyN63fuM
-	o11bNbVzh3ow9Qq2ZBoY+mmt94GBXkanpDq60KSRAJLeShdjqO45ZSN7+dAPnvqUzluGCZm94MTHi
-	iDpEkuB60FCdzG5NfoxyA3A5rhFO/9xcNbsNlYuLlIEtHpkkFDjmVsS5KXvruGXeNLhuCu/r9yhtQ
-	6FVZ8xWQ==;
+	bh=Q5xA2wRJBQ07Qo768sQziuchQxKB2Cjd+x4z5GHdG10=; b=PaS9UFR613grMWm6eBiUPPksg+
+	eE4PGyH/3hCZ+tTxvAYHTUIbmcejvRD5cKcSO7e3t9EgFvbj3PnSPmad48W15EjsPeZXGKxfHWaEl
+	x3YsoGD22f6j0dcQ6Z2pyj2nbu+Z297yzVSHZNEhw8Xdv7KM1ar+TgoFvyQuYazHl3KKkt80H5dfQ
+	qWyo9gaReuxhRr/g0Q3YB7jHRqLLe1BrJeEBVSKdfNSjFRQKhi3QVywcwzSbXBz+Ac/HlYNr6MrmE
+	p2vTMySknCH917SGcwmb+PedQ20+U9yLDE4RWc6/Y3FFDuuRaFo7GvAKTGNa2Q0o6uEuuap4/fnYM
+	mYVWfnRQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMCgm-000000083Dw-3y6V;
-	Wed, 28 Oct 2026 23:04:12 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xMClk-000000083Lu-2y9P;
+	Wed, 28 Oct 2026 23:09:20 +0000
+Received: from mail-pj1-x102c.google.com ([2607:f8b0:4864:20::102c])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMCgm-000000083Dm-01ld
+	id 1xMCli-000000083LW-1SF6
 	for kexec@lists.infradead.org;
-	Wed, 28 Oct 2026 23:04:12 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id E245A409C8;
-	Wed, 28 Oct 2026 23:04:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6C601F01825;
-	Wed, 28 Oct 2026 23:04:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793228650;
-	bh=yWahGggqBAzZZ1F2MkgON1x5Ts+WaoFBXhlIZHQR+vo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=KNqOZbIURlmWF8VcvD8mRkm1HnRRbtmWbwKy9abPnYENuciE+fk/k3MTfo8pGyvte
-	 LaYii0YidCo1CDVUe0bSDPr2vH04VR7ZmXl7uZx2kSW2QqRZkoVhbfeXgPXdhLv1xq
-	 w2NCKn2T0TwUdIT4NGGIbJsCXvAZE84LeeL5q9GmqESxWLvFq3bUx+7M7wMjX67c5k
-	 d+/lSbFJGE6+yBAemzswM6MQIdkH40nSa2pHPYGfvOoJNA4FEyebvRTs9fm/U3tZCM
-	 Sj2+s9T/YkNbmY9izzYzRDl54rzQiuF8p++cz6VnsHux8HFu+jOFJEfQA+vhy2bhRi
-	 xVBiqrGRlIHBA==
-From: Pratyush Yadav <pratyush@kernel.org>
+	Wed, 28 Oct 2026 23:09:19 +0000
+Received: by mail-pj1-x102c.google.com with SMTP id 98e67ed59e1d1-3ae2b7e1e17so921404a91.3
+        for <kexec@lists.infradead.org>; Wed, 28 Oct 2026 16:09:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1793228957; x=1793833757; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Q5xA2wRJBQ07Qo768sQziuchQxKB2Cjd+x4z5GHdG10=;
+        b=HaHjfyXgpB+8psZTdHFbzqK7DvjrQdhd3vIN+L413VMNY/BeHwzIsUx6XOm8G8a+m9
+         EQj5XPvD4qZvv3u7PooBkjiH+WXOPp1XYCEKY2XVCH8Z8zEl7TSDghFoqsNev/y11WVC
+         AIhOYpCERj3NJ/Mv9eY5R3P6D4Lply+a6LJGluoGhvWxpi4pMZLkjXDbDDw8XwsFX9BM
+         9OnAorTsmwHfDOaQoHYMbnSGooOf+TIwtFSmYPeMtK2GtjRobbsS+bXKbEOQJUDU96Rt
+         XnOxEBJkpOaHIR/7DH0n9zLRFVS9AUg7LXUyRkDERTeJ4dk+xeUzMnPHjY2l8thuKget
+         5wAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793228957; x=1793833757;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Q5xA2wRJBQ07Qo768sQziuchQxKB2Cjd+x4z5GHdG10=;
+        b=wd3xqGuY8hQTnShlCONXk8wNxtFKXfNGLPmwjRSRQmQe758zkHO6uJqZ5BfW32E5lW
+         sCKOidBYUwclWkIc+zXp4WYgpaihi16esg3fauDuz386ePlT1k5R3T15XksXCqGzpoV+
+         ltuVvWIoJCxWSwzUg5SjALD6ghSglzCR4mclc8wkMLj3981x2OpmY3NRdyaqDpFj+JQV
+         lZkzDQdxOgLNpjVHdt05JcX5wKVCu0jGAjYa+9DdDicDCNR6Fys842L7IUMup9wmdoGP
+         nHLd7ygteLN8T/U6ZcRkh9rCLadPvb6js51eJzQYd4TX8Ta+IBUYtI+7Pxjl3Yl++RJS
+         IBng==
+X-Gm-Message-State: AFq9FYLiNfNkwcmXFZM1Bsp+gAubZakbtZXGgXL8NeGLVFip1Hwlq4xD
+	8ozX0LIG+pdIDc8GZZQ2gx/AnZby9ZeK+gVXQxgQacpgMmlxY6zBahjpD3nLFZQhCQ==
+X-Gm-Gg: AYBFou0eITI6dsbqFzd93mybbBy3jR3ArSTM3UICEpx9CEt4hUM9rSo5PBqqvOnK5M1
+	ylkC9WMJU+mATosg286bSwd0EtAklAF5ED7VmljFWY3bprQk9lOWDB4kGE4Wyq+UDfGWYJgLMBb
+	2BBLKDQzyoN2n+d/FInzIdccieN7w7ehoTJcRztAzijvYtmFgLZxofaNLYf1w+x4OaCGhyhHOiY
+	4S2EqfQk7H72eGQc3Vu7Y913p4oinzZuwpQkCtox6yYarzU6zem3jh+oGd7E8qvveKwP4gm11Vp
+	h85kMzt2jekNQ+6vGzPoVPsGxAyuf/9RLulAXxw/YhIZxSh9FdPCYwtPEvwWvk/QfVb4skMIkuT
+	cfpBF7MxiF7770Z0hV1vCwzPeIrNsPBtAsRkp3ih3rSBbgTwf/vZqaQTzMblMDf9nLBzztpwCYA
+	PXONsvGpX6QA6OfdvEZG/KTLFgxVuibPiGxZeg8CybnDJJ8kHGMJFtbbn+kdlJSEba+bDV2SRx8
+	2A/bfqF3dprvxxh5p10IKYhpY/WwoDx3rz0z1yNQG0kc7S+Mymz9nVHgi6YgFATzdXxf6mr7cLJ
+	U8JfIq90AECEgqJXkny3HaEAsyU1KLA4fF2MrmO/O8QCyUsdJzHqhCgETijiSP/uPw==
+X-Received: by 2002:a17:90a:ec8e:b0:3ac:8897:7b92 with SMTP id 98e67ed59e1d1-3ae58319f5amr2770048a91.57.1793228956133;
+        Wed, 28 Oct 2026 16:09:16 -0700 (PDT)
+Received: from google.com (64.75.127.34.bc.googleusercontent.com. [34.127.75.64])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ae6e973ac6sm1327770a91.11.2026.10.28.16.09.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Oct 2026 16:09:13 -0700 (PDT)
+Date: Wed, 28 Oct 2026 23:09:09 +0000
+From: David Matlack <dmatlack@google.com>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Alexander Viro
- <viro@zeniv.linux.org.uk>,  Christian Brauner <brauner@kernel.org>,  Jan
- Kara <jack@suse.cz>,  "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-  Hugh Dickins <hughd@google.com>,  Baolin Wang
- <baolin.wang@linux.alibaba.com>,  Andrew Morton
- <akpm@linux-foundation.org>,  David Hildenbrand <david@kernel.org>,  Zi
- Yan <ziy@nvidia.com>,  "Liam R. Howlett" <liam@infradead.org>,  Nico Pache
- <nico.pache@linux.dev>,  Ryan Roberts <ryan.roberts@arm.com>,  Dev Jain
- <dev.jain@arm.com>,  Barry Song <baohua@kernel.org>,  Lance Yang
- <lance.yang@linux.dev>,  Usama Arif <usama.arif@linux.dev>,  Kiryl
- Shutsemau <kas@kernel.org>,  Mike Rapoport <rppt@kernel.org>,  Matthew
- Brost <matthew.brost@intel.com>,  Joshua Hahn <joshua.hahnjy@gmail.com>,
-  Byungchul Park <byungchul@sk.com>,  Gregory Price <gourry@gourry.net>,
-  Ying Huang <ying.huang@linux.alibaba.com>,  Alistair Popple
- <apopple@nvidia.com>,  Kairui Song <kasong@tencent.com>,  Qi Zheng
- <qi.zheng@linux.dev>,  Shakeel Butt <shakeel.butt@linux.dev>,  Axel
- Rasmussen <axelrasmussen@google.com>,  Yuanchu Xie <yuanchu@google.com>,
-  Wei Xu <weixugc@google.com>,  Baoquan He <baoquan.he@linux.dev>,
-  Johannes Weiner <hannes@cmpxchg.org>,  Michal Hocko <mhocko@kernel.org>,
-  Lorenzo Stoakes <ljs@kernel.org>,  linux-fsdevel@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,
-  kexec@lists.infradead.org
-Subject: Re: [PATCH 1/3] mm/memfd_luo: don't use memfd_pin_folios()
-In-Reply-To: <179321872100.1775665.6881420026761127422.b4-review@b4> (Pasha
-	Tatashin's message of "Wed, 28 Oct 2026 16:18:41 -0400")
-References: <20261027173031.763213-1-pratyush@kernel.org>
-	<20261027173031.763213-2-pratyush@kernel.org>
-	<179321872100.1775665.6881420026761127422.b4-review@b4>
-Date: Thu, 29 Oct 2026 00:04:03 +0100
-Message-ID: <2vxz4ie5o2ak.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org, Alexander Graf <graf@amazon.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Christian Brauner <brauner@kernel.org>,
+	David Hildenbrand <david@kernel.org>,
+	Hugh Dickins <hughd@google.com>, Jonathan Corbet <corbet@lwn.net>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Lorenzo Stoakes <ljs@kernel.org>, Michal Hocko <mhocko@suse.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Vlastimil Babka <vbabka@kernel.org>
+Subject: Re: [PATCH v2 07/10] mm/shmem_luo: Retrieve tmpfs files onto a tmpfs
+ mount chosen by userspace
+Message-ID: <auKAlcPN0Lt6Y3Wm@google.com>
+References: <20261022225035.377445-1-dmatlack@google.com>
+ <20261022225035.377445-8-dmatlack@google.com>
+ <179322496574.1894369.544573858973645958.b4-review@b4>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <179322496574.1894369.544573858973645958.b4-review@b4>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261028_160918_413487_11309378 
+X-CRM114-Status: GOOD (  22.19  )
+X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,158 +118,57 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Wed, Oct 28 2026, Pasha Tatashin wrote:
+On 2026-10-28 06:02 PM, Pasha Tatashin wrote:
 
->> memfd_luo takes a snapshot of the folios in the file's mapping. To make
->> sure the snapshot does not go out of sync, it pins the folios in the
->> file via memfd_pin_folios(). The pinning also migrates the folios out of
->> MIGRATE_MOVABLE to make sure doesn't land in KHO boot memory or in a CMA
->> region.
->> 
->> memfd_pin_folios() does not lock the folios. So it can race with
->> shmem_writeout(). A folio returned by memfd_pin_folios() might already
->> be in swap cache. This happens to work but is fragile. memfd_luo looks
->> at folio flags and index on a folio that isn't in the memfd's page
->> cache.
->> 
->> In addition, memfd_pin_folios() needs the caller to allocate an array of
->> folios. memfd_luo does not really need that since it will vmalloc
->> folios_ser and store the information there anyway. The folios array is
->> unnecessary overhead.
->> 
->> Finally, memfd_pin_folios() fills in holes in the memfd. This makes
->> preserving sparse memfds very expensive in both compute and memory.
->> While this patch doesn't yet stop filling in the holes, it sets up the
->> infrastructure to make it simpler.
+> > +/*
+> > + * Whether @inode is on the internal shmem mount, which is used by
+> > + * shmem_file_setup() and thus by memfd_create().
+> > + */
+> > +bool shmem_inode_on_internal_mount(const struct inode *inode)
+> > +{
+> > +	return inode->i_sb == shm_mnt->mnt_sb;
+> > +}
+> 
+> Please fix the warning reported by kernel test robot.
+
+Will do.
+
+The prototype for shmem_inode_on_internal_mount() is in mm/internal.h,
+which mm/shmem.c only includes if CONFIG_SHMEM=y, but the robot was
+building without CONFIG_SHMEM. I've moved the definition of this
+function into CONFIG_SHMEM in v3 to fix this.
+
+> Looking at this together with Pratyush's mapping-freeze series ([PATCH
+> 0/3] mm: allow freezing mappings), I think we should extend the mapping
+> freeze lifecycle from preserve() -> retrieve() to preserve() ->
+> finish().
 >
-> +1, this is problematic and should be resolved. In some setups, VMMs 
-> leave holes for PCI/IO space; with the current approach, single memfd 
-> preservation does not work for such use cases.
-
-Yep, agreed. There are a couple parts to this. First is this patch. Next
-is KHO xarray. The patchset is ready, I'll send it after -rc1.
-
-I think I will move this patch to that series and then make the series
-also support holes.
-
+> When retrieve() returns an fd, its mapping should still come out frozen
+> and only become fully user-owned/mutable once a successful session
+> finish() happens. That keeps the index -> folio mapping invariant across
+> the entire live update until every fd in the session (e.g. vmfd,
+> iommufd, vfiofd that depend on the memfd) has been retrieved, passed
+> can_finish(), and been finalized together in finish().
 >
->> Fix all this by walking the page cache directly using shmem_get_folio()
->> with SGP_CACHE. This returns a locked folio with an elevated refcount.
->> memfd_luo holds that reference until the memfd is unpreserved. This
->> blocks compaction, migration, etc.
->> 
->> There is still a need to migrate folios out of MIGRATE_MOVABLE page
->> blocks. This is because those might be CMA or KHO scratch. memfd_luo
->> will hold a longterm reference to the folios so it will block migration
->> in that pageblock. Introduce memfd_luo_migrate_folio() to do this.
->> 
->> Also factor out folio unpreservation logic into memfd_luo_put_folios()
->> and use it from memfd_luo_unpreserve_folios() and from error paths in
->> memfd_luo_preserve_folios().
->> 
->> Since shmem_get_folio() always returns uptodate folios, drop the folio
->> zeroing logic.
->> 
->> This change also improves preservation performance, shown in the table
->> below.
->> 
->> |------------------+----------+------------+-------|
->> | memfd            | baseline | this patch | delta |
->> |------------------+----------+------------+-------|
->> | 4K pages, 32 GiB | 748 ms   | 600 ms     |  -20% |
->> | THP, 4 GiB       | 0.59 ms  | 0.59 ms    |    0% |
->> | THP, 16 GiB      | 2.99 ms  | 2.61 ms    |  -13% |
->> | THP, 32 GiB      | 4.83 ms  | 5.21 ms    |   +8% |
->> | sparse, 32 GiB   | 8695 ms  | 7269 ms    |  -16% |
->> |------------------+----------+------------+-------|
->
-> For THP 16 GiB / 32 GiB, the -13% / +8% swings look like high run-to-run 
-> variance. However, maybe not: is it because vmalloc_array() is 
-> overallocating memory for folios_ser?
+> (Doesn't have to block this series, we can do it on top or as part of
+> Pratyush's AS_FROZEN series.), but I think we must fix it either here or
+> there.)
 
-Could be, I only did a handful of runs. But I also reckon this is
-vmalloc_array() over-allocating. It over-allocated before this patch
-too, for the folios array, but that allocation was half as big since
-folios_ser is 16 bytes each.
+Ok that sounds reasonable. Should we do that as part of Pratyush's
+series then?
 
->
-> Also, could you clarify what "sparse, 32 GiB" means in this benchmark? 
-> Was the memfd completely unfaulted before preserve (so preserve faults 
-> in all 4K pages), or partially populated?
+Pratyuh's series replaces shmem_freeze() with mapping_set_frozen(), so
+retrieve() would freeze the new file and finish() would unfreeze it.
+That should work the same for memfds and tmpfs files..
 
-It was completely unfaulted. Size was set via ftruncate() and then
-preserved. So it is the worse case of "sparse".
-
-[...]
->> @@ -113,99 +213,77 @@ static int memfd_luo_preserve_folios(struct file *file,
->>  	 * Guess the number of folios based on inode size. Real number might end
->>  	 * up being smaller if there are higher order folios.
->>  	 */
->> -	max_folios = PAGE_ALIGN(size) / PAGE_SIZE;
->> -	folios = kvmalloc_objs(*folios, max_folios);
->> -	if (!folios)
->> +	end = DIV_ROUND_UP_ULL(size, PAGE_SIZE);
->> +	max_folios = end;
->> +	folios_ser = vmalloc_array(max_folios, sizeof(*folios_ser));
->> +	if (!folios_ser)
->>  		return -ENOMEM;
->
-> I bet in practice memfds almost always contain folios of the same size, 
-> so why not estimate the folios_ser size based on the first folio's 
-> order, and only if that ends up being too small, vrealloc() to match the 
-> maximum possible remaining size?
-
-That's a good idea! But I think the switch to KHO Xarray will remove the
-need for this.
-
->
-> It would be a different change though.
->
-[...]
->> +
->> +		if (unlikely(!folio_is_longterm_pinnable(folio))) {
->> +			folio_unlock(folio);
->> +			err = memfd_luo_migrate_folio(folio);
->> +			/* Someone else might have it isolated, retry a bit. */
->> +			if (err == -EBUSY && ++busy_retries < MEMFD_LUO_MIGRATE_RETRIES)
->> +				continue;
->> +			if (err)
->> +				goto err_restore;
->> +			continue;
->>  		}
->
-> Nit:
->
-> I would suggest adding another helper, memfd_luo_get_folio(inode, index, 
-> &folio), that wraps:
->
-> - shmem_get_folio()
-> - The !folio_is_longterm_pinnable() migration retry loop logic
->
-> I think this would make the final code a bit more manageable.
-
-Sounds good, will do.
-
->
-> Other than that the patch looks alright, feel free to add
-> Acked-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> Once the nit is addressed.
-
-Thanks!
-
-I think the MM side might take some time to gather reviews so I will
-send this out as part of a liveupdate-only series. This patch is useful
-on its own anyway.
-
--- 
-Regards,
-Pratyush Yadav
+BTW, this tmpfs series does a lot of renames and code motion so it
+conflicts with Pratyush's series. How should we order these?
 
