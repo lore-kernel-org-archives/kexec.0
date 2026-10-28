@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE75606A323
-	for <kexec@archiver.kernel.org>; Wed, 28 Oct 2026 16:55:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE2C606A325
+	for <kexec@archiver.kernel.org>; Wed, 28 Oct 2026 16:55:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=zfyLxeLX;
-	dkim=pass (2048-bit key, unprotected) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=MzXfkxIX
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=f3KrEVOh;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JlFpwLKt
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -14,69 +14,65 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=PRHEIBcRVtOU9mxXH6oSTTLdGiFLeS2r2uPk2vm17iM=; b=zfyLxeLX6I6ckBiqrbTOog5d6y
-	dY8KW78V36crmJoT2XQgVe/zSDWsAS/QOrCwj8Pelnd212xzbMgnkxFy4rFcUfOEhp4Fi4PWlI90c
-	d9BVj8uhoBSkBLvVPf/hX97g8U9ZO1tZ62qc9lfr2AsSkb1Bti3ASmigHEguFMyFeePWk6ymNVVkG
-	UEBvJSwrmBiKnW052SFYoafpWIgqPilUmLzU/jHeep+zH5Mvdbs+J/19aMHvsU0SjbbLf5zlfoVWv
-	RI1DSt8obVVSbDY8N3WasBeNS51gcnwMLy7NAWOFMUPJLvZTsq7hbf6qKQtwHZcS6mpT/x0kmtm+G
-	93bDnlWQ==;
+	bh=Z0ZhwvuKB4zpYCGY+1GjLRRMsHPTa5Lvp91s/JwcgmI=; b=f3KrEVOhw3iA38oWeHrYxZM07G
+	9odM3ikFB+kLwo/ZNhTgrXEQLX9lmUESkoRHTu/qfob2G8a1HEBuRjtpiX/VpzZcR3xNocJmDMSCM
+	8mHPPhw/QlF0ZBp7nwKpqCj6dtx8P1UKyHH9ij52qnJG2I3kNvpk/DT7KTIPuD15GqeZ7wGAsgndX
+	lIsXxLDVgX5uhWN1QfhjxPOB3LWyXTNwnTdTyrOdQvp9PQ4bY+nybZslPtx6jxA99pt+7aTq1hNPN
+	BovX+Xei9r3Da/IVSw0+YhPvWC5BGMhCpdh0foIivXby6AOLUVEat37VZpPuZK0YhrP2X80wB9J0n
+	0AanKmyA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xM6vd-00000007bSC-0MRC;
-	Wed, 28 Oct 2026 16:55:09 +0000
-Received: from mail-vk1-xa2d.google.com ([2607:f8b0:4864:20::a2d])
+	id 1xM6vn-00000007bVA-0i0Z;
+	Wed, 28 Oct 2026 16:55:19 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xM6vZ-00000007bPu-3Q8f
+	id 1xM6vm-00000007bUj-072b
 	for kexec@lists.infradead.org;
-	Wed, 28 Oct 2026 16:55:07 +0000
-Received: by mail-vk1-xa2d.google.com with SMTP id 71dfb90a1353d-5eaf169fe3dso409206e0c.3
-        for <kexec@lists.infradead.org>; Wed, 28 Oct 2026 09:55:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1793206504; x=1793811304; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=PRHEIBcRVtOU9mxXH6oSTTLdGiFLeS2r2uPk2vm17iM=;
-        b=MzXfkxIXRU9DVtUwRinN/QsSlMj3rV5dZXRhLJVYsoL+TORpsgigRTaHFm/EXGzRon
-         RSlWSgZu20THyBMDHbjtQbeYxtnqdS57/QA/QFyJGjY3VRYOmeLA3FsRse9ZayKEci0q
-         oo6rixBemLEGmOt3v4LdqAPbRVV0TQMbXaCpxwK7ca8Pc3iXHT8stkm1/2zJgPbiy4F8
-         x2YaKw2qZoLrcsHXeXD7dSSwXdhwa20BeZA2kef0FKAcVDTv1inDpNOtN1yAtugGPZGM
-         dhvc1rVd0NF+699aHfkDbI7nrFu5Exp0dOtaZCnkETlDoVjCHm0NQqyODiGCYd9IniAp
-         N6xQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793206504; x=1793811304;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=PRHEIBcRVtOU9mxXH6oSTTLdGiFLeS2r2uPk2vm17iM=;
-        b=05URNrto2SDAfS1jf72unFX+L/f3htdBWLAA8RQ1RqSzuVh3tCCVA5vjNzz8Nvu+qs
-         HgD5oj4nXkCqU8D4/Zfr/5Utrkzq8Y6Kv8Q0npvurVnei4vnF/jfOy5Ru+Jq4a1SG8ao
-         vwD7ojL0FDcmZTaHxal01jGzupH/+IILzikGxa3aK0YcYCBtogZmulkPfDfJYylPTkLU
-         OSmDMPGeqTrAmeGzSEA6IBw26+zIR9SPHdTv1t4WALjAXomyf37JX7ng1AQrrJ5HSFCW
-         gtKUaqF9mkmkfrrk/rwMWuG0LjrB72J68ZYciOAKK3p4Gz7/DOATkB2UDsiSpFGfFd2I
-         6S3g==
-X-Forwarded-Encrypted: i=1; AKwUvBx2vBpxs04RDI9xGI4YefH1GH8bsR+v5IWRCvpuFCHAlTsWyCUolqHFxvkxigl6r1bmh1xTvQ==@lists.infradead.org
-X-Gm-Message-State: AFq9FYIL41k47xkMFybXnpNVVoL0Fpf5k4LaJ5SRH6vtEPp568rjvb6b
-	Esace6Obb8fTDVoQww/KYJLoDWM3m4p3yJzOOG4sJjTAbqLhNFTq+pnbcxEwY9gjWhE=
-X-Gm-Gg: AYBFou31SF3gx9SCAOxRcsLpywabdO/PJ3PJH91CrzgJjgS2OthuY/XJdzT9VslaYl1
-	TwvoT6RO9IVAydDpj19Qrxe2e6GQPM3yXuzviw+uRu0vW2lunv8sF5LQcnP0py0cKJ9tipn0OAE
-	DcIxfLvet4iMldzV+3LI7AcTvJnCM5RnGjukrz4SgLfiPNVJBTY66P3fWtJM//OEd8ja3ed2r5H
-	kDGsu65NbalQLnn2iVE2zDn7s8uqMlzk4H5DWK9BUss62jhTUJ6w6OgdCdYAYsDK0xJZF6u3s9A
-	tJOdrEbfNK1ZJhL3FRST6rrEoERCelZuCkhCNBX/HJNZ8NMayACXZfnGrVmfazPx4tYKKtZJ0L7
-	Ey5tCf+3hMmj8iBoNMWy38legGKAntWpXGgDq0VT2nHdw6JXCBGJJVuX4273R7Tjkg6NetUnFRO
-	V6fPn5CgeLvKblz3X3UV9hPaPQxgiTOqfBieXJDGStKJMksoMfxps+xtd9vU0wS2y3kjKv0h8vS
-	KYks4C5wfpVd5vYWSR5tNLG0f7Uu9hq7NsnPz03tU5hQK+wEEaX62Z7IpCUCMNXjVVPlLWDqRH4
-	cn2CE2DqmMFW11SiNiyW+RrFqtjVpQmrJDXvKtRMf4MrpE6zDSPQLuZ8y1DmpO6o1Q8qfxnkbBX
-	pi1Tg6fDa0VGRnXRXF9JsrHcOFy049A==
-X-Received: by 2002:a05:6102:a54:b0:7b1:6028:5475 with SMTP id ada2fe7eead31-7d03a505a71mr1235376137.12.1793206503993;
-        Wed, 28 Oct 2026 09:55:03 -0700 (PDT)
-Received: from google.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-7cea3d32a48sm6300543137.9.2026.10.28.09.55.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2026 09:55:03 -0700 (PDT)
-Date: Wed, 28 Oct 2026 12:55:01 -0400
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
+	Wed, 28 Oct 2026 16:55:18 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id D805E600C8;
+	Wed, 28 Oct 2026 16:55:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17B221F01383;
+	Wed, 28 Oct 2026 16:55:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793206516;
+	bh=Z0ZhwvuKB4zpYCGY+1GjLRRMsHPTa5Lvp91s/JwcgmI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=JlFpwLKtSX2o0aWLZ/b3/7yIjMHRAOr+vEDpShfZy+KAUEpwP/sw3ESKIkAG8yW/h
+	 oOEG45gGP2A4Frdj40SEV1yFHzWd11p2LHszSy4mETnk8ASvOgXY2SLhjbhAee6ST/
+	 XxgWsEetfuCismwQo2ooCFRZXgJNelrESZk3Pplm9mfLTgS6JDiI2tadgjYICpwTtX
+	 NUaI3lEP+vBi4W4HMuS7/p0vFAysdqyoMbljlYLFvjTjKA/id1O7lADhvEzcESivIW
+	 gRcMJodBiNE93JgviyRdy7Sqv8JZ0fLti6a45kGshVZVGtE6RF7QWHxX7vONNVIcGQ
+	 BghLRGm4Q4Twg==
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfauth.ams.internal (Postfix) with ESMTP id 781C0198004A;
+	Wed, 28 Oct 2026 12:55:00 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Wed, 28 Oct 2026 12:55:10 -0400
+X-ME-Sender: <xms:4yjiajSARqw8PioWyLkupEeXct9Ss2qs5djqP4hQga51zyA5CclqhA>
+    <xme:4yjiaqF5uBuDkSDsDBVun3Nduxg_VIy8zCU5JbQmuyrxWrYRMrJ2uEtcy7Twvuij6
+    U9QyXXC7AkQ-_yXBOAoKFfx8gFyBSvVJ-PR_hzb6Szh6PHnzb9Cl-os>
+X-ME-Received: <xmr:4yjiaj-3U1reClXYJMR86x_214YB-E7NPJqkmAmytXP6g94Td4_LNsXyLGU>
+X-ME-Proxy-Cause: dmFkZTEH/JXmOVrY1taDCoPaJq3IVEd1uOJXsXXF/9Hj9n77Aoo8DF/Z2+y6VwUMjdyxL/
+    vNcNxlWPOrzJjnTTnhU/i8mG2RaecFzcvs1d/58U+81UT2rrSqZcuXVcmJPvN+85Vxmst6
+    M+xIX1By265vICLgVpWMTiDzp4SikoR94mt5KoeDHe0EMSHOdb4HjYnJ2gFn6Jl/jXpTbW
+    1cj1cjuHzE0QOe4Vj87hxPzVA7/e5WKQO7i7HlZnpcOqFBH4nZCcHIT12UXxL8WeWRxmIl
+    5Im68ywTuP3WqKspjS2QQUDWVpnJdjOhauD/wAZQybXH1dmkgbh8FRIT9xxu5hpwJaaomC
+    mvUYquwQCKDqfI6kfvDJMybmqBz7q/9PFZ6wxnj0QM2XOrQem1LihDgZxlgfmoxJzYIsWu
+    xbnrF8t8WIJ5hEFFFVA/MpFaq7kGfFEDtPj7c/5lR+6uEB6MT88r5l0hakRGsn+Sd9HUTl
+    b3RB3DDyj5tujdg60fA6EJQdbrWiA2uBzz55umormQ0ogMeP6OGN8c56LXAD6GGQ/PaZmQ
+    IQISuPc1mDylIDH5VLMmYpcJ31tdiRrFvBKWYGWu+h5ifZZ2RLfDnGQTfxhGSfZR7jcFMW
+    MFdExhcE3jnb1xzwCCOxlhc/jz01DYKk67mV4yzeBryfzQ34jWvPrzhEgeUA
+X-ME-Proxy: <xmx:4yjiaoFcaoyZWpIYKFY3v7C-Oj28kP3zeTCZgSy395wYH63piXPgLw>
+    <xmx:4yjiaphEdO-ptGAYs-gU575cuvwMxFSx7cAsAFR3lQSHx_aSFaRWEw>
+    <xmx:4yjiakFOsCpyaRjuMMuHroAjcH_Safa5KEzD4ud7UwmaX0IzR-ZYTw>
+    <xmx:4yjiat29K8iz33MgZzunPtVmpyVngsMlLqflnxkPJ89YD8mgu21FZg>
+    <xmx:5CjiavpckMmHMDqrTmPU1G6w75v7E6SF6dz-jOjzrFV-Ljvs7_smwbqv>
+Feedback-ID: i10464835:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 28 Oct 2026 12:54:58 -0400 (EDT)
+Date: Wed, 28 Oct 2026 16:54:57 +0000
+From: Kiryl Shutsemau <kas@kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
 	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
@@ -94,32 +90,27 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
 	Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
 	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
-	Oscar Salvador <osalvador@suse.de>, Minchan Kim <minchan@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>, 
+	Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
+	Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
+	Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
+	Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>, 
 	Chengming Zhou <chengming.zhou@linux.dev>, Chris Li <chrisl@kernel.org>, 
 	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
 	Youngjun Park <youngjun.park@lge.com>, Gregory Price <gourry@gourry.net>, 
 	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
 	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
-	stable@vger.kernel.org
-Subject: Re: [PATCH 04/46] mm/memfd: make f_pos accesses atomic
-Message-ID: <auIoupm228FQTNGi@google.com>
+	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, stable@vger.kernel.org, 
+	Josef Bacik <josef@toxicpanda.com>
+Subject: Re: [PATCH 05/46] mm/truncate: look again if a folio left the mapping
+Message-ID: <auIniV8YSpA4_oxg@thinkstation>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-4-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-5-6f74bec9a5bb@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261027-fixes_core-v1-4-6f74bec9a5bb@kernel.org>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261028_095505_871485_CA4E823B 
-X-CRM114-Status: GOOD (  26.10  )
-X-Spam-Score: -2.1 (--)
+In-Reply-To: <20261027-fixes_core-v1-5-6f74bec9a5bb@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -138,65 +129,113 @@ X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 10-27 00:17, David Hildenbrand (Arm) wrote:
-> From: Josef Bacik <josef@toxicpanda.com>
+On Tue, Oct 27, 2026 at 12:17:25AM +0100, David Hildenbrand (Arm) wrote:
+> invalidate_inode_pages2_range() skips a folio which no longer belongs to
+> the mapping by the time it has got the folio lock, on the assumption
+> that somebody else has removed it from the page cache. But the folio may
+> have been replaced, and then there is a new folio with the same data at
+> that index.
 > 
-> Commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per POSIX") made
-> read(), write() and lseek() on a shared open file description of a regular
-> file serialize on ->f_pos_lock.  The flag that asks for it,
-> FMODE_ATOMIC_POS, is set in do_dentry_open().  A memfd is a regular file
-> too, but its struct file comes from alloc_file_pseudo() and never passes
-> through do_dentry_open(), so it does not get the flag:
+> For most cases, like folio migration, that is impossible. However,
+> collapse_file() only checks the refcount of the old folios, under the
+> i_pages lock, and relies on their folio locks from there on. That works for
+> users which repeat the lookup when they find folio->mapping changed.
+> The following scenario is, however, possible:
 > 
->   CPU0                                CPU1
->   write(memfd, "a", 1)                write(memfd, "b", 1)
->     pos = file->f_pos  (= 0)
->                                         pos = file->f_pos  (= 0)
->     vfs_write(..., &pos)
->                                         vfs_write(..., &pos)
->     file->f_pos = pos  (= 1)
->                                         file->f_pos = pos  (= 1)
+>   CPU0 pwrite(O_DIRECT)               CPU1 collapse_file()
+>   kiocb_invalidate_pages()
+>                                       read the folio (old data), lock it
+>                                       refcount check
+>   the write completes                 copy to new_folio
+>   kiocb_invalidate_post_direct_write()
+>     find_get_entries() -> old folio
+>     folio_lock() ...                  xas_store(new_folio)
+>                                       folio->mapping = NULL
+>                                       folio_unlock(folio)
+>     folio->mapping != mapping
+>       -> continue
+
+The diagram reads as if the folio lock should have closed the race. It
+might be clearer with CPU0's folio_lock() after CPU1's folio_unlock(),
+since the reference taken after the refcount check is what matters:
+
+  CPU0 pwrite(O_DIRECT)               CPU1 collapse_file()
+  kiocb_invalidate_pages()
+                                      read the folio (old data), lock it
+                                      refcount check
+  the write completes                 copy to new_folio
+  kiocb_invalidate_post_direct_write()
+    find_get_entries() -> old folio
+                                      xas_store(new_folio)
+                                      folio->mapping = NULL
+                                      folio_unlock(folio)
+    folio_lock()
+    folio->mapping != mapping
+      -> continue
+
+> In that scenario, the collapsed folio with the data from before the write
+> stays in the page cache after the write has returned.
 > 
-> One of the two bytes is overwritten.  Two threads writing 100000 bytes
-> each, one at a time, to a memfd end up with a file that is far shorter than
-> 200000 bytes, while the same program on a tmpfs file never loses a byte.
+> This used to be impossible, as khugepaged only collapsed files that nobody
+> had open for writing.
 > 
-> Set the flag when the memfd is created.  As for any other regular file the
-> lock is only taken if the file is reachable in more than one way, and
-> nothing a memfd does in read or write waits for another operation on the
-> same file.  This cannot be done for all alloc_file_pseudo() files: anon
-> inode files such as eventfd are S_IFREG as well, and a blocked read holding
-> ->f_pos_lock would lock out the write that is supposed to wake it.
+> Restart the lookup at that index, like shmem_undo_range() does. The same
+> problem seems to exist in truncate_inode_pages_range() as well when
+> truncate_inode_folio() fails, so handle it there as well.
 > 
-> Fix generated by an LLM and sent by Josef Bacik in private.
-> 
-> Fixes: 9183df25fe7b ("shm: add memfd_create() syscall")
+> Fixes: 1b6444331beb ("mm/khugepaged: enable clean pagecache folio collapse for writable files")
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: minor description tweaks ]
+> Reported-by: Josef Bacik <josef@toxicpanda.com>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
-
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com> 
-
 > ---
->  mm/memfd.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  mm/truncate.c | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
 > 
-> diff --git a/mm/memfd.c b/mm/memfd.c
-> index 7d2da23157003..6f5fbce74f21e 100644
-> --- a/mm/memfd.c
-> +++ b/mm/memfd.c
-> @@ -484,6 +484,8 @@ struct file *memfd_alloc_file(const char *name, unsigned int flags)
->  	}
->  
->  	file->f_mode |= FMODE_LSEEK | FMODE_PREAD | FMODE_PWRITE;
-> +	/* a regular file like any other: POSIX.1-2008/SUSv4 Section XSI 2.9.7 */
-> +	file->f_mode |= FMODE_ATOMIC_POS;
->  	file->f_flags |= O_LARGEFILE;
->  
->  	if (flags & MFD_NOEXEC_SEAL) {
+> diff --git a/mm/truncate.c b/mm/truncate.c
+> index 733d2713a875a..6d8c0ec4623fe 100644
+> --- a/mm/truncate.c
+> +++ b/mm/truncate.c
+> @@ -499,7 +499,15 @@ void truncate_inode_pages_range(struct address_space *mapping,
+>  			folio_lock(folio);
+>  			VM_BUG_ON_FOLIO(!folio_contains(folio, indices[i]), folio);
+>  			folio_wait_writeback(folio);
+> -			truncate_inode_folio(mapping, folio);
+> +			if (truncate_inode_folio(mapping, folio)) {
+> +				folio_unlock(folio);
+> +				/*
+> +				 * Folio might have been replaced: look it up
+> +				 * again.
+> +				 */
+> +				index = indices[i];
+> +				break;
+> +			}
+>  			folio_unlock(folio);
+>  		}
+>  		truncate_folio_batch_exceptionals(mapping, &fbatch, indices);
+
+This hunk looks unneeded to me: its second loop restarts from start
+until find_get_entries() finds nothing, so the new folio gets truncated
+on a later round. Or am I missing a case?
+
+> @@ -760,7 +768,12 @@ int invalidate_inode_pages2_range(struct address_space *mapping,
+>  			folio_lock(folio);
+>  			if (unlikely(folio->mapping != mapping)) {
+>  				folio_unlock(folio);
+> -				continue;
+> +				/*
+> +				 * Folio might have been replaced: look up
+> +				 * again.
+> +				 */
+> +				index = indices[i];
+> +				break;
+>  			}
+>  			VM_BUG_ON_FOLIO(!folio_contains(folio, indices[i]), folio);
+>  			folio_wait_writeback(folio);
 > 
 > -- 
 > 2.43.0
 > 
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
