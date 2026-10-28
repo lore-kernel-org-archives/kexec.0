@@ -2,91 +2,83 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FEBD606A329
-	for <kexec@archiver.kernel.org>; Wed, 28 Oct 2026 17:13:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D93A606A33D
+	for <kexec@archiver.kernel.org>; Wed, 28 Oct 2026 17:17:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=oGNNE2o8;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BZ6enJrj
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=XV1OTDY4;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LIVACHG1
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Unsubscribe-Post:List-Owner;
-	bh=vktowsTsOQhJmqiWYNIb0aPqBLNSbNahOroQ81vALNQ=; b=oGNNE2o8d12he8Qy9Z+MxU6TZJ
-	FGchRnB9j7qw7VD2/eHMY0dT/RfbLo2RFSxYuuSKcnKhe12qeALzRQTqPSUzqbxP7Nyhp/oGRebnC
-	qOiUFR0C3J+unwVRcAoFqxpZgCbFCc0T6bwIcT98Y/4cBxq0mBg+xxIlxG40M0pwpGLZB5lGXkXah
-	QpiSSVnmsckiQlEp0vdJiacu1O0gbti9KcebxXa83ZTCNJBclAV7rNO7op8Tx0FE7xI5lwRuueI3m
-	i3sjUaF32enZalizIhRZIqHfSefG7i4vGNFTMs2n/NBpW8zWneTyxYGXNvBuWvQVfjbGTxCvhYTXH
-	j+SSbBYg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=05SG7gAJ008w03i9CCuLSraJDJiyVFmW6Oo7ipBrjbs=; b=XV1OTDY4Pd7eCp
+	ov0gP2zXhih3eF5fbbab1iStLIN33EAM1IaSY2JqTmA5CTIEUTBI+q+c8ncdT7LJMMFzJcP7KcDth
+	eJ91jCc9xWZQzJTHk0evJTMthmLfmKdrZgMWreTwya+dmZhRR00JfcUR+UHrM4H5K0eKJ+n4B9LQj
+	3qq7wfg4D/Ce51qtYq6J2XJwQRl3wOluBC7FLVvWhjC15OHpaCkx/oPRB7A2fsmRlL4Ak3WM1IlKH
+	S/5MN2uA0Dc0c0dKGYe16q65/Dr5Bz9BrAsb9sNUPP6Nx3VUDz5YaRBUC4+fkhvpeJYRktOlym/WR
+	rNNiUwZ9MIubC7UUX8OA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xM7DI-00000007e0A-2Pik;
-	Wed, 28 Oct 2026 17:13:24 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xM7Gx-00000007eTI-2Ljv;
+	Wed, 28 Oct 2026 17:17:11 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xM7DH-00000007dzq-2kk8;
-	Wed, 28 Oct 2026 17:13:23 +0000
+	id 1xM7Gw-00000007eT9-0Iqw;
+	Wed, 28 Oct 2026 17:17:10 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 9A6F242CBD;
-	Wed, 28 Oct 2026 17:13:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75E631F031E0;
-	Wed, 28 Oct 2026 17:13:10 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id DD3F9600DA;
+	Wed, 28 Oct 2026 17:17:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A438E1F01828;
+	Wed, 28 Oct 2026 17:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793207602;
-	bh=vktowsTsOQhJmqiWYNIb0aPqBLNSbNahOroQ81vALNQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=BZ6enJrj2fR+WiaobREMK06Ol4IBWooQRDlbbDCkO1gNP7+G2R9/lsOOs2AhduaH8
-	 IcGiH6/qAIxcfuSrwBdneQYRZt+W8ihxfi/bu8MIRkDPSGPjLv1CElqLHZjheiMzWZ
-	 DH0T5HoxcIR4+yigsaET5t4ctAredW023hZHdikTpcSGKdBksnJ3GuslAURAOE73r0
-	 OFDzAYx+euSlpwhkJz6vzjSi4qGr9oAaq/5t/Y26Gl7SwP46yh6RZXFHOGQCNEJN9I
-	 lo7RodJkVz/gLSXqyhniNMQsfTsQPbnnv/5roVKerewBTdFEwzrN4Aepm6Xp3XPTM4
-	 cnbju0zmHk6eA==
-Date: Wed, 28 Oct 2026 19:13:06 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Miaohe Lin <linmiaohe@huawei.com>,
-	Naoya Horiguchi <nao.horiguchi@gmail.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	kas@kernel.org, kexec@lists.infradead.org,
-	Brendan Jackman <brendan.jackman@linux.dev>,
-	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
-	shakeel.butt@linux.dev, linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org, driver-core@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, rmikey@meta.com,
-	riel@surriel.com, harry@kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v6 4/7] mm/memblock: add a reserved-region flag for
- poisoned frames
-Message-ID: <auItIsZRsh_Pwrti@kernel.org>
-References: <20261016-hwpoison-kho-v6-0-f304255147da@debian.org>
- <20261016-hwpoison-kho-v6-4-f304255147da@debian.org>
- <ato62palTbNjLwN7@kernel.org>
- <524ee7d9-790d-48b6-8613-841da042c32a@kernel.org>
- <auH6WT5zR1RM1lpA@gmail.com>
+	s=k20260515; t=1793207828;
+	bh=05SG7gAJ008w03i9CCuLSraJDJiyVFmW6Oo7ipBrjbs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=LIVACHG1RijgMjCcG/Za6quG10uP/bwvgH9QE8LBE1Ivatgc9Gsxomr3AtpNUFPU0
+	 A+6txV+JhFA/FQ9wi7C+7pWYpZ0e+Pc7WqKMe9jkABrVblw1ZFcwlZAztCqgB1P/e3
+	 p9b8wN4tDVitUGLc/V+1hQT1NZFTVD7m3WdPU0oqKQlNmHSSGk9l9hK3CeTbNDWqSe
+	 VN3sAKFewBC6xe0t5rYtB+sbuiw5e5lDQoKvIRxdjJ0DrtoKis23WnQwx7fOelIVvL
+	 Atltab4Pstjrs4D4dYuIJSyaVZnuHq7QWlD07iE6RtqSOvkxEaO4SzTr/vUKZm0prA
+	 whzCKqWsehupA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: David Matlack <dmatlack@google.com>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,  tarunsahu@google.com,
+  Andrew Morton <akpm@linux-foundation.org>,  joro@8bytes.org,  Mike
+ Rapoport <rppt@kernel.org>,  Pratyush Yadav <pratyush@kernel.org>,
+  maz@kernel.org,  arnd@arndb.de,  jgg@nvidia.com,  robin.murphy@arm.com,
+  loganodell@google.com,  oupton@kernel.org,  kevin.tian@intel.com,
+  alex@shazbot.org,  dwmw2@infradead.org,  pbonzini@redhat.com,
+  seanjc@google.com,  will@kernel.org,  Alexander Graf <graf@amazon.com>,
+  Bjorn Helgaas <bhelgaas@google.com>,  baolu.lu@linux.intel.com,
+  linux-arm-kernel@lists.infradead.org,  linux-arch@vger.kernel.org,
+  sagis@google.com,  linux-mm@kvack.org,  kvmarm@lists.linux.dev,
+  iommu@lists.linux.dev,  linux-pci@vger.kernel.org,
+  kexec@lists.infradead.org,  skhawaja@google.com,  kvm@vger.kernel.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 3/4] liveupdate: Replace compatibility string
+ with a 2-bit pair feature header
+In-Reply-To: <at-8vkVpN2SF3XgB@google.com> (David Matlack's message of "Mon,
+	26 Oct 2026 20:49:02 +0000")
+References: <atlKsD-aJB3mJr2j@google.com>
+	<CA+CK2bABt4OZO31TenVF2+uBUWVwViWbvfE00=0xbAw=f7K9SA@mail.gmail.com>
+	<atl7peoVHdP5hz7z@google.com>
+	<CA+CK2bBFXnJA1kddbLKGq0DAHDgjYhsTSQQay-xeX7jJC1V_UQ@mail.gmail.com>
+	<CALzav=e=ho2gVrn+7KpZ3ZyasvH2u15-pC-RSRSS7KcMfKqUJQ@mail.gmail.com>
+	<CA+CK2bAJo8dnTOyKMgnnMnk-SCXbTsv+JCLEOWkjyj-wqtEkHg@mail.gmail.com>
+	<atpNFEFIlqAoYIwH@google.com>
+	<CA+CK2bB2C3Am5ssRuzYpfiU7_vB81vxMGc19HQLq7N=_7YrbTg@mail.gmail.com>
+	<attmFVIFU_mS0Y7p@google.com>
+	<CA+CK2bDXDWbww_d3sD6OZqpo37V1a3t76_ubbrXLQS=9DB3dWA@mail.gmail.com>
+	<at-8vkVpN2SF3XgB@google.com>
+Date: Wed, 28 Oct 2026 18:17:02 +0100
+Message-ID: <2vxz8q3hoicx.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <auH6WT5zR1RM1lpA@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,62 +89,52 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Wed, Oct 28, 2026 at 06:49:18AM -0700, Breno Leitao wrote:
-> On Wed, Oct 28, 2026 at 09:39:42AM +0100, David Hildenbrand (Arm) wrote:
-> > On 10/22/26 18:33, Mike Rapoport wrote:
-> > > Hi Breno,
-> > > 
-> > > On Fri, Oct 16, 2026 at 05:15:44AM -0700, Breno Leitao wrote:
-> > >> memblock allocates from and frees to buddy whatever is not reserved, and
-> > >> knows nothing about frames an earlier kernel found hardware-poisoned.
-> > >> Such a frame can back the memmap, a page table or a percpu area before
-> > >> any hwpoison code runs, and otherwise reaches the buddy allocator like
-> > >> any other free frame.
-> > >>
-> > >> Add MEMBLOCK_RSRV_HWPOISON for a reserved range holding those frames.
-> > > 
-> > > How much this would fragment memblock.reserved?
-> > > 
-> > > memblock is not very scalable, to say the least, and each new flag
-> > > increases the size of memblock arrays which obviously hurts performance.
-> > 
-> > I assume that if you have too many regions there, you have different problems
-> > than scalability problems.
+On Mon, Oct 26 2026, David Matlack wrote:
 
-Not different, the problems are additive :)
+> On 2026-10-25 04:38 PM, Pasha Tatashin wrote:
+>> On Fri, Oct 23, 2026 at 9:50=E2=80=AFAM David Matlack <dmatlack@google.c=
+om> wrote:
+>
+[...]
+>> The reason I care about keeping the header compact is that we are
+>> defining a foundational kernel ABI and want to use this header across
+>> almost every serialized data structure so we can evolve them later
+>> without breaking compatibility. While some top-level structs are on
+>> sparse folios today, other serialized structs are tightly packed, and
+>> we are looking to add KHO slab support in the future where tightly
+>> packed allocations will be common.
+>
+> My intuition is we will have a small number of headers per preserved
+> file and per preserved FLB. One for the top-level struct and then
+> optionally a few more for sub-structs like arch-specific data. That is
+> why I am less worried 8 bytes per header, even if we fix the folio
+> problem.
+>
+> Maybe where our visions differ is when there are collections of
+> serialized structs, like KHO blocks. For collections I don't think the
+> elements will each have their own headers. Otherwise the elements could
+> be different sizes.
 
-> > We should cut out larger chunks, and if they are all over your address space you
-> > should scrap that machine.
-> 
-> Ack, that is what the 2M unit does. A DRAM row fault shows up as many 4K
-> pages but lands in one or two units, and adjacent units share one
-> memblock.reserved region.
-> 
-> Mike, on the statistics you asked for: across the Meta hosts that logged
-> a hard memory failure in the last 28 days, these are the
-> memblock.reserved regions each host would need:
-> 
->              p50   p90   p99
->      x86      1     4    41
->      arm64    1     5    27
+kho_block today doesn't store entry_size in the serialized payload. It
+relies on its caller to do so. With extensible structures, this can get
+messy. Sure, the owner of the kho_block_set can track the size somewhere
+in its payload, but perhaps we should store the size in
+kho_block_header_ser to begin with?
 
-Thanks!
-A new flag is fine by me.
+Anyway, not a problem this series needs to solve, but something we
+should eventually do.
 
-I'm still trying to parse what your LLM wrote in the commit messages before
-sending the tags ;-)
- 
-> Thanks,
-> --breno
+[...]
 
--- 
-Sincerely yours,
-Mike.
+--=20
+Regards,
+Pratyush Yadav
 
