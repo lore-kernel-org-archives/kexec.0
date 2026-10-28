@@ -2,108 +2,115 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B68606A329
-	for <kexec@archiver.kernel.org>; Wed, 28 Oct 2026 16:14:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F734606A31A
+	for <kexec@archiver.kernel.org>; Wed, 28 Oct 2026 16:20:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=VPqgJPw+;
-	dkim=pass (1024-bit key, unprotected) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.a=rsa-sha256 header.s=20151216 header.b=dA79TVtJ
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=o3y0fYwx;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Od2jCajZ
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
-	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=YYN469XUr3WsmN5x2KXUL5+rlZdUndMwuovf69cmYrc=; b=VPqgJPw+ZHjFL0kJxVtqCvnbxl
-	OxjVNYZJpa4Z2qkSYPPjo2XwaUq1sZdWzlryBB/6m7clZG+TTStz85IkODZSxrHOrV/H6zU5xckAJ
-	OGyrBS6wDGR8iQupySpGvpQlYuwvuDZwVUAXm9Qu3lJYqbeJuNfx5XrwcYL8p2UXm8cIrAOPOdHKZ
-	q2ismkXEDixr/RZmchidiytnGuH0jLGYWrjcHICWb1SobRC2MvfV/Xyc1xWL33vc2HFpFQgSeNc5r
-	rxPuBznxqLwRlNZ9zq1jjMLu4PaazQZmsPocbgy6Pm/1cdy05HCaJUch7Z/Puy3Na40d4kdlXnT8J
-	DfODHSGQ==;
+	bh=0rATnQQTJ72YrBkABg0cEBhwiSsSBn8AUhfECRfpTKo=; b=o3y0fYwxdVXtfBISvwtkxLBCv2
+	x/Wx/j/hYLpViDdTpIxsv4/vPId0IGfv0OF+oZNjSXxraCzNSwPOP8IvRfvLvku0B3HtCFIw3mzHL
+	aMKMAqWraIRjwHv0X6R7rOW5lm8a/0upqXScbi22h1MBevNUCYojr9l9fbczBNJQ/yszgb8Ch0kQn
+	WnZfRspd/vb7btHYdjc187GkCwXN8tU9MUdPf5h29Yr7cl8OcaEO9D5Mcf7Zi3V0BL4Yt0QaGxMF8
+	ghTaab0VgsxvET/8VlspaBjrLEkQvQgzTGTLkCDWjJrkpp2TW5/794sZAIzrFxdynjaKxJ2YPcUHX
+	BPGwXwQw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xM6IZ-00000007WJf-0tRw;
-	Wed, 28 Oct 2026 16:14:47 +0000
-Received: from lamorak.hansenpartnership.com ([2604:f440:8:8::2])
+	id 1xM6Nk-00000007WtP-0cYE;
+	Wed, 28 Oct 2026 16:20:08 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xM6IV-00000007WJ8-0FlX
+	id 1xM6Ni-00000007Wt2-37lc
 	for kexec@lists.infradead.org;
-	Wed, 28 Oct 2026 16:14:45 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1793204079;
-	bh=xkNCyrbp2VQoHF7RtBIDSpBRgMATx6Bjbp1pXFN3NLA=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=dA79TVtJcezeBVoqsgIaDXIGseAFMoEpedt1bMNl/7xTyQ6mgSoGTYOFs7QNnVuc+
-	 p463ULvumshHtfI7xRDLZSFVjdxNanvcXsQGrLkcrLDw7I1rAfkJ9g5Zc0gdNuwnO/
-	 yta1xzXpKzRXfX5+WNikZA158tPJZ4X1yp40LvgM=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4300:d341::8309])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519MLKEM768 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id EAA851C02C8;
-	Wed, 28 Oct 2026 12:14:37 -0400 (EDT)
-Message-ID: <ac7d9af1336f86baf2dfbe417944298a3ff6edbb.camel@HansenPartnership.com>
-Subject: Re: [PATCH RFC 1/4] ipe: add the .ipe policy keyring
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Luca Boccassi <luca.boccassi@gmail.com>
-Cc: Paul Moore <paul@paul-moore.com>, Christian Brauner
- <brauner@kernel.org>,  Fan Wu <wufan@kernel.org>, Manuel Huber
- <manuelh@nvidia.com>, David Howells <dhowells@redhat.com>,  Jarkko Sakkinen
- <jarkko@kernel.org>, Andrew Halaney <andrew@amutable.com>, James Morris
- <jmorris@namei.org>,  "Serge E. Hallyn"	 <serge@hallyn.com>,
- linux-security-module@vger.kernel.org, 	keyrings@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	kexec@lists.infradead.org, Mike Rapoport
- <rppt@kernel.org>, Pasha Tatashin	 <pasha.tatashin@soleen.com>, Pratyush
- Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>
-Date: Wed, 28 Oct 2026 12:14:36 -0400
-In-Reply-To: <CAMw=ZnQU0PRSn5gh-QNT+GuKroQaRsRUUMDB=rM=LSX+=h-JkQ@mail.gmail.com>
-References: <20261019-b4-ipe-keyring-rfc-v1-0-156f0b93e843@nvidia.com>
-	 <20261019-b4-ipe-keyring-rfc-v1-1-156f0b93e843@nvidia.com>
-	 <702ade20-a2f3-4919-97e6-c72faa89399a@kernel.org>
-	 <20261021-groll-donnerstag-erfuhren-ce34a0ed4e97@brauner>
-	 <CAHC9VhTHUU0h9k74CMT6wYhMwyY3YhbSSFwJoDTvoFRyTFVZwg@mail.gmail.com>
-	 <20261022-hausbank-dozent-hurtig-9443f3777475@brauner>
-	 <CAHC9VhQ4sdCRvJ+YPZoiQzR_hgQN6-=84qvnTDDGPf=7=L9-jA@mail.gmail.com>
-	 <5143896100674c9fd744c4d7d6ce12232910e789.camel@gmail.com>
-	 <CAMw=ZnR54hMBwGTps23t9Mm_VO1bAvmeX8uTf_VJ0rJsFNMLuw@mail.gmail.com>
-	 <37b653494cf282c6e428e2ae8fd781a0ea69bf3f.camel@HansenPartnership.com>
-	 <CAMw=ZnQU0PRSn5gh-QNT+GuKroQaRsRUUMDB=rM=LSX+=h-JkQ@mail.gmail.com>
-Autocrypt: addr=James.Bottomley@HansenPartnership.com;
- keydata=mQENBE58FlABCADPM714lRLxGmba4JFjkocqpj1/6/Cx+IXezcS22azZetzCXDpm2MfNE
- lecY3qkFjfnoffQiw5rrOO0/oRSATOh8+2fmJ6el7naRbDuh+i8lVESfdlkoqX57H5R8h/UTIp6gn
- 1mpNlxjQv6QSZbl551zQ1nmkSVRbA5TbEp4br5GZeJ58esmYDCBwxuFTsSsdzbOBNthLcudWpJZHU
- RfMc0ew24By1nldL9F37AktNcCipKpC2U0NtGlJjYPNSVXrCd1izxKmO7te7BLP+7B4DNj1VRnaf8
- X9+VIApCi/l4Kdx+ZR3aLTqSuNsIMmXUJ3T8JRl+ag7kby/KBp+0OpotABEBAAG0N0phbWVzIEJvd
- HRvbWxleSA8SmFtZXMuQm90dG9tbGV5QEhhbnNlblBhcnRuZXJzaGlwLmNvbT6JAVgEEwEIAEICGw
- MGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAhkBFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAml2ZBI
- FCS3GUMIACgkQgUrkfCFIVNZKjQf/deRzlXZClKxTC/Ee2yEPqqS7mm/INUA49KdQQ5oIhSxkUBy0
- 9J4qjMIo5F8ZFkFTqikBqeL35LKu7O7rn8WETfX8Bxvos3HUsl3jHo34DES4MUFIpoQPgtiLRGwLb
- K0cVCAArR2u2qj4ABmTRrs1I1kvdjEw6gatOuXtEe/j5O2fvfzTq9GBr0Q3n2IAsFXi4hLlx6VPE8
- tyWUZ8BWJKtih3JAeUiXFvASL3McV0rV9RnU0VbjEQEhSE7PMYhWpnDC9AyBb0lXJllQRvC3NSkUB
- 8KVQgNNxRPss0WE/nBoZ4dFA42jTyzTz8lNylxZoAWV7WJb3QxVg4oCodRVrxxrQhSmFtZXMgQm90
- dG9tbGV5IDxqZWpiQGtlcm5lbC5vcmc+iQFVBBMBCAA/AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeA
- QIXgBYhBNVgbnPItGJxvq2a34FK5HwhSFTWBQJgS5mYBQkbNYS9AAoJEIFK5HwhSFTWBpwIAL5Bk3
- 5FB34U6iHmDzzgdCbxLTs43T/YQyJpcGIvopBvnI/fDY8oSG6Df64/O6B+1R+A8TDp6ZG5ysUWnCC
- 6GuIaEHemBYkitMPglR6+sGCMQY7O0mlsPvdssvKK1KI9Bno4VU6ogaF2qVzefSqg1Djmf/DcsxWP
- rI/jdJ8FB5AYR2rjIdDFc+zRdAJuavo1/anyY2wgpFh/3R8IOYAEfWV9nGgYkf9+tA4EIn1sxE0I3
- L5oW2N3mbyRrkzuBwO8ztMCwqEPk7moWzhokcZqMXiAIahaZdkashJC+s2X2RZSGCy+g+pvY5NN4B
- BVG5XwLgVBqbHMTcxE0fbmPqz+q6O0LEphbWVzIEJvdHRvbWxleSA8amVqYkBoYW5zZW5wYXJ0bmV
- yc2hpcC5jb20+iQFXBBMBCABBFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAmODZ5ACGwMFCRs1hL0F
- CwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQgUrkfCFIVNZu0Af/TzvL2/NdgAcw9uN3x60H8
- jc4QUq14VpxcFEFEMpcj1morkX/G93V+56HBBaXZj+yK8PhxIA/SIz+sU7C/0YvKuvzakP8ZX/7WJ
- e32SOUtjfr/VTaqjIBzNj6OxLvZpmNbBw7s6DwhhNpHOWqJ/1ml+PtDRDV71IB58yVqQjp1xlNKVl
- ZppcJ5908EJzsFnRIVjiQiDSKoppqB2BCibBbrWcln7CiWMyOC/cco6SIn6twH+f7+aivJ3xGcOE2
- a9gBKF5rNi9TBoX9oyPmshv/TDmnohsVrH7AYXlGYfZTk15SWEiROh1QX8/uD9wl/gcIv5EDUpT/F
- L2jzOsA5663bw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	Wed, 28 Oct 2026 16:20:06 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 9297643681;
+	Wed, 28 Oct 2026 16:20:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B24D31F01825;
+	Wed, 28 Oct 2026 16:20:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793204405;
+	bh=0rATnQQTJ72YrBkABg0cEBhwiSsSBn8AUhfECRfpTKo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Od2jCajZKWKTDmGKxuYQxCznLzK5lE5I82XP6kHR/pVw15VviXOu0f+rBJztE2sWt
+	 aHB1YXF7LuPYHU40KtFSmxWKD6wxnYzbFJeWxCtv5kmvj0IwusDwG6I8dKNYl5hbAX
+	 qHQic4MJqltiIVHxUe3brboc9KewZxE/aWUva6VSi7IMJ81oP7hTDulOU8yLFxWP4u
+	 W3jZr5qZ7IvLut3ypzOXBw5SA0Vx7r0s7K9pRjlpSjQpPHMhmwn5yGGklOO6EJ9nTi
+	 wgAJwgkpfhsVSNks3KTWED/hZ081N4N8oDSY/jJ5jMBOtMs1oL4u97xlwL0bgFticW
+	 VC7cHA1IM/c3g==
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfauth.ams.internal (Postfix) with ESMTP id 29073198005A;
+	Wed, 28 Oct 2026 12:19:49 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Wed, 28 Oct 2026 12:19:59 -0400
+X-ME-Sender: <xms:pCDiapHR5_UfAlK6Y5IwuSd6tG-IN25ti_9qop6y33Mn7A8IfOyH2w>
+    <xme:pCDiaolisVVX49paz5DMLbhyfp3Q6L1SCMdynmBx-MO6JItRfQaLAqjheIBSQuP6W
+    utF727eX3BINM1KjFyEGeeFcQzdUVht_0jxrDU5lvFsc9Uo93IjJqpd>
+X-ME-Received: <xmr:pCDiatI176GX8GobYrpPR5_2HleYubAakxHYnaCbeKCR92Rik7DrWnkMNEI>
+X-ME-Proxy-Cause: dmFkZTGclD1JbppB9HJ+wc+PBYUc7y+dixlkOiA2HsCm5bBLjgZcXtU5z4GDtO5noWzmDd
+    ORQFP5u9B2gtbQIzAfn62HyoZPZzOaRlPLXMJbRuOKsJfFDAVc93Ms6EaNrHWEq6z6wsvt
+    Vwv7YGYHYp1DmH0JFFFqpqagIBWKJjdY8K+9fHquSKFVK4QpWZo3/X+8b1lo1wJj7cOP/0
+    UxPerUKzYQfYIPe0+zZpOe+dudiR/ZmyEvfhO+buEi+HLpafl9BeNw9D79/rT5MOLUUGeC
+    H20VI38/59YkMmPnP0Lyu8v9OMGay2+0LMnea7uAS3uuq0rtJ908MMUpIuTf0GbHo8UsAY
+    ua+t7Qev6BT8kMHCeyM4V1m6u5YQwDA4moRebSE73U9F3vqd/sLjELfF2vONZb+ZcW5TQB
+    94GQy7Qy9EYuo6vu61hPJ1VjyjuMJ99xhWVMI+3gZz6H3VQ84mHv5w8TE9tnJChUhoUUP9
+    4BpLr6gQs04DR36/rOYGy/+LZjcGIu/GNpIN099cOSZ+EN2zqtR43z7EhAL94X1B/ytyyp
+    oo/rRFI886c55KcN4on3qj6HWPCrIJtfc0D4lmBumEi5I8lrnU3HxQLS8Z22AYR9GbRHTz
+    75P/PVpblWhTAf4127jPQ1kO6sZzgqCljd55hkW2aMHmD3LDpX4z8/2t8a7Q
+X-ME-Proxy: <xmx:pCDiahze4ae2vr6g0xh1CGHOySl6hdDch_bPcHI01gx7Cx5B5_AyJw>
+    <xmx:pCDiapp2l8L-56W56KcYVToqHeGQ2dwKvVCsSdlmv3g205bP2Roufw>
+    <xmx:pCDiaj3XJkMTDlTUcybqoOOCtsjCPlXp0xH4AP7sKqkLmlew_k_rVA>
+    <xmx:pCDiaoL8lIOsfn_CSb0VzXBCgfJe6RSz91C-07dxto8nIE3ph-anSQ>
+    <xmx:pCDiaopVBBj5qbjabGhIOaxTeF90y_zQKddqmsT3AwUNkwcLcz8ejdNW>
+Feedback-ID: i10464835:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 28 Oct 2026 12:19:46 -0400 (EDT)
+Date: Wed, 28 Oct 2026 16:19:45 +0000
+From: Kiryl Shutsemau <kas@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	Hugh Dickins <hughd@google.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>, 
+	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
+	Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Usama Arif <usama.arif@linux.dev>, 
+	Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
+	Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
+	Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
+	Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Chris Li <chrisl@kernel.org>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
+	Youngjun Park <youngjun.park@lge.com>, Gregory Price <gourry@gourry.net>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
+	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, stable@vger.kernel.org, 
+	Josef Bacik <josef@toxicpanda.com>
+Subject: Re: [PATCH 02/46] fork: take mmap_lock before copying mm_struct
+Message-ID: <auIgkX9zz8TdnLum@thinkstation>
+References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261028_091443_159431_08B9CD4A 
-X-CRM114-Status: GOOD (  30.54  )
-X-Spam-Score: -2.1 (--)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -114,63 +121,40 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Wed, 2026-10-28 at 14:26 +0000, Luca Boccassi wrote:
-> On Wed, 28 Oct 2026 at 12:42, James Bottomley
-> <James.Bottomley@hansenpartnership.com> wrote:
-> >=20
-> > On Tue, 2026-10-27 at 11:07 +0000, Luca Boccassi wrote:
-> > > On Mon, 26 Oct 2026 at 12:57, <luca.boccassi@gmail.com> wrote:
-> > > > I think there is one issue with the design pattern where
-> > > > keyrings are set up in userspace, that I have mentioned a few
-> > > > times already and I got documented in
-> > > > https://www.freedesktop.org/software/systemd/man/latest/systemd-sys=
-tem.conf.html#RestrictFileSystemAccess=3D
-> > > > as well: they are trivially bypassable if the kernel has kexec
-> > > > enabled and it is signed. The security model relies on the
-> > > > "good" userspace running first, but if kexec is enabled,
-> > > > there's no guarantee that will be the case, and as far as I can
-> > > > tell it gives root trivial capability of overriding it and
-> > > > extending the trust chain as the attacker wishes.
-> >=20
-> > The attack sounds doable, but it also seems to be exploiting a gap
-> > in kexec policy: kexec is supposed to behave like a warm reboot so
-> > if boot policy requires UKI only then so should kexec and that
-> > sounds like the thing that should be fixed.
->=20
-> I don't think that's the case though, even before KHO/LUO existed,
-> kexec has never really behaved like a warm reboot, as for example
-> boot services do not run again, so various chains of trusts are not
-> reset  (eg: a bootloader might now be blocked so warm reboot would
-> not work, but kexec would). And since KHO now exists, the difference
-> is even greater, as more and more state is retained across the
-> boundary.
+On Tue, Oct 27, 2026 at 12:17:22AM +0100, David Hildenbrand (Arm) wrote:
+> dup_mm() copies the parent's mm_struct before dup_mmap() takes the
+> mmap_lock. A concurrent brk() can leave the child with a stale mm->brk
+> and newer heap mappings, causing later brk() requests to fail.
+> 
+> Other operations (e.g., PR_SET_MM) on the parent's mm_struct can similarly
+> cause inconsistencies.
+> 
+> As a simple and robust fix, grab the parent's mmap_lock earlier. This
+> way we don't need to update individual mm fields in dup_mmap() and
+> keep missing ones. Stop updating the 4 existing members (total_vm, data_vm,
+> exec_vm, stack_vm), as that is now no longer required.
+> 
+> Keep releasing the parent's mmap_lock in dup_mmap(), before
+> userfaultfd completion, to avoid moving the userfaultfd handling into the
+> caller. This should get cleaned up later.
+> 
+> Move uprobe_start_dup_mmap() to preserve the lock ordering.
+> 
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Cc: stable@vger.kernel.org
+> Reported-by: Josef Bacik <josef@toxicpanda.com>
+> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
-But still, a lot of people are using it for servicing reboots so it
-does sound as if it needs policy control.
+Reviewed-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
 
-> > What's the mechanism boot uses to ensure UKI only? So we can see if
-> > it can be adopted to kexec.
->=20
-> There isn't one, and I don't think there is correlation, as booting a
-> UKI is not the only way to boot a system. Eg: this problem applies
-> just as well to booting an arm system on uboot. So I really would not
-> tie this to UKI or UEFI specifics, it's more generic.
-
-Well here's the problem: I agree root could kexec to their own initrd,
-but it looks like they could also properly install and reboot to it, so
-it doesn't make that much sense to plug one hole without the other (and
-when they both get plugged it does make sense to use a similar
-mechanism).
-
-
-Regards,
-
-James
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
