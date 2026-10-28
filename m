@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92F9606A31C
-	for <kexec@archiver.kernel.org>; Wed, 28 Oct 2026 23:14:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D620E606A31C
+	for <kexec@archiver.kernel.org>; Wed, 28 Oct 2026 23:22:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=l0vqsjTd;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=KHEUPAxB
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=B3/42AbD;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Hx507ke+
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -14,67 +14,66 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=puyAoc6Jf4frehbhlLXQIfKglUE1ElIfqgej2JSgVAA=; b=l0vqsjTdiemE5PZOdYgHXYhOxl
-	rhTS1TN73NaW/CxcAaE6vwsgSkG16acdzSxX6lxGKqAsBTDaf4ltge5tvDmGumiO1DmKoHf2j/DU0
-	xUEbaxf5Wi6qJaHdeKelm8hjkPb+F89wmy9k1ijGwYB7ukMGpudL+0l7931aB7VktoeBaGyEqizwk
-	R+LkVMk+rdKCoFmA6+Ujl1pIkP2J5MRDdlSyOBWKuP3MJrt/+XYLeGJayn3zXNQCkmtvXD3NLmre8
-	K0dfk27GW/I79cDFz0QvxqQv15V7RwV9/MB7+FUsqBWoc2loDEg0++MD17f0hzZPOEe9v7uDJEOWM
-	CIlRsQfQ==;
+	bh=ErACdD6wnsCj5BI4BkkTwpFvg1ap5ibaSYHTkZSlAoQ=; b=B3/42AbDINeIwkjed0Ka341C+G
+	px90foojcxuQA22pZcCoNYzsqHvuHa9EjmMHfmUpetu+ECNsyZ3Mkd8Omw5SwK656hrM5z1fgrvBq
+	RoVAM39fxusCmdyzC1wQMGQlDpBGixvG620Z/9DkQ9r9RtXI+sLdAODbsnA2TIZ6EUfet1f6cm9Dt
+	J4RU9omXXO8jp8EPQnR5dvpuQCtvIcxsXUIuf9yxKF7zYUTxJAabSDyf6g7PR+khhDDpFslQyUvB+
+	lAHuq8oCEo3K9ZOT83V0TBblmsaiLFIwfhzQejJAb+6BvWBWlGz9R1+0l4AxDfOkQBT7bNADeIY2X
+	MpgMqBfQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMCqN-000000083Tq-1qFJ;
-	Wed, 28 Oct 2026 23:14:07 +0000
-Received: from mail-pf1-x434.google.com ([2607:f8b0:4864:20::434])
+	id 1xMCyP-000000083gD-2BAk;
+	Wed, 28 Oct 2026 23:22:25 +0000
+Received: from mail-pg1-x532.google.com ([2607:f8b0:4864:20::532])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMCqL-000000083TW-0TOp
+	id 1xMCyM-000000083fr-0yNQ
 	for kexec@lists.infradead.org;
-	Wed, 28 Oct 2026 23:14:06 +0000
-Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-8a60f90a924so697993b3a.3
-        for <kexec@lists.infradead.org>; Wed, 28 Oct 2026 16:14:03 -0700 (PDT)
+	Wed, 28 Oct 2026 23:22:23 +0000
+Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-cc7e79c1eaaso727060a12.2
+        for <kexec@lists.infradead.org>; Wed, 28 Oct 2026 16:22:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793229243; x=1793834043; darn=lists.infradead.org;
+        d=google.com; s=20260707; t=1793229741; x=1793834541; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=puyAoc6Jf4frehbhlLXQIfKglUE1ElIfqgej2JSgVAA=;
-        b=KHEUPAxBt2Du8BFnG9yArpgMF9/I74vIUHhowZJ1Lsh8jPgBgn51jGDGU35p3Jjuxh
-         iwmCLwxvubx/zQELhGi04rGeHaNgO45MuMjiK0PTD8AuZWpCsdxzV/DDtARjTkB30p6c
-         Vu7o5AM7SGbzVyLtIkVcpVfq06zAVoKV8PRR/e2paSsv14ncOcNTpJk0TFIaMxrkGS/9
-         lAnMiHvMfRBSgO4no/OTZvkPAcJ+nc3oR8dXJfQyQqX38ZRRsDHplkaYEedeMc+F5sRy
-         IIS9Ry77Yf08D6JA2q2UeQqJtyqBgbxnSi/zFUysjFRrDfTHuCzK3aQfZmBubPf4zHTs
-         V5lw==
+        bh=ErACdD6wnsCj5BI4BkkTwpFvg1ap5ibaSYHTkZSlAoQ=;
+        b=Hx507ke+ey3em8fp0tqJlavRYj+vpU6pyMvuhtuh5su0txskJL3+j7/zTWNu2QmuNK
+         rSZ47sJpg+wuiSUMaoJrrvXmnWY8cnAbRooKtIc8WwwOnlKxCVa2JzwZ0T551AK/yvbs
+         kQdk25SiZ2lnCdQ+mfKkzDSeEvHj0Q2D+xR+EeF/cMI1jZrfmeIPLt4MFCy00W3E28DW
+         +C3qjIgShtFdPGiLc0yskYcepJhy1ICrptdQ9s7vIcbtlLgn1KI5JMlo0OZzxFnxGn6D
+         4tTL/UF3qegeCQUwYRGv/sGlyhqwu1D+S9URp0DzXxHZHPyR473pVNi3wvw2ct2fvEr4
+         MY9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793229243; x=1793834043;
+        d=1e100.net; s=20260707; t=1793229741; x=1793834541;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=puyAoc6Jf4frehbhlLXQIfKglUE1ElIfqgej2JSgVAA=;
-        b=CFxcxZaFaJB0nvw+vXWWsP9TcRBXc1pRYZWqPrDLKb3mvVrWJ87HZnqP6gGPEwJ9jT
-         eii8nrGTRdYLrKQihABa5dTJETXU2wO4CeHHYdkHN20kJJwMOIAVb8FxQiAo/Bw1JOf5
-         A8BMiTogjq9xb+f36uPSB6ngbTtF6cddbsnQGRAoitipGzcxxPgFeGwlDK0OZYqHfxw1
-         oOM4dlZA8PnV1OVyqDLGxJC2ns0nucWihMZdfZ1YF2G4ZLNuzjVZFccvu9KUeyluV/7d
-         9LMMkvpF5oTxQdYGpXQ7YBJF/811RVhN/MrQnRDJAS9bvuyDQPsTXIyNBa4iyYo4n9jF
-         hddQ==
-X-Gm-Message-State: AFq9FYLrDjAaYWErp/Jxgj4xYXARqUVwWKxF18M3npk5ZowgDOYMhz3X
-	n1F9RgIkxjBCfV6fcit1brcr3iccvLwmiaM4VnbdF3r1wbijGRuWbd03sG8ZQ5/zoQ==
-X-Gm-Gg: AYBFou1luCrLdVBj4oYuvLUgoFVdW6WOE4m1HMQPlxf9pi1RZRHm4EWJV8//c7C8Kol
-	x+gItpK2AL7jhPv/IX6dJviGtR0YqUrE2S/Iy4s8HwFgAFI6Jy3cD340ClRkLBDV3ZB3ArUkEWc
-	Jw6o5o7GkEPWwMdlOli4RtbIb6NL0dI74kbi9Mal7zZa9ja0xjjc5SuPk67HlPiXxAjhJ51A5Gs
-	IFzYzDuepRPQrczpEGLsKR5zYTCWEHypyKVF1uvVAMqtKCKUEBMBv9PSIvMBrCAeaz6qN2Lh80P
-	XUEZhrjCvC2MljPu7ksoFMdt5zP8721ZhaSH1ebhkIOCPTncnPPZsHNHJ/D/4qWm6EVnfiuAgQu
-	O32T/EiA9qUuvNNP/9zVDARZTwDnVT69YIcIQ7UXkZIMke3TrmA1ZvD/rBXMDzgekLKu/yAVIgl
-	16N/HFXwv/zskXW4Fkx9VCymfEQqTBG6TLgWI13sEypvTTdTn/srhcCNhezeIkzlGDBejFX0dtd
-	LOdu52AN+Fziof7ZoyS0a0CpRTLFIgyNgMOpXkjnpdSiCNui7XiXhQIrZMu8zkmtb/A6IHnql+9
-	YZU1q9ETKbYj3HqBDj90bf+XP9/5shkaMUo9ecbw8exny8dFmETkwbCoGVuX9kltJ8AlQK8oZEG
-	iZBSedCdsanrIwZY/
-X-Received: by 2002:a05:6a20:914c:b0:3d3:af85:eb98 with SMTP id adf61e73a8af0-3e9022d6cbemr3267144637.26.1793229242275;
-        Wed, 28 Oct 2026 16:14:02 -0700 (PDT)
+        bh=ErACdD6wnsCj5BI4BkkTwpFvg1ap5ibaSYHTkZSlAoQ=;
+        b=j7NdJsjeypJljhbLEyf4v/47cmqvBmg/w7MC3Sy1fxvosKqlRZ0dwGG8sBihHgg+Bo
+         jLNVEK6U+GWyrksD+zdWmZ5Z09Nreng4xhkR/Q3xiRPlw8HDYvdlOkDmzF7pwQI/wpeT
+         M0Lv5srlaJ8dVQGeta01jrhTBCyiHEVZh1GjHB0MXTkSElE3npzgRqOcMh4LRDtJeePQ
+         OL5L7SGpTTQ1fMjIzKSWoyL61E/+6+V2v9qm8qHbyrJ4ocm+UaHWGHR6uuWh6P7nGVge
+         VL31gmmuBOgb3rEem/2uswi6YgI6q3MjvMaHxzXgs1lH1w4GL6GwWU7xfRAqamC3GcmC
+         9RYw==
+X-Gm-Message-State: AFq9FYJg4FI+jupWYCUhkRU13SlFRuyrnGGmmB9yjN8ghZh1hazrnbGZ
+	0OisQvBP5GPa8za3TiGvWzgFpq3sqFsfheOviZ5W7Rdqm0V6PHGAnEptAhy6BOhJPg==
+X-Gm-Gg: AYBFou36vwptH0AzFLhUVTIi+7QB0+Dm0awwuw9dBeU+V6MqTj0LcY8AMUByUQPVlDq
+	SiF1cMnGbUhLse9ZiS0B40IDXXD3UILdJy0tTs7zoH/VoZT9EYxsTbodEIkHKZi9wckim3Dq2h9
+	t1P/ACj3ykRlp7cAkp+WUoESFVCDVAHpzlPdHewEtDAYiyBoUJUau84fA1R8OkuTVW1PCxFRMoH
+	z4DZo0mGHD4lqC04ct8J6HDQul9PPwjC4bka9XMmRQOicZsU14+rhoqgh2RDksIQggfCehrMbJz
+	cijocNnap4dlWiQs+24+GRwbIQHlyriHoppLw5NtssaxPUtH4V5XBwQrLFNIzHhsGwqnlFOu/jc
+	lwP8h1cSp0CVzUVZVXZcKuq2NUpHaWlSahLOZ+B2JQs0ExC0mIC1BnnYuW7B0iMVInnm7pVpzog
+	DJHNU+p+BczOwMiIfVhozpoFSZDjJk8s8GCymiZTt4SWRYiVSoNCSAof7gTUFEY+V+9C8M1tt3B
+	46avPJq6pEZHXmX8ZIwCL1MwMi1oInxCfgUEOer4eSKjWFg9AVQXyFtPvP4utFRvSLKkl7uuUwM
+	29PqapWPXT2v+00AAxj0ygpwFKMvDlZyQrorsyMzT/V1nS5OPqHIzX8/XBHLf7YfSwGW2aGT
+X-Received: by 2002:a17:90b:1b0f:b0:3a4:967c:6947 with SMTP id 98e67ed59e1d1-3ae580cb98emr2772733a91.21.1793229740129;
+        Wed, 28 Oct 2026 16:22:20 -0700 (PDT)
 Received: from google.com (192.150.203.35.bc.googleusercontent.com. [35.203.150.192])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8a6a6cfa342sm1626775b3a.41.2026.10.28.16.14.01
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ae57a56a1dsm2552085a91.4.2026.10.28.16.22.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2026 16:14:01 -0700 (PDT)
-Date: Wed, 28 Oct 2026 23:13:57 +0000
+        Wed, 28 Oct 2026 16:22:19 -0700 (PDT)
+Date: Wed, 28 Oct 2026 23:22:15 +0000
 From: David Matlack <dmatlack@google.com>
 To: sashiko-reviews@lists.linux.dev
 Cc: kexec@lists.infradead.org, linux-mm@kvack.org,
@@ -94,20 +93,20 @@ Cc: kexec@lists.infradead.org, linux-mm@kvack.org,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	Suren Baghdasaryan <surenb@google.com>,
 	Vlastimil Babka <vbabka@kernel.org>
-Subject: Re: [PATCH v2 09/10] mm/shmem_luo: Allow retrieving tmpfs files with
- O_RDONLY
-Message-ID: <auKBtVmCS4jU8e_R@google.com>
+Subject: Re: [PATCH v2 08/10] mm/shmem_luo: Allow preserving tmpfs files that
+ are still linked
+Message-ID: <auKDp6MfztVCIzp2@google.com>
 References: <20261022225035.377445-1-dmatlack@google.com>
- <20261022225035.377445-10-dmatlack@google.com>
- <sashiko-outbox-183328@kernel.org>
+ <20261022225035.377445-9-dmatlack@google.com>
+ <sashiko-outbox-183327@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <sashiko-outbox-183328@kernel.org>
+In-Reply-To: <sashiko-outbox-183327@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261028_161405_155520_59614379 
-X-CRM114-Status: GOOD (  13.52  )
+X-CRM114-CacheID: sfid-20261028_162222_299218_2550592C 
+X-CRM114-Status: GOOD (  22.89  )
 X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -129,45 +128,72 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 
 On 2026-10-23 10:51 PM, sashiko-bot@kernel.org wrote:
 
-> > +	ro_file = dentry_open(&file->f_path, flags, current_cred());
-> > +	fput(file);
-> > +	return ro_file;
-> >  }
-> >  
-> >  static int shmem_luo_retrieve(struct liveupdate_file_op_args *args)
+> > +static int shmem_luo_may_preserve(struct file *file)
+> > +{
+> > +	struct mnt_idmap *idmap = file_mnt_idmap(file);
+> > +	struct inode *inode = file_inode(file);
+> > +	int err;
+> > +
+> > +	err = inode_permission(idmap, inode, MAY_WRITE);
+> 
+> [Severity: High]
+> Should shmem_luo_may_preserve() in mm/shmem_luo.c also verify that the file
+> is open for reading (file->f_mode & FMODE_READ) or that the caller has
+> MAY_READ permission?
+
+> Wouldn't that allow a caller with only write access to read the file's
+> contents after retrieval?
+
+Yes. I will fix this in v3 to require the file is open for reading and
+update the selftest to cover this scenario.
+
+> > +	if (err && (sb_rdonly(inode->i_sb) || IS_IMMUTABLE(inode)) &&
+> > +	    inode_owner_or_capable(idmap, inode))
+> > +		return 0;
+> > +
+> > +	return err;
+> > +}
 > 
 > [Severity: Medium]
-> When userspace retrieves a tmpfs file via LIVEUPDATE_SESSION_RETRIEVE_FD with
-> O_RDONLY in arg->flags, does passing the raw flags variable to dentry_open()
-> in shmem_luo_create_tmpfs_file() in mm/shmem_luo.c bypass the flag
-> normalization performed by file_open_root() -> build_open_flags()?
+> What happens if shmem_luo_may_preserve() in mm/shmem_luo.c is called on an
+> append-only (S_APPEND) tmpfs inode?
 > 
-> In fs/open.c, build_open_flags() strips O_CLOEXEC and ensures O_DSYNC is set
-> when __O_SYNC is present:
+> Tmpfs supports setting S_APPEND via FS_IOC_SETFLAGS in
+> shmem_fileattr_set() -> shmem_set_inode_flags() in mm/shmem.c:
 > 
->     u64 flags = how->flags;
->     u64 strip = O_CLOEXEC;
->     ...
->     flags &= ~strip;
->     ...
->     if (flags & __O_SYNC)
->         flags |= O_DSYNC;
+>     if (fsflags & FS_APPEND_FL)
+>         i_flags |= S_APPEND;
 > 
-> Because dentry_open() -> alloc_empty_file() -> init_file() initializes
-> ro_file->f_flags directly from the passed flags and do_dentry_open() only
-> clears:
+> Unlike IS_IMMUTABLE(inode), inode_permission(idmap, inode, MAY_WRITE) does
+> not reject S_APPEND inodes. In fs/verity/enable.c, fsverity_ioctl_enable()
+> explicitly checks IS_APPEND(inode) after checking MAY_WRITE:
 > 
->     f->f_flags &= ~(O_CREAT | O_EXCL | O_NOCTTY | O_TRUNC | __O_REGULAR);
->     f->f_iocb_flags = iocb_flags(f);
+>     if (IS_APPEND(inode))
+>         return -EPERM;
 > 
-> passing O_RDONLY | O_CLOEXEC in arg->flags leaves O_CLOEXEC in
-> ro_file->f_flags (visible via fcntl(fd, F_GETFL) and /proc/<pid>/fdinfo/<fd>),
-> and passing O_RDONLY | __O_SYNC without O_DSYNC leaves O_DSYNC and IOCB_DSYNC
-> unset on ro_file.
+> When a caller with MAY_WRITE permission on an S_APPEND tmpfs file preserves
+> it via LIVEUPDATE_SESSION_PRESERVE_FD -> luo_preserve_file() ->
+> shmem_luo_preserve(), shmem_freeze(inode, true) sets SHMEM_F_MAPPING_FROZEN.
+> Because all writes to an S_APPEND file extend past i_size,
+> shmem_write_begin() and shmem_fallocate() in mm/shmem.c will then fail with
+> -EPERM:
 > 
-> Should dentry_open() be passed (file->f_flags & ~O_ACCMODE) | O_RDONLY instead
-> of flags so that ro_file uses the normalized flags from file?
+>     if (unlikely((info->flags & SHMEM_F_MAPPING_FROZEN) &&
+>                  pos + len > inode->i_size))
+>         return -EPERM;
+> 
+> Should shmem_luo_may_preserve() also reject IS_APPEND(inode) with -EPERM so
+> an append-only writer cannot freeze the file and block future appends by all
+> users?
 
-Yes. I will fix this in v3 to re-open the read-only file with the flags
-that file_open_root() already normalized.
+I am not sure on this one, but rejecting S_APPEND inodes for now does
+seem like a reasonable place to start.
+
+A writer of an append-only file can only add data. It can't destroy
+existing data or stop others from adding more. preserve() blocks all
+future appends, so arguably it could be abused.
+
+I will update v3 to reject S_APPEND inodes. If someone has a use-case in
+the future for preserving such files we can revisit this and look at how
+to support them.
 
