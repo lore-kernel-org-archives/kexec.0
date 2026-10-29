@@ -2,55 +2,56 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31719606A31D
-	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 21:05:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6788606A31D
+	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 21:30:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=1BfGyLFz;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ISvCpW1n
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=fny88Cph;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WhdvjoN5
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=f99FBG9cmwfw/aEnFPXgwYaEgH0mqzP7LaMxLWErvlM=; b=1BfGyLFzH9L9VE
-	1XnLIEpScGb458FLjS2tVOk7XCYyYurNaAbLeYJmmQy6YDRkpc9Yi3mwQDP5ZFH5lpGKcZih1wmpt
-	xq84vNd5I4ome3qea9HyW52ic5yO0JcKJeS/RXgavjbBbfSxvlqAyYSxoQ9n9xggc1QjKhOVX+e2L
-	qXAb20tbGTSK5bCUB/XGDRp5zuXQjgUa5hsy7W5ZQfUd0NKFSS/qnctzswqYx8aNeiE7k4WoYpYrw
-	fNVNBQnmzq5ts1RTN6e0ubQ+AQZMJ4Oib+gnvx3Mv8in9t0tHaukEvTni9MR3e5irIg6kHEu+JagC
-	fUXfSlJAzuOO0slf3EXw==;
+	List-Owner; bh=GTbYn1B9uEaHo+IwnQISx6DSu8nadScf/DEgScNsxUY=; b=fny88CphztwFuC
+	JkyEA8ATfuIy8vkWv1V9v1nWh+q74h9RnC/eVB0N6yoz79bGFUbNIMMB6/jjjpH8eVtmn6VvnjjpH
+	GxNPbnFcIKeI19+mG0r5ej6so9+XNuU5CJunG8+B+K5Mocbbs3rNPRTLitrxuFcvosGo60w87EHrw
+	Q0tpZTphp/PLLqaLx5ahz7b+Q1z1p4Dl9L9xLIqiARr5COM+N05MuPKHPBKzBnpQaK0/af3gxymWn
+	InYOsjJBYqogsM3ywequHx1y5f9B501DXIaJ1Asz1MrG4vG2wk2F1b0PefiNFvYC1inOqrj3NhNYP
+	PYgP5yEa7y5NUnkb9xGQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMWz0-0000000AMir-3fHz;
-	Thu, 29 Oct 2026 20:44:22 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xMWzk-0000000AMvi-2Yfz;
+	Thu, 29 Oct 2026 20:45:08 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMWyz-0000000AMiU-02C3
+	id 1xMWzi-0000000AMv1-2O0J
 	for kexec@lists.infradead.org;
-	Thu, 29 Oct 2026 20:44:21 +0000
+	Thu, 29 Oct 2026 20:45:06 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 6FCB7601EE;
-	Thu, 29 Oct 2026 20:44:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4EBC1F01816;
-	Thu, 29 Oct 2026 20:44:05 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id E5EFC60623;
+	Thu, 29 Oct 2026 20:45:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CB641F01826;
+	Thu, 29 Oct 2026 20:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793306660;
-	bh=f99FBG9cmwfw/aEnFPXgwYaEgH0mqzP7LaMxLWErvlM=;
+	s=k20260515; t=1793306705;
+	bh=GTbYn1B9uEaHo+IwnQISx6DSu8nadScf/DEgScNsxUY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=ISvCpW1noMZ/QA9Jr4U4ciYvPBlggN3Z+6JfPPsgt7+DBM//0I+sSMG7BKDe4mOYJ
-	 0LzS18/0vo2MIyIc1gbIO4QitWdoMYUlqgluemT6WVI5mMdz1prqImIRZLHagRYJPl
-	 APjbqHJGcwwUeuXSaijEVSo7Ic8ccUPMCoJrbjRImpYt3b1GIpeOsoLwSbcKWxWMBE
-	 ImzDkrq/DeJ6vMi5OW4WJWRj+jRdW1Nm5Ct5iDGzqfdhTgeO72u6sQV4AW0hawlICs
-	 itcUaU3Clq0Apdq2pQxRfxTHxoFtftXWanHxoliGkrRBX9nEQXTMchpzwz3AWsjlCH
-	 Kcs9Gjc6eZC6w==
+	b=WhdvjoN5s9yBtKL7TO38yUQNFfwrtZV+RPRgO+dXzIyrW8v5zeF7U9sUJeRD31dCv
+	 tnqMt3RnlqgeqbFDBeJAps0ju8zYO89p+SoK/or2UoMdEm0hCT/TD/yDv0PCOqJ85P
+	 fNE8dHo04vvN/YtksdSHaEnUUy15/kf2CTeZdHFG47FJoXBqSAglNrRlOwaDjz8AAy
+	 wlfc60h5OWJMf1LQnsGiuPdwzn1ZbsCsvU/CR2NPTcn/RQ5ASf9KNEV4lkEIoVlIr7
+	 6AOCkbODg+/zUBE9orFJVeVfbx5hHhBwXIQMFWWkdVDDspFJ9Pj/83r9qJZySYzwBG
+	 KUEYRbyPx4IGw==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Thu, 29 Oct 2026 21:33:39 +0100
-Subject: [PATCH v2 44/47] mm/vma: don't leak the charge for stack growth
+Date: Thu, 29 Oct 2026 21:33:42 +0100
+Subject: [PATCH v2 47/47] fs/proc/task_mmu: refuse addresses beyond 32 bits
+ on 32bit
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261029-fixes_core-v2-44-a64ce7f83abb@kernel.org>
+Message-Id: <20261029-fixes_core-v2-47-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
 In-Reply-To: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -88,15 +89,15 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
- stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
+ Josef Bacik <josef@toxicpanda.com>, 
  "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1286; i=david@kernel.org;
- h=from:subject:message-id; bh=o0mheINR978z1uD1ZHGsTx1VSvH13fE2UEr82UlnsHQ=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLIer+36aHqh4IJVheeK896X0nMzPQ/Pi5JZtIppO0NnM
- HNBz/a2jlIWBjEOBlkxRZag4PsGL1+uq61242OGmcPKBDKEgYtTACYi68XI8EL/YelpBxn2YMEy
- +RgRwdSk2d/+utfpP5UtN9XV+bL/IMP/sMpy4djuF7d6rH8c1XGs5FY9Uao3xdh947d5D4VsGSb
- xAQA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1693; i=david@kernel.org;
+ h=from:subject:message-id; bh=H23iSXQ9Zo3UCvNDkTgZhR+Jd2mqfSBMzvPG+6Su2Bs=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLIer+36dd5g2Q4ND87Jf761zFBNvRKV+lT8j+vKzflze
+ YyOa+w70FHKwiDGwSArpsgSFHzf4OXLdbXVbnzMMHNYmUCGMHBxCsBEvrUyMqy5fPDlzml6Z/cX
+ 79h+PNfDilFB5ZDotvsSF56fsl9+5eVERoa/IndyDIr42sM3z5yxY7reXodOs79NDjUek3fdtxO
+ tdeEBAA==
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -117,40 +118,47 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-acct_stack_growth() charges stack expansion even without VM_ACCOUNT.
-This can happen for read-only or MAP_NORESERVE mappings created with
-MAP_GROWSDOWN. Unmapping these VMAs does not release the charge, leaking
-Committed_AS.
+From: Josef Bacik <josef@toxicpanda.com>
 
-Only check and charge growth for VM_ACCOUNT VMAs, matching mremap().
-Unaccounted growth skips the overcommit check while remaining subject
-to the other stack-growth limits.
+The addresses in struct pm_scan_arg are 64 bits wide.  The first thing
+pagemap_scan_get_args() does with them is to cast them to unsigned
+long.  On a 32-bit kernel the upper half is dropped without a word:
+PAGEMAP_SCAN of 0x100001000-0x100002000 scans, and with
+PM_SCAN_WP_MATCHING write-protects, 0x1000-0x2000, stores the result
+at the lower half of vec, and reports success.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable@vger.kernel.org
-Reported-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+Return -EFAULT, as for other addresses outside of the address space.
+
+This is probably not worth CCing stable.
+
+Fix generated by an LLM and sent by Josef Bacik in private.
+
+Fixes: 52526ca7fdb9 ("fs/proc/task_mmu: implement IOCTL to get and optionally clear info about PTEs")
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 Reviewed-by: Pedro Falcato <pfalcato@suse.de>
-Reviewed-by: Harry Yoo (Meta) <harry@kernel.org>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/vma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/proc/task_mmu.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/mm/vma.c b/mm/vma.c
-index acdf00346cda..695d0be85ac8 100644
---- a/mm/vma.c
-+++ b/mm/vma.c
-@@ -3391,7 +3391,8 @@ static int acct_stack_growth(struct vm_area_struct *vma,
- 	 * Overcommit..  This must be the final test, as it will
- 	 * update security statistics.
- 	 */
--	if (security_vm_enough_memory_mm(mm, grow))
-+	if (vma_test(vma, VMA_ACCOUNT_BIT) &&
-+	    security_vm_enough_memory_mm(mm, grow))
- 		return -ENOMEM;
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index 7452b695fdae..762b6dbb81e4 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -3032,6 +3032,12 @@ static int pagemap_scan_get_args(struct pm_scan_arg *arg,
+ 	     arg->category_anyof_mask | arg->return_mask) & ~PM_SCAN_CATEGORIES)
+ 		return -EINVAL;
  
- 	return 0;
++	/* Don't cut 64-bit numbers down to addresses that happen to work. */
++	if (arg->start != (unsigned long)arg->start ||
++	    arg->end != (unsigned long)arg->end ||
++	    arg->vec != (unsigned long)arg->vec)
++		return -EFAULT;
++
+ 	arg->start = untagged_addr((unsigned long)arg->start);
+ 	arg->end = untagged_addr((unsigned long)arg->end);
+ 	arg->vec = untagged_addr((unsigned long)arg->vec);
 
 -- 
 2.43.0
