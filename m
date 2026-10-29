@@ -2,56 +2,56 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E43D60A2616
-	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 20:36:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C4260A2602
+	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 20:36:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=mD76f5Nv;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ccajB90x
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=DvLMNLKw;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PbsN8DUM
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=8FhHny9mHzITD4CyW6Cx5He8UZdbQ/QXgTkMZkuawzE=; b=mD76f5NvFal4KT
-	Rq5zh1zTuqZswGcP/Il9pMl6lXlxvz9ZsyMEPAk88p7bPDANQ/XsRAaXgeUNmAkj1j7kA9uJPgESJ
-	x1JIjWydx3vmEOKFlUf/7ztdSwtvwXluRsmr5NyHuLLlInvQYEnYchVsb0V3o/92Aq5kcocA+Faga
-	3NkjHDIrNeHAXlvRtvQqY9VwLbjDiAmG1hMAlcpficYRFU3dK2tEXfADwlXzBk3/xxpOfaYjqPGN2
-	cAgX0sWq6KVJfaBNDzXiUtzSWZzNurc2qf8MDEeOIUeM4N5pcN1Q/AU0IXlSESuxp+jnDqEEppQeX
-	Ayv8iHi/BuLmtCfM6sGA==;
+	List-Owner; bh=qltIiuXU+zlhML5RIS5IOe+lQ29Yj3eoAi87jDTJsc4=; b=DvLMNLKwc0BUCK
+	o+nzi3f6pkkqEWXUKZvobgSLGrhWn/ev8gU41G1pu/tE+wdTAOZUMbTdGGRVM+GzeU25W/+qx3jcu
+	BUyNqyVxeJtAOGdgisD9GP0Fdf00iCw1JoDSokjGaXciXiShoAYpp92XbZzADf28Ct8M3LvtDx5Rc
+	fLKacIKpyfiMyTfwVVO6u285vu3OwEc7SKfrQtVAFlbouhCjFjpFeGcWVcGbzFihZ3t/GXLujMCWd
+	3YiXeOCC3lrslZ2lPFqJzb1g5HE8O2bYh3JOjGd4sdo9T5zOUhxph4ipV9DyJRVzkGrmwUjh5uBr4
+	V1cQR10KCLBXvRKMQW6A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMWr8-0000000AKnC-12oX;
-	Thu, 29 Oct 2026 20:36:14 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xMWrN-0000000AKr1-1aGd;
+	Thu, 29 Oct 2026 20:36:29 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMWr7-0000000AKn3-3GZZ
+	id 1xMWrM-0000000AKqn-09kA
 	for kexec@lists.infradead.org;
-	Thu, 29 Oct 2026 20:36:13 +0000
+	Thu, 29 Oct 2026 20:36:28 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 3C9E46061B;
+	by tor.source.kernel.org (Postfix) with ESMTP id 75E3F6020F;
+	Thu, 29 Oct 2026 20:36:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A1151F01825;
 	Thu, 29 Oct 2026 20:36:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 241201F031E0;
-	Thu, 29 Oct 2026 20:35:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793306172;
-	bh=8FhHny9mHzITD4CyW6Cx5He8UZdbQ/QXgTkMZkuawzE=;
+	s=k20260515; t=1793306187;
+	bh=qltIiuXU+zlhML5RIS5IOe+lQ29Yj3eoAi87jDTJsc4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=ccajB90xcKYAJCG+pfTeSfTQgjX/IGEu5IjSG5+Pjf3i6QHQbNF5DXftMaJFL6HVu
-	 /5+C09DE+AnR3J0PzYmM64letPIG7IW7jp2VxHhPVYsO1JYzLZGMyx3TgxYn+mTvXr
-	 p8xeUBk5TFgRSbPLFEUwrqVA2cHXP0EM5NyVUnDQjpsdjAsOCHovHoLpu9i/boW5oK
-	 9GGuAoMMCHI5Rx065d5OV5gaX1z11Po9mfCcEkr2eKbTHlSvJUubujMoX+E1fhzo1y
-	 47li6wryfeTWOH5R1QNgs2QcsRkR30gorcsJRsx5oWXrcZCkesEr7cPVm+WYu7sVTV
-	 wUHHbmk+/tizg==
+	b=PbsN8DUMZHet0eiaz/YtPnbseBFjT1WXluzzZmPAiGCnwOVZOmGfKM9mh4Hhr8RQL
+	 7YWdZwjM5Y5r6JqhpSIgRiraov8JyP5s3tVFCEdzVv5TXOjLSA1th27MnlnYUVgFgL
+	 sTC1CQ2rinSRaPVNA6+7XHDreBot/Mj62PBOaQUurFuFoTySKorBt6xAL5tvLLjPn7
+	 mhhTElRxbidvb5VwGdMn4KiqZOXsOdHbTTmCNjbgcCnwq18newaSnJDP+nYR6R1cS6
+	 RKvmRadHrc65MZtqR3trGpVjQPff933JBn/tkhEaQ/OjVCubDuvzFbz+wtW8t1s41u
+	 n6zXIzSEWRF7w==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Thu, 29 Oct 2026 21:33:06 +0100
-Subject: [PATCH v2 11/47] mm/huge_memory: properly handle refcounted PUD
- mappings on fork
+Date: Thu, 29 Oct 2026 21:33:07 +0100
+Subject: [PATCH v2 12/47] mm/huge_memory: fix livelock on device private
+ folio
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261029-fixes_core-v2-11-a64ce7f83abb@kernel.org>
+Message-Id: <20261029-fixes_core-v2-12-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
 In-Reply-To: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -89,14 +89,15 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
- stable@vger.kernel.org, "David Hildenbrand (Arm)" <david@kernel.org>
+ Josef Bacik <josef@toxicpanda.com>, 
+ "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4463; i=david@kernel.org;
- h=from:subject:message-id; bh=ziCtV5F1IAav4zC3aLs97NPTL1M7KSjISagzm3G8GUM=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLIer231ehEbUXtgUrZPiXR+i9qhrnuRX7zX+C11mGzxY
- mHX826XjlIWBjEOBlkxRZag4PsGL1+uq61242OGmcPKBDKEgYtTACai8oiRoelaWFaAxWKDlINn
- 1p2TPMcSULDb4rmTwC6PhZ0821oesjP8Fd36sWvXfC9JTqmgSbwbUpYvrVbv+qZ465tMtvHWGwV
- hXAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2251; i=david@kernel.org;
+ h=from:subject:message-id; bh=tTSXVaSqYcMlwqAolP5RSmpCZsM2rRJpm1YXsCV5Hb0=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLIer20905Lzv2PqpDmTOl4ztoqsFfh5lK3YtmudyjV+x
+ SV2qq+mdJSyMIhxMMiKKbIEBd83ePlyXW21Gx8zzBxWJpAhDFycAjARzo0M/+y3cLez3TOs/a+7
+ 1kfwzeSVL85PeZSotXbB1S1i9enXP1UzMhw/XBApxjFnktgLNZlCZa/Fr75NZQu/Grl5xyH1p24
+ +e1gA
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -117,116 +118,64 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-copy_huge_pud() copies device-DAX entries without taking a folio reference
-or updating mapcounts and the child's RSS.
+From: Josef Bacik <josef@toxicpanda.com>
 
-For example, MADV_GUARD_INSTALL sets VM_MAYBE_GUARD on a device-DAX VMA,
-forcing copy_page_range() to traverse the whole VMA on fork. Any remaining
-huge PUDs are then copied without accounting for the new mappings.
-Unmapping them in the child decrements accounting that was never added.
+If do_huge_pmd_device_private() cannot lock the folio, it simply returns
+to try again on the next fault.
 
-Use vm_normal_page_pud() to identify refcounted mappings. Take a folio
-reference and add the child's PUD rmap and RSS accounting before installing
-the copied entry. Pass src and dst VMAs consistently instead of src and
-dst MM. Move the TODO.
+Just like we did in commit b570f37a2ce4 ("mm: Fix a hmm_range_fault()
+livelock / starvation problem"), let's wait for the softleaf entry,
+which will drop the PTL and wait until the folio was unlocked. This is
+precisely what we do in do_swap_page() with device-private folios. This
+avoids possibly livelocking.
 
-Fixes: aed877c2b4257 ("device/dax: properly refcount device dax pages when mapping")
-Cc: stable@vger.kernel.org
+Update softleaf_entry_wait_on_locked() documentation to clarify that
+device-private entries wait until the folio is unlocked.
+
+There seems to be no compelling reason to backport this to stable
+kernels unless we actually see problems there.
+
+Fix generated by an LLM and sent by Josef Bacik in private.
+
+Fixes: 4964099163d0 ("mm/memory/fault: add THP fault handling for zone device private pages")
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+[ david: simplify patch description, fixup softleaf_entry_wait_on_locked description]
 Reviewed-by: Zi Yan <ziy@nvidia.com>
-Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 Reviewed-by: Lance Yang <lance.yang@linux.dev>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- include/linux/huge_mm.h |  5 ++---
- mm/huge_memory.c        | 27 +++++++++++++++++++--------
- mm/memory.c             |  4 +---
- 3 files changed, 22 insertions(+), 14 deletions(-)
+ mm/filemap.c     | 4 ++--
+ mm/huge_memory.c | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index c745f7ad2298..fac05120ab77 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -12,9 +12,8 @@ int copy_huge_pmd(struct mm_struct *dst_mm, struct mm_struct *src_mm,
- 		  pmd_t *dst_pmd, pmd_t *src_pmd, unsigned long addr,
- 		  struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma);
- bool huge_pmd_set_accessed(struct vm_fault *vmf);
--int copy_huge_pud(struct mm_struct *dst_mm, struct mm_struct *src_mm,
--		  pud_t *dst_pud, pud_t *src_pud, unsigned long addr,
--		  struct vm_area_struct *vma);
-+int copy_huge_pud(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma,
-+		pud_t *dst_pud, pud_t *src_pud, unsigned long addr);
+diff --git a/mm/filemap.c b/mm/filemap.c
+index b04be64a5069..e85a4114d2ec 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -1395,8 +1395,8 @@ static inline int folio_wait_bit_common(struct folio *folio, int bit_nr,
  
- #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
- void huge_pud_set_accessed(struct vm_fault *vmf, pud_t orig_pud);
+ #ifdef CONFIG_MIGRATION
+ /**
+- * softleaf_entry_wait_on_locked - Wait for a migration entry or
+- * device_private entry to be removed.
++ * softleaf_entry_wait_on_locked - Wait for a migration entry to be removed
++ * or a device-private folio in a device-private entry to get unlocked.
+  * @entry: migration or device_private swap entry.
+  * @ptl: already locked ptl. This function will drop the lock.
+  *
 diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 4c0194af9016..283c4bc8b927 100644
+index 283c4bc8b927..2b31a425c7a3 100644
 --- a/mm/huge_memory.c
 +++ b/mm/huge_memory.c
-@@ -2072,11 +2072,13 @@ void touch_pud(struct vm_area_struct *vma, unsigned long addr,
- 		update_mmu_cache_pud(vma, addr, pud);
- }
- 
--int copy_huge_pud(struct mm_struct *dst_mm, struct mm_struct *src_mm,
--		  pud_t *dst_pud, pud_t *src_pud, unsigned long addr,
--		  struct vm_area_struct *vma)
-+int copy_huge_pud(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma,
-+		pud_t *dst_pud, pud_t *src_pud, unsigned long addr)
- {
-+	struct mm_struct *dst_mm = dst_vma->vm_mm;
-+	struct mm_struct *src_mm = src_vma->vm_mm;
- 	spinlock_t *dst_ptl, *src_ptl;
-+	struct page *page;
- 	pud_t pud;
- 	int ret;
- 
-@@ -2089,11 +2091,20 @@ int copy_huge_pud(struct mm_struct *dst_mm, struct mm_struct *src_mm,
- 	if (unlikely(!pud_trans_huge(pud)))
- 		goto out_unlock;
- 
--	/*
--	 * TODO: once we support anonymous pages, use
--	 * folio_try_dup_anon_rmap_*() and split if duplicating fails.
--	 */
--	if (vma_is_cow_mapping(vma) && pud_write(pud)) {
-+	page = vm_normal_page_pud(src_vma, addr, pud);
-+	if (page) {
-+		struct folio *folio = page_folio(page);
-+
-+		folio_get(folio);
-+		/*
-+		 * TODO: once we support anonymous pages, use
-+		 * folio_try_dup_anon_rmap_*() and split if duplicating fails.
-+		 */
-+		folio_add_file_rmap_pud(folio, page, dst_vma);
-+		add_mm_counter(dst_mm, mm_counter_file(folio), HPAGE_PUD_NR);
-+	}
-+
-+	if (vma_is_cow_mapping(src_vma) && pud_write(pud)) {
- 		pudp_set_wrprotect(src_mm, addr, src_pud);
- 		pud = pud_wrprotect(pud);
+@@ -1500,7 +1500,7 @@ vm_fault_t do_huge_pmd_device_private(struct vm_fault *vmf)
+ 		folio_unlock(folio);
+ 		folio_put(folio);
+ 	} else {
+-		spin_unlock(ptl);
++		softleaf_entry_wait_on_locked(entry, ptl);
  	}
-diff --git a/mm/memory.c b/mm/memory.c
-index 0fb676dd2bd6..5392bcb1d24d 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -1463,7 +1463,6 @@ copy_pud_range(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma,
- 	       unsigned long end)
- {
- 	struct mm_struct *dst_mm = dst_vma->vm_mm;
--	struct mm_struct *src_mm = src_vma->vm_mm;
- 	pud_t *src_pud, *dst_pud;
- 	unsigned long next;
  
-@@ -1477,8 +1476,7 @@ copy_pud_range(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma,
- 			int err;
- 
- 			VM_BUG_ON_VMA(next-addr != HPAGE_PUD_SIZE, src_vma);
--			err = copy_huge_pud(dst_mm, src_mm,
--					    dst_pud, src_pud, addr, src_vma);
-+			err = copy_huge_pud(dst_vma, src_vma, dst_pud, src_pud, addr);
- 			if (err == -ENOMEM)
- 				return -ENOMEM;
- 			if (!err)
+ 	return ret;
 
 -- 
 2.43.0
