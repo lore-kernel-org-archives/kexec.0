@@ -2,82 +2,82 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04D3606A320
-	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 01:20:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F103F606A31A
+	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 01:25:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=464AvX8W;
-	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=BAHOAO51
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2aiUcZpA;
+	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=KbTnZ/nw
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
 	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=TWYN3MXkVQTFS4ykvP4ULAqrY98K2LtbRow9MYNtF9g=; b=464AvX8WAsIjwa
-	gjahCbcj9JUkAWLALede1q14WKCxL2gJzbukFVWfXiwvLtHFvqWtGB6h7fSOs/KCLu7UZFzjLJo0F
-	un5IZNvRkI8uBPdR+x0QLQa3GTlDmdYwbDgAWuwB9flQAc0PFj66GssL3zPEhaXKfKfgP4xkck9EI
-	zQP/gkgRCteUzoDxdJLUloT7o93mLdFh/mtu5tQM9YC7QVGOOaDqmlddOvXOrWZR8MTviXOvUML+e
-	kMC55gqtR+2Zx/o1o5Zr46nHaTLp8xkl4fPnet0ZDBknBkCqDuYZQJuf7jdyuCQo1O5Abd36Rr+WK
-	rTM/1WKjX/IxknoJqN4g==;
+	List-Owner; bh=M/AMFbjA9JAsBdCFWz1LANgAn0knNna+7jo0zCTOlPs=; b=2aiUcZpAIVcMyL
+	w6Ew3qQoQCqvbAQsoqzj9Crodeqia0fVxRiS1AA8HXhd+r8Rg05i7QPuyYEKe3fQDxZ47Ru6RWxVr
+	Y89Rel8FqszQ5X2XUHoLtRbjI+GDkWbUkfw8BYVPRPKfZ35kWKLe2fPBA0a26XEWFjO5sUMmw/Cax
+	Pc3VyMdWsYoU6S5UsQbD0nw/pNo7iZK+PXaEtIQEmgoMiDWe/L5efSazifw+ObCezv0u9K4nv+ER3
+	alw+N8cn3XC9GfrQwcaVAkdR7ALrN8b2t+1EZq8kcz/NjNCdgJ4YLpPlNNsUV/29hDcj8Y9RzzQM9
+	T2qMDQaM6Oy2ZcQKaqhw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMEom-000000088Vx-3j6K;
-	Thu, 29 Oct 2026 01:20:36 +0000
-Received: from mail-ed1-x531.google.com ([2a00:1450:4864:20::531])
+	id 1xMEtO-000000088eZ-2UjK;
+	Thu, 29 Oct 2026 01:25:22 +0000
+Received: from mail-ed1-x52a.google.com ([2a00:1450:4864:20::52a])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMEoi-000000088VH-3yhs
+	id 1xMEtL-000000088e8-0Cqw
 	for kexec@lists.infradead.org;
-	Thu, 29 Oct 2026 01:20:35 +0000
-Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-6b4a13789b0so328112a12.0
-        for <kexec@lists.infradead.org>; Wed, 28 Oct 2026 18:20:31 -0700 (PDT)
+	Thu, 29 Oct 2026 01:25:21 +0000
+Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-6b4bd3d98bfso3451a12.1
+        for <kexec@lists.infradead.org>; Wed, 28 Oct 2026 18:25:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1793236830; x=1793841630; darn=lists.infradead.org;
+        d=gourry.net; s=google; t=1793237116; x=1793841916; darn=lists.infradead.org;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=TWYN3MXkVQTFS4ykvP4ULAqrY98K2LtbRow9MYNtF9g=;
-        b=BAHOAO51jfPFZ295OuH833D3Q1adnpCpVjTWylNPU8HY9VrljM++/chQKQA1RpSxkd
-         buLtju41nB6WYswE1wd80NiXv4TpWDacZD8ueFsP20WdtgOceSMHgokkuurc/YFl9zQv
-         3RcnOuxKwu004wL3OwM+I652oue8dkjITvXHU2V24YdrRXZko2YRq1jsmsDTd79fp2Vt
-         4LS9P5lLZ4qtUZOe8vTo6hvZnSP36jOQSOryAZ/yq8UGaqth3O5OTXDEkT8sjPGfd2aa
-         7eCRNQeL+9fVWoFTdGK549m7NRZ/zSSkg0ux0U+xg7+QLjJTEooVxnmdE7tqUCDr2dsZ
-         SLtA==
+        bh=M/AMFbjA9JAsBdCFWz1LANgAn0knNna+7jo0zCTOlPs=;
+        b=KbTnZ/nwFMb/JEbrb/P6BHvTc2uprr0o+7R/2TRMVcN6hsQKT5iC3zvSq6+jqqXuxS
+         4ol9/DcgLmqbqsbXdTlsCzBwhgLWU+ghAVyu387ngIqZoysSI4pabwf1ZnObDW79eWYL
+         GWjQtJqvU170xQ2XpyEv+ZL7Y6ZL5EgzjkrcVfkF8gpWQFD6Z86z99U1i2k5UnDcG0nO
+         M/kLZ9u6fardnxBrKuR+16BF0r9KJrcwZyMa8j3DtC4b61koao2JfL5buRQrNilPjQU+
+         4GyazMo0CSWjmMAWKB1V2xZpRnyNCJzmYiU5MSuDSqz3AfpDtv9yk6bqXTQN9UuYBQlg
+         A7vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793236830; x=1793841630;
+        d=1e100.net; s=20260707; t=1793237116; x=1793841916;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=TWYN3MXkVQTFS4ykvP4ULAqrY98K2LtbRow9MYNtF9g=;
-        b=zU8/XEafAIWAfJaBfPVIvcCwjlRLi2eoVVDYWmb0sWv0105udEFB1ijt10DvB1t5FZ
-         2lkgW/SOoVoDhWAKcCy1foQk4e+2kyHMv+HiDenzQ0A6DMBTmiwR7k7Q8yqAcL1+28iR
-         UfFUXaHnop0nPMrkh/1v83R6PePOFtW4aHgWQFZg3N1TWxuIpcj89z8VajZVcpbn0tmo
-         1k4kXA6O7J8O9wyWrmR/22oznagYj0uxSMNviaNBbVv3nqq+R8uunAso/K0LHb56BtUw
-         KloOwOr++BGSTjTuOiEMJap+cxCIuM+kmhM0XnzFDJEd0+ELKWRo5VtosRF9oDsGxUQ7
-         wl9g==
-X-Forwarded-Encrypted: i=1; AKwUvBw+cdMdujs/H0iQ/zax0BKDTjN7oH3oVDTiQQ5kWioC3861QVw3g3VT40udfI1C/7YDNobmpQ==@lists.infradead.org
-X-Gm-Message-State: AFq9FYLPc/SNJW2ffFQizxz883I1Zw7XQDCZJpHBzzGtRHzvqcOMqUKc
-	JhFuqg6S4v9O5KC0jaWpr9Wid4C1WdT+StKp25EA3VHsDRLH+Pbr+PtmgR+nFRPFOMA=
-X-Gm-Gg: AYBFou2f5sxH46M83s4tJCG7dyV8StmkdNWKuqXNRxwgUvYRaxykeLsksK88M9e1TzH
-	uoVhs/cDia9NOMeNGbDJ3Gb4itYGiuRFXYXkAFd7XbuF6MRQgMDqS9k0sD8VOirTfmET32rW95X
-	t4rLfjY9Xwd92kW86Vc1tfg1i9YWL+WgBytNXRw/HYAuTmulqjZIAlatfGbezV1qt+nDRpJPnHX
-	qw+bZlwzNOrdGyg23EDAiA9c8OCm9ifJdU61GaloUgX8O+V9cZE6IpPs9gL5Ps3hQ8Ts8fUiSAp
-	nSi4Hn7R7uVaZJM7H58NaNC6brJD1yWmO/CBW2IjdwYJf5+fFqRNt7MdEPNs2zFYL7mVuIJyRrJ
-	n4NXXpOXVoIZelRoXNVkJAIm2wSHsrR+lyFa7ivE+Kyl3DpYH2Gz35qMKPFq/l/nAWt9/MpkauI
-	V2PguJ9uyD53j972gSv1InAaqbCQ3r8sC/R5/KHbzHd5IEo1wjh9wk6MYUcbZ+pqXhqMzCBm2RS
-	N+m9GCOWJkuzq7TTws7aa6Qi87cV73HeWVDdeh5MxwEBEl42ZnZo/IA1TrApaXcheLsJhZWyVSX
-	+66j2FK6CoMZYEuCka4H
-X-Received: by 2002:a05:6402:c507:10b0:6b4:8d8e:c5c9 with SMTP id 4fb4d7f45d1cf-6b4b0b82678mr569270a12.4.1793236830233;
-        Wed, 28 Oct 2026 18:20:30 -0700 (PDT)
-Received: from localhost ([2a03:2880:32ff:72::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c46bd649f69sm671275666b.43.2026.10.28.18.20.28
+        bh=M/AMFbjA9JAsBdCFWz1LANgAn0knNna+7jo0zCTOlPs=;
+        b=OY+J91r9OxzRmfkMz0jrRz9l89/YZ6hu+XsJRk7AV7IpxQTqOzAhVQ9Q05TAR9QPFf
+         exZsjQQraT8SGDI76jFsDQZe48MRK3zerpcFZ0GrK+QqIRyFLck5ncYdQrK7a0nJ4Nd5
+         pb4fwD5u+SSrsA+6Wb+xs2ZuPZ2Knl113qKDdqhBTTx9CUfKUY4g4VwOYzsaEk3kg4rQ
+         pcIfCxsaa1xyEJXNhFL3Lj3vZp0EoHWvKSyPjgWsnKY4W2M3Gvz4n0QJeTLw0S8c2R70
+         WQCX1TLFfUt/KlY3Fr5gvei+uIaLxszKrDBxwXGepTkydHLBzmQz+IDnhG/n0TXPc/IF
+         MBhQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwwljZKfGmDFhfs2O0dRbsnl9fydmB42MJIH1ksqfG9ueKgfmFsGSq8esaS6TKSAnFn5PG5rQ==@lists.infradead.org
+X-Gm-Message-State: AFq9FYLM842wGjk6SZNA+qA+uRZH0khp9c+MPgIRJiX8766p/eD/zVvy
+	WRdGlcmct5ZrFQNenxGbs6Akxkbr7I7gW1zEdfDyWDm9BGm67jj5QCQUfJAb0qLl3Os=
+X-Gm-Gg: AYBFou2LcyIRywGe7BQrUdkdPYz+G6ADLpK4mxLgEC33IHanUjnafmk2rB2fmJgDm6W
+	fvwtxBnLWczH/qrYUAToAge4M/SOT5hCiOW9+0Tg8hJ3UVqtCvk99y0xwbiiPLgVDo61eqiC8zB
+	+dgw3bw/JJV0Ag3db6Tyzw8Cp2UZGP8oKgytKuMAy1doE/rrWTIb4M40QOGzDafLDSs7OL2zmq4
+	PtUu2uMMfl0ZJcj8eT93NlSgJ43ubqYFMTeWM6E59l6+R87t6FzRJMyLIiM3WziNWF0rjwbKZFH
+	DqRr1JqpblN2SugrRxGSAxasroUDCkOGILe6sSI//6Z1xmv4gnydBymCW8WjrGXzo/0UwfMSDFa
+	XGNW1X1hfO/2c6dG0JBC4IZ9KaQRZCoLQSqiBeGJGLBvizSQ3rlR0W9YySqr80HXbMxPJy7rptv
+	BGO5BxVaqNhPFgOZi53N48mUR/oXScKFGWONaIOWUtpAaxYhp4mvXslSw5qhHg07oVYQqV8ZM7Z
+	VO4iNBGaNtnR49F7ncOJNh/JXCACe0+QwpuLn7bq6N/OlVR6+/H3boZftUNlDA0mMq6gsrRzF+J
+	bkqi1v7U8v5MgQNsbTYTEov8u9prmVpcJcj1Vcvq5g==
+X-Received: by 2002:a05:6402:234a:b0:6b4:7b28:8588 with SMTP id 4fb4d7f45d1cf-6b49cb5a33dmr2836967a12.2.1793237116591;
+        Wed, 28 Oct 2026 18:25:16 -0700 (PDT)
+Received: from localhost ([2a03:2880:32ff:7d::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b49644bcd7sm2122970a12.33.2026.10.28.18.25.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2026 18:20:29 -0700 (PDT)
+        Wed, 28 Oct 2026 18:25:15 -0700 (PDT)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 15/46] mm/khugepaged: always recheck the pmd in
+Subject: Re: [PATCH 16/46] mm/khugepaged: fix PMD table lock leak in
  try_collapse_pte_mapped_thp()
 From: Gregory Price <gourry@gourry.net>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
@@ -117,15 +117,15 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
  linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
  stable@vger.kernel.org
-In-Reply-To: <20261027-fixes_core-v1-15-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-16-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-15-6f74bec9a5bb@kernel.org>
-Date: Wed, 28 Oct 2026 18:20:27 -0700
-Message-Id: <179323682749.453251.17316394789253085295.b4-reply@b4>
+ <20261027-fixes_core-v1-16-6f74bec9a5bb@kernel.org>
+Date: Wed, 28 Oct 2026 18:25:13 -0700
+Message-Id: <179323711320.453251.11778195785979033843.b4-reply@b4>
 X-Mailer: b4 0.17-dev
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261028_182033_224397_59B33039 
-X-CRM114-Status: GOOD (  12.87  )
+X-CRM114-CacheID: sfid-20261028_182519_137719_1C713F29 
+X-CRM114-Status: GOOD (  12.99  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -148,21 +148,25 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 On 2026-10-27 00:17 +0100, David Hildenbrand (Arm) wrote:
 > From: Josef Bacik <josef@toxicpanda.com>
 > 
-> try_collapse_pte_mapped_thp() drops the PTE lock after it has cleared the
-> page table, and takes the PMD lock and the PTE lock to remove it.
+> For a private mapping with userfaultfd, try_collapse_pte_mapped_thp()
+> takes the PMD table lock before it maps the page table for the second time.
+> If that (pte_offset_map_rw_nolock) fails, because the page table vanished
+> in the meantime due to concurrent page table reclaim, it leaves through
+> the abort label, where the PMD table lock is unlocked if it differs from
+> PTE table lock.
 > 
-> In between, MADV_DONTNEED with CONFIG_PT_RECLAIM can reclaim the
-> page table. The pmd_same() check is supposed to handle this, but it is
-> only done with CONFIG_SPLIT_PTE_PTLOCKS.
+> In case the PMD table lock and the PTE table lock match, which is the
+> case without CONFIG_SPLIT_PTE_PTLOCKS after pte_offset_map_rw_nolock()
+> failed, we miss to unlock the PMD table.
 > 
-> Fix it by performing the check unconditionally.
+> To fix it, forget the PTE table lock when we unmap+unlock the PTE table.
 > 
 > Fix generated by an LLM and sent by Josef Bacik in private.
 > 
 > Fixes: 6375e95f381e ("mm: pgtable: reclaim empty PTE page in madvise(MADV_DONTNEED)")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: adjust description ]
+> [ david: move the ptl = NULL handling; rewrite description, drop wrong comments ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
