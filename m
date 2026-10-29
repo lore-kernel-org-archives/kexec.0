@@ -2,56 +2,55 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E0560A260F
-	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 20:34:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6091560A2610
+	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 20:34:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=eN0NcqTV;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AQKsyj+q
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=OXwdZaPi;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SjSyyyt2
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=IUH+yaBKom46Q63QM7iBm+f59t3sGZ4mQyL9p/SX3S4=; b=eN0NcqTVwUC3Gh
-	YVuUISVRbWE9lxRjLcVFz6Wj++LosZqA/dk6TFY27hchBgRrCx6vBzsga6WEn8a03IpiHu9JzZ/IV
-	IceiU0e+0Y2S4TvYPdfcd33gK7LJSmpNkARJLVhy4GZDoJP/Cjsu7wgt8E5QmI8cX2mfgE71bIoxb
-	6V553U9AuZLfGdV/4c1/T7Ovjlxix3rMCgnUeOOHTft+MEET3oq7cucmmJutwXNxi6hbTjDSnAZv2
-	U96dfgFr5ib0hhD16Tq6M0wPPKgwwDtew9mCrLm9KCof0RqHr0JlNxsrxEdJ0zDA0OlPaUbIoYDa7
-	PQ2bowAgf8lJWKpMCFqg==;
+	List-Owner; bh=oT+YqEtlQbND2mfRTH9TILHjv0P3Fo80cSp1PCr5wUg=; b=OXwdZaPi0b1qd3
+	IQfKjXuGUSGOFlufavJfTlYA/Y3cjWr8bU86cAZ9Io9rkLjXfWZu7XJreVVbmVr5zqOsb712xyFMK
+	E8js3IMX7lDK5/N8cF+w+4f3EdpHo9/MVj1L5xx4Bemx52KPIFtW0+6a3pVPZP46Z6g6qxwrHHyQK
+	6r2NxOPFQmRsB6LRpPfYhWHq7qtVNkGliBA1AGF6BvkulpTfCXcS2U9mSdIe1ahjVKOoPAEYlL5gF
+	4HCzhw4q6hn+xyg3906VKHwtRP3cL6E/n0NTNjWnVLedFFvlBkTCJuw5F7uihoZRcdAJBN38W2e6+
+	C6xO3FruJ49gMZ5EHNOg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMWpD-0000000AKHP-07Or;
-	Thu, 29 Oct 2026 20:34:15 +0000
+	id 1xMWpS-0000000AKLX-0SES;
+	Thu, 29 Oct 2026 20:34:30 +0000
 Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMWpC-0000000AKH9-0DAl
+	id 1xMWpR-0000000AKLN-1m5X
 	for kexec@lists.infradead.org;
-	Thu, 29 Oct 2026 20:34:14 +0000
+	Thu, 29 Oct 2026 20:34:29 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id C7E12416D8;
+	by sea.source.kernel.org (Postfix) with ESMTP id 22F8542B79;
+	Thu, 29 Oct 2026 20:34:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 341E61F01816;
 	Thu, 29 Oct 2026 20:34:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A26F31F01828;
-	Thu, 29 Oct 2026 20:33:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793306053;
-	bh=IUH+yaBKom46Q63QM7iBm+f59t3sGZ4mQyL9p/SX3S4=;
+	s=k20260515; t=1793306069;
+	bh=oT+YqEtlQbND2mfRTH9TILHjv0P3Fo80cSp1PCr5wUg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=AQKsyj+qR4bxZGp8hAtyoQ1xOy4UZyL47FxstML+FqQX7G/y7pZ8l9SOf+5ou7WnS
-	 AZ/MIxoJhVWJNFDauvFzu5zXAw5inOOKbVVHKcdXEUzqJPeX7wQfcuJQKHYfLV7cgT
-	 DBS0xvxyeqIDcCB94oXE/FoCz/yzahtQW9be2ViknnFuUwiLNKNChtzZica7dWmXmI
-	 rxJu6FqHy+hS0KRyeLYDs7SF6JTjHzt3/Fnx/dmoxM+iCSbUu0aeKsMfsauzJgHrdB
-	 M2PNJNfSKISDgyTRDXYcWYfP+czRJ+zkR1pNBo2whDOaHlVJSA2riVVk0BtrRZThlu
-	 TWT19hXESofoQ==
+	b=SjSyyyt23NhzYdLUJQzjyOqLwA8+XnmlLC5njjzlYt6G5ocTnXx44lnZTPI/B7exG
+	 Tpqip0IMnoVAS6p/71GtzFblSHA6svKrTkHsAq9WcnMlGJUdiQBwr4XlMyXh12ZqvM
+	 PMICUX0jeBtzxG34zNZAKpfGD12ftE+vqPHD+fywpcJnjaLgQt+vpN4uGZcLThOK8u
+	 D1jTUIEWcxMJjlyTBTqH9cb9voaIk3GpZ5mh8GmYLQdLgkQJ6rmEWMxh6gdHx15QIA
+	 Ie2Q4Jtu03dezRZ2IiU2gLRK/y+6l0H5VxNnAzVZG2SouSugNYWL5yMEENxKvREYzJ
+	 LvERDYWVFwK4Q==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Thu, 29 Oct 2026 21:32:58 +0100
-Subject: [PATCH v2 03/47] mm/memfd: check for real shmem inodes before
- accessing shmem state
+Date: Thu, 29 Oct 2026 21:32:59 +0100
+Subject: [PATCH v2 04/47] mm/memfd: make f_pos accesses atomic
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261029-fixes_core-v2-3-a64ce7f83abb@kernel.org>
+Message-Id: <20261029-fixes_core-v2-4-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
 In-Reply-To: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -89,15 +88,15 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
- stable@vger.kernel.org, Chris Mason <mason@kernel.org>, 
+ Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org, 
  "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3516; i=david@kernel.org;
- h=from:subject:message-id; bh=llGJ6NdJiWik0yJaZwx3srvBERv6b9fGHgw5NUViur8=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLIer21Ju85syDihqpSx8kZevq/BZ7vdCS+E9j8/nxLpZ
- /XE2Ia3o5SFQYyDQVZMkSUo+L7By5fraqvd+Jhh5rAygQxh4OIUgImo6DP8j8p2PfZIeerUF4kK
- Hjnn3G2C5wiVWez72jNt+fOvrBv2ejH84b6byOPtzq2/yLfz8kkfNWWZyr3pRUYsIhJrNjtK6AX
- xAQA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2770; i=david@kernel.org;
+ h=from:subject:message-id; bh=nYtl8pReTocJvpHuEkN/fjyaxBPiNA2Y0oMG8lh8AYY=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLIer22xkX+5Wkk7rWjRXY2Wt0+XTo3qWFSprqoufvySW
+ 8BivVlHOkpZGMQ4GGTFFFmCgu8bvHy5rrbajY8ZZg4rE8gQBi5OAZiI701GhvMcKwXqeEUK1hzV
+ juE376/hNWV5cNDRsyVF2ofV0GlGGCPDGvUzvfqV+ta/o6LsdG0TzrptVd5fecV8r1nh2W27GjU
+ ZAQ==
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -118,101 +117,68 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-shmem_file() only checks a file's backing mapping. That mapping can belong
-to another file, as with a Coda file backed by a tmpfs container after
-mmap(). It does not establish that file_inode(file) is a shmem inode.
+From: Josef Bacik <josef@toxicpanda.com>
 
-Seal handling and memfd preservation use this check before accessing
-shmem inode state, so they can access an inode of the wrong type.
+Commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per POSIX") made
+read(), write() and lseek() on a shared open file description of a regular
+file serialize on ->f_pos_lock.  The flag that asks for it,
+FMODE_ATOMIC_POS, is set in do_dentry_open().  A memfd is a regular file
+too, but its struct file comes from alloc_file_pseudo() and never passes
+through do_dentry_open(), so it does not get the flag:
 
-Add file_inode_is_shmem() to check the inode's file operations in both
-paths. This identifies regular shmem inodes, including those used by
-memfds and ordinary tmpfs files, independently of wrapper file operations.
+  CPU0                                CPU1
+  write(memfd, "a", 1)                write(memfd, "b", 1)
+    pos = file->f_pos  (= 0)
+                                        pos = file->f_pos  (= 0)
+    vfs_write(..., &pos)
+                                        vfs_write(..., &pos)
+    file->f_pos = pos  (= 1)
+                                        file->f_pos = pos  (= 1)
 
-Fixes: c49fcfcda8b5 ("mm/shmem: update file sealing comments and file checking")
-Fixes: b3749f174d68 ("mm: memfd_luo: allow preserving memfd")
+One of the two bytes is overwritten.  Two threads writing 100000 bytes
+each, one at a time, to a memfd end up with a file that is far shorter than
+200000 bytes, while the same program on a tmpfs file never loses a byte.
+
+Set the flag when the memfd is created.  As for any other regular file the
+lock is only taken if the file is reachable in more than one way, and
+nothing a memfd does in read or write waits for another operation on the
+same file.  This cannot be done for all alloc_file_pseudo() files: anon
+inode files such as eventfd are S_IFREG as well, and a blocked read holding
+->f_pos_lock would lock out the write that is supposed to wake it.
+
+Fix generated by an LLM and sent by Josef Bacik in private.
+
+Fixes: 9183df25fe7b ("shm: add memfd_create() syscall")
 Cc: stable@vger.kernel.org
-Reported-by: Chris Mason <mason@kernel.org>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+[ david: minor description tweaks ]
 Reviewed-by: Rik van Riel <riel@surriel.com>
+Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+Tested-by: Gregory Price (Meta) <gourry@gourry.net>
+Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
 Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+Reviewed-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
+Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- include/linux/shmem_fs.h | 6 ++++++
- mm/memfd.c               | 8 +++++---
- mm/memfd_luo.c           | 2 +-
- mm/shmem.c               | 5 +++++
- 4 files changed, 17 insertions(+), 4 deletions(-)
+ mm/memfd.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
-index a7c7a96a7cbf..4996420cfe60 100644
---- a/include/linux/shmem_fs.h
-+++ b/include/linux/shmem_fs.h
-@@ -117,8 +117,14 @@ extern unsigned long shmem_get_unmapped_area(struct file *, unsigned long addr,
- 		unsigned long len, unsigned long pgoff, unsigned long flags);
- extern int shmem_lock(struct file *file, int lock, struct ucounts *ucounts);
- #ifdef CONFIG_SHMEM
-+bool inode_is_shmem(const struct inode *inode);
- bool shmem_mapping(const struct address_space *mapping);
- #else
-+static inline bool inode_is_shmem(const struct inode *inode)
-+{
-+	return false;
-+}
-+
- static inline bool shmem_mapping(const struct address_space *mapping)
- {
- 	return false;
 diff --git a/mm/memfd.c b/mm/memfd.c
-index 0f6fff004f5e..507c00ce0fda 100644
+index 507c00ce0fda..131fb772ad65 100644
 --- a/mm/memfd.c
 +++ b/mm/memfd.c
-@@ -211,12 +211,14 @@ static int memfd_wait_for_pins(struct address_space *mapping)
+@@ -484,6 +484,8 @@ struct file *memfd_alloc_file(const char *name, unsigned int flags)
+ 	}
  
- static unsigned int *memfd_file_seals_ptr(struct file *file)
- {
--	if (shmem_file(file))
--		return &SHMEM_I(file_inode(file))->seals;
-+	struct inode *inode = file_inode(file);
-+
-+	if (inode_is_shmem(inode))
-+		return &SHMEM_I(inode)->seals;
+ 	file->f_mode |= FMODE_LSEEK | FMODE_PREAD | FMODE_PWRITE;
++	/* a regular file like any other: POSIX.1-2008/SUSv4 Section XSI 2.9.7 */
++	file->f_mode |= FMODE_ATOMIC_POS;
+ 	file->f_flags |= O_LARGEFILE;
  
- #ifdef CONFIG_HUGETLBFS
- 	if (is_file_hugepages(file))
--		return &HUGETLBFS_I(file_inode(file))->seals;
-+		return &HUGETLBFS_I(inode)->seals;
- #endif
- 
- 	return NULL;
-diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
-index 6b68220275eb..adaab98c8b63 100644
---- a/mm/memfd_luo.c
-+++ b/mm/memfd_luo.c
-@@ -581,7 +581,7 @@ static bool memfd_luo_can_preserve(struct liveupdate_file_handler *handler,
- {
- 	struct inode *inode = file_inode(file);
- 
--	return shmem_file(file) && !inode->i_nlink;
-+	return inode_is_shmem(inode) && !inode->i_nlink;
- }
- 
- static unsigned long memfd_luo_get_id(struct file *file)
-diff --git a/mm/shmem.c b/mm/shmem.c
-index af21a89abb0f..0ca5b7f7a517 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -275,6 +275,11 @@ static const struct vm_operations_struct shmem_vm_ops;
- static const struct vm_operations_struct shmem_anon_vm_ops;
- static struct file_system_type shmem_fs_type;
- 
-+bool inode_is_shmem(const struct inode *inode)
-+{
-+	return inode->i_fop == &shmem_file_operations;
-+}
-+
- bool shmem_mapping(const struct address_space *mapping)
- {
- 	return mapping->a_ops == &shmem_aops;
+ 	if (flags & MFD_NOEXEC_SEAL) {
 
 -- 
 2.43.0
