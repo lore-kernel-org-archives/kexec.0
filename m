@@ -2,56 +2,55 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032F6606A31C
-	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 20:44:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31719606A31D
+	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 21:05:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=FAefhIDQ;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=I3wM2Fp2
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=1BfGyLFz;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ISvCpW1n
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=PI8EmdBn37j7qc/hvMAGTDVDDo5VBf2eU5QEycECV2k=; b=FAefhIDQtK28Fd
-	1QZNH/tRNys6GdadEMICAPqMMzBnNvMZtx326Gy0Ec354oQIDBWUZnJZaDHDwuIh4xI2gJZSp4fNc
-	4351szlooedUw+YywfH9dXwy6xHqcDDktZ258Y1dxX9Fj6eqoi89E5SQHY0/DDpWR86kpBc1EQUXK
-	5kxnGalQXrL4QctpJJlxaFvyjSCaJ+1oKfT1MvNCzeMwq3mTwIlyKpjrMacM33Jc07phMx3/u6OSa
-	1GMXlRgD4uT3j5pO8d5Ur3bMvmaHFmXNxfcQjcqmXDlGvsXq1leiQJpkg6fZRLMIWDIi9LE7NPnAL
-	zlEQ3nkJYpeqgRHn/Dbw==;
+	List-Owner; bh=f99FBG9cmwfw/aEnFPXgwYaEgH0mqzP7LaMxLWErvlM=; b=1BfGyLFzH9L9VE
+	1XnLIEpScGb458FLjS2tVOk7XCYyYurNaAbLeYJmmQy6YDRkpc9Yi3mwQDP5ZFH5lpGKcZih1wmpt
+	xq84vNd5I4ome3qea9HyW52ic5yO0JcKJeS/RXgavjbBbfSxvlqAyYSxoQ9n9xggc1QjKhOVX+e2L
+	qXAb20tbGTSK5bCUB/XGDRp5zuXQjgUa5hsy7W5ZQfUd0NKFSS/qnctzswqYx8aNeiE7k4WoYpYrw
+	fNVNBQnmzq5ts1RTN6e0ubQ+AQZMJ4Oib+gnvx3Mv8in9t0tHaukEvTni9MR3e5irIg6kHEu+JagC
+	fUXfSlJAzuOO0slf3EXw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMWyl-0000000AMeV-362X;
-	Thu, 29 Oct 2026 20:44:07 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xMWz0-0000000AMir-3fHz;
+	Thu, 29 Oct 2026 20:44:22 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMWyk-0000000AMeO-0kXo
+	id 1xMWyz-0000000AMiU-02C3
 	for kexec@lists.infradead.org;
-	Thu, 29 Oct 2026 20:44:06 +0000
+	Thu, 29 Oct 2026 20:44:21 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 97A3A6062C;
+	by tor.source.kernel.org (Postfix) with ESMTP id 6FCB7601EE;
+	Thu, 29 Oct 2026 20:44:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4EBC1F01816;
 	Thu, 29 Oct 2026 20:44:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ABD81F01826;
-	Thu, 29 Oct 2026 20:43:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793306645;
-	bh=PI8EmdBn37j7qc/hvMAGTDVDDo5VBf2eU5QEycECV2k=;
+	s=k20260515; t=1793306660;
+	bh=f99FBG9cmwfw/aEnFPXgwYaEgH0mqzP7LaMxLWErvlM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=I3wM2Fp2M/mnFZOoLQjrOOGcJn2Tv+0zUzVbgWBHluank6O6Jj1/hRTD8bqfwKQr4
-	 zHGg1evLbpkE+EIITtj8IU/8h5sV5/cwswPhYhl58K+pNMq7yafhM/3QJ/6tSZvjtc
-	 EIkF69eSqkz5J1NC2rlbPl+flcQ/bjkq88b6bJXNhOBiP8sgZRILnp8rnBww98GwHz
-	 WXdmRGcnvgjlqG7d/lH2c1NXRCKkWqDCNw2Js2U532SmcF2gBH4YHMWqG1WEOaK84E
-	 XQRunhZ8gsVpvKbm8t04i7F4xsicZijv9ybjklw+5K7P0vn1r3nGM9fxxNtquFNu1P
-	 xH52ZIz0oh+VA==
+	b=ISvCpW1noMZ/QA9Jr4U4ciYvPBlggN3Z+6JfPPsgt7+DBM//0I+sSMG7BKDe4mOYJ
+	 0LzS18/0vo2MIyIc1gbIO4QitWdoMYUlqgluemT6WVI5mMdz1prqImIRZLHagRYJPl
+	 APjbqHJGcwwUeuXSaijEVSo7Ic8ccUPMCoJrbjRImpYt3b1GIpeOsoLwSbcKWxWMBE
+	 ImzDkrq/DeJ6vMi5OW4WJWRj+jRdW1Nm5Ct5iDGzqfdhTgeO72u6sQV4AW0hawlICs
+	 itcUaU3Clq0Apdq2pQxRfxTHxoFtftXWanHxoliGkrRBX9nEQXTMchpzwz3AWsjlCH
+	 Kcs9Gjc6eZC6w==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Thu, 29 Oct 2026 21:33:38 +0100
-Subject: [PATCH v2 43/47] mm/huge_memory: split huge PUDs when adjusting
- VMA boundaries
+Date: Thu, 29 Oct 2026 21:33:39 +0100
+Subject: [PATCH v2 44/47] mm/vma: don't leak the charge for stack growth
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261029-fixes_core-v2-43-a64ce7f83abb@kernel.org>
+Message-Id: <20261029-fixes_core-v2-44-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
 In-Reply-To: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -89,14 +88,15 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
- stable@vger.kernel.org, "David Hildenbrand (Arm)" <david@kernel.org>
+ stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
+ "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3933; i=david@kernel.org;
- h=from:subject:message-id; bh=QffgpAOB3agwHlZzTMqGo5KOI/hFG36iruKivYKWL2Q=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLIer+303vND6POzBp0C/l2WzFfevlivUbNg/4TeZ/vCm
- T3+ZP1b0FHKwiDGwSArpsgSFHzf4OXLdbXVbnzMMHNYmUCGMHBxCsBEZnozMkwLOl5Wk5Bj1Thd
- SFvk4Twt9r1svrlLZnWGliUJ23L9vMbwV86BzahUqf7TnN3Gc6RW/hTcvvzy1FTBp8v2vL6/5VD
- ZYz4A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1286; i=david@kernel.org;
+ h=from:subject:message-id; bh=o0mheINR978z1uD1ZHGsTx1VSvH13fE2UEr82UlnsHQ=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLIer+36aHqh4IJVheeK896X0nMzPQ/Pi5JZtIppO0NnM
+ HNBz/a2jlIWBjEOBlkxRZag4PsGL1+uq61242OGmcPKBDKEgYtTACYi68XI8EL/YelpBxn2YMEy
+ +RgRwdSk2d/+utfpP5UtN9XV+bL/IMP/sMpy4djuF7d6rH8c1XGs5FY9Uao3xdh947d5D4VsGSb
+ xAQA=
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -112,127 +112,45 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=4.0.1
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-PFN mappings such as VFIO PCI BAR mappings can use PUD leaves while
-allowing VMA splits at page granularity. However, vma_adjust_trans_huge()
-only handles PMDs.
+acct_stack_growth() charges stack expansion even without VM_ACCOUNT.
+This can happen for read-only or MAP_NORESERVE mappings created with
+MAP_GROWSDOWN. Unmapping these VMAs does not release the charge, leaking
+Committed_AS.
 
-After faulting a writable PUD-sized VFIO BAR mapping, changing its first
-page to read-only with mprotect() makes the PMD walk treat the PUD leaf
-as a PMD table. Applying MADV_DONTFORK to the first PMD-sized chunk leaves
-the PUD spanning two VMAs: the PMD-aligned boundary skips splitting.
+Only check and charge growth for VM_ACCOUNT VMAs, matching mremap().
+Unaccounted growth skips the overcommit check while remaining subject
+to the other stack-growth limits.
 
-Walk the page tables once at each adjusted boundary and split a huge
-PUD or PMD leaf as needed. Handle PUD leaves even when the boundary is
-PMD-aligned.
-
-Fixes: f9e54c3a2f5b7 ("vfio/pci: implement huge_fault support")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Cc: stable@vger.kernel.org
+Reported-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+Reviewed-by: Harry Yoo (Meta) <harry@kernel.org>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/huge_memory.c | 70 ++++++++++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 60 insertions(+), 10 deletions(-)
+ mm/vma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index f1b3f744c630..6ff3faa200f9 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -3504,16 +3504,66 @@ void split_huge_pmd_address(struct vm_area_struct *vma, unsigned long address,
- 	__split_huge_pmd(vma, pmd, address, freeze);
- }
- 
--static inline void split_huge_pmd_if_needed(struct vm_area_struct *vma, unsigned long address)
-+static bool pud_split_required(const struct vm_area_struct *vma,
-+		unsigned long address)
- {
-+	if (!IS_ENABLED(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD))
-+		return false;
-+	if (IS_ALIGNED(address, HPAGE_PUD_SIZE))
-+		return false;
- 	/*
--	 * If the new address isn't hpage aligned and it could previously
--	 * contain an hugepage: check if we need to split an huge pmd.
-+	 * Only selected VMAs support mapping PUDs for now. Lift the
-+	 * restriction once this changes.
+diff --git a/mm/vma.c b/mm/vma.c
+index acdf00346cda..695d0be85ac8 100644
+--- a/mm/vma.c
++++ b/mm/vma.c
+@@ -3391,7 +3391,8 @@ static int acct_stack_growth(struct vm_area_struct *vma,
+ 	 * Overcommit..  This must be the final test, as it will
+ 	 * update security statistics.
  	 */
--	if (!IS_ALIGNED(address, HPAGE_PMD_SIZE) &&
--	    range_in_vma(vma, ALIGN_DOWN(address, HPAGE_PMD_SIZE),
--			 ALIGN(address, HPAGE_PMD_SIZE)))
--		split_huge_pmd_address(vma, address, false);
-+	if (!vma_is_dax(vma) && !vma_test_any(vma, VMA_PFNMAP_BIT, VMA_MIXEDMAP_BIT))
-+		return false;
-+	return range_in_vma(vma, ALIGN_DOWN(address, HPAGE_PUD_SIZE),
-+			    ALIGN(address, HPAGE_PUD_SIZE));
-+}
-+
-+static bool pmd_split_required(const struct vm_area_struct *vma,
-+		unsigned long address)
-+{
-+	if (IS_ALIGNED(address, HPAGE_PMD_SIZE))
-+		return false;
-+
-+	return range_in_vma(vma, ALIGN_DOWN(address, HPAGE_PMD_SIZE),
-+			    ALIGN(address, HPAGE_PMD_SIZE));
-+}
-+
-+static void split_huge_leaf(struct vm_area_struct *vma,
-+		unsigned long address)
-+{
-+	const bool split_pud = pud_split_required(vma, address);
-+	const bool split_pmd = pmd_split_required(vma, address);
-+	pgd_t *pgd;
-+	p4d_t *p4d;
-+	pud_t *pud;
-+	pmd_t *pmd;
-+
-+	/*
-+	 * mmap, VMA and rmap write locks protect the walk; the split helpers
-+	 * take the page table locks.
-+	 */
-+	if (!split_pud && !split_pmd)
-+		return;
-+
-+	pgd = pgd_offset(vma->vm_mm, address);
-+	if (!pgd_present(*pgd))
-+		return;
-+
-+	p4d = p4d_offset(pgd, address);
-+	if (!p4d_present(*p4d))
-+		return;
-+
-+	pud = pud_offset(p4d, address);
-+	if (pud_leaf(*pud))
-+		__split_huge_pud(vma, pud, address);
-+	if (!split_pmd || !pud_present(*pud))
-+		return;
-+
-+	pmd = pmd_offset(pud, address);
-+	__split_huge_pmd(vma, pmd, address, false);
- }
+-	if (security_vm_enough_memory_mm(mm, grow))
++	if (vma_test(vma, VMA_ACCOUNT_BIT) &&
++	    security_vm_enough_memory_mm(mm, grow))
+ 		return -ENOMEM;
  
- void vma_adjust_trans_huge(struct vm_area_struct *vma,
-@@ -3522,14 +3572,14 @@ void vma_adjust_trans_huge(struct vm_area_struct *vma,
- 			   struct vm_area_struct *next)
- {
- 	/* Check if we need to split start first. */
--	split_huge_pmd_if_needed(vma, start);
-+	split_huge_leaf(vma, start);
- 
- 	/* Check if we need to split end next. */
--	split_huge_pmd_if_needed(vma, end);
-+	split_huge_leaf(vma, end);
- 
- 	/* If we're incrementing next->vm_start, we might need to split it. */
- 	if (next)
--		split_huge_pmd_if_needed(next, end);
-+		split_huge_leaf(next, end);
- }
- 
- /*
+ 	return 0;
 
 -- 
 2.43.0
