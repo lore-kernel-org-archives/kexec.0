@@ -2,83 +2,83 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1337606A31C
-	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 01:27:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC50F606A321
+	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 01:49:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=JoZnubln;
-	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=cgKIiYmE
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=JMULakXj;
+	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=gx3NBXs9
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
 	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=CDgUtS6BmV52eDuX4xnh+bC+kNpwLNlhCSGJQEIkHH8=; b=JoZnubln/qXC2M
-	1bWvhJfsaCEgSO+J355/Tve9fTIZb0mU6fGEVMuPYS7erPVHrNdGW5xnIz1eS4wvnU/TJ0ieU4W5N
-	3r+iizYKPsKdcVSAmtXSc1dMoky863fztHedpRedt/S1je9F0vhBECllfooJwF9XbkvqmcFApoC1a
-	v0NKQcguGNnmQ50KTw8BkjDQq/Y8Oue8+1e144Mgd7wKKoeZvh7StZ3CjS6tQPsGZL5M4SUGBVej7
-	jk2/veptIZv0D1u3zkT2EuibF7QB6KGDI/S1/XB058x4qVQTlHTHyA0qABpEy2Wys2MXEKCli2KVV
-	sjSKNLYHGTSs9Z+fGp6A==;
+	List-Owner; bh=WpPpjm9qqTzsBHBWliVMSUioS6+fsJ4niawtYuOMrWQ=; b=JMULakXjmAF+nl
+	0qL0eqjNB/oB5+To0j0srxfC3qyH+P0kB9XrP4Ph+a0ry8S6OQarzzFIF0ZYcb+F5J/2MKPaAIfzN
+	jm9GwO/674/kSkIlbg8xrr3fcYXIPdQOvH4GinioCfeh5RUDeayzZrbxuVVyUM6geMOZ030n1pD+K
+	wBSqu1UcX6jgIleVujicOxgiSfIw6Mv0cq2ZPkG7q7lib7JqOnVvxoR+shsseUggpqUGfxERCAM1H
+	7ZsODOwU0UVkaRJoZfcMIl323y6QdbcuhYAlySdlPK0YKl8NBSrISAG5z+kILtCXlm3+q+pt1enuR
+	IOvYkuBxwfZRIOrG5X5g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMEvP-000000088mA-0Eqt;
-	Thu, 29 Oct 2026 01:27:27 +0000
-Received: from mail-ej1-x635.google.com ([2a00:1450:4864:20::635])
+	id 1xMFGG-000000089pQ-2O0K;
+	Thu, 29 Oct 2026 01:49:00 +0000
+Received: from mail-ej1-x62d.google.com ([2a00:1450:4864:20::62d])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMEvM-000000088lp-2s4b
+	id 1xMFGD-000000089p3-3iBv
 	for kexec@lists.infradead.org;
-	Thu, 29 Oct 2026 01:27:26 +0000
-Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-c4682977f9aso203663766b.1
-        for <kexec@lists.infradead.org>; Wed, 28 Oct 2026 18:27:23 -0700 (PDT)
+	Thu, 29 Oct 2026 01:48:59 +0000
+Received: by mail-ej1-x62d.google.com with SMTP id a640c23a62f3a-c46822eefb6so206590066b.2
+        for <kexec@lists.infradead.org>; Wed, 28 Oct 2026 18:48:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1793237242; x=1793842042; darn=lists.infradead.org;
+        d=gourry.net; s=google; t=1793238535; x=1793843335; darn=lists.infradead.org;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=CDgUtS6BmV52eDuX4xnh+bC+kNpwLNlhCSGJQEIkHH8=;
-        b=cgKIiYmEbNYtMge0VyLgB6aF0zJdD3B8F4OanG1YYY1bQoYf5b6LNANq0pxKXUbKvX
-         TD9OGqIlyFUbza/ovotLtNwBuurKp6VFHgOyU72wOJc3IGMQv1JVGwaQM6ihm+7jAinK
-         aLfjyHgRxNDPJ9I1O5TdEzAM0i+kQIHPoiKnWb+yRlsDUHiYuMSc/v0UZBWsRR5qsPA6
-         LKWf5iLyFwV7XAxCpTCGThvXVILUwmizcP1wBbHTNduirO6NiUFHr6cwvt7y0q7exA7f
-         l67DEIUGpYPXSxmwLHun4/Uxomb1G8j3paOig6LrH1e0NqswLgCeoe1LX8oCnu937r+C
-         HtUA==
+        bh=WpPpjm9qqTzsBHBWliVMSUioS6+fsJ4niawtYuOMrWQ=;
+        b=gx3NBXs9kwI7UKEjiVqO9pFie9GJQHftOTICCXAlZi9EsWxRvkvA+kgiMzm7OoxcOI
+         kgF3kgjQhB9nINmQbY0cRUK7s+DBfDln/Tftm43DrVcKGmWAfacODjvHjXzNV9+1GCvu
+         1VcQP3Fi2bloAHPslGu6l2Bc0hvlBIo5o4VEJ652NEP9iAIx1ohU/j8MTKyqO5Po4xMB
+         1Y3Xj45Pvfjzfv2CoRU/wJnLrkt+JratkTPL5h/QHp3lb48Il+H+yakCknaUXSO/LFZ8
+         MhOY9bsmSyY2adtvgp1Z0auKGS+ikbuY6Jz4tcrBCFMdctOGXjhgNfRGnDoG32bKdz18
+         mYGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793237242; x=1793842042;
+        d=1e100.net; s=20260707; t=1793238535; x=1793843335;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=CDgUtS6BmV52eDuX4xnh+bC+kNpwLNlhCSGJQEIkHH8=;
-        b=vFtfMKFblPLaJ7lOS64JLMqrXGzqKiFI08wxHe6Z6LaP9eiEov4NlWsaPqn7OBi05x
-         X3Mf8k40c77QJAzorOMuTcwfz/qtqxNAbZomDFgQb2692EKDckHR64yoM/qlGo9Nqhva
-         JMo8jXoIc0MJnakCBiagHJrU2nJDCIPzBYC999mwv2xQIoYcIihdDYWIr0RvFT3hGE1Z
-         i7mn1PCfA2iateMvfUIF0pxI6ZS8j/e2IMUA/CDfzupMN+ggl5xImmbrYWU1ep/y3ldi
-         Uo12PBLK342yk8ssCaG8iL4TUM/2Wm3gHPrwgx6CWxnz6OOxJyj/PoVLUyECfInMxZij
-         eE0A==
-X-Forwarded-Encrypted: i=1; AKwUvByjDiB09NAdN1da3EMjUXV5VyUOFw4/V5OMawh9G8FEsVKLel2Kl+yHzFvQqY6Eed0bKGtNBw==@lists.infradead.org
-X-Gm-Message-State: AFq9FYIWl152yncgkbZWaa53DEiT1PcSsKeOUjDkD8KmdRu2SNr3NpO7
-	oMRMgW3kKs9mm/OeV1SJJjiwfYvwABJdgy2yxvEkdOXBATnMpol32JtKR4fHcm+d7W8=
-X-Gm-Gg: AYBFou1KDZv5HmxvO5G9943Jbo5br67cANmejEP3Y+B8VnYVLXT5KmZxS7WPf/qKL7e
-	H8GNizT65d+tpbbqJnZloZtX+OM0SgcHjRSKlLmnYiOqlyKuYpoFirp5IM7CsAIMkU9Tku4usNa
-	IVmVuICFmGQ9gPyKYzjcW57RKjdDP8F4Y0bAw8XJsg8K6x7lRO5yBnix+xPWmXEFALbb/5dNq1Q
-	hc5jMRNJaqhtz7jkmZAMDhTSp/OseUZ4ccHaeDZ8ch86AzIUcOmvaog1JuL4+/QI2nc4IRZ/SAH
-	Qyxlf6UVqBfPwl/M6Cfxm1smpiDt063CCVYRd4sjLCgUHjXEKjUg8cGm3g0up6RNaGiuwVsFjgV
-	0zKTaLe2JzcqMiYD4s/kHQLZEJif53Tq3b/WW65/oLesUXy0I/0NsD23Vwxp3TqH6VwRFJWrsOv
-	HXfcXvSDD+vb8IIZfke4FwkA1b1uf+KDJSxuEJPtOPyITuc9IUt4UBQj8JT6QwRh7tnwnUeWlqS
-	Kq4LgqCAT2MOMFQKxzRav5lA08htTEG1LkQPcswIST4MMyITC7k9qn2MXWarXVFU5RjF5hwoB7a
-	mt0BTmhSCThIKR+ElrBf
-X-Received: by 2002:a17:907:97d5:b0:c29:c079:676d with SMTP id a640c23a62f3a-c49bdd744a5mr330020866b.3.1793237242153;
-        Wed, 28 Oct 2026 18:27:22 -0700 (PDT)
-Received: from localhost ([2a03:2880:32ff:70::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b4964488e8sm2081290a12.31.2026.10.28.18.27.19
+        bh=WpPpjm9qqTzsBHBWliVMSUioS6+fsJ4niawtYuOMrWQ=;
+        b=Bh3/2KbuVfHrgGutQIw0R254LD7p3527ivE9nyST/UAVqG0qDkcoDkOel1RGhUuMfh
+         nMWxRQM03rtBdkQzIOpZ6XWvEkxgmap92lpyO47fVRnKBRm803L2efiG3Jyc/07wRv7f
+         AkSn9tu8WVNRQx34xv0udD9WCPkH+h4warPPtOlfkqiphLUVRm1a1TyUi5dmWYeCaAeW
+         PUhxJ14XZUYCmaoFQf8heEN8G0PHkLhop0t7f9BvAuy4d4KtaiITezDe0XgAu9HTGrF0
+         ooE6Wa1oZryv9rUHa68Qc8AB/hrvGTBtK/UBqkFPzrPnm/4M4wFCeANS8heD75ZpKDbw
+         tH/g==
+X-Forwarded-Encrypted: i=1; AKwUvBwrWvfxQtbuodhVCiCMxMBuA21y6dx/AScQzyYx0PsNePXJzqusxVGDxfN0zy5YmKGnmGh0bg==@lists.infradead.org
+X-Gm-Message-State: AFq9FYJ4pJuIBIVF9thYDIM6qwV3yOQVXZ1u3c5WJ49C4ZvH5vAcAeLW
+	jdENbjEYyh8ala/p6FVMrvxBR/lle01BuLkF7eNAIgpswXSMOebLdrzWbgADQEJTarU=
+X-Gm-Gg: AYBFou2sZGMD38hWa+2cUMP1xPIogMURde3NbncPcg86LIR3C9KtDnAX77ViIvYGW2f
+	9BeqSt6qq7PTZ60ykqzR2p0Q6yx3iKzkXNLJQ4WV+iLErh2d4ul7KkmKyNh++cpuuzsriY2XCQM
+	nvscQA+VZ+DwrZRuTQqLMi5YTSPs0KFBlSVXotFyr4GiPMcXT3JM8gRpSxaM+bibPPPBjB1jqjq
+	WS53SEamvEoQKbYGq26ScuV9RXiPlyjqYOYxjcKPe7Easeo5GlOrJK88PhHA4uwdv2chBT3/hAX
+	T0B9lYym+dIIocMFolBRL6kPgrw5LkIP+Fz7viu/xiHoPq2n/75rZvuqkSM9SIofPaE5gvWeHMk
+	czN5UDkAnY+Yq5ECk+UhX/yffkm4wfPlMlnxeY6lPfX9Byu4P8y25NVp0dK4uLXaDdIUzr3/TVE
+	DONGAw0GDmw94qZ2kpAj6UsNQrIpqf+DhgwGDMh1S6Nx9D6eO/ajnRsGxD36MG1mk7QN66sKITy
+	VRKBe/BamWT+gEa5Dg3cXRUUVrF/rp9uLU3p8AA8m3J8k+I8uRAeV0+RQ4dOf1jE4xZXd2uAu+w
+	9BB1yIJdlFht0QO0CKPx
+X-Received: by 2002:a17:906:ef0b:b0:c41:b94c:4539 with SMTP id a640c23a62f3a-c49bddac7b0mr353178966b.6.1793238535200;
+        Wed, 28 Oct 2026 18:48:55 -0700 (PDT)
+Received: from localhost ([2a03:2880:32ff:4e::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b495ac454fsm2147232a12.1.2026.10.28.18.48.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2026 18:27:20 -0700 (PDT)
+        Wed, 28 Oct 2026 18:48:53 -0700 (PDT)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 17/46] mm/khugepaged: preserve dirty bits when
- collapsing PTE-mapped THPs
+Subject: Re: [PATCH 18/46] mm/khugepaged: check if PTE table is empty in
+ try_collapse_pte_mapped_thp()
 From: Gregory Price <gourry@gourry.net>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
@@ -115,17 +115,16 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
  linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
  linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
- linux-cxl@vger.kernel.org, Chris Mason <mason@kernel.org>, 
- stable@vger.kernel.org
-In-Reply-To: <20261027-fixes_core-v1-17-6f74bec9a5bb@kernel.org>
+ linux-cxl@vger.kernel.org
+In-Reply-To: <20261027-fixes_core-v1-18-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-17-6f74bec9a5bb@kernel.org>
-Date: Wed, 28 Oct 2026 18:27:18 -0700
-Message-Id: <179323723859.453251.1630776487784216917.b4-reply@b4>
+ <20261027-fixes_core-v1-18-6f74bec9a5bb@kernel.org>
+Date: Wed, 28 Oct 2026 18:48:51 -0700
+Message-Id: <179323853182.453251.8510731747954180380.b4-reply@b4>
 X-Mailer: b4 0.17-dev
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261028_182724_763896_BE7652DA 
-X-CRM114-Status: GOOD (  14.48  )
+X-CRM114-CacheID: sfid-20261028_184857_961575_9F597E6A 
+X-CRM114-Status: GOOD (  17.07  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -140,41 +139,44 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=4.0.1
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
 On 2026-10-27 00:17 +0100, David Hildenbrand (Arm) wrote:
-> From: Chris Mason <mason@kernel.org>
+> The existing code is rather horrible and already resulted in bugs in the
+> past: we special-case UFFD inserting anonymous folios by grabbing the PMD
+> lock early, but ignore any other markers (guard, poison through uffd) that
+> could have been inserted into the page table in the meantime, effectively
+> dropping them.
 > 
-> try_collapse_pte_mapped_thp() clears PTEs without transferring their dirty
-> bits to the folio. A shmem read fault can map a clean folio writable, so
-> a later store only dirties the PTE. Losing that dirty bit allows reclaim
-> to discard modified data.
+> Let's just unify and simplify the locking: try to grab the PMD table
+> lock and if that fails, flush the TLB, drop the PTE lock, take PT locks in
+> the right order and check if the page table is still empty.
 > 
-> The assumption that regular files are read-only is also obsolete since
-> commit 1b6444331bebb ("mm/khugepaged: enable clean pagecache folio collapse
-> for writable files"). In any case, transferring PTE dirty bits to the folio
-> when removing mappings (and while the folio is still mapped) is the right
-> thing to do.
+> We still perform the heavy lifting (zapping the folio ptes) under PTE table
+> lock only.
 > 
-> Use get_and_clear_ptes() to collect the dirty bits and mark the folio
-> dirty before unmapping it. Update the comment.
+> Include <linux/hugetlb.h> for now, as x86's flush_tlb_range() macro
+> depends on hugetlb helpers. This dependency needs a separate cleanup.
 > 
-> This was reproduced with shmem using MADV_COLLAPSE followed by
-> MADV_PAGEOUT.
+> Both issues this fixes are rather corner cases. Let's not CC stable for
+> now.
 > 
-> Fix generated by an LLM and sent by Chris Mason in private.
-> 
-> Fixes: 27e1f8273113 ("khugepaged: enable collapse pmd for pte-mapped THP")
-> Fixes: 1b6444331bebb ("mm/khugepaged: enable clean pagecache folio collapse for writable files")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Chris Mason <mason@kernel.org>
-> [ david: adjust comment; simplify description; cover file-thp as well ]
+> Fixes: f807123d578d ("mm: allow guard regions in file-backed and read-only mappings")
+> Fixes: 1043173eb5eb ("mm/khugepaged: collapse_pte_mapped_thp() with mmap_read_lock()")
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
-Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+This patch is painful. It's taking me a bit to wrap my head around.
+
+I get that you want to avoid taking both locks while zapping, but
+wouldn't it be simpler?  I suppose we don't know what kind of
+regressions might pop up with that though, bah.
+
+I can say that I've reproduced and tested the before/after state,
+and it looks stable.
+
 Tested-by: Gregory Price (Meta) <gourry@gourry.net>
 
 -- 
