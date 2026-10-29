@@ -2,129 +2,172 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC50F606A321
-	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 01:49:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED49606A31A
+	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 03:02:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=JMULakXj;
-	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=gx3NBXs9
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=XG9w/87s;
+	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=E24w5rDJ
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
-	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=WpPpjm9qqTzsBHBWliVMSUioS6+fsJ4niawtYuOMrWQ=; b=JMULakXjmAF+nl
-	0qL0eqjNB/oB5+To0j0srxfC3qyH+P0kB9XrP4Ph+a0ry8S6OQarzzFIF0ZYcb+F5J/2MKPaAIfzN
-	jm9GwO/674/kSkIlbg8xrr3fcYXIPdQOvH4GinioCfeh5RUDeayzZrbxuVVyUM6geMOZ030n1pD+K
-	wBSqu1UcX6jgIleVujicOxgiSfIw6Mv0cq2ZPkG7q7lib7JqOnVvxoR+shsseUggpqUGfxERCAM1H
-	7ZsODOwU0UVkaRJoZfcMIl323y6QdbcuhYAlySdlPK0YKl8NBSrISAG5z+kILtCXlm3+q+pt1enuR
-	IOvYkuBxwfZRIOrG5X5g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	References:Subject:From:To:Cc:Message-Id:Date:Content-Type:
+	Content-Transfer-Encoding:Reply-To:Content-ID:Content-Description:Resent-Date
+	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=uFJpG7TccakKvQrmjtVFkUtgC0R44/OJ46skeKOwvLI=; b=XG9w/87sdBa2y999WONw8ujXN+
+	Zgyt6eRauDs6U/Wmvd7ubZmppcFWtY/reLewfP+jxEsN6mnJU8LXRl6QiwYw5/c0Ic30Ft9ag3l8Q
+	WSq49J12xZtE+wjyRsS97JJ55Ye3DeFM1xlzxMLtXyEwErQGocf0A4ZRZvE5P1CssvQkyWIIpW4Kw
+	mMzIg3XDOZeduCbR1V4dvGz/m6LIVi/PwZMwIFj5GHU55A7GmNIBGVu/wpoY+xm+UZ1cF+z9u/epj
+	QCsPIcq7BV0LErKEOF4BsrinljCUjdsqTJO+1Sxpm36Grx7hHQ/4idgmoSzhF4wp0SO4T7JN3+BG2
+	WF+VGt3Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMFGG-000000089pQ-2O0K;
-	Thu, 29 Oct 2026 01:49:00 +0000
-Received: from mail-ej1-x62d.google.com ([2a00:1450:4864:20::62d])
+	id 1xMGPN-00000008EYh-3GMn;
+	Thu, 29 Oct 2026 03:02:29 +0000
+Received: from mail-centralusazon11011061.outbound.protection.outlook.com ([52.101.62.61] helo=DM5PR21CU001.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMFGD-000000089p3-3iBv
+	id 1xMGPL-00000008EYH-067v
 	for kexec@lists.infradead.org;
-	Thu, 29 Oct 2026 01:48:59 +0000
-Received: by mail-ej1-x62d.google.com with SMTP id a640c23a62f3a-c46822eefb6so206590066b.2
-        for <kexec@lists.infradead.org>; Wed, 28 Oct 2026 18:48:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1793238535; x=1793843335; darn=lists.infradead.org;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=WpPpjm9qqTzsBHBWliVMSUioS6+fsJ4niawtYuOMrWQ=;
-        b=gx3NBXs9kwI7UKEjiVqO9pFie9GJQHftOTICCXAlZi9EsWxRvkvA+kgiMzm7OoxcOI
-         kgF3kgjQhB9nINmQbY0cRUK7s+DBfDln/Tftm43DrVcKGmWAfacODjvHjXzNV9+1GCvu
-         1VcQP3Fi2bloAHPslGu6l2Bc0hvlBIo5o4VEJ652NEP9iAIx1ohU/j8MTKyqO5Po4xMB
-         1Y3Xj45Pvfjzfv2CoRU/wJnLrkt+JratkTPL5h/QHp3lb48Il+H+yakCknaUXSO/LFZ8
-         MhOY9bsmSyY2adtvgp1Z0auKGS+ikbuY6Jz4tcrBCFMdctOGXjhgNfRGnDoG32bKdz18
-         mYGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793238535; x=1793843335;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=WpPpjm9qqTzsBHBWliVMSUioS6+fsJ4niawtYuOMrWQ=;
-        b=Bh3/2KbuVfHrgGutQIw0R254LD7p3527ivE9nyST/UAVqG0qDkcoDkOel1RGhUuMfh
-         nMWxRQM03rtBdkQzIOpZ6XWvEkxgmap92lpyO47fVRnKBRm803L2efiG3Jyc/07wRv7f
-         AkSn9tu8WVNRQx34xv0udD9WCPkH+h4warPPtOlfkqiphLUVRm1a1TyUi5dmWYeCaAeW
-         PUhxJ14XZUYCmaoFQf8heEN8G0PHkLhop0t7f9BvAuy4d4KtaiITezDe0XgAu9HTGrF0
-         ooE6Wa1oZryv9rUHa68Qc8AB/hrvGTBtK/UBqkFPzrPnm/4M4wFCeANS8heD75ZpKDbw
-         tH/g==
-X-Forwarded-Encrypted: i=1; AKwUvBwrWvfxQtbuodhVCiCMxMBuA21y6dx/AScQzyYx0PsNePXJzqusxVGDxfN0zy5YmKGnmGh0bg==@lists.infradead.org
-X-Gm-Message-State: AFq9FYJ4pJuIBIVF9thYDIM6qwV3yOQVXZ1u3c5WJ49C4ZvH5vAcAeLW
-	jdENbjEYyh8ala/p6FVMrvxBR/lle01BuLkF7eNAIgpswXSMOebLdrzWbgADQEJTarU=
-X-Gm-Gg: AYBFou2sZGMD38hWa+2cUMP1xPIogMURde3NbncPcg86LIR3C9KtDnAX77ViIvYGW2f
-	9BeqSt6qq7PTZ60ykqzR2p0Q6yx3iKzkXNLJQ4WV+iLErh2d4ul7KkmKyNh++cpuuzsriY2XCQM
-	nvscQA+VZ+DwrZRuTQqLMi5YTSPs0KFBlSVXotFyr4GiPMcXT3JM8gRpSxaM+bibPPPBjB1jqjq
-	WS53SEamvEoQKbYGq26ScuV9RXiPlyjqYOYxjcKPe7Easeo5GlOrJK88PhHA4uwdv2chBT3/hAX
-	T0B9lYym+dIIocMFolBRL6kPgrw5LkIP+Fz7viu/xiHoPq2n/75rZvuqkSM9SIofPaE5gvWeHMk
-	czN5UDkAnY+Yq5ECk+UhX/yffkm4wfPlMlnxeY6lPfX9Byu4P8y25NVp0dK4uLXaDdIUzr3/TVE
-	DONGAw0GDmw94qZ2kpAj6UsNQrIpqf+DhgwGDMh1S6Nx9D6eO/ajnRsGxD36MG1mk7QN66sKITy
-	VRKBe/BamWT+gEa5Dg3cXRUUVrF/rp9uLU3p8AA8m3J8k+I8uRAeV0+RQ4dOf1jE4xZXd2uAu+w
-	9BB1yIJdlFht0QO0CKPx
-X-Received: by 2002:a17:906:ef0b:b0:c41:b94c:4539 with SMTP id a640c23a62f3a-c49bddac7b0mr353178966b.6.1793238535200;
-        Wed, 28 Oct 2026 18:48:55 -0700 (PDT)
-Received: from localhost ([2a03:2880:32ff:4e::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b495ac454fsm2147232a12.1.2026.10.28.18.48.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2026 18:48:53 -0700 (PDT)
+	Thu, 29 Oct 2026 03:02:28 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gUrshiwj/nQakDj8oCw+KMhpatGjbbOrfbX80UzHLbEn3qPIyjadSdTDNfvvq6VuV/+JalvFjd02Zoc1YMLfBfudtTsTqzs3vBkI4grbBgkmfoc+xe7O97Bjbqb0GnUMZ7Ew5jOqsqfp+9MEwQZWr5KpX8coMxeGBbXwo0Ora6czXxTjJoAJxM0OQli8GPHZZOzQ9EdXs9YPsFlKROx/XW+btiymJXqy5E2kT9XlvXwiR3b3Z2SwS/0EIEru7ZvDpQDp58GBYCAJflG6HL5b059r7WGN1X3DDfDbTJDqXNEtMYybCUa3D5yrrex+mCEu76Tyf7kxpMJ6XNEmujj5Zg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uFJpG7TccakKvQrmjtVFkUtgC0R44/OJ46skeKOwvLI=;
+ b=HMTIXNziFOFm1l9a5Wbwsq62zSevKcV3lB1b2Ulg64hVRzC/pFLM684z1Oi3spvAo6+U+vsa+YPrOzlRklBGPWL8r2Ne2+InSq8E3fW9AABP+eW6fCvspHjIMCq/XliRLDURhbbmWlunuilT8iIneE4Iu51G8irsAfk/ACWdp73JE/2/AmxLWHBHv4NvPq7m7yM01eaHS5tPQAAfrFKASGJbR8nPQgHZE5PQo5XUUvOjzuRFGsCIjn7Aw7Tsq4eugRlkAdEHxWFc1D/9xSAS25YwxOUWoIcG+JnKYIWIDCRNj6qw3EHCJ/DE10IexZlDIVOwmdYHYdvXA+NW6v1sCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uFJpG7TccakKvQrmjtVFkUtgC0R44/OJ46skeKOwvLI=;
+ b=E24w5rDJ2p8bDy9lOLRItODKyI4R+a25Z6O74W8M7kH+6lraizBeGuU6f0h+S8Vl5Ni1SGsZV+efKDUp9DOY9r7LaUBHDWvvhCZtWG0CSHD8EjCcprlNlDGfWJNc3yM7IOSdpahpT5tCfILusyBTURWyEbMSy6b8IgK6l2wJvlTtZi+xIjz1gq7AhyBwM16ezZWUaDPra31OSD02svu4xXcJyEQtgUgvUEXEwSvjTTKjEZSlBBfwPlFMw8kXXM/dC5GUAaH+2FS3JQvA/6E0s74A757SccF9aDoRXEvV1a+S9eSBvq0F7cK3jsMrALJQJlF0Gk8jskodhqnc37Dhxw==
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
+ by PH7PR12MB5782.namprd12.prod.outlook.com (2603:10b6:510:1d1::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.8; Thu, 29 Oct
+ 2026 03:00:46 +0000
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16%6]) with mapi id 15.21.0569.007; Thu, 29 Oct 2026
+ 03:00:46 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 28 Oct 2026 23:00:42 -0400
+Message-Id: <DMGZJ921Z264.1GCMO7EYVWIG0@nvidia.com>
+Cc: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+ <kexec@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
+ <linux-arch@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+ <stable@vger.kernel.org>, "Josef Bacik" <josef@toxicpanda.com>
+To: "David Hildenbrand (Arm)" <david@kernel.org>, "Andrew Morton"
+ <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>,
+ "Michal Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>,
+ "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo Stoakes"
+ <ljs@kernel.org>, "Kairui Song" <kasong@tencent.com>, "Barry Song"
+ <baohua@kernel.org>, "Axel Rasmussen" <axelrasmussen@google.com>, "Yuanchu
+ Xie" <yuanchu@google.com>, "Wei Xu" <weixugc@google.com>, "Baoquan He"
+ <baoquan.he@linux.dev>, "Baolin Wang" <baolin.wang@linux.alibaba.com>,
+ "Liam R. Howlett" <liam@infradead.org>, "Vlastimil Babka"
+ <vbabka@kernel.org>, "Mike Rapoport" <rppt@kernel.org>, "Suren
+ Baghdasaryan" <surenb@google.com>, "Michal Hocko" <mhocko@suse.com>, "Kees
+ Cook" <kees@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>, "Jann
+ Horn" <jannh@google.com>, "Pedro Falcato" <pfalcato@suse.de>, "Hugh
+ Dickins" <hughd@google.com>, "Pasha Tatashin" <pasha.tatashin@soleen.com>,
+ "Pratyush Yadav" <pratyush@kernel.org>, "Matthew Wilcox (Oracle)"
+ <willy@infradead.org>, "Jan Kara" <jack@suse.cz>, "Lance Yang"
+ <lance.yang@linux.dev>, "Rik van Riel" <riel@surriel.com>, "Harry Yoo"
+ <harry@kernel.org>, "Alistair Popple" <apopple@nvidia.com>, "Nico Pache"
+ <nico.pache@linux.dev>, "Ryan Roberts" <ryan.roberts@arm.com>, "Dev Jain"
+ <dev.jain@arm.com>, "Usama Arif" <usama.arif@linux.dev>, "Kiryl Shutsemau"
+ <kas@kernel.org>, "Matthew Brost" <matthew.brost@intel.com>, "John Hubbard"
+ <jhubbard@nvidia.com>, "Peter Xu" <peterx@redhat.com>, "Will Deacon"
+ <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, "Nick
+ Piggin" <npiggin@gmail.com>, "Oscar Salvador" <osalvador@suse.de>, "Minchan
+ Kim" <minchan@kernel.org>, "Muchun Song" <muchun.song@linux.dev>, "Xu Xin"
+ <xu.xin@linux.dev>, "Chengming Zhou" <chengming.zhou@linux.dev>, "Chris Li"
+ <chrisl@kernel.org>, "Kemeng Shi" <shikemeng@huaweicloud.com>, "Nhat Pham"
+ <nphamcs@gmail.com>, "Youngjun Park" <youngjun.park@lge.com>, "Gregory
+ Price" <gourry@gourry.net>, "Joshua Hahn" <joshua.hahnjy@gmail.com>, "Rakie
+ Kim" <rakie.kim@sk.com>, "Ying Huang" <ying.huang@linux.alibaba.com>,
+ "Jason Gunthorpe" <jgg@ziepe.ca>
+From: "Zi Yan" <ziy@nvidia.com>
+Subject: Re: [PATCH 05/46] mm/truncate: look again if a folio left the
+ mapping
+X-Mailer: aerc 0.22.0
+References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-5-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-5-6f74bec9a5bb@kernel.org>
+X-ClientProxiedBy: YQBPR0101CA0329.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:6c::21) To IA0PR12MB8374.namprd12.prod.outlook.com
+ (2603:10b6:208:40e::7)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 18/46] mm/khugepaged: check if PTE table is empty in
- try_collapse_pte_mapped_thp()
-From: Gregory Price <gourry@gourry.net>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
- Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>, 
- Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, 
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
- Baoquan He <baoquan.he@linux.dev>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
- Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
- Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, 
- Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
- Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>, 
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
- Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
- Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
- Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, 
- Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
- Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
- Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
- Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>, 
- Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>, 
- Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>, 
- Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
- Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>, 
- Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
- linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
- linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
- linux-cxl@vger.kernel.org
-In-Reply-To: <20261027-fixes_core-v1-18-6f74bec9a5bb@kernel.org>
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-18-6f74bec9a5bb@kernel.org>
-Date: Wed, 28 Oct 2026 18:48:51 -0700
-Message-Id: <179323853182.453251.8510731747954180380.b4-reply@b4>
-X-Mailer: b4 0.17-dev
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|PH7PR12MB5782:EE_
+X-MS-Office365-Filtering-Correlation-Id: c9465010-dfc0-4a3f-11b1-08df3568d416
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|23010399003|7416014|376014|921020|261028144727099003|4143699003|56012099006|11063799006|261009223027099003|261022105027099003|261021121427099003|261021123027099003|261026140227099003|10067099003|261026121527099003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info: k0y6vLy0ku3Bu+dQ8KaZ+myKKht2W0DEoIDG8U/sOGxN+FPl4a0w43Uzwi+Mk+7lzZfakvzW+vF5pD3/TO/GqhQdAvZcwXCFiBmImKUP4EkHhCH/YmQ85TPqTNnaT5+4j8JtRa928v+yOt+kxwgiNIcSc7Fq4NtNYHXzy13Wcg6oRNJoyN3+qWuQ+G6bMKWvxs12Br0UAqsw3JNIUkT2ung1IVpapVc9HhAycQCdoZIOpZHdHWaFYxgHCwHYPZjko71RtfIUMDhR3cZOHfzJOygkj3/WKspV0lcTJALuq243CN8/GPiP04fJdWpiaHchBFU0UPVR6P9hNA6cQrhZyvdOzXLHVwUNqDcNjMa5zM0qJRd7pL8eFGV8YEmoNmBUEkZ9TgvDk3gktrgcYnhWe87Q7bfcGmutC4/OEqWz4XbUqsGfaBq6v0BBl68iOd9LpXITqNUzdcGIuxAJoWAdq55gPSjTRESFPynTsDMEkXfl6aW3ToJcBtQR+w8xnZtF/YDKgCyjPQFLOyHVSd8U25DbfyjcpZK2/FTI7+aAmlINm2+xhBy0XhiRvNZtZBznpzJt7gPLGX6XPIvyqTkGcPbHWMg3PW66fdzGGJhnyOv7Rr763dW1OQHepV7MXu8hzjBaOVqDjtCH2Q5Us76cGhszxtMTTKRunlGVUwBwDUfycEuczfh2xrGXxCo6NAvAHGVejB1DPpb5wrVqdXUJ5Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(7416014)(376014)(921020)(261028144727099003)(4143699003)(56012099006)(11063799006)(261009223027099003)(261022105027099003)(261021121427099003)(261021123027099003)(261026140227099003)(10067099003)(261026121527099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aTEySDZ3dDQzOURlck5CdzEyQlBQS2dMUks0Q0U4OVJkRjlkMEZwMTR5K3Nr?=
+ =?utf-8?B?NmNJYzI2emZMQmpNOThMNTBIR1Q5TTZKREFYaUtXbVdUL0lodEtkbmQvVjNl?=
+ =?utf-8?B?U0NpZzZ0RWNiR0psWXdVNHowUFFFU1hGTm9PTW5meGFxa1cya2lsWkZvLzlF?=
+ =?utf-8?B?ZzBzOVE0T3FIY0svM3c0azh3YllwZHdYTUU2NG1yTWlyZDhiQVAvZi92amJ0?=
+ =?utf-8?B?ekhSOEM5dUY1OTZoRXhQNktsbEtObUFmMzlwWkQyZngzUmFrdm5OejBiWjRX?=
+ =?utf-8?B?bzFFaXpWWC9KNldDcmZEREh3V1V5ekRJYzc3Zk1DZzRtU09Da0ZEZE1aSGF1?=
+ =?utf-8?B?bEMrNC91QXBzZ3JycHpzbUcyTm40Q0hhWEZjSTlpc3QzMFlobGk0amZTdWVz?=
+ =?utf-8?B?NktHVlBwZzE3d1UxRndjaWc2cndBMGZiSGhkdXJKcTJ2QmNPTzZmWjJodWZC?=
+ =?utf-8?B?WHl4TURHek5ZUE9sKzdUR3RhR2I5ck1XVytCY2tkS2p6cG1leXN6RDBvWGQ4?=
+ =?utf-8?B?VGE0bVNWYUlpcm1WK2ZlTHBsbkhUejhBdlBqNGF3ekhQZEdMaWg1aWdPLzd1?=
+ =?utf-8?B?L2hJNmVpRW4vYWNMRHB3ZlV5UlJ1dEUrVXFFdFJDL0h3YjhSaktYZ3Budm1F?=
+ =?utf-8?B?ZzFZeEJEY3N6YmVXUWZMK2ZSQ25pK0xmaHpleldoOW5wb3pEZVNPeVYzcHhQ?=
+ =?utf-8?B?aXF6YkgyZi9Sb0JCTWxIR2UwMC8vTXRtbjA3WDlibkovQW40cFBzZFdwdFA4?=
+ =?utf-8?B?WVlqMDRMMnFrd1pyYklLdE4vN0tRZTk0YW4xNTltTW5FRVk5RDZraWZNMmRs?=
+ =?utf-8?B?eXVzeTJDZkR5bWxCQkExdUxXeVBpbS93M0RpMkFCaGg4NlhHRDRseFNrNmNk?=
+ =?utf-8?B?MVZPV0o4Z2dIcFRkT21NUWo4cHBybkJJWDQ1NUhSTFZWQ2ZDbnVHUDZCQkdi?=
+ =?utf-8?B?YkZGQ09nV2pTWURYL1pqMmlYL0Y1TGt3clBmWmFLMmk1K0J3Q2JHeUFNb2dt?=
+ =?utf-8?B?RWtpZ3VSeDAxT1NiY2Q0NkQ1aFRSUG4zdW9iNUFYN0xJZlNwRGU0Um9SU2lD?=
+ =?utf-8?B?eExzdGFIL2ErM0NHdkt6ZzVyUzg4T0IvekplSml2YzlEZjJCM3FWRXhvVFJP?=
+ =?utf-8?B?LzlGeUx3cGdLL0ZCM3BnWHRKMVUzTHA4ck5wQzdENVlHU3lvSlNVM1JRS0du?=
+ =?utf-8?B?REtWSGdsdzJ5OGk5aS9CR1FkMFJnc3lIWXhwMCtJak5WZi9HOEljeTZCU2sr?=
+ =?utf-8?B?NWtWanhnNnhmTjR2bThzN3ZMSFlHVDFWS2FxejBYSVkxWjBFRzBkM0Y5cGZW?=
+ =?utf-8?B?YnNHNFdqc1lBdnR5aTJIaGg5RFhab3B0TVhQbittUnhObGtCdHdIUVRYN0Iy?=
+ =?utf-8?B?NEMvVkp4VDRZQmFFT2l3UnNYMXVLejlTeEtQZjRLanZ0cExuU0QrQTQ1eUxB?=
+ =?utf-8?B?bTlaRzJpZ3RJNTdpcFByb05sa3ltdUFqcVNPRlh5VmJscDU4cUZzczJPRExh?=
+ =?utf-8?B?NzV0WS9PQmpMTlRjU3IxTW5BdExxdWlESlNzUExwQUFIVVZLblZLaXI1U2Jh?=
+ =?utf-8?B?c2JVdlovU0V0QlIwTFpDZWtIcmtqanpwYnVEUlZER1lPSmx1OHZTcC91dTdB?=
+ =?utf-8?B?TUpOSU04OFpScVVQTnpXTHRZaW1qZ3JNb0hUbzMwZ1lkVGJkM2hHVTM3ejBo?=
+ =?utf-8?B?VStDNDQ0S2I3cnZXNEEvR3h0OWVlc3ZsbjB5b0k1ZUFYSzFFVC9RUTc2S0Nw?=
+ =?utf-8?B?YWcySlBGNHh0dDFIWUZQVlY4YUt5dUpQcmZUWDd3eGtQK2lVb0pHOTFCam05?=
+ =?utf-8?B?eXdkZ1UzR2ZOYUJPQ0FDSWZ0ZmdyV1lFRmlQWTJZd2UycVdsaE9KSDhhUmE0?=
+ =?utf-8?B?MUFJdXN5N1pnbzNOaGY1UVVvYVlheFBUZmpPMmtrYWZaSjNoMmVXYWlxVkRa?=
+ =?utf-8?B?OFRnR2hvMm9QMlBhNCtKVEduNXdkZ1MrVEJGYmJPdnhLZWlGMkZabXo5ZzBF?=
+ =?utf-8?B?SVdFWVV2dGJQNTZPRFdPL0R6cnlZQzc2Z212bEQ4dHNqVFBwTDZyVlhrWkxr?=
+ =?utf-8?B?Q0s0aTJUY3V2T0QrK1VoUXJTRnBsdXFYRE93elFkREFhb2ozN2JDZ213Wi9i?=
+ =?utf-8?B?d3RFSTJKNm5nZzQ0bk0wVTZTNHhtSmhGTTVwYkxKdzFudml5Y1VySlMvZTVQ?=
+ =?utf-8?B?RlF6QksxUDhQOUNMVkx0bVBvanJrVDVrRFhzNjdOeDFEdlB5Y0kySXBTaDNC?=
+ =?utf-8?B?UlhJVzJ5aW5hd2ZQQTlwdWxVUHdXNVFZSDVxT2dQMGNlWEcwbGp1a3NESGpX?=
+ =?utf-8?Q?73k3Sbp2byV03imYQ6?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9465010-dfc0-4a3f-11b1-08df3568d416
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2026 03:00:46.2496
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OQMbL1UH/7g80U7gDIJN0XBH45mu3jkSmYgT/Q65hUhYrx5pFcndQlg1X/Tq6Kbq
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5782
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261028_184857_961575_9F597E6A 
-X-CRM114-Status: GOOD (  17.07  )
+X-CRM114-CacheID: sfid-20261028_200227_089402_A2DABBC3 
+X-CRM114-Status: GOOD (  18.76  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -136,49 +179,66 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 2026-10-27 00:17 +0100, David Hildenbrand (Arm) wrote:
-> The existing code is rather horrible and already resulted in bugs in the
-> past: we special-case UFFD inserting anonymous folios by grabbing the PMD
-> lock early, but ignore any other markers (guard, poison through uffd) that
-> could have been inserted into the page table in the meantime, effectively
-> dropping them.
-> 
-> Let's just unify and simplify the locking: try to grab the PMD table
-> lock and if that fails, flush the TLB, drop the PTE lock, take PT locks in
-> the right order and check if the page table is still empty.
-> 
-> We still perform the heavy lifting (zapping the folio ptes) under PTE table
-> lock only.
-> 
-> Include <linux/hugetlb.h> for now, as x86's flush_tlb_range() macro
-> depends on hugetlb helpers. This dependency needs a separate cleanup.
-> 
-> Both issues this fixes are rather corner cases. Let's not CC stable for
-> now.
-> 
-> Fixes: f807123d578d ("mm: allow guard regions in file-backed and read-only mappings")
-> Fixes: 1043173eb5eb ("mm/khugepaged: collapse_pte_mapped_thp() with mmap_read_lock()")
+On Mon Oct 26, 2026 at 7:17 PM EDT, David Hildenbrand (Arm) wrote:
+> invalidate_inode_pages2_range() skips a folio which no longer belongs to
+> the mapping by the time it has got the folio lock, on the assumption
+> that somebody else has removed it from the page cache. But the folio may
+> have been replaced, and then there is a new folio with the same data at
+> that index.
+>
+> For most cases, like folio migration, that is impossible. However,
+> collapse_file() only checks the refcount of the old folios, under the
+> i_pages lock, and relies on their folio locks from there on. That works f=
+or
+> users which repeat the lookup when they find folio->mapping changed.
+> The following scenario is, however, possible:
+>
+>   CPU0 pwrite(O_DIRECT)               CPU1 collapse_file()
+>   kiocb_invalidate_pages()
+>                                       read the folio (old data), lock it
+>                                       refcount check
+>   the write completes                 copy to new_folio
+>   kiocb_invalidate_post_direct_write()
+>     find_get_entries() -> old folio
+>     folio_lock() ...                  xas_store(new_folio)
+>                                       folio->mapping =3D NULL
+>                                       folio_unlock(folio)
+>     folio->mapping !=3D mapping
+>       -> continue
+>
+> In that scenario, the collapsed folio with the data from before the write
+> stays in the page cache after the write has returned.
+>
+> This used to be impossible, as khugepaged only collapsed files that nobod=
+y
+> had open for writing.
+>
+> Restart the lookup at that index, like shmem_undo_range() does. The same
+> problem seems to exist in truncate_inode_pages_range() as well when
+> truncate_inode_folio() fails, so handle it there as well.
+>
+> Fixes: 1b6444331beb ("mm/khugepaged: enable clean pagecache folio collaps=
+e for writable files")
+> Cc: stable@vger.kernel.org
+> Reported-by: Josef Bacik <josef@toxicpanda.com>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> ---
+>  mm/truncate.c | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
+>
 
-This patch is painful. It's taking me a bit to wrap my head around.
+Reviewed-by: Zi Yan <ziy@nvidia.com>
 
-I get that you want to avoid taking both locks while zapping, but
-wouldn't it be simpler?  I suppose we don't know what kind of
-regressions might pop up with that though, bah.
+--=20
+Best Regards,
+Yan, Zi
 
-I can say that I've reproduced and tested the before/after state,
-and it looks stable.
-
-Tested-by: Gregory Price (Meta) <gourry@gourry.net>
-
--- 
-Gregory Price (Meta) <gourry@gourry.net>
 
