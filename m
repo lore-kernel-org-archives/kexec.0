@@ -2,53 +2,55 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA52606A329
-	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 15:36:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CBC606A332
+	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 15:40:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=AImUhc9d;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SvnxR1RE
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=bAAbTAe4;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HEX1DhI/
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Content-Type:In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=0MZ+Cdtu8ZetD6MQAGKoqkVifXgXtqYdnKHo/eTOhbs=; b=AImUhc9dDyL/1u
-	vzFDHD4T+6OQudIB19fTenBWsZF++WRKHvwj7qSMzF/mwUSvKqvC4+OgghIb8xUAjqxPOuuU/G7sb
-	IrsjcT6MQNjTe+w019ZSTYkcb32CleYFEag9dPzHXLkakGqxTNlC1gFTNxhu+1U3aLkoU7BRSm1nz
-	NknLAFVvLnmjs5H25On2KNyHL+mXO6aK7pvN2ijh7mMXzWGt4KYmRLyLlUfNXFeNbILs6e62cSyUM
-	dRWvmJ4Sn3CqD3WNApKfq+lZm+v5Hg1UNIKTwixW3rjLjKrgyvnenmVT752EZfrCu10s43cGS1uDe
-	QM7VH0FpVMbm+ces6Axg==;
+	List-Owner; bh=dYZCc2lNTUYj2t2pu6YWJRD5XfL+7XVbwTmCwIjHH9M=; b=bAAbTAe4pvvCbo
+	A6RATUGHW5nwUUSFlGHNlRb4rf+lU3Ay2SsVJekKiBvWpU3EuVGUnJz/octSzJwYBxcTfAh/NwFzC
+	AvqABPHQyC8Br/HnhP/Diq+ZLRJYCCyBD1NUvbY8IypXnuQQVRmQqWP5odWVKtJJOFP0Mv8PU5wUc
+	42skOaZJ3aHod3iwr0qz/dnQO3dW7hPmsluKSxMCFln/iMYMHETEliN+V8LeBGpZkZXWm0Yne3AZa
+	nqi18unGsPybPv+DEyCztSlVCQk/DySuarThslWbXz16BQfM/nFzWDFNo1To2isazPLA6tMAfeZxd
+	Rn77CYPpFhHb0SBu/Xfw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMSAg-00000009e3i-1W3G;
-	Thu, 29 Oct 2026 15:36:06 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xMSEq-00000009eJe-1GHa;
+	Thu, 29 Oct 2026 15:40:24 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMSAf-00000009e3G-0Vlt
+	id 1xMSEo-00000009eJP-3V0x
 	for kexec@lists.infradead.org;
-	Thu, 29 Oct 2026 15:36:05 +0000
+	Thu, 29 Oct 2026 15:40:22 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id B64FE60267;
-	Thu, 29 Oct 2026 15:36:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBEE31F01824;
-	Thu, 29 Oct 2026 15:35:49 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 0302A40AE6;
+	Thu, 29 Oct 2026 15:40:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 499621F01825;
+	Thu, 29 Oct 2026 15:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793288163;
-	bh=0MZ+Cdtu8ZetD6MQAGKoqkVifXgXtqYdnKHo/eTOhbs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=SvnxR1REqXjogeGPFsmkj46v0mjpHOkSNLkbtpJLKJnBH2R57tcgmfFBLxg3pg+tc
-	 hyT1sCGbf5V9UaG9pEvhmd/4dZjpLb7ssvKXSN0V7KILMB8LcOXEFLy+Is3AkWvyyS
-	 uSMXMe7F5Ryv+os8+r6jBBYCoI2bgM3QV6MI/39SdvciA0pOCwQNuaL5x92OOIZgkI
-	 jYsv8a3nz9ca+51kEv6QxK7fMZmRnlAZUIelKhdKNS2pI48R9iE46PIH/2UXUpYFFp
-	 b7sZoOi9kvVNaM/xMhYaE69JMYiB1hlPi/NKqIFfmvSD0Fzq0an+EX7an9WJEKizxt
-	 w7qkPA0NsvJBg==
-Message-ID: <957fc9ce-1789-41d7-a4cb-66acdf7fcecb@kernel.org>
-Date: Thu, 29 Oct 2026 16:21:54 +0100
+	s=k20260515; t=1793288421;
+	bh=dYZCc2lNTUYj2t2pu6YWJRD5XfL+7XVbwTmCwIjHH9M=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To;
+	b=HEX1DhI/2X9DdajitxhgBddyoyv6FilOfCQpBtJ2ki6f9+zZe3m32dX/laOZm+NZo
+	 3+VL/GiUGc80vUKeQiNpy6rLscll7ooEz/oJamgMcs95z6H+FVJQg+52LWBiQT1ZCx
+	 B9pxDJe4nQgtjxOWTILlUSTrEi2JyqBWO1I7gYZgjRXXO4yRuTE8lvOm+XgdNCMIDE
+	 eb3G/knwjTXKSL2d4wyVlA0FBRRSDCVk8B2OABs84uw416YI5ZzgLVFhsSp4M7PYYh
+	 yvucyVCRSRnO1+W+WGDTO/DlXwK9M4Gd0oL8Iez7I1bLu5UTiPlfESH9LjxdMY4Zdz
+	 hoQaZEWRjMyTQ==
+Message-ID: <e796dace-06c6-43b8-83f0-594e7f1e7380@kernel.org>
+Date: Thu, 29 Oct 2026 16:35:46 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/46] mm/truncate: look again if a folio left the mapping
+Subject: Re: [PATCH 42/46] mm/huge_memory: split huge PUDs when adjusting VMA
+ boundaries
+From: "David Hildenbrand (Arm)" <david@kernel.org>
 To: Kiryl Shutsemau <kas@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
  Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
@@ -83,16 +85,13 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org,
  linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
  linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-cxl@vger.kernel.org, stable@vger.kernel.org,
- Josef Bacik <josef@toxicpanda.com>
+ linux-cxl@vger.kernel.org, stable@vger.kernel.org
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-5-6f74bec9a5bb@kernel.org>
- <auIniV8YSpA4_oxg@thinkstation>
- <2f2ef336-2186-4f20-b7f5-565e60471bda@kernel.org>
- <auMvYdTd_e9O9kDj@thinkstation>
- <7fab2115-6c44-43b1-b03b-8ce4a37ffe32@kernel.org>
- <auNaOMYUUpnzCofx@thinkstation>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
+ <20261027-fixes_core-v1-42-6f74bec9a5bb@kernel.org>
+ <auMxQPze5cOvGbCe@thinkstation>
+ <9f4128a4-85fc-4f4b-ac41-b9d348f56e37@kernel.org>
+ <auNYPPlCnLdN88t_@thinkstation>
+ <d5d077fe-4695-453a-a2cd-40ef30abd61d@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -138,7 +137,7 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <auNaOMYUUpnzCofx@thinkstation>
+In-Reply-To: <d5d077fe-4695-453a-a2cd-40ef30abd61d@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
@@ -151,113 +150,63 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 10/29/26 15:38, Kiryl Shutsemau wrote:
-> On Thu, Oct 29, 2026 at 03:18:23PM +0100, David Hildenbrand (Arm) wrote:
->> On 10/29/26 12:37, Kiryl Shutsemau wrote:
+On 10/29/26 15:40, David Hildenbrand (Arm) wrote:
+> On 10/29/26 15:31, Kiryl Shutsemau wrote:
+>> On Thu, Oct 29, 2026 at 03:24:29PM +0100, David Hildenbrand (Arm) wrote:
 >>>
->>> Yes, I missed that the loop only goes back to start when a lookup
->>> comes back empty below end. When the last batch reaches end, it exits
->>> without another look. It doesn't need the split either: any punch hole
->>> whose last page is in the page cache gets there.
->>>
->>> That exit looks unintended to me. b9a8a4195c7d ("truncate,shmem: Handle
->>> truncates that split large folios") turned the "if (start >= end) goto
->>> out" early exit into the loop condition. Before it, the loop went back
->>> to start until a lookup from start found nothing; Hugh kept that on
->>> purpose for hole punch in 792ceaefe621 ("mm/fs: fix pessimization in
->>> hole-punching pagecache").
->>>
->>> Restoring it is enough, and makes the "restart to make sure all gone"
->>> comment true again:
->>>
->>> +       if (start >= end)
->>> +               return;
->>> +
->>>         index = start;
->>> -       while (index < end) {
->>> +       for (;;) {
->>>
->>> Then a replaced folio is found on the next round, and truncate needs no
->>> special case for it.
->>>
+>>> __split_huge_pud() must split a leave. Either by zapping it (what we do right
+>>> now) or by populating page tables (as in Usama's PoC).
 >>
->> But that's then another lookup even if not really required?
->>
->> Why do you thing that is that better?
->>
->> I agree that the code is simpler, but at least it's consistent with the other
->> handling.
+>> No, meant the situation when pud_leaf() is true, but split_pud is false,
+>> so __split_huge_pud() is never hit. pud_present() is true so we proceed
+>> to pmd_offset()
 > 
-> The extra lookup only happens when the second loop had work to do.
-> Normally the first pass removes everything, the first lookup from start
-> comes back empty, and both versions stop there. When the second loop did
-> run to end, it costs one more lookup over a range that is now empty.
-> 
-> What I like about it is one way to look again instead of two: the loop
-> already goes back to start when the last batch ends below end, and the
-> patch adds a second way for when it ends at end. truncate is not like
-> shmem here: shmem_undo_range() stops after one sweep on hole punch on
-> purpose, so it needs the rewind; truncate was meant to sweep until
-> nothing is left.
-> 
-> Your version fixes the bug too, so I'll leave the choice to you.
-> 
+> Oh, yeah, I can add a WARN_ON_ONCE() for that, it would be a bug in the software.
 
-Can we just do:
+Ah, or I can just drop the split_pud check. Let me do that.
 
-diff --git a/mm/truncate.c b/mm/truncate.c
-index 733d2713a875..9e9bf029635c 100644
---- a/mm/truncate.c
-+++ b/mm/truncate.c
-@@ -475,8 +475,11 @@ void truncate_inode_pages_range(struct address_space *mapping,
- 		}
- 	}
- 
-+	if (start >= end)
-+		return;
++static void split_huge_leaf(struct vm_area_struct *vma,
++               unsigned long address)
++{
++       const bool split_pud = pud_split_required(vma, address);
++       const bool split_pmd = pmd_split_required(vma, address);
++       pgd_t *pgd;
++       p4d_t *p4d;
++       pud_t *pud;
++       pmd_t *pmd;
 +
- 	index = start;
--	while (index < end) {
-+	while (true) {
- 		cond_resched();
- 		if (!find_get_entries(mapping, &index, end - 1, &fbatch,
- 				indices)) {
-@@ -499,6 +502,7 @@ void truncate_inode_pages_range(struct address_space *mapping,
- 			folio_lock(folio);
- 			VM_BUG_ON_FOLIO(!folio_contains(folio, indices[i]), folio);
- 			folio_wait_writeback(folio);
-+			/* Do not handle errors, we'll do another lookup */
- 			truncate_inode_folio(mapping, folio);
- 			folio_unlock(folio);
- 		}
-@@ -760,7 +764,12 @@ int invalidate_inode_pages2_range(struct address_space *mapping,
- 			folio_lock(folio);
- 			if (unlikely(folio->mapping != mapping)) {
- 				folio_unlock(folio);
--				continue;
-+				/*
-+				 * Folio might have been replaced: look up
-+				 * again.
-+				 */
-+				index = indices[i];
-+				break;
- 			}
- 			VM_BUG_ON_FOLIO(!folio_contains(folio, indices[i]), folio);
- 			folio_wait_writeback(folio);
--- 
-2.43.0
-
-
-That would be easier for me to digest than the index <= end thing.
-
++       /*
++        * mmap, VMA and rmap write locks protect the walk; the split helpers
++        * take the page table locks.
++        */
++       if (!split_pud && !split_pmd)
++               return;
++
++       pgd = pgd_offset(vma->vm_mm, address);
++       if (!pgd_present(*pgd))
++               return;
++
++       p4d = p4d_offset(pgd, address);
++       if (!p4d_present(*p4d))
++               return;
++
++       pud = pud_offset(p4d, address);
++       if (pud_leaf(*pud))
++               __split_huge_pud(vma, pud, address);
++       if (!split_pmd || !pud_present(*pud))
++               return;
++
++       pmd = pmd_offset(pud, address);
++       __split_huge_pmd(vma, pmd, address, false);
+ }
 
 -- 
 Cheers,
