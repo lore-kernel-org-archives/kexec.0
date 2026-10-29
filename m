@@ -2,56 +2,56 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82DD160A2633
-	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 20:34:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F123606A33E
+	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 20:35:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ZpCMEIOe;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h5YlBqSR
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=sd8Kgc3D;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m8stvVUt
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=8NeWgKC8rFJYZ7CY//H5MJ8mlDLPVUlB7WRXqG52bhs=; b=ZpCMEIOe0IOwHy
-	you+nJmfjgbYLr8+Cjt0sTieTzoaFDCZwMafBwJTW4N4IkH8RLEFKz3l1WXJuJ44lJdYiLJFiUWvO
-	9aeb4qTgsd7Rp3lkta/aSPggyCH1AVLtGwSBjM/EiqFn8R+6HIUIPeAIy7ZMV6bFJbejfKpUAziI+
-	iDUxvnEdiyVBuSqfHM4dzzuUhTyhaR2QkznHgDPs/C2d9ytHY7Uew/MsYJVJ37tuan9RbZwayGfa2
-	G3Hbn9FeubgOy4e6VWssxav/7nfZfLGzEKzHVJW4NDkDVSUQgSl1ghkmqs79+CyqH8ApCAVmMej73
-	8JWh6Fitw4ttfTyr2X/w==;
+	List-Owner; bh=KxYr7Sm6OEegxhd0iVI9DwNJDZ8ymD/S/fyvDRwEbZs=; b=sd8Kgc3DTM1dX/
+	vYttH6R67d3y0TYbH49nDEKvfLLA1XBcTOlXAgOEC2QyIOiiZhRQzPqQL5cNuMmZe4+Rx2plXBbIG
+	ugKkdmm+RqYl7UFT90dTDVh41oMO+j4hQuiLDfgoGT8+/UARRr296NGhB8SJ2hlVDUAr8zda1YM6C
+	TLqJLqIEirlmRT7JcQjBEqUSZxXfjEXij0AxOrVDQ/OT52gYDrHU9pZS0wVqpXFJKbd6Tc3GEDVWe
+	V46rKtZnQ++iLWv14GkJb9DTxyicV7QTC7tbzW21OiuwAxCfOthy0nDmKBL1QAKfqWIvIHObrRcrT
+	F2w9v4DD79pL3Gfv+APA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMWph-0000000AKQW-13Mh;
-	Thu, 29 Oct 2026 20:34:45 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xMWpx-0000000AKUy-1Rr6;
+	Thu, 29 Oct 2026 20:35:01 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMWpg-0000000AKQ8-0V6I
+	id 1xMWpw-0000000AKUR-02FM
 	for kexec@lists.infradead.org;
-	Thu, 29 Oct 2026 20:34:44 +0000
+	Thu, 29 Oct 2026 20:35:00 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id CC6004190F;
-	Thu, 29 Oct 2026 20:34:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A1371F01825;
-	Thu, 29 Oct 2026 20:34:29 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id F189F605CA;
+	Thu, 29 Oct 2026 20:34:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3413D1F01826;
+	Thu, 29 Oct 2026 20:34:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793306083;
-	bh=8NeWgKC8rFJYZ7CY//H5MJ8mlDLPVUlB7WRXqG52bhs=;
+	s=k20260515; t=1793306098;
+	bh=KxYr7Sm6OEegxhd0iVI9DwNJDZ8ymD/S/fyvDRwEbZs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=h5YlBqSRsRQCrhmhb7220/BdTpbl1XOfJ22+z1dVZFlRKfbL+drAxRpvK5BSKbiqk
-	 z4Yx0Re+/RHynvRBIbM1ppOnJLhfWmgi513P3ua5Wr9IbSLQ8emJZl3Yi/oNEiOcR3
-	 hej0anVMIrPJH6EUcTvHJWuxdJ+OMBQE2DpDrm0QmaVdek3+JEirmytsKmT42UjcWp
-	 Cto2aIPZHz2WPdzD6lBNoM479P0R+mPiBjCn083hWSKlAH1IBn8toFkmcHR4qEDSMq
-	 3x7FIDUx5x9Hf7AdMTO6otEaq/aNaHmVondhDFgT3OpBGeXkzBP5HUf1Z1lrXn1/5Z
-	 r2urf3Jip4tiA==
+	b=m8stvVUtaQ1zzXBZo9b4DXWtjQAwfK94PwzaJ/eyWlctn2jfEk/kIccDZT4yzRzTV
+	 xUwhkYp4JFgiEQbnWZ93UJ8mt2S+Web/7pzGe0SpkYI6oocQZiPLpHT73hP74roi3D
+	 Yr+BUk3pE/quR4/Ig1StPmT2uOE6hcTPcUKEVJ/Lv5UMx5k4G06IaFelmWSX8rEvzA
+	 ylUcnc1dGEcjLRHd7oeEGKeFW/1BtT4p1adLyRlFCZ+tJKXJz8Wd3CUiSLA5LptqrQ
+	 Lopmi7EvwC7Ts8BZAb+MLwTj6XScPpqfDLchayfM4KgiBF4iArRR7JwJRL9P4FDqwX
+	 OjQa5upyhqaBA==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Thu, 29 Oct 2026 21:33:00 +0100
-Subject: [PATCH v2 05/47] mm/truncate: look again if a folio left the
- mapping
+Date: Thu, 29 Oct 2026 21:33:01 +0100
+Subject: [PATCH v2 06/47] mm/filemap: read mapping->a_ops->free_folio under
+ i_lock
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261029-fixes_core-v2-5-a64ce7f83abb@kernel.org>
+Message-Id: <20261029-fixes_core-v2-6-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
 In-Reply-To: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -89,15 +89,15 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
- stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
+ Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org, 
  "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3335; i=david@kernel.org;
- h=from:subject:message-id; bh=8zVtiTIPHUHGhLtYGmDF+TjVfOwqhbOhyrdIJGBJe/g=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLIer22p+/bitVtd6s75Z3g2zq/IlNg9X5CvRELkVamsm
- V7AxoMfOkpZGMQ4GGTFFFmCgu8bvHy5rrbajY8ZZg4rE8gQBi5OAZjI36uMDHfMu/aWOrHVagjM
- 981Tuuth9qL13rEDrMmT/086Jvnv+ytGhh02l8sV7tQmRFyczcXj1TZlj9uXvw4ej0XnNipX1fN
- acwIA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3722; i=david@kernel.org;
+ h=from:subject:message-id; bh=QdrOe18hQtm70tC+kr29IxB4g7ljmyzLHze5efGpjA8=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLIer22pSz/Yr2rC1Wyzv75dSO/9zxyjvv59K06tKJoq7
+ jFNwXtbRykLgxgHg6yYIktQ8H2Dly/X1Va78THDzGFlAhnCwMUpABOpqmNkOBziF+Ztzcv74uOs
+ M8/99SO2irj9uWaeLBJ/3eKDe2PYO0aG15ob3G0e/LRW1gmRjJv2v3bv/R1bGjMeL888u3fdBef
+ zDAA=
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -118,91 +118,112 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-invalidate_inode_pages2_range() skips a folio which no longer belongs to
-the mapping by the time it has got the folio lock, on the assumption
-that somebody else has removed it from the page cache. But the folio may
-have been replaced, and then there is a new folio with the same data at
-that index.
+From: Josef Bacik <josef@toxicpanda.com>
 
-For most cases, like folio migration, that is impossible. However,
-collapse_file() only checks the refcount of the old folios, under the
-i_pages lock, and relies on their folio locks from there on. That works for
-users which repeat the lookup when they find folio->mapping changed.
-The following scenario is, however, possible:
+memory_failure() -> ... -> filemap_remove_folio() can read mapping->a_ops
+after the inode has been freed. Once the folio is deleted from the
+pagecache it no longer pins the mapping, so after i_lock is dropped
+e.g., a concurrent final iput() can evict and free the inode before
+filemap_free_folio() looks up mapping->a_ops->free_folio.
 
-  CPU0 pwrite(O_DIRECT)               CPU1 collapse_file()
-  kiocb_invalidate_pages()
-                                      read the folio (old data), lock it
-                                      refcount check
-  the write completes                 copy to new_folio
-  kiocb_invalidate_post_direct_write()
-    find_get_entries() -> old folio
-                                      xas_store(new_folio)
-                                      folio->mapping = NULL
-                                      folio_unlock(folio)
-    folio_lock()
-    folio->mapping != mapping
-      -> continue
+Most callers hold a reference on the inode, but not all.
 
-In that scenario, the collapsed folio with the data from before the write
-stays in the page cache after the write has returned.
+Documentation/filesystems/vfs.rst explicitly states that ->free_folio()
+must not assume the original address_space mapping still exists.
 
-This used to be impossible, as khugepaged only collapsed files that nobody
-had open for writing.
+Fix it by loading ->free_folio while i_lock is still held, similar to
+what folio_unmap_invalidate() does.
 
-Restart the lookup at that index, like shmem_undo_range() does. The same
-problem seems to exist in truncate_inode_pages_range() as well when
-truncate_inode_folio() fails, so handle it there as well, but slightly
-differently: simply check once more through find_get_entries().
+Inline filemap_free_folio() into its remaining caller such that
+delete_from_page_cache_batch() also just loads the callback before
+dropping the i_lock.
 
-Fixes: 1b6444331beb ("mm/khugepaged: enable clean pagecache folio collapse for writable files")
+The bug was found by code inspection and has not been reproduced.
+
+Fix generated by an LLM and sent by Josef Bacik in private.
+
+Fixes: 59c66c5f8c4f ("mm: factor out page cache page freeing into a separate function")
 Cc: stable@vger.kernel.org
-Reported-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+[ david: get rid of filemap_free_folio() entirely; improve patch description ]
 Reviewed-by: Rik van Riel <riel@surriel.com>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/truncate.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ mm/filemap.c | 29 ++++++++++++++---------------
+ 1 file changed, 14 insertions(+), 15 deletions(-)
 
-diff --git a/mm/truncate.c b/mm/truncate.c
-index 733d2713a875..9e9bf029635c 100644
---- a/mm/truncate.c
-+++ b/mm/truncate.c
-@@ -475,8 +475,11 @@ void truncate_inode_pages_range(struct address_space *mapping,
- 		}
- 	}
+diff --git a/mm/filemap.c b/mm/filemap.c
+index b74bc1e5015c..906b013c11eb 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -227,18 +227,6 @@ void __filemap_remove_folio(struct folio *folio, void *shadow)
+ 	page_cache_delete(mapping, folio, shadow);
+ }
  
-+	if (start >= end)
-+		return;
+-static void filemap_free_folio(const struct address_space *mapping,
+-		struct folio *folio)
+-{
+-	void (*free_folio)(struct folio *);
+-
+-	free_folio = mapping->a_ops->free_folio;
+-	if (free_folio)
+-		free_folio(folio);
+-
+-	folio_put_refs(folio, folio_nr_pages(folio));
+-}
+-
+ /**
+  * filemap_remove_folio - Remove folio from page cache.
+  * @folio: The folio.
+@@ -250,6 +238,7 @@ static void filemap_free_folio(const struct address_space *mapping,
+ void filemap_remove_folio(struct folio *folio)
+ {
+ 	struct address_space *mapping = folio->mapping;
++	void (*free_folio)(struct folio *folio);
+ 
+ 	BUG_ON(!folio_test_locked(folio));
+ 	spin_lock(&mapping->host->i_lock);
+@@ -258,9 +247,12 @@ void filemap_remove_folio(struct folio *folio)
+ 	xa_unlock_irq(&mapping->i_pages);
+ 	if (mapping_shrinkable(mapping))
+ 		inode_lru_list_add(mapping->host);
++	free_folio = mapping->a_ops->free_folio;
+ 	spin_unlock(&mapping->host->i_lock);
+ 
+-	filemap_free_folio(mapping, folio);
++	if (free_folio)
++		free_folio(folio);
++	folio_put_refs(folio, folio_nr_pages(folio));
+ }
+ 
+ /*
+@@ -320,6 +312,7 @@ static void page_cache_delete_batch(struct address_space *mapping,
+ void delete_from_page_cache_batch(struct address_space *mapping,
+ 				  struct folio_batch *fbatch)
+ {
++	void (*free_folio)(struct folio *folio);
+ 	int i;
+ 
+ 	if (!folio_batch_count(fbatch))
+@@ -337,10 +330,16 @@ void delete_from_page_cache_batch(struct address_space *mapping,
+ 	xa_unlock_irq(&mapping->i_pages);
+ 	if (mapping_shrinkable(mapping))
+ 		inode_lru_list_add(mapping->host);
++	free_folio = mapping->a_ops->free_folio;
+ 	spin_unlock(&mapping->host->i_lock);
+ 
+-	for (i = 0; i < folio_batch_count(fbatch); i++)
+-		filemap_free_folio(mapping, fbatch->folios[i]);
++	for (i = 0; i < folio_batch_count(fbatch); i++) {
++		struct folio *folio = fbatch->folios[i];
 +
- 	index = start;
--	while (index < end) {
-+	while (true) {
- 		cond_resched();
- 		if (!find_get_entries(mapping, &index, end - 1, &fbatch,
- 				indices)) {
-@@ -499,6 +502,7 @@ void truncate_inode_pages_range(struct address_space *mapping,
- 			folio_lock(folio);
- 			VM_BUG_ON_FOLIO(!folio_contains(folio, indices[i]), folio);
- 			folio_wait_writeback(folio);
-+			/* Do not handle errors, we'll do another lookup */
- 			truncate_inode_folio(mapping, folio);
- 			folio_unlock(folio);
- 		}
-@@ -760,7 +764,12 @@ int invalidate_inode_pages2_range(struct address_space *mapping,
- 			folio_lock(folio);
- 			if (unlikely(folio->mapping != mapping)) {
- 				folio_unlock(folio);
--				continue;
-+				/*
-+				 * Folio might have been replaced: look up
-+				 * again.
-+				 */
-+				index = indices[i];
-+				break;
- 			}
- 			VM_BUG_ON_FOLIO(!folio_contains(folio, indices[i]), folio);
- 			folio_wait_writeback(folio);
++		if (free_folio)
++			free_folio(folio);
++		folio_put_refs(folio, folio_nr_pages(folio));
++	}
+ }
+ 
+ int filemap_check_errors(struct address_space *mapping)
 
 -- 
 2.43.0
