@@ -2,56 +2,56 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3464E60A2639
-	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 20:36:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B3260A2635
+	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 20:37:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=1Ul1ub7J;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Wn33W2jS
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=KLlwrMSZ;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hLIyzFr/
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=q5vK/qK4XuBQrL53cs9TeuLxUrSX2eJpWdLNS5EZvqY=; b=1Ul1ub7JAjprg7
-	WQkJ0jVQrOvVrvkqaPDjPyoiingfndfb3wxPeVCSCWv3CfWFv72gOgvkNAK5r8f0svNfv7H6Dnlb9
-	vRcaV4TWW3RIiUXam3aVxj1LBbae6Vhvm8mCwfwBLitK/950Phdza5wpDanO2obLyHw8fufm6Rf2i
-	7xm3wnLfKnUgQQ1b01e18DPOR2f9Hs8o2ew4TRi6Psw+Vv6r7gIZXfBrCtDiiSa3yR2txUdOEWtnK
-	fb7rjF3mdP0MvdOJ/u3vUNl1RIaonItmdajpl3znoa9P6SERXFkElBt/aOlLf+ZKrhVh/+P2EqMhU
-	ZAVJSBE2XymjcRSFr7vA==;
+	List-Owner; bh=39sO4eVWOAhWIFY7dwmw5wDLBZR1O1Wkdyg2pyVIaSw=; b=KLlwrMSZZHdkJH
+	wagd4kBvJBLb2qVqu79IsoO3hjrHaF8C3ksqYwoTa+UoSuAsi9GdWVwq8xPZsPNQySuV0b5BRKTHO
+	pOEMKnuxuOIxyBcs9RaE01yVirY+wPfEUJZs09iCM9iRNqI4NaW9O+r5NcWeAH5Vk7dhOlAOEAGiC
+	tGjSQLvGCDQo4WWwjC0Hk/MmhT21FrTfRpvbPwreH4zvpROpm20OsFs8gTmTIuw2Q2cqsZz7+kqPF
+	zObp7FtITMu6O55TCUwt5XN242Y3kApIf+Bma0OnGfgdsF20e9i61H7MNDqzR6RStPgyofwWxtb9Q
+	aluRuP6mtOFCogTn+cgg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMWrb-0000000AKur-3kkB;
-	Thu, 29 Oct 2026 20:36:43 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xMWrs-0000000AKxc-00mr;
+	Thu, 29 Oct 2026 20:37:00 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMWra-0000000AKuh-3O5Z
+	id 1xMWrq-0000000AKxO-0wqP
 	for kexec@lists.infradead.org;
-	Thu, 29 Oct 2026 20:36:42 +0000
+	Thu, 29 Oct 2026 20:36:58 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 3E89240F48;
+	by tor.source.kernel.org (Postfix) with ESMTP id 59B46605CA;
+	Thu, 29 Oct 2026 20:36:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6E0E1F01828;
 	Thu, 29 Oct 2026 20:36:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B39EF1F01816;
-	Thu, 29 Oct 2026 20:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793306202;
-	bh=q5vK/qK4XuBQrL53cs9TeuLxUrSX2eJpWdLNS5EZvqY=;
+	s=k20260515; t=1793306217;
+	bh=39sO4eVWOAhWIFY7dwmw5wDLBZR1O1Wkdyg2pyVIaSw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=Wn33W2jSO7FMd6s0f6J+WahGrG50HQ170ETyv6hs47qSO1TwExsP9mS9I9/sBR3+c
-	 7wsvODaM9WxAO5Rc5MJD34QTdFNd4D08AlxQyrVme7gS4+H0uLmPkOVIJZg7RTVfdc
-	 zaLgXKXLjTgdZKdtfmg0AFBGu9Ssc9s+ntFiFxRAjCvlss1/LcmLsBYqtdrqVGlRG0
-	 9CDMyd4sYfaUFqKRB9NscT9OhnDRrKnXImU+vH5BiOtbyQW/e/5qy85Fn5d/9xx7cr
-	 Su1TurTVFKrvkJSSNlOjYBJx5bpNzRnX2gPRMqdkL8WXnfFrlviI2cmvyyjoLIzbjy
-	 7x2DRkHzJkQnw==
+	b=hLIyzFr/V/VvcGfnmQExxQg7IIwVIxjs2CWLB1sCab5pSvGmM4huLIGWjFbTIQt/g
+	 LvIjs//slU9Pq4A2SJLgO204tjYJlgMOO2JybMj7kVGc2TG/vohe/X3Zz7FeCoRLRc
+	 nrf/oQie/gYaRI5uDKW3ey8ucpkNlAPAQfa6wQ9bTo3VzjDmA6sP4x+IV/OttkAqd3
+	 JyWct3e8oJ1K9D8M52trvZOLS6s+qHpCPGamQ5HJ5Fz9lHdo495ySJkjCRlFWivA2z
+	 btGsxZgoULfAhGK6RKAeYV19UJkhbRKtCZuqzEA68xNrUH7XyrReQRSJ+prYoLs7a3
+	 fqpJE+V6bRCdQ==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Thu, 29 Oct 2026 21:33:08 +0100
-Subject: [PATCH v2 13/47] mm/huge_memory: fix truncate racing with PMD
- zapping
+Date: Thu, 29 Oct 2026 21:33:09 +0100
+Subject: [PATCH v2 14/47] mm/huge_memory: fix zapping migration entries for
+ device-private THPs
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261029-fixes_core-v2-13-a64ce7f83abb@kernel.org>
+Message-Id: <20261029-fixes_core-v2-14-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
 In-Reply-To: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -92,12 +92,12 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  Chris Mason <mason@kernel.org>, stable@vger.kernel.org, 
  "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2058; i=david@kernel.org;
- h=from:subject:message-id; bh=whzXA4Qm4HXSA1pqm4tcjWrVcDozZ04CivHfstsAKVQ=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLIer221D+SO8q1Sly3O/b/h+7nDEu/kw7iWNp/nM7Vet
- HgP39H4jlIWBjEOBlkxRZag4PsGL1+uq61242OGmcPKBDKEgYtTAG6yEMM/UwX358mXle/zSWT1
- C8a7zAkNVfL6do+z7XPyZJFLRnKKDL+YK/rkNSuXzGoxr93d/TuuL1y5+PQNd8e8cyxz3n6uMeQ
- BAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1532; i=david@kernel.org;
+ h=from:subject:message-id; bh=I7I0jhaFoDQ+nBqhpxvpT0b9yhPeTYbK2Z2XhTeg/TA=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLIer21bu2tt8uaHDhHRMpPkLUTW16ivZ94sK3hdWn5lQ
+ 8L31aqJHaUsDGIcDLJiiixBwfcNXr5cV1vtxscMM4eVCWQIAxenAEzkghUjw3rfBSFaX+RXSHif
+ D2cU2Dqz50GT77tKx0VZSuXaaz3ahRj+KTklP/0QL6kglxAToL0i5/q5rtPBtyrT2i1fVd2MMHv
+ HAQA=
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -120,58 +120,41 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 
 From: Chris Mason <mason@kernel.org>
 
-zap_huge_pmd_folio() removes the rmap before calling folio_mark_dirty().
-If this was the last mapping, truncation can skip unmapping the folio
-and proceed without waiting for the PMD lock, racing with dirtying.
+A PMD migration entry can refer to a device-private folio.
+zap_huge_pmd_folio() checks the folio type instead of the entry type,
+so it treats such a migration entry as a device-private entry.
 
-ifs_set_range_dirty() can oops if MADV_DONTNEED races with
-ftruncate() on XFS, when we get the folio set dirty after it was found
-to not be mapped anymore.
+Installing the migration entry already removed the reverse mapping and
+dropped the mapping reference. Zapping it must not repeat those
+operations. Concurrent MADV_DONTNEED during migration back to system
+memory can trigger this.
 
-Move folio_mark_dirty() and folio_mark_accessed() before rmap removal,
-matching the PTE zap path. This keeps the folio mapped while updating
-its state, so truncation must wait for the page table lock.
+Check the PMD entry type using pmd_is_device_private_entry().
 
 Fix generated by an LLM and sent by Chris Mason in private.
 
-Fixes: fe6cf984939d ("mm/huge_memory: transfer the pmd dirty bit to the folio on zap")
+Fixes: 368076f52ebe ("mm/huge_memory: add device-private THP support to PMD operations")
 Cc: stable@vger.kernel.org
 Signed-off-by: Chris Mason <mason@kernel.org>
-[ david: simplify comment and description ]
+[ david: simplify description ]
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/huge_memory.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ mm/huge_memory.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 2b31a425c7a3..1d65c4f576f9 100644
+index 1d65c4f576f9..c5aa0a0a407c 100644
 --- a/mm/huge_memory.c
 +++ b/mm/huge_memory.c
-@@ -2495,10 +2495,6 @@ static void zap_huge_pmd_folio(struct mm_struct *mm, struct vm_area_struct *vma,
+@@ -2493,7 +2493,7 @@ static inline void zap_deposited_table(struct mm_struct *mm, pmd_t *pmd)
+ static void zap_huge_pmd_folio(struct mm_struct *mm, struct vm_area_struct *vma,
+ 		pmd_t pmdval, struct folio *folio, bool is_present)
  {
- 	const bool is_device_private = folio_is_device_private(folio);
+-	const bool is_device_private = folio_is_device_private(folio);
++	const bool is_device_private = !is_present && pmd_is_device_private_entry(pmdval);
  
--	/* Present and device private folios are rmappable. */
--	if (is_present || is_device_private)
--		folio_remove_rmap_pmd(folio, &folio->page, vma);
--
  	if (folio_test_anon(folio)) {
  		add_mm_counter(mm, MM_ANONPAGES, -HPAGE_PMD_NR);
- 	} else {
-@@ -2512,6 +2508,13 @@ static void zap_huge_pmd_folio(struct mm_struct *mm, struct vm_area_struct *vma,
- 			folio_mark_accessed(folio);
- 	}
- 
-+	/*
-+	 * Present and device private folios are rmappable. Remove the
-+	 * rmap after transferring young+dirty to the folio.
-+	 */
-+	if (is_present || is_device_private)
-+		folio_remove_rmap_pmd(folio, &folio->page, vma);
-+
- 	/* Device private folios are pinned. */
- 	if (is_device_private)
- 		folio_put(folio);
 
 -- 
 2.43.0
