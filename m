@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5EAA60A2603
-	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 15:42:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE751606A31E
+	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 15:44:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=iTG4XzTe;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VBWpMU/K
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=dqS7AOzV;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NyagxtlF
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -14,64 +14,64 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=x05fCxndf1hYykwEJ06qD0sbC4EVKTE/sZRMpUPdEQc=; b=iTG4XzTeqkD1Q/JBS1ga+iwq+h
-	p5S8sQLlWyxCRy8dExy8l3K9Dd8pYHNshs7e5DcwZRy0H3FSXWL5FJXwvOm1xMc6C7+vl++5yLkK+
-	bmP99EPii/NxCVaGCEXq0IMsd5C5DDNXFmJqFWo8SqT+KQ3JD7ZOLzcJjlty2UURNJrkSRs2+VIft
-	ZNmQuJTgFG3H2teOxrxRUo2cea6+sKKtlTrvFmCUko/5b1Ru+igSeauA+AZJ2G/MFXULQfEmmPccc
-	Ti7qnSif2N/zS+fXFSYDpstWGUZLAX5aeszfzA7yjKMOAI0q1wKvF4tHSmCmHhdji4cVDGRegA8lh
-	SJk151Dw==;
+	bh=9LohosSmNI0EaSphEpGjYH9L23OvaCdilKiGHMtzl+I=; b=dqS7AOzVCk4hrZxyogfxarvaTl
+	CbINuMxtydsIdCouf74bXT0DpzTiTdge9rljeyE8m0sdh71GcujYcPq3sx636LoCdl5AG9UNQJ+kq
+	NG7pDE+8QOULV56Zx8Qt5//GY73t5iVgcF23OnwKEEOKLJrVwUzj+xC1ueTC3soCKJFl/UtjZp0G5
+	hInNt81N9kvDNrhW/n7/rUAy9RjV+LSumeuRIguC7FhGVpWcrNRkAEcJYwKD3/OVk3A4TL2deyUmS
+	zhK53omVL2NHyDn+J0epmgScYL0/GTtIMfYh+BP+OlN7wlAy10CLkw/Ax5B2VV59GFfv/6Rco3vNu
+	A+aNyCCg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMSHK-00000009elz-13vF;
-	Thu, 29 Oct 2026 15:42:58 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xMSIY-00000009f4I-29Jb;
+	Thu, 29 Oct 2026 15:44:14 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMSHI-00000009elX-3TRR
+	id 1xMSIX-00000009f4C-1Xir
 	for kexec@lists.infradead.org;
-	Thu, 29 Oct 2026 15:42:56 +0000
+	Thu, 29 Oct 2026 15:44:13 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 471E643F1A;
-	Thu, 29 Oct 2026 15:42:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B22651F01824;
-	Thu, 29 Oct 2026 15:42:52 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 83BFA60207;
+	Thu, 29 Oct 2026 15:44:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F7931F031E1;
+	Thu, 29 Oct 2026 15:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793288576;
-	bh=x05fCxndf1hYykwEJ06qD0sbC4EVKTE/sZRMpUPdEQc=;
+	s=k20260515; t=1793288652;
+	bh=9LohosSmNI0EaSphEpGjYH9L23OvaCdilKiGHMtzl+I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=VBWpMU/KLAu7f/e/8Noc5/ky4m6uYCqrAnbDe7B1Eiyf3YKYYuSJu9S6rMUBwAHRq
-	 rxdNuSkxQyc4TOUMzaXdWdtkkmG4SSedqSFbH+UiVGUvDBhSbF5ps5Rj1N4WC5Z+1M
-	 nVg6ipTCrheIKd6OSnlqmCHY40aY5JuHQMktjBDTz0bNGDllpKtBpr67h+uTjX/02/
-	 BPVwPJ/jrEhMjy1lbZssZEiGQ47CW+eoOvd7LM9X+gXcm1M/wx1zx2VQ/uyO8q67C5
-	 n6t0zAffCO2JyYnGumXddDp++ELqcS68IiiH0skAk3Y++ZmqpXAGKI8OP//9xNZw14
-	 KXjSab75N39jg==
+	b=NyagxtlFRZCZ8laotq+zQX/nXLERa551dmYVok4IhbDxultx8Qv/zBxN54h8zWNFB
+	 SU+tc74cj79XLWTEjRkwdxchX9I6BXRs21mLGib4aipJWDxDX/KvxW4iqXOSr7B0dx
+	 eme5eSIcyy8lJJh/A0BknoG9D8uZig8XSMWsJd3rvw5Pdll/YBqlR/FyK0LWdIjic1
+	 k0HXGV7jTLdAqFs6AdorrgNLNgGIvlSTjYkuzYdUXJsEGDCqm72UBjgUPtTCzdsqeP
+	 CNAnKspdsy9k+rM2AVusw0R8k8/cc2GV8FBVCf9QtijcAoNWNqrIhMx9kys+i4sdhb
+	 Qn/epeF6H3VQA==
 Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfauth.ams.internal (Postfix) with ESMTP id 55D60198003A;
-	Thu, 29 Oct 2026 11:42:41 -0400 (EDT)
+	by mailfauth.ams.internal (Postfix) with ESMTP id B8741198003A;
+	Thu, 29 Oct 2026 11:43:56 -0400 (EDT)
 Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Thu, 29 Oct 2026 11:42:51 -0400
-X-ME-Sender: <xms:cGnjatNYCDeDF49taWGwFnFA6DTBtqFjLkJEWyZ2h7-8tO1hYgeSTw>
-    <xme:cGnjalcGilwgpzywEq5-9_Uax-LoiciY26Hr9Dx2NdLZKDVOeYHxJNoKbsqoyc0HV
-    fMpRhpRtFCi6EkHPOqVKO7Qgcsf8k8JabM2EeZbLZYt0LPRJSrAX1Uy>
-X-ME-Received: <xmr:cGnjam3XDA41P6ZfG4_oZPjd4RhksmXGacPPo4PHNrL9WQIkvxQOdIUOlic>
-X-ME-Proxy-Cause: dmFkZTGrojcwHOYNV1R27yGMmE+sn2SpgiwFqzTWix470caHvIOH90SafujrsKt+HTJD90
-    SN5SPP69uNBPn1MxWH6/eaMHHTJo/SvRT/z0Ju39Z9YfjzvKYsDYrFhgheSCBdJ9b5YIFp
-    cIdIwys365LDAngvB6UcUIm3AGzNccSf4yN/FZLQr8sexIPFzUStpfInmWS9yXmQgvCx5c
-    fmpZ7EbFXEWylssnvmmDQCnrMMUW1jHsUhf/jrVErtMG2Lbffr1bqxM2P6gj7ypN5ZdyZj
-    TgAYvrVjfWikwB2MTrnw3YjFYjeMV0UDDQUTP/dXoAy/YlzoJiJh64//IR8g0ZuUVQCpel
-    PcjjoB9Q6Jx3knI5olrCUi4hirBEGQQT+oSeGTeh25/h09KblyE6Vl7jNLQSnQit4V+35z
-    J17GU/oPzC0n+oCMVsG/dfInPKVCtLZBd5z2d7pFm7kIyajC91WW0fXwTIMOKy3y+R1okp
-    ekcKGTudIOrHnEZRx1GDJKalnfGvVV/PnxC4Qbu/41RL8DRLjWQuiSHsfiURJwHwuxhasY
-    GYMOJsxXNzU8cnNcXtdtzJIfeYba/tJgBPi2qhRcbC1kxMhMglGWVDH8uH+rSsnay/vQnw
-    D3Mh5eiVtNV6r+viH4MNCT1TzsAFldnQpQurl7rb5p9gSfzssla1/AAmhpLw
-X-ME-Proxy: <xmx:cGnjalwWU8W_LTwkSDS4FwlbRvlMAxVh616uhleGcP8DWlPfaYmGzw>
-    <xmx:cGnjaj53Pt7V4Vu7bIXzZKdpvSrEym3BIg-jYhLqD8PxloGEbD1BjA>
-    <xmx:cGnjampN953BOAPY-iT_PyL1bwsUDnSFFEZwFhBzoi8zawrViQ6drg>
-    <xmx:cGnjaqnZb_SLLcbp0PPUsQOS2wLwEGRm-QsuvZlsn1hfIsEUvsIcMQ>
-    <xmx:cGnjaqQ6rvy28ek_52FnLx0f5zjRtsChWHkRCTWZP2DTXANVWLWIhapi>
+  by phl-compute-06.internal (MEProxy); Thu, 29 Oct 2026 11:44:06 -0400
+X-ME-Sender: <xms:vGnjaqXV_oXgY5WUohdr93Ik2ciaVdD-rppLtqYNFzseLbm9KSKfCA>
+    <xme:vGnjavN8pBx64E9WcCMA8kFGqSS4xWegMAxVR_OBlfT1SxSA4n0In5x5lbogKKlBc
+    2rRH2jGjWSLyr4Tyc9R7jhxaFX3yje0xka2R1JpP2wFHC9Wg3f8KVMj>
+X-ME-Received: <xmr:vGnjaiVCXjTDRQFWtHXM2tH5Wgg-Aq7EBL6jORvsqxqYi7qv7dCvrGbSRIA>
+X-ME-Proxy-Cause: dmFkZTGgJ834dc6Y2aLU8zitTP7wE/5Ai0JJcu2EEkyHN74nVjQguXnqD1o/giwxhWpS9o
+    5GchtjMcZM/GimMO/oRY8cX+X5o2O14DaG/wHSoGgsePhNezpMMUR9hxfh+6ePbBrSONp8
+    zUTDPK4YxRFB7PeD9qpcs33Dq2TJ1rCyaCFWQqXYaeQ5IfvhaG1aEgdU9FIBIbjxQyUEVO
+    HUhgjEnLM/mcjpKXN3he8HzQsNkc6t66xTfzuNR3aFM/rpGhCVU4vnygjpenFdd7gimv9e
+    MgBaDigPiYtn0obZd1xKf8xjo+9ygSAq03nBlObq0yoPRGrpSR1NmJKyzbHTEpvNJryhG2
+    oPIKnzFB/jvoPqtSeTVcwgzvAxg1c5L48mEINcwempzZtumcmvHXasq/aFb81DhF1mCBpJ
+    k0Wd876DP/lwDJqM2yLb9ejFBfSTZaL5p93eohaQGYpjoUKfReSmxvjtGjgIvo2rmBt7la
+    FqiSPNMgdpRknAzIxxtHBZwUytDrApT3RG3uLkS298mLHFtCnBMbrOKOZH+PAxoBTWX2Pn
+    9gF3ShCPlU6mXRgQPAvMj+FEowG2WQXnjXKfnerLhTADFznq+/TOvIONV4A3pqqDzDZrzC
+    SzVIwowSHvm6FClF8On+525Eh2Tr7cnWddMWSEr16lkF2XGXutWYCuVCIvHg
+X-ME-Proxy: <xmx:vGnjamxjzn27rK0ySjsGRniUaql1tj51-3CqBDy-1H61hM2iCxkUaw>
+    <xmx:vGnjaoXmMQI9KQwEfOjnXMm-rXDeB-wh8O3GucM8N1bOjv5Gsw38Gw>
+    <xmx:vGnjatGq1k8tRzclx_X2jSCVi6_3zr7GTYrg3feqS3CvIxacixI4ig>
+    <xmx:vGnjat54KicWAGKdQmUX9xn_FZnJU6qwkhTMCIjnw6EryTcAJne9EA>
+    <xmx:vGnjagBJm-xLj-uOPmq8qxgdDdgBPjFXl8HGy9pVFnLZwZ7Eo94LuXNe>
 Feedback-ID: i10464835:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 29 Oct 2026 11:42:39 -0400 (EDT)
-Date: Thu, 29 Oct 2026 15:42:38 +0000
+ 29 Oct 2026 11:43:54 -0400 (EDT)
+Date: Thu, 29 Oct 2026 15:43:53 +0000
 From: Kiryl Shutsemau <kas@kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
@@ -100,22 +100,23 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
 	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 42/46] mm/huge_memory: split huge PUDs when adjusting VMA
- boundaries
-Message-ID: <auNpU-7hPtUZeTGs@thinkstation>
+	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, stable@vger.kernel.org, 
+	Josef Bacik <josef@toxicpanda.com>
+Subject: Re: [PATCH 05/46] mm/truncate: look again if a folio left the mapping
+Message-ID: <auNprZJRad8r_xaY@thinkstation>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-42-6f74bec9a5bb@kernel.org>
- <auMxQPze5cOvGbCe@thinkstation>
- <9f4128a4-85fc-4f4b-ac41-b9d348f56e37@kernel.org>
- <auNYPPlCnLdN88t_@thinkstation>
- <d5d077fe-4695-453a-a2cd-40ef30abd61d@kernel.org>
- <e796dace-06c6-43b8-83f0-594e7f1e7380@kernel.org>
+ <20261027-fixes_core-v1-5-6f74bec9a5bb@kernel.org>
+ <auIniV8YSpA4_oxg@thinkstation>
+ <2f2ef336-2186-4f20-b7f5-565e60471bda@kernel.org>
+ <auMvYdTd_e9O9kDj@thinkstation>
+ <7fab2115-6c44-43b1-b03b-8ce4a37ffe32@kernel.org>
+ <auNaOMYUUpnzCofx@thinkstation>
+ <957fc9ce-1789-41d7-a4cb-66acdf7fcecb@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e796dace-06c6-43b8-83f0-594e7f1e7380@kernel.org>
+In-Reply-To: <957fc9ce-1789-41d7-a4cb-66acdf7fcecb@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -133,23 +134,62 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Thu, Oct 29, 2026 at 04:35:46PM +0100, David Hildenbrand (Arm) wrote:
-> On 10/29/26 15:40, David Hildenbrand (Arm) wrote:
-> > On 10/29/26 15:31, Kiryl Shutsemau wrote:
-> >> On Thu, Oct 29, 2026 at 03:24:29PM +0100, David Hildenbrand (Arm) wrote:
+On Thu, Oct 29, 2026 at 04:21:54PM +0100, David Hildenbrand (Arm) wrote:
+> On 10/29/26 15:38, Kiryl Shutsemau wrote:
+> > On Thu, Oct 29, 2026 at 03:18:23PM +0100, David Hildenbrand (Arm) wrote:
+> >> On 10/29/26 12:37, Kiryl Shutsemau wrote:
 > >>>
-> >>> __split_huge_pud() must split a leave. Either by zapping it (what we do right
-> >>> now) or by populating page tables (as in Usama's PoC).
+> >>> Yes, I missed that the loop only goes back to start when a lookup
+> >>> comes back empty below end. When the last batch reaches end, it exits
+> >>> without another look. It doesn't need the split either: any punch hole
+> >>> whose last page is in the page cache gets there.
+> >>>
+> >>> That exit looks unintended to me. b9a8a4195c7d ("truncate,shmem: Handle
+> >>> truncates that split large folios") turned the "if (start >= end) goto
+> >>> out" early exit into the loop condition. Before it, the loop went back
+> >>> to start until a lookup from start found nothing; Hugh kept that on
+> >>> purpose for hole punch in 792ceaefe621 ("mm/fs: fix pessimization in
+> >>> hole-punching pagecache").
+> >>>
+> >>> Restoring it is enough, and makes the "restart to make sure all gone"
+> >>> comment true again:
+> >>>
+> >>> +       if (start >= end)
+> >>> +               return;
+> >>> +
+> >>>         index = start;
+> >>> -       while (index < end) {
+> >>> +       for (;;) {
+> >>>
+> >>> Then a replaced folio is found on the next round, and truncate needs no
+> >>> special case for it.
+> >>>
 > >>
-> >> No, meant the situation when pud_leaf() is true, but split_pud is false,
-> >> so __split_huge_pud() is never hit. pud_present() is true so we proceed
-> >> to pmd_offset()
+> >> But that's then another lookup even if not really required?
+> >>
+> >> Why do you thing that is that better?
+> >>
+> >> I agree that the code is simpler, but at least it's consistent with the other
+> >> handling.
 > > 
-> > Oh, yeah, I can add a WARN_ON_ONCE() for that, it would be a bug in the software.
+> > The extra lookup only happens when the second loop had work to do.
+> > Normally the first pass removes everything, the first lookup from start
+> > comes back empty, and both versions stop there. When the second loop did
+> > run to end, it costs one more lookup over a range that is now empty.
+> > 
+> > What I like about it is one way to look again instead of two: the loop
+> > already goes back to start when the last batch ends below end, and the
+> > patch adds a second way for when it ends at end. truncate is not like
+> > shmem here: shmem_undo_range() stops after one sweep on hole punch on
+> > purpose, so it needs the rewind; truncate was meant to sweep until
+> > nothing is left.
+> > 
+> > Your version fixes the bug too, so I'll leave the choice to you.
+> > 
 > 
-> Ah, or I can just drop the split_pud check. Let me do that.
+> Can we just do:
 
-Yeah, looks good.
+LGTM!
 
 -- 
   Kiryl Shutsemau / Kirill A. Shutemov
