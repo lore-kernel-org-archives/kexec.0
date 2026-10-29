@@ -2,56 +2,55 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5626C606A31A
-	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 21:51:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3BBF606A31C
+	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 21:56:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=vM+1ClF5;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XNLXlqRw
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=RdPay3Lm;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GauLCy/1
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=0u9mqum51kiy34ukMYiOeDJqgQ6PcqJiGIEfUzDte84=; b=vM+1ClF5uB52mY
-	Luz0oD8Bs0zKMHo0Kn7ccq6odg/zWGwzNZb55DlKYWZgwZIQN1nmFL9mJ+/7mYdkzg8ukvtY02OaI
-	Ify0ap5EpkS+LGmCLywpR7Dm/SrDBrs26xvLSl8sE6RyZY7D9KdAtvfzAEpxYpvLcFF8IvJut11hn
-	eHQOT8e5ELl+tquIg3EWp2x7TRWJdtPzzzUMEYR8immfG4efAucPmOIIpSNOkQpyRluw5VGSRzTEE
-	aHq5ziJ+krqkeoHj6iWi3VOd/gd/cV7i9hcbv5McEudJkL7D7hYTYO4pFxT7kBJcqgIAUPwCRbUm6
-	qlgZM5gWxhRF2eKHqBig==;
+	List-Owner; bh=OmrddnalYvKzrQnN9N4Fpu9NVAES2TsOMe4SsI3z9gU=; b=RdPay3LmVCDf0y
+	KHqMfXzD0MIVvsuiGMRkiPNemcW65iidC4ZuCOzwQf8HKaO4H3WoRgFHT1C/aZDjUnPHmGKMMpy6J
+	l9ilb38gamiJ4XJCnD1Ea1LwH0JC1Nu03BbiVoAxuW6+n/0IfPGrzECs8aRq66XYRTw5+F9m2FvVu
+	4XKXi5vLFROFdLuXA44f0E/B6YVVUlEuCrwJYdDmf6ke0GkTn/CjuudZGPDf9OgRZP7eRQJJ00jK6
+	DEnG5h704fn3I27vgpM1MJDpIRN73fSWzsnSWBdgJHDvrCXBzWAXbBsy0aqCJ8RR7nMgVUs/d4KKx
+	Aqgr6j+7axPJ6J6ew/JA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMWzV-0000000AMrd-0RL2;
-	Thu, 29 Oct 2026 20:44:53 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xMWzF-0000000AMmU-42KH;
+	Thu, 29 Oct 2026 20:44:37 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMWzT-0000000AMrL-3E9M
+	id 1xMWzE-0000000AMmE-07KJ
 	for kexec@lists.infradead.org;
-	Thu, 29 Oct 2026 20:44:51 +0000
+	Thu, 29 Oct 2026 20:44:36 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id DA33A601EE;
-	Thu, 29 Oct 2026 20:44:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F9CC1F01824;
+	by sea.source.kernel.org (Postfix) with ESMTP id B7B8541082;
 	Thu, 29 Oct 2026 20:44:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B00911F01825;
+	Thu, 29 Oct 2026 20:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793306690;
-	bh=0u9mqum51kiy34ukMYiOeDJqgQ6PcqJiGIEfUzDte84=;
+	s=k20260515; t=1793306675;
+	bh=OmrddnalYvKzrQnN9N4Fpu9NVAES2TsOMe4SsI3z9gU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=XNLXlqRwdRH7zOXlHSAyM5r9l+ZsOYydF9IM6c41SfzDtPH1QjYiKg2vebUPxLRhE
-	 op9syInbMCIbPK5ag5w28kgrB20oq6dz6kz7zwHtoMeI3sn0MMvrWpam94RFGJgDxP
-	 PwuSJ2sDX281xB+sF7JbamBjH+Lt1N+zLFvcykhavgdcPfZcysVtAD4MHmB4sYH6Ln
-	 ybtI5TkPw6mEClQrIsXfrvgw+3L5rwnHWTSP6EOAsNIyTGyK5uyY2hbH03ERH5/SzU
-	 /29GOoPKsf2oq6PwxEHLGhAGPKt6XxH3qiXXHt/UH7EJc+i1SCplW5JPkQ0WQvlUQC
-	 DoaDQWsFpWhEA==
+	b=GauLCy/1HrYbdieZoYJGY/PpIUS1vgONUu0M4PlXJvY7eY+GegQj06Bc3k52Nn7Cw
+	 5pUOiZmQPSa/agrZVJmrfiWcTl/MEWxkZ9UQsk7lluRie9slFArS3/SevT9Xccdva3
+	 jp2ZFiK7k5Rm5+WgEwWwD32w960RLwKV1pQDqkERuQqbjtkTQtpbzWr7jdja43hl2C
+	 c8k7J5I4N2CU6YXX6Fvp4i5opY3LoX3l2OPr87naVfONU+oHtwZSXt5gIoOIzHgVXo
+	 jtFFykZR1o4q1kxv0399ek+IcViDhuU9YWAlcP+xsYEpMNrWrwGCMJzm0kwU8GDd9N
+	 c2NA3KmLJdFDw==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Thu, 29 Oct 2026 21:33:41 +0100
-Subject: [PATCH v2 46/47] mm/memory-tiers: unregister empty tiers outside
- memory_tier_lock
+Date: Thu, 29 Oct 2026 21:33:40 +0100
+Subject: [PATCH v2 45/47] mm/cma: don't release CMA pages still in use
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261029-fixes_core-v2-46-a64ce7f83abb@kernel.org>
+Message-Id: <20261029-fixes_core-v2-45-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
 In-Reply-To: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -89,15 +88,14 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
- stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
- "David Hildenbrand (Arm)" <david@kernel.org>
+ stable@vger.kernel.org, "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3065; i=david@kernel.org;
- h=from:subject:message-id; bh=Be0cEORXL/+FFSLbAGaUCWXPcitw/28TU4MyQxK8Pu4=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLIer+2KdjtU9mUqD/ObE6nfr6W/WsvPu0X2p7PUp8V1b
- +oT/Z1XdZSyMIhxMMiKKbIEBd83ePlyXW21Gx8zzBxWJpAhDFycAjCRk6cYGdakdG50VWY+a/9V
- 8/mJgoV/fRerH9Bh/RdRvUB9CnvUSjuG/24s+zm964Q1rNsURSvOGhmcdnscZ7DUsWr7it/1S89
- +5wYA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2252; i=david@kernel.org;
+ h=from:subject:message-id; bh=3kpfFp5NOxLKJV7MN0qgqEyHjOOrTqFsf7HE3Qur7Ks=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLIer+16LPZT4EOJ2H3DwG0neWorjk3wfGRVsoy7nXl93
+ YOjzLF9HaUsDGIcDLJiiixBwfcNXr5cV1vtxscMM4eVCWQIAxenAEzk7zaG/wGvIi2+nrw7edI2
+ i513/4c0ZS6asqr28e2KUp2fNmp7rUMZfrPoSJ2ovysSvbya44cCH9+H3rqFRjUPV/WUWk7Yv/V
+ nMCsA
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -118,97 +116,68 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-When offlining a node's last memory empties its tier,
-clear_node_memory_tier() calls device_unregister() while holding
-memory_tier_lock. A concurrent sysfs read can hold a kernfs active
-reference and block in nodelist_show() on that mutex. device_unregister()
-then waits in kernfs_drain() for the read to finish and release its active
-reference, while the reader waits for the offlining task to release the
-mutex.
+From: Rik van Riel <riel@surriel.com>
 
-Return the node's former tier from clear_node_memory_tier(), making the
-helper more similar to set_node_memory_tier(), which also returns a
-memory_tier pointer. Let the caller unlink an empty tier under
-memory_tier_lock before rebuilding demotion targets, then unregister its
-device after dropping the lock.
+When a driver calls dma_free_contiguous() before quiescing DMA, the
+page might still have a reference from the device.
+put_page_testzero() there returns false, WARN fires, but the code proceeds
+to free_contig_frozen_range() putting a live page onto buddy and clearing
+the bitmap. A subsequent allocation can hand the same PFN to a new
+owner while the original holder still references it.
 
-Fixes: 9832fb87834e ("mm/demotion: expose memory tier details via sysfs")
+A concurrent put_page() that drops the last reference between the
+testzero loop and free_contig_frozen_range() can double-queue the page
+via page->lru, corrupting buddy lists.
+
+Avoid the corruption by not freeing a CMA region if any of the
+pages inside are still in use.
+
+Make it explicit in the warning that the driver allowed a leak.
+
+While at it, use page_ref_freeze() to make the semantics clearer and
+switch to pr_warn_ratelimited().
+
+Fixes: 9bda131c6093 ("mm: cma: add cma_alloc_frozen{_compound}()")
 Cc: stable@vger.kernel.org
-Reported-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+Signed-off-by: Rik van Riel <riel@surriel.com>
+Link: https://patch.msgid.link/20260811132045.5f114772@fangorn
+[ david: use page_ref_freeze() + pr_warn_ratelimited() ]
+Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+Acked-by: Muchun Song <muchun.song@linux.dev>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/memory-tiers.c | 29 +++++++++++++----------------
- 1 file changed, 13 insertions(+), 16 deletions(-)
+ mm/cma.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
-index 25e121851b58..8eda313cf619 100644
---- a/mm/memory-tiers.c
-+++ b/mm/memory-tiers.c
-@@ -572,21 +572,14 @@ static struct memory_tier *set_node_memory_tier(int node)
- 	return memtier;
- }
- 
--static void destroy_memory_tier(struct memory_tier *memtier)
-+static struct memory_tier *clear_node_memory_tier(int node)
+diff --git a/mm/cma.c b/mm/cma.c
+index a10ea37a261d..871f95c9ae9f 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -1020,7 +1020,7 @@ bool cma_release(struct cma *cma, const struct page *pages,
+ 		 unsigned long count)
  {
--	list_del(&memtier->list);
--	device_unregister(&memtier->dev);
--}
--
--static bool clear_node_memory_tier(int node)
--{
--	bool cleared = false;
- 	pg_data_t *pgdat;
- 	struct memory_tier *memtier;
+ 	struct cma_memrange *cmr;
+-	unsigned long ret = 0;
++	unsigned long leaked = 0;
+ 	unsigned long i, pfn;
  
- 	pgdat = NODE_DATA(node);
- 	if (!pgdat)
--		return false;
-+		return NULL;
+ 	cmr = find_cma_memrange(cma, pages, count);
+@@ -1029,9 +1029,13 @@ bool cma_release(struct cma *cma, const struct page *pages,
  
- 	/*
- 	 * Make sure that anybody looking at NODE_DATA who finds
-@@ -604,14 +597,10 @@ static bool clear_node_memory_tier(int node)
- 		synchronize_rcu();
- 		memtype = node_memory_types[node].memtype;
- 		node_clear(node, memtype->nodes);
--		if (nodes_empty(memtype->nodes)) {
-+		if (nodes_empty(memtype->nodes))
- 			list_del_init(&memtype->tier_sibling);
--			if (list_empty(&memtier->memory_types))
--				destroy_memory_tier(memtier);
--		}
--		cleared = true;
- 	}
--	return cleared;
-+	return memtier;
- }
+ 	pfn = page_to_pfn(pages);
+ 	for (i = 0; i < count; i++, pfn++)
+-		ret += !put_page_testzero(pfn_to_page(pfn));
++		leaked += !page_ref_freeze(pfn_to_page(pfn), 1);
  
- static void release_memtype(struct kref *kref)
-@@ -884,13 +873,21 @@ static int __meminit memtier_hotplug_callback(struct notifier_block *self,
- {
- 	struct memory_tier *memtier;
- 	struct node_notify *nn = _arg;
-+	bool empty = false;
+-	WARN(ret, "%lu pages are still in use!\n", ret);
++	if (leaked) {
++		pr_warn_ratelimited("%lu pages are still in use, not freeing CMA region!\n",
++				   leaked);
++		return true;
++	}
  
- 	switch (action) {
- 	case NODE_REMOVED_LAST_MEMORY:
- 		mutex_lock(&memory_tier_lock);
--		if (clear_node_memory_tier(nn->nid))
-+		memtier = clear_node_memory_tier(nn->nid);
-+		if (memtier) {
-+			empty = list_empty(&memtier->memory_types);
-+			if (empty)
-+				list_del(&memtier->list);
- 			establish_demotion_targets();
-+		}
- 		mutex_unlock(&memory_tier_lock);
-+		if (empty)
-+			device_unregister(&memtier->dev);
- 		break;
- 	case NODE_ADDED_FIRST_MEMORY:
- 		mutex_lock(&memory_tier_lock);
+ 	__cma_release_frozen(cma, cmr, pages, count);
+ 
 
 -- 
 2.43.0
