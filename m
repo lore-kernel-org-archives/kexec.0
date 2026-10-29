@@ -2,66 +2,69 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76DE0606A31E
-	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 10:58:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CAC606A31F
+	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 11:02:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=lyf0drj+;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=H3FsUol2
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=SDm8Wzdi;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WrVYzA32
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=HRlYvtp0NLbF/qBaWCj/ZYIcUA7W6S9v5stNA3ILEuU=; b=lyf0drj+Qvjl22
-	QF2NfmN8p2a+q5teVs04pH8PI3ceXu/eJGye9NF0weAC30Cb6jr0o1KDGjNbDIqs/sYzCcWywrl03
-	iFf+rZ1CXldu51T9pv4ky02QfB8tyU/wzVUWeT7zFpxUshyBuHAkW5PuG7ceVfmRrlySnyhZqKZKs
-	XbIY5xiGoIbhJ5MhRPhwPAGVLwAZ9RbL/dmfpSGqx6sSGmHxhFFBD5cUosPN2dGzD3nLzgXozLbAZ
-	IVvOI74hVD6k+h4hNtRnQf1uqil+lZ/PoQKvCKsL1L444KZeDcIzRkpKSl8WehQJtNvfb7u05SG1f
-	E4ClHWuT+YxvCrYF9d6Q==;
+	List-Owner; bh=OYmhv8HwvlOQOOI8sOhoeifNYQzQv5FQ9ix1RIz0byk=; b=SDm8WzdiKOgEHs
+	3OZLFuCY1DGEsXmiT5ylsXBJlKKcAbWeK/zdh5FcCEey7bCh83ijDi96uIVklDhnDx5Db71uJ4hv6
+	H5Z7TFKpVkozr2pNeGrkkamcyyxP4L3mfJujMUlmr52Dq04tXHk9bMBS2TWdziDmuoQVs0hpke8Ad
+	YSZ1ESyOGRSsU2opMzR2x1v9j/oXKm6KF2getgqHDVNqEMVOPF2JthuxXPZir0Eg1paLRDWgR1mpa
+	QCq6v9Csu0xVL8W3wwPZ4BNHcHBZUDBW9Xk6314lLtNx/5FkVcjO8WG7/6oL7Qd8J3HZbxmc0lUdy
+	Nk23/eKVVX04eW4hgdvA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMNpe-000000091kQ-1Y86;
-	Thu, 29 Oct 2026 10:58:06 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xMNtS-000000092Hp-1FB4;
+	Thu, 29 Oct 2026 11:02:02 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMNpc-000000091kJ-3I6c
+	id 1xMNtR-000000092Hh-0A5s
 	for kexec@lists.infradead.org;
-	Thu, 29 Oct 2026 10:58:04 +0000
+	Thu, 29 Oct 2026 11:02:01 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id ED08F43ECB;
-	Thu, 29 Oct 2026 10:58:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F11AA1F01825;
-	Thu, 29 Oct 2026 10:57:45 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 1CDCE4039A;
+	Thu, 29 Oct 2026 11:02:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 868E41F01825;
+	Thu, 29 Oct 2026 11:01:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793271483;
-	bh=HRlYvtp0NLbF/qBaWCj/ZYIcUA7W6S9v5stNA3ILEuU=;
+	s=k20260515; t=1793271720;
+	bh=OYmhv8HwvlOQOOI8sOhoeifNYQzQv5FQ9ix1RIz0byk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=H3FsUol2krhWc0MOsqYSy4b1n5I/yEBuYGJf4ssu48mgFUkvW+0qm9DYEj2+lgKgm
-	 fFIbgCvBARf3WoqRQM+NLSRyK4kJJtyXKF974wXPAnGy4mgrBPrkqSLraPFBxk9NfV
-	 L82qn5kVuNTWaxKH3veWkSXybe31FXgnFOznG6WMGFZe9paGUxsFhSbjUdaJI80DAR
-	 97c4aNlaizxp0hL3Aeed13cW6uSdzU+3T6iuag663YJN6movTiPMGWocBnKF741/kS
-	 kb2KEPH80ay4scp18cnaw4P1KMwb8sIEcjlJBYfiyGroVIGDg6lz21BKMsUllLAqh1
-	 0vJP7Pj5AIqZA==
-Message-ID: <d7b1c89f-b119-4598-af22-1a7e4e4a3037@kernel.org>
-Date: Thu, 29 Oct 2026 11:57:42 +0100
+	b=WrVYzA32uJkCm0VS++wNZs3DP7uWRGdJEXgTe24KpJtmejSidIe8tQmWXTY33s0QG
+	 HWa5maFNgZ9hsLBs9p6tltp+e/BdFtOGCb9jz8qmS+Cp/6fRjZJQMmzLdLwR9TfBUQ
+	 sN03Re4Pf9uxJOc9kulo+S78oKrbtmqC1f9GNHIJfTsLmluP4xsQoE6hd9E9GfiCvb
+	 17qs7MKo4Qvzf3fWJz3HgnZ6Q6xNSZmlIhFv32WzWDFBIhnqWNSRPfmP7RtFcf+bLQ
+	 l2Tpp3alC16EanFj658aO1knHP3qQXCiprCyZR3keIAic7R0SlOv9FIqNe2jn4U8+0
+	 pf43loQgoyv0Q==
+Message-ID: <f9067f65-fcdc-4ebb-bbf8-84db9e22af0d@kernel.org>
+Date: Thu, 29 Oct 2026 12:01:40 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/46] fork: take mmap_lock before copying mm_struct
-To: Barry Song <baohua@kernel.org>, Pedro Falcato <pfalcato@suse.de>
+Subject: Re: [PATCH 18/46] mm/khugepaged: check if PTE table is empty in
+ try_collapse_pte_mapped_thp()
+To: Gregory Price <gourry@gourry.net>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
  Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
  Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
  Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
+ Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+ Baoquan He <baoquan.he@linux.dev>,
  Baolin Wang <baolin.wang@linux.alibaba.com>,
  "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
  Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
  Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>,
  Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>,
- Hugh Dickins <hughd@google.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
  Pratyush Yadav <pratyush@kernel.org>,
  "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
  Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
@@ -77,20 +80,14 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
  Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
  Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
- Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
- Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
  linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-cxl@vger.kernel.org, stable@vger.kernel.org,
- Josef Bacik <josef@toxicpanda.com>
+ linux-cxl@vger.kernel.org
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org>
- <auB-3BQn_rR6IfY8@pedro-suse.tail5790ac.ts.net>
- <22b819a2-631d-468e-b724-770caf9f94e4@kernel.org>
- <CAGsJ_4z3qgCPBpCDitVTq+xiGsS=-yEhKSbEO4Lbdn9MVAHK0g@mail.gmail.com>
- <auHve-G8bboW77IZ@pedro-suse.tail5790ac.ts.net>
- <CAGsJ_4xD_EU9sBZmJRb3ET3zfxnOnXJvZB1p_3pTLV=Y4xHPMw@mail.gmail.com>
+ <20261027-fixes_core-v1-18-6f74bec9a5bb@kernel.org>
+ <179323853182.453251.8510731747954180380.b4-reply@b4>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -137,9 +134,9 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <CAGsJ_4xD_EU9sBZmJRb3ET3zfxnOnXJvZB1p_3pTLV=Y4xHPMw@mail.gmail.com>
+In-Reply-To: <179323853182.453251.8510731747954180380.b4-reply@b4>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -150,60 +147,65 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 10/28/26 22:11, Barry Song wrote:
-> On Wed, Oct 28, 2026 at 8:55 PM Pedro Falcato <pfalcato@suse.de> wrote:
+On 10/29/26 02:48, Gregory Price wrote:
+> On 2026-10-27 00:17 +0100, David Hildenbrand (Arm) wrote:
+>> The existing code is rather horrible and already resulted in bugs in the
+>> past: we special-case UFFD inserting anonymous folios by grabbing the PMD
+>> lock early, but ignore any other markers (guard, poison through uffd) that
+>> could have been inserted into the page table in the meantime, effectively
+>> dropping them.
 >>
->> On Wed, Oct 28, 2026 at 03:48:09AM +0800, Barry Song wrote:
->>> On Wed, Oct 28, 2026 at 3:07 AM David Hildenbrand (Arm)
->>> <david@kernel.org> wrote:
->>>
->>> Regarding the race with memcpy(mm, oldmm, sizeof(*mm)), we
->>> still have one [1] even after this patch.
->>>
->>> That is, copying mm_struct can happen concurrently with
->>> lru_gen_del_mm(). However, this race doesn't seem harmful.
->>> I might be missing something here though.
+>> Let's just unify and simplify the locking: try to grab the PMD table
+>> lock and if that fails, flush the TLB, drop the PTE lock, take PT locks in
+>> the right order and check if the page table is still empty.
 >>
->> I don't think it's harmful as well. mm_init() reinitializes those fields.
+>> We still perform the heavy lifting (zapping the folio ptes) under PTE table
+>> lock only.
 >>
->> Though I hate that memcpy. I think that ideally we copy by member and
->> data_race() benign races, like what is done in vm_area_init_from().
+>> Include <linux/hugetlb.h> for now, as x86's flush_tlb_range() macro
+>> depends on hugetlb helpers. This dependency needs a separate cleanup.
+>>
+>> Both issues this fixes are rather corner cases. Let's not CC stable for
+>> now.
+>>
+>> Fixes: f807123d578d ("mm: allow guard regions in file-backed and read-only mappings")
+>> Fixes: 1043173eb5eb ("mm/khugepaged: collapse_pte_mapped_thp() with mmap_read_lock()")
+>> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 > 
-> Yes. I was suggesting something like using data_race() to
-> silence the warning[1], but applying it to memcpy() also
-> seems a bit too drastic.
-> 
-> Another option is to copy members one by one, skipping those
-> that don't need to be copied. However, that would make the
-> code quite lengthy, and the copying might also be slower?
+> This patch is painful. It's taking me a bit to wrap my head around.
 
-The compiler might do its best to improve it, but I don't think this is the
-direction we want.
+The key here is that we unfuck (sorry) what we over-engineered before.
 
-We'd have to figure out
+We just to the same locking independent of VMA flags. But if the trylock fails
+(which we have to do because of possible deadlocks) we'll drop both locks and
+just do another lookup.
+
+If we raced with someone messing with the page tables in the meantime (no longer
+empty), we give up.
 
 > 
->>
->> Anyway, KCSAN reports aren't the most serious thing in the world, so this can
->> (should?) be cleaned up later.
+> I get that you want to avoid taking both locks while zapping, but
+> wouldn't it be simpler?  I suppose we don't know what kind of
+> regressions might pop up with that though, bah.
+
+Exactly, that's the spirit of the original code. We would just block a 1GiB
+range of va space for the entire operation.
+
+If you think there is a more elegant way of doing it (while minimizing holding
+the pmd lock), please shoot :)
+
 > 
-> Yep, I don't think there are any blockers for this patch. I had
-> actually given my Reviewed-by tag before raising this race.
-> 
-> David discussed races between memcpy() of mm_struct
-> and other operations. I recalled another related case, so I
-> posted it here. Hopefully, I'm not just making noise.
-Not at all. I think that needs a proper investigation as well ... and I am still
-u clear how it would be valid to access the mm struct without the mmap lock (per
-my patch) that way.
+> I can say that I've reproduced and tested the before/after state,
+> and it looks stable.
+Thanks!
 
 -- 
 Cheers,
