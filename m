@@ -2,44 +2,44 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3B0606A31E
-	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 17:31:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D024606A31D
+	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 17:31:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=hzm7KVoL;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=xPnFkVGP
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2Ao0oOFX;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=W9LFoFBs
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=/+hjM5CsEedso/LlGxQH+kdJiIeJBeEghJpwPsmuqXM=; b=hzm7KVoL01ljph
-	cU7opjv5W0tSPYWDbKam79o1r+baigBg1wcqozOVZ6n+UAeYKShIj6VlHv6dK+H7NETyIKMfECpcv
-	TW9eA5EryKHejcwHSureRyEv5ue8MaSfyxZ4BVqIg6uksu0skLyQIr0I1KWuRbQEcyI11n2fgsJ7C
-	JVrQHFmJBF+NNGaPfEYD1MMyxjAint4M3IIXAElteVAIvjknS1/tLAuDTBi/mrePzAf7FV/X9qXze
-	+u7VbLr6dSRZ2drC3hQOyNdmeJxmxByOyRy/pqVkpzl8RMC963B8ge2EdguRXFtAJ5RJzk9WLqfzr
-	4VnVd9ijI2s8cZ2nsE3w==;
+	List-Owner; bh=hjl3YWLB9mIMK4NxN5xFoTsa4zvmwEeXlgSjnO0OUbA=; b=2Ao0oOFXLVY2Jp
+	2OskrYXPCwAsy+SwBUPBRljPOCbHWd9i0oL5nvt/Y4IbEstyMmwOC1xejIgI+ogxJRIXWZJFQ7e0Q
+	gnwXJI9opQbVJrdIuDw9/83xneNhsfxY/DAfAQYg0mdqdllglAM7Sm5T6iPzBGjvLLODmrjr9D9xc
+	OOMHG41VF0A4/KBJtU0lGw1lgzgCSmyfZUkoMDOTmxZlBv718FJvTO2kXLeIgEr9XtX3eEBtwquh7
+	L84JFN5Xq82st6kozgn1Ey3YGCGynRoYJ2v5I5n5NC+Bh/ETk/tIu+fJ5L6bqMvXYJ5mqSYCoGKqc
+	PZhVBwOMq9lUGzGi6I0w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMTxw-00000009yih-3VAF;
-	Thu, 29 Oct 2026 17:31:04 +0000
-Received: from out-5.mta1.migadu.com ([95.215.58.5] helo=mta1.migadu.com)
+	id 1xMTy2-00000009ymI-003d;
+	Thu, 29 Oct 2026 17:31:10 +0000
+Received: from out-250.mta0.migadu.com ([2001:41d0:1004:224b::fa] helo=mta0.migadu.com)
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMTxs-00000009yej-3oLS
+	id 1xMTxz-00000009yif-011s
 	for kexec@lists.infradead.org;
-	Thu, 29 Oct 2026 17:31:03 +0000
+	Thu, 29 Oct 2026 17:31:08 +0000
 X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=XjaLIKpPNBz8YS+fveYxov34nv5lXYqg9aUyoW4HF6I=;
+DKIM-Signature: a=rsa-sha256; bh=GBih4azSAalhMpwQa4vAt/wr7df5ETSpm+lkTN2YYcw=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793295058; v=1; x=1793899858;
- b=xPnFkVGPL1QlatO8UExQBh7I/oQ7dCIPtcm0w9D9uT/f3tQiHIeMhfaVOfxkUr317Yy8D3qq
- Z9q+BkBVSYSu8XAvbF7V302QzSYfro1VtTONorAqqtsMb84XMbG+lFZgfoRYpIiT7eF/FRER19m
- tadG1qwTfbcTGi96CL0Qf208=
+ t=1793295064; v=1; x=1793899864;
+ b=W9LFoFBszpWry1/NSZbVhjNsFbcVuSrt/CoO/JfaLe7WiVW7vFpNJY7uGjKf+aJPQSKJXkIV
+ 06V+5qqpODl9AsLap7BQ8oVrkrYL+GpTR9hNsSgs8TMSSct9wgIdgHD1c/40EKKFuVfRSevj1BA
+ V7H11bHuwTRyacCfRGC8mjeE=
 X-Envelope-To: kexec@lists.infradead.org
-Received: by smtp.migadu.com with ESMTPS id 072f51d6be77a39d;
-	Thu, 29 Oct 2026 17:30:58 +0000
-X-Mizu-Trace-ID: 072f51d6be77a39d
+Received: by smtp.migadu.com with ESMTPS id d28391d344248cfb;
+	Thu, 29 Oct 2026 17:31:04 +0000
+X-Mizu-Trace-ID: d28391d344248cfb
 X-Migadu-Flow: FLOW_OUT
 From: George Guo <dongtai.guo@linux.dev>
 To: rppt@kernel.org,
@@ -62,9 +62,9 @@ Cc: ilias.apalodimas@linaro.org,
 	linux-mm@kvack.org,
 	linux-kselftest@vger.kernel.org,
 	linux-efi@vger.kernel.org
-Subject: [PATCH v6 7/8] selftests/kho: Add LoongArch vmtest support
-Date: Fri, 30 Oct 2026 02:29:54 +0900
-Message-ID: <20261029172956.20791-8-dongtai.guo@linux.dev>
+Subject: [PATCH v6 8/8] selftests/liveupdate: Add LoongArch vmtest support
+Date: Fri, 30 Oct 2026 02:29:55 +0900
+Message-ID: <20261029172956.20791-9-dongtai.guo@linux.dev>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20261029172956.20791-1-dongtai.guo@linux.dev>
 References: <20261029172956.20791-1-dongtai.guo@linux.dev>
@@ -72,9 +72,9 @@ X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261029_103101_110484_C8387810 
-X-CRM114-Status: GOOD (  15.33  )
-X-Spam-Score: -2.8 (--)
+X-CRM114-CacheID: sfid-20261029_103107_249150_34FDEB80 
+X-CRM114-Status: GOOD (  13.99  )
+X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,70 +95,100 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 
 From: George Guo <guodongtai@kylinos.cn>
 
-Add loongarch.conf to run the test on QEMU's LoongArch virtual machine
-with a la464 CPU and an 8250 serial console, and let vmtest.sh accept
-the loongarch64 target.
+Add the LoongArch kernel configuration, target and cross-compiler
+detection, and include loongarch64 in the VM test suite.
 
-Boot vmlinux.efi through EFI firmware. The EFI stub installs the KHO EFI
-table, and QEMU's direct kernel boot would skip the stub. QEMU_EFI
-defaults to /usr/share/edk2/loongarch64/QEMU_EFI.fd and can be set for
-distributions that install the firmware elsewhere, such as Debian's
-qemu-efi-loongarch64 package.
-
-QEMU's LoongArch virtual machine has no i8042 controller. Enable the
-generic PCI host so its I/O space is mapped before the i8042 fallback
-probe touches the legacy ports. This keeps i8042 enabled, so the same
-kernel configuration still works on real hardware.
-
-Enable ACPI_SPCR_TABLE so the bare earlycon parameter gets the UART from
-the SPCR table installed by EDK2. Unlike x86, LoongArch does not enable
-it by default, and without it there is no early console and vmtest sees
-no early boot output.
-
-The KHO vmtest needs CONFIG_DEFERRED_STRUCT_PAGE_INIT=y, which depends
-on SPARSEMEM, so select CONFIG_SPARSEMEM_MANUAL=y.
+Boot vmlinux.efi through EFI firmware so the EFI stub installs the KHO
+table. Allow the firmware path to be set with QEMU_EFI and skip the test
+if it is unavailable.
 
 Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
 Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
 Signed-off-by: George Guo <guodongtai@kylinos.cn>
 ---
- tools/testing/selftests/kho/loongarch.conf | 11 +++++++++++
- tools/testing/selftests/kho/vmtest.sh      |  3 ++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/kho/loongarch.conf
+ .../selftests/liveupdate/config.loongarch64        |  5 +++++
+ tools/testing/selftests/liveupdate/run-vmtests.sh  |  4 ++--
+ tools/testing/selftests/liveupdate/vmtest.sh       | 14 +++++++++++++-
+ 3 files changed, 20 insertions(+), 3 deletions(-)
+ create mode 100644 tools/testing/selftests/liveupdate/config.loongarch64
 
-diff --git a/tools/testing/selftests/kho/loongarch.conf b/tools/testing/selftests/kho/loongarch.conf
+diff --git a/tools/testing/selftests/liveupdate/config.loongarch64 b/tools/testing/selftests/liveupdate/config.loongarch64
 new file mode 100644
-index 000000000000..36153b03c4ef
+index 000000000000..264067ef5ab1
 --- /dev/null
-+++ b/tools/testing/selftests/kho/loongarch.conf
-@@ -0,0 +1,11 @@
-+QEMU_EFI="${QEMU_EFI:-/usr/share/edk2/loongarch64/QEMU_EFI.fd}"
-+QEMU_CMD="qemu-system-loongarch64 -M virt -cpu la464 -bios $QEMU_EFI"
-+QEMU_KCONFIG="
++++ b/tools/testing/selftests/liveupdate/config.loongarch64
+@@ -0,0 +1,5 @@
 +CONFIG_ACPI_SPCR_TABLE=y
 +CONFIG_PCI_HOST_GENERIC=y
 +CONFIG_SERIAL_8250=y
 +CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SPARSEMEM_MANUAL=y
-+"
-+KERNEL_IMAGE="vmlinux.efi"
-+KERNEL_CMDLINE="console=ttyS0 earlycon"
-diff --git a/tools/testing/selftests/kho/vmtest.sh b/tools/testing/selftests/kho/vmtest.sh
-index 0014bd76e88d..d05ba0734b25 100755
---- a/tools/testing/selftests/kho/vmtest.sh
-+++ b/tools/testing/selftests/kho/vmtest.sh
-@@ -21,7 +21,7 @@ Options:
- 	-d)	path to the kernel build directory
- 	-j)	number of jobs for compilation, similar to -j in make
- 	-t)	run test for target_arch, requires CROSS_COMPILE set
--		supported targets: aarch64, x86_64
-+		supported targets: aarch64, loongarch64, x86_64
++CONFIG_SMP=y
+diff --git a/tools/testing/selftests/liveupdate/run-vmtests.sh b/tools/testing/selftests/liveupdate/run-vmtests.sh
+index d656ce58c5a7..f6cfb76b1dac 100755
+--- a/tools/testing/selftests/liveupdate/run-vmtests.sh
++++ b/tools/testing/selftests/liveupdate/run-vmtests.sh
+@@ -4,7 +4,7 @@
+ SCRIPT_DIR=$(dirname "$(realpath "$0")")
+ TEST_RUNNER="$SCRIPT_DIR/vmtest.sh"
+ 
+-TARGETS=("x86_64" "aarch64")
++TARGETS=("x86_64" "aarch64" "loongarch64")
+ 
+ GREEN='\033[0;32m'
+ RED='\033[0;31m'
+@@ -72,7 +72,7 @@ function main() {
+ 		for test_name in "${TEST_NAMES[@]}"; do
+ 			log="$output_dir/${arch}_${test_name}.log"
+ 
+-			printf "  -> %-8s %-24s ... " "$arch" "$test_name"
++			printf "  -> %-11s %-24s ... " "$arch" "$test_name"
+ 
+ 			"$TEST_RUNNER" -t "$arch" -T "$test_name" &> "$log"
+ 			exit_code=$?
+diff --git a/tools/testing/selftests/liveupdate/vmtest.sh b/tools/testing/selftests/liveupdate/vmtest.sh
+index 69beda6c961d..ffe82512f3e4 100755
+--- a/tools/testing/selftests/liveupdate/vmtest.sh
++++ b/tools/testing/selftests/liveupdate/vmtest.sh
+@@ -21,6 +21,12 @@ function get_arch_conf() {
+ 		QEMU_CMD="qemu-system-aarch64 -M virt -cpu max"
+ 		KERNEL_IMAGE="Image"
+ 		KERNEL_CMDLINE="console=ttyAMA0"
++	elif [[ "$arch" == "loongarch" ]]; then
++		local qemu_efi="${QEMU_EFI:-/usr/share/edk2/loongarch64/QEMU_EFI.fd}"
++		[ -r "$qemu_efi" ] || skip "EFI firmware '$qemu_efi' not found, set QEMU_EFI"
++		QEMU_CMD="qemu-system-loongarch64 -M virt -cpu la464 -bios $qemu_efi"
++		KERNEL_IMAGE="vmlinux.efi"
++		KERNEL_CMDLINE="console=ttyS0 earlycon"
+ 	elif [[ "$arch" == "x86" ]]; then
+ 		QEMU_CMD="qemu-system-x86_64"
+ 		KERNEL_IMAGE="bzImage"
+@@ -37,11 +43,15 @@ $0 [-d build_dir] [-j jobs] [-t target_arch] [-T test_name] [-w workspace_dir] [
+ Options:
+ 	-d)	path to the kernel build directory (default: .luo_test_build.<arch>)
+ 	-j)	number of jobs for compilation
+-	-t)	run test for target_arch (aarch64, x86_64)
++	-t)	run test for target_arch (aarch64, loongarch64, x86_64)
+ 	-T)	test name to run (default: luo_kexec_simple)
+ 	-w)	custom workspace directory (default: creates temp dir)
+ 	-k)	keep workspace directory after successful test
  	-h)	display this help
++
++Environment:
++	QEMU_EFI	LoongArch EFI firmware path
++			(default: /usr/share/edk2/loongarch64/QEMU_EFI.fd)
  EOF
  }
-@@ -126,6 +126,7 @@ function target_to_arch() {
  
+@@ -86,6 +96,7 @@ function detect_cross_compile() {
+ 	local candidate=""
+ 	case "$target" in
+ 		aarch64) candidate="aarch64-linux-gnu-" ;;
++		loongarch64) candidate="loongarch64-linux-gnu-" ;;
+ 		x86_64)  candidate="x86_64-linux-gnu-" ;;
+ 		*)       skip "Auto-detection for target '$target' not supported. Please set CROSS_COMPILE manually." ;;
+ 	esac
+@@ -193,6 +204,7 @@ function target_to_arch() {
+ 	local target=$1
  	case $target in
  	     aarch64) echo "arm64" ;;
 +	     loongarch64) echo "loongarch" ;;
