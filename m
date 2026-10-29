@@ -2,85 +2,132 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E5B606A326
-	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 13:15:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE41606A327
+	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 14:14:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=P1s8x4XE;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MmZFJDiu
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=jzDk2eeR;
+	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=Y0CiRY6N
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Unsubscribe-Post:List-Owner;
-	bh=lqh2h9OdAhEsv8R7JgV92DMgdxSdmNya/U3mKn63VeQ=; b=P1s8x4XEaR+bPWsHEvzH9JYqZQ
-	mSvlTFHaolvIP+PV/gMyQVcbpN30V7igfe9N209CzlbZ7bLemerN8usl9JjquikE15Hgx+10tqoNE
-	t0BwLbydvmX7Kz+XUSt5v853rf3COO75Y+hRLiiNefV87ayLRN/Mu4zMJ8ALZ23YjN1ZZtH4d9k4B
-	JKUXVeutiCj61e5oo5lIVhHvGaxSGRAs2IcZRepcqRgxsMGhq9FiAyOERR2NlEY0xwp1kelKpTJmE
-	WmAYhtePhevTR9OsIYMJjqaoP9vhR9/RjsLw4NRevR9FxJH/iQNNWOScciq+iku/4fCFg7oHwmdF3
-	FtFnA+mw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
+	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=VHQCBBokr9ANF1mnkSximMg4YC5imaFH/YUHtOF7V4U=; b=jzDk2eeRi38hoE
+	oYfYjYzgKNT51poihCgKnLM+wkUBhF6aju+kt9Scz7LRnfHSyqW4rnonxNPRtekalOwe5QdOx8Im3
+	OkwtBbveipADK7rXsXcmKzTAY0e+tDp4PQa1iW0hFMFLWtnLEUHjWXKWq0jSZcFSGpLvUTXr5LrsJ
+	vCyjwDd+mt6TTTO/OYkN+hA8zYMrTJu3PO+XR2QncB20gVfp8RFjgo8J2o9jx+1LtrkUTmwO2T7v+
+	OucSS2oT9yj2d2WgcbwQw5/3x0vS5U/wfcq+B3m/yjfukFDyh65QaZPooSgECK0RPjjJ19r061NNn
+	z5luK91v9u+9NWibnStA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMPyu-00000009JxJ-3CUH;
-	Thu, 29 Oct 2026 13:15:48 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xMQtD-00000009Uw6-0xW1;
+	Thu, 29 Oct 2026 14:13:59 +0000
+Received: from mail-ej1-x635.google.com ([2a00:1450:4864:20::635])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMPys-00000009Jwz-3AKI
+	id 1xMQtA-00000009UvT-0QR6
 	for kexec@lists.infradead.org;
-	Thu, 29 Oct 2026 13:15:46 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id DF0D6600D1;
-	Thu, 29 Oct 2026 13:15:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A98C01F01825;
-	Thu, 29 Oct 2026 13:15:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793279745;
-	bh=lqh2h9OdAhEsv8R7JgV92DMgdxSdmNya/U3mKn63VeQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=MmZFJDiu5p0O+/D6H9EcM1bWgs2P1sLao6pof6JMiCUbkuDuhoUnWvIYq6wdOTfbm
-	 BpcdU9h8weFSI7YLOAuJPhsKw4Gi4YRQO5cUZN10fGi7ReIbYh9hagBT+jrYElX2YH
-	 +ih3xGMrA3kLoEpG35T95VY9VY8CZ9PitTQpY1G0Ri8tbgIY4OEyb5lujXrodMB0ht
-	 9mq4mqJBN5iSIEzqMYOWBi7auC6ctfTuZZc8lG2Ic63rca7gBPiLKOXjhv0fOpMgDy
-	 ZaqKgfNBg3F6hiO66BQ6fFngZ+rT7A9j651kIkx8sefoDuBSSHj73PbusVG/D+GcyR
-	 U4/gnsox7yWQw==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Alexander Viro
- <viro@zeniv.linux.org.uk>,  Christian Brauner <brauner@kernel.org>,  Jan
- Kara <jack@suse.cz>,  "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-  Hugh Dickins <hughd@google.com>,  Baolin Wang
- <baolin.wang@linux.alibaba.com>,  Andrew Morton
- <akpm@linux-foundation.org>,  David Hildenbrand <david@kernel.org>,  Zi
- Yan <ziy@nvidia.com>,  "Liam R. Howlett" <liam@infradead.org>,  Nico Pache
- <nico.pache@linux.dev>,  Ryan Roberts <ryan.roberts@arm.com>,  Dev Jain
- <dev.jain@arm.com>,  Barry Song <baohua@kernel.org>,  Lance Yang
- <lance.yang@linux.dev>,  Usama Arif <usama.arif@linux.dev>,  Kiryl
- Shutsemau <kas@kernel.org>,  Mike Rapoport <rppt@kernel.org>,  Matthew
- Brost <matthew.brost@intel.com>,  Joshua Hahn <joshua.hahnjy@gmail.com>,
-  Byungchul Park <byungchul@sk.com>,  Gregory Price <gourry@gourry.net>,
-  Ying Huang <ying.huang@linux.alibaba.com>,  Alistair Popple
- <apopple@nvidia.com>,  Kairui Song <kasong@tencent.com>,  Qi Zheng
- <qi.zheng@linux.dev>,  Shakeel Butt <shakeel.butt@linux.dev>,  Axel
- Rasmussen <axelrasmussen@google.com>,  Yuanchu Xie <yuanchu@google.com>,
-  Wei Xu <weixugc@google.com>,  Baoquan He <baoquan.he@linux.dev>,
-  Johannes Weiner <hannes@cmpxchg.org>,  Michal Hocko <mhocko@kernel.org>,
-  Lorenzo Stoakes <ljs@kernel.org>,  linux-fsdevel@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,
-  kexec@lists.infradead.org
-Subject: Re: [PATCH 1/3] mm/memfd_luo: don't use memfd_pin_folios()
-In-Reply-To: <auKJXHWnNMzju7cv@google.com> (Pasha Tatashin's message of "Wed,
-	28 Oct 2026 20:01:59 -0400")
-References: <20261027173031.763213-1-pratyush@kernel.org>
-	<20261027173031.763213-2-pratyush@kernel.org>
-	<179321872100.1775665.6881420026761127422.b4-review@b4>
-	<2vxz4ie5o2ak.fsf@kernel.org> <auKJXHWnNMzju7cv@google.com>
-Date: Thu, 29 Oct 2026 14:15:38 +0100
-Message-ID: <2vxzv76kmyv9.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	Thu, 29 Oct 2026 14:13:57 +0000
+Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-c3f04e0e65fso387773866b.2
+        for <kexec@lists.infradead.org>; Thu, 29 Oct 2026 07:13:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1793283233; x=1793888033; darn=lists.infradead.org;
+        h=message-id:date:references:in-reply-to:cc:to:from:subject
+         :content-transfer-encoding:content-type:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=VHQCBBokr9ANF1mnkSximMg4YC5imaFH/YUHtOF7V4U=;
+        b=Y0CiRY6NCXqzF7Llx6sqItlA23ASxNpIB5mEsITO+aDcegA6NXMr/sPGCw8A053H7e
+         9PfstsN1atx84EfcFo1pTA1LGfmKxFc7AFDVx5qtAHTk6bEmk/tqtBxGCzB2LsWT6+G/
+         j9qiNcuqKA9+Ja8xzy2LwqSrB2xCRBd5UbWbtnMixPtCterhnS6woJUZNWFnBAA1XqEw
+         5lZtuss9+GPjPt6z38jk6KhsVBac785ZrfzR1Ac10O7CjQlPE3V7oJURwfeeSbOGOD4b
+         KR2kC2/86xY6YKm1yrRRU85ckPQx2AR1zEwSE9btn1n5Cb4xRYDqR/vOiIWeU3C4tKJ7
+         wdcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793283233; x=1793888033;
+        h=message-id:date:references:in-reply-to:cc:to:from:subject
+         :content-transfer-encoding:content-type:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=VHQCBBokr9ANF1mnkSximMg4YC5imaFH/YUHtOF7V4U=;
+        b=Ga8xRL+oqFQb5ihcRbWMNGtCPEe206oyddxFosouZQSrmQ/R++SssLDsLS82UIYTIF
+         XqOk+nR6R3vkb1RhFvGjiEGgKGCg8LWDNzP/Pbua6xhYJ0IEM7hRkgLzf5Qo1tHS1hXc
+         DRl3OXr7ILVL93mMzD1jS1MdieCSsSH8U5N7J4AscULNDCX++9Yy92TmKA7Tr53ez4Vy
+         VoKkZHL4s9oN7MjRxeB6FgvflcnblGS+v7mioc+sr2iAp2S9hbwTpShEdiFerhqm3sXl
+         aaF+H1N/RNQzpuP9xDd8Br3DPVrvb7j+eWOAxMLR3eMjsoYqYinZh3umqFHQBDR+xrOs
+         mPig==
+X-Forwarded-Encrypted: i=1; AKwUvBwOgJi4jBejn40BFwLxfQoD0jZpzoqeYnBCuCBX/YUvskcLqznvfuBtdy0e3FLsFgZ3HiEO4Q==@lists.infradead.org
+X-Gm-Message-State: AFq9FYJhZbuX9VWMfllX40TEY8y9syen8aqXwOZO2SHJEwAACkVImUk2
+	EJdCOtdPjzsdCExtO3eig7LWOhMIUqpLNk4nNaS6c88p2gDjSBR2E++kG+VWpmS4FrM=
+X-Gm-Gg: AYBFou2aNzXQ+gBg1fCRaSJoMYhu+qWW9grZwT9SkboCrS/FLhB/48EtAGboKX+XCns
+	rH5bH2RT9Y0DY6wBCv+M1xSe0Hn4Z4ZPIAwgmLKNQ9ZmP171EfC9RnpDp72/assf9pq4GefpPLZ
+	ylhFbT2GivZ+NLXgX12yyiVgrDcxohYLGJunVgH3muz2yMUPkEubR19xlKy6WicApQ2U4fl4OQ4
+	mjPDvBhMGMQfR3fjWRhW3SmTZhU9x15wCtbZ6ZGh+hNd5FPxpf/8NHRxd7gWxZcEIVUBJlBe97N
+	FpyiroUeqH5HmRUmSCbRTBZcSc/xrmRccmXxWI96UiFAH3tG+ENwQlEU0EMsKQjksyEAshfrUSl
+	uVTFmRvj/g7KP30+ZGuqineQOVYd5RsSDey7KTKx/0/0dgpjZ1u80jVqw/eAo7IqqnD0QHpW2gd
+	JP/zNyTkNmQOJvpRiSei3PJyo4GA5Fis4qpEFkTj3Sm8Ug1PPJXx/NVzpXLU5+RlY6glqpaeMcc
+	SrcbzXR+gpDqjnk12zXb1+1tt1pRCkMThAGz9nVRB53iVdbVGzr7pv9qqww0I3bmVCOMtNuvQGx
+	Nb0Z0xr7aetCIryp6kw=
+X-Received: by 2002:a17:906:7313:b0:c45:c030:732c with SMTP id a640c23a62f3a-c49be03a73amr545832866b.41.1793283232717;
+        Thu, 29 Oct 2026 07:13:52 -0700 (PDT)
+Received: from localhost ([2a03:2880:32ff:4::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c4992141068sm521507866b.60.2026.10.29.07.13.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Oct 2026 07:13:52 -0700 (PDT)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 18/46] mm/khugepaged: check if PTE table is empty in
+ try_collapse_pte_mapped_thp()
+From: Gregory Price <gourry@gourry.net>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Gregory Price <gourry@gourry.net>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+ Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>, 
+ Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, 
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+ Baoquan He <baoquan.he@linux.dev>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+ Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
+ Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, 
+ Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>, 
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+ Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>, 
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
+ Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+ Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
+ Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, 
+ Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
+ Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
+ Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
+ Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>, 
+ Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+ Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>, 
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
+ Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
+ linux-cxl@vger.kernel.org
+In-Reply-To: <f9067f65-fcdc-4ebb-bbf8-84db9e22af0d@kernel.org>
+References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-18-6f74bec9a5bb@kernel.org>
+ <179323853182.453251.8510731747954180380.b4-reply@b4>
+ <f9067f65-fcdc-4ebb-bbf8-84db9e22af0d@kernel.org>
+Date: Thu, 29 Oct 2026 07:13:51 -0700
+Message-Id: <179328323124.453251.12177231963891458248.b4-reply@b4>
+X-Mailer: b4 0.17-dev
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261029_071356_320520_2051D500 
+X-CRM114-Status: GOOD (  15.71  )
+X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,52 +138,35 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Wed, Oct 28 2026, Pasha Tatashin wrote:
+On 2026-10-29 12:01 +0100, David Hildenbrand (Arm) wrote:
+> On 10/29/26 02:48, Gregory Price wrote:
+> > On 2026-10-27 00:17 +0100, David Hildenbrand (Arm) wrote:
+> > 
+> > I get that you want to avoid taking both locks while zapping, but
+> > wouldn't it be simpler?  I suppose we don't know what kind of
+> > regressions might pop up with that though, bah.
+> 
+> Exactly, that's the spirit of the original code. We would just block a 1GiB
+> range of va space for the entire operation.
+> 
+> If you think there is a more elegant way of doing it (while minimizing holding
+> the pmd lock), please shoot :)
+> 
 
-> On 10-29 00:04, Pratyush Yadav wrote:
->> > Nit:
->> >
->> > I would suggest adding another helper, memfd_luo_get_folio(inode, index, 
->> > &folio), that wraps:
->> >
->> > - shmem_get_folio()
->> > - The !folio_is_longterm_pinnable() migration retry loop logic
->> >
->> > I think this would make the final code a bit more manageable.
->> 
->> Sounds good, will do.
->> 
->> >
->> > Other than that the patch looks alright, feel free to add
->> > Acked-by: Pasha Tatashin <pasha.tatashin@soleen.com>
->> > Once the nit is addressed.
->> 
->> Thanks!
->> 
->> I think the MM side might take some time to gather reviews so I will
->> send this out as part of a liveupdate-only series. This patch is useful
->> on its own anyway.
->
-> Sounds good. Could you also consider adding a patch to that live 
-> update-only series to extend the memfd freeze from retrieve to finish()? 
-> That would close another gap that does not affect us yet, but will once 
-> other session fds depend on the memfd mapping.
->
-> See:
-> https://lore.kernel.org/r/20261022225035.377445-8-dmatlack@google.com
+Elegant and this code do not appear to be compatible.
 
-Hmm, right. That's a useful fix. I think I'll do that in a separate
-series, since it can go independently.
+Another look, i think this is the preferred route.
+
+Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
 
 -- 
-Regards,
-Pratyush Yadav
+Gregory Price (Meta) <gourry@gourry.net>
 
