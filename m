@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6BE606A31C
-	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 00:02:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC86D606A31F
+	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 00:04:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=vi0iadDv;
-	dkim=pass (2048-bit key, unprotected) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=EqO0VQxg
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=FfMzfABU;
+	dkim=pass (2048-bit key, unprotected) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=TOFAHawp
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -14,101 +14,96 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=UtW/sYsNMYd14q833jtnLcBy0iGbA94LyKtY63+yQks=; b=vi0iadDv7cKU+8wLiGpbuLRE6i
-	FMtswh2Qr0UIMLCnz8ckTmY4j/iBA5XQr7I1yYVUdXTiuVgLSuVOma4VdVfNeqFvtIQG9xOYwG0yB
-	ni44sNey9f66ssXzKt7NM1EYUQy+Ug1GZDWeV644ic6aX1fATjju3jpFxuc0ke593sgPqZz2vJWTO
-	e2F9o+YRZIKIQZW+v0tZ4bJ4bz9EOB1dHFpetES5lqEjJAgqhB7JJTOufTx9Uim43LR7KgysLUzuB
-	V4I+JdXBtxGrtnfIBFmXvPhWW+0ZrTjd5/LvNySpS4QCcJjXa2GqzDVqvdit4+cIVHCqPqNnj1fbn
-	zOjwqq9A==;
+	bh=q/xBVtBLk16U8qItuEo0/3JxmIlfapOJCXoA5AObKSA=; b=FfMzfABURiMRiH5FWFmCfM/UVz
+	W7+3udAPCmhur9xT6SzECso+URtbSvC+IRxNlrEQGrVwofQg35JNx7N102NM9P+MKOny5XT0UAyV/
+	3JG29RNt5XeIpUVe8JrzLzVM5g4nyJEVDvyUBgR7RTDYgRT8lMnHhtMtbxDF0gepNiFSiQEQhKvdb
+	Akl4KiSW9M7nlU2SAUVmG19vKxuVgp5TzBvfEDrRyXiiml7x8exo7we7hRiAPRsqYnkKBqSZwkdnS
+	2NgLIpFhqUbaAwReZDAo0/XoY8z+ya6Fmqnly235/Ff2shHYO2f0b5Tb4gXQ7ccJRe60qEoC2wq+2
+	eJ8vNicQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMDap-0000000850Q-2jLC;
-	Thu, 29 Oct 2026 00:02:07 +0000
-Received: from mail-vk1-xa36.google.com ([2607:f8b0:4864:20::a36])
+	id 1xMDdQ-0000000855S-1i9R;
+	Thu, 29 Oct 2026 00:04:48 +0000
+Received: from mail-ua1-x92e.google.com ([2607:f8b0:4864:20::92e])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMDam-00000008503-12sg
+	id 1xMDdN-00000008554-20P3
 	for kexec@lists.infradead.org;
-	Thu, 29 Oct 2026 00:02:05 +0000
-Received: by mail-vk1-xa36.google.com with SMTP id 71dfb90a1353d-5eac01ff101so571664e0c.2
-        for <kexec@lists.infradead.org>; Wed, 28 Oct 2026 17:02:03 -0700 (PDT)
+	Thu, 29 Oct 2026 00:04:46 +0000
+Received: by mail-ua1-x92e.google.com with SMTP id a1e0cc1a2514c-9905d61449cso540789241.0
+        for <kexec@lists.infradead.org>; Wed, 28 Oct 2026 17:04:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1793232122; x=1793836922; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1793232283; x=1793837083; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=UtW/sYsNMYd14q833jtnLcBy0iGbA94LyKtY63+yQks=;
-        b=EqO0VQxgA9bL88cuK2q3lObRUQK0siRthzl54llk1oQ1hoPfQVqF+RAcs1opzYlMVV
-         MXP0XBR9rBKTvBz7wjaob+i1R1tb6b5Dpc3UCT52+eOXnqABcrQKbKNdsTxFUHmQIt4A
-         O636nUR4/j6zlsEy9wLFjmzvN8sFTAbb42xRQOJG7snED2FeQ1RQXcFQS7qan57efrvo
-         PDk+7/oWr+wGPVOmAkh3+fFM8uBao01TWrskpZy0Id/u06voHOzFZ4aHZ9n3zd/11Pbo
-         5zjQHFgo4yW9RiVy5AhMkUG4VIklIXp+kuEAO5n4JuDZHz71kni2DSKJJX20oYQcyI5e
-         aUdw==
+        bh=q/xBVtBLk16U8qItuEo0/3JxmIlfapOJCXoA5AObKSA=;
+        b=TOFAHawpEawLdXNtcOoQfjtdXhpshrmNg+Lg0eSFBpghgevg4AgSEyzjOEM8wvj29H
+         g0r9QIYGhpKeIVawUk5fYb+cImqGWzYYqGx63Yospm3TXJXVpCj95kdfDQtAKczz8ZEM
+         o8g4zUZlT1vMGO1aRTzRAwphJEKIKPtzYYqguDDzUl0SOumyuZH60exYKFmu4Z3ZHuqw
+         Qdxt3Ob/csDSdmNorsZFuh3PSBm+AvNZct8OBEzwUCv+mbc1c4PgyGDicVEeEumvwSIF
+         zMLRVpx3ayvosWHgMdo2pY/Q+yc9An1fTd++QBZqpKsto6yDMrsxbJYZpvJ0QVsmE00k
+         YhbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793232122; x=1793836922;
+        d=1e100.net; s=20260707; t=1793232283; x=1793837083;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=UtW/sYsNMYd14q833jtnLcBy0iGbA94LyKtY63+yQks=;
-        b=jVcY6zvzLD2w4929jE1WEtjwLCnem85p0eEgV4ejhW1LF4lChafAc9Z6poYezn8ASV
-         GDQl2R2ZuZvhvpButKkfOH+1GAq0dsGQjE5+Ogb4bk60qGsf46FRhXmnMfCGEOV5YWv+
-         sCIutx6cqfox1o+x7depYqbggwGiYbOFxNKQCt7Hyslbmi6sQ6Cy2x3iwZgMI9Xxurb6
-         9JFcpRjsJfz0xueSVPmDrpUVfQu1/iGF1jplbcdtXc31lBUNeIR5FFr0Ux+WdS3POm2x
-         fl9jdbYZd6rVU3dJKB/EihTTSs81p5PEuSnZeiZ0vVSowHB4MVJ+8KJIO4ItYL35QMLr
-         u4Yw==
-X-Forwarded-Encrypted: i=1; AKwUvBxcTu7xL6EihSsdR/gusJqLDr5331bxGg+V6p0ZozDq3HsDsmDWi8VvJA5mA5oblIbcbLbeWw==@lists.infradead.org
-X-Gm-Message-State: AFq9FYJaRn01jwo0nQ4d5vn/2/VkIF/3VnZ/t156e30BLYojonTs7pwV
-	m7ph08ZT6L90rHMSauKZ1E0mF2q789YdQBAZo2glVn5E7GwoV2R/NoEnOFC/MGMG0mU=
-X-Gm-Gg: AYBFou1Eq/YTGgfGBu1TrsqZ1IspGMsZ4O9Yk0wU0l+6HpZUrTkUfyTSvfiVmExexok
-	zTr0eo8ZLCxAMMwYJxQW3oR8wlT34GdfseAQZm4wKs4qfuS1b5NyHDO+E3Pv00l24xdMYXzJ5hQ
-	rRbP1BdE+0+KPVMXl96Px2VAs2OXGQQR98uyiLVRhSfUYYaX7qMljfk0F7ftQFhTUf1wBuiAk42
-	OY9hnZY/wcMEogIeFsrSNW1K1p3Ro9h9RGIWDDVXP1sX41XxE7YICakLfm+Nrg7RF2VHDD11F0Y
-	3RNghlYAe3A0k4kEPOm390CqGzz/BFfgHTwIsi7LLgzLHXccC42GkXjF4T29+Q2x00L5B7HxhYI
-	EYfH2s8q4w6jws7O8UTeDlkKSEThN7HFUOlb02Yq+tXULJHzdUOFl2VPMYhv07NbIaROyI3niXo
-	8HOQOE5SrdSzkdEVMt7FDG689Jci0BthBirLEH/IGS2OwzuTUtmCMAewSa27hSGZVqqelQREO/z
-	RC6Dj00stcM1RCZ0ECF4+Wk7RCyWzTvgQKrfcvWqCr2DFGSSQ5GKptNzLr5zrbe0WCMjwOmqSrB
-	aDbujIw1EoCe8hd0apDNmbzG2C+bS1PnQjHQlYhh/c2/to4D/HIXJVxNFjYi11n6agqRmeoK0fD
-	h0t2xxxx9fpAeXVqeiYodA7o8LbmjYxad
-X-Received: by 2002:a05:6122:1c03:b0:5ea:d14a:ef8f with SMTP id 71dfb90a1353d-5ec4cc14f21mr1861192e0c.4.1793232122251;
-        Wed, 28 Oct 2026 17:02:02 -0700 (PDT)
+        bh=q/xBVtBLk16U8qItuEo0/3JxmIlfapOJCXoA5AObKSA=;
+        b=gy0KGXLQFoxFNhgAo/ERtgVI6GxIWhkTgIb7pIh/OA3FdgL6dua7P/C5LtI0NX1E4C
+         g1KHgqRJHPQ9vIFi29XQ00nvMyhYrM4L2HEahHtDc+flhNptuH51fYizHXrLoFC5rSK/
+         8ILjAcYcARoxfhIzQ1w9MlC9igWXPR0YnQyAYcJDxyRSQyH0BiG3X59/4gCp9IqOBrZP
+         MeR/h+ns5QymRCHSBwX4KGpqK8y3Faq9dpJB2y/v9DoLzyneUqZiqwcOWO4OY3O5hcjv
+         YrKNKvfL6Xqwv+szCrzoLRq2TPfAGwd7fciSqome8iV4LGzEPdMRIycVNI4+RzEGKQXe
+         vcyg==
+X-Forwarded-Encrypted: i=1; AKwUvBw9kK/6kGbDAAidog80PpWbB/Yqd9jxas5tSfZPEL3meI6+6PhGT0Y1bU3aM2AsTTgOMo0NVA==@lists.infradead.org
+X-Gm-Message-State: AFq9FYIvcKmsflo5bvWlL/yqtFWcU3t8zyTLnBMs36a6VWDKJ3x32UCh
+	jsKBbQKUFPbGXuS001pIijDGZPZsLZkE/mPJZ6PIQHakdGcsyrxTtKagLb6e3I43f9Q=
+X-Gm-Gg: AYBFou2PQHH6Vt+st1Z0E6PKE2ak4by+24OgDh9gmjQsDzwa+ylL3qfYzSerDOBToya
+	jKA+grjQO658kTIqCo+TPDxaViuI7Qtf7RAtKcgaedq3h8nnkCXonbONzBaZgrrur3nU8VLUgsO
+	jRHldna3Tc+jdNVIumG3UE1UymAL7q7qkIDfPuxdpl03XS6Gu7hSUlrxHlISRrHLt2JzLv6Lgty
+	advxFYWL65DM6QHptEHS18HtONLMlnF6+KmdXyYFAbXDc0nBhgyQVP1pKh/mmBDu4hC7FoPtCvF
+	iqFmF/kMCVufT0viMciFgxHmrmoJB9JFUGRawk3onCzDZG6B1dGquwzUVkBmeTTyW0bgHguqQYB
+	S+3FkNQAYfSPZ1j9pDUeHx/uA/gG5hIJsam6ukgTShZHNvblGnosmV/6g90cHzbYZe2xljHzrAY
+	jjQSx7h3HXZM4Y6XlGyZc2HOQET/R4FZxXqPMFYG68PGmj0oEJf98XvKTql6rpXmwnsmuaGS+k6
+	IXHK/akPRhGdzeCUcXxSXYMZKBdE+wh0D9AZOWOIXigM+fwnmvlSYQQo4HTKV6NGLv6Zhkhho/5
+	VUWl1QnnyuV0Sy3VSoBE7ul2LMW0cZYF7SkWaFOwqa244w62nqI3XRZq2sSkJNZU0OOVv2wcEO3
+	zC2ehcFUjNs7zLF/cVZhSsxSNuNzyEfAd
+X-Received: by 2002:a05:6102:3e92:b0:7b5:1ca4:9df1 with SMTP id ada2fe7eead31-7d03a29c54fmr1908368137.5.1793232283543;
+        Wed, 28 Oct 2026 17:04:43 -0700 (PDT)
 Received: from google.com (64.167.245.35.bc.googleusercontent.com. [35.245.167.64])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5ec4f931911sm3523257e0c.10.2026.10.28.17.01.59
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-99125931983sm7622737241.2.2026.10.28.17.04.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2026 17:02:01 -0700 (PDT)
-Date: Wed, 28 Oct 2026 20:01:59 -0400
+        Wed, 28 Oct 2026 17:04:43 -0700 (PDT)
+Date: Wed, 28 Oct 2026 20:04:42 -0400
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Hugh Dickins <hughd@google.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Zi Yan <ziy@nvidia.com>, "Liam R. Howlett" <liam@infradead.org>, 
-	Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>, 
-	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, kexec@lists.infradead.org
-Subject: Re: [PATCH 1/3] mm/memfd_luo: don't use memfd_pin_folios()
-Message-ID: <auKJXHWnNMzju7cv@google.com>
-References: <20261027173031.763213-1-pratyush@kernel.org>
- <20261027173031.763213-2-pratyush@kernel.org>
- <179321872100.1775665.6881420026761127422.b4-review@b4>
- <2vxz4ie5o2ak.fsf@kernel.org>
+To: David Matlack <dmatlack@google.com>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, kexec@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, Alexander Graf <graf@amazon.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Christian Brauner <brauner@kernel.org>, David Hildenbrand <david@kernel.org>, 
+	Hugh Dickins <hughd@google.com>, Jonathan Corbet <corbet@lwn.net>, 
+	"Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>, Michal Hocko <mhocko@suse.com>, 
+	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Samiullah Khawaja <skhawaja@google.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Vlastimil Babka <vbabka@kernel.org>
+Subject: Re: [PATCH v2 07/10] mm/shmem_luo: Retrieve tmpfs files onto a tmpfs
+ mount chosen by userspace
+Message-ID: <auKND0n3LyivCrir@google.com>
+References: <20261022225035.377445-1-dmatlack@google.com>
+ <20261022225035.377445-8-dmatlack@google.com>
+ <179322496574.1894369.544573858973645958.b4-review@b4>
+ <auKAlcPN0Lt6Y3Wm@google.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2vxz4ie5o2ak.fsf@kernel.org>
+In-Reply-To: <auKAlcPN0Lt6Y3Wm@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261028_170204_307927_201E0BD9 
-X-CRM114-Status: GOOD (  16.78  )
+X-CRM114-CacheID: sfid-20261028_170445_527772_0F648C9E 
+X-CRM114-Status: GOOD (  27.37  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -120,45 +115,65 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 10-29 00:04, Pratyush Yadav wrote:
-> > Nit:
-> >
-> > I would suggest adding another helper, memfd_luo_get_folio(inode, index, 
-> > &folio), that wraps:
-> >
-> > - shmem_get_folio()
-> > - The !folio_is_longterm_pinnable() migration retry loop logic
-> >
-> > I think this would make the final code a bit more manageable.
+On 10-28 23:09, David Matlack wrote:
+> On 2026-10-28 06:02 PM, Pasha Tatashin wrote:
 > 
-> Sounds good, will do.
+> > > +/*
+> > > + * Whether @inode is on the internal shmem mount, which is used by
+> > > + * shmem_file_setup() and thus by memfd_create().
+> > > + */
+> > > +bool shmem_inode_on_internal_mount(const struct inode *inode)
+> > > +{
+> > > +	return inode->i_sb == shm_mnt->mnt_sb;
+> > > +}
+> > 
+> > Please fix the warning reported by kernel test robot.
 > 
+> Will do.
+> 
+> The prototype for shmem_inode_on_internal_mount() is in mm/internal.h,
+> which mm/shmem.c only includes if CONFIG_SHMEM=y, but the robot was
+> building without CONFIG_SHMEM. I've moved the definition of this
+> function into CONFIG_SHMEM in v3 to fix this.
+> 
+> > Looking at this together with Pratyush's mapping-freeze series ([PATCH
+> > 0/3] mm: allow freezing mappings), I think we should extend the mapping
+> > freeze lifecycle from preserve() -> retrieve() to preserve() ->
+> > finish().
 > >
-> > Other than that the patch looks alright, feel free to add
-> > Acked-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> > Once the nit is addressed.
+> > When retrieve() returns an fd, its mapping should still come out frozen
+> > and only become fully user-owned/mutable once a successful session
+> > finish() happens. That keeps the index -> folio mapping invariant across
+> > the entire live update until every fd in the session (e.g. vmfd,
+> > iommufd, vfiofd that depend on the memfd) has been retrieved, passed
+> > can_finish(), and been finalized together in finish().
+> >
+> > (Doesn't have to block this series, we can do it on top or as part of
+> > Pratyush's AS_FROZEN series.), but I think we must fix it either here or
+> > there.)
 > 
-> Thanks!
+> Ok that sounds reasonable. Should we do that as part of Pratyush's
+> series then?
 > 
-> I think the MM side might take some time to gather reviews so I will
-> send this out as part of a liveupdate-only series. This patch is useful
-> on its own anyway.
+> Pratyuh's series replaces shmem_freeze() with mapping_set_frozen(), so
+> retrieve() would freeze the new file and finish() would unfreeze it.
+> That should work the same for memfds and tmpfs files..
+> 
+> BTW, this tmpfs series does a lot of renames and code motion so it
+> conflicts with Pratyush's series. How should we order these?
 
-Sounds good. Could you also consider adding a patch to that live 
-update-only series to extend the memfd freeze from retrieve to finish()? 
-That would close another gap that does not affect us yet, but will once 
-other session fds depend on the memfd mapping.
-
-See:
-https://lore.kernel.org/r/20261022225035.377445-8-dmatlack@google.com
+Initially, I thought Pratyush's patch series would land after yours. 
+However, since he plans to separate the LU changes from the rest, I 
+expect both series to land in this cycle. The order does not matter; 
+whoever lands in liveupdate/next first, the other will need to resolve 
+the merge conflicts.
 
 -- 
 Pasha
