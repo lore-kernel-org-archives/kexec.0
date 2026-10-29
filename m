@@ -2,56 +2,56 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59991606A31D
-	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 20:42:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3FF606A32D
+	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 20:42:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=KAYJVFX5;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aupcWAQV
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=dEXu2ROg;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TBb3ZJbC
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=EmFFeOpTju++ba/4+xeyEk8Axf+jyt6U1SaWbXoiuJ4=; b=KAYJVFX5UaiMtd
-	NAX1MVcyXDia5GNyhIb01J93lEjy0dEI1PB+Z9wwQqj6ULUha8V669jOI9DCrIQc4oKnuzqsSwcod
-	JlUygVFwC+hYzR7ak29wRY8uz+l4g9eFWn6TxzUHGR82FheUe9UHjcGLiUydD0Pj04xzZ0Xs9wpwf
-	opRS3FzUNEVP2dYsRgd6SkjMlrO2IuOp6WAIk2Kc+6/8L29m/2M0Ge7ZXmANJzPtg0Ijs87cUovth
-	exbvhAetq3mZUvHLmaiARqVP/jlNWmbS4ww/t/kF+z8WjInb02nGNBvt81h0AH0LcXLv/l6g+R/IN
-	evfuCD5zcvBvSCJFVWpA==;
+	List-Owner; bh=t7RYg5h2D7p8QXMl+okHSyCLmxQpieD4Ay9U30Ul4Os=; b=dEXu2ROgaWbQdn
+	HP0jy1zNUBuoNz1B2xLg8OZpoQTMJUHGW2D44fJkCKGtjBmbje7sdrpvkDKHsP2PVPsXpKy9W4bDr
+	lelmQbU7wLuMMmCnd+sglKwbIsqf8//HJt+vAStx1IKV/LBDiBPbtTJcExDdRmTIn6qWr1h4T/yQT
+	DW0x0s08pm5xkej+pilQ8Y45w3PUdLnE4r1w1eRIGQCFHJP4BhjKcu0uCwM1vsjA2FUy24pllgD70
+	XZM/jC9vnYmc09t1wi1d5eCnK73zCJgA4MXI3WsFLt5aH7V8vfExondxiGTLL+YEDAabODmeRXjZC
+	aV5I/5dXwO10sxTN1wDg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMWwq-0000000AM8S-0I9u;
-	Thu, 29 Oct 2026 20:42:08 +0000
+	id 1xMWx3-0000000AMC7-0dq9;
+	Thu, 29 Oct 2026 20:42:21 +0000
 Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMWwn-0000000AM85-3uLe
+	id 1xMWx2-0000000AMBv-3ix8
 	for kexec@lists.infradead.org;
-	Thu, 29 Oct 2026 20:42:05 +0000
+	Thu, 29 Oct 2026 20:42:20 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id AA4E04119E;
+	by sea.source.kernel.org (Postfix) with ESMTP id 94E9941A18;
+	Thu, 29 Oct 2026 20:42:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F6521F01828;
 	Thu, 29 Oct 2026 20:42:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 823091F01816;
-	Thu, 29 Oct 2026 20:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793306525;
-	bh=EmFFeOpTju++ba/4+xeyEk8Axf+jyt6U1SaWbXoiuJ4=;
+	s=k20260515; t=1793306540;
+	bh=t7RYg5h2D7p8QXMl+okHSyCLmxQpieD4Ay9U30Ul4Os=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=aupcWAQVBJTU5Efp9WaPPRXHokXcM9AJqzyLpqG83aXFjxFt7JZ/KxBuLj5XfBFcl
-	 8A1HXSJpx0v2mV8OmFjFfgEiQrctA7BiCWa2AjsSS8WoRaQRyd0aCK6rU84MfjOd2h
-	 LKtHqaFV52W+DJFd2Zu10Gt0mzqUxMT2JZ2/clGN6CTEFYixvBfaHqCMg3UMkkr9mW
-	 immrEuLeds/yA/5o0Dxsl1l87L5TafFkI2LWsR/jcIjDLTDVfs/jSTM9WABHdLUIfG
-	 znmWD6Nyo5Mf5P7bc2R5bVFgPnZPyLmvRlzxgwlFeWU+xfv1JehQcmxcXuSeVhYFQM
-	 TWNhKtkgz6Mgw==
+	b=TBb3ZJbCQasNHJ9vehOgkMBuvVuxUnA36Qy5qE1aq+MkrIUVvYyQfmLsrZ1G2wl5K
+	 W5zLXmeYPlK7j17PamK961yty+mZimw5UxdunC19gNXpSQa7Y3AOY6CLlkyWTzMdY2
+	 /DGe1y8MXhbxfngyG9fv1FgTQlIRX3eZ2Uw3wrT1zLXNkniVWoDNppVY6YrZPhrZg+
+	 A70Q5xhY7fkYbNjOrJDkXHi+fsXT7YNtPJBP34l7R3IRZCbZYvQcGPxX34mHcmnyUM
+	 hNyc6ue5xF4ZnbzL/QAg0anhjNIk5nrHjfAz1cy6iVu0/+Vo2b6vVi5shq5xWSv29r
+	 yqF7fhnnFVDLw==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Thu, 29 Oct 2026 21:33:30 +0100
-Subject: [PATCH v2 35/47] mm/memory: reject remote COW faults on PFN
- mappings
+Date: Thu, 29 Oct 2026 21:33:31 +0100
+Subject: [PATCH v2 36/47] mm: fix unmap_mapping_range() beyond 4 GiB on
+ 32-bit
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261029-fixes_core-v2-35-a64ce7f83abb@kernel.org>
+Message-Id: <20261029-fixes_core-v2-36-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
 In-Reply-To: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -89,15 +89,15 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
- Chris Mason <mason@kernel.org>, stable@vger.kernel.org, 
+ Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org, 
  "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2247; i=david@kernel.org;
- h=from:subject:message-id; bh=NZgsSdEHxnbgHjPXcrsPLj969BYYYgAtMd+ESFDEtdw=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLIer+0oO21x57rIvu0fshoW9U9UFeH7v3SBKt+E3TK5e
- 07veWrG0FHKwiDGwSArpsgSFHzf4OXLdbXVbnzMMHNYmUCGMHBxCsBEAjMYGfbvP1TLKbb2+ymZ
- M607Djdul16prRrWU53vWcS73WVt2yqGvyK2ZcrruRZEXiv69mWViZnE/EkPxE7f+vuSLeDilpC
- UR+wA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2239; i=david@kernel.org;
+ h=from:subject:message-id; bh=FaMGvBz2T3vWhwVxRPgiVx8avhRKMEtK+bszIc5YQPg=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLIer+3UYBdOdc4OsRe4dcYm/IWlRsLr4/8u6jRYlmQKs
+ m76JWLbUcrCIMbBICumyBIUfN/g5ct1tdVufMwwc1iZQIYwcHEKwETmuzAyXCj+uuyi290tD3zU
+ dPIsJ7toCFryWsZe4PSNseAPXraEkeGfouF9z1zh1MDXleEbpm8V5fqXbFjDdG+fl/L0BTF6S7c
+ wAAA=
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -118,67 +118,56 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-From: Chris Mason <mason@kernel.org>
+From: Josef Bacik <josef@toxicpanda.com>
 
-When handling a COW fault without a normal source page (PFN mappings),
-__wp_page_copy_user() copies from the faulting user address. For remote
-faults, this accesses the wrong address space, resulting in wrong data
-getting copied.
+Commit 9eab0421fa94 ("mm: fix unmap_mapping_range high bits shift bug")
+made holebegin and holelen unsigned before they are shifted, by casting
+them to pgoff_t. That is an unsigned long: on a 32-bit kernel the cast
+cuts off the upper half of the two loff_t values, so a hole which begins
+at 4 GiB or beyond is taken for one in the first 4 GiB of the file.
 
-For example, user_events updates an enable bit in the registering
-process's memory. If that memory needs to be faulted in,
-user_event_enabler_fault_fixup() calls fixup_user_fault() from a work
-item. Placing the enable bit in a private PFN mapping can trigger this
-remote COW path.
+truncate_pagecache() passes the new size of the file and asks for private
+COWed pages to be unmapped as well. If a file of 6 GiB is truncated to
+5 GiB, everything from 1 GiB on is unmapped, and what a process has
+written to a private mapping of the range between 1 GiB and 5 GiB is
+lost: it reads the contents of the file again.
 
-Reject these faults with VM_FAULT_SIGBUS when the target mm differs from
-current->mm: remote faults. Ordinary (non-PFN) mappings are not affected.
+Where the range has an end, the wrong range is unmapped instead of the
+right one. The page cache copes with that, as it unmaps every folio that
+it removes. The callers which only have unmap_mapping_range() to get
+rid of user mappings do not, for example drm_vma_node_unmap(), whose fake
+offsets reach beyond 4 GiB on 32-bit, and revoke_iomem() with physical
+addresses of more than 32 bits.
 
-The user-address copy dates back to commit 6aab341e0a28 ("mm: re-architect
-the VM_UNPAGED logic"); likely, actual ways to get remote faults in
-there on COW PFN mappings appeared afterwards. But the fix is simple and
-straight forward.
+Cast to u64 instead. Nothing changes for 64-bit kernels.
 
-Fix generated by an LLM and sent by Chris Mason in private.
+Fix generated by an LLM and sent by Josef Bacik in private.
 
-Fixes: 6aab341e0a28 ("mm: re-architect the VM_UNPAGED logic")
+Fixes: 9eab0421fa94 ("mm: fix unmap_mapping_range high bits shift bug")
 Cc: stable@vger.kernel.org
-Signed-off-by: Chris Mason <mason@kernel.org>
-Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-[ david: simplify comment and description ]
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/memory.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ mm/memory.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/mm/memory.c b/mm/memory.c
-index 5392bcb1d24d..ae8d567bc6ba 100644
+index ae8d567bc6ba..732b8f926de6 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
-@@ -3761,6 +3761,13 @@ static inline int __wp_page_copy_user(struct page *dst, struct page *src,
- 		return 0;
- 	}
+@@ -4649,8 +4649,8 @@ EXPORT_SYMBOL_GPL(unmap_mapping_pages);
+ void unmap_mapping_range(struct address_space *mapping,
+ 		loff_t const holebegin, loff_t const holelen, int even_cows)
+ {
+-	pgoff_t hba = (pgoff_t)(holebegin) >> PAGE_SHIFT;
+-	pgoff_t hlen = ((pgoff_t)(holelen) + PAGE_SIZE - 1) >> PAGE_SHIFT;
++	pgoff_t hba = (u64)holebegin >> PAGE_SHIFT;
++	pgoff_t hlen = ((u64)holelen + PAGE_SIZE - 1) >> PAGE_SHIFT;
  
-+	/*
-+	 * __copy_from_user_inatomic() only works as expected for local faults.
-+	 * Reject remote faults.
-+	 */
-+	if (unlikely(mm != current->mm))
-+		return -EFAULT;
-+
- 	/*
- 	 * If the source page was a PFN mapping, we don't have
- 	 * a "struct page" for it. We do a best-effort copy by
-@@ -4086,6 +4093,8 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
- 				folio_put(old_folio);
- 
- 			delayacct_wpcopy_end();
-+			if (err == -EFAULT)
-+				return VM_FAULT_SIGBUS;
- 			return err == -EHWPOISON ? VM_FAULT_HWPOISON : 0;
- 		}
- 		kmsan_copy_page_meta(&new_folio->page, vmf->page);
+ 	/* Check for overflow. */
+ 	if (sizeof(holelen) > sizeof(hlen)) {
 
 -- 
 2.43.0
