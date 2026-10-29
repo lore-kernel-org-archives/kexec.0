@@ -2,92 +2,78 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CAC606A31F
-	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 11:02:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A52C606A31D
+	for <kexec@archiver.kernel.org>; Thu, 29 Oct 2026 11:03:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=SDm8Wzdi;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WrVYzA32
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=l5RqfwUo;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kraS3KWc
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=OYmhv8HwvlOQOOI8sOhoeifNYQzQv5FQ9ix1RIz0byk=; b=SDm8WzdiKOgEHs
-	3OZLFuCY1DGEsXmiT5ylsXBJlKKcAbWeK/zdh5FcCEey7bCh83ijDi96uIVklDhnDx5Db71uJ4hv6
-	H5Z7TFKpVkozr2pNeGrkkamcyyxP4L3mfJujMUlmr52Dq04tXHk9bMBS2TWdziDmuoQVs0hpke8Ad
-	YSZ1ESyOGRSsU2opMzR2x1v9j/oXKm6KF2getgqHDVNqEMVOPF2JthuxXPZir0Eg1paLRDWgR1mpa
-	QCq6v9Csu0xVL8W3wwPZ4BNHcHBZUDBW9Xk6314lLtNx/5FkVcjO8WG7/6oL7Qd8J3HZbxmc0lUdy
-	Nk23/eKVVX04eW4hgdvA==;
+	List-Owner; bh=MN2H/Sd0YoWD7yOsUu+/3nrXR4+HLFAIs61hYMcDiRg=; b=l5RqfwUobMXapK
+	l/9GVesREQJk3URmDcwPJuxViJPc6g/MR9jt9h9zYespJNEa0WDoFwVhofP1jQIPUOP07VUziOgbW
+	frb6tezydwPCCXC2x893VPpxf5K/UzgqWFsstRAq9fSiJxj3Hioot6Bk3GCR/fAMcZvjHyO3V4xAO
+	T/HZLA7TT2etm0OX0VAcJRboofszpFWf6hYDIa4lIyBnXk8KA8AFFu38jkQrto4p7CkIIyEF2gExa
+	+yw6jlAlox3paemTff4yAHOjHgsAHG6kVNt4t+ZguPPKs3Pg7Hs/FMrmfgZyAXsG+YiXGhIroRR/b
+	ecqmdh2cASE5lwBP3bqA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMNtS-000000092Hp-1FB4;
-	Thu, 29 Oct 2026 11:02:02 +0000
+	id 1xMNuZ-000000092NF-200n;
+	Thu, 29 Oct 2026 11:03:11 +0000
 Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMNtR-000000092Hh-0A5s
+	id 1xMNuY-000000092N7-0XQn
 	for kexec@lists.infradead.org;
-	Thu, 29 Oct 2026 11:02:01 +0000
+	Thu, 29 Oct 2026 11:03:10 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 1CDCE4039A;
-	Thu, 29 Oct 2026 11:02:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 868E41F01825;
-	Thu, 29 Oct 2026 11:01:43 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id CF16543EB1;
+	Thu, 29 Oct 2026 11:03:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E871A1F01825;
+	Thu, 29 Oct 2026 11:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793271720;
-	bh=OYmhv8HwvlOQOOI8sOhoeifNYQzQv5FQ9ix1RIz0byk=;
+	s=k20260515; t=1793271789;
+	bh=MN2H/Sd0YoWD7yOsUu+/3nrXR4+HLFAIs61hYMcDiRg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=WrVYzA32uJkCm0VS++wNZs3DP7uWRGdJEXgTe24KpJtmejSidIe8tQmWXTY33s0QG
-	 HWa5maFNgZ9hsLBs9p6tltp+e/BdFtOGCb9jz8qmS+Cp/6fRjZJQMmzLdLwR9TfBUQ
-	 sN03Re4Pf9uxJOc9kulo+S78oKrbtmqC1f9GNHIJfTsLmluP4xsQoE6hd9E9GfiCvb
-	 17qs7MKo4Qvzf3fWJz3HgnZ6Q6xNSZmlIhFv32WzWDFBIhnqWNSRPfmP7RtFcf+bLQ
-	 l2Tpp3alC16EanFj658aO1knHP3qQXCiprCyZR3keIAic7R0SlOv9FIqNe2jn4U8+0
-	 pf43loQgoyv0Q==
-Message-ID: <f9067f65-fcdc-4ebb-bbf8-84db9e22af0d@kernel.org>
-Date: Thu, 29 Oct 2026 12:01:40 +0100
+	b=kraS3KWcR1HapYe2L8S04iaBUBqNCB8CgKH3Z4hF8TMnrmxZGGmnZ2QpTqjbmPO7b
+	 mVvrwquiFMJDE9p3UwAnEs+1js4PqXm/tZQtza0S3ZtIpsLWkdtViZEFp6ZJ8SEQST
+	 v+nIgqZXH8hsCK1nprjCVjMvlhvvsz91WUv0cl4n2JQlB+wnm6BaRxa/js3GiGpLr3
+	 jizIWEtIUQzmXO+462nKgWuYKe2pZMOfnpo9WCtr1L4+fxPj7YKX4aqbouQaA2aRux
+	 vUEyglwL6d5E0toW8MCroM61RUoU3Lux0qi7OwzKJW51rs80KLz2s0rbV7ZIljKCo+
+	 K3ZqDZO9lh7XA==
+Message-ID: <cba61fbf-17a1-4e27-88db-9ba066cbceb9@kernel.org>
+Date: Thu, 29 Oct 2026 12:02:48 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 18/46] mm/khugepaged: check if PTE table is empty in
- try_collapse_pte_mapped_thp()
-To: Gregory Price <gourry@gourry.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
- Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
- Baoquan He <baoquan.he@linux.dev>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
- Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>,
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
- Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
- Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
- <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
- Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>,
- Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
- Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
- linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-cxl@vger.kernel.org
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-18-6f74bec9a5bb@kernel.org>
- <179323853182.453251.8510731747954180380.b4-reply@b4>
+Subject: Re: [PATCH 33/46] mm/madvise: fix data loss from MADV_FREE on a KSM
+ page
+To: xu.xin@linux.dev
+Cc: akpm@linux-foundation.org, aneesh.kumar@kernel.org, apopple@nvidia.com,
+ axelrasmussen@google.com, baohua@kernel.org, baolin.wang@linux.alibaba.com,
+ baoquan.he@linux.dev, chengming.zhou@linux.dev, chrisl@kernel.org,
+ dev.jain@arm.com, gourry@gourry.net, hannes@cmpxchg.org, harry@kernel.org,
+ hughd@google.com, jack@suse.cz, jannh@google.com, jgg@ziepe.ca,
+ jhubbard@nvidia.com, josef@toxicpanda.com, joshua.hahnjy@gmail.com,
+ kas@kernel.org, kasong@tencent.com, kees@kernel.org,
+ kexec@lists.infradead.org, lance.yang@linux.dev, liam@infradead.org,
+ linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, ljs@kernel.org, matthew.brost@intel.com,
+ mhocko@kernel.org, mhocko@suse.com, minchan@kernel.org,
+ muchun.song@linux.dev, nico.pache@linux.dev, nphamcs@gmail.com,
+ npiggin@gmail.com, osalvador@suse.de, pasha.tatashin@soleen.com,
+ peterx@redhat.com, peterz@infradead.org, pfalcato@suse.de,
+ pratyush@kernel.org, qi.zheng@linux.dev, rakie.kim@sk.com, riel@surriel.com,
+ rppt@kernel.org, ryan.roberts@arm.com, shakeel.butt@linux.dev,
+ shikemeng@huaweicloud.com, stable@vger.kernel.org, surenb@google.com,
+ usama.arif@linux.dev, vbabka@kernel.org, weixugc@google.com,
+ will@kernel.org, willy@infradead.org, ying.huang@linux.alibaba.com,
+ youngjun.park@lge.com, yuanchu@google.com, ziy@nvidia.com
+References: <20261027-fixes_core-v1-33-6f74bec9a5bb@kernel.org>
+ <20261029045307.131675-1-xu.xin@linux.dev>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -134,7 +120,7 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <179323853182.453251.8510731747954180380.b4-reply@b4>
+In-Reply-To: <20261029045307.131675-1-xu.xin@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
@@ -147,64 +133,68 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 10/29/26 02:48, Gregory Price wrote:
-> On 2026-10-27 00:17 +0100, David Hildenbrand (Arm) wrote:
->> The existing code is rather horrible and already resulted in bugs in the
->> past: we special-case UFFD inserting anonymous folios by grabbing the PMD
->> lock early, but ignore any other markers (guard, poison through uffd) that
->> could have been inserted into the page table in the meantime, effectively
->> dropping them.
+On 10/29/26 05:53, xu.xin@linux.dev wrote:
+>> MADV_FREE can clear the dirty flag of a singly mapped KSM folio. The
+>> folio remains in the stable tree and can gain new mappings without being
+>> dirtied again. Once marked lazyfree, reclaim can discard data that those
+>> mappings still need.
 >>
->> Let's just unify and simplify the locking: try to grab the PMD table
->> lock and if that fails, flush the TLB, drop the PTE lock, take PT locks in
->> the right order and check if the page table is still empty.
+>> KSM always marks a folio dirty when converting it to a KSM folio in
+>> try_to_merge_one_page(). Marking a folio lazyfree clears PG_swapbacked
+>> but leaves PG_dirty unchanged. Preserving PG_dirty makes reclaim restore
+>> PG_swapbacked instead of discarding the folio. This also protects folios
+>> that were already lazyfree when KSM converted them.
 >>
->> We still perform the heavy lifting (zapping the folio ptes) under PTE table
->> lock only.
+>> Skip KSM folios before clearing their dirty flag, checking under the
+>> folio lock to serialize with KSM conversion.
 >>
->> Include <linux/hugetlb.h> for now, as x86's flush_tlb_range() macro
->> depends on hugetlb helpers. This dependency needs a separate cleanup.
->>
->> Both issues this fixes are rather corner cases. Let's not CC stable for
->> now.
->>
->> Fixes: f807123d578d ("mm: allow guard regions in file-backed and read-only mappings")
->> Fixes: 1043173eb5eb ("mm/khugepaged: collapse_pte_mapped_thp() with mmap_read_lock()")
+>> Fixes: 854e9ed09ded ("mm: support madvise(MADV_FREE)")
+>> Cc: stable@vger.kernel.org
+>> Reported-by: Josef Bacik <josef@toxicpanda.com>
+>> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 >> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+>> ---
+>>  mm/madvise.c | 9 +++++++++
+>>  1 file changed, 9 insertions(+)
+>>
+>> diff --git a/mm/madvise.c b/mm/madvise.c
+>> index 75b409e97dbf2..a16e3cb256b7b 100644
+>> --- a/mm/madvise.c
+>> +++ b/mm/madvise.c
+>> @@ -756,6 +756,15 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
+>>  		if (folio_test_swapcache(folio) || folio_test_dirty(folio)) {
+>>  			if (!folio_trylock(folio))
+>>  				continue;
+>> +			/*
+>> +			 * KSM folios can gain new mappings at any time, so we must
+>> +			 * not clear their dirty flag.
+>> +			 */
+>> +			if (folio_test_ksm(folio)) {
+>> +				folio_unlock(folio);
+>> +				continue;
+>> +			}
+>> +
+>>  			/*
+>>  			 * If we have a large folio at this point, we know it is
+>>  			 * fully mapped so if its mapcount is the same as its
+>>
+>> -- 
+>> 2.43.0
 > 
-> This patch is painful. It's taking me a bit to wrap my head around.
+> The fix looks correct to me: checking folio_test_ksm() under the
+> folio lock properly serializes with KSM conversion, and skipping
+> the folio avoids clearing PG_dirty on a KSM folio.
 
-The key here is that we unfuck (sorry) what we over-engineered before.
+Yes. And doing it under the lock is something the original AI fix missed.
 
-We just to the same locking independent of VMA flags. But if the trylock fails
-(which we have to do because of possible deadlocks) we'll drop both locks and
-just do another lookup.
-
-If we raced with someone messing with the page tables in the meantime (no longer
-empty), we give up.
-
-> 
-> I get that you want to avoid taking both locks while zapping, but
-> wouldn't it be simpler?  I suppose we don't know what kind of
-> regressions might pop up with that though, bah.
-
-Exactly, that's the spirit of the original code. We would just block a 1GiB
-range of va space for the entire operation.
-
-If you think there is a more elegant way of doing it (while minimizing holding
-the pmd lock), please shoot :)
-
-> 
-> I can say that I've reproduced and tested the before/after state,
-> and it looks stable.
 Thanks!
 
 -- 
