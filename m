@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00247606A31A
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:42:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F06D606A31A
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:42:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Gc9uah6N;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fLbwWRdZ
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=b4Hor+Lq;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=itx+Xv1t
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=wKRDIwlNotbn2pTACKd/ug1jEVrX0r6bM2vUYvA137A=; b=Gc9uah6NfAYIBvGtjb5ndtG1SQ
-	IVbLSPEx4U7vCgSV1PzuIYbidKAI+7uTvpmZhABKbU4Z35DMXxQMCzFWhp6o8x0K8+99lyce1nou5
-	gg1mbxBjyQU6qw6jyQNphTYzUgCOmk7R6szJd6gBPag7fYnp22Uvvv6dV3EKKiHAIv2Zyw38mxn73
-	feD6sQQpZrua9S3Rdc0EQHBJUigOZ+ophtKoCcgr640gPECEZjhoe14steqFGrs9Szh8GogOMKpyW
-	d8k/WR6XfDuP8bcDb1fI24JER7Toqh+KBDSx/Mxwd0mYZsRTXqcwlAvYL3LR9Cj+acnBRNgpX2r4L
-	46bIUWVQ==;
+	bh=tpeknwVNJmP/bKKG+fXm/2Q3N6ESvrFSEq0ZVqkxjXo=; b=b4Hor+LqSTATu3yVSck3PYitMY
+	hqVbjxgbCVNrfpPIwhGBhaHCrH/hXQvbBjxWWBxJEFUufn7EniKV8bH6NvcgtRlUrZMkmERNOZnvO
+	U5XmmnWlsC/Ybb7Drbxrc5VUZpwjmOxvJqE88wEuAdHa3ELmlmQmUgbSoy9Up0x/pCAF724Qmw1Fb
+	0EcdF8DmG5/xs/duKW1AjLDlY5zXE4poW1WkqjkiB7ygRsraygb/TDdNVc7n3ZP8nI5PLGrb8LBYq
+	E5ABrx7SLJvSyo0JGnqfzZMWNQex9h/5dwf45QHMfah3haL6HgYbtyX8nHNVtl/QZS0qfZHTtfI7S
+	fqZJUrtw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdVg-0000000AlCD-1nAV;
-	Fri, 30 Oct 2026 03:42:32 +0000
+	id 1xMdVj-0000000AlFt-3fep;
+	Fri, 30 Oct 2026 03:42:35 +0000
 Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdVe-0000000AlB8-3HNt
+	id 1xMdVi-0000000AlEJ-13AF
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 03:42:30 +0000
+	Fri, 30 Oct 2026 03:42:34 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 7898140591;
+	by sea.source.kernel.org (Postfix) with ESMTP id 026E640444;
+	Fri, 30 Oct 2026 03:42:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D35851F00A02;
 	Fri, 30 Oct 2026 03:42:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 899171F000C1;
-	Fri, 30 Oct 2026 03:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793331750;
-	bh=wKRDIwlNotbn2pTACKd/ug1jEVrX0r6bM2vUYvA137A=;
+	s=k20260515; t=1793331753;
+	bh=tpeknwVNJmP/bKKG+fXm/2Q3N6ESvrFSEq0ZVqkxjXo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fLbwWRdZHN/LG5u47Q/45vT9Aev7MeA5MmBbL+5CedwWMaiapKC8ZoLyLQ3quCnTL
-	 TXHa5XZqMJBa9lqRtpKN4myab77CvH2EI1Ey2c+pD2wsDOIirdFxI7/axMWDssd/Rr
-	 oYdjWCcLcByFeJUN3eOeOvYQYy6LPhAl+SDw+hJgnE0dTcWv7xDTBZuw8nupJfWb+n
-	 8OvKRl2twd9WW+LNSboSgYU+N2RgUZa5dJ4DHGOwopxdmEbZ0ZZiHmBMUZDuVKo/PP
-	 L3g0/w+ud04RNn/bykWZjzi+D87CTj1vDFlrZVLGXTE+U0HHZxYHk9WI47WudVy6o1
-	 tD5sPmlQXJ43Q==
-Message-ID: <sashiko-outbox-190270@kernel.org>
+	b=itx+Xv1tuOl2fS/x35e04kS2m3+RtcQGcYRf7iqwkM/rWJ9UsF7NqLdUzbGiFAUib
+	 dF5Ut7kniw77qXpLAD/xtefZwBopd1sTzFMt7kneV9JwdVrZYL3djKRegvXcFkB/Qz
+	 Pe19hqDgtWewUWdj3/7u9y/DYSS5j/ebdQrcwIQG04PcL78p1HWtFEqo1BirKJz2+B
+	 FCKNuf1ONrByNQAV0nFlatf1IK3j9OfEy/6xL9xC+A8KU8rYiCr8oENRKafhjLTtno
+	 Z1e+LAST9fDkMFW7fw6kQ5HqX5NS9ABi7fxmFIAk/clpV0Rs83EXW/MFzo49mXAlmL
+	 6cHykGwT5hnGg==
+Message-ID: <sashiko-outbox-190271@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 42/47] mm/vma: call ->may_split() before a partial
- merge
+Subject: Re: [PATCH v2 43/47] mm/huge_memory: split huge PUDs when adjusting
+ VMA boundaries
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -74,13 +74,13 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org, "Chris Mason" <mason@kernel.org>
-In-Reply-To: <20261029-fixes_core-v2-42-a64ce7f83abb@kernel.org>
+Cc: kexec@lists.infradead.org
+In-Reply-To: <20261029-fixes_core-v2-43-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-42-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-43-a64ce7f83abb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 03:42:27 +0000
+Date: Fri, 30 Oct 2026 03:42:30 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,32 +100,27 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> From: Chris Mason <mason@kernel.org>
+> PFN mappings such as VFIO PCI BAR mappings can use PUD leaves while
+> allowing VMA splits at page granularity. However, vma_adjust_trans_huge()
+> only handles PMDs.
 >=20
-> A driver can use the ->may_split() hook to forbid a VMA boundary at
-> certain addresses.
+> After faulting a writable PUD-sized VFIO BAR mapping, changing its first
+> page to read-only with mprotect() makes the PMD walk treat the PUD leaf
+> as a PMD table. Applying MADV_DONTFORK to the first PMD-sized chunk leaves
+> the PUD spanning two VMAs: the PMD-aligned boundary skips splitting.
 >=20
-> A device-dax device is a character device that gives raw access to a
-> range of memory through mmap(). device-dax refuses any address that is not
-> a multiple of the device's alignment through vm_ops->may_split.
+> Walk the page tables once at each adjusted boundary and split a huge
+> PUD or PMD leaf as needed. Handle PUD leaves even when the boundary is
+> PMD-aligned.
 >=20
-> vma_merge_existing_range() can move boundaries, but does not call
-> vm_ops->may_split.
->=20
-> If a range at the edge of a VMA gets the attributes of the adjacent VMA,
-> the function moves only that range over to the neighbour: one VMA shrinks
-> and the other grows. This is a partial merge, and vma_modify() tries it
-> [ ... ]
-> [ david: improve description; cleanup the code ]
-> Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
-> Tested-by: Gregory Price (Meta) <gourry@gourry.net>
-> Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
+> Fixes: f9e54c3a2f5b7 ("vfio/pci: implement huge_fault support")
+> Cc: stable@vger.kernel.org
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-fixes_core=
--v2-0-a64ce7f83abb@kernel.org?part=3D42
+-v2-0-a64ce7f83abb@kernel.org?part=3D43
 
 
