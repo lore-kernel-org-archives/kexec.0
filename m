@@ -2,57 +2,56 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4A460A2621
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 11:11:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD143606A334
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 11:15:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=bU6dR/vn;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ewkqjIeb
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=oJY+jHmE;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X0Z5bJ43
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=e5NnHqFGh2WLk8KpW0BJvN7IH3ve0Yj4mZZ8fp9OtsI=; b=bU6dR/vnPhPSpN
-	atL5Bzth0JbNkhg9VCHQQ8TINeq1e4yHfbFWLliqGTfq8RDMuZtpbUZec5MHgYwANk55443P7vgHL
-	mvKoFuzMWDo05u3Y6h3uZ0R5rpq/iOn9USBymIgI85laMsBe1LQOpEcGf1eU4XtqY4uLhs7KmhRLq
-	gfvLoO39Fgf5jFzmr/YTPB3qQB1R1Hpc9VMjcHHgSJGSV0DqUrLWTg9htBjnf3RBEzIOexTRgzib6
-	br5LTYJRDgj1oy8SHoEe36u1hRjS1JOu1tzFlQmLGEpxkElt83Ft8vEJ7YT1LcwACkfpzD5b/Cj0X
-	hGf0o1eKrEQodig2rn7w==;
+	List-Owner; bh=jcFVnDvIZ8heZvYaiF3eCzfDTR74GY+V/2n+TMcTvAs=; b=oJY+jHmEGDZyAY
+	zJqTjgaI3Dz/Jx2UE8K0CUKamde+HFJMDqgRU5WVpFdIm8JzE+5gf8OlWBcN4ADhMoZj/FShrEuH3
+	eAwfSuTc8eWwV/hBYUjK4abvgodueos2qs5UkQchAP4cQO0AvhyPDCxhqRPjVzM/Dm584MKx9P25B
+	ALtQyu0Pjb0v/qQFJkvO2fnrbmARHa2eTx1Ltn5FdZT/HHxjvpHYgeSCrs8V037HZMOd51VHclLEH
+	ZJXnaOFDRXbBN6RvKNi/J9HfZCqV+ATvcbzoSHc+i1osBEwpH5mzdwNSPm2d6f4PomEPrEbkg7RLG
+	4BoAeemuqJ5ctbiDC0aA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMkVo-0000000BVY5-1Ukz;
-	Fri, 30 Oct 2026 11:11:08 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xMkaC-0000000BW9n-1q1L;
+	Fri, 30 Oct 2026 11:15:40 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMkVn-0000000BVXM-1INq
+	id 1xMkaA-0000000BW8s-1Kte
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 11:11:07 +0000
+	Fri, 30 Oct 2026 11:15:38 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 8DA5843989;
-	Fri, 30 Oct 2026 11:11:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22FC11F000C1;
-	Fri, 30 Oct 2026 11:10:49 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 6C028605D0;
+	Fri, 30 Oct 2026 11:15:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9548D1F000C1;
+	Fri, 30 Oct 2026 11:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793358665;
-	bh=e5NnHqFGh2WLk8KpW0BJvN7IH3ve0Yj4mZZ8fp9OtsI=;
+	s=k20260515; t=1793358937;
+	bh=jcFVnDvIZ8heZvYaiF3eCzfDTR74GY+V/2n+TMcTvAs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ewkqjIebBvhym6IB3Ksl7IZW4E3WWrG+/4yOGfUUwfsfHMqgAdiGfPsLito4NMzH+
-	 3X5GTmTwRVzbBuN0IMwDqw+qwS5ZG1TkZy22Bl6SI2a2ruWcosBrFpeUBZwQ1+X86r
-	 2XsLssw2rnRioIhlsH3cexrza2qXr4bBiLO7ocs8u3A+E/DxolzLiaKG/WTEJdrZmV
-	 j3bSQu7F+PpI5upb84fHqRT4ETg6Pm/arVNg449Goy2wT41T8MsfIsurdfVxOe8Qwv
-	 dw++8VuLquwqT4MD8BXS6SL+v+RwX048NJm6rMxUecQ/wWmEsk2BQT0mxJGwf0odE4
-	 9x6mq7eusSUaw==
-Message-ID: <ef51420b-0260-454f-b08b-f4e5a3da6e20@kernel.org>
-Date: Fri, 30 Oct 2026 12:10:47 +0100
+	b=X0Z5bJ43M9j+dsxw0EOfb2RfVAPvTOOq7wzfRja5C/mo0S5QFye2IEgPAlORI4c3g
+	 ifImjUhJwdI8WKJ5YsmZzwNO9T/m0kviNcNKqqlF1HggGNZPwAWIf5tuKcs2oU5XVz
+	 izKsKdkgcOFL5wt8C5/w8BeHHulb+7ldzTHu+6qfcHg6P136wlJ4Zt/a0lQGMSi3hY
+	 KM0nA2fT0xAsx3g4kOpikLMdyV+GVhDasUmL3YTRLy61zlRQukgrzzF1OnpaAKinvF
+	 CdRbd2dFS6Ly6QcLF/O4Pob9/Zy+lYtZgiUY62l/mQIs9T+8HMZdWboQ0mM+HSpbiP
+	 UY5gtheZjBa1w==
+Message-ID: <48a66134-3522-4b81-adca-4e76d52dc391@kernel.org>
+Date: Fri, 30 Oct 2026 12:15:19 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 14/47] mm/huge_memory: fix zapping migration entries
- for device-private THPs
-To: "Gregory Price (Meta)" <gourry@gourry.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+Subject: Re: [PATCH v2 27/47] mm/mmu_gather: fix flushing ranges with 4 GiB or
+ larger
+To: SJ Park <sj@kernel.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
  Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
  Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
  Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
@@ -80,15 +79,14 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
  Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
  Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
+ Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
  linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-cxl@vger.kernel.org, Chris Mason <mason@kernel.org>,
+ linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
  stable@vger.kernel.org
-References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-14-a64ce7f83abb@kernel.org>
- <179331304801.2127828.6570375349219520262.b4-reply@b4>
+References: <20261030005726.155279-1-sj@kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -135,7 +133,7 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <179331304801.2127828.6570375349219520262.b4-reply@b4>
+In-Reply-To: <20261030005726.155279-1-sj@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
@@ -156,43 +154,56 @@ X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 10/29/26 23:30, Gregory Price (Meta) wrote:
-> On 2026-10-29 21:33 +0100, David Hildenbrand (Arm) wrote:
->> From: Chris Mason <mason@kernel.org>
+On 10/30/26 01:57, SJ Park wrote:
+> On Thu, 29 Oct 2026 21:33:22 +0100 "David Hildenbrand (Arm)" <david@kernel.org> wrote:
+> 
+>> From: Josef Bacik <josef@toxicpanda.com>
 >>
->> A PMD migration entry can refer to a device-private folio.
->> zap_huge_pmd_folio() checks the folio type instead of the entry type,
->> so it treats such a migration entry as a device-private entry.
+>> __tlb_adjust_range() takes the size of the range which has to be flushed
+>> as an unsigned int. Its callers, tlb_flush_{pte,pmd,pud,p4d}_range(), get
+>> and pass an unsigned long. Consequently, a range that is 4 GiB or larger
+>> gets truncated, possibly to 0.
 >>
->> Installing the migration entry already removed the reverse mapping and
->> dropped the mapping reference. Zapping it must not repeat those
->> operations. Concurrent MADV_DONTNEED during migration back to system
->> memory can trigger this.
+>> On arm64 with hugetlb, a 64k kernel can have 16 GiB hugetlb folios
+>> mapped contiguously at the PMD level and flush them when unmapping, and a
+>> 16k kernel can flush 64 GiB PUDs through tlb_unshare_pmd_ptdesc(). So
+>> at least these two scenarios are affected.
 >>
->> Check the PMD entry type using pmd_is_device_private_entry().
+>> Fix it by flushing the proper range instead of the truncated one by
+>> properly using "unsigned long" for range_size.
+> 
+> Makes sense to me.
+> 
 >>
->> Fix generated by an LLM and sent by Chris Mason in private.
+>> Fix generated by an LLM and sent by Josef Bacik in private.
 >>
->> Fixes: 368076f52ebe ("mm/huge_memory: add device-private THP support to PMD operations")
+>> Fixes: b528e4b6405b ("mm/hugetlb: add tlb_remove_hugetlb_entry for handling hugetlb pages")
+>> Fixes: 8ce720d5bd91 ("mm/hugetlb: fix excessive IPI broadcasts when unsharing PMD tables using mmu_gather")
 >> Cc: stable@vger.kernel.org
->> Signed-off-by: Chris Mason <mason@kernel.org>
->> [ david: simplify description ]
+>> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+>> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+>> [ david: use two-tab indent, simplify description ]
+> 
+> It seems the convention [1] is to put the above modification note right before
+> the last S-o-b: of David.  Maybe you forgot moving it after adding R-b: and
+> T-b: from great reviewers?
+
+It's "b4 trailers" that apparently messes this up. I don't think it really
+matters (some move it above all trailers), but I'll fix this up when applying.
+
+(++ on all the great people around here)
+
+> 
+>> Reviewed-by: Qi Zheng <qi.zheng@linux.dev>
+>> Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+>> Tested-by: Gregory Price (Meta) <gourry@gourry.net>
+>> Reviewed-by: Dev Jain <dev.jain@arm.com>
+>> Reviewed-by: Muchun Song <muchun.song@linux.dev>
+>> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 >> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 > 
-> One note below, but it's not a holdup.
-> 
-> Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
-> 
->> +	const bool is_device_private = !is_present && pmd_is_device_private_entry(pmdval);
-> 
-> pmd_is_device_private_entry() already returns false for a present
-> pmdval - so !is_present is redundant.  If there was a reason to open
-> code this, then keep it, but otherwise you could drop it.
-
-Ah, softleaf_from_pmd() takes care of that. Yes, let me drop the is_present check.
-
-(I'll double check that both are guaranteed to be consistent; but otherwise we
-might have a bug already)
+> Reviewed-by: SJ Park <sj@kernel.org>
+Thanks!
 
 -- 
 Cheers,
