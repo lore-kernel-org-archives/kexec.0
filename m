@@ -2,77 +2,91 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2B2606A31E
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 08:55:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17ED4606A31C
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 10:22:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=yM2+g6nt;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CXll4QP4
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=H2MOguxb;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dwBFosyH
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=2ME/YKcQAmqEKXR0yxRYRyIXblEy16rwwZK5YWNyjhA=; b=yM2+g6ntufVHeD
-	2ChRlIQXcrUAe93BDWbl+MJ/sFLQFeqFKgsdwmJcQ8560z+DJowppQmpUX8Er/Uujxsuh8XK257X4
-	aIO4p9lwm2tDCM0rgeOVb7dmRyzAt/X1m52IXAM8VN0L/OurP74Te3eAXCZpwUlM9ieQOpVD0YWpF
-	snA6M4okBdRsv8YcBmG05KtKdhKJuMQR/O7ojc0LhxDx5KeA9eXLT/QFCRHsRultuN6WysiWdz4bP
-	vatRXj9C8x9F4pbiEwKSXxWQ3051bg206NC5A2guEDsWqsDT2lLqdrZcYy5vZHk5agyWgk4UmUvDH
-	K/Bl0j9MR+DHFsi0+w9Q==;
+	List-Owner; bh=o+kaUtC8ovQj6xhHRCbmiOuasEe9YC6Zr5iT5M2eCM0=; b=H2MOguxboczuKk
+	ZZTpaUsu0+BuaQfo/KONME/YcxfJO9XtgWwdODJILbQlvXxKmaiv17j0cP4BK8nbph/JoNtPnuzHA
+	w59YUcoULHD81ECLbaxKMM24ZD5XzNjlGy3dioPHRCnj8jx6MfKItwHgixl2hB3nunb4Pwzy3F+W5
+	m6/axJ5Vb4HFDIpiBbu3yRsTA7c1S2v2ZS2LbOOC+RB9rwnX6Bdj59Bj86O3nnJx4oU3AQWqeVUCX
+	Gc0oFbYtxw8Hk9vpPMEjDOKTfD/4nrKK15hYBiqWu0G0eszLYEEXqdl/7huJirVM+W3mTc/MlxE9z
+	HCrJLqfqw/+3wzhgnuxQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMiOO-0000000BAtZ-2Ybi;
-	Fri, 30 Oct 2026 08:55:20 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xMjkS-0000000BNc4-2cVJ;
+	Fri, 30 Oct 2026 10:22:12 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMiOM-0000000BAsV-2W0K
+	id 1xMjkR-0000000BNbn-1WYN
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 08:55:18 +0000
+	Fri, 30 Oct 2026 10:22:11 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 58B346061C;
-	Fri, 30 Oct 2026 08:55:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D61461F000C1;
-	Fri, 30 Oct 2026 08:55:02 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 0B3C560092;
+	Fri, 30 Oct 2026 10:22:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00F301F000C1;
+	Fri, 30 Oct 2026 10:21:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793350517;
-	bh=2ME/YKcQAmqEKXR0yxRYRyIXblEy16rwwZK5YWNyjhA=;
+	s=k20260515; t=1793355729;
+	bh=o+kaUtC8ovQj6xhHRCbmiOuasEe9YC6Zr5iT5M2eCM0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=CXll4QP4+ROaktyPv7RAJz7f+WPuofJbzyw2m4AACejiGVIILiYZq+PxNbpYDu8vd
-	 2Dm5iuJ/12bzLkrDS1RdE10rGH6i9HYqGkE0UXGfgzXOzXXE6naiSTFXFT7mi2yMsS
-	 a5WNcQ+GTLBcmmRjtarEdx1R8caixrVhQKolICv40IegTz6IRR+SoElmpwOTHyW/q6
-	 7Df3TV3klPlzpPUtvCGhWSAq9qOAqVDLWQWzyNS7wv5Qwyy8WwoASqZBNjn4XEEStK
-	 CMKfPt8dwsnEchT7An+jO6D/nNxutbcvk8hJ6ADyAH3HF0ZZuRBHVTr7HFOcvGhjm2
-	 gDwN1kw1sLmow==
-Message-ID: <1e277f4a-87b7-4f5e-8c87-1b2bf280e859@kernel.org>
-Date: Fri, 30 Oct 2026 09:54:59 +0100
+	b=dwBFosyHJNEN/VlP9Ae3KU8sfJ1VpcWyMYJG0hYheIRJZb8LD62PaQRkm1G0V2DOU
+	 /thDolVwbKVJ+f+WEKxynk73Tq8txa/etK+tLb/fptp+mzUo+CQq8mvhbO0P5f+/p9
+	 Nq/8/AzFmw5eWg9Jj0YW8MDMjUYo6UKlKavvcEB81ku1e5o7qQqsCBV7gvspaDsMz0
+	 Jz/HAKpj8ZfulPBeQbw9kwQpzl6Et707A+yl1grA0FZJghBafUgkNkE2fQ8DGj/ZPB
+	 gVCz8+83ggGBl0JMUrrgr16/dml/0dpNWJghy7sr9pH48z+QkBdbe20lK5K6Qhd0Y9
+	 WzTTotFpshtjQ==
+Message-ID: <6d679adb-a866-4a76-b9ea-3b8c64171fae@kernel.org>
+Date: Fri, 30 Oct 2026 11:21:50 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 38/46] mm/ksm: reset the unstable trees of all nodes
-To: xu.xin@linux.dev
-Cc: akpm@linux-foundation.org, aneesh.kumar@kernel.org, apopple@nvidia.com,
- axelrasmussen@google.com, baohua@kernel.org, baolin.wang@linux.alibaba.com,
- baoquan.he@linux.dev, chengming.zhou@linux.dev, chrisl@kernel.org,
- dev.jain@arm.com, gourry@gourry.net, hannes@cmpxchg.org, harry@kernel.org,
- hughd@google.com, jack@suse.cz, jannh@google.com, jgg@ziepe.ca,
- jhubbard@nvidia.com, josef@toxicpanda.com, joshua.hahnjy@gmail.com,
- kas@kernel.org, kasong@tencent.com, kees@kernel.org,
- kexec@lists.infradead.org, lance.yang@linux.dev, liam@infradead.org,
- linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, ljs@kernel.org, matthew.brost@intel.com,
- mhocko@kernel.org, mhocko@suse.com, minchan@kernel.org,
- muchun.song@linux.dev, nico.pache@linux.dev, nphamcs@gmail.com,
- npiggin@gmail.com, osalvador@suse.de, pasha.tatashin@soleen.com,
- peterx@redhat.com, peterz@infradead.org, pfalcato@suse.de,
- pratyush@kernel.org, qi.zheng@linux.dev, rakie.kim@sk.com, riel@surriel.com,
- rppt@kernel.org, ryan.roberts@arm.com, shakeel.butt@linux.dev,
- shikemeng@huaweicloud.com, stable@vger.kernel.org, surenb@google.com,
- usama.arif@linux.dev, vbabka@kernel.org, weixugc@google.com,
- will@kernel.org, willy@infradead.org, ying.huang@linux.alibaba.com,
- youngjun.park@lge.com, yuanchu@google.com, ziy@nvidia.com
-References: <20261027-fixes_core-v1-38-6f74bec9a5bb@kernel.org>
- <20261030032409.127393-1-xu.xin@linux.dev>
+Subject: Re: [PATCH v2 01/47] mm/mglru: don't use stack pointers when walking
+ PUD and PMD tables
+To: SJ Park <sj@kernel.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
+ Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+ Baoquan He <baoquan.he@linux.dev>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
+ Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
+ <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
+ Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>,
+ Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
+ Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
+ Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
+ Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+ stable@vger.kernel.org, Muhammad Usama Anjum <usama.anjum@arm.com>
+References: <20261030002004.154595-1-sj@kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -119,7 +133,7 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20261030032409.127393-1-xu.xin@linux.dev>
+In-Reply-To: <20261030002004.154595-1-sj@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
@@ -132,103 +146,31 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 10/30/26 04:24, xu.xin@linux.dev wrote:
->>
->> Let's fix it by tracking in ksm_nr_node_ids the actual number of
->> allocated tree roots.
->>
->> remove_all_stable_nodes() and ksm_check_stable_tree() will now scan
->> more tree roots (skipping the empty ones), which is harmless.
->>
->> Fixes: ef53d16cded7 ("ksm: allocate roots when needed")
->> Cc: stable@vger.kernel.org
->> Reported-by: Josef Bacik <josef@toxicpanda.com>
->> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
->> ---
->>  mm/ksm.c | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/mm/ksm.c b/mm/ksm.c
->> index dbfb8f98b1892..9c51925825cbf 100644
->> --- a/mm/ksm.c
->> +++ b/mm/ksm.c
->> @@ -475,6 +475,7 @@ static void advisor_stop_scan(void)
->>  #ifdef CONFIG_NUMA
->>  /* Zeroed when merging across nodes is not allowed */
->>  static unsigned int ksm_merge_across_nodes = 1;
->> +/* Number of allocated stable and unstable tree roots. */
->>  static int ksm_nr_node_ids = 1;
->>  #else
->>  #define ksm_merge_across_nodes	1U
->> @@ -3636,14 +3637,13 @@ static ssize_t merge_across_nodes_store(struct kobject *kobj,
->>  			else {
->>  				root_stable_tree = buf;
->>  				root_unstable_tree = buf + nr_node_ids;
->> +				ksm_nr_node_ids = nr_node_ids;
->>  				/* Stable tree is empty but not the unstable */
->>  				root_unstable_tree[0] = one_unstable_tree[0];
->>  			}
->>  		}
->> -		if (!err) {
->> +		if (!err)
->>  			ksm_merge_across_nodes = knob;
->> -			ksm_nr_node_ids = knob ? 1 : nr_node_ids;
->> -		}
->>  	}
->>  	mutex_unlock(&ksm_thread_mutex);
->>  
->>
->> -- 
->> 2.43.0
+On 10/30/26 01:20, SJ Park wrote:
+> 'get_maintainer.pl --nogit --nogit-fallback' suggests adding below recipients.
+> But I can show there are already quite a number of recipients, so I'm just
+> noting here.
 > 
+> - Brian Geffon <bgeffon@google.com>
+> - Oleksandr Natalenko <oleksandr@natalenko.name>
+> - Steven Barrett <steven@liquorix.net>
+> - Yu Zhao <yuzhao@google.com>
 
-Thanks for the review!
+The CC list was so long that I limited it to people that area either a reviewer
+or a maintainer of code.
 
-> Looks correct as far as it goes, but I think it is not quite sufficient
-> on its own.
+MGLRU not having any real maintainer is a big problem; because that maintainer
+would know whom to CC.
 
-I think this fixes the problem described. What you describe below is a mismatch
-between documentation and the implementation, but I don't think it is
-problematic as in "responsible for BUGS". See below.
-
-> 
-> The documentation requires that merge_across_nodes can only be changed
-> when there are no KSM shared pages in the system, but
-> merge_across_nodes_store() does not enforce this at the sysfs level.
-> 
-> Should we also reject writes while ksmd is merging? At minimum:
-> 
-> +	if (ksm_run & KSM_RUN_MERGE)
-> +		return -EBUSY;
-> 
-> Ideally, we should also check that ksm_pages_shared is zero, since
-> KSM_RUN_STOP (0) does not guarantee that all pages have been unmerged.
-
-We do that already in merge_across_nodes_store() I think:
-
-if (ksm_pages_shared || remove_all_stable_nodes())
-	err = -EBUSY;
-
-Which is really required when swapping trees.
-
-> 
-> That would make the interface match the documented sequence and close
-> the remaining race window.
-
-Right, either we should adjust documentation or adjust the implementation. Not
-sure if restricting the interface is really required. Personally, I'd simply
-fixup the documentation (separately) unless there is a real problem with the
-implementation when allowing KSM_RUN_MERGE.
-
-(I think there is no problem as we are synchronized on the mutex).
+Thanks!
 
 -- 
 Cheers,
