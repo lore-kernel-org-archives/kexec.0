@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C478606A31A
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:42:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D26606A31A
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:42:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=VSIpLxAB;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ka7UXsQh
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Bj5oFoC8;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TeNQ4doi
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=IIJ6xEqRSmc3P/njmK7rvcrkOwirvqwv8tVhsJQABX4=; b=VSIpLxABTccO69LFPxCpfmf3Jy
-	H549001I4zLAnpVj7981fqVLezc9ppHGSYGsivxkkdA4B6Xcwn3VA6B6oKCBgTnBal/TjJRH4zWhV
-	5og+zWcLqQJMhhiI0+FjccS89LBIuFcr7MAmHK9vn8X2Fzg5bGNVV9ux7e5sOxyAAFGBmf0Cc+0Ec
-	ZHKEqaRPB25rCVLPAMXc/ogvcid2VInacqfoRtQvImZyIIPUEB14C60G34CXvZ2WlWoWfV9HWrmKn
-	a/bhd69nda45YwWkAuNvya/vdjaM5tAP3G9+o+YrxubkFFZr4tcbr8CVpsCgD5WiuZGTnd4mPOcuq
-	7gi5jBhA==;
+	bh=1DVfW7WdRXw5HtUsrRdkHoFkqI0NXEN33s4RUMxp7iM=; b=Bj5oFoC8rc3dOt/bgH/AkITADL
+	m2cKZruV45NedVk1YZdyGuXyQjf2ET3QtlpR0v/eWJWMFRHRNQZnuNmO1/rJC/SJKvLOoKIPzVAKc
+	m/SYQBTHoy6uh3htKdGorf24BHEyjUmey0j4JIxgk16fW9A9Rq0NBZrjuvSJhbwkFrBabFSoyen3L
+	W0uBAmrRDCj9/s4Jk0WHXB3Lp4AgUBGcIc93KYotzwBrTUdlQR9cMk3ET4AKaax39K62DefzacEtM
+	CavK8penOPvBpSIENxodG+NaCB5pJw1N9MgV5Ol093+o5v6UnkSfAtAPkYn3SE4nWR31irM4YmerJ
+	P5rb8blA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdVO-0000000AkxN-0j3z;
-	Fri, 30 Oct 2026 03:42:14 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xMdVQ-0000000Akyu-1V8G;
+	Fri, 30 Oct 2026 03:42:16 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdVL-0000000Akuw-0h0G
+	id 1xMdVP-0000000Akxu-09FA
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 03:42:11 +0000
+	Fri, 30 Oct 2026 03:42:15 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id E52EC414D7;
-	Fri, 30 Oct 2026 03:42:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27E631F000C1;
-	Fri, 30 Oct 2026 03:42:08 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 77FF2600DA;
+	Fri, 30 Oct 2026 03:42:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 496591F0093A;
+	Fri, 30 Oct 2026 03:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793331730;
-	bh=IIJ6xEqRSmc3P/njmK7rvcrkOwirvqwv8tVhsJQABX4=;
+	s=k20260515; t=1793331734;
+	bh=1DVfW7WdRXw5HtUsrRdkHoFkqI0NXEN33s4RUMxp7iM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ka7UXsQhDWZeJmR/suhEgkW5bO0Pa2Frrr3UWVJxiTfY2zAtb0YAR97r0+vybzIYH
-	 XiCOQGtR/AkdqEbjxD8vX9gnW6i1f9dzk9gzExvKhwwZ6/zY27gefccO91ciXjoqel
-	 nvzDvOu+QxrV4K1GDdSlMi8jZxJ3FVUtiPVhHD2YllaT6T+N8nQMJJMqfLK9lm2wQ8
-	 ohQ6gVRvEjZ8oIZ3WQmbplEYlkmX1bQDK9PbGYKxYxf++oSm5HQe7hjIZvZAdKTf9a
-	 vCZNn7ZkH7Ql7xIa5QqMxuDYq63tXQVBRPN8rx2au2bA38AWBZmwTEVBUWfjoelgTP
-	 l6CwYrAWJ5Jow==
-Message-ID: <sashiko-outbox-190264@kernel.org>
+	b=TeNQ4doiCdnPEYDurFBlfz5zzXkkj+GPRbNGCtLDonajEhLzJ4bHlI3O2RBZSy0cv
+	 phiHT3+BeLGhYoYeVOp78QlHNUEYtTfwhsKT4Bd6xMwTQSHe1JT77LPAF9k+uTeoo5
+	 1njnkt9PWuFkJVBhrh2h+UsOtDOn1gSRq2ddFAzp/dN3dI2F57aba4ZjEfhO4zYGUv
+	 yBFWGsD7a34U27x4X8DDTv4S2beaAUiaGbi8eOKZOiqtcaXIq3I1mXG0idbG3x1LaM
+	 ZKl38b60IqRUzaSGETPVUxTtwuw3NyCOL58o2PQRD0WBIM3zr+ykll4qRPR0XHFViH
+	 w19tjiUTr4RoA==
+Message-ID: <sashiko-outbox-190265@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 36/47] mm: fix unmap_mapping_range() beyond 4 GiB on
- 32-bit
+Subject: Re: [PATCH v2 37/47] mm: fix unkillable fault loop on MAP_DROPPABLE
+ memory
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -74,13 +74,13 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261029-fixes_core-v2-36-a64ce7f83abb@kernel.org>
+Cc: kexec@lists.infradead.org, "Chris Mason" <mason@kernel.org>
+In-Reply-To: <20261029-fixes_core-v2-37-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-36-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-37-a64ce7f83abb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 03:42:07 +0000
+Date: Fri, 30 Oct 2026 03:42:10 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,32 +100,34 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> From: Josef Bacik <josef@toxicpanda.com>
+> From: Chris Mason <mason@kernel.org>
 >=20
-> Commit 9eab0421fa94 ("mm: fix unmap_mapping_range high bits shift bug")
-> made holebegin and holelen unsigned before they are shifted, by casting
-> them to pgoff_t. That is an unsigned long: on a 32-bit kernel the cast
-> cuts off the upper half of the two loff_t values, so a hole which begins
-> at 4 GiB or beyond is taken for one in the first 4 GiB of the file.
+> handle_mm_fault() suppresses VM_FAULT_OOM for VM_DROPPABLE mappings.
 >=20
-> truncate_pagecache() passes the new size of the file and asks for private
-> COWed pages to be unmapped as well. If a file of 6 GiB is truncated to
-> 5 GiB, everything from 1 GiB on is unmapped, and what a process has
-> written to a private mapping of the range between 1 GiB and 5 GiB is
-> lost: it reads the contents of the file again.
+> For user-mode faults, pending signals are processed before retrying the
+> access. Kernel-mode faults on user buffers instead return directly to
+> the faulting instruction.
 >=20
-> Where the range has an end, the wrong range is unmapped instead of the
-> [ ... ]
+> With persistent allocation failures (esp. memcg limits), a syscall,
+> such as write(), can therefore loop while not dropping locks.
+>=20
+> Only suppress VM_FAULT_OOM when FAULT_FLAG_USER is set, allowing
+> kernel-mode faults and GUP to fail and signal allocation errors.
+>=20
+> Fix generated by an LLM and sent by Chris Mason in private.
+>=20
+> Fixes: 9651fcedf7b9 ("mm: add MAP_DROPPABLE for designating always lazily=
+ freeable mappings")
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+> Signed-off-by: Chris Mason <mason@kernel.org>
+> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> [ david: simplify description ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-fixes_core=
--v2-0-a64ce7f83abb@kernel.org?part=3D36
+-v2-0-a64ce7f83abb@kernel.org?part=3D37
 
 
