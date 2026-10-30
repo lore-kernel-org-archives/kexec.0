@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F341606A31A
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:42:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D804C606A31A
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:42:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Xme7GW4e;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Fsi35OKz
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=iZT1DzHM;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FWAH9XrR
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Rbc3pQFYLRqbUTRgL5kXu/Ce2Rj8JH7uJEi1O5Rd5aw=; b=Xme7GW4eqsuNEGcSwr1PIOUzv6
-	xnw2wKXj54iwOr/IR0X8cJviZulNqJH8yuS2Rw8HgEy+96Vy9dca0Ol90U1j7BE6GzlgFezmiXYLK
-	6Kc2EJGnMB35XTdmR6B80hqcgDk5wHKqUH591EWWD+a2rCyKHIJ+Zw0LvvD8C/HW2Xl/S0QLubt6r
-	5HUuO2cKtj4LpiZW9ATw4BQJK53frB7D5esrS/Nn/3xspMGfzRdLrxIfQymmiIOIoGUtJntuPyh8w
-	gpdoBkZAPmH0Bpz4ANfdusD/fFgmDJe0eLLhGUdH47dDwcnpHeQX33tvSNpzeqx/ubiqsMfmdkda/
-	AHsWmLWA==;
+	bh=8vt3r0dV4H78MyX5tyofuPfjl2FfIwvVkisCW8E4akc=; b=iZT1DzHMev5d6yRMbd9uliuKud
+	EqCdxlXhyJ/HBZWPHSXzfKmbuaaFJ+Tbd27VXxsFXFUvy8s0PwCzwKKRjHxxYfz7Z7UwqsJxxYO+o
+	8AMRyAQGgLcf9Kh5IMORea065v/SckCkMgvR+lRc1vXEokPJ2JKueeLMuSLMF6IxG5BGhj+tns7LW
+	Kn/pMVoIE/cHAB/rzdtfBL6wQRkqgCDrFqTcN/25EL3s+uLwBmdG4KEeLak5/xuBBCOKXs+f+NftE
+	qmxp68K4WrVF6gbF1/Zj63DhVcdrSzk8CXPvIieTISNUxTY1szwIqX928wjD015o9ydGQuEkIk5yQ
+	w1vViagQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdVG-0000000AkrO-3yAP;
-	Fri, 30 Oct 2026 03:42:06 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xMdVJ-0000000AktV-1cjd;
+	Fri, 30 Oct 2026 03:42:09 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdVF-0000000Akqj-1cpo
+	id 1xMdVI-0000000AksZ-1qWF
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 03:42:05 +0000
+	Fri, 30 Oct 2026 03:42:08 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id CE297600C8;
+	by tor.source.kernel.org (Postfix) with ESMTP id DA112600DA;
+	Fri, 30 Oct 2026 03:42:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 087E21F000C1;
 	Fri, 30 Oct 2026 03:42:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C77D61F000C1;
-	Fri, 30 Oct 2026 03:42:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793331724;
-	bh=Rbc3pQFYLRqbUTRgL5kXu/Ce2Rj8JH7uJEi1O5Rd5aw=;
+	s=k20260515; t=1793331727;
+	bh=8vt3r0dV4H78MyX5tyofuPfjl2FfIwvVkisCW8E4akc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Fsi35OKztrfLy2tRC0byGUMFCDknDzh2TXOYky3qeCJ/s+p3muXASLtfdbVZ6veyU
-	 cOIVZ4dhnZG3OBn2ba2T4FN8BhNuI+fNIZQfR9tf16Gre8yIZEPNIPS4eM16gzRjtP
-	 cMOfWlId4DTbDIso1oG2Nl4SHNKxiNsXkhbS2ASGUqtUSd2195EepSQ76md7k4moqI
-	 iJCKWa/NueDP7aa/w+8TJ9ciUf23B6dydA1HOArGszAD0EDAQ7jHi21hJMyFPAflZV
-	 A0Vq+++y4ZsMK/LfCQG8lRb0r1/TjiceXAaGFKrnOLonOklS/+IHRNtD6A29aDlYOS
-	 h7K4NqAvx/orA==
-Message-ID: <sashiko-outbox-190262@kernel.org>
+	b=FWAH9XrRqNGdlVz48bcrq1+V5ulr2ptkvsIlZv5tR/SewdcA21FsGI0sfWCkvVI3w
+	 vlZOqqLr+j9nIeY+r0UDa3P2h7Q8UiJbj4R49KdyHvM8I8t5Bx8eIxo60ZNwaiXqFx
+	 Y3iBdeEohDmXI2JWsVCBX5AAC9biHBcL6LasvitQ7iZjN8Nhic1aDM46tk/4kVj0cI
+	 CFtbDbBIvz1de83W7IN6d+cT8ZDpS2FoXR0BjGFTOljQaxJMsf3nd40jpRiWL6JvJC
+	 rLwhFuy3EFpWb6KcaqEEIbuaDvsVdFJMGeAliDDa+yJCUdrw/xyg+N6MupITSmvtuj
+	 HPuLFoQNb0ivg==
+Message-ID: <sashiko-outbox-190263@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 34/47] mm/madvise: fix data loss from MADV_FREE on a
- KSM page
+Subject: Re: [PATCH v2 35/47] mm/memory: reject remote COW faults on PFN
+ mappings
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -74,13 +74,13 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261029-fixes_core-v2-34-a64ce7f83abb@kernel.org>
+Cc: kexec@lists.infradead.org, "Chris Mason" <mason@kernel.org>
+In-Reply-To: <20261029-fixes_core-v2-35-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-34-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-35-a64ce7f83abb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 03:42:01 +0000
+Date: Fri, 30 Oct 2026 03:42:04 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,31 +100,41 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> MADV_FREE can clear the dirty flag of a singly mapped KSM folio. The
-> folio remains in the stable tree and can gain new mappings without being
-> dirtied again. Once marked lazyfree, reclaim can discard data that those
-> mappings still need.
+> From: Chris Mason <mason@kernel.org>
 >=20
-> KSM always marks a folio dirty when converting it to a KSM folio in
-> try_to_merge_one_page(). Marking a folio lazyfree clears PG_swapbacked
-> but leaves PG_dirty unchanged. Preserving PG_dirty makes reclaim restore
-> PG_swapbacked instead of discarding the folio. This also protects folios
-> that were already lazyfree when KSM converted them.
+> When handling a COW fault without a normal source page (PFN mappings),
+> __wp_page_copy_user() copies from the faulting user address. For remote
+> faults, this accesses the wrong address space, resulting in wrong data
+> getting copied.
 >=20
-> Skip KSM folios before clearing their dirty flag, checking under the
-> folio lock to serialize with KSM conversion.
+> For example, user_events updates an enable bit in the registering
+> process's memory. If that memory needs to be faulted in,
+> user_event_enabler_fault_fixup() calls fixup_user_fault() from a work
+> item. Placing the enable bit in a private PFN mapping can trigger this
+> remote COW path.
 >=20
-> Fixes: 854e9ed09ded ("mm: support madvise(MADV_FREE)")
+> Reject these faults with VM_FAULT_SIGBUS when the target mm differs from
+> current->mm: remote faults. Ordinary (non-PFN) mappings are not affected.
+>=20
+> The user-address copy dates back to commit 6aab341e0a28 ("mm: re-architect
+> the VM_UNPAGED logic"); likely, actual ways to get remote faults in
+> there on COW PFN mappings appeared afterwards. But the fix is simple and
+> straight forward.
+>=20
+> Fix generated by an LLM and sent by Chris Mason in private.
+>=20
+> Fixes: 6aab341e0a28 ("mm: re-architect the VM_UNPAGED logic")
 > Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
+> Signed-off-by: Chris Mason <mason@kernel.org>
 > Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> Reviewed-by: Xu Xin <xu.xin@linux.dev>
+> [ david: simplify comment and description ]
+> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-fixes_core=
--v2-0-a64ce7f83abb@kernel.org?part=3D34
+-v2-0-a64ce7f83abb@kernel.org?part=3D35
 
 
