@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DF6606A31A
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:42:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F341606A31A
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:42:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2m5jDUsS;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Aod7EPH2
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Xme7GW4e;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Fsi35OKz
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=P8qUj2Lyi9M5bEeQQEDKN13Kh3zQRbwq6uXOyQRSpCI=; b=2m5jDUsSUmWMasOEuHpmNUcSiz
-	D4lnVBVehFRtS2b9BkMu56TVqNfKLVkweqb5RDmcvPRVd4/lv/JeLIQb+WNc9l6GCj6McQ1XeGaNx
-	ajaXd1TkUQWCLmMRgxpA/cU1SpWZPvMOM6A0QloiggIpjOfG5g2b9WUcTAW8VPQWu77nf1g+sHtDD
-	FLCekzUlvoHm85AM+dSamvuZRtbX/pGc2YqHO8dRfSGa5+3T1baXZjpJUsKZ80sHF37j8ZQauch/C
-	8tYHZsKkIs7xGmnXN47D/NGLeJHs5g1UfolT8ZWqZUDDVxIa5JRuzRIVeEFsts5jfNzIVvO02F2z+
-	jt3szkAA==;
+	bh=Rbc3pQFYLRqbUTRgL5kXu/Ce2Rj8JH7uJEi1O5Rd5aw=; b=Xme7GW4eqsuNEGcSwr1PIOUzv6
+	xnw2wKXj54iwOr/IR0X8cJviZulNqJH8yuS2Rw8HgEy+96Vy9dca0Ol90U1j7BE6GzlgFezmiXYLK
+	6Kc2EJGnMB35XTdmR6B80hqcgDk5wHKqUH591EWWD+a2rCyKHIJ+Zw0LvvD8C/HW2Xl/S0QLubt6r
+	5HUuO2cKtj4LpiZW9ATw4BQJK53frB7D5esrS/Nn/3xspMGfzRdLrxIfQymmiIOIoGUtJntuPyh8w
+	gpdoBkZAPmH0Bpz4ANfdusD/fFgmDJe0eLLhGUdH47dDwcnpHeQX33tvSNpzeqx/ubiqsMfmdkda/
+	AHsWmLWA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdVD-0000000Akps-2cUd;
-	Fri, 30 Oct 2026 03:42:03 +0000
+	id 1xMdVG-0000000AkrO-3yAP;
+	Fri, 30 Oct 2026 03:42:06 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdVC-0000000AkoQ-0dct
+	id 1xMdVF-0000000Akqj-1cpo
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 03:42:02 +0000
+	Fri, 30 Oct 2026 03:42:05 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 9555D600DA;
+	by tor.source.kernel.org (Postfix) with ESMTP id CE297600C8;
+	Fri, 30 Oct 2026 03:42:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C77D61F000C1;
 	Fri, 30 Oct 2026 03:42:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C3A41F000C1;
-	Fri, 30 Oct 2026 03:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793331721;
-	bh=P8qUj2Lyi9M5bEeQQEDKN13Kh3zQRbwq6uXOyQRSpCI=;
+	s=k20260515; t=1793331724;
+	bh=Rbc3pQFYLRqbUTRgL5kXu/Ce2Rj8JH7uJEi1O5Rd5aw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Aod7EPH2lEU2ehvHOvHCeEtpGs6ylV7AgyK9t9xzGFObYIyMuMQowD1+UZL+H9QxJ
-	 jxOrH7srMCrUb8p5x8IWegeeNSvjR4sYYEO9P+9Tjnxzwsh7FF9uAxF1+iYW393qpF
-	 g3bEPyDgc3y5/w+WqxI3J8SSCcfkglFyoXs/X5r5MZhZ180d/RpB2eYrInfspZUm/3
-	 gCMqr/wPKmhy1wxUQGuOs62/gfFgq3xZxO0qmLkSo0N+lWLJvAV5fUTvyAGUYiB4bv
-	 3fhSdEAO8U7cJCaRlLVCQ+hc3LeZ1ewCyvQlGXVIRwcCbwz936L2nL7JDjuRM/oOqW
-	 w5QXUAYdrQQaw==
-Message-ID: <sashiko-outbox-190261@kernel.org>
+	b=Fsi35OKztrfLy2tRC0byGUMFCDknDzh2TXOYky3qeCJ/s+p3muXASLtfdbVZ6veyU
+	 cOIVZ4dhnZG3OBn2ba2T4FN8BhNuI+fNIZQfR9tf16Gre8yIZEPNIPS4eM16gzRjtP
+	 cMOfWlId4DTbDIso1oG2Nl4SHNKxiNsXkhbS2ASGUqtUSd2195EepSQ76md7k4moqI
+	 iJCKWa/NueDP7aa/w+8TJ9ciUf23B6dydA1HOArGszAD0EDAQ7jHi21hJMyFPAflZV
+	 A0Vq+++y4ZsMK/LfCQG8lRb0r1/TjiceXAaGFKrnOLonOklS/+IHRNtD6A29aDlYOS
+	 h7K4NqAvx/orA==
+Message-ID: <sashiko-outbox-190262@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 33/47] mm/memory_hotplug: avoid races in
- pfn_to_online_page() with dying pgmap
+Subject: Re: [PATCH v2 34/47] mm/madvise: fix data loss from MADV_FREE on a
+ KSM page
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -75,12 +75,12 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
 Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261029-fixes_core-v2-33-a64ce7f83abb@kernel.org>
+In-Reply-To: <20261029-fixes_core-v2-34-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-33-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-34-a64ce7f83abb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 03:41:58 +0000
+Date: Fri, 30 Oct 2026 03:42:01 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,37 +100,31 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> From: Josef Bacik <josef@toxicpanda.com>
+> MADV_FREE can clear the dirty flag of a singly mapped KSM folio. The
+> folio remains in the stable tree and can gain new mappings without being
+> dirtied again. Once marked lazyfree, reclaim can discard data that those
+> mappings still need.
 >=20
-> If ZONE_DEVICE memory shares a memory section with ordinary memory, the
-> section is online and the pfns of the device are valid.
-> pfn_to_online_page() tells them apart by asking get_dev_pagemap() whether
-> the pfn belongs to a dev_pagemap.
+> KSM always marks a folio dirty when converting it to a KSM folio in
+> try_to_merge_one_page(). Marking a folio lazyfree clears PG_swapbacked
+> but leaves PG_dirty unchanged. Preserving PG_dirty makes reclaim restore
+> PG_swapbacked instead of discarding the folio. This also protects folios
+> that were already lazyfree when KSM converted them.
 >=20
-> get_dev_pagemap() only returns a dev_pagemap whose reference is alive.
-> memunmap_pages() kills the reference first, waits until all pages are
-> idle, and then removes the memmap. During all that time the function
-> finds nothing, and pfn_to_online_page() hands out the struct pages of the
-> device as if they were online memory. A pfn walker reads them while they
-> are poisoned and freed.
+> Skip KSM folios before clearing their dirty flag, checking under the
+> folio lock to serialize with KSM conversion.
 >=20
-> The entry in pgmap_array is only deleted after the pages have been
-> removed. Look at that instead of trying to get a reference.
->=20
-> This is probably not worth CCing stable.
->=20
-> Fix generated by an LLM and sent by Josef Bacik in private.
->=20
-> Fixes: 1f90a3477df3 ("mm: teach pfn_to_online_page() about ZONE_DEVICE se=
-ction collisions")
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+> Fixes: 854e9ed09ded ("mm: support madvise(MADV_FREE)")
+> Cc: stable@vger.kernel.org
+> Reported-by: Josef Bacik <josef@toxicpanda.com>
+> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> Reviewed-by: Xu Xin <xu.xin@linux.dev>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-fixes_core=
--v2-0-a64ce7f83abb@kernel.org?part=3D33
+-v2-0-a64ce7f83abb@kernel.org?part=3D34
 
 
