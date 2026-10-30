@@ -2,131 +2,143 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4D7606A31F
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 13:10:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515AF606A321
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 14:35:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=3Qc1Dlun;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aE+UcR4O
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=G3vp3/sV;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Zc8ZNVO6
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Subject:References:In-Reply-To:Message-Id:Cc:To:From:Date:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=BIsmxaqlcIiqqe+DfpItRAhgOJbkWsY0ZSYuASH2dgo=; b=3Qc1DluntBzxNS
-	gk1Z5sgyANQnU/EBtV1YTWuuKy2MMLZtvDoftxUScuRywj80qJ9OdSgFT6us8bqVbCBbUNJVaAFhR
-	sjxSVU7S5ObyeFJn0Ujzh2cFMEiAvn8RiPnnAOGyzAO7o+niGFnEfJenzObQaKICWmsal80dTZuYC
-	lYefnF6GOBKWHqAMLRjO8Qt7Qdb4FvUXsuvI5isk9mp+g8sCJfmBm4L+50QHltklGFLAC/IDa7y0N
-	iAx7SnAiE2Adz581xa39aWNo/8BxeX1P+oU3zN2r37e7CFvNSWYcJezmdjYkKTO6+IezP8+w3KfMK
-	D9TUM5YRYav0RpieLJHA==;
+	List-Owner; bh=y6XXbQ+HdgQmOTZa0aEBan+zjL/ycrb6TKGl8S7Q83w=; b=G3vp3/sVuCEkEN
+	xbf7M+TrLuoBVfGRF+MBIcLDPi2ik8P7KjWsvN/2MptZHKBgk4+iQOhjroBFROIF6YdDEgP/j2Lf3
+	aCD38/wjynJjSmKZiSQ4Iw5NcfhMddkjL6z50JDTgq6VYeGlObab6XPc0eJM9mjwZ0rGu8XE/xBt0
+	MQvFgm+CZusqA+EAFSvQtaIes9nCLQGewfXv/B/N6xBhB7tgkk5eTAswQVuj7AvIxRi5b9GABMnSo
+	X4t5dCpYUcJA+JIh0rWj0j/9RsdSO1WwezGK74qqToyjJxB8t+VBQg9XhJ5CXmKwA9nNsP9aFJIvA
+	LqiAyp+CNkdwFZIsc4UQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMmNK-0000000Bjs7-34Ll;
-	Fri, 30 Oct 2026 13:10:30 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xMnhy-0000000Bs32-1PEC;
+	Fri, 30 Oct 2026 14:35:54 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMmNI-0000000Bjrc-2No7
+	id 1xMnhx-0000000Bs2t-0gep
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 13:10:28 +0000
+	Fri, 30 Oct 2026 14:35:53 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id B252241978;
-	Fri, 30 Oct 2026 13:10:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E5611F0093A;
-	Fri, 30 Oct 2026 13:10:27 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 65EC4419C1;
+	Fri, 30 Oct 2026 14:35:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 697CF1F0093A;
+	Fri, 30 Oct 2026 14:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793365827;
-	bh=BIsmxaqlcIiqqe+DfpItRAhgOJbkWsY0ZSYuASH2dgo=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=aE+UcR4OtmI1gsAuleOjFb68pLXXLXkRQbAWvngo171T2MUUuwjy+lrcz2fa900Oa
-	 4jrYfKABe2JsUQNDDMr8LHMydxA2OR4eFUP0n+okjO+fCYNkr2t0oFDX3OZbWNsHkc
-	 9FOki2qP8o1578DoVS6j4Ha2l9nKWXo/PwQLeofhbAptMNLznIZcalKf4CfY+TsEU5
-	 ko938kjuwV+SzeAc1oCkdQMWrUvfCXsLdHLlXHlbAX4d2Qvq1JA8oZU/MBsn4zu9iH
-	 /mYszUAhgaZ3QvOiktJYjo8pq2d+/cDPxcPeXZHq7P6jbizyjM3/JsXTfeJejutH0+
-	 QVqpbytwntPyg==
-Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
-	by mailfauth.stl.internal (Postfix) with ESMTP id B22B6780043;
-	Fri, 30 Oct 2026 09:10:26 -0400 (EDT)
-Received: from stl-imap-13 ([10.204.2.104])
-  by stl-compute-04.internal (MEProxy); Fri, 30 Oct 2026 09:10:26 -0400
-X-ME-Sender: <xms:QpfkaudgPlWfhG2nuX5v0oYxnFnd34OSZvAUv1UZVpB12tHv8EreXg>
-    <xme:QpfkajCgIdn2T-PjuQzu2w2WrYYDqpLVkhxKQrSCYdBa1aOg3t5bIjhv1fn84uU-X
-    gWui-BFJypI5jHtbfxKx9anlVeSzOeMnJ9FBaX8ytr50BFBoJ7ChA>
-X-ME-Proxy-Cause: dmFkZTGh/6azztQX4EjOpOWsP9cU87M/GO2aoMRhBpjxyvA9Mgxud2UfYibhs/CNwlNrxR
-    OVYhQ00dRta7xjyTz8NtYoTm7ScvixKhrCgmB14JzOz0EI/mP6fEi8NWTuMHhrcDaZeBk1
-    YaQTwyUEgXvrrCojrJE/qHFnsqVSnKBrUgjzGmjfEQsz/3lIybZUkOsNLIPE9CqfqBx7Ah
-    c24qnXX2j9fLPh5cewjKYtSEE+5zOGLldi7n9WyLyT2lALzgx/t2uBwk6YlpgQtoGaFAlv
-    yB2TdRcPZQLT6XQVgCOGmWsKCe+r6lBRqzeLlPt7JfBlWSjnTHhGNl3PrxEWFRylHy3lYf
-    kpptfFm+LkbmYdnqv7oT9qRe6teuGi7QOqfk5YudV2k5/qHerwrD5mfpc1QxohxNmdHQ67
-    yj8Rz7kBIydzzYNKrzYQKqbQXg0kSF8IHV2N8ZkxHRhLt4+XOPrRrgms7SZ9do1Qu2fOEf
-    7gKxf9P9fbZ/DgTar35vJ2bvnTZ317N7Y8UTtBnGUltw+RKrdEC4+6AQZMWYfuqSibj6JM
-    96wE3O2w5if218SI9BPq+AC04w4C8BL1PIZ2E3PLHYgJEITmt5yhSABPu0OlnexaD6/LLQ
-    jwjzjRs+epVjfmBA0tpujtP4JNG/zdq0IHpXR7m2kfDQlL4Dtjw0AhljJPGg
-X-ME-Proxy: <xmx:Qpfkat0lFMgtIn-egodGPRZg50OJO_gN8Ozpuq4JeAFHSOZDyFLdGw>
-    <xmx:QpfkakdhY6IUI_POEWnR2AytGl7qggQuuGL6GirIVsyTlrDwSSoTuA>
-    <xmx:QpfkavBC5Cv9FH0260FxTRXt_JzcSeG3bnfgZiX914OEIxY2vrWv9g>
-    <xmx:Qpfkam3RZTfgcCrKd5Jr7vSiAo8ay2X3TiHRB67g5-Wew0ciZZ1vZA>
-    <xmx:QpfkavMdLUJ1qZO3QO5a3wtqeItG9O9oeeqToDsDHFEcmk4CL7Mtt8M3>
-Feedback-ID: iccae4b50:Fastmail
-Received: by mailuser.stl.internal (Postfix, from userid 501)
-	id 59AA0F6007F; Fri, 30 Oct 2026 09:10:26 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20260515; t=1793370952;
+	bh=y6XXbQ+HdgQmOTZa0aEBan+zjL/ycrb6TKGl8S7Q83w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=Zc8ZNVO6uRM/ebf2tyuqkNg2F+fe5LIUT6QCAumzzPpOuGmyXnfnNO5s9RSYLm2rE
+	 jwJf7qLnqMB1Nf2QO0gP2HzziZZK6letMz6x4Z1QebhXjhx6Lp5o3hUiQQDX2zhFLu
+	 5wWBHnZAqJxpm4krMusfEm0ziwpBACmY2PLnP7EQIV+ROXKrDC2x0Z413kzf7TnVRa
+	 1IzLYX7Ri/ykqtCagS6CsHGxfJq/AfR5jwjpZPHtLQClzkqVrG8JQ9OGKa/yrF53ml
+	 FKD/f6zB3W/UEBSdx5AyFtTg6EeOre5o75pbwDLQQv3rT/OAi7RJN7FszZ+57tVf4M
+	 radtUUXIQvVSg==
+Message-ID: <43994c77-bde2-47cc-b6bd-5b479672bad2@kernel.org>
+Date: Fri, 30 Oct 2026 15:35:33 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Aey4jMk1dEgs
-Date: Fri, 30 Oct 2026 09:10:05 -0400
-From: "Chris Mason" <mason@kernel.org>
-To: "Muhammad Usama Anjum" <usama.anjum@arm.com>,
- "David Hildenbrand (Arm)" <david@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Johannes Weiner" <hannes@cmpxchg.org>, "Michal Hocko" <mhocko@kernel.org>,
- "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>,
- "Lorenzo Stoakes (ARM)" <ljs@kernel.org>, "Kairui Song" <kasong@tencent.com>,
- "Barry Song" <baohua@kernel.org>,
- "Axel Rasmussen" <axelrasmussen@google.com>,
- "Yuanchu Xie" <yuanchu@google.com>, "Wei Xu" <weixugc@google.com>,
- "Baoquan He" <baoquan.he@linux.dev>,
- "Baolin Wang" <baolin.wang@linux.alibaba.com>,
- "Liam R. Howlett" <liam@infradead.org>,
- "Vlastimil Babka" <vbabka@kernel.org>, "Mike Rapoport" <rppt@kernel.org>,
- "Suren Baghdasaryan" <surenb@google.com>, "Michal Hocko" <mhocko@suse.com>,
- "Kees Cook" <kees@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>,
- "Jann Horn" <jannh@google.com>, "Pedro Falcato" <pfalcato@suse.de>,
- "Hugh Dickins" <hughd@google.com>,
- "Pasha Tatashin" <pasha.tatashin@soleen.com>,
- "Pratyush Yadav" <pratyush@kernel.org>,
- "Matthew Wilcox" <willy@infradead.org>, "Jan Kara" <jack@suse.cz>,
- "Zi Yan" <ziy@nvidia.com>, "Lance Yang" <lance.yang@linux.dev>,
- "Rik van Riel" <riel@surriel.com>, "Harry Yoo" <harry@kernel.org>,
- "Alistair Popple" <apopple@nvidia.com>, "Nico Pache" <nico.pache@linux.dev>,
- "Ryan Roberts" <ryan.roberts@arm.com>, "Dev Jain" <dev.jain@arm.com>,
- "Usama Arif" <usama.arif@linux.dev>, "Kiryl Shutsemau" <kas@kernel.org>,
- "Matthew Brost" <matthew.brost@intel.com>,
- "John Hubbard" <jhubbard@nvidia.com>, "Peter Xu" <peterx@redhat.com>,
- "Will Deacon" <will@kernel.org>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- "Nick Piggin" <npiggin@gmail.com>, "Oscar Salvador" <osalvador@suse.de>,
- "Minchan Kim" <minchan@kernel.org>, "Muchun Song" <muchun.song@linux.dev>,
- "Xu Xin" <xu.xin@linux.dev>, "Chengming Zhou" <chengming.zhou@linux.dev>,
- "Chris Li" <chrisl@kernel.org>, "Kemeng Shi" <shikemeng@huaweicloud.com>,
- "Nhat Pham" <nphamcs@gmail.com>, "Youngjun Park" <youngjun.park@lge.com>,
- "Gregory Price" <gourry@gourry.net>, "Joshua Hahn" <joshua.hahnjy@gmail.com>,
- "Rakie Kim" <rakie.kim@sk.com>, "Ying Huang" <ying.huang@linux.alibaba.com>,
- "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
- "Josef Bacik" <josef@toxicpanda.com>, stable@vger.kernel.org,
- "Thadeu Lima de Souza Cascardo" <cascardo@igalia.com>,
- "Mani Tofigh" <mt4022@columbia.edu>,
- "Samiullah Khawaja" <skhawaja@google.com>
-Message-Id: <ad0d82f5-c2ad-46d0-986d-94626faac1f9@app.fastmail.com>
-In-Reply-To: <bc8c1fc5-4620-4515-8520-22ebcd0d592a@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 03/47] mm/memfd: check for real shmem inodes before
+ accessing shmem state
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
+ Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+ Baoquan He <baoquan.he@linux.dev>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
+ Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
+ <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
+ Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>,
+ Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
+ Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
+ Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
+ Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-cxl@vger.kernel.org, stable@vger.kernel.org,
+ Chris Mason <mason@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <2f23dafc-43a5-47c9-a819-e696cda6fd44@arm.com>
- <baeda061-e0d0-4be1-9aa5-8886182ca83f@kernel.org>
- <bc8c1fc5-4620-4515-8520-22ebcd0d592a@arm.com>
-Subject: Re: [PATCH v2 00/47] mm: various (urgent?) fixes
-Content-Type: text/plain
+ <20261029-fixes_core-v2-3-a64ce7f83abb@kernel.org>
+ <2vxzmrrvmnil.fsf@kernel.org>
+ <297adf4c-1792-4dff-a7c8-2694dc2b1446@kernel.org>
+ <2vxzik2jmkw1.fsf@kernel.org>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <2vxzik2jmkw1.fsf@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -138,75 +150,81 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-
-
-On Fri, Oct 30, 2026, at 8:12 AM, Muhammad Usama Anjum wrote:
-> On 30/10/2026 11:35 am, David Hildenbrand (Arm) wrote:
->> On 10/30/26 12:19, Muhammad Usama Anjum wrote:
->>> On 29/10/2026 8:32 pm, David Hildenbrand (Arm) wrote:
->>>> See v1 on details. TL;DR various fixes :)
->>>>
->>>> Thanks to everyone for the review! Hoping I can get some more? :)
->>>>
->>>> I am planning on picking these myself, moving them to linux-next fairly
->>>> soon through mm/core.git.
->>>>
->>>> ---
->>>> Changes in v2:
->>>> - "mm/memfd: check for real shmem inodes before accessing shmem state"
->>>>  - Call it inode_is_shmem
->>>> - "mm/truncate: look again if a folio left the mapping"
->>>>  - Different fix for truncate_inode_pages_range
->>>>  - Adjust description
->>>> - "mm/huge_memory: fix zapping migration entries for device-private THPs"
->>>>  - Move handling in zap_deposited_table
->>>> - "mm/mmu_gather: fix flushing ranges with 4 GiB or larger"
->>>>  - Adjust description"
->>>> - "mm/huge_memory: split huge PUDs when adjusting VMA boundaries"
->>>>  - Drop split_pud check
->>>> - Link to v1: https://patch.msgid.link/20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org
->>> I ran Fastpath, a Linux kernel performance benchmarking framework, on
->>> this series against mm-stable on aws-m7g.metal. (I) and (R) indicate
->>> statistically significant improvements and regressions, respectively.
->>> The results show 10 improvements and 1 regression. Other, unmarked
->>> percentage changes can be ignored as statistically insignificant. Hence:
+On 10/30/26 13:29, Pratyush Yadav wrote:
+> On Fri, Oct 30 2026, David Hildenbrand (Arm) wrote:
+> 
+>> On 10/30/26 12:33, Pratyush Yadav wrote:
+>>> Hi David,
 >>>
->>> Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
->> 
->> 
->> Thanks for the results. IIUC it's schbench that shows a possible regression.
->> 
->> I would expect that no changes here really affect performance at all (neither
->> positively nor negatively).
->> 
->> "mm/huge_memory: fix list corruption when deferred_split_scan() races with
->> deferred_split_folio()" fixes locking, but I wouldn't assume that this matters
->> at all for this benchmark.
->> 
->> "fork: take mmap_lock before copying mm_struct" changes locking, but I also fail
->> to see how that would affect the benchmark.
->> 
->> Maybe some code layout changes just affect some benchmark on some machines?
->> Because already seeing 10 improvements makes me wonder how that could possibly be.
->> 
->> So I'll move forward with these fixes for now and see if we get more reports and
->> could identify actual problematic commits.
->
-> Yes, these improvements/regression might be because of code movement and how it
-> has affected the run time performance. Most importantly, these results show that
-> there isn't any drastic affect on performance. These fixes are good to go.
+> [...]
+>>> Both want to only look at "proper" shmem
+>>> files, and should not do any work on a Coda file with a shmem mapping.
+>>> Plus, someone later down the line might use shmem_file() without knowing
+>>> this subtle problem, and we probably would miss it in review.
+>>>
+>>> For callers that only care about the mapping should then use
+>>> shmem_mapping(). I am not sure if there are any. Perhaps that would be
+>>> collapse_file()? But TBH I don't really understand khugepaged all that
+>>> much. All other callers of shmem_file() seem to care about the actual
+>>> inode.
+>>
+>> Looks like collapse_file() would then use shmem_mapping() for the time
+>> being. God this is confusing.
+> 
+> Yes...
+> 
+>>
+>> What about the following replacement:
+>>
+>>
+>> From 6e3c4f92a651e36ed1ae8d7659d2ca08543fa430 Mon Sep 17 00:00:00 2001
+>> From: "David Hildenbrand (Arm)" <david@kernel.org>
+>> Date: Sat, 24 Oct 2026 21:08:33 +0200
+>> Subject: [PATCH] mm/shmem: make shmem_file() check the file's inode
+>>
+>> shmem_file() only checks if file->f_mapping is a shmem mapping. This
+>> mapping can belong to another file, however, as with a Coda file backed
+>> by a tmpfs container after mmap().
+>>
+>> So it does not guarantee that the file inode is an actual shmem inode.
+>>
+>> Seal handling and memfd preservation use this check before accessing
+>> shmem inode state, so they can access an inode of the wrong type.
+>>
+>> Let's make shmem_file() check the inode's file operations instead, to
+>> identify shmem inodes reliably. This will identify regular shmem inodes,
+>> including memfds and ordinary tmpfs files, independently of wrapper file
+>> operations.
+>>
+>> Use shmem_mapping() in collapse_file() instead to not change the behavior
+>> of collapse_file(): it operates on the page cache and uses mapping->host
+>> for shmem inode operations. Focusing on the file does not seem relevant.
+>>
+>> Fixes: c49fcfcda8b5 ("mm/shmem: update file sealing comments and file checking")
+>> Fixes: b3749f174d68 ("mm: memfd_luo: allow preserving memfd")
+>> Cc: stable@vger.kernel.org
+>> Reported-by: Chris Mason <mason@kernel.org>
+>> Suggested-by: Pratyush Yadav <pratyush@kernel.org>
+>> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> 
+> Looks great, thanks!
+> 
+> Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 
-This schbench configuration is going to be really sensitive to process placement, and it
-should be doing all of its memory allocations up front.   I haven't done many schbench
-runs on this type of hardware, but I'd agree this result shouldn't indicate a bigger lurking
-regression anywhere.
+Thanks!
 
--chris
+@Mike, @Rik, Ill drop your RB, so please re-review.
+
+-- 
+Cheers,
+
+David
 
