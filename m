@@ -2,125 +2,86 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B7C606A31E
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:24:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70226606A31A
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:40:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=r8STOhCd;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=sFWn6Osd
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=FTuYC1ZV;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=I5GuMBeM
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=YxF7dRKdKAp6T/NOw/hryWAVYb3GZKlSovGXpa5oCY8=; b=r8STOhCdMLu9yu
-	XvEcE0Ruuc4o/iqsDYb0HAGLfXtySwwnKNAgC/DEsAh569g8peDSruw7LMDNULGSiQgUxtWa+2ChV
-	08Pjq9Q5tPutVQXrMBc7dEsKk1noEmUUOLaQIXH85Pqk7XeyLe+sN8BBHQEpEuEyzvaqrDCJe0Ndv
-	KfzxrOoX6Nluy/NSLGaySJjIi7dTMMKDGSnhjyfrAESYDCLgmRd+bwS/Hd47RpzJ1qvdRKgLVbQMI
-	gDDiV3Uetw+c1GkW80vbfVTu9gv4RsfuFAmcNWqoqfO2ndn0VKCFY/ba6tutPbliCFNPnEFXl7Nqh
-	52IDmg372Qm22PugUigQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
+	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=Bv38qew6Wsr0ojuGu26s7yan/OuyYioSrYN2sDRrsjM=; b=FTuYC1ZV5LW8VHbX5QjEZPkVfE
+	AcU81sOn+YTW41wiLkdDUVnlbD4jyx/cgSKc5SXCxFDAwgY1FQ0qQdedS6eXsvJf3SYtECSJmEXRh
+	KkgFzusmDzzcBKsGpafEGfCCP6qBftVgbtQ1LNM7IKtqSdK8de7aGjqir3M2DYaSIVR99njGcGltF
+	+RRYF6lDJn2XigU8JdwZcbzJ8hpcS3CG3+RYvc0Qeze95YmFlTnoWoHYl6bnh6Isa8+upnYSuut0M
+	nkaxKtFJaqTDyORCwSsAfVXK4M66IwiuIR3WICtWHYEYDVyJ1VVTbMei11dI3PF6pMdGFZhuIL1uJ
+	k6Cl2PCg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdEP-0000000Aj9v-2BGL;
-	Fri, 30 Oct 2026 03:24:41 +0000
-Received: from out-161.mta1.migadu.com ([95.215.58.161] helo=mta1.migadu.com)
+	id 1xMdTW-0000000AjgD-3dM8;
+	Fri, 30 Oct 2026 03:40:18 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdEM-0000000Aj9N-0bID
+	id 1xMdTU-0000000Ajg2-2cAy
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 03:24:40 +0000
-X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=K9e2xpCltZ0luCSKJ76+rRB5TbBjqG8Rs7tkxWAziAc=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793330674; v=1; x=1793935474;
- b=sFWn6Osd3p26eREcmcIASru+spScdxjMfW23b0Y2POx0A7cPjdRAZnOrHq+XGzSQm8O8znSL
- GcPW+KYbC/rayHgTcZsEHJo0uyjZtTCnQEGFm/LVMX+PMJM2sOtnbK4b1ngvJXY84rWZ79OpEq2
- myhFIaTzDDfiCZo6MKBT4eIY=
-X-Envelope-To: kexec@lists.infradead.org
-Received: by mta10.migadu.com with ESMTPS id 13ff5ce3ac3bfaeb;
-	Fri, 30 Oct 2026 03:24:34 +0000
-X-Mizu-Trace-ID: 13ff5ce3ac3bfaeb
-X-Migadu-Flow: FLOW_OUT
-From: xu.xin@linux.dev
-To: david@kernel.org
-Cc: akpm@linux-foundation.org,
-	aneesh.kumar@kernel.org,
-	apopple@nvidia.com,
-	axelrasmussen@google.com,
-	baohua@kernel.org,
-	baolin.wang@linux.alibaba.com,
-	baoquan.he@linux.dev,
-	chengming.zhou@linux.dev,
-	chrisl@kernel.org,
-	dev.jain@arm.com,
-	gourry@gourry.net,
-	hannes@cmpxchg.org,
-	harry@kernel.org,
-	hughd@google.com,
-	jack@suse.cz,
-	jannh@google.com,
-	jgg@ziepe.ca,
-	jhubbard@nvidia.com,
-	josef@toxicpanda.com,
-	joshua.hahnjy@gmail.com,
-	kas@kernel.org,
-	kasong@tencent.com,
-	kees@kernel.org,
-	kexec@lists.infradead.org,
-	lance.yang@linux.dev,
-	liam@infradead.org,
-	linux-arch@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	ljs@kernel.org,
-	matthew.brost@intel.com,
-	mhocko@kernel.org,
-	mhocko@suse.com,
-	minchan@kernel.org,
-	muchun.song@linux.dev,
-	nico.pache@linux.dev,
-	nphamcs@gmail.com,
-	npiggin@gmail.com,
-	osalvador@suse.de,
-	pasha.tatashin@soleen.com,
-	peterx@redhat.com,
-	peterz@infradead.org,
-	pfalcato@suse.de,
-	pratyush@kernel.org,
-	qi.zheng@linux.dev,
-	rakie.kim@sk.com,
-	riel@surriel.com,
-	rppt@kernel.org,
-	ryan.roberts@arm.com,
-	shakeel.butt@linux.dev,
-	shikemeng@huaweicloud.com,
-	stable@vger.kernel.org,
-	surenb@google.com,
-	usama.arif@linux.dev,
-	vbabka@kernel.org,
-	weixugc@google.com,
-	will@kernel.org,
-	willy@infradead.org,
-	xu.xin@linux.dev,
-	ying.huang@linux.alibaba.com,
-	youngjun.park@lge.com,
-	yuanchu@google.com,
-	ziy@nvidia.com
-Subject: [PATCH 38/46] mm/ksm: reset the unstable trees of all nodes
-Date: Fri, 30 Oct 2026 11:24:09 +0800
-Message-Id: <20261030032409.127393-1-xu.xin@linux.dev>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20261027-fixes_core-v1-38-6f74bec9a5bb@kernel.org>
-References: <20261027-fixes_core-v1-38-6f74bec9a5bb@kernel.org>
-X-Archived-By: <archiver.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261029_202438_771714_B281DF5B 
-X-CRM114-Status: GOOD (  20.44  )
-X-Spam-Score: -2.8 (--)
+	Fri, 30 Oct 2026 03:40:16 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id E7B03403F4;
+	Fri, 30 Oct 2026 03:40:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 373651F000C1;
+	Fri, 30 Oct 2026 03:40:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793331614;
+	bh=Bv38qew6Wsr0ojuGu26s7yan/OuyYioSrYN2sDRrsjM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=I5GuMBeMlvP7xOF2reJ/9htIAgEgMSim3T/wHhP38g6j0ydv3kUTNlIBO3g+DSRfL
+	 A65PcwerGwEIRqfjP4owXvaRvPk13TylRHZrkEFOh4gyIwHwL2kFVoGYiCZeIR0Rcx
+	 kuz2Tg/JGT2tJ8yRYe/j5ZOmvXEw+PO+xDqH7MnJcz1fhjWCoId4r/tn2fJR0kXE/9
+	 mYWcHrTtDsLFsEulgb649N9GhfERZNgqhOBJ+M1YjANmOPek1W/mBY0ul8CRfK4INi
+	 RHRSKIEgYa1OclNYrOv/SHkuCBTTF3DLO3yPrJOx8U6jfIU9wVgmTJLdYIbjIm7WOq
+	 CM/A3AjjzvJ1g==
+Message-ID: <sashiko-outbox-190229@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 01/47] mm/mglru: don't use stack pointers when
+ walking PUD and PMD tables
+To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
+ Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
+ Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
+ Stoakes" <ljs@kernel.org>, "Kairui Song" <kasong@tencent.com>, "Barry Song" <baohua@kernel.org>, "Axel
+ Rasmussen" <axelrasmussen@google.com>, "Yuanchu Xie" <yuanchu@google.com>, "Wei
+ Xu" <weixugc@google.com>, "Baoquan He" <baoquan.he@linux.dev>, "Baolin Wang" <baolin.wang@linux.alibaba.com>, "Liam
+ R. Howlett" <liam@infradead.org>, "Vlastimil Babka" <vbabka@kernel.org>, "Mike
+ Rapoport" <rppt@kernel.org>, "Suren Baghdasaryan" <surenb@google.com>, "Michal
+ Hocko" <mhocko@suse.com>, "Kees Cook" <kees@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>, "Jann
+ Horn" <jannh@google.com>, "Pedro Falcato" <pfalcato@suse.de>, "Hugh Dickins" <hughd@google.com>, "Pasha
+ Tatashin" <pasha.tatashin@soleen.com>, "Pratyush Yadav" <pratyush@kernel.org>,
+ =?utf-8?b?TWF0dGhldyBXaWxjb3ggKE9yYWNsZSk=?= <willy@infradead.org>, "Jan
+ Kara" <jack@suse.cz>, "Zi Yan" <ziy@nvidia.com>, "Lance Yang" <lance.yang@linux.dev>, "Rik
+ van Riel" <riel@surriel.com>, "Harry Yoo" <harry@kernel.org>, "Alistair
+ Popple" <apopple@nvidia.com>, "Nico Pache" <nico.pache@linux.dev>, "Ryan
+ Roberts" <ryan.roberts@arm.com>, "Dev Jain" <dev.jain@arm.com>, "Usama Arif" <usama.arif@linux.dev>, "Kiryl
+ Shutsemau" <kas@kernel.org>, "Matthew Brost" <matthew.brost@intel.com>, "John
+ Hubbard" <jhubbard@nvidia.com>, "Peter Xu" <peterx@redhat.com>, "Will
+ Deacon" <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, "Nick
+ Piggin" <npiggin@gmail.com>, "Oscar Salvador" <osalvador@suse.de>, "Minchan
+ Kim" <minchan@kernel.org>, "Muchun Song" <muchun.song@linux.dev>, "Xu Xin" <xu.xin@linux.dev>, "Chengming
+ Zhou" <chengming.zhou@linux.dev>, "Chris Li" <chrisl@kernel.org>, "Kemeng
+ Shi" <shikemeng@huaweicloud.com>, "Nhat Pham" <nphamcs@gmail.com>, "Youngjun
+ Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
+ Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
+ Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
+Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>, "Muhammad
+ Usama Anjum" <usama.anjum@arm.com>
+In-Reply-To: <20261029-fixes_core-v2-1-a64ce7f83abb@kernel.org>
+References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-1-a64ce7f83abb@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 30 Oct 2026 03:40:11 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -130,78 +91,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
+X-Archived-By: <archiver.kernel.org>
 
-> 
-> Let's fix it by tracking in ksm_nr_node_ids the actual number of
-> allocated tree roots.
-> 
-> remove_all_stable_nodes() and ksm_check_stable_tree() will now scan
-> more tree roots (skipping the empty ones), which is harmless.
-> 
-> Fixes: ef53d16cded7 ("ksm: allocate roots when needed")
-> Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
+> From: Josef Bacik <josef@toxicpanda.com>
+>=20
+> MGLRU passes stack copies of page-table entries in walk_pud_range() and
+> walk_pmd_range() when walking to the next level. These copies can become
+> stale when khugepaged or MADV_DONTNEED (CONFIG_PT_RECLAIM) removes a PTE
+> table concurrently.
+>=20
+> This pattern dates back to commit bd74fdaea146 ("mm: multi-gen LRU:
+> support page table walks"). Likely, earlier locking masked the latent
+> bug. Later changes exposed it: commit 1d65b771bc08 ("mm/khugepaged:
+> retract_page_tables() without mmap or vma lock") allowed concurrent
+> retraction, and commit cf4a65539c13 ("memcg-v1: no need for memcg locking
+> for MGLRU") dropped the walker's outer RCU protection.
+>=20
+> The fix is simple, so just fix the original commit so we don't have to
+> [ ... ]
+> Reviewed-by: Barry Song <baohua@kernel.org>
+> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+> Reviewed-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
-> ---
->  mm/ksm.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/ksm.c b/mm/ksm.c
-> index dbfb8f98b1892..9c51925825cbf 100644
-> --- a/mm/ksm.c
-> +++ b/mm/ksm.c
-> @@ -475,6 +475,7 @@ static void advisor_stop_scan(void)
->  #ifdef CONFIG_NUMA
->  /* Zeroed when merging across nodes is not allowed */
->  static unsigned int ksm_merge_across_nodes = 1;
-> +/* Number of allocated stable and unstable tree roots. */
->  static int ksm_nr_node_ids = 1;
->  #else
->  #define ksm_merge_across_nodes	1U
-> @@ -3636,14 +3637,13 @@ static ssize_t merge_across_nodes_store(struct kobject *kobj,
->  			else {
->  				root_stable_tree = buf;
->  				root_unstable_tree = buf + nr_node_ids;
-> +				ksm_nr_node_ids = nr_node_ids;
->  				/* Stable tree is empty but not the unstable */
->  				root_unstable_tree[0] = one_unstable_tree[0];
->  			}
->  		}
-> -		if (!err) {
-> +		if (!err)
->  			ksm_merge_across_nodes = knob;
-> -			ksm_nr_node_ids = knob ? 1 : nr_node_ids;
-> -		}
->  	}
->  	mutex_unlock(&ksm_thread_mutex);
->  
-> 
-> -- 
-> 2.43.0
 
-Looks correct as far as it goes, but I think it is not quite sufficient
-on its own.
+Sashiko has reviewed this patch and found no issues.
 
-The documentation requires that merge_across_nodes can only be changed
-when there are no KSM shared pages in the system, but
-merge_across_nodes_store() does not enforce this at the sysfs level.
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-fixes_core=
+-v2-0-a64ce7f83abb@kernel.org?part=3D1
 
-Should we also reject writes while ksmd is merging? At minimum:
-
-+	if (ksm_run & KSM_RUN_MERGE)
-+		return -EBUSY;
-
-Ideally, we should also check that ksm_pages_shared is zero, since
-KSM_RUN_STOP (0) does not guarantee that all pages have been unmerged.
-
-That would make the interface match the documented sequence and close
-the remaining race window.
 
