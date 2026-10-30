@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA4D606A337
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 17:16:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8306606A31D
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 17:55:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=bgJopCth;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=qpseBjFK
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=bHHn9Hhs;
+	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=pvRBMiTG
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
@@ -14,57 +14,57 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Reply-To:Content-ID:Content-Description:Resent-Date
 	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=ybKVbrtZEUo4ZkUVHlywlKk6LlM+bSvFqSsT60Q6nMQ=; b=bgJopCth7In9j3rBiXMvQS+NjN
-	q0xLtbASbxaN/xlNOnCQcI1Qf6dH18U6kerBU2h07MmW1Izh1BvMIDAvrAwE3AJcnk1aY+qGBjk9n
-	hbNAa7Mp4OqbW5WWhyBkpGu6n4oVkW4QUBSypxCrG+e3iz088MFnR5JoxLJMKy04E4iuFVSohS95i
-	qAzFBApYAu9va3nK5HP7r7X7wQsbvf6U+8NwVxP068pnRnJ45A4CpX1pNVEaAZIfBAlqOejMDaJVq
-	8fe5VkCs4b48qXEDcav2p+T1gyaKUiCI3+hR1+NFJp6L9yDfO1Mhk02nyHZuRTzWeQrBIAoPADWke
-	Z67vI7uQ==;
+	bh=5t9Ik+Xn40v2YUIFF97fV2ihpRAbPLQi02EprWu9+aI=; b=bHHn9HhsQ58vQ17rI4xfoW86oX
+	p7V72D6aN02lD5YM3NG2uUKhTrvStvOKKfYiTFXv1L5BTZq4FFBM6OzaDY6JRSbL2emkvwN+IVLxm
+	UbwCCoOCL+X585S/HW1meM88pI8Z0oPIbAaSu7D5Q+Tcz/02AwCAGJj+3ZACtuENFiqVfCG1sCGqJ
+	PcmQI/v6Al5vGrYgIS2cObErFpIKmQp2JWR8RlqM2VMZlTWZ0W6qZ0cow9Yp+V6lLkKA+w/5hVnJa
+	GNkRTroIkry8CzO9Fu0WJmeIe6RlbbjL1o28PnvuCpZdZzO46zfBlNSSz70//C7er04eJk470r6n5
+	OPnmn53g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMqDB-0000000CDOO-2lWv;
-	Fri, 30 Oct 2026 17:16:17 +0000
-Received: from mail-westus2azlp170100005.outbound.protection.outlook.com ([2a01:111:f403:c005::5] helo=CO1PR03CU002.outbound.protection.outlook.com)
+	id 1xMqpL-0000000CKVg-00ZJ;
+	Fri, 30 Oct 2026 17:55:43 +0000
+Received: from mail-westus3azlp170100009.outbound.protection.outlook.com ([2a01:111:f403:c107::9] helo=PH7PR06CU001.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMqD7-0000000CDNc-418a
+	id 1xMqpH-0000000CKUg-1LV8
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 17:16:15 +0000
+	Fri, 30 Oct 2026 17:55:40 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dWvv4kL2pvb1+Uh/Pwjb1+OPD3Gic+0MlAP+KuvnxaIOb91VYimdOSknUfY1dm3Pxaoc+xa12jWKtXQMurMZ2ldMAMX2ViQWU+vOsNiefGxELXpXABk8oR8pdynumRgwGqj518F/kguFAsmpn0+zd6+zMz/+Kch6yAzHy+wNw3710YXQRQpS4f1d1yeMXdXFl4EhAriU2AmyN5DLRrIcKJi8S+EvC8gtdHLu1jn5bEgVADx42zaYAfYc339lZ7JouG2sGorl4Qorla/BVRV6drRbnGz4O/9WzxQf/nQtZVnpkiDeSJBKX+Sftpd1uLHDPTTQWyQAqTEVO7JmNnBm1A==
+ b=I/U7UF/lsPXMvHMc7/4+ZmsnGftzGSwPWy3RjgQk8ygVgFsTt3yeZF8QPDc6cBG6oqjqvofVoUmpomxuyuFJYj51AYOQD6yzz5J3G64xGfi4bncEu7Xtv9mUSYEHQ4at1mTuuycgMMWbUDHMeVkUKqxypyED28s+jU+dWdSIrtJkue043waJGu3ui/OAnLQinmiefhvyMHUmMZtBR2rOzaK5qtmrlB/gFItiwwP+/3jt0sKTJXwRVo200uVGIv+y9IZYL6EfkEaCFdOLEQ8hZ8u99Iue7vgOHn0gn3CUoNIcp0dZXt/dXO+Ngqz3XIDmH3JxSfEZDZCE6fZs0dr6dw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ybKVbrtZEUo4ZkUVHlywlKk6LlM+bSvFqSsT60Q6nMQ=;
- b=Ee3BgvibJJ+MdLeZBMYHjqdI+hsUMaZqnPotUtJ6tVZknXaQ8AtN+1GfwUPenTKFPFDmNeneLG3/Bde+j4Gj7+K4H9DwADt24X9jzu2pFxbDsnh8MC3aoUuOSMPO+r0IUgqFagu9IOjCA2q+71FvroNAeMWexIBZsuvsQ7UiW7t07cjG5I8kV63SYRegs/DDN0sp3+Is8BMyKGisFDFcVsJTXXkm8WYmRXKQ/gZx1pAiDsovan6WUX05TZx8QTtbHjAMMY0FQM+oRURoy6BGD94kXNH4cqNAo5vqn61pyA0LpH6FEEBTRDPpeUjk7y3KfLYoShfEjbEkTxQhmwmspA==
+ bh=5t9Ik+Xn40v2YUIFF97fV2ihpRAbPLQi02EprWu9+aI=;
+ b=XPKMuFo2/hTwFDXLIlqVq25598rhn0nfm6g7n7t/CbLFxIQod03kKAD4Q/w3XPj5kOnK+xIvFNw949xPXGkMhWeRjQam64bw58WZKVxpCqH/iZWgRcl3Yy+PIg4iZ60V/O4dk2HbzLP4SWE0VpSulYaipFhS0phvhlMX8DCJ/M1BbvMBS7EX2P7XahqCDGox0WU5xrr8ebVJ87Q7yGcp1zNr+wxMI2J02nhH5EsDmtelEgm3IBHBvZdpvh6IoKsMw741VkSyRuSZRjS2kQZWOTPeCvMGk1YpOWkyX4Akcqs51yNTeElFURTr1PHC5/OWS8j5Oaxopli3l8SDlL6Q2g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ybKVbrtZEUo4ZkUVHlywlKk6LlM+bSvFqSsT60Q6nMQ=;
- b=qpseBjFKCY7R4uz1NE4P3dnptQjJmvu5hcRGee4842hsyRB7sP7GwH/MefNc/H9+tj8wx3Z5hfko9DsZuDiB1z0AV42llnAYBez3OSZZNHf9uQMjgHEt04lhLTJ8gbgDhMRHf7ETv0a4U44ZCfkHq+Di/B8kZ0mDO/Lh0y/R+dmDmlc1oPLnNaYOWllDFj8O6ARQLq03G3t8cXciKq4grhOV4DxPkGRMx08lCJcwGpMjm5/0Fq4ef0XXSsEN8Xyt+Tb7TJRCGRjg3xv5Kiq4+BlAfm7mf/dMIVaHrDw1ST6B089tV/LgeoEhsidDrXaAlISj1jjOVxYg35wRjmOuRQ==
+ bh=5t9Ik+Xn40v2YUIFF97fV2ihpRAbPLQi02EprWu9+aI=;
+ b=pvRBMiTGADq6s/d3kJwO9AnNUpwT2A7g0/t0dYmvqObqcwvJPupmiN5UHchIes50NY7Z+d82WFRxiZ5Ht7iqeWe+E0gFiGM/SujA7FhKSm7tF4/sISNiC1tevua21I4rxvIa3ysJHnPpmVcyj3ANYOgtg/lIWt5NZYp20hOssDdJ+r8RC9UakiG+dFyP9xaYsXHgcYWE1k50p7vRPKbNpATkAyIjoupBWd8fWV2DrAkuWhSzsWIYgzbmobPSyFtEGExxQPoeSdoYdd9dGNCB1YeaAaEmSzRf+2sQsqYFXOFQMCGd0j5+yEdHRZsFXm0BmzdIhMvYZ7QUCTu7IqvR9g==
 Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
- by SA3PR12MB8047.namprd12.prod.outlook.com (2603:10b6:806:31b::8) with
+ by PHXPR12MB999255.namprd12.prod.outlook.com (2603:10b6:510:3ca::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.9; Fri, 30 Oct
- 2026 17:15:50 +0000
+ 2026 17:55:31 +0000
 Received: from IA0PR12MB8374.namprd12.prod.outlook.com
  ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
  ([fe80::d85f:4c87:ae84:3f16%6]) with mapi id 15.21.0569.009; Fri, 30 Oct 2026
- 17:15:50 +0000
+ 17:55:31 +0000
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Fri, 30 Oct 2026 13:15:46 -0400
-Message-Id: <DMICCHK80H4R.3R69XK82S57AO@nvidia.com>
-Subject: Re: [PATCH v2 05/47] mm/truncate: look again if a folio left the
- mapping
+Date: Fri, 30 Oct 2026 13:55:29 -0400
+Message-Id: <DMID6W4179LU.2GP3DZWJ95ZVR@nvidia.com>
+Subject: Re: [PATCH v2 06/47] mm/filemap: read mapping->a_ops->free_folio
+ under i_lock
 Cc: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
  <kexec@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
- <linux-arch@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
- <stable@vger.kernel.org>, "Josef Bacik" <josef@toxicpanda.com>
+ <linux-arch@vger.kernel.org>, <linux-cxl@vger.kernel.org>, "Josef Bacik"
+ <josef@toxicpanda.com>, <stable@vger.kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>, "Andrew Morton"
  <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>,
  "Michal Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>,
@@ -99,75 +99,75 @@ To: "David Hildenbrand (Arm)" <david@kernel.org>, "Andrew Morton"
 From: "Zi Yan" <ziy@nvidia.com>
 X-Mailer: aerc 0.22.0
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-5-a64ce7f83abb@kernel.org>
-In-Reply-To: <20261029-fixes_core-v2-5-a64ce7f83abb@kernel.org>
-X-ClientProxiedBy: YQBP288CA0048.CANP288.PROD.OUTLOOK.COM
- (2603:10b6:c01:9d::18) To IA0PR12MB8374.namprd12.prod.outlook.com
+ <20261029-fixes_core-v2-6-a64ce7f83abb@kernel.org>
+In-Reply-To: <20261029-fixes_core-v2-6-a64ce7f83abb@kernel.org>
+X-ClientProxiedBy: BL1PR13CA0167.namprd13.prod.outlook.com
+ (2603:10b6:208:2bd::22) To IA0PR12MB8374.namprd12.prod.outlook.com
  (2603:10b6:208:40e::7)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|SA3PR12MB8047:EE_
-X-MS-Office365-Filtering-Correlation-Id: 79cefca3-0ccd-4580-8f49-08df36a97223
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|PHXPR12MB999255:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4dcf4974-f4d9-4917-6f99-08df36aefd39
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|23010399003|366016|921020|4143699003|56012099006|11063799006|261009223027099003|261026140227099003|261026121527099003|261022105027099003|261021123027099003|261028144727099003|261021121427099003|10067099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info: hF+tC7yRsSx1Z+i32+U14mF8hMSFMJmFFAON7ZIQRb2FK3FDmXWwaGTUxtRBP+gPUIG6fKgBDqxqnlvWs2IbjnVmGxbzLL3pS66tbkS/lOw6+Hc6/wxyS6XiVnZoGxbOzQdDS4Q5GQuTIts2Fbg9C/ZhwAzKnkBHJhefhoHBb4illIUZ36pyqoFiaMiw6TFV27lUqQf0jVgSapBsG70keI0+yB//I+EQRJ3cukt3FYZz23aBdVrzwObLwllhsYGTFiZZzNrryjWFinVzfkWvMNr6wPaQUL3DF+mR2Tkx+T4CvWDTbwhn+Q6F0Jy9KDW5wS+rt8x+aaz634RjEwCgzuSfQ6NJ9Y8/BQ2DJOQFolqIRvUMa5Uf//EKv3aVXHEeYh7nzS2Kwf1LSapzVZ+Sl2reeFnxPkyXWnEPdG4j+CTfjBQYD2ckGukEOWonzaU8lPcQ6u1I7ep1W2xU9ofuMwqHz7E64TA9NfFM9kCrNfMWv8sgTpXLlzmNUCo9VlIwDubcrqnxbPYLTsyHAJOsqTM/3o5AhKYHqBGz5ZZd4tZuhDd93e7VkS8xY1z1wObipR+fC69eesYguCVDgzBxhOLFWIS1CU+o/S+/O8l9sKrQGmJ6DfeI78ohJKRfPUqs96M920NvGUIQN6MbqyMIyAE4bfILnprw2a6BOdCEZa+Od83FI87TuJOIRfwLqnnOyTQVfvu4rHd+8hONj+hrPA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(23010399003)(366016)(921020)(4143699003)(56012099006)(11063799006)(261009223027099003)(261026140227099003)(261026121527099003)(261022105027099003)(261021123027099003)(261028144727099003)(261021121427099003)(10067099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|376014|7416014|1800799024|366016|18002099003|22082099003|921020|56012099006|11063799006|4143699003|261028144727099003|261026140227099003|261026121527099003|10067099003|261021121427099003|261022105027099003|261022075727099003|261021123027099003|261009223027099003;
+X-Microsoft-Antispam-Message-Info: UaXycZhrGMIKRNFkdCxTGshtn5zjH2nR/RJiF5RrMpKrP7cXKTVVHmCzxB8CMQ0JEqp5IL0o4MpJIfGfo3wLLTAE6uCmf1rxcTpV8y2x/7yXR5jLUePh2ggZ4uR7wvSntFVmVs9geNXDt5OMa6FRgAIZDNvDSe65Xr7jwmTUVOKQ/vrjGHrx7R/uEbrOq81WF+CaA9xTdMUfJqA+dKrJ2Eaol2IiRBn9OHZmJOnsSJNjMis30NqdmhJwHktm3AbJFnIIES0Jv9WzcO5ak2Qe6AiGxqY65jKDMjuhOaorrgzsP4iR3kYqUjcMafN+ge5v3RAxErRDnglu+KRlEtnq0578w6wA37LSCkWmQxLl+OndM38OnM5mmitpF9rMvIX7ttz9eENOAxHk5eTnFuA+YPOirLhhj7lkg5IAX0/7IXxkKlN4gzDK0zcIsbuu/z6R+hjRYj35+lKzXhyl9EMtSB1+rvWzPQzySqJfAR8K0x1hUOJ911LmRUfsPbufPdEDLincxNHEQQajA62rkvupKR9AbjgK0XD5BCvD5TqCmkl2d684nxnSMHBhIa++7ys1nZxOcYfE2K4w/ZHG75NV3CGLzPcyvsRzzb6is4xyy7Qwrz1rni+W7YOJUDD+6rmhJHp8VhsJik53nX29B/cH6USJsmmsJ12ICvfTg6nI3Ak/chwpnRgPUMNoIAHCCWNQfoRN1kB6JfjriJTnBkTwcg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(7416014)(1800799024)(366016)(18002099003)(22082099003)(921020)(56012099006)(11063799006)(4143699003)(261028144727099003)(261026140227099003)(261026121527099003)(10067099003)(261021121427099003)(261022105027099003)(261022075727099003)(261021123027099003)(261009223027099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eWFjTndzY3BuM1ZEM05EWEVZcUFzeXB4aE9PNjlYWEdzRVVjMC9YS1o3MWZl?=
- =?utf-8?B?YzZPcHJaditldVJhM04wNEpzci9ESTZ2VWx4MG14d0xxb0ovL0xwa2h2SzFM?=
- =?utf-8?B?QTIvNDRUOHI5STNIU1dVZGdWZ1NPWGpRelZCaTE4MVNENDRSczBJRFc1eXRF?=
- =?utf-8?B?anFPMkNQVmtuQmpFcTB1UjVUajhuYlFHSkpyVzZvQVpIaVk3dE01YUZ4V1ds?=
- =?utf-8?B?S0FtMGlKSFc3alRPWm9GT3VWZyt2NGxXNVc3Ykl1bVcrcXp0MERNd0RlNTNl?=
- =?utf-8?B?czlIbmpsWUpWNWdqSzMzWFZvYW1VRzhnR0I5WTJEa2J0Y2hnbnI4OFY5WElW?=
- =?utf-8?B?R00xSmU0Y3VTUm45WFRQbjh3Y3pBbUJjRFh3YUhhSk1pM05wSklMWml4Um9Z?=
- =?utf-8?B?cWdIaHhQNVplSi96aEd3bWZWOS96TFNUVkhFajhmM3o4NWZRVVRGaVFiajBQ?=
- =?utf-8?B?dGZXSFU1d2NmYW5HVitpMVBtSnNUaUJpQ0REczBIYUVRSE9rVzZxNUNPTlc4?=
- =?utf-8?B?V0lDdjV4QzJIL0hTNVA2WXhxYzN0N1h1THZQZDNZdVM0UmphdURmRlNIcWlx?=
- =?utf-8?B?VFpzbHNrdnJCWU5TaG1Jc0pKTnhXQ1JZQ1FBR2JhM1RiNkxJY1ZhUDNHNUlm?=
- =?utf-8?B?VEhFSXhuMUx6U1Q1S0RUVDAzd082dHhteUpSd29TZlJ2dlFScS9zSG1wcUs1?=
- =?utf-8?B?Q0tYNVYrK21QWFM0eit3eElic05sY3BvcUFVR0hUUHpjWVkvNnRMMHBlU05Y?=
- =?utf-8?B?Z3NwMjdGYjBrc0pTZ1U1OUZ1RXFYOVpObTBVdVl6bjJZOHhFUTVNQ1ZwaVRx?=
- =?utf-8?B?ZU4xMlZuenFMQXpyWXljNTBYendFaVJrYTF2TXdKVzVSM21GMHRVY3plZ29S?=
- =?utf-8?B?Z3dKTVJlb1FNenpjaHhWWHhxRXI1TG41UHI3amk1UmFvTUNGcTNRTkNqNzI5?=
- =?utf-8?B?aDI1aHlLZHRaTENJUmZDY2xsM0ZXaXJCRk9uQnN2djM3RWVpY0QrTDZNZi9K?=
- =?utf-8?B?NmtKaGZiYVdFRm5jcnZIRjByMnZYVVBLNU13UXQwL29jUG5FZ2NoVTkwb09y?=
- =?utf-8?B?OW1PV0loUWQrWlp4TFNjZVlveGg4WExRQmk0b1gxbEtrdHZsajdjR3VZVTBl?=
- =?utf-8?B?T1VhUGhkNjBkeFg3c1hGVlFBZ2l0d05kOWVtTk1vRFZkazBPeTVMUEFnNmFt?=
- =?utf-8?B?LzJlNUYyQ1h4L3ZaaFVwSXRtbnZHTFJPL00xd2c2ZjRFbm9UaVZIN01ubzYz?=
- =?utf-8?B?UkVhZ1hUbkRwd1g0dUFKWGZ2N1V6cFVTR0FIZ011QmROMXdUK2wwQ3MwWHk3?=
- =?utf-8?B?NmJnQnd2UURKNG5reGpyeDkvaWNHR3pKbWsvQmRJbHU1UzR5K3RzbFFRMlhB?=
- =?utf-8?B?aXl6Ukk5dHlhVi9GT2kyNHJvMHlxSXZFMGtKN2FJQXlHYkRTNEt4L2Q4emNo?=
- =?utf-8?B?TVNkOEtaRzh6TnJianRqb205UHR4aklGWFhWS1Vsc00zNDBsZVRGTmk0QmdD?=
- =?utf-8?B?ZHpPRDN4VUlOSVltb21ITUdBYUpUWHNQODM2T1RLQjNuZUFRQTFHaEl0aFd5?=
- =?utf-8?B?QkUxT0VUazZBOU1kVU1Ec3lXZmNyQ2RTMEM3WVY1dXR5QzNJbUdadWxjc2RO?=
- =?utf-8?B?blpFaXBtM2xQbk5PVmhmYmdwclRwaHZpcUYrOHJQT3ZBWm5taUhFREVkZk1T?=
- =?utf-8?B?R3BOLzFOU0FpNlBPQ1kzYXJoczlXYVQ3cXcyTUQ0aDREWUV0a3pmaE9oNkZl?=
- =?utf-8?B?ZFA5YmhNNkcwTGhUNk42OFR3aDl6UDZhVmI3K1ZsTHRBa2RKTGV0RXBQZGk0?=
- =?utf-8?B?SEJ4Zm9mWGFvVGpDUkg0ZzBVSk5jY1hTMi9MTDFpZG0xYjdEcVhJZ21KMjFM?=
- =?utf-8?B?U05hNEhQbW1uWUpVR2hXLzNhSWJWdC85UGFYTzNxNWFzL200ZVRhVXFlMjJ4?=
- =?utf-8?B?WDlFU292d2g1M24xMW9sRk1OOE9oMHBKUGxyVjlPRGFVUHgrcmtwSjRZK2Zx?=
- =?utf-8?B?VU16bEFvZk02ckZKVEo3dytLSkNBekZuQWt3RDVYMXpLRkZyclRYK2hWc21D?=
- =?utf-8?B?TzJlVzhjckZ2UmdWZjF5QTBkdG9ycXBOSWsyQ2dMQnp5aXU2cTNSemp0NlAw?=
- =?utf-8?B?cUErTk40NUt6aTNYRnNkVmRwNDNSZnRqbVYrMCtwVERVMWV3REg5WjRLY0xZ?=
- =?utf-8?B?RnFIdy9zdzRIeUdEVHF3aHlXUjhFYWZtTk5PcTBSU3N5VU5ydXFHV3ZOSkR5?=
- =?utf-8?B?SFh1VTJrQVpDeS9nSk1WUjg5SHdUa2J5TzJ3TTJkWWFyNUowQktSNGR5ZElH?=
- =?utf-8?Q?v077EA3heQG3+i51gM?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?T2E5YTcybjRQSkRLUW5xbzcxOUdvQlowUFA2REw4cG56VkNBYk9pcldIaUJQ?=
+ =?utf-8?B?cGxQRVcxOVIzQjl4VklRQ0MwY2g2U1Q2TWc1RzRnb1I2aGNLM240WVVQRXc5?=
+ =?utf-8?B?b1JLVmxBejRZa3YyYW5WMzRsdW1OZTJUTEN1cGhkNlhlSEwzU1ROOEpXaWZu?=
+ =?utf-8?B?RzcwZDdSVjgzRnM4OGFJR3BQeTZSQnJ6ZFQzVVNuQnFpbm92WVlnbXZ1dndV?=
+ =?utf-8?B?Um5UUzdibzIxWlZrM1V3OHBqb3QzVHhuVWdqN1pMYVVZeUd2THQ0U09XSnJj?=
+ =?utf-8?B?eVR1NWVaSjJRdFVqZ1JUTEVRb00rcG5IdHQ0bWlmNi9xT011LzdUbDdGVzJP?=
+ =?utf-8?B?SFZCc3kwNXQ1UGlEQ2czU2E3aVhDK3llVzhFckNuZWJ0MW9jSFJZYXdDVThN?=
+ =?utf-8?B?TGhOR1FHQVlLM3Y3Q21CTmFTdkRmT0lnS3RaVUZXSjhmbnl6ZVhwMmpCa1VL?=
+ =?utf-8?B?cGlVRHdoN1UzczRtQ0c3SW5vV09wN2tlMGFkMGQyaWpHN2FEVHlSWmNXTHZZ?=
+ =?utf-8?B?M3lxRXBSNUwzQUVmaTA3WnpiOGVWNFRaQ2RYTlNLQkoycFpPWFRTNy93cDhN?=
+ =?utf-8?B?bUtPQ2Z2Z0lranlLRWk2M2V1emZFWVdHcVJ6NTdDSGVWUDRXTDZMZEhuYmxo?=
+ =?utf-8?B?anNQU2d6TklEZTNZZFZHUGNQVWx3bHc3OUdvWElES3puVGJNVGd4Y2g5V1VK?=
+ =?utf-8?B?ZkJ5aUorQzdnd2YzQk5LYktOOWtYREpuM1crUTFGZVFIYVhsVER2VkFiMkRL?=
+ =?utf-8?B?dFZaSk96akJ4OTMwQitjTkZqd2hnL1l6bC9LUlhSczQrQzlvVDBkSjNDMnEw?=
+ =?utf-8?B?b2NhWEdFOXcwek0zRFluN0FWcnF4NmdwUzlDRnVkM2NkcmluZTdOZ0NsSERC?=
+ =?utf-8?B?OVdUQjAyV28vZnUxcnljcGZyeTJkTGMvVlM0VWtCZ2ZqZDl4dFd3OCtlRVli?=
+ =?utf-8?B?RjNRSHlVYzF4QWtIdWVDV3UzTldaT1dkUWdzMTlVRFFnbElsMlhLMENoZmts?=
+ =?utf-8?B?OVIrNTVoS0ExMWRoRVpzdUtDZEx2V1Y5N043YmtDdjN4RWl1Zi9DbU0xOHBx?=
+ =?utf-8?B?eVN6aHBiMzFZdkUwd29oakpkYXFxREViOENBTis0WktPZkpmamNmMncvUytS?=
+ =?utf-8?B?czR0Q0RvYXBZV2V3TGREYUY3SXNhNzRGaGdxZUZib3VPV2g2NnF6WCtpaFFr?=
+ =?utf-8?B?dlJEMEVrMC9ZOEo4NkJKQ0ZQZlFCM091ajBMdjIyUlZUQ0JVdElHRzJWWTRU?=
+ =?utf-8?B?NDNIR3JnMTVaTDBxU1FDOTdOMjJTZWxYZmh3UUFSeWs4MjY0MVF5NmZMOTNF?=
+ =?utf-8?B?ck42ZzZCNEw3VGUveitFdDVtUkpCdUN6aTlJNDFyWUFsbDBGRjl2WUNtQURW?=
+ =?utf-8?B?VE5sL0NuL1JTdG1wVFBQWmpPZkw1QlF4ck9hMGNucTR0bmNkUllKWHF5YlE5?=
+ =?utf-8?B?Q1ZIN2gxZ2pmaWgvZ2JvS21iYkhJbWdaMEczLzlEa2FNZmc0NXd4OWg5YXVU?=
+ =?utf-8?B?Q3lFeGlsNEZQanZkR0lyTlVuUVM3M24xQjMyN1liVDRFVlF1d0hXQzhrZGxi?=
+ =?utf-8?B?dHRsVXhBZWp3MkFMTGF6ck51RjU3QU5DQUZSNVk0dDVzYlBTT0UrbHltMzlr?=
+ =?utf-8?B?SVRJU3UrOVVzdEJzOVk0eUd4NUp1RGdBb1VUMkhTNU54UktZeXRoQ05jK1BZ?=
+ =?utf-8?B?elBKSkN5UlNuYmVMRnlVdE9VOUlQWW5sd3B2RVVBWmgzTmRXejcydmFqdk5L?=
+ =?utf-8?B?S21CRE5GL010UmJjWGRTdW5DOVFWSGZmd2NIdHFJSEhsSm1xdGgra0s1SVla?=
+ =?utf-8?B?K284Vzdya2dhQWZERVE4clZSZGc0Q2ZoQi9rT29wdGp1d0tkVmxYVnZUNjZi?=
+ =?utf-8?B?WElLamtCZC91R2U3Z2ZycUFiRkE1TG5PdGNnSk1JejlPV1JTRDVoa1JibFpx?=
+ =?utf-8?B?Q0VZQVBZRFAvdHlkOGd1Q1F3ZHdrUkdjclNPNDhZT2F1NEJ2K0dRZ1ViYnJX?=
+ =?utf-8?B?WkhVM052cm10ZHVQaVpSK2t6Unk0WXhIUklmWnVuVHpDQXJWR1k0V1RpTXpu?=
+ =?utf-8?B?dFlORTlHS3hlVnFMZ3hZV21ka0p4ci9aUTh2ekwvT1djb0lLZlBWUWpkRFRS?=
+ =?utf-8?B?d1hyYmV5aTJLSkZrbkE3aXpSSFJ3S0QwYUs2anozSkl4NW1OSUxwSnFTTUEx?=
+ =?utf-8?B?Ty9oY25tcWhyZGE0MmxJcktEdEF1Y0Urb2gxbXZrSXZCajFnd0hyNVVtQjAw?=
+ =?utf-8?B?b2IrR3FUREQ2Wm9neVFUZVUzQy92VVZTZWhnalVUYmhkbUVZSHpjbGtGbjRM?=
+ =?utf-8?Q?gI8jVTYGVrSIA+qtMc?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79cefca3-0ccd-4580-8f49-08df36a97223
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4dcf4974-f4d9-4917-6f99-08df36aefd39
 X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2026 17:15:50.4055
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2026 17:55:31.1995
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aX4zk400flKWjrO1eitTIt2cgIoUwMZ1IWQjJxTUnQhomGQP8f/wWP+rE0gaAaFs
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8047
+X-MS-Exchange-CrossTenant-UserPrincipalName: mYevNH66hkvMYw9k7TMVYMuKZFSc6CTOJnOn8pIE0pMHHJQyB5YpobiHadth3sN8
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PHXPR12MB999255
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261030_101614_005798_327F2142 
-X-CRM114-Status: GOOD (  19.30  )
+X-CRM114-CacheID: sfid-20261030_105539_589811_02EAC809 
+X-CRM114-Status: GOOD (  14.70  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -182,63 +182,53 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
 On Thu Oct 29, 2026 at 4:33 PM EDT, David Hildenbrand (Arm) wrote:
-> invalidate_inode_pages2_range() skips a folio which no longer belongs to
-> the mapping by the time it has got the folio lock, on the assumption
-> that somebody else has removed it from the page cache. But the folio may
-> have been replaced, and then there is a new folio with the same data at
-> that index.
+> From: Josef Bacik <josef@toxicpanda.com>
 >
-> For most cases, like folio migration, that is impossible. However,
-> collapse_file() only checks the refcount of the old folios, under the
-> i_pages lock, and relies on their folio locks from there on. That works f=
-or
-> users which repeat the lookup when they find folio->mapping changed.
-> The following scenario is, however, possible:
+> memory_failure() -> ... -> filemap_remove_folio() can read mapping->a_ops
+> after the inode has been freed. Once the folio is deleted from the
+> pagecache it no longer pins the mapping, so after i_lock is dropped
+> e.g., a concurrent final iput() can evict and free the inode before
+> filemap_free_folio() looks up mapping->a_ops->free_folio.
 >
->   CPU0 pwrite(O_DIRECT)               CPU1 collapse_file()
->   kiocb_invalidate_pages()
->                                       read the folio (old data), lock it
->                                       refcount check
->   the write completes                 copy to new_folio
->   kiocb_invalidate_post_direct_write()
->     find_get_entries() -> old folio
->                                       xas_store(new_folio)
->                                       folio->mapping =3D NULL
->                                       folio_unlock(folio)
->     folio_lock()
->     folio->mapping !=3D mapping
->       -> continue
+> Most callers hold a reference on the inode, but not all.
 >
-> In that scenario, the collapsed folio with the data from before the write
-> stays in the page cache after the write has returned.
+> Documentation/filesystems/vfs.rst explicitly states that ->free_folio()
+> must not assume the original address_space mapping still exists.
 >
-> This used to be impossible, as khugepaged only collapsed files that nobod=
-y
-> had open for writing.
+> Fix it by loading ->free_folio while i_lock is still held, similar to
+> what folio_unmap_invalidate() does.
 >
-> Restart the lookup at that index, like shmem_undo_range() does. The same
-> problem seems to exist in truncate_inode_pages_range() as well when
-> truncate_inode_folio() fails, so handle it there as well, but slightly
-> differently: simply check once more through find_get_entries().
+> Inline filemap_free_folio() into its remaining caller such that
+> delete_from_page_cache_batch() also just loads the callback before
+> dropping the i_lock.
 >
-> Fixes: 1b6444331beb ("mm/khugepaged: enable clean pagecache folio collaps=
-e for writable files")
+> The bug was found by code inspection and has not been reproduced.
+>
+> Fix generated by an LLM and sent by Josef Bacik in private.
+>
+> Fixes: 59c66c5f8c4f ("mm: factor out page cache page freeing into a separ=
+ate function")
 > Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
+> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+> [ david: get rid of filemap_free_folio() entirely; improve patch descript=
+ion ]
 > Reviewed-by: Rik van Riel <riel@surriel.com>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 > ---
->  mm/truncate.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
+>  mm/filemap.c | 29 ++++++++++++++---------------
+>  1 file changed, 14 insertions(+), 15 deletions(-)
 >
 
+Makes sense.
+
 Reviewed-by: Zi Yan <ziy@nvidia.com>
+
 
 --=20
 Best Regards,
