@@ -2,56 +2,57 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17ED4606A31C
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 10:22:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4A460A2621
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 11:11:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=H2MOguxb;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dwBFosyH
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=bU6dR/vn;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ewkqjIeb
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=o+kaUtC8ovQj6xhHRCbmiOuasEe9YC6Zr5iT5M2eCM0=; b=H2MOguxboczuKk
-	ZZTpaUsu0+BuaQfo/KONME/YcxfJO9XtgWwdODJILbQlvXxKmaiv17j0cP4BK8nbph/JoNtPnuzHA
-	w59YUcoULHD81ECLbaxKMM24ZD5XzNjlGy3dioPHRCnj8jx6MfKItwHgixl2hB3nunb4Pwzy3F+W5
-	m6/axJ5Vb4HFDIpiBbu3yRsTA7c1S2v2ZS2LbOOC+RB9rwnX6Bdj59Bj86O3nnJx4oU3AQWqeVUCX
-	Gc0oFbYtxw8Hk9vpPMEjDOKTfD/4nrKK15hYBiqWu0G0eszLYEEXqdl/7huJirVM+W3mTc/MlxE9z
-	HCrJLqfqw/+3wzhgnuxQ==;
+	List-Owner; bh=e5NnHqFGh2WLk8KpW0BJvN7IH3ve0Yj4mZZ8fp9OtsI=; b=bU6dR/vnPhPSpN
+	atL5Bzth0JbNkhg9VCHQQ8TINeq1e4yHfbFWLliqGTfq8RDMuZtpbUZec5MHgYwANk55443P7vgHL
+	mvKoFuzMWDo05u3Y6h3uZ0R5rpq/iOn9USBymIgI85laMsBe1LQOpEcGf1eU4XtqY4uLhs7KmhRLq
+	gfvLoO39Fgf5jFzmr/YTPB3qQB1R1Hpc9VMjcHHgSJGSV0DqUrLWTg9htBjnf3RBEzIOexTRgzib6
+	br5LTYJRDgj1oy8SHoEe36u1hRjS1JOu1tzFlQmLGEpxkElt83Ft8vEJ7YT1LcwACkfpzD5b/Cj0X
+	hGf0o1eKrEQodig2rn7w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMjkS-0000000BNc4-2cVJ;
-	Fri, 30 Oct 2026 10:22:12 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xMkVo-0000000BVY5-1Ukz;
+	Fri, 30 Oct 2026 11:11:08 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMjkR-0000000BNbn-1WYN
+	id 1xMkVn-0000000BVXM-1INq
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 10:22:11 +0000
+	Fri, 30 Oct 2026 11:11:07 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 0B3C560092;
-	Fri, 30 Oct 2026 10:22:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00F301F000C1;
-	Fri, 30 Oct 2026 10:21:52 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 8DA5843989;
+	Fri, 30 Oct 2026 11:11:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22FC11F000C1;
+	Fri, 30 Oct 2026 11:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793355729;
-	bh=o+kaUtC8ovQj6xhHRCbmiOuasEe9YC6Zr5iT5M2eCM0=;
+	s=k20260515; t=1793358665;
+	bh=e5NnHqFGh2WLk8KpW0BJvN7IH3ve0Yj4mZZ8fp9OtsI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=dwBFosyHJNEN/VlP9Ae3KU8sfJ1VpcWyMYJG0hYheIRJZb8LD62PaQRkm1G0V2DOU
-	 /thDolVwbKVJ+f+WEKxynk73Tq8txa/etK+tLb/fptp+mzUo+CQq8mvhbO0P5f+/p9
-	 Nq/8/AzFmw5eWg9Jj0YW8MDMjUYo6UKlKavvcEB81ku1e5o7qQqsCBV7gvspaDsMz0
-	 Jz/HAKpj8ZfulPBeQbw9kwQpzl6Et707A+yl1grA0FZJghBafUgkNkE2fQ8DGj/ZPB
-	 gVCz8+83ggGBl0JMUrrgr16/dml/0dpNWJghy7sr9pH48z+QkBdbe20lK5K6Qhd0Y9
-	 WzTTotFpshtjQ==
-Message-ID: <6d679adb-a866-4a76-b9ea-3b8c64171fae@kernel.org>
-Date: Fri, 30 Oct 2026 11:21:50 +0100
+	b=ewkqjIebBvhym6IB3Ksl7IZW4E3WWrG+/4yOGfUUwfsfHMqgAdiGfPsLito4NMzH+
+	 3X5GTmTwRVzbBuN0IMwDqw+qwS5ZG1TkZy22Bl6SI2a2ruWcosBrFpeUBZwQ1+X86r
+	 2XsLssw2rnRioIhlsH3cexrza2qXr4bBiLO7ocs8u3A+E/DxolzLiaKG/WTEJdrZmV
+	 j3bSQu7F+PpI5upb84fHqRT4ETg6Pm/arVNg449Goy2wT41T8MsfIsurdfVxOe8Qwv
+	 dw++8VuLquwqT4MD8BXS6SL+v+RwX048NJm6rMxUecQ/wWmEsk2BQT0mxJGwf0odE4
+	 9x6mq7eusSUaw==
+Message-ID: <ef51420b-0260-454f-b08b-f4e5a3da6e20@kernel.org>
+Date: Fri, 30 Oct 2026 12:10:47 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/47] mm/mglru: don't use stack pointers when walking
- PUD and PMD tables
-To: SJ Park <sj@kernel.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+Subject: Re: [PATCH v2 14/47] mm/huge_memory: fix zapping migration entries
+ for device-private THPs
+To: "Gregory Price (Meta)" <gourry@gourry.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
  Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
  Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
  Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
@@ -79,14 +80,15 @@ Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
  Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
  Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
  Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
- Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
- Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
  linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
- stable@vger.kernel.org, Muhammad Usama Anjum <usama.anjum@arm.com>
-References: <20261030002004.154595-1-sj@kernel.org>
+ linux-cxl@vger.kernel.org, Chris Mason <mason@kernel.org>,
+ stable@vger.kernel.org
+References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-14-a64ce7f83abb@kernel.org>
+ <179331304801.2127828.6570375349219520262.b4-reply@b4>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -133,7 +135,7 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20261030002004.154595-1-sj@kernel.org>
+In-Reply-To: <179331304801.2127828.6570375349219520262.b4-reply@b4>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
@@ -146,31 +148,51 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 10/30/26 01:20, SJ Park wrote:
-> 'get_maintainer.pl --nogit --nogit-fallback' suggests adding below recipients.
-> But I can show there are already quite a number of recipients, so I'm just
-> noting here.
+On 10/29/26 23:30, Gregory Price (Meta) wrote:
+> On 2026-10-29 21:33 +0100, David Hildenbrand (Arm) wrote:
+>> From: Chris Mason <mason@kernel.org>
+>>
+>> A PMD migration entry can refer to a device-private folio.
+>> zap_huge_pmd_folio() checks the folio type instead of the entry type,
+>> so it treats such a migration entry as a device-private entry.
+>>
+>> Installing the migration entry already removed the reverse mapping and
+>> dropped the mapping reference. Zapping it must not repeat those
+>> operations. Concurrent MADV_DONTNEED during migration back to system
+>> memory can trigger this.
+>>
+>> Check the PMD entry type using pmd_is_device_private_entry().
+>>
+>> Fix generated by an LLM and sent by Chris Mason in private.
+>>
+>> Fixes: 368076f52ebe ("mm/huge_memory: add device-private THP support to PMD operations")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Chris Mason <mason@kernel.org>
+>> [ david: simplify description ]
+>> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 > 
-> - Brian Geffon <bgeffon@google.com>
-> - Oleksandr Natalenko <oleksandr@natalenko.name>
-> - Steven Barrett <steven@liquorix.net>
-> - Yu Zhao <yuzhao@google.com>
+> One note below, but it's not a holdup.
+> 
+> Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+> 
+>> +	const bool is_device_private = !is_present && pmd_is_device_private_entry(pmdval);
+> 
+> pmd_is_device_private_entry() already returns false for a present
+> pmdval - so !is_present is redundant.  If there was a reason to open
+> code this, then keep it, but otherwise you could drop it.
 
-The CC list was so long that I limited it to people that area either a reviewer
-or a maintainer of code.
+Ah, softleaf_from_pmd() takes care of that. Yes, let me drop the is_present check.
 
-MGLRU not having any real maintainer is a big problem; because that maintainer
-would know whom to CC.
-
-Thanks!
+(I'll double check that both are guaranteed to be consistent; but otherwise we
+might have a bug already)
 
 -- 
 Cheers,
