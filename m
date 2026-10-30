@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D804C606A31A
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:42:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C478606A31A
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:42:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=iZT1DzHM;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FWAH9XrR
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=VSIpLxAB;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ka7UXsQh
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=8vt3r0dV4H78MyX5tyofuPfjl2FfIwvVkisCW8E4akc=; b=iZT1DzHMev5d6yRMbd9uliuKud
-	EqCdxlXhyJ/HBZWPHSXzfKmbuaaFJ+Tbd27VXxsFXFUvy8s0PwCzwKKRjHxxYfz7Z7UwqsJxxYO+o
-	8AMRyAQGgLcf9Kh5IMORea065v/SckCkMgvR+lRc1vXEokPJ2JKueeLMuSLMF6IxG5BGhj+tns7LW
-	Kn/pMVoIE/cHAB/rzdtfBL6wQRkqgCDrFqTcN/25EL3s+uLwBmdG4KEeLak5/xuBBCOKXs+f+NftE
-	qmxp68K4WrVF6gbF1/Zj63DhVcdrSzk8CXPvIieTISNUxTY1szwIqX928wjD015o9ydGQuEkIk5yQ
-	w1vViagQ==;
+	bh=IIJ6xEqRSmc3P/njmK7rvcrkOwirvqwv8tVhsJQABX4=; b=VSIpLxABTccO69LFPxCpfmf3Jy
+	H549001I4zLAnpVj7981fqVLezc9ppHGSYGsivxkkdA4B6Xcwn3VA6B6oKCBgTnBal/TjJRH4zWhV
+	5og+zWcLqQJMhhiI0+FjccS89LBIuFcr7MAmHK9vn8X2Fzg5bGNVV9ux7e5sOxyAAFGBmf0Cc+0Ec
+	ZHKEqaRPB25rCVLPAMXc/ogvcid2VInacqfoRtQvImZyIIPUEB14C60G34CXvZ2WlWoWfV9HWrmKn
+	a/bhd69nda45YwWkAuNvya/vdjaM5tAP3G9+o+YrxubkFFZr4tcbr8CVpsCgD5WiuZGTnd4mPOcuq
+	7gi5jBhA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdVJ-0000000AktV-1cjd;
-	Fri, 30 Oct 2026 03:42:09 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xMdVO-0000000AkxN-0j3z;
+	Fri, 30 Oct 2026 03:42:14 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdVI-0000000AksZ-1qWF
+	id 1xMdVL-0000000Akuw-0h0G
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 03:42:08 +0000
+	Fri, 30 Oct 2026 03:42:11 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id DA112600DA;
-	Fri, 30 Oct 2026 03:42:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 087E21F000C1;
-	Fri, 30 Oct 2026 03:42:04 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id E52EC414D7;
+	Fri, 30 Oct 2026 03:42:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27E631F000C1;
+	Fri, 30 Oct 2026 03:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793331727;
-	bh=8vt3r0dV4H78MyX5tyofuPfjl2FfIwvVkisCW8E4akc=;
+	s=k20260515; t=1793331730;
+	bh=IIJ6xEqRSmc3P/njmK7rvcrkOwirvqwv8tVhsJQABX4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FWAH9XrRqNGdlVz48bcrq1+V5ulr2ptkvsIlZv5tR/SewdcA21FsGI0sfWCkvVI3w
-	 vlZOqqLr+j9nIeY+r0UDa3P2h7Q8UiJbj4R49KdyHvM8I8t5Bx8eIxo60ZNwaiXqFx
-	 Y3iBdeEohDmXI2JWsVCBX5AAC9biHBcL6LasvitQ7iZjN8Nhic1aDM46tk/4kVj0cI
-	 CFtbDbBIvz1de83W7IN6d+cT8ZDpS2FoXR0BjGFTOljQaxJMsf3nd40jpRiWL6JvJC
-	 rLwhFuy3EFpWb6KcaqEEIbuaDvsVdFJMGeAliDDa+yJCUdrw/xyg+N6MupITSmvtuj
-	 HPuLFoQNb0ivg==
-Message-ID: <sashiko-outbox-190263@kernel.org>
+	b=ka7UXsQhDWZeJmR/suhEgkW5bO0Pa2Frrr3UWVJxiTfY2zAtb0YAR97r0+vybzIYH
+	 XiCOQGtR/AkdqEbjxD8vX9gnW6i1f9dzk9gzExvKhwwZ6/zY27gefccO91ciXjoqel
+	 nvzDvOu+QxrV4K1GDdSlMi8jZxJ3FVUtiPVhHD2YllaT6T+N8nQMJJMqfLK9lm2wQ8
+	 ohQ6gVRvEjZ8oIZ3WQmbplEYlkmX1bQDK9PbGYKxYxf++oSm5HQe7hjIZvZAdKTf9a
+	 vCZNn7ZkH7Ql7xIa5QqMxuDYq63tXQVBRPN8rx2au2bA38AWBZmwTEVBUWfjoelgTP
+	 l6CwYrAWJ5Jow==
+Message-ID: <sashiko-outbox-190264@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 35/47] mm/memory: reject remote COW faults on PFN
- mappings
+Subject: Re: [PATCH v2 36/47] mm: fix unmap_mapping_range() beyond 4 GiB on
+ 32-bit
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -74,13 +74,13 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org, "Chris Mason" <mason@kernel.org>
-In-Reply-To: <20261029-fixes_core-v2-35-a64ce7f83abb@kernel.org>
+Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
+In-Reply-To: <20261029-fixes_core-v2-36-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-35-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-36-a64ce7f83abb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 03:42:04 +0000
+Date: Fri, 30 Oct 2026 03:42:07 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,34 +100,25 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> From: Chris Mason <mason@kernel.org>
+> From: Josef Bacik <josef@toxicpanda.com>
 >=20
-> When handling a COW fault without a normal source page (PFN mappings),
-> __wp_page_copy_user() copies from the faulting user address. For remote
-> faults, this accesses the wrong address space, resulting in wrong data
-> getting copied.
+> Commit 9eab0421fa94 ("mm: fix unmap_mapping_range high bits shift bug")
+> made holebegin and holelen unsigned before they are shifted, by casting
+> them to pgoff_t. That is an unsigned long: on a 32-bit kernel the cast
+> cuts off the upper half of the two loff_t values, so a hole which begins
+> at 4 GiB or beyond is taken for one in the first 4 GiB of the file.
 >=20
-> For example, user_events updates an enable bit in the registering
-> process's memory. If that memory needs to be faulted in,
-> user_event_enabler_fault_fixup() calls fixup_user_fault() from a work
-> item. Placing the enable bit in a private PFN mapping can trigger this
-> remote COW path.
+> truncate_pagecache() passes the new size of the file and asks for private
+> COWed pages to be unmapped as well. If a file of 6 GiB is truncated to
+> 5 GiB, everything from 1 GiB on is unmapped, and what a process has
+> written to a private mapping of the range between 1 GiB and 5 GiB is
+> lost: it reads the contents of the file again.
 >=20
-> Reject these faults with VM_FAULT_SIGBUS when the target mm differs from
-> current->mm: remote faults. Ordinary (non-PFN) mappings are not affected.
->=20
-> The user-address copy dates back to commit 6aab341e0a28 ("mm: re-architect
-> the VM_UNPAGED logic"); likely, actual ways to get remote faults in
-> there on COW PFN mappings appeared afterwards. But the fix is simple and
-> straight forward.
->=20
-> Fix generated by an LLM and sent by Chris Mason in private.
->=20
-> Fixes: 6aab341e0a28 ("mm: re-architect the VM_UNPAGED logic")
+> Where the range has an end, the wrong range is unmapped instead of the
+> [ ... ]
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Chris Mason <mason@kernel.org>
-> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> [ david: simplify comment and description ]
+> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 > Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
@@ -135,6 +126,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-fixes_core=
--v2-0-a64ce7f83abb@kernel.org?part=3D35
+-v2-0-a64ce7f83abb@kernel.org?part=3D36
 
 
