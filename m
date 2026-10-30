@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AD2606A31A
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:41:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03510606A31A
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:41:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=csojoJO6;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CBY4cN8r
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=OkMbe3JP;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CrdAShBd
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=h3wIpY6vHa1RWex7hAszkeoTd27MCJIXZVzzxBnwc/g=; b=csojoJO6rA1R6gQoUijhnvnypc
-	6oxKazft4EEds+t5dMblg0AnmSTzyOpr1XZUMajtGcKhG2doQQDIX3jb7PCHcv3AiI42a0PN+rf5Z
-	Ks0LabxJQ9+XO0jKXkQC4PzrJ8Tz2taLbQcHgkD0v+JzyYf+Tc33B4imwK7EJyOGlv+blBY/CQ4KP
-	fwHFNVduYMtXvxt2D+tXctKig6nDwIFliaGZavBJcw7+igWhOs8XXL7G3kUnFiUUeaXFE9sqDFJ3P
-	M3U2zYTshTO/RCZ1sbb9Llr5uTGRcM0cq3dPWU4+RL3Ug3Mmk6l1FIITQEdKBddj67+yonl49pGrn
-	CdicsPOA==;
+	bh=zCVih5uUzlXaogzU6GoQX8A4XwUbRTR1pBAFwZRAjzE=; b=OkMbe3JP8t7Krahnf4tpHjbYGu
+	9GtWd0Z89auHIkGPJFfHbZRKz7QUdubnPpY8uR9nOmt9XIeNrqQ+cRgfs2zoY3YHsyHfVQuCb+WFQ
+	X7WCaZsU8+HlCvFxEkxhv4sHq7nejZeOpdluTYaa6pq6ns3EhNYbp4ZtjHdD5s6ot0rTI+JZaVd0X
+	zJfLJ4TlWyxxiJX72Ow2OgdEyuWs6tN3SIMNBZ5moPBN6GoD3JeqnhN7owZGMYMx19gV0NUk0Leug
+	QQy/vqByz+bXbRmZxm/+K7OvK/Tf/b1ZKjUJ6T0jTsCnsI+OWJ0KDVPsek8aIHRIn78nwirgMnnAT
+	9x017TUg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdUO-0000000AkI4-16MM;
-	Fri, 30 Oct 2026 03:41:12 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xMdUR-0000000AkKZ-2dd6;
+	Fri, 30 Oct 2026 03:41:15 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdUN-0000000AkHQ-1uic
+	id 1xMdUQ-0000000AkJa-1986
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 03:41:11 +0000
+	Fri, 30 Oct 2026 03:41:14 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id DF606600E4;
-	Fri, 30 Oct 2026 03:41:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF0391F0093A;
-	Fri, 30 Oct 2026 03:41:07 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 004424004F;
+	Fri, 30 Oct 2026 03:41:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 185691F0093A;
+	Fri, 30 Oct 2026 03:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793331670;
-	bh=h3wIpY6vHa1RWex7hAszkeoTd27MCJIXZVzzxBnwc/g=;
+	s=k20260515; t=1793331673;
+	bh=zCVih5uUzlXaogzU6GoQX8A4XwUbRTR1pBAFwZRAjzE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CBY4cN8rY6OoX25Sb46cpjYcjtx+96UO7PE2C8dcFhDa5iEyKG/jQXLVXnuupS1zJ
-	 cyCqIx8TKhOSv18T8DnIKNH/jXNSBIQ6mZyT5Xv5Fbpi7QhMv4gp4KfscAP0Tti0VQ
-	 W0BNx5jQcFJeZgcgyyCQXl8GEhvO3ScenA39n6FByExdi8VhYbpLPKZSxHe1+o2umX
-	 vpbSxLT338Qx55OKvYdQBv9WgcfdAI42/atrt2mF1Cpm15oSGUR89p/Ms+42RVoy7m
-	 4T3PSNhsBqAwBNofo5wi7yjzBTOgERJWM2p7gfVivdf3HDu94baYIyYdXimoKDR385
-	 au10aj1iCSL/w==
-Message-ID: <sashiko-outbox-190246@kernel.org>
+	b=CrdAShBdm0HkATudVT5TpybjgMmtOrUSMTmONwPIdRXkJL2+sYIRQrR0WHgKtZY8x
+	 bT/rKkT2crhcVmJoS9WKRcyOExgx/NWZlxMIDTxvs+4u7ZrYi/j55rfmXV90lWl4Ob
+	 +HtPojNfdVyQeyDoi6DFUgSMhexSgXYrXp0V0xIcyOw2mT4sWnZEDK0v6/Ld1mkXXg
+	 tChsOthmGBxe9CP4lSpuA/ztiWHIw5rnrm+kQ8lazAgXoIpXz5jRHuu6CqQ4Fs4jrK
+	 YCJHEer85QiDcPEaoiPSIJwSvq1TrlhFAqPMII50w2hWIsSRkWMkFS5AwZZp0DQq6d
+	 ztvThStZeRQ1Q==
+Message-ID: <sashiko-outbox-190247@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 18/47] mm/khugepaged: check if PTE table is empty in
- try_collapse_pte_mapped_thp()
+Subject: Re: [PATCH v2 19/47] mm/gup: recheck the PUD under PTL in
+ follow_pud_mask()
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -74,13 +74,13 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org
-In-Reply-To: <20261029-fixes_core-v2-18-a64ce7f83abb@kernel.org>
+Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
+In-Reply-To: <20261029-fixes_core-v2-19-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-18-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-19-a64ce7f83abb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 03:41:07 +0000
+Date: Fri, 30 Oct 2026 03:41:10 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,38 +100,32 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> The existing code is rather horrible and already resulted in bugs in the
-> past: we special-case UFFD inserting anonymous folios by grabbing the PMD
-> lock early, but ignore any other markers (guard, poison through uffd) that
-> could have been inserted into the page table in the meantime, effectively
-> dropping them.
+> follow_pud_mask() reads the PUD without a lock. If it is a leaf, it takes
+> the lock and calls follow_huge_pud(), which reads the entry again, but
+> only tests whether it is present.
 >=20
-> Let's just unify and simplify the locking: try to grab the PMD table
-> lock and if that fails, flush the TLB, drop the PTE lock, take PT locks in
-> the right order and check if the page table is still empty.
+> A leaf can be zapped concurrently and a page fault can fill the empty
+> entry with a page table.
 >=20
-> We still perform the heavy lifting (zapping the folio ptes) under PTE tab=
-le
-> lock only.
+> This currently only applies when device-dax makes use of PUD entries,
+> and the fault after e.g., MADV_DONTNEED would find THPs to be disabled.
 >=20
-> Include <linux/hugetlb.h> for now, as x86's flush_tlb_range() macro
-> depends on hugetlb helpers. This dependency needs a separate cleanup.
+> That requires a sequence like
 >=20
-> Both issues this fixes are rather corner cases. Let's not CC stable for
-> now.
+> 1) Fault in the PUD
+> 2) Disable THP
+> 3) Have GUP race against concurrent MADV_DONTNEED + refault
+> [ ... ]
 >=20
-> Fixes: f807123d578d ("mm: allow guard regions in file-backed and read-onl=
-y mappings")
-> Fixes: 1043173eb5eb ("mm/khugepaged: collapse_pte_mapped_thp() with mmap_=
-read_lock()")
-> Tested-by: Gregory Price (Meta) <gourry@gourry.net>
-> Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+> Fixes: 1b1676180246 ("mm/gup: handle huge pud for follow_pud_mask()")
+> Cc: stable@vger.kernel.org
+> Reported-by: Josef Bacik <josef@toxicpanda.com>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-fixes_core=
--v2-0-a64ce7f83abb@kernel.org?part=3D18
+-v2-0-a64ce7f83abb@kernel.org?part=3D19
 
 
