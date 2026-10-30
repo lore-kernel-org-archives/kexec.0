@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D26606A31A
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:42:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AED8606A31A
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:42:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Bj5oFoC8;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TeNQ4doi
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=3PLYO5rf;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nP21Y2MO
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=1DVfW7WdRXw5HtUsrRdkHoFkqI0NXEN33s4RUMxp7iM=; b=Bj5oFoC8rc3dOt/bgH/AkITADL
-	m2cKZruV45NedVk1YZdyGuXyQjf2ET3QtlpR0v/eWJWMFRHRNQZnuNmO1/rJC/SJKvLOoKIPzVAKc
-	m/SYQBTHoy6uh3htKdGorf24BHEyjUmey0j4JIxgk16fW9A9Rq0NBZrjuvSJhbwkFrBabFSoyen3L
-	W0uBAmrRDCj9/s4Jk0WHXB3Lp4AgUBGcIc93KYotzwBrTUdlQR9cMk3ET4AKaax39K62DefzacEtM
-	CavK8penOPvBpSIENxodG+NaCB5pJw1N9MgV5Ol093+o5v6UnkSfAtAPkYn3SE4nWR31irM4YmerJ
-	P5rb8blA==;
+	bh=AiNk0l2rg2iXeiqwqVr+Pt9hVRxhcTvTMKbYUZzDWgA=; b=3PLYO5rfRLfxbSpOFOa1yY2LKI
+	d7sVL3i2ShMZ7qceRc6D4ArLUbbVbfl32Op1SecHx0XTrmzLANn44lPC561IuAS12c+XkKM7l9Pp8
+	uz5axkDTjEBNWwdjK2ecB/Nrb1NhgOb7T+TtUeQvM/f52gCFBmPNwZBtPARHxkoCcJsaSi7CYvplw
+	iz4xPP9ZrX9uhDHVe1ymdCTwRpPGl1m8v07z6e4hEyBVb/OEzHAdEzEP4bC14UjErdBRvMgxGGfkG
+	1t1OXt/kiWhUMFQXc2PMfd1aqn4+OeYBNzuA5ASl3uEnZvErkHE8FsPoMDd4i3qwYB3ZbYymxPVVM
+	TloQD4sQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdVQ-0000000Akyu-1V8G;
-	Fri, 30 Oct 2026 03:42:16 +0000
+	id 1xMdVT-0000000Al1W-3qAd;
+	Fri, 30 Oct 2026 03:42:19 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdVP-0000000Akxu-09FA
+	id 1xMdVS-0000000Al0K-1SJg
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 03:42:15 +0000
+	Fri, 30 Oct 2026 03:42:18 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 77FF2600DA;
+	by tor.source.kernel.org (Postfix) with ESMTP id C5B97601EE;
+	Fri, 30 Oct 2026 03:42:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC88C1F0093A;
 	Fri, 30 Oct 2026 03:42:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 496591F0093A;
-	Fri, 30 Oct 2026 03:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793331734;
-	bh=1DVfW7WdRXw5HtUsrRdkHoFkqI0NXEN33s4RUMxp7iM=;
+	s=k20260515; t=1793331737;
+	bh=AiNk0l2rg2iXeiqwqVr+Pt9hVRxhcTvTMKbYUZzDWgA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TeNQ4doiCdnPEYDurFBlfz5zzXkkj+GPRbNGCtLDonajEhLzJ4bHlI3O2RBZSy0cv
-	 phiHT3+BeLGhYoYeVOp78QlHNUEYtTfwhsKT4Bd6xMwTQSHe1JT77LPAF9k+uTeoo5
-	 1njnkt9PWuFkJVBhrh2h+UsOtDOn1gSRq2ddFAzp/dN3dI2F57aba4ZjEfhO4zYGUv
-	 yBFWGsD7a34U27x4X8DDTv4S2beaAUiaGbi8eOKZOiqtcaXIq3I1mXG0idbG3x1LaM
-	 ZKl38b60IqRUzaSGETPVUxTtwuw3NyCOL58o2PQRD0WBIM3zr+ykll4qRPR0XHFViH
-	 w19tjiUTr4RoA==
-Message-ID: <sashiko-outbox-190265@kernel.org>
+	b=nP21Y2MOWKX5mNXosilZovGfoMu73QLkmpDaQu3AQc9yBLmIVwaajAnArjy8fdCCR
+	 tJzR9Dw5EQCc2Tjtx4OZXhdkfkVxjffLa1dL0GQobtvmbxX3tQxEZ4ByIduzu3rYPK
+	 inNZdP108nzRUpr6Twox8qw9FqhKtPRiPJpnkFqkhJrRMlZxhpDZqGj4wylHzFe046
+	 98HI9LqMwVoOrxRHu3Nj2RXFtOH8dnmMvT4d81dHDmXSVnclqIPxOvQ4F/p2mvKTMx
+	 ykwfAvp7f79G1KxMJOJwYX2BL9Yaa1woK4+DRoumyJdwQ7jPdR0AJ2LTUX6Fc1JGKY
+	 M0lLt6hwsI1Nw==
+Message-ID: <sashiko-outbox-190266@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 37/47] mm: fix unkillable fault loop on MAP_DROPPABLE
- memory
+Subject: Re: [PATCH v2 38/47] mm: fix deadlock of mremap() against
+ UFFDIO_MOVE
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -75,12 +75,12 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
 Cc: kexec@lists.infradead.org, "Chris Mason" <mason@kernel.org>
-In-Reply-To: <20261029-fixes_core-v2-37-a64ce7f83abb@kernel.org>
+In-Reply-To: <20261029-fixes_core-v2-38-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-37-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-38-a64ce7f83abb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 03:42:10 +0000
+Date: Fri, 30 Oct 2026 03:42:14 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,32 +102,39 @@ X-Archived-By: <archiver.kernel.org>
 
 > From: Chris Mason <mason@kernel.org>
 >=20
-> handle_mm_fault() suppresses VM_FAULT_OOM for VM_DROPPABLE mappings.
+> With per-VMA locks, UFFDIO_MOVE can run concurrently with mremap()
+> on different VMAs in the same mm. Those VMAs can share page tables, so
+> both operations can acquire the same pair of page-table locks.
 >=20
-> For user-mode faults, pending signals are processed before retrying the
-> access. Kernel-mode faults on user buffers instead return directly to
-> the faulting instruction.
+> UFFDIO_MOVE orders the locks by address, while mremap() takes the source
+> lock first. These conflicting orders can deadlock; mremap() holding
+> mmap_lock for writing no longer helps.
 >=20
-> With persistent allocation failures (esp. memcg limits), a syscall,
-> such as write(), can therefore loop while not dropping locks.
+> Move double_pt_lock() and double_pt_unlock() to mm/internal.h and use
+> them for all page-table moves in mremap(). Preserve the source entry
+> checks after acquiring both locks. Remove the comments claiming that
+> exclusive mmap_lock makes lock ordering irrelevant.
 >=20
-> Only suppress VM_FAULT_OOM when FAULT_FLAG_USER is set, allowing
-> kernel-mode faults and GUP to fail and signal allocation errors.
+> In move_ptes(), make sure to just recheck source and destination PMD
+> after taking the locks and drop the overly-long comment.
 >=20
 > Fix generated by an LLM and sent by Chris Mason in private.
 >=20
-> Fixes: 9651fcedf7b9 ("mm: add MAP_DROPPABLE for designating always lazily=
- freeable mappings")
+> [ david: use new helpers consistently; simplify description and comments;
+>          move_ptes() fixup ]
+>=20
+> Fixes: 867a43a34ff8 ("userfaultfd: use per-vma locks in userfaultfd opera=
+tions")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Chris Mason <mason@kernel.org>
 > Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> [ david: simplify description ]
+> Acked-by: Muchun Song <muchun.song@linux.dev>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-fixes_core=
--v2-0-a64ce7f83abb@kernel.org?part=3D37
+-v2-0-a64ce7f83abb@kernel.org?part=3D38
 
 
