@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC8D606A31A
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:41:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF287606A31A
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:41:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=rvK89E9A;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n5wUI5FV
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=pIeTktjU;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jx9yhXxj
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,39 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=QEX9vlMNf/S5h2VpPXqypsfpqZC9bn2dXekRVGh41+I=; b=rvK89E9AOcdiPaGt6FRVUZugMd
-	l6DlnPzD43+1OgyS4b4HvJWb5l7P+Dl3hrWVRr6dPyyD0hnoTeC/3iS3M8Y+bjCDeoOcV2IRW+ioD
-	G5ABdS3u8HeGpjcsQdw/4G/atReDi4E7wqb4FGdx8KC40emII/epJLV50za9z3J65I2qPMwsHYIq3
-	2ir9iidRNsn1c0ACnCJckxvxokzUKEJPwq8iZms7Zi726gFRSUDmIQuPH0L4O4AiMAnKqOUQ4lW5G
-	8BfIE8R3XC64FfcQjMW+Zpe9Myg4Ui5alk3xHtskGQO108AQyQl8gU9RxrpP72E5enw9BVyuC3Qqs
-	Bd/yqkRQ==;
+	bh=q7aT8B/qtq4cNGSUSI/bfciBbXr63b2FO+ggiQLicMA=; b=pIeTktjUmQ2A3yOXKGPTtk9QP/
+	SZvpd/xmaNFF1xygnVGNNC+yE3zSt6w4Y+4Ct8BCYx/TfFEBzZnaKAxU/QfwuPxInNprjVx8VW6XV
+	RjEjNqlQj5FOdBwxbCRzAcbmLYLMFIu1/NHK0i+Cie1EFiEmV4wb9ydo4FC7lBbbBopwhR1shutJ+
+	Heqi3hF6HrSuFqGRwayfT2OwHPhMRFbKC8qikTcLrdZc1SjHrta3WzJB454FN4kfVEPspsxEr1usr
+	MvUKqWIcbXaQpVlcdIUWvntH3YnnqTtXctJptdQDcHkQjw9V+0l060tIOuXDAWKtZjdT8BASqpNDv
+	+0U/pFsA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdUf-0000000AkT6-1gUt;
-	Fri, 30 Oct 2026 03:41:29 +0000
+	id 1xMdUh-0000000AkUn-2cvj;
+	Fri, 30 Oct 2026 03:41:31 +0000
 Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdUd-0000000AkSY-3pxk
+	id 1xMdUh-0000000AkUM-08DN
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 03:41:28 +0000
+	Fri, 30 Oct 2026 03:41:31 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 5CF4B600E4;
+	by tor.source.kernel.org (Postfix) with ESMTP id 7A975600C8;
+	Fri, 30 Oct 2026 03:41:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 871A81F00A02;
 	Fri, 30 Oct 2026 03:41:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D48C1F0093A;
-	Fri, 30 Oct 2026 03:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793331687;
-	bh=QEX9vlMNf/S5h2VpPXqypsfpqZC9bn2dXekRVGh41+I=;
+	s=k20260515; t=1793331690;
+	bh=q7aT8B/qtq4cNGSUSI/bfciBbXr63b2FO+ggiQLicMA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=n5wUI5FV0LBZ9l0/JQtUOJ/CNnlfwfy/QEwMm0M2jl9OSdaGfy0pF/kptqwzlkoyt
-	 AXFCyUHVeh59TIcW4u/zAnMSdZpgKp1CB8ed1AAlLelNjrs9i78aBoJeMNL9rMhrhx
-	 3UXJlXwiN6ImjLEdOBiKqBUBPjqRsOVW+ZxpZBkJB9iFXD6D1gkP4z0G0q9ndF2IXN
-	 9cnI6jkO8wSIprccwvAJ4yZDiizUY5APIatreyzN5r1ClZxBg+32Tr0K9WBUUXJP3Q
-	 tX1HSijn84bmfqHIt+8AvPFKCht1oDNAMCyIRL0Ii8HGWKa3qkobhFjnboMcd1hYyf
-	 8ELxsaj8UqP2w==
-Message-ID: <sashiko-outbox-190251@kernel.org>
+	b=jx9yhXxj0fyJWp6x0U7iH9Is7tXl0gk0msbET08xbnH+ZKaRsOW95e81pmFKs24Mn
+	 BgWZ4oAj0XEKMO6zRX/3RGi3tlcAUI6HBK/pUjpkUqJqZmcNsWKuXVADEltmwp1nlp
+	 tV2rQGmAgFImjIGgD4g/BE6mS2yqczka1TN5wvuZJwWfk5RFUAD58UwSAi/51zH0W2
+	 bAN3XKASYmpBMXMeO4hKayUFqrqGl9J/mQcX5h3rp5U/D945SwzLqpeR0Sk+kffuMw
+	 3GCp5xgqBi3NhJW6vL9mOdH5h+pCObaillLFGfvtzSXGt1sppy4B+VMK6pKU+WyNcU
+	 dufjnTLT5JjsA==
+Message-ID: <sashiko-outbox-190252@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 23/47] mm/userfaultfd: write-lock the VMA before
- waking waiters when unregistering
+Subject: Re: [PATCH v2 24/47] mm/userfaultfd: wake all waiters on unregister
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -75,12 +74,12 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
 Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261029-fixes_core-v2-23-a64ce7f83abb@kernel.org>
+In-Reply-To: <20261029-fixes_core-v2-24-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-23-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-24-a64ce7f83abb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 03:41:24 +0000
+Date: Fri, 30 Oct 2026 03:41:27 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,28 +99,32 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> userfaultfd_unregister() wakes pending missing faults before clearing the
-> VMA's userfaultfd registration. With per-VMA fault locking, holding
-> mmap_lock for write does not prevent another fault from queuing after
-> the wakeup but before userfaultfd_clear_vma() write-locks the VMA. That
-> waiter can then remain asleep indefinitely.
+> From: Josef Bacik <josef@toxicpanda.com>
 >=20
-> Call vma_start_write() before waking waiters. Existing fault handlers
-> queue themselves before dropping the VMA read lock, and new readers are
-> excluded until mmap_write_unlock().
+> UFFDIO_UNREGISTER only wakes pending faults if VM_UFFD_MISSING is set.
+> Threads waiting on write-protect, minor or RWP faults can therefore remain
+> asleep after unregistering a range that does not track missing faults.
 >=20
-> Fixes: 29a22b9e08d7 ("mm: handle userfaults under VMA lock")
+> Wake pending faults regardless of the registration mode so they can retry
+> without an explicit UFFDIO_WAKE or closing the userfaultfd. This matches
+> the existing behavior for missing faults, including removing unread fault
+> messages for the woken waiters.
+>=20
+> Fix generated by an LLM and sent by Josef Bacik in private.
+>=20
+> Fixes: 63b2d4174c4a ("userfaultfd: wp: add the writeprotect API to userfa=
+ultfd ioctl")
 > Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
+> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+> [ david: rebase; simplify description ]
 > Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 > Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> Reviewed-by: Suren Baghdasaryan <surenb@google.com>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-fixes_core=
--v2-0-a64ce7f83abb@kernel.org?part=3D23
+-v2-0-a64ce7f83abb@kernel.org?part=3D24
 
 
