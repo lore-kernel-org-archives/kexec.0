@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FB2606A31A
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:40:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33950606A31A
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:40:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=1ZEoHfaO;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FXYK/0/v
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=l5t2Lcmi;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QEZWyZnP
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=IfXkLdB2R4sDImm8bzY/1UjAIsrAfwRilVnQTGvBTuU=; b=1ZEoHfaO1Gpw6jxb/a2GdS0GLB
-	jYBSOgYIOZdBlqm+SlgfkYdaH+m4oYH9gNcpSfvzNfOm2oV+yLLmm/GtLmRN2lYLo+s3pFD10bpET
-	nv2ulFWtmV61d54dBni6YeM8tHbzNDlmbcTTcRindLHnJPig0u866qYlSEowU4x46MzRmz3F05ejf
-	tsBRzvrMus820HxgUH6/ZYM9daDHKBjYdiEDGI2/cbyhV9sIbFC0uZDkdPPrGhqe8W0I+vCweNyA8
-	l4r+5cf9CxFbYLBjstTDhU5pyY9HeWDNz7paaYJvBsY98ptOBle0A1PSJWTb3YIQ3w0L30U0Ooboy
-	XtyEghwQ==;
+	bh=0PgywMammR2qAWnRPD7pSLV4zmmHmA4MMNsJHAQHtp0=; b=l5t2LcmiouobA4QgnF6g/sPxXV
+	iCb5JGilA/SHT6iargKoC6/KT932nJCXsbIUTHeuazPFlTaA/tg3SRzhcX+ozA6wRaqM45ZzHqhhn
+	uBneyzGj0iaADZjhbUAK9aHopIjxK/Vitx2JBy0hYrI03mMVf068iVC/SZGZCv+LzS2EDVfFKRfaE
+	TT09aZ7bGCo1XgvHtVkBuWhVSS8C390BlT20fLVAIDEcKfz0SWw+kXfSwdXXfvGaYYeFDjZopfOMb
+	6kSARrnToT67ad0TwqklcBkKAOfBWAt4k2pnyjlOx4sUCxqnFvoPKP9hQFZhJvU/pKLJWs7YIqbc/
+	mQusgQuQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdU3-0000000Ak3n-2zam;
-	Fri, 30 Oct 2026 03:40:51 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xMdU6-0000000Ak6c-3hHg;
+	Fri, 30 Oct 2026 03:40:54 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdU1-0000000Ak26-27D6
+	id 1xMdU5-0000000Ak4x-2Dzp
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 03:40:49 +0000
+	Fri, 30 Oct 2026 03:40:53 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id E8154600C8;
-	Fri, 30 Oct 2026 03:40:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3FDA1F000C1;
-	Fri, 30 Oct 2026 03:40:45 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id EC7FD60267;
+	Fri, 30 Oct 2026 03:40:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25B6F1F000C1;
+	Fri, 30 Oct 2026 03:40:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793331648;
-	bh=IfXkLdB2R4sDImm8bzY/1UjAIsrAfwRilVnQTGvBTuU=;
+	s=k20260515; t=1793331652;
+	bh=0PgywMammR2qAWnRPD7pSLV4zmmHmA4MMNsJHAQHtp0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FXYK/0/vbbRVTpCfi5NSPh0rsRu3XHDuU4p1ncAnAn9u2KhLt7a11/ulAHTdXSI89
-	 Y0AHpJ5J+ZjwxSwoX36ie+QwEwU4M/Z7moUh+EMte6IJ9r7LPKVGYthTLxD6wJbKEZ
-	 AqohEGYHGzsqDlLqhfkIgGqaUws1J8bujta7wXhdX5kH+ae0rfgyjrbqjd8GO0qSkg
-	 n3mcBYAZkOxo5PKVmQRuODtKb8Wx9M/+BIoXO/nAp7JZ7vNMhiPig4/0ofjQv20paz
-	 2gk7YH9JJUYGIITKm9loz/xC9KaWp/ngJKJ5f3tWSii3dQne94HPVOlWqp7Abg6E34
-	 kKZU3rQGjAXBg==
-Message-ID: <sashiko-outbox-190240@kernel.org>
+	b=QEZWyZnPBfH30aauw7rjUYw3R6jkywa3oL5WEb3r3Sla+9/x3pOZEvtnEPWqgJAbo
+	 PyoCK8d5JKbkfpSV2jATOWxaq1itutrkwhatrVMw5IhpgmtDe0QsTLxDIGwZdZHrKD
+	 8wkz+ex8+sxEi8yq0aSaYO0yehzlGIyHp6FikFBQ8rSB4wkTeO1tV9ZM8/rc+lrEKW
+	 C9j4lOwQczQF7st8lS9F89dycVQim3m6rPR0eWXVHtBy1WA7XSuSqKJB6naFLd9sXU
+	 PjsPJ4Ffj4GhIrY6nt6ufyeWOMpoXe1w83sl4wJ5uoTDPGiytxxckyiL+G7We4OX1f
+	 Q9Ktkplow66QA==
+Message-ID: <sashiko-outbox-190241@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 12/47] mm/huge_memory: fix livelock on device private
- folio
+Subject: Re: [PATCH v2 13/47] mm/huge_memory: fix truncate racing with PMD
+ zapping
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -74,13 +74,13 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261029-fixes_core-v2-12-a64ce7f83abb@kernel.org>
+Cc: kexec@lists.infradead.org, "Chris Mason" <mason@kernel.org>
+In-Reply-To: <20261029-fixes_core-v2-13-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-12-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-13-a64ce7f83abb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 03:40:45 +0000
+Date: Fri, 30 Oct 2026 03:40:48 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,38 +100,33 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> From: Josef Bacik <josef@toxicpanda.com>
+> From: Chris Mason <mason@kernel.org>
 >=20
-> If do_huge_pmd_device_private() cannot lock the folio, it simply returns
-> to try again on the next fault.
+> zap_huge_pmd_folio() removes the rmap before calling folio_mark_dirty().
+> If this was the last mapping, truncation can skip unmapping the folio
+> and proceed without waiting for the PMD lock, racing with dirtying.
 >=20
-> Just like we did in commit b570f37a2ce4 ("mm: Fix a hmm_range_fault()
-> livelock / starvation problem"), let's wait for the softleaf entry,
-> which will drop the PTL and wait until the folio was unlocked. This is
-> precisely what we do in do_swap_page() with device-private folios. This
-> avoids possibly livelocking.
+> ifs_set_range_dirty() can oops if MADV_DONTNEED races with
+> ftruncate() on XFS, when we get the folio set dirty after it was found
+> to not be mapped anymore.
 >=20
-> Update softleaf_entry_wait_on_locked() documentation to clarify that
-> device-private entries wait until the folio is unlocked.
+> Move folio_mark_dirty() and folio_mark_accessed() before rmap removal,
+> matching the PTE zap path. This keeps the folio mapped while updating
+> its state, so truncation must wait for the page table lock.
 >=20
-> There seems to be no compelling reason to backport this to stable
-> kernels unless we actually see problems there.
+> Fix generated by an LLM and sent by Chris Mason in private.
 >=20
-> Fix generated by an LLM and sent by Josef Bacik in private.
->=20
-> Fixes: 4964099163d0 ("mm/memory/fault: add THP fault handling for zone de=
-vice private pages")
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: simplify patch description, fixup softleaf_entry_wait_on_locked =
-description]
-> Reviewed-by: Zi Yan <ziy@nvidia.com>
-> Reviewed-by: Lance Yang <lance.yang@linux.dev>
+> Fixes: fe6cf984939d ("mm/huge_memory: transfer the pmd dirty bit to the f=
+olio on zap")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Chris Mason <mason@kernel.org>
+> [ david: simplify comment and description ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-fixes_core=
--v2-0-a64ce7f83abb@kernel.org?part=3D12
+-v2-0-a64ce7f83abb@kernel.org?part=3D13
 
 
