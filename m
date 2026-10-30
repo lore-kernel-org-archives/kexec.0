@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46900606A31A
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:41:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85371606A31A
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:41:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=z3JmhfEX;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aLs4Lc0r
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=s67tafyL;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gFEHCcUA
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Z4gIs9FAcDYd3Bi8ing4RfPP5/k8Ciid2eS4HKq3Pqk=; b=z3JmhfEXESKT4kSYrGVPHXCRhp
-	oLJdWflreiSvZ9BWLPh5AFRgHwc5iyG4MTepFZb8cKVj+vwjGwMEM79bzClfq/97or+52PnJ2K3sv
-	KB3vYPXdWdse+b0o6dc4cl4uI8KHetF4VlQUjH5dVypKJ2W85J1aBRZGQ7ocZyXmP9gGmC+wgxZf3
-	Ky7oGc8RhkDBAJMA0302MCrHE/SFoCwG47qPQmcp4nJjXrdOt3Kz//dz1g4QfREEIxfZzWq1QszoB
-	oS0B18hVsjg37cpbVClr49SAQzbyapAB2VS/1JH9Ksp+VAyHO31hXi1UmHotTHCf33K74xG9bT4nm
-	tIw4ku9A==;
+	bh=WWHlJvm4sYewhU38umcbZ0ROTrmcfZhQeV3HCRulFDQ=; b=s67tafyL93qASo92alpd1sMxAW
+	kXKVJT8haocLJj+HrQbToR3UhvrWo459IDNkjjM0ZNMo/vKnlmDfvyyoEyOkeWCK8vNM4Nb4HX1V+
+	lrJiB0CGgyzyaAP7/UJN74S13OZFf+NQk8SIyIjSjnj4op3ikCzTzT9estCnQUX8vTOMHn8X3gxAB
+	OJ8vclzY0xISnTV6FMsaBCN0B5zCgff8OILOv/I5D8CO9Jq+ylYijP3VSQ2rVtszslnf4UIj5gHjK
+	I6YUDeurCgjJ1ObpolwmsJIu9SO8IwKbWBmWjcCY3aNq6Ogy3uxMi5huos008WL8O2SOg5F/k9Soi
+	R3N8hREw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdV2-0000000AkhB-0396;
-	Fri, 30 Oct 2026 03:41:52 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xMdV6-0000000Akkg-0pfF;
+	Fri, 30 Oct 2026 03:41:56 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdV0-0000000AkgA-1lQl
+	id 1xMdV4-0000000Akjm-38Mt
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 03:41:50 +0000
+	Fri, 30 Oct 2026 03:41:54 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 2F6E5407C4;
+	by sea.source.kernel.org (Postfix) with ESMTP id 7A21F42A9C;
+	Fri, 30 Oct 2026 03:41:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D8421F000C1;
 	Fri, 30 Oct 2026 03:41:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76F021F000C1;
-	Fri, 30 Oct 2026 03:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793331710;
-	bh=Z4gIs9FAcDYd3Bi8ing4RfPP5/k8Ciid2eS4HKq3Pqk=;
+	s=k20260515; t=1793331714;
+	bh=WWHlJvm4sYewhU38umcbZ0ROTrmcfZhQeV3HCRulFDQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=aLs4Lc0rKRs2zQbF2SEd6ItEYTFbERuMXeY2q1XNJNR7p0LOf+F0VfEDsm5tcG2hs
-	 INVfH6/apaWArXuuOYLiWU6l5OGhXvmI0JzuK5fI7GW+Vzrltxb9NSNzsfobAHWJeR
-	 31POAGY1ejEiXURTDO2PUk9OLjlqpGVZVq6ExLC9NMfU5s+4VaKW3ZvGO0GULYMflw
-	 goXQDo4/z43zAMiJiI9ZcTJw5TRChi/G0VGUXhe8x3RTsvlJKdnbvUv4B6ANgHtOCa
-	 7W7baUngy/P4YNBFxQdKjT60ns4w/gNPNRW+tJBMG7WrQr2i9q23Tw8QzQ24GjzYgy
-	 nMJAC3ryGKtwg==
-Message-ID: <sashiko-outbox-190258@kernel.org>
+	b=gFEHCcUAJ73UlIzKp4w1Ztp5h4592qFsZ9sHNRG5dVP0q9DgDRk0IbHFKCSr/AOru
+	 CeRaXBpbQz3CDJkQbfPOqzJEOAq0aCWC3jJsikNkX9hI2VvShru/1QVonMz5FzX4cV
+	 hSHayMPVXKUORlb7Q1g2t+UcrGuPwZGikOzPaHI2og7p8saSR5CHrsHt5ZEQo1qB6t
+	 WNNiCwnJu8OX6lqWBI8+S+fKvYxDe/vAIj/G2SE1FrDlxQJJB8CW0LtoZZkFuBr89d
+	 LrjVvpyCykCLFkN5ROF3HGCXd4SXiGxOMSeAxZJsqxijpKtwJ3K+lNGbjcFPWwY1CI
+	 /TZx+cc9qxMuA==
+Message-ID: <sashiko-outbox-190259@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 30/47] mm/mremap: use pudp_huge_get_and_clear() when
- moving huge PUDs
+Subject: Re: [PATCH v2 31/47] mm/mremap: recheck PUDs under the page table
+ lock
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -75,12 +75,12 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
 Cc: kexec@lists.infradead.org
-In-Reply-To: <20261029-fixes_core-v2-30-a64ce7f83abb@kernel.org>
+In-Reply-To: <20261029-fixes_core-v2-31-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-30-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-31-a64ce7f83abb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 03:41:46 +0000
+Date: Fri, 30 Oct 2026 03:41:50 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,28 +100,38 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> move_huge_pud() reads the old PUD and clears it in separate operations.
-> Hardware accessed or dirty updates between those operations can be lost
-> when the saved entry is installed at the new address.
+> Once get_old_pud() is fixed to accept PUD leaves, unmap_mapping_range() c=
+an
+> clear a leaf between the lookup and the move. Holding mmap_lock in write
+> mode does not prevent this.
 >=20
-> The raw pud_clear() also bypasses page_table_check_pud_clear(), while
-> set_pud_at() accounts for the destination mapping. This leaves the
-> checker counts unbalanced for mappings tracked by page table checking.
+> If the zap happens before move_page_tables() tests the entry, an empty
+> PUD can reach move_normal_pud(), where pud_populate() turns it into a
+> present page table entry. If it happens after the test, move_huge_pud()
+> can instead try to move an empty entry, triggering CONFIG_DEBUG_VM
+> warnings on powerpc.
 >=20
-> To fix it, simply use pudp_huge_get_and_clear().
+> Recheck the source under the page table lock in both helpers. Treat an
+> empty source in move_normal_pud() as a completed move, and use
+> __pud_trans_huge_lock() in move_huge_pud().
 >=20
-> Fixes: 7d846db7d0e2 ("mm/mremap: convert huge PUD move to separate helper=
-")
+> In the future we should likely have the code lookup a PUD/PMD lockless
+> once, instead of multiple times, because one of the problematic bits
+> here is the:
+>=20
+> 	pud_trans_huge(*old_pud)
+>=20
+> Fixes: 0881ace292b6 ("mm/mremap: use pmd/pud_poplulate to update page tab=
+le entries")
 > Cc: stable@vger.kernel.org
 > Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 > Reviewed-by: Pedro Falcato <pfalcato@suse.de>
-> Reviewed-by: Dev Jain <dev.jain@arm.com>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-fixes_core=
--v2-0-a64ce7f83abb@kernel.org?part=3D30
+-v2-0-a64ce7f83abb@kernel.org?part=3D31
 
 
