@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03510606A31A
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:41:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8C1606A31A
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:41:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=OkMbe3JP;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CrdAShBd
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=n7WyZBdR;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Z1NozHJG
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=zCVih5uUzlXaogzU6GoQX8A4XwUbRTR1pBAFwZRAjzE=; b=OkMbe3JP8t7Krahnf4tpHjbYGu
-	9GtWd0Z89auHIkGPJFfHbZRKz7QUdubnPpY8uR9nOmt9XIeNrqQ+cRgfs2zoY3YHsyHfVQuCb+WFQ
-	X7WCaZsU8+HlCvFxEkxhv4sHq7nejZeOpdluTYaa6pq6ns3EhNYbp4ZtjHdD5s6ot0rTI+JZaVd0X
-	zJfLJ4TlWyxxiJX72Ow2OgdEyuWs6tN3SIMNBZ5moPBN6GoD3JeqnhN7owZGMYMx19gV0NUk0Leug
-	QQy/vqByz+bXbRmZxm/+K7OvK/Tf/b1ZKjUJ6T0jTsCnsI+OWJ0KDVPsek8aIHRIn78nwirgMnnAT
-	9x017TUg==;
+	bh=EXDyCZ9d9v8062HqYr5Ri8CAFz+AKpRHIqe7Y2rz7Qo=; b=n7WyZBdRzm3n0fysd+EWWQKERc
+	pOfZTgR8cUTOEk+Iemj8SX+ZF0r7Z89dDNwUjVU0bYb4/spCBAc7wTija3AGMwkQH1u1Z50u7wFA1
+	qrph9Pr3DLU+fr/rVdnRWX3iodmiRDW5QUlwSdgQ7F0UbgvFiT7NDPoXgqtFOh+sA9g1QTTfWcfSF
+	UcjHebAnYy16QcyRkHpwWgT7n8y1kW/eiECz91wB2glELeb4XsQblrZwY7ta0viOkGAuVW9jFgdR+
+	+ovDc0+6bABLQFx9Bf7zXYRltfnxFPDEwBaNtijRUF2eUZtkQUVG89e8agSAltXyeJhi5DiYtJaua
+	/cLwTXZw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdUR-0000000AkKZ-2dd6;
-	Fri, 30 Oct 2026 03:41:15 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xMdUU-0000000AkMo-3Whr;
+	Fri, 30 Oct 2026 03:41:18 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdUQ-0000000AkJa-1986
+	id 1xMdUT-0000000AkLi-2Bm9
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 03:41:14 +0000
+	Fri, 30 Oct 2026 03:41:17 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 004424004F;
+	by sea.source.kernel.org (Postfix) with ESMTP id 485F342DAB;
+	Fri, 30 Oct 2026 03:41:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D8331F0093A;
 	Fri, 30 Oct 2026 03:41:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 185691F0093A;
-	Fri, 30 Oct 2026 03:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793331673;
-	bh=zCVih5uUzlXaogzU6GoQX8A4XwUbRTR1pBAFwZRAjzE=;
+	s=k20260515; t=1793331677;
+	bh=EXDyCZ9d9v8062HqYr5Ri8CAFz+AKpRHIqe7Y2rz7Qo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CrdAShBdm0HkATudVT5TpybjgMmtOrUSMTmONwPIdRXkJL2+sYIRQrR0WHgKtZY8x
-	 bT/rKkT2crhcVmJoS9WKRcyOExgx/NWZlxMIDTxvs+4u7ZrYi/j55rfmXV90lWl4Ob
-	 +HtPojNfdVyQeyDoi6DFUgSMhexSgXYrXp0V0xIcyOw2mT4sWnZEDK0v6/Ld1mkXXg
-	 tChsOthmGBxe9CP4lSpuA/ztiWHIw5rnrm+kQ8lazAgXoIpXz5jRHuu6CqQ4Fs4jrK
-	 YCJHEer85QiDcPEaoiPSIJwSvq1TrlhFAqPMII50w2hWIsSRkWMkFS5AwZZp0DQq6d
-	 ztvThStZeRQ1Q==
-Message-ID: <sashiko-outbox-190247@kernel.org>
+	b=Z1NozHJGOQV1BOqD8eQkU71Oq6t+Es7kvSGM7+1qWcBHA9vlbolvvorMDZOLzfQwk
+	 iutXzYQiuEjjDyrrh0ki3GeQjzw0LX6UKUd360C3pgIkIx8Kxov0KoTStj6eaK5mu4
+	 br6G0AjmrAuw3KZfYQTexKXiAa2Dbn6KSh2rhtrrddeo3HKfHiKa0z25lsuoYtVQT0
+	 FexFOwhvc+z+UTFUr3F/4vX8WXVxFJGEXt9hYhqW76qCf0ZRU4rB+oaGw7+zx5eVSg
+	 Fv/utV4Esioiy96QfvAjL0xh6XsM7HyZneRVO3Pg2wLwpBBbdCPlby1E7CtSvqWe6f
+	 Snt3GiC6Pgy6g==
+Message-ID: <sashiko-outbox-190248@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 19/47] mm/gup: recheck the PUD under PTL in
- follow_pud_mask()
+Subject: Re: [PATCH v2 20/47] mm/gup: fix clearing folios in
+ memfd_pin_folios()
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -74,13 +74,14 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261029-fixes_core-v2-19-a64ce7f83abb@kernel.org>
+Cc: kexec@lists.infradead.org, "Chris Mason" <mason@kernel.org>, "Samiullah
+ Khawaja" <skhawaja@google.com>
+In-Reply-To: <20261029-fixes_core-v2-20-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-19-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-20-a64ce7f83abb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 03:41:10 +0000
+Date: Fri, 30 Oct 2026 03:41:14 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,32 +101,32 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> follow_pud_mask() reads the PUD without a lock. If it is a leaf, it takes
-> the lock and calls follow_huge_pud(), which reads the entry again, but
-> only tests whether it is present.
+> From: Chris Mason <mason@kernel.org>
 >=20
-> A leaf can be zapped concurrently and a page fault can fill the empty
-> entry with a page table.
+> memfd_pin_folios() pins folios obtained directly from the page cache
+> without checking whether they are uptodate. However, shmem fallocate()
+> can leave newly allocated folios uncleared and not uptodate. Callers
+> such as udmabuf can then expose uninitialized memory to userspace.
 >=20
-> This currently only applies when device-dax makes use of PUD entries,
-> and the fault after e.g., MADV_DONTNEED would find THPs to be disabled.
+> Clear non-uptodate folios and mark them uptodate under the folio lock
+> before returning them to the caller.
 >=20
-> That requires a sequence like
+> Fix generated by an LLM and sent by Chris Mason in private.
 >=20
-> 1) Fault in the PUD
-> 2) Disable THP
-> 3) Have GUP race against concurrent MADV_DONTNEED + refault
-> [ ... ]
->=20
-> Fixes: 1b1676180246 ("mm/gup: handle huge pud for follow_pud_mask()")
+> Fixes: 89c1905d9c14 ("mm/gup: introduce memfd_pin_folios() for pinning me=
+mfd folios")
 > Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
+> Signed-off-by: Chris Mason <mason@kernel.org>
+> [ david: simplify description and comment ]
+> Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+> Reviewed-by: Samiullah Khawaja <skhawaja@google.com>
+> Tested-by: Samiullah Khawaja <skhawaja@google.com>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-fixes_core=
--v2-0-a64ce7f83abb@kernel.org?part=3D19
+-v2-0-a64ce7f83abb@kernel.org?part=3D20
 
 
