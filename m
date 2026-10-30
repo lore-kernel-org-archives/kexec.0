@@ -2,85 +2,126 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BEB606A31A
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:42:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE54606A32A
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:55:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=CxqgvEHf;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cFIlLBDd
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=pN44718I;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=JZqpmtFQ
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
-	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Unsubscribe-Post:List-Owner;
-	bh=EGD5ZlcBjHcdJ3z3LqF/9UNUYpf+Z22iRdpjDJSuPXc=; b=CxqgvEHftTYa0cDoYoosLykKgM
-	PqOOUIaQr5rvd+rST/pz/UB5NjIqW3SS4ldf8OpRKnQC2VcKamEBgIcn40MUEkgBkEmU4Z4UbvObI
-	xG0HSygVO9FEFE3e2JL+GE+wYd5znejpRHxXMFO1iBVbv3M5RFmq0NvDaP783sIQD9fUsM6h5dvqp
-	l5PvANbBSCyjDboSoIfWQS1/jIJWptwLk3ISEVbX2PXS11zFDN+P9euBr/U0Qo16YcU5wanINONX5
-	xI86PbPieUYtfHc9rhqUiCVQd7a3ZVwT2ysgTKmaUNZSHeA/uwj6YQINke470mzworNRCFLmVvCLJ
-	0ksnDwHg==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=ey3vPsJ2dQFhz2BxI4N3mBDHBT7ectNl9BIu9ANR89g=; b=pN44718IMJSVdt
+	uUTP/bZd4KMJOQ5RubfljH7Y7yRfC7tAy1j9G/whQO5ugwxla5FDeyF16fKiYjYrF85bLQAkWd7di
+	npF7qolcf/2h2TeOQq2l//UWM9JMACTDT1EF2b3jMjhsD5M4hEJoIEykZdTFCadCnLuqppf543InB
+	F+3tkFNTH/XBrKD+DbrAAXczNrrgENz70LnBI5+CG/TFn9KVI1J/Pqb0r/2ytFe5OUb7VoylAVeA9
+	RHaHCIjp7RrvP/l+syDErTdKTfQn5QugD+2yWNomcwXUrKSjVJoLzjt5Abm9RG5U1a1tR2oKxqzvN
+	/68PQ6aGepx4yare4ulg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdVx-0000000AlSz-0LyM;
-	Fri, 30 Oct 2026 03:42:49 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xMdia-0000000Amdz-0RfV;
+	Fri, 30 Oct 2026 03:55:52 +0000
+Received: from out-195.mta1.migadu.com ([95.215.58.195] helo=mta1.migadu.com)
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdVv-0000000AlQn-1fOv
+	id 1xMdiW-0000000AmdH-1LAa
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 03:42:47 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id D03E8600C8;
-	Fri, 30 Oct 2026 03:42:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09EC51F0093A;
-	Fri, 30 Oct 2026 03:42:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793331766;
-	bh=EGD5ZlcBjHcdJ3z3LqF/9UNUYpf+Z22iRdpjDJSuPXc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=cFIlLBDdZADTraWJuKWty99Jmt//wFbSMulTnSshIKFqzqkoYz3+aqgN7vkKm6b1o
-	 8/3TFLHk8DjepXIHAbCKC1IjuNgYyWRyuC4IoxAMUJcz3mez0hk2WyegpD58xEOZiN
-	 DbwXM8IVXzCf12/J8Vw6AEKe7J9xUgsgV2/U8eU+TYIejyLLKAVhGFj16XwIG8UPDa
-	 hyuFm+Ah3bQroctYG2AtsuM0M6/HytekiONtGNIWnUQkuZpgnImYYAo0rdr9/+LSHx
-	 BJzBTYygDLO8/3tvwfBYd5x1VDDZOo2AadqMztHBWazRndme/dyVJXHO4DgydlERS9
-	 SvxTk0rviVLNQ==
-Message-ID: <sashiko-outbox-190275@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 47/47] fs/proc/task_mmu: refuse addresses beyond 32
- bits on 32bit
-To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
- Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
- Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
- Stoakes" <ljs@kernel.org>, "Kairui Song" <kasong@tencent.com>, "Barry Song" <baohua@kernel.org>, "Axel
- Rasmussen" <axelrasmussen@google.com>, "Yuanchu Xie" <yuanchu@google.com>, "Wei
- Xu" <weixugc@google.com>, "Baoquan He" <baoquan.he@linux.dev>, "Baolin Wang" <baolin.wang@linux.alibaba.com>, "Liam
- R. Howlett" <liam@infradead.org>, "Vlastimil Babka" <vbabka@kernel.org>, "Mike
- Rapoport" <rppt@kernel.org>, "Suren Baghdasaryan" <surenb@google.com>, "Michal
- Hocko" <mhocko@suse.com>, "Kees Cook" <kees@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>, "Jann
- Horn" <jannh@google.com>, "Pedro Falcato" <pfalcato@suse.de>, "Hugh Dickins" <hughd@google.com>, "Pasha
- Tatashin" <pasha.tatashin@soleen.com>, "Pratyush Yadav" <pratyush@kernel.org>,
- =?utf-8?b?TWF0dGhldyBXaWxjb3ggKE9yYWNsZSk=?= <willy@infradead.org>, "Jan
- Kara" <jack@suse.cz>, "Zi Yan" <ziy@nvidia.com>, "Lance Yang" <lance.yang@linux.dev>, "Rik
- van Riel" <riel@surriel.com>, "Harry Yoo" <harry@kernel.org>, "Alistair
- Popple" <apopple@nvidia.com>, "Nico Pache" <nico.pache@linux.dev>, "Ryan
- Roberts" <ryan.roberts@arm.com>, "Dev Jain" <dev.jain@arm.com>, "Usama Arif" <usama.arif@linux.dev>, "Kiryl
- Shutsemau" <kas@kernel.org>, "Matthew Brost" <matthew.brost@intel.com>, "John
- Hubbard" <jhubbard@nvidia.com>, "Peter Xu" <peterx@redhat.com>, "Will
- Deacon" <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, "Nick
- Piggin" <npiggin@gmail.com>, "Oscar Salvador" <osalvador@suse.de>, "Minchan
- Kim" <minchan@kernel.org>, "Muchun Song" <muchun.song@linux.dev>, "Xu Xin" <xu.xin@linux.dev>, "Chengming
- Zhou" <chengming.zhou@linux.dev>, "Chris Li" <chrisl@kernel.org>, "Kemeng
- Shi" <shikemeng@huaweicloud.com>, "Nhat Pham" <nphamcs@gmail.com>, "Youngjun
- Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
- Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
- Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261029-fixes_core-v2-47-a64ce7f83abb@kernel.org>
-References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-47-a64ce7f83abb@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 03:42:43 +0000
+	Fri, 30 Oct 2026 03:55:49 +0000
+X-Envelope-To: kexec@lists.infradead.org
+DKIM-Signature: a=rsa-sha256; bh=U6aEVcyx4cbsQT0ReFIAsX7642J2D1rQ7p5hav7hVYg=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793332545; v=1; x=1793937345;
+ b=JZqpmtFQ7Ohd/1LNlZcCz7DJxGmfw1W0QBIwKd81WGlQ+GCSScpslPKi5z61+nW3yuNQ2DfG
+ qYpgDNHPL3GYEromeJ9ePTKmdga4oQNe9eAq94ZKZxJjP2u8k8hH0quzBvtjDNrpC+rFPoXIxuw
+ UlDm22KbKQ+To97lJYUZVLqY=
+X-Envelope-To: kexec@lists.infradead.org
+Received: by mta10.migadu.com with ESMTPS id 29251291072b5e95;
+	Fri, 30 Oct 2026 03:55:20 +0000
+X-Mizu-Trace-ID: 29251291072b5e95
+X-Migadu-Flow: FLOW_OUT
+From: xu.xin@linux.dev
+To: david@kernel.org
+Cc: akpm@linux-foundation.org,
+	aneesh.kumar@kernel.org,
+	apopple@nvidia.com,
+	axelrasmussen@google.com,
+	baohua@kernel.org,
+	baolin.wang@linux.alibaba.com,
+	baoquan.he@linux.dev,
+	chengming.zhou@linux.dev,
+	chrisl@kernel.org,
+	dev.jain@arm.com,
+	gourry@gourry.net,
+	hannes@cmpxchg.org,
+	harry@kernel.org,
+	hughd@google.com,
+	jack@suse.cz,
+	jannh@google.com,
+	jgg@ziepe.ca,
+	jhubbard@nvidia.com,
+	joshua.hahnjy@gmail.com,
+	kas@kernel.org,
+	kasong@tencent.com,
+	kees@kernel.org,
+	kexec@lists.infradead.org,
+	lance.yang@linux.dev,
+	liam@infradead.org,
+	linux-arch@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	ljs@kernel.org,
+	mason@kernel.org,
+	matthew.brost@intel.com,
+	mhocko@kernel.org,
+	mhocko@suse.com,
+	minchan@kernel.org,
+	muchun.song@linux.dev,
+	nico.pache@linux.dev,
+	nphamcs@gmail.com,
+	npiggin@gmail.com,
+	osalvador@suse.de,
+	pasha.tatashin@soleen.com,
+	peterx@redhat.com,
+	peterz@infradead.org,
+	pfalcato@suse.de,
+	pratyush@kernel.org,
+	qi.zheng@linux.dev,
+	rakie.kim@sk.com,
+	riel@surriel.com,
+	rppt@kernel.org,
+	ryan.roberts@arm.com,
+	shakeel.butt@linux.dev,
+	shikemeng@huaweicloud.com,
+	stable@vger.kernel.org,
+	surenb@google.com,
+	usama.arif@linux.dev,
+	vbabka@kernel.org,
+	weixugc@google.com,
+	will@kernel.org,
+	willy@infradead.org,
+	xu.xin@linux.dev,
+	ying.huang@linux.alibaba.com,
+	youngjun.park@lge.com,
+	yuanchu@google.com,
+	ziy@nvidia.com
+Subject: Re: [PATCH 39/46] mm/ksm: fix use of a freed anon_vma at swap-in
+Date: Fri, 30 Oct 2026 11:54:47 +0800
+Message-Id: <20261030035447.140856-1-xu.xin@linux.dev>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20261027-fixes_core-v1-39-6f74bec9a5bb@kernel.org>
+References: <20261027-fixes_core-v1-39-6f74bec9a5bb@kernel.org>
+X-Archived-By: <archiver.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261029_205548_707123_F0CA74EB 
+X-CRM114-Status: GOOD (  22.53  )
+X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,42 +131,95 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
-X-Archived-By: <archiver.kernel.org>
 
-> From: Josef Bacik <josef@toxicpanda.com>
->=20
-> The addresses in struct pm_scan_arg are 64 bits wide.  The first thing
-> pagemap_scan_get_args() does with them is to cast them to unsigned
-> long.  On a 32-bit kernel the upper half is dropped without a word:
-> PAGEMAP_SCAN of 0x100001000-0x100002000 scans, and with
-> PM_SCAN_WP_MATCHING write-protects, 0x1000-0x2000, stores the result
-> at the lower half of vec, and reports success.
->=20
-> Return -EFAULT, as for other addresses outside of the address space.
->=20
-> This is probably not worth CCing stable.
->=20
-> Fix generated by an LLM and sent by Josef Bacik in private.
->=20
-> Fixes: 52526ca7fdb9 ("fs/proc/task_mmu: implement IOCTL to get and option=
-ally clear info about PTEs")
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+> A folio read from a swap slot previously shared by KSM can remain in the
+> swap cache after the process that first mapped it exits. Its anon_vma
+> can then be freed, so ksm_might_need_to_copy() must not dereference it
+> to compare roots.
+> 
+> Doing so can result in some false-positives, resulting in the reverse
+> mapping missing the new folio mapping, preventing migration and reclaim.
+> 
+> SLAB_TYPESAFE_BY_RCU allows individual anon_vma objects to be reused
+> immediately after freeing. A stale pointer can then refer to another
+> anon_vma whose root matches, even though the target VMA is not linked
+> to that anon_vma.
+> 
+> Move the anonymous rmap compatibility checks into
+> folio_anon_rmap_compatible(). Keep the page-index check and compare the
+> folio's anon_vma pointer against the VMA's own anon_vma and root first.
+> 
+> If neither matches, bite the bullet and walk the VMA's anon_vma_chain.
+> The VMA keeps these anon_vmas alive, and finding a match guarantees that
+> reverse mapping can find the new mapping.
+> 
+> Lorenzo Stoakes says in a private discussion:
+> 
+>   "This isn't quite equivalent to the existing check.
+> 
+>   Every anon_vma in an anon_vma_chain shares the same root, but if you
+>   split a VMA then fork both of them like this:
+> 
+>                   VMA A
+>                /        \         <split>
+>             VMA B      VMA C
+>                \        /
+>         root <- anon_vma 1
+>                ----^ ^----        <fork>
+>               /   parent  \
+>         anon_vma 2   anon_vma 3
+>              |            |
+>            VMA D        VMA E
+> 
+>   VMA's D and E both get their own new
+>   anon_vma's such that:
+> 
+>   VMA D: anon_vma 2 -> anon_vma 1 -> root
+>   VMA E: anon_vma 3 -> anon_vma 1 -> root
+> 
+>   And if you found a folio referencing anon_vma 2, the existing check:
+> 
+> 	anon_vma->root == vma->anon-vma->root
+> 
+>   Would be true for VMA's B, C, D & E.
+> 
+>   However after your change it'd be true for VMA D only, as it's the only
+>   one with anon_vma 2 in its anon_vma_chain.
+> 
+>   Whether or not that could actually happen in practice... 🙂 I don't
+>   know.
+> 
+>   [...] after your change it'd be true for VMA D only, as it's the only
+>   one with anon_vma 2 in its anon_vma_chain. [...] I would [...] say that
+>   you are making the test stricter but more correct.
+> "
+> 
+> If this affects performance when KSM was never even involved, we could
+> just track whether KSM ever merged anything and just skip these checks.
+> 
+> There isn't really a lot we can do otherwise: for mapped folios we might
+> be able to use folio_get_anon_vma(), but for unmapped folios there really
+> is no easy way to see if the anon_vma is still valid.
+> 
+> Document the (confusing) lifetime requirements of folio_anon_vma().
+> 
+> Fixes: ba6f0ff3981e ("ksm: fix ksm swapin time optimization")
+> Cc: stable@vger.kernel.org
+> Reported-by: Chris Mason <mason@kernel.org>
+> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> ---
+>  mm/ksm.c  | 36 +++++++++++++++++++++++++++++++-----
+>  mm/util.c | 13 +++++++++++++
+>  2 files changed, 44 insertions(+), 5 deletions(-)
 
-Sashiko has reviewed this patch and found no issues.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-fixes_core=
--v2-0-a64ce7f83abb@kernel.org?part=3D47
-
+Acked-by: Xu Xin <xu.xin@linux.dev>
 
