@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A2D606A31E
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:42:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00247606A31A
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:42:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Omv21VI5;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ClQIDxgk
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Gc9uah6N;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fLbwWRdZ
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=oFdcpP+KgyuG6C2z1UxbacnABme3LeVHkLzHOj3cdDI=; b=Omv21VI5374J1XJv34NKg834o1
-	Wm+VgAdhOOibemJz3cVo03kGfV7A7NOzyFIGN2VooY9KOMIWz9SMZV2br+/juN6GFGn4v7YCu/Qbp
-	pofcduz7eacv22gGDOma6x36v1RMiNoWRp2GX///z3jH7htb3h5gOJorNF49hMPohu8edwoIOnjh6
-	4YS2ZepqJotrcqEqwiwOotIoqF/5dwBMfR77zgSMb/WHa8FO3ZaGRp8f73MsT3lDxWNXnoi+ba2Ev
-	hbQPBTbGKq3k549HeopUWjq36kJ1oHkP/kx9Ml+HqwrixMR/Olr+hNild60wCa+ESSlNe56uFeu6O
-	lsVAEEpg==;
+	bh=wKRDIwlNotbn2pTACKd/ug1jEVrX0r6bM2vUYvA137A=; b=Gc9uah6NfAYIBvGtjb5ndtG1SQ
+	IVbLSPEx4U7vCgSV1PzuIYbidKAI+7uTvpmZhABKbU4Z35DMXxQMCzFWhp6o8x0K8+99lyce1nou5
+	gg1mbxBjyQU6qw6jyQNphTYzUgCOmk7R6szJd6gBPag7fYnp22Uvvv6dV3EKKiHAIv2Zyw38mxn73
+	feD6sQQpZrua9S3Rdc0EQHBJUigOZ+ophtKoCcgr640gPECEZjhoe14steqFGrs9Szh8GogOMKpyW
+	d8k/WR6XfDuP8bcDb1fI24JER7Toqh+KBDSx/Mxwd0mYZsRTXqcwlAvYL3LR9Cj+acnBRNgpX2r4L
+	46bIUWVQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdVd-0000000Al9K-1aSl;
-	Fri, 30 Oct 2026 03:42:29 +0000
+	id 1xMdVg-0000000AlCD-1nAV;
+	Fri, 30 Oct 2026 03:42:32 +0000
 Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdVb-0000000Al80-1jIv
+	id 1xMdVe-0000000AlB8-3HNt
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 03:42:27 +0000
+	Fri, 30 Oct 2026 03:42:30 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 2CC2D42A9C;
+	by sea.source.kernel.org (Postfix) with ESMTP id 7898140591;
+	Fri, 30 Oct 2026 03:42:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 899171F000C1;
 	Fri, 30 Oct 2026 03:42:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ECF81F000C1;
-	Fri, 30 Oct 2026 03:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793331747;
-	bh=oFdcpP+KgyuG6C2z1UxbacnABme3LeVHkLzHOj3cdDI=;
+	s=k20260515; t=1793331750;
+	bh=wKRDIwlNotbn2pTACKd/ug1jEVrX0r6bM2vUYvA137A=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ClQIDxgk1yRspzgLDfDSXXnUvA9x9wLU+7rTeWjktOQv44BbSf8ZAoPJVRunbihvu
-	 Mdw7Kr9BJX4AZZsidRiAndjFd7/PJHuEYOv8GZVsM+94Z5Iv/zaoO3Cp6OP69xQErp
-	 VYAb6u1R1g+vnJos2ikjPO3xFZioRkK9HjOLvPFfkWXFuNCGYWwjODP/1qbbrs7u4D
-	 4VvhYpVsDW/Sgyz0w3ZSwRsDokYiDu7LYnybbnmxR75eU0fox/lEzPx9MaQWij5KeX
-	 gvkVnikDEciojkdKJ6OPz8P6rqOhAoGzpTN24xLuzgCcjacJCAc6wD+NCIURU+Rr5G
-	 esW5j0Bor9uTA==
-Message-ID: <sashiko-outbox-190269@kernel.org>
+	b=fLbwWRdZHN/LG5u47Q/45vT9Aev7MeA5MmBbL+5CedwWMaiapKC8ZoLyLQ3quCnTL
+	 TXHa5XZqMJBa9lqRtpKN4myab77CvH2EI1Ey2c+pD2wsDOIirdFxI7/axMWDssd/Rr
+	 oYdjWCcLcByFeJUN3eOeOvYQYy6LPhAl+SDw+hJgnE0dTcWv7xDTBZuw8nupJfWb+n
+	 8OvKRl2twd9WW+LNSboSgYU+N2RgUZa5dJ4DHGOwopxdmEbZ0ZZiHmBMUZDuVKo/PP
+	 L3g0/w+ud04RNn/bykWZjzi+D87CTj1vDFlrZVLGXTE+U0HHZxYHk9WI47WudVy6o1
+	 tD5sPmlQXJ43Q==
+Message-ID: <sashiko-outbox-190270@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 41/47] mm/ksm: check large swap-cache folios before
- mapping them
+Subject: Re: [PATCH v2 42/47] mm/vma: call ->may_split() before a partial
+ merge
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -75,12 +75,12 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
 Cc: kexec@lists.infradead.org, "Chris Mason" <mason@kernel.org>
-In-Reply-To: <20261029-fixes_core-v2-41-a64ce7f83abb@kernel.org>
+In-Reply-To: <20261029-fixes_core-v2-42-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-41-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-42-a64ce7f83abb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 03:42:24 +0000
+Date: Fri, 30 Oct 2026 03:42:27 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,30 +102,30 @@ X-Archived-By: <archiver.kernel.org>
 
 > From: Chris Mason <mason@kernel.org>
 >=20
-> KSM folios are always small, but their shared swap slots can be read
-> back as part of a large folio in the swap cache. ksm_might_need_to_copy()
-> skips large folios, so another process can map a page with an incompatible
-> anon_vma or page index. Reverse mapping then cannot find the new
-> mapping, preventing migration or reclaim.
+> A driver can use the ->may_split() hook to forbid a VMA boundary at
+> certain addresses.
 >=20
-> Apply the same compatibility checks to large folios as to small ones.
-> Pass the page corresponding to the swap entry and copy only that page
-> when necessary. In do_swap_page()'s copy path, decrement only that slot's
-> swap count, because the source swap-cache folio can now be large.
+> A device-dax device is a character device that gives raw access to a
+> range of memory through mmap(). device-dax refuses any address that is not
+> a multiple of the device's alignment through vm_ops->may_split.
 >=20
-> Fix generated by an LLM and sent by Chris Mason in private.
+> vma_merge_existing_range() can move boundaries, but does not call
+> vm_ops->may_split.
 >=20
-> Fixes: f1879e8a0c60 ("mm, swap: never bypass the swap cache even for SWP_=
-SYNCHRONOUS_IO")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Chris Mason <mason@kernel.org>
-> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> If a range at the edge of a VMA gets the attributes of the adjacent VMA,
+> the function moves only that range over to the neighbour: one VMA shrinks
+> and the other grows. This is a partial merge, and vma_modify() tries it
+> [ ... ]
+> [ david: improve description; cleanup the code ]
+> Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+> Tested-by: Gregory Price (Meta) <gourry@gourry.net>
+> Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-fixes_core=
--v2-0-a64ce7f83abb@kernel.org?part=3D41
+-v2-0-a64ce7f83abb@kernel.org?part=3D42
 
 
