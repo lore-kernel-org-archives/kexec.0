@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA5B606A31A
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:40:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FB2606A31A
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:40:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=yYrQBNGa;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ldUgwhDa
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=1ZEoHfaO;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FXYK/0/v
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=ylGAM8KQRZ9ZLmaDOtxL+ExPvvFScgEppaE4+gvRGSE=; b=yYrQBNGalig4iXGY973aKaMuOw
-	3hUjIlfF68jdGcAF7Uz0/H54nC9SJ9MRB1w+Ax2eFwUNfF6YQtkdvYM07jqCcRo/m3FnU8IWrmwi8
-	mZ2CcF+Z9knndCbfjHZJtwYqPH/SJ+hvHK8GUKFLvjIPkSgrkLt3awVs6CZmJw3g3ve9w0HlYUg0w
-	jjlTc61oxgMGbSrHAby6DTctB5sVuAwjoU3vTlCDosvkGDPjIp/JsCrL/cqrVp9QQNEGU4qQPwgxi
-	m3Aa/ZYruewIaTfm1Bh6cDp6W1U14iueNv+9yffEOu5a9ZzULyL9ciS638miTVcYaK7nPfSZQouXS
-	UlW8TOXg==;
+	bh=IfXkLdB2R4sDImm8bzY/1UjAIsrAfwRilVnQTGvBTuU=; b=1ZEoHfaO1Gpw6jxb/a2GdS0GLB
+	jYBSOgYIOZdBlqm+SlgfkYdaH+m4oYH9gNcpSfvzNfOm2oV+yLLmm/GtLmRN2lYLo+s3pFD10bpET
+	nv2ulFWtmV61d54dBni6YeM8tHbzNDlmbcTTcRindLHnJPig0u866qYlSEowU4x46MzRmz3F05ejf
+	tsBRzvrMus820HxgUH6/ZYM9daDHKBjYdiEDGI2/cbyhV9sIbFC0uZDkdPPrGhqe8W0I+vCweNyA8
+	l4r+5cf9CxFbYLBjstTDhU5pyY9HeWDNz7paaYJvBsY98ptOBle0A1PSJWTb3YIQ3w0L30U0Ooboy
+	XtyEghwQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdTz-0000000Ak0t-14kA;
-	Fri, 30 Oct 2026 03:40:47 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xMdU3-0000000Ak3n-2zam;
+	Fri, 30 Oct 2026 03:40:51 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdTy-0000000Ajzk-0mAU
+	id 1xMdU1-0000000Ak26-27D6
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 03:40:46 +0000
+	Fri, 30 Oct 2026 03:40:49 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 84FF7600E4;
+	by tor.source.kernel.org (Postfix) with ESMTP id E8154600C8;
+	Fri, 30 Oct 2026 03:40:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3FDA1F000C1;
 	Fri, 30 Oct 2026 03:40:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6F371F0093A;
-	Fri, 30 Oct 2026 03:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793331645;
-	bh=ylGAM8KQRZ9ZLmaDOtxL+ExPvvFScgEppaE4+gvRGSE=;
+	s=k20260515; t=1793331648;
+	bh=IfXkLdB2R4sDImm8bzY/1UjAIsrAfwRilVnQTGvBTuU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ldUgwhDaBnmnAkJVyc3e+gU8hak4j54zcsnSMOpGXPWewvQSrwBi0uX3/8A8DXpXd
-	 yLuD9ey1ds4DaeiQuyV5fY33YWmImUg9rXwPhRVQWjTxHVZ6cBycC4HH8LlkmGLkkS
-	 HbGSpg4ifa8ksdFku4Lh460iYK37O2O5FheBPcVrP7E+4SqPKNeYoosOuVEhLO089y
-	 MzpWQ+2D4FyMAyYDxEFRGgUc8QRRlJg9tTYAq15U2rte2nDdlhjn1id8QUs380ENFa
-	 yW3D4mBXPMNvAGgfTXla/Evlj28i3iJorxJ1Czs3j2UGQEI9WGDPcANRjmc60ouyGS
-	 6gLZMFD4ajABg==
-Message-ID: <sashiko-outbox-190239@kernel.org>
+	b=FXYK/0/vbbRVTpCfi5NSPh0rsRu3XHDuU4p1ncAnAn9u2KhLt7a11/ulAHTdXSI89
+	 Y0AHpJ5J+ZjwxSwoX36ie+QwEwU4M/Z7moUh+EMte6IJ9r7LPKVGYthTLxD6wJbKEZ
+	 AqohEGYHGzsqDlLqhfkIgGqaUws1J8bujta7wXhdX5kH+ae0rfgyjrbqjd8GO0qSkg
+	 n3mcBYAZkOxo5PKVmQRuODtKb8Wx9M/+BIoXO/nAp7JZ7vNMhiPig4/0ofjQv20paz
+	 2gk7YH9JJUYGIITKm9loz/xC9KaWp/ngJKJ5f3tWSii3dQne94HPVOlWqp7Abg6E34
+	 kKZU3rQGjAXBg==
+Message-ID: <sashiko-outbox-190240@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 11/47] mm/huge_memory: properly handle refcounted PUD
- mappings on fork
+Subject: Re: [PATCH v2 12/47] mm/huge_memory: fix livelock on device private
+ folio
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -74,13 +74,13 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org
-In-Reply-To: <20261029-fixes_core-v2-11-a64ce7f83abb@kernel.org>
+Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
+In-Reply-To: <20261029-fixes_core-v2-12-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-11-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-12-a64ce7f83abb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 03:40:42 +0000
+Date: Fri, 30 Oct 2026 03:40:45 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,25 +100,31 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> copy_huge_pud() copies device-DAX entries without taking a folio reference
-> or updating mapcounts and the child's RSS.
+> From: Josef Bacik <josef@toxicpanda.com>
 >=20
-> For example, MADV_GUARD_INSTALL sets VM_MAYBE_GUARD on a device-DAX VMA,
-> forcing copy_page_range() to traverse the whole VMA on fork. Any remaining
-> huge PUDs are then copied without accounting for the new mappings.
-> Unmapping them in the child decrements accounting that was never added.
+> If do_huge_pmd_device_private() cannot lock the folio, it simply returns
+> to try again on the next fault.
 >=20
-> Use vm_normal_page_pud() to identify refcounted mappings. Take a folio
-> reference and add the child's PUD rmap and RSS accounting before installi=
-ng
-> the copied entry. Pass src and dst VMAs consistently instead of src and
-> dst MM. Move the TODO.
+> Just like we did in commit b570f37a2ce4 ("mm: Fix a hmm_range_fault()
+> livelock / starvation problem"), let's wait for the softleaf entry,
+> which will drop the PTL and wait until the folio was unlocked. This is
+> precisely what we do in do_swap_page() with device-private folios. This
+> avoids possibly livelocking.
 >=20
-> Fixes: aed877c2b4257 ("device/dax: properly refcount device dax pages whe=
-n mapping")
-> Cc: stable@vger.kernel.org
+> Update softleaf_entry_wait_on_locked() documentation to clarify that
+> device-private entries wait until the folio is unlocked.
+>=20
+> There seems to be no compelling reason to backport this to stable
+> kernels unless we actually see problems there.
+>=20
+> Fix generated by an LLM and sent by Josef Bacik in private.
+>=20
+> Fixes: 4964099163d0 ("mm/memory/fault: add THP fault handling for zone de=
+vice private pages")
+> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+> [ david: simplify patch description, fixup softleaf_entry_wait_on_locked =
+description]
 > Reviewed-by: Zi Yan <ziy@nvidia.com>
-> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 > Reviewed-by: Lance Yang <lance.yang@linux.dev>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
@@ -126,6 +132,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-fixes_core=
--v2-0-a64ce7f83abb@kernel.org?part=3D11
+-v2-0-a64ce7f83abb@kernel.org?part=3D12
 
 
