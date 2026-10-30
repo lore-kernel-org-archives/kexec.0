@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13ACF606A31D
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:42:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3523606A321
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:42:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=VRDabC7s;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aLNO1N0+
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=fC/6w0I1;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cuzNSJ3N
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,39 +14,39 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=dtYY2IbHusF8u6PurHtWtFH/FeUtCD3CRaNl91mK+3I=; b=VRDabC7sm0PQoaMdhxFrifrG6J
-	VTGvozrsLynDyQHDL9sTgAhF6vVpXfL0no/2JJ6FAWX4sdXWW6GAsol/4S4aHIO9BlB3g/+/6Cnnl
-	aUkEjqUdMZh/yDeiPyk/Q5A8xDZyJnIAWOW536J0NDN2liWXoEX+1FOfMICCW0k2fHPr6qeZJLm6P
-	m+J63R5gpi10iGNogMa0RaA4BHTHXeBwSylEj+BoKBDhi/pgwZ3/jTEmnjAk4d/51yy5RVi3dfoiI
-	GV0q7w3Wmzbfy3MLx6TfyT2nTIZVA7QZl6IBOHVfckHoQuMKIRLP8Vtp7BwiNMEq8KFQkqrj4GH74
-	6l8RsYRw==;
+	bh=B0Ll3KZd/2ziMYeiGgscSMDWwXvufGTqPOd/mun6tfo=; b=fC/6w0I17DodBwrRObVDtsSXAt
+	h/aCF3T8S9j5uopVQpWlur/Ro9eBjimdjvZoW6DI1vvsxj4TylPbN6P+UvZLHFhBdF8109q7IpaKB
+	RA7Vyq3hdatYTXYClbZjLJDN/TahdLqyvvMkPU96H1rG3moIhddyF5KRXYXHjnSEllwM0zfiomDB0
+	W5XzrfbECgjW/WMq4r+hSJ4qBvYLJ0ddAfWwxY4PLUHwq411sXHGiH/dCGSwY1oa6HEbIDxkNoLMq
+	GBdW11nEAxOZNGfYYVRF8xsAqE0A6eFtYSOIr0VtPBBpzKmxHcZc/ie5ltkvbTdkSzCzUmbOH9ts+
+	n6UfQMGg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdVW-0000000Al45-2Xio;
-	Fri, 30 Oct 2026 03:42:22 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xMdVa-0000000Al6k-0AcO;
+	Fri, 30 Oct 2026 03:42:26 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdVV-0000000Al2z-0frC
+	id 1xMdVY-0000000Al5R-1rdi
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 03:42:21 +0000
+	Fri, 30 Oct 2026 03:42:24 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id E16E640290;
-	Fri, 30 Oct 2026 03:42:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0862A1F0093A;
-	Fri, 30 Oct 2026 03:42:17 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 287F3413CF;
+	Fri, 30 Oct 2026 03:42:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 427211F000C1;
+	Fri, 30 Oct 2026 03:42:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793331740;
-	bh=dtYY2IbHusF8u6PurHtWtFH/FeUtCD3CRaNl91mK+3I=;
+	s=k20260515; t=1793331744;
+	bh=B0Ll3KZd/2ziMYeiGgscSMDWwXvufGTqPOd/mun6tfo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=aLNO1N0+CjFMK7yI8dJXEdF5fJ70w3G3KUUi6el65vVfA4LJ2uWOu0q2myyuuDv76
-	 ElxQHkU8Jkr4zxMyPFAdMQdj/g5I5k6zEXw79y83lIeCzGGbM9J4InFwio++ZsC3zd
-	 1k9B0b9572A/WapwsxZth8uZTfJQif0emWAWwXLBlStpiu04rC820ZqypAqcIl0mVG
-	 eFwf3LKj+1vOHa4lFfzlrmTDGWp/mp4wYU6o+IU9/DOi1DcQq/8k9ZWB+s8Q6Ec00b
-	 g8O+QdFrBvYYZKcSIkdGLi48/OhjgKlLppYF4EVsL7TFJhJosuiipdCFY5PLdtDrpT
-	 Vxdslmy9he21A==
-Message-ID: <sashiko-outbox-190267@kernel.org>
+	b=cuzNSJ3NAD2t26YEqiHWiBiFIhGhFPzM5af5XTYo/oFLZIZr2pNySGhB6P9W+OXjk
+	 QNWpy1yfl3O9iPo9+UAradfy7hFUgd4/yte0UX8nM/hmzjs36F8V1XB3C2Ls7Lb9p2
+	 GtLrWybBwuB1p83Aowa4Lkb44O02T9vJt/ARCE/q5KOicuYiyZtDapSlln60HlDj8t
+	 eMa06EKf29456OP6F3V8XgWIRBSVRJs+1WiiTrKlz/uCKeOdNqPwtxfL0OOHQpVHjC
+	 pmHJ49swtQ8ywjLVXgSur1fyLI1+idiTMiLzwisIusIPT/kxrxkmr3woi6iOku84B5
+	 fxQdpOCbOMvEA==
+Message-ID: <sashiko-outbox-190268@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 39/47] mm/ksm: reset the unstable trees of all nodes
+Subject: Re: [PATCH v2 40/47] mm/ksm: fix use of a freed anon_vma at swap-in
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -73,13 +73,13 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261029-fixes_core-v2-39-a64ce7f83abb@kernel.org>
+Cc: kexec@lists.infradead.org, "Chris Mason" <mason@kernel.org>
+In-Reply-To: <20261029-fixes_core-v2-40-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-39-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-40-a64ce7f83abb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 03:42:17 +0000
+Date: Fri, 30 Oct 2026 03:42:20 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,37 +99,32 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Each full scan resets ksm_nr_node_ids unstable tree roots. Enabling
-> merge_across_nodes resets this count to 1, even if per-node roots were
-> previously allocated.
+> A folio read from a swap slot previously shared by KSM can remain in the
+> swap cache after the process that first mapped it exits. Its anon_vma
+> can then be freed, so ksm_might_need_to_copy() must not dereference it
+> to compare roots.
 >=20
-> So when toggling "merge_across_nodes" 0 -> 1 -> 0, a scan that starts
-> while the setting is 1 and continues after switching back to 0 can
-> encounter stale unstable tree roots, resulting in UAF.
+> Doing so can result in some false-positives, resulting in the reverse
+> mapping missing the new folio mapping, preventing migration and reclaim.
 >=20
-> Only root is allowed to change "merge_across_nodes", and the documented
-> sequence is: "merge_across_nodes setting can be changed only when there
-> are no ksm shared pages in the system: set run 2 to unmerge pages first,
-> then to 1 after changing merge_across_nodes, to remerge according to the
-> new setting."
+> SLAB_TYPESAFE_BY_RCU allows individual anon_vma objects to be reused
+> immediately after freeing. A stale pointer can then refer to another
+> anon_vma whose root matches, even though the target VMA is not linked
+> to that anon_vma.
 >=20
-> Let's fix it by tracking in ksm_nr_node_ids the actual number of
-> allocated tree roots.
->=20
-> remove_all_stable_nodes() and ksm_check_stable_tree() will now scan
-> more tree roots (skipping the empty ones), which is harmless.
->=20
-> Fixes: ef53d16cded7 ("ksm: allocate roots when needed")
+> Move the anonymous rmap compatibility checks into
+> folio_anon_rmap_compatible(). Keep the page-index check and compare the
+> [ ... ]
+> Fixes: ba6f0ff3981e ("ksm: fix ksm swapin time optimization")
 > Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
-> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> Reported-by: Chris Mason <mason@kernel.org>
+> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-fixes_core=
--v2-0-a64ce7f83abb@kernel.org?part=3D39
+-v2-0-a64ce7f83abb@kernel.org?part=3D40
 
 
