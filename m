@@ -2,123 +2,63 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE4F606A31E
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 00:57:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51019606A329
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:09:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=hvgqriod;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bck9LEQ0
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=qfA+ufZT;
+	dkim=pass (1024-bit key, unprotected) header.d=126.com header.i=@126.com header.a=rsa-sha256 header.s=s110527 header.b=PuWXMmG1
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=M6bpDqyFL1t6pXSfv5Po8tZyxphIeTUYr2/GTeN0+Ow=; b=hvgqriodkqwiYa
-	wtMjtdl6QQnhFS0nC8AnGOx+1Q9JQVKRD6qsmvrSkZm4eUG3perVc6aHbVVs2sz1f4Ridb0PNWbdB
-	esNamwE8ZTWGAi5v/WhLqEUZolJWZab/e4cs/ddyLg19FeH6Fx7Kf4t37/Rxx/8vZS670MTsEJz7n
-	fjw35VwH5crz5vR1ZqG9aJn5oVTBJht6jKsGYi0XaXLkWxPVDGcrT1iSlE0LcfcyKvUoOWevVKj6n
-	UqXImS23XKfeYCGlpdE9/BtZp1MMwOmIgB4QxF5xOzZZA0jGEyY8DLpnsg3H0yRp3MV3kgGNqLlZW
-	8i7b0XCUq3uDWqGIz92w==;
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Unsubscribe-Post:List-Owner;
+	bh=k6t9eyb2E8jkIZBTmriw5WaYSUJLnvk+ry/+WUbhsWg=; b=qfA+ufZTiDItprmLPFdhMjmPwy
+	GPi5s1kE0KF+KEr8Rx49yjbzEY4k6DYKlHkkHFDC+BWwE9ftBn3cgIRJLeb40zAE0mvcyYV+U5Ypp
+	vKvBc2Gt1fUHhiyi0rjj8AjMFvlY7eDQkN3oX8ZJoSQFhT08NZIbSfKgEutCTqq3WvHCXbUFINUsB
+	weZTbqbCK25qtGwixm9etvUOJ83d4RdijxESDjZu0ldCYYAWNckB0Y6Lw4g+Noih+ze2dppH959nO
+	jw/HroZ6jDmpkxqI8KQokFcsdgisqfEIw1UUudmjE/359a9or5Ez/kjaVHaUyGVaSLl9LRDlffQf9
+	8r+87VlQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMaw8-0000000AamN-1yHi;
-	Fri, 30 Oct 2026 00:57:40 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xMczv-0000000AiKx-3xPF;
+	Fri, 30 Oct 2026 03:09:43 +0000
+Received: from m16.mail.126.com ([220.197.31.7])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMaw5-0000000AamA-1H6K
+	id 1xMczt-0000000AiKY-0kKY
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 00:57:37 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id C9CEE60267;
-	Fri, 30 Oct 2026 00:57:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5070C1F000C1;
-	Fri, 30 Oct 2026 00:57:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793321855;
-	bh=M6bpDqyFL1t6pXSfv5Po8tZyxphIeTUYr2/GTeN0+Ow=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bck9LEQ0UPt4LikhQsWdEDa6SKxVHXgeqY8QxTgswXVFtiDdPukVSUu4n9MbVtYs5
-	 9bJB0UhYlqNoSAncXFJ2j1+NWPJNqcsDIAUWHsMxFaaWRhN5euG3twTUKMEQOkhMHq
-	 kCqRFz7lMFFHp8ifCqslKWbUlluFBnrNX2Gsx1QQZJ1my3+Qiqa83Vi4wtVn+wWcXY
-	 yr12zqlMfd4YaoyLMi/eCnYBn6ROMiu9tbRatmj2MhIT5+dvt+dbydBKyR+FVLJc9O
-	 dqXK/TupCXUvbOJG5GZZZVlCKD/5zJ1rV6kAoCfn2B0Pn4nRrmkZIvQ909w4V4Nmjy
-	 P8zEJJwppvlEQ==
-From: SJ Park <sj@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: SJ Park <sj@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Qi Zheng <qi.zheng@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	Kairui Song <kasong@tencent.com>,
-	Barry Song <baohua@kernel.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>,
-	Wei Xu <weixugc@google.com>,
-	Baoquan He <baoquan.he@linux.dev>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Kees Cook <kees@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	Hugh Dickins <hughd@google.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Jan Kara <jack@suse.cz>,
-	Zi Yan <ziy@nvidia.com>,
-	Lance Yang <lance.yang@linux.dev>,
-	Rik van Riel <riel@surriel.com>,
-	Harry Yoo <harry@kernel.org>,
-	Alistair Popple <apopple@nvidia.com>,
-	Nico Pache <nico.pache@linux.dev>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>,
-	Usama Arif <usama.arif@linux.dev>,
-	Kiryl Shutsemau <kas@kernel.org>,
-	Matthew Brost <matthew.brost@intel.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Peter Xu <peterx@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	Nick Piggin <npiggin@gmail.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Minchan Kim <minchan@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Xu Xin <xu.xin@linux.dev>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Chris Li <chrisl@kernel.org>,
-	Kemeng Shi <shikemeng@huaweicloud.com>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Youngjun Park <youngjun.park@lge.com>,
-	Gregory Price <gourry@gourry.net>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>,
-	Rakie Kim <rakie.kim@sk.com>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	Josef Bacik <josef@toxicpanda.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2 27/47] mm/mmu_gather: fix flushing ranges with 4 GiB or larger
-Date: Thu, 29 Oct 2026 17:57:25 -0700
-Message-ID: <20261030005726.155279-1-sj@kernel.org>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20261029-fixes_core-v2-27-a64ce7f83abb@kernel.org>
-References: 
+	Fri, 30 Oct 2026 03:09:43 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=k6
+	t9eyb2E8jkIZBTmriw5WaYSUJLnvk+ry/+WUbhsWg=; b=PuWXMmG1JDpzYKedlP
+	Osf15RRJZmrcGyFGwOfpM9szQP1b3ULVBUHYU5kGPsfBySndyMo8RNfrPkgY+3sM
+	KaD67UFKXw4dlq/VIJCiEQS9C71FEfnObwJOr/8Q+D4W1cwA/4Im4Jj82sdB7GKk
+	aQQq7RllJGB5uVzXKOBe2Aew0=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wD3915sCuRqXTr0Bw--.61347S2;
+	Fri, 30 Oct 2026 11:09:33 +0800 (CST)
+From: zhangzikang1992@126.com
+To: kexec@lists.infradead.org
+Cc: zhangzikang <zhangzikang@kylinos.cn>
+Subject: [PATCH] kexec: fix stack buffer overflow in update_purgatory()
+Date: Fri, 30 Oct 2026 11:09:18 +0800
+Message-Id: <20261030030917.103293-1-zhangzikang1992@126.com>
+X-Mailer: git-send-email 2.25.1
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: _____wD3915sCuRqXTr0Bw--.61347S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7WrWkJr4kJr1kWF13JFWrZrb_yoW8Crykpa
+	9xKF1DKw4rA3WIkFn7tF4xZas8Zws5GrWrAFWj93y8Jr18CFy0qay2qa1qyF4jyrW3K347
+	Wrn0qFZ3X3W8ua7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jFsjUUUUUU=
+X-CM-SenderInfo: x2kd0wp2lnt0jjrzmja6rslhhfrp/xtbBlg1xs2rkCm0tQQAA3c
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261029_200941_684720_C046481A 
+X-CRM114-Status: UNSURE (   6.80  )
+X-CRM114-Notice: Please train this message.
+X-Spam-Score: -1.8 (-)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -129,62 +69,50 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Thu, 29 Oct 2026 21:33:22 +0100 "David Hildenbrand (Arm)" <david@kernel.org> wrote:
+From: zhangzikang <zhangzikang@kylinos.cn>
 
-> From: Josef Bacik <josef@toxicpanda.com>
-> 
-> __tlb_adjust_range() takes the size of the range which has to be flushed
-> as an unsigned int. Its callers, tlb_flush_{pte,pmd,pud,p4d}_range(), get
-> and pass an unsigned long. Consequently, a range that is 4 GiB or larger
-> gets truncated, possibly to 0.
-> 
-> On arm64 with hugetlb, a 64k kernel can have 16 GiB hugetlb folios
-> mapped contiguously at the PMD level and flush them when unmapping, and a
-> 16k kernel can flush 64 GiB PUDs through tlb_unshare_pmd_ptdesc(). So
-> at least these two scenarios are affected.
-> 
-> Fix it by flushing the proper range instead of the truncated one by
-> properly using "unsigned long" for range_size.
+Problem:
+A stack buffer overflow exists in "update_purgatory()". The local array "sha256_region region[SHA256_REGIONS]" (size 16) is written during iteration over "info->nr_segments" without boundary checking for the write index "j".
 
-Makes sense to me.
+"Add_degment_phys-virt()" only issues a warning when "nr_degments" exceeds "KEXEC_MAX_SGMENTS" (=16) and continues to append segments. Therefore, "update_purgation()" may be called, causing "nr_degments" to be much larger than "SHA256-REGIONS", resulting in "region [j]" being written outside of the 16 item stack array. This type of out of bounds write will damage the Canary stack and adjacent stack frames.
 
-> 
-> Fix generated by an LLM and sent by Josef Bacik in private.
-> 
-> Fixes: b528e4b6405b ("mm/hugetlb: add tlb_remove_hugetlb_entry for handling hugetlb pages")
-> Fixes: 8ce720d5bd91 ("mm/hugetlb: fix excessive IPI broadcasts when unsharing PMD tables using mmu_gather")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> [ david: use two-tab indent, simplify description ]
+Impact:
+Stack buffer overflow causing process crash (resulting in denial of service through Canary termination); The potential for controllable stack destruction depends on the content of the image.
 
-It seems the convention [1] is to put the above modification note right before
-the last S-o-b: of David.  Maybe you forgot moving it after adding R-b: and
-T-b: from great reviewers?
+Fix:
+Before writing to "region[j]" in "update_purgatory()", add a bounds check on "j" to ensure that writing stops immediately when "j" reaches "SHA256_REGIONS", preventing out-of-bounds writes from corrupting adjacent global variables.
 
-> Reviewed-by: Qi Zheng <qi.zheng@linux.dev>
-> Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
-> Tested-by: Gregory Price (Meta) <gourry@gourry.net>
-> Reviewed-by: Dev Jain <dev.jain@arm.com>
-> Reviewed-by: Muchun Song <muchun.song@linux.dev>
-> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+Signed-off-by: zhangzikang <zhangzikang@kylinos.cn>
+---
+ kexec/kexec.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Reviewed-by: SJ Park <sj@kernel.org>
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index c9e4bcb..732058e 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -728,6 +728,11 @@ static void update_purgatory(struct kexec_info *info)
+ 			sha256_update(&ctx, null_buf, bytes);
+ 			nullsz -= bytes;
+ 		}
++		if (j >= SHA256_REGIONS) {
++			fprintf(stderr, "Warning: SHA256 region limit reached. "
++				"Skipping remaining segments from checksum region list\n");
++			break;
++		}
+ 		region[j].start = (unsigned long) info->segment[i].mem;
+ 		region[j].len   = info->segment[i].memsz;
+ 		j++;
+-- 
+2.43.0
 
-[1] https://docs.kernel.org/maintainer/modifying-patches.html
-
-
-Thanks,
-SJ
-
-[...]
 
