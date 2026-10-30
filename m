@@ -2,54 +2,55 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD143606A334
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 11:15:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AAE6606A321
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 11:20:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=oJY+jHmE;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X0Z5bJ43
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=LjJnIam+;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X8DkNBsz
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Content-Type:In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=jcFVnDvIZ8heZvYaiF3eCzfDTR74GY+V/2n+TMcTvAs=; b=oJY+jHmEGDZyAY
-	zJqTjgaI3Dz/Jx2UE8K0CUKamde+HFJMDqgRU5WVpFdIm8JzE+5gf8OlWBcN4ADhMoZj/FShrEuH3
-	eAwfSuTc8eWwV/hBYUjK4abvgodueos2qs5UkQchAP4cQO0AvhyPDCxhqRPjVzM/Dm584MKx9P25B
-	ALtQyu0Pjb0v/qQFJkvO2fnrbmARHa2eTx1Ltn5FdZT/HHxjvpHYgeSCrs8V037HZMOd51VHclLEH
-	ZJXnaOFDRXbBN6RvKNi/J9HfZCqV+ATvcbzoSHc+i1osBEwpH5mzdwNSPm2d6f4PomEPrEbkg7RLG
-	4BoAeemuqJ5ctbiDC0aA==;
+	List-Owner; bh=euk1MZglVLNri+rYCLQwY1lNbQIirnUyD9xcyB6Byp4=; b=LjJnIam+LDbdNT
+	B1U2MgVgYjaLbVgtMJFF0PLl17tFsUA5+gAa/4eEaOvv+e1jPR8uQUjehT0gjb13zjUaQtj0aDUSE
+	oit6f1IEvV2yK47RdhWK5RTtv9y8HRUv+bOKrwOjilv+XlHAG2JGf/Em5fkPjgc7gG0R1g7a2Yy4N
+	HMJOtCRbPdAy5zvJf0WjRq2e5o+n59bRU/nJ/GwCQ7bx00KFxzUZerUaRBs76e5nONIZEdNYfbIfC
+	ofyuo8KdrdZpOjdRGcP/8wRylKRF3I3E/0xJB8tyc48Qedxlm7Z49cvEdpDLIO27hpNoJ0SVTG22B
+	mK1O30ks+HzYsK2Y8J2A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMkaC-0000000BW9n-1q1L;
-	Fri, 30 Oct 2026 11:15:40 +0000
+	id 1xMkeU-0000000BXMT-2kGg;
+	Fri, 30 Oct 2026 11:20:06 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMkaA-0000000BW8s-1Kte
+	id 1xMkeT-0000000BXMK-3fdO
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 11:15:38 +0000
+	Fri, 30 Oct 2026 11:20:05 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 6C028605D0;
-	Fri, 30 Oct 2026 11:15:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9548D1F000C1;
-	Fri, 30 Oct 2026 11:15:22 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 4D65E601EE;
+	Fri, 30 Oct 2026 11:20:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C06A81F000C1;
+	Fri, 30 Oct 2026 11:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793358937;
-	bh=jcFVnDvIZ8heZvYaiF3eCzfDTR74GY+V/2n+TMcTvAs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=X0Z5bJ43M9j+dsxw0EOfb2RfVAPvTOOq7wzfRja5C/mo0S5QFye2IEgPAlORI4c3g
-	 ifImjUhJwdI8WKJ5YsmZzwNO9T/m0kviNcNKqqlF1HggGNZPwAWIf5tuKcs2oU5XVz
-	 izKsKdkgcOFL5wt8C5/w8BeHHulb+7ldzTHu+6qfcHg6P136wlJ4Zt/a0lQGMSi3hY
-	 KM0nA2fT0xAsx3g4kOpikLMdyV+GVhDasUmL3YTRLy61zlRQukgrzzF1OnpaAKinvF
-	 CdRbd2dFS6Ly6QcLF/O4Pob9/Zy+lYtZgiUY62l/mQIs9T+8HMZdWboQ0mM+HSpbiP
-	 UY5gtheZjBa1w==
-Message-ID: <48a66134-3522-4b81-adca-4e76d52dc391@kernel.org>
-Date: Fri, 30 Oct 2026 12:15:19 +0100
+	s=k20260515; t=1793359205;
+	bh=euk1MZglVLNri+rYCLQwY1lNbQIirnUyD9xcyB6Byp4=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To;
+	b=X8DkNBszymg7DuZ6+Bhdqn9pMKv5GvRX7MN6A6XfqeofSms7pCCBsQrTGdxenLipv
+	 SfBkuCgtqgHo5NAF2TLOVZP4tnKWXJLqwO+f7RPDcBuWWPWHu+PfR17rMsqBFFNV6S
+	 lPsQnD4cT7ccl6FS6w1siLPO3V4q/J5fOE8TxFzuhxio7xGSYqO+WWbeCP+mJTlFGn
+	 VTwXQGVqR5ftMB6ScKb/G3bIbPgk9qnzJpD5jp+MtS+6lx2FFbv58ZUJDcZ7IwvteO
+	 x7JhGdArobuCUeeCxdmxzteC3/LlouaJl+KZfgJJlhmQmbmIdfM/R8yr4p1n+o8BxR
+	 1kO0q/J2vqvrw==
+Message-ID: <6ac05dd8-321a-4c2e-bce8-bd7ffcac9eac@kernel.org>
+Date: Fri, 30 Oct 2026 12:19:46 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 27/47] mm/mmu_gather: fix flushing ranges with 4 GiB or
  larger
+From: "David Hildenbrand (Arm)" <david@kernel.org>
 To: SJ Park <sj@kernel.org>
 Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
  Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
@@ -87,7 +88,7 @@ Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
  linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
  stable@vger.kernel.org
 References: <20261030005726.155279-1-sj@kernel.org>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
+ <48a66134-3522-4b81-adca-4e76d52dc391@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -133,7 +134,7 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20261030005726.155279-1-sj@kernel.org>
+In-Reply-To: <48a66134-3522-4b81-adca-4e76d52dc391@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
@@ -154,56 +155,50 @@ X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 10/30/26 01:57, SJ Park wrote:
-> On Thu, 29 Oct 2026 21:33:22 +0100 "David Hildenbrand (Arm)" <david@kernel.org> wrote:
+On 10/30/26 12:15, David Hildenbrand (Arm) wrote:
+> On 10/30/26 01:57, SJ Park wrote:
+>> On Thu, 29 Oct 2026 21:33:22 +0100 "David Hildenbrand (Arm)" <david@kernel.org> wrote:
+>>
+>>> From: Josef Bacik <josef@toxicpanda.com>
+>>>
+>>> __tlb_adjust_range() takes the size of the range which has to be flushed
+>>> as an unsigned int. Its callers, tlb_flush_{pte,pmd,pud,p4d}_range(), get
+>>> and pass an unsigned long. Consequently, a range that is 4 GiB or larger
+>>> gets truncated, possibly to 0.
+>>>
+>>> On arm64 with hugetlb, a 64k kernel can have 16 GiB hugetlb folios
+>>> mapped contiguously at the PMD level and flush them when unmapping, and a
+>>> 16k kernel can flush 64 GiB PUDs through tlb_unshare_pmd_ptdesc(). So
+>>> at least these two scenarios are affected.
+>>>
+>>> Fix it by flushing the proper range instead of the truncated one by
+>>> properly using "unsigned long" for range_size.
+>>
+>> Makes sense to me.
+>>
+>>>
+>>> Fix generated by an LLM and sent by Josef Bacik in private.
+>>>
+>>> Fixes: b528e4b6405b ("mm/hugetlb: add tlb_remove_hugetlb_entry for handling hugetlb pages")
+>>> Fixes: 8ce720d5bd91 ("mm/hugetlb: fix excessive IPI broadcasts when unsharing PMD tables using mmu_gather")
+>>> Cc: stable@vger.kernel.org
+>>> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+>>> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+>>> [ david: use two-tab indent, simplify description ]
+>>
+>> It seems the convention [1] is to put the above modification note right before
+>> the last S-o-b: of David.  Maybe you forgot moving it after adding R-b: and
+>> T-b: from great reviewers?
 > 
->> From: Josef Bacik <josef@toxicpanda.com>
->>
->> __tlb_adjust_range() takes the size of the range which has to be flushed
->> as an unsigned int. Its callers, tlb_flush_{pte,pmd,pud,p4d}_range(), get
->> and pass an unsigned long. Consequently, a range that is 4 GiB or larger
->> gets truncated, possibly to 0.
->>
->> On arm64 with hugetlb, a 64k kernel can have 16 GiB hugetlb folios
->> mapped contiguously at the PMD level and flush them when unmapping, and a
->> 16k kernel can flush 64 GiB PUDs through tlb_unshare_pmd_ptdesc(). So
->> at least these two scenarios are affected.
->>
->> Fix it by flushing the proper range instead of the truncated one by
->> properly using "unsigned long" for range_size.
-> 
-> Makes sense to me.
-> 
->>
->> Fix generated by an LLM and sent by Josef Bacik in private.
->>
->> Fixes: b528e4b6405b ("mm/hugetlb: add tlb_remove_hugetlb_entry for handling hugetlb pages")
->> Fixes: 8ce720d5bd91 ("mm/hugetlb: fix excessive IPI broadcasts when unsharing PMD tables using mmu_gather")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
->> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
->> [ david: use two-tab indent, simplify description ]
-> 
-> It seems the convention [1] is to put the above modification note right before
-> the last S-o-b: of David.  Maybe you forgot moving it after adding R-b: and
-> T-b: from great reviewers?
+> It's "b4 trailers" that apparently messes this up. I don't think it really
+> matters (some move it above all trailers), but I'll fix this up when applying.
 
-It's "b4 trailers" that apparently messes this up. I don't think it really
-matters (some move it above all trailers), but I'll fix this up when applying.
+Thinking again, I *think* this order is correct.
 
-(++ on all the great people around here)
+People reviewed and tested with these changes.
 
-> 
->> Reviewed-by: Qi Zheng <qi.zheng@linux.dev>
->> Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
->> Tested-by: Gregory Price (Meta) <gourry@gourry.net>
->> Reviewed-by: Dev Jain <dev.jain@arm.com>
->> Reviewed-by: Muchun Song <muchun.song@linux.dev>
->> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
->> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
-> 
-> Reviewed-by: SJ Park <sj@kernel.org>
-Thanks!
+it would be something different if I modify a patch while applying it. Because
+then, what people reviewed and tested would be different to the original version.
 
 -- 
 Cheers,
