@@ -2,144 +2,72 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88D8606A329
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 11:35:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0597F606A325
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 12:04:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=DZc4DgSe;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DV7dP3Zs
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=hVcI8JsB;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bKBGo9SZ
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=TYrpZVQ/GsvgUGgPVgovKNkkVkoYTgtTPGZXWBcYsUg=; b=DZc4DgSehHqmAr
-	eL+ldyfGQXvTZo2pV1nk2YzCn5DB313Z1VFSlCYKCkf7/yfA8xeZ5DBvAY68QfwmBP/aCfGTMVaSP
-	k+687r+74nXBKn0lRRfkc25o+luaBHsvpIB/McanCi+bqCFk/acfsOBwgObTx7qnT9PbpcnDMQEQ1
-	UJWsjolhcRpilOMytfye3hldNTCrUqaPFIzwRLNALav+Rt0VuHu5b5tJRqDJO53zieKVQBbKlMJiA
-	cDQ2UpghHoYnkHJdS1MOh5SiVUqnkWwUzrWn2dMIziAmD+8jItsTGYJmO2bdk9p765QHNDC29fllV
-	xF5wO0T/ryL7iX49K4Mw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=v82mzkt/jt6jPtl1ei1Iq8wfRsMZYKIpIpg9HbC5F18=; b=hVcI8JsBxRVJZSvL1dPr60VoOH
+	z/ZZFW/Id4PsCTlwYFe559j6OA9Kc4nvf6L/ilauYlFOnjpjYQ3NS5I/cSWW60zyZkp61DxUoLv6y
+	z8rg85I/+sK/DaGWBInsSPqNxhuIyyOFwDkVN0PpfRB031AIV9ywz1FDJO1Px2su8EiD5ktKWxHSh
+	gkRFB2mYeEUrGW7qpgTShZbXLXsMKq3i9etuJYgcoiFcneBxSq7ROMD/MGXWLgc+2I5uez12AXMIP
+	eeEODGxB1N1HB0+2jdr75+s+K/0ElQ12eTErbyOZ66aVIp2AhNeZ9T1qEv9HmYTLX2TUIAM/d+x1H
+	JUrjSYRg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMktZ-0000000BZ9D-2blm;
-	Fri, 30 Oct 2026 11:35:41 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xMlL6-0000000Bcz9-3zUf;
+	Fri, 30 Oct 2026 12:04:08 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMktY-0000000BZ8k-0MZu
+	id 1xMlL5-0000000BcyZ-1N6u
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 11:35:40 +0000
+	Fri, 30 Oct 2026 12:04:07 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id DE129602CC;
-	Fri, 30 Oct 2026 11:35:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22A911F00A17;
-	Fri, 30 Oct 2026 11:35:22 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 7015543602;
+	Fri, 30 Oct 2026 12:04:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56CDA1F000C1;
+	Fri, 30 Oct 2026 12:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793360138;
-	bh=TYrpZVQ/GsvgUGgPVgovKNkkVkoYTgtTPGZXWBcYsUg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=DV7dP3ZsojHaXxJribD0DKo5b4PCOC8FdkRUgYL7R+uUDI7gUjh5A7huogvcG+J6J
-	 Nd2e24ltHviS/XzS8gcUIifHgGSepFBRuv4iQmYXeeAYxK+UYFoOtK9BPjb/rX84Qr
-	 2m0GTTuKi6u9uhP3b1UQ55GaUl9OONJ2fbAax8hY8CD97plqv+q5+JNPNO220WD6qK
-	 dBbODOTfcboqVXbdiS50rxbmXmGd69ll7rciNrgicqN3QR6abLc4MeZjjSAdK5StQW
-	 z/9hzzkTYNBG8Q3t11Zmx8tUQAbm1gypQjVg8uptfgJSeyJf1lNVlen0WpnB2ukvv/
-	 1WLh2kL5FKdjA==
-Message-ID: <baeda061-e0d0-4be1-9aa5-8886182ca83f@kernel.org>
-Date: Fri, 30 Oct 2026 12:35:20 +0100
+	s=k20260515; t=1793361846;
+	bh=v82mzkt/jt6jPtl1ei1Iq8wfRsMZYKIpIpg9HbC5F18=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=bKBGo9SZfxwjC/Xfqsy4J8CcQ7x1O4QhOR3H1pnysW62FBdsJRwtCvOy28QHYKcR3
+	 VrjQ0tY9EXaol2fM77uzLHD7pYPlEk1J4x6OdzYA1y0Ma0UuT1ivg5wMECjifl0Utv
+	 rUnI08CGpjcSJYa7vDOHCTTh8HAsV/KOVk2/4x8DzYVbujacQUZBbpImkrVWvouKx0
+	 QcRuEbgagwyuFa0f3k/RGb/l7/6udXYs+QS3xtQ430YisTQ2zEg/YjK8JAM/8p3iYH
+	 Da5Q8yZeBa+apnfcjjbIDPFYbLXav/zsReh2gHHinKOyVPyxzeM59lHemtrjCLDefk
+	 jVON88cHrKDnw==
+Date: Fri, 30 Oct 2026 14:03:57 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: "Pandey, Radhey Shyam" <radheys@amd.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,
+	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	akpm@linux-foundation.org, david@kernel.org, ljs@kernel.org,
+	liam@infradead.org, vbabka@kernel.org, surenb@google.com,
+	mhocko@suse.com, baoquan.he@linux.dev, pasha.tatashin@soleen.com,
+	graf@amazon.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org
+Subject: Re: [RFC PATCH 1/2] kexec: do not place the next kernel in a
+ fixed-address CMA area
+Message-ID: <auSHrdDdFrWRsuzM@kernel.org>
+References: <20261014145731.3431527-1-radhey.shyam.pandey@amd.com>
+ <20261014145731.3431527-2-radhey.shyam.pandey@amd.com>
+ <2vxzh5i5orbv.fsf@kernel.org>
+ <auL3UW2InVqYU6Fs@kernel.org>
+ <2vxzzevwmz2v.fsf@kernel.org>
+ <7625fa23-5f4b-4658-b17a-fe4e58103e7c@amd.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/47] mm: various (urgent?) fixes
-To: Muhammad Usama Anjum <usama.anjum@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
- Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
- Baoquan He <baoquan.he@linux.dev>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
- Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>,
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
- Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
- Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
- <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
- Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>,
- Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
- Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
- Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
- Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
- Jason Gunthorpe <jgg@ziepe.ca>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
- Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org,
- Chris Mason <mason@kernel.org>,
- Thadeu Lima de Souza Cascardo <cascardo@igalia.com>,
- Mani Tofigh <mt4022@columbia.edu>, Samiullah Khawaja <skhawaja@google.com>
-References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <2f23dafc-43a5-47c9-a819-e696cda6fd44@arm.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <2f23dafc-43a5-47c9-a819-e696cda6fd44@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7625fa23-5f4b-4658-b17a-fe4e58103e7c@amd.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -150,66 +78,60 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 10/30/26 12:19, Muhammad Usama Anjum wrote:
-> On 29/10/2026 8:32 pm, David Hildenbrand (Arm) wrote:
->> See v1 on details. TL;DR various fixes :)
->>
->> Thanks to everyone for the review! Hoping I can get some more? :)
->>
->> I am planning on picking these myself, moving them to linux-next fairly
->> soon through mm/core.git.
->>
->> ---
->> Changes in v2:
->> - "mm/memfd: check for real shmem inodes before accessing shmem state"
->>  - Call it inode_is_shmem
->> - "mm/truncate: look again if a folio left the mapping"
->>  - Different fix for truncate_inode_pages_range
->>  - Adjust description
->> - "mm/huge_memory: fix zapping migration entries for device-private THPs"
->>  - Move handling in zap_deposited_table
->> - "mm/mmu_gather: fix flushing ranges with 4 GiB or larger"
->>  - Adjust description"
->> - "mm/huge_memory: split huge PUDs when adjusting VMA boundaries"
->>  - Drop split_pud check
->> - Link to v1: https://patch.msgid.link/20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org
-> I ran Fastpath, a Linux kernel performance benchmarking framework, on
-> this series against mm-stable on aws-m7g.metal. (I) and (R) indicate
-> statistically significant improvements and regressions, respectively.
-> The results show 10 improvements and 1 regression. Other, unmarked
-> percentage changes can be ignored as statistically insignificant. Hence:
+On Fri, Oct 30, 2026 at 01:22:50PM +0530, Pandey, Radhey Shyam wrote:
+> On 10/29/2026 6:41 PM, Pratyush Yadav wrote:
+> > On Thu, Oct 29 2026, Mike Rapoport wrote:
+> > > On Wed, Oct 28, 2026 at 03:03:16PM +0100, Pratyush Yadav wrote:
+> > > > On Wed, Oct 14 2026, Radhey Shyam Pandey wrote:
+> > > > > @@ -304,6 +317,7 @@ int __init cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
+> > > > >   	cma->ranges[0].count = cma->count;
+> > > > >   	cma->nranges = 1;
+> > > > >   	cma->nid = NUMA_NO_NODE;
+> > > > > +	set_bit(CMA_FIXED_BASE, &cma->flags);
+> > > > >   	*res_cma = cma;
+> > > > > @@ -517,6 +531,8 @@ static int __init __cma_declare_contiguous_nid(phys_addr_t *basep,
+> > > > >   	}
+> > > > >   	(*res_cma)->nid = nid;
+> > > > > +	if (!fixed)
+> > > > > +		clear_bit(CMA_FIXED_BASE, &(*res_cma)->flags);
+> > > > 
+> > > > Nit: This reads a bit odd. cma_init_reserved_mem() sets the fixed base
+> > > > and then you clear it later. Wouldn't it be better to just pass the
+> > > > fixed boolean to cma_init_reserved_mem()?
+> > > 
+> > > Actually, we shouldn't expose cma_init_reserved_mem() at all.
+> > > 
+> > > The current callers of cma_init_reserved_mem() should be switched to
+> > > cma_declare_contiguous_nid() that does sanity checks before calling
+> > > cma_init_reserved_mem().
 > 
-> Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+> Thanks Pratyush and Mike for the review.
+> 
+> The switch from cma_init_reserved_mem() to cma_declare_contiguous_nid()
+> looks like a broader CMA refactoring and requires additional changes to work
+> correctly.
 
+Hmm, you are right.
 
-Thanks for the results. IIUC it's schbench that shows a possible regression.
+How about we invert the flag meaning?
+Than cma_declare_contiguous_* will set it where appropriate and we won't
+have the weirdness Pratyush pointed out.
 
-I would expect that no changes here really affect performance at all (neither
-positively nor negatively).
+And Radhey, please, make your LLM to spill more concise and to the point
+text and teach it to trim emails ;-)
 
-"mm/huge_memory: fix list corruption when deferred_split_scan() races with
-deferred_split_folio()" fixes locking, but I wouldn't assume that this matters
-at all for this benchmark.
-
-"fork: take mmap_lock before copying mm_struct" changes locking, but I also fail
-to see how that would affect the benchmark.
-
-Maybe some code layout changes just affect some benchmark on some machines?
-Because already seeing 10 improvements makes me wonder how that could possibly be.
-
-So I'll move forward with these fixes for now and see if we get more reports and
-could identify actual problematic commits.
+> Thanks,
+> Radhey
+> 
 
 -- 
-Cheers,
-
-David
+Sincerely yours,
+Mike.
 
