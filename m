@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B42EA606A31A
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:41:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DF6606A31A
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:42:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=3fp2vWSX;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bq6IbL5W
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2m5jDUsS;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Aod7EPH2
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,39 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=ZhL8BNSrHZGSoY++1Be8XSKI/qF2Hy1grT9AAtL1Ig0=; b=3fp2vWSX1dBLQ7kP734ob9NZcB
-	Quvg5zTCThwCqlW53F8YZS4FLOrnKSXrhKA7f65m2d8CFnIUh6EhmtFkvclyh88MstrF7QO5qErk7
-	IBJVOPt8xU3eTwU8lwNYL7KWOcAW2HIQCDuFcdL1y9XXqY3Yh8dDp83sjh9curgADemhU8pNtCEY8
-	KzRX24Nir3E0DGSAnogpT0T/uSNE7aYfhoqud5VqC0XAUrHEmE9vtlKuePdTW3Ausa7tieN9P0p4Z
-	hAYbRezyC0eyVydJ8/DAt8oFkfgdpBoHW+3zGhWcOriRaOUXH9FARN+luYzFWgoJhvUUmOmVECCXD
-	l8wr+NEw==;
+	bh=P8qUj2Lyi9M5bEeQQEDKN13Kh3zQRbwq6uXOyQRSpCI=; b=2m5jDUsSUmWMasOEuHpmNUcSiz
+	D4lnVBVehFRtS2b9BkMu56TVqNfKLVkweqb5RDmcvPRVd4/lv/JeLIQb+WNc9l6GCj6McQ1XeGaNx
+	ajaXd1TkUQWCLmMRgxpA/cU1SpWZPvMOM6A0QloiggIpjOfG5g2b9WUcTAW8VPQWu77nf1g+sHtDD
+	FLCekzUlvoHm85AM+dSamvuZRtbX/pGc2YqHO8dRfSGa5+3T1baXZjpJUsKZ80sHF37j8ZQauch/C
+	8tYHZsKkIs7xGmnXN47D/NGLeJHs5g1UfolT8ZWqZUDDVxIa5JRuzRIVeEFsts5jfNzIVvO02F2z+
+	jt3szkAA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdV9-0000000Akmj-1xFg;
-	Fri, 30 Oct 2026 03:41:59 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xMdVD-0000000Akps-2cUd;
+	Fri, 30 Oct 2026 03:42:03 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdV8-0000000Akm5-1wKd
+	id 1xMdVC-0000000AkoQ-0dct
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 03:41:58 +0000
+	Fri, 30 Oct 2026 03:42:02 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 2E2744341B;
+	by tor.source.kernel.org (Postfix) with ESMTP id 9555D600DA;
+	Fri, 30 Oct 2026 03:42:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C3A41F000C1;
 	Fri, 30 Oct 2026 03:41:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D95981F000C1;
-	Fri, 30 Oct 2026 03:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793331718;
-	bh=ZhL8BNSrHZGSoY++1Be8XSKI/qF2Hy1grT9AAtL1Ig0=;
+	s=k20260515; t=1793331721;
+	bh=P8qUj2Lyi9M5bEeQQEDKN13Kh3zQRbwq6uXOyQRSpCI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bq6IbL5WtmYkqiPCauhwpTHyHIgWH9M5GpoxJKV6boQr/+1ba0saS2qFvta08YJ2W
-	 e62gn4AhBFKx1uP5i0ps28Lk3nzMi4WYXqsCFC4ogfW51/o/mx9I9bhHouKgnjeMYI
-	 FQLp7TWGlwmLiHR2gmIIz3RwT4VCCCXLbkZmwL4XwCWXqpT3xceEi4yUuSTMd8/hdn
-	 E+P8JL/4RveatLUqmB7OJC3rBEo12ZaK5CmSX2D8f185ADFnlqo//5VnNJIarU4zlK
-	 HgfxS7U3CEbTfI70jpcxhcDpYtMbH4BRDBuLbx33B6SjUrOSYUjBXuAHxnOK0CK/Se
-	 IrsYXk1UCH34w==
-Message-ID: <sashiko-outbox-190260@kernel.org>
+	b=Aod7EPH2lEU2ehvHOvHCeEtpGs6ylV7AgyK9t9xzGFObYIyMuMQowD1+UZL+H9QxJ
+	 jxOrH7srMCrUb8p5x8IWegeeNSvjR4sYYEO9P+9Tjnxzwsh7FF9uAxF1+iYW393qpF
+	 g3bEPyDgc3y5/w+WqxI3J8SSCcfkglFyoXs/X5r5MZhZ180d/RpB2eYrInfspZUm/3
+	 gCMqr/wPKmhy1wxUQGuOs62/gfFgq3xZxO0qmLkSo0N+lWLJvAV5fUTvyAGUYiB4bv
+	 3fhSdEAO8U7cJCaRlLVCQ+hc3LeZ1ewCyvQlGXVIRwcCbwz936L2nL7JDjuRM/oOqW
+	 w5QXUAYdrQQaw==
+Message-ID: <sashiko-outbox-190261@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 32/47] mm/mremap: fix moving PUD leaves
+Subject: Re: [PATCH v2 33/47] mm/memory_hotplug: avoid races in
+ pfn_to_online_page() with dying pgmap
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -74,12 +75,12 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
 Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261029-fixes_core-v2-32-a64ce7f83abb@kernel.org>
+In-Reply-To: <20261029-fixes_core-v2-33-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-32-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-33-a64ce7f83abb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 03:41:54 +0000
+Date: Fri, 30 Oct 2026 03:41:58 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,37 +102,35 @@ X-Archived-By: <archiver.kernel.org>
 
 > From: Josef Bacik <josef@toxicpanda.com>
 >=20
-> pud_none_or_clear_bad() only really works on page tables. PUD leaves
-> confuse the check and make us clear the page table entry and print a
-> warning.
+> If ZONE_DEVICE memory shares a memory section with ordinary memory, the
+> section is online and the pfns of the device are valid.
+> pfn_to_online_page() tells them apart by asking get_dev_pagemap() whether
+> the pfn belongs to a dev_pagemap.
 >=20
-> Since commit aed877c2b4257 ("device/dax: properly refcount device dax pag=
-es
-> when mapping"), this also leaks device-DAX folio references, mapcounts
-> and RSS accounting, resulting in "Bad rss-counter state" warnings on exit.
+> get_dev_pagemap() only returns a dev_pagemap whose reference is alive.
+> memunmap_pages() kills the reference first, waits until all pages are
+> idle, and then removes the memmap. During all that time the function
+> finds nothing, and pfn_to_online_page() hands out the struct pages of the
+> device as if they were online memory. A pfn walker reads them while they
+> are poisoned and freed.
 >=20
-> Allow PUD leaves in get_old_pud(). If a PUD leaf cannot be moved as a
-> whole or the move fails, split it. This unmaps it with proper accounting
-> instead of treating the leaf entry as a PMD table.
+> The entry in pgmap_array is only deleted after the pages have been
+> removed. Look at that instead of trying to get a reference.
 >=20
-> Keep using pud_trans_huge() for now, in the future this code should be
-> cleaned up to just check for PUD leaves.
+> This is probably not worth CCing stable.
 >=20
 > Fix generated by an LLM and sent by Josef Bacik in private.
 >=20
-> Fixes: a00cc7d9dd93 ("mm, x86: add support for PUD-sized transparent huge=
-pages")
-> Cc: stable@vger.kernel.org
+> Fixes: 1f90a3477df3 ("mm: teach pfn_to_online_page() about ZONE_DEVICE se=
+ction collisions")
 > Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> [ david: fallthrough after splitting ]
-> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+> Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-fixes_core=
--v2-0-a64ce7f83abb@kernel.org?part=3D32
+-v2-0-a64ce7f83abb@kernel.org?part=3D33
 
 
