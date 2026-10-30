@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63664606A31A
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:42:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF15606A31A
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:42:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ksx/+zIn;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PdykOuQ5
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=vGH2W7cx;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MTA6YZJW
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,39 +14,39 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=1NU0rp815o60LOooW0e6kyoi8YGgClNQEnOvVbCL4mM=; b=ksx/+zInLjI8pL6vNFg1nMRiMI
-	gJI11jFDu1tQVH666ROHv4eLHTKqi1GT0S5P0nxlgo9ivPu2dz7OViw0zLb6HjoL6NqbGWMj5aiqD
-	XDSqM547ZqiCPc8ABaKsarasZL0EPWdJHheX1VDopg4kWn+biWymuC+51Fu0C+rEKuzkjqjHkDTHH
-	khpzKQojZF79dgCwduWKzcktMUQj2WhYsH1QVXyrT8me1iNO3h2aBnZH+/Gdz4PMaj7y4ypWgTDO6
-	h/chgD3sW8El8qhj9AJl97bcOUrtuwBf6pNQKPEglIfo/yeYbzHvdeZosHjJ3V0yWEw3Me6Xvsmlj
-	R4c1VOyQ==;
+	bh=u5xzret16o3iRVcvdLYAIgiyC5Y+uB5cEUow+F10Mo0=; b=vGH2W7cxYSIbvZSIjw/PeIpO1+
+	7xi2Ep7ZCUP4yYI4zuFEyG0ImpM5G+3FHT7eWNS8Ef9PGCipVeAYQpCSmrRwE4NI073s4idXC1yvC
+	FjNqj3fB2mlET3OxTBswyyqVm1VjtXIcBi56ZMkzpDoS0U740vj8jAP/1hEd4e5qZvak9FyCFrrKu
+	Y2+tAVb094dO8cvDZTO/PM4MqKV+u2KWNqmHgT1ITENqZupQ4QYVQZo89w8D88ieI62hWp//E+DL0
+	R+lfMZFZIEY/g44rr7Fwb2ClNOeds8mjBqcewoRIeA/X7zCfSPEq1HcI4nxgDJum9QxM62npHTv/V
+	S42juu3g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdVn-0000000AlIZ-0ORM;
-	Fri, 30 Oct 2026 03:42:39 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xMdVq-0000000AlLd-1E6S;
+	Fri, 30 Oct 2026 03:42:42 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdVl-0000000AlH6-3cnf
+	id 1xMdVo-0000000AlKi-2oT4
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 03:42:37 +0000
+	Fri, 30 Oct 2026 03:42:40 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 4DB44600C8;
+	by sea.source.kernel.org (Postfix) with ESMTP id 57E4A406FB;
+	Fri, 30 Oct 2026 03:42:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A27BF1F000C1;
 	Fri, 30 Oct 2026 03:42:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B4561F000C1;
-	Fri, 30 Oct 2026 03:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793331757;
-	bh=1NU0rp815o60LOooW0e6kyoi8YGgClNQEnOvVbCL4mM=;
+	s=k20260515; t=1793331760;
+	bh=u5xzret16o3iRVcvdLYAIgiyC5Y+uB5cEUow+F10Mo0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=PdykOuQ5GId4NyNFUmFmRa7uXmR7JQMZkj/lRjTUVJs3CSAl12HZG3/YD9Co6h/h8
-	 K7GAgjIsOWvb9xfdYpPL9TKMA0CaQ0rS6ZyqOJLJ6jg+tls2Njh7fQK8wFhWorZN+8
-	 XcIFqUkL7R0Rq5GIJIzCtXoNslWBPnhmTGIqr2o4h7bo68FA0a1hb/fux8nn2hAPVg
-	 9isA46x8/FDzI1dhuoO8GiunPrCizdoIFME9cK0gD/Ottbdc7qY8tNAsh8SiFSPBbf
-	 loJUAZ7/RmzOwrR0U3EhdoGNMDpUUOnr+vHWKqOTpPbnFm3Bkbklij8928ax0UXhuC
-	 2ZyTLEvrf1tiA==
-Message-ID: <sashiko-outbox-190272@kernel.org>
+	b=MTA6YZJWv0ySaGWoHElnL+j3pDonr6tYGaoMQQStrhsGmlXTzU46Jh27Lpt92yty5
+	 j6qWLR2ecmk5hNASU1Uhm1OacS+njLqFQBGcr4H6QgNF9UKOqJVAe1I3lNtYegeWS4
+	 w+v137TVz+7ra6pyLZdpZpYgOcVMzETpvo/d1TE9guCgIhZMpvTdfAhdTLepOgpJhA
+	 GNVnnKyc478nmGREx3h7Kp3saR4axQYZrmvhm9qHaWrxK33wqE0bBPYIQitGulRhv0
+	 XPlehyJFdNSd/GVTkexwwSaQ2gNUe4Ga7BoZ2/+UKSyXh+v9KQgpUYJMMYhIg7xEwP
+	 j3cRTJlCGFCMw==
+Message-ID: <sashiko-outbox-190273@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 44/47] mm/vma: don't leak the charge for stack growth
+Subject: Re: [PATCH v2 45/47] mm/cma: don't release CMA pages still in use
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -73,13 +73,13 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
-In-Reply-To: <20261029-fixes_core-v2-44-a64ce7f83abb@kernel.org>
+Cc: kexec@lists.infradead.org
+In-Reply-To: <20261029-fixes_core-v2-45-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-44-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-45-a64ce7f83abb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 03:42:34 +0000
+Date: Fri, 30 Oct 2026 03:42:37 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,27 +99,40 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> acct_stack_growth() charges stack expansion even without VM_ACCOUNT.
-> This can happen for read-only or MAP_NORESERVE mappings created with
-> MAP_GROWSDOWN. Unmapping these VMAs does not release the charge, leaking
-> Committed_AS.
+> From: Rik van Riel <riel@surriel.com>
 >=20
-> Only check and charge growth for VM_ACCOUNT VMAs, matching mremap().
-> Unaccounted growth skips the overcommit check while remaining subject
-> to the other stack-growth limits.
+> When a driver calls dma_free_contiguous() before quiescing DMA, the
+> page might still have a reference from the device.
+> put_page_testzero() there returns false, WARN fires, but the code proceeds
+> to free_contig_frozen_range() putting a live page onto buddy and clearing
+> the bitmap. A subsequent allocation can hand the same PFN to a new
+> owner while the original holder still references it.
 >=20
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> A concurrent put_page() that drops the last reference between the
+> testzero loop and free_contig_frozen_range() can double-queue the page
+> via page->lru, corrupting buddy lists.
+>=20
+> Avoid the corruption by not freeing a CMA region if any of the
+> pages inside are still in use.
+>=20
+> Make it explicit in the warning that the driver allowed a leak.
+>=20
+> While at it, use page_ref_freeze() to make the semantics clearer and
+> switch to pr_warn_ratelimited().
+>=20
+> Fixes: 9bda131c6093 ("mm: cma: add cma_alloc_frozen{_compound}()")
 > Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
-> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
-> Reviewed-by: Harry Yoo (Meta) <harry@kernel.org>
+> Signed-off-by: Rik van Riel <riel@surriel.com>
+> Link: https://patch.msgid.link/20260811132045.5f114772@fangorn
+> [ david: use page_ref_freeze() + pr_warn_ratelimited() ]
+> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> Acked-by: Muchun Song <muchun.song@linux.dev>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-fixes_core=
--v2-0-a64ce7f83abb@kernel.org?part=3D44
+-v2-0-a64ce7f83abb@kernel.org?part=3D45
 
 
