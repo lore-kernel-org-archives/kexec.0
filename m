@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A4D606A31A
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:40:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DC2606A31A
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 03:41:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=JbblWlB8;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oPXSLEB3
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=fhRanWkm;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CsB4nRVF
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=rFXYeRPup9A/nTmf7WF84PaK5UUI23Dold1qVXzLmMA=; b=JbblWlB8/5/Gx/Qy8zOvkz2iiu
-	47w+stBfihkyNICbLAYNZE3Ox4MNzuL0cx0z14g2YI18iAiEH4C+vvte8hIBzwKyfKxtsYH5WHu5F
-	+hNDtm+gWHSDuuxdpMavAGXbB+hKabXxcJgo0kA5xM9bs7/nLbDPvl3iQhm+NS4QOKDjujhpB+7C5
-	KKUE7wRT5JNXJ7Kzo9m9WFnYxyH3Wk/sklLnqtj/3ysulrTuCAflkg7U1aWg/QU9phSZhU4Xrz/oL
-	meKdAr1jYOMr5kyXTmqSn0yRWUH75KO60TVz2SDZzIfOGO9+Z+Pk/FCC8mVkI6XUlo8/kyx5EbhtM
-	cc/suJug==;
+	bh=uhjJzAN/ZFp9kwLKt3yv86gJRco8j4xLKzbef9ACfwU=; b=fhRanWkmv7RvjtwbD7V59bXlBN
+	tA4eS8upiL7PZkKNSPSXFvy+2hYq6LwNIpdSpRPjU4rO7ruGBGiveNX2xX5y8CFkCGE1S3WJFKRh4
+	KwsxmNbzUotpc2oAjc9IoQbwc9oZBfBmvkYVtEt6g5ve7/c8YZRSvJmrtIKL/tfUocbaGhW/6BW3g
+	FXTV/LgX3uxVTFfEEfsqoM9Fq+3h3CESYqep9sUSLc7itKx43Gol3ugUyXvDZveFo1M8Nv4xnWAVf
+	ngHF5Urrj9oFpMBNWICUTEH5kQBONCScfH5dTui08JpPPimJA9V8bIzeJJ2hBfPJ1ONgd1UA2HmAO
+	9eoI3QTA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdUB-0000000AkAL-0Moi;
-	Fri, 30 Oct 2026 03:40:59 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xMdUF-0000000AkCu-0vGf;
+	Fri, 30 Oct 2026 03:41:03 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMdUA-0000000Ak9X-1DOn
+	id 1xMdUD-0000000AkC0-3duv
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 03:40:58 +0000
+	Fri, 30 Oct 2026 03:41:01 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 036F940B7E;
+	by tor.source.kernel.org (Postfix) with ESMTP id 5071D600C8;
+	Fri, 30 Oct 2026 03:41:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A2FD1F000C1;
 	Fri, 30 Oct 2026 03:40:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26C191F000C1;
-	Fri, 30 Oct 2026 03:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793331657;
-	bh=rFXYeRPup9A/nTmf7WF84PaK5UUI23Dold1qVXzLmMA=;
+	s=k20260515; t=1793331661;
+	bh=uhjJzAN/ZFp9kwLKt3yv86gJRco8j4xLKzbef9ACfwU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=oPXSLEB3/OrcO1VozJqFhS3CPIJRhajWG/j/1iG+/RGh74xix1xvHhOpejOexbMVE
-	 Sp2q0NYFC7uG1PfR61vObX4sTdEBPlcHGimALHK9qlw01tUTAQzI5LTjnibK0zvYjt
-	 Tu4LzYBxJ0HrL9yJluuqSQSFK09ZOVwvtgoDNP9KdfrVq92zF0N2oAba8LyNFFc/Ha
-	 cD2fVZGAQGA141GZtcnv5wbkFGwRqhZEn03oSmnj847POmVDIu629KIkFLUa+ksmDv
-	 KIxXp+xXk+xX71csuoo0QOThaWkxxpTWCfznUb9cUjYgB8wMwSI+AcjmajI7fK8lex
-	 Rrr+spoJoUTvQ==
-Message-ID: <sashiko-outbox-190242@kernel.org>
+	b=CsB4nRVFEiNpJ88Npqoed9SY5DCaV1enDsz6URmL7vutkoMoTe5YSenTB267GgBvG
+	 g/O2wi1aTdf5yRICEDlNP/xA7EmWSts6WO/tf4pF1L8tgr0mY25r5Rttn84QMT3I+K
+	 x6f03T4DLYEd5gjv8eeVFMNghrcbBECr0MTkXuO7U+yDGvl4+PsZiROuloIVPxtRWm
+	 OZSLSMy++27FbbTH2avwXAsteveQDyAJg/YZVFTjW7u9DQO6tGcnKDo+0gvY5bZqTN
+	 cEQdlDzfrprpV+H1iCbf0FbQ9/3aev5K4XE9X1LfUuPk2DtcNHeZR/PDIkDAbIoPY+
+	 TFgMbB8L6K6YA==
+Message-ID: <sashiko-outbox-190243@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 14/47] mm/huge_memory: fix zapping migration entries
- for device-private THPs
+Subject: Re: [PATCH v2 15/47] mm/khugepaged: always recheck the pmd in
+ try_collapse_pte_mapped_thp()
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Morton" <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>, "Michal
  Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo
@@ -74,13 +74,13 @@ To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Andrew
  Park" <youngjun.park@lge.com>, "Gregory Price" <gourry@gourry.net>, "Joshua
  Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Ying
  Huang" <ying.huang@linux.alibaba.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: kexec@lists.infradead.org, "Chris Mason" <mason@kernel.org>
-In-Reply-To: <20261029-fixes_core-v2-14-a64ce7f83abb@kernel.org>
+Cc: kexec@lists.infradead.org, "Josef Bacik" <josef@toxicpanda.com>
+In-Reply-To: <20261029-fixes_core-v2-15-a64ce7f83abb@kernel.org>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-14-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-15-a64ce7f83abb@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 03:40:52 +0000
+Date: Fri, 30 Oct 2026 03:40:58 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,32 +100,32 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> From: Chris Mason <mason@kernel.org>
+> From: Josef Bacik <josef@toxicpanda.com>
 >=20
-> A PMD migration entry can refer to a device-private folio.
-> zap_huge_pmd_folio() checks the folio type instead of the entry type,
-> so it treats such a migration entry as a device-private entry.
+> try_collapse_pte_mapped_thp() drops the PTE lock after it has cleared the
+> page table, and takes the PMD lock and the PTE lock to remove it.
 >=20
-> Installing the migration entry already removed the reverse mapping and
-> dropped the mapping reference. Zapping it must not repeat those
-> operations. Concurrent MADV_DONTNEED during migration back to system
-> memory can trigger this.
+> In between, MADV_DONTNEED with CONFIG_PT_RECLAIM can reclaim the
+> page table. The pmd_same() check is supposed to handle this, but it is
+> only done with CONFIG_SPLIT_PTE_PTLOCKS.
 >=20
-> Check the PMD entry type using pmd_is_device_private_entry().
+> Fix it by performing the check unconditionally.
 >=20
-> Fix generated by an LLM and sent by Chris Mason in private.
+> Fix generated by an LLM and sent by Josef Bacik in private.
 >=20
-> Fixes: 368076f52ebe ("mm/huge_memory: add device-private THP support to P=
-MD operations")
+> Fixes: 6375e95f381e ("mm: pgtable: reclaim empty PTE page in madvise(MADV=
+_DONTNEED)")
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Chris Mason <mason@kernel.org>
-> [ david: simplify description ]
+> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+> [ david: adjust description ]
+> Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+> Tested-by: Gregory Price (Meta) <gourry@gourry.net>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-fixes_core=
--v2-0-a64ce7f83abb@kernel.org?part=3D14
+-v2-0-a64ce7f83abb@kernel.org?part=3D15
 
 
