@@ -2,47 +2,47 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6474C606A31C
-	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 00:34:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE4F606A31E
+	for <kexec@archiver.kernel.org>; Fri, 30 Oct 2026 00:57:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Q+1gqBSx;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DduHRuPY
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=hvgqriod;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bck9LEQ0
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=J6qvhedKX/gt9L39bpVgRBd7A0g16i9D1HZNiTvqkfw=; b=Q+1gqBSxT6WPtu
-	C0TbNgKq7sl8SAXlQLnobNh+uJrDGsDzKOEbktFsl7g1hbWfANK0zC73f3qWKV4poGYkL5k7rpbHb
-	X+nGtmSK5CZfphE7uZnppEptZPealy9D5GXdoUszAVR92evpZNbvhg3qvtw2RXmRFR60KZJRDlU9o
-	UGOgVn65XUAVKH7RVVs9imTlzPKvE2wvStvcMkZWaj2wQUb4E81b7sbj9uNcygtGxFhP6Bw0g8ctK
-	OVS+mgPbUtvKynTa3HBar7Wi9eFooHiJgm/U5VQI3nvdjrbqx3TBZsgJmSMPBiTzmb6dR3a/RPy8h
-	TdIb40zPSilrAOEjksmQ==;
+	List-Owner; bh=M6bpDqyFL1t6pXSfv5Po8tZyxphIeTUYr2/GTeN0+Ow=; b=hvgqriodkqwiYa
+	wtMjtdl6QQnhFS0nC8AnGOx+1Q9JQVKRD6qsmvrSkZm4eUG3perVc6aHbVVs2sz1f4Ridb0PNWbdB
+	esNamwE8ZTWGAi5v/WhLqEUZolJWZab/e4cs/ddyLg19FeH6Fx7Kf4t37/Rxx/8vZS670MTsEJz7n
+	fjw35VwH5crz5vR1ZqG9aJn5oVTBJht6jKsGYi0XaXLkWxPVDGcrT1iSlE0LcfcyKvUoOWevVKj6n
+	UqXImS23XKfeYCGlpdE9/BtZp1MMwOmIgB4QxF5xOzZZA0jGEyY8DLpnsg3H0yRp3MV3kgGNqLlZW
+	8i7b0XCUq3uDWqGIz92w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMaa3-0000000AZys-1MlB;
-	Fri, 30 Oct 2026 00:34:51 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xMaw8-0000000AamN-1yHi;
+	Fri, 30 Oct 2026 00:57:40 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMaZw-0000000AZyf-1iRG
+	id 1xMaw5-0000000AamA-1H6K
 	for kexec@lists.infradead.org;
-	Fri, 30 Oct 2026 00:34:45 +0000
+	Fri, 30 Oct 2026 00:57:37 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 3F6AC438A6;
-	Fri, 30 Oct 2026 00:34:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03BF11F000C1;
-	Fri, 30 Oct 2026 00:34:40 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id C9CEE60267;
+	Fri, 30 Oct 2026 00:57:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5070C1F000C1;
+	Fri, 30 Oct 2026 00:57:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793320483;
-	bh=J6qvhedKX/gt9L39bpVgRBd7A0g16i9D1HZNiTvqkfw=;
+	s=k20260515; t=1793321855;
+	bh=M6bpDqyFL1t6pXSfv5Po8tZyxphIeTUYr2/GTeN0+Ow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=DduHRuPYmFLQVXIsNcNjApO97/T8X2q8UAfCyYP1FbDA55gYCiFqIxgKlBRMzDPCT
-	 Eqs2Hx8NW5JNHHOwoaWAREmZ9P3g0DpqSD6ZIAALIBan8uNdEC7bloNBM6ojVGEYVk
-	 FENFOG2Gdb/Pe7A0j+ozRR73EUaDH16qGjtXlvUo9kWAgkt1QHi+VdagnEw8C8T74j
-	 Yr8bysC4D0OxTeYJFfW5QuO9Da+Ehdf3XvdtWlh8G5C0H/tFFCwNzQnltS9dLOayxj
-	 OH44Anbtpxbx/w1SEQjMZhJc6+ynBnLLft0fXjVDgMDV3v73CICkPnVUjb7wRDMMx3
-	 S8ms98yTtaxtw==
+	b=bck9LEQ0UPt4LikhQsWdEDa6SKxVHXgeqY8QxTgswXVFtiDdPukVSUu4n9MbVtYs5
+	 9bJB0UhYlqNoSAncXFJ2j1+NWPJNqcsDIAUWHsMxFaaWRhN5euG3twTUKMEQOkhMHq
+	 kCqRFz7lMFFHp8ifCqslKWbUlluFBnrNX2Gsx1QQZJ1my3+Qiqa83Vi4wtVn+wWcXY
+	 yr12zqlMfd4YaoyLMi/eCnYBn6ROMiu9tbRatmj2MhIT5+dvt+dbydBKyR+FVLJc9O
+	 dqXK/TupCXUvbOJG5GZZZVlCKD/5zJ1rV6kAoCfn2B0Pn4nRrmkZIvQ909w4V4Nmjy
+	 P8zEJJwppvlEQ==
 From: SJ Park <sj@kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: SJ Park <sj@kernel.org>,
@@ -108,13 +108,13 @@ Cc: SJ Park <sj@kernel.org>,
 	linux-fsdevel@vger.kernel.org,
 	linux-arch@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
-	stable@vger.kernel.org,
-	Josef Bacik <josef@toxicpanda.com>
-Subject: Re: [PATCH v2 02/47] fork: take mmap_lock before copying mm_struct
-Date: Thu, 29 Oct 2026 17:34:33 -0700
-Message-ID: <20261030003434.154864-1-sj@kernel.org>
+	Josef Bacik <josef@toxicpanda.com>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2 27/47] mm/mmu_gather: fix flushing ranges with 4 GiB or larger
+Date: Thu, 29 Oct 2026 17:57:25 -0700
+Message-ID: <20261030005726.155279-1-sj@kernel.org>
 X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20261029-fixes_core-v2-2-a64ce7f83abb@kernel.org>
+In-Reply-To: <20261029-fixes_core-v2-27-a64ce7f83abb@kernel.org>
 References: 
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
@@ -137,42 +137,50 @@ X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Thu, 29 Oct 2026 21:32:57 +0100 "David Hildenbrand (Arm)" <david@kernel.org> wrote:
+On Thu, 29 Oct 2026 21:33:22 +0100 "David Hildenbrand (Arm)" <david@kernel.org> wrote:
 
-> dup_mm() copies the parent's mm_struct before dup_mmap() takes the
-> mmap_lock. A concurrent brk() can leave the child with a stale mm->brk
-> and newer heap mappings, causing later brk() requests to fail.
+> From: Josef Bacik <josef@toxicpanda.com>
 > 
-> Other operations (e.g., PR_SET_MM) on the parent's mm_struct can similarly
-> cause inconsistencies.
+> __tlb_adjust_range() takes the size of the range which has to be flushed
+> as an unsigned int. Its callers, tlb_flush_{pte,pmd,pud,p4d}_range(), get
+> and pass an unsigned long. Consequently, a range that is 4 GiB or larger
+> gets truncated, possibly to 0.
 > 
-> As a simple and robust fix, grab the parent's mmap_lock earlier. This
-> way we don't need to update individual mm fields in dup_mmap() and
-> keep missing ones. Stop updating the 4 existing members (total_vm, data_vm,
-> exec_vm, stack_vm), as that is now no longer required.
+> On arm64 with hugetlb, a 64k kernel can have 16 GiB hugetlb folios
+> mapped contiguously at the PMD level and flush them when unmapping, and a
+> 16k kernel can flush 64 GiB PUDs through tlb_unshare_pmd_ptdesc(). So
+> at least these two scenarios are affected.
 > 
-> Keep releasing the parent's mmap_lock in dup_mmap(), before
-> userfaultfd completion, to avoid moving the userfaultfd handling into the
-> caller. This should get cleaned up later.
-> 
-> Move uprobe_start_dup_mmap() to preserve the lock ordering.
+> Fix it by flushing the proper range instead of the truncated one by
+> properly using "unsigned long" for range_size.
 
-Looks good and makes sense to me.
+Makes sense to me.
 
 > 
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Fix generated by an LLM and sent by Josef Bacik in private.
+> 
+> Fixes: b528e4b6405b ("mm/hugetlb: add tlb_remove_hugetlb_entry for handling hugetlb pages")
+> Fixes: 8ce720d5bd91 ("mm/hugetlb: fix excessive IPI broadcasts when unsharing PMD tables using mmu_gather")
 > Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
-> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> Reviewed-by: Rik van Riel <riel@surriel.com>
-> Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
-> Reviewed-by: Barry Song <baohua@kernel.org>
+> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> [ david: use two-tab indent, simplify description ]
+
+It seems the convention [1] is to put the above modification note right before
+the last S-o-b: of David.  Maybe you forgot moving it after adding R-b: and
+T-b: from great reviewers?
+
+> Reviewed-by: Qi Zheng <qi.zheng@linux.dev>
+> Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+> Tested-by: Gregory Price (Meta) <gourry@gourry.net>
+> Reviewed-by: Dev Jain <dev.jain@arm.com>
+> Reviewed-by: Muchun Song <muchun.song@linux.dev>
 > Reviewed-by: Pedro Falcato <pfalcato@suse.de>
-> Reviewed-by: Harry Yoo (Meta) <harry@kernel.org>
-> Reviewed-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Reviewed-by: SJ Park <sj@kernel.org>
+
+[1] https://docs.kernel.org/maintainer/modifying-patches.html
 
 
 Thanks,
