@@ -2,58 +2,48 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62FCD606A336
-	for <kexec@archiver.kernel.org>; Sat, 31 Oct 2026 09:52:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D07606A325
+	for <kexec@archiver.kernel.org>; Sat, 31 Oct 2026 10:55:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=fO5MYZ8u;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mm/XhP7H
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=CLbYXj6s;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hZVih8RK
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
-	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
-	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Date:Message-Id:Subject:References:In-Reply-To:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=P+XDhasxBREAHMJWaTnaRrbmO35vpS7TJxAQhlwiqYY=; b=fO5MYZ8u4poxaG
-	/EGiKWWEVA1OqjQ+HO7bX7qLGw6x5v75rD5nem1A6CxS/Bwnp3z5o4L0QFrKXg5/4YcBRIAsZUoTn
-	1SP6R8octsRwGd4v6LmUgGZN8BXDjopr3iKtY8IqNidwI0U6sdPelpVaylzFCoU/oWFxj/C17EZNV
-	gfdfjO/oHgVTCQ+/5TOERWFt6ErxTzHp+Xbw1Gn0+9PIj0Fm0O8QVPPH1rZunwUJazOfNMZFXV4vg
-	H6QnCJxQaNLSvmO4dg80L64EquapLXwn4AZ1OFcxlVi6XD2fLmP9Vgfsgu7mN+9OG2nYY/PQx/nm+
-	DG8NrqErB072Vge7Jj2w==;
+	List-Owner; bh=kf7DHW+HPMG6HKkFPWFn96X9OnxzATvopEw39adSoAw=; b=CLbYXj6sP+A4n0
+	PPz6ES+av6nnfx23u+hD3SfcRQSN4CpdcPcFMJNishGM/DsnoLDAqI/yMB7rqWHbKhaf+KVIVWek8
+	demUjuFVQdI3RPtH/UI0g3rNXm2KVDA37sWXA59rByQQj3xqM6U+EgGi9TFh1DGAcbPtEPmXXc4BH
+	nx47PQYPNBMycAvc/3XR8wdmvZ1vlS3xCebEqL3msvAdzoqPav9n7StsRqKVhZzhiMcKo/ysmsa4R
+	finiDslmuJBBoaYWA1ppsPHGOpYaI8ycPTlzYYatr77zg1Sp6uF8W3ysJIaTx5KQeS6rfBhRp1C4b
+	/SGkRB273hKsKIqBOE0Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xN5lG-0000000DC5v-0VJ8;
-	Sat, 31 Oct 2026 09:52:30 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xN6kK-0000000DF3k-3Bzy;
+	Sat, 31 Oct 2026 10:55:36 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xN5lE-0000000DC5b-171g
+	id 1xN6kJ-0000000DF3d-0jqw
 	for kexec@lists.infradead.org;
-	Sat, 31 Oct 2026 09:52:28 +0000
+	Sat, 31 Oct 2026 10:55:35 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id C17EE4064C;
-	Sat, 31 Oct 2026 09:52:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECB401F000C1;
-	Sat, 31 Oct 2026 09:52:12 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id E1489600AA;
+	Sat, 31 Oct 2026 10:55:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E14E1F000C1;
+	Sat, 31 Oct 2026 10:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793440347;
-	bh=P+XDhasxBREAHMJWaTnaRrbmO35vpS7TJxAQhlwiqYY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=mm/XhP7HPzo+iFoVllgXYlAnByRSGdmEmQ/9WKMRbKjP9gf3uokjKC5NnR5B3Ub/0
-	 df3PiunpjyE567NZ1zBV+tZM/rAOyYte79fMgzRX8xb1Jw5+RRsKg9cba6L4fDpu4J
-	 dbeRuNMuFh8XWCB3F2fTvLcoauM/ZmvDce60MDqxjOp4hjk75ZMWebupjRfd1ssHP3
-	 RF1SriyTNMONJLj1srRxbt9Lj/xl7DWYcaVNvpp2N+phftZoU8/tH9J9wXRfuk02EY
-	 OjKf5XK7hX1//dPKa46gIrs8/UpIGMlYMN5XKpuUgrJihaeRboayI8kWy1HZdnQrGU
-	 oJnIAqua6PDFg==
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Sat, 31 Oct 2026 10:40:16 +0100
-Subject: [PATCH v3 47/47] fs/proc/task_mmu: refuse addresses beyond 32 bits
- on 32bit
-X-Archived-By: <archiver.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261031-fixes_core-v3-47-d6437171ecc3@kernel.org>
-References: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
-In-Reply-To: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
+	s=k20260515; t=1793444133;
+	bh=kf7DHW+HPMG6HKkFPWFn96X9OnxzATvopEw39adSoAw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=hZVih8RKW7+5gqeTqGdWFckbkE1fBUoRpN0Yf0ztRjkuk4YcZRZ4SSexv/PHbbF0M
+	 Iw/MDy6ZJVau5vIvy4d9TQWjFHxgzfqg7bAxcQxHH7309wEJ+KyA/WF+gb8Ma44Loc
+	 9wYsFL/TYaZFnAgSNIladW1t5k5pX9s2HV/slhp4sv/yPogd5Np88XzSI7K6yxbGiR
+	 U+XWdtKEx3lD/aDZfVO3Mxo7uGmn9jDQqnBS3Zl7IX2O1Y8pWhA/5Ptf4nkgq+Aof7
+	 Kos1TmRXkKGX3i46dfJQXPVPBQJTav6JodXebp2iYW9yajnhsPGigGBu9AbiWXzfC9
+	 hTLYOZQ3crkbA==
+From: David Hildenbrand <david@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
  Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
  Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
@@ -85,22 +75,26 @@ To: Andrew Morton <akpm@linux-foundation.org>,
  Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>, 
  Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
  Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>, 
- Jason Gunthorpe <jgg@ziepe.ca>
+ Jason Gunthorpe <jgg@ziepe.ca>, 
+ "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
- Josef Bacik <josef@toxicpanda.com>, 
- Muhammad Usama Anjum <usama.anjum@arm.com>, 
- "David Hildenbrand (Arm)" <david@kernel.org>
+ Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org, 
+ Muhammad Usama Anjum <usama.anjum@arm.com>, SJ Park <sj@kernel.org>, 
+ Chris Mason <mason@kernel.org>, 
+ Thadeu Lima de Souza Cascardo <cascardo@igalia.com>, 
+ Mani Tofigh <mt4022@columbia.edu>, Samiullah Khawaja <skhawaja@google.com>
+In-Reply-To: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
+References: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
+Subject: Re: [PATCH v3 00/47] mm: various (urgent?) fixes
+Message-Id: <179344411888.15514.3120155844849052881.b4-ty@b4>
+Date: Sat, 31 Oct 2026 11:55:18 +0100
+X-Archived-By: <archiver.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1750; i=david@kernel.org;
- h=from:subject:message-id; bh=d8AVCy95kfas+cJ7pSeAW9fI96TKmix6WWb4ARgBYj0=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLKebs+uWlm2vM6eedFfrsPlmn5VRldO9lvIXFeflLt4m
- UjDL9sJHaUsDGIcDLJiiixBwfcNXr5cV1vtxscMM4eVCWQIAxenAEykXYWR4eH/x/2/vSJVbgRt
- 27d0zhqZ4nL5itJpMbbKUsv1G6dMymb4X93EcfrTp/qNqTE90isL4+W72IwZ/7uandbptO5xmr2
- PAQA=
-X-Developer-Key: i=david@kernel.org; a=openpgp;
- fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,58 +105,136 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-From: Josef Bacik <josef@toxicpanda.com>
+On Sat, 31 Oct 2026 10:39:29 +0100, David Hildenbrand (Arm) wrote:
+> Thanks to everyone for the review! Hoping I can get some more? :)
+> 
+> A quick resend, I'll queue these immediately after sending to get them
+> into -next asap. Don't let that discourage you from reviewing ;)
 
-The addresses in struct pm_scan_arg are 64 bits wide.  The first thing
-pagemap_scan_get_args() does with them is to cast them to unsigned
-long.  On a 32-bit kernel the upper half is dropped without a word:
-PAGEMAP_SCAN of 0x100001000-0x100002000 scans, and with
-PM_SCAN_WP_MATCHING write-protects, 0x1000-0x2000, stores the result
-at the lower half of vec, and reports success.
+Applied, thanks!
 
-Return -EFAULT, as for other addresses outside of the address space.
+tree: mm/core.git
+branch: for-next-fixes
 
-This is probably not worth CCing stable.
+Applied patches will appear soon in mm-next, followed by linux-next.
 
-Fix generated by an LLM and sent by Josef Bacik in private.
+Please report any outstanding bugs that were missed during review, so we
+can either drop the patch series or decide how to fix it up.
 
-Fixes: 52526ca7fdb9 ("fs/proc/task_mmu: implement IOCTL to get and optionally clear info about PTEs")
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-Reviewed-by: Pedro Falcato <pfalcato@suse.de>
-Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
-Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
----
- fs/proc/task_mmu.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+It is encouraged to provide Acked-bys, Reviewed-bys, and Tested-bys even
+though the patches have already been applied. If possible, patch trailers
+will be updated.
 
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 7452b695fdaec..762b6dbb81e4a 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -3032,6 +3032,12 @@ static int pagemap_scan_get_args(struct pm_scan_arg *arg,
- 	     arg->category_anyof_mask | arg->return_mask) & ~PM_SCAN_CATEGORIES)
- 		return -EINVAL;
- 
-+	/* Don't cut 64-bit numbers down to addresses that happen to work. */
-+	if (arg->start != (unsigned long)arg->start ||
-+	    arg->end != (unsigned long)arg->end ||
-+	    arg->vec != (unsigned long)arg->vec)
-+		return -EFAULT;
-+
- 	arg->start = untagged_addr((unsigned long)arg->start);
- 	arg->end = untagged_addr((unsigned long)arg->end);
- 	arg->vec = untagged_addr((unsigned long)arg->vec);
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. Further, this is not a guarantee that the
+patches will go upstream. If in doubt, please check the listed branch.
+
+[01/47] mm/mglru: don't use stack pointers when walking PUD and PMD tables
+        https://git.kernel.org/mm/core/c/3922fe76
+[02/47] fork: take mmap_lock before copying mm_struct
+        https://git.kernel.org/mm/core/c/6cf33ce8
+[03/47] mm/shmem: make shmem_file() check the file's inode
+        https://git.kernel.org/mm/core/c/d6003145
+[04/47] mm/memfd: make f_pos accesses atomic
+        https://git.kernel.org/mm/core/c/b6638250
+[05/47] mm/truncate: look again if a folio left the mapping
+        https://git.kernel.org/mm/core/c/e7086d79
+[06/47] mm/filemap: read mapping->a_ops->free_folio under i_lock
+        https://git.kernel.org/mm/core/c/c9073948
+[07/47] mm/filemap: don't lose a folio lock wakeup to a signal
+        https://git.kernel.org/mm/core/c/c39c22f2
+[08/47] mm/filemap: finish fault cleanup before dropping the fault lock
+        https://git.kernel.org/mm/core/c/335429f6
+[09/47] mm/rmap: handle device-exclusive entries in folio_referenced_one()
+        https://git.kernel.org/mm/core/c/6324d435
+[10/47] mm/huge_memory: fix list corruption when deferred_split_scan() races with deferred_split_folio()
+        https://git.kernel.org/mm/core/c/be9ec969
+[11/47] mm/huge_memory: properly handle refcounted PUD mappings on fork
+        https://git.kernel.org/mm/core/c/1ef69272
+[12/47] mm/huge_memory: fix livelock on device private folio
+        https://git.kernel.org/mm/core/c/88ee4890
+[13/47] mm/huge_memory: fix truncate racing with PMD zapping
+        https://git.kernel.org/mm/core/c/a63ff7ba
+[14/47] mm/huge_memory: fix zapping migration entries for device-private THPs
+        https://git.kernel.org/mm/core/c/2814cce8
+[15/47] mm/khugepaged: always recheck the pmd in try_collapse_pte_mapped_thp()
+        https://git.kernel.org/mm/core/c/17382ca5
+[16/47] mm/khugepaged: fix PMD table lock leak in try_collapse_pte_mapped_thp()
+        https://git.kernel.org/mm/core/c/bf852461
+[17/47] mm/khugepaged: preserve dirty bits when collapsing PTE-mapped THPs
+        https://git.kernel.org/mm/core/c/299b8524
+[18/47] mm/khugepaged: check if PTE table is empty in try_collapse_pte_mapped_thp()
+        https://git.kernel.org/mm/core/c/22b08cd1
+[19/47] mm/gup: recheck the PUD under PTL in follow_pud_mask()
+        https://git.kernel.org/mm/core/c/e04a9b5e
+[20/47] mm/gup: fix clearing folios in memfd_pin_folios()
+        https://git.kernel.org/mm/core/c/c6791388
+[21/47] mm/gup: fix out-of-bounds write for nr_pages == 0 in GUP-fast
+        https://git.kernel.org/mm/core/c/5b1b815c
+[22/47] mm/gup: check for overflow when converting nr_pages to bytes in GUP-fast
+        https://git.kernel.org/mm/core/c/8791ac0a
+[23/47] mm/userfaultfd: write-lock the VMA before waking waiters when unregistering
+        https://git.kernel.org/mm/core/c/35f48d65
+[24/47] mm/userfaultfd: wake all waiters on unregister
+        https://git.kernel.org/mm/core/c/9e4d60fe
+[25/47] mm/userfaultfd: wake waiters when registration modes are removed
+        https://git.kernel.org/mm/core/c/a9cba229
+[26/47] mm/userfaultfd: compare exact registration modes before skipping
+        https://git.kernel.org/mm/core/c/86de3945
+[27/47] mm/mmu_gather: fix flushing ranges with 4 GiB or larger
+        https://git.kernel.org/mm/core/c/61437375
+[28/47] mm/mmu_notifier: finish non-blocking interval invalidation on error
+        https://git.kernel.org/mm/core/c/ec3feff7
+[29/47] mm/mmu_notifier: set ->mm only after mmgrab()
+        https://git.kernel.org/mm/core/c/10ad9b99
+[30/47] mm/mremap: use pudp_huge_get_and_clear() when moving huge PUDs
+        https://git.kernel.org/mm/core/c/f16f7e7c
+[31/47] mm/mremap: recheck PUDs under the page table lock
+        https://git.kernel.org/mm/core/c/ae414aed
+[32/47] mm/mremap: fix moving PUD leaves
+        https://git.kernel.org/mm/core/c/262a6a25
+[33/47] mm/memory_hotplug: avoid races in pfn_to_online_page() with dying pgmap
+        https://git.kernel.org/mm/core/c/67782b68
+[34/47] mm/madvise: fix data loss from MADV_FREE on a KSM page
+        https://git.kernel.org/mm/core/c/4fc80184
+[35/47] mm/memory: reject remote COW faults on PFN mappings
+        https://git.kernel.org/mm/core/c/99e96e4d
+[36/47] mm: fix unmap_mapping_range() beyond 4 GiB on 32-bit
+        https://git.kernel.org/mm/core/c/1ca84b58
+[37/47] mm: fix unkillable fault loop on MAP_DROPPABLE memory
+        https://git.kernel.org/mm/core/c/a4c8fb4f
+[38/47] mm: fix deadlock of mremap() against UFFDIO_MOVE
+        https://git.kernel.org/mm/core/c/55f62b5f
+[39/47] mm/ksm: reset the unstable trees of all nodes
+        https://git.kernel.org/mm/core/c/9c1d2a06
+[40/47] mm/ksm: fix use of a freed anon_vma at swap-in
+        https://git.kernel.org/mm/core/c/9c20c73c
+[41/47] mm/ksm: check large swap-cache folios before mapping them
+        https://git.kernel.org/mm/core/c/7fa9d8cb
+[42/47] mm/vma: call ->may_split() before a partial merge
+        https://git.kernel.org/mm/core/c/e0b967df
+[43/47] mm/huge_memory: split huge PUDs when adjusting VMA boundaries
+        https://git.kernel.org/mm/core/c/0653a27f
+[44/47] mm/vma: don't leak the charge for stack growth
+        https://git.kernel.org/mm/core/c/a8ebd75d
+[45/47] mm/cma: don't release CMA pages still in use
+        https://git.kernel.org/mm/core/c/d7950ad4
+[46/47] mm/memory-tiers: unregister empty tiers outside memory_tier_lock
+        https://git.kernel.org/mm/core/c/b6d7ad49
+[47/47] fs/proc/task_mmu: refuse addresses beyond 32 bits on 32bit
+        https://git.kernel.org/mm/core/c/021ea6d2
 
 -- 
-2.43.0
+Cheers,
+
+David
 
 
