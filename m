@@ -2,56 +2,55 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 725FA606A322
-	for <kexec@archiver.kernel.org>; Sat, 31 Oct 2026 09:48:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0744606A31D
+	for <kexec@archiver.kernel.org>; Sat, 31 Oct 2026 09:48:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=0/973+MS;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WyYl5dm5
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=jDhCo1QF;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QoEpOhUZ
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=oRdxulna6bx7ZoXAJZWTtTOwXgwkKcXU1p7Oe42EAqo=; b=0/973+MSfeKt1H
-	S3WtVGubwHJTlwMt/O2USHpvxHHfcqVlifMizVIxkU3RZYpMoqm153aZKyKIhk/BQ4QjBgWVRWn8+
-	dU2cixeH8sVtkwv7B4c9dyRzq+jAIOWL3mKeEcHIbil26tS9NhJo3yucu7F2gzaGTad/7F3kwd0ad
-	izNmxv8kiTjDHg54ccx0+vdpuISitLqEfjToj2kx0GCz1k17RY/ZyTboLOOYYDAB93nsF92+jk71T
-	JgKDbZ43R2zvEtfdOjnOJbdkR2xIH/fvJl/eQDVyBB0j8tzp9OPioW56XeZVoAHp7Iv7HY+6EffGm
-	dsu7wtQrHkuL4v6tjMTg==;
+	List-Owner; bh=DxsTnHZLfef+ZwV+bvdRNnaTqozvDnboMuYB5CYD3jE=; b=jDhCo1QFUnp4oN
+	RIDUa7GcAy6kMDEDYx+INeRA++148rw2yxdRtWABQW0WcunfuJl1NxnZ6euJnsCe7UYHKYmzgP6SE
+	Xf9WSglfTH+l7SR1uJOnLQ22z6Cw5gI/ompKY2Fuge9PR2a1RWKmxDqcqdeynVAQPyaEK1C84eQZA
+	ojgPPKBxJcul30RRYN7br+7TqT3yNwjsTLmvP9NU7NobJrMgGHrf5M0qPa39GCRKZIhlDcPlZBV+W
+	lAAvu5Ya6fk2t23l50hMBdrvCEZVmjNuXAvAQ5ByICMkoWeWKH8dCOVcqjKsPcOacRmFPFW7QK5Ie
+	62EnNXiznJbP2vCZPdfw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xN5gz-0000000DAoF-0ohO;
-	Sat, 31 Oct 2026 09:48:05 +0000
+	id 1xN5hD-0000000DAur-2PAH;
+	Sat, 31 Oct 2026 09:48:19 +0000
 Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xN5gx-0000000DAo0-2dUZ
+	id 1xN5hD-0000000DAug-12s6
 	for kexec@lists.infradead.org;
-	Sat, 31 Oct 2026 09:48:03 +0000
+	Sat, 31 Oct 2026 09:48:19 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 5F9FF402FA;
+	by sea.source.kernel.org (Postfix) with ESMTP id EB9B5407F0;
+	Sat, 31 Oct 2026 09:48:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CADAB1F00A18;
 	Sat, 31 Oct 2026 09:48:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DC8D1F000C1;
-	Sat, 31 Oct 2026 09:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793440083;
-	bh=oRdxulna6bx7ZoXAJZWTtTOwXgwkKcXU1p7Oe42EAqo=;
+	s=k20260515; t=1793440098;
+	bh=DxsTnHZLfef+ZwV+bvdRNnaTqozvDnboMuYB5CYD3jE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=WyYl5dm5PLsvVySkqKWeW4aQqBeXA4uNtbZ0Q7ESvQ9tb1cE7IFM8dVmAypfFv3ew
-	 pK6i+F632f1aj9HT4Cz09nw5s0O0bZ5JJgEVYKNecloJyyHAvxJPkOtixdHmgd9HpI
-	 ydeZ+vEbxoT2hxdhnYJAvglbZQ+7fd+Nssi6fmiuxZu5XAOtvh4jFDcMbwsyhFvb8n
-	 YJpI0mC9y4/JQpQ/d8ePl8NBnMpf+oSAr2oC2r7k6ENsJMAClBoUl5GM/DJi9h5aZw
-	 jNNqW+cyjceGWw0WFsiSKjNfEmU5Ecr8h4R26sYJPRy4YQVxh2ZZdfLKPRODE8MDBn
-	 YEP3nGt6vG92w==
+	b=QoEpOhUZRVT5ren8mNvEjqn1fyrCuCi3IqzacLFBc1u2HJO2oZExxcKCe19eR+RGQ
+	 8iwI8BvPZqNo5/jrqNSTGGo88w098M0MYwCIhUk6LpVbPz2i7KC/apSep2/KNgnikI
+	 CCZGsUUg6SYpN5WNaqgo8h1JdSLlrj3hYY7CzMCHMtG1ewJfyApyunEHXCarGJoL5Y
+	 prMZdGWKplHeXSIkx1fzFbYsB0I7gZ7MmULj4BhOGc7AQjO7OtPdPPIl2SKAWZRQVo
+	 g2l/0yxLop/YPFutY9Vnr3DZWe2nReOil0JTX8tcvbh73/vuVLd2Z0v/zRvWBDB3E/
+	 ebhBYFeK5WLLQ==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Sat, 31 Oct 2026 10:39:59 +0100
-Subject: [PATCH v3 30/47] mm/mremap: use pudp_huge_get_and_clear() when
- moving huge PUDs
+Date: Sat, 31 Oct 2026 10:40:00 +0100
+Subject: [PATCH v3 31/47] mm/mremap: recheck PUDs under the page table lock
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261031-fixes_core-v3-30-d6437171ecc3@kernel.org>
+Message-Id: <20261031-fixes_core-v3-31-d6437171ecc3@kernel.org>
 References: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
 In-Reply-To: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -92,12 +91,12 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  stable@vger.kernel.org, Muhammad Usama Anjum <usama.anjum@arm.com>, 
  "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1350; i=david@kernel.org;
- h=from:subject:message-id; bh=J+BkXcl4Qvwywi9WLcoERfpKcUUnTN7lTfE+aJlF+GQ=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLKebs8s914UfNrOe/qM8PKSOwFhTJaPeWuqqvs6bhy2z
- XAoTOTvKGVhEONgkBVTZAkKvm/w8uW62mo3PmaYOaxMIEMYuDgFYCJdMowMM/5zRgrnX8krOPRu
- eabUTz+9eNN3X64U7kiNWPKmVGDhH4bfrCkLONfNlpM/71PMcqR811mPT4cj1riv3S95hPloRs0
- 7dgA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2437; i=david@kernel.org;
+ h=from:subject:message-id; bh=YLac1XnofZU1UqgkNCzS2hgJEvURcnZijflAh/9PoUE=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLKebs/M2sG2+2aZx+o8Q2HJ9yX+F78wragxXn+sMS6Ri
+ WfxVTGfjlIWBjEOBlkxRZag4PsGL1+uq61242OGmcPKBDKEgYtTACbyw4vhN4t60MezWt6cQpaK
+ d97fOyKk439i2WG5kKkXGDQZLs+zLWRkWKKb/J/dqOvfq/UKWfytT/oFeqdGrpN5+3lT6H7Tbt3
+ //AA=
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -118,41 +117,71 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-move_huge_pud() reads the old PUD and clears it in separate operations.
-Hardware accessed or dirty updates between those operations can be lost
-when the saved entry is installed at the new address.
+Once get_old_pud() is fixed to accept PUD leaves, unmap_mapping_range() can
+clear a leaf between the lookup and the move. Holding mmap_lock in write
+mode does not prevent this.
 
-The raw pud_clear() also bypasses page_table_check_pud_clear(), while
-set_pud_at() accounts for the destination mapping. This leaves the
-checker counts unbalanced for mappings tracked by page table checking.
+If the zap happens before move_page_tables() tests the entry, an empty
+PUD can reach move_normal_pud(), where pud_populate() turns it into a
+present page table entry. If it happens after the test, move_huge_pud()
+can instead try to move an empty entry, triggering CONFIG_DEBUG_VM
+warnings on powerpc.
 
-To fix it, simply use pudp_huge_get_and_clear().
+Recheck the source under the page table lock in both helpers. Treat an
+empty source in move_normal_pud() as a completed move, and use
+__pud_trans_huge_lock() in move_huge_pud().
 
-Fixes: 7d846db7d0e2 ("mm/mremap: convert huge PUD move to separate helper")
+In the future we should likely have the code lookup a PUD/PMD lockless
+once, instead of multiple times, because one of the problematic bits
+here is the:
+
+	pud_trans_huge(*old_pud)
+
+Fixes: 0881ace292b6 ("mm/mremap: use pmd/pud_poplulate to update page table entries")
 Cc: stable@vger.kernel.org
 Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 Reviewed-by: Pedro Falcato <pfalcato@suse.de>
-Reviewed-by: Dev Jain <dev.jain@arm.com>
 Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/mremap.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ mm/mremap.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/mm/mremap.c b/mm/mremap.c
-index 0d06d7f37f19a..16e736c72d9cb 100644
+index 16e736c72d9cb..91f0865f6aeea 100644
 --- a/mm/mremap.c
 +++ b/mm/mremap.c
-@@ -509,8 +509,7 @@ static bool move_huge_pud(struct pagetable_move_control *pmc,
+@@ -461,14 +461,18 @@ static bool move_normal_pud(struct pagetable_move_control *pmc,
+ 	if (new_ptl != old_ptl)
  		spin_lock_nested(new_ptl, SINGLE_DEPTH_NESTING);
  
- 	/* Clear the pud */
--	pud = *old_pud;
--	pud_clear(old_pud);
-+	pud = pudp_huge_get_and_clear(mm, pmc->old_addr, old_pud);
+-	/* Clear the pud */
+ 	pud = *old_pud;
++	if (unlikely(pud_none(pud)))
++		goto out_unlock;
++
++	/* Clear the pud */
+ 	pud_clear(old_pud);
  
  	VM_BUG_ON(!pud_none(*new_pud));
  
+ 	pud_populate(mm, new_pud, pud_pgtable(pud));
+ 	flush_tlb_range(vma, pmc->old_addr, pmc->old_addr + PUD_SIZE);
++out_unlock:
+ 	if (new_ptl != old_ptl)
+ 		spin_unlock(new_ptl);
+ 	spin_unlock(old_ptl);
+@@ -503,7 +507,9 @@ static bool move_huge_pud(struct pagetable_move_control *pmc,
+ 	 * We don't have to worry about the ordering of src and dst
+ 	 * ptlocks because exclusive mmap_lock prevents deadlock.
+ 	 */
+-	old_ptl = pud_lock(mm, old_pud);
++	old_ptl = __pud_trans_huge_lock(old_pud, vma);
++	if (unlikely(!old_ptl))
++		return false;
+ 	new_ptl = pud_lockptr(mm, new_pud);
+ 	if (new_ptl != old_ptl)
+ 		spin_lock_nested(new_ptl, SINGLE_DEPTH_NESTING);
 
 -- 
 2.43.0
