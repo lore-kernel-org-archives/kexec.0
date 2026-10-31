@@ -2,55 +2,56 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CABA2606A31E
-	for <kexec@archiver.kernel.org>; Sat, 31 Oct 2026 09:46:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B6E606A31D
+	for <kexec@archiver.kernel.org>; Sat, 31 Oct 2026 09:46:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=e85qIuLR;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Yugjn+pB
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ps7u4Pg/;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EX+rzLR3
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=6rdFsSanvdSasr5hp2c+zM3yMNq0teCos7F9FeyTNnc=; b=e85qIuLR5UsDBr
-	gWGAaF7VmE1j+fx8D1I471yiL+0ZIezWBfGFYrzTXNY2vfeXzgKyjbOqn61WjdcTlT8b9ltRP4Onb
-	v9cUz6dYkp8iUD+k7Ye/prQtdBfO6RLcPt8SfILPwVmwZP93jG9AvE6wsOXoXOK9gSzLaSP/4bBc3
-	G95DJuxo41W8xPqF+QF75GdR9D2XkWWAFH9ZG5IJTz72KtHsjTwe2c/kG7LMQfkkqiqIgolBc+QU2
-	BWM10ITaOwIwoEajBQ+++DQ/eTc8gmBLIXkva4X90/yTCtf1lrS/vCqtBH32n7skqs95eSU4PPUHl
-	ZKR67i6AK4YcHoTsUWmg==;
+	List-Owner; bh=aFAIeNXgFr1JMM5WH77Fc7EqldEyl6IknIX1LhJHwrw=; b=ps7u4Pg/w8Fdwo
+	Qy4irl9xrx9cqmbBxd837U3n9jnxqnUdKAoPRi7lzC1hkkCPmz0Q9uqFl/OZHEjitt6E9QKBrrgG8
+	sm58jO8ZH8TD0VchIATCpVLQ/EtRl0o5fGKh/WLVgtVSdH+6OvlDkTTm/sxRaupyAM7PB3L3P9RmC
+	0ELv0KVxcl0SAgWD37pAmu/RiL0zjr/ijOABldd2LG4Cs6BQy4Q9hEqnUX6a0OQRKjEp9rzcQz0gV
+	MRohb8rtRseGySuj6S7J3DxFuu7PFFLmICwLftXilWiChhueRhD49hGAUrVHSUE7piaAgqDj7cq1S
+	8SHPef21RR+bC+sPT5BA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xN5fU-0000000DAUS-1lck;
-	Sat, 31 Oct 2026 09:46:32 +0000
+	id 1xN5fj-0000000DAXX-2TlU;
+	Sat, 31 Oct 2026 09:46:47 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xN5fS-0000000DAUJ-1NOy
+	id 1xN5fi-0000000DAXP-0Lk1
 	for kexec@lists.infradead.org;
-	Sat, 31 Oct 2026 09:46:30 +0000
+	Sat, 31 Oct 2026 09:46:46 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id BD570600DA;
+	by tor.source.kernel.org (Postfix) with ESMTP id 857656061B;
+	Sat, 31 Oct 2026 09:46:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09CA31F000C1;
 	Sat, 31 Oct 2026 09:46:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FC641F00919;
-	Sat, 31 Oct 2026 09:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793439989;
-	bh=6rdFsSanvdSasr5hp2c+zM3yMNq0teCos7F9FeyTNnc=;
+	s=k20260515; t=1793440005;
+	bh=aFAIeNXgFr1JMM5WH77Fc7EqldEyl6IknIX1LhJHwrw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=Yugjn+pBYLqLBNC3xTiCz5oiW74vhvC7wFkycvRquO3PnYkqqxvJdBjpVVLOOf9a3
-	 GMY5NPMvyim4j6zvtGkobuJQM6LHuop5J9jeU838zTWLADf6gS9mENKHqyeQ3U/cE2
-	 tJ3QNIKkVHGA8XgYw0iQQ87Mz2ixJeN+SwIvqwqJfyG5NckD6CXkcAUg8jOqrL4xfa
-	 4j3O2xRowLdRQSBYvwRe96Lht4Bnym9ZIAj/D5fzhJgLn932plRC2akFWJdgu9efrr
-	 PFVFdC6cmtsSCVrw0oaNlN0Ha4j0Xykq9Zmdvyk6cfI3okiXdYyvJvgkiQPI3PQ4x/
-	 B7Mx6SnjXL73w==
+	b=EX+rzLR3sPZ/JAPmDxO6qvruP7KweCWYbPS+ljbCCp8ncesIMMjQFWL1CwA/7qSfO
+	 MZc2qDD1LCXFUhxjV2Wh1MkDNJkf+rR7cRYaaywcEG/vgDTdJs73AERbIuvmnhE1S6
+	 H+m+yHY/9r3a7AicVf4tzMRkrsrz4IKZTEYKWfu6Qu1s/KRba/wlS2kCTK/e6cNvcp
+	 fG7t1VvwaN5GFTBzBdF7Y40XCg3q4K29QXyXbc4wZPl9siKtYXSZ/Kcf6Q58L4QyHS
+	 YigSSln0JE5OvhEsT/dbdRmsbNjFGtOnAHU+HIrXMBQCDYGCScxOz39ya44Wul1aWT
+	 iCtQ2jWApIcOA==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Sat, 31 Oct 2026 10:39:53 +0100
-Subject: [PATCH v3 24/47] mm/userfaultfd: wake all waiters on unregister
+Date: Sat, 31 Oct 2026 10:39:54 +0100
+Subject: [PATCH v3 25/47] mm/userfaultfd: wake waiters when registration
+ modes are removed
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261031-fixes_core-v3-24-d6437171ecc3@kernel.org>
+Message-Id: <20261031-fixes_core-v3-25-d6437171ecc3@kernel.org>
 References: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
 In-Reply-To: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -88,16 +89,15 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
- Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org, 
- Muhammad Usama Anjum <usama.anjum@arm.com>, 
+ stable@vger.kernel.org, Muhammad Usama Anjum <usama.anjum@arm.com>, 
  "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2433; i=david@kernel.org;
- h=from:subject:message-id; bh=jQmdKlit53in6eLyB5lf4macOO/l2TcVDsIv/EBmrGQ=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLKebs+QuqZh0vyitqWjpyf93yWBKxsFeRNZrt5UZ0/01
- uPyqfjQUcrCIMbBICumyBIUfN/g5ct1tdVufMwwc1iZQIYwcHEKwESW2TH8lXjDYm1v2hI/s91y
- 7fU857DG/g2ne3flZlXO0qn8+vyaKCPD/kUxxXONRZa5rZX00Vw4Oe9ZxN3rE9xft8fcOiRdJvG
- cEwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3059; i=david@kernel.org;
+ h=from:subject:message-id; bh=jIZ4aj6oO0T8O1iDgAYwxVUGJ5PVlOxvrE64yrDPOpw=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLKebs+YcELBdt666LezdhU52py4HZm8/dli+Q03o4qWM
+ xRWFxqs6ihlYRDjYJAVU2QJCr5v8PLlutpqNz5mmDmsTCBDGLg4BWAianqMDO/D2137GiO5DPhs
+ zh344W9+yLuP8c+LXNmID1+Yjs5d08LI8PXN7dVm34SkfnwM6C++9qtg/ZrPP8T2TW/qe7h+anf
+ SCx4A
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -118,71 +118,85 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-From: Josef Bacik <josef@toxicpanda.com>
+UFFDIO_REGISTER can replace MISSING or MINOR tracking without waking
+faults that are already queued. For example, switching an anonymous
+range from MISSING to WP leaves a missing-fault waiter asleep until
+userspace explicitly wakes it.
 
-UFFDIO_UNREGISTER only wakes pending faults if VM_UFFD_MISSING is set.
-Threads waiting on write-protect, minor or RWP faults can therefore remain
-asleep after unregistering a range that does not track missing faults.
+When a registration change removes a UFFD mode, wake waiters in the
+affected interval after updating the VMA. The VMA is write-locked at
+this point, so no new faults can queue under the old modes and woken
+threads cannot retry until mmap_write_unlock(). Waiters for retained
+modes in the same interval may also wake and refault.
 
-Wake pending faults regardless of the registration mode so they can retry
-without an explicit UFFDIO_WAKE or closing the userfaultfd. This matches
-the existing behavior for missing faults, including removing unread fault
-messages for the woken waiters.
-
-Fix generated by an LLM and sent by Josef Bacik in private.
+The hang reproduces for MISSING-to-WP and MINOR-to-MISSING transitions,
+with both read and unread fault events.
 
 Fixes: 63b2d4174c4a ("userfaultfd: wp: add the writeprotect API to userfaultfd ioctl")
 Cc: stable@vger.kernel.org
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-[ david: rebase; simplify description ]
+Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+Tested-by: Gregory Price (Meta) <gourry@gourry.net>
+Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
 Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/userfaultfd.c | 22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+ mm/userfaultfd.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index 3ca04b582329f..be630674fda9b 100644
+index be630674fda9b..03f1b15bfe63e 100644
 --- a/mm/userfaultfd.c
 +++ b/mm/userfaultfd.c
-@@ -3977,6 +3977,8 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
+@@ -2270,6 +2270,9 @@ static struct vm_area_struct *userfaultfd_clear_vma(struct vma_iterator *vmi,
+ 	return ret;
+ }
  
- 	ret = 0;
++static void wake_userfault_range(struct userfaultfd_ctx *ctx,
++		unsigned long start, unsigned long end);
++
+ /* Assumes mmap write lock taken, and mm_struct pinned. */
+ static int userfaultfd_register_range(struct userfaultfd_ctx *ctx,
+ 			       struct vm_area_struct *vma,
+@@ -2287,6 +2290,8 @@ static int userfaultfd_register_range(struct userfaultfd_ctx *ctx,
+ 		prev = vma;
+ 
  	for_each_vma_range(vmi, vma, end) {
-+		struct userfaultfd_wake_range range;
++		const bool any_mode_removed = vma->vm_flags & __VM_UFFD_FLAGS & ~vm_flags;
 +
  		cond_resched();
  
- 		/* VMA not registered with userfaultfd. */
-@@ -3994,18 +3996,14 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
- 		/* Prevent new userfaults from being queued after the wakeup. */
- 		vma_start_write(vma);
+ 		VM_WARN_ON_ONCE(!vma_can_userfault(vma, vm_flags, wp_async));
+@@ -2332,6 +2337,10 @@ static int userfaultfd_register_range(struct userfaultfd_ctx *ctx,
+ 		 */
+ 		userfaultfd_set_ctx(vma, ctx, vm_flags);
  
--		if (userfaultfd_missing(vma)) {
--			/*
--			 * Wake any concurrent pending userfault while
--			 * we unregister, so they will not hang
--			 * permanently and it avoids userland to call
--			 * UFFDIO_WAKE explicitly.
--			 */
--			struct userfaultfd_wake_range range;
--			range.start = start;
--			range.len = vma_end - start;
--			wake_userfault(vma->vm_userfaultfd_ctx.ctx, &range);
--		}
-+		/*
-+		 * Wake any concurrent pending userfault while we unregister,
-+		 * so they will not hang permanently and it avoids userland to
-+		 * call UFFDIO_WAKE explicitly.
-+		 */
-+		range.start = start;
-+		range.len = vma_end - start;
-+		wake_userfault(ctx, &range);
++		/* Retry faults for removed modes while the VMA is write-locked. */
++		if (any_mode_removed)
++			wake_userfault_range(ctx, start, vma_end);
++
+ 		if (vma_is_hugetlb(vma) && uffd_disable_huge_pmd_share(vma))
+ 			hugetlb_unshare_all_pmds(vma);
  
- 		vma = userfaultfd_clear_vma(&vmi, prev, vma,
- 					    start, vma_end);
+@@ -3648,6 +3657,17 @@ static __always_inline void wake_userfault(struct userfaultfd_ctx *ctx,
+ 		__wake_userfault(ctx, range);
+ }
+ 
++static void wake_userfault_range(struct userfaultfd_ctx *ctx,
++		unsigned long start, unsigned long end)
++{
++	struct userfaultfd_wake_range range = {
++		.start = start,
++		.len = end - start,
++	};
++
++	wake_userfault(ctx, &range);
++}
++
+ static __always_inline int validate_unaligned_range(
+ 	struct mm_struct *mm, __u64 start, __u64 len)
+ {
 
 -- 
 2.43.0
