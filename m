@@ -2,56 +2,56 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA924606A31F
-	for <kexec@archiver.kernel.org>; Sat, 31 Oct 2026 09:42:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACF2606A323
+	for <kexec@archiver.kernel.org>; Sat, 31 Oct 2026 09:42:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=OOG8QuQD;
-	dkim=temperror header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Z5e53RJF
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=UqcxAP6F;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SlvOoo7h
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=PCXji8t2YghBn8zNO97WnfB06mhFIwWKCiaxVt0zvRk=; b=OOG8QuQD3i95q2
-	d8pPKhd1+7fTBS9kYTgBMFYNStJEb8mpgujRH9adPBNszld+kp+b6hq9qB1CyLkaY5kmDCAWDNiXV
-	/o2fQKtfRvLa62pCrG88zoMm4avPMa/Oo4p2LC1c+EDBrERI/OYLai7pDhGBxF9Kraaw25/tP98Rh
-	5knOecQCH/uzxpXXCbCPGPJAn0yFbC2vpUY+Z/wykoPhJQgkRRiUfqHg8OkEAKVLNIKVfV+6UJv4K
-	ztGR0LaD5cn1k56zJluEy5biaIpZXYLxxbWEG0XuTG2ubIBsv2/EQBZPLdNS7YNGOYfN7dFqBqhFA
-	VtpBXWZeL729CMWkIISg==;
+	List-Owner; bh=l+l7vL6OppC3xXbuZ+6FYNU9AQPqNjHig+EtP/8oH5c=; b=UqcxAP6FV/N1qG
+	XmKkQ+SvZ2/eGry2IkaY4qWqcrjko8DaIqxmDTRXCR324p998jNiB7ft0UeECgtvqWxgSGhNy2s1V
+	WUodJCu7tEo4hMMlEfWTx4b9XVwwJfIUVsPVv7vzpiiDpsnLD1/z66xSSF77URkT/lujBtYUjFGXT
+	a2DfKkh691ToajyKd2fxzK/L5H0fm9p4BiWEe2qpU18uIHD6q43IPjs2uDwIg6C+NnkN3te/K2uzV
+	mwu1ifnW+4dwP+O653u4sUySld8YEAdweIyIWBRi0Nyl9+cVw1pAVGPpB0pKbfcSc2YwD4J1NC2tk
+	f/DfctbPbQotXnTVKUQw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xN5bh-0000000D9Np-2nBK;
-	Sat, 31 Oct 2026 09:42:37 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xN5bx-0000000D9SJ-01wU;
+	Sat, 31 Oct 2026 09:42:53 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xN5bg-0000000D9NV-0Z8e
+	id 1xN5bv-0000000D9S3-2Y1E
 	for kexec@lists.infradead.org;
-	Sat, 31 Oct 2026 09:42:36 +0000
+	Sat, 31 Oct 2026 09:42:51 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 904B8600C8;
+	by sea.source.kernel.org (Postfix) with ESMTP id 5D62842A93;
+	Sat, 31 Oct 2026 09:42:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E61F31F00A1A;
 	Sat, 31 Oct 2026 09:42:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C6831F0093A;
-	Sat, 31 Oct 2026 09:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793439755;
-	bh=PCXji8t2YghBn8zNO97WnfB06mhFIwWKCiaxVt0zvRk=;
+	s=k20260515; t=1793439771;
+	bh=l+l7vL6OppC3xXbuZ+6FYNU9AQPqNjHig+EtP/8oH5c=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=Z5e53RJFYXZm94nrWWOWfz98i5n0k7Vq1mlTIUq5K8+xJc8k6dpaYYzSZsF4CgBGh
-	 v4KYqINsYG9kt2cDdfKy0eTyGyYpv6J5W5NiuEPWdzqHf88nGhb0V60FfXxzWiLdX3
-	 QmdhnZrltq4DP3/sy1XSUvGTC8FipG5eXCbz9AOB+hjr5+MIg4VzYpuGk4ssaJpufB
-	 TQO0s/RKG+JX4ALqjZDzvmreezhmYOe5sHjpVmP0tZoPQLouAFH7bKEQyTb3phuSOY
-	 jUGQIHVgorDoKoHm4liePBrx/LWneHktnw6p09RxrbfVYcoo6un0Z7fj/dn2+TFapn
-	 MVKDKVJ5kogzA==
+	b=SlvOoo7h2NrGSce+EZ0r/TEXEBd2b3M+W3a5ZrbTwYZjlGRtxW/0dAR4JP4GA+76w
+	 P+f7bAuUNu1Yv1g1H7D8kFS4QD5s2CZBGegKhPNpITqlN7Ip3qbNZ4cy/WVa1ZlmjD
+	 /D2MxgtNqIQyQIzKHKj7qIVDjMAvkJf4rRPteq1rzuV+/rMCJ7D7uysNhe47S8OYi0
+	 hM/g0ow18Z8BSkDidvpS/QUBtepf7GfsSShe5dLagt+hSjgLUsSJX9zgTlj9tPN+J/
+	 0X8jIEgDjVqkM1UbZ87/UjTXIQyGyjjTepCGPRDVpmowDIpCv4zaqmYY0OHgBX6iW2
+	 qTDUniZzh/0Ww==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Sat, 31 Oct 2026 10:39:38 +0100
-Subject: [PATCH v3 09/47] mm/rmap: handle device-exclusive entries in
- folio_referenced_one()
+Date: Sat, 31 Oct 2026 10:39:39 +0100
+Subject: [PATCH v3 10/47] mm/huge_memory: fix list corruption when
+ deferred_split_scan() races with deferred_split_folio()
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20261031-fixes_core-v3-9-d6437171ecc3@kernel.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261031-fixes_core-v3-10-d6437171ecc3@kernel.org>
 References: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
 In-Reply-To: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -90,15 +90,16 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
  stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
+ Mani Tofigh <mt4022@columbia.edu>, 
  Muhammad Usama Anjum <usama.anjum@arm.com>, 
  "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3393; i=david@kernel.org;
- h=from:subject:message-id; bh=glmREPecf3Soxf23A8cAtJsaeHFT2ex5UzHoQI9g+28=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLKebk8TXHrRW3j5ImPXqRM2+EWeLvBgOzKltzWl/Yf1J
- /Wu2evmdpSyMIhxMMiKKbIEBd83ePlyXW21Gx8zzBxWJpAhDFycAjARpheMDFNaAhtDhL1kNO1c
- dGdue3/ixn6rTU5ud9Ss+l5+3C7szsbwk7Fgs0P+Td/7KsFuhndbzDKmPefPbc5Li/3Itfb6dNY
- p3AA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3706; i=david@kernel.org;
+ h=from:subject:message-id; bh=JLLChxKIypxsdt4WbVQ02kyFhDQ6FU9NlTqVcswW/5U=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLKebk8TMZnE9X4D4/OEzCXBE1Z9d/jC1rw4beqiza7Gr
+ ftD/0+x6ihlYRDjYJAVU2QJCr5v8PLlutpqNz5mmDmsTCBDGLg4BWAitXmMDDuD94idilyy2OlJ
+ +uw7ca5Hak9PM5FUNfP55rpY7WLg7Z0M/9NvzDOcl7v+Y92qeT0exhK3v3ycJN1/VN6Lyeh+8ln
+ l97wA
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -119,91 +120,91 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-page_vma_mapped_walk() can return non-present device-exclusive entries,
-but folio_referenced_one() passes them to PTE young-bit accessors that
-require present PTEs.
+Since the deferred split queue became a list_lru, the isolate callback
+moves the folios it took a reference on to an on-stack list, linked
+through folio->_deferred_list, and deferred_split_scan() takes them off
+that list with list_del_init() without holding the list_lru lock.
 
-We must neither call clear_flush_young_ptes_notify() nor
-folio_pte_batch() with non-present entries. For example, clearing the
-young bit on non-present PTEs can corrupt the entry: on arm64
-PTE_AF overlaps the swap type, so clearing it turns a device-exclusive
-entry into an ordinary swap entry.
+deferred_split_folio() does not know about the on-stack list. It only
+holds the list_lru lock when it looks at the same list_head, and it can
+run for such a folio: a THP is queued when it is mapped, as a candidate
+for the underused check, and is queued "again" when a part of it gets
+unmapped:
 
-folio_pte_batch() will VM_WARN_ON_FOLIO.
+  CPU0 deferred_split_scan()          CPU1 deferred_split_folio()
+  list_del_init(&folio->_deferred_list)
+    next->prev = prev
+    prev->next = next
+    entry->next = entry
+                                      list_lru_lock_irqsave()
+                                      folio_set_partially_mapped()
+                                      __list_lru_add()
+                                        list_empty(item)  -> true
+                                        list_add_tail(item, &l->list)
+                                          item->next = &l->list
+                                          item->prev = tail
+    entry->prev = entry
 
-Apply the same approach as the previous fixes to e.g., damon_ptep_mkold():
-treat these entries as old from the CPU's perspective and obtain their
-young state through the MMU notifier.
+The folio now sits on the list_lru with ->prev pointing to itself. The
+next removal leaves the neighbours pointing to it, and they still do so
+after the folio has been freed. With CONFIG_DEBUG_LIST:
 
-Skip PTE batching and MGLRU look-around for non-present entries, and
-don't modify non-present PTEs.
+  list_del corruption. prev->next should be ffd4000000270090, but was
+  ffd4000000278090. (prev=ffd4000000270090)
 
-Fixes: b756a3b5e7ea ("mm: device exclusive memory access")
-Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+Fix it by grabbing the lock around list_del_init() so
+deferred_split_folio() cannot race with it.
+
+Fixes: fafaeceb89a5 ("mm: switch deferred split shrinker to list_lru")
 Cc: stable@vger.kernel.org
 Reported-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Harry Yoo (Meta) <harry@kernel.org>
-Reviewed-by: Barry Song <baohua@kernel.org>
-Reviewed-by: Dev Jain <dev.jain@arm.com>
+Reviewed-by: Johannes Weiner <hannes@cmpxchg.org>
+Reviewed-by: Mani Tofigh <mt4022@columbia.edu>
+Tested-by: Mani Tofigh <mt4022@columbia.edu>
+Reviewed-by: Lance Yang <lance.yang@linux.dev>
 Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/rmap.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ mm/huge_memory.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 1131b76bbbc28..0faef46806e5c 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -924,6 +924,7 @@ static bool folio_referenced_one(struct folio *folio,
- 	DEFINE_FOLIO_VMA_WALK(pvmw, folio, vma, address, 0);
- 	int ptes = 0, referenced = 0;
- 	unsigned int nr;
-+	pte_t pteval;
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index bd44d58e86845..4c0194af9016d 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -4522,8 +4522,7 @@ int split_folio_to_list(struct folio *folio, struct list_head *list)
+  *
+  * It is unsafe to call folio_unqueue_deferred_split() until folio refcount is
+  * zero: because even when the list_lru lock is held, a non-empty
+- * _deferred_list might be in use on deferred_split_scan()'s unlocked
+- * on-stack list.
++ * _deferred_list might be in use on deferred_split_scan()'s on-stack list.
+  *
+  * The list_lru sublist is determined by folio's memcg: it is therefore
+  * important to unqueue deferred split before changing folio memcg.
+@@ -4665,10 +4664,22 @@ static unsigned long deferred_split_scan(struct shrinker *shrink,
+ 					    deferred_split_isolate, &dispose);
  
- 	while (page_vma_mapped_walk(&pvmw)) {
- 		address = pvmw.address;
-@@ -968,10 +969,12 @@ static bool folio_referenced_one(struct folio *folio,
- 			return false;
- 		}
+ 	list_for_each_entry_safe(folio, next, &dispose, _deferred_list) {
++		struct mem_cgroup *memcg;
++		struct list_lru_one *lru;
+ 		bool did_split = false;
+ 		bool underused = false;
  
--		if (pvmw.pte && folio_test_large(folio)) {
-+		if (pvmw.pte)
-+			pteval = ptep_get(pvmw.pte);
-+
-+		if (pvmw.pte && pte_present(pteval) && folio_test_large(folio)) {
- 			const unsigned long end_addr = pmd_addr_end(address, vma->vm_end);
- 			const unsigned int max_nr = (end_addr - address) >> PAGE_SHIFT;
--			pte_t pteval = ptep_get(pvmw.pte);
++		/*
++		 * Sync with deferred_split_folio(), which can requeue the
++		 * folio once list_empty() is true, and sets PG_partially_mapped.
++		 */
++		rcu_read_lock();
++		memcg = folio_memcg(folio);
++		lru = list_lru_lock_irq(&deferred_split_lru, folio_nid(folio),
++					&memcg);
+ 		list_del_init(&folio->_deferred_list);
++		list_lru_unlock_irq(lru);
++		rcu_read_unlock();
  
- 			nr = folio_pte_batch(folio, pvmw.pte, pteval, max_nr);
- 		}
-@@ -981,11 +984,23 @@ static bool folio_referenced_one(struct folio *folio,
- 		 * are. —they could be on active/inactive lists or on MGLRU. So the
- 		 * simplest approach is to disable this look-around optimization.
- 		 */
--		if (lru_gen_enabled() && !lru_gen_switching() && pvmw.pte) {
-+		if (lru_gen_enabled() && !lru_gen_switching() && pvmw.pte &&
-+		    pte_present(pteval)) {
- 			if (lru_gen_look_around(&pvmw, nr))
- 				referenced++;
- 		} else if (pvmw.pte) {
--			if (clear_flush_young_ptes_notify(vma, address, pvmw.pte, nr))
-+			bool young = false;
-+
-+			/*
-+			 * PFN swap PTEs, such as device-exclusive ones, that
-+			 * actually map pages are "old" from a CPU perspective.
-+			 * The MMU notifier takes care of any device aspects.
-+			 */
-+			if (pte_present(pteval))
-+				young = clear_flush_young_ptes(vma, address, pvmw.pte, nr);
-+			young |= mmu_notifier_clear_flush_young(vma->vm_mm, address,
-+								address + nr * PAGE_SIZE);
-+			if (young)
- 				referenced++;
- 		} else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
- 			if (pmdp_clear_flush_young_notify(vma, address,
+ 		if (!folio_test_partially_mapped(folio)) {
+ 			/*
 
 -- 
 2.43.0
