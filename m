@@ -2,56 +2,56 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D303B606A31A
-	for <kexec@archiver.kernel.org>; Sat, 31 Oct 2026 09:46:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE48606A32C
+	for <kexec@archiver.kernel.org>; Sat, 31 Oct 2026 09:46:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=VUC9ckAx;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OcVH/BeE
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=jwcqsKzv;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d6CFfneP
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=wISwi351T9RVVV1oXeQonBfVyTKFfK4XoWM4mZGU1z8=; b=VUC9ckAx8jjYd4
-	XexGyBfDeYKSfLucMGAh8Q/fpWkDFt8lMRYXN+6u1N2cRHGwfAUJ6Lr5B0ZO3HHV62cjD51vwtnld
-	9SIPQ020C9HWgNqOKH8ydIeH3xIp5SzYMpq+Sud2H0dyvtv5wnwx3pt5WiJV6jR2y26TwDKupgtc5
-	tOEXlL2CLj8gv6ftwtuOxJQ5scbq7zm9GFgpsolSQoE8qUJe6Kv2jw/uP0m0sNz3fhO3y9hz23Nsr
-	1VIrjPrMgOvQNu21JsrzekmYpdYt5+BHWFsJ8XCIEmoroBcAj8PQ31lkPPRiufDD0qNIFFbQHuMAO
-	AkROuTCRQlQQTyY1finQ==;
+	List-Owner; bh=4sgsef0PgIF0cfrADdJuNAAJq268avrj1EIWVyDlN9A=; b=jwcqsKzvf8iEmI
+	WaMnqElREDl3OFDt2fuXOUE7Dcxyt0G8H6gM2AmXyZlrlalHf8P4ouYgb6e8cUqZNxU401dcQToOy
+	bR+heKRRMmWq24bbmaftr27RagoeYHBxflzW3Ac8tt43DPuHkQBhDuC/BoQHMC3vcSbXPaG4Hqb+V
+	ecYU5DSP8feiQ2yUO60IpkOhhCIhh7oVC+pkI6RvFyU2Ebgd2c96VI8i13zBfSoXAYt91qzd3pePF
+	bnNJ7NEE00SChBAWRYpZtXwN3eR2/1tZKHQQWXd7QtcrFSyU7+nfHjirTHIL7WMrwzo/YrQ20kPf6
+	76CCfakmvao6spfmat8A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xN5ey-0000000DANF-2HAm;
-	Sat, 31 Oct 2026 09:46:00 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xN5fD-0000000DAQT-2db7;
+	Sat, 31 Oct 2026 09:46:15 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xN5ew-0000000DAN0-0yRi
+	id 1xN5fC-0000000DAQC-16Mk
 	for kexec@lists.infradead.org;
-	Sat, 31 Oct 2026 09:45:58 +0000
+	Sat, 31 Oct 2026 09:46:14 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id E85FC41A94;
-	Sat, 31 Oct 2026 09:45:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 278111F0093A;
-	Sat, 31 Oct 2026 09:45:42 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id B17AA41464;
+	Sat, 31 Oct 2026 09:46:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6136E1F000C1;
+	Sat, 31 Oct 2026 09:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793439957;
-	bh=wISwi351T9RVVV1oXeQonBfVyTKFfK4XoWM4mZGU1z8=;
+	s=k20260515; t=1793439973;
+	bh=4sgsef0PgIF0cfrADdJuNAAJq268avrj1EIWVyDlN9A=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=OcVH/BeEc2hYfL2FYGWe1OvmH8o+k5edNc4FHDUjc8QmLWMD9qEaA3739kvUYuIIv
-	 NdEhiB4tuErpPCysmctpgOwiA1RyjWRiKmEBs4q/oO0aFyWb6QW2imFkeevKJ6/u6/
-	 A5D7ccuqBCziN4Gk+eR3salFGBi6bsDi9+pKQkmS4CuDSUFnOvvuZSPJhGkhtRUJuz
-	 hyaWctchXf7KHnMJMYfXCPdeKm59BqQ5oSysl9esxUiYfV5qJnQm09ojPLZu36HExp
-	 qeaPCo7g8Ah2K2QCxL85rqYn6+orFN7B2pkZTZuUAVM5jv2YS9eLZFOLhcs/7mIU3w
-	 4zHQWM0WMBKFA==
+	b=d6CFfnePukIWxq1RflVVt4wxWBc+6vCaK03YtXkPiVGAT1MLhmGttqbCKpZC8CMv0
+	 ykZG9YuZhqJBGj8aR09OSLgRuWTYMZWKwLUnOtAFD0NmRWhh/hkNYdyjvdkGrtM/HC
+	 NvXMCLg235yYjJ1P9mJHTNNH7LQX4WGY6VQxjXRLERdE7L37vvhfQideQle/aO4CF2
+	 rz9IJxRxQ+TD0DOdP47cmawMrJuPX8KczA2npuhKSEktnAwI/DZutaxbl1koK56PVe
+	 4Qx6oqX4wL1+I/FemH+A6y6sdwfYTdtWxi7NEEoGuMBtRUXETKv8bzi+XlHEkQntS7
+	 4jzXemYA3bcMA==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Sat, 31 Oct 2026 10:39:51 +0100
-Subject: [PATCH v3 22/47] mm/gup: check for overflow when converting
- nr_pages to bytes in GUP-fast
+Date: Sat, 31 Oct 2026 10:39:52 +0100
+Subject: [PATCH v3 23/47] mm/userfaultfd: write-lock the VMA before waking
+ waiters when unregistering
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261031-fixes_core-v3-22-d6437171ecc3@kernel.org>
+Message-Id: <20261031-fixes_core-v3-23-d6437171ecc3@kernel.org>
 References: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
 In-Reply-To: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -89,15 +89,16 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
- stable@vger.kernel.org, Muhammad Usama Anjum <usama.anjum@arm.com>, 
+ stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
+ Muhammad Usama Anjum <usama.anjum@arm.com>, 
  "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1366; i=david@kernel.org;
- h=from:subject:message-id; bh=kuHYCo8jZXAQ9XN8vjw93pI/nGqY4DS2NH2YO8khoeQ=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLKebs94vWxtqPbuuB9vUk9tOlh+p4nLJ3bzr5mJJZUfV
- U4vWNkT0VHKwiDGwSArpsgSFHzf4OXLdbXVbnzMMHNYmUCGMHBxCsBEtM8zMqzlOOtfm5t343jZ
- 1o5lDTYVTDu850yesrHneqye5kuf74sZ/leL5UluV9b4zxeU2FBTZ/1S7rP6zpebP1huXfhOy1z
- gLQcA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1507; i=david@kernel.org;
+ h=from:subject:message-id; bh=wm0iwUtDDosDLjqj9xBcxV65LFmKykeK8WHMHyZPLHw=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLKebs+QOvwkeiXTRJbcv69PJk23spi0JO3lV54Jugxc1
+ +3fPj4R2VHKwiDGwSArpsgSFHzf4OXLdbXVbnzMMHNYmUCGMHBxCsBEXhkw/K8Jnfd9x5bTzUxX
+ pftZNxgezJ8YN90hhLtU3enYreUr/mQwMlwUz5Tcc+IGq0Txmea3//4c6PzmP2uueYjKLiaP75X
+ zrrMAAA==
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -118,42 +119,42 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-The overflow check in gup_fast_fallback() only covers the addition to
-start. The preceding nr_pages << PAGE_SHIFT can already have truncated
-the length on 32bit.
+userfaultfd_unregister() wakes pending missing faults before clearing the
+VMA's userfaultfd registration. With per-VMA fault locking, holding
+mmap_lock for write does not prevent another fault from queuing after
+the wakeup but before userfaultfd_clear_vma() write-locks the VMA. That
+waiter can then remain asleep indefinitely.
 
-Users such as RapidIO's rio_dma_transfer() can derive such page counts
-from a 64-bit userspace length.
+Call vma_start_write() before waking waiters. Existing fault handlers
+queue themselves before dropping the VMA read lock, and new readers are
+excluded until mmap_write_unlock().
 
-Let's just check_shl_overflow() to reject any such overflow with
--EOVERFLOW early.
-
-Fixes: c28b1fc70390 ("mm/gup: reorganize internal_get_user_pages_fast()")
+Fixes: 29a22b9e08d7 ("mm: handle userfaults under VMA lock")
 Cc: stable@vger.kernel.org
+Reported-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-Acked-by: Muchun Song <muchun.song@linux.dev>
-Reviewed-by: Barry Song <baohua@kernel.org>
+Reviewed-by: Suren Baghdasaryan <surenb@google.com>
 Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/gup.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/userfaultfd.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 1c2ac7c66c309..ba4907b352323 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -3225,8 +3225,8 @@ static int gup_fast_fallback(unsigned long start, unsigned long nr_pages,
- 		might_lock_read(&current->mm->mmap_lock);
+diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+index 928ad95eeb2ba..3ca04b582329f 100644
+--- a/mm/userfaultfd.c
++++ b/mm/userfaultfd.c
+@@ -3991,6 +3991,9 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
+ 			start = vma->vm_start;
+ 		vma_end = min(end, vma->vm_end);
  
- 	start = untagged_addr(start) & PAGE_MASK;
--	len = nr_pages << PAGE_SHIFT;
--	if (check_add_overflow(start, len, &end))
-+	if (check_shl_overflow(nr_pages, PAGE_SHIFT, &len) ||
-+	    check_add_overflow(start, len, &end))
- 		return -EOVERFLOW;
- 	if (end > TASK_SIZE_MAX)
- 		return -EFAULT;
++		/* Prevent new userfaults from being queued after the wakeup. */
++		vma_start_write(vma);
++
+ 		if (userfaultfd_missing(vma)) {
+ 			/*
+ 			 * Wake any concurrent pending userfault while
 
 -- 
 2.43.0
