@@ -2,99 +2,88 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D07606A325
-	for <kexec@archiver.kernel.org>; Sat, 31 Oct 2026 10:55:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 876E9606A329
+	for <kexec@archiver.kernel.org>; Sat, 31 Oct 2026 21:19:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=CLbYXj6s;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hZVih8RK
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=wOuBck2l;
+	dkim=pass (4096-bit key, unprotected) header.d=archlinux.org header.i=@archlinux.org header.a=rsa-sha256 header.s=dkim-rsa header.b=pyiQH2XZ;
+	dkim=pass header.d=archlinux.org header.i=@archlinux.org header.a=ed25519-sha256 header.s=dkim-ed25519 header.b=LzKLQPS3
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Date:Message-Id:Subject:References:In-Reply-To:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=kf7DHW+HPMG6HKkFPWFn96X9OnxzATvopEw39adSoAw=; b=CLbYXj6sP+A4n0
-	PPz6ES+av6nnfx23u+hD3SfcRQSN4CpdcPcFMJNishGM/DsnoLDAqI/yMB7rqWHbKhaf+KVIVWek8
-	demUjuFVQdI3RPtH/UI0g3rNXm2KVDA37sWXA59rByQQj3xqM6U+EgGi9TFh1DGAcbPtEPmXXc4BH
-	nx47PQYPNBMycAvc/3XR8wdmvZ1vlS3xCebEqL3msvAdzoqPav9n7StsRqKVhZzhiMcKo/ysmsa4R
-	finiDslmuJBBoaYWA1ppsPHGOpYaI8ycPTlzYYatr77zg1Sp6uF8W3ysJIaTx5KQeS6rfBhRp1C4b
-	/SGkRB273hKsKIqBOE0Q==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:Cc:
+	From:References:To:Subject:MIME-Version:Date:Message-ID:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=aKd4VIfqupxGNM4oWRC45thgoJYh5rgI3rgNAQKGbAE=; b=wOuBck2lUY9VoAgJC0i4soMDQf
+	VePG0TSTvUaE1eDWwBcy220bT1vbDSDuAO6/sAw8FB1ZOoB5h/zlh4b84uYngJ1J0Pwg2/yXTdp9Q
+	p3PNXRjd+2fI90UqHzNso1GffjbhMU/VN48p5bGy0TIVmpVwZhzwlnC6BYAVdp6BB/qgAQ3rWPdyx
+	q07MV2dKztDMSaZ5vzkeok+vvjHPPLuvuqaVCFP931hELFuMGUvTJ2lu8kdLgtWYuR7UXQPy6dGxn
+	IBg85lBBZmGNfF3WjAW5BenoHsPwXS058xXPfmswkqRhbd5kSbqXWhtj5pEOKiSFHnLl1fjr9Tzxb
+	UGt0jSIw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xN6kK-0000000DF3k-3Bzy;
-	Sat, 31 Oct 2026 10:55:36 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xNGUV-0000000DhUK-3LeQ;
+	Sat, 31 Oct 2026 21:19:55 +0000
+Received: from mail.archlinux.org ([2a01:4f9:c010:3052::1])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xN6kJ-0000000DF3d-0jqw
+	id 1xNGUO-0000000DhTq-2P0a
 	for kexec@lists.infradead.org;
-	Sat, 31 Oct 2026 10:55:35 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id E1489600AA;
-	Sat, 31 Oct 2026 10:55:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E14E1F000C1;
-	Sat, 31 Oct 2026 10:55:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793444133;
-	bh=kf7DHW+HPMG6HKkFPWFn96X9OnxzATvopEw39adSoAw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=hZVih8RKW7+5gqeTqGdWFckbkE1fBUoRpN0Yf0ztRjkuk4YcZRZ4SSexv/PHbbF0M
-	 Iw/MDy6ZJVau5vIvy4d9TQWjFHxgzfqg7bAxcQxHH7309wEJ+KyA/WF+gb8Ma44Loc
-	 9wYsFL/TYaZFnAgSNIladW1t5k5pX9s2HV/slhp4sv/yPogd5Np88XzSI7K6yxbGiR
-	 U+XWdtKEx3lD/aDZfVO3Mxo7uGmn9jDQqnBS3Zl7IX2O1Y8pWhA/5Ptf4nkgq+Aof7
-	 Kos1TmRXkKGX3i46dfJQXPVPBQJTav6JodXebp2iYW9yajnhsPGigGBu9AbiWXzfC9
-	 hTLYOZQ3crkbA==
-From: David Hildenbrand <david@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
- Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>, 
- Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, 
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
- Baoquan He <baoquan.he@linux.dev>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
- Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
- Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, 
- Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
- Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>, 
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
- Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
- Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
- Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, 
- Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
- Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
- Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
- Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>, 
- Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>, 
- Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>, 
- Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
- Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>, 
- Jason Gunthorpe <jgg@ziepe.ca>, 
- "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
- kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
- linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
- Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org, 
- Muhammad Usama Anjum <usama.anjum@arm.com>, SJ Park <sj@kernel.org>, 
- Chris Mason <mason@kernel.org>, 
- Thadeu Lima de Souza Cascardo <cascardo@igalia.com>, 
- Mani Tofigh <mt4022@columbia.edu>, Samiullah Khawaja <skhawaja@google.com>
-In-Reply-To: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
-References: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
-Subject: Re: [PATCH v3 00/47] mm: various (urgent?) fixes
-Message-Id: <179344411888.15514.3120155844849052881.b4-ty@b4>
-Date: Sat, 31 Oct 2026 11:55:18 +0100
+	Sat, 31 Oct 2026 21:19:51 +0000
+Message-ID: <350c0929-584b-4d04-afeb-61f89ca241c9@archlinux.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=archlinux.org;
+	s=dkim-rsa; t=1793481580;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=aKd4VIfqupxGNM4oWRC45thgoJYh5rgI3rgNAQKGbAE=;
+	b=pyiQH2XZ18NmZjMyuj3TigDmqZCaW8Lk6VLsITwDi9qHmlM22JqM5MB8JbAdXkGGBcDIYm
+	b3oL4w8axSG3+mGh5LG1IyyxxOij/HKWvEJoR3mqm7t879r0Y2bq6BbZJtveaPmpkCbFNH
+	Sn3Z4gBM3IwBuK2DQnkz47WrAIiVrf6DF/gnTI5IyCPSlLTSU61OVF0GrSlX2UoH7dwEk0
+	OZ0EJcTbVOaRtFOLeyQ/p3So1ZmA2ssiqHiHDwIrmT02zMxkIZYD5FnfHeM1G6zWPcjOTe
+	FtXplnaeMDkydb+CbI5lV5UbJNODuLiQqaw2dGwvADnYAxX5vYtfqyOXM9kitiMkshAWXF
+	mThMjg0MfEY9Pt67n09y8A6qKYzvqSxbHFdMq+4xbu+NFjqT7D61ErRZtfo9qYToe6Dedl
+	K5KzTr3iRnCVSOmXx8U9BDTxfKozAOgQschFb6UNZZTfJOknStytjJdwvr7ilRzsZMBVU1
+	ZztQaQIuMO0EmsYu68Ud99igmtDXXpCYwEzTmZpL6KghG/LBxp3GKPy4jQFyydRGY1x7Rp
+	3KcUO33PPV5KJhN3/w6pSUXpS6jfecOEJWL0KQ0uWUxrXf5Hmc94KJeyXMwhlFv4cTAOZM
+	1zCCkbenCV9pyDtCL5p+GMo8xemq0+94aqIKSdCOXhmIrhsvJV8gQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=archlinux.org;
+	s=dkim-ed25519; t=1793481580;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=aKd4VIfqupxGNM4oWRC45thgoJYh5rgI3rgNAQKGbAE=;
+	b=LzKLQPS3hdw+XOeiyqqYQcnhAggN2AdLv3MYkCfW4d0P06SiwT66WMHg+Np+fSeog1f9Tf
+	77PFK1pXKgnExFDg==
+Authentication-Results: mail.archlinux.org;
+	auth=pass smtp.auth=artafinde smtp.mailfrom=artafinde@archlinux.org
+Date: Sat, 31 Oct 2026 21:19:39 +0000
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.16.0
+Subject: Re: [ANNOUNCE] makedumpfile 1.8.0
+To: kexec@lists.infradead.org
+References: <10bfd9ef-c589-45e8-9d1c-12b3b0acf118@nec.com>
+Content-Language: en-GB, en-GB-large
+From: Leonidas Spyropoulos <artafinde@archlinux.org>
+Autocrypt: addr=artafinde@archlinux.org; keydata=
+ xjMEZVZY3RYJKwYBBAHaRw8BAQdAsjxXb8lH9q6ra3NbhAUqYbtGL1kpJH8MBzeSjeUeGa7N
+ SExlb25pZGFzIFNweXJvcG91bG9zIChBcmNoIExpbnV4IFBhY2thZ2VyIGtleSkgPGFydGFm
+ aW5kZUBhcmNobGludXgub3JnPsKTBBMWCgA7FiEEIZG4lDG6wKi5bek9JEdA0Xx/0OwFAmVW
+ WN0CGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQJEdA0Xx/0OyI9AEAvplbjjov
+ k7SykUFPobbXgtAx2i5hnjWfWsOFlQ/FinkBAOeS1H4dpidiJ5UBEXVkvEEjs3EzQKJT7hS0
+ GVKUDokIzjgEZVZY3RIKKwYBBAGXVQEFAQEHQBAdgSzOFatqQqSkAlQz+zRWvMLqNP7z1rOP
+ VXzMH6UcAwEIB8J4BBgWCgAgFiEEIZG4lDG6wKi5bek9JEdA0Xx/0OwFAmVWWN0CGwwACgkQ
+ JEdA0Xx/0OyWIAEA4RigzVezX7E5zxl7qXOxkpIgMu/cF35rFBsEvsgNFh0A+wQhZBzZySV3
+ JaiWCNq+smE/rvpHvUzlpnmN1kMvECIG
+Cc: m-yamazaki2@nec.com, k-hagio-ab@nec.com
+In-Reply-To: <10bfd9ef-c589-45e8-9d1c-12b3b0acf118@nec.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------ZT1Hxks577GFVI4TKhDBEROe"
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261031_141949_431070_BE781FE4 
+X-CRM114-Status: GOOD (  24.53  )
+X-Spam-Score: -4.4 (----)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,136 +94,203 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=4.0.1
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Sat, 31 Oct 2026 10:39:29 +0100, David Hildenbrand (Arm) wrote:
-> Thanks to everyone for the review! Hoping I can get some more? :)
-> 
-> A quick resend, I'll queue these immediately after sending to get them
-> into -next asap. Don't let that discourage you from reviewing ;)
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------ZT1Hxks577GFVI4TKhDBEROe
+Content-Type: multipart/mixed; boundary="------------eA5n0i8nHZ5y1oW0O0jnGiQB";
+ protected-headers="v1"; hp="clear"
+Message-ID: <350c0929-584b-4d04-afeb-61f89ca241c9@archlinux.org>
+Date: Sat, 31 Oct 2026 21:19:39 +0000
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [ANNOUNCE] makedumpfile 1.8.0
+To: kexec@lists.infradead.org
+References: <10bfd9ef-c589-45e8-9d1c-12b3b0acf118@nec.com>
+Content-Language: en-GB, en-GB-large
+From: Leonidas Spyropoulos <artafinde@archlinux.org>
+Autocrypt: addr=artafinde@archlinux.org; keydata=
+ xjMEZVZY3RYJKwYBBAHaRw8BAQdAsjxXb8lH9q6ra3NbhAUqYbtGL1kpJH8MBzeSjeUeGa7N
+ SExlb25pZGFzIFNweXJvcG91bG9zIChBcmNoIExpbnV4IFBhY2thZ2VyIGtleSkgPGFydGFm
+ aW5kZUBhcmNobGludXgub3JnPsKTBBMWCgA7FiEEIZG4lDG6wKi5bek9JEdA0Xx/0OwFAmVW
+ WN0CGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQJEdA0Xx/0OyI9AEAvplbjjov
+ k7SykUFPobbXgtAx2i5hnjWfWsOFlQ/FinkBAOeS1H4dpidiJ5UBEXVkvEEjs3EzQKJT7hS0
+ GVKUDokIzjgEZVZY3RIKKwYBBAGXVQEFAQEHQBAdgSzOFatqQqSkAlQz+zRWvMLqNP7z1rOP
+ VXzMH6UcAwEIB8J4BBgWCgAgFiEEIZG4lDG6wKi5bek9JEdA0Xx/0OwFAmVWWN0CGwwACgkQ
+ JEdA0Xx/0OyWIAEA4RigzVezX7E5zxl7qXOxkpIgMu/cF35rFBsEvsgNFh0A+wQhZBzZySV3
+ JaiWCNq+smE/rvpHvUzlpnmN1kMvECIG
+Cc: m-yamazaki2@nec.com, k-hagio-ab@nec.com
+In-Reply-To: <10bfd9ef-c589-45e8-9d1c-12b3b0acf118@nec.com>
 
-Applied, thanks!
+--------------eA5n0i8nHZ5y1oW0O0jnGiQB
+Content-Type: multipart/mixed; boundary="------------KYo0ZvsPhIY5p1PoS2TpzP5q"
 
-tree: mm/core.git
-branch: for-next-fixes
+--------------KYo0ZvsPhIY5p1PoS2TpzP5q
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-Applied patches will appear soon in mm-next, followed by linux-next.
+T24gMzAvMTAvMjAyNiAwODoyMCwgWUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0jiDnnJ/lhYkp
+IHdyb3RlOg0KPiBIaSwNCj4gDQo+IFdlJ3JlIHBsZWFzZWQgdG8gYW5ub3VuY2UgdGhlIHJl
+bGVhc2Ugb2YgbWFrZWR1bXBmaWxlIDEuOC4wLg0KPiBUaGFuayB5b3UgZXZlcnlvbmUgZm9y
+IHlvdXIgaGVscCB0byBtYWludGFpbiB0aGUgdG9vbC4NCj4gDQo+IERvd25sb2FkOg0KPiBU
+aGUgbGF0ZXN0IG1ha2VkdW1wZmlsZSBjYW4gYmUgZG93bmxvYWRlZCBmcm9tIHRoZSBmb2xs
+b3dpbmcgcGFnZS4NCj4gICDCoCDCoCDCoGh0dHBzOi8vZ2l0aHViLmNvbS9tYWtlZHVtcGZp
+bGUvbWFrZWR1bXBmaWxlL3JlbGVhc2VzDQo+IA0KPiBOZXcgZmVhdHVyZXM6DQo+IC0gU3Vw
+cG9ydCBmb3Iga2VybmVscyB1cCB0byB2Ny4zICh4ODZfNjQpDQo+IC0gRXh0ZW5zaW9uIG1v
+ZHVsZSBzdXBwb3J0IGJhc2VkIG9uIEJURiBhbmQga2FsbHN5bXMNCj4gLSBBZGQgNS1sZXZl
+bCBwYWdlIHRhYmxlIHN1cHBvcnQgZm9yIDRLIHBhZ2VzIHdpdGggNTItYml0IFZBIChhcm02
+NCkNCj4gDQo+IENvbW1pdHMgc2luY2UgMS43Ljk6DQo+IGFlNmM2NGMgW3YxLjguMF0gVXBk
+YXRlIHZlcnNpb24gKFlBTUFaQUtJIE1hc2FtaXRzdSkNCj4gY2VjY2UwMCBbUEFUQ0hdIERl
+cml2ZSB0aGUgbWVtX3NlY3Rpb24gbWVtX21hcCBtYXNrIGZyb20gU0laRShwYWdlKSAoTmlr
+dW5qIEtlbGEpDQo+IDUwNWQxNWIgW1BBVENIXSBSRUFETUU6IFJlbW92ZSBlbWFpbCBhZGRy
+ZXNzZXMgdGhhdCB3aWxsIGJlIGdvbmUgYW5kIHVwZGF0ZSBpbmZvcm1hdGlvbiAoS2F6dWhp
+dG8gSGFnaW8pDQo+IDY3NzJjYTcgW1BBVENIIHYyIDcvOV0gQWRkIFBHX0lOQ0xVREVfSEVB
+RCBleHRlbnNpb24gcmV0dXJuIHN0YXR1cyAoU3RlcGhlbiBCcmVubmFuKQ0KPiBmNTA5MDRk
+IFtQQVRDSCB2MiA2LzldIFNpbXBsaWZ5IGFyZ3VtZW50cyBmb3IgcGFnZSBjaGVja3MgKFN0
+ZXBoZW4gQnJlbm5hbikNCj4gZmE5ZTA4MiBbUEFUQ0ggdjIgNS85XSBNb3ZlIHBhZ2UgY2hl
+Y2tzIGludG8gbWFrZWR1bXBmaWxlLmggKFN0ZXBoZW4gQnJlbm5hbikNCj4gNTNmOGNlYSBb
+UEFUQ0ggdjIgNC85XSBJbnRyb2R1Y2UgYSBzdGF0IGZvciBwYWdlcyByZXRhaW5lZCBieSBl
+eHRlbnNpb24gKFN0ZXBoZW4gQnJlbm5hbikNCj4gODE5NGZhZSBbUEFUQ0ggdjIgMy85XSBT
+aGFyZSBwYWdlIGluZm9ybWF0aW9uIHdpdGggZXh0ZW5zaW9uIGNhbGxiYWNrcyAoU3RlcGhl
+biBCcmVubmFuKQ0KPiAyYzA1M2ZiIFtQQVRDSCB2MiAyLzldIEhvbm9yIENGTEFHUyBpbiBl
+eHRlbnNpb25zL01ha2VmaWxlIChTdGVwaGVuIEJyZW5uYW4pDQo+IDgyZmMwZmQgW1BBVENI
+IHYyIDEvOV0gRG8gbm90IGNhbGwgZXh0ZW5zaW9ucyBmb3IgdGFpbCBwYWdlcyAoU3RlcGhl
+biBCcmVubmFuKQ0KPiA3NTUxNjBiIFtQQVRDSCA2LzZdIEVuc3VyZSBlX3BoZW50c2l6ZSBk
+b2VzIG5vdCBleGNlZWQgYnVmIHNpemUgKFRhbyBMaXUpDQo+IDgwZjY1ODYgW1BBVENIIDUv
+Nl0gRW5zdXJlIGdldF9zbXJhbV9jcHVfc3RhdGUoKSBkb2VzIG5vdCByZWFkIGJleW9uZCBz
+bXJhbSAoVGFvIExpdSkNCj4gNjk1ODVkNiBbUEFUQ0ggNC82XSBBZGQgYW4gb3V0LW9mLWJv
+dW5kcyBjaGVjayBmb3IgaW5mby0+dmFsaWRfcGFnZXNbXSAoVGFvIExpdSkNCj4gZDk2YjIx
+MyBbUEFUQ0ggMy82XSBQcmV2ZW50IGEgbXVsdGlwbHkgb3ZlcmZsb3cgaW4gY2FjaGVfaW5p
+dCgpIChUYW8gTGl1KQ0KPiA5M2Q2NWEyIFtQQVRDSCAyLzZdIEFkZCBhbiBvdXQtb2YtYm91
+bmRzIGNoZWNrIGZvciBzaS0+YmxvY2tfdGFibGVbXSAoVGFvIExpdSkNCj4gZTYzNzA4YSBb
+UEFUQ0ggMS82XSBFbnN1cmUgcGFnZV9kZXNjIGRvZXMgbm90IGV4Y2VlZCBwYWdlX3NpemUg
+KFRhbyBMaXUpDQo+IGZlOTg1OGYgW1BBVENIXSBBdm9pZCBnbGliYyBsYXp5LXVud2luZCBt
+YWNoaW5lcnkgaW4gcGFyYWxsZWwgdGVhcmRvd24gKE1heGkgU2FwYXJvdikNCj4gYjc1ODdm
+MSBbUEFUQ0hdIGFybTY0OiBBZGQgNS1sZXZlbCBwYWdlIHRhYmxlIHN1cHBvcnQgZm9yIDRL
+IHBhZ2VzIHdpdGggNTItYml0IFZBIChYaWFvbGVpIFdhbmcpDQo+IDdkYTA1ZjcgW1BBVENI
+IHY2IDA5LzEwXSBEb2M6IEFkZCAtLWV4dGVuc2lvbiBvcHRpb24gdG8gbWFrZWR1bXBmaWxl
+IG1hbnVhbCAoVGFvIExpdSkNCj4gNTVhZTg2NSBbUEFUQ0ggdjYgMDgvMTBdIEFkZCBlcmFz
+ZV9zYW1wbGUgZXh0ZW5zaW9uIGFzIGFuIGRhdGEgZXJhc2UgcmVmZXJlbmNlIChUYW8gTGl1
+KQ0KPiBlZTM0NWQ1IFtQQVRDSCB2NiAwNy8xMF0gQWRkIHNhbXBsZSBleHRlbnNpb24gYXMg
+YW4gZXhhbXBsZSByZWZlcmVuY2UgKFRhbyBMaXUpDQo+IDhjOTFhNTMgW1BBVENIIHY2IDA2
+LzEwXSBBZGQgbWFrZWR1bXBmaWxlIGV4dGVuc2lvbnMgc3VwcG9ydCAoVGFvIExpdSkNCj4g
+Y2M2Y2Q0ZCBbUEFUQ0ggdjYgMDUvMTBdIEltcGxlbWVudCBrZXJuZWwgbW9kdWxlJ3MgYnRm
+IHJlc29sdmluZyAoVGFvIExpdSkNCj4gOGVlNDJjNCBbUEFUQ0ggdjYgMDQvMTBdIEltcGxl
+bWVudCBrZXJuZWwgbW9kdWxlJ3Mga2FsbHN5bXMgcmVzb2x2aW5nIChUYW8gTGl1KQ0KPiAw
+YTI1NmMzIFtQQVRDSCB2NiAwMy8xMF0gSW1wbGVtZW50IGtlcm5lbCBidGYgcmVzb2x2aW5n
+IChUYW8gTGl1KQ0KPiBmZDM4MGQ3IFtQQVRDSCB2NiAwMi8xMF0gSW1wbGVtZW50IGtlcm5l
+bCBrYWxsc3ltcyByZXNvbHZpbmcgKFRhbyBMaXUpDQo+IGZkZjYyZjMgW1BBVENIIHY2IDAx
+LzEwXSBSZXNlcnZlIHNlY3Rpb25zIGZvciBtYWtlZHVtcGZpbGUgYW5kIGV4dGVuaW9ucyAo
+VGFvIExpdSkNCj4gZmQ1MjIxNCBbUEFUQ0hdIEZpeCBlcnJvciBhbmQgc2ltcGxpZnkgZXBw
+aWNfc2NyaXB0cy9wcm9jX25hbWVzXzNfMTBfdG9fNF84LmMgKEthenVoaXRvIEhhZ2lvKQ0K
+PiBmNTBjMDE1IFtQQVRDSF0gRml4IHdyb25nIGV4Y2x1c2lvbiBvZiBjb21wb3VuZCB0YWls
+IHBhZ2VzIG9uIExpbnV4IDcuMSBhbmQgbGF0ZXIgKEthenVoaXRvIEhhZ2lvKQ0KPiA4NjNl
+MmM0IFtQQVRDSCB2MiAyLzJdIHJpc2N2NjQ6IEZpeCBodWdlIHBhZ2UgdHJhbnNsYXRpb24g
+aW4gdnRvcF9yaXNjdjY0KCkgKFJ1aSBRaSkNCj4gOTk4YjEzNyBbUEFUQ0ggdjIgMS8yXSBy
+aXNjdjY0OiBGaXggdmFkZHJfdG9fcGFkZHIgZm9yIHZtYWxsb2MgYW5kIHZtZW1tYXAgcmVn
+aW9ucyAoUnVpIFFpKQ0KPiAzZmJlMmNiIFtQQVRDSF0gTWFyayBzdGFydCBvZiAxLjguMCBk
+ZXZlbG9wbWVudCBwaGFzZSB3aXRoIHZlcnNpb24gMS43LjkrKyAoS2F6dWhpdG8gSGFnaW8p
+DQo+IA0KPiBEZXNjcmlwdGlvbiBvZiBtYWtlZHVtcGZpbGU6DQo+IFRoZSBtYWtlZHVtcGZp
+bGUgaXMgYSB0b29sIGZvciBjcmVhdGluZyBhIGR1bXBmaWxlIGZyb20gL3Byb2Mvdm1jb3Jl
+DQo+IHdpdGggZmlsdGVyaW5nIG91dCB1bm5lY2Vzc2FyeSBwYWdlcyBmb3IgYW5hbHlzaXMg
+YW5kIGNvbXByZXNzaW5nIHRoZQ0KPiByZW1haW5pbmcgcGFnZXMsIHRvIHNob3J0ZW4gdGhl
+IHNpemUgb2YgdGhlIGR1bXBmaWxlIGFuZCB0aGUgdGltZSBvZg0KPiBjcmVhdGluZyBpdC4N
+Cj4gaHR0cHM6Ly9naXRodWIuY29tL21ha2VkdW1wZmlsZS9tYWtlZHVtcGZpbGUNCj4gDQo+
+IFRoYW5rcywNCj4gTWFzYQ0KDQpIZWxsbyBNYXNhLA0KDQpBcyB0aGUgQXJjaCBMaW51eCBt
+YWludGFpbmVyIG9mIG1ha2VkdW1wZmlsZSBJIGhhdmUgdG8gcmFpc2UgdGhlIHNpZ25pbmcg
+DQpjaGFpbiBvbmNlIG1vcmUsIGFzIEkgZGlkIGZvciAxLjcuMSBbMV0gYW5kIDEuNy43IFsy
+XS4NCg0KVGhlIDEuOC4wIHRhZyBpcyBzaWduZWQgYnkgYSBrZXkgd2UgaGF2ZSBub3Qgc2Vl
+biBiZWZvcmU6DQogICAzRTY5MEVBRUFEQjQyREMzMDk2NjUyM0I5NzAzMTREOUE5RkNDMkVD
+DQogICAodGFnZ2VyOiBZQU1BWkFLSSBNYXNhbWl0c3UgPG0teWFtYXpha2kyQG5lYy5jb20+
+KQ0KDQoxLjcuOCB3YXMgc2lnbmVkIGJ5IE1hc2EncyBwcmV2aW91cyBrZXksIA0KNEQxQTA5
+MTYxNDAxQTdFNzczQkEwMkEwQTU2QjI2OERDRTM1ODQ5LiBGcm9tIHdoYXQgSSB1bmRlcnN0
+YW5kIG5vdGhpbmcgDQpjb25uZWN0cyB0aGUgdHdvIGtleXMsIHRoZSBuZXcga2V5IGlzIG5v
+dCBwdWJsaXNoZWQgYXMgYSBwdWJrZXkqIHRhZywgaXQgDQppcyBub3Qgb24ga2V5cy5vcGVu
+cGdwLm9yZyBub3Iga2V5c2VydmVyLnVidW50dS5jb20sIGFuZCBpdCBpcyBub3QgDQpjZXJ0
+aWZpZWQgYnkgYW55IGVhcmxpZXIga2V5LiBUaGUgUkVBRE1FIEZBUSAoMDAzKSBzdGlsbCBz
+YXlzIHB1YmtleTQgaXMgDQp0aGUgY3VycmVudCBrZXkuDQoNClByZXZpb3VzbHkgdGhlIGhh
+bmRvdmVyIGZvciAxLjcuOCB3YXMgZG9uZSBjb3JyZWN0bHkuIFRoZSBwdWJrZXk1IHRhZyAN
+CmhvbGRpbmcgTWFzYSdzIGtleSB3YXMgc2lnbmVkIGJ5IEthenUncyBrZXkgRTk1RDE3RjUs
+IHNvIGFueW9uZSBjb3VsZCANCnZlcmlmeSB0aGF0IHRoZSBleGlzdGluZyBtYWludGFpbmVy
+IGhhZCB2b3VjaGVkIGZvciB0aGUgbmV3IG9uZS4gV2l0aG91dCANCml0LCB0aGUgb25seSB0
+aGluZyB0eWluZyAzRTY5MEVBRS4uLiB0byB0aGUgcHJvamVjdCBpcyBwdXNoIGFjY2VzcyB0
+byANCkdpdEh1Yi4NCg0KQ291bGQgeW91IHBsZWFzZSBkbyB0aGUgZm9sbG93aW5nOg0KMS4g
+U2lnbiB0aGUgbmV3IGtleSB3aXRoIHRoZSBvbGQgb25lIChGNEQxQTA5MS4uLiBvciBLYXp1
+J3MgRTk1RDE3RjUpLA0KICAgIGFuZCBwdWJsaXNoIGl0IGFzIGEgcHVia2V5NiB0YWcgc2ln
+bmVkIGJ5IHRoZSBvbGQga2V5LCBlLmcuOg0KICAgICBncGcgLXUgRjREMUEwOTE2MTQwMUE3
+RTc3M0JBMDJBMEE1NkIyNjhEQ0UzNTg0OSBcDQogICAgICAgLS1zaWduLWtleSAzRTY5MEVB
+RUFEQjQyREMzMDk2NjUyM0I5NzAzMTREOUE5RkNDMkVDDQogICAgIGdwZyAtLWFybW9yIC0t
+ZXhwb3J0IDNFNjkwRUFFQURCNDJEQzMwOTY2NTIzQjk3MDMxNEQ5QTlGQ0MyRUMgPiBuZXcu
+YXNjDQogICAgIGdpdCB0YWcgLXMgLXUgRjREMUEwOTE2MTQwMUE3RTc3M0JBMDJBMEE1NkIy
+NjhEQ0UzNTg0OSBcDQogICAgICAgLW0gIm1ha2VkdW1wZmlsZSByZWxlYXNlIGtleTogWUFN
+QVpBS0kgTWFzYW1pdHN1IA0KPG0teWFtYXpha2kyQG5lYy5jb20+IiBcDQogICAgICAgcHVi
+a2V5NiAkKGdpdCBoYXNoLW9iamVjdCAtdyBuZXcuYXNjKQ0KICAgICBJdCB3b3VsZCBhbHNv
+IGhlbHAgdG8gdXBsb2FkIHRoZSBjZXJ0aWZpZWQga2V5IHRvIGtleXMub3BlbnBncC5vcmcu
+DQoyLiBVcGRhdGUgUkVBRE1FIEZBUSAwMDMgdG8gbGlzdCB0aGUgY3VycmVudCBrZXkgZmlu
+Z2VycHJpbnQocykuDQozLiBQbGVhc2UgZG8gdGhpcyBiZWZvcmUgS2F6dSdzIG5lYy5jb20g
+YWRkcmVzc2VzIGdvIGF3YXkgKGNvbW1pdA0KICAgIDUwNWQxNWIpIGFzIGhpcyBrZXkgaXMg
+dGhlIG90aGVyIGxpbmsgaW4gdGhlIGNoYWluLg0KDQpJZiB0aGUgb2xkIGtleSBpcyBubyBs
+b25nZXIgYXZhaWxhYmxlLCBwbGVhc2UgdGVsbCB1cy4NCg0KV2UgZG9jdW1lbnRlZCBvdXIg
+ZXhwZWN0YXRpb25zIGZvciB1cHN0cmVhbSBzaWduaW5nIGluIFJGQyAwMDQ2IFszXS4NClVu
+ZGVyIHRoYXQgcG9saWN5IHdlIGNhbm5vdCBzaGlwIDEuOC4wIHVudGlsIGEgY2hhaW4gb2Yg
+dHJ1c3QgZm9yIHRoZSANCmN1cnJlbnQgZ3BnIGtleSBpcyBlc3RhYmxpc2hlZCBhZ2Fpbi4g
+SWYga2VlcGluZyB0aGUgY2hhaW4gaXMgdG9vIG11Y2ggDQpvdmVyaGVhZCwgcGxlYXNlIGlu
+Zm9ybSB1cyBhbmQgd291bGQgdGhlbiBzdG9wIHZlcmlmeWluZyBzaWduYXR1cmVzIGFuZCAN
+CnJlbHkgb24gdGhlIGdpdCB0YWcgYW5kIGNoZWNrc3VtcyBvbmx5LiBPdXIgcHJlZmVyZW5j
+ZSBvZiBjb3Vyc2UgaXMgdG8gDQprZWVwIHRoZSB2ZXJpZmljYXRpb24gaW4gcGxhY2UuDQoN
+ClRoYW5rIHlvdSwNCg0KWzFdIGh0dHBzOi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20va2V4ZWNA
+bGlzdHMuaW5mcmFkZWFkLm9yZy9tc2cyODMyMi5odG1sDQpbMl0gaHR0cHM6Ly93d3cubWFp
+bC1hcmNoaXZlLmNvbS9rZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnL21zZzM2MDUwLmh0bWwN
+ClszXSANCmh0dHBzOi8vZ2l0bGFiLmFyY2hsaW51eC5vcmcvYXJjaGxpbnV4L3JmY3MvLS9i
+bG9iL21haW4vcmZjcy8wMDQ2LXVwc3RyZWFtLXBhY2thZ2Utc291cmNlcy5tZA0KDQotLSAN
+Ckxlb25pZGFzIFNweXJvcG91bG9zDQpEZXZlbG9wZXIgJiBEZXZPcHMNClBHUDogNTlFNDNF
+MTA2QjI0NzM2OA0KICAgICAgMjQ0NzQwRDE3QzdGRDBFQw0K
+--------------KYo0ZvsPhIY5p1PoS2TpzP5q
+Content-Type: application/pgp-keys; name="OpenPGP_0x244740D17C7FD0EC.asc"
+Content-Disposition: attachment; filename="OpenPGP_0x244740D17C7FD0EC.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-Please report any outstanding bugs that were missed during review, so we
-can either drop the patch series or decide how to fix it up.
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-It is encouraged to provide Acked-bys, Reviewed-bys, and Tested-bys even
-though the patches have already been applied. If possible, patch trailers
-will be updated.
+xjMEZVZY3RYJKwYBBAHaRw8BAQdAsjxXb8lH9q6ra3NbhAUqYbtGL1kpJH8MBzeS
+jeUeGa7NSExlb25pZGFzIFNweXJvcG91bG9zIChBcmNoIExpbnV4IFBhY2thZ2Vy
+IGtleSkgPGFydGFmaW5kZUBhcmNobGludXgub3JnPsKTBBMWCgA7FiEEIZG4lDG6
+wKi5bek9JEdA0Xx/0OwFAmVWWN0CGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcC
+F4AACgkQJEdA0Xx/0OyI9AEAvplbjjovk7SykUFPobbXgtAx2i5hnjWfWsOFlQ/F
+inkBAOeS1H4dpidiJ5UBEXVkvEEjs3EzQKJT7hS0GVKUDokIzSpMZW9uaWRhcyBT
+cHlyb3BvdWxvcyA8YXJ0YWZpbmRlQGdtYWlsLmNvbT7CkwQTFgoAOxYhBCGRuJQx
+usCouW3pPSRHQNF8f9DsBQJlVpNTAhsDBQsJCAcCAiICBhUKCQgLAgQWAgMBAh4H
+AheAAAoJECRHQNF8f9DsPpABAPFZGF96CHer7Cd+ar2aNiCfXqm0a3xbwQ3zRSxO
+wk81AP9f4zCI1NzItcnJ5VJExI2MnuoViUbOO2tlFFtgLjarBs44BGVWWN0SCisG
+AQQBl1UBBQEBB0AQHYEszhWrakKkpAJUM/s0VrzC6jT+89azj1V8zB+lHAMBCAfC
+eAQYFgoAIBYhBCGRuJQxusCouW3pPSRHQNF8f9DsBQJlVljdAhsMAAoJECRHQNF8
+f9DsliABAOEYoM1Xs1+xOc8Ze6lzsZKSIDLv3Bd+axQbBL7IDRYdAPsEIWQc2ckl
+dyWolgjavrJhP676R71M5aZ5jdZDLxAiBg=3D=3D
+=3D8VXZ
+-----END PGP PUBLIC KEY BLOCK-----
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. Further, this is not a guarantee that the
-patches will go upstream. If in doubt, please check the listed branch.
+--------------KYo0ZvsPhIY5p1PoS2TpzP5q--
 
-[01/47] mm/mglru: don't use stack pointers when walking PUD and PMD tables
-        https://git.kernel.org/mm/core/c/3922fe76
-[02/47] fork: take mmap_lock before copying mm_struct
-        https://git.kernel.org/mm/core/c/6cf33ce8
-[03/47] mm/shmem: make shmem_file() check the file's inode
-        https://git.kernel.org/mm/core/c/d6003145
-[04/47] mm/memfd: make f_pos accesses atomic
-        https://git.kernel.org/mm/core/c/b6638250
-[05/47] mm/truncate: look again if a folio left the mapping
-        https://git.kernel.org/mm/core/c/e7086d79
-[06/47] mm/filemap: read mapping->a_ops->free_folio under i_lock
-        https://git.kernel.org/mm/core/c/c9073948
-[07/47] mm/filemap: don't lose a folio lock wakeup to a signal
-        https://git.kernel.org/mm/core/c/c39c22f2
-[08/47] mm/filemap: finish fault cleanup before dropping the fault lock
-        https://git.kernel.org/mm/core/c/335429f6
-[09/47] mm/rmap: handle device-exclusive entries in folio_referenced_one()
-        https://git.kernel.org/mm/core/c/6324d435
-[10/47] mm/huge_memory: fix list corruption when deferred_split_scan() races with deferred_split_folio()
-        https://git.kernel.org/mm/core/c/be9ec969
-[11/47] mm/huge_memory: properly handle refcounted PUD mappings on fork
-        https://git.kernel.org/mm/core/c/1ef69272
-[12/47] mm/huge_memory: fix livelock on device private folio
-        https://git.kernel.org/mm/core/c/88ee4890
-[13/47] mm/huge_memory: fix truncate racing with PMD zapping
-        https://git.kernel.org/mm/core/c/a63ff7ba
-[14/47] mm/huge_memory: fix zapping migration entries for device-private THPs
-        https://git.kernel.org/mm/core/c/2814cce8
-[15/47] mm/khugepaged: always recheck the pmd in try_collapse_pte_mapped_thp()
-        https://git.kernel.org/mm/core/c/17382ca5
-[16/47] mm/khugepaged: fix PMD table lock leak in try_collapse_pte_mapped_thp()
-        https://git.kernel.org/mm/core/c/bf852461
-[17/47] mm/khugepaged: preserve dirty bits when collapsing PTE-mapped THPs
-        https://git.kernel.org/mm/core/c/299b8524
-[18/47] mm/khugepaged: check if PTE table is empty in try_collapse_pte_mapped_thp()
-        https://git.kernel.org/mm/core/c/22b08cd1
-[19/47] mm/gup: recheck the PUD under PTL in follow_pud_mask()
-        https://git.kernel.org/mm/core/c/e04a9b5e
-[20/47] mm/gup: fix clearing folios in memfd_pin_folios()
-        https://git.kernel.org/mm/core/c/c6791388
-[21/47] mm/gup: fix out-of-bounds write for nr_pages == 0 in GUP-fast
-        https://git.kernel.org/mm/core/c/5b1b815c
-[22/47] mm/gup: check for overflow when converting nr_pages to bytes in GUP-fast
-        https://git.kernel.org/mm/core/c/8791ac0a
-[23/47] mm/userfaultfd: write-lock the VMA before waking waiters when unregistering
-        https://git.kernel.org/mm/core/c/35f48d65
-[24/47] mm/userfaultfd: wake all waiters on unregister
-        https://git.kernel.org/mm/core/c/9e4d60fe
-[25/47] mm/userfaultfd: wake waiters when registration modes are removed
-        https://git.kernel.org/mm/core/c/a9cba229
-[26/47] mm/userfaultfd: compare exact registration modes before skipping
-        https://git.kernel.org/mm/core/c/86de3945
-[27/47] mm/mmu_gather: fix flushing ranges with 4 GiB or larger
-        https://git.kernel.org/mm/core/c/61437375
-[28/47] mm/mmu_notifier: finish non-blocking interval invalidation on error
-        https://git.kernel.org/mm/core/c/ec3feff7
-[29/47] mm/mmu_notifier: set ->mm only after mmgrab()
-        https://git.kernel.org/mm/core/c/10ad9b99
-[30/47] mm/mremap: use pudp_huge_get_and_clear() when moving huge PUDs
-        https://git.kernel.org/mm/core/c/f16f7e7c
-[31/47] mm/mremap: recheck PUDs under the page table lock
-        https://git.kernel.org/mm/core/c/ae414aed
-[32/47] mm/mremap: fix moving PUD leaves
-        https://git.kernel.org/mm/core/c/262a6a25
-[33/47] mm/memory_hotplug: avoid races in pfn_to_online_page() with dying pgmap
-        https://git.kernel.org/mm/core/c/67782b68
-[34/47] mm/madvise: fix data loss from MADV_FREE on a KSM page
-        https://git.kernel.org/mm/core/c/4fc80184
-[35/47] mm/memory: reject remote COW faults on PFN mappings
-        https://git.kernel.org/mm/core/c/99e96e4d
-[36/47] mm: fix unmap_mapping_range() beyond 4 GiB on 32-bit
-        https://git.kernel.org/mm/core/c/1ca84b58
-[37/47] mm: fix unkillable fault loop on MAP_DROPPABLE memory
-        https://git.kernel.org/mm/core/c/a4c8fb4f
-[38/47] mm: fix deadlock of mremap() against UFFDIO_MOVE
-        https://git.kernel.org/mm/core/c/55f62b5f
-[39/47] mm/ksm: reset the unstable trees of all nodes
-        https://git.kernel.org/mm/core/c/9c1d2a06
-[40/47] mm/ksm: fix use of a freed anon_vma at swap-in
-        https://git.kernel.org/mm/core/c/9c20c73c
-[41/47] mm/ksm: check large swap-cache folios before mapping them
-        https://git.kernel.org/mm/core/c/7fa9d8cb
-[42/47] mm/vma: call ->may_split() before a partial merge
-        https://git.kernel.org/mm/core/c/e0b967df
-[43/47] mm/huge_memory: split huge PUDs when adjusting VMA boundaries
-        https://git.kernel.org/mm/core/c/0653a27f
-[44/47] mm/vma: don't leak the charge for stack growth
-        https://git.kernel.org/mm/core/c/a8ebd75d
-[45/47] mm/cma: don't release CMA pages still in use
-        https://git.kernel.org/mm/core/c/d7950ad4
-[46/47] mm/memory-tiers: unregister empty tiers outside memory_tier_lock
-        https://git.kernel.org/mm/core/c/b6d7ad49
-[47/47] fs/proc/task_mmu: refuse addresses beyond 32 bits on 32bit
-        https://git.kernel.org/mm/core/c/021ea6d2
+--------------eA5n0i8nHZ5y1oW0O0jnGiQB--
 
--- 
-Cheers,
+--------------ZT1Hxks577GFVI4TKhDBEROe
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
-David
+-----BEGIN PGP SIGNATURE-----
 
+iHUEARYKAB0WIQQhkbiUMbrAqLlt6T0kR0DRfH/Q7AUCauZbawAKCRAkR0DRfH/Q
+7OqBAP9IcSO9BIPvOwcUSXSohJd/X1dxLy5BnAVHJJdlM3G2rAEAnF5GGAbfb/kj
+/XIK84fu+7WvHGVk/034oQgpkWpIpQY=
+=nDsZ
+-----END PGP SIGNATURE-----
+
+--------------ZT1Hxks577GFVI4TKhDBEROe--
 
