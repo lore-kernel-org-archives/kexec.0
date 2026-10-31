@@ -2,55 +2,56 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E39606A31D
-	for <kexec@archiver.kernel.org>; Sat, 31 Oct 2026 09:45:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96084606A323
+	for <kexec@archiver.kernel.org>; Sat, 31 Oct 2026 09:45:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=18EO72H5;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=I+u/qiUF
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=4z5xvfMD;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JhV9oGMq
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=i0fOCg32ZVxaPUOTstAI4PWBunqX+FIUzQ1HDwJNXX0=; b=18EO72H5zGQa5z
-	ktiCHgPo4E3eBGRzvUE1RsDHJWHyIWaft30ySn986dTJMGiUrmay2bs5NIRAxgkdrVlwKTDWhJVsN
-	t33/VUz+9w0Ugr6+tkCmUpPY4/fZII4PNPJTpH+c40aDXHzyyvEm/3dDvXuInI4EXOc54Veoc8BMA
-	HsX5L3pTdfhADMifLxo5i6vHHOc+AUe7zmnPA2ehBMhysAa8ISrcRMwhUovG0dpf2LyRTW20F8L98
-	EsF70rkMa7oBSEuMWvG3FVDMzNbsme0HMBCtUcXBHCWIewHIB0zbmY58akdMCR4wwLns8BGKb2NnK
-	1VSF5yQDcZ6uTc0m/azA==;
+	List-Owner; bh=foIE8/qjRxOslIMIVm5LWTcoDseO7kpGoD14hc0ILxg=; b=4z5xvfMDoVCXVR
+	q5poxJ7ZrKvE8lA/iwTtGMEr6W6Z5UCv1GjNMI0+0Quk9TWN41UBRHAtQVN0sdgCVdE26GVhQfx6z
+	dFTWNER5P33/k1hpHKTT+jLJclgReYgSJ3Pc5mMW5TNfnkRVBL0B8tdnJT7gCWlwYrAk2g3Bq/TSw
+	OOuTffbUb4M6eOzZjzQqPpchVMfqAvAL2t2dbjeCmjSYNDFtoN8w6edsuc5sCcRIsF9i9UyWOnWPQ
+	ohDse6uk+kkLOieCfCdl3rTlJ+x5QP6bFO8R0StT0vR4XsXHFrDedaAyBBXytnNhx2060dObbc08s
+	W7ovTtXqZTQrm3nuziTw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xN5eT-0000000DADL-12u5;
-	Sat, 31 Oct 2026 09:45:29 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xN5ej-0000000DAI9-1PYw;
+	Sat, 31 Oct 2026 09:45:45 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xN5eR-0000000DACj-2pV1
+	id 1xN5eh-0000000DAHs-3MZN
 	for kexec@lists.infradead.org;
-	Sat, 31 Oct 2026 09:45:27 +0000
+	Sat, 31 Oct 2026 09:45:43 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 6B0184172C;
+	by tor.source.kernel.org (Postfix) with ESMTP id EFC7C605CF;
+	Sat, 31 Oct 2026 09:45:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D56871F000C1;
 	Sat, 31 Oct 2026 09:45:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBB241F00A02;
-	Sat, 31 Oct 2026 09:45:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793439927;
-	bh=i0fOCg32ZVxaPUOTstAI4PWBunqX+FIUzQ1HDwJNXX0=;
+	s=k20260515; t=1793439942;
+	bh=foIE8/qjRxOslIMIVm5LWTcoDseO7kpGoD14hc0ILxg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=I+u/qiUFq55Bqh/mCzeRdaNEZVbWz2Cez27DLAzD/CdZXTyqmB5bYm+Fl6qEmq2Z2
-	 WJvwseUo7zHKYRbWt9Rv4IEnwRIhPvMDh/PKuwrOafaZnW8X/5pqr5Bkq9YF7RmOYS
-	 4Zei8laaNlZyX2P2Q6NUKdD1GbEww9ZjP+y70mr1OQYlD1V64LRxmdqoaSomaV2FtX
-	 CQ8Ic3S0l1ZmuJLSZ0I7IOLDDtdlEsNfHC7kEu6Ki9oOfT6r3v2JnYREAy6h6bHLWn
-	 X/ei8Nn0JLhG5DT/1yTYHYlsyj1adY19h8G8Oq2LvYsF7hvt7JNDTs8gKO6F2XpwYB
-	 apJOtNdWZXBwg==
+	b=JhV9oGMqjIuZGgcbHEUsRikcUmJNTkInVxMbDD2McBF1KHRCOovytr11YurFRKmY+
+	 bzpFUCXJV07KGchANo9OXAYly2i+TAjzzG2qyAyH0zYRfED/AUnwLW/4JR6ep8DOEp
+	 3ob8fsc2zXmkJajPfwx9ACN5aMF4fl4RqsnmBccaStiOm1Ik3W84FuIM9kDgSEnVcs
+	 FnUcTU/F9+4T7XCWF7hfPk1mhEKqJzRhHlBbv4kVrzqvgm/NnX6C0xi3dX2J6sa5iR
+	 Ryhd7cB6JyGhcESjQmqHd0GH2cyaVRdT7FizFV9PWwZW6Rt8Hkhe6GmVGYIIMTUxku
+	 0gFPxVWBEFA7Q==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Sat, 31 Oct 2026 10:39:49 +0100
-Subject: [PATCH v3 20/47] mm/gup: fix clearing folios in memfd_pin_folios()
+Date: Sat, 31 Oct 2026 10:39:50 +0100
+Subject: [PATCH v3 21/47] mm/gup: fix out-of-bounds write for nr_pages == 0
+ in GUP-fast
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261031-fixes_core-v3-20-d6437171ecc3@kernel.org>
+Message-Id: <20261031-fixes_core-v3-21-d6437171ecc3@kernel.org>
 References: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
 In-Reply-To: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -89,16 +90,15 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
  Chris Mason <mason@kernel.org>, stable@vger.kernel.org, 
- Samiullah Khawaja <skhawaja@google.com>, 
  Muhammad Usama Anjum <usama.anjum@arm.com>, 
  "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1729; i=david@kernel.org;
- h=from:subject:message-id; bh=xcEwKBas+pY55btjstA9an0JLHBAjCwLiQD85ZwKAMo=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLKebk/P5eswTLp9ZXLkC/9lrHE/q3ZEFgpdslmWPqPj/
- eeCtB8rOkpZGMQ4GGTFFFmCgu8bvHy5rrbajY8ZZg4rE8gQBi5OAZjIgjBGhvvPd/1JS1pZsSZj
- 4YRAc8n5JzsyOWbXbgkOuvGe5XSddzIjw4NFU/SfrmJzfKdh3SrxLb541d9lcemla96uStcJCCu
- cww4A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1320; i=david@kernel.org;
+ h=from:subject:message-id; bh=R62eMdMsJypxqcni0WbltJmOI5kqokR7T4ahYSHS7oQ=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLKebk9XufzzUt3qVRK79jW/zlzmvMenZ80MsUTHtrnHE
+ 7tlXOZqdpSyMIhxMMiKKbIEBd83ePlyXW21Gx8zzBxWJpAhDFycAjCRtAqGv6InnopkrO0IDNHq
+ 7pC+cvvWiW0b+d98XM7UJ9iq53RHYQ3Df69HC3Z+ryqu27DmAne4j/fJiz8+bFvAecZ3t5uDiFP
+ eOk4A
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -121,53 +121,41 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 
 From: Chris Mason <mason@kernel.org>
 
-memfd_pin_folios() pins folios obtained directly from the page cache
-without checking whether they are uptodate. However, shmem fallocate()
-can leave newly allocated folios uncleared and not uptodate. Callers
-such as udmabuf can then expose uninitialized memory to userspace.
+With nr_pages == 0, GUP-fast still enters its page table walk and can
+write past the caller's page array. The old end <= start check caught
+empty ranges, but was replaced with an overflow check.
 
-Clear non-uptodate folios and mark them uptodate under the folio lock
-before returning them to the caller.
+Users such as OrangeFS can pass a zero page count derived from a
+userspace-supplied length. So let's return zero for nr_pages == 0 before
+starting the walk, just like GUP-slow.
 
 Fix generated by an LLM and sent by Chris Mason in private.
 
-Fixes: 89c1905d9c14 ("mm/gup: introduce memfd_pin_folios() for pinning memfd folios")
+Fixes: c28b1fc70390 ("mm/gup: reorganize internal_get_user_pages_fast()")
 Cc: stable@vger.kernel.org
 Signed-off-by: Chris Mason <mason@kernel.org>
-[ david: simplify description and comment ]
-Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-Reviewed-by: Samiullah Khawaja <skhawaja@google.com>
-Tested-by: Samiullah Khawaja <skhawaja@google.com>
+[ david: simplify description ]
+Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+Acked-by: Muchun Song <muchun.song@linux.dev>
 Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/gup.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ mm/gup.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/mm/gup.c b/mm/gup.c
-index f809361227e7e..cc4fa18783ce0 100644
+index cc4fa18783ce0..1c2ac7c66c309 100644
 --- a/mm/gup.c
 +++ b/mm/gup.c
-@@ -3527,6 +3527,20 @@ long memfd_pin_folios(struct file *memfd, loff_t start, loff_t end,
- 					goto err;
- 				}
+@@ -3215,6 +3215,9 @@ static int gup_fast_fallback(unsigned long start, unsigned long nr_pages,
+ 				       FOLL_PCI_P2PDMA | FOLL_HONOR_NUMA_FAULT)))
+ 		return -EINVAL;
  
-+				/*
-+				 * fallocate() can leave folios in the
-+				 * page cache that were never cleared.
-+				 */
-+				if (!folio_test_uptodate(folio)) {
-+					folio_lock(folio);
-+					if (!folio_test_uptodate(folio)) {
-+						folio_zero_range(folio, 0, folio_size(folio));
-+						flush_dcache_folio(folio);
-+						folio_mark_uptodate(folio);
-+					}
-+					folio_unlock(folio);
-+				}
++	if (unlikely(!nr_pages))
++		return 0;
 +
- 				if (nr_folios == 0)
- 					*offset = offset_in_folio(folio, start);
+ 	if (gup_flags & FOLL_PIN)
+ 		mm_set_has_pinned_flag(current->mm);
  
 
 -- 
