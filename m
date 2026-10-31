@@ -2,56 +2,56 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2CC606A323
-	for <kexec@archiver.kernel.org>; Sat, 31 Oct 2026 09:49:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47772606A32D
+	for <kexec@archiver.kernel.org>; Sat, 31 Oct 2026 09:49:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=BgMdH/LE;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Vxe+k77k
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Hbg5AqP1;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Nk8DpZQP
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=IjXGxdI21GHlefNuc9d8WG3Gh6i1uecgZnNzYjBLxQA=; b=BgMdH/LEN7LLPE
-	bP7j4fOtsBP3yffRyQAw3LNPtDknVWflhzB+Lxxp7V2u1aAGoKUl6qFKSv1XnVLEX/qVDZNUsD6gV
-	DHFiC15SlgLBmNo7w0gdLFpvQdUhp+uT3JKv2VXEV1/WgBXOz6TgkjbHStkGsE7PqgeoxfaKO4plv
-	sDBO3DlTCDMazcjguJY8p1D82DUSNEZ6FypEQHCbKMxJTgiDfYGm+YdY4cU0dqb70HZVnt/6RgTKv
-	qQvs5ZsoBaIDgZMVNdPKsNOI9s6ebVsKRADoRoFF03KHEwfB07BzAITcCaI0VXf6TZlzIhuTVkkdr
-	YpxYPN3SrJrfWHOl2ADw==;
+	List-Owner; bh=pzeRdDMVfEMNbkMdT/nRgGx9sjoVV/E/1Sv6j9DFArI=; b=Hbg5AqP1OICK6n
+	kDNnidMIx2n2WL+qzp7TvHzHJGJwsctZ8F2tEYGrkjZ9KJpBWM7MG8hdZIKNWzpLaTSE6mTV/9Xrm
+	f0gseM9pWMq/+OR1OmO4waFNLSlRgabv8dvriknkAmNoe2HbWU8BYBtezalyrahUO9qKSkxJMmWr1
+	Fq2QWQDOQo9C5h0kzktktGy0vleKi0ISq5TOc1se0e9Fn6EEuG0Fga0WFln4e3IRVtRbMVElKoipo
+	3sr+LiGZuMv0uVVd/L5sBkgnIOuxQXrXk7KVp8JJXpccM/PDaaAH0eJ8HnAwuUsmmq5lCL6Nkoufg
+	1MJhsF+qncHQ3aFLYdlQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xN5hz-0000000DBAJ-3aDv;
-	Sat, 31 Oct 2026 09:49:07 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xN5iE-0000000DBF6-4C8v;
+	Sat, 31 Oct 2026 09:49:23 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xN5hy-0000000DBAD-3K2E
+	id 1xN5iE-0000000DBEz-1BTd
 	for kexec@lists.infradead.org;
-	Sat, 31 Oct 2026 09:49:06 +0000
+	Sat, 31 Oct 2026 09:49:22 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 3C78E605CF;
+	by sea.source.kernel.org (Postfix) with ESMTP id 09C7B40D9F;
+	Sat, 31 Oct 2026 09:49:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 768741F000C1;
 	Sat, 31 Oct 2026 09:49:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB06D1F00A16;
-	Sat, 31 Oct 2026 09:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793440145;
-	bh=IjXGxdI21GHlefNuc9d8WG3Gh6i1uecgZnNzYjBLxQA=;
+	s=k20260515; t=1793440161;
+	bh=pzeRdDMVfEMNbkMdT/nRgGx9sjoVV/E/1Sv6j9DFArI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=Vxe+k77kJPuUdVyhCbp6hqSL5tOVmFwh62QnvvZPRanJVeYjVeqJffbeRNnz6bi7Z
-	 vJdeaHpjumIsgJdILQnTJEu7H7EbVbRZsqoXiAagi4mHoe3X/P3hsSEdpjEbruGdEl
-	 fkie4Ik9xJ4scAW7TEs2sD0XZmJ98VuYgSZwI9KITCZBowq0dQUQCaY6WDXIIIhDSW
-	 mlGHw7ibBWgm3xwzwaCOM78EU02kSve6SOeLgYiVL3f8yUrfXWbUbskMw2cilY0ust
-	 QFg4g9JR0agefCjXswUnCs6aQu3t7FyolU+jzLtrz4mmumfSsW66hGPLXxSJJBbO+9
-	 RX+PAGn7J9Qnw==
+	b=Nk8DpZQP6BzD9OA8zt/17XY/95wwW4UIU2PZ2B9LYSCoMPTi2ddtIV6u99LHr+5Oe
+	 g4tDbV0A9eSd5emCxI8wukjjJ2YT2aWaeikxo/9ZsvfdGNzOUVTriMj7ENkyyLHSUr
+	 /AmyIiG8Vw/uXBjmX5bA/kDSRtXD7rVcvEJxXTMudlPtX62drHe3FsXcaMp69dcM9/
+	 YwYGbDDS5YN7PQOQjxE/6H/9hJFXhZl2GVnrqXpy2NO/l62R63MYQrI/IpmBB0SIR1
+	 0pQhFdr/sND4w08uekTBmbzVcrRzdHw2xwe/pl3C0l93a6hCf30nDvqDtr32D5+WyV
+	 NJm0qxt4y7qnw==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Sat, 31 Oct 2026 10:40:03 +0100
-Subject: [PATCH v3 34/47] mm/madvise: fix data loss from MADV_FREE on a KSM
- page
+Date: Sat, 31 Oct 2026 10:40:04 +0100
+Subject: [PATCH v3 35/47] mm/memory: reject remote COW faults on PFN
+ mappings
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261031-fixes_core-v3-34-d6437171ecc3@kernel.org>
+Message-Id: <20261031-fixes_core-v3-35-d6437171ecc3@kernel.org>
 References: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
 In-Reply-To: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -89,16 +89,16 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
- stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
+ Chris Mason <mason@kernel.org>, stable@vger.kernel.org, 
  Muhammad Usama Anjum <usama.anjum@arm.com>, 
  "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1790; i=david@kernel.org;
- h=from:subject:message-id; bh=1jHBM4yk7cItfizVmqJa87+gzav2ElPv67Z1UsegsEg=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLKebs9coxvHyH1z9s7VefczZtw+fkhp40ypL1M2bLLxy
- Cx3fSHF2VHKwiDGwSArpsgSFHzf4OXLdbXVbnzMMHNYmUCGMHBxCsBEZmkz/C/0dhFjdz3d/179
- gLK7z3f2pa9y9xzsbsid1zQ1c8LEyp+MDHPUY16u7ZrSKTKz6UJziCPDjl/K/z5zx+p/sKx6+vj
- GE04A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2304; i=david@kernel.org;
+ h=from:subject:message-id; bh=vy3o0JKxTUrol+3XYhfqk0XP7HsGSqgA1eThmpFZJfQ=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLKebs/sadz7N7koN4X/1CmTNuOJDc28a4xv2m9VPWy6Q
+ qSCb2NnRykLgxgHg6yYIktQ8H2Dly/X1Va78THDzGFlAhnCwMUpABPxes3IMDdGTmx1U9JkAxWO
+ z0JHpPjtV/9wspB8sXV9S7o/z6MaV0aGG98XcfzwDPadESJ0P5rn4aVNSzjtP99zunv3xwmuytf
+ uHAA=
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -119,51 +119,68 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-MADV_FREE can clear the dirty flag of a singly mapped KSM folio. The
-folio remains in the stable tree and can gain new mappings without being
-dirtied again. Once marked lazyfree, reclaim can discard data that those
-mappings still need.
+From: Chris Mason <mason@kernel.org>
 
-KSM always marks a folio dirty when converting it to a KSM folio in
-try_to_merge_one_page(). Marking a folio lazyfree clears PG_swapbacked
-but leaves PG_dirty unchanged. Preserving PG_dirty makes reclaim restore
-PG_swapbacked instead of discarding the folio. This also protects folios
-that were already lazyfree when KSM converted them.
+When handling a COW fault without a normal source page (PFN mappings),
+__wp_page_copy_user() copies from the faulting user address. For remote
+faults, this accesses the wrong address space, resulting in wrong data
+getting copied.
 
-Skip KSM folios before clearing their dirty flag, checking under the
-folio lock to serialize with KSM conversion.
+For example, user_events updates an enable bit in the registering
+process's memory. If that memory needs to be faulted in,
+user_event_enabler_fault_fixup() calls fixup_user_fault() from a work
+item. Placing the enable bit in a private PFN mapping can trigger this
+remote COW path.
 
-Fixes: 854e9ed09ded ("mm: support madvise(MADV_FREE)")
+Reject these faults with VM_FAULT_SIGBUS when the target mm differs from
+current->mm: remote faults. Ordinary (non-PFN) mappings are not affected.
+
+The user-address copy dates back to commit 6aab341e0a28 ("mm: re-architect
+the VM_UNPAGED logic"); likely, actual ways to get remote faults in
+there on COW PFN mappings appeared afterwards. But the fix is simple and
+straight forward.
+
+Fix generated by an LLM and sent by Chris Mason in private.
+
+Fixes: 6aab341e0a28 ("mm: re-architect the VM_UNPAGED logic")
 Cc: stable@vger.kernel.org
-Reported-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Chris Mason <mason@kernel.org>
 Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-Reviewed-by: Xu Xin <xu.xin@linux.dev>
+[ david: simplify comment and description ]
+Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/madvise.c | 9 +++++++++
+ mm/memory.c | 9 +++++++++
  1 file changed, 9 insertions(+)
 
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 75b409e97dbf2..a16e3cb256b7b 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -756,6 +756,15 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
- 		if (folio_test_swapcache(folio) || folio_test_dirty(folio)) {
- 			if (!folio_trylock(folio))
- 				continue;
-+			/*
-+			 * KSM folios can gain new mappings at any time, so we must
-+			 * not clear their dirty flag.
-+			 */
-+			if (folio_test_ksm(folio)) {
-+				folio_unlock(folio);
-+				continue;
-+			}
+diff --git a/mm/memory.c b/mm/memory.c
+index 5392bcb1d24d6..ae8d567bc6ba3 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -3761,6 +3761,13 @@ static inline int __wp_page_copy_user(struct page *dst, struct page *src,
+ 		return 0;
+ 	}
+ 
++	/*
++	 * __copy_from_user_inatomic() only works as expected for local faults.
++	 * Reject remote faults.
++	 */
++	if (unlikely(mm != current->mm))
++		return -EFAULT;
 +
- 			/*
- 			 * If we have a large folio at this point, we know it is
- 			 * fully mapped so if its mapcount is the same as its
+ 	/*
+ 	 * If the source page was a PFN mapping, we don't have
+ 	 * a "struct page" for it. We do a best-effort copy by
+@@ -4086,6 +4093,8 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
+ 				folio_put(old_folio);
+ 
+ 			delayacct_wpcopy_end();
++			if (err == -EFAULT)
++				return VM_FAULT_SIGBUS;
+ 			return err == -EHWPOISON ? VM_FAULT_HWPOISON : 0;
+ 		}
+ 		kmsan_copy_page_meta(&new_folio->page, vmf->page);
 
 -- 
 2.43.0
