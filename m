@@ -2,56 +2,55 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA5E606A331
-	for <kexec@archiver.kernel.org>; Sat, 31 Oct 2026 09:49:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D8C606A333
+	for <kexec@archiver.kernel.org>; Sat, 31 Oct 2026 09:50:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=an94ZcEi;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h8uJy23m
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=puSzHc3u;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Stp7IfF8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=6KPzj8boSo2Gk3+3ECHnUsyvk9AxPiK+EOaIJxEN6Go=; b=an94ZcEizrXkgX
-	qSOyhGQhvT1/ZoiO5yit8YVr5pygoqU4Vg4z3FV5cmP4Qd3TmCcpBm3k45SreSbfHTTtVwU9pSBw+
-	ADgE5K2HxiPuLB4b/s5ym/oVKcfBwMKAuBA2YRamGDd7o+p1sbZEJpXcoDCWhkaPXPQKq1zSeCeNk
-	TVwax6OreyKbDiqVXGC62fVwvBtHD/YX7JOCr3m/qqtZX9kh5r4AL2wDT2YY5PZB1NdZd24eKx6QV
-	AOCu3DfZvhEeTro/jRg4/4p3SZwZ7CFy+S7d6fjvQ3NPkUpW3a6VxaTQKmv1KdcI4lJRcw6fKZJAJ
-	v+w4gpFU+mcbV+vj6YDw==;
+	List-Owner; bh=eGBourP1Ec6F7yIaqRhrFMrMAx6wQjtkJt9BhpEnZMY=; b=puSzHc3uTk7JMZ
+	My1S6+liN18RIF5vOBmjY7DoUWGU8SMVYW0z9OMyDjofsGV10jMkDvWcVKxYpY9xXOysvk0N34C2V
+	We4n4VtocRl/0sxGIEUP9i+auOCsyJRgawoleK7hBRWMYA987MIkIUQ7Yxx9jKRv7jGQm/wmF8XRa
+	xDz/LqH5XF59GPha0AYpN03EkLl+65OMXl3lyDFBZMFZ1cBI1vJdwIFUiXNllTxZL44c9QbeB9+GV
+	KgSwvNuJcACs7TaQL/VQOY0bGRQvg8YTyB0AhS+x8JL1/cLy/Qyz0BI4uQ4inQLm8ql3rnV+roBe3
+	3cQWUM+wrCswYVJuRpyg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xN5ik-0000000DBOa-1OLn;
-	Sat, 31 Oct 2026 09:49:54 +0000
+	id 1xN5j0-0000000DBV8-2Vws;
+	Sat, 31 Oct 2026 09:50:10 +0000
 Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xN5ij-0000000DBNy-0YYz
+	id 1xN5iy-0000000DBUg-3OG4
 	for kexec@lists.infradead.org;
-	Sat, 31 Oct 2026 09:49:53 +0000
+	Sat, 31 Oct 2026 09:50:08 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id D1D0C43588;
-	Sat, 31 Oct 2026 09:49:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09AC41F00A16;
-	Sat, 31 Oct 2026 09:49:37 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 7F3EF41F9D;
+	Sat, 31 Oct 2026 09:50:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 487B01F00A15;
+	Sat, 31 Oct 2026 09:49:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793440192;
-	bh=6KPzj8boSo2Gk3+3ECHnUsyvk9AxPiK+EOaIJxEN6Go=;
+	s=k20260515; t=1793440208;
+	bh=eGBourP1Ec6F7yIaqRhrFMrMAx6wQjtkJt9BhpEnZMY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=h8uJy23m3iqMl3OwU/TM+eG06BDIlLaiL+p78gyW/VyxpuisHpa2ij0C+rNXmy/03
-	 It3m3GuGtjE1NLJE7RvqGkdLdWj64TbEwTq+FK9jdAgAMRRLLG0OFvDhEHOXIwMmzh
-	 Ph+e2q0/8C3LArjv4DLBCBIlUpCi3pOHs2a+Gex1nTr7/Tp4pokf6D3HyAEdm+nENQ
-	 WR3Dc2oa2Y9tdNn0AJ7rqpEELD1qIZkhidc3x1iia2aUU7kmgloZMD6mGBIbvvHLue
-	 tnycJdnsNH7tD/BAWlohAJfDtEVTzqgdRhmAlOZgGnqWVujtbljH2p0m4ztc6FHdjv
-	 3AMt5DmbFMxZQ==
+	b=Stp7IfF81lCoZQeTDvWZhdX0umr0ydHPt3aqycZ9Ldjrw7PKIj+9jepRCt9jEApgi
+	 5DRFWJHrk0CXLKcJs3AHdeR+LCaYR8I4VWF1Du1rAWuNZKL4tadfQnDmuv/ZssFxkV
+	 JT7+wuVNVeabQJHi2il2+dvGPmSSjiAnE6Fd5gBnvfKuwCNe6WvZ+l0L1+A58OR9nB
+	 vnqUaoXa8Z5l9vRVgWpYAguU0gqdu6W/ur9B/9XNt7bkaL+ag5sP9Zz75WNiQX03e8
+	 hQ51a/g/r7UKOj8wXHDcvGCCxts/w8N1JNNBDdFbex52TOpEiSPDFx/Xlefv4//ciL
+	 +Wm95usZneC5w==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Sat, 31 Oct 2026 10:40:06 +0100
-Subject: [PATCH v3 37/47] mm: fix unkillable fault loop on MAP_DROPPABLE
- memory
+Date: Sat, 31 Oct 2026 10:40:07 +0100
+Subject: [PATCH v3 38/47] mm: fix deadlock of mremap() against UFFDIO_MOVE
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261031-fixes_core-v3-37-d6437171ecc3@kernel.org>
+Message-Id: <20261031-fixes_core-v3-38-d6437171ecc3@kernel.org>
 References: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
 In-Reply-To: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -93,12 +92,12 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  Muhammad Usama Anjum <usama.anjum@arm.com>, 
  "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1744; i=david@kernel.org;
- h=from:subject:message-id; bh=3QXuBW/o+aJfpqMh7L6nYMz0PgksViIVDVNcIUyYwLI=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLKebs96d4VrvjfLxvuSP3cLVT87tXlD8pIaaW7WLX9mv
- vMx1v/W3FHKwiDGwSArpsgSFHzf4OXLdbXVbnzMMHNYmUCGMHBxCsBEJqgyMmx/LLzCanKTqnWQ
- QIReLffBpYG/TVrZtlry33zqrXm9bBrDf6dPfy/+1zggt1ls09usTdH3ZnC6a3l7LSq45vxQq2L
- jNQ4A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=12373; i=david@kernel.org;
+ h=from:subject:message-id; bh=Rer+vUgLo61UxgimR6mxLuRdoYcoV25AcDsJP21Zxj4=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLKebs967Mfwc+odVo9daoqyvCfvRzrpzmbf9J6T5UKo8
+ 1yjusWVHaUsDGIcDLJiiixBwfcNXr5cV1vtxscMM4eVCWQIAxenAEzknzcjw9+5xnu9tkoY8CSd
+ 8z3Y9mxR8ofL25/q6gZE5h+cZrtu+zWG/4U+0p2nuX6zqH64E+00v/z/ZMXKSofv0ub36s987W5
+ cwQUA
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -121,50 +120,371 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 
 From: Chris Mason <mason@kernel.org>
 
-handle_mm_fault() suppresses VM_FAULT_OOM for VM_DROPPABLE mappings.
+With per-VMA locks, UFFDIO_MOVE can run concurrently with mremap()
+on different VMAs in the same mm. Those VMAs can share page tables, so
+both operations can acquire the same pair of page-table locks.
 
-For user-mode faults, pending signals are processed before retrying the
-access. Kernel-mode faults on user buffers instead return directly to
-the faulting instruction.
+UFFDIO_MOVE orders the locks by address, while mremap() takes the source
+lock first. These conflicting orders can deadlock; mremap() holding
+mmap_lock for writing no longer helps.
 
-With persistent allocation failures (esp. memcg limits), a syscall,
-such as write(), can therefore loop while not dropping locks.
+Move double_pt_lock() and double_pt_unlock() to mm/internal.h and use
+them for all page-table moves in mremap(). Preserve the source entry
+checks after acquiring both locks. Remove the comments claiming that
+exclusive mmap_lock makes lock ordering irrelevant.
 
-Only suppress VM_FAULT_OOM when FAULT_FLAG_USER is set, allowing
-kernel-mode faults and GUP to fail and signal allocation errors.
+In move_ptes(), make sure to just recheck source and destination PMD
+after taking the locks and drop the overly-long comment.
 
 Fix generated by an LLM and sent by Chris Mason in private.
 
-Fixes: 9651fcedf7b9 ("mm: add MAP_DROPPABLE for designating always lazily freeable mappings")
+[ david: use new helpers consistently; simplify description and comments;
+         move_ptes() fixup ]
+
+Fixes: 867a43a34ff8 ("userfaultfd: use per-vma locks in userfaultfd operations")
 Cc: stable@vger.kernel.org
 Signed-off-by: Chris Mason <mason@kernel.org>
 Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-[ david: simplify description ]
+Acked-by: Muchun Song <muchun.song@linux.dev>
 Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/memory.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ include/linux/userfaultfd_k.h |  2 -
+ mm/huge_memory.c              | 19 ++++------
+ mm/hugetlb.c                  | 14 ++-----
+ mm/internal.h                 | 28 ++++++++++++++
+ mm/mremap.c                   | 87 +++++++++++++++++--------------------------
+ mm/userfaultfd.c              | 27 --------------
+ 6 files changed, 72 insertions(+), 105 deletions(-)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index 732b8f926de6a..77d4bbf444bc2 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -6957,8 +6957,12 @@ vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
+diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
+index a14b8a9ffb7b1..565e98f342dc8 100644
+--- a/include/linux/userfaultfd_k.h
++++ b/include/linux/userfaultfd_k.h
+@@ -153,8 +153,6 @@ extern int mrwprotect_range(struct userfaultfd_ctx *ctx, unsigned long start,
+ 			    unsigned long len, bool enable_rwp);
  
- 	lru_gen_exit_fault();
+ /* move_pages */
+-void double_pt_lock(spinlock_t *ptl1, spinlock_t *ptl2);
+-void double_pt_unlock(spinlock_t *ptl1, spinlock_t *ptl2);
+ int move_pages_huge_pmd(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd, pmd_t dst_pmdval,
+ 			struct vm_area_struct *dst_vma,
+ 			struct vm_area_struct *src_vma,
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 0c6512b33db0e..196de7fe6b4ee 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2646,15 +2646,11 @@ bool move_huge_pmd(struct vm_area_struct *vma, unsigned long old_addr,
+ 		return false;
+ 	}
  
--	/* If the mapping is droppable, then errors due to OOM aren't fatal. */
--	if (is_droppable)
-+	/*
-+	 * If the mapping is droppable, then errors due to OOM aren't fatal: the
-+	 * task returns to user mode, handles its signals and tries again. A
-+	 * fault from kernel mode has no such return, so it must see the error.
-+	 */
-+	if (is_droppable && (flags & FAULT_FLAG_USER))
- 		ret &= ~VM_FAULT_OOM;
+-	/*
+-	 * We don't have to worry about the ordering of src and dst
+-	 * ptlocks because exclusive mmap_lock prevents deadlock.
+-	 */
+-	old_ptl = __pmd_trans_huge_lock(old_pmd, vma);
+-	if (old_ptl) {
+-		new_ptl = pmd_lockptr(mm, new_pmd);
+-		if (new_ptl != old_ptl)
+-			spin_lock_nested(new_ptl, SINGLE_DEPTH_NESTING);
++	old_ptl = pmd_lockptr(mm, old_pmd);
++	new_ptl = pmd_lockptr(mm, new_pmd);
++
++	double_pt_lock(old_ptl, new_ptl);
++	if (likely(pmd_is_huge(*old_pmd))) {
+ 		pmd = pmdp_huge_get_and_clear(mm, old_addr, old_pmd);
+ 		if (pmd_present(pmd))
+ 			force_flush = true;
+@@ -2683,11 +2679,10 @@ bool move_huge_pmd(struct vm_area_struct *vma, unsigned long old_addr,
+ 		set_pmd_at(mm, new_addr, new_pmd, pmd);
+ 		if (force_flush)
+ 			flush_pmd_tlb_range(vma, old_addr, old_addr + PMD_SIZE);
+-		if (new_ptl != old_ptl)
+-			spin_unlock(new_ptl);
+-		spin_unlock(old_ptl);
++		double_pt_unlock(old_ptl, new_ptl);
+ 		return true;
+ 	}
++	double_pt_unlock(old_ptl, new_ptl);
+ 	return false;
+ }
  
- 	if (flags & FAULT_FLAG_USER) {
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index da5d04edf7c10..84141527fe73d 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -5153,15 +5153,9 @@ static void move_huge_pte(struct vm_area_struct *vma, unsigned long old_addr,
+ 	spinlock_t *src_ptl, *dst_ptl;
+ 	pte_t pte;
+ 
+-	dst_ptl = huge_pte_lock(h, mm, dst_pte);
++	dst_ptl = huge_pte_lockptr(h, mm, dst_pte);
+ 	src_ptl = huge_pte_lockptr(h, mm, src_pte);
+-
+-	/*
+-	 * We don't have to worry about the ordering of src and dst ptlocks
+-	 * because exclusive mmap_lock (or the i_mmap_lock) prevents deadlock.
+-	 */
+-	if (src_ptl != dst_ptl)
+-		spin_lock_nested(src_ptl, SINGLE_DEPTH_NESTING);
++	double_pt_lock(dst_ptl, src_ptl);
+ 
+ 	pte = huge_ptep_get_and_clear(mm, old_addr, src_pte, sz);
+ 
+@@ -5190,9 +5184,7 @@ static void move_huge_pte(struct vm_area_struct *vma, unsigned long old_addr,
+ 		set_huge_pte_at(mm, new_addr, dst_pte, pte, sz);
+ 	}
+ 
+-	if (src_ptl != dst_ptl)
+-		spin_unlock(src_ptl);
+-	spin_unlock(dst_ptl);
++	double_pt_unlock(dst_ptl, src_ptl);
+ }
+ 
+ int move_hugetlb_page_tables(struct vm_area_struct *vma,
+diff --git a/mm/internal.h b/mm/internal.h
+index 566cbd2dce485..824c2919a37fd 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -624,6 +624,34 @@ static inline void force_page_cache_readahead(struct address_space *mapping,
+ 	force_page_cache_ra(&ractl, nr_to_read);
+ }
+ 
++/*
++ * Take two page table locks at the same level in address order such that
++ * we cannot deadlock.
++ */
++static inline void double_pt_lock(spinlock_t *ptl1, spinlock_t *ptl2)
++	__acquires(ptl1)
++	__acquires(ptl2)
++{
++	if (ptl1 > ptl2)
++		swap(ptl1, ptl2);
++	spin_lock(ptl1);
++	if (ptl1 != ptl2)
++		spin_lock_nested(ptl2, SINGLE_DEPTH_NESTING);
++	else
++		__acquire(ptl2);
++}
++
++static inline void double_pt_unlock(spinlock_t *ptl1, spinlock_t *ptl2)
++	__releases(ptl1)
++	__releases(ptl2)
++{
++	spin_unlock(ptl1);
++	if (ptl1 != ptl2)
++		spin_unlock(ptl2);
++	else
++		__release(ptl2);
++}
++
+ unsigned find_lock_entries(struct address_space *mapping, pgoff_t *start,
+ 		pgoff_t end, struct folio_batch *fbatch, pgoff_t *indices);
+ unsigned find_get_entries(struct address_space *mapping, pgoff_t *start,
+diff --git a/mm/mremap.c b/mm/mremap.c
+index 1237718848f5c..70b7264aa6bf5 100644
+--- a/mm/mremap.c
++++ b/mm/mremap.c
+@@ -202,7 +202,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+ 	struct mm_struct *mm = vma->vm_mm;
+ 	pte_t *old_ptep, *new_ptep;
+ 	pte_t old_pte, pte;
+-	pmd_t dummy_pmdval;
++	pmd_t old_pmdval, new_pmdval;
+ 	spinlock_t *old_ptl, *new_ptl;
+ 	bool force_flush = false;
+ 	unsigned long old_addr = pmc->old_addr;
+@@ -234,31 +234,30 @@ static int move_ptes(struct pagetable_move_control *pmc,
+ 	if (pmc->need_rmap_locks)
+ 		take_rmap_locks(vma);
+ 
+-	/*
+-	 * We don't have to worry about the ordering of src and dst
+-	 * pte locks because exclusive mmap_lock prevents deadlock.
+-	 */
+-	old_ptep = pte_offset_map_lock(mm, old_pmd, old_addr, &old_ptl);
++	old_ptep = pte_offset_map_rw_nolock(mm, old_pmd, old_addr, &old_pmdval,
++					    &old_ptl);
+ 	if (!old_ptep) {
+ 		err = -EAGAIN;
+ 		goto out;
+ 	}
+-	/*
+-	 * Now new_pte is none, so collapse_scan_file() path can not find
+-	 * this by traversing file->f_mapping, so there is no concurrency with
+-	 * retract_page_tables(). In addition, we already hold the exclusive
+-	 * mmap_lock, so this new_pte page is stable, so there is no need to get
+-	 * pmdval and do pmd_same() check.
+-	 */
+-	new_ptep = pte_offset_map_rw_nolock(mm, new_pmd, new_addr, &dummy_pmdval,
+-					   &new_ptl);
++	new_ptep = pte_offset_map_rw_nolock(mm, new_pmd, new_addr, &new_pmdval,
++					    &new_ptl);
+ 	if (!new_ptep) {
+-		pte_unmap_unlock(old_ptep, old_ptl);
++		pte_unmap(old_ptep);
++		err = -EAGAIN;
++		goto out;
++	}
++
++	double_pt_lock(old_ptl, new_ptl);
++	if (unlikely(!pmd_same(old_pmdval, pmdp_get_lockless(old_pmd)) ||
++		     !pmd_same(new_pmdval, pmdp_get_lockless(new_pmd)))) {
++		double_pt_unlock(old_ptl, new_ptl);
++		pte_unmap(new_ptep);
++		pte_unmap(old_ptep);
+ 		err = -EAGAIN;
+ 		goto out;
+ 	}
+-	if (new_ptl != old_ptl)
+-		spin_lock_nested(new_ptl, SINGLE_DEPTH_NESTING);
++
+ 	flush_tlb_batched_pending(vma->vm_mm);
+ 	lazy_mmu_mode_enable();
+ 
+@@ -317,10 +316,9 @@ static int move_ptes(struct pagetable_move_control *pmc,
+ 	lazy_mmu_mode_disable();
+ 	if (force_flush)
+ 		flush_tlb_range(vma, old_end - len, old_end);
+-	if (new_ptl != old_ptl)
+-		spin_unlock(new_ptl);
++	double_pt_unlock(old_ptl, new_ptl);
+ 	pte_unmap(new_ptep - 1);
+-	pte_unmap_unlock(old_ptep - 1, old_ptl);
++	pte_unmap(old_ptep - 1);
+ out:
+ 	if (pmc->need_rmap_locks)
+ 		drop_rmap_locks(vma);
+@@ -395,14 +393,9 @@ static bool move_normal_pmd(struct pagetable_move_control *pmc,
+ 	if (WARN_ON_ONCE(!pmd_none(*new_pmd)))
+ 		return false;
+ 
+-	/*
+-	 * We don't have to worry about the ordering of src and dst
+-	 * ptlocks because exclusive mmap_lock prevents deadlock.
+-	 */
+-	old_ptl = pmd_lock(mm, old_pmd);
++	old_ptl = pmd_lockptr(mm, old_pmd);
+ 	new_ptl = pmd_lockptr(mm, new_pmd);
+-	if (new_ptl != old_ptl)
+-		spin_lock_nested(new_ptl, SINGLE_DEPTH_NESTING);
++	double_pt_lock(old_ptl, new_ptl);
+ 
+ 	pmd = *old_pmd;
+ 
+@@ -418,9 +411,7 @@ static bool move_normal_pmd(struct pagetable_move_control *pmc,
+ 	pmd_populate(mm, new_pmd, pmd_pgtable(pmd));
+ 	flush_tlb_range(vma, pmc->old_addr, pmc->old_addr + PMD_SIZE);
+ out_unlock:
+-	if (new_ptl != old_ptl)
+-		spin_unlock(new_ptl);
+-	spin_unlock(old_ptl);
++	double_pt_unlock(old_ptl, new_ptl);
+ 
+ 	return res;
+ }
+@@ -452,14 +443,10 @@ static bool move_normal_pud(struct pagetable_move_control *pmc,
+ 	if (WARN_ON_ONCE(!pud_none(*new_pud)))
+ 		return false;
+ 
+-	/*
+-	 * We don't have to worry about the ordering of src and dst
+-	 * ptlocks because exclusive mmap_lock prevents deadlock.
+-	 */
+-	old_ptl = pud_lock(mm, old_pud);
++	old_ptl = pud_lockptr(mm, old_pud);
+ 	new_ptl = pud_lockptr(mm, new_pud);
+-	if (new_ptl != old_ptl)
+-		spin_lock_nested(new_ptl, SINGLE_DEPTH_NESTING);
++
++	double_pt_lock(old_ptl, new_ptl);
+ 
+ 	pud = *old_pud;
+ 	if (unlikely(pud_none(pud)))
+@@ -473,9 +460,7 @@ static bool move_normal_pud(struct pagetable_move_control *pmc,
+ 	pud_populate(mm, new_pud, pud_pgtable(pud));
+ 	flush_tlb_range(vma, pmc->old_addr, pmc->old_addr + PUD_SIZE);
+ out_unlock:
+-	if (new_ptl != old_ptl)
+-		spin_unlock(new_ptl);
+-	spin_unlock(old_ptl);
++	double_pt_unlock(old_ptl, new_ptl);
+ 
+ 	return true;
+ }
+@@ -503,16 +488,14 @@ static bool move_huge_pud(struct pagetable_move_control *pmc,
+ 	if (WARN_ON_ONCE(!pud_none(*new_pud)))
+ 		return false;
+ 
+-	/*
+-	 * We don't have to worry about the ordering of src and dst
+-	 * ptlocks because exclusive mmap_lock prevents deadlock.
+-	 */
+-	old_ptl = __pud_trans_huge_lock(old_pud, vma);
+-	if (unlikely(!old_ptl))
+-		return false;
++	old_ptl = pud_lockptr(mm, old_pud);
+ 	new_ptl = pud_lockptr(mm, new_pud);
+-	if (new_ptl != old_ptl)
+-		spin_lock_nested(new_ptl, SINGLE_DEPTH_NESTING);
++
++	double_pt_lock(old_ptl, new_ptl);
++	if (unlikely(!pud_trans_huge(*old_pud))) {
++		double_pt_unlock(old_ptl, new_ptl);
++		return false;
++	}
+ 
+ 	/* Clear the pud */
+ 	pud = pudp_huge_get_and_clear(mm, pmc->old_addr, old_pud);
+@@ -523,9 +506,7 @@ static bool move_huge_pud(struct pagetable_move_control *pmc,
+ 	/* mark soft_ditry when we add pud level soft dirty support */
+ 	set_pud_at(mm, pmc->new_addr, new_pud, pud);
+ 	flush_pud_tlb_range(vma, pmc->old_addr, pmc->old_addr + HPAGE_PUD_SIZE);
+-	if (new_ptl != old_ptl)
+-		spin_unlock(new_ptl);
+-	spin_unlock(old_ptl);
++	double_pt_unlock(old_ptl, new_ptl);
+ 
+ 	return true;
+ }
+diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+index dac696bda19f0..169f681f9849b 100644
+--- a/mm/userfaultfd.c
++++ b/mm/userfaultfd.c
+@@ -1206,33 +1206,6 @@ int mrwprotect_range(struct userfaultfd_ctx *ctx, unsigned long start,
+ 	return 0;
+ }
+ 
+-void double_pt_lock(spinlock_t *ptl1,
+-		    spinlock_t *ptl2)
+-	__acquires(ptl1)
+-	__acquires(ptl2)
+-{
+-	if (ptl1 > ptl2)
+-		swap(ptl1, ptl2);
+-	/* lock in virtual address order to avoid lock inversion */
+-	spin_lock(ptl1);
+-	if (ptl1 != ptl2)
+-		spin_lock_nested(ptl2, SINGLE_DEPTH_NESTING);
+-	else
+-		__acquire(ptl2);
+-}
+-
+-void double_pt_unlock(spinlock_t *ptl1,
+-		      spinlock_t *ptl2)
+-	__releases(ptl1)
+-	__releases(ptl2)
+-{
+-	spin_unlock(ptl1);
+-	if (ptl1 != ptl2)
+-		spin_unlock(ptl2);
+-	else
+-		__release(ptl2);
+-}
+-
+ static inline bool is_pte_pages_stable(pte_t *dst_pte, pte_t *src_pte,
+ 				       pte_t orig_dst_pte, pte_t orig_src_pte,
+ 				       pmd_t *dst_pmd, pmd_t dst_pmdval)
 
 -- 
 2.43.0
