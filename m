@@ -2,56 +2,56 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA319606A31C
-	for <kexec@archiver.kernel.org>; Sat, 31 Oct 2026 09:47:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A46B606A31C
+	for <kexec@archiver.kernel.org>; Sat, 31 Oct 2026 09:47:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=MfUvjgSh;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Goo08VUO
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=d3j1d+Me;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IaCWaKaw
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=gNn7/nSxmNJguW2bsADoqLsPI7cv25lI/JHeobxIgIk=; b=MfUvjgShux54PC
-	3YTg8+xrCq/2GPivVPDTdCaOKg8kAjEYBiBMD4gJPB2ASqV4kfFd+2LHXhhLDRIKpQQ8Omhgf8AN1
-	f6yBBBWHWcmEUSztTsrn73q3VfZ84O8D4XhRkP0y837GWxpW3OnDjgMDtDLhDyAX71KHTLWG8tZXV
-	eqQZ/N2Q3pZ2/WlzNr7Clmg5VwoI+dkGzRf6tgvCRTnFq+ljgV/xoEWM/SOuz4OYVitJKpEwuYF4h
-	qsSgrQAc3QsPi/C17yEMbJH4Wv0maHh9EafQk2hFg71Htil0PaUjPaApenOPVh+yW8aOnAviadjlu
-	OFR3/6KJGd6ZJcYfDTBQ==;
+	List-Owner; bh=KVrdbHh4TefzyeW1e6RlSzEhzIhMK50yL/X3kkZm6/4=; b=d3j1d+MetdxR8y
+	SDrKAJYQtJtSED0rEm+2UFbIpu3iSTCKvc74BY+j3dn2O5OIdLhjQ/fTeFe9qp2KQTVtiEhUp2mva
+	ECA27/fqO63q0TP9MfX6f6so+D1hjogZoT+9KyA2nXXFq4jusffRTkubMd5ukA4JYQ509jlMXqzth
+	YfFcNwRAkhbi35MnOJFz22y/T1B+h7XPzacjzvDhXks7V0EFdSTHE6+9s2lIYLweScbS87b6cVE4N
+	XNYwM8ApWwIc8+RrGeMIGgYetsMZ69V5h7aGHFDKHMQxJpKAnosrAh8hiGZnP3VgkSyIjRioDx7C8
+	QRFyKjj1RfJrBBU6P6CA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xN5fy-0000000DAbp-2p6v;
-	Sat, 31 Oct 2026 09:47:02 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xN5gE-0000000DAee-3ABT;
+	Sat, 31 Oct 2026 09:47:18 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xN5fx-0000000DAbT-1C2W
+	id 1xN5gD-0000000DAeW-2ac6
 	for kexec@lists.infradead.org;
-	Sat, 31 Oct 2026 09:47:01 +0000
+	Sat, 31 Oct 2026 09:47:17 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id B0F2D43664;
+	by tor.source.kernel.org (Postfix) with ESMTP id ECB7B605CF;
+	Sat, 31 Oct 2026 09:47:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27FC01F00919;
 	Sat, 31 Oct 2026 09:47:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3A131F0093A;
-	Sat, 31 Oct 2026 09:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793440020;
-	bh=gNn7/nSxmNJguW2bsADoqLsPI7cv25lI/JHeobxIgIk=;
+	s=k20260515; t=1793440036;
+	bh=KVrdbHh4TefzyeW1e6RlSzEhzIhMK50yL/X3kkZm6/4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=Goo08VUOyTuxB+9BiU8tT1hGY7xIbPlcSmnFKYKLEns6CjMozp+42PLDwlris0Wgy
-	 Epy0qZs9ruATYG7k3H09RtPnyDeTrQWjydx2A76PkzWc/HJEqku1kfq+YGHjvzgiu7
-	 PVzQSIFw2G73kn0/TmY4S7YikUWi5ZjSlNlCvW8sTI4Xwv03qxL3EhI9T4GGCOuzOS
-	 wqesxAZme6fwCbZotjvP7RH+qDfB95lIIOdkup1BldzJkCVJXYxqy9DC9vPqebcprH
-	 uLdmoGd5Ixnvi0Tvgq2KahgXTyv1qFs3LN+TYfkQH8ipONbe0mXOCdtPulAg5ZVhx7
-	 dsOwRYfOdSfgQ==
+	b=IaCWaKawXOqDcZ22xFCnwg7umYwYJDgAbJNOOK5GTEKGHR4Bx9Acayri7plzIv2dF
+	 0xsaLS7xr4ETWZusdZHXrFhdvJbU1AhSTCPEA0QR3Dj1ccFkxelrbwXMWTOnrQQWG3
+	 58kyNmdrL4h4kMvLnIkpzCrckrID/LCj0Cf5LWhtYMlVhaHMgI1lgO/M9mXJT3I+oS
+	 Z2xhPUc1AK103gnGCePYltjzgbzdLKcT6Hk2CY7ZOOT3q1CY+nRSeutkrRUi7hRWeR
+	 F8JX7Cij2PkVFNeFOQbrbxnEdvAY1cKNFIxVfTTwYaHRhB/a7xn+bEQBXPQJM9W6rl
+	 g/T9m03kc4kGQ==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Sat, 31 Oct 2026 10:39:55 +0100
-Subject: [PATCH v3 26/47] mm/userfaultfd: compare exact registration modes
- before skipping
+Date: Sat, 31 Oct 2026 10:39:56 +0100
+Subject: [PATCH v3 27/47] mm/mmu_gather: fix flushing ranges with 4 GiB or
+ larger
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261031-fixes_core-v3-26-d6437171ecc3@kernel.org>
+Message-Id: <20261031-fixes_core-v3-27-d6437171ecc3@kernel.org>
 References: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
 In-Reply-To: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -89,15 +89,16 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
- stable@vger.kernel.org, Muhammad Usama Anjum <usama.anjum@arm.com>, 
+ Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org, 
+ SJ Park <sj@kernel.org>, Muhammad Usama Anjum <usama.anjum@arm.com>, 
  "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1520; i=david@kernel.org;
- h=from:subject:message-id; bh=VPLF7ZF60P6QZsc5ogJFtB1G0DgMIn6ux/cdpuH/iTQ=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLKebs/ojGKyT+C9PCWZu/jAdn/xR/eWdutsjRLU8tn3S
- GhxtmtcRykLgxgHg6yYIktQ8H2Dly/X1Va78THDzGFlAhnCwMUpABNZIMzwV1CyVabwyaF8oQum
- Z0+LdgcvbTw/7Wih/MHrHFWK3NvDDzD8Ffi01Oet/XuBJXyLvH7pvd019+vmjPjl/i3pgnKt0x3
- OsgMA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2186; i=david@kernel.org;
+ h=from:subject:message-id; bh=XMqAbJynrW+dSeh468tky7AqZSEZvUJFOrLi82qkd/w=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLKebs+Q9csy471kdl/JWJJ57iLLuN+/Dm83vFRrH99oc
+ 7pyn8zijlIWBjEOBlkxRZag4PsGL1+uq61242OGmcPKBDKEgYtTACbifp2R4daLlSYBH/m0hd89
+ 6zgm/f7UvRPHexf3Ppv+3PCr3TX9iQqMDGs2JfTrdpm2nXv/RPP2W62itX1MireabfWCQlf+3vo
+ olh8A
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 X-BeenThere: kexec@lists.infradead.org
@@ -118,46 +119,56 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-From: Gregory Price <gourry@gourry.net>
+From: Josef Bacik <josef@toxicpanda.com>
 
-Changing registration from MISSING|WP to WP returns success but leaves
-MISSING enabled. The no-op check sees that WP is already set and skips
-the update, so later accesses to missing pages still wait for userspace.
+__tlb_adjust_range() takes the size of the range which has to be flushed
+as an unsigned int. Its callers, tlb_flush_{pte,pmd,pud,p4d}_range(), get
+and pass an unsigned long. Consequently, a range that is 4 GiB or larger
+gets truncated, possibly to 0.
 
-Skip the update only when the current and requested UFFD modes match
-exactly.
+On arm64 with hugetlb, a 64k kernel can have 16 GiB hugetlb folios
+mapped contiguously at the PMD level and flush them when unmapping, and a
+16k kernel can flush 64 GiB PUDs through tlb_unshare_pmd_ptdesc(). So
+at least these two scenarios are affected.
 
-Fixes: 63b2d4174c4a ("userfaultfd: wp: add the writeprotect API to userfaultfd ioctl")
+Fix it by flushing the proper range instead of the truncated one by
+properly using "unsigned long" for range_size.
+
+Fix generated by an LLM and sent by Josef Bacik in private.
+
+Fixes: b528e4b6405b ("mm/hugetlb: add tlb_remove_hugetlb_entry for handling hugetlb pages")
+Fixes: 8ce720d5bd91 ("mm/hugetlb: fix excessive IPI broadcasts when unsharing PMD tables using mmu_gather")
 Cc: stable@vger.kernel.org
-Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
-[ david: apply fixup from Lorenzo ]
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+[ david: use two-tab indent, simplify description ]
+Reviewed-by: Qi Zheng <qi.zheng@linux.dev>
+Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+Tested-by: Gregory Price (Meta) <gourry@gourry.net>
+Reviewed-by: Dev Jain <dev.jain@arm.com>
+Reviewed-by: Muchun Song <muchun.song@linux.dev>
+Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+Reviewed-by: SJ Park <sj@kernel.org>
 Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/userfaultfd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/asm-generic/tlb.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index 03f1b15bfe63e..dac696bda19f0 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -2291,6 +2291,7 @@ static int userfaultfd_register_range(struct userfaultfd_ctx *ctx,
+diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+index fbe1114e9a443..3f4a180b48f3c 100644
+--- a/include/asm-generic/tlb.h
++++ b/include/asm-generic/tlb.h
+@@ -350,8 +350,7 @@ struct mmu_gather {
+ void tlb_flush_mmu(struct mmu_gather *tlb);
  
- 	for_each_vma_range(vmi, vma, end) {
- 		const bool any_mode_removed = vma->vm_flags & __VM_UFFD_FLAGS & ~vm_flags;
-+		const vma_flags_t curr_vma_flags = vma_flags_and_mask(&vma->flags, __VMA_UFFD_FLAGS);
- 
- 		cond_resched();
- 
-@@ -2304,7 +2305,7 @@ static int userfaultfd_register_range(struct userfaultfd_ctx *ctx,
- 		 * userfaultfd and with the right tracking mode too.
- 		 */
- 		if (vma->vm_userfaultfd_ctx.ctx == ctx &&
--		    vma_test_all_mask(vma, vma_flags))
-+		    vma_flags_same_pair(&curr_vma_flags, &vma_flags))
- 			goto skip;
- 
- 		/*
+ static inline void __tlb_adjust_range(struct mmu_gather *tlb,
+-				      unsigned long address,
+-				      unsigned int range_size)
++		unsigned long address, unsigned long range_size)
+ {
+ 	tlb->start = min(tlb->start, address);
+ 	tlb->end = max(tlb->end, address + range_size);
 
 -- 
 2.43.0
