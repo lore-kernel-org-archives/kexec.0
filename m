@@ -2,55 +2,55 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03E8606B0E1
-	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:07:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC1F60A1DAB
+	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:08:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=GYN3/yOS;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kIoUwWZI
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=mZRqmSib;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IJsS4rxO
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=lzi0v2Iw6r5Nf2GLOsMSQBwdPNX93e2TzGzGfD3oQvk=; b=GYN3/yOSS5bl9Z
-	vQMyUDa7tmMLuRWinlYHi9XyasyRKneCr3npwUw35TSW6iL1lMENuw/Mphmz8MvQ+iImOwAKv6MPm
-	SgybQFmO6a3RKTcu5zdZaw6/6fVvbee4mFm1uRUg1s9IvcT8j25d3hhoD0ihqsdLxJOnSrpnIXD+G
-	DVQeokIn7TRYNE0eywOB9IG+rbrYULWUlsod3WoVmlzRGNfRSgxSVkcJ4TpFnlbFcjoL+diNTV3EZ
-	nIi713qwcuPx/c2s2XeuDjbfhRrzQxPG3mCFPSZGqc1qLdhR3sG14wZO9ewclAYfqJFQ5Xau2YE04
-	LZ7h3jUII11Tt12LEAbA==;
+	List-Owner; bh=6VXp+nvPq44Iibfd7M3dnZqyMxw2lTQeTkLffGnpGI8=; b=mZRqmSibQC9axS
+	VKvFNGVD2yK0nPC5OB/a3mA1usr7UFwqLZK56Gn7dxIpx5ol279v/M0TD+Y1gzP+2iWcJ89F3qEoP
+	3u/M2lzyOiPjHWYABiYy84TVh8d9DA3ktxYxgAE8OjUYWHNIc17mN11bLRYUl4eZTfmVVtPBR1Eeg
+	HqKmuxfnNURan/8brcev89x+6vLuwobawBKNR9DZMR8h+0ZlkYho3sjAPltEmTr0sNy2F/W83RA5P
+	7z693UyKcKIXfBlYjjPe1g++CBwMwpF2hNaiwoKN3LMWmoKNCDUaiPCh8A33wz24PwKvUnBiqLjbZ
+	TcYszs4pIZeDreQS6WGQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNtdX-0000000GzKo-1zkW;
-	Mon, 02 Nov 2026 15:07:51 +0000
+	id 1xNtdo-0000000GzPQ-2stV;
+	Mon, 02 Nov 2026 15:08:08 +0000
 Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNtdV-0000000GzKM-40Fe;
-	Mon, 02 Nov 2026 15:07:49 +0000
+	id 1xNtdn-0000000GzP5-1NPY;
+	Mon, 02 Nov 2026 15:08:07 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id B1FD84378E;
-	Mon,  2 Nov 2026 15:07:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C6921F00A18;
-	Mon,  2 Nov 2026 15:07:36 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 18A8C43267;
+	Mon,  2 Nov 2026 15:08:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E8D31F00A1B;
+	Mon,  2 Nov 2026 15:07:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793632069;
-	bh=lzi0v2Iw6r5Nf2GLOsMSQBwdPNX93e2TzGzGfD3oQvk=;
+	s=k20260515; t=1793632087;
+	bh=6VXp+nvPq44Iibfd7M3dnZqyMxw2lTQeTkLffGnpGI8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=kIoUwWZIZJmPIDGcbCqUMn+ysgkkYH4B9KIOKwQcxHvHBenqGMDwfSExIyruQhbFw
-	 GSvSuGXqLlsS/+2bX4zY15r68FSJdvY7PhgxxV9bnP9Q3PrAcl12NmKthDnezkWdzA
-	 YQcdsHreaTBVFGkt5/ixU0O685iwRTrAmT2xH295OHXHJaGkHJFEIXEMqGqXCeqbKp
-	 nkpHGaPfZ7GY12qU7tMKJN88syBFW289W+duXDc1qru1IIyFkTan4orRc22NIVl3pP
-	 G9JHqYUFv0jVxFqVlQXSQgnsHBo0FeNBeFWC+sINyeJMsGIfziINB34GYCGOVyuJWO
-	 tkxpbHP0pDc6g==
+	b=IJsS4rxOrw0evPnx89c/k4QBxYWHpvmf5bC5nkZvS9heIkdiPMQ9+UGLYAqwXCeRo
+	 01xMhphWRq3Aq5SpmzQFwBYXFYqXKEaXV7aEPiCoGMFOQNxw7pWWisGb5yaQPmI5Sh
+	 tp1LULK9tthAvY5/hntPoT0wfDOVWswz1/lwzqVDgSpYEcKIVZ8JMYeE0wU54k61kO
+	 ToCwYStQ9aor3WEDfPrJ5VAU7p1igwmg/9f/J70vTmuPCQCbfb4H8bgp2jfpfxr9Bw
+	 Lja5YKZ94jQYHKXWFN6sFWb+EV8QZMwi+q9qWB4+h7zvBC2rh/ZxyN51W+VcpcOFR+
+	 oDn8HTPgDHHnA==
 From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 02 Nov 2026 16:01:45 +0100
-Subject: [PATCH RFC 18/22] macintosh/via-pmu: let procfs copy in writes to
- the options file
+Date: Mon, 02 Nov 2026 16:01:46 +0100
+Subject: [PATCH RFC 19/22] platform/x86: thinkpad_acpi: let procfs copy in
+ writes
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261102-work-procfs-arch-v1-18-c9492ab08480@kernel.org>
+Message-Id: <20261102-work-procfs-arch-v1-19-c9492ab08480@kernel.org>
 References: <20261102-work-procfs-arch-v1-0-c9492ab08480@kernel.org>
 In-Reply-To: <20261102-work-procfs-arch-v1-0-c9492ab08480@kernel.org>
 To: linux-fsdevel@vger.kernel.org
@@ -104,47 +104,57 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Implement ->proc_write_buf() so procfs copies in what is written before
-it pins the entry, and parse the option from that copy. Writes larger
-than PAGE_SIZE - 1 bytes fail with -EINVAL now.
+Implement ->proc_write_buf() so procfs copies in what is written to
+/proc/acpi/ibm/* before it pins the entry, and hand that copy to
+->write(). procfs already rejects writes larger than PAGE_SIZE - 1
+bytes.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- drivers/macintosh/via-pmu.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/platform/x86/lenovo/thinkpad_acpi.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/macintosh/via-pmu.c b/drivers/macintosh/via-pmu.c
-index 49f929ae10e4..079c085be5d2 100644
---- a/drivers/macintosh/via-pmu.c
-+++ b/drivers/macintosh/via-pmu.c
-@@ -913,7 +913,7 @@ static int pmu_options_proc_show(struct seq_file *m, void *v)
+diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+index 01e4c980fad6..b4f253da9536 100644
+--- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
++++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+@@ -881,33 +881,25 @@ static int dispatch_proc_show(struct seq_file *m, void *v)
  }
  
- static ssize_t pmu_options_proc_write(struct file *file,
--		const char __user *buffer, size_t count, loff_t *pos)
-+		char *buffer, size_t count, loff_t *pos)
+ static ssize_t dispatch_proc_write(struct file *file,
+-			const char __user *userbuf,
++			char *buf,
+ 			size_t count, loff_t *pos)
  {
- 	char tmp[33];
- 	char *label, *val;
-@@ -923,8 +923,7 @@ static ssize_t pmu_options_proc_write(struct file *file,
+ 	struct ibm_struct *ibm = pde_data(file_inode(file));
+-	char *kernbuf;
+ 	int ret;
+ 
+ 	if (!ibm || !ibm->write)
  		return -EINVAL;
- 	if (count > 32)
- 		count = 32;
--	if (copy_from_user(tmp, buffer, count))
--		return -EFAULT;
-+	memcpy(tmp, buffer, count);
- 	tmp[count] = 0;
+-	if (count > PAGE_SIZE - 1)
+-		return -EINVAL;
  
- 	label = tmp;
-@@ -958,7 +957,7 @@ static ssize_t pmu_options_proc_write(struct file *file,
+-	kernbuf = memdup_user_nul(userbuf, count);
+-	if (IS_ERR(kernbuf))
+-		return PTR_ERR(kernbuf);
+-	ret = ibm->write(kernbuf);
++	ret = ibm->write(buf);
+ 	if (ret == 0)
+ 		ret = count;
  
- static const struct proc_ops pmu_options_proc_ops = {
- 	.proc_show	= pmu_options_proc_show,
--	.proc_write	= pmu_options_proc_write,
-+	.proc_write_buf	= pmu_options_proc_write,
+-	kfree(kernbuf);
+-
+ 	return ret;
+ }
+ 
+ static const struct proc_ops dispatch_proc_ops = {
+ 	.proc_show	= dispatch_proc_show,
+-	.proc_write	= dispatch_proc_write,
++	.proc_write_buf	= dispatch_proc_write,
  };
- #endif
  
+ /****************************************************************************
 
 -- 
 2.53.0
