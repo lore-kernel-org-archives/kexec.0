@@ -2,77 +2,78 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C705606A32D
-	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 21:14:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB7E606EE82
+	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 21:15:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Dh/PV/ad;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jhto4Q7I
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=nxjF7dNP;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=i4XS/+Qp
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:Subject:References:In-Reply-To:Message-Id:Cc:To:From:Date:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=e/MGsEabL/7GG396Jx8SjaCfwMIwyJ2tMCUpq+3DLDI=; b=Dh/PV/adssGcTi
-	2N45clh2uW1aZcTY25ZptCmXoYtKIqa49fkeltTc1kLHs8V5q4AD78lRvAsc99qtWcICIE1cvmRoP
-	r42gdvHAX3ByzxNVbfGnBhggh8EIkRALX9eHJq6ngmWOznIBLjdn0HF2jnMZ3txTa1e2UwnjTYDcL
-	oEJ4yjT046/a9FZsyeZzT6NZQFLiFUAs2ORyCtpxO2xypFv+Xphg5yq7Ks343ltKOc3pSvGVEgLcE
-	5Q13/NgAGsNSA+ry6CoH3o/QYs0tKbjc2i/mmPpL15lvk9BRuCQ/l6/9LgOAk0W/hwnBAkxlNqesD
-	6YINqR8mxaRYVzhkKjig==;
+	List-Owner; bh=IboT5prE1F2zgLUjN3M8JJkwTsSKYt9w9Q1ZY5Lm5jE=; b=nxjF7dNPQm2Oxi
+	zVCWJzYDoV9vbMe/mMFfry0nekJrABnSVvWAeFX9kYGd75UqnRUjiqS1u5U3/a0ip9NP6LMEvn4Oh
+	MunJKWNwNUN6X1MLUOHD9ESyFw7UrTJFy0wEwUr5HMyuKujV8FxK3Ix1uq3fYxxmBQ1ZAPTZwgaYO
+	2qQ9753aL640WzGohGfQTOmI2DFaKSiLpJ7I3ywfZ8MwbU06WrBh7knMj3da3MJQSGDRz1gsHFiu3
+	yMpaLX/CJP9SOacCgad1rth08F1pq8tNYGqSjaZVnPIozFtR5NEvrGRIJdFXAaJUWZpQPI78sR4Ii
+	l5MVEMQF4xkLHBKoFMWQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNzMV-00000000RiZ-05Mh;
-	Mon, 02 Nov 2026 21:14:39 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xNzMt-00000000RqE-3Gkm;
+	Mon, 02 Nov 2026 21:15:03 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNzMS-00000000RiE-2Hhe;
-	Mon, 02 Nov 2026 21:14:36 +0000
+	id 1xNzMs-00000000Rpv-1UEC
+	for kexec@lists.infradead.org;
+	Mon, 02 Nov 2026 21:15:02 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 3E2DB43DC9;
-	Mon,  2 Nov 2026 21:14:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D818E1F00A20;
-	Mon,  2 Nov 2026 21:14:34 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id A4E0042A5F;
+	Mon,  2 Nov 2026 21:15:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E19181F00A1A;
+	Mon,  2 Nov 2026 21:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793654076;
-	bh=e/MGsEabL/7GG396Jx8SjaCfwMIwyJ2tMCUpq+3DLDI=;
+	s=k20260515; t=1793654101;
+	bh=IboT5prE1F2zgLUjN3M8JJkwTsSKYt9w9Q1ZY5Lm5jE=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=jhto4Q7I5ebcc5MAm6sH/pHKRFdCgRbQR8Fl2+sLkmyywtaBuxW0OrmAy072AXrP7
-	 neEtlQY1pHB9h9IY5VKXyMTm9hAxvyM+0CydcHI4zbMaODZ/uMSO3wm6XKSdUXw2i1
-	 zw1kWSaAI5GRn/p5hrqeLkoRrYln9t7Vva5aU0nqaFNoE3NxvXQIOkLZ0nPblQCZnu
-	 lj0gUvZGwF2dKABRzhIzD6Z4H214iL8Pty+VmUiC/RJqkJL53MhT/faeWoYgOhsRM/
-	 5ZXDAC77RZiX0M3bldPrCNSYAivbooBumK3IGE/4nnV4JAm4k7cNtwuVJfO0h02UT4
-	 YjmsvJgQpUiDA==
+	b=i4XS/+Qp/XJpkpHyhLatkkxrTnb76H0AyrbluP9UrYsSjjvFvYed65zWeP+n5bDMR
+	 T4jrppxwRxmsiUoLJtpEDBZOQUgSEb2I7JAqNJICoUtmRZqGDSr+AkbMY5KraB9hcp
+	 LJSetra0CCoguNvIXys8kMbF38qG79C7rZIljzi9OxsucTBr2qJtAKy2hNxphivV7X
+	 SqR7z4TvF6OS2jxQo3eWdNU0GD2TA876qUhcb25obxs7Qa0hq+gMR1c2AKZ0TYfXxl
+	 /PRnwvUkfYbroZLwoik/xUkslivJlp+q60cSPVqp80BDXlYt0jmnPbIlU0+2JbsucT
+	 rjIixFbj3/TrQ==
 Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 26958F4006B;
-	Mon,  2 Nov 2026 16:14:34 -0500 (EST)
+	by mailfauth.phl.internal (Postfix) with ESMTP id 3FB84F4006B;
+	Mon,  2 Nov 2026 16:14:59 -0500 (EST)
 Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Mon, 02 Nov 2026 16:14:34 -0500
-X-ME-Sender: <xms:Ov3oaudaRP85NzNgvo9gkP-MXfbogSw56-7TMRTbPKxIonQDu3IxHQ>
-    <xme:Ov3oajASSRT1bTVfE6Yfylz-Q2cb5WzhItUIpzyOnYi4Ho9AOkdZT6HjOaX20rb4D
-    9taQ97lq5DfA_nhyUWeMZ_W1taGbwO-fS7RiMfZ9u2zRLst3-ycp9NX>
-X-ME-Proxy-Cause: dmFkZTEwFlNdOZMJt/6ERsMJpfliFwApaNUQtGyzrNgUVhL+xr6t4hflHpnCpvlDcd34OL
-    tsnnvmlp46QcBNUANprPsj0jIeIkFlAHqmtQZLa2Sf8hNpQ9wBRFf1oo7j5UmVKMmxUPoD
-    CAYsZ+irDyVCdEsc2qGBd+J6vgHB5jfhOit/H7yfEU9O3BgxuDkP6BIpzFQICmtidThPiQ
-    wQ5iTjbCuW/m/r0nOijWyl7wYDNa5di+BmhLTsIvAVvDZmQjQEiKQbgS7OaGcQ8IrAe2iJ
-    dzOrAPUicjvABQdhm6+s8X7yR3H/OnFcIOzSI3sa7nr++6wlo9Nr7XGUu9npauH3EjdnZB
-    d8SiICjs57Bl5kCrWEBHfpiNyDf0VcOFdp1B4zP1lS/QTex+fDbly0ZmI6Oy2ConL4lGxh
-    /glhXDiohYMGBeqhE1OFWto0WwZtKmCLBCeSZfL9MCPfURDGaHHisnCZY6kvsOFDvhaCor
-    VZqgtiO/SBK/Y5QgrCdW3HFV3LwJ8YmbXP/DugUPUadgGyQm7Xhur0+oUAzHb6By+3knGi
-    7OFiG2suqU+MsawnGTt3KtMcmomuas+uDRlvRDytGDwdPSUnJzYsk2KECbsMV0y2fBTHk5
-    K+qTiHGAHJZkj+8vu51m+NPaw7fmZCNvqOYyO7NAnNI1SzeRX6rDMtnriOEQ
-X-ME-Proxy: <xmx:Ov3oajAjXaAo0MCg-5mOh1kpmlpYdD2YfnidScMjdG05laxXGCBcug>
-    <xmx:Ov3oavbaygWZIZ9DvVH6jb71mOGY1Ado5jGzZJVcQaL4VUVNzfnyLQ>
-    <xmx:Ov3oahBfqIJHdV5qBhjnVnio35nQ6hlhJrYFiJZOCEftQWgDSSVQhQ>
-    <xmx:Ov3oam6fLaNBtJqW2gtTD_ISnxMIg_eBjR3o4IKYsrM5dijacJsK8g>
-    <xmx:Ov3oaokDgUdqdaNtT5fJJp84D48qBuDsZWPWAns4MbOuSRRfIzDAfjj->
+  by phl-compute-10.internal (MEProxy); Mon, 02 Nov 2026 16:14:59 -0500
+X-ME-Sender: <xms:U_3oagUAPKL0KahIhejOYJwKEPfYb6twqYG_HHugM7_eLn8Er-TgPg>
+    <xme:U_3oavZTuzGHMfK0qXbinG0nc7CYskrIhJQ5eHOz_Ha7XvQtwnXU_T7hJPsGo9qg4
+    BhXiwA3Pdzj3QiIOE4JzHYJnc55BkwZtZcinLkFBcrDsA6sylLxQvo7>
+X-ME-Proxy-Cause: dmFkZTGSCWblgfsMhzNjEIN00ph1bmXztXGhYrK6FQCSJysx8m5mqsCTJHkCuZD0tpZuBG
+    pYnx6qST1krVMCyjpYhoMBo2TltjSYVP2LKGOkZnOBb4t//k/nGoJ/SIXKKJyIATQl84il
+    BuXRlRV3aPeB88TAd/llIDq/9PMZ1EzorVjUV4ox06mXS/IOKUqdbOTFcr2gFtJFq3Gx7F
+    Zq0nEujwlkDiPcDOX28riG6oQW7iLTgD6BaMnfnV9H0ADvTknFe8adm4EFa+o6I1mSuG3K
+    LJ3epAVfTBg3DuzNRu88aZuYWYeuI7KoVJah/eioVIkx6sAoHZjqyTVRvcNhYqHYgvNdOh
+    F7RoapMXPpPy7fnRDGp1EnOzRafp7mYLbQvUWevKonPpL0zVugnrni/xwOB0ZUdq15K6LL
+    U4eIWAyGEDjfaCYO/Dppo1HoBBuP1Ugp4Zki+kXZHcTkA1gjEQVaV70KrwrPcut26vPd/h
+    q5yJSVyn3x/Ch0xklWbVCXPbWoaIS17brwWPL/guaVzJxizQ0P/jgX0plm53NXTsLd+70V
+    110yVl467ZsRMKGBWdC4JnWQHbcxAMHjeZkhkyAsfOuCVSLebxwzvInrQKLcoImyb5UwHY
+    pO0Oc+d4/j2oJCRnrCOkOe51eLIclfMVgyBLq7y/6qqZiV8XA97NvuTzr1lg
+X-ME-Proxy: <xmx:U_3oatxqYhX0hWpcSGJgdTO64UmbQLn1zkSvkgmn2QN3P9YNu5WJ0w>
+    <xmx:U_3oav5HgW2k6KeJbHXAdQUNPTjXcBKAkESvLUwa5JME7gNZc5c0tQ>
+    <xmx:U_3oasSgNqIt2BaGeBZ12VcERyFoy0lpk1cdl0eiT57vWKlvWpphXg>
+    <xmx:U_3oaifZ0cTDaYHT72Jch7KjTqrgvVpyqwgckwFzCeMt7Uwl9HyKaw>
+    <xmx:U_3oapwU7EvPML2sBaImLYgTk9SsDSGibfYemkcHEOBIYG1GVrkdWT-b>
 Feedback-ID: ifa6e4810:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id E5D1F78273B; Mon,  2 Nov 2026 16:14:33 -0500 (EST)
+	id 181AE78273B; Mon,  2 Nov 2026 16:14:59 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AnCeav_jaY2o
-Date: Mon, 02 Nov 2026 16:14:13 -0500
+X-ThreadId: AlKaHQIBeldV
+Date: Mon, 02 Nov 2026 16:14:38 -0500
 From: "Chuck Lever" <cel@kernel.org>
 To: "Christian Brauner" <brauner@kernel.org>, linux-fsdevel@vger.kernel.org
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>,
@@ -105,11 +106,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>,
  "Takashi Iwai" <tiwai@suse.de>, linux-input@vger.kernel.org,
  linux-raid@vger.kernel.org, linux-ext4@vger.kernel.org,
  linux-modules@vger.kernel.org, linux-debuggers@vger.kernel.org
-Message-Id: <f29a6aca-edda-465d-b6ab-9c7a5d7cddad@app.fastmail.com>
-In-Reply-To: <20261102-work-procfs-fs-v1-5-d09a996317b3@kernel.org>
+Message-Id: <961e7e3d-2117-48ee-8a7e-a7a851ec8ef8@app.fastmail.com>
+In-Reply-To: <20261102-work-procfs-fs-v1-6-d09a996317b3@kernel.org>
 References: <20261102-work-procfs-fs-v1-0-d09a996317b3@kernel.org>
- <20261102-work-procfs-fs-v1-5-d09a996317b3@kernel.org>
-Subject: Re: [PATCH RFC 05/27] nfsd: factor out setting up the exports seq_file
+ <20261102-work-procfs-fs-v1-6-d09a996317b3@kernel.org>
+Subject: Re: [PATCH RFC 06/27] nfsd: let procfs own the seq_file of
+ /proc/fs/nfs/exports
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
@@ -132,16 +134,15 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 
 
 On Mon, Nov 2, 2026, at 10:07 AM, Christian Brauner wrote:
-> Move setting up ->private and taking the reference to the network
-> namespace into exports_net_init() and dropping it into
-> exports_net_put(). The procfs file needs them without the seq_open()
-> and seq_release() around them.
->
-> No functional changes.
+> Declare the seq_operations and let procfs open and free the seq_file.
+> ->proc_open() and ->proc_release() only set up ->private and take and
+> drop the reference to the network namespace now. Reading the file then
+> no longer holds up its removal.
 >
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
 Acked-by: Chuck Lever <cel@kernel.org>
+
 
 -- 
 Chuck Lever (Come to NFS bake-a-thon! https://nfsv4bat.org)
