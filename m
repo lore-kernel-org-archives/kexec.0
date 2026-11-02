@@ -2,104 +2,98 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A5360805B3
-	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:22:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64FF60A5BD4
+	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:22:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=K+NiXtG2;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=FGVXtx2l
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=MUW9z/oW;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jam/DikG
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
-	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=SERWfo+CWfVylpcb5SSH7tU3Bq6GtJcVFRC89lRnVyE=; b=K+NiXtG2JdAWLj
-	Z7sbG7qnj3ZvFz9YxcPy0ZSMLUQ4LrZ0z0fKetBL/nzlOzTvpHHvS8VEETzTrgt59mTKKOLUcmgPR
-	qw1Nmd7sry2qGZt42J8WTKGHC1J6WwT24d0iQK9QegcTnF+ijSDCByf486j88ClEarXCWwyIIR/9J
-	4SPPMpRDbxAPhhNjb/TCl0ZawwtdMAZcHPBECBXFkp9js/bpRR0PSiqn5eSGzB848JZ4yetZDaPSL
-	9J55Q8nlKdtghiATVDTBeIkmCxsq3u3t6h64sJHrpwrInooG4SmBSQsuDjxPxGIRu0mAVYGsvjydf
-	ASfktj0xXX5rbRO4FXjQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=lzw2p1lwQVTXGjOVK+O2fRllw6EWFGiyVpP4wwnyOh0=; b=MUW9z/oW/V8d/c
+	xBGL2SnC2j98/YQrmnmwyQTmDVBRVKHeFICaoD/lMnANQbzrzrjkCRr5vNy6tHJ7UoKnp/A4rxMnK
+	qxcfa++F9Suwxuc3iaz8IjS0ZsViF3jds16NRBw7MS/kYtz4Fat2kAt7xUsO/cMf72gg1bZq+RZVU
+	m8l11l0sBRLGZTBhJZ4v22far1UgMEM7T9Y8/knYoXOTEMUKuVXb0YAgxE4P0T1oEEXanllu5zxOC
+	BtBSJKrHn59/BW1Xc+ICYGsyHbCoqvwyQs9G10PA5TbpEh1J0t0hUHOi60tsQwGpbwc2Wu7RwLAZh
+	n6mqiPacRFsdgPUFG8HA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNtrK-0000000H3yo-3XY0;
-	Mon, 02 Nov 2026 15:22:06 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1xNtrm-0000000H473-1tVL;
+	Mon, 02 Nov 2026 15:22:34 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNtrG-0000000H3vv-3v2J
-	for kexec@lists.infradead.org;
-	Mon, 02 Nov 2026 15:22:06 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1793632919;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SERWfo+CWfVylpcb5SSH7tU3Bq6GtJcVFRC89lRnVyE=;
-	b=FGVXtx2l6XNickHJWeKppED1CgLV76PQioDYOyH4FzoGJQp/S0m+91w4l+sBdzfpqADA0C
-	IUq1wr3JxqDzU9MO0kjKUnSZuSIb8lRgrrDvTksaW51t73D7wDLWzO/j2j8ufGR8OfdEbZ
-	ySwso1AGeFTykb4yelUZe6o6IvvohvQ=
-Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com
- [74.125.82.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-73-ZVIz_TnIMGOPCfatn7rH7Q-1; Mon, 02 Nov 2026 10:21:58 -0500
-X-MC-Unique: ZVIz_TnIMGOPCfatn7rH7Q-1
-X-Mimecast-MFC-AGG-ID: ZVIz_TnIMGOPCfatn7rH7Q_1793632917
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-351788121cfso3066462eec.0
-        for <kexec@lists.infradead.org>; Mon, 02 Nov 2026 07:21:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793632917; x=1794237717;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=SERWfo+CWfVylpcb5SSH7tU3Bq6GtJcVFRC89lRnVyE=;
-        b=S8UWGBv5dQB3r516t0weOttFft9jp0lvOArlM6KAvA8NineGFJ3e1oK7apHIPYElu0
-         RiomOhQqSsnFaRLIljnVPVg3cJPGZZCU20WeZxbVuNQ+FA35h8dzbT3GQ8XCQKmsfp7n
-         CgfT600FeU9w4rmiFI6F8/Jh8SNZ4QxMivh3+E04kIkcnbNL+wAOSgFFd0V+l0gQMIbt
-         Pp1Pvc8qTgLvUBskKxiBYKjE1DkS9BM1b/PP1z4qMWOC234REqVulYiBwmUUwFXLfiBZ
-         FAALHooxiOjkyh6m94rMIGd1b0y/IeDvW5MTI0NVecCmHz8Rknc06utAw6WfXwI5v3zN
-         JR/g==
-X-Gm-Message-State: AFq9FYISDpGtB9GbxWlAqqGrvnn67w8v7Ak1AWCRmtFgcb8Ak1TNUyBD
-	ZB9kMsMICc5WFEiv1vSgiStJ/wR7DeTbqdJwMkJJ8WjrdEklrPYEd20B5nPSjZCI+PDnBA1Co0x
-	ohmMPusDXfu0aDZIYdpI0lwReuFnshrxUaHs6SMpPtYx6KCqMd43C6KxkGY7epA1exgSgO9dKdB
-	ugW5SuABFvckF/AhYBhvgQf6ufWt0XZMLUCptkzHutrx37UQ==
-X-Gm-Gg: AYBFou2QhF03m6bJqj9xwRVGdRXlzyldtxXYLRxoLgW26GKPBQhLuARdlBlrRA0HYrR
-	9bu6Y/wozkyh3NTs+KWPTDib7BCNtGZ2kYh0e1VSBW1o3xysOIZxT3Pgb021jMSfN2HpLilgBDo
-	r7sYcyXcQNFHWE33hOxh7jmBAbtXlgHYjtercakyqj7Hksrb9D2qLoDT7vF6WI7+ajooILShSqK
-	R2nv6CCyMDkfAfQUBw1Kg3Zki5w1ayRl+NdXCjO8qHRLZgnFqO1I/ImcrCMJTlB4Y6LC5mcxyYL
-	um1goa14yLPusAPzcyXWmyTXO97j+wjbaxvGIHJWrpBpfBUmw/aPDOeuEZ/GRPYE5SyxKcaOLV8
-	p7kWSQ9Q2Do2mQbiJ0rd1322qU/aZ3l4ywICw47QsTNdVuR/xhZ5Ir4icH2agXpEpl7oCNZ+In0
-	vrv7wT0hVsUOT6sNXjJ+WSxpxaR5m6fODcf9PCjwKnDxE=
-X-Received: by 2002:a05:7022:eb55:10b0:168:3243:c90c with SMTP id a92af1059eb24-1ac59dd356cmr16566506c88.15.1793632916855;
-        Mon, 02 Nov 2026 07:21:56 -0800 (PST)
-X-Received: by 2002:a05:7022:eb55:10b0:168:3243:c90c with SMTP id a92af1059eb24-1ac59dd356cmr16566438c88.15.1793632915716;
-        Mon, 02 Nov 2026 07:21:55 -0800 (PST)
-Received: from ?IPV6:2401:4900:1cc4:ec63:d913:9793:cfad:cfb8? ([2401:4900:1cc4:ec63:d913:9793:cfad:cfb8])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1ac1b38ac58sm33734923c88.23.2026.11.02.07.21.52
-        for <kexec@lists.infradead.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Nov 2026 07:21:53 -0800 (PST)
-Message-ID: <dcd72c30-06d7-453b-83bc-28ae2cfdb6ce@redhat.com>
-Date: Mon, 2 Nov 2026 20:51:51 +0530
+	id 1xNtrl-0000000H46T-2LcR;
+	Mon, 02 Nov 2026 15:22:33 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 50CAB40839;
+	Mon,  2 Nov 2026 15:22:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE0491F00A17;
+	Mon,  2 Nov 2026 15:22:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793632953;
+	bh=lzw2p1lwQVTXGjOVK+O2fRllw6EWFGiyVpP4wwnyOh0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=jam/DikGbP3IcdUEgRo2CFdrSnYZ/3MSMU4LaHUHhtBAwB6d0wN4GG1MyQdeaC9Ok
+	 wdJM+b/3RRtjlCv8z3tItr1QxtSmH9BkYdSP+SP67oPniRC+yl3OGovJKbnl6vggYQ
+	 Xw6S0FI/uqQMcc4B28EcQ0DDMaWkGXvvD/9rG4J+o8qpnbTPjubCx61OEoREYP+wT+
+	 n2SYcDkpCjIpsbDnXuLn3gvGvJMSkTaaQcGsDZNp5Sixc2gl8PYMoWuRLivBfr0Eti
+	 JYdHka5rVsIFLmn3fwhKKgzdpuCwWerAtbnpQ53n/tpOZi1eZbO6XiCI8qo1rd8OmY
+	 S9C/ymTqVEc8Q==
+From: Christian Brauner <brauner@kernel.org>
+Date: Mon, 02 Nov 2026 16:07:18 +0100
+Subject: [PATCH RFC 08/27] smb: client: let procfs own the seq_file of the
+ smbdirect files
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/liveupdate: Preserve VM workspaces with
- run-vmtests.sh -k
-To: kexec@lists.infradead.org
-References: <20261029090542.13283-1-dongtai.guo@linux.dev>
-From: Mukesh Pilaniya <mpilaniy@redhat.com>
-In-Reply-To: <20261029090542.13283-1-dongtai.guo@linux.dev>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: LDvoLI8X2iEgEEPNSJ_MggWuxmmJMM6R96OtMBNoPi8_1793632917
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261102_072203_058463_F3DB3AE1 
-X-CRM114-Status: GOOD (  20.03  )
-X-Spam-Score: -2.8 (--)
+Message-Id: <20261102-work-procfs-fs-v1-8-d09a996317b3@kernel.org>
+References: <20261102-work-procfs-fs-v1-0-d09a996317b3@kernel.org>
+In-Reply-To: <20261102-work-procfs-fs-v1-0-d09a996317b3@kernel.org>
+To: linux-fsdevel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+ Jann Horn <jannh@google.com>, Josef Bacik <josef@toxicpanda.com>, 
+ Chris Mason <mason@kernel.org>, Jeff Layton <jlayton@kernel.org>, 
+ NeilBrown <neil@brown.name>, Eric Dumazet <edumazet@kernel.org>, 
+ Thomas Gleixner <tglx@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+ Jonathan Corbet <corbet@lwn.net>, Christoph Hellwig <hch@lst.de>, 
+ Greg Kroah-Hartman <gregkh@suse.de>, 
+ Joel Granados <joel.granados@kernel.org>, Kees Cook <kees@kernel.org>, 
+ Jan Kara <jack@suse.cz>, Jan Kara <jack@suse.com>, 
+ linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+ linux-acpi@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, 
+ linux-um@lists.infradead.org, linux-wireless@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org, 
+ ntfs3@lists.linux.dev, platform-driver-x86@vger.kernel.org, 
+ coreteam@netfilter.org, kexec@lists.infradead.org, 
+ linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
+ netfilter-devel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ ibm-acpi-devel@lists.sourceforge.net, jfs-discussion@lists.sourceforge.net, 
+ linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-cifs@vger.kernel.org, linux-fbdev@vger.kernel.org, 
+ linux-hwmon@vger.kernel.org, linux-mm@kvack.org, linux-sh@vger.kernel.org, 
+ linux-usb@vger.kernel.org, samba-technical@lists.samba.org, 
+ sparclinux@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
+ linux-doc@vger.kernel.org, linux-serial@vger.kernel.org, 
+ linux-atm-general@lists.sourceforge.net, Takashi Iwai <tiwai@suse.de>, 
+ linux-input@vger.kernel.org, linux-raid@vger.kernel.org, 
+ linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, 
+ linux-debuggers@vger.kernel.org, 
+ "Christian Brauner (Amutable)" <brauner@kernel.org>, 
+ Chuck Lever <cel@kernel.org>
+X-Mailer: b4 0.17-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1034; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=RIZYcDqYt7NhFvt2L4C6pTMn3DylkXBLCyRwuGHjm7I=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9WG6U8n4ug8YGx1uVNoYGj8zfPCt5xX+/1GRB/J/oU
+ N4J1w72dZSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAExk8ylGhs/Tfi77dN1/hsfq
+ 9zYVab+vKc/ddURfvDWri+u34qLfrzQY/tm3hDFcuBC2pbSmPpAxdem3TZc/mgiqPk5x3Kp2npv
+ flwsA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp;
+ fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -110,103 +104,46 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=4.0.1
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Hi George,
+Declare the show function in PROC_FILE_DEFINE() and let procfs open and
+free the seq_file. That makes the open functions unnecessary.
 
-On 29/10/26 2:35 pm, George Guo wrote:
-> From: George Guo <guodongtai@kylinos.cn>
-> 
-> run-vmtests.sh -k keeps the test output logs, but vmtest.sh still
-> removes its workspace and qemu.serial, losing the guest output needed
-> to debug failures.
-> 
-> Forward -k to vmtest.sh when keeping logs and update the help texts to
-> match.
-> 
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> ---
->  tools/testing/selftests/liveupdate/run-vmtests.sh | 7 +++++--
->  tools/testing/selftests/liveupdate/vmtest.sh      | 2 +-
->  2 files changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/liveupdate/run-vmtests.sh b/tools/testing/selftests/liveupdate/run-vmtests.sh
-> index d656ce58c5a7..6f592aec0f85 100755
-> --- a/tools/testing/selftests/liveupdate/run-vmtests.sh
-> +++ b/tools/testing/selftests/liveupdate/run-vmtests.sh
-> @@ -26,7 +26,7 @@ function usage() {
->  	cat <<EOF
->  $0 [-k] [-o output_dir] [-h]
->  Options:
-> -	-k)	keep logs
-> +	-k)	keep logs and VM workspaces, including guest serial logs
->  	-o)	specify output directory
->  	-h)	display this help
->  EOF
-> @@ -48,6 +48,8 @@ function fail() {
->  }
->  
->  function main() {
-> +	local -a vmtest_args=()
-> +
->  	while getopts 'hko:' opt; do
->  		case $opt in
->  		k) keep_logs=1 ;;
-> @@ -59,6 +61,7 @@ function main() {
->  	done
->  
->  	if [ -n "$keep_logs" ]; then
-> +		vmtest_args+=(-k)
->  		if [ -z "$output_dir" ]; then
->  			output_dir="$SCRIPT_DIR/results_$(date +%Y%m%d_%H%M%S)"
->  		fi;
-> @@ -74,7 +77,7 @@ function main() {
->  
->  			printf "  -> %-8s %-24s ... " "$arch" "$test_name"
->  
-> -			"$TEST_RUNNER" -t "$arch" -T "$test_name" &> "$log"
-> +			"$TEST_RUNNER" "${vmtest_args[@]}" -t "$arch" -T "$test_name" &> "$log"
->  			exit_code=$?
->  
->  			case $exit_code in
-the "4) skip;;" branch in run-vmtests.sh can never be hit.
+Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
+---
+ fs/smb/client/cifs_debug.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-vmtest.sh's skip() exits with $KSFT_SKIP, but the EXIT trap runs
-cleanup(),which calls ktap_finished(), and that exits with $KSFT_PASS
-when the counts add up to the plan. So "./vmtest.sh -k -t bogus" prints
-"ok 1 ... # SKIP" and still exits 0 (and leaves an empty /tmp/luo-test.*
-with -k).
-
-That's a pre-existing bug, not caused by forwarding -k, so it may
-require a separate fix that keeps the exit status in cleanup()?
-Something like saving $? at the top and exiting with it, calling
-ktap_finished() only when it's 0. kho/vmtest.sh has the same pattern, so
-it probably wants the same fix.
-
-> diff --git a/tools/testing/selftests/liveupdate/vmtest.sh b/tools/testing/selftests/liveupdate/vmtest.sh
-> index 69beda6c961d..bd7032c4b122 100755
-> --- a/tools/testing/selftests/liveupdate/vmtest.sh
-> +++ b/tools/testing/selftests/liveupdate/vmtest.sh
-> @@ -40,7 +40,7 @@ Options:
->  	-t)	run test for target_arch (aarch64, x86_64)
->  	-T)	test name to run (default: luo_kexec_simple)
->  	-w)	custom workspace directory (default: creates temp dir)
-> -	-k)	keep workspace directory after successful test
-> +	-k)	keep workspace directory
->  	-h)	display this help
->  EOF
->  }
-> 
-> base-commit: 9a6a70aefe77f6fb9ff2b3037dcf87f6dff65c8c
+diff --git a/fs/smb/client/cifs_debug.c b/fs/smb/client/cifs_debug.c
+index dfcd2cdbb2a8..664072ab3342 100644
+--- a/fs/smb/client/cifs_debug.c
++++ b/fs/smb/client/cifs_debug.c
+@@ -873,16 +873,9 @@ static int name##_proc_show(struct seq_file *m, void *v) \
+ 	seq_printf(m, "%d\n", name); \
+ 	return 0; \
+ } \
+-static int name##_open(struct inode *inode, struct file *file) \
+-{ \
+-	return single_open(file, name##_proc_show, NULL); \
+-} \
+ \
+ static const struct proc_ops cifs_##name##_proc_fops = { \
+-	.proc_open	= name##_open, \
+-	.proc_read	= seq_read, \
+-	.proc_lseek	= seq_lseek, \
+-	.proc_release	= single_release, \
++	.proc_show	= name##_proc_show, \
+ 	.proc_write	= name##_write, \
+ }
+ 
 
 -- 
-Regards,
-Mukesh Pilaniya
+2.53.0
 
 
