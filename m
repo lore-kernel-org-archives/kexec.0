@@ -2,55 +2,55 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10DF2606A910
-	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:24:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2B760C95AB
+	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:24:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=3KlL0xDJ;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Wzv23e35
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=BA5vBbhp;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OegWozdU
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=0DA6RuBvRtTkFqswtNQb2uYlEiZpU59l9tIHU1Ga2j8=; b=3KlL0xDJSb1XmR
-	7kJC8OGCX3WjmMUddpJAuPhNVRqSNLfH8V+iDLe76jwKr+oXte0s0PJNvnkJbKMbZejoAzw/L9K5k
-	lnpxAnrqYvBzwQ7nOoKbtSESzk07P6UVgnDJNuNHZfbsWuxzN/N1vh2mt9MWqp78xwTPe4rTghxY9
-	3+LvLnsnl5HE8g//QrLGsQd0bvvpm6mIAZ1A53JXBQCYlZFbIsIEKerRLL/BGmN0P9uXEa91UY0FK
-	G2mZ0W+6+LWsMiOTS/2/z3/jNZysMAZpVAvD3gLgWbaJduZ3W+q1KRzPDlBOiafYWp5DT5zz1nAr/
-	CKOG1ucA6QSgJHgt0FeQ==;
+	List-Owner; bh=oLmDMwPd5/E7rKj+sTJUI9YQ2nm5m+orCk4a0Hb3xdc=; b=BA5vBbhpoCehzC
+	Ebj9QSxoWwHSTHE9B0lrY2XWEzR7c0l805PxAZsgixG7g69S+WYXwVJuwOKu5JSzc8zlokcUwlflM
+	lvjV/TZJKcqieaYGrXHvgek8/iZPgdtAAMcxTb/GcmnXrPfT4oM3CpXbieItIhPSvOQpKIcifryRC
+	37rMX7KcnnmSdYfj1YgwnktgSik9Oc03zcczaX/15g6SBFn/mbwznQxdHBRknL04AoRzLQDUDKTBU
+	WwINcoJ3SNYnjU1YIM7aHRi+eKw37W6j7eMqqrHfIaW+GeH5ZzyDnwgxOTOY53rqOiWjY4pxeAyZu
+	zFPnePEnNDAzmWwa1TAg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNttO-0000000H4rl-2wx3;
-	Mon, 02 Nov 2026 15:24:14 +0000
+	id 1xNttk-0000000H50F-07Ah;
+	Mon, 02 Nov 2026 15:24:36 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNttN-0000000H4qy-0lvp;
-	Mon, 02 Nov 2026 15:24:13 +0000
+	id 1xNttj-0000000H4ze-0deg;
+	Mon, 02 Nov 2026 15:24:35 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 9BF8C60629;
-	Mon,  2 Nov 2026 15:24:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 967341F00A16;
-	Mon,  2 Nov 2026 15:23:54 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 91F2860054;
+	Mon,  2 Nov 2026 15:24:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 012281F00A16;
+	Mon,  2 Nov 2026 15:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793633052;
-	bh=0DA6RuBvRtTkFqswtNQb2uYlEiZpU59l9tIHU1Ga2j8=;
+	s=k20260515; t=1793633074;
+	bh=oLmDMwPd5/E7rKj+sTJUI9YQ2nm5m+orCk4a0Hb3xdc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=Wzv23e35LlF722Cfqg73FBGVnhxt+H5uTjMVTnB7asIIrTAol+UsSWODD3A9JMAWW
-	 CHeJx+/sOCjLZSq1s4VoynRxvWm7XhKnNjGUb4tFL3st5AhwGX1X8EXNyiNSob8zfe
-	 hPoA0Jwnc94AejcwzAl8mS34lOo0kwPJnFcg+lOSVQtUdf4OqaeMQYnXbxeWnmbXEb
-	 AX7yo9n+oT0VV5xUQw7x3ALW+dHnEd/WKJEInzk6ceYQfrGKcinK0xZJkLZt2jHfOm
-	 CKZoFbsH8Uf/vBc0GUbzhEZ6RBBP6OGx93Jv1yb/leud/4X919tLDeUZ9h/mDfqa8c
-	 5djzkG/VTzWXw==
+	b=OegWozdUNrHGegNfTW2sm1HszSzrGzjh4ebMkWsD9u5gapIhy/O07QlRH3LV8M60J
+	 //9uoOmD2XV9WnY62s/9qC5sYKTMOlS7YYqmfCV9USWy3TF92pR30R3sIC3bOI2cDl
+	 eEYn+NqyCZgWe3RZrUPYTjFNI78jnhghKTiQ17RDj3pUBjadrdwq1A/MV0eG6aKps7
+	 XvYJ1cpQlb/G4uhuL9+gJpBzSStLEg/xW7EREUkdqnqORUj3TCI9W+nv9Qji9Ee+7B
+	 DnyLhoImoHxzQ28fH5V+87G43o48UQI/63qjJ9PF6kXAg+QKgEiJv0WhYMM43w1hXk
+	 YkGa+9+0aqacQ==
 From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 02 Nov 2026 16:07:23 +0100
-Subject: [PATCH RFC 13/27] locking/lockdep: let procfs copy in writes to
- /proc/lock_stat
+Date: Mon, 02 Nov 2026 16:07:24 +0100
+Subject: [PATCH RFC 14/27] profiling: let procfs copy in writes to
+ /proc/profile
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261102-work-procfs-fs-v1-13-d09a996317b3@kernel.org>
+Message-Id: <20261102-work-procfs-fs-v1-14-d09a996317b3@kernel.org>
 References: <20261102-work-procfs-fs-v1-0-d09a996317b3@kernel.org>
 In-Reply-To: <20261102-work-procfs-fs-v1-0-d09a996317b3@kernel.org>
 To: linux-fsdevel@vger.kernel.org
@@ -86,12 +86,12 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  "Christian Brauner (Amutable)" <brauner@kernel.org>, 
  Chuck Lever <cel@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1505; i=brauner@kernel.org;
- h=from:subject:message-id; bh=8vcSfGoyDeqLJaquRqiN2D+SQsNeRK8HAS3H3FbecE8=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9WG6k0HtsppuIOtP74Igd108lcc3fGSuzcnJdKhtD4
- so7t2c0dZSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAExkkQEjQ+ONtmlOpu7yPdtO
- f6mefC2DpTVNKs/EavHuEoFe/ryYWEaGI5/jjbfc+3ttHUtbJafnBWsGE6vUrY4/vk118NKbYRj
- KAAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1504; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=ZtnZ7+j/OHZGj1nwL6jF9VPBdIcnJPmE5lAHJaT+bVk=;
+ b=kA0DAAoWkcYbwGV43KIByyZiAGropzKjAwsxvRFdHBmiuO5usrlNmAf7XGR/a5n/gvJ3Bj8se
+ oh1BAAWCgAdFiEEQIc0Vx6nDHizMmkokcYbwGV43KIFAmropzIACgkQkcYbwGV43KLjJQEA0hf3
+ srBDq6EKvc+VG3c3zONfGz6/IVil9hzyZy3OB28A/RQHopfLUnFRNQfqy4yzV+dF++aZlDkaR57
+ e/BjxgpoM
 X-Developer-Key: i=brauner@kernel.org; a=openpgp;
  fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 X-BeenThere: kexec@lists.infradead.org
@@ -113,49 +113,47 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
 Implement ->proc_write_buf() so procfs copies in what is written before
-it pins the entry, and look at the first character of that copy. Writes
+it pins the entry, and take the multiplier from that copy. Writes
 larger than PAGE_SIZE - 1 bytes fail with -EINVAL now.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- kernel/locking/lockdep_proc.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ kernel/profile.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
-index 9b034b5b94bd..2a66ea09c2aa 100644
---- a/kernel/locking/lockdep_proc.c
-+++ b/kernel/locking/lockdep_proc.c
-@@ -669,18 +669,14 @@ static int lock_stat_open(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
--static ssize_t lock_stat_write(struct file *file, const char __user *buf,
--			       size_t count, loff_t *ppos)
-+static ssize_t lock_stat_write(struct file *file, char *buf, size_t count,
-+			       loff_t *ppos)
+diff --git a/kernel/profile.c b/kernel/profile.c
+index e7defa90a34c..6e4b34f35e3b 100644
+--- a/kernel/profile.c
++++ b/kernel/profile.c
+@@ -189,16 +189,14 @@ int __weak setup_profiling_timer(unsigned mult)
+  * Writing a 'profiling multiplier' value into it also re-sets the profiling
+  * interrupt frequency, on architectures that support this.
+  */
+-static ssize_t write_profile(struct file *file, const char __user *buf,
+-			     size_t count, loff_t *ppos)
++static ssize_t write_profile(struct file *file, char *buf, size_t count,
++			     loff_t *ppos)
  {
- 	struct lock_class *class;
- 	unsigned long idx;
--	char c;
+ #ifdef CONFIG_SMP
+ 	if (count == sizeof(int)) {
+ 		unsigned int multiplier;
  
- 	if (count) {
--		if (get_user(c, buf))
+-		if (copy_from_user(&multiplier, buf, sizeof(int)))
 -			return -EFAULT;
 -
--		if (c != '0')
-+		if (buf[0] != '0')
- 			return count;
++		memcpy(&multiplier, buf, sizeof(int));
+ 		if (setup_profiling_timer(multiplier))
+ 			return -EINVAL;
+ 	}
+@@ -209,7 +207,7 @@ static ssize_t write_profile(struct file *file, const char __user *buf,
  
- 		iterate_lock_classes(idx, class) {
-@@ -703,7 +699,7 @@ static int lock_stat_release(struct inode *inode, struct file *file)
- static const struct proc_ops lock_stat_proc_ops = {
- 	.proc_seq_ops	= &lockstat_ops,
- 	.proc_open	= lock_stat_open,
--	.proc_write	= lock_stat_write,
-+	.proc_write_buf	= lock_stat_write,
- 	.proc_release	= lock_stat_release,
+ static const struct proc_ops profile_proc_ops = {
+ 	.proc_read	= read_profile,
+-	.proc_write	= write_profile,
++	.proc_write_buf	= write_profile,
+ 	.proc_lseek	= default_llseek,
  };
- #endif /* CONFIG_LOCK_STAT */
+ 
 
 -- 
 2.53.0
