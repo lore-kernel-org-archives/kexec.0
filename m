@@ -2,127 +2,95 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED52E606A332
-	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 06:06:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43758606A334
+	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 06:08:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=sMgBSz3A;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=mnLeKo3J
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=UqOwvNTP;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=VzKX9NMk
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=+yuFDhrhf3kM/PO/AnTTpZJjMtV5tAkK8200L66uGl8=; b=sMgBSz3ArufL6L
-	dyUHS5MoJ5Dt3hRxqmQlgGjsNI/EH7NUrenAJNnfOsBvLnSsGCaCxhz5U7zZmQU6H3qmsQ2M3Y+Xs
-	TxVIOAtOuv5sfaLcTHiLVK3NBOnJxc1qHUJDAlymhnBHqlrwNmJHYt2WqdLrXRng2vDr7VXR2OJE4
-	z1/RYiREcyTCMLJdfe3gaxI0ctOc/bQCo6RvCLXlFMhIANvDAIhzkukynohilM4QXLZugOKPvRH9z
-	4thWeximkqCGv/jCGhLiNtTcY0QD7PFCJrl8/r4ZMimKI1NwiM4Ua7hAZzAPlFZwSq48rbmjBe7ch
-	fIW/fDPQb/FviHtRnOUg==;
+	List-Owner; bh=hBHoVDgYosEEjwFENvnqm8RfVk+ydgr5qWMoLpA4mck=; b=UqOwvNTPcgMq5A
+	zqij7xZunGIEgN3DTKO+uny1mdbyUSztzD0NvtN0BdleMVCmllmB7HAxoCXvQJ+4wWhZZHJPtgU87
+	C3rNi9M7Ro0k1xp8OwyiLcFhXgVl8wcpTXVYqtqIBHyrQcqZxoKrixVSxiNAP3VFBa5J0E9RUZ4NH
+	XjBWmulskpYQv5enVdzH5A0wln9aAip3zb9GmidktY3xF91YZjjcAkGS5l+DGNbxbjggPJKipoCql
+	qJ/MA5Gmj0Uw8F+u2q0bXXV4Rkj4Pm4uXee28enO3+RI1exz1QSoZ+OqF9Q/eQn7ckK3XQG14eP8X
+	Yh5bGnZRi+S35vXtUniw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNlBD-0000000FcoD-2oTy;
-	Mon, 02 Nov 2026 06:06:03 +0000
-Received: from out-156.mta0.migadu.com ([2001:41d0:1004:224b::9c] helo=mta0.migadu.com)
+	id 1xNlDR-0000000FctV-3l6i;
+	Mon, 02 Nov 2026 06:08:21 +0000
+Received: from out30-101.freemail.mail.aliyun.com ([115.124.30.101])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNlBA-0000000FcnZ-1FOv
+	id 1xNlDO-0000000Fct4-1wAK
 	for kexec@lists.infradead.org;
-	Mon, 02 Nov 2026 06:06:02 +0000
-X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=ex0bR+wqY48y7Ys0l1lS/C4xyqfg/lqStx93s8K9wXI=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793599557; v=1; x=1794204357;
- b=mnLeKo3JIlrjZ0v8csYIXQvs0MqjNYBAaha6FI+GsXgzsTBscKhu47xfdxei1GstkYX55TtU
- s7+ijDrBsSQikbWr4RhQIABec//XfnZQfXcLKbZqgwK2XEUTDJ36HqPkKEIRh6O+ifRMQgl5bW3
- ABiUUGhU4PsBaXEJa27dL80Y=
-X-Envelope-To: kexec@lists.infradead.org
-Received: by smtp.migadu.com with ESMTPS id 85932c5ab249e449;
-	Mon, 02 Nov 2026 06:05:56 +0000
-X-Mizu-Trace-ID: 85932c5ab249e449
-X-Migadu-Flow: FLOW_OUT
-From: Lance Yang <lance.yang@linux.dev>
-To: david@kernel.org
-Cc: akpm@linux-foundation.org,
-	hannes@cmpxchg.org,
-	mhocko@kernel.org,
-	qi.zheng@linux.dev,
-	shakeel.butt@linux.dev,
-	ljs@kernel.org,
-	kasong@tencent.com,
-	baohua@kernel.org,
-	axelrasmussen@google.com,
-	yuanchu@google.com,
-	weixugc@google.com,
-	baoquan.he@linux.dev,
-	baolin.wang@linux.alibaba.com,
-	liam@infradead.org,
-	vbabka@kernel.org,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	kees@kernel.org,
-	peterz@infradead.org,
-	jannh@google.com,
-	pfalcato@suse.de,
-	hughd@google.com,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	willy@infradead.org,
-	jack@suse.cz,
-	ziy@nvidia.com,
-	lance.yang@linux.dev,
-	riel@surriel.com,
-	harry@kernel.org,
-	apopple@nvidia.com,
-	nico.pache@linux.dev,
-	ryan.roberts@arm.com,
-	dev.jain@arm.com,
-	usama.arif@linux.dev,
-	kas@kernel.org,
-	matthew.brost@intel.com,
-	jhubbard@nvidia.com,
-	peterx@redhat.com,
-	will@kernel.org,
-	aneesh.kumar@kernel.org,
-	npiggin@gmail.com,
-	osalvador@suse.de,
-	minchan@kernel.org,
-	muchun.song@linux.dev,
-	xu.xin@linux.dev,
-	chengming.zhou@linux.dev,
-	chrisl@kernel.org,
-	shikemeng@huaweicloud.com,
-	nphamcs@gmail.com,
-	youngjun.park@lge.com,
-	gourry@gourry.net,
-	joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com,
-	ying.huang@linux.alibaba.com,
-	jgg@ziepe.ca,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	mason@kernel.org,
-	stable@vger.kernel.org,
-	usama.anjum@arm.com
-Subject: Re: [PATCH v3 17/47] mm/khugepaged: preserve dirty bits when collapsing PTE-mapped THPs
-Date: Mon,  2 Nov 2026 14:05:47 +0800
-Message-ID: <20261102060547.39942-1-lance.yang@linux.dev>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20261031-fixes_core-v3-17-d6437171ecc3@kernel.org>
-References: <20261031-fixes_core-v3-17-d6437171ecc3@kernel.org>
+	Mon, 02 Nov 2026 06:08:20 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1793599695; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=hBHoVDgYosEEjwFENvnqm8RfVk+ydgr5qWMoLpA4mck=;
+	b=VzKX9NMkc4NrA423mj0NI8nBQ8R6A5VFtHlSsVCHkbDJWczYGsZlB+Gvz39hQQjbakZ40vqowWqapG2q3SuCRvSRSCIDgPSaswMPkoGJ3dnFQqtqQNroJ0msLEpU+r3WYCzKoQz0cxbB0zOeK3hshBUx4zlpVOTTy94I9WlJ738=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R801e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=66;SR=0;TI=SMTPD_---0XDuTEnB_1793599690;
+Received: from 30.74.144.167(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0XDuTEnB_1793599690 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 02 Nov 2026 14:08:12 +0800
+Message-ID: <dda009fe-abda-4745-810c-da02d8440b3c@linux.alibaba.com>
+Date: Mon, 2 Nov 2026 14:08:10 +0800
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 09/47] mm/rmap: handle device-exclusive entries in
+ folio_referenced_one()
+To: "David Hildenbrand (Arm)" <david@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
+ Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+ Baoquan He <baoquan.he@linux.dev>, "Liam R. Howlett" <liam@infradead.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Kees Cook <kees@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+ Hugh Dickins <hughd@google.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
+ Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
+ <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
+ Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>,
+ Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
+ Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
+ Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
+ Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
+ stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+ Muhammad Usama Anjum <usama.anjum@arm.com>
+References: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
+ <20261031-fixes_core-v3-9-d6437171ecc3@kernel.org>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20261031-fixes_core-v3-9-d6437171ecc3@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261101_220600_659313_E48E31C6 
-X-CRM114-Status: GOOD (  13.07  )
-X-Spam-Score: -2.1 (--)
+X-CRM114-CacheID: sfid-20261101_220819_007837_6332B61C 
+X-CRM114-Status: UNSURE (   9.53  )
+X-CRM114-Notice: Please train this message.
+X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -133,80 +101,47 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-19.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
 
-On Sat, Oct 31, 2026 at 10:39:46AM +0100, David Hildenbrand (Arm) wrote:
->From: Chris Mason <mason@kernel.org>
->
->try_collapse_pte_mapped_thp() clears PTEs without transferring their dirty
->bits to the folio. A shmem read fault can map a clean folio writable, so
->a later store only dirties the PTE. Losing that dirty bit allows reclaim
->to discard modified data.
->
->The assumption that regular files are read-only is also obsolete since
->commit 1b6444331bebb ("mm/khugepaged: enable clean pagecache folio collapse
->for writable files"). In any case, transferring PTE dirty bits to the folio
->when removing mappings (and while the folio is still mapped) is the right
->thing to do.
->
->Use get_and_clear_ptes() to collect the dirty bits and mark the folio
->dirty before unmapping it. Update the comment.
->
->This was reproduced with shmem using MADV_COLLAPSE followed by
->MADV_PAGEOUT.
->
->Fix generated by an LLM and sent by Chris Mason in private.
->
->Fixes: 27e1f8273113 ("khugepaged: enable collapse pmd for pte-mapped THP")
->Fixes: 1b6444331bebb ("mm/khugepaged: enable clean pagecache folio collapse for writable files")
->Cc: stable@vger.kernel.org
->Signed-off-by: Chris Mason <mason@kernel.org>
->[ david: adjust comment; simplify description; cover file-thp as well ]
->Reviewed-by: Pedro Falcato <pfalcato@suse.de>
->Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
->Tested-by: Gregory Price (Meta) <gourry@gourry.net>
->Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
->Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
->---
-> mm/khugepaged.c | 5 +++--
-> 1 file changed, 3 insertions(+), 2 deletions(-)
->
->diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->index 34ebb37c862c0..ce794d9760a87 100644
->--- a/mm/khugepaged.c
->+++ b/mm/khugepaged.c
->@@ -1995,9 +1995,10 @@ static enum scan_result try_collapse_pte_mapped_thp(struct mm_struct *mm, unsign
-> 		/*
-> 		 * Must clear entry, or a racing truncate may re-remove it.
-> 		 * TLB flush can be left until pmdp_collapse_flush() does it.
->-		 * PTE dirty? Shmem page is already dirty; file is read-only.
-> 		 */
->-		clear_ptes(mm, addr, pte, nr_batch_ptes);
->+		ptent = get_and_clear_ptes(mm, addr, pte, nr_batch_ptes);
 
-I went through get_and_clear_ptes() as well. It merges dirty bits across
-the batch, so we're covered even when the first PTE is clean and a later
-one is dirty.
+On 10/31/26 5:39 PM, David Hildenbrand (Arm) wrote:
+> page_vma_mapped_walk() can return non-present device-exclusive entries,
+> but folio_referenced_one() passes them to PTE young-bit accessors that
+> require present PTEs.
+> 
+> We must neither call clear_flush_young_ptes_notify() nor
+> folio_pte_batch() with non-present entries. For example, clearing the
+> young bit on non-present PTEs can corrupt the entry: on arm64
+> PTE_AF overlaps the swap type, so clearing it turns a device-exclusive
+> entry into an ordinary swap entry.
+> 
+> folio_pte_batch() will VM_WARN_ON_FOLIO.
+> 
+> Apply the same approach as the previous fixes to e.g., damon_ptep_mkold():
+> treat these entries as old from the CPU's perspective and obtain their
+> young state through the MMU notifier.
+> 
+> Skip PTE batching and MGLRU look-around for non-present entries, and
+> don't modify non-present PTEs.
+> 
+> Fixes: b756a3b5e7ea ("mm: device exclusive memory access")
+> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> Cc: stable@vger.kernel.org
+> Reported-by: Josef Bacik <josef@toxicpanda.com>
+> Reviewed-by: Harry Yoo (Meta) <harry@kernel.org>
+> Reviewed-by: Barry Song <baohua@kernel.org>
+> Reviewed-by: Dev Jain <dev.jain@arm.com>
+> Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> ---
 
-LGTM!
-
-Reviewed-by: Lance Yang <lance.yang@linux.dev>
-
->+		if (pte_dirty(ptent))
->+			folio_mark_dirty(folio);
-> 		folio_remove_rmap_ptes(folio, page, nr_batch_ptes, vma);
-> 		nr_mapped_ptes += nr_batch_ptes;
-> 	}
->
->-- 
->2.43.0
->
->
+LGTM.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 
