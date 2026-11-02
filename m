@@ -2,48 +2,48 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F44606A324
-	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 07:14:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E0E606A32F
+	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 07:25:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=hm+ziJPs;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=tD3FBqvv
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=oF+5N2iX;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=gYzN4YGm
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=Qm2rnyse/ykhHOoe09sGuMes6K54FQWZVf+H4ljHjfM=; b=hm+ziJPs7xvO6f
-	YQUSW/B7h+FFJ8cndcvX0WQmGp6MP1zYZ7r6wU/bGnUMLBnvHuXQVPdYaPBfUXAqrzqIPmbxbn5h9
-	ngCR+YggeIKKxvbL4BHGpP2g6Nw05Vck9kJ0R6fbBpUTWGK/kkqlqYhQT9q3erueBrTh+QBctSbFA
-	PM9tmhs9fWDNzj/EOuBPeLZ7Ply9TgXeQFVrywg8VYOWLjWYyhNmKbl9zj/F7hf4upQeLoGmltUCd
-	HnzmtDpEU+5hd7aSVnBR+/XpDlGgw26OBQoM6KY/v5jV1A1/rmlUS+/+I37Xdz5OIT55yPrCr8L03
-	uHSe3F56aWw8AvAv81VA==;
+	List-Owner; bh=FpzobxBA97ERHDZ10JHwpxS0fLfapgQK42Ay+O68OEA=; b=oF+5N2iXtLXiFn
+	WleXMiGy4nHzc1jMl40iUiK3TYxhmIUb6kiXwI4ewlxv0tbzdo+qe3Kpk4I4qih5X2FF+f+p2R7ua
+	H9X/XnwHbgqV4ATjiUMUoAVHptwk8S9brbyumpej0mCCPFoxMGa8vMYNiHCP4Yl0xWfC0yqNA7Awq
+	ECNTV4d0XEmpqaqir+BeevyXsO5BuSQuqosJpQ5H3nM2efe4J7rb1XQU2nL6iwoAIr1qukN2TFk7P
+	BO7xX1CILeAp7N6CIIokVG2kNmCs1EUCMx1ahloP5Rcar1bxQRNh5nAb443KOqc5xOyupuNaOVq0G
+	Lt10gaZeJ8TCs8lnvooQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNmFH-0000000Fj5O-1iwi;
-	Mon, 02 Nov 2026 07:14:19 +0000
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130])
+	id 1xNmQ0-0000000FjwM-247W;
+	Mon, 02 Nov 2026 07:25:24 +0000
+Received: from out30-110.freemail.mail.aliyun.com ([115.124.30.110])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNmFC-0000000Fj4B-38Rr
+	id 1xNmPx-0000000Fjvw-2kTR
 	for kexec@lists.infradead.org;
-	Mon, 02 Nov 2026 07:14:16 +0000
+	Mon, 02 Nov 2026 07:25:23 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1793603652; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Qm2rnyse/ykhHOoe09sGuMes6K54FQWZVf+H4ljHjfM=;
-	b=tD3FBqvvf6/jAXU5deKLdxFcgZC+3vumynZLxU6JHsNY/O8n0JXkttljQbOieRCOmO+mkhNtQOyWicUYL7AJjkXUi26XEqcVb+YY4SQgL1bWAtEhwi105IvQcUAyN4noQataINSriu+foNbRcTL6fTwGigJ1Sefhs56iG9xzXIc=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=66;SR=0;TI=SMTPD_---0XDv-BWP_1793603647;
-Received: from 30.74.144.167(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0XDv-BWP_1793603647 cluster:ay36)
+	t=1793604317; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=FpzobxBA97ERHDZ10JHwpxS0fLfapgQK42Ay+O68OEA=;
+	b=gYzN4YGms8SeNBqvZnLG2kLDm91HkCDUJvS2G17KX8cbyTWIPmtB6qXTs85Pkhvi+N0hO4AQlnhhP3S+gZBkkgBGNTQMwzaJU6X+clrXqPu9smWoC8VMbA5pBh3HTbvpa4rUSlMrCcRQMKHcu5AZAJeUrN35xE9UgEkaOoUWaXc=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=66;SR=0;TI=SMTPD_---0XDv5rjy_1793604311;
+Received: from 30.74.144.167(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0XDv5rjy_1793604311 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Mon, 02 Nov 2026 15:14:09 +0800
-Message-ID: <72c3964c-1355-4272-b61c-5767f5591f43@linux.alibaba.com>
-Date: Mon, 2 Nov 2026 15:14:06 +0800
+          Mon, 02 Nov 2026 15:25:13 +0800
+Message-ID: <17e9d4c6-6ea4-4c3f-986f-a3775c591da3@linux.alibaba.com>
+Date: Mon, 2 Nov 2026 15:25:10 +0800
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 16/47] mm/khugepaged: fix PMD table lock leak in
- try_collapse_pte_mapped_thp()
+Subject: Re: [PATCH v3 17/47] mm/khugepaged: preserve dirty bits when
+ collapsing PTE-mapped THPs
 To: "David Hildenbrand (Arm)" <david@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
@@ -78,17 +78,17 @@ To: "David Hildenbrand (Arm)" <david@kernel.org>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
- Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org,
+ Chris Mason <mason@kernel.org>, stable@vger.kernel.org,
  Muhammad Usama Anjum <usama.anjum@arm.com>
 References: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
- <20261031-fixes_core-v3-16-d6437171ecc3@kernel.org>
+ <20261031-fixes_core-v3-17-d6437171ecc3@kernel.org>
 From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20261031-fixes_core-v3-16-d6437171ecc3@kernel.org>
+In-Reply-To: <20261031-fixes_core-v3-17-d6437171ecc3@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261101_231414_966511_9284EBBB 
-X-CRM114-Status: GOOD (  10.99  )
+X-CRM114-CacheID: sfid-20261101_232521_889131_E953375D 
+X-CRM114-Status: GOOD (  12.48  )
 X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -111,27 +111,33 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 
 
 On 10/31/26 5:39 PM, David Hildenbrand (Arm) wrote:
-> From: Josef Bacik <josef@toxicpanda.com>
+> From: Chris Mason <mason@kernel.org>
 > 
-> For a private mapping with userfaultfd, try_collapse_pte_mapped_thp()
-> takes the PMD table lock before it maps the page table for the second time.
-> If that (pte_offset_map_rw_nolock) fails, because the page table vanished
-> in the meantime due to concurrent page table reclaim, it leaves through
-> the abort label, where the PMD table lock is unlocked if it differs from
-> PTE table lock.
+> try_collapse_pte_mapped_thp() clears PTEs without transferring their dirty
+> bits to the folio. A shmem read fault can map a clean folio writable, so
+> a later store only dirties the PTE. Losing that dirty bit allows reclaim
+> to discard modified data.
 > 
-> In case the PMD table lock and the PTE table lock match, which is the
-> case without CONFIG_SPLIT_PTE_PTLOCKS after pte_offset_map_rw_nolock()
-> failed, we miss to unlock the PMD table.
+> The assumption that regular files are read-only is also obsolete since
+> commit 1b6444331bebb ("mm/khugepaged: enable clean pagecache folio collapse
+> for writable files"). In any case, transferring PTE dirty bits to the folio
+> when removing mappings (and while the folio is still mapped) is the right
+> thing to do.
 > 
-> To fix it, forget the PTE table lock when we unmap+unlock the PTE table.
+> Use get_and_clear_ptes() to collect the dirty bits and mark the folio
+> dirty before unmapping it. Update the comment.
 > 
-> Fix generated by an LLM and sent by Josef Bacik in private.
+> This was reproduced with shmem using MADV_COLLAPSE followed by
+> MADV_PAGEOUT.
 > 
-> Fixes: 6375e95f381e ("mm: pgtable: reclaim empty PTE page in madvise(MADV_DONTNEED)")
+> Fix generated by an LLM and sent by Chris Mason in private.
+> 
+> Fixes: 27e1f8273113 ("khugepaged: enable collapse pmd for pte-mapped THP")
+> Fixes: 1b6444331bebb ("mm/khugepaged: enable clean pagecache folio collapse for writable files")
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: move the ptl = NULL handling; rewrite description, drop wrong comments ]
+> Signed-off-by: Chris Mason <mason@kernel.org>
+> [ david: adjust comment; simplify description; cover file-thp as well ]
+> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 > Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
 > Tested-by: Gregory Price (Meta) <gourry@gourry.net>
 > Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
