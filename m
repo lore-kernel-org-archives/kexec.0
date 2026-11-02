@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70F160F0C26
-	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:37:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22C5606CEE7
+	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:37:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Mg9b0erE;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=SrPPYZ+p
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=MtllE0s2;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=HH+H34D/
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
@@ -14,63 +14,63 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Co3UjJyFEnZJpTpwZDKwqCjGC43bvHMJxy07QdLEStk=; b=Mg9b0erEyv9iQ/F+lRViOZS2aE
-	7V3fXdbufIJoWqXCFB5RkFxDWMcahONPeqYT4dwqMWcu+jjg3UBr/B2rkVZVgprHxQs+PsDnulZ01
-	AWzLp1jdRZK/PbD9wpxyrIsszp7/9iItmmTq2LU9fBkTJrZkr+A4VUGWLHtWPD48P7v+67a6LI+Q3
-	1cUm0klu/PbVtOksXIxXDIAagUf6rWRzIckCuS98iZ5rtnojTSJ8pV/gTHc0hp3Ydxy9oTBqFz3ls
-	JarMhv+CVhruPupz6Svkna6Hp0/KBnINYRjq/bku1z3kcx4aw9w36LxyJZ3Ko8Xltmu5ES48q80C8
-	xRhtVtLQ==;
+	bh=PQb3q6R6QngEoe3ekBduEqXoGdMTuhEwA2ttf4WySgI=; b=MtllE0s27TcQhbuXp6NPuynUOt
+	/YMWRlcQMdd9sU2jb30E8/pryctTDVcwvsfLzoP8WrmGvne3bXbMeDrLNUGLWQ+elCjkLMou6BMny
+	grdM8iL3DJkPQ2Qd7G8qnWoLYEpfSs4Gbe3Y1+hGM5XSDUse9N/3rIgUKesxgzvf2YYVCdfQWQvJe
+	sANKCfj201GyUM+UiBzK0Adm28D1Ue9Ya144Yczbyh6xKiSMeLG1h59/vyjj4C9J3O3WpEp/rF4U0
+	bNQcVoIAE20+Rf1Y+mkzjSlIQT+R77uysNVnYdl55I0D5bnu5NVo7Qh/rMMpkElDUHl2t1i57sdny
+	bIG4sjGA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNu6N-0000000HAAX-1GlR;
-	Mon, 02 Nov 2026 15:37:39 +0000
-Received: from mail-pj1-x1048.google.com ([2607:f8b0:4864:20::1048])
+	id 1xNu6P-0000000HAGh-2NG7;
+	Mon, 02 Nov 2026 15:37:41 +0000
+Received: from mail-pl1-x647.google.com ([2607:f8b0:4864:20::647])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNu6D-0000000H9uy-1QmV
+	id 1xNu6E-0000000H9zf-2yhG
 	for kexec@lists.infradead.org;
-	Mon, 02 Nov 2026 15:37:31 +0000
-Received: by mail-pj1-x1048.google.com with SMTP id 98e67ed59e1d1-3ae6fda7a00so3011696a91.2
-        for <kexec@lists.infradead.org>; Mon, 02 Nov 2026 07:37:25 -0800 (PST)
+	Mon, 02 Nov 2026 15:37:35 +0000
+Received: by mail-pl1-x647.google.com with SMTP id d9443c01a7336-2e93f67358eso35406375ad.1
+        for <kexec@lists.infradead.org>; Mon, 02 Nov 2026 07:37:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793633845; x=1794238645; darn=lists.infradead.org;
+        d=google.com; s=20260707; t=1793633849; x=1794238649; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Co3UjJyFEnZJpTpwZDKwqCjGC43bvHMJxy07QdLEStk=;
-        b=SrPPYZ+pmOqMR8KuVg0zwNWG0QJAfvqgUgSNMUzW9F0pIQ7sxM2VPJ1X2qqB1nLXRN
-         CoLzl18RL7wO0ykD9WTM3QtB6lNUnuwJb3Az/UsiGpQWXPd1pJ2HCNOL9/m+OEx3fuav
-         zn5Ylm/jMmLBd+OGP0ICQVBklQYVNsQsbpPBTeRCUhb71WUas8WkQ6Csgs1Efcichx41
-         BjaKZoCbhBy8QY+nW0E4EtADTi86eO1kJaKsXjOwXnXiQRzVN3dwKacreqgR9IWb+lD3
-         te09ZgWd8w+BoGOeAuzwjC+HAMeJgYaijzU7OS6goGPm06eS/uER83roBpQbv4YISZ49
-         Iyyw==
+        bh=PQb3q6R6QngEoe3ekBduEqXoGdMTuhEwA2ttf4WySgI=;
+        b=HH+H34D/b21QwOctGcOgkmgqGs/UUzKQazCENa/hN6TW5LoClv9m4LRUFYmqKBKym/
+         D/HDH2vq+NLnXxME4BphynFSFEChYFAE4NBNsQBH6V3Hxvdv1kn09w8L9a+a2QYRGdFg
+         rg/gEZqYR0m4aYWg83X7QdBfJnb7yqalU3T81EPZNVbMhmIScOloi5hcVpyDy/U6xWGq
+         L/sEOiuNGVJwR55Prw7SY6H3h2FoLoY6hMBRtwog/RbPxzlEaX1ysXwlTK9POpD1zG02
+         fMwzQS4Qn4qmhfUzLKhyD8SrLpxKZ3qMzPouWq5WMRx8rzQ24p/Z95CEha7kZd4vQ21p
+         wdsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793633845; x=1794238645;
+        d=1e100.net; s=20260707; t=1793633849; x=1794238649;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Co3UjJyFEnZJpTpwZDKwqCjGC43bvHMJxy07QdLEStk=;
-        b=KpDTdI2aHbwGUNfLEy66r0beiwCYcKum5kdTWvTJU+LMZbchGRxO0XGD3KCWnXm+3D
-         Yr6xV8Nw9z907iKgcwC8ixFEs3Z2BZCgfQG4mTDPXFODloINGlIPxefvJ/0/0aS1AusY
-         MnINyqf2urYWdkNhah4hNthMJcqPLvWt2lS2fEy6O02wqQR2UELf96oe6t0L8zhAy7U/
-         cESHdPL7q+tH6a21PplvZoE3dJfNuGRBowpstF6bUti+npIWI4383+gl9ivfPoxOs5/2
-         n0TWHTNVocip+F5hqWYh51vgPHCRvZXYXRWFttRtKHxa7rpLSzxW8Hi7SRrG7BYOrIxS
-         LZ3g==
-X-Gm-Message-State: APuU4Z9DrJauMqxsNswlE+zdq6DSBKBs8nO2QhLITrkGrYk7NkMZqcFr
-	ZwWfv9y5CzBB0dc3Bv3z1HncRk0jIvc9+s4s8KNl1PHb1livJWuOD3pEvW/RP1W+MmO16ll0gwV
-	J67Mnz/77ZvCznoWs3WiztkCDEWx15cjpVp+q9iptUfRrVddJ5/kshsdwUtwz5TcwWrTIsbGj49
-	NnGuP5cEqLn6gUwiZyrZr3oTgGCy3UiGjfY/FDVEFqyp3liA==
-X-Received: from pjbir4.prod.google.com ([2002:a17:90b:4684:b0:3a8:74c5:5a5c])
- (user=vipinsh job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3887:b0:3ac:97e3:73a3
- with SMTP id 98e67ed59e1d1-3ae89574e10mr7137697a91.6.1793633844535; Mon, 02
- Nov 2026 07:37:24 -0800 (PST)
-Date: Mon,  2 Nov 2026 07:36:52 -0800
+        bh=PQb3q6R6QngEoe3ekBduEqXoGdMTuhEwA2ttf4WySgI=;
+        b=RdQqSeJPgM0jBivv+b2D+WJFtdzL4oCp/bPVwyPI6Jm6aDjDLOwqoLn6T+Bf+6393s
+         yV6FBQM2bDjgDKS7L0EL4s+MQ1vGj+IuOyKuzKsmD/sLV5uV8MOrG74hvhhTMmNsKweH
+         Is/SO6r/QADser+E20FjyLVuVNYFHwYqHWiwvaEuIbyAyKNz5lFeojLkwIpfU1uM6Q/B
+         Ehskfd1Nhc0I0C829dihfvBXbb33gjFyJKDqNbH1U8tGO18Rq1y7aA2EtP2o1PUkGcZx
+         anXmJy+EulFI3j/CumsIjdG7Q934iZoMiufJcUcev5WD7BxTGnhJGo1FwnEjJTaR8IXU
+         7DJA==
+X-Gm-Message-State: APuU4Z+GmHZnnprS5grfdFg8h0gW1D/lF1YCC+e1VZpmfWByv8QR/XVZ
+	uQIvCFwwG8d0T+7bZQDMKONgGXxAkRLTFdwxwf96owV17gSNZkw0ievQoZltf2MELk/KwZQJcdT
+	+09Prh3/+hTb0lZhEymuU10vUOWMlrut+0oyhpEuvjdgRdMV6esNyiImcKBKJcVb/7WlChFS33l
+	Q2C0XIvAlWJB/9inDmalkl2GgmUp2svjPZLwWAyQt5iubI8g==
+X-Received: from plbjf11.prod.google.com ([2002:a17:903:268b:b0:2e8:7c73:6eb4])
+ (user=vipinsh job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2ecc:b0:2e9:9c65:1aff
+ with SMTP id d9443c01a7336-2eb364d70e3mr109468515ad.45.1793633848882; Mon, 02
+ Nov 2026 07:37:28 -0800 (PST)
+Date: Mon,  2 Nov 2026 07:36:56 -0800
 In-Reply-To: <20261102153656.1431701-1-vipinsh@google.com>
 X-Archived-By: <archiver.kernel.org>
 Mime-Version: 1.0
 References: <20261102153656.1431701-1-vipinsh@google.com>
 X-Mailer: git-send-email 2.56.0.317.g454f8302e1-goog
-Message-ID: <20261102153656.1431701-24-vipinsh@google.com>
-Subject: [PATCH v6 23/27] vfio: selftests: Add an attach() driver op
+Message-ID: <20261102153656.1431701-28-vipinsh@google.com>
+Subject: [PATCH v6 27/27] vfio: selftests: Add continuous DMA to vfio_pci_liveupdate_kexec_test
 From: Vipin Sharma <vipinsh@google.com>
 To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
 	linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org, 
@@ -90,8 +90,8 @@ Cc: ajayachandra@nvidia.com, alex@shazbot.org, amastro@fb.com,
 	yanjun.zhu@linux.dev, yi.l.liu@intel.com
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261102_073729_813925_295B3F12 
-X-CRM114-Status: GOOD (  20.32  )
+X-CRM114-CacheID: sfid-20261102_073730_796670_28D9B75B 
+X-CRM114-Status: GOOD (  23.31  )
 X-Spam-Score: -9.5 (---------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -111,232 +111,379 @@ X-Spam-Status: No, score=-26.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Add a new attach() op to vfio_pci_driver_ops and a corresponding
-vfio_pci_driver_attach() wrapper to adopt a device that was already
-initialized (and optionally has memcpy operations in flight) in another
-process prior to a Live Update, without resetting or reprogramming the
-hardware.
+Extend vfio_pci_liveupdate_kexec_test to exercise continuous DMA across
+a Live Update when the device is in noiommu mode.
 
-Implement attach() for the igb and dsa selftest drivers: refresh process-
-local BAR pointers, verify that the device hardware state and descriptor
-rings are still intact as left before kexec, re-enable MSI-X, and set
-driver capability limits.
+Allocate a shmem memfd backed by three 2MB THP folios (for the driver
+region, source buffer, and destination buffer), map each folio at
+IOVA == PA via iommu_map_identity(), and preserve the memfd in the same
+Live Update session before the device so that LUO's LIFO finish order
+keeps the memory alive until after the device is finished.
 
+Before kexec, initialize the selftest driver, run a sanity memcpy, kick
+off a long-running DMA memcpy, and disable MSI-X so freeze() succeeds.
+After kexec, take over the device via __vfio_pci_device_init(), retrieve
+and map the preserved memfd verifying that all three 2MB folios stayed
+at the exact same physical addresses, attach the driver without resetting
+the device, wait for the pre-kexec memcpy to complete, and run another
+memcpy without reinitializing the device.
+
+Co-developed-by: David Matlack <dmatlack@google.com>
+Signed-off-by: David Matlack <dmatlack@google.com>
 Signed-off-by: Vipin Sharma <vipinsh@google.com>
 ---
- .../selftests/vfio/lib/drivers/dsa/dsa.c      | 35 +++++++++++++++--
- .../selftests/vfio/lib/drivers/igb/igb.c      | 39 +++++++++++++++++--
- .../lib/include/libvfio/vfio_pci_driver.h     | 17 ++++++++
- .../selftests/vfio/lib/vfio_pci_driver.c      | 22 ++++++++++-
- 4 files changed, 105 insertions(+), 8 deletions(-)
+ .../vfio/vfio_pci_liveupdate_kexec_test.c     | 266 +++++++++++++++++-
+ 1 file changed, 257 insertions(+), 9 deletions(-)
 
-diff --git a/tools/testing/selftests/vfio/lib/drivers/dsa/dsa.c b/tools/testing/selftests/vfio/lib/drivers/dsa/dsa.c
-index 19d9630b24c2..2764ed4c67f8 100644
---- a/tools/testing/selftests/vfio/lib/drivers/dsa/dsa.c
-+++ b/tools/testing/selftests/vfio/lib/drivers/dsa/dsa.c
-@@ -215,6 +215,16 @@ static void dsa_register_cache_init(struct vfio_pci_device *device)
- 	dsa->max_copies_per_batch = min(dsa->max_copies_per_batch, ARRAY_SIZE(dsa->copy));
- }
+diff --git a/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c b/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
+index 9610fe593cf6..c33b62118523 100644
+--- a/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
++++ b/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
+@@ -1,22 +1,120 @@
+ // SPDX-License-Identifier: GPL-2.0-only
  
-+static void dsa_set_limits(struct vfio_pci_device *device)
-+{
-+	struct dsa_state *dsa = to_dsa_state(device);
++#include <errno.h>
+ #include <fcntl.h>
+ #include <limits.h>
++#include <stdlib.h>
++#include <string.h>
++#include <time.h>
++#include <unistd.h>
 +
-+	device->driver.max_memcpy_count =
-+		dsa->max_batches * dsa->max_copies_per_batch;
-+	device->driver.max_memcpy_size = 1UL << dsa->gen_cap.max_xfer_shift;
-+	device->driver.msi = MSIX_VECTOR;
+ #include <sys/ioctl.h>
++#include <sys/mman.h>
++
++#include <linux/sizes.h>
+ #include <linux/vfio.h>
++
+ #include <libliveupdate.h>
+ #include <libvfio.h>
+ 
++#define DRIVER_REGION_SIZE	SZ_2M
++#define MEMCPY_FOLIO_SIZE	SZ_2M
++#define NR_MEMFD_FOLIOS		3
++#define MEMFD_SIZE		(NR_MEMFD_FOLIOS * SZ_2M)
++
++#define MEMCPY_TIMEOUT_S	(30 * 60)
++
++static struct dma_region src_region;
++static struct dma_region dst_region;
++static void *memfd_vaddr;
++static u64 folio_pa[NR_MEMFD_FOLIOS];
++
+ static const char *device_bdf;
+ 
+ static char state_session[LIVEUPDATE_SESSION_NAME_LENGTH];
++static char data_session[LIVEUPDATE_SESSION_NAME_LENGTH];
+ static char device_session[LIVEUPDATE_SESSION_NAME_LENGTH];
+ 
+ enum {
+ 	STATE_TOKEN,
+ 	DEVICE_TOKEN,
++	MEMFD_TOKEN,
++	DATA_TOKEN,
+ };
+ 
++static u64 memcpy_size(struct vfio_pci_device *device)
++{
++	return min_t(u64, src_region.size, device->driver.max_memcpy_size);
 +}
 +
- static void dsa_init(struct vfio_pci_device *device)
- {
- 	struct dsa_state *dsa = to_dsa_state(device);
-@@ -236,11 +246,27 @@ static void dsa_init(struct vfio_pci_device *device)
- 	dsa_command(device, IDXD_CMD_ENABLE_WQ);
- 
- 	vfio_pci_msix_enable(device, MSIX_VECTOR, 1);
-+	dsa_set_limits(device);
-+}
- 
--	device->driver.max_memcpy_count =
--		dsa->max_batches * dsa->max_copies_per_batch;
--	device->driver.max_memcpy_size = 1UL << dsa->gen_cap.max_xfer_shift;
--	device->driver.msi = MSIX_VECTOR;
-+static void dsa_attach(struct vfio_pci_device *device)
++static bool is_filled(const char *buf, u64 size, char c)
 +{
-+	struct dsa_state *dsa = to_dsa_state(device);
-+	union gensts_reg gensts;
-+
-+	VFIO_ASSERT_GE(device->driver.region.size, sizeof(*dsa));
-+
-+	/* The device must still be enabled as dsa_init() left it. */
-+	gensts.bits = readl(device->bars[0].vaddr + IDXD_GENSTATS_OFFSET);
-+	VFIO_ASSERT_EQ((u32)gensts.state, IDXD_DEVICE_STATE_ENABLED,
-+		       "Device was disabled or reset\n");
-+	dsa_check_sw_err(device);
-+
-+	/* BAR0 is mapped at a different address now, refresh the pointers into it. */
-+	dsa_register_cache_init(device);
-+
-+	vfio_pci_msix_enable(device, MSIX_VECTOR, 1);
-+	dsa_set_limits(device);
- }
- 
- static void dsa_remove(struct vfio_pci_device *device)
-@@ -420,6 +446,7 @@ const struct vfio_pci_driver_ops dsa_ops = {
- 	.name = "dsa",
- 	.probe = dsa_probe,
- 	.init = dsa_init,
-+	.attach = dsa_attach,
- 	.remove = dsa_remove,
- 	.memcpy_start = dsa_memcpy_start,
- 	.memcpy_wait = dsa_memcpy_wait,
-diff --git a/tools/testing/selftests/vfio/lib/drivers/igb/igb.c b/tools/testing/selftests/vfio/lib/drivers/igb/igb.c
-index fd9e05d77ea4..3f9f631a5977 100644
---- a/tools/testing/selftests/vfio/lib/drivers/igb/igb.c
-+++ b/tools/testing/selftests/vfio/lib/drivers/igb/igb.c
-@@ -224,6 +224,13 @@ static void igb_reset(struct igb *igb)
- 	igb_write32(igb, E1000_IMC, 0xFFFFFFFF);
- }
- 
-+static void igb_set_limits(struct vfio_pci_device *device)
-+{
-+	device->driver.max_memcpy_size = IGB_MAX_CHUNK_SIZE;
-+	device->driver.max_memcpy_count = RING_SIZE - 1;
-+	device->driver.msi = MSIX_VECTOR;
++	return buf[0] == c && !memcmp(buf, buf + 1, size - 1);
 +}
 +
- /*
-  * Program the device into a usable state.  Split out of igb_init() so it
-  * can be reused after a device reset to re-program the registers that
-@@ -372,9 +379,7 @@ static void igb_hw_init(struct vfio_pci_device *device)
- 	igb->tx_tail = 0;
- 	igb->rx_tail = 0;
- 
--	device->driver.max_memcpy_size = IGB_MAX_CHUNK_SIZE;
--	device->driver.max_memcpy_count = RING_SIZE - 1;
--	device->driver.msi = MSIX_VECTOR;
-+	igb_set_limits(device);
- }
- 
- static void igb_init(struct vfio_pci_device *device)
-@@ -400,6 +405,33 @@ static void igb_init(struct vfio_pci_device *device)
- 	igb_hw_init(device);
- }
- 
-+static void igb_attach(struct vfio_pci_device *device)
++static void dma_memcpy_one(struct vfio_pci_device *device, char c)
 +{
-+	struct igb *igb = to_igb_state(device);
-+	u64 iova_tx, iova_rx;
++	u64 size = memcpy_size(device);
++	void *src = src_region.vaddr;
++	void *dst = dst_region.vaddr;
 +
-+	VFIO_ASSERT_GE(device->driver.region.size, sizeof(struct igb));
++	memset(src, c, size);
++	memset(dst, 0, size);
 +
-+	/* BAR0 is mapped at a different address in this process. */
-+	igb->bar0 = device->bars[0].vaddr;
++	VFIO_ASSERT_EQ(vfio_pci_driver_memcpy(device, to_iova(device, src),
++					      to_iova(device, dst), size), 0);
++	VFIO_ASSERT_TRUE(is_filled(dst, size, c));
++}
++
++static void dma_memcpy_start(struct vfio_pci_device *device)
++{
++	u64 size = memcpy_size(device);
++	void *src = src_region.vaddr;
++	void *dst = dst_region.vaddr;
++	u64 count;
 +
 +	/*
-+	 * The device must still use the rings and tails in the driver region,
-+	 * i.e. it was not reset and the region is mapped at the same IOVAs.
++	 * Rough Math: If we assume the device will perform memcpy at a rate of
++	 * 30GB/s then 7200GB of transfers will run for about 4 minutes.
 +	 */
-+	iova_tx = to_iova(device, igb->tx_ring);
-+	iova_rx = to_iova(device, igb->rx_ring);
-+	VFIO_ASSERT_EQ(igb_read32(igb, E1000_TDBAL(0)), (u32)iova_tx);
-+	VFIO_ASSERT_EQ(igb_read32(igb, E1000_TDBAH(0)), (u32)(iova_tx >> 32));
-+	VFIO_ASSERT_EQ(igb_read32(igb, E1000_RDBAL(0)), (u32)iova_rx);
-+	VFIO_ASSERT_EQ(igb_read32(igb, E1000_RDBAH(0)), (u32)(iova_rx >> 32));
-+	VFIO_ASSERT_EQ(igb_read32(igb, E1000_TDT(0)), igb->tx_tail);
-+	VFIO_ASSERT_EQ(igb_read32(igb, E1000_RDT(0)), igb->rx_tail);
++	count = (u64)7200 * SZ_1G / size;
++	count = min_t(u64, count, device->driver.max_memcpy_count);
 +
-+	vfio_pci_msix_enable(device, MSIX_VECTOR, 1);
-+	igb_set_limits(device);
++	memset(src, 'x', size);
++	memset(dst, 0, size);
++
++	ksft_print_msg("Starting %lu DMA memcpy operations of size 0x%lx\n",
++		       count, size);
++	vfio_pci_driver_memcpy_start(device, to_iova(device, src),
++				     to_iova(device, dst), size, count);
 +}
 +
- static void igb_remove(struct vfio_pci_device *device)
- {
- 	struct igb *igb = to_igb_state(device);
-@@ -578,6 +610,7 @@ const struct vfio_pci_driver_ops igb_ops = {
- 	.name = "igb",
- 	.probe = igb_probe,
- 	.init = igb_init,
-+	.attach = igb_attach,
- 	.remove = igb_remove,
- 	.memcpy_start = igb_memcpy_start,
- 	.memcpy_wait = igb_memcpy_wait,
-diff --git a/tools/testing/selftests/vfio/lib/include/libvfio/vfio_pci_driver.h b/tools/testing/selftests/vfio/lib/include/libvfio/vfio_pci_driver.h
-index e5ada209b1d1..09603eacab4d 100644
---- a/tools/testing/selftests/vfio/lib/include/libvfio/vfio_pci_driver.h
-+++ b/tools/testing/selftests/vfio/lib/include/libvfio/vfio_pci_driver.h
-@@ -28,6 +28,21 @@ struct vfio_pci_driver_ops {
- 	 */
- 	void (*remove)(struct vfio_pci_device *device);
- 
-+	/**
-+	 * attach() - Adopt @device as init() and memcpy_start() left it, e.g.
-+	 * in another process before a Live Update, without resetting or
-+	 * reprogramming it. Memcpy operations started then keep going and can be
-+	 * waited for with memcpy_wait(). Optional.
-+	 *
-+	 * Only sets up what is specific to the calling process (pointers into the
-+	 * BARs kept in the driver state, MSI-X) and the driver limits.
-+	 *
-+	 * Must be called after device->driver.region, and any memory the device
-+	 * was told to DMA to, have been mapped at the same IOVAs as when init()
-+	 * and memcpy_start() were called.
-+	 */
-+	void (*attach)(struct vfio_pci_device *device);
-+
- 	/**
- 	 * memcpy_start() - Kick off @count repeated memcpy operations from
- 	 * [@src, @src + @size) to [@dst, @dst + @size).
-@@ -85,6 +100,8 @@ struct vfio_pci_driver {
- 
- void vfio_pci_driver_probe(struct vfio_pci_device *device);
- void vfio_pci_driver_init(struct vfio_pci_device *device);
-+void vfio_pci_driver_attach(struct vfio_pci_device *device,
-+			    bool memcpy_in_progress);
- void vfio_pci_driver_remove(struct vfio_pci_device *device);
- int vfio_pci_driver_memcpy(struct vfio_pci_device *device,
- 			   iova_t src, iova_t dst, u64 size);
-diff --git a/tools/testing/selftests/vfio/lib/vfio_pci_driver.c b/tools/testing/selftests/vfio/lib/vfio_pci_driver.c
-index 5e65434d2318..b4be2070342f 100644
---- a/tools/testing/selftests/vfio/lib/vfio_pci_driver.c
-+++ b/tools/testing/selftests/vfio/lib/vfio_pci_driver.c
-@@ -40,7 +40,8 @@ static void vfio_check_driver_op(struct vfio_pci_driver *driver, void *op,
- {
- 	VFIO_ASSERT_NOT_NULL(driver->ops);
- 	VFIO_ASSERT_NOT_NULL(op, "Driver has no %s()\n", op_name);
--	VFIO_ASSERT_EQ(driver->initialized, op != driver->ops->init);
-+	VFIO_ASSERT_EQ(driver->initialized,
-+		       op != driver->ops->init && op != driver->ops->attach);
- 	VFIO_ASSERT_EQ(driver->memcpy_in_progress, op == driver->ops->memcpy_wait);
- }
- 
-@@ -61,6 +62,25 @@ void vfio_pci_driver_init(struct vfio_pci_device *device)
- 	driver->initialized = true;
- }
- 
-+/*
-+ * Take over @device as vfio_pci_driver_init() left it in another process, e.g.
-+ * before a Live Update. Pass @memcpy_in_progress if memcpy operations were
-+ * started there, to be able to wait for them with vfio_pci_driver_memcpy_wait().
-+ */
-+void vfio_pci_driver_attach(struct vfio_pci_device *device,
-+			    bool memcpy_in_progress)
++static void dma_memcpy_wait(struct vfio_pci_device *device)
 +{
-+	struct vfio_pci_driver *driver = &device->driver;
++	u64 size = memcpy_size(device);
++	void *src = src_region.vaddr;
++	void *dst = dst_region.vaddr;
++	struct timespec start, end;
++	long ms;
 +
-+	VFIO_ASSERT_NOT_NULL(driver->region.vaddr);
-+	VFIO_CHECK_DRIVER_OP(driver, attach);
++	VFIO_ASSERT_EQ(clock_gettime(CLOCK_MONOTONIC, &start), 0);
 +
-+	driver->ops->attach(device);
++	/* Fail rather than hang if the device stopped, e.g. as it was reset. */
++	alarm(MEMCPY_TIMEOUT_S);
++	VFIO_ASSERT_EQ(vfio_pci_driver_memcpy_wait(device), 0);
++	alarm(0);
 +
-+	driver->initialized = true;
-+	driver->memcpy_in_progress = memcpy_in_progress;
++	VFIO_ASSERT_EQ(clock_gettime(CLOCK_MONOTONIC, &end), 0);
++	ms = (end.tv_sec - start.tv_sec) * 1000 +
++	     (end.tv_nsec - start.tv_nsec) / 1000000;
++
++	VFIO_ASSERT_TRUE(is_filled(src, size, 'x'));
++	VFIO_ASSERT_TRUE(is_filled(dst, size, 'x'));
++
++	ksft_print_msg("Pre-kexec DMA memcpy operations completed after %ld ms\n",
++		       ms);
 +}
 +
- void vfio_pci_driver_remove(struct vfio_pci_device *device)
+ static void check_noiommu(const char *bdf)
  {
- 	struct vfio_pci_driver *driver = &device->driver;
+ 	const char *cdev_path = __vfio_pci_get_cdev_path(bdf, true);
+@@ -35,26 +133,162 @@ static void check_noiommu(const char *bdf)
+ 	free((void *)cdev_path);
+ }
+ 
++static void dma_memfd_regions_map(struct vfio_pci_device *device, int fd,
++				  bool before_kexec)
++{
++	struct dma_region *regions[NR_MEMFD_FOLIOS] = {
++		&device->driver.region,
++		&src_region,
++		&dst_region,
++	};
++	int i;
++
++	memfd_vaddr = vfio_memfd_mmap_aligned(fd, MEMFD_SIZE, SZ_2M);
++
++	for (i = 0; i < NR_MEMFD_FOLIOS; i++) {
++		struct dma_region *r = regions[i];
++
++		r->vaddr = memfd_vaddr + (u64)i * SZ_2M;
++		r->size = SZ_2M;
++		iommu_map_identity(device->iommu, r);
++
++		if (before_kexec)
++			folio_pa[i] = r->iova;
++		else
++			VFIO_ASSERT_EQ(r->iova, folio_pa[i],
++				       "Folio %d moved across kexec (0x%lx != 0x%lx)\n",
++				       i, r->iova, folio_pa[i]);
++	}
++}
++
++static void dma_memfd_recheck_pa(struct vfio_pci_device *device)
++{
++	struct dma_region *regions[NR_MEMFD_FOLIOS] = {
++		&device->driver.region,
++		&src_region,
++		&dst_region,
++	};
++	int i;
++
++	for (i = 0; i < NR_MEMFD_FOLIOS; i++) {
++		u64 pa, len;
++
++		VFIO_ASSERT_EQ(__iommu_noiommu_get_pa(device->iommu,
++						      regions[i]->iova, SZ_2M,
++						      &pa, &len), 0);
++		VFIO_ASSERT_EQ(pa, folio_pa[i]);
++		VFIO_ASSERT_EQ(len, (u64)SZ_2M);
++	}
++}
++
++static void dma_memfd_regions_unmap(struct vfio_pci_device *device)
++{
++	iommu_unmap(device->iommu, &dst_region);
++	iommu_unmap(device->iommu, &src_region);
++	iommu_unmap(device->iommu, &device->driver.region);
++	VFIO_ASSERT_EQ(munmap(memfd_vaddr, MEMFD_SIZE), 0);
++	memfd_vaddr = NULL;
++}
++
++static void save_data_session(int luo_fd)
++{
++	char buf[256];
++	int data_fd;
++
++	data_fd = luo_create_session(luo_fd, data_session);
++	VFIO_ASSERT_GE(data_fd, 0);
++
++	snprintf_assert(buf, sizeof(buf), "0x%lx 0x%lx 0x%lx",
++			folio_pa[0], folio_pa[1], folio_pa[2]);
++	VFIO_ASSERT_EQ(create_and_preserve_memfd(data_fd, DATA_TOKEN, buf), 0);
++}
++
++static void load_data_session(int luo_fd)
++{
++	char buf[256] = {};
++	char *end, *cur;
++	int data_fd;
++	int mfd;
++	int i;
++
++	data_fd = luo_retrieve_session(luo_fd, data_session);
++	VFIO_ASSERT_GE(data_fd, 0);
++
++	mfd = luo_session_retrieve_fd(data_fd, DATA_TOKEN);
++	VFIO_ASSERT_GE(mfd, 0);
++	VFIO_ASSERT_GT(pread(mfd, buf, sizeof(buf) - 1, 0), 0);
++	VFIO_ASSERT_EQ(close(mfd), 0);
++
++	cur = buf;
++	for (i = 0; i < NR_MEMFD_FOLIOS; i++) {
++		errno = 0;
++		folio_pa[i] = strtoull(cur, &end, 0);
++		VFIO_ASSERT_EQ(errno, 0);
++		VFIO_ASSERT_NE(end, cur);
++		cur = end;
++	}
++
++	VFIO_ASSERT_EQ(luo_session_finish(data_fd), 0);
++	VFIO_ASSERT_EQ(close(data_fd), 0);
++}
++
+ static void before_kexec(int luo_fd)
+ {
+ 	struct vfio_pci_device *device;
+ 	struct iommu *iommu;
++	void *init_vaddr = NULL;
+ 	int session_fd;
++	int memfd;
+ 	int ret;
+ 
+ 	check_noiommu(device_bdf);
+ 
++	memfd = vfio_thp_memfd_alloc(MEMFD_SIZE, &init_vaddr);
++	if (memfd < 0)
++		ksft_exit_skip("Failed to allocate 2MB THP memfd: %s\n",
++			       strerror(-memfd));
++	VFIO_ASSERT_EQ(munmap(init_vaddr, MEMFD_SIZE), 0);
++
+ 	iommu = iommu_init(MODE_IOMMUFD_NOIOMMU);
+ 	device = vfio_pci_device_init(device_bdf, iommu);
+ 
++	if (!device->driver.ops || !device->driver.ops->attach)
++		ksft_exit_skip("No driver that supports attach() found for %s\n",
++			       device_bdf);
++
++	dma_memfd_regions_map(device, memfd, true);
++
+ 	create_state_file(luo_fd, state_session, STATE_TOKEN, /*next_stage=*/2);
+ 
+ 	session_fd = luo_create_session(luo_fd, device_session);
+ 	VFIO_ASSERT_GE(session_fd, 0);
+ 
++	/*
++	 * Preserve the DMA memfd in the same session before the device so that
++	 * LUO's LIFO finish order resets an unclaimed device before freeing
++	 * the memfd folios.
++	 */
++	ret = luo_session_preserve_fd(session_fd, memfd, MEMFD_TOKEN);
++	VFIO_ASSERT_EQ(ret, 0);
++
++	dma_memfd_recheck_pa(device);
++
+ 	ret = luo_session_preserve_fd(session_fd, device->fd, DEVICE_TOKEN);
+ 	VFIO_ASSERT_EQ(ret, 0);
+ 
++	vfio_pci_driver_init(device);
++	dma_memcpy_one(device, 'a');
++
++	dma_memcpy_start(device);
++
++	/*
++	 * Disable interrupts on the device or freeze() will fail. The memcpy
++	 * operations do not generate any.
++	 */
++	vfio_pci_msix_disable(device);
++
++	save_data_session(luo_fd);
++
+ 	close(luo_fd);
+ 	daemonize_and_wait();
+ }
+@@ -98,13 +332,16 @@ static void after_kexec(int luo_fd, int state_session_fd)
+ 	struct iommu *iommu;
+ 	int session_fd;
+ 	int device_fd;
++	int memfd;
+ 	int stage;
+ 
+-	check_open_vfio_device_fails();
+-
+ 	restore_and_read_stage(state_session_fd, STATE_TOKEN, &stage);
+ 	VFIO_ASSERT_EQ(stage, 2);
+ 
++	load_data_session(luo_fd);
++
++	check_open_vfio_device_fails();
++
+ 	session_fd = luo_retrieve_session(luo_fd, device_session);
+ 	VFIO_ASSERT_GE(session_fd, 0);
+ 
+@@ -112,16 +349,25 @@ static void after_kexec(int luo_fd, int state_session_fd)
+ 	VFIO_ASSERT_GE(device_fd, 0);
+ 
+ 	iommu = iommu_init(MODE_IOMMUFD_NOIOMMU);
+-
+-	/*
+-	 * This will invoke various ioctls on device_fd such as
+-	 * VFIO_DEVICE_GET_INFO. So this is a decent sanity test
+-	 * that LUO actually handed us back a valid VFIO device
+-	 * file and not something else.
+-	 */
+ 	device = __vfio_pci_device_init(device_bdf, iommu, device_fd);
+ 
++	memfd = luo_session_retrieve_fd(session_fd, MEMFD_TOKEN);
++	VFIO_ASSERT_GE(memfd, 0);
++
++	dma_memfd_regions_map(device, memfd, false);
++
++	vfio_pci_driver_attach(device, /*memcpy_in_progress=*/true);
++	dma_memcpy_wait(device);
++
++	/* The device was not reset, so it can be used without reinitializing it. */
++	dma_memcpy_one(device, 'y');
++
+ 	VFIO_ASSERT_EQ(luo_session_finish(session_fd), 0);
++	VFIO_ASSERT_EQ(close(session_fd), 0);
++
++	vfio_pci_driver_remove(device);
++	dma_memfd_regions_unmap(device);
++	VFIO_ASSERT_EQ(close(memfd), 0);
+ 
+ 	vfio_pci_device_cleanup(device);
+ 	iommu_cleanup(iommu);
+@@ -133,6 +379,8 @@ int main(int argc, char *argv[])
+ 
+ 	snprintf_assert(device_session, sizeof(device_session),
+ 			"vfio-lu-device-%s", device_bdf);
++	snprintf_assert(data_session, sizeof(data_session),
++			"vfio-lu-data-%s", device_bdf);
+ 	snprintf_assert(state_session, sizeof(state_session),
+ 			"vfio-lu-state-%s", device_bdf);
+ 
 -- 
 2.56.0.317.g454f8302e1-goog
 
