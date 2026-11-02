@@ -2,55 +2,54 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFFC606A917
-	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:32:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1022608959B
+	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:32:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=O8QPaRyI;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R/SfkjWl
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=rkU6Ydid;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WOtNUR7A
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=/ScPPr5h13RwAGNd5LaTn6V2vw4rEmThm0/Me/ibEcc=; b=O8QPaRyI+gK/rM
-	rFDYXqy1JuA4/yFsfn9OY0eT1B33/PwDzqFjNa9+MTSilnwSp+iSZYzLmqhmXzrUbV6BteKhf7kyk
-	9kpX4jPN8QMiLbYut+pPgUKdrtcqr96X/yp3u2+OYkmwjJ3SwpQy3oLFKasRrqRClRCoCNePmq6eN
-	fd9N5M47ZPqdSlusAfeXtu3VyYr0t4WtYWyBBceaSF3ZfNxc/dTpXIOQurZhoL+nWZWdG1q8lWuJH
-	weU9HEkJcWmpgtfkA9JeIhXAFQ8hNe8eYQlOaKzBy8ti6V9ZmMot+GBHnYC4AnCdRCqNzemuUPqIQ
-	IZBXGf3hMh+60M5felZw==;
+	List-Owner; bh=j0XEj0YD19hajZrTiSL4Hx5oTZ822IFleoT2hqE8QNQ=; b=rkU6YdidaSMCgJ
+	4Ubw07x3cVWBVVYqKaUMgSUvAhOVDdKoIf+ig0oL04rY7HQYIn6+A1athwnKUHAw4dZuqdpiaEOwv
+	2/c3h+PxL9kzbb8d2jWMlo3LkKpjv8m9QT1amiMAYyBCci+IXouJ4wz6P6+yg5Im3wniJ+aMANSyM
+	zGTijvptOF8r6esQA+eXYTaapO9aOnUhgdu515y0PJzOWC5SSF6Pd2HZRz9/uKQl0Nvy+3SBV7Bl2
+	CKrnG6BjVfgCBZZXR+uUVp2UpuRUU5+Aw+v2Vx2MgMhSLJjm/DvACpsvL/RCT9CQ3HkdSHRzp5Cd5
+	VMV/7Ms/F22LscchpryQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNu15-0000000H7Ml-2ttg;
-	Mon, 02 Nov 2026 15:32:11 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xNu1R-0000000H7WJ-2Br2;
+	Mon, 02 Nov 2026 15:32:33 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNu14-0000000H7MQ-1jsN;
-	Mon, 02 Nov 2026 15:32:10 +0000
+	id 1xNu1Q-0000000H7VY-0h73;
+	Mon, 02 Nov 2026 15:32:32 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 125BD406F4;
-	Mon,  2 Nov 2026 15:32:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 834041F00A17;
-	Mon,  2 Nov 2026 15:31:52 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id E4D2142E35;
+	Mon,  2 Nov 2026 15:32:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 714811F00A1A;
+	Mon,  2 Nov 2026 15:32:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793633529;
-	bh=/ScPPr5h13RwAGNd5LaTn6V2vw4rEmThm0/Me/ibEcc=;
+	s=k20260515; t=1793633551;
+	bh=j0XEj0YD19hajZrTiSL4Hx5oTZ822IFleoT2hqE8QNQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=R/SfkjWlo0adylJibXR66wVpuLzM40UvXOuxgQkxjIb27PygVO01Xo6Y9Cxv0DOYF
-	 U8vDJ9Lvryykt72BGFLhvtk7I7gcq7QnZbl3EX+DRor36ZfRQHoTy18ofbXZVWub8x
-	 loiIMfSMmDrRidXBlhwmW9M/yF25pKJxozll8XYRFV3naaaJjgabiBmeWltQ5KlU4n
-	 dqnB3zZZgSK5jXLooPwqv5t5ovJ4Em+lKQ2n3lQJaucJaYsVzo74JlgcgBbH86bHgB
-	 0MidtBYGMNMDITSh0GhFH6xUCs+aKDllisLXlyelzfW76HVNTln7h8X9MMKkJGiQHg
-	 RdbysmIcQlqDw==
+	b=WOtNUR7ANTbV8Aq+NS5tB7HOgtUYtUFBrHUduOMXGSrvyvVh49FKtJAtPA79xEdKK
+	 bWLuxrK34vw5XvQe2Ses1fW882zwHJNi0DTpIw4mOgryVfyh06j3VgDnExsFIakuQ5
+	 myUaZwuXJOiUD0AVpk0r2EDdW+XFBxyBcKxkzbyxcSh7mpU9vIC53YIaLvGKA95Tv5
+	 l0wnd9SE3I99/RpnQwpcxyDZJh+XRZ7Gez9UyXhApoK8ws1dteMc6OckWGLtrOFM+7
+	 gV/vEgFiiBUWN/JNUdIJHozxukOMKP9vkwq6miFhFVRTjftdm1zZuN9/BGNHxbp7GI
+	 sMgsvoriwacXQ==
 From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 02 Nov 2026 16:07:18 +0100
-Subject: [PATCH RFC 04/11] netfilter: xt_recent: let procfs own the
- seq_file
+Date: Mon, 02 Nov 2026 16:07:19 +0100
+Subject: [PATCH RFC 05/11] netfilter: xt_recent: let procfs copy in writes
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261102-work-procfs-net-v1-4-982104a4f592@kernel.org>
+Message-Id: <20261102-work-procfs-net-v1-5-982104a4f592@kernel.org>
 References: <20261102-work-procfs-net-v1-0-982104a4f592@kernel.org>
 In-Reply-To: <20261102-work-procfs-net-v1-0-982104a4f592@kernel.org>
 To: linux-fsdevel@vger.kernel.org
@@ -86,12 +85,12 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  "Christian Brauner (Amutable)" <brauner@kernel.org>, 
  Chuck Lever <cel@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1502; i=brauner@kernel.org;
- h=from:subject:message-id; bh=TskCtPEUarxCx4EqZA92+8BIMcoYThcQZwAI90/Y1gc=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9WG78b6LTCzn9/5cEdq8IeS3ee1vyt0J0uonutwlHf
- mXckYq90FHKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjCRHwsYGRryxfz51WWu+Ex4
- dvLygrAe7uvesdzsTw4nh8VUHdhTcoKR4UfM5V4bl2lCh997aOft/3BEUfL2u5mz19wX1cw4cIM
- vnw0A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1724; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=m6dNErjBjmz9XKGa3rT6vumTNxSZMRjmxs3KBefnnQ8=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9WG7ccSQ+KU5P1WO9/aOk9EeM4vLnjsV0vNLouKtsy
+ VSiVh/SUcrCIMbFICumyOLQbhIut5ynYrNRpgbMHFYmkCEMXJwCMBGms4wMX9eu8Tt9WbzpS8+D
+ b9e3s2i/FAvXOGvYKGJYVuMb/Oy2IcM/vbLA/s/ikvwyn4PDDs4pne0p8eNi9MxKj7iwnmCdYhF
+ uAA==
 X-Developer-Key: i=brauner@kernel.org; a=openpgp;
  fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 X-BeenThere: kexec@lists.infradead.org
@@ -112,44 +111,47 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Declare the seq_operations and the size of the iterator state and let
-procfs open and free the seq_file. ->proc_open() only fills in the table
-now. Reading /proc/net/xt_recent/<table> then no longer holds up the
-removal of the table.
+Implement ->proc_write_buf() so procfs copies in what is written to
+/proc/net/xt_recent/<table> before it pins the entry, and take the
+address from that copy. The removal of a table runs under recent_mutex
+and doesn't wait for a writer that faults on its buffer anymore. Writes
+larger than PAGE_SIZE - 1 bytes fail with -EINVAL now.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- net/netfilter/xt_recent.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ net/netfilter/xt_recent.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
 diff --git a/net/netfilter/xt_recent.c b/net/netfilter/xt_recent.c
-index 11acb9a50d4b..b771cc463aab 100644
+index b771cc463aab..306557f25daf 100644
 --- a/net/netfilter/xt_recent.c
 +++ b/net/netfilter/xt_recent.c
-@@ -546,11 +546,7 @@ static const struct seq_operations recent_seq_ops = {
- 
- static int recent_seq_open(struct inode *inode, struct file *file)
- {
--	struct recent_iter_state *st;
--
--	st = __seq_open_private(file, &recent_seq_ops, sizeof(*st));
--	if (st == NULL)
--		return -ENOMEM;
-+	struct recent_iter_state *st = ((struct seq_file *)file->private_data)->private;
- 
- 	st->table    = pde_data(inode);
- 	return 0;
-@@ -626,11 +622,10 @@ recent_mt_proc_write(struct file *file, const char __user *input,
+@@ -553,8 +553,7 @@ static int recent_seq_open(struct inode *inode, struct file *file)
  }
  
- static const struct proc_ops recent_mt_proc_ops = {
-+	.proc_seq_ops	= &recent_seq_ops,
-+	.proc_state_size = sizeof(struct recent_iter_state),
+ static ssize_t
+-recent_mt_proc_write(struct file *file, const char __user *input,
+-		     size_t size, loff_t *loff)
++recent_mt_proc_write(struct file *file, char *input, size_t size, loff_t *loff)
+ {
+ 	struct recent_table *t = pde_data(file_inode(file));
+ 	struct recent_entry *e;
+@@ -568,8 +567,7 @@ recent_mt_proc_write(struct file *file, const char __user *input,
+ 		return 0;
+ 	if (size > sizeof(buf))
+ 		size = sizeof(buf);
+-	if (copy_from_user(buf, input, size) != 0)
+-		return -EFAULT;
++	memcpy(buf, input, size);
+ 
+ 	/* Strict protocol! */
+ 	if (*loff != 0)
+@@ -625,7 +623,7 @@ static const struct proc_ops recent_mt_proc_ops = {
+ 	.proc_seq_ops	= &recent_seq_ops,
+ 	.proc_state_size = sizeof(struct recent_iter_state),
  	.proc_open	= recent_seq_open,
--	.proc_read	= seq_read,
- 	.proc_write	= recent_mt_proc_write,
--	.proc_release	= seq_release_private,
--	.proc_lseek	= seq_lseek,
+-	.proc_write	= recent_mt_proc_write,
++	.proc_write_buf	= recent_mt_proc_write,
  };
  
  static int __net_init recent_proc_net_init(struct net *net)
