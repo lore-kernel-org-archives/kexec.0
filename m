@@ -2,54 +2,54 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B34C6074658
-	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 14:52:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F2460771FD
+	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 14:52:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=cobQD5+1;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gkL6dVH3
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=o+S4+mf7;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YC9ApXUw
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=t7CXhIggcklIY3xO5IiO5lA9eZblBCQpzIpV4iqWwIs=; b=cobQD5+1BsqKRI
-	Xee5a/a1K5RwaUwi9uB+KOnNA4f5Ysn2x3idgVLC0hX8JE2PrJQm7AQCVODCMDw+DRvKr73rHa/yw
-	RlMzZpqDj9El9kA+/dWUY2qNuKDAyP3k4+w2LXBUAakrBTO9nBUV3upuVoM7ZN5yN6JojdpGOBbaF
-	D/3wgD4eDPSJ9DmGnrjEQ41qW9RUMfHEsnu/77rAKEdh0yd4mYmq+PLrV5X0zfrUqkv7XZRorNeAP
-	8jvFnmJvHHVbFm4UtMrl4gsM0rXtAH3BN325P6npxgBeyHiQZpJubC+K9iCaGWlELXq0sFduRSy8s
-	5GBi7i8MEZpW/JmkjGqQ==;
+	List-Owner; bh=z15Uq40RTWsSdyyx7OaN0bxQRP62XbWMWxAG8tgRqsc=; b=o+S4+mf7g7sN01
+	FDcYvooyej05RhUpLwkEuv4BX6biLAsKRqMATeEeh3ZhGIMowmXJC97sYkfgVrwq+h/V11ST7fntV
+	90GaVEevPBDsrUhGBev6WatiyWrabOHRy1r49IOH6LhSDV64NzwOmjE9f/mHbkyENK1aYKTrJzaNT
+	lQIeQfpPJM4cczz3BgT5sTRRi5E/3ymRreqJXWvIZdJMogpG9WD6OkNwuzmsoNZ+dcEVhppOlnL7J
+	qRGiMupRoeNZ623e9Hy69ebbdhfCVHlN2FmQAJkz3fYQ9ArXhFX1OP6a4jvW6LN157cVhQ5MECOak
+	3AYhC1MRe5BHi1EbH9Nw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNtOk-0000000Gun2-0Kn2;
-	Mon, 02 Nov 2026 14:52:34 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xNtP9-0000000GuwW-1CQf;
+	Mon, 02 Nov 2026 14:52:59 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNtOj-0000000GumQ-0XjM;
-	Mon, 02 Nov 2026 14:52:33 +0000
+	id 1xNtP7-0000000Guw6-1ghX;
+	Mon, 02 Nov 2026 14:52:57 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 90F5A60200;
-	Mon,  2 Nov 2026 14:52:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 943F01F00A18;
-	Mon,  2 Nov 2026 14:52:10 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 162C643ACE;
+	Mon,  2 Nov 2026 14:52:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED4BF1F00A17;
+	Mon,  2 Nov 2026 14:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793631152;
-	bh=t7CXhIggcklIY3xO5IiO5lA9eZblBCQpzIpV4iqWwIs=;
+	s=k20260515; t=1793631177;
+	bh=z15Uq40RTWsSdyyx7OaN0bxQRP62XbWMWxAG8tgRqsc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=gkL6dVH3qeZTZTEUa5gJkjb3DNPVL8n5WP7/jOyBtnyh2kByZfYEWHf2I4V1dxI/p
-	 MRJ7Cw4L3gZu5jux1vQS4dO9q+KH6eZstOXSKpu3hAjg1a2jYzTILzigEgrHxnw7a+
-	 i+t8SHRQhy99x5vtc69Wd2RooVfSrGTh0BlmU//CeRIHSUWS8Rx6aYeOu7JZwe1YT/
-	 PvpClFllL3x0bHydSz1hKBiSwFXahsk/lqsUAX5OXvNypfMaPi/I/xtwDZZXht4OD1
-	 TjstHlA2Hp9ENKs7XrHGkLPp/n8NK6zuyN2Fg1CTZaD1iWdK7fJJWkqOfluwSEGTxl
-	 kopkZdZ+WBiqA==
+	b=YC9ApXUwYHXdh7Oe3VkjE39wJ3Qg7gCObz/rTOq48xo1JAMB5WL5rAv5ZOVJS8qqZ
+	 ynnExq4rKiMg+GmAmkH9n8AzdYfTlEHmZ/fOsTnE53ISdXH1WVlbQFy7hO/CdAQSYn
+	 4JbQf/FIJ657tBcgXmsRiDHSQsBBt84kHCnQ3pca44VTjgoKmBvJxiGyOKjK34ikx2
+	 /LNlDgNsznisNZc5MkevQj1M+4bf1MamMBIardSrDk1sWSAOiPvR03vBw4J+ZC6wk0
+	 R7UEuNIvdf3X8fF/lS/cfHuoxA8HStGxldAahOLTER+k7KMNib4+Ih4XKO3zJT65eL
+	 9MJrEIEx2zC9Q==
 From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 02 Nov 2026 15:48:49 +0100
-Subject: [PATCH RFC 09/16] seq_file: add seq_preallocate()
+Date: Mon, 02 Nov 2026 15:48:50 +0100
+Subject: [PATCH RFC 10/16] proc: let procfs own the seq_file of /proc/stat
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261102-work-procfs-core-v1-9-75df35e4f8b8@kernel.org>
+Message-Id: <20261102-work-procfs-core-v1-10-75df35e4f8b8@kernel.org>
 References: <20261102-work-procfs-core-v1-0-75df35e4f8b8@kernel.org>
 In-Reply-To: <20261102-work-procfs-core-v1-0-75df35e4f8b8@kernel.org>
 To: linux-fsdevel@vger.kernel.org
@@ -103,85 +103,36 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-single_open_size() allocates the buffer itself because it does the
-single_open() too. A file whose seq_file is opened by somebody else,
-like procfs does now, needs to do that after the fact. Add
-seq_preallocate() for that and use it in single_open_size().
-
-No functional changes.
+Declare the show function and let procfs open and free the seq_file.
+->proc_open() only preallocates the buffer now.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- fs/seq_file.c            | 36 ++++++++++++++++++++++++++++--------
- include/linux/seq_file.h |  1 +
- 2 files changed, 29 insertions(+), 8 deletions(-)
+ fs/proc/stat.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/fs/seq_file.c b/fs/seq_file.c
-index 456c78719fd0..a4644cdda7e6 100644
---- a/fs/seq_file.c
-+++ b/fs/seq_file.c
-@@ -590,21 +590,41 @@ int single_open(struct file *file, int (*show)(struct seq_file *, void *),
- }
- EXPORT_SYMBOL(single_open);
+diff --git a/fs/proc/stat.c b/fs/proc/stat.c
+index 79b42f2bfd00..3bfb79edc0f6 100644
+--- a/fs/proc/stat.c
++++ b/fs/proc/stat.c
+@@ -161,15 +161,13 @@ static int stat_open(struct inode *inode, struct file *file)
  
--int single_open_size(struct file *file, int (*show)(struct seq_file *, void *),
--		void *data, size_t size)
-+/**
-+ *	seq_preallocate -	start out with a buffer of @size
-+ *	@m: the seq_file, before it is first read
-+ *	@size: the size of the buffer
-+ *
-+ *	For files whose records don't fit into a page, so that the first read
-+ *	doesn't have to work its way up to the right buffer size.
-+ */
-+int seq_preallocate(struct seq_file *m, size_t size)
- {
- 	char *buf = seq_buf_alloc(size);
--	int ret;
-+
- 	if (!buf)
- 		return -ENOMEM;
-+	kvfree(m->buf);
-+	m->buf = buf;
-+	m->size = size;
-+	return 0;
-+}
-+EXPORT_SYMBOL(seq_preallocate);
-+
-+int single_open_size(struct file *file, int (*show)(struct seq_file *, void *),
-+		void *data, size_t size)
-+{
-+	int ret;
-+
- 	ret = single_open(file, show, data);
--	if (ret) {
--		kvfree(buf);
-+	if (ret)
- 		return ret;
-+	ret = seq_preallocate(file->private_data, size);
-+	if (ret) {
-+		single_release(file_inode(file), file);
-+		file->private_data = NULL;
- 	}
--	((struct seq_file *)file->private_data)->buf = buf;
--	((struct seq_file *)file->private_data)->size = size;
--	return 0;
-+	return ret;
+ 	/* minimum size to display an interrupt count : 2 bytes */
+ 	size += 2 * irq_get_nr_irqs();
+-	return single_open_size(file, show_stat, NULL, size);
++	return seq_preallocate(file->private_data, size);
  }
- EXPORT_SYMBOL(single_open_size);
  
-diff --git a/include/linux/seq_file.h b/include/linux/seq_file.h
-index b813b7e63d89..834daff48b7d 100644
---- a/include/linux/seq_file.h
-+++ b/include/linux/seq_file.h
-@@ -175,6 +175,7 @@ int seq_path_root(struct seq_file *m, const struct path *path,
- void *single_start(struct seq_file *, loff_t *);
- int single_open(struct file *, int (*)(struct seq_file *, void *), void *);
- int single_open_size(struct file *, int (*)(struct seq_file *, void *), void *, size_t);
-+int seq_preallocate(struct seq_file *m, size_t size);
- int single_release(struct inode *, struct file *);
- void *__seq_open_private(struct file *, const struct seq_operations *, int);
- int seq_open_private(struct file *, const struct seq_operations *, int);
+ static const struct proc_ops stat_proc_ops = {
+ 	.proc_flags	= PROC_ENTRY_PERMANENT,
++	.proc_show	= show_stat,
+ 	.proc_open	= stat_open,
+-	.proc_read_iter	= seq_read_iter,
+-	.proc_lseek	= seq_lseek,
+-	.proc_release	= single_release,
+ };
+ 
+ static int __init proc_stat_init(void)
 
 -- 
 2.53.0
