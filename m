@@ -2,55 +2,54 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56AD4606D808
-	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 14:52:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B34C6074658
+	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 14:52:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Gt5mB+Ap;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PR4eStJu
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=cobQD5+1;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gkL6dVH3
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=iJ84nEP4YY4K28kLfEZAA/6j0sLXVTf/aEe1LCZ8e14=; b=Gt5mB+ApbiZ3GK
-	ir4IU9ma3PXE39YNLW5n8UYfg7tb1W19wDbMy71uAtUPkkIAzW+mKUMZwdRBsE3EcOSLYie7IL9me
-	GN/FO+7C6YiqwZIp2/1NSHT9L0UCN7HlW7XXKBoMPrqoMkISaYWR1IQrx2oVzsbocjTvr+bLjqApP
-	N7blSuLvSZJOhboE6Q55F+NkRjjmZAB7Mutc+V/NRZ0v1UJVocUYk4H2LLANcdU7up1Accr37h0+2
-	J7HSO60o5ovUSImNE7Kx83tY0QHkioSaG6jU9ZML0ayvKKRcQNRW4r8TJgoalSee4x2cKv6Dj6pzA
-	AHg332NUlt0Zb07BGXFw==;
+	List-Owner; bh=t7CXhIggcklIY3xO5IiO5lA9eZblBCQpzIpV4iqWwIs=; b=cobQD5+1BsqKRI
+	Xee5a/a1K5RwaUwi9uB+KOnNA4f5Ysn2x3idgVLC0hX8JE2PrJQm7AQCVODCMDw+DRvKr73rHa/yw
+	RlMzZpqDj9El9kA+/dWUY2qNuKDAyP3k4+w2LXBUAakrBTO9nBUV3upuVoM7ZN5yN6JojdpGOBbaF
+	D/3wgD4eDPSJ9DmGnrjEQ41qW9RUMfHEsnu/77rAKEdh0yd4mYmq+PLrV5X0zfrUqkv7XZRorNeAP
+	8jvFnmJvHHVbFm4UtMrl4gsM0rXtAH3BN325P6npxgBeyHiQZpJubC+K9iCaGWlELXq0sFduRSy8s
+	5GBi7i8MEZpW/JmkjGqQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNtOL-0000000GudE-0FDO;
-	Mon, 02 Nov 2026 14:52:09 +0000
+	id 1xNtOk-0000000Gun2-0Kn2;
+	Mon, 02 Nov 2026 14:52:34 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNtOJ-0000000Gucv-36qE;
-	Mon, 02 Nov 2026 14:52:07 +0000
+	id 1xNtOj-0000000GumQ-0XjM;
+	Mon, 02 Nov 2026 14:52:33 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 2DE1E600D4;
-	Mon,  2 Nov 2026 14:52:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FECC1F00A1B;
-	Mon,  2 Nov 2026 14:51:46 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 90F5A60200;
+	Mon,  2 Nov 2026 14:52:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 943F01F00A18;
+	Mon,  2 Nov 2026 14:52:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793631126;
-	bh=iJ84nEP4YY4K28kLfEZAA/6j0sLXVTf/aEe1LCZ8e14=;
+	s=k20260515; t=1793631152;
+	bh=t7CXhIggcklIY3xO5IiO5lA9eZblBCQpzIpV4iqWwIs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=PR4eStJuCoR+mECGMaIVXtQASozW+a7AOmyTO4iG4xy4nIzb4PWW2BKxvYmoNRuHs
-	 x2Lm2Rfp+v90UcW719VC0BYV4O8DTyukQ9z+uecUIg7pY28G7drnWgQgVWiNUS+/ck
-	 xxhSirH9ZyCaYNU7/1qRcYlti7eFvPDGGsReRJYcEPKXsJ5iSGH7SZJURK2R0hC4aT
-	 hXX/7O0Tf8cPki+pg2H6SZ7pXnNxkptKTlJYs8cIZrx/PHwXHyzeBPMp/y/AzKyvOE
-	 N8mqzLmWmEBFNIMmXqg5H4OevB0bDwM2UM7fMf6GDHFGBq7FkN5sBI9EBYQrhUrLbY
-	 N6tJxPjUYmLBA==
+	b=gkL6dVH3qeZTZTEUa5gJkjb3DNPVL8n5WP7/jOyBtnyh2kByZfYEWHf2I4V1dxI/p
+	 MRJ7Cw4L3gZu5jux1vQS4dO9q+KH6eZstOXSKpu3hAjg1a2jYzTILzigEgrHxnw7a+
+	 i+t8SHRQhy99x5vtc69Wd2RooVfSrGTh0BlmU//CeRIHSUWS8Rx6aYeOu7JZwe1YT/
+	 PvpClFllL3x0bHydSz1hKBiSwFXahsk/lqsUAX5OXvNypfMaPi/I/xtwDZZXht4OD1
+	 TjstHlA2Hp9ENKs7XrHGkLPp/n8NK6zuyN2Fg1CTZaD1iWdK7fJJWkqOfluwSEGTxl
+	 kopkZdZ+WBiqA==
 From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 02 Nov 2026 15:48:48 +0100
-Subject: [PATCH RFC 08/16] selftests/proc: check that a faulting reader
- doesn't hold up removal
+Date: Mon, 02 Nov 2026 15:48:49 +0100
+Subject: [PATCH RFC 09/16] seq_file: add seq_preallocate()
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261102-work-procfs-core-v1-8-75df35e4f8b8@kernel.org>
+Message-Id: <20261102-work-procfs-core-v1-9-75df35e4f8b8@kernel.org>
 References: <20261102-work-procfs-core-v1-0-75df35e4f8b8@kernel.org>
 In-Reply-To: <20261102-work-procfs-core-v1-0-75df35e4f8b8@kernel.org>
 To: linux-fsdevel@vger.kernel.org
@@ -104,163 +103,85 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Read /proc/net/dev_snmp6/<dev> of a tun device into a buffer whose first
-page is backed by userfaultfd and remove the device while the reader
-sleeps in its copy to userspace:
+single_open_size() allocates the buffer itself because it does the
+single_open() too. A file whose seq_file is opened by somebody else,
+like procfs does now, needs to do that after the fact. Add
+seq_preallocate() for that and use it in single_open_size().
 
-- removing the entry doesn't wait for the reader
-
-- the reader still gets what was printed before the removal
-
-- and the next read fails with -EIO
-
-The entry is removed under RTNL, so a regression stalls the test for
-five seconds before it fails.
+No functional changes.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- .../selftests/proc/proc-remove-slow-reader.c       | 133 +++++++++++++++++++++
- 1 file changed, 133 insertions(+)
+ fs/seq_file.c            | 36 ++++++++++++++++++++++++++++--------
+ include/linux/seq_file.h |  1 +
+ 2 files changed, 29 insertions(+), 8 deletions(-)
 
-diff --git a/tools/testing/selftests/proc/proc-remove-slow-reader.c b/tools/testing/selftests/proc/proc-remove-slow-reader.c
-new file mode 100644
-index 000000000000..a201645beca9
---- /dev/null
-+++ b/tools/testing/selftests/proc/proc-remove-slow-reader.c
-@@ -0,0 +1,133 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * A read that faults while copying to userspace must not hold up removal of
-+ * the /proc entry. /proc/net/dev_snmp6/<dev> of a tun device is removed under
-+ * RTNL when the device's file is closed.
+diff --git a/fs/seq_file.c b/fs/seq_file.c
+index 456c78719fd0..a4644cdda7e6 100644
+--- a/fs/seq_file.c
++++ b/fs/seq_file.c
+@@ -590,21 +590,41 @@ int single_open(struct file *file, int (*show)(struct seq_file *, void *),
+ }
+ EXPORT_SYMBOL(single_open);
+ 
+-int single_open_size(struct file *file, int (*show)(struct seq_file *, void *),
+-		void *data, size_t size)
++/**
++ *	seq_preallocate -	start out with a buffer of @size
++ *	@m: the seq_file, before it is first read
++ *	@size: the size of the buffer
++ *
++ *	For files whose records don't fit into a page, so that the first read
++ *	doesn't have to work its way up to the right buffer size.
 + */
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <linux/if.h>
-+#include <linux/if_tun.h>
-+#include <linux/userfaultfd.h>
-+#include <poll.h>
-+#include <pthread.h>
-+#include <sched.h>
-+#include <string.h>
-+#include <sys/ioctl.h>
-+#include <sys/mman.h>
-+#include <sys/syscall.h>
-+#include <unistd.h>
++int seq_preallocate(struct seq_file *m, size_t size)
+ {
+ 	char *buf = seq_buf_alloc(size);
+-	int ret;
 +
-+#include "../kselftest_harness.h"
-+
-+#define TUN_NAME	"procslow0"
-+#define SNMP6_PATH	"/proc/net/dev_snmp6/" TUN_NAME
-+#define READ_PAGES	16
-+#define TIMEOUT_MS	5000
-+
-+struct reader {
-+	int fd;
-+	char *buf;
-+	size_t len;
-+	ssize_t ret;
-+};
-+
-+struct closer {
-+	int tun;
-+	int done;
-+};
-+
-+static void *read_thread(void *arg)
-+{
-+	struct reader *r = arg;
-+
-+	r->ret = read(r->fd, r->buf, r->len);
-+	return NULL;
+ 	if (!buf)
+ 		return -ENOMEM;
++	kvfree(m->buf);
++	m->buf = buf;
++	m->size = size;
++	return 0;
 +}
++EXPORT_SYMBOL(seq_preallocate);
 +
-+static void *close_thread(void *arg)
++int single_open_size(struct file *file, int (*show)(struct seq_file *, void *),
++		void *data, size_t size)
 +{
-+	struct closer *c = arg;
-+	ssize_t ret;
++	int ret;
 +
-+	close(c->tun);
-+	ret = write(c->done, "x", 1);
-+	return (void *)ret;
-+}
-+
-+TEST(remove_while_reader_faults)
-+{
-+	struct uffdio_api api = { .api = UFFD_API };
-+	struct uffdio_register reg = {};
-+	struct uffdio_zeropage zero = {};
-+	long psz = sysconf(_SC_PAGESIZE);
-+	struct ifreq ifr = {};
-+	struct reader r = {};
-+	struct closer c = {};
-+	struct uffd_msg msg;
-+	struct pollfd pfd;
-+	pthread_t rt, ct;
-+	int uffd, done[2];
-+	char *buf;
-+
-+	if (unshare(CLONE_NEWNET))
-+		SKIP(return, "unshare(CLONE_NEWNET): %s", strerror(errno));
-+
-+	c.tun = open("/dev/net/tun", O_RDWR | O_CLOEXEC);
-+	if (c.tun < 0)
-+		SKIP(return, "/dev/net/tun: %s", strerror(errno));
-+	strncpy(ifr.ifr_name, TUN_NAME, IFNAMSIZ - 1);
-+	ifr.ifr_flags = IFF_TUN | IFF_NO_PI;
-+	ASSERT_EQ(ioctl(c.tun, TUNSETIFF, &ifr), 0);
-+
-+	r.fd = open(SNMP6_PATH, O_RDONLY | O_CLOEXEC);
-+	if (r.fd < 0)
-+		SKIP(return, SNMP6_PATH ": %s", strerror(errno));
-+
-+	uffd = syscall(__NR_userfaultfd, O_CLOEXEC | O_NONBLOCK);
-+	if (uffd < 0)
-+		SKIP(return, "userfaultfd: %s", strerror(errno));
-+	ASSERT_EQ(ioctl(uffd, UFFDIO_API, &api), 0);
-+
-+	/* Only the first page of the buffer goes through userfaultfd. */
-+	buf = mmap(NULL, READ_PAGES * psz, PROT_READ | PROT_WRITE,
-+		   MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-+	ASSERT_NE(buf, MAP_FAILED);
-+	reg.range.start = (unsigned long)buf;
-+	reg.range.len = psz;
-+	reg.mode = UFFDIO_REGISTER_MODE_MISSING;
-+	ASSERT_EQ(ioctl(uffd, UFFDIO_REGISTER, &reg), 0);
-+
-+	r.buf = buf;
-+	r.len = READ_PAGES * psz;
-+	ASSERT_EQ(pthread_create(&rt, NULL, read_thread, &r), 0);
-+
-+	/* The reader now sleeps in its copy to userspace. */
-+	pfd = (struct pollfd){ .fd = uffd, .events = POLLIN };
-+	ASSERT_EQ(poll(&pfd, 1, TIMEOUT_MS), 1);
-+	ASSERT_EQ(read(uffd, &msg, sizeof(msg)), sizeof(msg));
-+	ASSERT_EQ(msg.event, UFFD_EVENT_PAGEFAULT);
-+
-+	/* Closing the device removes the file that is being read. */
-+	ASSERT_EQ(pipe2(done, O_CLOEXEC), 0);
-+	c.done = done[1];
-+	ASSERT_EQ(pthread_create(&ct, NULL, close_thread, &c), 0);
-+	pfd = (struct pollfd){ .fd = done[0], .events = POLLIN };
-+	EXPECT_EQ(poll(&pfd, 1, TIMEOUT_MS), 1) {
-+		TH_LOG("removing " SNMP6_PATH " waited for the reader");
-+	}
-+
-+	zero.range.start = (unsigned long)buf;
-+	zero.range.len = psz;
-+	ASSERT_EQ(ioctl(uffd, UFFDIO_ZEROPAGE, &zero), 0);
-+	ASSERT_EQ(pthread_join(rt, NULL), 0);
-+	ASSERT_EQ(pthread_join(ct, NULL), 0);
-+
-+	/* What was printed before the removal still arrives, then nothing. */
-+	EXPECT_GT(r.ret, 0);
-+	EXPECT_EQ(read(r.fd, buf, psz), -1);
-+	EXPECT_EQ(errno, EIO);
-+}
-+
-+TEST_HARNESS_MAIN
+ 	ret = single_open(file, show, data);
+-	if (ret) {
+-		kvfree(buf);
++	if (ret)
+ 		return ret;
++	ret = seq_preallocate(file->private_data, size);
++	if (ret) {
++		single_release(file_inode(file), file);
++		file->private_data = NULL;
+ 	}
+-	((struct seq_file *)file->private_data)->buf = buf;
+-	((struct seq_file *)file->private_data)->size = size;
+-	return 0;
++	return ret;
+ }
+ EXPORT_SYMBOL(single_open_size);
+ 
+diff --git a/include/linux/seq_file.h b/include/linux/seq_file.h
+index b813b7e63d89..834daff48b7d 100644
+--- a/include/linux/seq_file.h
++++ b/include/linux/seq_file.h
+@@ -175,6 +175,7 @@ int seq_path_root(struct seq_file *m, const struct path *path,
+ void *single_start(struct seq_file *, loff_t *);
+ int single_open(struct file *, int (*)(struct seq_file *, void *), void *);
+ int single_open_size(struct file *, int (*)(struct seq_file *, void *), void *, size_t);
++int seq_preallocate(struct seq_file *m, size_t size);
+ int single_release(struct inode *, struct file *);
+ void *__seq_open_private(struct file *, const struct seq_operations *, int);
+ int seq_open_private(struct file *, const struct seq_operations *, int);
 
 -- 
 2.53.0
