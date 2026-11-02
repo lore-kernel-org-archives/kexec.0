@@ -2,55 +2,55 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2560360A262D
-	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 14:22:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B213606A337
+	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 14:22:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=WwHyXbXG;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ax8dWQye
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=0ZJvQ9u5;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Df3TZq60
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=0oFqdYtQQ93hmf66Xu9P3kJmoMCkLJeiEqd5UgVqoAA=; b=WwHyXbXGSweNGV
-	YUUHma3XNpt7Zy0lZTs/GwNq6laDgQgJ5AbDK71mSmQDH+zjqoP+JgAoxm7t0r0cw1HZM3CC9mQLG
-	5h22tvtadVVS0O07Yw0zRs036iByOCCUBarS8vX2AiD152lbl5mDoZV9Z9ltbekqdNxOlKbRJFxHj
-	LCeWwIyuWcwlBnvI+jetR7fCffrFuNXPGOyqdmN/tZsaD4pHNcKULbIsqcIapkUt4JpIpCp7EIBiR
-	pXYE8wNZXIn4PoZGxWQrPQsQcTZYjUhKeBMEcm2sQQaCCwoEgmtuvaVo/2qOHNJuw6jIYBcX/bgaH
-	uYsyxjksisLmJzIk4gCw==;
+	List-Owner; bh=pGKkc9crGkZecPr8vk7TgMVLcv4DpuQHsFCpp4FMbY8=; b=0ZJvQ9u5y7mPl1
+	H5jGYU+OU9Zu4JI2YZPAG0wU3Q5Nob1jAQaLRVLVFmCE5qMSRXy19hXgRxG0w91neH6EkuvRCUJrd
+	TgODlwcXYqpxDgEC6EZB6By4ao4TNEUHVxRE0wDKOTK3dWA6J9/7yda7VryYT7W5BLNjUkwUTC2sb
+	nqam6oARZzsapa0eD83POUfLEyJEdGiSwQMt8oju0Ub3cZ9GP5AhCA8iC9AJRSvbjMAicEbbkFLQO
+	9pM0lmMGn8LowaVXkqPwP/+MGMzcJkxZ1w0XK37dyg5TIeY95eh0tn+a8SLM9gncFKUFO4CVpJnem
+	SK3AkECNPH/RALcDO/MA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNsvE-0000000Glwf-3evs;
-	Mon, 02 Nov 2026 14:22:04 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xNsvT-0000000Gm1X-0UJn;
+	Mon, 02 Nov 2026 14:22:19 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNsvD-0000000GlwQ-3Paw;
-	Mon, 02 Nov 2026 14:22:03 +0000
+	id 1xNsvR-0000000Gm1H-3t0E;
+	Mon, 02 Nov 2026 14:22:17 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 5813E404B9;
+	by sea.source.kernel.org (Postfix) with ESMTP id 798CA439C9;
+	Mon,  2 Nov 2026 14:22:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B385C1F00A1A;
 	Mon,  2 Nov 2026 14:22:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8B981F00A17;
-	Mon,  2 Nov 2026 14:21:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793629323;
-	bh=0oFqdYtQQ93hmf66Xu9P3kJmoMCkLJeiEqd5UgVqoAA=;
+	s=k20260515; t=1793629337;
+	bh=pGKkc9crGkZecPr8vk7TgMVLcv4DpuQHsFCpp4FMbY8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=ax8dWQyerzpr/lWF0zvdG4jamemgWlVZd/h7GMRXnqhpTBDJEl7ev50HTLs6gH7J/
-	 0p7NNLryksO6UgSelTjy18+WNSqy3gYWlFUSSyR19sqLhSv0hd9SLP5IvSKwiIx0nB
-	 EmF9BtAu7NyghltI+OycSZEJ26mnAtmx7MkuIud4BVq2NcIGDOUtdlbiumRpD8YiX6
-	 cay+Ggorj7ZVDVBu7GBPEK5Aw51B56VDfiDPqSmzWSFRn7vWnbSOjeXUnaCNUmE3rR
-	 czSLGyB9rAbV56X/5L4Tebo1G1sdy4cG9DZlv5tDH9WHwzjWU8tayWaP5twT6EmNQp
-	 RARmDivxEu4rw==
+	b=Df3TZq60vzd3Ud6sHKXoJyOdQDpB0y91AXsdElaLXcBNikKzPy/szHHI0/CwhfdRn
+	 WsM9i5bSUctcGEqYeXI7QRDxIUmUu6UVak83Uv46oMzFfbpgzCr7WVMlJ4BZ9J3HMW
+	 AjiG1/VEQjOOGRPDINpgdmcZyMZLtyj1mgE1Unq9dkmYqFAk/CpLvDVWQcV09cYgAf
+	 ujO/67H0xCQCJ6g61xa0UOqeiUbiLYXf42d70VBXVhX79yB82XPCpH4/p7mnlrDBHD
+	 DpkuL3OCzDyMvDM0Y7nF2tWK4aAoLW1EUN7+2jUNhTpoMsfy3rJmuVaCfP3vQoVnEw
+	 qrmaSSpx2GTbg==
 From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 02 Nov 2026 15:21:16 +0100
-Subject: [PATCH RFC 01/38] PCI/proc: don't truncate the position of config
- space accesses
+Date: Mon, 02 Nov 2026 15:21:17 +0100
+Subject: [PATCH RFC 02/38] PNP: isapnp: don't read past the end of the
+ buffer on a large pread()
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261102-work-procfs-bugfixes-v1-1-59422ed3e465@kernel.org>
+Message-Id: <20261102-work-procfs-bugfixes-v1-2-59422ed3e465@kernel.org>
 References: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
 In-Reply-To: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
 To: linux-fsdevel@vger.kernel.org
@@ -86,12 +86,12 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  "Christian Brauner (Amutable)" <brauner@kernel.org>, 
  Chuck Lever <cel@kernel.org>, stable@vger.kernel.org
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2714; i=brauner@kernel.org;
- h=from:subject:message-id; bh=57Zv3BgjxHPYJgAYtfWWUhWCD6jzurA4v7Zp2iJg+04=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9mJN11v/UUrXtFcJuaV4rJB5G2Ou5n+Tu6Z/jVp+uW
- MTK/0yqo5SFQYyLQVZMkcWh3SRcbjlPxWajTA2YOaxMIEMYuDgFYCK7NzH8M2yqMdxuWRuoE37x
- QsuKJx8C/3tt2Xjyxk6p05Y/GGTn7WJkeKXl8emh1r1VXHuO8HVGP7z6emFsq1zH7SfFda/fuJx
- cwwoA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1282; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=r49sdX7Qo0uBjLpgxxQ+IVLBreEaXwT40T2nEujvZRA=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9mJN1Oevk86ly4dxr5u5ckPH96NsbLxgkniTHLPuY0
+ Ppb4oDwx45SFgYxLgZZMUUWh3aTcLnlPBWbjTI1YOawMoEMYeDiFICJ5CsyMpyUnxT0MYT7za6w
+ DL3kKeLy+fudHgfx3zRQWh2/9tvz59EM/2MUrjVNN51Y9MLwwibHKsNwxzdPq+cE1u3LTEhIn7J
+ PhRUA
 X-Developer-Key: i=brauner@kernel.org; a=openpgp;
  fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 X-BeenThere: kexec@lists.infradead.org
@@ -112,85 +112,43 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-proc_bus_pci_write() truncates the file position to an int. A pwrite()
-at an offset like 0xfffff000 turns it negative, the check against the
-size of the config space passes and the count it clamps to ends up
-larger than what was written. The loop then reads past the end of the
-caller's buffer and writes all of it into config space at negative
-offsets, which pci_user_write_config_*() pass on to the config
-accessors unchecked. The write also returns more than it was asked to
-write.
+isapnp_proc_bus_read() truncates the position to an int. A pread() at
+an offset like 0xfffffc00 turns it negative, the check against the size
+of the configuration space passes, and the loop then puts everything
+from that position up to byte 256 into the reader's buffer, no matter
+how few bytes were asked for.
 
-An offset above 4G that truncates to a small positive value writes to
-the start of config space instead. proc_bus_pci_read() keeps the
-position in an unsigned int, so a read at such an offset returns the
-start of config space instead of hitting EOF.
-
-Check the position against the size of the config space before
-narrowing it.
+Keep the position as a loff_t and clamp the count against what is left
+of the configuration space.
 
 Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Cc: stable@vger.kernel.org
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- drivers/pci/proc.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/pnp/isapnp/proc.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
-index 3d7a9ed5fc22..e0dc70123f82 100644
---- a/drivers/pci/proc.c
-+++ b/drivers/pci/proc.c
-@@ -32,8 +32,7 @@ static ssize_t proc_bus_pci_read(struct file *file, char __user *buf,
- 				 size_t nbytes, loff_t *ppos)
+diff --git a/drivers/pnp/isapnp/proc.c b/drivers/pnp/isapnp/proc.c
+index c1f6e6bd0eb2..8197c7f29743 100644
+--- a/drivers/pnp/isapnp/proc.c
++++ b/drivers/pnp/isapnp/proc.c
+@@ -23,14 +23,12 @@ static ssize_t isapnp_proc_bus_read(struct file *file, char __user * buf,
+ 				    size_t nbytes, loff_t * ppos)
  {
- 	struct pci_dev *dev = pde_data(file_inode(file));
--	unsigned int pos = *ppos;
--	unsigned int cnt, size;
-+	unsigned int pos, cnt, size;
- 
- 	/*
- 	 * Normal users can read only the standardized portion of the
-@@ -51,8 +50,9 @@ static ssize_t proc_bus_pci_read(struct file *file, char __user *buf,
- 	if (!nbytes)
- 		return 0;
- 
--	if (pos >= size)
-+	if (*ppos >= size)
- 		return 0;
-+	pos = *ppos;
- 	if (nbytes >= size)
- 		nbytes = size;
- 	if (pos + nbytes > size)
-@@ -119,9 +119,8 @@ static ssize_t proc_bus_pci_write(struct file *file, const char __user *buf,
- {
- 	struct inode *ino = file_inode(file);
- 	struct pci_dev *dev = pde_data(ino);
+ 	struct pnp_dev *dev = pde_data(file_inode(file));
 -	int pos = *ppos;
- 	int size = dev->cfg_size;
--	int cnt, ret;
-+	int pos, cnt, ret;
++	loff_t pos = *ppos;
+ 	int cnt, size = 256;
  
- 	ret = security_locked_down(LOCKDOWN_PCI_ACCESS);
- 	if (ret)
-@@ -130,14 +129,16 @@ static ssize_t proc_bus_pci_write(struct file *file, const char __user *buf,
- 	if (!nbytes)
+ 	if (pos >= size)
  		return 0;
+-	if (nbytes >= size)
+-		nbytes = size;
+-	if (pos + nbytes > size)
++	if (nbytes > size - pos)
+ 		nbytes = size - pos;
+ 	cnt = nbytes;
  
-+	if (*ppos >= size)
-+		return 0;
-+	pos = *ppos;
-+
- 	if (resource_is_exclusive(&dev->driver_exclusive_resource, pos, nbytes)) {
- 		pci_warn_once(dev, "%s: Unexpected write to kernel-exclusive config offset %x",
- 			      current->comm, pos);
- 		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
- 	}
- 
--	if (pos >= size)
--		return 0;
- 	if (nbytes >= size)
- 		nbytes = size;
- 	if (pos + nbytes > size)
 
 -- 
 2.53.0
