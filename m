@@ -2,54 +2,55 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E208C6070C8E
-	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:02:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ECF06070D9D
+	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:02:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=hMFPr9Xj;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d/TU5Bzo
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Tfj0Ule+;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RNnLcX8e
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=qVgyj+FYQ9g7uHqmkN/6kOivRqdCDmjAyQM7m79vY9A=; b=hMFPr9XjBlhpvR
-	vJqt/h+Nh8h2WXG9T+8i54qv2U3hX4v/anr/gx/7XLJZtBwM2Oa/VBwrenidT18E2iamZ/t3oW9kt
-	3H5+aYqLK/NhCtj9HtGgHqsSDO2uuwtNEZrwIBgftp+BXK7QZMXiNY1yhybDN/fKIIiMmIOn66H46
-	V3X64A8GT8TAJiJO9tSnEsVecvY4/zDByr2k88H3oDN1J3MvKfkRLeDTIVd12BmMin1wsGTFB7kvM
-	vzizOyHTPSseGY1DleWBXcRTZ8BuE7kslYt+8serpa12aDXRiyIG46VqMSjo+0CVgk88T6unZ1iVa
-	gowDFKLqt1m4I56n2ewA==;
+	List-Owner; bh=pQQ1Vs9Ggdq4tGJpsZZ2KAKh5WKICEOKhSgV+25xKrE=; b=Tfj0Ule+EshzSS
+	0nDBcQ5nEPWPbz0M+3thnUqo0HCBVnYvVRMl0ukTiaoQyLJYHCwq1JtAUpqLHOgzvC85NeRexq+jR
+	tDx6sS8/YtKxaPwjRVqXqS+r9BAwoKBkkTmtFkaC7xUTWk5kzqVxiHeSSXRT85FaXCDonMGALpUvn
+	TmAvLUtkbBPYYjDW+DqDorpFx5Ea/9DOU3J1PFcdNEricUyTEkdCB0KUSvPUPJSc1NtjvXYegGmhb
+	KaCxuxpDqAVJ5IBGtvPrwDNr3FuCtrYlmvrQF5NIIiyOxehL0mLUmIvZojTf5H6mTZhalQ6+PsHrp
+	j8wcPkIFNgGUGQSKRe5g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNtYK-0000000GxRJ-2eC4;
-	Mon, 02 Nov 2026 15:02:28 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xNtYb-0000000GxZ1-07hR;
+	Mon, 02 Nov 2026 15:02:45 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNtYJ-0000000GxQq-1g6e;
-	Mon, 02 Nov 2026 15:02:27 +0000
+	id 1xNtYZ-0000000GxYT-21NG;
+	Mon, 02 Nov 2026 15:02:43 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 29E534085D;
-	Mon,  2 Nov 2026 15:02:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 174411F00A17;
-	Mon,  2 Nov 2026 15:02:12 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 3E276434BC;
+	Mon,  2 Nov 2026 15:02:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 822B61F00A16;
+	Mon,  2 Nov 2026 15:02:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793631747;
-	bh=qVgyj+FYQ9g7uHqmkN/6kOivRqdCDmjAyQM7m79vY9A=;
+	s=k20260515; t=1793631763;
+	bh=pQQ1Vs9Ggdq4tGJpsZZ2KAKh5WKICEOKhSgV+25xKrE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=d/TU5BzoI0BtvHfYzajrrcPl1GXVCryRY1Ut48y/GJIvjjd3K9tAkOPoaubnTH8Cj
-	 sK1647iQobp60ZY24tDMaAx9NsKxFNjymF5IY5h/cKkK9nGKkyHoV7CZDZf8JNbRww
-	 IRIPJfTF97vUVSY7NrIvF3mdu1MbBY5I5i7z+xiQlEEZ26yJHEdd7bH89Gqlbow2Ks
-	 Vg0J9epC20U9E4NUHIBDGai+NMTOFT3rd71sgkTUJULyeOxAVxvB4aiLpCaS0sj7+K
-	 C1HjOmzglPQcf1LCUAmDC0bN3L5TxoShuNDSEnm0bhASQBWbCYoW6wiUfo3S3aSY11
-	 bUEfQJ+ZWGIIw==
+	b=RNnLcX8egvEl5rPbLFMIscYDo1QnoOrpG6e02ikgGgR/Z2oamdimB42SLpFro378t
+	 USbuYkcNHDjjzryLCSmr+2mmsvc3Atos4MVc28LQXLDJayaUp2uu3SYOz50KP5/BKt
+	 3u8kERoVbEfv90E7PC1AQzopGHBD/M7WfJWVvb4TNCYwjGxWo6SsNG7sq/Lq8yJIja
+	 zntE5mo3Bhg9BDYczlvI4bibAH3u2IIBa/7c1DzqGQ/HgRro22a3o66odi6Je5Ttco
+	 L0BW9ZHBEZJkGL3uRb7ev3sdiVhk7xK/B7muXSKuAHvnwQSKK0opx2IHD1lw9HfJa5
+	 LqGcvESsuLu/A==
 From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 02 Nov 2026 16:01:29 +0100
-Subject: [PATCH RFC 02/22] ARM: alignment: let procfs copy in writes
+Date: Mon, 02 Nov 2026 16:01:30 +0100
+Subject: [PATCH RFC 03/22] ARM: atags: let procfs copy out reads of
+ /proc/atags
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261102-work-procfs-arch-v1-2-c9492ab08480@kernel.org>
+Message-Id: <20261102-work-procfs-arch-v1-3-c9492ab08480@kernel.org>
 References: <20261102-work-procfs-arch-v1-0-c9492ab08480@kernel.org>
 In-Reply-To: <20261102-work-procfs-arch-v1-0-c9492ab08480@kernel.org>
 To: linux-fsdevel@vger.kernel.org
@@ -103,44 +104,36 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Implement ->proc_write_buf() so procfs copies in what is written to
-/proc/cpu/alignment before it pins the entry, and take the mode from
-that copy. Writes larger than PAGE_SIZE - 1 bytes fail with -EINVAL now.
+Implement ->proc_read_buf() so procfs copies what is read to userspace
+after it unpinned the entry.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- arch/arm/mm/alignment.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/arm/kernel/atags_proc.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/mm/alignment.c b/arch/arm/mm/alignment.c
-index 3e5e30968634..11ceefdfa388 100644
---- a/arch/arm/mm/alignment.c
-+++ b/arch/arm/mm/alignment.c
-@@ -144,14 +144,13 @@ static int alignment_proc_show(struct seq_file *m, void *v)
- 	return 0;
+diff --git a/arch/arm/kernel/atags_proc.c b/arch/arm/kernel/atags_proc.c
+index 8411fbfbcb8b..ff28bf24dd30 100644
+--- a/arch/arm/kernel/atags_proc.c
++++ b/arch/arm/kernel/atags_proc.c
+@@ -10,15 +10,15 @@ struct buffer {
+ 	char data[] __counted_by(size);
+ };
+ 
+-static ssize_t atags_read(struct file *file, char __user *buf,
++static ssize_t atags_read(struct file *file, char *buf,
+ 			  size_t count, loff_t *ppos)
+ {
+ 	struct buffer *b = pde_data(file_inode(file));
+-	return simple_read_from_buffer(buf, count, ppos, b->data, b->size);
++	return memory_read_from_buffer(buf, count, ppos, b->data, b->size);
  }
  
--static ssize_t alignment_proc_write(struct file *file, const char __user *buffer,
-+static ssize_t alignment_proc_write(struct file *file, char *buffer,
- 				    size_t count, loff_t *pos)
- {
- 	char mode;
- 
- 	if (count > 0) {
--		if (get_user(mode, buffer))
--			return -EFAULT;
-+		mode = buffer[0];
- 		if (mode >= '0' && mode <= '5')
- 			ai_usermode = safe_usermode(mode - '0', true);
- 	}
-@@ -160,7 +159,7 @@ static ssize_t alignment_proc_write(struct file *file, const char __user *buffer
- 
- static const struct proc_ops alignment_proc_ops = {
- 	.proc_show	= alignment_proc_show,
--	.proc_write	= alignment_proc_write,
-+	.proc_write_buf	= alignment_proc_write,
+ static const struct proc_ops atags_proc_ops = {
+-	.proc_read	= atags_read,
++	.proc_read_buf	= atags_read,
+ 	.proc_lseek	= default_llseek,
  };
- #endif /* CONFIG_PROC_FS */
  
 
 -- 
