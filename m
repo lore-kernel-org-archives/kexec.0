@@ -2,54 +2,54 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D926070DAE
-	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:02:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E208C6070C8E
+	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:02:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=X2j9GYq2;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=g7GASIyP
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=hMFPr9Xj;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d/TU5Bzo
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=RCWYzTdROaZ//Ublq96X/PsjFPNs26aKqDomYMjplOg=; b=X2j9GYq2FO/QRG
-	3QHDdtXAAUEk7utk9KW/PaySW3p90p5IOqSi2OHKhMuWcv47zaH6LLPCm1IzTjCn8brpqUrJtwumg
-	9NmEjgMoDbciG50wYsk6Mjf2QH+VFXOnbSmxZLoGpFLJk7byeZIG7AR4Xg09OuZmqasb2gSj1lI5d
-	1Uaq6IUeRG0ugHRWVkXE/TstuIvkqMLQ8vx04P8L5oux7BRwDW/YrhXITpaLLYCKhENdBn/c1HiKa
-	RaEgePyr+waZnu4V8mdBpwVSqBEqdoafiXcpeyzBuNjLbNcBZ01CZz1/q4dkL+s6XSyl/3HynxXyq
-	xWWPit+OdEj+6d2PFR0A==;
+	List-Owner; bh=qVgyj+FYQ9g7uHqmkN/6kOivRqdCDmjAyQM7m79vY9A=; b=hMFPr9XjBlhpvR
+	vJqt/h+Nh8h2WXG9T+8i54qv2U3hX4v/anr/gx/7XLJZtBwM2Oa/VBwrenidT18E2iamZ/t3oW9kt
+	3H5+aYqLK/NhCtj9HtGgHqsSDO2uuwtNEZrwIBgftp+BXK7QZMXiNY1yhybDN/fKIIiMmIOn66H46
+	V3X64A8GT8TAJiJO9tSnEsVecvY4/zDByr2k88H3oDN1J3MvKfkRLeDTIVd12BmMin1wsGTFB7kvM
+	vzizOyHTPSseGY1DleWBXcRTZ8BuE7kslYt+8serpa12aDXRiyIG46VqMSjo+0CVgk88T6unZ1iVa
+	gowDFKLqt1m4I56n2ewA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNtY3-0000000GxJt-1Vda;
-	Mon, 02 Nov 2026 15:02:11 +0000
+	id 1xNtYK-0000000GxRJ-2eC4;
+	Mon, 02 Nov 2026 15:02:28 +0000
 Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNtY1-0000000GxJf-3wIg;
-	Mon, 02 Nov 2026 15:02:09 +0000
+	id 1xNtYJ-0000000GxQq-1g6e;
+	Mon, 02 Nov 2026 15:02:27 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id ACB6443EE2;
-	Mon,  2 Nov 2026 15:02:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAB381F00A1C;
-	Mon,  2 Nov 2026 15:01:55 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 29E534085D;
+	Mon,  2 Nov 2026 15:02:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 174411F00A17;
+	Mon,  2 Nov 2026 15:02:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793631729;
-	bh=RCWYzTdROaZ//Ublq96X/PsjFPNs26aKqDomYMjplOg=;
+	s=k20260515; t=1793631747;
+	bh=qVgyj+FYQ9g7uHqmkN/6kOivRqdCDmjAyQM7m79vY9A=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=g7GASIyP66iaHneT0IXLyxGE3Gv8uk+u36p3s2m270MYuKSf/lxqLAMSRJOW/mN5b
-	 cqw43daYhwXjGaH+bT+uzWlv1RtJgVmK1pKNWgKadSoQ4YP7xysJZZNazw538Ya2w8
-	 aQyWb7PBw6LuxEkCbQCuHEsb1KvYSgmQDTGlChVmndzt2sLknpmWaqisu0NyUvlM/y
-	 hG208gvk6GSsXAzvoi3yhFcxnrvr/4f9iVDAGppDZvhr/8T+2kNPcVMo4GJLXJAgLG
-	 J6pV+INZeS4SdtLtP2ZjONMRNNmVsgjQI6Fx9jjazJ3kAgIbreGUlE2x6BQYTDKlDz
-	 uF54rLOl1jq1A==
+	b=d/TU5BzoI0BtvHfYzajrrcPl1GXVCryRY1Ut48y/GJIvjjd3K9tAkOPoaubnTH8Cj
+	 sK1647iQobp60ZY24tDMaAx9NsKxFNjymF5IY5h/cKkK9nGKkyHoV7CZDZf8JNbRww
+	 IRIPJfTF97vUVSY7NrIvF3mdu1MbBY5I5i7z+xiQlEEZ26yJHEdd7bH89Gqlbow2Ks
+	 Vg0J9epC20U9E4NUHIBDGai+NMTOFT3rd71sgkTUJULyeOxAVxvB4aiLpCaS0sj7+K
+	 C1HjOmzglPQcf1LCUAmDC0bN3L5TxoShuNDSEnm0bhASQBWbCYoW6wiUfo3S3aSY11
+	 bUEfQJ+ZWGIIw==
 From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 02 Nov 2026 16:01:28 +0100
-Subject: [PATCH RFC 01/22] alpha: srm_env: let procfs copy in writes
+Date: Mon, 02 Nov 2026 16:01:29 +0100
+Subject: [PATCH RFC 02/22] ARM: alignment: let procfs copy in writes
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261102-work-procfs-arch-v1-1-c9492ab08480@kernel.org>
+Message-Id: <20261102-work-procfs-arch-v1-2-c9492ab08480@kernel.org>
 References: <20261102-work-procfs-arch-v1-0-c9492ab08480@kernel.org>
 In-Reply-To: <20261102-work-procfs-arch-v1-0-c9492ab08480@kernel.org>
 To: linux-fsdevel@vger.kernel.org
@@ -104,58 +104,44 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
 Implement ->proc_write_buf() so procfs copies in what is written to
-/proc/srm_environment/* before it pins the entry, and hand that copy to
-the console callback through the page it used before.
+/proc/cpu/alignment before it pins the entry, and take the mode from
+that copy. Writes larger than PAGE_SIZE - 1 bytes fail with -EINVAL now.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- arch/alpha/kernel/srm_env.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ arch/arm/mm/alignment.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/alpha/kernel/srm_env.c b/arch/alpha/kernel/srm_env.c
-index faafc2df7886..6a1742b09a82 100644
---- a/arch/alpha/kernel/srm_env.c
-+++ b/arch/alpha/kernel/srm_env.c
-@@ -81,7 +81,7 @@ static int srm_env_proc_show(struct seq_file *m, void *v)
- 	return ret;
+diff --git a/arch/arm/mm/alignment.c b/arch/arm/mm/alignment.c
+index 3e5e30968634..11ceefdfa388 100644
+--- a/arch/arm/mm/alignment.c
++++ b/arch/arm/mm/alignment.c
+@@ -144,14 +144,13 @@ static int alignment_proc_show(struct seq_file *m, void *v)
+ 	return 0;
  }
  
--static ssize_t srm_env_proc_write(struct file *file, const char __user *buffer,
-+static ssize_t srm_env_proc_write(struct file *file, char *buffer,
- 				  size_t count, loff_t *pos)
+-static ssize_t alignment_proc_write(struct file *file, const char __user *buffer,
++static ssize_t alignment_proc_write(struct file *file, char *buffer,
+ 				    size_t count, loff_t *pos)
  {
- 	int res;
-@@ -92,13 +92,8 @@ static ssize_t srm_env_proc_write(struct file *file, const char __user *buffer,
- 	if (!buf)
- 		return -ENOMEM;
+ 	char mode;
  
--	res = -EINVAL;
--	if (count >= PAGE_SIZE)
--		goto out;
--
- 	res = -EFAULT;
--	if (copy_from_user(buf, buffer, count))
--		goto out;
-+	memcpy(buf, buffer, count);
- 	buf[count] = '\0';
- 
- 	ret1 = callback_setenv(id, buf, count);
-@@ -109,14 +104,13 @@ static ssize_t srm_env_proc_write(struct file *file, const char __user *buffer,
- 		res = (int) ret1;
+ 	if (count > 0) {
+-		if (get_user(mode, buffer))
+-			return -EFAULT;
++		mode = buffer[0];
+ 		if (mode >= '0' && mode <= '5')
+ 			ai_usermode = safe_usermode(mode - '0', true);
  	}
+@@ -160,7 +159,7 @@ static ssize_t alignment_proc_write(struct file *file, const char __user *buffer
  
-- out:
- 	free_page((unsigned long)buf);
- 	return res;
- }
- 
- static const struct proc_ops srm_env_proc_ops = {
- 	.proc_show	= srm_env_proc_show,
--	.proc_write	= srm_env_proc_write,
-+	.proc_write_buf	= srm_env_proc_write,
+ static const struct proc_ops alignment_proc_ops = {
+ 	.proc_show	= alignment_proc_show,
+-	.proc_write	= alignment_proc_write,
++	.proc_write_buf	= alignment_proc_write,
  };
+ #endif /* CONFIG_PROC_FS */
  
- static int __init
 
 -- 
 2.53.0
