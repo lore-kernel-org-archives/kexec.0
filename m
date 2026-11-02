@@ -2,48 +2,48 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43758606A334
-	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 06:08:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0E0606A33B
+	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 06:20:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=UqOwvNTP;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=VzKX9NMk
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=tMcMtGht;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=l/djPWMj
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=hBHoVDgYosEEjwFENvnqm8RfVk+ydgr5qWMoLpA4mck=; b=UqOwvNTPcgMq5A
-	zqij7xZunGIEgN3DTKO+uny1mdbyUSztzD0NvtN0BdleMVCmllmB7HAxoCXvQJ+4wWhZZHJPtgU87
-	C3rNi9M7Ro0k1xp8OwyiLcFhXgVl8wcpTXVYqtqIBHyrQcqZxoKrixVSxiNAP3VFBa5J0E9RUZ4NH
-	XjBWmulskpYQv5enVdzH5A0wln9aAip3zb9GmidktY3xF91YZjjcAkGS5l+DGNbxbjggPJKipoCql
-	qJ/MA5Gmj0Uw8F+u2q0bXXV4Rkj4Pm4uXee28enO3+RI1exz1QSoZ+OqF9Q/eQn7ckK3XQG14eP8X
-	Yh5bGnZRi+S35vXtUniw==;
+	List-Owner; bh=k85vwGun/ME58WuhAJ471wGe1ShuWGkpnjyDxU6NW6s=; b=tMcMtGht2Kih5G
+	HFBIwoO7EZiriX88S9WohEmWdwkiUFa9j+kMeRy/hW7Ysf2IHU2Ze76NpJet8LTbN0eS9iATEyiPS
+	bEbzDf3kv6uY5/XdXBzw86VXPBqbQ3XK3mPEI01EP7yUE2F1C/zzo7ADngLz8XekhdVgrio7OUccu
+	AK4TPwtxTx3xsDTFFFlT3bOL+aNTN50pjjQ0UQlv0AFdk8oBUzi7EKx+fv6Li+sgRDdKhddSdtKSq
+	N5K90iSF6Drl7RgSz8K344A6n+4J4bq04auKtAw6GamNsw+jNjXERFrrZ9tKtiQbp7e8u/W+9wucU
+	O57w6gPx9nNKh//y0Rcw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNlDR-0000000FctV-3l6i;
-	Mon, 02 Nov 2026 06:08:21 +0000
-Received: from out30-101.freemail.mail.aliyun.com ([115.124.30.101])
+	id 1xNlP5-0000000FdmI-3cPG;
+	Mon, 02 Nov 2026 06:20:23 +0000
+Received: from out30-112.freemail.mail.aliyun.com ([115.124.30.112])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNlDO-0000000Fct4-1wAK
+	id 1xNlP0-0000000Fdlu-1z7U
 	for kexec@lists.infradead.org;
-	Mon, 02 Nov 2026 06:08:20 +0000
+	Mon, 02 Nov 2026 06:20:21 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1793599695; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=hBHoVDgYosEEjwFENvnqm8RfVk+ydgr5qWMoLpA4mck=;
-	b=VzKX9NMkc4NrA423mj0NI8nBQ8R6A5VFtHlSsVCHkbDJWczYGsZlB+Gvz39hQQjbakZ40vqowWqapG2q3SuCRvSRSCIDgPSaswMPkoGJ3dnFQqtqQNroJ0msLEpU+r3WYCzKoQz0cxbB0zOeK3hshBUx4zlpVOTTy94I9WlJ738=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R801e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=66;SR=0;TI=SMTPD_---0XDuTEnB_1793599690;
-Received: from 30.74.144.167(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0XDuTEnB_1793599690 cluster:ay36)
+	t=1793600415; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=k85vwGun/ME58WuhAJ471wGe1ShuWGkpnjyDxU6NW6s=;
+	b=l/djPWMj3pLofFZ1ChO1tDz1BoDoS4uzl6ScJZSjzk5pvrr48EAB516mAU8uKrnak/+CseX/GH0JeVmCeBVZSNjut0BoLfEQAhr51sh/H1F4SFY0fwEgtZjutLxod1Hk2RVpR7bNgOphtA0M40dfXjcx/Z/D3UAHiw/Kt2rTd7Q=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R601e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=67;SR=0;TI=SMTPD_---0XDunP4-_1793600408;
+Received: from 30.74.144.167(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0XDunP4-_1793600408 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Mon, 02 Nov 2026 14:08:12 +0800
-Message-ID: <dda009fe-abda-4745-810c-da02d8440b3c@linux.alibaba.com>
-Date: Mon, 2 Nov 2026 14:08:10 +0800
+          Mon, 02 Nov 2026 14:20:09 +0800
+Message-ID: <2fd4f929-d7e1-4deb-b3c7-4bdc611e789b@linux.alibaba.com>
+Date: Mon, 2 Nov 2026 14:20:07 +0800
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 09/47] mm/rmap: handle device-exclusive entries in
- folio_referenced_one()
+Subject: Re: [PATCH v3 10/47] mm/huge_memory: fix list corruption when
+ deferred_split_scan() races with deferred_split_folio()
 To: "David Hildenbrand (Arm)" <david@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
@@ -79,17 +79,16 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
  stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
- Muhammad Usama Anjum <usama.anjum@arm.com>
+ Mani Tofigh <mt4022@columbia.edu>, Muhammad Usama Anjum <usama.anjum@arm.com>
 References: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
- <20261031-fixes_core-v3-9-d6437171ecc3@kernel.org>
+ <20261031-fixes_core-v3-10-d6437171ecc3@kernel.org>
 From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20261031-fixes_core-v3-9-d6437171ecc3@kernel.org>
+In-Reply-To: <20261031-fixes_core-v3-10-d6437171ecc3@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261101_220819_007837_6332B61C 
-X-CRM114-Status: UNSURE (   9.53  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20261101_222018_693388_3E2F3114 
+X-CRM114-Status: GOOD (  15.43  )
 X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -105,39 +104,56 @@ X-Spam-Status: No, score=-19.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=4.0.1
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
 
 
 On 10/31/26 5:39 PM, David Hildenbrand (Arm) wrote:
-> page_vma_mapped_walk() can return non-present device-exclusive entries,
-> but folio_referenced_one() passes them to PTE young-bit accessors that
-> require present PTEs.
+> Since the deferred split queue became a list_lru, the isolate callback
+> moves the folios it took a reference on to an on-stack list, linked
+> through folio->_deferred_list, and deferred_split_scan() takes them off
+> that list with list_del_init() without holding the list_lru lock.
 > 
-> We must neither call clear_flush_young_ptes_notify() nor
-> folio_pte_batch() with non-present entries. For example, clearing the
-> young bit on non-present PTEs can corrupt the entry: on arm64
-> PTE_AF overlaps the swap type, so clearing it turns a device-exclusive
-> entry into an ordinary swap entry.
+> deferred_split_folio() does not know about the on-stack list. It only
+> holds the list_lru lock when it looks at the same list_head, and it can
+> run for such a folio: a THP is queued when it is mapped, as a candidate
+> for the underused check, and is queued "again" when a part of it gets
+> unmapped:
 > 
-> folio_pte_batch() will VM_WARN_ON_FOLIO.
+>    CPU0 deferred_split_scan()          CPU1 deferred_split_folio()
+>    list_del_init(&folio->_deferred_list)
+>      next->prev = prev
+>      prev->next = next
+>      entry->next = entry
+>                                        list_lru_lock_irqsave()
+>                                        folio_set_partially_mapped()
+>                                        __list_lru_add()
+>                                          list_empty(item)  -> true
+>                                          list_add_tail(item, &l->list)
+>                                            item->next = &l->list
+>                                            item->prev = tail
+>      entry->prev = entry
 > 
-> Apply the same approach as the previous fixes to e.g., damon_ptep_mkold():
-> treat these entries as old from the CPU's perspective and obtain their
-> young state through the MMU notifier.
+> The folio now sits on the list_lru with ->prev pointing to itself. The
+> next removal leaves the neighbours pointing to it, and they still do so
+> after the folio has been freed. With CONFIG_DEBUG_LIST:
 > 
-> Skip PTE batching and MGLRU look-around for non-present entries, and
-> don't modify non-present PTEs.
+>    list_del corruption. prev->next should be ffd4000000270090, but was
+>    ffd4000000278090. (prev=ffd4000000270090)
 > 
-> Fixes: b756a3b5e7ea ("mm: device exclusive memory access")
-> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> Fix it by grabbing the lock around list_del_init() so
+> deferred_split_folio() cannot race with it.
+> 
+> Fixes: fafaeceb89a5 ("mm: switch deferred split shrinker to list_lru")
 > Cc: stable@vger.kernel.org
 > Reported-by: Josef Bacik <josef@toxicpanda.com>
-> Reviewed-by: Harry Yoo (Meta) <harry@kernel.org>
-> Reviewed-by: Barry Song <baohua@kernel.org>
-> Reviewed-by: Dev Jain <dev.jain@arm.com>
+> Reviewed-by: Johannes Weiner <hannes@cmpxchg.org>
+> Reviewed-by: Mani Tofigh <mt4022@columbia.edu>
+> Tested-by: Mani Tofigh <mt4022@columbia.edu>
+> Reviewed-by: Lance Yang <lance.yang@linux.dev>
 > Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 > ---
