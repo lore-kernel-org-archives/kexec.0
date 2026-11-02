@@ -2,55 +2,54 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263C26070CA4
-	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:25:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9C460CB7D8
+	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:25:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=bR78L9Iw;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UIWGBig/
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=YcsBLlei;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iGHhpB98
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=el6PFkO3xcLBJA86iuA3itBWUpq/ZBw6RIw3oM8RbD0=; b=bR78L9IwbrT03y
-	QYxjosHGxEFRgs4/iqZsMpsyoD83kmAqvenJ7gI402iK2tOOtvlL5aTgjOJoMJwZUGczs28CeCvQh
-	X/9qWPtaqr+B8wTE1XMORQ1Z1ObVE5cMyhmIf91tZG0Om05b4icp693FOom5A4mZTO03DcG6GlQUc
-	8LfcM/HriLWJL39LN/4T2LXhypTOgQDYcIP7aodBZJrpBOrqqwwLb7TJMpTMZU6zyYiefEDovSc6e
-	v92tNZHxHd6qj6j2Z1DDipUjtNGqg2qXXIuzzZeiOjotL5/TFNAPygXKkH2II12sf+dMkK42v8dq2
-	ZD/or1whIyv8kpBDPb2g==;
+	List-Owner; bh=u3HTYGmb1x7uDyRawit7Dffu0Uk1tIeuw4QH7NxI4G0=; b=YcsBLleigkVul7
+	3pILKsoE+h/GZMrKEdrB/rT3EUfBm0WcaEgDxjko/k+O9jthcDDDQ/XZ4CjD3XV87JIljIAdAlrR5
+	G+or7FTa11f0lG+2VoCN82qp1a90lJN2qfqe7Vc+U+pdh3NTZnyvfeE6uvzxtNu+n1hl6yIuVCYfc
+	P7XVzb8T1cpF7gO2TP+L5ReHZZW9bCRgfPczt8frHhlk8mfmOIZMEwyCB8aCwoRkMG8+LQBYRd4j6
+	3hy7Dj1I+yHfEQnTKsSHxo32ZXtBtIxZUld80CCl8OtXdFgr6oAbIDPDT6k9GWLOaAfpYayWY2oto
+	+Gua7PktXgpnzQmS99uw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNtuf-0000000H5K0-3ZCN;
-	Mon, 02 Nov 2026 15:25:33 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xNtuy-0000000H5QP-3Wwh;
+	Mon, 02 Nov 2026 15:25:52 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNtuf-0000000H5Jl-1iXH;
-	Mon, 02 Nov 2026 15:25:33 +0000
+	id 1xNtuy-0000000H5Q0-18Uy;
+	Mon, 02 Nov 2026 15:25:52 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id C7E5C41A9D;
-	Mon,  2 Nov 2026 15:25:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B18D61F00A17;
-	Mon,  2 Nov 2026 15:25:15 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id E56AA413AD;
+	Mon,  2 Nov 2026 15:25:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 313B21F00A17;
+	Mon,  2 Nov 2026 15:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793633132;
-	bh=el6PFkO3xcLBJA86iuA3itBWUpq/ZBw6RIw3oM8RbD0=;
+	s=k20260515; t=1793633151;
+	bh=u3HTYGmb1x7uDyRawit7Dffu0Uk1tIeuw4QH7NxI4G0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=UIWGBig/hERSv8UC2SBY2/AHoKZwbp+vwJFVHzMXkPYGqF9dt5+0EHsg4lTeFLkeY
-	 CX0dkWtDTbDh5piV0+jALeqJO7PUPJCWq1rupoLvRrR9hiV3ruK5lQ5JOwWAGeI3m9
-	 WHFwZ3fPrTC2yVGxGOTIiQVUBriwWhb2Nv/E2ooxajbFUJ7ShCeNadjFtrTnu8oFHf
-	 xwdUD2zrQXvpkIQ0+Qui98P3kjE0XPPvTcVbSYvw3ebU20McuSBsFpLwx/BeWQxlQ8
-	 9LtMFh6B4imtlAnC4skherstPQYyR/MSLL3rf0G6z64tTDIw/TLE29S7Z0kORviOLo
-	 N/TEiOL6+fxLg==
+	b=iGHhpB98VtzSPCbdmRXR/jCaFOOHZgng77vUnXXpa/iWV7qgDLNgW+ckdUHqU4P7W
+	 lDMM7rzM9cD98EU9ntqwmlo6AuOoYZdNE3YkTnnk2jPoU8L+XDA+C+OYpRSKBliOpJ
+	 Rg/pR2WDpOWUfNwbK2q9lS3ZnE/kvv5zpOAi991IrpIVqPKvYKM9BLNcJnUUC4UvoB
+	 LpQiqxDLLPWF2bD3oAhWzx9vrPEIlvXjP3GUu14Y6hE+qmOaf7p2eyQbu01WP23SRb
+	 Hyz2xBroBzw/ny6J0hknPSpAtx/1qvcvkfpvBp5y82d9lfWO4ucvYBvmjUl8jn1DSn
+	 Ypg4M07MNUeaA==
 From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 02 Nov 2026 16:07:26 +0100
-Subject: [PATCH RFC 16/27] sched/psi: let procfs own the seq_file of the
- pressure files
+Date: Mon, 02 Nov 2026 16:07:27 +0100
+Subject: [PATCH RFC 17/27] sched/psi: let procfs copy in trigger writes
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261102-work-procfs-fs-v1-16-d09a996317b3@kernel.org>
+Message-Id: <20261102-work-procfs-fs-v1-17-d09a996317b3@kernel.org>
 References: <20261102-work-procfs-fs-v1-0-d09a996317b3@kernel.org>
 In-Reply-To: <20261102-work-procfs-fs-v1-0-d09a996317b3@kernel.org>
 To: linux-fsdevel@vger.kernel.org
@@ -86,12 +85,12 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  "Christian Brauner (Amutable)" <brauner@kernel.org>, 
  Chuck Lever <cel@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2971; i=brauner@kernel.org;
- h=from:subject:message-id; bh=nkKdnljsMnki7Ruy8D8hScsbrXYOUFXONWdXZYhGvI8=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9WG40a+nMGLu2+z9eheoKh0w5ullw+0k5Y81bXIHrm
- k3i/y2o6ShlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZjIhQCGvxKS9lN+rOr+uvCY
- g43mie7/U77u6rTN7Zd/x/ExmrlJaCLDf8eDZ2sYnGNzPy0zajRR3fOy/on3y7yddT/K6nOLk54
- ZsAIA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3970; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=SVvoMFbFBzWPlCiJZBe1GzsxYGasrV4wYLo3Ox4kbh0=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9WG7UxHvptWKC9c35XSF/kpOfaj46/DMkOOHWrllLi
+ 9QWsUrmd5SyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEwkrYnhr3D29W9/ZF+bKy49
+ qjy90y2mc63R6pC8HTt6pc8+Xi//Rp6RYb+Q4b/rejGfVzTHsppfOHRxw+yaxoZfLDYTXlT5z3p
+ mwAEA
 X-Developer-Key: i=brauner@kernel.org; a=openpgp;
  fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 X-BeenThere: kexec@lists.infradead.org
@@ -112,100 +111,119 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Declare the show functions and let procfs open and free the seq_file of
-/proc/pressure/*. That makes the open functions unnecessary and
-->proc_release() only destroys the trigger now.
+Implement ->proc_write_buf() for the files in /proc/pressure so procfs
+copies in what is written before it pins the entry, and take the
+trigger from that copy. Only the first 31 bytes were ever looked at.
+Writes larger than PAGE_SIZE - 1 bytes fail with -EINVAL now.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- kernel/sched/psi.c | 38 +++++---------------------------------
- 1 file changed, 5 insertions(+), 33 deletions(-)
+ kernel/sched/psi.c | 40 +++++++++++++++++++---------------------
+ 1 file changed, 19 insertions(+), 21 deletions(-)
 
 diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-index 7c5381423334..bcb8bf4e0b69 100644
+index bcb8bf4e0b69..3132105bf382 100644
 --- a/kernel/sched/psi.c
 +++ b/kernel/sched/psi.c
-@@ -1535,21 +1535,6 @@ static int psi_cpu_show(struct seq_file *m, void *v)
+@@ -1535,8 +1535,8 @@ static int psi_cpu_show(struct seq_file *m, void *v)
  	return psi_show(m, &psi_system, PSI_CPU);
  }
  
--static int psi_io_open(struct inode *inode, struct file *file)
--{
--	return single_open(file, psi_io_show, NULL);
--}
--
--static int psi_memory_open(struct inode *inode, struct file *file)
--{
--	return single_open(file, psi_memory_show, NULL);
--}
--
--static int psi_cpu_open(struct inode *inode, struct file *file)
--{
--	return single_open(file, psi_cpu_show, NULL);
--}
--
- static ssize_t psi_write(struct file *file, const char __user *user_buf,
- 			 size_t nbytes, enum psi_res res)
+-static ssize_t psi_write(struct file *file, const char __user *user_buf,
+-			 size_t nbytes, enum psi_res res)
++static ssize_t psi_write(struct file *file, const char *kbuf, size_t nbytes,
++			 enum psi_res res)
  {
-@@ -1635,31 +1620,25 @@ static int psi_fop_release(struct inode *inode, struct file *file)
- 	struct seq_file *seq = file->private_data;
+ 	char buf[32];
+ 	size_t buf_size;
+@@ -1552,9 +1552,7 @@ static ssize_t psi_write(struct file *file, const char __user *user_buf,
+ 		return -EINVAL;
  
- 	psi_trigger_destroy(seq->private);
--	return single_release(inode, file);
-+	return 0;
+ 	buf_size = min(nbytes, sizeof(buf));
+-	if (copy_from_user(buf, user_buf, buf_size))
+-		return -EFAULT;
+-
++	memcpy(buf, kbuf, buf_size);
+ 	buf[buf_size - 1] = '\0';
+ 
+ 	seq = file->private_data;
+@@ -1590,22 +1588,22 @@ static ssize_t psi_write(struct file *file, const char __user *user_buf,
+ 	return nbytes;
  }
  
+-static ssize_t psi_io_write(struct file *file, const char __user *user_buf,
+-			    size_t nbytes, loff_t *ppos)
++static ssize_t psi_io_write(struct file *file, char *buf, size_t nbytes,
++			    loff_t *ppos)
+ {
+-	return psi_write(file, user_buf, nbytes, PSI_IO);
++	return psi_write(file, buf, nbytes, PSI_IO);
+ }
+ 
+-static ssize_t psi_memory_write(struct file *file, const char __user *user_buf,
+-				size_t nbytes, loff_t *ppos)
++static ssize_t psi_memory_write(struct file *file, char *buf, size_t nbytes,
++				loff_t *ppos)
+ {
+-	return psi_write(file, user_buf, nbytes, PSI_MEM);
++	return psi_write(file, buf, nbytes, PSI_MEM);
+ }
+ 
+-static ssize_t psi_cpu_write(struct file *file, const char __user *user_buf,
+-			     size_t nbytes, loff_t *ppos)
++static ssize_t psi_cpu_write(struct file *file, char *buf, size_t nbytes,
++			     loff_t *ppos)
+ {
+-	return psi_write(file, user_buf, nbytes, PSI_CPU);
++	return psi_write(file, buf, nbytes, PSI_CPU);
+ }
+ 
+ static __poll_t psi_fop_poll(struct file *file, poll_table *wait)
+@@ -1625,21 +1623,21 @@ static int psi_fop_release(struct inode *inode, struct file *file)
+ 
  static const struct proc_ops psi_io_proc_ops = {
--	.proc_open	= psi_io_open,
--	.proc_read	= seq_read,
--	.proc_lseek	= seq_lseek,
-+	.proc_show	= psi_io_show,
- 	.proc_write	= psi_io_write,
+ 	.proc_show	= psi_io_show,
+-	.proc_write	= psi_io_write,
++	.proc_write_buf	= psi_io_write,
  	.proc_poll	= psi_fop_poll,
  	.proc_release	= psi_fop_release,
  };
  
  static const struct proc_ops psi_memory_proc_ops = {
--	.proc_open	= psi_memory_open,
--	.proc_read	= seq_read,
--	.proc_lseek	= seq_lseek,
-+	.proc_show	= psi_memory_show,
- 	.proc_write	= psi_memory_write,
+ 	.proc_show	= psi_memory_show,
+-	.proc_write	= psi_memory_write,
++	.proc_write_buf	= psi_memory_write,
  	.proc_poll	= psi_fop_poll,
  	.proc_release	= psi_fop_release,
  };
  
  static const struct proc_ops psi_cpu_proc_ops = {
--	.proc_open	= psi_cpu_open,
--	.proc_read	= seq_read,
--	.proc_lseek	= seq_lseek,
-+	.proc_show	= psi_cpu_show,
- 	.proc_write	= psi_cpu_write,
+ 	.proc_show	= psi_cpu_show,
+-	.proc_write	= psi_cpu_write,
++	.proc_write_buf	= psi_cpu_write,
  	.proc_poll	= psi_fop_poll,
  	.proc_release	= psi_fop_release,
-@@ -1671,11 +1650,6 @@ static int psi_irq_show(struct seq_file *m, void *v)
+ };
+@@ -1650,15 +1648,15 @@ static int psi_irq_show(struct seq_file *m, void *v)
  	return psi_show(m, &psi_system, PSI_IRQ);
  }
  
--static int psi_irq_open(struct inode *inode, struct file *file)
--{
--	return single_open(file, psi_irq_show, NULL);
--}
--
- static ssize_t psi_irq_write(struct file *file, const char __user *user_buf,
- 			     size_t nbytes, loff_t *ppos)
+-static ssize_t psi_irq_write(struct file *file, const char __user *user_buf,
+-			     size_t nbytes, loff_t *ppos)
++static ssize_t psi_irq_write(struct file *file, char *buf, size_t nbytes,
++			     loff_t *ppos)
  {
-@@ -1683,9 +1657,7 @@ static ssize_t psi_irq_write(struct file *file, const char __user *user_buf,
+-	return psi_write(file, user_buf, nbytes, PSI_IRQ);
++	return psi_write(file, buf, nbytes, PSI_IRQ);
  }
  
  static const struct proc_ops psi_irq_proc_ops = {
--	.proc_open	= psi_irq_open,
--	.proc_read	= seq_read,
--	.proc_lseek	= seq_lseek,
-+	.proc_show	= psi_irq_show,
- 	.proc_write	= psi_irq_write,
+ 	.proc_show	= psi_irq_show,
+-	.proc_write	= psi_irq_write,
++	.proc_write_buf	= psi_irq_write,
  	.proc_poll	= psi_fop_poll,
  	.proc_release	= psi_fop_release,
+ };
 
 -- 
 2.53.0
