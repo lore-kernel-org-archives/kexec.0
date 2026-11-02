@@ -2,97 +2,97 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFE660EA5FF
-	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:37:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE22360EC3F2
+	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:37:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=LbowF2Ga;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Scddr8P1
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=WI7B8Fma;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=N5d8raPn
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Unsubscribe-Post:List-Owner;
-	bh=d9AP9+h3Vm5Lv0UYDFXf9dAmgO6It2Nsi1syTC+DAOg=; b=LbowF2GaCeFSJM4Du6dShSFnbp
-	PQ/qJxM5yeuftWWDPFxTDJSIeLiiSYmmGFvjwPmSLN864/U5W0rTmHrow9JI4htBe/0EwRV5D4/Yf
-	m00TmPzTl6T7yt3OVvswVrJiiF/g8EXttBBagWJjvmgpsFcrZAIpo+SI2FAHOHRKR1vgGF8b5+KWY
-	xubSt2xc0qtJ9dovUAPFjiYD/MnGloXmOPHMiakR0rwKxKB/ayJEFEWTMKq2VdWkjCDVtywxgY13l
-	Mski6j/Aa75hRpF3PC177bVk2V8nEbCq+ZbwPkkh0xovrHDLfMaBxQJZUCRK/AXHrj7byi9FLkHyS
-	MbK95Xeg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=MkQRjvaZWXm4tuezHj6GIBRblccuaWpNe7JtwA3svBQ=; b=WI7B8FmamrIYcx
+	UUJRRWOtcZBPCLSIT/HnAhCE49vXom4nV/MqtBurzutsdCysKk/8VILTN5y/SPGBMYe+c60SLBgwV
+	i0cXu3Wm5M7gwJ6gt7VxAwOFl0Om3JOKrGb0Gs4/q1F51lHM9jfev7EWnSOc4XqL3egy+u3jBPBNF
+	5g5r421hLtjzeJvWkN16TvUF+/WRcP+nmlbiTrJQLztGGzZSEtHJiNQFH9JbB0YtbFd7SKphm4NBX
+	1BngP253uoiQnicnf9VrHFGiWJosrkxSbHkWfCFt3Jn5nMM3Awnt0jYWBlO3N+bqimiNHyQeLTA/K
+	Kw5ddg9tC9uJ+hvCIR/Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNu64-0000000H9pI-2nlC;
-	Mon, 02 Nov 2026 15:37:20 +0000
-Received: from mail-pl1-x646.google.com ([2607:f8b0:4864:20::646])
+	id 1xNu66-0000000H9qA-1lJe;
+	Mon, 02 Nov 2026 15:37:23 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNu5y-0000000H9ab-1mS3
-	for kexec@lists.infradead.org;
+	id 1xNu63-0000000H9mf-1sJN;
 	Mon, 02 Nov 2026 15:37:19 +0000
-Received: by mail-pl1-x646.google.com with SMTP id d9443c01a7336-2e9995cea88so32444885ad.0
-        for <kexec@lists.infradead.org>; Mon, 02 Nov 2026 07:37:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793633832; x=1794238632; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=d9AP9+h3Vm5Lv0UYDFXf9dAmgO6It2Nsi1syTC+DAOg=;
-        b=Scddr8P1sOSdpQBhq80BEe2cs/dbEvzTvK7d7eyJX9Omwfd/knafBwYVZ41joIR7GL
-         ZBNDNvDaLWW9CHcdsQLOcCHezNbR01yiEPFjKmjcRlPMnfg87LZF1X3PHjdAlqZ0PwIU
-         Qn4MzCKD0+aHzvNHR/9i8o4+gppha0CTuD3OwZUeMLPhzsOo07MGkCvcjz0P3OPacLMq
-         2Xql4lkA5NQrkwMnp73mVjQRas7Ckyiez7Q9Qwcl6BXqeeH6ZC/YHQ0VWs8BqJVA4x2o
-         Y7ZfIm5yUMlNJHalzRvUCGpfU5p0bzz1hEQQvx2ssdJ2Rla404oy1N0eJkyWTdeNSlMe
-         Nmeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793633832; x=1794238632;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=d9AP9+h3Vm5Lv0UYDFXf9dAmgO6It2Nsi1syTC+DAOg=;
-        b=v0Gz1w+4BvvyJ/+ClWxjp4mlVoUDae7k/ZTgtCtSbZLlG1kzcdT3QWPsQfXxnYXglV
-         7iUp6+tZpICYsn6j0j1Z6d0kb50GrCTUA1nTt3VHAHjycUqxvR20mdpL1S5z2swNGxHQ
-         Zxyr2jgi2sF4qR7t1s93xUD91bpq5WdLpWxgcmWF9GJfAsPEbovS0jb2O20W/s8Z4avk
-         y68HaejWjExCKoF34sNFLiNDphldhQW56XP6qeboKj4gsc5iQNARPvJXFlMiF+GhfjTr
-         obNIveFsKNAAEJiXE9VmI6VlvyOWti57AI+8nc9Oi7oFATBaoaxa8hVNh03L/aw31WkJ
-         OfQQ==
-X-Gm-Message-State: APuU4Z/ToBXFu9mzsbP5kEK1toC/gSE1LqS8ltScgy9AeCAqlkrNuHMB
-	8BOKTB46B4jkLGtQOZen3cTk5bjbygOw3HNCTyKWrNXEXK4xTPTxyv1h9YafiZeC0sHpG+I9oDa
-	dg6mMp/O76IKLdXntIPiZNJyCeBgdYYy5Nw/k1AmmeL+h6/f8IHkGSIFdJU9KCzpxsTqmUCwPRa
-	ktaVHogpG9PtMJTC4WVEVVKeLOo36BRXvAU5EyivU3aRS+yQ==
-X-Received: from pltm3.prod.google.com ([2002:a17:902:6bc3:b0:2e5:ffbf:77d8])
- (user=vipinsh job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:3c4e:b0:2e9:9c65:1af9
- with SMTP id d9443c01a7336-2eb364e8187mr97004705ad.53.1793633831668; Mon, 02
- Nov 2026 07:37:11 -0800 (PST)
-Date: Mon,  2 Nov 2026 07:36:40 -0800
-In-Reply-To: <20261102153656.1431701-1-vipinsh@google.com>
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 0E950444EA;
+	Mon,  2 Nov 2026 15:37:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 287BC1F00A16;
+	Mon,  2 Nov 2026 15:36:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793633837;
+	bh=MkQRjvaZWXm4tuezHj6GIBRblccuaWpNe7JtwA3svBQ=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=N5d8raPng3UsswrfEfRD/6Yf+jypyuu/YJ4VCAay1GiuUsmcXR0Y+Fa7sMVAYeevV
+	 WM7BUZsbSmL4Fu5gyoWA16hCX0R0Hfuk4/6rrpwUW/n5HR1xQ9hkyJzb1TV8UUEY39
+	 sq81QZhsVNtwBY1vJDzc8qXh8JzgLKmWgem0vI3jtE3Fhmef11/+wBMp2eZbVJNCDl
+	 FVALapmecAgWsUbKfgsbVhfxmQ7Wf8WjCjAYtzp3O7fVon30zJQFMARHQKCK9TYt4X
+	 Gn6a+T3+o2m68mj19GQb8PAki38MHMtf0oH5fqX+2eADrgXwfXQgFFcusidzk7J6TX
+	 G2CFGyyqTA8eg==
+From: Christian Brauner <brauner@kernel.org>
+Date: Mon, 02 Nov 2026 16:15:57 +0100
+Subject: [PATCH RFC 4/5] proc: rename ->proc_read() and ->proc_read_iter()
 X-Archived-By: <archiver.kernel.org>
-Mime-Version: 1.0
-References: <20261102153656.1431701-1-vipinsh@google.com>
-X-Mailer: git-send-email 2.56.0.317.g454f8302e1-goog
-Message-ID: <20261102153656.1431701-12-vipinsh@google.com>
-Subject: [PATCH v6 11/27] vfio/pci: Retrieve preserved device files after Live Update
-From: Vipin Sharma <vipinsh@google.com>
-To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org
-Cc: ajayachandra@nvidia.com, alex@shazbot.org, amastro@fb.com, 
-	ankita@nvidia.com, apopple@nvidia.com, bhelgaas@google.com, chrisl@kernel.org, 
-	christian.koenig@amd.com, corbet@lwn.net, dmatlack@google.com, 
-	graf@amazon.com, jacob.pan@linux.microsoft.com, jgg@nvidia.com, jgg@ziepe.ca, 
-	jrhilke@google.com, julianr@linux.ibm.com, kees@kernel.org, 
-	kevin.tian@intel.com, leon@kernel.org, leonro@nvidia.com, lukas@wunner.de, 
-	mattev@meta.com, michal.winiarski@intel.com, parav@nvidia.com, 
-	pasha.tatashin@soleen.com, praan@google.com, pratyush@kernel.org, 
-	rananta@google.com, rdunlap@infradead.org, rientjes@google.com, 
-	rodrigo.vivi@intel.com, rppt@kernel.org, saeedm@nvidia.com, 
-	schnelle@linux.ibm.com, skhan@linuxfoundation.org, skhawaja@google.com, 
-	vipinsh@google.com, vivek.kasireddy@intel.com, witu@nvidia.com, 
-	yanjun.zhu@linux.dev, yi.l.liu@intel.com
-Content-Type: text/plain; charset="UTF-8"
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261102_073714_587835_37D8046A 
-X-CRM114-Status: GOOD (  33.18  )
-X-Spam-Score: -9.5 (---------)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261102-work-procfs-cleanup-v1-4-c40014bc12f5@kernel.org>
+References: <20261102-work-procfs-cleanup-v1-0-c40014bc12f5@kernel.org>
+In-Reply-To: <20261102-work-procfs-cleanup-v1-0-c40014bc12f5@kernel.org>
+To: linux-fsdevel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+ Jann Horn <jannh@google.com>, Josef Bacik <josef@toxicpanda.com>, 
+ Chris Mason <mason@kernel.org>, Jeff Layton <jlayton@kernel.org>, 
+ NeilBrown <neil@brown.name>, Eric Dumazet <edumazet@kernel.org>, 
+ Thomas Gleixner <tglx@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+ Jonathan Corbet <corbet@lwn.net>, Christoph Hellwig <hch@lst.de>, 
+ Greg Kroah-Hartman <gregkh@suse.de>, 
+ Joel Granados <joel.granados@kernel.org>, Kees Cook <kees@kernel.org>, 
+ Jan Kara <jack@suse.cz>, Jan Kara <jack@suse.com>, 
+ linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+ linux-acpi@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, 
+ linux-um@lists.infradead.org, linux-wireless@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org, 
+ ntfs3@lists.linux.dev, platform-driver-x86@vger.kernel.org, 
+ coreteam@netfilter.org, kexec@lists.infradead.org, 
+ linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
+ netfilter-devel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ ibm-acpi-devel@lists.sourceforge.net, jfs-discussion@lists.sourceforge.net, 
+ linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-cifs@vger.kernel.org, linux-fbdev@vger.kernel.org, 
+ linux-hwmon@vger.kernel.org, linux-mm@kvack.org, linux-sh@vger.kernel.org, 
+ linux-usb@vger.kernel.org, samba-technical@lists.samba.org, 
+ sparclinux@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
+ linux-doc@vger.kernel.org, linux-serial@vger.kernel.org, 
+ linux-atm-general@lists.sourceforge.net, Takashi Iwai <tiwai@suse.de>, 
+ linux-input@vger.kernel.org, linux-raid@vger.kernel.org, 
+ linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, 
+ linux-debuggers@vger.kernel.org, 
+ "Christian Brauner (Amutable)" <brauner@kernel.org>, 
+ Chuck Lever <cel@kernel.org>
+X-Mailer: b4 0.17-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9255; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=LiuenQB/cw1jutoK/+2XN6spwsgEUsgUo+MfZZ5B3rY=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9WJlT4nDmwwaZ4MPi7y7HTLWT2yy0SGjlkrpEyzOXf
+ 5j+WJVe1FHKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjARvShGho+MfBYBi1ZMC9JP
+ Son9PcXCOjZk/kJLH7FSxbfvt1Q4X2X4Z1mltufL22qVj4zPQrZu1u8WtJtZ97XhY+dhz0QLh8f
+ C7AA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp;
+ fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,684 +103,248 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-26.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=4.0.1
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Enable userspace to retrieve preserved VFIO device files after a Live
-Update by implementing the retrieve() and finish() file handler
-callbacks.
+Only entries that are never removed may implement ->proc_read() or
+->proc_read_iter() now, and PROC_ENTRY_PERMANENT is 0 in modules. But a
+module that sets one of them still builds fine and only finds out when
+registering its entry fails with a warning.
 
-During retrieve():
- * Validate the handed-over struct vfio_pci_core_device_ser header,
-   sizes, and flags.
- * Locate the registered vfio-pci device matching the serialized domain
-   and BDF (requiring device->ops == &vfio_pci_ops) under the device
-   lock. vfio-pci registers the vfio device before its probe completes,
-   and the probe holds that lock, so a device that is still being probed
-   is not returned.
- * Require the device to be in noiommu mode in the new kernel (returning
-   -EOPNOTSUPP otherwise), still marked incoming by the PCI Live Update
-   core, and matching the serialized PCI config space size.
- * Deserialize the inherited struct pci_saved_state and copy the
-   handed-over vconfig and pci_config_map into a kernel-owned struct
-   vfio_pci_liveupdate_incoming attached to vdev under dev_set->lock via
-   vfio_pci_liveupdate_attach_incoming(), leaving the KHO serialized
-   buffer read-only.
- * Open and return an anonymous VFIO cdev file via
-   vfio_device_liveupdate_cdev_open().
+So rename them to ->proc_permanent_read() and
+->proc_permanent_read_iter(). A module that sets one of them doesn't
+build anymore and the name says which entries may use them. Hiding the
+members from modules behind #ifdef MODULE instead would give modules a
+different layout of struct proc_ops than the rest of the kernel.
 
-Do not implement can_finish(): closing a retrieved LUO session invokes
-finish, and refusing can_finish() would leak the session and leave
-unclaimed devices running. Instead, finish() always completes:
- * If the retrieved device was claimed by opening it via
-   VFIO_DEVICE_BIND_IOMMUFD (which consumes vdev->liveupdate_incoming;
-   subsequent patches replace the open-time reset with non-reset
-   take-over, reject opening incoming devices other than via retrieve(),
-   and protect incoming kept-running devices across runtime PM, dev_set
-   resets, and non-noiommu boots), finish() simply completes its PCI
-   Live Update participation.
- * If the device was not claimed (never retrieved, retrieve() failed, or
-   retrieved but never bound via VFIO_DEVICE_BIND_IOMMUFD),
-   vfio_pci_core_liveupdate_reset() logs one pci_warn() naming the
-   device, clears PCI_COMMAND_MASTER, resets the function, and restores
-   the inherited pci_saved_state just as closing the device would. If
-   the device has a function reset but is not reset, e.g. because
-   pci_dev_trylock() contends with a concurrent driver unbind, latch
-   vdev->liveupdate_reset_pending so vfio_pci_core_unregister_device()
-   completes the function reset and state restoration via
-   vfio_pci_core_liveupdate_reset_locked() under the device lock held by
-   device_release_driver(). Opening the device after finish() resets it
-   like any open, so it drops the latch.
- * If the device was not retrieved, look it up under pci_dev_lock(),
-   which waits for a vfio-pci probe in progress. If it is bound to
-   vfio-pci, finish it as above. If it has no driver, clear bus
-   mastering and reset it. Otherwise leave it to the bound driver.
- * Call pci_liveupdate_finish() and kho_restore_free() on every path.
+While at it, rename PROC_ENTRY_proc_read_iter and
+pde_has_proc_read_iter() to match.
 
-Co-developed-by: David Matlack <dmatlack@google.com>
-Signed-off-by: David Matlack <dmatlack@google.com>
-Signed-off-by: Vipin Sharma <vipinsh@google.com>
+No functional changes.
+
+Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci_core.c       |  65 +++++
- drivers/vfio/pci/vfio_pci_liveupdate.c | 342 ++++++++++++++++++++++++-
- drivers/vfio/pci/vfio_pci_priv.h       |  75 ++++++
- include/linux/vfio_pci_core.h          |   6 +
- 4 files changed, 484 insertions(+), 4 deletions(-)
+ fs/proc/generic.c       | 15 +++++++++------
+ fs/proc/inode.c         |  9 +++++----
+ fs/proc/internal.h      |  5 +++--
+ fs/proc/kcore.c         |  2 +-
+ fs/proc/kmsg.c          |  2 +-
+ fs/proc/page.c          |  6 +++---
+ include/linux/proc_fs.h | 10 ++++++----
+ kernel/profile.c        |  2 +-
+ 8 files changed, 29 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index 5f8c882d5778..60ada3bbb6ff 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -671,6 +671,8 @@ int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
- 
- 	vfio_pci_core_map_bars(vdev);
- 
-+	vfio_pci_liveupdate_claim_incoming(vdev);
-+
- 	return 0;
- 
- out_free_zdev:
-@@ -739,6 +741,63 @@ static void vfio_pci_core_try_reset(struct vfio_pci_core_device *vdev)
- 	pci_restore_state(pdev);
+diff --git a/fs/proc/generic.c b/fs/proc/generic.c
+index 7c8def4ed9fc..4bcec5a29b5f 100644
+--- a/fs/proc/generic.c
++++ b/fs/proc/generic.c
+@@ -444,7 +444,8 @@ static int pde_set_flags(struct proc_dir_entry *pde)
+ 	if (proc_ops->proc_flags & PROC_ENTRY_PERMANENT)
+ 		pde->flags |= PROC_ENTRY_PERMANENT;
+ 	/* These copy to userspace and only an entry that can't go away may. */
+-	if (WARN_ON_ONCE((proc_ops->proc_read || proc_ops->proc_read_iter) &&
++	if (WARN_ON_ONCE((proc_ops->proc_permanent_read ||
++			  proc_ops->proc_permanent_read_iter) &&
+ 			 !pde_is_permanent(pde)))
+ 		return -EINVAL;
+ 	if (proc_ops->proc_seq_ops) {
+@@ -457,7 +458,8 @@ static int pde_set_flags(struct proc_dir_entry *pde)
+ 	}
+ 	if (pde_is_seq_file(pde)) {
+ 		/* procfs reads and seeks through the seq_file itself */
+-		if (WARN_ON_ONCE(proc_ops->proc_read || proc_ops->proc_read_iter ||
++		if (WARN_ON_ONCE(proc_ops->proc_permanent_read ||
++				 proc_ops->proc_permanent_read_iter ||
+ 				 proc_ops->proc_lseek))
+ 			return -EINVAL;
+ 		/* and frees it, see pde_seq_release() */
+@@ -467,8 +469,8 @@ static int pde_set_flags(struct proc_dir_entry *pde)
+ 			return -EINVAL;
+ 		pde->flags |= PROC_ENTRY_proc_lseek;
+ 	} else {
+-		if (proc_ops->proc_read_iter)
+-			pde->flags |= PROC_ENTRY_proc_read_iter;
++		if (proc_ops->proc_permanent_read_iter)
++			pde->flags |= PROC_ENTRY_proc_permanent_read_iter;
+ 		if (proc_ops->proc_lseek)
+ 			pde->flags |= PROC_ENTRY_proc_lseek;
+ 	}
+@@ -479,8 +481,9 @@ static int pde_set_flags(struct proc_dir_entry *pde)
+ 			pde->flags |= PROC_ENTRY_SHORT_WRITES;
+ 	}
+ 	if (proc_ops->proc_read_buf) {
+-		if (WARN_ON_ONCE(pde_is_seq_file(pde) || proc_ops->proc_read ||
+-				 proc_ops->proc_read_iter))
++		if (WARN_ON_ONCE(pde_is_seq_file(pde) ||
++				 proc_ops->proc_permanent_read ||
++				 proc_ops->proc_permanent_read_iter))
+ 			return -EINVAL;
+ 		pde->flags |= PROC_ENTRY_proc_read_buf;
+ 		pde->read_size = proc_ops->proc_read_size ?: PAGE_SIZE;
+diff --git a/fs/proc/inode.c b/fs/proc/inode.c
+index a7f8818b0b74..16d8f00bfc26 100644
+--- a/fs/proc/inode.c
++++ b/fs/proc/inode.c
+@@ -464,7 +464,7 @@ static ssize_t proc_reg_read_iter(struct kiocb *iocb, struct iov_iter *iter)
+ 	if (pde_has_proc_read_buf(pde))
+ 		return pde_read_buf(pde, iocb, iter);
+ 	/* only permanent entries have one, see pde_set_flags() */
+-	return pde->proc_ops->proc_read_iter(iocb, iter);
++	return pde->proc_ops->proc_permanent_read_iter(iocb, iter);
  }
  
-+/*
-+ * Reset a device that was kept running across a Live Update but not taken over,
-+ * from the Live Update finish() of the device. Return true if the device was
-+ * reset, false if it could not be reset, e.g. because its device lock could
-+ * not be taken.
-+ */
-+bool vfio_pci_core_liveupdate_reset(struct vfio_pci_core_device *vdev,
-+				    struct pci_saved_state *saved_state,
-+				    bool reset_works, const char *reason)
-+{
-+	struct pci_dev *pdev = vdev->pdev;
-+
-+	lockdep_assert_held(&vdev->vdev.dev_set->lock);
-+
-+	if (reason)
-+		pci_warn(pdev,
-+			 "Resetting device not taken over after Live Update (%s)\n",
-+			 reason);
-+
-+	pci_clear_master(pdev);
-+	if (!saved_state)
-+		pci_save_state(pdev);
-+	kfree(vdev->pci_saved_state);
-+	vdev->pci_saved_state = saved_state;
-+	vdev->reset_works = reset_works;
-+	vfio_pci_core_try_reset(vdev);
-+
-+	return !vdev->needs_reset;
-+}
-+EXPORT_SYMBOL_GPL(vfio_pci_core_liveupdate_reset);
-+
-+/*
-+ * Reset a device preserved across a Live Update from its remove() path, where
-+ * the driver core holds the device lock. Save and restore the config space
-+ * around the reset like vfio_pci_core_try_reset(), and block user config
-+ * access while doing so. Like pci_reset_function_locked(), do not take the
-+ * upstream bridge lock: remove() cannot wait for it without inverting the
-+ * bridge -> device lock order, and the Live Update finish() of an unbound
-+ * device holds it while it waits for the device lock held here.
-+ */
-+void vfio_pci_core_liveupdate_reset_locked(struct vfio_pci_core_device *vdev)
-+{
-+	struct pci_dev *pdev = vdev->pdev;
-+
-+	device_lock_assert(&pdev->dev);
-+	lockdep_assert_held(&vdev->vdev.dev_set->lock);
-+
-+	pci_clear_master(pdev);
-+	pci_cfg_access_lock(pdev);
-+	pci_save_state(pdev);
-+	pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
-+	if (!__pci_reset_function_locked(pdev))
-+		vdev->needs_reset = false;
-+	pci_restore_state(pdev);
-+	pci_cfg_access_unlock(pdev);
-+}
-+
- void vfio_pci_core_disable(struct vfio_pci_core_device *vdev)
+ static ssize_t proc_reg_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
+@@ -475,9 +475,9 @@ static ssize_t proc_reg_read(struct file *file, char __user *buf, size_t count,
+ 	 * Only permanent entries have one, see pde_set_flags(). Anything else
+ 	 * might be gone along with its ->proc_ops.
+ 	 */
+-	if (!pde_is_permanent(pde) || !pde->proc_ops->proc_read)
++	if (!pde_is_permanent(pde) || !pde->proc_ops->proc_permanent_read)
+ 		return -EIO;
+-	return pde->proc_ops->proc_read(file, buf, count, ppos);
++	return pde->proc_ops->proc_permanent_read(file, buf, count, ppos);
+ }
+ 
+ /*
+@@ -880,7 +880,8 @@ struct inode *proc_get_inode(struct super_block *sb, struct proc_dir_entry *de)
+ 		inode->i_op = de->proc_iops;
+ 		if (pde_is_seq_file(de))
+ 			inode->i_fop = &proc_seq_file_ops;
+-		else if (pde_has_proc_read_iter(de) || pde_has_proc_read_buf(de))
++		else if (pde_has_proc_permanent_read_iter(de) ||
++			 pde_has_proc_read_buf(de))
+ 			inode->i_fop = &proc_iter_file_ops;
+ 		else
+ 			inode->i_fop = &proc_reg_file_ops;
+diff --git a/fs/proc/internal.h b/fs/proc/internal.h
+index 93d20995b6fe..f4677815ebfa 100644
+--- a/fs/proc/internal.h
++++ b/fs/proc/internal.h
+@@ -89,9 +89,10 @@ static inline void pde_make_permanent(struct proc_dir_entry *pde)
+ 	pde->flags |= PROC_ENTRY_PERMANENT;
+ }
+ 
+-static inline bool pde_has_proc_read_iter(const struct proc_dir_entry *pde)
++static inline bool
++pde_has_proc_permanent_read_iter(const struct proc_dir_entry *pde)
  {
- 	struct pci_dev *pdev = vdev->pdev;
-@@ -2362,6 +2421,12 @@ void vfio_pci_core_unregister_device(struct vfio_pci_core_device *vdev)
- 
- 	vfio_unregister_group_dev(&vdev->vdev);
- 
-+	/*
-+	 * Must follow vfio_unregister_group_dev(), which waits for the
-+	 * references a Live Update finish() of the device may hold.
-+	 */
-+	vfio_pci_liveupdate_unregister_dev(vdev);
-+
- 	vfio_pci_vf_uninit(vdev);
- 	vfio_pci_vga_uninit(vdev);
- 
-diff --git a/drivers/vfio/pci/vfio_pci_liveupdate.c b/drivers/vfio/pci/vfio_pci_liveupdate.c
-index ac77241ffb1e..f13c757b4567 100644
---- a/drivers/vfio/pci/vfio_pci_liveupdate.c
-+++ b/drivers/vfio/pci/vfio_pci_liveupdate.c
-@@ -35,7 +35,13 @@
-  *    preserved, so there is no way for the file to be destroyed or the device
-  *    to be unbound from the vfio-pci driver while it is preserved.
-  *
-- * Retrieving the file after kexec is not yet supported.
-+ * After kexec, the preserved VFIO device file can be retrieved from the session
-+ * just like any other preserved file::
-+ *
-+ *   ioctl(session_fd, LIVEUPDATE_SESSION_RETRIEVE_FD, &arg);
-+ *   device_fd = arg.fd;
-+ *   ...
-+ *   ioctl(session_fd, LIVEUPDATE_SESSION_FINISH, ...);
-  *
-  * Restrictions
-  * ============
-@@ -97,6 +103,36 @@
-  * the ``unfreeze()`` callback restores the physical INTx mask and clears the
-  * frozen state, leaving the existing file descriptor immediately usable again.
-  *
-+ * Retrieval and Finish Behavior After Kexec
-+ * =========================================
-+ *
-+ * After kexec, userspace must ensure the preserved PCI device is bound to
-+ * ``vfio-pci`` in noiommu mode before invoking
-+ * ``LIVEUPDATE_SESSION_RETRIEVE_FD`` (for example, via ``vfio-pci.ids=...`` on
-+ * the kernel command line). A failed ``LIVEUPDATE_SESSION_RETRIEVE_FD`` call is
-+ * cached permanently by LUO for that file.
-+ *
-+ * ``LIVEUPDATE_SESSION_RETRIEVE_FD`` validates the handed-over serialized state
-+ * and returns a new unbound VFIO cdev file descriptor. The device is claimed on
-+ * the first ``VFIO_DEVICE_BIND_IOMMUFD`` on that file descriptor.
-+ *
-+ * ``LIVEUPDATE_SESSION_FINISH`` (or closing a retrieved session file
-+ * descriptor) always completes:
-+ *
-+ *  * If the device was retrieved and claimed via ``VFIO_DEVICE_BIND_IOMMUFD``,
-+ *    ``finish()`` simply completes its Live Update participation.
-+ *  * If the device was not claimed (never retrieved, ``retrieve()`` failed, or
-+ *    retrieved but never bound via ``VFIO_DEVICE_BIND_IOMMUFD``), ``finish()``
-+ *    logs one ``pci_warn()`` naming the device, clears ``PCI_COMMAND_MASTER``,
-+ *    resets the function and restores the initial PCI saved state just as
-+ *    closing the device would, and finishes its Live Update participation so
-+ *    the device can be opened normally afterwards. If ``finish()`` cannot
-+ *    reset a device that has a function reset, for example because it cannot
-+ *    take the device lock while the device is being unbound from
-+ *    ``vfio-pci``, it still clears ``PCI_COMMAND_MASTER``, and the function
-+ *    reset is retried when the device is unbound, unless the device is opened
-+ *    (which resets it) before that.
-+ *
-  * DMA Memory Ordering Contract
-  * ============================
-  *
-@@ -110,8 +146,9 @@
-  *    preserving the VFIO device. LUO finishes files within a session in reverse
-  *    preservation order (LIFO), guaranteeing that if the device is not taken
-  *    over in the new kernel, VFIO's ``finish()`` callback stops bus mastering
-- *    and resets the device before the ``memfd``'s ``finish()`` callback releases
-- *    its folios. Cross-session ordering is the responsibility of userspace.
-+ *    before the ``memfd``'s ``finish()`` callback releases its folios. It
-+ *    normally resets the device at that point too (see above for when it
-+ *    cannot). Cross-session ordering is the responsibility of userspace.
-  *
-  *  * After retrieving a preserved ``memfd`` in the new kernel, its folios are
-  *    ordinary unpinned shmem page cache until pinned again; userspace must keep
-@@ -124,6 +161,7 @@
- 
- #include <linux/cleanup.h>
- #include <linux/errno.h>
-+#include <linux/file.h>
- #include <linux/kexec_handover.h>
- #include <linux/kho/abi/vfio_pci.h>
- #include <linux/liveupdate.h>
-@@ -131,6 +169,7 @@
- #include <linux/overflow.h>
- #include <linux/pci.h>
- #include <linux/pci_liveupdate.h>
-+#include <linux/slab.h>
- #include <linux/string.h>
- #include <linux/vfio.h>
- 
-@@ -327,13 +366,308 @@ static void vfio_pci_liveupdate_unfreeze(struct liveupdate_file_op_args *args)
- 	smp_store_release(&vdev->liveupdate_frozen, false);
+-	return pde->flags & PROC_ENTRY_proc_read_iter;
++	return pde->flags & PROC_ENTRY_proc_permanent_read_iter;
  }
  
-+static int vfio_pci_liveupdate_validate_ser(const struct vfio_pci_core_device_ser *ser)
-+{
-+	size_t expected;
-+
-+	if (ser->reserved)
-+		return -EINVAL;
-+
-+	if (ser->flags & ~VFIO_PCI_SER_KNOWN_FLAGS)
-+		return -EOPNOTSUPP;
-+
-+	if (ser->cfg_size != PCI_CFG_SPACE_SIZE &&
-+	    ser->cfg_size != PCI_CFG_SPACE_EXP_SIZE)
-+		return -EINVAL;
-+
-+	expected = size_add(sizeof(*ser),
-+			    size_add(size_mul(2, ser->cfg_size),
-+				     ser->saved_state_size));
-+	if (expected != ser->size)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static struct pci_saved_state *
-+vfio_pci_liveupdate_parse_saved_state(struct pci_dev *pdev,
-+				      const struct vfio_pci_core_device_ser *ser)
-+{
-+	const void *blob;
-+
-+	if (!ser->saved_state_size)
-+		return NULL;
-+
-+	blob = ser->data + 2 * (size_t)ser->cfg_size;
-+	return pci_liveupdate_deserialize_saved_state(pdev, blob,
-+						      ser->saved_state_size);
-+}
-+
-+static int match_device(struct device *dev, const void *arg)
-+{
-+	struct vfio_device *device = container_of(dev, struct vfio_device, device);
-+	const struct vfio_pci_core_device_ser *ser = arg;
-+	struct pci_dev *pdev;
-+
-+	if (device->ops != &vfio_pci_ops)
-+		return false;
-+
-+	pdev = dev_is_pci(device->dev) ? to_pci_dev(device->dev) : NULL;
-+	if (!pdev)
-+		return false;
-+
-+	return ser->bdf == pci_dev_id(pdev) &&
-+	       ser->domain == pci_domain_nr(pdev->bus);
-+}
-+
-+/*
-+ * vfio-pci makes the vfio device visible before its probe completes, and the
-+ * probe runs under the device lock. Look the device up with that lock held, so
-+ * that a device found here has completed its probe, and the reset done by
-+ * finish() does not contend with the probe for that lock. Return the device
-+ * with a registration reference held.
-+ */
-+static struct vfio_device *
-+vfio_pci_liveupdate_find_probed(const struct vfio_pci_core_device_ser *ser)
-+{
-+	struct vfio_device *device;
-+	struct pci_dev *pdev;
-+
-+	pdev = pci_get_domain_bus_and_slot(ser->domain, PCI_BUS_NUM(ser->bdf),
-+					   ser->bdf & 0xff);
-+	if (!pdev)
-+		return NULL;
-+
-+	device_lock(&pdev->dev);
-+	device = vfio_find_device(ser, match_device);
-+	device_unlock(&pdev->dev);
-+	pci_dev_put(pdev);
-+	return device;
-+}
-+
-+static int
-+vfio_pci_liveupdate_attach_incoming(struct vfio_pci_core_device *vdev,
-+				    struct vfio_pci_liveupdate_incoming *in)
-+{
-+	guard(mutex)(&vdev->vdev.dev_set->lock);
-+
-+	if (vdev->liveupdate_incoming || vdev->liveupdate_claimed ||
-+	    !pci_liveupdate_is_incoming(vdev->pdev))
-+		return -EBUSY;
-+
-+	vdev->liveupdate_incoming = in;
-+	return 0;
-+}
-+
- static int vfio_pci_liveupdate_retrieve(struct liveupdate_file_op_args *args)
- {
--	return -EOPNOTSUPP;
-+	struct pci_saved_state *saved_state = NULL;
-+	const struct vfio_pci_core_device_ser *ser;
-+	struct vfio_pci_liveupdate_incoming *in;
-+	struct vfio_pci_core_device *vdev;
-+	struct vfio_device *device;
-+	struct pci_dev *pdev;
-+	struct file *file;
-+	size_t in_size;
-+	int ret;
-+
-+	if (!args->serialized_data)
-+		return -EINVAL;
-+
-+	ser = phys_to_virt(args->serialized_data);
-+	ret = vfio_pci_liveupdate_validate_ser(ser);
-+	if (ret)
-+		return ret;
-+
-+	device = vfio_pci_liveupdate_find_probed(ser);
-+	if (!device)
-+		return -ENODEV;
-+
-+	vdev = container_of(device, struct vfio_pci_core_device, vdev);
-+	pdev = vdev->pdev;
-+
-+	if (!vfio_device_is_noiommu(device)) {
-+		ret = -EOPNOTSUPP;
-+		goto out_put_dev;
-+	}
-+
-+	if (!pci_liveupdate_is_incoming(pdev) ||
-+	    ser->cfg_size != pdev->cfg_size) {
-+		ret = -EINVAL;
-+		goto out_put_dev;
-+	}
-+
-+	if (ser->saved_state_size) {
-+		saved_state = vfio_pci_liveupdate_parse_saved_state(pdev, ser);
-+		if (IS_ERR(saved_state)) {
-+			ret = PTR_ERR(saved_state);
-+			goto out_put_dev;
-+		}
-+	}
-+
-+	in_size = struct_size(in, data, size_mul(2, ser->cfg_size));
-+	in = kzalloc(in_size, GFP_KERNEL);
-+	if (!in) {
-+		ret = -ENOMEM;
-+		goto out_free_saved;
-+	}
-+
-+	in->saved_state = saved_state;
-+	in->reset_works = !!(ser->flags & VFIO_PCI_SER_RESET_WORKS);
-+	in->cfg_size = ser->cfg_size;
-+	memcpy(in->data, ser->data, 2 * (size_t)ser->cfg_size);
-+
-+	file = vfio_device_liveupdate_cdev_open(device);
-+	if (IS_ERR(file)) {
-+		ret = PTR_ERR(file);
-+		goto out_free_in;
-+	}
-+
-+	ret = vfio_pci_liveupdate_attach_incoming(vdev, in);
-+	if (ret)
-+		goto out_fput;
-+
-+	args->file = file;
-+	vfio_device_put_registration(device);
-+	return 0;
-+
-+out_fput:
-+	fput(file);
-+out_free_in:
-+	kfree(in);
-+out_free_saved:
-+	kfree(saved_state);
-+out_put_dev:
-+	vfio_device_put_registration(device);
-+	return ret;
-+}
-+
-+static void vfio_pci_liveupdate_finish_vdev(struct vfio_pci_core_device *vdev,
-+					    const struct vfio_pci_core_device_ser *ser,
-+					    const char *reason)
-+{
-+	struct pci_dev *pdev = vdev->pdev;
-+	struct pci_saved_state *saved_state = NULL;
-+	bool reset_works = true;
-+	bool was_reset;
-+
-+	scoped_guard(mutex, &vdev->vdev.dev_set->lock) {
-+		if (!vdev->liveupdate_claimed &&
-+		    pci_liveupdate_is_incoming(pdev)) {
-+			if (vdev->liveupdate_incoming) {
-+				saved_state = vdev->liveupdate_incoming->saved_state;
-+				vdev->liveupdate_incoming->saved_state = NULL;
-+				reset_works = vdev->liveupdate_incoming->reset_works;
-+			} else if (!vfio_pci_liveupdate_validate_ser(ser) &&
-+				   ser->cfg_size == pdev->cfg_size) {
-+				reset_works = !!(ser->flags & VFIO_PCI_SER_RESET_WORKS);
-+				saved_state = vfio_pci_liveupdate_parse_saved_state(pdev, ser);
-+				if (IS_ERR(saved_state))
-+					saved_state = NULL;
-+			}
-+
-+			/*
-+			 * An unbind of the device waits for the reference held
-+			 * by finish() with the device lock held, so the reset
-+			 * only tries to take that lock. If the device has a
-+			 * function reset but was not reset, e.g. because that
-+			 * lock was taken, bus mastering is still cleared, and
-+			 * the function reset is retried when the device is
-+			 * unbound, unless the device is opened before that. See
-+			 * vfio_pci_liveupdate_unregister_dev() and
-+			 * vfio_pci_liveupdate_claim_incoming().
-+			 */
-+			was_reset = vfio_pci_core_liveupdate_reset(vdev,
-+								   saved_state,
-+								   reset_works,
-+								   reason);
-+			vdev->liveupdate_reset_pending = reset_works &&
-+							 !was_reset;
-+		}
-+		vfio_pci_liveupdate_free_incoming(vdev);
-+	}
-+
-+	if (pci_liveupdate_is_incoming(pdev))
-+		pci_liveupdate_finish(pdev);
-+}
-+
-+/*
-+ * Look up the vfio-pci device of a preserved device that was not retrieved,
-+ * with the device lock held, like vfio_pci_liveupdate_find_probed(). If it is
-+ * bound to vfio-pci, return the vfio-pci device with a registration reference
-+ * held, so that the caller finishes it. Otherwise, finish the device here.
-+ */
-+static struct vfio_device *
-+vfio_pci_liveupdate_finish_lookup(const struct vfio_pci_core_device_ser *ser)
-+{
-+	struct vfio_device *device = NULL;
-+	struct pci_dev *pdev, *bridge;
-+
-+	pdev = pci_get_domain_bus_and_slot(ser->domain, PCI_BUS_NUM(ser->bdf),
-+					   ser->bdf & 0xff);
-+	if (!pdev)
-+		return NULL;
-+
-+	bridge = pci_upstream_bridge(pdev);
-+	if (bridge)
-+		pci_dev_lock(bridge);
-+	pci_dev_lock(pdev);
-+
-+	if (pci_liveupdate_is_incoming(pdev)) {
-+		if (!pdev->dev.driver) {
-+			pci_warn(pdev,
-+				 "Resetting device not taken over after Live Update (not bound to vfio-pci)\n");
-+			pci_clear_master(pdev);
-+			pci_reset_function_locked(pdev);
-+			pci_liveupdate_finish(pdev);
-+		} else {
-+			/*
-+			 * A driver is bound and its probe has completed, as it
-+			 * runs under the device lock. Holding the lock also
-+			 * prevents an unbind until the registration reference
-+			 * below is taken.
-+			 */
-+			device = vfio_find_device(ser, match_device);
-+			if (!device) {
-+				pci_warn(pdev,
-+					 "Device not taken over after Live Update is bound to %s, not resetting it\n",
-+					 dev_driver_string(&pdev->dev));
-+				pci_liveupdate_finish(pdev);
-+			}
-+		}
-+	}
-+
-+	pci_dev_unlock(pdev);
-+	if (bridge)
-+		pci_dev_unlock(bridge);
-+	pci_dev_put(pdev);
-+	return device;
- }
+ static inline bool pde_has_proc_lseek(const struct proc_dir_entry *pde)
+diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
+index 390547b992ac..5584b2642f2f 100644
+--- a/fs/proc/kcore.c
++++ b/fs/proc/kcore.c
+@@ -664,7 +664,7 @@ static int release_kcore(struct inode *inode, struct file *file)
  
- static void vfio_pci_liveupdate_finish(struct liveupdate_file_op_args *args)
- {
-+	struct vfio_pci_core_device_ser *ser = phys_to_virt(args->serialized_data);
-+	struct vfio_pci_core_device *vdev;
-+	struct vfio_device *device;
-+	const char *reason;
-+
-+	if (args->retrieve_status > 0) {
-+		device = vfio_device_from_file(args->file);
-+		vdev = container_of(device, struct vfio_pci_core_device, vdev);
-+		vfio_pci_liveupdate_finish_vdev(vdev, ser,
-+						"retrieved but not opened");
-+	} else {
-+		reason = args->retrieve_status ? "retrieve failed" : "not retrieved";
-+		device = vfio_pci_liveupdate_finish_lookup(ser);
-+		if (device) {
-+			vdev = container_of(device, struct vfio_pci_core_device,
-+					    vdev);
-+			vfio_pci_liveupdate_finish_vdev(vdev, ser, reason);
-+			vfio_device_put_registration(device);
-+		}
-+	}
-+
-+	kho_restore_free(ser);
- }
+ static const struct proc_ops kcore_proc_ops = {
+ 	.proc_flags	= PROC_ENTRY_PERMANENT,
+-	.proc_read_iter	= read_kcore_iter,
++	.proc_permanent_read_iter = read_kcore_iter,
+ 	.proc_open	= open_kcore,
+ 	.proc_release	= release_kcore,
+ 	.proc_lseek	= default_llseek,
+diff --git a/fs/proc/kmsg.c b/fs/proc/kmsg.c
+index 2fc92a13f9f8..28b40ffccdfb 100644
+--- a/fs/proc/kmsg.c
++++ b/fs/proc/kmsg.c
+@@ -48,7 +48,7 @@ static __poll_t kmsg_poll(struct file *file, poll_table *wait)
  
- static const struct liveupdate_file_ops vfio_pci_liveupdate_file_ops = {
-diff --git a/drivers/vfio/pci/vfio_pci_priv.h b/drivers/vfio/pci/vfio_pci_priv.h
-index 2c732cb1c189..d8670dc51bb4 100644
---- a/drivers/vfio/pci/vfio_pci_priv.h
-+++ b/drivers/vfio/pci/vfio_pci_priv.h
-@@ -150,6 +150,15 @@ static inline void vfio_pci_dma_buf_move(struct vfio_pci_core_device *vdev,
- }
- #endif
- 
-+struct vfio_pci_liveupdate_incoming {
-+	struct pci_saved_state *saved_state;
-+	bool reset_works;
-+	u16 cfg_size;
-+	u8 data[];
-+};
-+
-+void vfio_pci_core_liveupdate_reset_locked(struct vfio_pci_core_device *vdev);
-+
- #ifdef CONFIG_VFIO_PCI_LIVEUPDATE
- int __init vfio_pci_liveupdate_init(void);
- void vfio_pci_liveupdate_cleanup(void);
-@@ -159,6 +168,57 @@ static inline bool vfio_pci_dev_is_frozen(struct vfio_pci_core_device *vdev)
- 	/* Written in VFIO PCI Liveupdate during freeze()/unfreeze() */
- 	return smp_load_acquire(&vdev->liveupdate_frozen);
- }
-+
-+static inline void
-+vfio_pci_liveupdate_free_incoming(struct vfio_pci_core_device *vdev)
-+{
-+	struct vfio_pci_liveupdate_incoming *in = vdev->liveupdate_incoming;
-+
-+	if (!in)
-+		return;
-+
-+	kfree(in->saved_state);
-+	kfree(in);
-+	vdev->liveupdate_incoming = NULL;
-+}
-+
-+static inline void
-+vfio_pci_liveupdate_claim_incoming(struct vfio_pci_core_device *vdev)
-+{
-+	/*
-+	 * A reset that finish() left for unbind is not needed once the device
-+	 * is opened after finish(): the open resets the device if it can, and
-+	 * so does the close.
-+	 */
-+	vdev->liveupdate_reset_pending = false;
-+
-+	if (!vdev->liveupdate_incoming)
-+		return;
-+
-+	vfio_pci_liveupdate_free_incoming(vdev);
-+	vdev->liveupdate_claimed = true;
-+}
-+
-+static inline void
-+vfio_pci_liveupdate_unregister_dev(struct vfio_pci_core_device *vdev)
-+{
-+	struct pci_dev *pdev = vdev->pdev;
-+
-+	scoped_guard(mutex, &vdev->vdev.dev_set->lock) {
-+		/*
-+		 * Complete a reset that finish() could not do, see
-+		 * vfio_pci_liveupdate_finish_vdev().
-+		 */
-+		if (vdev->liveupdate_reset_pending) {
-+			vfio_pci_core_liveupdate_reset_locked(vdev);
-+			vdev->liveupdate_reset_pending = false;
-+		}
-+		vfio_pci_liveupdate_free_incoming(vdev);
-+	}
-+
-+	if (pci_liveupdate_is_incoming(pdev))
-+		pci_liveupdate_finish(pdev);
-+}
- #else
- static inline int vfio_pci_liveupdate_init(void)
- {
-@@ -173,6 +233,21 @@ static inline bool vfio_pci_dev_is_frozen(struct vfio_pci_core_device *vdev)
- {
- 	return false;
- }
-+
-+static inline void
-+vfio_pci_liveupdate_free_incoming(struct vfio_pci_core_device *vdev)
-+{
-+}
-+
-+static inline void
-+vfio_pci_liveupdate_claim_incoming(struct vfio_pci_core_device *vdev)
-+{
-+}
-+
-+static inline void
-+vfio_pci_liveupdate_unregister_dev(struct vfio_pci_core_device *vdev)
-+{
-+}
- #endif /* CONFIG_VFIO_PCI_LIVEUPDATE */
- 
- #endif
-diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
-index 6bae7581f4f4..f5c279d0df1e 100644
---- a/include/linux/vfio_pci_core.h
-+++ b/include/linux/vfio_pci_core.h
-@@ -152,6 +152,9 @@ struct vfio_pci_core_device {
- #ifdef CONFIG_VFIO_PCI_LIVEUPDATE
- 	bool			liveupdate_frozen;
- 	bool			liveupdate_intx_disabled;
-+	bool			liveupdate_claimed;
-+	bool			liveupdate_reset_pending;
-+	struct vfio_pci_liveupdate_incoming *liveupdate_incoming;
- #endif
+ static const struct proc_ops kmsg_proc_ops = {
+ 	.proc_flags	= PROC_ENTRY_PERMANENT,
+-	.proc_read	= kmsg_read,
++	.proc_permanent_read = kmsg_read,
+ 	.proc_poll	= kmsg_poll,
+ 	.proc_open	= kmsg_open,
+ 	.proc_release	= kmsg_release,
+diff --git a/fs/proc/page.c b/fs/proc/page.c
+index 6aa99e42ec22..6a68f392453c 100644
+--- a/fs/proc/page.c
++++ b/fs/proc/page.c
+@@ -133,7 +133,7 @@ static ssize_t kpagecount_read(struct file *file, char __user *buf,
+ static const struct proc_ops kpagecount_proc_ops = {
+ 	.proc_flags	= PROC_ENTRY_PERMANENT,
+ 	.proc_lseek	= mem_lseek,
+-	.proc_read	= kpagecount_read,
++	.proc_permanent_read = kpagecount_read,
  };
  
-@@ -197,6 +200,9 @@ int vfio_pci_core_match_token_uuid(struct vfio_device *core_vdev,
- int vfio_pci_core_enable(struct vfio_pci_core_device *vdev);
- void vfio_pci_core_disable(struct vfio_pci_core_device *vdev);
- void vfio_pci_core_finish_enable(struct vfio_pci_core_device *vdev);
-+bool vfio_pci_core_liveupdate_reset(struct vfio_pci_core_device *vdev,
-+				    struct pci_saved_state *saved_state,
-+				    bool reset_works, const char *reason);
- pci_ers_result_t vfio_pci_core_aer_err_detected(struct pci_dev *pdev,
- 						pci_channel_state_t state);
- ssize_t vfio_pci_core_do_io_rw(struct vfio_pci_core_device *vdev, bool test_mem,
+ 
+@@ -259,7 +259,7 @@ static ssize_t kpageflags_read(struct file *file, char __user *buf,
+ static const struct proc_ops kpageflags_proc_ops = {
+ 	.proc_flags	= PROC_ENTRY_PERMANENT,
+ 	.proc_lseek	= mem_lseek,
+-	.proc_read	= kpageflags_read,
++	.proc_permanent_read = kpageflags_read,
+ };
+ 
+ #ifdef CONFIG_MEMCG
+@@ -271,7 +271,7 @@ static ssize_t kpagecgroup_read(struct file *file, char __user *buf,
+ static const struct proc_ops kpagecgroup_proc_ops = {
+ 	.proc_flags	= PROC_ENTRY_PERMANENT,
+ 	.proc_lseek	= mem_lseek,
+-	.proc_read	= kpagecgroup_read,
++	.proc_permanent_read = kpagecgroup_read,
+ };
+ #endif /* CONFIG_MEMCG */
+ 
+diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
+index 17516b064922..4db79f1ab97e 100644
+--- a/include/linux/proc_fs.h
++++ b/include/linux/proc_fs.h
+@@ -18,7 +18,8 @@ enum {
+ 	/*
+ 	 * All /proc entries using this ->proc_ops instance are never removed.
+ 	 * procfs calls into them without pinning them, so they may copy to
+-	 * userspace themselves through ->proc_read() or ->proc_read_iter().
++	 * userspace themselves through ->proc_permanent_read() or
++	 * ->proc_permanent_read_iter().
+ 	 *
+ 	 * If in doubt, ignore this flag.
+ 	 */
+@@ -28,7 +29,7 @@ enum {
+ 	PROC_ENTRY_PERMANENT		= 1U << 0,
+ #endif
+ 
+-	PROC_ENTRY_proc_read_iter	= 1U << 1,
++	PROC_ENTRY_proc_permanent_read_iter = 1U << 1,
+ 	PROC_ENTRY_proc_lseek		= 1U << 3,
+ 	PROC_ENTRY_proc_seq_ops		= 1U << 4,
+ 	PROC_ENTRY_proc_show		= 1U << 5,
+@@ -78,8 +79,9 @@ struct proc_ops {
+ 	 * These two are only for PROC_ENTRY_PERMANENT entries. Everything else
+ 	 * uses ->proc_read_buf().
+ 	 */
+-	ssize_t	(*proc_read)(struct file *, char __user *, size_t, loff_t *);
+-	ssize_t (*proc_read_iter)(struct kiocb *, struct iov_iter *);
++	ssize_t	(*proc_permanent_read)(struct file *, char __user *, size_t,
++				       loff_t *);
++	ssize_t (*proc_permanent_read_iter)(struct kiocb *, struct iov_iter *);
+ 	/*
+ 	 * mandatory unless nonseekable_open() or equivalent is used, procfs
+ 	 * seeks seq_file entries itself
+diff --git a/kernel/profile.c b/kernel/profile.c
+index 6f2441dd4a00..72e30bb30396 100644
+--- a/kernel/profile.c
++++ b/kernel/profile.c
+@@ -207,7 +207,7 @@ static ssize_t write_profile(struct file *file, char *buf, size_t count,
+ 
+ static const struct proc_ops profile_proc_ops = {
+ 	.proc_flags	= PROC_ENTRY_PERMANENT,
+-	.proc_read	= read_profile,
++	.proc_permanent_read = read_profile,
+ 	.proc_write_buf	= write_profile,
+ 	.proc_lseek	= default_llseek,
+ };
+
 -- 
-2.56.0.317.g454f8302e1-goog
+2.53.0
 
 
