@@ -2,55 +2,55 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ECF06070D9D
-	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:02:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5286085560
+	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:03:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Tfj0Ule+;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RNnLcX8e
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=gMavhAi8;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ht8IvPAW
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=pQQ1Vs9Ggdq4tGJpsZZ2KAKh5WKICEOKhSgV+25xKrE=; b=Tfj0Ule+EshzSS
-	0nDBcQ5nEPWPbz0M+3thnUqo0HCBVnYvVRMl0ukTiaoQyLJYHCwq1JtAUpqLHOgzvC85NeRexq+jR
-	tDx6sS8/YtKxaPwjRVqXqS+r9BAwoKBkkTmtFkaC7xUTWk5kzqVxiHeSSXRT85FaXCDonMGALpUvn
-	TmAvLUtkbBPYYjDW+DqDorpFx5Ea/9DOU3J1PFcdNEricUyTEkdCB0KUSvPUPJSc1NtjvXYegGmhb
-	KaCxuxpDqAVJ5IBGtvPrwDNr3FuCtrYlmvrQF5NIIiyOxehL0mLUmIvZojTf5H6mTZhalQ6+PsHrp
-	j8wcPkIFNgGUGQSKRe5g==;
+	List-Owner; bh=wEPnWAoxjJOkMqmLZaf/U9t0SZ8y5Jr9Z0MZeAu0+Kc=; b=gMavhAi8vy2CUZ
+	xfnsovW2jXKGiF14W0wQP0cSx+7Z5j1BM7WcHF3qhGgG2Uxo4QY5ciu5sh16ooDx1gma9zKyzFLXA
+	rXc2dpmTI6QKDxVAnDftbz5MkmiGue9NfhR34M8ps62A7dUJEQeKX1h/MXW95epSdBeazkA1SUXrg
+	U0X5rbBwGy0V7uldLGwlTYz5BHihxv/mLPJbL8bzd2LY82Ge6TTTo25AOBUHNkfBGZAnME1Gh7kW5
+	RqjHOZs9nMIQP89gto1RjmhQhzzV/ENQPlB3kzw9fQJ8RSK/0xQjnG7hf11vMmaKFuL+F2j4G0NXu
+	3cswv2/nYVjc0e+7vLGA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNtYb-0000000GxZ1-07hR;
-	Mon, 02 Nov 2026 15:02:45 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xNtYs-0000000Gxf0-1DNI;
+	Mon, 02 Nov 2026 15:03:02 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNtYZ-0000000GxYT-21NG;
-	Mon, 02 Nov 2026 15:02:43 +0000
+	id 1xNtYq-0000000Gxed-2QoY;
+	Mon, 02 Nov 2026 15:03:00 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 3E276434BC;
-	Mon,  2 Nov 2026 15:02:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 822B61F00A16;
-	Mon,  2 Nov 2026 15:02:30 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 09B946022F;
+	Mon,  2 Nov 2026 15:03:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 993D81F00A1C;
+	Mon,  2 Nov 2026 15:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793631763;
-	bh=pQQ1Vs9Ggdq4tGJpsZZ2KAKh5WKICEOKhSgV+25xKrE=;
+	s=k20260515; t=1793631779;
+	bh=wEPnWAoxjJOkMqmLZaf/U9t0SZ8y5Jr9Z0MZeAu0+Kc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=RNnLcX8egvEl5rPbLFMIscYDo1QnoOrpG6e02ikgGgR/Z2oamdimB42SLpFro378t
-	 USbuYkcNHDjjzryLCSmr+2mmsvc3Atos4MVc28LQXLDJayaUp2uu3SYOz50KP5/BKt
-	 3u8kERoVbEfv90E7PC1AQzopGHBD/M7WfJWVvb4TNCYwjGxWo6SsNG7sq/Lq8yJIja
-	 zntE5mo3Bhg9BDYczlvI4bibAH3u2IIBa/7c1DzqGQ/HgRro22a3o66odi6Je5Ttco
-	 L0BW9ZHBEZJkGL3uRb7ev3sdiVhk7xK/B7muXSKuAHvnwQSKK0opx2IHD1lw9HfJa5
-	 LqGcvESsuLu/A==
+	b=Ht8IvPAW4mof6T3nGFwGbeVcaglGOl5mlj1CVqepMvEvFGz+8PKgoWLHL9+bJs9L7
+	 53v2AQN+tBMkiLzgkeml7gGU+OB8Qm2CYhl3PTcPVXGN5OADSQkZJx/YRkKTS8i052
+	 B5XpuKPR4lfAkar6kmgYTuxdr92sz56IZFvIKuF1+wppZQEyaU5GTMiW0VyOvuqR23
+	 IRN/l76vPa7aqwWxy1j21njn6oagnIsGH3fmLYqTV/WDWTC2VC/h/xgzC3mEcucqJ4
+	 Ga/T8yFZ4NOj4fhKsZdAeiJjq2g3w2I4SHbAhfhyRvJrP9tLFJXFNtfFbKv/jX0P31
+	 EU9eTVpIjSIzQ==
 From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 02 Nov 2026 16:01:30 +0100
-Subject: [PATCH RFC 03/22] ARM: atags: let procfs copy out reads of
- /proc/atags
+Date: Mon, 02 Nov 2026 16:01:31 +0100
+Subject: [PATCH RFC 04/22] m68k/bootinfo: let procfs copy out reads of
+ /proc/bootinfo
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261102-work-procfs-arch-v1-3-c9492ab08480@kernel.org>
+Message-Id: <20261102-work-procfs-arch-v1-4-c9492ab08480@kernel.org>
 References: <20261102-work-procfs-arch-v1-0-c9492ab08480@kernel.org>
 In-Reply-To: <20261102-work-procfs-arch-v1-0-c9492ab08480@kernel.org>
 To: linux-fsdevel@vger.kernel.org
@@ -109,29 +109,29 @@ after it unpinned the entry.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- arch/arm/kernel/atags_proc.c | 6 +++---
+ arch/m68k/kernel/bootinfo_proc.c | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/kernel/atags_proc.c b/arch/arm/kernel/atags_proc.c
-index 8411fbfbcb8b..ff28bf24dd30 100644
---- a/arch/arm/kernel/atags_proc.c
-+++ b/arch/arm/kernel/atags_proc.c
-@@ -10,15 +10,15 @@ struct buffer {
- 	char data[] __counted_by(size);
- };
+diff --git a/arch/m68k/kernel/bootinfo_proc.c b/arch/m68k/kernel/bootinfo_proc.c
+index 857fa2aaa748..4936cf44e86a 100644
+--- a/arch/m68k/kernel/bootinfo_proc.c
++++ b/arch/m68k/kernel/bootinfo_proc.c
+@@ -19,15 +19,15 @@ static char bootinfo_tmp[1536] __initdata;
+ static void *bootinfo_copy;
+ static size_t bootinfo_size;
  
--static ssize_t atags_read(struct file *file, char __user *buf,
-+static ssize_t atags_read(struct file *file, char *buf,
+-static ssize_t bootinfo_read(struct file *file, char __user *buf,
++static ssize_t bootinfo_read(struct file *file, char *buf,
  			  size_t count, loff_t *ppos)
  {
- 	struct buffer *b = pde_data(file_inode(file));
--	return simple_read_from_buffer(buf, count, ppos, b->data, b->size);
-+	return memory_read_from_buffer(buf, count, ppos, b->data, b->size);
+-	return simple_read_from_buffer(buf, count, ppos, bootinfo_copy,
++	return memory_read_from_buffer(buf, count, ppos, bootinfo_copy,
+ 				       bootinfo_size);
  }
  
- static const struct proc_ops atags_proc_ops = {
--	.proc_read	= atags_read,
-+	.proc_read_buf	= atags_read,
+ static const struct proc_ops bootinfo_proc_ops = {
+-	.proc_read	= bootinfo_read,
++	.proc_read_buf	= bootinfo_read,
  	.proc_lseek	= default_llseek,
  };
  
