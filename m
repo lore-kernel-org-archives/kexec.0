@@ -2,98 +2,94 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0599D60A1DB5
-	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:36:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6425160E34E4
+	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:37:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=bQ9mnp7i;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Xv854kNM
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=4yvHS9Kd;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=TiVXSFdU
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
-	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
-	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=S9tzR156ub0Ko3Mv53tQ+R8L9hVWUPj+OCS3UYlYhFM=; b=bQ9mnp7iIm+7Fq
-	g3i1yB4B2N6pkQSXc29l3/lvJ2OT0mRmn0XA41b1HEUbFy+odwinGsKbxNVtM3QcIQSaIghqjK9j2
-	c1waWAHoZhN1joDGHBRBRWw7pBRWYQO8FHd/w4+6txaOYgOzn7yTIaf1rL73wOif7Dwg+nrXm0w3M
-	ETmhm24CRxlMtYgXE+YnTXa2nZJEDRASUND80Pt/EsK57YyydTCj5nWpINzqD4DegPIp00V40UBGA
-	DwuqvLbk7iIv9jcXkJsbkKGY77I1BkR5olEOv6O5aoJxV5o9T4GzcGUntzCdrroVGvP7I1Nb2dQMf
-	7ApefGp/MKKeERV+dm7A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Unsubscribe-Post:List-Owner;
+	bh=iSMn9Luik8JQySxKW5TZdiPLSp0bOJ1EGPPjD/yQ8D8=; b=4yvHS9Kdy/G+ulo7PmAxgnJ859
+	0lYGPCNV4xn4QloeTbSJfsuk1QHmsuaYVlWXBryr6H6ZAfQu9DvqyU/MZPVqhWt05NQZLfVwSqKx8
+	EaUzEgTID+4hTt7VcijNCfzaD7jdURiCa+viYtT6fmn2z502WR1oFanD7BRgD76AKTP/OfFY3i9i1
+	KuxSzRSijBpHXCtT9l1QlzFlhgl2u3WEvpKBeIm68UtO0He13S+bu8vY9KxjE2PxpUZdxjIlEDVDe
+	AY+gB1nBISgZNx475SGJ6oOA58oUrKAFP/FbXJf2Lwt7cP7zR+FNidj3ZFqvN0GldFlGPj15I8xAE
+	P34tH0Fw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNu5i-0000000H9MC-32iA;
-	Mon, 02 Nov 2026 15:36:58 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xNu5p-0000000H9RK-0QM8;
+	Mon, 02 Nov 2026 15:37:05 +0000
+Received: from mail-pg1-x545.google.com ([2607:f8b0:4864:20::545])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNu5h-0000000H9Lm-1fcx;
-	Mon, 02 Nov 2026 15:36:57 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id BE75C605D0;
-	Mon,  2 Nov 2026 15:36:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 531081F00A18;
-	Mon,  2 Nov 2026 15:36:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793633816;
-	bh=S9tzR156ub0Ko3Mv53tQ+R8L9hVWUPj+OCS3UYlYhFM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=Xv854kNMsGwo7y+d1KGrPoCvj8xhJsXdx+NPbr36bs+rW5xwmzoPtt2iRcwjhbEKU
-	 XfGn3WHT/EUTweyMuOntYcuRNkJ8rTxnpo6+2PE2yMcenfdCzl5eIgjm5/Mh5ebn7G
-	 fkhyKa0rXacAXgJ+DCsssER449+cBLCHyxVdSSLX+Dc8MDSqMopDEivA7yuiSDKGIt
-	 S+zxOV5qOgzsYi0jxj417k6xxIdELaXugUKSSeWJd0Mj/Dej88U0tMQwopSyTcFdVs
-	 +LuR+neBjXGs3pWPltnJUq6afbVpYXhNMgZlQFhveRD+FSFnPEgw7sZPZlNM5HmN/s
-	 Kl3S3hqMGw5FQ==
-From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 02 Nov 2026 16:15:56 +0100
-Subject: [PATCH RFC 3/5] proc: only let permanent entries read straight
- into userspace
+	id 1xNu5m-0000000H9NL-055J
+	for kexec@lists.infradead.org;
+	Mon, 02 Nov 2026 15:37:03 +0000
+Received: by mail-pg1-x545.google.com with SMTP id 41be03b00d2f7-cc4216aee8fso3322002a12.1
+        for <kexec@lists.infradead.org>; Mon, 02 Nov 2026 07:37:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1793633820; x=1794238620; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=iSMn9Luik8JQySxKW5TZdiPLSp0bOJ1EGPPjD/yQ8D8=;
+        b=TiVXSFdUvaCHSj34bI85xhIaR9ixc6TCAB8ZU2kBo2jDlCuQvL/niY3JnpO1r8zhz8
+         Og4za+zKI5bRd64b9T6epDCTVHh2aArPYT2M1Rb+Odkqt1pozDZ4Et5Cc080c5RmnYmo
+         y87UFUP8w0wD4wZ+r1+8QZoACDMQgw/eT5YIVgEzno3NM21lDioOdLbaj4Ctvy5biG4H
+         g/uB3fSQ4edkVxgSdJuLIvzJVe6T5++yWteWckj0jiHV6ti1lYISVTp/cS4bCXFqr4PT
+         E8Gf/bhp/MoVS7friooRuPvxffcdsPhv/ncGbHcss7ziusMA734JDY4dup/Z7Ko9d7rS
+         oVkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793633820; x=1794238620;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=iSMn9Luik8JQySxKW5TZdiPLSp0bOJ1EGPPjD/yQ8D8=;
+        b=Cn1b7LUenQy2lU8/UYvryaJ6PqezN/G1sRpCLROjzBNnmfuyv5IX1SgXkmhcIP4r05
+         Nd7Ivpy+Sj0Ap2HdvTRhwIjL4r1U07Cb6MTiVYoMhPJBYfMmR7X5K4RJkZuwFuTjXS7l
+         fPcRAjhkqI8nzcOLH8AFjdjYySOHD2Ju0T/an9oCTHjUdrAqykMIJo6az7Rbj/wP9T5J
+         CTn+4gf8nzYPU9yma4F0aKdWQvA/voxhSMWQE0e/CNu3wicZwtzhr177KoNT5674A2t5
+         kD16iUtkd8CSCdVHrmU9aN0oo/pfcpq0FsN7V6RXtfAw4ci+nM/jEe4vuQx8cHFcuIeU
+         +4tQ==
+X-Gm-Message-State: APuU4Z/PJjS0mICdnHk4lHsivuLzONsVNeu1SnDLIuh6Curoy+umpGox
+	BcozqO0iOW+IMCdjmO8i7Uca9EXmicOT0oV6PPruyaYzOWyeM0IGvgBMSha7LHamVHrly7dqNuE
+	ST1Pt3oBnxYVbyG3z7stdcGD4eqnFp5huq2l1X3gdk0hkk4RlAcjyC4fHjb4f7Ajhze3KSgH+XN
+	FCqMCOjdAJngug49i758nW7JGaAyt2s7gVxejcd5SBOjcprQ==
+X-Received: from pjbir10.prod.google.com ([2002:a17:90b:468a:b0:3aa:ee30:1a77])
+ (user=vipinsh job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1a8b:b0:3ab:884b:65b7
+ with SMTP id 98e67ed59e1d1-3ae89814e34mr8631702a91.25.1793633819867; Mon, 02
+ Nov 2026 07:36:59 -0800 (PST)
+Date: Mon,  2 Nov 2026 07:36:29 -0800
 X-Archived-By: <archiver.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261102-work-procfs-cleanup-v1-3-c40014bc12f5@kernel.org>
-References: <20261102-work-procfs-cleanup-v1-0-c40014bc12f5@kernel.org>
-In-Reply-To: <20261102-work-procfs-cleanup-v1-0-c40014bc12f5@kernel.org>
-To: linux-fsdevel@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
- Jann Horn <jannh@google.com>, Josef Bacik <josef@toxicpanda.com>, 
- Chris Mason <mason@kernel.org>, Jeff Layton <jlayton@kernel.org>, 
- NeilBrown <neil@brown.name>, Eric Dumazet <edumazet@kernel.org>, 
- Thomas Gleixner <tglx@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
- Jonathan Corbet <corbet@lwn.net>, Christoph Hellwig <hch@lst.de>, 
- Greg Kroah-Hartman <gregkh@suse.de>, 
- Joel Granados <joel.granados@kernel.org>, Kees Cook <kees@kernel.org>, 
- Jan Kara <jack@suse.cz>, Jan Kara <jack@suse.com>, 
- linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
- linux-acpi@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, 
- linux-um@lists.infradead.org, linux-wireless@vger.kernel.org, 
- linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org, 
- ntfs3@lists.linux.dev, platform-driver-x86@vger.kernel.org, 
- coreteam@netfilter.org, kexec@lists.infradead.org, 
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
- netfilter-devel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- ibm-acpi-devel@lists.sourceforge.net, jfs-discussion@lists.sourceforge.net, 
- linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-cifs@vger.kernel.org, linux-fbdev@vger.kernel.org, 
- linux-hwmon@vger.kernel.org, linux-mm@kvack.org, linux-sh@vger.kernel.org, 
- linux-usb@vger.kernel.org, samba-technical@lists.samba.org, 
- sparclinux@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
- linux-doc@vger.kernel.org, linux-serial@vger.kernel.org, 
- linux-atm-general@lists.sourceforge.net, Takashi Iwai <tiwai@suse.de>, 
- linux-input@vger.kernel.org, linux-raid@vger.kernel.org, 
- linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, 
- linux-debuggers@vger.kernel.org, 
- "Christian Brauner (Amutable)" <brauner@kernel.org>, 
- Chuck Lever <cel@kernel.org>
-X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3948; i=brauner@kernel.org;
- h=from:subject:message-id; bh=HAEx+xWoU7bRVFGL7mPvEVPlpuc3m3z2NxJgiNg4Kyk=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9WJlZf/pOH6N9WMJzv9uNpixmJcz8Ug/Ejvz11/239
- 6GG0aykjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIncamf4X3St2856z96lFedd
- LXNe81VttXmn+CW5oKrcbePRNO7QUwz/LLla1BTNtBU3uscdWNC45ueiHItPagqx/Q8zd6094Fv
- ADgA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp;
- fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.317.g454f8302e1-goog
+Message-ID: <20261102153656.1431701-1-vipinsh@google.com>
+Subject: [PATCH v6 00/27] VFIO PCI Live Update (noiommu mode)
+From: Vipin Sharma <vipinsh@google.com>
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org
+Cc: ajayachandra@nvidia.com, alex@shazbot.org, amastro@fb.com, 
+	ankita@nvidia.com, apopple@nvidia.com, bhelgaas@google.com, chrisl@kernel.org, 
+	christian.koenig@amd.com, corbet@lwn.net, dmatlack@google.com, 
+	graf@amazon.com, jacob.pan@linux.microsoft.com, jgg@nvidia.com, jgg@ziepe.ca, 
+	jrhilke@google.com, julianr@linux.ibm.com, kees@kernel.org, 
+	kevin.tian@intel.com, leon@kernel.org, leonro@nvidia.com, lukas@wunner.de, 
+	mattev@meta.com, michal.winiarski@intel.com, parav@nvidia.com, 
+	pasha.tatashin@soleen.com, praan@google.com, pratyush@kernel.org, 
+	rananta@google.com, rdunlap@infradead.org, rientjes@google.com, 
+	rodrigo.vivi@intel.com, rppt@kernel.org, saeedm@nvidia.com, 
+	schnelle@linux.ibm.com, skhan@linuxfoundation.org, skhawaja@google.com, 
+	vipinsh@google.com, vivek.kasireddy@intel.com, witu@nvidia.com, 
+	yanjun.zhu@linux.dev, yi.l.liu@intel.com
+Content-Type: text/plain; charset="UTF-8"
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261102_073702_104068_005B3723 
+X-CRM114-Status: GOOD (  24.66  )
+X-Spam-Score: -9.5 (---------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,123 +100,221 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-26.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Every entry that can be removed implements ->proc_read_buf() now and
-procfs copies what is read to userspace after unpinning the entry.
-->proc_read() and ->proc_read_iter() are left for the entries that are
-never removed, kcore, kmsg, kpagecount, kpageflags, kpagecgroup and
-profile. procfs never pins those, so nothing can wait for them.
+This series adds a fully working Live Update support for vfio-pci
+devices in noiommu mode, using the Live Update Orchestrator (LUO) and
+Kexec HandOver (KHO).
 
-Say so in struct proc_ops and refuse to register an entry that can be
-removed and has one of them. The read paths then don't need to pin the
-entry anymore.
+This series can also be found on GitHub:
+  https://github.com/shvipin/linux/tree/vfio/liveupdate/v6
 
-PROC_ENTRY_PERMANENT is 0 in modules, so a module can't register an
-entry with one of them anymore.
+Unlike v5, which reset the device in freeze() and required userspace to
+re-initialize it after kexec, v6 keeps a preserved device running across
+the kexec: it is not reset, bus mastering and memory decode stay enabled,
+it stays in D0, and in-flight DMA continues into preserved memory (e.g. a
+LUO-preserved shmem memfd). In the new kernel, userspace retrieves the
+device FD from its LUO session and takes over the running device without
+resetting it on the first VFIO_DEVICE_BIND_IOMMUFD.
 
-Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
----
- fs/proc/generic.c       |  4 ++++
- fs/proc/inode.c         | 27 ++++++++-------------------
- include/linux/proc_fs.h |  6 ++++++
- 3 files changed, 18 insertions(+), 19 deletions(-)
+Preserving IOMMU-backed devices is refused with -EOPNOTSUPP until LUO can
+preserve IOMMU state; group/container FDs and unbound cdev FDs are refused
+with -ENOENT.
 
-diff --git a/fs/proc/generic.c b/fs/proc/generic.c
-index 413382efefc7..7c8def4ed9fc 100644
---- a/fs/proc/generic.c
-+++ b/fs/proc/generic.c
-@@ -443,6 +443,10 @@ static int pde_set_flags(struct proc_dir_entry *pde)
- 
- 	if (proc_ops->proc_flags & PROC_ENTRY_PERMANENT)
- 		pde->flags |= PROC_ENTRY_PERMANENT;
-+	/* These copy to userspace and only an entry that can't go away may. */
-+	if (WARN_ON_ONCE((proc_ops->proc_read || proc_ops->proc_read_iter) &&
-+			 !pde_is_permanent(pde)))
-+		return -EINVAL;
- 	if (proc_ops->proc_seq_ops) {
- 		pde->seq_ops = proc_ops->proc_seq_ops;
- 		pde->state_size = proc_ops->proc_state_size;
-diff --git a/fs/proc/inode.c b/fs/proc/inode.c
-index 971f2aecc006..a7f8818b0b74 100644
---- a/fs/proc/inode.c
-+++ b/fs/proc/inode.c
-@@ -460,35 +460,24 @@ static ssize_t pde_read_buf(struct proc_dir_entry *pde, struct kiocb *iocb,
- static ssize_t proc_reg_read_iter(struct kiocb *iocb, struct iov_iter *iter)
- {
- 	struct proc_dir_entry *pde = PDE(file_inode(iocb->ki_filp));
--	ssize_t ret;
- 
- 	if (pde_has_proc_read_buf(pde))
- 		return pde_read_buf(pde, iocb, iter);
--	if (!pde_pin(pde))
--		return -EIO;
--	ret = pde->proc_ops->proc_read_iter(iocb, iter);
--	pde_unpin(pde);
--	return ret;
--}
--
--static ssize_t pde_read(struct proc_dir_entry *pde, struct file *file, char __user *buf, size_t count, loff_t *ppos)
--{
--	const auto read = pde->proc_ops->proc_read;
--	if (read)
--		return read(file, buf, count, ppos);
--	return -EIO;
-+	/* only permanent entries have one, see pde_set_flags() */
-+	return pde->proc_ops->proc_read_iter(iocb, iter);
- }
- 
- static ssize_t proc_reg_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
- {
- 	struct proc_dir_entry *pde = PDE(file_inode(file));
--	ssize_t rv;
- 
--	if (!pde_pin(pde))
-+	/*
-+	 * Only permanent entries have one, see pde_set_flags(). Anything else
-+	 * might be gone along with its ->proc_ops.
-+	 */
-+	if (!pde_is_permanent(pde) || !pde->proc_ops->proc_read)
- 		return -EIO;
--	rv = pde_read(pde, file, buf, count, ppos);
--	pde_unpin(pde);
--	return rv;
-+	return pde->proc_ops->proc_read(file, buf, count, ppos);
- }
- 
- /*
-diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
-index 64242a9aa117..17516b064922 100644
---- a/include/linux/proc_fs.h
-+++ b/include/linux/proc_fs.h
-@@ -17,6 +17,8 @@ struct seq_operations;
- enum {
- 	/*
- 	 * All /proc entries using this ->proc_ops instance are never removed.
-+	 * procfs calls into them without pinning them, so they may copy to
-+	 * userspace themselves through ->proc_read() or ->proc_read_iter().
- 	 *
- 	 * If in doubt, ignore this flag.
- 	 */
-@@ -72,6 +74,10 @@ struct proc_ioctl_arg {
- struct proc_ops {
- 	unsigned int proc_flags;
- 	int	(*proc_open)(struct inode *, struct file *);
-+	/*
-+	 * These two are only for PROC_ENTRY_PERMANENT entries. Everything else
-+	 * uses ->proc_read_buf().
-+	 */
- 	ssize_t	(*proc_read)(struct file *, char __user *, size_t, loff_t *);
- 	ssize_t (*proc_read_iter)(struct kiocb *, struct iov_iter *);
- 	/*
+This series is built on top of PCI Live Update series version v10:
+  https://lore.kernel.org/linux-pci/20261013162529.1928093-1-dmatlack@google.com/
 
+Design
+======
+
+- Preserve: only a bound noiommu vfio-pci cdev FD can be preserved (no
+  VFs, Intel display devices, or zdev). The device is registered with PCI
+  Live Update and its pre-open struct pci_saved_state is serialized into
+  a versioned KHO buffer ("vfio-pci-v1").
+
+- Freeze/unfreeze: freeze() requires interrupts to be disabled, the
+  device to be in D0, and SR-IOV to be disabled (VFs are not preserved).
+  It snapshots vconfig and pci_config_map, and masks physical INTx while
+  leaving bus mastering enabled. If the kexec is aborted, unfreeze()
+  restores INTx and the existing FD keeps working.
+
+- Early protection in the new kernel: an incoming device is kept out of
+  runtime D3, sibling dev_set resets are blocked, and opening it via its
+  cdev or VFIO_GROUP_GET_DEVICE_FD fails with -EBUSY until the session is
+  finished. If the new kernel is not in noiommu mode, bus mastering is
+  cleared at registration.
+
+- Retrieve and take-over: LIVEUPDATE_SESSION_RETRIEVE_FD validates the
+  serialized state against the hardware and returns an unbound cdev FD.
+  The first VFIO_DEVICE_BIND_IOMMUFD takes over the device without
+  clearing bus mastering, resetting, or re-saving its state, restores the
+  preserved vconfig, and keeps the original saved state so that normal
+  reset/restore applies when the FD is closed.
+
+- Unclaimed devices: if the session is finished or closed without taking
+  over the device (not retrieved, retrieved but not bound, unbound, or
+  driverless), the kernel logs one pci_warn(), resets the device, and
+  restores its pre-Live-Update state.
+
+- DMA memory ordering: a running device keeps DMAing until it is taken
+  over or reset, so its DMA memory must stay pinned until then. LUO
+  finishes files in LIFO order, so userspace must preserve the DMA memory
+  (e.g. a memfd) in the same session and before the device. This is
+  documented in Documentation/driver-api/vfio_pci_liveupdate.rst.
+
+Testing
+=======
+
+- QEMU with an emulated igb device in noiommu mode, across real
+  kexec reboots: vfio_pci_liveupdate_uapi_test and
+  vfio_pci_liveupdate_kexec_test (opens fail with -EBUSY, memfd stays at
+  the same physical addresses, pre-kexec DMA completes after take-over,
+  and new DMA works without re-init).
+- Physical Intel hosts with DSA (8086:0b25), across real kexec
+  reboots: vfio_pci_liveupdate_kexec_test with DMA started just before
+  the kexec (opens fail with -EBUSY, memfd stays at the same physical
+  addresses, pre-kexec DMA completes correctly after take-over, and new
+  DMA works without re-init).
+
+
+  $ ./setup.sh 0000:6a:01.0
+  $ ./vfio_pci_liveupdate_kexec_test -s 1 0000:6a:01.0
+  $ kexec --reuse-cmdline -l -s /boot/vmlinuz
+  $ kexec -e
+  $ ./setup.sh 0000:6a:01.0
+  $ ./vfio_pci_liveupdate_kexec_test -s 2 0000:6a:01.0
+
+AI disclosure
+=============
+
+New and reworked patches were developed with LLM assistance. Assisted-by
+is not needed now in linux kernel but I thought I should at least
+disclose this in cover letter.
+
+v6:
+
+- Keep noiommu devices running across kexec and take them over without
+  reset, instead of resetting them in freeze().
+- Restrict preservation to bound noiommu cdev FDs.
+- Add PCI helpers to serialize and restore struct pci_saved_state.
+- Add unfreeze() and close races between freeze() and ioctl/config
+  access. Refuse freeze() while SR-IOV is enabled, and refuse enabling
+  SR-IOV on a frozen device.
+- Protect incoming devices in the new kernel until they finish Live
+  Update; reset unclaimed devices in finish() with a single pci_warn().
+  retrieve() and finish() look the device up under the device lock, so
+  they never act on a device that vfio-pci is still probing.
+- Fix vfio_pci_liveupdate_init() error handling to avoid a double
+  unregister at module exit (reported by Sashiko on v5).
+- Drop "vfio/pci: Export vfio_pci_dma_buf_move for vfio-pci module",
+  "vfio: selftests: Expose iommu_modes to tests", and exports that were
+  only needed by the v5 reset path.
+- Update the VFIO PCI and PCI Live Update documentation.
+- Selftests: add an iommufd noiommu mode, IOVA == PA mapping helpers,
+  2MB THP memfd helpers, an attach() driver op (igb, DSA), and a kexec
+  test with DMA running across the Live Update.
+
+v5: https://lore.kernel.org/kvm/20260714151505.3466855-1-vipinsh@google.com/
+v4: https://lore.kernel.org/kvm/20260511234802.2280368-1-vipinsh@google.com/
+v3: https://lore.kernel.org/kvm/20260323235817.1960573-1-dmatlack@google.com/
+v2: https://lore.kernel.org/kvm/20260129212510.967611-1-dmatlack@google.com/
+v1: https://lore.kernel.org/kvm/20251126193608.2678510-1-dmatlack@google.com/
+rfc: https://lore.kernel.org/kvm/20251018000713.677779-1-vipinsh@google.com/
+
+David Matlack (4):
+  vfio: Enforce preserved devices are retrieved via
+    LIVEUPDATE_SESSION_RETRIEVE_FD
+  docs: liveupdate: Add documentation for VFIO PCI
+  vfio: selftests: Add vfio_pci_liveupdate_uapi_test
+  vfio: selftests: Add Makefile support for TEST_GEN_PROGS_EXTENDED
+
+Vipin Sharma (23):
+  vfio/pci: Factor out the reset logic in VFIO PCI device close path
+  vfio: Export various helpers from VFIO
+  liveupdate: Export symbols needed by modules
+  vfio/pci: Register a file handler with Live Update Orchestrator
+  PCI: liveupdate: Add helpers to preserve struct pci_saved_state
+  vfio: Add helpers to identify device files that can be preserved
+  vfio/pci: Preserve vfio-pci device files across Live Update
+  vfio: Introduce vfio_find_device() helper
+  vfio: Refactor vfio_device_fops_cdev_open()
+  vfio: Add API to open cdev device for Live Update restore
+  vfio/pci: Retrieve preserved device files after Live Update
+  vfio/pci: Protect incoming preserved devices until they finish Live
+    Update
+  vfio/pci: Take over preserved devices without resetting them
+  vfio: selftests: Build liveupdate library in VFIO selftests
+  vfio: selftests: Initialize vfio_pci_device using a VFIO cdev FD
+  vfio: selftests: Add iommufd noiommu mode
+  vfio: selftests: Add helpers to map DMA memory at IOVA == PA in
+    noiommu mode
+  vfio: selftests: Add helpers for Live Update DMA memory and sysfs
+    state
+  vfio: selftests: Add an attach() driver op
+  vfio: selftests: Test preserving noiommu devices in
+    vfio_pci_liveupdate_uapi_test
+  vfio: selftests: Add vfio_pci_liveupdate_kexec_test
+  vfio: selftests: Verify that opening VFIO device fails during Live
+    Update
+  vfio: selftests: Add continuous DMA to vfio_pci_liveupdate_kexec_test
+
+ Documentation/PCI/liveupdate.rst              |   3 +
+ Documentation/core-api/liveupdate.rst         |   1 +
+ .../driver-api/vfio_pci_liveupdate.rst        |  25 +
+ MAINTAINERS                                   |   2 +
+ drivers/pci/liveupdate.c                      | 223 ++++++
+ drivers/pci/pci.c                             |   5 -
+ drivers/pci/pci.h                             |   6 +
+ drivers/vfio/device_cdev.c                    |  87 +-
+ drivers/vfio/group.c                          |   9 +
+ drivers/vfio/pci/Kconfig                      |  11 +
+ drivers/vfio/pci/Makefile                     |   1 +
+ drivers/vfio/pci/vfio_pci.c                   |  14 +-
+ drivers/vfio/pci/vfio_pci_config.c            |  19 +-
+ drivers/vfio/pci/vfio_pci_core.c              | 348 ++++++--
+ drivers/vfio/pci/vfio_pci_intrs.c             |   4 +-
+ drivers/vfio/pci/vfio_pci_liveupdate.c        | 745 ++++++++++++++++++
+ drivers/vfio/pci/vfio_pci_priv.h              | 177 +++++
+ drivers/vfio/vfio.h                           |  28 +-
+ drivers/vfio/vfio_main.c                      |  85 +-
+ include/linux/kho/abi/pci.h                   |  47 ++
+ include/linux/kho/abi/vfio_pci.h              |  76 ++
+ include/linux/pci_liveupdate.h                |   7 +
+ include/linux/vfio.h                          |  19 +
+ include/linux/vfio_pci_core.h                 |  11 +
+ kernel/liveupdate/luo_file.c                  |   2 +
+ tools/testing/selftests/vfio/Makefile         |  23 +-
+ .../selftests/vfio/lib/drivers/dsa/dsa.c      |  35 +-
+ .../selftests/vfio/lib/drivers/igb/igb.c      |  39 +-
+ .../selftests/vfio/lib/include/libvfio.h      |   3 +
+ .../vfio/lib/include/libvfio/iommu.h          |  43 +
+ .../vfio/lib/include/libvfio/sysfs.h          |   1 +
+ .../lib/include/libvfio/vfio_pci_device.h     |  10 +
+ .../lib/include/libvfio/vfio_pci_driver.h     |  17 +
+ tools/testing/selftests/vfio/lib/iommu.c      |  70 +-
+ tools/testing/selftests/vfio/lib/libvfio.c    |  54 ++
+ tools/testing/selftests/vfio/lib/sysfs.c      |  22 +-
+ .../selftests/vfio/lib/vfio_pci_device.c      |  56 +-
+ .../selftests/vfio/lib/vfio_pci_driver.c      |  22 +-
+ .../vfio/vfio_pci_liveupdate_kexec_test.c     | 388 +++++++++
+ .../vfio/vfio_pci_liveupdate_uapi_test.c      | 227 ++++++
+ 40 files changed, 2826 insertions(+), 139 deletions(-)
+ create mode 100644 Documentation/driver-api/vfio_pci_liveupdate.rst
+ create mode 100644 drivers/vfio/pci/vfio_pci_liveupdate.c
+ create mode 100644 include/linux/kho/abi/vfio_pci.h
+ create mode 100644 tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
+ create mode 100644 tools/testing/selftests/vfio/vfio_pci_liveupdate_uapi_test.c
+
+
+base-commit: 312200e9211ede3f9a03cc17d094805e06e4674e
 -- 
-2.53.0
+2.56.0.317.g454f8302e1-goog
 
 
