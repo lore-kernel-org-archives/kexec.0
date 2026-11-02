@@ -2,97 +2,97 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE22360EC3F2
-	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:37:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA05D60EEC17
+	for <kexec@archiver.kernel.org>; Mon,  2 Nov 2026 15:37:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=WI7B8Fma;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=N5d8raPn
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=AsRf1Y4v;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=F4s9FtlT
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
-	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
-	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=MkQRjvaZWXm4tuezHj6GIBRblccuaWpNe7JtwA3svBQ=; b=WI7B8FmamrIYcx
-	UUJRRWOtcZBPCLSIT/HnAhCE49vXom4nV/MqtBurzutsdCysKk/8VILTN5y/SPGBMYe+c60SLBgwV
-	i0cXu3Wm5M7gwJ6gt7VxAwOFl0Om3JOKrGb0Gs4/q1F51lHM9jfev7EWnSOc4XqL3egy+u3jBPBNF
-	5g5r421hLtjzeJvWkN16TvUF+/WRcP+nmlbiTrJQLztGGzZSEtHJiNQFH9JbB0YtbFd7SKphm4NBX
-	1BngP253uoiQnicnf9VrHFGiWJosrkxSbHkWfCFt3Jn5nMM3Awnt0jYWBlO3N+bqimiNHyQeLTA/K
-	Kw5ddg9tC9uJ+hvCIR/Q==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=WePLvWtT/WZKO7Unx2RTF+SOz/N+MuUr8ckMVHiMFxQ=; b=AsRf1Y4vz1dhN65b8Mwse4Jt84
+	15hjijrt+q2upIvUQ8ZkdP9RyyAT8YphsnsQgrhxlrb7GkklduJbzuYAmpHOn7Dsb+DL7sA0svDvb
+	0uRRhFi/kAG2tuqv9oyftvgjxGXXRUSwyn+kYM3S52E877m7F7QKjtb//UVbVqDa8DFb1zI5pNsfv
+	/cqRUo/9QU3iIZB6xpyjotOXHti8ypRXPwc5qD8WI6NeaXzesovZM+75RBcH3H4NHnpTRn9BcVqfy
+	IRRSfptRGtjDMnckPz2WBXZH2Caokb/oeffPphsaJPSmgP6eaYVWdEFr8gzMw5yzIqaeX7rfU7GJh
+	upJyXy+Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNu66-0000000H9qA-1lJe;
-	Mon, 02 Nov 2026 15:37:23 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xNu6B-0000000H9wC-3XsF;
+	Mon, 02 Nov 2026 15:37:27 +0000
+Received: from mail-pj1-x1047.google.com ([2607:f8b0:4864:20::1047])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNu63-0000000H9mf-1sJN;
+	id 1xNu61-0000000H9ic-42gX
+	for kexec@lists.infradead.org;
 	Mon, 02 Nov 2026 15:37:19 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 0E950444EA;
-	Mon,  2 Nov 2026 15:37:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 287BC1F00A16;
-	Mon,  2 Nov 2026 15:36:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793633837;
-	bh=MkQRjvaZWXm4tuezHj6GIBRblccuaWpNe7JtwA3svBQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=N5d8raPng3UsswrfEfRD/6Yf+jypyuu/YJ4VCAay1GiuUsmcXR0Y+Fa7sMVAYeevV
-	 WM7BUZsbSmL4Fu5gyoWA16hCX0R0Hfuk4/6rrpwUW/n5HR1xQ9hkyJzb1TV8UUEY39
-	 sq81QZhsVNtwBY1vJDzc8qXh8JzgLKmWgem0vI3jtE3Fhmef11/+wBMp2eZbVJNCDl
-	 FVALapmecAgWsUbKfgsbVhfxmQ7Wf8WjCjAYtzp3O7fVon30zJQFMARHQKCK9TYt4X
-	 Gn6a+T3+o2m68mj19GQb8PAki38MHMtf0oH5fqX+2eADrgXwfXQgFFcusidzk7J6TX
-	 G2CFGyyqTA8eg==
-From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 02 Nov 2026 16:15:57 +0100
-Subject: [PATCH RFC 4/5] proc: rename ->proc_read() and ->proc_read_iter()
+Received: by mail-pj1-x1047.google.com with SMTP id 98e67ed59e1d1-3aca98f01c1so3044295a91.2
+        for <kexec@lists.infradead.org>; Mon, 02 Nov 2026 07:37:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1793633836; x=1794238636; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=WePLvWtT/WZKO7Unx2RTF+SOz/N+MuUr8ckMVHiMFxQ=;
+        b=F4s9FtlTJdxCPx294llcG8vgq7TpHm0Tj7PG7zulHNz8tlBYu9JB1QuobN1g1jJut0
+         x+ybzKIV27Ajp0EnbdzaFHqnCgwC9z/OyRSLLVNVcdAxE7PHd+rb+DD2BcQ8w9d++n6s
+         q19N0SxmzjN4ey73EFQ6P8eqdTop04wIUeoe2f2qiCDYDTHAjWU0B19QdBPNN70GrVbd
+         hktKlh1GQ+J+ExppWTopjHcoa5+/HoIx/pP1sIf8jAVt7i+goHFw4J8/ZXqZLxpQBw25
+         6VNuGFAK9G36i0HzZXqtijK2NSSM6357iVh6WYwcTvFGY1jGbkB3H11/DiIhLhNv9owW
+         qyNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793633836; x=1794238636;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=WePLvWtT/WZKO7Unx2RTF+SOz/N+MuUr8ckMVHiMFxQ=;
+        b=Th9EttxAvvdQLxW72tYuheALB7hlhkiMhoQtfwdCsMHBm6V1F75dSbszLLfyMML/6e
+         EA2ZcOgATVN7u8dhO+j/WtNGYVha8V49IksmSN4vvrIngzIujBLtwNY+H2nDjvcWJFUM
+         CGGtU1vFnTs2bCJV1LNBLgUnS1aKZijT63gbc4opr9Fb/RyDMTd7fzCoETyav2nwG9SV
+         1U0HYrXdcq12wK0dS0ESOOfBZxR0tNHw0/703UDDBK2uQ/EXE/KMaDlMKCErnwc7mNEn
+         U3eNHrpPQ5zUKGyAehJVOM3Oxy6qJUIk/o/bTTdA5wvv/UcBVwQI+tY8lHC/REOHUicZ
+         6fDA==
+X-Gm-Message-State: APuU4Z/JOzg+keqz0gt1HNqyWePQy3AKy0i6c0HOWGsRv0JRDCEppJYJ
+	9KgRp8qCpIJyq/NuPLVHH5gSlJH49WKptSrEQe4noP88bC5TgT8gJZ7MRYDLgZqRsmkooI06db1
+	r34epY8fRz26zgP0ziTzBxiZX7kG1e69XBhfUxnhed5VSXdrCOnO6qIt+iVudIRPVhVA5BnkRVz
+	UfsUOjIDg+8TVLSrXg9epcr/K980GQhAE+rMQ3tqZ7rDXw8Q==
+X-Received: from pjbcm14.prod.google.com ([2002:a17:90a:fa0e:b0:3a6:f87a:f3e1])
+ (user=vipinsh job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3807:b0:3ad:a232:403f
+ with SMTP id 98e67ed59e1d1-3ae897aa79emr9013104a91.56.1793633835815; Mon, 02
+ Nov 2026 07:37:15 -0800 (PST)
+Date: Mon,  2 Nov 2026 07:36:44 -0800
+In-Reply-To: <20261102153656.1431701-1-vipinsh@google.com>
 X-Archived-By: <archiver.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261102-work-procfs-cleanup-v1-4-c40014bc12f5@kernel.org>
-References: <20261102-work-procfs-cleanup-v1-0-c40014bc12f5@kernel.org>
-In-Reply-To: <20261102-work-procfs-cleanup-v1-0-c40014bc12f5@kernel.org>
-To: linux-fsdevel@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
- Jann Horn <jannh@google.com>, Josef Bacik <josef@toxicpanda.com>, 
- Chris Mason <mason@kernel.org>, Jeff Layton <jlayton@kernel.org>, 
- NeilBrown <neil@brown.name>, Eric Dumazet <edumazet@kernel.org>, 
- Thomas Gleixner <tglx@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
- Jonathan Corbet <corbet@lwn.net>, Christoph Hellwig <hch@lst.de>, 
- Greg Kroah-Hartman <gregkh@suse.de>, 
- Joel Granados <joel.granados@kernel.org>, Kees Cook <kees@kernel.org>, 
- Jan Kara <jack@suse.cz>, Jan Kara <jack@suse.com>, 
- linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
- linux-acpi@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, 
- linux-um@lists.infradead.org, linux-wireless@vger.kernel.org, 
- linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org, 
- ntfs3@lists.linux.dev, platform-driver-x86@vger.kernel.org, 
- coreteam@netfilter.org, kexec@lists.infradead.org, 
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
- netfilter-devel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- ibm-acpi-devel@lists.sourceforge.net, jfs-discussion@lists.sourceforge.net, 
- linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-cifs@vger.kernel.org, linux-fbdev@vger.kernel.org, 
- linux-hwmon@vger.kernel.org, linux-mm@kvack.org, linux-sh@vger.kernel.org, 
- linux-usb@vger.kernel.org, samba-technical@lists.samba.org, 
- sparclinux@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
- linux-doc@vger.kernel.org, linux-serial@vger.kernel.org, 
- linux-atm-general@lists.sourceforge.net, Takashi Iwai <tiwai@suse.de>, 
- linux-input@vger.kernel.org, linux-raid@vger.kernel.org, 
- linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, 
- linux-debuggers@vger.kernel.org, 
- "Christian Brauner (Amutable)" <brauner@kernel.org>, 
- Chuck Lever <cel@kernel.org>
-X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9255; i=brauner@kernel.org;
- h=from:subject:message-id; bh=LiuenQB/cw1jutoK/+2XN6spwsgEUsgUo+MfZZ5B3rY=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9WJlT4nDmwwaZ4MPi7y7HTLWT2yy0SGjlkrpEyzOXf
- 5j+WJVe1FHKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjARvShGho+MfBYBi1ZMC9JP
- Son9PcXCOjZk/kJLH7FSxbfvt1Q4X2X4Z1mltufL22qVj4zPQrZu1u8WtJtZ97XhY+dhz0QLh8f
- C7AA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp;
- fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Mime-Version: 1.0
+References: <20261102153656.1431701-1-vipinsh@google.com>
+X-Mailer: git-send-email 2.56.0.317.g454f8302e1-goog
+Message-ID: <20261102153656.1431701-16-vipinsh@google.com>
+Subject: [PATCH v6 15/27] docs: liveupdate: Add documentation for VFIO PCI
+From: Vipin Sharma <vipinsh@google.com>
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org
+Cc: ajayachandra@nvidia.com, alex@shazbot.org, amastro@fb.com, 
+	ankita@nvidia.com, apopple@nvidia.com, bhelgaas@google.com, chrisl@kernel.org, 
+	christian.koenig@amd.com, corbet@lwn.net, dmatlack@google.com, 
+	graf@amazon.com, jacob.pan@linux.microsoft.com, jgg@nvidia.com, jgg@ziepe.ca, 
+	jrhilke@google.com, julianr@linux.ibm.com, kees@kernel.org, 
+	kevin.tian@intel.com, leon@kernel.org, leonro@nvidia.com, lukas@wunner.de, 
+	mattev@meta.com, michal.winiarski@intel.com, parav@nvidia.com, 
+	pasha.tatashin@soleen.com, praan@google.com, pratyush@kernel.org, 
+	rananta@google.com, rdunlap@infradead.org, rientjes@google.com, 
+	rodrigo.vivi@intel.com, rppt@kernel.org, saeedm@nvidia.com, 
+	schnelle@linux.ibm.com, skhan@linuxfoundation.org, skhawaja@google.com, 
+	vipinsh@google.com, vivek.kasireddy@intel.com, witu@nvidia.com, 
+	yanjun.zhu@linux.dev, yi.l.liu@intel.com
+Content-Type: text/plain; charset="UTF-8"
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261102_073718_259297_2DD3B218 
+X-CRM114-Status: GOOD (  13.60  )
+X-Spam-Score: -9.5 (---------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,248 +103,85 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+X-Spam-Status: No, score=-31.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=4.0.1
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Only entries that are never removed may implement ->proc_read() or
-->proc_read_iter() now, and PROC_ENTRY_PERMANENT is 0 in modules. But a
-module that sets one of them still builds fine and only finds out when
-registering its entry fails with a warning.
+From: David Matlack <dmatlack@google.com>
 
-So rename them to ->proc_permanent_read() and
-->proc_permanent_read_iter(). A module that sets one of them doesn't
-build anymore and the name says which entries may use them. Hiding the
-members from modules behind #ifdef MODULE instead would give modules a
-different layout of struct proc_ops than the rest of the kernel.
+Add documentation for preserving VFIO device files across a Live Update,
+generated from the kernel-doc comments in the code.
 
-While at it, rename PROC_ENTRY_proc_read_iter and
-pde_has_proc_read_iter() to match.
-
-No functional changes.
-
-Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
+Signed-off-by: David Matlack <dmatlack@google.com>
+Signed-off-by: Vipin Sharma <vipinsh@google.com>
 ---
- fs/proc/generic.c       | 15 +++++++++------
- fs/proc/inode.c         |  9 +++++----
- fs/proc/internal.h      |  5 +++--
- fs/proc/kcore.c         |  2 +-
- fs/proc/kmsg.c          |  2 +-
- fs/proc/page.c          |  6 +++---
- include/linux/proc_fs.h | 10 ++++++----
- kernel/profile.c        |  2 +-
- 8 files changed, 29 insertions(+), 22 deletions(-)
+ Documentation/core-api/liveupdate.rst         |  1 +
+ .../driver-api/vfio_pci_liveupdate.rst        | 25 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 3 files changed, 27 insertions(+)
+ create mode 100644 Documentation/driver-api/vfio_pci_liveupdate.rst
 
-diff --git a/fs/proc/generic.c b/fs/proc/generic.c
-index 7c8def4ed9fc..4bcec5a29b5f 100644
---- a/fs/proc/generic.c
-+++ b/fs/proc/generic.c
-@@ -444,7 +444,8 @@ static int pde_set_flags(struct proc_dir_entry *pde)
- 	if (proc_ops->proc_flags & PROC_ENTRY_PERMANENT)
- 		pde->flags |= PROC_ENTRY_PERMANENT;
- 	/* These copy to userspace and only an entry that can't go away may. */
--	if (WARN_ON_ONCE((proc_ops->proc_read || proc_ops->proc_read_iter) &&
-+	if (WARN_ON_ONCE((proc_ops->proc_permanent_read ||
-+			  proc_ops->proc_permanent_read_iter) &&
- 			 !pde_is_permanent(pde)))
- 		return -EINVAL;
- 	if (proc_ops->proc_seq_ops) {
-@@ -457,7 +458,8 @@ static int pde_set_flags(struct proc_dir_entry *pde)
- 	}
- 	if (pde_is_seq_file(pde)) {
- 		/* procfs reads and seeks through the seq_file itself */
--		if (WARN_ON_ONCE(proc_ops->proc_read || proc_ops->proc_read_iter ||
-+		if (WARN_ON_ONCE(proc_ops->proc_permanent_read ||
-+				 proc_ops->proc_permanent_read_iter ||
- 				 proc_ops->proc_lseek))
- 			return -EINVAL;
- 		/* and frees it, see pde_seq_release() */
-@@ -467,8 +469,8 @@ static int pde_set_flags(struct proc_dir_entry *pde)
- 			return -EINVAL;
- 		pde->flags |= PROC_ENTRY_proc_lseek;
- 	} else {
--		if (proc_ops->proc_read_iter)
--			pde->flags |= PROC_ENTRY_proc_read_iter;
-+		if (proc_ops->proc_permanent_read_iter)
-+			pde->flags |= PROC_ENTRY_proc_permanent_read_iter;
- 		if (proc_ops->proc_lseek)
- 			pde->flags |= PROC_ENTRY_proc_lseek;
- 	}
-@@ -479,8 +481,9 @@ static int pde_set_flags(struct proc_dir_entry *pde)
- 			pde->flags |= PROC_ENTRY_SHORT_WRITES;
- 	}
- 	if (proc_ops->proc_read_buf) {
--		if (WARN_ON_ONCE(pde_is_seq_file(pde) || proc_ops->proc_read ||
--				 proc_ops->proc_read_iter))
-+		if (WARN_ON_ONCE(pde_is_seq_file(pde) ||
-+				 proc_ops->proc_permanent_read ||
-+				 proc_ops->proc_permanent_read_iter))
- 			return -EINVAL;
- 		pde->flags |= PROC_ENTRY_proc_read_buf;
- 		pde->read_size = proc_ops->proc_read_size ?: PAGE_SIZE;
-diff --git a/fs/proc/inode.c b/fs/proc/inode.c
-index a7f8818b0b74..16d8f00bfc26 100644
---- a/fs/proc/inode.c
-+++ b/fs/proc/inode.c
-@@ -464,7 +464,7 @@ static ssize_t proc_reg_read_iter(struct kiocb *iocb, struct iov_iter *iter)
- 	if (pde_has_proc_read_buf(pde))
- 		return pde_read_buf(pde, iocb, iter);
- 	/* only permanent entries have one, see pde_set_flags() */
--	return pde->proc_ops->proc_read_iter(iocb, iter);
-+	return pde->proc_ops->proc_permanent_read_iter(iocb, iter);
- }
+diff --git a/Documentation/core-api/liveupdate.rst b/Documentation/core-api/liveupdate.rst
+index 2bce2644eba2..20f1d2e20508 100644
+--- a/Documentation/core-api/liveupdate.rst
++++ b/Documentation/core-api/liveupdate.rst
+@@ -38,6 +38,7 @@ The following types of file descriptors can be preserved
+    :maxdepth: 1
  
- static ssize_t proc_reg_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
-@@ -475,9 +475,9 @@ static ssize_t proc_reg_read(struct file *file, char __user *buf, size_t count,
- 	 * Only permanent entries have one, see pde_set_flags(). Anything else
- 	 * might be gone along with its ->proc_ops.
- 	 */
--	if (!pde_is_permanent(pde) || !pde->proc_ops->proc_read)
-+	if (!pde_is_permanent(pde) || !pde->proc_ops->proc_permanent_read)
- 		return -EIO;
--	return pde->proc_ops->proc_read(file, buf, count, ppos);
-+	return pde->proc_ops->proc_permanent_read(file, buf, count, ppos);
- }
+    ../mm/memfd_preservation
++   ../driver-api/vfio_pci_liveupdate
  
- /*
-@@ -880,7 +880,8 @@ struct inode *proc_get_inode(struct super_block *sb, struct proc_dir_entry *de)
- 		inode->i_op = de->proc_iops;
- 		if (pde_is_seq_file(de))
- 			inode->i_fop = &proc_seq_file_ops;
--		else if (pde_has_proc_read_iter(de) || pde_has_proc_read_buf(de))
-+		else if (pde_has_proc_permanent_read_iter(de) ||
-+			 pde_has_proc_read_buf(de))
- 			inode->i_fop = &proc_iter_file_ops;
- 		else
- 			inode->i_fop = &proc_reg_file_ops;
-diff --git a/fs/proc/internal.h b/fs/proc/internal.h
-index 93d20995b6fe..f4677815ebfa 100644
---- a/fs/proc/internal.h
-+++ b/fs/proc/internal.h
-@@ -89,9 +89,10 @@ static inline void pde_make_permanent(struct proc_dir_entry *pde)
- 	pde->flags |= PROC_ENTRY_PERMANENT;
- }
- 
--static inline bool pde_has_proc_read_iter(const struct proc_dir_entry *pde)
-+static inline bool
-+pde_has_proc_permanent_read_iter(const struct proc_dir_entry *pde)
- {
--	return pde->flags & PROC_ENTRY_proc_read_iter;
-+	return pde->flags & PROC_ENTRY_proc_permanent_read_iter;
- }
- 
- static inline bool pde_has_proc_lseek(const struct proc_dir_entry *pde)
-diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
-index 390547b992ac..5584b2642f2f 100644
---- a/fs/proc/kcore.c
-+++ b/fs/proc/kcore.c
-@@ -664,7 +664,7 @@ static int release_kcore(struct inode *inode, struct file *file)
- 
- static const struct proc_ops kcore_proc_ops = {
- 	.proc_flags	= PROC_ENTRY_PERMANENT,
--	.proc_read_iter	= read_kcore_iter,
-+	.proc_permanent_read_iter = read_kcore_iter,
- 	.proc_open	= open_kcore,
- 	.proc_release	= release_kcore,
- 	.proc_lseek	= default_llseek,
-diff --git a/fs/proc/kmsg.c b/fs/proc/kmsg.c
-index 2fc92a13f9f8..28b40ffccdfb 100644
---- a/fs/proc/kmsg.c
-+++ b/fs/proc/kmsg.c
-@@ -48,7 +48,7 @@ static __poll_t kmsg_poll(struct file *file, poll_table *wait)
- 
- static const struct proc_ops kmsg_proc_ops = {
- 	.proc_flags	= PROC_ENTRY_PERMANENT,
--	.proc_read	= kmsg_read,
-+	.proc_permanent_read = kmsg_read,
- 	.proc_poll	= kmsg_poll,
- 	.proc_open	= kmsg_open,
- 	.proc_release	= kmsg_release,
-diff --git a/fs/proc/page.c b/fs/proc/page.c
-index 6aa99e42ec22..6a68f392453c 100644
---- a/fs/proc/page.c
-+++ b/fs/proc/page.c
-@@ -133,7 +133,7 @@ static ssize_t kpagecount_read(struct file *file, char __user *buf,
- static const struct proc_ops kpagecount_proc_ops = {
- 	.proc_flags	= PROC_ENTRY_PERMANENT,
- 	.proc_lseek	= mem_lseek,
--	.proc_read	= kpagecount_read,
-+	.proc_permanent_read = kpagecount_read,
- };
- 
- 
-@@ -259,7 +259,7 @@ static ssize_t kpageflags_read(struct file *file, char __user *buf,
- static const struct proc_ops kpageflags_proc_ops = {
- 	.proc_flags	= PROC_ENTRY_PERMANENT,
- 	.proc_lseek	= mem_lseek,
--	.proc_read	= kpageflags_read,
-+	.proc_permanent_read = kpageflags_read,
- };
- 
- #ifdef CONFIG_MEMCG
-@@ -271,7 +271,7 @@ static ssize_t kpagecgroup_read(struct file *file, char __user *buf,
- static const struct proc_ops kpagecgroup_proc_ops = {
- 	.proc_flags	= PROC_ENTRY_PERMANENT,
- 	.proc_lseek	= mem_lseek,
--	.proc_read	= kpagecgroup_read,
-+	.proc_permanent_read = kpagecgroup_read,
- };
- #endif /* CONFIG_MEMCG */
- 
-diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
-index 17516b064922..4db79f1ab97e 100644
---- a/include/linux/proc_fs.h
-+++ b/include/linux/proc_fs.h
-@@ -18,7 +18,8 @@ enum {
- 	/*
- 	 * All /proc entries using this ->proc_ops instance are never removed.
- 	 * procfs calls into them without pinning them, so they may copy to
--	 * userspace themselves through ->proc_read() or ->proc_read_iter().
-+	 * userspace themselves through ->proc_permanent_read() or
-+	 * ->proc_permanent_read_iter().
- 	 *
- 	 * If in doubt, ignore this flag.
- 	 */
-@@ -28,7 +29,7 @@ enum {
- 	PROC_ENTRY_PERMANENT		= 1U << 0,
- #endif
- 
--	PROC_ENTRY_proc_read_iter	= 1U << 1,
-+	PROC_ENTRY_proc_permanent_read_iter = 1U << 1,
- 	PROC_ENTRY_proc_lseek		= 1U << 3,
- 	PROC_ENTRY_proc_seq_ops		= 1U << 4,
- 	PROC_ENTRY_proc_show		= 1U << 5,
-@@ -78,8 +79,9 @@ struct proc_ops {
- 	 * These two are only for PROC_ENTRY_PERMANENT entries. Everything else
- 	 * uses ->proc_read_buf().
- 	 */
--	ssize_t	(*proc_read)(struct file *, char __user *, size_t, loff_t *);
--	ssize_t (*proc_read_iter)(struct kiocb *, struct iov_iter *);
-+	ssize_t	(*proc_permanent_read)(struct file *, char __user *, size_t,
-+				       loff_t *);
-+	ssize_t (*proc_permanent_read_iter)(struct kiocb *, struct iov_iter *);
- 	/*
- 	 * mandatory unless nonseekable_open() or equivalent is used, procfs
- 	 * seeks seq_file entries itself
-diff --git a/kernel/profile.c b/kernel/profile.c
-index 6f2441dd4a00..72e30bb30396 100644
---- a/kernel/profile.c
-+++ b/kernel/profile.c
-@@ -207,7 +207,7 @@ static ssize_t write_profile(struct file *file, char *buf, size_t count,
- 
- static const struct proc_ops profile_proc_ops = {
- 	.proc_flags	= PROC_ENTRY_PERMANENT,
--	.proc_read	= read_profile,
-+	.proc_permanent_read = read_profile,
- 	.proc_write_buf	= write_profile,
- 	.proc_lseek	= default_llseek,
- };
-
+ Public API
+ ==========
+diff --git a/Documentation/driver-api/vfio_pci_liveupdate.rst b/Documentation/driver-api/vfio_pci_liveupdate.rst
+new file mode 100644
+index 000000000000..81077ea173d1
+--- /dev/null
++++ b/Documentation/driver-api/vfio_pci_liveupdate.rst
+@@ -0,0 +1,25 @@
++.. SPDX-License-Identifier: GPL-2.0-or-later
++
++====================================
++VFIO PCI Device Preservation via LUO
++====================================
++
++.. kernel-doc:: drivers/vfio/pci/vfio_pci_liveupdate.c
++   :doc: VFIO PCI Preservation via LUO
++
++VFIO PCI Preservation ABI
++=========================
++
++.. kernel-doc:: include/linux/kho/abi/vfio_pci.h
++   :doc: VFIO PCI Live Update ABI
++
++.. kernel-doc:: include/linux/kho/abi/vfio_pci.h
++   :internal:
++
++See Also
++========
++
++- :doc:`/core-api/liveupdate`
++- :doc:`/core-api/kho/index`
++- :doc:`/PCI/liveupdate`
++- :doc:`/driver-api/vfio`
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 167aa9d66ce8..2b62a0b8a48c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -28661,6 +28661,7 @@ T:	git https://github.com/awilliam/linux-vfio.git
+ F:	Documentation/ABI/testing/debugfs-vfio
+ F:	Documentation/ABI/testing/sysfs-devices-vfio-dev
+ F:	Documentation/driver-api/vfio.rst
++F:	Documentation/driver-api/vfio_pci_liveupdate.rst
+ F:	drivers/vfio/
+ F:	include/linux/kho/abi/vfio_pci.h
+ F:	include/linux/vfio.h
 -- 
-2.53.0
+2.56.0.317.g454f8302e1-goog
 
 
