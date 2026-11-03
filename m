@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589BF60A2639
-	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 14:48:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6B960A262D
+	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 14:48:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=v6cgn3iO;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bRLhN+oY
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=zMp2IDkL;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XOb2jlGy
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=uVu79v5qeIUT2DHIeaxbzu36E3QvgQth4DXw9asgaKs=; b=v6cgn3iOEliCSFgL90sKeFb5zx
-	Nh8VCREPCkUkgODikXUOxGCqGT9uiS4umIVDgN6y+1G+LpcxW6OaetGj0yVAvPVy8pgbY6BOJ6Tj6
-	fBZQAd+0QIQq92Gnvv2pBarG6IzcdYnCGV6cwt/mFHt5Dg6JRAuiDQACLXis00UIUmZDr9/fhVor9
-	3NnQsOiB/2QbeiphfxlEjTrJN24aAvVwa9/slU2SU2HbhV5vTMeNVzX95YiPH8pvMZjbwf5a1aK6W
-	uHCzUEwQyYh7Sqa40otB6JPjxuYPqYgQvYvudkxX+icM80qohadG8AY6MQqwckMFRWubNhbPLolXJ
-	BhzmKfpQ==;
+	bh=35U9vRZipm/0ugcUNHxZ4oD7lBPqHisqrJL8z7uReys=; b=zMp2IDkLdHZXLhb3C1S7VKEV/M
+	s3LbtEMSASZopMfAF+7nCApCDvhy+JN3saWkmeN8jxZ17tqsDUt1WN1gKZ8Liwphg/h4xVYi7zHyX
+	iUvGRuNCyfj22kpJwoJqVHaHQY47Ilv49if960neQonfu6TS4evxnAJ4BrcKkZ8opM02iRp/ZvHUs
+	9ysYMONoynF+31+sPiQ19PuQ1HT07y5G8E4Df7DmEE8t/AE5p54BxbGQurdUoir2kCqz9+nL3lVJj
+	vKowXAsKyVOTKxP+ZXkVcH3mDGOKJbRp5jyENBaYuG8JFbLi2US/t+hR7m81Q9DHypXR5+4g5e/Cv
+	u0YJUMAw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFnv-00000002l39-3Fva;
+	id 1xOFnv-00000002l2T-1i2M;
 	Tue, 03 Nov 2026 14:48:03 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFno-00000002kw6-0GgI
+	id 1xOFns-00000002kx9-2C19
 	for kexec@lists.infradead.org;
-	Tue, 03 Nov 2026 14:47:58 +0000
+	Tue, 03 Nov 2026 14:48:00 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id CA387416D6;
-	Tue,  3 Nov 2026 14:47:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABF591F000C1;
-	Tue,  3 Nov 2026 14:47:53 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id DBAE96060D;
+	Tue,  3 Nov 2026 14:47:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A1531F000C1;
+	Tue,  3 Nov 2026 14:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793717275;
-	bh=uVu79v5qeIUT2DHIeaxbzu36E3QvgQth4DXw9asgaKs=;
+	s=k20260515; t=1793717279;
+	bh=35U9vRZipm/0ugcUNHxZ4oD7lBPqHisqrJL8z7uReys=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bRLhN+oY2Yw9kIhUHybbJ0e+ZZSuOHGWuij+w15WuF1xIJSabw1wFMsLCqzDlmojy
-	 TK03FrNF7bc7zoE1WvrzzaLmFvKEPPVLc1TPn5UU0/4/KYZ9h51Izc+12sOuXBzSSC
-	 vvh8TIDoCAV3mG7NT03ZLOxqjAMKpkvDrBg2IEpsZg+kl1A4hzw/X7tZX8NCniQfle
-	 ECsWaxAIfPq6+Q29V0SJTrPcv6uvKP2PxFaYrSLlpfU5Pt/3I1A8ccLjocNj2c6E7u
-	 gB9WuCPj5W1+G/AadYSeW6R0FUQdierHCujXWq9jSS10EgcsXeZFeIAePUVh8txQO6
-	 oGOGMufc7irOA==
-Message-ID: <sashiko-outbox-195486@kernel.org>
+	b=XOb2jlGyODvVjIsoXLfcQiibie0dXFv0flX7Bkq7YfFUUdCGP9U4bZYuD5rIE+J1J
+	 QVVQqcJ9wLtxY79RNRFPsBr5wvWN39EGIoHeohwyVD5LExUMq6fNZQD5vleYwbZu1U
+	 RRHp8sm2TlsuqMPTLpg3xjAZOLFon2zhV25A7wzEGfg58Su/olC89JSnQqdrixaGfO
+	 9Rqa2eSAMnbZyAyxi/rAB7t+lnni8cKQlavIUW298gxJlN9Oe4/AN6K2ky2Oe+MqLk
+	 gtUQ0MIbODOhgwn5ybHL653v1Ihw7dMlBBYQt2dSbI9DmFeH4nVnl+f6pys9S55l5z
+	 J6i/00DhD0qAg==
+Message-ID: <sashiko-outbox-195488@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC 14/38] um: NUL-terminate what is written to
- /proc/exitcode
+Subject: Re: [PATCH RFC 16/38] proc: don't walk through a non-directory when
+ resolving a name
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261102-work-procfs-bugfixes-v1-14-59422ed3e465@kernel.org>
+In-Reply-To: <20261102-work-procfs-bugfixes-v1-16-59422ed3e465@kernel.org>
 References: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
- <20261102-work-procfs-bugfixes-v1-14-59422ed3e465@kernel.org>
+ <20261102-work-procfs-bugfixes-v1-16-59422ed3e465@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 14:47:53 +0000
+Date: Tue, 03 Nov 2026 14:47:57 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,11 +84,24 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> exitcode_proc_write() copies up to sizeof(buf) bytes of the write into
-> buf and hands it to simple_strtol() without terminating it. So
-> "echo -n 5" parses whatever the stack held after the '5', and a write of
-> seven bytes or more reads past the end of buf. Terminate the copy.
+> __xlate_proc_name() walks the components of a name like "a/b/c" and
+> takes whatever it finds for "a" and "b" as the directory to go on in.
+> It never checks that they actually are directories. So
+> proc_create("file/x") hangs x into the subdir tree of the regular file
+> "file". Nobody can look x up there, but remove_proc_subtree() on the
+> file removes and frees x along with it, behind the back of whoever
+> registered x.
 >=20
+> pktgen passes the name the writer of "add_device" picks to
+> proc_create_data(), and only the part in front of the '@' has to name
+> a network device:
+>=20
+>   echo "add_device lo@"   > /proc/net/pktgen/kpktgend_0
+>   echo "add_device lo@/x" > /proc/net/pktgen/kpktgend_1
+>   echo "rem_device_all"   > /proc/net/pktgen/kpktgend_0
+> [ ... ]
+>=20
+> Reported-by: Chris Mason <mason@kernel.org>
 > Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
@@ -97,6 +110,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102-work-procf=
-s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D14
+s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D16
 
 
