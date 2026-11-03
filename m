@@ -2,44 +2,44 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95234606A334
-	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 03:08:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44424606A32C
+	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 06:26:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=zMIH1xl0;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=Y2iwApll
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=fSRpCbAi;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=BrQ5Opza
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=TcMB+7TMi2bLazC/QSSJVb+dN6unmraBocObaaHDrh4=; b=zMIH1xl0tEb9mP
-	3eqpJjnmwa2+IjOSraxbXSzOns67kiRFB/dolCp8JfXar5rjlgjfqrIv3UfB/FcXo86WTHBX+h/vY
-	bFMKDtvhVX/Ygf6M81wqPlPsNDsRKLlAXN6A6SrE8+GMmOlnk+z5XFtdawvXw//PUJkLHK9AzTfZS
-	TUgLswq8DHSKRG6zRG3zINarvrvSlM6b78yqNE/xZ4ldQ/yAvlKfFFptA1TT5LP7xc+93QNrsQhYv
-	pmrxv4ALhugWg1ZJUts+Dy9wpC2o63MEd4nYsJJ8IkSFX3GVIUZvFEO9ZG3QmQBGo1Ngpg1RydCJn
-	AXW3wLuhYcHNaqgk/eNw==;
+	List-Owner; bh=89WHsBI4UooPN0e/fzWqgj/M9hLD/tFhYxvpr6aA8I0=; b=fSRpCbAiVgn6qa
+	9/W+DMQl46VeIuFsH8ijc2YalhCfFy1KsY4doZFQ+wGHKquBOmDC/k+Xc0t8I7kmFNpJeYNGmqFnt
+	cm6o/Mh7Mn+AwefDlgXy0Lx+BMsIYGENaI4Q2+Edk+FlC6gRCXDB0W8wyYOYdXFQPulXGlUfhXWOK
+	kJFcXoAoe/91+YFr6j9pfdMtXAknx2lg3BheTIXYu4280ieVW/qOxmDo/LS3vSKPTPdF+4+MmqMMF
+	3inzgMDU6KFaNlODWZ1jBR8m19NxzjpUZu3LlOFvVnqL3Ylz7EzsUVDY+CH0J9NNELn356P9mbtL0
+	6bAO9vE6Nq+fvFU1ZKlQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xO4t4-00000000vEP-2Itf;
-	Tue, 03 Nov 2026 03:08:38 +0000
-Received: from out-77.mta0.migadu.com ([2001:41d0:1004:224b::4d] helo=mta0.migadu.com)
+	id 1xO7yk-00000001F4x-3Sls;
+	Tue, 03 Nov 2026 06:26:42 +0000
+Received: from out-167.mta1.migadu.com ([95.215.58.167] helo=mta1.migadu.com)
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xO4t1-00000000vDz-0Peg
+	id 1xO7yg-00000001F4O-1WZV
 	for kexec@lists.infradead.org;
-	Tue, 03 Nov 2026 03:08:36 +0000
+	Tue, 03 Nov 2026 06:26:40 +0000
 X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=9TIi4e+jhWvSVLJqdtmuDmhXX3FHNuF+HLGG6Up3ljY=;
+DKIM-Signature: a=rsa-sha256; bh=R4qncA5U596ba8pavgxH4k05FBMaxgAUsAOufRDPVI0=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793675312; v=1; x=1794280112;
- b=Y2iwAplloUzu5bm58twpXtkXG9/CIrmyyFjmR4r0iZ7mcki0wVTD3/AcJHdq+jFn4PndzStX
- io6vtdlQDs6nSNxk8e+ryodh7MtiPa/Xh/QOKBFWs0SWrKpNhZ4OClnOc5QavHY8x0cvltw7H2d
- 27+v3+F5MDZwhvhc2vc48Ozo=
+ t=1793687194; v=1; x=1794291994;
+ b=BrQ5OpzasmaKN5c4rG+lUhIWYHYwU9Zu/yaL7ECDfW6bWPv8oJYd/xoJtaPXoBVLlimlpMUD
+ hxMHJYVuqCPlSy9lE3cTmbFIqjIxFUJWVmK1PEWGFGvTx3eyIQsy580HKxs6eKEmRludRp7iNyI
+ 96WyFglyjScKawmHaqcOgHAs=
 X-Envelope-To: kexec@lists.infradead.org
-Received: by smtp.migadu.com with ESMTPS id 59608abf10f0d8e0;
-	Tue, 03 Nov 2026 03:08:32 +0000
-X-Mizu-Trace-ID: 59608abf10f0d8e0
+Received: by smtp.migadu.com with ESMTPS id 650e1e2cc95fd22e;
+	Tue, 03 Nov 2026 06:26:33 +0000
+X-Mizu-Trace-ID: 650e1e2cc95fd22e
 X-Migadu-Flow: FLOW_OUT
 From: Lance Yang <lance.yang@linux.dev>
 To: david@kernel.org
@@ -106,23 +106,24 @@ Cc: akpm@linux-foundation.org,
 	linux-fsdevel@vger.kernel.org,
 	linux-arch@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
-	josef@toxicpanda.com,
+	mason@kernel.org,
 	stable@vger.kernel.org,
 	usama.anjum@arm.com
-Subject: Re: [PATCH v3 32/47] mm/mremap: fix moving PUD leaves
-Date: Tue,  3 Nov 2026 11:08:26 +0800
-Message-ID: <20261103030826.79600-1-lance.yang@linux.dev>
+Subject: Re: [PATCH v3 38/47] mm: fix deadlock of mremap() against UFFDIO_MOVE
+Date: Tue,  3 Nov 2026 14:26:28 +0800
+Message-ID: <20261103062628.92242-1-lance.yang@linux.dev>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20261031-fixes_core-v3-32-d6437171ecc3@kernel.org>
-References: <20261031-fixes_core-v3-32-d6437171ecc3@kernel.org>
+In-Reply-To: <20261031-fixes_core-v3-38-d6437171ecc3@kernel.org>
+References: <20261031-fixes_core-v3-38-d6437171ecc3@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261102_190835_370491_19AE128F 
-X-CRM114-Status: GOOD (  13.83  )
-X-Spam-Score: -2.1 (--)
+X-CRM114-CacheID: sfid-20261102_222638_690856_8E763EA0 
+X-CRM114-Status: UNSURE (   8.17  )
+X-CRM114-Notice: Please train this message.
+X-Spam-Score: -2.8 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -133,86 +134,49 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
 
-On Sat, Oct 31, 2026 at 10:40:01AM +0100, David Hildenbrand (Arm) wrote:
->From: Josef Bacik <josef@toxicpanda.com>
+On Sat, Oct 31, 2026 at 10:40:07AM +0100, David Hildenbrand (Arm) wrote:
+>From: Chris Mason <mason@kernel.org>
 >
->pud_none_or_clear_bad() only really works on page tables. PUD leaves
->confuse the check and make us clear the page table entry and print a
->warning.
+>With per-VMA locks, UFFDIO_MOVE can run concurrently with mremap()
+>on different VMAs in the same mm. Those VMAs can share page tables, so
+>both operations can acquire the same pair of page-table locks.
 >
->Since commit aed877c2b4257 ("device/dax: properly refcount device dax pages
->when mapping"), this also leaks device-DAX folio references, mapcounts
->and RSS accounting, resulting in "Bad rss-counter state" warnings on exit.
+>UFFDIO_MOVE orders the locks by address, while mremap() takes the source
+>lock first. These conflicting orders can deadlock; mremap() holding
+>mmap_lock for writing no longer helps.
 >
->Allow PUD leaves in get_old_pud(). If a PUD leaf cannot be moved as a
->whole or the move fails, split it. This unmaps it with proper accounting
->instead of treating the leaf entry as a PMD table.
+>Move double_pt_lock() and double_pt_unlock() to mm/internal.h and use
+>them for all page-table moves in mremap(). Preserve the source entry
+>checks after acquiring both locks. Remove the comments claiming that
+>exclusive mmap_lock makes lock ordering irrelevant.
 >
->Keep using pud_trans_huge() for now, in the future this code should be
->cleaned up to just check for PUD leaves.
+>In move_ptes(), make sure to just recheck source and destination PMD
+>after taking the locks and drop the overly-long comment.
 >
->Fix generated by an LLM and sent by Josef Bacik in private.
+>Fix generated by an LLM and sent by Chris Mason in private.
 >
->Fixes: a00cc7d9dd93 ("mm, x86: add support for PUD-sized transparent hugepages")
+>[ david: use new helpers consistently; simplify description and comments;
+>         move_ptes() fixup ]
+>
+>Fixes: 867a43a34ff8 ("userfaultfd: use per-vma locks in userfaultfd operations")
 >Cc: stable@vger.kernel.org
->Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+>Signed-off-by: Chris Mason <mason@kernel.org>
 >Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
->[ david: fallthrough after splitting ]
->Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+>Acked-by: Muchun Song <muchun.song@linux.dev>
 >Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
 >Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 >---
-> mm/mremap.c | 9 ++++-----
-> 1 file changed, 4 insertions(+), 5 deletions(-)
->
->diff --git a/mm/mremap.c b/mm/mremap.c
->index 91f0865f6aeea..1237718848f5c 100644
->--- a/mm/mremap.c
->+++ b/mm/mremap.c
->@@ -87,7 +87,7 @@ static pud_t *get_old_pud(struct mm_struct *mm, unsigned long addr)
-> 		return NULL;
-> 
-> 	pud = pud_offset(p4d, addr);
->-	if (pud_none_or_clear_bad(pud))
->+	if (!pud_trans_huge(*pud) && pud_none_or_clear_bad(pud))
-> 		return NULL;
-> 
-> 	return pud;
->@@ -847,11 +847,10 @@ unsigned long move_page_tables(struct pagetable_move_control *pmc)
-> 		if (!new_pud)
-> 			break;
-> 		if (pud_trans_huge(*old_pud)) {
->-			if (extent == HPAGE_PUD_SIZE) {
->-				move_pgt_entry(pmc, HPAGE_PUD, old_pud, new_pud);
->-				/* We ignore and continue on error? */
->+			if (extent == HPAGE_PUD_SIZE &&
->+			    move_pgt_entry(pmc, HPAGE_PUD, old_pud, new_pud))
-> 				continue;
->-			}
->+			split_huge_pud(pmc->old, old_pud, pmc->old_addr);
 
-Right, copy_vma() already sets up the file and offset at the new address,
-so we can let subsequent faults rebuild the mapping.
-
-No need to build a PMD table just for the move ;)
+Nothing jumped out at me, so:
 
 Reviewed-by: Lance Yang <lance.yang@linux.dev>
-
-> 		} else if (IS_ENABLED(CONFIG_HAVE_MOVE_PUD) && extent == PUD_SIZE) {
-> 			if (move_pgt_entry(pmc, NORMAL_PUD, old_pud, new_pud))
-> 				continue;
->
->-- 
->2.43.0
->
->
 
