@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD9F606FCD5
-	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 15:01:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49631606FCE9
+	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 15:01:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=MOWZoAtS;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iPOrW1sZ
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=UV6P6M6j;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=POgogA4c
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=H4Y/D8MHsuJxIcgQs16JMa9LVQhoWAXgdYCn9GW8dZE=; b=MOWZoAtSOX2ll4RGr/Rvx7d+rA
-	KvjTUscNiMfQDKIypftRzakXv0otLTx9JhLzoIH5cSaaPItp+2jFTeTx96JcWVcw3weoBe5xgXFfP
-	zPIcMdONjWrcPOFFExt7yFBnu0Ka55CgInf6uWdB+nSsJUyek8XDsYKlNHDgZjlJZ0kmXuCphIUpq
-	FCuIDX0llz8mjBElDQt8ybklSRckEAUY8IEtf+DvVUivNQbBuZqcDHg2MkHeSwsiKEJdqLjFZAYtU
-	TTziPEibGc2bLJbPT7wSqnenwM8o1HRYoJ3wXNvN/Q1exaSKoBH+DDpDz696d4hnSayAHrLR1AMkd
-	+EtBqHcw==;
+	bh=/loBqHfb9xyTXY5jVvnLeUezXneNMR139AeDEeuZehA=; b=UV6P6M6jn+L9Tmiy9goeDBBgev
+	iGtC3/HqM2nrkl+1HpG9EEmyEo47/MZog5tO0Vb/yjbgw2gZEh1EZwwMR5OqT5GvWWNFFvKwhxgNn
+	9P6w5W+aXMPURf8ost9v8wjdfOz4fabViod/jqSa1UmGQ42/RTCTBWDd82nQXGKRF/eMyc0C0NLgp
+	Ibt221ekOPU1We+8pGysGVtCWUkefpAvkavwY4emp1w6ixGLQUeWD6nqX/AZBiJI2lPV6XuEolH66
+	Bs9ZMHjIsoiNhrpLoczwpBzQEgTbttKwLizGYbDLWPBtqeOYHWXeaC/F2YifqrFZK6Dj2jwYKNieS
+	Aw/glsNA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOG16-00000002pzG-3cno;
-	Tue, 03 Nov 2026 15:01:40 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xOG19-00000002q3M-4B42;
+	Tue, 03 Nov 2026 15:01:43 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOG15-00000002pwd-1fQu
+	id 1xOG16-00000002pym-3hED
 	for kexec@lists.infradead.org;
-	Tue, 03 Nov 2026 15:01:39 +0000
+	Tue, 03 Nov 2026 15:01:40 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id CDF8460A01;
-	Tue,  3 Nov 2026 15:01:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 664741F0093A;
-	Tue,  3 Nov 2026 15:01:36 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 9FCD84400C;
+	Tue,  3 Nov 2026 15:01:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D0B61F00A17;
+	Tue,  3 Nov 2026 15:01:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793718098;
-	bh=H4Y/D8MHsuJxIcgQs16JMa9LVQhoWAXgdYCn9GW8dZE=;
+	s=k20260515; t=1793718100;
+	bh=/loBqHfb9xyTXY5jVvnLeUezXneNMR139AeDEeuZehA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=iPOrW1sZYpx/JoZZqS9qV1GcjvdBuAyBkHMbgeIvuF9N8xnYtd/uAH/lu/jAlLzKf
-	 Nq5vM4zhxl93ARwt5IDAUvoCbIWrHeNs/6trXeNMyLqwoaSZliHN1Lmdtd6F1TrRM+
-	 E8t3nn11OR2O0yTsAAjfZ0JhJXAcI/KIsNGJZleh6tn4/huZCrKzH0zz2IUXdKnzkK
-	 6W9TGbxhz+i9CE9TQ8pBES4DkH/dBUxXGqSsH1jdznxKqWRCNHZxYwypnamo4/Cqy5
-	 fIsF/ocsyOzXijxNmThFmUaDNsK0S2Y+yjWibAtCyfn78+Zol7hiv1kIJFamvcET5T
-	 yE9Ruio9sbg7Q==
-Message-ID: <sashiko-outbox-195542@kernel.org>
+	b=POgogA4cI5wWOeMz1/cd+H4XvoMVMIqL2V+G+9Xb8VwCCRW83BzcmpLvxyFEpcbxe
+	 /mCmUg5eXDwuaxyPwlwAvbKSw9zAx9Xa82K09Vni06bzfAy7YLvu6siA/ipSvBj2rh
+	 qF1ewX3Ll1Mq4U/1lE3GqVU9xpuJunXOk7qadUPJ7/+1WlPF9/quSAmT+Y6x/gL7C5
+	 3liOSC/FI9jN7BDbCH+iEIkaGanVOlPqZzbv9g0LZ0T+zR7LlVVDb8k8ypBMeF0A0o
+	 YrstH3zBltw7mcoX5EIv/3z5moFT7qEVZnlXcgdb6E08qa2zhuTeeC8xgwd0aDyljl
+	 khtjX69PBXsaw==
+Message-ID: <sashiko-outbox-195543@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC 15/16] proc: let procfs copy ioctl arguments in and
- out
+Subject: Re: [PATCH RFC 16/16] Documentation: seq_file: describe how a /proc
+ file uses seq_file
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -55,18 +55,16 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Gleixner" <tglx@kernel.org>, "Al Viro" <viro@zeniv.linux.org.uk>, "Jonathan
  Corbet" <corbet@lwn.net>, "Christoph Hellwig" <hch@lst.de>, "Greg
  Kroah-Hartman" <gregkh@suse.de>, "Joel Granados" <joel.granados@kernel.org>, "Kees
- Cook" <kees@kernel.org>, "Jan Kara" <jack@suse.cz>, "Jan Kara" <jack@suse.com>, linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org, linux-mm@kvack.org, linux-usb@vger.kernel.org, samba-technical@lists.samba.org, sparclinux@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-serial@vger.kernel.org, "Takashi
- Iwai" <tiwai@suse.de>, linux-input@vger.kernel.org, linux-raid@vger.kernel.org, linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, "Chuck
- Lever" <cel@kernel.org>, tytso@mit.edu, dmitry.torokhov@gmail.com, "Petr
- Pavlu" <petr.pavlu@suse.com>, "Anna Schumaker" <anna@kernel.org>, yukuai@fygo.io, "Heiko
+ Cook" <kees@kernel.org>, "Jan Kara" <jack@suse.cz>, "Jan Kara" <jack@suse.com>, linux-s390@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, linux-pci@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-usb@vger.kernel.org, samba-technical@lists.samba.org, linux-m68k@lists.linux-m68k.org, linux-serial@vger.kernel.org, "Takashi
+ Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261102-work-procfs-core-v1-15-75df35e4f8b8@kernel.org>
+In-Reply-To: <20261102-work-procfs-core-v1-16-75df35e4f8b8@kernel.org>
 References: <20261102-work-procfs-core-v1-0-75df35e4f8b8@kernel.org>
- <20261102-work-procfs-core-v1-15-75df35e4f8b8@kernel.org>
+ <20261102-work-procfs-core-v1-16-75df35e4f8b8@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 15:01:36 +0000
+Date: Tue, 03 Nov 2026 15:01:38 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,122 +78,25 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] proc: unguarded zero-length user copies in pde_ioctl_buf()
-- [Low] proc: split declaration and initialization of __free() variable in =
-pde_ioctl_buf()
---
+> The example in seq_file.rst hands proc_create() file operations built
+> from an open method that calls seq_open() and from seq_read(),
+> seq_lseek() and seq_release(). procfs doesn't work that way anymore. It
+> opens and releases the seq_file itself when the entry declares its
+> seq_operations or its show function in struct proc_ops. Say so, and
+> point the extra-simple version at ->proc_show() for /proc files.
+>=20
+> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
-commit 468d1faef733a0559be5a05e125e1ce20ec69e4e
-Author: Christian Brauner <brauner@kernel.org>
-
-proc: let procfs copy ioctl arguments in and out
-
-This commit introduces ->proc_ioctl_buf() and ->proc_ioctl_args to allow
-procfs to copy ioctl arguments from and to userspace outside of pinning the
-proc_dir_entry, preventing page faults during user copies from blocking
-remove_proc_entry().
-
-> diff --git a/fs/proc/inode.c b/fs/proc/inode.c
-> index 3f29a1663d266..7e4ca5751abb5 100644
-> --- a/fs/proc/inode.c
-> +++ b/fs/proc/inode.c
-[ ... ]
-> @@ -571,11 +572,66 @@ static long pde_ioctl(struct proc_dir_entry *pde, s=
-truct file *file, unsigned in
-[ ... ]
-> +static long pde_ioctl_buf(struct proc_dir_entry *pde, struct file *file,
-> +			  unsigned int cmd, void __user *uarg, unsigned long arg)
-> +{
-> +	void *buf __free(kvfree) =3D NULL;
-> +	struct proc_ioctl_arg a;
-> +	size_t size;
-> +	long rv;
-> +
-> +	if (!pde_ioctl_arg(pde, cmd, &a))
-> +		return -ENOTTY;
-> +	size =3D max(a.in, a.out);
-> +	if (size) {
-> +		buf =3D kvzalloc(size, GFP_KERNEL);
-
-[Severity: Low]
-This isn't a bug, but in pde_ioctl_buf() in fs/proc/inode.c, buf is declared
-with __free(kvfree) =3D NULL at the top of the function and assigned later =
-when
-size is non-zero. Per the cleanup.h guidelines, could buf be defined and
-initialized in a single statement once size is known (for example,
-void *buf __free(kvfree) =3D size ? kvzalloc(size, GFP_KERNEL) : NULL;)?
-
-> +		if (!buf)
-> +			return -ENOMEM;
-> +		if (copy_from_user(buf, uarg, a.in))
-> +			return -EFAULT;
-> +	}
-> +
-> +	if (!pde_pin(pde))
-> +		return -ENOTTY;
-> +	rv =3D pde->proc_ops->proc_ioctl_buf(file, cmd, buf ?: (void *)arg);
-> +	pde_unpin(pde);
-> +	if (rv >=3D 0 && copy_to_user(uarg, buf, a.out))
-> +		return -EFAULT;
-
-[Severity: Medium]
-Should copy_from_user() and copy_to_user() in pde_ioctl_buf() in
-fs/proc/inode.c be guarded by checking a.in and a.out respectively?
-
-Because a.in and a.out are runtime values loaded from
-proc_ops->proc_ioctl_args, check_copy_size() and _inline_copy_from_user() /
-_inline_copy_to_user() do not short-circuit when the length is 0 and still
-invoke raw_copy_from_user() / raw_copy_to_user().
-
-When a command has a.out =3D=3D 0 (such as an _IOW or _IO command) and user=
-space
-passes arg =3D=3D 0, calling copy_to_user(NULL, buf, 0) fails with -EFAULT =
-on
-C-SKY after ->proc_ioctl_buf() has already succeeded, because C-SKY checks =
-the
-destination pointer for NULL before checking whether the length is 0:
-
-arch/csky/lib/usercopy.c:raw_copy_to_user() {
-	...
-	"0:     cmpnei  %1, 0           \n"
-	"       bf      8f              \n"
-	...
-}
-
-On UML, calling copy_from_user() with a.in =3D=3D 0 or copy_to_user() with
-a.out =3D=3D 0 still enters buffer_op() -> do_op_one_page() -> maybe_map() =
-->
-handle_page_fault() on uarg before checking if remain =3D=3D 0:
-
-arch/um/kernel/skas/uaccess.c:buffer_op() {
-	...
-	size =3D min(PAGE_ALIGN(addr) - addr, (unsigned long) len);
-	remain =3D len;
-
-	n =3D do_op_one_page(addr, size, is_write, op, arg);
-	if (n !=3D 0)
-		return (n < 0 ? remain : 0);
-	...
-}
-
-Additionally, when both a.in =3D=3D 0 and a.out =3D=3D 0, size is 0 and buf=
- remains
-NULL, so copy_to_user(uarg, NULL, 0) passes a NULL source pointer into
-raw_copy_to_user() (and memcpy() on CONFIG_UACCESS_MEMCPY or UML builds).
-
-Would it make sense to check if (a.in && copy_from_user(buf, uarg, a.in)) a=
-nd
-if (rv >=3D 0 && a.out && copy_to_user(uarg, buf, a.out))?
+Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102-work-procf=
-s-core-v1-0-75df35e4f8b8@kernel.org?part=3D15
+s-core-v1-0-75df35e4f8b8@kernel.org?part=3D16
+
 
