@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5547606C85E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14200606B243
 	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 14:48:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=vgyeejjS;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=T/AbEilE
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ACdG6Bx2;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=I1YHc/Mt
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=8ompXbSfKTmar/iuaOX9JIZ9dqke8qGTDkyO8zZl7i8=; b=vgyeejjSctPs4XKvsyciXtaHef
-	wK1pCzjLEvoKlXXlyhnud6d8mNa75Gtg1HmZW7sHBszLpgrMd0oDa83ooirGkVMD2tWK71hZ5kWum
-	DnS43GXJJZjEXVyxlolLoxzsWNvvK1+cpMYbKcM0BTufsNO7GjBfYgNnDAMEn5KRlRwkLGPrjJsHa
-	9a42zluNYp7hXIos+kIZfogrP1HcKZLwQL+dDIxm/gJcOseVxJop+OXhaDwR7v3bdgMbQ5Wr8Jfxw
-	QMzbYemU1z5dB5Ec2HjKvtEwjprpznRG0Rw+Mbb26zLFyDjtcXuEJw3EmGPt0JnO19nu7JQTfy2P0
-	3mItYIYQ==;
+	bh=Y+bptWnMsm9688ffvlZik5wuheu2AuAp4FHdf42AsHs=; b=ACdG6Bx2AB2BfKOtL7c5fDf9gP
+	WZOiiKOAb7Zv1483Q1zYybaW7o+9s2uhOV98XPPaqRc9eH9GY/DdGQhA0sTXvqGfFJzsJ4EUB7Jvf
+	4zzc9TFqylXtGYmRLObjRV4PZiaS2zr+S3RR4uKyNCJmqnpfuUj+dZXpS4vpM7samGbnVVHw53eJv
+	Stuw4kSBmu5ht73R9KkdVN5SkUWNYdSfWhfQgD0FO18UHi5pLiD7SF/cV5X7jIGhuJx29lsLtCkE2
+	bJ0bcBR4Wu6Ey8FwfytttKltkV76OM1byL+aQz0YSqqjz6vNuPAF9f2QdUz9visHPQZ9lTHJ5RQ8h
+	7+eJZmmw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFoU-00000002lmy-1OAF;
-	Tue, 03 Nov 2026 14:48:38 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xOFoT-00000002llL-2orC;
+	Tue, 03 Nov 2026 14:48:37 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFoS-00000002liQ-19c3
+	id 1xOFoQ-00000002lfF-1He8
 	for kexec@lists.infradead.org;
-	Tue, 03 Nov 2026 14:48:36 +0000
+	Tue, 03 Nov 2026 14:48:34 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id EDB7F43978;
-	Tue,  3 Nov 2026 14:48:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5079B1F00919;
-	Tue,  3 Nov 2026 14:48:34 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id E94064018B;
+	Tue,  3 Nov 2026 14:48:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4C941F000C1;
+	Tue,  3 Nov 2026 14:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793717315;
-	bh=8ompXbSfKTmar/iuaOX9JIZ9dqke8qGTDkyO8zZl7i8=;
+	s=k20260515; t=1793717313;
+	bh=Y+bptWnMsm9688ffvlZik5wuheu2AuAp4FHdf42AsHs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=T/AbEilEPu+993/i5YrlBe/LjW0S5UQfpCu5Iccbvzqd12sRlTgFWsgrSVjw2w1Ji
-	 feLhyt4/KDJ0nKFxA0iTxvtabCMgfYDOWi9/8DtzToqxMu4kRB3J0iRi9xaoOeAiQe
-	 bxCJ50IHJLdREO77IDUbG52cQ8VgBxK7kEVyzcedFS7bENBc+uy9QX+tlio1XnTzH5
-	 DAdRilCYdO6cIMJKRAY4DvOH9JBzziLKOpYIkd+hmD6OOYQHSsSMOdLVBXppMe1DNg
-	 BVkpW9rOFYDyLgabcNoUfGp6p/nPWyKE4kB6moR5RMrDeUbDs9DqAMXxdrGzppmBuD
-	 Pn7dOj5o6ylrg==
-Message-ID: <sashiko-outbox-195505@kernel.org>
+	b=I1YHc/MtZN8GDa7UIDwX7EZbAGqySvUQ9iJMmqHpFghXtS1a7u1snUSRoQZbPgotf
+	 rzTS20EjRbQSiraVWbKDq4ZCE++cNFCKRi5Aaifb5wigRVmBCmMaDT7YdKMsDB9tDI
+	 EKZhwJ8mtHIR7tJTtUGX8l08CJRlHDCymC+ysWL+tDYTrAJTPYswbt5itzEnPuNwmU
+	 0VvXfu6Z2XZnOqblVvT6wHfP6+iohenxq+H4qRRnC04rlzIf4Onp6n05i56McAI+1Y
+	 TqDE/PH+7Hpp+X7zYzUT3YtEtnTjOTA8j+Z92u2V2zFKtu1xuQnbMQURmWoACjuOYC
+	 jjzKWAkws/G0g==
+Message-ID: <sashiko-outbox-195504@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC 33/38] proc: sysctl: copy to and from userspace
- without holding the table
+Subject: Re: [PATCH RFC 32/38] selftests/proc: check a sysctl listing while
+ entries come and go
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -55,16 +55,18 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Gleixner" <tglx@kernel.org>, "Al Viro" <viro@zeniv.linux.org.uk>, "Jonathan
  Corbet" <corbet@lwn.net>, "Christoph Hellwig" <hch@lst.de>, "Greg
  Kroah-Hartman" <gregkh@suse.de>, "Joel Granados" <joel.granados@kernel.org>, "Kees
- Cook" <kees@kernel.org>, "Jan Kara" <jack@suse.cz>, "Jan Kara" <jack@suse.com>, linux-s390@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, linux-pci@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-usb@vger.kernel.org, samba-technical@lists.samba.org, linux-m68k@lists.linux-m68k.org, linux-serial@vger.kernel.org, "Takashi
- Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
+ Cook" <kees@kernel.org>, "Jan Kara" <jack@suse.cz>, "Jan Kara" <jack@suse.com>, linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org, linux-mm@kvack.org, linux-usb@vger.kernel.org, samba-technical@lists.samba.org, sparclinux@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-serial@vger.kernel.org, "Takashi
+ Iwai" <tiwai@suse.de>, linux-input@vger.kernel.org, linux-raid@vger.kernel.org, linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, "Chuck
+ Lever" <cel@kernel.org>, tytso@mit.edu, dmitry.torokhov@gmail.com, "Petr
+ Pavlu" <petr.pavlu@suse.com>, "Anna Schumaker" <anna@kernel.org>, yukuai@fygo.io, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261102-work-procfs-bugfixes-v1-33-59422ed3e465@kernel.org>
+In-Reply-To: <20261102-work-procfs-bugfixes-v1-32-59422ed3e465@kernel.org>
 References: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
- <20261102-work-procfs-bugfixes-v1-33-59422ed3e465@kernel.org>
+ <20261102-work-procfs-bugfixes-v1-32-59422ed3e465@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 14:48:33 +0000
+Date: Tue, 03 Nov 2026 14:48:31 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,39 +80,179 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> proc_sys_call_handler() grabs the table, copies in what is written,
-> calls the handler and copies what it produced out to userspace before
-> it lets go of the table again. Unregistering a table waits until nobody
-> uses it anymore. So a reader or writer whose copy faults for as long as
-> it wants, with userfaultfd or a stalled FUSE mapping, keeps
-> unregister_sysctl_table() waiting, and its callers like to hold locks
-> while they do that. addrconf unregisters the ipv6 sysctls of a device
-> with RTNL held, so a stalled read of /proc/sys/net/ipv6/conf/<dev>/mtu
-> holds up every RTNL user until the reader gives up.
->=20
-> Copy in before grabbing the table and copy out after letting go of it,
-> like procfs and kernfs do for their files. The buffer is ours, nothing
-> needs the table for the copies.
->=20
-> That moves the allocation and the copy in before the permission check.
-> A write that can't be copied in, or a request that is too large, now
-> fails with -EFAULT or -ENOMEM where it used to fail with -EPERM.
->=20
-> Fixes: 330d57fb98a9 ("[PATCH] Fix sysctl unregistration oops (CVE-2005-27=
-09)")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Medium] selftests/proc: missing prerequisite skips in sysctl_readdir_set=
+up()
+- [Low] selftests/proc: proc-sysctl-readdir-churn duplicates proc-readdir-c=
+hurn
+--
 
-Sashiko has reviewed this patch and found no issues.
+commit 9b75f87bfb2fb1adbf5b6ac83f3bfdac725df7f5
+Author: Christian Brauner <brauner@kernel.org>
+
+selftests/proc: check a sysctl listing while entries come and go
+
+This commit adds a new kselftest binary, proc-sysctl-readdir-churn, to veri=
+fy
+that multi-call getdents64() listings of /proc/sys/net/ipv4/conf do not rep=
+eat
+or skip entries when a tun network device is registered or unregistered
+between calls.
+
+> diff --git a/tools/testing/selftests/proc/proc-sysctl-readdir-churn.c b/t=
+ools/testing/selftests/proc/proc-sysctl-readdir-churn.c
+> new file mode 100644
+> index 0000000000000..0e067a3619c44
+> --- /dev/null
+> +++ b/tools/testing/selftests/proc/proc-sysctl-readdir-churn.c
+> @@ -0,0 +1,147 @@
+
+[ ... ]
+
+> +#define CONF_DIR	"/proc/sys/net/ipv4/conf"
+> +#define TUN_NAME	"a0"		/* sorts before "all" */
+> +#define TUN_PATH	CONF_DIR "/" TUN_NAME
+> +#define SMALL_BUF	80		/* ".", ".." and one short name */
+> +#define NAMES		64
+> +
+> +static int tun_open(const char *name)
+> +{
+> +	struct ifreq ifr =3D {};
+> +	int fd;
+> +
+> +	fd =3D open("/dev/net/tun", O_RDWR | O_CLOEXEC);
+> +	if (fd < 0)
+> +		return -1;
+> +	strncpy(ifr.ifr_name, name, IFNAMSIZ - 1);
+> +	ifr.ifr_flags =3D IFF_TUN | IFF_NO_PI;
+> +	if (ioctl(fd, TUNSETIFF, &ifr)) {
+> +		close(fd);
+> +		return -1;
+> +	}
+> +	return fd;
+> +}
+> +
+> +/* one getdents64() into @buf, the names appended to @names */
+> +static int list(int fd, char *buf, size_t size, char names[][NAME_MAX + =
+1],
+> +		int *n)
+> +{
+> +	long ret, off;
+> +	int got =3D 0;
+> +
+> +	ret =3D syscall(__NR_getdents64, fd, buf, size);
+> +	if (ret < 0)
+> +		return -errno;
+> +	for (off =3D 0; off < ret;) {
+> +		struct dirent64 *d =3D (void *)(buf + off);
+> +
+> +		if (*n < NAMES)
+> +			strcpy(names[(*n)++], d->d_name);
+> +		got++;
+> +		off +=3D d->d_reclen;
+> +	}
+> +	return got;
+> +}
+> +
+> +static int count(char names[][NAME_MAX + 1], int n, const char *name)
+> +{
+> +	int i, c =3D 0;
+> +
+> +	for (i =3D 0; i < n; i++)
+> +		if (!strcmp(names[i], name))
+> +			c++;
+> +	return c;
+> +}
+> +
+> +FIXTURE(sysctl_readdir) {
+> +	int dir;
+> +	int n;
+> +	char names[NAMES][NAME_MAX + 1];
+> +	char buf[65536];
+> +};
+
+[Severity: Low]
+This isn't a bug, but tun_open(), list(), count(), the fixture state in
+FIXTURE(sysctl_readdir), and the register_in_front and unregister_in_front
+test flows in tools/testing/selftests/proc/proc-sysctl-readdir-churn.c
+duplicate the helpers, FIXTURE(proc_readdir), and the add_in_front and
+remove_in_front test cases in tools/testing/selftests/proc/proc-readdir-chu=
+rn.c,
+differing only in the target directory (/proc/sys/net/ipv4/conf vs
+/proc/net/dev_snmp6) and expected baseline entries (all, default, and lo vs
+lo).
+
+Could this be parameterized in proc-readdir-churn.c using FIXTURE_VARIANT a=
+nd
+FIXTURE_VARIANT_ADD instead of introducing a second standalone test file wi=
+th
+duplicated helpers and test logic?
+
+> +
+> +FIXTURE_SETUP(sysctl_readdir)
+> +{
+> +	if (unshare(CLONE_NEWNET))
+> +		SKIP(return, "unshare(CLONE_NEWNET): %s", strerror(errno));
+> +	if (access("/dev/net/tun", F_OK))
+> +		SKIP(return, "/dev/net/tun: %s", strerror(errno));
+> +	self->dir =3D open(CONF_DIR, O_RDONLY | O_DIRECTORY | O_CLOEXEC);
+> +	ASSERT_GE(self->dir, 0);
+> +	self->n =3D 0;
+> +}
+> +
+> +FIXTURE_TEARDOWN(sysctl_readdir)
+> +{
+> +	close(self->dir);
+> +}
+> +
+> +/* a device registered in front of the position doesn't repeat an entry =
+*/
+> +TEST_F(sysctl_readdir, register_in_front)
+> +{
+> +	int tun;
+> +
+> +	/* ".", ".." and "all", "default" doesn't fit */
+> +	ASSERT_EQ(list(self->dir, self->buf, SMALL_BUF, self->names, &self->n),=
+ 3);
+> +	ASSERT_EQ(count(self->names, self->n, "all"), 1);
+> +
+> +	tun =3D tun_open(TUN_NAME);
+> +	ASSERT_GE(tun, 0);
+
+[Severity: Medium]
+In FIXTURE_SETUP(sysctl_readdir), opening CONF_DIR (/proc/sys/net/ipv4/conf)
+is checked with ASSERT_GE(self->dir, 0), whereas proc-readdir-churn.c skips
+when opening SNMP6_DIR fails:
+
+tools/testing/selftests/proc/proc-readdir-churn.c:FIXTURE_SETUP(proc_readdi=
+r) {
+	...
+	self->dir =3D open(SNMP6_DIR, O_RDONLY | O_DIRECTORY | O_CLOEXEC);
+	if (self->dir < 0)
+		SKIP(return, SNMP6_DIR ": %s", strerror(errno));
+}
+
+In addition, FIXTURE_SETUP(sysctl_readdir) only checks
+access("/dev/net/tun", F_OK). On systems where /dev/net/tun exists as a
+static device node (for example, created by udev or kmod static-nodes) while
+CONFIG_TUN is disabled, access("/dev/net/tun", F_OK) succeeds, but
+open("/dev/net/tun", ...) inside tun_open(TUN_NAME) fails with ENODEV or
+ENXIO and triggers ASSERT_GE(tun, 0) in register_in_front and
+unregister_in_front.
+
+Since tools/testing/selftests/proc/config only enables CONFIG_PROC_FS=3Dy at
+this point, will running this test on a kernel without CONFIG_SYSCTL,
+CONFIG_INET, or CONFIG_TUN fail the test instead of skipping when those
+prerequisites are unavailable?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102-work-procf=
-s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D33
-
+s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D32
 
