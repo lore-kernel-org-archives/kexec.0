@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD5A6083617
-	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 14:47:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A70960A2617
+	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 14:48:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=MxupIxm1;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ShMAFIe9
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=NSDDf+qS;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BhIDX50f
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=AI0rGhRzTqGYKRLTB4K0BKBYUbKuh2b2KCu/bDS4bLM=; b=MxupIxm1JvXnRbfMDbSrFZUwRW
-	q+bMlo8PYiu98IyWH5b1IoAVTIZPYDTtFeylHw87WUPz03CXx3JZ76d6KRuwSLyEMTPMF6GUvWVWq
-	iFGG6FJAbHOCK5g6BueH2X8Tf/u65QhXee9dbZTo2jTuyLo7CWvQRmrv5gVuNcp0XDGVwQp3mNdoZ
-	hFBqUeGjTBifENSD7MC3ZgOfYFzeTvLOqB42nj+nmkqOtKnZ0Rw4SfZbsEtDmpdCbUzEgTmiGf5QU
-	mRJi+QuA6v527E1OyXVRmhbhUXMkIqRVtCiTI/tlmvf3PNoD7lhiJkbDOSK4XuVF3Uxp0lrEHrcPK
-	ZkIGtvTQ==;
+	bh=VXMUtsHfQTM8ehBaoiCzItOpo0wlFMHyP4KpaoP+TJw=; b=NSDDf+qSptRWOpMBGk7amtEe4S
+	WlsX0Veh3jb6RF/FG+Ch7/cv7PdQMyQD7aCFOUTGE37nMb9/UNp2uLWMCet0Siq6lnORLJC0YrshA
+	gncF2br7U1ZQekj44unoO/CLpGTlWNwq3O35k0ZM9znnz+qDm8MiCRN7Fflwcm7FmAOz77yFoQcqV
+	NUBd+mjMPU0gs10OFlqWrs3Ozh02xvywYtcEmjrsEufWT/PmEV9OOYCdGzgHzXzOvZy2/nVd7y6XZ
+	oBiqzTHjub4WnSuyv6ZiWEuT3AowQY0T559kCN6Ie5rEnkISKBVGBTL5pWt2XPu0z3ZdM7f+xh9A3
+	VFGgEYbw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFnl-00000002ktT-3RsG;
-	Tue, 03 Nov 2026 14:47:53 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xOFnt-00000002kz7-0OAz;
+	Tue, 03 Nov 2026 14:48:01 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFnj-00000002krc-2LDZ
+	id 1xOFnm-00000002ktN-0NAZ
 	for kexec@lists.infradead.org;
-	Tue, 03 Nov 2026 14:47:51 +0000
+	Tue, 03 Nov 2026 14:47:54 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 4E4E640BBA;
+	by tor.source.kernel.org (Postfix) with ESMTP id 8495660258;
+	Tue,  3 Nov 2026 14:47:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB8581F00A1A;
 	Tue,  3 Nov 2026 14:47:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9F4B1F000C1;
-	Tue,  3 Nov 2026 14:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793717271;
-	bh=AI0rGhRzTqGYKRLTB4K0BKBYUbKuh2b2KCu/bDS4bLM=;
+	s=k20260515; t=1793717273;
+	bh=VXMUtsHfQTM8ehBaoiCzItOpo0wlFMHyP4KpaoP+TJw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ShMAFIe95BTdZ2y4kYVfQPHLm//wuCkQQIPlY09N64k9vZ1VUW1lmnEqdkl0tWce+
-	 knySIL9/DVo9aQOZYQkJG93Wyzcd6C/0Erm0JdbeY5hpN2CyahPgm/LOQQv98jl2VZ
-	 Hs9IowAUWCqL1UitWEgdsFMjAqrvDmd7D9Y4C6j9jU51K/WOU8uJ8PEvTLiQR/wbXx
-	 aKoA8OsXfqxzDd6qpl2ukJsC2GUZJ9+0eB4F6fsScC07klIl0X9a1IqUD8OdA0MlIl
-	 icJQrYztLOnx3QIlvIFAO30B3GUV3EHclXPPks/c8ySMPgjLbVipKODsdqGWJXlGa0
-	 Nh/UTh9DN36ag==
-Message-ID: <sashiko-outbox-195484@kernel.org>
+	b=BhIDX50fZD3GGyEzS/ikmaR8zeMkB5OGeMIgm/tbgOhzPWrBZdWsC+tbrpR28AdYr
+	 y3gIAbA9tORdQwifVX097HrJTcxhg5Ti4Kg4bqcyLx0KxPC3OdQlaAqq+EsL5DzLEy
+	 y9ezT0t+gH5B6gfU6yBTJLut1mMFzWSgEkEMq984oe69utPAyOufz+c5qMd0DsJKJi
+	 4chNM7WJ/pwpiLiKwaDsdXRchxMXpLXv3rTqFY5iprInrROKqH4oGU7pwml/nW6r5m
+	 XaOnNRmGJOyEf+eVhyWOUyj2w45ZXuucOBUsC1wdU5xDQHfLFXoZkbzuNGGkUHo7vl
+	 BkrM8qAOk4TnQ==
+Message-ID: <sashiko-outbox-195485@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC 12/38] wifi: libipw: don't return 0 from writes to
- debug_level
+Subject: Re: [PATCH RFC 13/38] scsi: core: NUL-terminate what is written to
+ the host proc files
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261102-work-procfs-bugfixes-v1-12-59422ed3e465@kernel.org>
+In-Reply-To: <20261102-work-procfs-bugfixes-v1-13-59422ed3e465@kernel.org>
 References: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
- <20261102-work-procfs-bugfixes-v1-12-59422ed3e465@kernel.org>
+ <20261102-work-procfs-bugfixes-v1-13-59422ed3e465@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 14:47:49 +0000
+Date: Tue, 03 Nov 2026 14:47:51 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,19 +84,20 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> debug_level_proc_write() returns the length of the string it parsed. A
-> write that starts with a NUL byte thus returns 0 and writers that use
-> stdio retry it forever. Return the number of bytes that were written
-> instead, which also stops writes longer than the 11 bytes it looks at
-> from coming up short.
+> proc_scsi_host_write() copies what is written into a page and hands it
+> to ->write_info() without terminating it. ppa and imm parse it with
+> strncmp() and simple_strtoul(), which read on past what was written into
+> whatever the page held before. Terminate the copy. A write is at most
+> PROC_BLOCK_SIZE bytes, so the page always has room for that.
 >=20
-> Fixes: b453872c35cf ("[NET] ieee80211 subsystem")
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Cc: stable@vger.kernel.org
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102-work-procf=
-s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D12
+s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D13
 
 
