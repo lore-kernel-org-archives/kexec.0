@@ -2,64 +2,64 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC5F606D826
-	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 18:19:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AEBC606A32D
+	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 18:30:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=BLl0WkYf;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=c9sJCu1x
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=zu5KgGHk;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Kz4K6JZL
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=ikpjRxzxut3T/KDasjzHggVPTQG5Ge+eGv+OSVemEXk=; b=BLl0WkYfwK4kRy
-	jLqn18XG/KHDRqlJmE2gHEnO2FwV58mLqnGHl2c2Ehl9dKnHtN4f/gm9iDiUviEy4LClHUahpXToy
-	7Jc3qfq2tmRJSXyNtZnqCOZ5G8qRPJH9r3v1vTCIhUlGYLZMck4qaMS+b1WzpOlG9fKojXRBYcwAF
-	tmVsLsM3xingHa80AubB74w51mdx2l26TmP1I4Bz4FkJZdefnqJgVIgpE8wIrRSZg5zVA8pDhJdPW
-	gQ4ZKiSvZwzRucpJIlwZxFHoFQqdMbM/vQyyf9FFtprKM3CXvP3c5MiG3G/G8TgUFKdrCzwi2cPKf
-	VkZOWuEe14P4NXN1aBAw==;
+	List-Owner; bh=o/fdt424hIU68uAYJONXv1npbcycyDxRVgKexRLZ6GQ=; b=zu5KgGHkn0THWg
+	5Fc7Z7jG8dVgnRLRuoMy4KjRolDa7oaeysxm46eNor9bgdKEjowSwajXSuK4Vf4Qxjv+wpti0JtvH
+	VmwU9ZevXHmzTDpbKFKjOv+TmarTQoDuc7emqQ5vDvua53llG2HzfwLzqTT++8H56WhwZ61ODHRHu
+	NJ9zSA86dgLDbst7IfMkuAcoXbvtxIkj+pmHwZ3dcfswDuIoRDHMVPoy+EENLpdJWYY2c7Yn4OQTt
+	MFHnJtuuNiVbq5gcNrH5IKAIbVBG+AB3KETxS7pGRdV3k6Uj6GzVCmcZC0u5hsIBEuq6s3AParMp5
+	gko8284tPGTgGtguP7XQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOJ6b-00000003Ovd-2TXr;
-	Tue, 03 Nov 2026 18:19:33 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xOJH6-00000003Qpt-2pKG;
+	Tue, 03 Nov 2026 18:30:24 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOJ6a-00000003OuA-1O7x
+	id 1xOJH5-00000003Qpn-0edN
 	for kexec@lists.infradead.org;
-	Tue, 03 Nov 2026 18:19:32 +0000
+	Tue, 03 Nov 2026 18:30:23 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 8A7DF60A59;
-	Tue,  3 Nov 2026 18:19:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9D441F00A25;
-	Tue,  3 Nov 2026 18:19:29 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id B403343281;
+	Tue,  3 Nov 2026 18:30:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A43BB1F000C1;
+	Tue,  3 Nov 2026 18:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793729971;
-	bh=ikpjRxzxut3T/KDasjzHggVPTQG5Ge+eGv+OSVemEXk=;
+	s=k20260515; t=1793730622;
+	bh=o/fdt424hIU68uAYJONXv1npbcycyDxRVgKexRLZ6GQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=c9sJCu1xp74krmFkMVk8mLe2ptw4u+UQIkBrktG1eh45b/H6ID18PQHlk5dcst1r6
-	 gv0yMz7OoYa9jmuiZC4P4il5W4zCsYkIGdBmH+hInR68kATNWaQkYJs/QirwAUbgOW
-	 ShcB1cIuQOhXJc28DYjRzkZQJrnE4yyaFMdrNNNTeoo1KNKqyLls8xKxvOE5Si7zd3
-	 cv/GxpIWQPrALyfNuQTqRKlbKITWsNeGtc86ZCTuulJBqnkS/kvuiBlFcuEtZW2SlA
-	 4mhsoIbFCuhL7hyYIjBGvwBuUgSER7Y0n+6fy+dZjsXm4x4DKnHwlRSikzB+wlGYsW
-	 O2gdqMVXqF9XA==
-From: Pratyush Yadav <pratyush@kernel.org>
+	b=Kz4K6JZLVW9TKnN76d6D3OuUrgzUrK9/fEb1e0p3TxSKIHbz9YDtGtsOu4Ksf/ZpK
+	 kD9MIMNtYaY78h8abOFdpaEUU0XC9wQdOyjbmJutHgEb/Cza2BNZeUzCVbvAG1jSPB
+	 I5wQlgz3ORyE2naRjKjRA34AgZhiIFksIHnmvxbho49MKRY1F82rzjl7YuNhxLte71
+	 MIxtjfCMlYruQm+S8tJB6aMPvuWiiZE3vZ4n7B0/c4UBlqcFcfiJAMl8tEdWFZ98Wf
+	 0oFJC2ltiQ7mPt5M+4d57iM9NA4ZC43W3kP92E0Cyo8yF5Y5AedKjVl3n0qAxdRPP0
+	 ODC4LrgGrXN7g==
+From: Mike Rapoport <rppt@kernel.org>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Mike Rapoport <rppt@kernel.org>,
 	Pratyush Yadav <pratyush@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Samiullah Khawaja <skhawaja@google.com>
-Cc: kexec@lists.infradead.org,
+	Christian Aurich Zanettini Martins <christian.aurichzm@gmail.com>
+Cc: Mike Rapoport <rppt@kernel.org>,
+	kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH 2/2] mm/memfd_luo: keep memfd frozen until finish
-Date: Tue,  3 Nov 2026 19:19:14 +0100
-Message-ID: <20261103181916.2462825-3-pratyush@kernel.org>
-X-Mailer: git-send-email 2.56.0.385.gac671c819a-goog
-In-Reply-To: <20261103181916.2462825-1-pratyush@kernel.org>
-References: <20261103181916.2462825-1-pratyush@kernel.org>
+	stable@vger.kernel.org
+Subject: Re: [PATCH] liveupdate: check for duplicate session before growing block set
+Date: Tue,  3 Nov 2026 20:30:15 +0200
+Message-ID: <179373060810.1731986.15227244276856998447.b4-ty@b4>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20261103153928.716753-1-christian.aurichzm@gmail.com>
+References: <20261103153928.716753-1-christian.aurichzm@gmail.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -71,196 +71,36 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+From: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-After a memfd is retrieved, it immediately goes back into "normal"
-operation. The file comes back unfrozen, and its pages can migrate, it
-can be truncated, and so on. If the memfd is depended on by something,
-like iommufd, that can open a window for folios to move around before
-the consumer can re-establish its references.
+On Tue, 03 Nov 2026 12:39:28 -0300, Christian Aurich Zanettini Martins wrote:
+> luo_session_insert() grows the outgoing block set before checking for a
+> duplicate session name. On -EEXIST the new block stays in the set.
+> 
+> If the session count is an exact multiple of the per-block capacity (51
+> with 4K pages), that block stays empty. It is serialized with count 0,
+> which kho_block_set_restore() rejects in the next kernel:
+> 
+> [...]
 
-Finish is the conceptual point when a retrieved file can start to behave
-as "normal". So take an extra reference on the folios and freeze the
-memfd on retrieve until finish.
+Applied to next branch of liveupdate/linux.git tree, thanks!
 
-Suggested-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
----
- mm/memfd_luo.c | 87 +++++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 68 insertions(+), 19 deletions(-)
+[1/1] liveupdate: check for duplicate session before growing block set
+      commit: 7d4282ec2d3bfd5e7959bbd2663936a29c45f609
 
-diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
-index 9fd9abf9fedf6..50dbbda47ad3c 100644
---- a/mm/memfd_luo.c
-+++ b/mm/memfd_luo.c
-@@ -55,6 +55,14 @@
-  *   Only seals known to this LUO version (see ``MEMFD_LUO_ALL_SEALS``) may
-  *   be present; preservation fails with ``-EOPNOTSUPP`` otherwise.
-  *
-+ * Restrictions
-+ * ============
-+ *
-+ * While a memfd is preserved, and after it is retrieved until the session is
-+ * finished, its size can't be changed and holes can't be punched in it.
-+ * Operations that would do so (``ftruncate()``, ``fallocate()``, writes past
-+ * the end of the file) fail.
-+ *
-  * Non-Preserved Properties
-  * ========================
-  *
-@@ -456,33 +464,56 @@ static void memfd_luo_discard_folios(const struct memfd_luo_folio_ser *folios_se
- 	}
- }
- 
-+/* Drop the references retrieve() holds on the folios added to the file. */
-+static void
-+memfd_luo_put_retrieved_folios(const struct memfd_luo_folio_ser *folios_ser,
-+			       u64 nr_folios)
-+{
-+	for (u64 i = 0; i < nr_folios; i++) {
-+		const struct memfd_luo_folio_ser *pfolio = &folios_ser[i];
-+
-+		if (pfolio->pfn)
-+			folio_put(pfn_folio(pfolio->pfn));
-+	}
-+}
-+
- static void memfd_luo_finish(struct liveupdate_file_op_args *args)
- {
- 	struct memfd_luo_folio_ser *folios_ser;
- 	struct memfd_luo_ser *ser;
- 
--	/*
--	 * If retrieve was successful, nothing to do. If it failed, retrieve()
--	 * already cleaned up everything it could. So nothing to do there
--	 * either. Only need to clean up when retrieve was not called.
--	 */
--	if (args->retrieve_status)
-+	/* If retrieve failed, it already cleaned up everything it could. */
-+	if (args->retrieve_status < 0)
- 		return;
- 
- 	ser = phys_to_virt(args->serialized_data);
- 	if (!ser)
- 		return;
- 
--	if (ser->nr_folios) {
--		folios_ser = kho_restore_vmalloc(&ser->folios);
--		if (!folios_ser)
--			goto out;
-+	if (args->retrieve_status > 0) {
-+		/*
-+		 * Retrieve was successful, release the folios and unfreeze the
-+		 * file so it can be used normally.
-+		 */
-+		struct inode *inode = file_inode(args->file);
-+
-+		folios_ser = args->private_data;
-+
-+		inode_lock(inode);
-+		memfd_luo_put_retrieved_folios(folios_ser, ser->nr_folios);
-+		shmem_freeze(inode, false);
-+		inode_unlock(inode);
- 
--		memfd_luo_discard_folios(folios_ser, ser->nr_folios);
- 		vfree(folios_ser);
-+	} else if (args->retrieve_status == 0 && ser->nr_folios) {
-+		/* Retrieve was not called, discard the preserved folios. */
-+		folios_ser = kho_restore_vmalloc(&ser->folios);
-+		if (folios_ser) {
-+			memfd_luo_discard_folios(folios_ser, ser->nr_folios);
-+			vfree(folios_ser);
-+		}
- 	}
- 
--out:
- 	kho_restore_free(ser);
- }
- 
-@@ -552,7 +583,10 @@ static int memfd_luo_retrieve_folios(struct file *file,
- 		nr_added_pages += npages;
- 		folio_add_lru(folio);
- 		folio_unlock(folio);
--		folio_put(folio);
-+		/*
-+		 * Keep the reference from kho_restore_folio(). It is dropped
-+		 * in finish().
-+		 */
- 	}
- 
- 	shmem_recalc_inode(inode, nr_added_pages, 0);
-@@ -566,9 +600,12 @@ static int memfd_luo_retrieve_folios(struct file *file,
- 	folio_put(folio);
- put_folios:
- 	/*
--	 * Note: don't free the folios already added to the file. They will be
--	 * freed when the file is freed. Free the ones not added yet here.
-+	 * Drop the references held on the folios already added to the file.
-+	 * The folios themselves will be freed when the file is freed.
- 	 */
-+	memfd_luo_put_retrieved_folios(folios_ser, i);
-+
-+	/* Free the ones not added yet here. */
- 	for (long j = i + 1; j < nr_folios; j++) {
- 		const struct memfd_luo_folio_ser *pfolio = &folios_ser[j];
- 		phys_addr_t phys;
-@@ -589,7 +626,7 @@ static int memfd_luo_retrieve_folios(struct file *file,
- 
- static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
- {
--	struct memfd_luo_folio_ser *folios_ser;
-+	struct memfd_luo_folio_ser *folios_ser = NULL;
- 	struct memfd_luo_ser *ser;
- 	struct file *file;
- 	int err;
-@@ -624,6 +661,17 @@ static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
- 	vfs_setpos(file, ser->pos, MAX_LFS_FILESIZE);
- 	i_size_write(file_inode(file), ser->size);
- 
-+	/*
-+	 * Keep the file frozen until finish(). Other preserved objects might
-+	 * depend on it.
-+	 *
-+	 * The file isn't visible to anyone yet, but take the lock anyway since
-+	 * shmem_freeze() requires it.
-+	 */
-+	inode_lock(file_inode(file));
-+	shmem_freeze(file_inode(file), true);
-+	inode_unlock(file_inode(file));
-+
- 	if (ser->nr_folios) {
- 		folios_ser = kho_restore_vmalloc(&ser->folios);
- 		if (!folios_ser) {
-@@ -632,16 +680,17 @@ static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
- 		}
- 
- 		err = memfd_luo_retrieve_folios(file, folios_ser, ser->nr_folios);
--		vfree(folios_ser);
- 		if (err)
--			goto put_file;
-+			goto free_folios_ser;
- 	}
- 
- 	args->file = file;
--	kho_restore_free(ser);
-+	args->private_data = folios_ser;
- 
- 	return 0;
- 
-+free_folios_ser:
-+	vfree(folios_ser);
- put_file:
- 	fput(file);
- free_ser:
--- 
-2.56.0.385.gac671c819a-goog
+tree: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux
+branch: next
+
+--
+Sincerely yours,
+Mike.
 
 
