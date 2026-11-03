@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F6C606C853
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5A9606B243
 	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 14:48:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=XJHerFBH;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BS/unFTJ
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=l1Y2rn5K;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F8FNSykI
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=CZitfjPRWrqbc1UugEpoY/pCdHKs/Ak0rSBgNQ6MBwQ=; b=XJHerFBHkVh1NUS37BfFoo+xQV
-	OzTH0n+3h7n1M76avnDaecYNLR50mIS0+LQDd591Qtj4JTGbkYCsIXtdKI2Zxcp51s1PyawwTzUpX
-	E0qwhJypyASbpF2+DbH3tsCNnz0HoUhkdFcSHdUdvHfS50HU+6KX+Edlrlcu0yaRuEadXCJsMKNZg
-	YRbLV76LwUOKeSbGb2e2GAmh8xkexdh9TDcSp6E99KcLpQWFb6QAEyVVkQ9mWCvaD68YJCqjfI/r+
-	ZX1EdxUXLanMifLytNuOwZUCOMyjo6C8gIMKfdbD0t6dGGLvhVS4jxBPPxgdLEbSHgcW0/63C5MlV
-	D4xJ3VDg==;
+	bh=oZNMg0XOhOF82NdxKw8m3fuJZ/CwTFkJ3vKS6G2BA+8=; b=l1Y2rn5K73jV3mTmNykizg/Wdx
+	dYqVkb4fJHsfOr1zw9h3nPE9oBh+h6jEQrLP/h9Q5BMfIz2G9aeQSNcW3itBCZuEevz1phg0cwZfc
+	AULuQkUqdG3Y1m8ugs9sSffBsZysBkK8gFaSgDIq6+a43VmbCiIyvcSiOSk2CjxsdPoeKea3+1toU
+	WQoP7teOF6GwRWfE1T4sbz2Ux9zDNnI0C3cZ5xWDURK50cOIBxmrtBhOEvGAFr9W3wixlY0D9+imK
+	n1si/WobIwaTjhAA26AM9cBTp9jN4RvpcfEhEgSTK2dJWvhRpd8oCh9OV78nM4KonCOd/CKL/nPsG
+	a5Kp4prA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFoS-00000002ljq-3iwf;
-	Tue, 03 Nov 2026 14:48:36 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xOFoT-00000002lkf-15HH;
+	Tue, 03 Nov 2026 14:48:37 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFoJ-00000002lYl-2tG2
+	id 1xOFoL-00000002lbo-2k4Y
 	for kexec@lists.infradead.org;
-	Tue, 03 Nov 2026 14:48:28 +0000
+	Tue, 03 Nov 2026 14:48:29 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 1FF83609F4;
+	by tor.source.kernel.org (Postfix) with ESMTP id 1C17E609ED;
+	Tue,  3 Nov 2026 14:48:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DCB31F000C1;
 	Tue,  3 Nov 2026 14:48:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A7911F00A17;
-	Tue,  3 Nov 2026 14:48:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793717306;
-	bh=CZitfjPRWrqbc1UugEpoY/pCdHKs/Ak0rSBgNQ6MBwQ=;
+	s=k20260515; t=1793717308;
+	bh=oZNMg0XOhOF82NdxKw8m3fuJZ/CwTFkJ3vKS6G2BA+8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=BS/unFTJQBCgBdJJQEKrq3m4FFXM+1Tye2f6vDO2eS408GceaDi4Fta6UOVzoQLP4
-	 zPuiIi740ueizm1BtHY/HHB7VqgikK8iTG9o8Y63KAWnNgIhl0L7fMcLj2NGI5IgNC
-	 oINvup30ow3k7O9GL4AwA0eFFJfTKQRNqkKaQbf2gv/ikZr9Xx+V/SH0Empjc44JZt
-	 2GySUS6y02hSvYHWLBEAjlLxTbDT6Ybn3oGw4xRi8bo6d4KF2eUQf8dpbJCu/dQFlw
-	 CRpL8LrbCxYMDI2YOnG4mio8VO3TgsHCf+MaGYmj6SJlaVmu3CaHdhW9klBgICCnHW
-	 5aUnXrTjG9RCg==
-Message-ID: <sashiko-outbox-195501@kernel.org>
+	b=F8FNSykIjsbIYyaW7wlpeo7Jpn0dKaAreMckL+hzdum+Nm9DhHKifm2w4cRC12Zuf
+	 FMphUuoK+hWmYUdPHNzO6H8bziy31o7b+pN218q2Hp1gBYtkbTvpEUQ+x2kYJUTGbU
+	 amr4aSwQRjTvoLEO8pBwqFwBIAflxH0WBNUru5M44VEqR+WrJF38qQzc5RNwaaY8rK
+	 U/bSSq6pCzSaxPBgrjZXz5mOFbKW0lxZLA/85eQV8QSkyLI5I1g237UjWtVW4FOz4i
+	 7eRL44CQhswG3W572187LfOOth0Bx8K25XUo4u38O9AE4bdxmCYBIrD7N596LhCSKY
+	 60DTPQ7Vz2Maw==
+Message-ID: <sashiko-outbox-195502@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC 29/38] powerpc/pseries: bound the lengths in the
- ofdt property parser
+Subject: Re: [PATCH RFC 30/38] powerpc/pseries/lparcfg: return h_get_ppp()'s
+ status as a long
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261102-work-procfs-bugfixes-v1-29-59422ed3e465@kernel.org>
+In-Reply-To: <20261102-work-procfs-bugfixes-v1-30-59422ed3e465@kernel.org>
 References: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
- <20261102-work-procfs-bugfixes-v1-29-59422ed3e465@kernel.org>
+ <20261102-work-procfs-bugfixes-v1-30-59422ed3e465@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 14:48:24 +0000
+Date: Tue, 03 Nov 2026 14:48:26 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,27 +84,22 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> The commands for /proc/powerpc/ofdt that carry properties, "add_node",
-> "add_property" and "update_property", can make the parser read past the
-> buffer they were copied into:
+> h_get_ppp() returns the status of the H_GET_PPP hcall as an unsigned
+> int. update_ppp() hands it on as its ssize_t result, and
+> lparcfg_write() turns the hcall statuses it knows into an errno and
+> returns anything else as it is. So when H_GET_PPP fails, say with
+> H_PARAMETER (-4), the status comes back as 4294967292 and a write to
+> /proc/powerpc/lparcfg reports that many bytes written.
 >=20
-> (1) do_update_property() computes the end of the buffer after
->     parse_node() moved buf past the phandle. So the end is off by the
->     length of the phandle string, which can be padded with zeroes, and
->     parse_next_property() accepts a value that reaches that far past
->     the command. new_property() then copies those bytes into the
->     property, which everyone can read in /proc/device-tree.
+> Return the status as the long it is. lparcfg_write() then treats it
+> like the status of H_SET_PPP and an unknown one is at least negative.
+> Before commit 11529396ea31 ("powerpc/pseries: Split processor
+> entitlement retrieval and gathering to helper routines") a failed
+> H_GET_PPP turned into -EIO.
 >=20
-> (2) parse_next_property() parses the length with simple_strtoul() into
->     an int and only rejects -1. A length above INT_MAX turns negative,
->     tmp +=3D *length moves backwards and passes the check against the
->     end, so *tmp is read up to 2G in front of the buffer.
-> [ ... ]
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Fixes: 610d91511f99 ("[PATCH] powerpc: Add support for changing propertie=
-s from userspace")
-> Fixes: 46db2f86a3b2 ("powerpc/pseries: Fix to handle slb resize across mi=
-gration")
+> Reported-by: Chris Mason <mason@kernel.org>
+> Fixes: 11529396ea31 ("powerpc/pseries: Split processor entitlement retrie=
+val and gathering to helper routines")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -112,6 +107,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102-work-procf=
-s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D29
+s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D30
 
 
