@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14200606B243
-	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 14:48:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9F3606D2FB
+	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 14:48:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ACdG6Bx2;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=I1YHc/Mt
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2xtPAEff;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ljtTrKrz
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Y+bptWnMsm9688ffvlZik5wuheu2AuAp4FHdf42AsHs=; b=ACdG6Bx2AB2BfKOtL7c5fDf9gP
-	WZOiiKOAb7Zv1483Q1zYybaW7o+9s2uhOV98XPPaqRc9eH9GY/DdGQhA0sTXvqGfFJzsJ4EUB7Jvf
-	4zzc9TFqylXtGYmRLObjRV4PZiaS2zr+S3RR4uKyNCJmqnpfuUj+dZXpS4vpM7samGbnVVHw53eJv
-	Stuw4kSBmu5ht73R9KkdVN5SkUWNYdSfWhfQgD0FO18UHi5pLiD7SF/cV5X7jIGhuJx29lsLtCkE2
-	bJ0bcBR4Wu6Ey8FwfytttKltkV76OM1byL+aQz0YSqqjz6vNuPAF9f2QdUz9visHPQZ9lTHJ5RQ8h
-	7+eJZmmw==;
+	bh=ED7DfxpP0C+3U90pEocB+hyI9bQg1Q/rMH3eRirphfo=; b=2xtPAEffK7scCt8KWb/gVikDIY
+	7OIW/ccSTreGPzBNK2roo7XUgsArNtm8yAsoa6xGF+jdCYCKBAEiHO008g+ZCjFMh4gMib7g6p6Vy
+	AMPeUPtWj/rtF4IPs5Oh8X1llAlMSE4XY/xloRuE6aBtNYKd30fByYGmbgSZV3Y82xn4O3+tU8Xr2
+	8I+TRUgBSTRiNQt3YrPHuG6vCMP+nSPCjcqtYAJ16zzxSTR0zcpB5DW6H9uush6Xwgf0CiTNPlAAl
+	1cH1sKHcmZKX1EBhc5qkOIS+DeTxlJdgSd8KdoieLxj2nQbhLRZWcfj+HXHNqEZdK4BSve5E5Qv5w
+	kwtyoITQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFoT-00000002llL-2orC;
-	Tue, 03 Nov 2026 14:48:37 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xOFod-00000002lxB-48Jj;
+	Tue, 03 Nov 2026 14:48:47 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFoQ-00000002lfF-1He8
+	id 1xOFoa-00000002lrz-0xIm
 	for kexec@lists.infradead.org;
-	Tue, 03 Nov 2026 14:48:34 +0000
+	Tue, 03 Nov 2026 14:48:46 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id E94064018B;
-	Tue,  3 Nov 2026 14:48:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4C941F000C1;
-	Tue,  3 Nov 2026 14:48:31 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 9D10860616;
+	Tue,  3 Nov 2026 14:48:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E4781F000C1;
+	Tue,  3 Nov 2026 14:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793717313;
-	bh=Y+bptWnMsm9688ffvlZik5wuheu2AuAp4FHdf42AsHs=;
+	s=k20260515; t=1793717323;
+	bh=ED7DfxpP0C+3U90pEocB+hyI9bQg1Q/rMH3eRirphfo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=I1YHc/MtZN8GDa7UIDwX7EZbAGqySvUQ9iJMmqHpFghXtS1a7u1snUSRoQZbPgotf
-	 rzTS20EjRbQSiraVWbKDq4ZCE++cNFCKRi5Aaifb5wigRVmBCmMaDT7YdKMsDB9tDI
-	 EKZhwJ8mtHIR7tJTtUGX8l08CJRlHDCymC+ysWL+tDYTrAJTPYswbt5itzEnPuNwmU
-	 0VvXfu6Z2XZnOqblVvT6wHfP6+iohenxq+H4qRRnC04rlzIf4Onp6n05i56McAI+1Y
-	 TqDE/PH+7Hpp+X7zYzUT3YtEtnTjOTA8j+Z92u2V2zFKtu1xuQnbMQURmWoACjuOYC
-	 jjzKWAkws/G0g==
-Message-ID: <sashiko-outbox-195504@kernel.org>
+	b=ljtTrKrzjwh9bmTgB/C4QRv4lPNCmDXb0oGrnMVLkXCeEPfpYMq2XwmiskAtwQlsK
+	 oR+9Ko1Pl3b/OoYpR0JTmvi3u4DF0d6V6KQt841p42E0GJwXEsp4zexEhStpCZGKot
+	 pkJLfSa1M3AMrCCthqht9MFhgLn+Yh9p8Octt6Ghr3uXvq/2JhHMONBnt+SmQKq34t
+	 I08bZ2ixHGY9RHmh/bJlC1bBT/o22sClyAftWhJVYpDvJ2AVldTnb++uYWhQYb014k
+	 kzsT0ppwzb8VRvjDyZBpKuGuVZJ8s3MbvTiItwdFL05JRwkjFnFrqSpfLfwR7+VZN8
+	 /LmgWCZM8tKSQ==
+Message-ID: <sashiko-outbox-195508@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC 32/38] selftests/proc: check a sysctl listing while
- entries come and go
+Subject: Re: [PATCH RFC 36/38] selftests/proc: check that faulting sysctl
+ accesses don't hold up removal
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -61,12 +61,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Pavlu" <petr.pavlu@suse.com>, "Anna Schumaker" <anna@kernel.org>, yukuai@fygo.io, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261102-work-procfs-bugfixes-v1-32-59422ed3e465@kernel.org>
+In-Reply-To: <20261102-work-procfs-bugfixes-v1-36-59422ed3e465@kernel.org>
 References: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
- <20261102-work-procfs-bugfixes-v1-32-59422ed3e465@kernel.org>
+ <20261102-work-procfs-bugfixes-v1-36-59422ed3e465@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 14:48:31 +0000
+Date: Tue, 03 Nov 2026 14:48:40 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,173 +86,93 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] selftests/proc: missing prerequisite skips in sysctl_readdir_set=
-up()
-- [Low] selftests/proc: proc-sysctl-readdir-churn duplicates proc-readdir-c=
-hurn
+- [Medium] selftests/proc: getdents test faults in dir_emit_dots() before e=
+ntry lookup
 --
 
-commit 9b75f87bfb2fb1adbf5b6ac83f3bfdac725df7f5
+commit fc0ab3f791b6ab04b43d13e015f97882092d54fc
 Author: Christian Brauner <brauner@kernel.org>
 
-selftests/proc: check a sysctl listing while entries come and go
+selftests/proc: check that faulting sysctl accesses don't hold up removal
 
-This commit adds a new kselftest binary, proc-sysctl-readdir-churn, to veri=
-fy
-that multi-call getdents64() listings of /proc/sys/net/ipv4/conf do not rep=
-eat
-or skip entries when a tun network device is registered or unregistered
-between calls.
+This commit adds a proc selftest using userfaultfd and a tun device in a new
+network namespace to verify that page faults during read(), write(), and
+getdents64() on /proc/sys do not block sysctl table unregistration.
 
-> diff --git a/tools/testing/selftests/proc/proc-sysctl-readdir-churn.c b/t=
-ools/testing/selftests/proc/proc-sysctl-readdir-churn.c
+> diff --git a/tools/testing/selftests/proc/proc-remove-slow-sysctl.c b/too=
+ls/testing/selftests/proc/proc-remove-slow-sysctl.c
 > new file mode 100644
-> index 0000000000000..0e067a3619c44
+> index 0000000000000..e1b1fd19a07ab
 > --- /dev/null
-> +++ b/tools/testing/selftests/proc/proc-sysctl-readdir-churn.c
-> @@ -0,0 +1,147 @@
+> +++ b/tools/testing/selftests/proc/proc-remove-slow-sysctl.c
+> @@ -0,0 +1,213 @@
 
 [ ... ]
 
-> +#define CONF_DIR	"/proc/sys/net/ipv4/conf"
-> +#define TUN_NAME	"a0"		/* sorts before "all" */
-> +#define TUN_PATH	CONF_DIR "/" TUN_NAME
-> +#define SMALL_BUF	80		/* ".", ".." and one short name */
-> +#define NAMES		64
-> +
-> +static int tun_open(const char *name)
+> +TEST_F(proc_sys_slow, getdents)
 > +{
-> +	struct ifreq ifr =3D {};
-> +	int fd;
+> +	struct worker w =3D {
+> +		.op	=3D SYSCTL_GETDENTS,
+> +		.len	=3D BUF_PAGES * self->psz,
+> +	};
 > +
-> +	fd =3D open("/dev/net/tun", O_RDWR | O_CLOEXEC);
-> +	if (fd < 0)
-> +		return -1;
-> +	strncpy(ifr.ifr_name, name, IFNAMSIZ - 1);
-> +	ifr.ifr_flags =3D IFF_TUN | IFF_NO_PI;
-> +	if (ioctl(fd, TUNSETIFF, &ifr)) {
-> +		close(fd);
-> +		return -1;
-> +	}
-> +	return fd;
-> +}
+> +	w.fd =3D open(CONF_PATH, O_RDONLY | O_DIRECTORY | O_CLOEXEC);
+> +	ASSERT_GE(w.fd, 0);
+> +	stall_and_remove(_metadata, self, &w);
 > +
-> +/* one getdents64() into @buf, the names appended to @names */
-> +static int list(int fd, char *buf, size_t size, char names[][NAME_MAX + =
-1],
-> +		int *n)
-> +{
-> +	long ret, off;
-> +	int got =3D 0;
-> +
-> +	ret =3D syscall(__NR_getdents64, fd, buf, size);
-> +	if (ret < 0)
-> +		return -errno;
-> +	for (off =3D 0; off < ret;) {
-> +		struct dirent64 *d =3D (void *)(buf + off);
-> +
-> +		if (*n < NAMES)
-> +			strcpy(names[(*n)++], d->d_name);
-> +		got++;
-> +		off +=3D d->d_reclen;
-> +	}
-> +	return got;
-> +}
-> +
-> +static int count(char names[][NAME_MAX + 1], int n, const char *name)
-> +{
-> +	int i, c =3D 0;
-> +
-> +	for (i =3D 0; i < n; i++)
-> +		if (!strcmp(names[i], name))
-> +			c++;
-> +	return c;
-> +}
-> +
-> +FIXTURE(sysctl_readdir) {
-> +	int dir;
-> +	int n;
-> +	char names[NAMES][NAME_MAX + 1];
-> +	char buf[65536];
-> +};
-
-[Severity: Low]
-This isn't a bug, but tun_open(), list(), count(), the fixture state in
-FIXTURE(sysctl_readdir), and the register_in_front and unregister_in_front
-test flows in tools/testing/selftests/proc/proc-sysctl-readdir-churn.c
-duplicate the helpers, FIXTURE(proc_readdir), and the add_in_front and
-remove_in_front test cases in tools/testing/selftests/proc/proc-readdir-chu=
-rn.c,
-differing only in the target directory (/proc/sys/net/ipv4/conf vs
-/proc/net/dev_snmp6) and expected baseline entries (all, default, and lo vs
-lo).
-
-Could this be parameterized in proc-readdir-churn.c using FIXTURE_VARIANT a=
-nd
-FIXTURE_VARIANT_ADD instead of introducing a second standalone test file wi=
-th
-duplicated helpers and test logic?
-
-> +
-> +FIXTURE_SETUP(sysctl_readdir)
-> +{
-> +	if (unshare(CLONE_NEWNET))
-> +		SKIP(return, "unshare(CLONE_NEWNET): %s", strerror(errno));
-> +	if (access("/dev/net/tun", F_OK))
-> +		SKIP(return, "/dev/net/tun: %s", strerror(errno));
-> +	self->dir =3D open(CONF_DIR, O_RDONLY | O_DIRECTORY | O_CLOEXEC);
-> +	ASSERT_GE(self->dir, 0);
-> +	self->n =3D 0;
-> +}
-> +
-> +FIXTURE_TEARDOWN(sysctl_readdir)
-> +{
-> +	close(self->dir);
-> +}
-> +
-> +/* a device registered in front of the position doesn't repeat an entry =
-*/
-> +TEST_F(sysctl_readdir, register_in_front)
-> +{
-> +	int tun;
-> +
-> +	/* ".", ".." and "all", "default" doesn't fit */
-> +	ASSERT_EQ(list(self->dir, self->buf, SMALL_BUF, self->names, &self->n),=
- 3);
-> +	ASSERT_EQ(count(self->names, self->n, "all"), 1);
-> +
-> +	tun =3D tun_open(TUN_NAME);
-> +	ASSERT_GE(tun, 0);
+> +	/* What was looked up before the removal still arrives, then nothing. */
+> +	EXPECT_GT(w.ret, 0);
 
 [Severity: Medium]
-In FIXTURE_SETUP(sysctl_readdir), opening CONF_DIR (/proc/sys/net/ipv4/conf)
-is checked with ASSERT_GE(self->dir, 0), whereas proc-readdir-churn.c skips
-when opening SNMP6_DIR fails:
+Does TEST_F(proc_sys_slow, getdents) in
+tools/testing/selftests/proc/proc-remove-slow-sysctl.c actually fault on a
+looked-up sysctl entry, or does it fault inside dir_emit_dots() before any
+entry is looked up?
 
-tools/testing/selftests/proc/proc-readdir-churn.c:FIXTURE_SETUP(proc_readdi=
-r) {
+In FIXTURE_SETUP(proc_sys_slow), only the first page of self->buf is
+registered with userfaultfd. When TEST_F(proc_sys_slow, getdents) opens
+CONF_PATH, w.fd starts at file position 0 and is passed directly to
+stall_and_remove() -> work_thread() -> getdents64().
+
+In fs/proc/proc_sysctl.c:proc_sys_readdir(), dir_emit_dots() runs before
+sysctl_dir_next():
+
+fs/proc/proc_sysctl.c:proc_sys_readdir() {
 	...
-	self->dir =3D open(SNMP6_DIR, O_RDONLY | O_DIRECTORY | O_CLOEXEC);
-	if (self->dir < 0)
-		SKIP(return, SNMP6_DIR ": %s", strerror(errno));
+	if (!dir_emit_dots(file, ctx))
+		return 0;
+
+	if (cursor && cursor->pos =3D=3D ctx->pos) {
+		err =3D sysctl_dir_next(ctl_dir, &d, cursor->name, cursor->len);
+	} else {
+		loff_t pos =3D 2;
+
+		err =3D sysctl_dir_next(ctl_dir, &d, NULL, 0);
+	...
 }
 
-In addition, FIXTURE_SETUP(sysctl_readdir) only checks
-access("/dev/net/tun", F_OK). On systems where /dev/net/tun exists as a
-static device node (for example, created by udev or kmod static-nodes) while
-CONFIG_TUN is disabled, access("/dev/net/tun", F_OK) succeeds, but
-open("/dev/net/tun", ...) inside tun_open(TUN_NAME) fails with ENODEV or
-ENXIO and triggers ASSERT_GE(tun, 0) in register_in_front and
-unregister_in_front.
+Because ctx->pos is 0, dir_emit_dots() writes "." at the start of self->buf
+and triggers the single userfaultfd page fault before sysctl_dir_next() is
+called and while d.head is still NULL.
 
-Since tools/testing/selftests/proc/config only enables CONFIG_PROC_FS=3Dy at
-this point, will running this test on a kernel without CONFIG_SYSCTL,
-CONFIG_INET, or CONFIG_TUN fail the test instead of skipping when those
-prerequisites are unavailable?
+While work_thread() is sleeping in dir_emit_dots(), stall_and_remove() clos=
+es
+self->tun (which unregisters CONF_PATH and marks ctl_dir->header as
+unregistering) and resolves the fault on the first page with UFFDIO_ZEROPAG=
+E.
+When work_thread() resumes, dir_emit_dots() finishes emitting "." and "..",
+sysctl_dir_next() immediately returns -ENOENT, and getdents64() returns the
+48 bytes from the dot entries without ever entering the entry-emission loop.
+
+Should TEST_F(proc_sys_slow, getdents) advance w.fd past "." and ".." first
+(for example with lseek(w.fd, 2, SEEK_SET)) before calling stall_and_remove=
+()
+so the fault occurs in dir_emit() after sysctl_dir_next() and
+proc_sys_fill_dirent() have looked up an entry?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102-work-procf=
-s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D32
+s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D36
 
