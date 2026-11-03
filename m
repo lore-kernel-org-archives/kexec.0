@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416D1606BA02
-	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 15:18:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147BC6082BF2
+	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 15:18:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ARxUIn/f;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HpJXKwG4
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=qKZ6q3qO;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AM0tHmEK
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,39 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=iYkrqCMK4sFn+IzKtXYQ/U5EAsE/ebvjSwDe60Rgl0E=; b=ARxUIn/fCoanpQ5F0GGgzYk1IA
-	XfaTC7Y5TDk/VVybDxjyTBZyDl36w1uV11KC2uhs3mNjgGKWNRm6tjvT7Y3+Chr+1+xulZzcD/gkb
-	OXUmxGFgbb9O/POJJHNmcYBxqKR70QyYRLJORrKFgqmRNqqWFx1FTWE0aQ1S09wwzAvbBw3aYB13m
-	5NXuZWDlkdTWh2CdOol41EdN6m16h2i0my6DSb0+PgrlsLuVGGXpBASYoz2/ljaX0boLwHJrgxjYH
-	mShvFqxdyyg+3rPbXMEIgQBlVEMTh6WR2x0MHiu5o3FqkonDVK6eUXcgTdHOBX4HRTCMDSAXCDbt1
-	XcHmdQ4g==;
+	bh=DuUWXqjsSRZJqvPrRnnQUK8F6HwoSKU+vf+Jc0u1BP4=; b=qKZ6q3qO5IY4kPmBkHwJYJ+Czs
+	5/9R80En4ZNjKUdR6XQUwt+Utg1Se10G5XytrMnyqmEbdzEcZp3V0+cLncBGedrwrsPjqam8ASqFB
+	clIBhm5kOhj41P+pmBwrobCBHZ7DBDEtgxQV3TG0JX++GXWdKNKQ5aH93jO7VdhrJfKl/NqbQzwGa
+	9Wnkw+Xs17F0nQqcXHEj+tfoS2ghruDM0wjWFKwBNhoORDS51njGeHrBXbRIuctVRDyKDvj8V1tSc
+	NKwXjDmZXW9+MoO443aPbjQAy7uzu4INZFKyooux8QLwBtYYRqL8DQoyum9qI+mLK90BRcwNSFY17
+	AbhVoDJw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOGHZ-00000002v2l-3yOJ;
-	Tue, 03 Nov 2026 15:18:41 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xOGHm-00000002vC8-3Frj;
+	Tue, 03 Nov 2026 15:18:54 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOGHX-00000002uyd-1Swe
+	id 1xOGHb-00000002v4E-3MfM
 	for kexec@lists.infradead.org;
-	Tue, 03 Nov 2026 15:18:39 +0000
+	Tue, 03 Nov 2026 15:18:45 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 1D83B4037F;
-	Tue,  3 Nov 2026 15:18:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7805A1F000C1;
-	Tue,  3 Nov 2026 15:18:37 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 830F243DE6;
+	Tue,  3 Nov 2026 15:18:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D34361F00A1A;
+	Tue,  3 Nov 2026 15:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793719119;
-	bh=iYkrqCMK4sFn+IzKtXYQ/U5EAsE/ebvjSwDe60Rgl0E=;
+	s=k20260515; t=1793719123;
+	bh=DuUWXqjsSRZJqvPrRnnQUK8F6HwoSKU+vf+Jc0u1BP4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HpJXKwG4c83h/WlMOPfbG+pXRjut25QP4ALof5n4perASl+pG0+XdnLAbH2pMqjWu
-	 ZpqwtUvq+pwD25biFv2DLmaWL7DlQpG3/qb8VpBOvxd5wqf/4VNn1Juy6IsBSymW7g
-	 LtxumV7l/CDvPksMz+J/phWUSoo1dPWSJ9E/KVqcESkpZHFoXwDV2h/RTh/BVVsupo
-	 ywpSTGwrOlS88G9c7TocjGL//IsVNc+C80+riS0EcI8W467Qh9hACT4HrtUR2laHK7
-	 s3CQWjYxjczoY5WJryXtrQuJdT8nqogkMRxvjIzU1yLUca1vgAib4Yyq8AR2OjsCdV
-	 hQ9tAaJMXUQbA==
-Message-ID: <sashiko-outbox-195587@kernel.org>
+	b=AM0tHmEKokixtZONwfAH9GtAY9t8XyE8EQqFABZ4jT/4JvAwevkMeQijwg3GGuI6b
+	 +uRWlXfdEm1zAuo+7Xu83HaUoLhd7v44csfZ9YCQ9XFZDzwuUrIIJ5ZJSNbLwnlYGa
+	 m75nZBJXugcWf9XdVH2eCRknX8RVMsoXlE0Be3ASTz8tvYz7mmfB2q97Rx+lmFR/d/
+	 P3y+Pk1FjoR6TzepE4sGWFDJ+B5VBr3/cihd1PQ5ptIU6mTwzqamjpHrgXtwTmDqHD
+	 SsBfs8TF14zsa35s0UdWhnaIUoaZqYvGdNLbwEdyaDdYpcyIPY7xkys8bbdug4fGgR
+	 Z1HIudLH9yC6g==
+Message-ID: <sashiko-outbox-195588@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC 07/23] s390/dasd: let procfs copy in writes to
- /proc/dasd/statistics
+Subject: Re: [PATCH RFC 08/23] s390/cio: let procfs copy in writes
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +58,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261102-work-procfs-drivers-v1-7-a994bd4d3b1a@kernel.org>
+In-Reply-To: <20261102-work-procfs-drivers-v1-8-a994bd4d3b1a@kernel.org>
 References: <20261102-work-procfs-drivers-v1-0-a994bd4d3b1a@kernel.org>
- <20261102-work-procfs-drivers-v1-7-a994bd4d3b1a@kernel.org>
+ <20261102-work-procfs-drivers-v1-8-a994bd4d3b1a@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 15:18:37 +0000
+Date: Tue, 03 Nov 2026 15:18:40 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,9 +83,13 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Implement ->proc_write_buf() so procfs copies in what is written before
-> it pins the entry, and parse the command from that copy. Commands longer
-> than PAGE_SIZE - 1 bytes are rejected now instead of cut at 64k.
+> Implement ->proc_write_buf() for cio_ignore and cio_settle so procfs
+> copies in what is written before it pins the entry. cio_ignore parses
+> the list from that copy, up to the first NUL like strncpy_from_user()
+> handed it to it before. Writes larger than 64k still come up short, now
+> through PROC_ENTRY_SHORT_WRITES. Writes to cio_settle larger than
+> PAGE_SIZE - 1 bytes fail with -EINVAL now, it never looked at what was
+> written.
 >=20
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -94,6 +97,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102-work-procf=
-s-drivers-v1-0-a994bd4d3b1a@kernel.org?part=3D7
+s-drivers-v1-0-a994bd4d3b1a@kernel.org?part=3D8
 
 
