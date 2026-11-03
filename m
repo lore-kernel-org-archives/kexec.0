@@ -2,71 +2,127 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC876082BEB
-	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 14:48:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7398606E6F2
+	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 14:49:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ZfATI3ol;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PVuIrc17
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=mJ/N7RD2;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=QzuU3YVM
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
-	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Unsubscribe-Post:List-Owner;
-	bh=0V+CicgMBoN1QbZ4PU2bDKMr8pvOiaSaM7EPJ1DfD7w=; b=ZfATI3olvYRJDCfu5AYE5eQYFy
-	uRVAByT0bjcBheW4N5zfA9LTdIZsk5MNkWHA8XBJYwNuW1v9vyU3t17ppa9sM+ZXE6/uZBEioS4YJ
-	X8a3euV9PkH6tSQzT65070obXPV6JQ44gpOzdDxgiWIRfbaKCP6ZQTaNaQkaB31jE/2Ge472kqSzF
-	na9YvV74To3Hiu+nq8lFzYSBETgn2kVS/7nVFBy/0oTxbjfzzVe+omWO7iJFMl15NtS1WC+K/glZQ
-	T2WjGxYa+JNAouxDwbWE5d2CitY5wDOiiMSFyOywuU+Ai2zdwlaTgGYfBPxWglkRq2Fv3HPsc4zmL
-	RP7R/rtg==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=0jU0FKXBVK1IwPB+pnplBif7xzGvyqeYd/rvs2r/ax0=; b=mJ/N7RD2oW6IrR
+	TF5LckFjxYHXpGhsxoA0eIi5oA2fdk+iUNnLKJiICGvZAsrTuyY6ZWa69yLa8PKOewYpuS+/iZY7q
+	0uWA4LVbS9ULKMtHc55ZqzyefFnvGgFuFZOWlK+o6OPJ+Tr7DDD0/MYJ83t+oEvkOUveDj3oMv8qv
+	Nm3EFsAU/CZMLdPMR4qEsz8K1O1W7j/Hvyf3wIRrbbiMNdzC1vJKQyVraql8yU12Ia1zLVxDyeXia
+	7ES2CTMZtGjkS1DolOnh3EUOd2h94eR9SEEpSo8WwomLIoYPD2gkkT9v7g7nO13nqXN7u8bW0EASi
+	7K5LKiMTOJMSBd5zgCqA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFog-00000002m1b-1G2U;
-	Tue, 03 Nov 2026 14:48:50 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xOFpF-00000002mMb-2mOb;
+	Tue, 03 Nov 2026 14:49:25 +0000
+Received: from out-80.mta0.migadu.com ([2001:41d0:1004:224b::50] helo=mta0.migadu.com)
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFoe-00000002lxk-2Xf6
+	id 1xOFpB-00000002mKk-47Ci
 	for kexec@lists.infradead.org;
-	Tue, 03 Nov 2026 14:48:48 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 04F2A60622;
-	Tue,  3 Nov 2026 14:48:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA0571F00919;
-	Tue,  3 Nov 2026 14:48:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793717327;
-	bh=0V+CicgMBoN1QbZ4PU2bDKMr8pvOiaSaM7EPJ1DfD7w=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=PVuIrc17XR1DR65SazgbGfICE7wjxOzqZgkY9U1rqo2UnB6kZRbNYqycjDbOYBHPI
-	 mtr+oI337If1hGZt23auaywjb3aFf3e8V7x2KLacnHZWCqxTNAHGtZLRjV/QTQa/U0
-	 2ZVG3QOmYYo3Vbue///pzGjX2fvcEVYSv1E5A4Nokf1yW93VnBHjLJNY9R0S7cKzna
-	 lEsPjbqB4XU52YaxjHh1FMLVvCbZQad8DMHktuK95ryZyb144WX0kMVeswfQ7MIXWT
-	 q6wVkMNqoNp3Q2h44ir/sz5Pqydvc1rrrcEksxS0NSkW2lL6OZFvuNnmSZDzSaqv1o
-	 ng7I2nNH/acPg==
-Message-ID: <sashiko-outbox-195510@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC 38/38] selftests/proc: check that a faulting
- readlink() doesn't hold up removal
-To: "Christian Brauner" <brauner@kernel.org>
-Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
- Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
- Layton" <jlayton@kernel.org>, NeilBrown <neil@brown.name>, "Eric Dumazet" <edumazet@kernel.org>, "Thomas
- Gleixner" <tglx@kernel.org>, "Al Viro" <viro@zeniv.linux.org.uk>, "Jonathan
- Corbet" <corbet@lwn.net>, "Christoph Hellwig" <hch@lst.de>, "Greg
- Kroah-Hartman" <gregkh@suse.de>, "Joel Granados" <joel.granados@kernel.org>, "Kees
- Cook" <kees@kernel.org>, "Jan Kara" <jack@suse.cz>, "Jan Kara" <jack@suse.com>, linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org, linux-mm@kvack.org, linux-usb@vger.kernel.org, samba-technical@lists.samba.org, sparclinux@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-serial@vger.kernel.org, "Takashi
- Iwai" <tiwai@suse.de>, linux-input@vger.kernel.org, linux-raid@vger.kernel.org, linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, "Chuck
- Lever" <cel@kernel.org>, tytso@mit.edu, dmitry.torokhov@gmail.com, "Petr
- Pavlu" <petr.pavlu@suse.com>, "Anna Schumaker" <anna@kernel.org>, yukuai@fygo.io, "Heiko
- Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261102-work-procfs-bugfixes-v1-38-59422ed3e465@kernel.org>
-References: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
- <20261102-work-procfs-bugfixes-v1-38-59422ed3e465@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 14:48:45 +0000
+	Tue, 03 Nov 2026 14:49:24 +0000
+X-Envelope-To: kexec@lists.infradead.org
+DKIM-Signature: a=rsa-sha256; bh=dOHWqJbFAMJYJY9pYQ0G9QdWl3ff5fr4nC5HvUAG8+A=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793717360; v=1; x=1794322160;
+ b=QzuU3YVMkybToy3jCx589JuXk6v7arOjZKVMIuzVTtcNW67BI2N1Sv/tO1vpXZew6+OWlgh+
+ BtzfOsvNi5KxLjRGGqGPhJtBN3VmFTvpgdWNR8NKH7Gp6SbMkzFQdncMIrRdzS1uk7Hz+9X+9N+
+ g3oq2Ln4/BioZxzKZymYhmOg=
+X-Envelope-To: kexec@lists.infradead.org
+Received: by smtp.migadu.com with ESMTPS id 632a76e6b0da1a08;
+	Tue, 03 Nov 2026 14:49:18 +0000
+X-Mizu-Trace-ID: 632a76e6b0da1a08
+X-Migadu-Flow: FLOW_OUT
+From: Lance Yang <lance.yang@linux.dev>
+To: david@kernel.org
+Cc: akpm@linux-foundation.org,
+	hannes@cmpxchg.org,
+	mhocko@kernel.org,
+	qi.zheng@linux.dev,
+	shakeel.butt@linux.dev,
+	ljs@kernel.org,
+	kasong@tencent.com,
+	baohua@kernel.org,
+	axelrasmussen@google.com,
+	yuanchu@google.com,
+	weixugc@google.com,
+	baoquan.he@linux.dev,
+	baolin.wang@linux.alibaba.com,
+	liam@infradead.org,
+	vbabka@kernel.org,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	kees@kernel.org,
+	peterz@infradead.org,
+	jannh@google.com,
+	pfalcato@suse.de,
+	hughd@google.com,
+	pasha.tatashin@soleen.com,
+	pratyush@kernel.org,
+	willy@infradead.org,
+	jack@suse.cz,
+	ziy@nvidia.com,
+	lance.yang@linux.dev,
+	riel@surriel.com,
+	harry@kernel.org,
+	apopple@nvidia.com,
+	nico.pache@linux.dev,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	usama.arif@linux.dev,
+	kas@kernel.org,
+	matthew.brost@intel.com,
+	jhubbard@nvidia.com,
+	peterx@redhat.com,
+	will@kernel.org,
+	aneesh.kumar@kernel.org,
+	npiggin@gmail.com,
+	osalvador@suse.de,
+	minchan@kernel.org,
+	muchun.song@linux.dev,
+	xu.xin@linux.dev,
+	chengming.zhou@linux.dev,
+	chrisl@kernel.org,
+	shikemeng@huaweicloud.com,
+	nphamcs@gmail.com,
+	youngjun.park@lge.com,
+	gourry@gourry.net,
+	joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com,
+	ying.huang@linux.alibaba.com,
+	jgg@ziepe.ca,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	mason@kernel.org,
+	stable@vger.kernel.org,
+	usama.anjum@arm.com
+Subject: Re: [PATCH v3 42/47] mm/vma: call ->may_split() before a partial merge
+Date: Tue,  3 Nov 2026 22:49:09 +0800
+Message-ID: <20261103144909.6138-1-lance.yang@linux.dev>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20261031-fixes_core-v3-42-d6437171ecc3@kernel.org>
+References: <20261031-fixes_core-v3-42-d6437171ecc3@kernel.org>
+X-Archived-By: <archiver.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261103_064922_506526_B6ED6CA7 
+X-CRM114-Status: GOOD (  18.80  )
+X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,70 +132,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
-X-Archived-By: <archiver.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] selftests/proc: Makefile adds nonexistent proc-remove-slow-reade=
-r target
---
 
-commit ac0073c08526e8690efa58576485d79bbd906522
-Author: Christian Brauner <brauner@kernel.org>
+On Sat, Oct 31, 2026 at 10:40:11AM +0100, David Hildenbrand (Arm) wrote:
+>From: Chris Mason <mason@kernel.org>
+>
+>A driver can use the ->may_split() hook to forbid a VMA boundary at
+>certain addresses.
+>
+>A device-dax device is a character device that gives raw access to a
+>range of memory through mmap(). device-dax refuses any address that is not
+>a multiple of the device's alignment through vm_ops->may_split.
+>
+>vma_merge_existing_range() can move boundaries, but does not call
+>vm_ops->may_split.
+>
+>If a range at the edge of a VMA gets the attributes of the adjacent VMA,
+>the function moves only that range over to the neighbour: one VMA shrinks
+>and the other grows. This is a partial merge, and vma_modify() tries it
+>before any split.
+>
+>Take a device-dax VMA that lies next to another VMA of the same file.
+>The user calls mprotect() on the one page of the first VMA that touches
+>the second VMA, and asks for the protection that the second VMA already
+>has. The result is a partial merge. It puts the boundary inside a 1 GiB
+>mapping, which is a single leaf entry at the PUD level.
+>
+>As part of the merge, the kernel looks for a huge PMD to split at the
+>new boundary. That code does not expect a PUD leaf:
+>
+>    vma_merge_existing_range()
+>      commit_merge()
+>        vma_adjust_trans_huge()
+>          split_huge_pmd_address()
+>            mm_find_pmd()
+>              treats the PUD leaf as a pointer to a PMD table,
+>              so the "table" is the device memory that the leaf maps
+>            __split_huge_pmd()
+>              reads a PMD that the user wrote to the device memory
+>              folio_put() on the folio that this PMD names
+>
+>Bad. While the code must at some point be taught to split PUD entries as
+>well, the issue here is that we move VMA boundaries such that they are
+>incompatible with the driver.
+>
+>Fix this by calling ->may_split() on the address that a partial merge
+>would move the boundary to, and by abandoning the merge if the driver
+>refuses. vma_modify() then tries the split, which fails with -EINVAL.
+>
+>Factor out existing split handling into check_split() and reuse it.
+>
+>Fix generated by an LLM and sent by Chris Mason in private.
+>
+>Fixes: 38607c62b34b ("fs/dax: properly refcount fs dax pages")
+>Cc: stable@vger.kernel.org
+>Signed-off-by: Chris Mason <mason@kernel.org>
+>Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+>[ david: improve description; cleanup the code ]
+>Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+>Tested-by: Gregory Price (Meta) <gourry@gourry.net>
+>Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
+>Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+>Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+>---
 
-selftests/proc: check that a faulting readlink() doesn't hold up removal
-
-This commit adds a selftest verifying that a readlink() call faulting via
-userfaultfd on /proc/asound/<id> does not block removal of the /proc symlink
-when renaming a dummy sound card.
-
-> diff --git a/tools/testing/selftests/proc/.gitignore b/tools/testing/self=
-tests/proc/.gitignore
-> index 7b81334927820..e2566cc0ae079 100644
-> --- a/tools/testing/selftests/proc/.gitignore
-> +++ b/tools/testing/selftests/proc/.gitignore
-> @@ -22,6 +22,8 @@
->  /proc-uptime-002
->  /proc-pidns
->  /proc-remove-slow-sysctl
-> +/proc-remove-slow-reader
-> +/proc-remove-slow-readlink
->  /read
->  /self
->  /setns-dcache
-> diff --git a/tools/testing/selftests/proc/Makefile b/tools/testing/selfte=
-sts/proc/Makefile
-> index bce6beca72744..6a9bdc999f545 100644
-> --- a/tools/testing/selftests/proc/Makefile
-> +++ b/tools/testing/selftests/proc/Makefile
-> @@ -33,5 +33,7 @@ TEST_GEN_PROGS +=3D proc-fsconfig-hidepid
->  TEST_GEN_PROGS +=3D proc-sysctl-readdir-churn
->  TEST_GEN_PROGS +=3D proc-pidns
->  TEST_GEN_PROGS +=3D proc-remove-slow-sysctl
-> +TEST_GEN_PROGS +=3D proc-remove-slow-reader
-
-[Severity: Medium]
-Was proc-remove-slow-reader added to TEST_GEN_PROGS in
-tools/testing/selftests/proc/Makefile (and to
-tools/testing/selftests/proc/.gitignore) by mistake?
-
-This patch adds tools/testing/selftests/proc/proc-remove-slow-readlink.c, b=
-ut
-tools/testing/selftests/proc/proc-remove-slow-reader.c does not exist in the
-tree. Because the default all target in tools/testing/selftests/lib.mk depe=
-nds
-on $(TEST_GEN_PROGS), building the proc selftests fails with no rule to make
-target proc-remove-slow-reader.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102-work-procf=
-s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D38
+Reviewed-by: Lance Yang <lance.yang@linux.dev>
 
