@@ -2,72 +2,80 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3D7606C563
-	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 10:15:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EC9606A802
+	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 10:29:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=F5JKcxYP;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=l4M9873z
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=4/I8Y5yb;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=QQ1qfgqU
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Unsubscribe-Post:List-Owner;
-	bh=5o98qwlKEQyOrCRjq2RUqHe7Txdo2HfIj4qXGPwficc=; b=F5JKcxYPeLK1WHu9A3G3OZz3OM
-	qkM37622K/hglsTs44ooVWDvXzjxTXF9wU7iSKxMFat4ctCbmqWwqevTPfkgjNclcTQKq78xoBVxk
-	N8q3zUyH7Mb4/StacVxs5VdvxjT0csud7Z/IeHb32SOJ1s7VfwI2Qw+BvQ807kZ7DmUPZR7OxnQOM
-	CLIiteHM2RKwC0pTIWei9A9uF3xHiaA+z1V5iHR0jD9YQEdEAgmasSsVPGYbrpo726srH3OsgaIn0
-	nsDMYrfVItPon32NYQEtCDVTNnzfXf3C/qFLinBI3eGPcWTkugtK3NWTZAxVvDkJzCayBYGJxIEgD
-	TWeRl/vw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=9OSvScGRwha8A7Tb2tHR3R5F02sXRmMamVkr8+PRTWs=; b=4/I8Y5yb1E3jSJ
+	H+NlT7a6u8dG13wqxNnv3T/Ky+PnGwQeEzeyLNu5jSa2J1QQd/8r1KsTOb4LqI3awfmGLa5CY/5TD
+	u8agGaeS2qQEJ+mXHNnrPbVNlEAE52npZiJrrkRkxvnhn1h1bcf5zAzI6gB7rvXA0bGu92NuGrJLi
+	CxoZCNTSYUqHmT0kUMSsk3t0s2VOy94viyYeOTnvrngmcptck35pTFjvinBjXY4FN+UAhFMyyNK3s
+	AgDEvgW+170k/iNztknwSqKsKjGhH6nqABB4t8HWUxpt07DTJEw0d6vo3O9Em2szW0ZIXuspJxH8z
+	p+LctMEgk7UrkLvW581w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOBY9-00000001w8l-2CP1;
-	Tue, 03 Nov 2026 10:15:29 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xOBm6-000000020gX-2k4X;
+	Tue, 03 Nov 2026 10:29:54 +0000
+Received: from out-201.mta0.migadu.com ([2001:41d0:1004:224b::c9] helo=mta0.migadu.com)
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOBY7-00000001w3h-034m;
-	Tue, 03 Nov 2026 10:15:27 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 0008C601FF;
-	Tue,  3 Nov 2026 10:15:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C53311F000C1;
-	Tue,  3 Nov 2026 10:15:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793700925;
-	bh=5o98qwlKEQyOrCRjq2RUqHe7Txdo2HfIj4qXGPwficc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=l4M9873zeOp+nuSn9vGGPWM/5zR54YN8iGYC/B8Y18HQJOpFdwDfuPsn2vNUNk+NP
-	 Uhf2M+Btkoiph3PQBpwJsFhic896iAqepE0h9dLCpKlAT/9gUjbY5mhQLzGQ3/fL1f
-	 ZsQ1uSDCfX8u5/3T+tY4zOt7H2ihasdNaaoxKbI2NBQYIYbtZO9nG9bwX8dcZbYdyO
-	 0BQUezOpFtIVi/H+vhLMA7bUtpqmWfcSpK93Xv8oCzQ+t22pDSLZjSIfg3hXfKDps3
-	 DdRnHbHugGUkSbZpCF5hrPiL7KiLQeeff3o/ayxbyjmYJq+PIMS+HKqulLooeXACS4
-	 r4f891vSExf1A==
-Date: Tue, 3 Nov 2026 12:15:16 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: gaohan@iscas.ac.cn
-Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <baoquan.he@linux.dev>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>, Yao Zi <me@ziyao.cc>,
-	Han Gao <rabenda.cn@gmail.com>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	kexec@lists.infradead.org
-Subject: Re: [PATCH 4/5] kexec_core: Clear the unused part of CMA segments
-Message-ID: <aum0NFfSezGOiR0K@kernel.org>
-References: <20261023-riscv-kexec-cma-fixes-v1-0-825b90ea23c4@iscas.ac.cn>
- <20261023-riscv-kexec-cma-fixes-v1-4-825b90ea23c4@iscas.ac.cn>
+	id 1xOBm1-000000020cp-1DMO
+	for kexec@lists.infradead.org;
+	Tue, 03 Nov 2026 10:29:52 +0000
+X-Envelope-To: kexec@lists.infradead.org
+DKIM-Signature: a=rsa-sha256; bh=9OSvScGRwha8A7Tb2tHR3R5F02sXRmMamVkr8+PRTWs=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793701785; v=1; x=1794306585;
+ b=QQ1qfgqUbGhGBerxeLuJhyNk7bgr29IpB6mdUWq7I5GBjwVxZyy1/52gPaY/7kXtM0GXHLCx
+ 4RpcT2uiJ1ar4EFiI4YDe8tiB1L5f3BVfM1Orm01rf7eF0WUMSfamObsQPcMPJ6r1YAuC3tWkmp
+ 0vu1Vhi7wZbuoThW/OWjzw8w=
+X-Envelope-To: kexec@lists.infradead.org
+Received: by smtp.migadu.com with ESMTPS id 129eb9b76a2afe71;
+	Tue, 03 Nov 2026 10:29:45 +0000
+X-Mizu-Trace-ID: 129eb9b76a2afe71
+X-Migadu-Flow: FLOW_OUT
+From: George Guo <dongtai.guo@linux.dev>
+To: ardb@kernel.org,
+	pratyush@kernel.org
+Cc: rppt@kernel.org,
+	pasha.tatashin@soleen.com,
+	chenhuacai@kernel.org,
+	shuah@kernel.org,
+	ilias.apalodimas@linaro.org,
+	akpm@linux-foundation.org,
+	baoquan.he@linux.dev,
+	ruirui.yang@linux.dev,
+	guodongtai@kylinos.cn,
+	kernel@xen0n.name,
+	graf@amazon.com,
+	liukexin@kylinos.cn,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-efi@vger.kernel.org
+Subject: Re: [PATCH v6 1/8] efi: Pass KHO state to the next kernel in a configuration table
+Date: Tue,  3 Nov 2026 19:29:41 +0900
+Message-ID: <20261103102941.11087-1-dongtai.guo@linux.dev>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <2382a0ee-cb6d-4572-be6e-ce3cf4d006e5@app.fastmail.com>
+References: <2382a0ee-cb6d-4572-be6e-ce3cf4d006e5@app.fastmail.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261023-riscv-kexec-cma-fixes-v1-4-825b90ea23c4@iscas.ac.cn>
+Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261103_022949_477685_C4A9F8E9 
+X-CRM114-Status: UNSURE (   7.82  )
+X-CRM114-Notice: Please train this message.
+X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,67 +86,31 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Fri, Oct 23, 2026 at 03:33:17PM +0800, Han Gao via B4 Relay wrote:
-> From: Han Gao <gaohan@iscas.ac.cn>
-> 
-> kimage_load_cma_segment() copies the source data into pages that are not
-> cleared, but zeroes nothing after it: the final memset() runs once the
-> loop has consumed all of memsz. The tail of the last source page and
-> every page beyond bufsz keep stale data, while the purgatory digest
-> covers them as zeroes.
-> 
-> A kexec_file reboot then stops in purgatory on a digest mismatch, for
-> instance when the DTB lands in a reused CMA page.
-> 
-> Zero the remainder of each page instead.
-> 
-> Fixes: 07d24902977e ("kexec: enable CMA based contiguous allocation")
-> Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+Hi Ard, Pratyush,
 
-Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+On Thu, Oct 29 2026, Ard Biesheuvel wrote:
+> Can we handle this as an arch table then, and handle everything in
+> the LoongArch arch code?
 
-> ---
->  kernel/kexec_core.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index dc770b9a6d05..0d6e10bea4e4 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -780,15 +780,15 @@ static int kimage_load_cma_segment(struct kimage *image, int idx)
->  			goto out;
->  		}
->  
-> +		/* CMA pages are not cleared: zero the part without source data */
-> +		memset(ptr + uchunk, 0, mchunk - uchunk);
-> +
->  		ptr    += mchunk;
->  		mbytes -= mchunk;
->  
->  		cond_resched();
->  	}
->  
-> -	/* Clear any remainder */
-> -	memset(ptr, 0, mbytes);
-> -
->  out:
->  	return result;
->  }
-> 
-> -- 
-> 2.55.0
-> 
-> 
+Ard, LoongArch is currently the only user, so I understand the suggestion
+to keep the handling in the architecture code.
 
--- 
-Sincerely yours,
-Mike.
+My preference is to keep the table definition and handling common, given
+the potential for x86 to use it as Pratyush described in his reply, to
+replace setup_data once x86 gains EFI support. The table contains no
+LoongArch-specific fields, and only the LoongArch stub installs it. On
+systems without the table, the common code does nothing.
+
+Would that be acceptable, or would you prefer to keep the handling in
+LoongArch until a second architecture adopts it?
+
+Thanks,
+George
 
