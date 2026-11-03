@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E619E606A329
-	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 14:47:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE246082BDC
+	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 14:47:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=SLjW9NVu;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aH/asmyl
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=rgxtSLT6;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W0+szZ/z
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=mViIUxRNZIoofVsWiwX04B3K3onsdHxagHM514Ox1M4=; b=SLjW9NVu9vmyDRlbhsn5L8wltV
-	990JZfJN1xqOS2iGhGe66xMs2eBloHWyc8T+dMaqGpMErc7/LuY92C6p8MQEgcr/HTlllmnUyfJ/S
-	pyjSA6DOqO3uSrIk7Gp1wfsun0f7zHngmR+4BVr9AiwHZVO6DAqlZq5OyWL/OYHcnJBoVNGTgpPwd
-	qjaiqhplUuyCzD36SokWd//rdVpMik6UPzkjPoTUY3Nc30b1gCIHPenGjk5p/r8vRh19MLpj8Vyfk
-	5L7B4gyxhRYaT0+zeaIHfQ6NZSn+HKkbscl/r48XCG2T7ysFQiWqXAd1cJnTdaa4KRgJzyHiQy+Bf
-	h7OxK2ug==;
+	bh=zBynH5IZYgyQFUsVAjOAcJ5nfcoP0yn8vY+uG73McmE=; b=rgxtSLT6z/HuyZ5WEwpBPO2uA4
+	qF7n6JiqwxRRWWVxukn58E4Oa3iRnqjKqh9rtlh2BWultvKpjvdSoJDWFK1GzYOdwBNe5JH7FWbOz
+	EyuFRdh9g2hQu1Ol2k1U2Sq72fYT4bGPkdq9OJgNxPBT5W+o/q6fZDn8E4FlOs0rJmIhTJZV4JqEY
+	KAdJsVEeVKg3zCJlFi/A7lGtJd6Z3VHZO1oY53zwTBS/W4V7Ylx0N4Ogo9tlXRpzN+HlSN2MQDxE0
+	zxrvVrMiRqICpwJv9HtYc38T60BSCE/03kEZZBYtfupy1fVyijhaxuqeCAQ2jbf/PlfdwqhtHHxsu
+	K8eWKTYQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFnh-00000002kpM-2hvp;
-	Tue, 03 Nov 2026 14:47:49 +0000
+	id 1xOFnl-00000002ktO-33pP;
+	Tue, 03 Nov 2026 14:47:53 +0000
 Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFng-00000002knC-1M0x
+	id 1xOFni-00000002kpd-0YMR
 	for kexec@lists.infradead.org;
-	Tue, 03 Nov 2026 14:47:48 +0000
+	Tue, 03 Nov 2026 14:47:50 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id BB89B6022C;
+	by tor.source.kernel.org (Postfix) with ESMTP id 8E48D605CF;
+	Tue,  3 Nov 2026 14:47:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E265D1F00A18;
 	Tue,  3 Nov 2026 14:47:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19B9D1F00A17;
-	Tue,  3 Nov 2026 14:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793717267;
-	bh=mViIUxRNZIoofVsWiwX04B3K3onsdHxagHM514Ox1M4=;
+	s=k20260515; t=1793717269;
+	bh=zBynH5IZYgyQFUsVAjOAcJ5nfcoP0yn8vY+uG73McmE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=aH/asmyl4nElVluuN+CpEBKWL3OzlD7RbEaxQGMjr94O7xpbH0XAOYTf1yBhHVd/y
-	 TgzcLuuupFalbdLvEEXiNgvpSD41XGTFXKXNcYP2BrSbkhzb9hEiH3Nf9LHd0REr1e
-	 ZaAfxsc2vyYOCAweCvelhTC327/7GiZQOmyqc2Gljz76b7ymN6jmC9M9IX3lY9tDAu
-	 09YoWfStodXkELJrxc+0/qGSQw3/TRpty2+6LYLDX0gzlX//yTUlfR3Hn9lT4tiZdV
-	 umBmn0PCmKQPhxVkxVA6cM5PmQqNO5Y0r6pJhij+FJy6FF0m9P8Zzz1np7yXbTty2R
-	 uEIGiEOoNRZjw==
-Message-ID: <sashiko-outbox-195482@kernel.org>
+	b=W0+szZ/zwo28wV5zF2parBxS+5Nv/kl7A3/bt7jYI1tQbVGOtht65KKFMl44iJlKb
+	 2TsWpsLSka7w9uTEaPdP7Iq93P5+V8D+quzXN7cHPAigbIaOZxzDITokPt4uHJaCNg
+	 63AB4FZAZv4geP5M1V/KUv6syj9b+HqtMj2eLetkjO/egjQ5GEGunX1BwoJl/O8Ssu
+	 bKnmaipZkZoedWba9JzbDTT+nON7C/z/f8ds/5jZpvBiRwvWwJzoQ2MgoQoUa4qgE6
+	 52QWD1McR+13+jhrpxi0bhfJwC4UaAH+mXNUbzS3lo7La95FoBwBIRwe6n61kWLXjB
+	 nsC1eCFGZzPow==
+Message-ID: <sashiko-outbox-195483@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC 10/38] scsi: BusLogic: don't return 0 from writes to
- the proc file
+Subject: Re: [PATCH RFC 11/38] scsi: ips: don't return 0 from writes to the
+ proc file
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261102-work-procfs-bugfixes-v1-10-59422ed3e465@kernel.org>
+In-Reply-To: <20261102-work-procfs-bugfixes-v1-11-59422ed3e465@kernel.org>
 References: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
- <20261102-work-procfs-bugfixes-v1-10-59422ed3e465@kernel.org>
+ <20261102-work-procfs-bugfixes-v1-11-59422ed3e465@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 14:47:45 +0000
+Date: Tue, 03 Nov 2026 14:47:47 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,9 +84,10 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> A write to /proc/scsi/BusLogic/<n> resets the statistics and returns 0.
-> Writers that use stdio, echo for example, take that as no progress and
-> retry forever. Return the number of bytes that were written.
+> ips_write_info() ignores what is written to /proc/scsi/ips/<n> and
+> returns 0. Writers that use stdio, echo for example, take that as no
+> progress and retry forever. Return the number of bytes that were
+> written.
 >=20
 > Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
@@ -95,6 +96,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102-work-procf=
-s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D10
+s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D11
 
 
