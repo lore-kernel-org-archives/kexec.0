@@ -2,51 +2,51 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B53606A330
-	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 02:45:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D06D606A33A
+	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 02:45:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=K2fbhN74
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=HJvoSonP
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:References:In-Reply-To:Message-ID:Date:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=j2PzMKclJ0XXRtE8rhnZiT/fJmdBjVtkmRUeMkoGe1o=; b=K2fbhN74UJvmzI
-	VaWYrt7USPHwE/7avjT3M9Phb1FCCE7K1My+NaXZJtXVaJ0vHkx5fOuYhFEmAyuz2PCa2/cwVVSun
-	NY2TbbTTfpSAIok08Kq+UCyzVkCymI9txnSHbItHS9Asi7moII4NTvHFfd9xf+yxyyio0SatW5yof
-	I1xLi9SJQUHoNafV6vybhGzaGW4pvDLK3Bw/mF1amoHtCR0mx+8/AZypHdABH+IyEFzdktmq6J6fA
-	CHzLdFM7cpeTI+tWrXoF2bhAdotHhfsIRDUmSFVWPt2+IpDihZrGTfqgbTL1mMD5HzQOlYF5U4uGw
-	+hHS5geE0elzvLs0SYqA==;
+	List-Owner; bh=R5tGfW1ky4si4RwX40JQdC4wv91k5kgX6hr5LMogCSU=; b=HJvoSonP1V0Lbj
+	2vEz2jr23opyHEZfoxIOTFFToFP/DYiEzo7us8tnj320BAW6eEmvRPuX5pQa83qFF+gbS5XAzVssF
+	FhmK1RuI9ObcBTByWJOOPvEfukRFBp3trGg/lpmk1MU2id4e/NLsWxjCccqg2ZkNg0Q1dPe62EPfQ
+	DGKRyiI6eP0VD3V9acqzJh++Gfxq8uIrNwaOPe2hL8oM4Sq/HvimTA3x9bKd8Dy2JZgtNPDn26PcC
+	V5j7WUhRhUS/bK4p6CK+4EsTAzlG2/M4RzjCYgvrvYTf/eDHlGSy3GpjW0No7Z3Ltyj9lFLaDzoWO
+	BRnJegBKPWzG8p5T1BTw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xO4WN-00000000tTX-34YK;
-	Tue, 03 Nov 2026 02:45:11 +0000
-Received: from mail-ukwestazon11020112.outbound.protection.outlook.com ([52.101.195.112] helo=CWXP265CU008.outbound.protection.outlook.com)
+	id 1xO4WQ-00000000tWR-3SaH;
+	Tue, 03 Nov 2026 02:45:14 +0000
+Received: from mail-uksouthazon11021092.outbound.protection.outlook.com ([52.101.95.92] helo=LO2P265CU024.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xO4WL-00000000tQc-0rHq
+	id 1xO4WO-00000000tSm-08ze
 	for kexec@lists.infradead.org;
-	Tue, 03 Nov 2026 02:45:10 +0000
+	Tue, 03 Nov 2026 02:45:13 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RLgNaDJfLbPKbrknciQlJHtQSBuwl53EQEOmCwnqZWaFY8eJpbF0sFllRb/6XGuQHW8JRMFQQhGrgYUYFqwCAGVusavMVzXNyW5MfYvLCISXNbtoUpGiMGsKDW/Chl7IC446oQh/pvDz7CR+AlWZvWn1La3oC/1jyCpMg5LMFUsz09xWG3U4/cUZlf4tDUkH3Y6DBx5hy+xW18O/wGzAJc8kLi5s2XtmXhhjO8s96eUiKM++2DK9V7GSRWxWBpzS6oaPnXWKc0qlbsPAJHBF60Ke/7NR8UXUpvSt1Y7FN8J+NsuToAGCxgJs6XPx4cRjz4j/ihH0VOYM36nvNC3iVg==
+ b=d15kmlcvcRgOsP03reMpndP2Wy/kGvXihhdmO+vWbROgKt/9x+AlaIJWqxN4iGVazHt4iijyd3tNdSVKaNYm/TJrKUiJkiC5k3nCNqlamFCUHdmNT6UiB/Qj6cZAodwGmscXuhjC7egJ75mO3ysTWgnuOCDdeYELRIekTw46i1VE98YFFFY/Y8PG5CorFmCq/k1LvddxcMF7Ow+ZcIrrrOVejzJLyqOOyf306Qd37gmswGBSOtg6UfI2LYnUoe/qaPVx0hZbnEt+pELMV4h0bK7j47d9smZy+vtBlyCXoGjsAQO8dvqQ5WR0CO4N7VvP7tFaf0eSGF5aqIsCzy3U5w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=j2PzMKclJ0XXRtE8rhnZiT/fJmdBjVtkmRUeMkoGe1o=;
- b=jSSrn+aSALN396aeUl93CwFDNAI1GW5TPjDFLzXuGXBrCojzJDjcG0yJ+HaHOqS14ISMRXwI04JPyww07CqnGa8uXf4GdMb2Z3Ust51lgAAAGJQuIh+LH0oADYDa52Dit0VeKvQOYGvWoyvjbXD/NctF0N6QpPDJeq5uuuBoSqJr0KHK27Uwor/JNllb6E9ruOtpd8Qu0kJ2Rszigx0gEHXUU01vRV3aRfMiAUnRbslqvVYMW8Omb/aGZD9sOavMwO9UKkK7qLRxGyIWfgkqIxQydeP6LSH0G7fmHV0DARMy83UJhXZERiTdYZIH8A+lt/jeRipdUIVNMRMWbvNUVA==
+ bh=R5tGfW1ky4si4RwX40JQdC4wv91k5kgX6hr5LMogCSU=;
+ b=rXt7ZxPD+elpOR84lC9RJEJQrH29WoHwcKgrP8WbiehHKNNLVMy9+46KKX5AyaSM6auRXlYYAcpc6WgcoCn7cydDF6t4SNcF/k9YD3Zfry/imov5XY6+0M3rlFv9JzdEP4Ni+esndzFORqD4nV3QESumQWFGYFnXz5kOImoPtWmKjvABp1yp550y7+E7cX03AWUUNNrti0OTb6HmsDpyU0b4CRA8Bm2LcXGR3kCbIsNe6NysSnjvH+6Tc3ldav/sSlWlGzC7prTLrGt1JfDxdXRGQOyxuXZQi9U9GZYQyUblBldrgYhv1ie/ibOlyYewf0EIn17u4J5NU5VB5vwP2Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
  dkim=pass header.d=atomlin.com; arc=none
 Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=atomlin.com;
 Received: from LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:163::8)
- by LO2P123MB6972.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:31d::5) with
+ by LOFP123MB913335.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:702::24) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.12; Tue, 3 Nov
- 2026 02:45:00 +0000
+ 2026 02:45:08 +0000
 Received: from LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
  ([fe80::f71f:a9f:c4de:687a]) by LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
  ([fe80::f71f:a9f:c4de:687a%5]) with mapi id 15.21.0569.011; Tue, 3 Nov 2026
- 02:45:00 +0000
+ 02:45:08 +0000
 From: Aaron Tomlin <atomlin@atomlin.com>
 To: pmladek@suse.com,
 	john.ogness@linutronix.de,
@@ -89,72 +89,72 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-rt-devel@lists.linux.dev
-Subject: [RFC PATCH v2 1/5] panic, sys_info: Fix duplicate and dropped all-CPU backtraces in panic
-Date: Mon,  2 Nov 2026 21:44:49 -0500
-Message-ID: <20261103024453.922373-2-atomlin@atomlin.com>
+Subject: [RFC PATCH v2 3/5] timers: Avoid blocking on hrtimer_cpu_base lock during Oops or panic
+Date: Mon,  2 Nov 2026 21:44:51 -0500
+Message-ID: <20261103024453.922373-4-atomlin@atomlin.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261103024453.922373-1-atomlin@atomlin.com>
 References: <20261103024453.922373-1-atomlin@atomlin.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: BN8PR04CA0066.namprd04.prod.outlook.com
- (2603:10b6:408:d4::40) To LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
+X-ClientProxiedBy: BN0PR04CA0098.namprd04.prod.outlook.com
+ (2603:10b6:408:ec::13) To LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:600:163::8)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LO2P123MB4190:EE_|LO2P123MB6972:EE_
-X-MS-Office365-Filtering-Correlation-Id: f1f62944-3cfd-4731-5407-08df39547478
+X-MS-TrafficTypeDiagnostic: LO2P123MB4190:EE_|LOFP123MB913335:EE_
+X-MS-Office365-Filtering-Correlation-Id: bd5c6619-321d-48db-364b-08df39547908
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|23010399003|7416014|376014|1800799024|6133799003|10067099003|22082099003|261102123227099003|18002099003|261102130727099003|921020|56012099006|5023799004|261026140227099003|261022105027099003|261021121427099003|261021123027099003|261022075727099003|261026121527099003|261009223027099003|261028144727099003|261021135927099003;
-X-Microsoft-Antispam-Message-Info: DEEsuFzEaAIPMEIC59UGqHjLCniHLOC0ny/ExPwmC4p8xvIGuUTG+kyGMDlxfSJpGiSkHxQvpkUFxdYYlLNr5nYPrzxFHKgCE2NVzRWmC96LncgucyQWT7GbT1RUMnH3JBlwKRJRQb755FQBZyYqAbiLy/DkRy58+FhxPzT1MdINAVyolkgWCGdT6NBr/2f0R6I+sk1zwJ1Ha5pilCUnjUB7uUELYG9vrObZPD5bHbxEiMCL0UZrG98mBx7TvFvOgLzJ2xnWfSlr47y6Qr5n3NeCepfraVHydSLit4yEHoANCRJbEQ4dAqrYmV4qyb8udl2BbhP9GiuyuWp1l8aPtLl3cOyL49kE9l5am2vzY3VJwNgbePK9TDV8Mdhl3sBe4EVXjbxl6lfoAVO8at+NyhsoQJvxe6rx9YN6vqD5764f4fQ0iKMR8mEbeoBfOOyBgmAky1rVIOaZ+UID/h28CGeOFiTH2jnfsGhuVzVHmwTnOgm36Pj2us1xnf00twlfPC0leBzM7+O431mO7rg/zE07oh8ATNTXvKce4I4vfumTBwVZrTkKU26zr5x2OLWylIxAYBr+mbUlqNY5dEC3eiUtIShGLzjwx44BxYBuIIojEjlvK05y1MhpnvAuwgKdAqJn0Yr4kYulYjlAEqGr6v0dAjNEnBXThYvvPuVboqrkT2qQr+fISoGP2Ovpyj5jAh1MVqa1dfCvdBZYkPf3IQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(7416014)(376014)(1800799024)(6133799003)(10067099003)(22082099003)(261102123227099003)(18002099003)(261102130727099003)(921020)(56012099006)(5023799004)(261026140227099003)(261022105027099003)(261021121427099003)(261021123027099003)(261022075727099003)(261026121527099003)(261009223027099003)(261028144727099003)(261021135927099003);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|23010399003|376014|1800799024|6133799003|10067099003|22082099003|261102123227099003|18002099003|921020|56012099006|5023799004|261021121427099003|261021123027099003|261022075727099003|261026121527099003|261009223027099003|261021135927099003;
+X-Microsoft-Antispam-Message-Info: TLi9/smI4SWrrwh5XdQXjxosQKtf2BPmxvj6iChYdWts7cvwu8GZCvQGiV4Aseoa/V4sFdlIrur7eIqnWN7haZroYAqqZBGjAetZBoM6AhHRxKXv4sdRinhrsPM8aBunE6zTWGD3VSmMPUBIcUh1qDA9HmRiYAoONWsRHRV2OcvOQG1w086WOXkMGzA4CWpeJstTaZd1hKIIQ29V1qno+AtsGpUdBfwUA9AXfoNbJ+DvJLjEoHSHQg/rKstbJ1hH/tAMjY8ISC3ja3NtqxW4n972egwkCPLI8DntFFMqPWFySBwb+aPr7wIZcOfAXWaIY6kzjQH25shAFhKYq1CY+QoyubzL4acqHrI2ajzViKw2oirjWK2ArnuFY+QlF44hBNLEYiaEb3w96Ch2/5xvva06oguaD4SwDjapFd4CZlgCxt+hVfa99z4rtqdZp/ybR/lheIOqSSSD4iDGqpp85Ar0lfMAuMb33QMFH8FpgXP2WSf1OJPzCZSWvfcyxvJiCK3rGOdaqDCMKpwkkCtSUmBiGgScH9Eg0xZyDkectNpmmROqDffxdIDq/wFXph2+acX29Pumkbw6pQv4trdMngkNueRZK/t0SL1/bfDyeyFDUwlycvWs9jdtaNgvwTK3byG5aLAePuLR5GxuRsXMG8wEjhiJ6luxgJjl+qByHjKs+UX7G2aY2xwCwoVmGCCg3nlq8I78eEmJgmttIFHd4g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(23010399003)(376014)(1800799024)(6133799003)(10067099003)(22082099003)(261102123227099003)(18002099003)(921020)(56012099006)(5023799004)(261021121427099003)(261021123027099003)(261022075727099003)(261026121527099003)(261009223027099003)(261021135927099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?bu+rvqO3I51fLboa/uhLhKXgVxpP3g6ZKzHeUKAbzBACr7PI157grrvBIxEv?=
- =?us-ascii?Q?GmVlXuMu21o5Jeq/gyS7LiBZrt58oc9dR7nMUEaNa65MfIyCnSi0MA89eDUU?=
- =?us-ascii?Q?O+EWA2n3ow7d3Tf+4YG5PiKO04azoeIQdLdCEvx40AwNqRmApGxKjmbzzUNm?=
- =?us-ascii?Q?LttsaiiELtR6xj+IEAe3PLW7JqHdpfcz8IwmKGur5zXNdNo83DZuf4Bc7rCx?=
- =?us-ascii?Q?Q0+Pm14iMHt01Zg/dsqULBIWYMwDFRKrgNAbGk66EeaiF1C8rla/PJGCbIae?=
- =?us-ascii?Q?ZikJg4XZkVJDCXoaoGPdfxFDC/oMAbpxKD5NGcc31rh3nxT+alM8MSyE0dTJ?=
- =?us-ascii?Q?7hKU40hBSrdxKJQvgcw9g803TZowQz4DEyguSlHA1Dnsnj02RUUGbXZmx1oi?=
- =?us-ascii?Q?08rLLtLyapk0pojabQu1YxhtkOsJPAjo7z+jx07WinP1q3mQAlWySMtZZVeK?=
- =?us-ascii?Q?/H7kecDGYrSqOwY7jd88TM/dKpQyLZrFt20c7HzOxfMW2J5tvHEsF0uUOT1a?=
- =?us-ascii?Q?2/C9sFIFD/SwMGUfNYSGv6tZeLPiGxEYf/0nGREtOWEDgT1eVPb7RLmvvDlo?=
- =?us-ascii?Q?VCKSCoXsCRW1257auPG/l+wvIUQMmySQVvx6hsfdfUaUpa6QM3fm8nTlAc23?=
- =?us-ascii?Q?4wlJhzEujFJ/qMR4AnZGUxlNk7x9LuCK/U0BxXHH4VPJY8Y1fMt74P3Z11s1?=
- =?us-ascii?Q?yNd08hby+aYYsKjtrvPXI1j4RV0+2QI64J+TtoMC43bBLl6WbS3StIVHAdEk?=
- =?us-ascii?Q?OlnG+12lvD+CRACsVpMt7Gfn15mmDpnAQ/t2ZUFXTU4yDmORlyE7Tq2B5dHW?=
- =?us-ascii?Q?4wcYQcnA/DlkKWce5oDAlnWaHO+aT0TLsPetUfpfNn2f60u2Z4mgLBbASHc0?=
- =?us-ascii?Q?4i0wKtqHHUc6P01vXe5QySUaYeIcgPPQMe+0MXuzDBps4h3jc/QV6nzWW0Oh?=
- =?us-ascii?Q?bXojOMvKGQn2Ll0kDrXA+k598/5MLt6TMLQeOqKdGqWFTJwlQpRtZliM/qbh?=
- =?us-ascii?Q?QSP3V7cgap6fMbSDjNd3rKjWUvUSUjoI8T4Dihuy1NGcsrN9cD6409CJSD1O?=
- =?us-ascii?Q?lqHobJd3RqNueabi0dYm+uUrlmwI2Lokw6XVR/0LrypypJ76Oht0aotkRJMX?=
- =?us-ascii?Q?63zOWNdKGNggPae0CsSqPRL2zHZc2nK50LhcHxgm77mCrNSu5OT+xMk2seV3?=
- =?us-ascii?Q?G4JZ9vQNydmpl2UisxPgWWVUAfcBBbzxkWHVVj9LlvXvJRWIIMtXs0SFTXqt?=
- =?us-ascii?Q?fsX5WakncsEGPpcFcjizWtCOdZafihsdoNVS4R6Xf1rXGWivH/6fvzsms7Nb?=
- =?us-ascii?Q?ZFXNXMoXd94tz58tt5Kz1KBDLodKOQgBic8yx9NpMXvkJqiYA9jmol/MqYcp?=
- =?us-ascii?Q?+hohjBIXAnkmxE6Z/xQWnY9WLUya1fuYgACldiwHV2wOuxcTKCxDIBCAVuGx?=
- =?us-ascii?Q?/0JrsMUeaIOFXv2JHejxYS/ueLa32v+G1uxVPzJ5cvbg97cLsnm/0OQujgLy?=
- =?us-ascii?Q?br0dlje9qUtel5+oLK966cx1anOpanYkhgh2dRKCK+V+tb0G0qkWcvqTIgEB?=
- =?us-ascii?Q?rfiDvyyYdbUSWisoa61iZhUMEU7Geap2fXroCrd18gQuIAjvK9hkF4BPni6K?=
- =?us-ascii?Q?a0AMfaYqzP3VVQJiUwBhgME5jDPycyduCHIo/uwN1ymXeKMckcknhOKDp8ih?=
- =?us-ascii?Q?MgIOmph//Wih5zWQhEXsA7OxEPse8tRxPERF1d0gDsacLYG4+kKlCZfE8+Jj?=
- =?us-ascii?Q?0kDAXGkh2Q=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?NL/cG7SZrq4v4TYqepzd5U4QMFzwBvSyoVXffV1I0G9hwYMOMqwPUIJAzhP/?=
+ =?us-ascii?Q?q6pssBujzs5Vm0Rvuryta3LrbduzZ3XJEwys+X5KSQ1ABM0GV9DloOFDA7ip?=
+ =?us-ascii?Q?Pb2YqQHHzjr41GHAS86Nzqmb+r2662qTQpUZDEulLok+A+/Cj0VecWN5Jmos?=
+ =?us-ascii?Q?GwCMuhl9TcSor2TQa4wm4Qgo42m/wVDnc2L11CU1U0awfpV98UBbZiw1PL4G?=
+ =?us-ascii?Q?Npfhx61fefgBgDf9K7geeoUUPPFYuZY8m8sU55gIU1UUScgUa572W/NPxA/u?=
+ =?us-ascii?Q?oERFZDW9irOEXO7FEwhIN3OCaEfNTEJSq1CPbd7Yom0/mo66bA14tWGreURd?=
+ =?us-ascii?Q?U259c3X7UrxfEe6VYJUeWTtP89ccX0E8MCQVT6zeaKceZ0nMEadCZt6Zgxow?=
+ =?us-ascii?Q?jYv4XncdzRfXPofhsc/1Bq143l9OD83LpCHAqvfD62at51EZhwdzIGOABvi7?=
+ =?us-ascii?Q?WJmKuvW61drQhDubmQo4OiQKfEp4/oVFYMBTekfGw1bSCiHYfweSpbBShIrH?=
+ =?us-ascii?Q?fpzBSYSWPfdshmH/RUNHlqq8+tj35VvtBa4TNbvIVtjAe6jbjxiuqTCb/IJB?=
+ =?us-ascii?Q?y/5ZXbDW9FyI5cjeVO3+5heeCckouwn9w2rLJGhSOcVae0AUOt4wHTYVPRK1?=
+ =?us-ascii?Q?9Y3MFTfe9Pw5+0pKPqHmPd1M2FYayjIq8WbuMREEqMH+8e2aiBnLPR5LrWKb?=
+ =?us-ascii?Q?ycVqvNYlOVINN5uassvokcwIae91YpfwjeVDtjWa0zMuoQ9QHmncZl380XjY?=
+ =?us-ascii?Q?K4ypSK76jBTrPG8jGUNl0uCPGtMTzqbsOHiE7MMQ2qMPeHI5LAH5oytYMijz?=
+ =?us-ascii?Q?fgUiKsRNHkpkR5iWKmKMEVyrP+pBXaOasmoU/crClXm8zPMHqC1wNehhYjEE?=
+ =?us-ascii?Q?fCc7XlDq51hUGcNGYjzAPAPgGiJcjCt1Pdpf9RXDHmVKlJcKIGOtAUsZlhyM?=
+ =?us-ascii?Q?jQlXGlfZj8kdnxzHFoW/nWONq3afGp6Hs2MRagr0U+AGzYjAqw8aoihdrNom?=
+ =?us-ascii?Q?7BWgiUTN7XJmlyWi4YTBRR0zGBJgsK+1ZxVTIcD9h8U37+sLEjut51ZkaHnT?=
+ =?us-ascii?Q?QW8dyf5h4tF12tPt4UNgh+SJxrLiw6Q1olBDd3Z/jo6p34f5A9rdzlJqUomK?=
+ =?us-ascii?Q?8F3Cy/Hl8AHZgJ5+pw1Qp6/h+AUkyTCiBRlnFeUyU6QdKjeQfB+9ut+Wim+7?=
+ =?us-ascii?Q?oVFfzYajXh6IYiHLO8ECRT9wKwgBzcj3+BBqXKqrnVZaNDh9vUt1pHIIWFyd?=
+ =?us-ascii?Q?nk91oYNSkC4Xg973jg0MW/nXp52GdR8wwe37cIv70XL+ulkoV0T4fXufj7Eq?=
+ =?us-ascii?Q?Me5o78sfzw63GNOMR9/L8U+iieULM3vMzBcQDAjdC1lUfEflBWWfPRY+JK2d?=
+ =?us-ascii?Q?Xcyo4Ll+Hl4R2hvxDHYmGCJwPpmlxlDfmoQlOW/lv6NCuZEkUj6tgzx/0VQj?=
+ =?us-ascii?Q?N20FSNWpSRb0ofxb+sQYor8Ri2pssAzFAmQ9pjnecQcQAzYOjWy5a70TDRht?=
+ =?us-ascii?Q?a3B2cbJVedjtmAy7lieWoU5FLak533ut8GSOxzjEb48TA+/Q15jZaqcQWHRe?=
+ =?us-ascii?Q?PgaRnT40OUUT2uPToRWY6pJt8dn+6XxCyH9AbYpgbWLYRoR0dOgY3UrFmIzW?=
+ =?us-ascii?Q?5+prCtyXdn0QNPDSTgCiQOHKYxa1WYjDNEntdhRQ6eGv83jLxkG8SuRx5HxD?=
+ =?us-ascii?Q?4n2tRVmWvnZ2QKb9LnM7EhzmKtgbPYI/Mni9m++K53MulHB5OGhpoTod81u7?=
+ =?us-ascii?Q?wkQMTlUATw=3D=3D?=
 X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1f62944-3cfd-4731-5407-08df39547478
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd5c6619-321d-48db-364b-08df39547908
 X-MS-Exchange-CrossTenant-AuthSource: LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2026 02:45:00.5994
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2026 02:45:08.1982
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: snS+TJ8ZAX+FWrsGp79hOQY3IBrFLpSVtXF6jzdwv9K5gkFMQxgsuE6flNqpPN/vH2kcvIxLXs3bsqSrxKdQRg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO2P123MB6972
+X-MS-Exchange-CrossTenant-UserPrincipalName: Kcy4pIlcXkxaEe30kis2y9Pko5il4sb47WD+YFhtH41EWz4GBvCC7cjUPgKI0pJj4OkoLsMjfc6hntItWv2IqA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOFP123MB913335
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261102_184509_255535_B053AFF7 
-X-CRM114-Status: GOOD (  17.81  )
+X-CRM114-CacheID: sfid-20261102_184512_087928_EB588CCC 
+X-CRM114-Status: GOOD (  11.24  )
 X-Spam-Score: -1.9 (-)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -169,188 +169,62 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-16.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=4.0.1
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-When sys_info() was factored out of kernel/panic.c by
-commit b76e89e50fc3 ("panic: generalize panic_print's function to show
-sys info"), __sys_info() gained an unconditional call to
-trigger_all_cpu_backtrace() when SYS_INFO_ALL_BT is set, while
-panic_other_cpus_shutdown() retained its own call to
-panic_trigger_all_cpu_backtrace().
+When sysrq_timer_list_show() dumps active high-resolution timers across
+all online CPUs, it calls ktime_get() (which spins on tk_core.seq) and
+print_active_timers() unconditionally acquires each CPU's
+base->cpu_base->lock via raw_spin_lock_irqsave(). If invoked from an
+Oops, NMI, or panic context while the crashing CPU or a wedged remote
+CPU is inside a timekeeping write section or already holds
+base->cpu_base->lock, sysrq_timer_list_show() will spin indefinitely
+and prevent panic recovery or kexec from completing.
 
-This causes two problems during a kernel panic:
+Use the NMI-safe ktime_get_mono_fast_ns() helper in
+sysrq_timer_list_show() and raw_spin_trylock_irqsave() in
+print_active_timers() when in_nmi(), oops_in_progress, or
+panic_in_progress() is active, noting any contended lock and returning cleanly instead of
+deadlocking.
 
-    1.  vpanic() invokes panic_trigger_all_cpu_backtrace() inside
-        panic_other_cpus_shutdown() before stopping secondary CPUs, and
-        then invokes trigger_all_cpu_backtrace() a second time inside
-        sys_info(panic_print) after secondary CPUs have already been
-        shut down, stalling for up to 10 seconds waiting for offline
-        CPUs to respond to NMIs. Furthermore, if SYS_INFO_ALL_BT is
-        configured via the kernel.kernel_sys_info sysctl rather than
-        panic_print, panic_other_cpus_shutdown() misses it prior to CPU
-        shutdown.
-
-    2.  If sys_info(SYS_INFO_ALL_BT) is invoked on the panicking CPU
-        prior to panic_other_cpus_shutdown(), calling
-        trigger_all_cpu_backtrace() directly bypasses
-        panic_trigger_all_cpu_backtrace() and leaves
-        panic_triggering_all_cpu_backtrace unset. Because panic_cpu is
-        already active, vprintk_emit() silently drops all NMI backtrace
-        messages originating from non-panic CPUs.
-
-Export panic_trigger_all_cpu_backtrace() with a panic_on_this_cpu() and
-one-shot guard so all-CPU backtraces are only emitted once before
-secondary CPUs are stopped, consult sys_info_get_mask(panic_print) in
-panic_other_cpus_shutdown(), record prior Oops stack dumps in
-panic_try_start(), and route SYS_INFO_ALL_BT in __sys_info()
-through panic_trigger_all_cpu_backtrace() on the panicking CPU.
-
-Fixes: b76e89e50fc3 ("panic: generalize panic_print's function to show sys info")
+Fixes: d999bd9392de ("panic: add options to print system info when panic happens")
 Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
 ---
- include/linux/panic.h    |  1 +
- include/linux/sys_info.h |  1 +
- kernel/panic.c           | 31 +++++++++++++++++++++++++++----
- lib/sys_info.c           | 17 ++++++++++++++---
- 4 files changed, 43 insertions(+), 7 deletions(-)
+ kernel/time/timer_list.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/panic.h b/include/linux/panic.h
-index 17e61b61c45f..3b56f873f1e2 100644
---- a/include/linux/panic.h
-+++ b/include/linux/panic.h
-@@ -57,6 +57,7 @@ void panic_reset(void);
- bool panic_in_progress(void);
- bool panic_on_this_cpu(void);
- bool panic_on_other_cpu(void);
-+void panic_trigger_all_cpu_backtrace(void);
+diff --git a/kernel/time/timer_list.c b/kernel/time/timer_list.c
+index 0406bf4488e9..4973650c4ae5 100644
+--- a/kernel/time/timer_list.c
++++ b/kernel/time/timer_list.c
+@@ -68,7 +68,15 @@ static void print_active_timers(struct seq_file *m, struct hrtimer_clock_base *b
  
- /*
-  * Only to be used by arch init code. If the user over-wrote the default
-diff --git a/include/linux/sys_info.h b/include/linux/sys_info.h
-index a5bc3ea3d44b..e7699b82aa49 100644
---- a/include/linux/sys_info.h
-+++ b/include/linux/sys_info.h
-@@ -18,6 +18,7 @@
- #define SYS_INFO_BLOCKED_TASKS		0x00000080
+ 	touch_nmi_watchdog();
  
- void sys_info(unsigned long si_mask);
-+unsigned long sys_info_get_mask(unsigned long si_mask);
- unsigned long sys_info_parse_param(char *str);
- 
- #ifdef CONFIG_SYSCTL
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 574ee5a12f92..4cb26914b2af 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -70,6 +70,7 @@ static bool panic_console_replay;
- 
- bool panic_triggering_all_cpu_backtrace;
- static bool panic_this_cpu_backtrace_printed;
-+static bool panic_all_cpu_backtrace_printed;
- 
- int panic_timeout = CONFIG_PANIC_TIMEOUT;
- EXPORT_SYMBOL_GPL(panic_timeout);
-@@ -451,13 +452,21 @@ bool panic_try_start(void)
- 	old_cpu = PANIC_CPU_INVALID;
- 	this_cpu = raw_smp_processor_id();
- 
--	return atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu);
-+	if (!atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu))
-+		return false;
-+
-+	if (atomic_read(&panic_redirect_cpu) == PANIC_CPU_INVALID &&
-+	    (test_taint(TAINT_DIE) || oops_in_progress))
-+		panic_this_cpu_backtrace_printed = true;
-+
-+	return true;
- }
- EXPORT_SYMBOL(panic_try_start);
- 
- void panic_reset(void)
- {
--	atomic_set(&panic_cpu, PANIC_CPU_INVALID);
-+	panic_this_cpu_backtrace_printed = false;
-+	atomic_set_release(&panic_cpu, PANIC_CPU_INVALID);
- }
- EXPORT_SYMBOL(panic_reset);
- 
-@@ -538,8 +547,21 @@ void check_panic_on_warn(const char *origin)
- 		      origin, limit);
- }
- 
--static void panic_trigger_all_cpu_backtrace(void)
-+/**
-+ * panic_trigger_all_cpu_backtrace - trigger NMI backtraces on all CPUs once
-+ *
-+ * Temporarily permit non-panic CPUs to emit messages into the printk ring
-+ * buffer while capturing all-CPU backtraces during a panic. Subsequent calls
-+ * are ignored so backtraces are not re-triggered after secondary CPUs have
-+ * been shut down.
-+ */
-+void panic_trigger_all_cpu_backtrace(void)
- {
-+	if (!panic_on_this_cpu() || panic_all_cpu_backtrace_printed)
-+		return;
-+
-+	panic_all_cpu_backtrace_printed = true;
-+
- 	/* Temporary allow non-panic CPUs to write their backtraces. */
- 	panic_triggering_all_cpu_backtrace = true;
- 
-@@ -558,8 +580,9 @@ static void panic_trigger_all_cpu_backtrace(void)
-  */
- static void panic_other_cpus_shutdown(bool crash_kexec)
- {
--	if (panic_print & SYS_INFO_ALL_BT)
-+	if (sys_info_get_mask(panic_print) & SYS_INFO_ALL_BT)
- 		panic_trigger_all_cpu_backtrace();
-+	panic_all_cpu_backtrace_printed = true;
- 
- 	/*
- 	 * Note that smp_send_stop() is the usual SMP shutdown function,
-diff --git a/lib/sys_info.c b/lib/sys_info.c
-index f32a06ec9ed4..496893eb776b 100644
---- a/lib/sys_info.c
-+++ b/lib/sys_info.c
-@@ -7,6 +7,7 @@
- #include <linux/kernel.h>
- #include <linux/ftrace.h>
- #include <linux/nmi.h>
-+#include <linux/panic.h>
- #include <linux/sched/debug.h>
- #include <linux/string.h>
- #include <linux/sysctl.h>
-@@ -153,14 +154,24 @@ static void __sys_info(unsigned long si_mask)
- 	if (si_mask & SYS_INFO_FTRACE)
- 		ftrace_dump(DUMP_ALL);
- 
--	if (si_mask & SYS_INFO_ALL_BT)
--		trigger_all_cpu_backtrace();
-+	if (si_mask & SYS_INFO_ALL_BT) {
-+		if (panic_on_this_cpu())
-+			panic_trigger_all_cpu_backtrace();
-+		else if (!panic_in_progress())
-+			trigger_all_cpu_backtrace();
+-	raw_spin_lock_irqsave(&base->cpu_base->lock, flags);
++	if (in_nmi() || oops_in_progress || panic_in_progress()) {
++		if ((!IS_ENABLED(CONFIG_SMP) && in_nmi()) ||
++		    !raw_spin_trylock_irqsave(&base->cpu_base->lock, flags)) {
++			SEQ_printf(m, "  [cpu_base lock contended]\n");
++			return;
++		}
++	} else {
++		raw_spin_lock_irqsave(&base->cpu_base->lock, flags);
 +	}
  
- 	if (si_mask & SYS_INFO_BLOCKED_TASKS)
- 		show_state_filter(TASK_UNINTERRUPTIBLE);
- }
+ 	curr = timerqueue_linked_first(&base->active);
+ 	/*
+@@ -262,7 +270,8 @@ static inline void timer_list_header(struct seq_file *m, ktime_t now)
  
-+unsigned long sys_info_get_mask(unsigned long si_mask)
-+{
-+	return (si_mask & ~SYS_INFO_PANIC_CONSOLE_REPLAY) ? :
-+		READ_ONCE(kernel_si_mask);
-+}
-+
- void sys_info(unsigned long si_mask)
+ void sysrq_timer_list_show(void)
  {
--	__sys_info(si_mask ? : kernel_si_mask);
-+	__sys_info(sys_info_get_mask(si_mask));
- }
+-	ktime_t now = ktime_get();
++	ktime_t now = (in_nmi() || oops_in_progress || panic_in_progress()) ?
++		      ns_to_ktime(ktime_get_mono_fast_ns()) : ktime_get();
+ 	int cpu;
+ 
+ 	timer_list_header(NULL, now);
 -- 
 2.55.0
 
