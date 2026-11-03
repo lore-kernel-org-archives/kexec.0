@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0087D606D807
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192E660A6F74
 	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 14:48:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=JiRuR+a0;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=epjMvs1d
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=DTggYpfm;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KNzIAkDc
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=8mbFNT8lVL2nvpVsUKgASJ1yFuw1L2kPoKsCbuWRO+8=; b=JiRuR+a0/CEt7XysEt6nEJF+2r
-	LmGSzwEoPs3RPdQxrDXnqq4bpL51j/nHREGz1IBg7+5RqDRD+Do8b8/7DbTa5X9MrNi3067z17HmH
-	zo4lascRvONIqeOXJN6CyHv5iD1Fmr7R7zP70NdY9gjrzGz1CGCwQB4BX11wV0hWYZrd0BPASkMxl
-	KhPN/sbNCBsJ1FY9fUlMjteubIpbKSgHvz0d3Avp3utKpNeVtcKiyJfWA2gv/kSyhhfeQHd/iL4+d
-	+SpPaEOJSYbdMaMw7kNWD/6vLLew+m7hpGkcPHgd7k1KlvKh8xL1uASrCwBHPVbgzix+RWg2tVYOw
-	rhdzpwzQ==;
+	bh=IjXeEs0cvKJ9BEkMWj983otFpIRGB9/uiTG6eTej6SY=; b=DTggYpfmDSpBjShzxA6bP2+95W
+	9nJnIe8oC3GucgbNo+elJqHzIa34WejkH2tligZ7/huZBNy9/PGylUTmtgH/pTfp216E+3pOiwVZ0
+	15yPr1lRAlBcy9ZhvRULkav/f+OkT5w/+lx7cKDvRmHygdqXblJIPEazDo6NTJe1bTZMu+NVDaER8
+	xSH31aoz/p5b9UTnVZ3foQ1xs3W52gMy/YMwT2Bg/epSiflLf7JpxudUhswvga4bzoJ55agdMybKW
+	0284fxzyy2/CWmI9paOsEuaP5SpoBEwwY1JDpMrXWx7I/e3YQsiCOnVYP+6feGTXhypCY4ScS2cgO
+	AQzgzzDw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFo8-00000002lLH-2lkY;
+	id 1xOFo8-00000002lLU-3ExV;
 	Tue, 03 Nov 2026 14:48:16 +0000
 Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFo2-00000002lCp-24ws
+	id 1xOFo4-00000002lFT-1RfA
 	for kexec@lists.infradead.org;
-	Tue, 03 Nov 2026 14:48:10 +0000
+	Tue, 03 Nov 2026 14:48:12 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id E99C4609E0;
-	Tue,  3 Nov 2026 14:48:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A6791F000C1;
-	Tue,  3 Nov 2026 14:48:08 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id C4448609EF;
+	Tue,  3 Nov 2026 14:48:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EA6E1F00919;
+	Tue,  3 Nov 2026 14:48:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793717289;
-	bh=8mbFNT8lVL2nvpVsUKgASJ1yFuw1L2kPoKsCbuWRO+8=;
+	s=k20260515; t=1793717291;
+	bh=IjXeEs0cvKJ9BEkMWj983otFpIRGB9/uiTG6eTej6SY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=epjMvs1dEdIwrI2DpgBsZGQorVKIJHhwUyrikWAHBc6Kk4cu+6mzN1OvGvUEUPhEM
-	 B6AUhqEbvZnjd+L44ByeppapXiuprgTdI5dgYBGzcuPQ4mliSoBdYo9ya2AhybeQeS
-	 hLysf5uAjAy1Ce1fGawoITmQs42q0WmndS/BpCcBJHCfp5/P5rgpN0KUvtsPXZ/tyI
-	 1RZJZQTcjxHQ3TMgT1oAPoFy9LwZ7R59bQU8SwJTbZ2VhKizlrum4kIdEP7KLjnN/f
-	 n8AAaCBb12w0yRYObxfiHCa2z0CKocMdytuZrknD7LG7ju9D/FRUqPhOPy2fc6VOrS
-	 AnhnaOeX0gTFQ==
-Message-ID: <sashiko-outbox-195493@kernel.org>
+	b=KNzIAkDcTAyZi+bMDBEDiJ2ueX6+YuNBqQcpX4aSHRAYfT+9O1WnTJ+pT4zRQBBHX
+	 p25i441sJ/pPELfnxtK22X3a1lcSIwpcUY38RMAWCOPurdhPZg+7wIe+xltR5RL31U
+	 u481RToVHFbarFTlUWzAE9MGCxYh1xelMTlElM9jsoGQWFc05EGBAhMboLFT0D6o3c
+	 ZdwQlbqPOxICYuQsuQoNiBroU5anKaeSmXCKUvubsHl3FSv4AlbNXkVjqgO6mUx1pR
+	 swIa23i3wGX82qen6c30FEla74FnYQVAcQdkulRdqS/OXs8CaHc0ie+cdiYQ5eL3YC
+	 V7rdW/Ghfh0qg==
+Message-ID: <sashiko-outbox-195494@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC 21/38] proc: let proc_remove() remove the entry it
- was given
+Subject: Re: [PATCH RFC 22/38] proc: warn about entries left in /proc/net of
+ a dying namespace
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261102-work-procfs-bugfixes-v1-21-59422ed3e465@kernel.org>
+In-Reply-To: <20261102-work-procfs-bugfixes-v1-22-59422ed3e465@kernel.org>
 References: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
- <20261102-work-procfs-bugfixes-v1-21-59422ed3e465@kernel.org>
+ <20261102-work-procfs-bugfixes-v1-22-59422ed3e465@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 14:48:07 +0000
+Date: Tue, 03 Nov 2026 14:48:09 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,33 +84,25 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> proc_remove() looks the entry up by its name in its parent and removes
-> whatever it finds there:
+> proc_net_ns_exit() runs after all the other pernet exits and frees
+> net->proc_net right after removing "stat" from it. An entry that some
+> pernet exit forgot to remove is left with a freed ->parent, and so
+> PDE_NET() hands seq_open_net() and single_open_net() a freed struct net
+> when the entry is opened through a file descriptor that someone kept.
 >=20
->   remove_proc_subtree(de->name, de->parent);
->=20
-> If the entry was removed already, say along with its parent, that is
-> either nothing or a different entry that got the same name in the
-> meantime, and de->parent may well be gone. Two removals of the same
-> entry are a bug in the caller, but going by the name turns it into
-> removing an entry that belongs to somebody else.
->=20
-> Since commit 895b4c0c79b0 ("fs/proc: fix uaf in proc_readdir_de()")
-> an entry that was unlinked has an empty rb node. So check for that
-> under proc_subdir_lock and otherwise remove the entry itself, with the
-> loop of remove_proc_subtree() moved into a helper both of them use.
-> Nothing can help a caller that passes an entry that has been freed
-> already.
+> There is no such entry in the tree that we know of, but nothing would
+> tell us about one either. So warn about it like remove_proc_entry()
+> does for a directory that isn't empty.
 >=20
 > Reported-by: Chris Mason <mason@kernel.org>
-> Fixes: a8ca16ea7b0a ("proc: Supply a function to remove a proc entry by P=
-DE")
+> Fixes: e9720acd728a ("[NET]: Make /proc/net a symlink on /proc/self/net (=
+v3)")
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102-work-procf=
-s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D21
+s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D22
 
 
