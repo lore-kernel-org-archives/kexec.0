@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22554606A795
-	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 15:01:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45088606D833
+	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 15:01:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=4CrZufRy;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZtKCljk1
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=wvI7WCbi;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jajaKVz5
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,39 +14,39 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=O9ttEEMk5aMI0xnyyX9rHNq+bDAQQVwO4bXVwqZk5oM=; b=4CrZufRyfUm6UyjuCOY4wx/cLB
-	WgIV+C00gECKCgdci28r1xgOwdA83RUEwiPQCCQ4+/gd6jEaIQbYDCoUAx2xj1WWkBhk7/DUACEI0
-	x1puqe6fSJZevjhiI08VVOupWdf0B2JvOQ/YGg7A4w53i6gXleK2rUgeaOn9wo+mIT0KunvHUwjU8
-	0TOgP0l8dMmikfgT6yjftNP1YGKyhZKioUDl0boZ/gaFSqkuk5LKca1icMJeuuC8/DMTLFjTdZjen
-	QW4EdfD/VLOClQ9H1imnmAehXOwneKlunbltY5EhjSfKaw0ViSkcp97NkxqPqOL86VJmLAS8V8ls0
-	tJvXRVBQ==;
+	bh=ID7LC75za88M69BElGmlUwzZxk8blr2d/qu4Qw48pXo=; b=wvI7WCbi3am/0e/w6pmS7WY+6l
+	E5g9aXzRiF0m+m5PqkasUOf2S6omcA3pNyYGhqF+sUND7gNKRzvFR8ohilhLqW79QSDajilB7oDSA
+	60a0VoAkxLcWuOu0QOu/U6w8qCuRfOItvl1hkRlXUztb9yFJJ7bhJ/2ahzErHdVIAJW+Tzdm1+ZaO
+	LalHOXA4YxhhoQ07GEynU25My4aRKb5xz+MM0caOlYK43ajdBVq58gLuts6cTQasb7GkUE/tD2Sw/
+	x9rxFk7KjcbBSMUOIdEQpvpVM1UqYWJOvv0dAOKxnvaccBZtluPcKnrehqY2AgAFrumGKtNnJU+GO
+	2VKBv6Yw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOG0X-00000002pUi-3aMh;
-	Tue, 03 Nov 2026 15:01:05 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xOG0a-00000002pWt-3tio;
+	Tue, 03 Nov 2026 15:01:08 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOG0W-00000002pTp-0kzV
+	id 1xOG0Z-00000002pVh-2Jh3
 	for kexec@lists.infradead.org;
-	Tue, 03 Nov 2026 15:01:04 +0000
+	Tue, 03 Nov 2026 15:01:07 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id E939244000;
-	Tue,  3 Nov 2026 15:01:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 057A91F00919;
-	Tue,  3 Nov 2026 15:01:01 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 9BB34609FC;
+	Tue,  3 Nov 2026 15:01:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE5311F00A1E;
+	Tue,  3 Nov 2026 15:01:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793718063;
-	bh=O9ttEEMk5aMI0xnyyX9rHNq+bDAQQVwO4bXVwqZk5oM=;
+	s=k20260515; t=1793718066;
+	bh=ID7LC75za88M69BElGmlUwzZxk8blr2d/qu4Qw48pXo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ZtKCljk1LUvJX7KWDQjGj4wiHw+nMT87rtLCGJRTBYFOnVKhOBYNUS58KOesO+NiT
-	 ER2HFmDawKCWeqirKD1bgeaaWLAsw7kaZahNvdMxcZ2A6tubEEU2b+KyISPnVnH3De
-	 VlS8UWmQqfvhIjxe0gW/En7sarJ3yWhvP+J+F29JCEifzwOto5rP9bGZe97qhSS6Yi
-	 xYFyCbF6HeTNA5fWxqAfDBvJNHBsNOuOBdzH4kWFRyOW2Q6tGuyciAiivU2E0CTx+4
-	 6M2yffCJdgdXWLkNu3Ruz21vUDqhU/xAJMYjVWhf2ZqkxGJXsbg8JOCIzeTSiOCTh3
-	 /uO8boCh8z46A==
-Message-ID: <sashiko-outbox-195529@kernel.org>
+	b=jajaKVz5uF5jV8KNkaRZ9jm2p4d6qjnBibcW+RdQG415ddsGl+0d3bo5j0mleaLxm
+	 RwN0oymilT3njGexXy56725ypD8aMhBv35E9z3nBKq7iYYj1uGr0z2x1vioz+IJ0zr
+	 CIMhu6ko7LsevcSiGh6ht2M3uptrpuTNi8xCLl9RYAGb2JQIB1dYpM4tY3O3Yj0v1Q
+	 i6wOkRWSaCouWbczxv6hLshYtafnWa40AAByma6d3JjyufxRbPRcUODDXJFJzDRzTt
+	 QFQvvpET6EoFeMBD9/m6afIrzXxj97ddDjVi2YA1OzWzbIgGVogylw7h1FKknnweMl
+	 qgPPLhzd74S9A==
+Message-ID: <sashiko-outbox-195530@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC 02/16] proc: add pde_pin() and pde_unpin()
+Subject: Re: [PATCH RFC 03/16] proc: make room for more entry flags
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -58,12 +58,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261102-work-procfs-core-v1-2-75df35e4f8b8@kernel.org>
+In-Reply-To: <20261102-work-procfs-core-v1-3-75df35e4f8b8@kernel.org>
 References: <20261102-work-procfs-core-v1-0-75df35e4f8b8@kernel.org>
- <20261102-work-procfs-core-v1-2-75df35e4f8b8@kernel.org>
+ <20261102-work-procfs-core-v1-3-75df35e4f8b8@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 15:01:01 +0000
+Date: Tue, 03 Nov 2026 15:01:04 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,11 +83,9 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Every call into an entry that can go away is wrapped in use_pde() and
-> unuse_pde(), and a permanent entry is called straight away. The read,
-> write, poll, ioctl, mmap and lseek methods all spell that out as the
-> same if-else. The next patches add a few more callers. So put it into
-> pde_pin() and pde_unpin() and use them everywhere.
+> ->flags of struct proc_dir_entry is a u8 and the next patches need more
+> flags than it has room for, so make it a u16. Bit 6 stays free,
+> vfs-7.5.mount takes it for PROC_ENTRY_CANT_MOUNT.
 >=20
 > No functional changes.
 >=20
@@ -97,6 +95,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102-work-procf=
-s-core-v1-0-75df35e4f8b8@kernel.org?part=3D2
+s-core-v1-0-75df35e4f8b8@kernel.org?part=3D3
 
 
