@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9F3606D2FB
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8D7606D819
 	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 14:48:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2xtPAEff;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ljtTrKrz
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=tASqvW2d;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Y7X/3tby
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=ED7DfxpP0C+3U90pEocB+hyI9bQg1Q/rMH3eRirphfo=; b=2xtPAEffK7scCt8KWb/gVikDIY
-	7OIW/ccSTreGPzBNK2roo7XUgsArNtm8yAsoa6xGF+jdCYCKBAEiHO008g+ZCjFMh4gMib7g6p6Vy
-	AMPeUPtWj/rtF4IPs5Oh8X1llAlMSE4XY/xloRuE6aBtNYKd30fByYGmbgSZV3Y82xn4O3+tU8Xr2
-	8I+TRUgBSTRiNQt3YrPHuG6vCMP+nSPCjcqtYAJ16zzxSTR0zcpB5DW6H9uush6Xwgf0CiTNPlAAl
-	1cH1sKHcmZKX1EBhc5qkOIS+DeTxlJdgSd8KdoieLxj2nQbhLRZWcfj+HXHNqEZdK4BSve5E5Qv5w
-	kwtyoITQ==;
+	bh=w2/IP9Nbbwaq1rM5X5TI+Z6uMBVhleLl4dqv4RtKuWA=; b=tASqvW2dGcTsDVTYAJql9L095l
+	veT+KBT+zNZ5JXF8OLpFHC7IZKbAvfCq6WbkcA4mMT9dwg8a3SVUUMSx4RKO5o5HDfm39XAP7N+nS
+	u8kp1+KPn0NHe3hcHerLwNqz0+Uhe3v9R/bzKIosXB3Kkwz+WnhUXosdhOVFyufDW7OK9ivvnRMTv
+	MJLFgcErAXOzSc/zWPQDFUKF/JIHXCfNhup0wWyRA/3RXOSe66c/SCrUIAYQ5s3qXtFdSprrjzfRG
+	PCdDUtuJ15YaQHMeFBRbnDL9GP4sDeGO3Zi15YTy+h+qMZ52on4aP75FnR8JGR0oBvFk7TaJtX4EQ
+	uwx4zdBw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFod-00000002lxB-48Jj;
-	Tue, 03 Nov 2026 14:48:47 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xOFoe-00000002lxW-0wYq;
+	Tue, 03 Nov 2026 14:48:48 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFoa-00000002lrz-0xIm
+	id 1xOFoU-00000002lns-2ttL
 	for kexec@lists.infradead.org;
-	Tue, 03 Nov 2026 14:48:46 +0000
+	Tue, 03 Nov 2026 14:48:43 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 9D10860616;
-	Tue,  3 Nov 2026 14:48:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E4781F000C1;
-	Tue,  3 Nov 2026 14:48:41 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 6D12040220;
+	Tue,  3 Nov 2026 14:48:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62BCD1F000C1;
+	Tue,  3 Nov 2026 14:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793717323;
-	bh=ED7DfxpP0C+3U90pEocB+hyI9bQg1Q/rMH3eRirphfo=;
+	s=k20260515; t=1793717318;
+	bh=w2/IP9Nbbwaq1rM5X5TI+Z6uMBVhleLl4dqv4RtKuWA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ljtTrKrzjwh9bmTgB/C4QRv4lPNCmDXb0oGrnMVLkXCeEPfpYMq2XwmiskAtwQlsK
-	 oR+9Ko1Pl3b/OoYpR0JTmvi3u4DF0d6V6KQt841p42E0GJwXEsp4zexEhStpCZGKot
-	 pkJLfSa1M3AMrCCthqht9MFhgLn+Yh9p8Octt6Ghr3uXvq/2JhHMONBnt+SmQKq34t
-	 I08bZ2ixHGY9RHmh/bJlC1bBT/o22sClyAftWhJVYpDvJ2AVldTnb++uYWhQYb014k
-	 kzsT0ppwzb8VRvjDyZBpKuGuVZJ8s3MbvTiItwdFL05JRwkjFnFrqSpfLfwR7+VZN8
-	 /LmgWCZM8tKSQ==
-Message-ID: <sashiko-outbox-195508@kernel.org>
+	b=Y7X/3tby5ok9JWnFEB65JWWmANthXkUjcXdb9uSdjW0JhmR9HZjv1YT00Y4DsNv+W
+	 Biuw8DvsjPcl772z7tONEXXEXtYepxE4vSjBigB6zSeMFdoUu1aYEPpOnorED4q8/6
+	 jPTA+4fCMfDW09aVM/QBTydO81RE7CgVc1Pp6JLW4SpOJYkbo9BUyN8EiUCyyjZQlp
+	 kv0bhokpcFD78wxy4BaRRF0TZr/IYs/oBfNzPTLQzgQNoJpQ9WrZvetS4oHr4FTbxa
+	 gW0WNwcqv3NgJchB8vagqoYRJIHigOkbqStPD4Hh4/ge7N18B2zIy8QT5B5D4G6wz1
+	 nY9eJEyDXdkew==
+Message-ID: <sashiko-outbox-195506@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC 36/38] selftests/proc: check that faulting sysctl
- accesses don't hold up removal
+Subject: Re: [PATCH RFC 34/38] proc: sysctl: look at the table under
+ sysctl_lock when creating an inode
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -55,18 +55,16 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Gleixner" <tglx@kernel.org>, "Al Viro" <viro@zeniv.linux.org.uk>, "Jonathan
  Corbet" <corbet@lwn.net>, "Christoph Hellwig" <hch@lst.de>, "Greg
  Kroah-Hartman" <gregkh@suse.de>, "Joel Granados" <joel.granados@kernel.org>, "Kees
- Cook" <kees@kernel.org>, "Jan Kara" <jack@suse.cz>, "Jan Kara" <jack@suse.com>, linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org, linux-mm@kvack.org, linux-usb@vger.kernel.org, samba-technical@lists.samba.org, sparclinux@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-serial@vger.kernel.org, "Takashi
- Iwai" <tiwai@suse.de>, linux-input@vger.kernel.org, linux-raid@vger.kernel.org, linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, "Chuck
- Lever" <cel@kernel.org>, tytso@mit.edu, dmitry.torokhov@gmail.com, "Petr
- Pavlu" <petr.pavlu@suse.com>, "Anna Schumaker" <anna@kernel.org>, yukuai@fygo.io, "Heiko
+ Cook" <kees@kernel.org>, "Jan Kara" <jack@suse.cz>, "Jan Kara" <jack@suse.com>, linux-s390@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, linux-pci@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-usb@vger.kernel.org, samba-technical@lists.samba.org, linux-m68k@lists.linux-m68k.org, linux-serial@vger.kernel.org, "Takashi
+ Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261102-work-procfs-bugfixes-v1-36-59422ed3e465@kernel.org>
+In-Reply-To: <20261102-work-procfs-bugfixes-v1-34-59422ed3e465@kernel.org>
 References: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
- <20261102-work-procfs-bugfixes-v1-36-59422ed3e465@kernel.org>
+ <20261102-work-procfs-bugfixes-v1-34-59422ed3e465@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 14:48:40 +0000
+Date: Tue, 03 Nov 2026 14:48:36 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,99 +78,31 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] selftests/proc: getdents test faults in dir_emit_dots() before e=
-ntry lookup
---
+> proc_sys_make_inode() checks under sysctl_lock that @head isn't being
+> unregistered, lets go of the lock, and then reads the mode of @table
+> and calls ->set_ownership() with @head. That's fine as long as the
+> caller holds @head in use, which keeps unregistering from getting past
+> that check. The next patch has a caller that only pins the memory of
+> @head. For that one the table, and whatever the owner of the header
+> keeps behind it, is only there for as long as nobody unregisters the
+> header, which happens under sysctl_lock. So read the mode and set the
+> ownership before letting go of the lock. The ->set_ownership()
+> callbacks only look up ids in a user namespace.
+>=20
+> No functional changes.
+>=20
+> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
-commit fc0ab3f791b6ab04b43d13e015f97882092d54fc
-Author: Christian Brauner <brauner@kernel.org>
-
-selftests/proc: check that faulting sysctl accesses don't hold up removal
-
-This commit adds a proc selftest using userfaultfd and a tun device in a new
-network namespace to verify that page faults during read(), write(), and
-getdents64() on /proc/sys do not block sysctl table unregistration.
-
-> diff --git a/tools/testing/selftests/proc/proc-remove-slow-sysctl.c b/too=
-ls/testing/selftests/proc/proc-remove-slow-sysctl.c
-> new file mode 100644
-> index 0000000000000..e1b1fd19a07ab
-> --- /dev/null
-> +++ b/tools/testing/selftests/proc/proc-remove-slow-sysctl.c
-> @@ -0,0 +1,213 @@
-
-[ ... ]
-
-> +TEST_F(proc_sys_slow, getdents)
-> +{
-> +	struct worker w =3D {
-> +		.op	=3D SYSCTL_GETDENTS,
-> +		.len	=3D BUF_PAGES * self->psz,
-> +	};
-> +
-> +	w.fd =3D open(CONF_PATH, O_RDONLY | O_DIRECTORY | O_CLOEXEC);
-> +	ASSERT_GE(w.fd, 0);
-> +	stall_and_remove(_metadata, self, &w);
-> +
-> +	/* What was looked up before the removal still arrives, then nothing. */
-> +	EXPECT_GT(w.ret, 0);
-
-[Severity: Medium]
-Does TEST_F(proc_sys_slow, getdents) in
-tools/testing/selftests/proc/proc-remove-slow-sysctl.c actually fault on a
-looked-up sysctl entry, or does it fault inside dir_emit_dots() before any
-entry is looked up?
-
-In FIXTURE_SETUP(proc_sys_slow), only the first page of self->buf is
-registered with userfaultfd. When TEST_F(proc_sys_slow, getdents) opens
-CONF_PATH, w.fd starts at file position 0 and is passed directly to
-stall_and_remove() -> work_thread() -> getdents64().
-
-In fs/proc/proc_sysctl.c:proc_sys_readdir(), dir_emit_dots() runs before
-sysctl_dir_next():
-
-fs/proc/proc_sysctl.c:proc_sys_readdir() {
-	...
-	if (!dir_emit_dots(file, ctx))
-		return 0;
-
-	if (cursor && cursor->pos =3D=3D ctx->pos) {
-		err =3D sysctl_dir_next(ctl_dir, &d, cursor->name, cursor->len);
-	} else {
-		loff_t pos =3D 2;
-
-		err =3D sysctl_dir_next(ctl_dir, &d, NULL, 0);
-	...
-}
-
-Because ctx->pos is 0, dir_emit_dots() writes "." at the start of self->buf
-and triggers the single userfaultfd page fault before sysctl_dir_next() is
-called and while d.head is still NULL.
-
-While work_thread() is sleeping in dir_emit_dots(), stall_and_remove() clos=
-es
-self->tun (which unregisters CONF_PATH and marks ctl_dir->header as
-unregistering) and resolves the fault on the first page with UFFDIO_ZEROPAG=
-E.
-When work_thread() resumes, dir_emit_dots() finishes emitting "." and "..",
-sysctl_dir_next() immediately returns -ENOENT, and getdents64() returns the
-48 bytes from the dot entries without ever entering the entry-emission loop.
-
-Should TEST_F(proc_sys_slow, getdents) advance w.fd past "." and ".." first
-(for example with lseek(w.fd, 2, SEEK_SET)) before calling stall_and_remove=
-()
-so the fault occurs in dir_emit() after sysctl_dir_next() and
-proc_sys_fill_dirent() have looked up an entry?
+Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102-work-procf=
-s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D36
+s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D34
+
 
