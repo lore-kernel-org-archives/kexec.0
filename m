@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6745F60A262D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A660F60A5BD0
 	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 14:48:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=xCeQN3Ek;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZLM25BCG
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=k8Obq5Eh;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NtpigpjF
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,39 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Jt8oSnDtjWT9Rc1lRRQoEdIpZQuLDAxwiZiNGREGvEU=; b=xCeQN3EkJgkNmjvDuszKYvV9jc
-	Jfdkcmc2s/bKWvVykLzFDHpvnI2RdyZAZ0O4qL10NRkuLAsFatDcn2Or5FLg/EnQijc/3m5ypwMd2
-	DBHtuIsmd4PO/rWYbnyWl8a7IJuPupzdMn2L+c+cGVHBv5WObeHsMqButh+TiJ1gN3HyXbCRNvAQn
-	jErMCKDED2tA63oQ73Tsxhmv5neqN+XWuffVTMx98iw4Zgjfc2EnemPZT5KtpaNDUIIDcWOpVr2bR
-	VmCsvZrttYtXwO5OSvNS4tgC18W+nAh65nfw5w8ujOOi3B11p8iJw4tqGrL4j3b5lrDlFUzlpFATK
-	rWXYGxdg==;
+	bh=Ooj3Pi0SRErCEL8duAq8trKUrdQD3CC9mA+kTthUPow=; b=k8Obq5Eh+sK5b93vQHzTL+kVZm
+	vPMJVaQYwpr1lGtWtwZaNHsFBnigVq5W45uCr04ailDMKDN0O7p9sRLOLi0dEeTv9mBrIp5UKGymy
+	RXy1L+YHGrfRmjwK+yOeLlF48vk3mS/L9FcnYru/+0RNoXivI12+H+C1G4iGHjBpTDM38+C/TpZa1
+	xbPSaU3TIbVguEHVZjqY3glvQ0Ua2m2aInQS84YgKUy4Q0JJvc3woWY7s3Nzb47DZoU4JD1cLmLL3
+	8ZLHB2G8y3uec9kogwoqsQ8g8Pn2SQzcvVJZT4aWdJsOaH6EGPs4OI33SR3+0Yfx3f6cWS3wnLw+0
+	oZQjCX/w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFo1-00000002lAe-0Pt5;
+	id 1xOFo1-00000002lB2-1FYh;
 	Tue, 03 Nov 2026 14:48:09 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFnu-00000002l0P-2yZe
+	id 1xOFny-00000002l7B-2FPA
 	for kexec@lists.infradead.org;
-	Tue, 03 Nov 2026 14:48:02 +0000
+	Tue, 03 Nov 2026 14:48:06 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 1D69B60626;
-	Tue,  3 Nov 2026 14:48:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D27A1F00919;
-	Tue,  3 Nov 2026 14:48:00 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id F1122608F7;
+	Tue,  3 Nov 2026 14:48:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B0B41F00919;
+	Tue,  3 Nov 2026 14:48:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793717281;
-	bh=Jt8oSnDtjWT9Rc1lRRQoEdIpZQuLDAxwiZiNGREGvEU=;
+	s=k20260515; t=1793717285;
+	bh=Ooj3Pi0SRErCEL8duAq8trKUrdQD3CC9mA+kTthUPow=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ZLM25BCGsWNuNmJ/K9N1vryFmClM5QGd+w1e7Y/oABSSzjVbQNzdV0AlPqiqT/BZz
-	 gVjtej5uWjivTFNRb8niUA/AaCtVvzYTNAGV9gc6Mg8Q73DILuzBagqZP0YjlkS4ok
-	 8a5PyM62d8H3SaSHls5JF7e6qN38DCKSnLe90TyyDShwSeDWLcnDwqx5NCFzJREoSZ
-	 fYkFOlYBmIxCnw6DQBk3StfjM1WgHAjuKa+F5YHphYcUyb5by0bUB2nqkyvRC6EwmM
-	 mLR9qu9/cElVYgf0F7Xq0FERhwAIiwGHNA/5lHothanOlSg0abydegRnPFqWsonMYV
-	 SucZjZpZ0qt0Q==
-Message-ID: <sashiko-outbox-195489@kernel.org>
+	b=NtpigpjF9sxyzNlDIMr/kIauC0vBupDN5MuLmfVxwkf400sU8+++mUwlL1pvEUk4U
+	 YdcMZMXDZjtqhHUcqJyV4raQjqK1SeIDUy2RBvl89itIx4icaaYqEgmEXXRaLQYMmb
+	 jOP6Sdj3Y7zqWtxapxGQS1jXb4qxnOuvLYeJlGosFoofGNNwZrCIWMafCDB7JbNkBZ
+	 Qz5Sf+jjdXOMa08tCYoT0JUtuZBq02Ez0HXq8fnSCQlQPns2Bix1SoLU4K5sqpsc2i
+	 MQ5+a/FFu5rN5Hx0DeoKCx1MVxYil+GjRzwCVieeWb+tUiU4ff5gb8eX+apVlRxCYH
+	 86U+GeLfMsa6A==
+Message-ID: <sashiko-outbox-195491@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC 17/38] net: pktgen: reject device names with a '/'
+Subject: Re: [PATCH RFC 19/38] proc: resume readdir after the last name it
+ returned
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -58,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261102-work-procfs-bugfixes-v1-17-59422ed3e465@kernel.org>
+In-Reply-To: <20261102-work-procfs-bugfixes-v1-19-59422ed3e465@kernel.org>
 References: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
- <20261102-work-procfs-bugfixes-v1-17-59422ed3e465@kernel.org>
+ <20261102-work-procfs-bugfixes-v1-19-59422ed3e465@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 14:47:59 +0000
+Date: Tue, 03 Nov 2026 14:48:03 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,30 +84,32 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> "add_device" takes a name like eth0@1. Only the part in front of the
-> '@' has to name a network device. The rest is free text and all of it
-> becomes the name of a file in /proc/net/pktgen, where procfs takes a
-> '/' as a directory separator. So "add_device lo@a/b" makes procfs look
-> for a directory "lo@a" that doesn't exist and warn about it. Any user
-> can do that in a network namespace of its own:
+> proc_readdir_de() counts the entries of a directory and resumes a
+> listing at the number getdents64() stopped at. The entries are sorted
+> by name, so one that is added or removed in between shifts everything
+> behind it by one. Listing /proc/net/dev_snmp6 with a buffer that holds
+> ".", ".." and "lo" and adding a device whose name sorts before "lo"
+> makes the next call return "lo" a second time. Removing one that sorted
+> before the position makes the next call skip an entry instead.
 >=20
->   name 'lo@a/b'
->   WARNING: fs/proc/generic.c:174 at __xlate_proc_name+0xb1/0xf0, CPU#3: b=
-ash/241
->   Call Trace:
->    __proc_create+0xd0/0x9b0
->    proc_create_reg+0x45/0xf0
->    proc_create_data+0x77/0xf0
->    pktgen_thread_write+0xd8d/0x1750
+> Since commit 895b4c0c79b0 ("fs/proc: fix uaf in proc_readdir_de()") an
+> entry that is removed while it is being emitted also ends the listing
+> right there. pde_subdir_next() finds nothing after an erased entry, so
+> proc_readdir_de() reports the end of the directory and the next call
+> resumes by number, skipping another entry. For /proc itself
+> proc_root_readdir() takes that as the end of the static entries and
+> moves on to the pids, so the rest of the static entries is missing.
+> And if the position is behind the last entry when a call starts
+> proc_readdir_de() returns 0, so /proc then lists no pids at all.
 >=20
-> With panic_on_warn that takes the machine down. And if "lo@a" exists
-> because somebody added a device of that name, procfs used to register
-> the new entry below that regular file, and removing "lo@a" freed both.
+> So remember the name of the last entry a call emitted in the file and
+> resume at the first entry after it, like kernfs resumes after the node
+> it stopped at. An entry that was removed while it was emitted is
+> continued after by its name as well. If the position was moved by a
+> seek in between the listing counts from the start like before.
 >=20
-> Reject names with a '/'.
->=20
-> Reported-by: Chris Mason <mason@kernel.org>
-> Fixes: e6fce5b916cd ("pktgen: multiqueue etc.")
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Fixes: 895b4c0c79b0 ("fs/proc: fix uaf in proc_readdir_de()")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -114,6 +117,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102-work-procf=
-s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D17
+s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D19
 
 
