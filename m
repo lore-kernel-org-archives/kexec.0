@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38125606EE93
-	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 14:47:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4CB606EE9F
+	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 14:47:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=FuKFz25f;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ecNUXxnh
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=fJ7yiNJ6;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hasVYka7
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=q0d4FPmWtZwKMh/sPGL0i6hRLuYL8e+WwbXcE1bGJN4=; b=FuKFz25fH3tO59EUlyMmQdV8Xn
-	6diu4K0CNUF24d8NgTY+BOWLj17UenUVzU/ya8zeOjltrxmSGJiHmVKgmhIyXGBQmg168Un/567we
-	/lTGXCVc5m8na2MlvzJNfPSCg6AvBRt7RFPQYAM2Zupg/mOQO66tlmEGH6XONhhGj4qinVD+/x2gM
-	C5x2gn3ffFbm4HdG1lN5e2NTBQ6N3kxqnLZgpaiG6ZGJ9/sBGys1cAb98KuVfsxR+TURYhAcB+7BN
-	CZuT21MINNneqgvqqG9dw6yrhJdsQ5XdriKQZYKYtzoUIhR7qFsevahlDgcjTomN4pdd94E2AHdZT
-	RbREoP4Q==;
+	bh=N05eG3DcsrZpQfqjL5D91LwnvEOvTP0/ov6vkT4Pvcs=; b=fJ7yiNJ6PUjANcvHvz93utK16F
+	u6SUhi2XHk5wLqgMFatVWkO/nABNhOfL2HoJ6NJZlKfAFEeRY+nUkZZ0TzId8gIaKyFwpi0Sfuxr7
+	Y+fA93tmR/t/Cg1y22VLdPwpgeHMcLjgtNS+0LoZn4fDDONmfO32NtHy0RF6a9TizZ2Kg6LZZ+PCi
+	tg8cG8pSoBhLPANQBrUCMnAd0+M1vZ1L78OUxC/kunw+/j3ffFpt9OwORAMBWL5xlkBBVBRNKCM0S
+	N7SzzPHIEIjPNyrpAxJdC4JscHPuMDUbj1tcTpe8av8/+2qp463aHl7u3P8AyxTO9vBOybhtIkI/+
+	wU0n3H0g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFnW-00000002kfF-3eyZ;
-	Tue, 03 Nov 2026 14:47:38 +0000
+	id 1xOFnZ-00000002kh4-3yFl;
+	Tue, 03 Nov 2026 14:47:41 +0000
 Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFnT-00000002kcw-3Kzx
+	id 1xOFnV-00000002ke6-43rP
 	for kexec@lists.infradead.org;
 	Tue, 03 Nov 2026 14:47:37 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 8C2E0417D7;
+	by sea.source.kernel.org (Postfix) with ESMTP id AFC7E4095E;
+	Tue,  3 Nov 2026 14:47:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E80461F00A1A;
 	Tue,  3 Nov 2026 14:47:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E75901F00A16;
-	Tue,  3 Nov 2026 14:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793717255;
-	bh=q0d4FPmWtZwKMh/sPGL0i6hRLuYL8e+WwbXcE1bGJN4=;
+	s=k20260515; t=1793717257;
+	bh=N05eG3DcsrZpQfqjL5D91LwnvEOvTP0/ov6vkT4Pvcs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ecNUXxnh2OcVVvSa0U3huTG0L9O+PzIB1xuXCxIUp/GZPPPzipCpRc1/qlsk4J6CA
-	 x7U8X9eMczAWPO2ZaCpsl6YNtO0NoBu0+DXnA39JSuS9XY9AjGBFyXlc/Ccq4RTQY0
-	 UAugm1HYHytJJ48gGhh5Ikw7HuDNMAn11k6igesT8J9xgHn79oAIaLwhkpwX1VrdQQ
-	 +5bvleOIuzZz7sQeEwq2Hki4vo4gTrOnLMNutAIHZebuy2qBXQktzKVc8aWpJCw5wT
-	 EMd2yrUC+CDD8BIHuYrdGWQwA/PwlqJVUVRxCdpabP9PdTkesHJyvmQoHa6OBE4VbX
-	 e+c9Js8H66prA==
-Message-ID: <sashiko-outbox-195476@kernel.org>
+	b=hasVYka7WfTQX4gVG72LHVrtfNEhVp4P8ZtdcWyH+LgHzqiGmI0IYbQHO1iwq9m07
+	 y/1lwfnTHWCCY+cbAgh9hskIZQ97rVMlqM95iGbxPIOe3f8RS9bNGt+mxw9ntpVqb/
+	 scjaMJLEVTqoyjO6TjfG7nqX7032JBfqmizKNDbPX8HDDI6FUj87MgRMBXyr8hd/G6
+	 o/Ht1P5w/7ACphg2RTZAjkTSNTX/ebWs2gke1l0yWrd0iIR+fNLltdhYI899csOJwZ
+	 1y9qK6xl8eu6MrQZdcUR4uzY+8RNuZ/DmBvaIF0iaqRFYBY29TqHfRB0P45MNfIHFj
+	 usD+mtvrE3OkA==
+Message-ID: <sashiko-outbox-195477@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC 04/38] s390/dasd: don't look in front of the buffer
- on an empty write
+Subject: Re: [PATCH RFC 05/38] platform/x86: toshiba_acpi: reject malformed
+ brightness and fan writes
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261102-work-procfs-bugfixes-v1-4-59422ed3e465@kernel.org>
+In-Reply-To: <20261102-work-procfs-bugfixes-v1-5-59422ed3e465@kernel.org>
 References: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
- <20261102-work-procfs-bugfixes-v1-4-59422ed3e465@kernel.org>
+ <20261102-work-procfs-bugfixes-v1-5-59422ed3e465@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 14:47:33 +0000
+Date: Tue, 03 Nov 2026 14:47:35 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,11 +84,18 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> dasd_get_user_string() strips a trailing newline by looking at the last
-> byte that was written. For an empty write that's the byte in front of
-> the buffer it just allocated. Only look if something was written.
+> When lcd_proc_write() and fan_proc_write() were refactored their checks
+> were inverted but the && stayed. They only fail if sscanf() didn't
+> parse anything and the value is out of range at the same time, and for
+> the brightness value < 0 && value > levels can't be true at all. So an
+> out of range brightness or fan setting is passed on to the hardware,
+> and so is the uninitialized value if nothing could be parsed.
 >=20
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Restore the checks as they were before the refactoring.
+>=20
+> Fixes: e1a949c1b988 ("toshiba_acpi: Refactor *{get, set} functions return=
+ value")
+> Fixes: 3e07e5baa2af ("toshiba_acpi: Add set_fan_status function")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -96,6 +103,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102-work-procf=
-s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D4
+s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D5
 
 
