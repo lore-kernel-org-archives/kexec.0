@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A70960A2617
-	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 14:48:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08436606EE80
+	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 14:48:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=NSDDf+qS;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BhIDX50f
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Bi9FAhbg;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HcJ+JRqm
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=VXMUtsHfQTM8ehBaoiCzItOpo0wlFMHyP4KpaoP+TJw=; b=NSDDf+qSptRWOpMBGk7amtEe4S
-	WlsX0Veh3jb6RF/FG+Ch7/cv7PdQMyQD7aCFOUTGE37nMb9/UNp2uLWMCet0Siq6lnORLJC0YrshA
-	gncF2br7U1ZQekj44unoO/CLpGTlWNwq3O35k0ZM9znnz+qDm8MiCRN7Fflwcm7FmAOz77yFoQcqV
-	NUBd+mjMPU0gs10OFlqWrs3Ozh02xvywYtcEmjrsEufWT/PmEV9OOYCdGzgHzXzOvZy2/nVd7y6XZ
-	oBiqzTHjub4WnSuyv6ZiWEuT3AowQY0T559kCN6Ie5rEnkISKBVGBTL5pWt2XPu0z3ZdM7f+xh9A3
-	VFGgEYbw==;
+	bh=QRmT1dursV1/AbPfdQawgpWX1OE+hs1OgQGe5g88v1g=; b=Bi9FAhbgOmHJk9MPth3/qHMfbe
+	G0pVwwykaGloi6bUU7UXqQOkiiK0ZEKRZNYBOQ6owCt0SD5UIXCZGHCCuO6KACl5wakutKf0gprvt
+	cucgzNRPnXRQ+mvqm7mru3310QtgA0cLx67yOX5B3aRtdOqyM+QvyUvrhRKFp8in3GIolkqfzDI2Q
+	MsB1CpU2CDKCEop6oIU8G2sUuBfC8HXk1Altcyg8OUT3eFMS/LtKPnTuy4KXCCixkmtwzbXLpjcjJ
+	TT8aLdkrno/AytugNfia8VDEeaJY6MjWhglhqrCMaE+1SknWkId2xLxonBkAvC/yKt3PpkxdbECuJ
+	NS3iGzQA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFnt-00000002kz7-0OAz;
-	Tue, 03 Nov 2026 14:48:01 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xOFnv-00000002l2e-2VyB;
+	Tue, 03 Nov 2026 14:48:03 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOFnm-00000002ktN-0NAZ
+	id 1xOFnp-00000002kwM-48BJ
 	for kexec@lists.infradead.org;
-	Tue, 03 Nov 2026 14:47:54 +0000
+	Tue, 03 Nov 2026 14:47:58 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 8495660258;
-	Tue,  3 Nov 2026 14:47:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB8581F00A1A;
-	Tue,  3 Nov 2026 14:47:51 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id B904640712;
+	Tue,  3 Nov 2026 14:47:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27D401F00A02;
+	Tue,  3 Nov 2026 14:47:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793717273;
-	bh=VXMUtsHfQTM8ehBaoiCzItOpo0wlFMHyP4KpaoP+TJw=;
+	s=k20260515; t=1793717277;
+	bh=QRmT1dursV1/AbPfdQawgpWX1OE+hs1OgQGe5g88v1g=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=BhIDX50fZD3GGyEzS/ikmaR8zeMkB5OGeMIgm/tbgOhzPWrBZdWsC+tbrpR28AdYr
-	 y3gIAbA9tORdQwifVX097HrJTcxhg5Ti4Kg4bqcyLx0KxPC3OdQlaAqq+EsL5DzLEy
-	 y9ezT0t+gH5B6gfU6yBTJLut1mMFzWSgEkEMq984oe69utPAyOufz+c5qMd0DsJKJi
-	 4chNM7WJ/pwpiLiKwaDsdXRchxMXpLXv3rTqFY5iprInrROKqH4oGU7pwml/nW6r5m
-	 XaOnNRmGJOyEf+eVhyWOUyj2w45ZXuucOBUsC1wdU5xDQHfLFXoZkbzuNGGkUHo7vl
-	 BkrM8qAOk4TnQ==
-Message-ID: <sashiko-outbox-195485@kernel.org>
+	b=HcJ+JRqmYEiMrWdia1VF/h68+hME8LTqCzLLleewidrGGkT23nLAVx72jBXXGRnJH
+	 deW5WlbJslcCL70kgQE/USZ9Pn2koDB3lf5HMQ+VPVhK2NhZBxXINU1jpYDX7AyCsb
+	 zx7C3NFyw/w3WUfgqJDpNiOEzMi7KG9GL3w92NOCLX5CEQpNgp8ax9OyQnfnVIOmqd
+	 91xXbQvhxesjbGUDIpGvSg5XYWfnpqWG13blZJqrRvr8fqcc4OOCQ4glPo9tDaoFWV
+	 HSEf1t6mQ2mTtiA0x+I9dkOFdgeDd9SF/dvfLBNHVQRjp06VJHYOEXnI2KvV4mwZi0
+	 9BjYRzDu4BVvQ==
+Message-ID: <sashiko-outbox-195487@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC 13/38] scsi: core: NUL-terminate what is written to
- the host proc files
+Subject: Re: [PATCH RFC 15/38] ntfs3: don't warn when a huge label is
+ written
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261102-work-procfs-bugfixes-v1-13-59422ed3e465@kernel.org>
+In-Reply-To: <20261102-work-procfs-bugfixes-v1-15-59422ed3e465@kernel.org>
 References: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
- <20261102-work-procfs-bugfixes-v1-13-59422ed3e465@kernel.org>
+ <20261102-work-procfs-bugfixes-v1-15-59422ed3e465@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 14:47:51 +0000
+Date: Tue, 03 Nov 2026 14:47:55 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,13 +84,14 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> proc_scsi_host_write() copies what is written into a page and hands it
-> to ->write_info() without terminating it. ppa and imm parse it with
-> strncmp() and simple_strtoul(), which read on past what was written into
-> whatever the page held before. Terminate the copy. A write is at most
-> PROC_BLOCK_SIZE bytes, so the page always has room for that.
+> ntfs3_label_write() allocates as many bytes as are written with plain
+> kmalloc(). A write that is larger than what kmalloc() can hand out then
+> trips the page allocator's warning, which panics a panic_on_warn kernel.
+> Use memdup_user(), which fails such an allocation quietly with -ENOMEM
+> like before.
 >=20
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Fixes: 7832e123490a ("fs/ntfs3: Add support /proc/fs/ntfs3/<dev>/volinfo =
+and /proc/fs/ntfs3/<dev>/label")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -98,6 +99,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102-work-procf=
-s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D13
+s-bugfixes-v1-0-59422ed3e465@kernel.org?part=3D15
 
 
