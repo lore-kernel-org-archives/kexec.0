@@ -2,83 +2,123 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D5D606D82C
-	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 16:26:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3111606A326
+	for <kexec@archiver.kernel.org>; Tue,  3 Nov 2026 16:27:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=UhnRAksu;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HyDteQG2
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ttAwfA+A;
+	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=GmZ7NBHh
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
+	:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=88x5nWCU4/5DUnm5J75+/44oJREtwTCj+m3lJcaJoNE=; b=UhnRAksuwQhuk+vZBDZXbhkqUZ
-	r9P7OuNlSlJWbLnxKDjHOxyMDXujO+ccikyJI7E2mnkLzOtrCun1X76BuIyu8P9oiNUYb/BS6T+v/
-	WEwE1zt0/Ftm4Ng9pDfcg4Gdl+xVuyXQBXTU1d+fjwAzs1XYvDXlQcA64F7xi5TwFe4xxb/7TLdPg
-	o7xfBIz3tnP41eadw+16PBLduS2Jml9adUHIgxFFSlkaF+kU0wj2F8WkLPwL+ebaBF0pBFieOz66A
-	FOurmND58QksNOklHdPg1YQm0O53bdxIAs86KbDBMN3Ymjs8IR5jGWBd+FrEdjAC782Lxb/YOlNo+
-	f4HeqGDA==;
+	bh=2/zq8nI54thIjHywswAXZQZjDPR3ylqQd0E9IUHe/2Q=; b=ttAwfA+A2dLOzeaK6kqRPhiWTH
+	hfUzCYF339UTPFVRNyezeV+2rsijCGls/HTs0iClfes//kXwuDbSeKrQ47TOtzS0iZS4MyEYQvZeA
+	dNzDUcSLBVP+sqQGqYjQrg862lRv3ncJ3TzpuxIs0AehqoVbajD3b8qNnV/Uu5HuNByZacyWQFs6u
+	zmZtZjedrEKpje0lkskup+ARAj3R7ta8nVZyyvlJrf+DeY+BKb7xGS5SjXHqWUXsFwt2jf/OO7Yf0
+	mvbUBJHr1CkAgIWa9gp+KBpKUV5U/32/Y94W5RZYWvMuRTIusZ6KT70pEgeuSJj6PGefeGtvJOtHo
+	Kj8Ch8VA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOHLJ-000000037DF-1sJx;
-	Tue, 03 Nov 2026 16:26:37 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xOHLq-000000037NA-30nO;
+	Tue, 03 Nov 2026 16:27:10 +0000
+Received: from mail-westcentralusazlp170100005.outbound.protection.outlook.com ([2a01:111:f403:c112::5] helo=CY7PR03CU001.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOHLI-000000037Cq-0Y7Y;
-	Tue, 03 Nov 2026 16:26:36 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id CC725404E3;
-	Tue,  3 Nov 2026 16:26:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09A721F000C1;
-	Tue,  3 Nov 2026 16:26:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793723195;
-	bh=88x5nWCU4/5DUnm5J75+/44oJREtwTCj+m3lJcaJoNE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=HyDteQG2VBDz2pwudxJvRFZ3NzuhMM1n/qoJyRpSIEa+4sIo8qfNjCKCMkx9fqPnu
-	 PTXEB3HB8c+csEYJbUqrD18YNji+Wb3P0nPR4rCDriU41qd0d35Q951xfxtaew6zqD
-	 xTRV7HQa/evoV4YEWVb3yEGxlVh8/pDAOnR650sPVOaA2QtXNMiUjYtFVGzVyuFmxJ
-	 cuqSFcaDMPcPNDAwdq/HarCHKLW8nQ/TcudxBJnTO/IQN1HpQ6LTm2xHx92xHn7YRV
-	 9GYQVIg2n29fkajQrtiWC1hueIuFYRrAfwMXbzDr3+UFxfeou5MMiBIFbN+ZYhp4th
-	 RFlMkVbcaKQDw==
-Date: Tue, 3 Nov 2026 17:26:21 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Jann Horn <jannh@google.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Chris Mason <mason@kernel.org>, Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
-	Eric Dumazet <edumazet@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jonathan Corbet <corbet@lwn.net>, Christoph Hellwig <hch@lst.de>, 
-	Greg Kroah-Hartman <gregkh@suse.de>, Joel Granados <joel.granados@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Jan Kara <jack@suse.cz>, Jan Kara <jack@suse.com>, 
-	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-s390@vger.kernel.org, 
-	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, linux-um@lists.infradead.org, linux-wireless@vger.kernel.org, 
-	Linuxppc Dev <linuxppc-dev@lists.ozlabs.org>, netdev@vger.kernel.org, ntfs3@lists.linux.dev, 
-	platform-driver-x86@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, 
-	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, netfilter-devel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, ibm-acpi-devel@lists.sourceforge.net, 
-	jfs-discussion@lists.sourceforge.net, linux-alpha@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-cifs@vger.kernel.org, linux-fbdev@vger.kernel.org, 
-	linux-hwmon@vger.kernel.org, linux-mm@kvack.org, linux-sh@vger.kernel.org, 
-	linux-usb@vger.kernel.org, samba-technical@lists.samba.org, sparclinux@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linux-doc@vger.kernel.org, linux-serial@vger.kernel.org, 
-	linux-atm-general@lists.sourceforge.net, Takashi Iwai <tiwai@suse.de>, linux-input@vger.kernel.org, 
-	linux-raid@vger.kernel.org, linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, 
-	linux-debuggers@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH RFC 27/38] sunrpc: make queue_wait a global wait queue
- again
-Message-ID: <20261103-lufttemperatur-absondern-zweifach-31d272ad55ab@brauner>
-References: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
- <20261102-work-procfs-bugfixes-v1-27-59422ed3e465@kernel.org>
- <16f91f93-16b4-49b1-b7fa-cec69759c349@app.fastmail.com>
+	id 1xOHLo-000000037Ly-0jWL
+	for kexec@lists.infradead.org;
+	Tue, 03 Nov 2026 16:27:09 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ndYS55akVlGbGtlPhYdP0cnL4kh9L6uXiYdxhFKWoKehtjJIP/VJvTqHt0uOXJtka2xQeUCqKDlNCCRnE3GM3yi2B2NTl3L+JDhY36EgXI6XniSDNKf+3gmo9IbIyKZBF7ReL3WL/yMV/2dnjhlCRJsKUaghtzSTQ3eg3hBkw+3im8yHz707wv6hfUpcrx/dQe6AWatez+dHiYdpVG3EnLRULBuSL9D24/E4uXrbQ+qkoQQu1PPpY4b5A2zLt9Ml43CLyAMk+GvqA4QjzMR7TQl0rwwxse9lMFkKCwqVbgS0m6uYoS3a1MHpIN9HlnobsQcBhRdrHLkKEeD3l3gKcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2/zq8nI54thIjHywswAXZQZjDPR3ylqQd0E9IUHe/2Q=;
+ b=vwiz8eYIPxUmxsicaLNzzF87z9tf/y1jvOfBKOOAeZeuDsJe5B9CxZKqckJwk1Nu4OHgcywXlpppty7AhGxTBaVKDA4LpWOKk3Jsg2bY8mbofgssEJBUnvM0nzJgW4s0tfUNsoUib97eIktz7fm/te2Esi6v8P7IqUQ43QLJmcLo/ICXAo7/IK2yGSc6c1ZRk8QxK5KHcybtlS6gLMTVhb0gCPuNfR0zKociUQHsuzD1PCIigVEyvH4JujGrlgAYoBJzgPLwiHr8/azmj5uWqKtGBL6bGEXBCFMRNatbcjguOHsAg0XioSI0W5V+qLHizQhEm183ufNP1d35kEHvrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2/zq8nI54thIjHywswAXZQZjDPR3ylqQd0E9IUHe/2Q=;
+ b=GmZ7NBHhZPAPr6rbrBKhtzM3LWVxuj3B0wnE9GIXAEPHhf0nvdutiGSKS5wgUQoMc9DEG948EIYAqQQuMfS4UEoQHuZWSctw9cY7z+AAyrSeHUkd4NbHwadj6p0AwB2HvhByXMJEqC5wNW3nX/WiHhnt7lSwH37dsJT3d8pP0v0=
+Received: from DS7PR03CA0157.namprd03.prod.outlook.com (2603:10b6:5:3b2::12)
+ by DS5PR12MB238689.namprd12.prod.outlook.com (2603:10b6:8:47e::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.8; Tue, 3 Nov 2026
+ 16:25:15 +0000
+Received: from BL2PEPF000352D6.namprd02.prod.outlook.com
+ (2603:10b6:5:3b2:cafe::82) by DS7PR03CA0157.outlook.office365.com
+ (2603:10b6:5:3b2::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.592.8 via Frontend Transport; Tue, 3
+ Nov 2026 16:25:15 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
+ is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ BL2PEPF000352D6.mail.protection.outlook.com (10.167.254.6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.592.5 via Frontend Transport; Tue, 3 Nov 2026 16:25:15 +0000
+Received: from Satlexmb09.amd.com (10.181.42.218) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.53; Tue, 3 Nov
+ 2026 10:25:03 -0600
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb09.amd.com
+ (10.181.42.218) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.53; Tue, 3 Nov
+ 2026 10:25:03 -0600
+Received: from xhdradheys41.xilinx.com (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.53 via Frontend
+ Transport; Tue, 3 Nov 2026 10:24:57 -0600
+From: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+To: <robh@kernel.org>, <saravanak@kernel.org>, <akpm@linux-foundation.org>,
+	<david@kernel.org>, <ljs@kernel.org>, <liam@infradead.org>,
+	<vbabka@kernel.org>, <rppt@kernel.org>, <surenb@google.com>,
+	<mhocko@suse.com>, <m.szyprowski@samsung.com>, <robin.murphy@arm.com>,
+	<baoquan.he@linux.dev>, <pasha.tatashin@soleen.com>, <pratyush@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <iommu@lists.linux.dev>, <kexec@lists.infradead.org>,
+	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+Subject: [PATCH 3/4] mm/cma: reject CMA areas that overlap the kernel image
+Date: Tue, 3 Nov 2026 21:54:28 +0530
+Message-ID: <20261103162429.2053989-4-radhey.shyam.pandey@amd.com>
+X-Mailer: git-send-email 2.44.4
+In-Reply-To: <20261103162429.2053989-1-radhey.shyam.pandey@amd.com>
+References: <20261103162429.2053989-1-radhey.shyam.pandey@amd.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <16f91f93-16b4-49b1-b7fa-cec69759c349@app.fastmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL2PEPF000352D6:EE_|DS5PR12MB238689:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1c2ebe28-7cf7-45d7-8a45-08df39c70ade
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|82310400026|36860700016|7416014|376014|23010399003|1800799024|10067099003|22082099003|18002099003|921020|56012099006|11063799006|261022075727099003|261021121427099003|261022115727099003|261102123227099003|261009223027099003;
+X-Microsoft-Antispam-Message-Info: KqPQi62F6cg5CHqtNwHl7ZDubPkM5oJnriYQ1Y5nx//8QS3LkZ9Z1zCOP8YW4vUnvVwPLSbcAs8V5elFtF8OtAVHzkwc6DpUALKoBXpc6fIyCnWUkzTr3j3hF0mibV2ZR71nds+y+5vTJxyiTBxVS3BfFxfw8bOn6L43eWAS+KoEO5YTbixTx52+nkdnrKif4MVKRIwks+oY3oGTbSk/gWGqB/eUZaCPWHRMRWyWHSJl/mJBtxnHH1GzexeW66WkBwFev4RJtUc2CL/phO/wxt1ImllvLBFsspqRl1ZsBzWnZohiwaPIl9pIBJQ2Q+nOJHhSJHYxHv7anYouhmOpwjlbV/y/kl0j6Fn271yzoWFfeta3Q8HjpSe+LA6LA9iNuBEMGpfCeVYJRXJkorpIepvdjBRstIi5zvGs9RTqM/w+SxK8X2A/MWYLDw0SvG8jL2xzBa+h+59LKFUyjuyKr3mEGoN/PC40hviPl40eQf/FZ7WGAPqCkhcHqx0nbzFVjMsZA4ByUol7Mk7I5Z8poADDuvFCmIEBgJXVj0qw3bYGGeMCcm9Q3KtWzj8CGc8Uaa00oUYcb40HrKmLsB7JYk3H9pHBpwmOT+ZyQmzS7EM7k3yzDbP4X8M9DmYN6G4LaoNlG7XZ9qnty6KAPN6xtYfdKWG121RowewQRSyKEAiVpc1nBHlo//mEhcWMuP0eCW+uNqm2nyeSN2eViYdOg2PYo0GDXikuZOuG4gkiaVsDaAz++2jMfPUA56+oZpuS
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(7416014)(376014)(23010399003)(1800799024)(10067099003)(22082099003)(18002099003)(921020)(56012099006)(11063799006)(261022075727099003)(261021121427099003)(261022115727099003)(261102123227099003)(261009223027099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: Y08yYOoCWs19fuyoPFv9dureeY+xsdyM3gkI56KYEgqzjUjcWoXdOjpqPOeQRknLWCwdHQTtHGTIA4GvJJlyy/vXP3If9ym6ZQ00FgBS1dpFJLjKvwNX63cJEQ034fee89rWFCuZHRxiVViyUGG7ouUD4yyLg3S0BmGpM8ofpzTcKrQmoL6bAZ9Fowjrysbkqi+Oa9RyudDbaIfvwew4FDHZ2LGFKAOqBpKXRyF846zHaky54a5sNzw+ko+HOHhzV/7o4ZGdDsLywSt5qvXsy3vUq9C5X55lSHTo+sCq79P+VtYoY9xlbmxaAb36+8KA0lqVx/mWqQGl7CbrRcmqZG+majukTfNb6oX/un4FbQtmmnpih02PxbnCIj7tlpbuEQDTdeqQpOldE1E8iNLauXtxwsGZwVJXcM2rTO1d9JPb/XtdntfAA9oKauiD5eR1
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2026 16:25:15.3088
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1c2ebe28-7cf7-45d7-8a45-08df39c70ade
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BL2PEPF000352D6.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PR12MB238689
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261103_082708_215288_9B8F1820 
+X-CRM114-Status: GOOD (  14.25  )
+X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,76 +129,82 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Mon, Nov 02, 2026 at 10:12:12AM -0500, Chuck Lever wrote:
-> 
-> 
-> On Mon, Nov 2, 2026, at 9:21 AM, Christian Brauner wrote:
-> > Since commit 552d0e17ea04 ("sunrpc: convert queue_wait from global to
-> > per-cache-detail waitqueue") poll() and epoll queue their waiters for a
-> > channel file on the queue_wait head in struct cache_detail. But the
-> > cache_detail can be freed while its channel file is still open and
-> > waited on.
-> >
-> > The procfs channel files of a network namespace are removed when the
-> > namespace goes away. Removing a procfs file waits for the callers that
-> > are in one of its methods right now and then calls ->release on every
-> > file that is still open (cf. close_pdeo()). The waiters that poll() and
-> > epoll left on the head stay queued until their file is really closed.
-> > So:
-> >
-> >   sunrpc_exit_net()
-> >   -> ip_map_cache_destroy()
-> >      -> cache_unregister_net()
-> >         -> remove_cache_proc_entries()
-> >            -> proc_remove()      // ->release, the waiters stay queued
-> >      -> cache_destroy_net()      // kfree(cd)
-> >
-> > and when poll() returns remove_wait_queue() writes to the freed
-> > cache_detail:
-> >
-> >   BUG: KASAN: slab-use-after-free in _raw_spin_lock_irqsave+0x4b/0xa0
-> >   Read of size 1 at addr ff110001131bb570 by task sunrpc-poll-uaf/242
-> >   Call Trace:
-> >    remove_wait_queue+0x22/0x1c0
-> >    poll_freewait+0xc2/0x230
-> >    do_sys_poll+0x9ba/0xd50
-> >    __x64_sys_poll+0x165/0x470
-> >   Freed by task 12:
-> >    kfree+0x267/0x620
-> >    sunrpc_exit_net+0x34/0x80
-> >    ops_undo_list+0x271/0x8d0
-> >    cleanup_net+0x3f3/0x860
-> >
-> > Closing an epoll instance that watches the file gets there through
-> > ep_unregister_pollwait() instead.
-> >
-> > The channel files of a network namespace belong to the root of its
-> > user namespace and cache_open() doesn't check for a capability. So an
-> > unprivileged user can open the channel file of a namespace of its own
-> > from the outside, poll it and let the namespace die.
-> >
-> > Go back to a single static wait queue that never goes away. A wakeup
-> > for one cache wakes the waiters of all caches again but cache_poll()
-> > reports per cache_detail so that's just a spurious wakeup. procfs
-> > should really own the wait queue of its files like kernfs does but
-> > that's nothing for stable.
-> >
-> > Reported-by: Chris Mason <mason@kernel.org>
-> > Fixes: 552d0e17ea04 ("sunrpc: convert queue_wait from global to 
-> > per-cache-detail waitqueue")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
-> 
-> Acked-by: Chuck Lever <cel@kernel.org>
+cma_init_reserved_mem() takes a base chosen by its caller and only requires
+that the range already be reserved, so an overlap with the kernel image is
+indistinguishable from the normal case. cma_activate_area() then clears
+PageReserved on those pages and frees them into MIGRATE_CMA, overriding the
+memblock_reserve() of [_text, _end), so live kernel text reaches userspace.
+kexec reached this until the fix this series builds on; a device tree
+placing a shared-dma-pool over where the bootloader loaded the kernel still
+can. Reject the overlap rather than let such a caller corrupt the kernel.
 
-Fwiw, I have a patch series on top of this that makes procfs own the
-waitqueue and then this whole UAF issues goes away structurally and you
-get to elide that global thing here.
+Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+---
+Changes since RFC:
+- Drop Pratyush reviewed-by tag as there were few changes.
+- Trim the commit description.
+- Drop the redundant comment as suggested by Mike.
+- cma_overlaps_kernel_image() is kept as helpers in asm-generic/sections.h
+  are virtual-address helpers.
+---
+ mm/cma.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/mm/cma.c b/mm/cma.c
+index 9c53b2b70dc8..3231a53161cd 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -31,6 +31,8 @@
+ #include <linux/kmemleak.h>
+ #include <trace/events/cma.h>
+ 
++#include <asm/sections.h>
++
+ #include "internal.h"
+ #include "cma.h"
+ #include "mm_init.h"
+@@ -68,6 +70,16 @@ bool cma_has_dynamic_base(const struct cma *cma)
+ 	return test_bit(CMA_DYNAMIC_BASE, &cma->flags);
+ }
+ 
++static bool cma_overlaps_kernel_image(phys_addr_t base, phys_addr_t size)
++{
++	phys_addr_t end;
++
++	if (check_add_overflow(base, size, &end))
++		return true;
++
++	return base < __pa_symbol(_end) && __pa_symbol(_text) < end;
++}
++
+ static unsigned long cma_bitmap_aligned_mask(const struct cma *cma,
+ 					     unsigned int align_order)
+ {
+@@ -295,6 +307,15 @@ int __init cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
+ 	if (!size || !memblock_is_region_reserved(base, size))
+ 		return -EINVAL;
+ 
++	if (cma_overlaps_kernel_image(base, size)) {
++		phys_addr_t text = __pa_symbol(_text);
++		phys_addr_t end = __pa_symbol(_end);
++
++		pr_err("area %s (%pa, size %pa) overlaps kernel image [%pa-%pa]\n",
++		       name ?: "(unnamed)", &base, &size, &text, &end);
++		return -EBUSY;
++	}
++
+ 	/*
+ 	 * CMA uses CMA_MIN_ALIGNMENT_BYTES as alignment requirement which
+ 	 * needs pageblock_order to be initialized. Let's enforce it.
+-- 
+2.44.4
+
 
