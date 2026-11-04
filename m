@@ -2,65 +2,63 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040DC606A32D
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 13:40:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AABC606A31B
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 13:42:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=EGWa82nl;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mIrbZaDl
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2VZjzYTH;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=m1/TBuwl
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Unsubscribe-Post:List-Owner;
-	bh=EZAUQMhN3rMe7FCapRNk/7rrtwkPUHUoi09OPENdnHg=; b=EGWa82nlxNOeZ4gxVLu14nsDHc
-	lsWUlsn4TDcAD6sgmdHqM3CFWcXTvEjGQ8hgsbHgzPhesKzOtLSAoJmU4ZGxnh3+fCZ+INbOgbUbQ
-	sJWbFk+alCfSra3QE7GW7L970197RMHcqkhbiSCGyu9aQvFo/4ZZSy5v3/+7AW17VmbOBnaxPiyIk
-	ZRDXxbBoZv5t59n+jD5lDojzyka4vmQNsXp1S+DLmHIOXgOOlHY2NAZpQ8Xe4nQxQOsV5sL2KI0sj
-	ipI1uaif0NqD6jrQqsX/nhShNf1BVkOdEJxFAfUoJywR4oWPx64tOF6gwBkI3hw+BQde2TtWS31Y7
-	6e7YWNdw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=4IqEotgPDT1hegyi7/J8DGunAd5SP02PqdK9DhD9Exc=; b=2VZjzYTHXVW5y6
+	KUUPC83LBJmjUechurarjAXVJrkSq1Yb0+HXAOLjSl6//t6wjfQ9FD8gaTRRIfOoSTbf8iKeJZhbD
+	AGd0vMEUVZmv2IzbQs+zlDEVGlKj9wn9qZripoODOtKzuSA75XYReBj4peSVFfMPLR9nQnEDBbJ3H
+	A5JRZtVM5ftaftrDeXlEdDeAqteApY+giph+6CT/94TbUakHGV3eBGnB7++1tWXQefb67T5UqAv0F
+	r6351mtzD6xhM81dgUQa6k0nZntw5RfUlwGVNwrGn9QOTf4q7xV0OKeoNKWXIsYk+rIoFY9Dz994a
+	gIgmobqL9jJctbt38wsA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xObEP-00000005V9w-2vP8;
-	Wed, 04 Nov 2026 13:40:49 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xObFa-00000005VMh-0sj5;
+	Wed, 04 Nov 2026 13:42:02 +0000
+Received: from out30-97.freemail.mail.aliyun.com ([115.124.30.97])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xObEO-00000005V9q-4Bep
+	id 1xObFX-00000005VLC-11ZO
 	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 13:40:49 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 87C9F41A33;
-	Wed,  4 Nov 2026 13:40:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 263761F000C1;
-	Wed,  4 Nov 2026 13:40:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793799648;
-	bh=EZAUQMhN3rMe7FCapRNk/7rrtwkPUHUoi09OPENdnHg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=mIrbZaDlsoXr337Dd1aQvpZtyvWkUbui9aNsdGO39rnOez9/LC9vHEkL6oLEMmOjM
-	 5ZS/EHVquAEEDjPxCrKhN3kshP7TS3JrO7w5Z0n0AQEv2MP6imfd5lntHJRp9EEZzU
-	 AO1b/xidJ4xZJiAUB8EK5i2yqdQFoIbjV2rlSzG1AWl8xYdHcII+CrKkb2amyd2Tgn
-	 siqgy24+C2iDDSdGuvES7WbPh2sAvX4J3wa6ToVDiYzL70KuyKjQ1uvZiShbArseLU
-	 OZvXeGJ81KpgtvCcDjm84M+yrDFCeHPphdgMb/Wl3mb7UkVZo1aN5xTbwtXqV3KT5q
-	 Uk3jtazUmpszg==
-Date: Wed, 4 Nov 2026 15:40:42 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>,
-	David Matlack <dmatlack@google.com>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v10 00/13] PCI: liveupdate: PCI core support for Live
- Update
-Message-ID: <aus12iOdLyiIiywZ@kernel.org>
-References: <20261013162529.1928093-1-dmatlack@google.com>
- <179373348545.623992.16522569527665218421.b4-ty@b4>
+	Wed, 04 Nov 2026 13:42:00 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1793799715; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=4IqEotgPDT1hegyi7/J8DGunAd5SP02PqdK9DhD9Exc=;
+	b=m1/TBuwluJUKU9g0aPAqQr0SgawskW5qRgQsyijNC5RnRFR+8C4FGgYE8LXPk1udR8IKKA3paslVHFCz7DNBwpxBKmkOt/6WhOiWl8HsvzqQENxJR8AmmJxOj+aaU3ZSMY4ZDMfbMzKTm2RnuyfUn3ZrQQfIxHUA075lLESdo5c=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R711e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0XE5r9Xj_1793799708;
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0XE5r9Xj_1793799708 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 04 Nov 2026 21:41:54 +0800
+From: Chen Pei <cp0613@linux.alibaba.com>
+To: pratyush@kernel.org
+Cc: graf@amazon.com,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	pasha.tatashin@soleen.com,
+	rppt@kernel.org
+Subject: Re: [PATCH] kho: Skip zero-sized bootmem areas
+Date: Wed,  4 Nov 2026 21:39:56 +0800
+Message-ID: <20261104134147.1695-1-cp0613@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <2vxz8q38lqp4.fsf@kernel.org>
+References: <20261026131851.9942-1-cp0613@linux.alibaba.com> <2vxzld7kpmmi.fsf@kernel.org> <20261027074028.13042-1-cp0613@linux.alibaba.com> <2vxz8q38lqp4.fsf@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <179373348545.623992.16522569527665218421.b4-ty@b4>
+Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261104_054159_502332_0E10CD5A 
+X-CRM114-Status: UNSURE (   4.04  )
+X-CRM114-Notice: Please train this message.
+X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -71,40 +69,24 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Tue, Nov 03, 2026 at 02:21:10PM -0500, Pasha Tatashin wrote:
-> On Tue, 13 Oct 2026 16:25:16 +0000, David Matlack wrote:
-> > This series can be found on GitHub:
-> > 
-> >   https://github.com/dmatlack/linux/tree/liveupdate/pci/base/v10
-> > 
-> > This series introduces support in the PCI core for Live Update, enabling
-> > drivers to preserve PCI devices across a kexec-based kernel update
-> > without interrupting the device. This functionality is critical for
-> > minimizing downtime in environments where PCI devices (e.g., those
-> > assigned to VMs via VFIO) must continue operating or maintain state
-> > across a host kernel upgrade.
-> > 
-> > [...]
-> 
-> Applied, thanks!
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git/log/?h=lu-pci-preservation
- 
-And luckily we have a few weeks chase Bjorn and Alex for Acks ;-)
- 
-> Best regards,
-> -- 
-> Pasha
-> 
+> Mike sent out [0] recently which should fix this problem. Please take a
+> look at that, and see if it works for you.
 
--- 
-Sincerely yours,
-Mike.
+Yes, that covers it. The zero check sits in the one helper all three
+allocations go through, so the three cases in my other mail are all
+handled and my patch is not needed - please consider it withdrawn, there
+is no competing change from my side.
+
+Thanks for pointing me at it, and thanks Mike for picking this up.
+
+Best regards,
+Chen
 
