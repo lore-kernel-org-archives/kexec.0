@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139B4606A326
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 01:03:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193CC606A31B
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 01:03:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=BsryAWZa;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=b/3bI66V
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=QBRrGiu6;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jKNHYWtf
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,39 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=2FGlcQNvjb1qEph9MnhzIvWuZCAzG9Qp7ajKfHgUz/4=; b=BsryAWZaVVRN8uG6B00LX/r0L3
-	QLRLxkhtlw7aHTPDyXiVQbUOeDKtlEHs0FxwA7N+mH3JTJkgVR0cpOE9ayHs6xn0TFl0P8WTFxxf9
-	8gmzeMD8ouykc7M8H+apPWi0H3AjLKakeRYhe38vV2PZgIdRY0slQwLBE5E0Wy6/VWRa7Mb/WoweF
-	IsOrvaMsHnCX76PU905ddXryrr/YDLj1UHZGR8JPfuQAslKK3vitQ6Ch8kRKflhD2iiPWv2J76gLi
-	eFWpL7Eo0r0His+XcEBF83ZHBa698IOmVlQYksOuj16ETponRh49LnNfYE+imHoSQZjIbsoLQor+s
-	/EtJhtpg==;
+	bh=VjQj72weLtRUEeeA7pEXpvTgVlPTwRiBgG+W6jPCuAk=; b=QBRrGiu6k2Dsk5ilFThIYkUGCR
+	3UQzcNCf3Ezf0oyyJGkH5lNLlmA1my+apodE9UdDmROQ9PqvpoHCEfjDo5SrTaveJiCKWqRNoPV+/
+	THD+lsRWO5hEKRmzSPkWLqSOoCyX22olhSYQ1bWeMfvugiUh9fnwbPTzsp252L3MdZpYiCA0krknz
+	xEWkF6IHEsuUBbC3vN9uo7cVJIEBG/s9WIa6vUyIZer+m1hbXkE6Od/PZ0W4kvJoNr7VZRHPpmLbj
+	HQ0KAT2G/TAFYoRc6pzIvz12Za1VTkb//xB52E+t/LrHnusxV465kCls0ZXV7sXKssXsfAYqpcC1H
+	oSFLZ2gA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOPPV-000000042LV-2z43;
-	Wed, 04 Nov 2026 01:03:29 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xOPPX-000000042O1-3QHg;
+	Wed, 04 Nov 2026 01:03:31 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOPPU-000000042Jx-0nsM
+	id 1xOPPV-000000042Kx-2byR
 	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 01:03:28 +0000
+	Wed, 04 Nov 2026 01:03:29 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 952AF40598;
+	by sea.source.kernel.org (Postfix) with ESMTP id 02B7E43995;
+	Wed,  4 Nov 2026 01:03:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0E141F00919;
 	Wed,  4 Nov 2026 01:03:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8506F1F000C1;
-	Wed,  4 Nov 2026 01:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793754207;
-	bh=2FGlcQNvjb1qEph9MnhzIvWuZCAzG9Qp7ajKfHgUz/4=;
+	s=k20260515; t=1793754208;
+	bh=VjQj72weLtRUEeeA7pEXpvTgVlPTwRiBgG+W6jPCuAk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=b/3bI66V2D0MtIlnGzxSU5f9fDGXhHe5WgOkiEGBnKBXcxApWH91dijdUyZFVoEuw
-	 jHjCsHw/LV2rhXYM5DP1F2/DnohylXlRIIu2mJ+YsZkbGD9RYZSQ/1PgTAHX44iy0E
-	 BkeQ9qxSjXaKLyY0FbEzH3DzPiTP1+b9OzIqRjjRR1DzUooBGzRO94bL7/bFLw+s43
-	 sMXbFP57yvI939CoJcgXYX+RYhuI8L0oncXaG9Pl7R6QuLLWE9o+u4f+3AagloKWuP
-	 deoucIh4xjklUs15o27XFyoSIjIvvHrYKDLhwgB6WiaVmVC+dQpk5kRFLfuADzf46h
-	 h8drTVDELoWlQ==
-Message-ID: <sashiko-outbox-196335@kernel.org>
+	b=jKNHYWtfvxIENEJmYuKJVD82YnLLgeQU/XLqdGMXg9IPKe+FrOAPTOy+YK7dMezJW
+	 LnpMR6qCjSyv0/0F4Ouun2kcLvSIUikEqaZGIvFNrZvtOkqflsv4d/zgkE9A2TuvuI
+	 o5fIOw7tl+nP447L4/68IFSh8aiXAP9QGR893g8Djq4bxjpDoRmp0tFOjb/OvJGYlB
+	 ebMFsalym2S7/ZusnUKOTe8TbMcEosVqwLp0ypT6PNgE+s2LgDoRhgjJVAueOS6nUU
+	 t3JlmWaOV9grDiYuXXm7+lcSTHQ47aMW3BxVZM/q0r5/3X5iWBKHieIPVHuG8z1r/i
+	 /3kgPw6nuTO9w==
+Message-ID: <sashiko-outbox-196336@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 04/10] mm: Rename memfd_luo to shmem_luo
+Subject: Re: [PATCH v3 05/10] liveupdate: Don't WARN if tracking a retrieved
+ file fails
 To: "David Matlack" <dmatlack@google.com>, kexec@lists.infradead.org
 Cc: "Alexander Graf" <graf@amazon.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Baolin
  Wang" <baolin.wang@linux.alibaba.com>, "Christian Brauner" <brauner@kernel.org>, "David
@@ -57,12 +58,12 @@ Cc: "Alexander Graf" <graf@amazon.com>, "Andrew Morton" <akpm@linux-foundation.o
  Dunlap" <rdunlap@infradead.org>, "Samiullah Khawaja" <skhawaja@google.com>, "Shuah
  Khan" <skhan@linuxfoundation.org>, "Suren Baghdasaryan" <surenb@google.com>, "Vlastimil
  Babka" <vbabka@kernel.org>
-In-Reply-To: <20261103010216.3447716-5-dmatlack@google.com>
+In-Reply-To: <20261103010216.3447716-6-dmatlack@google.com>
 References: <20261103010216.3447716-1-dmatlack@google.com>
- <20261103010216.3447716-5-dmatlack@google.com>
+ <20261103010216.3447716-6-dmatlack@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 01:03:26 +0000
+Date: Wed, 04 Nov 2026 01:03:27 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,33 +83,27 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Rename the memfd Live Update file handler from memfd_luo to shmem_luo,
-> including the source file, its KHO ABI header, its documentation and its
-> Kconfig option (CONFIG_LIVEUPDATE_MEMFD to CONFIG_LIVEUPDATE_SHMEM).
+> Handle a failure to add a retrieved file to luo_preserved_files instead
+> of triggering a WARN_ON(). Make the failure permanent, and keep the file
+> until the file set is finished, like any other retrieved file.
 >=20
-> The handler preserves shmem files. Today those are memfds, but following
-> commits extend it to other files on tmpfs mounts, for which the memfd
-> name is confusing. Preserving memfds created with MFD_HUGETLB, which are
-> hugetlbfs files, will need a separate handler, so naming the handler
-> after the filesystem that backs the files also avoids having to rename
-> it again then.
+> xa_insert() can fail with -ENOMEM, and userspace can trigger that with
+> LIVEUPDATE_SESSION_RETRIEVE_FD, so warning about it lets userspace crash
+> systems with panic_on_warn.
 >=20
-> Don't change the compatible string of the handler, "memfd-v2". It is
-> matched against the preserved state from the previous kernel, so
-> changing it would break live updates from kernels that use the old
-> name. The serialized format doesn't change either.
+> The handler has already consumed the preserved state when this happens,
+> so the retrieve can't be retried. Keeping the file ensures that its
+> resources are not released before the file set is finished. Finishing
+> the file set then erases the file from luo_preserved_files, which does
+> nothing for a file that was never added.
 >=20
-> Also clarify in the documentation that memfd means a memfd created
-> without MFD_HUGETLB, and name the ABI documentation after the handler.
->=20
-> No functional change intended.
->=20
+> Fixes: 00d0b372374f ("liveupdate: prevent double management of files")
 > Signed-off-by: David Matlack <dmatlack@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103010216.3447=
-716-1-dmatlack@google.com?part=3D4
+716-1-dmatlack@google.com?part=3D5
 
 
