@@ -2,46 +2,46 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6726072B91
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 17:52:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06BE4606D80F
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 17:52:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=eOGmVLQR;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mYzQuqq1
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=4t41jO/c;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JXuPQ0ie
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=yb3WLcVokXU6BuV8DQIS3cnoxrtkXR+HXTNSt4lhnr4=; b=eOGmVLQRY2JB/l
-	RGNiI7pf2RB10krAwDw38zuRw6D+ZNVU22muz3zBWV1U38C4hYR8jsVZ2++EIm3zjfzadePR0fy3t
-	YSmHoOqJ55McmKeKIz9hPdkc2IsV9h6tZuDljz3b7/HJnPKeDh2pLVJerBoIb0WWjXvLY10QBxWiD
-	RxPhXirTr2ncfprKPX3WlHehnaHLqljrD7HKYTOjKv4OMKDlY81fwM3MZhq4FYkoQ2A/pujbj1+Vf
-	3IVpjZlz77HYdS9aitY74MNAWBckH8O4/86IJxP0aSFCST9FEyEraJZ+rpvdabg/DbvuOZMEEo+Nm
-	LBFmy+crbWEbyIiiucmQ==;
+	List-Owner; bh=LkQzylMBPw/rjuFeKsFyNpbMkN4WRhLixyhJUzJNoRI=; b=4t41jO/chqT0Qe
+	lA5/Z1uaBUVZR/qeFFz6tbfVSEMj19EBoEEovAUwENtGCf3IL/q6i3YfQknJUuwRLDm8sB6AUcIvR
+	2i3mYXXas8U9Oe7WQ1pXJGb242nRODHBwg/P9mtvz36jzpxGRAemgbI0lS4PedrVgfUg/BRDjkfsy
+	Tzezu8hLZZMOp+BYMhRc8wgHJEV/gWBkDUEVR2gCRNiYDLtajuMVw/8eA8ust35RLzu9Ybt0/VVNM
+	5VH9p77T/+C9pfaRXjaFApe5V/6sWYbZ1RwY57CWSQr7iS4t0LKkTs+4I01+26q1iA0vuXDcYf+YO
+	HjLl5EWET0m4RCjTH3ZA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOf9y-00000006J0R-24EG;
-	Wed, 04 Nov 2026 17:52:30 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xOfAN-00000006J9i-34Qn;
+	Wed, 04 Nov 2026 17:52:55 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOf9x-00000006J08-3PZx;
-	Wed, 04 Nov 2026 17:52:29 +0000
+	id 1xOfAL-00000006J9C-34Y3;
+	Wed, 04 Nov 2026 17:52:53 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 7BAB8434A7;
+	by tor.source.kernel.org (Postfix) with ESMTP id 2F25C6022E;
+	Wed,  4 Nov 2026 17:52:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 428D51F0093A;
 	Wed,  4 Nov 2026 17:52:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5214C1F00919;
-	Wed,  4 Nov 2026 17:52:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793814749;
-	bh=yb3WLcVokXU6BuV8DQIS3cnoxrtkXR+HXTNSt4lhnr4=;
+	s=k20260515; t=1793814772;
+	bh=LkQzylMBPw/rjuFeKsFyNpbMkN4WRhLixyhJUzJNoRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=mYzQuqq14/wTRRzzUwsG17Ab+8tgoUHpySPnl84Mr25NNzcLhEp7Tq87twOltFKtA
-	 dLD4dH0S9ylQ5twpfaifjPBB9F9nLw9N+znijKLYLcOnWkObGODYTAZeChhNq2O2Ca
-	 IQI8NCRh7J2BZ5sI7mVRJjsoRWd+WGQFkSSMno0hv8VCeplcjuV9ER78Y79IneS3ww
-	 A/5asZFiMwgLRWg3CnX7bPRgzhBlLJJ299YG81hHCGwYVIYI6Vtka99WENBzIlbtj9
-	 RDwPxtwzVpVgN2qYy6WEMTlYIhf+ZUrM+RRJ4JaWwLGuxFHxYcI/kP7k045W27PJnL
-	 9gvSnUTnaD3zQ==
+	b=JXuPQ0ieI1SmEXC52KDOcGy2C42dUQXH2gWt2mtcU1/uOST36dyA2aX/TbZituA2X
+	 Uhu3k1qct8vUKtDQH86VU1fhcBrjtbnzssmyZOcNcGl5JFmkchB4Gpruy1pXNgGar2
+	 VxVKlSU3xlY2ad6FO1CicLCPJyfh4ydr4gwsesh5g7agPQ4ipkIS7Cs9Wpj/e9EmLS
+	 Jm7RvFMHC/cB0vL14NXKg9Z/LHaENtZFhX3CEfJQZj2LcqrxZuIhRnv467SSOX8+tP
+	 0daQmY4DIeH2JUseA+pOpqhVDaW3Hc6WCgGMkzhZymUpdndKfNcU8aZ5068txhavYL
+	 LTnnyBYHI3CAQ==
 From: Christian Brauner <brauner@kernel.org>
 To: linux-fsdevel@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
@@ -103,16 +103,16 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	"Christian Brauner (Amutable)" <brauner@kernel.org>,
 	Chuck Lever <cel@kernel.org>,
 	stable@vger.kernel.org
-Subject: [PATCH v2 27/51] um: NUL-terminate what is written to /proc/exitcode
-Date: Wed,  4 Nov 2026 18:47:13 +0100
-Message-ID: <20261104-work-procfs-bugfixes-v2-27-bbf7d5546809@kernel.org>
+Subject: [PATCH v2 28/51] ntfs3: don't warn when a huge label is written
+Date: Wed,  4 Nov 2026 18:47:14 +0100
+Message-ID: <20261104-work-procfs-bugfixes-v2-28-bbf7d5546809@kernel.org>
 In-Reply-To: <20261104-work-procfs-bugfixes-v2-0-bbf7d5546809@kernel.org>
 References: <20261104-work-procfs-bugfixes-v2-0-bbf7d5546809@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1042; i=brauner@kernel.org; h=from:subject:message-id; bh=wRElBRQ5ywf1BhvCA77KtICLks8yyr6GFoKnZLCCyMo=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9znsQFfC+I/C0Ra1Qv94XtoNfmEzj9zwr/ak74frKN 6dmt7y52lHKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjCRvl6Gf8ru0zvmyVXlJJn5 RX64VRT8c5vVqQOhHe+XJk+QCA1678rI0PD9gNXt6xMOWujrbTe9wyTBv3D/B9HmPSse+sbVn4l X4wAA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1211; i=brauner@kernel.org; h=from:subject:message-id; bh=CQmQXvWqu+qpRxwX3Ai9kAzqqtrenD8xJsc3ckb17sQ=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9znv41bfhRbr0hB7+QH1DQe2NteXb2LY+9z1XbHd4a cOjhdu2dJSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAExkohAjw4rCmq+PWwJsL999 t/rf/719dR9cv2g/ad2gpsY5lzHE/RYjw7O2xVsFYh6FLFHbxmXmqiNfEK+8fvH1tXZe9j8O88X sYQIA
 X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
@@ -133,34 +133,42 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-exitcode_proc_write() copies up to sizeof(buf) bytes of the write into
-buf and hands it to simple_strtol() without terminating it. So
-"echo -n 5" parses whatever the stack held after the '5', and a write of
-seven bytes or more reads past the end of buf. Terminate the copy.
+ntfs3_label_write() allocates as many bytes as are written with plain
+kmalloc(). A write that is larger than what kmalloc() can hand out then
+trips the page allocator's warning, which panics a panic_on_warn kernel.
+Use memdup_user(), which fails such an allocation quietly with -ENOMEM
+like before.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Fixes: 7832e123490a ("fs/ntfs3: Add support /proc/fs/ntfs3/<dev>/volinfo and /proc/fs/ntfs3/<dev>/label")
 Cc: stable@vger.kernel.org
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- arch/um/kernel/exitcode.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/ntfs3/super.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/arch/um/kernel/exitcode.c b/arch/um/kernel/exitcode.c
-index 43edc2aa57e4..0230354f4812 100644
---- a/arch/um/kernel/exitcode.c
-+++ b/arch/um/kernel/exitcode.c
-@@ -43,9 +43,10 @@ static ssize_t exitcode_proc_write(struct file *file,
- 	size_t size;
- 	int tmp;
+diff --git a/fs/ntfs3/super.c b/fs/ntfs3/super.c
+index 29aabdc8a801..37e27b73b7a5 100644
+--- a/fs/ntfs3/super.c
++++ b/fs/ntfs3/super.c
+@@ -576,15 +576,10 @@ static ssize_t ntfs3_label_write(struct file *file, const char __user *buffer,
+ 	if (sb_rdonly(sb))
+ 		return -EROFS;
  
--	size = min(count, sizeof(buf));
-+	size = min(count, sizeof(buf) - 1);
- 	if (copy_from_user(buf, buffer, size))
- 		return -EFAULT;
-+	buf[size] = '\0';
+-	label = kmalloc(count, GFP_NOFS);
++	label = memdup_user(buffer, count);
++	if (IS_ERR(label))
++		return PTR_ERR(label);
  
- 	tmp = simple_strtol(buf, &end, 0);
- 	if ((*end != '\0') && !isspace(*end))
+-	if (!label)
+-		return -ENOMEM;
+-
+-	if (copy_from_user(label, buffer, ret)) {
+-		ret = -EFAULT;
+-		goto out;
+-	}
+ 	while (ret > 0 && label[ret - 1] == '\n')
+ 		ret -= 1;
+ 
 
 -- 
 2.53.0
