@@ -2,46 +2,46 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5DB606EE99
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:17:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8608C6083612
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:17:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=GjXcVHqF;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=omO9IGCx
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=V5RB02Se;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M+37idsG
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=Cbujoj2vf5W42joV5o7W0AvKkij9cCOpaGGghku9+G8=; b=GjXcVHqFXAsbHq
-	n1G1kr1gMnA3VaU6MuXfvTqjr+VJxA+vnOfRoDim5f5Y3yG5IAFo2K99aoIp90TYN37ALaP+XLtat
-	Isw13eUJNbAM5rZbCyWjWQv7KyMIFEmY/WvAY5WhNZN+wqzuXnDzBJ8Y5JIkWZHa+n1DvDhUTa4N8
-	NfEzttWq+e/lPAxYZadqLpYCCFj6VNOl1qdBeehGc4zCF1ejOs71Urx34z2ynDDAJrP+UmKOyeibE
-	sdOD9XgQIumrJDHJ/jOi9cY/xDqoyAcUUNMDVVYq0IE3mbOKdxoT4Uc6p9mHTsdn/d0KkYpHNuLt8
-	ukIga0XVMnZ9n5k3AeWQ==;
+	List-Owner; bh=9+yARzdOpzdllKXUJ7Oz/hxaICj5Mm35ej5JnL7jd2E=; b=V5RB02SeHSip3D
+	86gaqj/BmoEeWKFyn7VEdxBfzgXDwi7YKFBg3tr0IVSq6zI+28iHfVKucbHFg7kkY5cNdCgfra3pQ
+	dRfM37eRUZgrLzZMYJJyS/gpwZNqKZdycVt89X18cG8X0vbnCmOFPsiOqXqzT7IJLRdISoiXtLKke
+	EzkAoOv2SMfhvv2ES9+xaJhttARH6rvpxUURDpPMDx7K6r4Ciy3K4x9vDOp4g2JPhE3w4mKYoexey
+	WKp+Geu3Q25gcgVFGidgfFCBNprQH4f6tXfJCh+y9sreacEc4jQy6unKnDnAPObMwtbhNkXdx9hWB
+	WTaYB4D23S+HcZ1aTc0w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgTl-00000006Xrs-34n5;
-	Wed, 04 Nov 2026 19:17:02 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xOgU0-00000006Xxr-13r0;
+	Wed, 04 Nov 2026 19:17:16 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgTk-00000006XrV-0cA9;
-	Wed, 04 Nov 2026 19:17:00 +0000
+	id 1xOgTy-00000006XxO-38PE;
+	Wed, 04 Nov 2026 19:17:14 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 95EAF60A51;
-	Wed,  4 Nov 2026 19:16:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24F441F00A02;
-	Wed,  4 Nov 2026 19:16:46 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 3281260D79;
+	Wed,  4 Nov 2026 19:17:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1CC31F00A02;
+	Wed,  4 Nov 2026 19:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793819819;
-	bh=Cbujoj2vf5W42joV5o7W0AvKkij9cCOpaGGghku9+G8=;
+	s=k20260515; t=1793819833;
+	bh=9+yARzdOpzdllKXUJ7Oz/hxaICj5Mm35ej5JnL7jd2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=omO9IGCxRyG7KD0kOxfDpDxNQyYIzODWVtRjkLnN3/zFnPKj34X5crXOKucSFkfWr
-	 K2vwmPWEfSCfTc7KrJwcOMFunLOjtXDVztdyYUmknteKFz3PelPVAL1UgBnI+tAbd4
-	 XF5ErKRbX8bdCtSjgX0zvSFTT6L0PDEOQbHUmwQkI114XRdB8cIfxqGscpwpemafw3
-	 K7MJZBUNHbtj7OSLbkije9HCjsdQTGe+6yASXSAIELhzrF5YD6mcuYVUBb8Sm2r2MZ
-	 MV/cCX6mrHLPa/XrLIYAdVEN9IQTdCweH82A0WOCV2qCcCupff8Ero6Vt+lk3uRxZE
-	 xip5YgJ7X0fVA==
+	b=M+37idsGrLxfFvku7zl/pBSwEmNcKERej4x0tosO6grxOviHHdjWIUdhmF1vqg/33
+	 ePdxdVUOrxZAd03o21+XtRZheQyVUQvUyzG6bID6wcddrxq3hFrluAQ9lLCdxqRzfp
+	 kt/0B12iz71I2xcJyQXTn4hjtTXM1xta/DcZkdyqFcRIjvNQqhjLQ7+o4RQS7ld9uJ
+	 RxppQtsQpkcAJfI1T2eabtz3JiLt/pD+Ac5EuC64kC1SX9FzH8iROGnJpsFF7HprX/
+	 digopjDGEPs9QYh/4IRuwVyogSNhJ6h7LRJdrzEAtQ40rWwZdXm33gXiB304dOVRmc
+	 6xBzDofOt/82g==
 From: Christian Brauner <brauner@kernel.org>
 To: linux-fsdevel@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
@@ -103,16 +103,16 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	"Christian Brauner (Amutable)" <brauner@kernel.org>,
 	Chuck Lever <cel@kernel.org>,
 	stable@vger.kernel.org
-Subject: [PATCH RESEND v2 03/51] ALSA: cs46xx: hand the region to the region proc files
-Date: Wed,  4 Nov 2026 20:16:45 +0100
-Message-ID: <20261104-work-procfs-bugfixes-v2-3-021c84d852e0@kernel.org>
+Subject: [PATCH RESEND v2 04/51] PNP: isapnp: don't go on when isapnp_cfg_begin() fails
+Date: Wed,  4 Nov 2026 20:16:59 +0100
+Message-ID: <20261104-work-procfs-bugfixes-v2-4-021c84d852e0@kernel.org>
 In-Reply-To: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
 References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1215; i=brauner@kernel.org; h=from:subject:message-id; bh=Z6ZRkJrhuCU4H5MdQ4cObdjJffW/paOotMbfYVXoKlo=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9bjy38dymo9fKTmUGbmnq3vJ19u55ybMf3qtLXF/lV 3V+wtzWzx2lLAxiXAyyYoosDu0m4XLLeSo2G2VqwMxhZQIZwsDFKQAT+VXCyPDsb6PwnbR1njvC l2SKvFp3T79ebMkTpTsZWRmxsjzl6xoZ/qmcK6g8/p/jzJXZ7Ak/uerEBKe8Z+6ItmpmfjKzNzX 8DSMA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3910; i=brauner@kernel.org; h=from:subject:message-id; bh=zJWqbpFP7Eog9HhLBr1/8hQ7kUfFg3Bc340XkbmHZ+k=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9bjwfy6albiRae1/wtUrq+c387TdzlueZHTlof0l6C 9s2jaXJHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABOxOMDwP/P/rHn3hBMn3dDV dmaavka+U/6WztZHr9XU+ayeBLut+8/wz/yq9VK/Qs8AXxn5YxmeOze0nVnNEjjjZ9J8gXrmcL1 FPAA=
 X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
@@ -128,37 +128,114 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=4.0.1
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-snd_cs46xx_proc_init() stores the chip in the private data of the five
-region entries, but snd_cs46xx_io_read() reads that back as the region,
-so a read of /proc/asound/cardN/CS46xx_BA0 and friends copies from
-whatever sits at the region's offset in struct snd_cs46xx instead of
-the mapped registers. Store the region.
+isapnp_cfg_begin() refuses a logical device number above 10 and a bad
+card number with -EINVAL before it takes isapnp_cfg_mutex. The callers
+that read and write the device's configuration, the proc file included,
+don't look at that: they go on talking to whatever device the card
+currently has selected and then unlock a mutex they never took in
+isapnp_cfg_end(). isapnp_create_device() hands out logical device
+numbers without a bound, so a card with twelve or more logical devices
+gets there. Return the error instead.
 
 Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Cc: stable@vger.kernel.org
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- sound/pci/cs46xx/cs46xx_lib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pnp/isapnp/core.c | 16 ++++++++++++----
+ drivers/pnp/isapnp/proc.c |  5 ++++-
+ sound/isa/es18xx.c        |  6 +++++-
+ 3 files changed, 21 insertions(+), 6 deletions(-)
 
-diff --git a/sound/pci/cs46xx/cs46xx_lib.c b/sound/pci/cs46xx/cs46xx_lib.c
-index 797a5f09cade..efc7df444cb5 100644
---- a/sound/pci/cs46xx/cs46xx_lib.c
-+++ b/sound/pci/cs46xx/cs46xx_lib.c
-@@ -2764,7 +2764,7 @@ static int snd_cs46xx_proc_init(struct snd_card *card, struct snd_cs46xx *chip)
- 		struct snd_cs46xx_region *region = &chip->region.idx[idx];
- 		if (! snd_card_proc_new(card, region->name, &entry)) {
- 			entry->content = SNDRV_INFO_CONTENT_DATA;
--			entry->private_data = chip;
-+			entry->private_data = region;
- 			entry->c.ops = &snd_cs46xx_proc_io_ops;
- 			entry->size = region->size;
- 			entry->mode = S_IFREG | 0400;
+diff --git a/drivers/pnp/isapnp/core.c b/drivers/pnp/isapnp/core.c
+index 219f96f2aaaf..3591a2791c1a 100644
+--- a/drivers/pnp/isapnp/core.c
++++ b/drivers/pnp/isapnp/core.c
+@@ -853,7 +853,9 @@ static int isapnp_get_resources(struct pnp_dev *dev)
+ 
+ 	pnp_dbg(&dev->dev, "get resources\n");
+ 	pnp_init_resources(dev);
+-	isapnp_cfg_begin(dev->card->number, dev->number);
++	ret = isapnp_cfg_begin(dev->card->number, dev->number);
++	if (ret)
++		return ret;
+ 	dev->active = isapnp_read_byte(ISAPNP_CFG_ACTIVATE);
+ 	if (!dev->active)
+ 		goto __end;
+@@ -887,10 +889,12 @@ __end:
+ static int isapnp_set_resources(struct pnp_dev *dev)
+ {
+ 	struct resource *res;
+-	int tmp;
++	int tmp, ret;
+ 
+ 	pnp_dbg(&dev->dev, "set resources\n");
+-	isapnp_cfg_begin(dev->card->number, dev->number);
++	ret = isapnp_cfg_begin(dev->card->number, dev->number);
++	if (ret)
++		return ret;
+ 	dev->active = 1;
+ 	for (tmp = 0; tmp < ISAPNP_MAX_PORT; tmp++) {
+ 		res = pnp_get_resource(dev, IORESOURCE_IO, tmp);
+@@ -936,9 +940,13 @@ static int isapnp_set_resources(struct pnp_dev *dev)
+ 
+ static int isapnp_disable_resources(struct pnp_dev *dev)
+ {
++	int ret;
++
+ 	if (!dev->active)
+ 		return -EINVAL;
+-	isapnp_cfg_begin(dev->card->number, dev->number);
++	ret = isapnp_cfg_begin(dev->card->number, dev->number);
++	if (ret)
++		return ret;
+ 	isapnp_deactivate(dev->number);
+ 	dev->active = 0;
+ 	isapnp_cfg_end();
+diff --git a/drivers/pnp/isapnp/proc.c b/drivers/pnp/isapnp/proc.c
+index c1f6e6bd0eb2..b3abab24050b 100644
+--- a/drivers/pnp/isapnp/proc.c
++++ b/drivers/pnp/isapnp/proc.c
+@@ -25,6 +25,7 @@ static ssize_t isapnp_proc_bus_read(struct file *file, char __user * buf,
+ 	struct pnp_dev *dev = pde_data(file_inode(file));
+ 	int pos = *ppos;
+ 	int cnt, size = 256;
++	int ret;
+ 
+ 	if (pos >= size)
+ 		return 0;
+@@ -37,7 +38,9 @@ static ssize_t isapnp_proc_bus_read(struct file *file, char __user * buf,
+ 	if (!access_ok(buf, cnt))
+ 		return -EINVAL;
+ 
+-	isapnp_cfg_begin(dev->card->number, dev->number);
++	ret = isapnp_cfg_begin(dev->card->number, dev->number);
++	if (ret)
++		return ret;
+ 	for (; pos < 256 && cnt > 0; pos++, buf++, cnt--) {
+ 		unsigned char val;
+ 		val = isapnp_read_byte(pos);
+diff --git a/sound/isa/es18xx.c b/sound/isa/es18xx.c
+index 3cadbf7cf238..de1eda5a0656 100644
+--- a/sound/isa/es18xx.c
++++ b/sound/isa/es18xx.c
+@@ -1950,7 +1950,11 @@ static int snd_audiodrive_pnp_init_main(int dev, struct pnp_dev *pdev)
+ 	/* ok. hack using Vendor-Defined Card-Level registers */
+ 	/* skip csn and logdev initialization - already done in isapnp_configure */
+ 	if (pnp_device_is_isapnp(pdev)) {
+-		isapnp_cfg_begin(isapnp_card_number(pdev), isapnp_csn_number(pdev));
++		int ret = isapnp_cfg_begin(isapnp_card_number(pdev),
++					   isapnp_csn_number(pdev));
++
++		if (ret)
++			return ret;
+ 		isapnp_write_byte(0x27, pnp_irq(pdev, 0));	/* Hardware Volume IRQ Number */
+ 		if (mpu_port[dev] != SNDRV_AUTO_PORT)
+ 			isapnp_write_byte(0x28, pnp_irq(pdev, 0)); /* MPU-401 IRQ Number */
 
 -- 
 2.53.0
