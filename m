@@ -2,127 +2,77 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3BB606A328
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 03:12:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9AF606A326
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 03:59:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=f2ryisbC;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=MC8VPNm7
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=adaWQQ1W;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MD8HHl2V
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=BFKdbCnvgEnPUCR+piUdwFlucy5SNy4ZmkD3FremwV0=; b=f2ryisbCpyfBam
-	oPgGKXmwYaMncHs02iNLc452ydq51LsyFW7B3ljleIjnJfGfFSLjq0VqSvtpOU84ZlFC+EIwvHMAz
-	au4jNPHQLiagBl23VvJ6fNdgT3YiyduR62JgRQOAx+aktnl7+Mn30CPmHbKaDXRd6ThPYN7hWM80Z
-	LKYL9Jw8Ss80JopJQ1+K+I+hREofQb+Qk55whnVw2aW2tOKRhiKYi4oq/OwK/WcAYpT7nIfDK90Dk
-	3Qe237Ft37NytPmgWRKHhN+aH6N1DkKe0Qp1jSsy2AyCfkgOtkw0PQuOoxuiCok1mqNCJRFaqalDO
-	2sHw/yJ+Njd37szs4Q3g==;
+	List-Owner; bh=aVD57Vyoa++azfiqBAhfzngOl8QvU9DsGw/NobLJvHM=; b=adaWQQ1WDPRd4g
+	wnOq05fL4PU9hEWBqA8oRefHtfZH03t5fCyrJ5a3AGNKOL+Ii2qJmGloDU87JhnZKqAgVpcjAfUP5
+	1T8f5c7bpFlEkt8p7Z8hRLpN8DD2klredt/TZ5FNAVKQnW84qTkCp4t+WEiHRScAJ4w99hhSp/giq
+	i117pj6W25pKok5yVj0ZGPfvddraY8/T0dhEm/hN6q6L0qUj3XAGh8zbz/PwQ/DjaRKQT4zsHIbcL
+	L34WtSZLSq03lYuaXe+V6c8Y3pQ9tOESUYnwPiWrV7MYtMiM3C55wvb42Xmh9Z1QYyfGn/5/RJnV6
+	WAZfg/+Lneq4kV/YdIdQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xORQo-00000004FLr-2R9q;
-	Wed, 04 Nov 2026 03:12:58 +0000
-Received: from out-183.mta0.migadu.com ([2001:41d0:1004:224b::b7] helo=mta0.migadu.com)
+	id 1xOS9r-00000004Hpe-15jo;
+	Wed, 04 Nov 2026 03:59:31 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xORQk-00000004FLM-3yI1
+	id 1xOS9q-00000004HpR-48Xo
 	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 03:12:56 +0000
-X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=BFKdbCnvgEnPUCR+piUdwFlucy5SNy4ZmkD3FremwV0=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793761972; v=1; x=1794366772;
- b=MC8VPNm74Ok18sfdmxnpsI6xRh7R0Zk5W//KSoh4oQqgT/S/C7qdI564Yzn9q9U82YW5fQUa
- bHEVLCzq9Vqzf9FcDE7exA0+xlnDu1bTQ6V7pBzRG57qh+3OeK8awrDIx3MWDyYkXpPcFBKY+AD
- RqEEVje7E40Z3XH7oOIjjkYY=
-X-Envelope-To: kexec@lists.infradead.org
-Received: by smtp.migadu.com with ESMTPS id 888f0105953f8a83;
-	Wed, 04 Nov 2026 03:12:52 +0000
-X-Mizu-Trace-ID: 888f0105953f8a83
-X-Migadu-Flow: FLOW_OUT
-From: Lance Yang <lance.yang@linux.dev>
-To: david@kernel.org
-Cc: akpm@linux-foundation.org,
-	hannes@cmpxchg.org,
-	mhocko@kernel.org,
-	qi.zheng@linux.dev,
-	shakeel.butt@linux.dev,
-	ljs@kernel.org,
-	kasong@tencent.com,
-	baohua@kernel.org,
-	axelrasmussen@google.com,
-	yuanchu@google.com,
-	weixugc@google.com,
-	baoquan.he@linux.dev,
-	baolin.wang@linux.alibaba.com,
-	liam@infradead.org,
-	vbabka@kernel.org,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	kees@kernel.org,
-	peterz@infradead.org,
-	jannh@google.com,
-	pfalcato@suse.de,
-	hughd@google.com,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	willy@infradead.org,
-	jack@suse.cz,
-	ziy@nvidia.com,
-	lance.yang@linux.dev,
-	riel@surriel.com,
-	harry@kernel.org,
-	apopple@nvidia.com,
-	nico.pache@linux.dev,
-	ryan.roberts@arm.com,
-	dev.jain@arm.com,
-	usama.arif@linux.dev,
-	kas@kernel.org,
-	matthew.brost@intel.com,
-	jhubbard@nvidia.com,
-	peterx@redhat.com,
-	will@kernel.org,
-	aneesh.kumar@kernel.org,
-	npiggin@gmail.com,
-	osalvador@suse.de,
-	minchan@kernel.org,
-	muchun.song@linux.dev,
-	xu.xin@linux.dev,
-	chengming.zhou@linux.dev,
-	chrisl@kernel.org,
-	shikemeng@huaweicloud.com,
-	nphamcs@gmail.com,
-	youngjun.park@lge.com,
-	gourry@gourry.net,
-	joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com,
-	ying.huang@linux.alibaba.com,
-	jgg@ziepe.ca,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	stable@vger.kernel.org,
-	usama.anjum@arm.com
-Subject: Re: [PATCH v3 43/47] mm/huge_memory: split huge PUDs when adjusting VMA boundaries
-Date: Wed,  4 Nov 2026 11:12:45 +0800
-Message-ID: <20261104031245.9524-1-lance.yang@linux.dev>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20261031-fixes_core-v3-43-d6437171ecc3@kernel.org>
-References: <20261031-fixes_core-v3-43-d6437171ecc3@kernel.org>
+	Wed, 04 Nov 2026 03:59:31 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 62FDA4400F
+	for <kexec@lists.infradead.org>; Wed,  4 Nov 2026 03:59:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4052A1F00A15
+	for <kexec@lists.infradead.org>; Wed,  4 Nov 2026 03:59:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793764770;
+	bh=aVD57Vyoa++azfiqBAhfzngOl8QvU9DsGw/NobLJvHM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=MD8HHl2V9nd3qEjuMbvRrBTZH2bsLxioMX7oFVjfHv6Tesnt0q7hLLNSr/m+49jT8
+	 lSaMljX+4CfG6xelFsRF1fxldkH8GVcb5JOkwpvBTB6C904Npj4yaJEsjO6nsYj8ky
+	 PiTyHb3iLt9aZhE4hj5wbXMfIg2RSBp5ev3N2fC5Zj1mxwDiJy86cQwRZb4AVliw3Q
+	 RwP5uHM1C6vmwTxZCfbm+Pbg1xxqSdX9YQI/nAp+Zkv4z5kDyaFy/li/WcsfKzh4sk
+	 2fq9e0+Qa+LlcBpy/2sOS5dBim+3SbmMjvx243pGgrt4PUVTbroGo+xDHS+eYE2LqK
+	 T53xBvgdG3ILQ==
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6b1aa2848d2so292699a12.3
+        for <kexec@lists.infradead.org>; Tue, 03 Nov 2026 19:59:30 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AKwUvBziEGPwO/CAPiS7sWu5fTlqlvqDNyU8LCpAJsB6rKKM4PIwnhVsIzlGqnxA6NfSTVq8dd75/A==@lists.infradead.org
+X-Gm-Message-State: APuU4Z8+7UEtj4k10/TEbei8OGGlTgGrvOym40HHPDdW0Tr+T0PMz92C
+	guhDWCJXw0AxjqDAR1lxhdKtPtjdmKFDxy64e6JzjdR0Pz33wV+Cn74LFpMIIBr5vqUfsXU1cyg
+	D9b6dPfTGfgnPdaySGwTEDPUIQ0rxENY=
+X-Received: by 2002:a05:6402:270f:b0:6ac:934e:a9ca with SMTP id
+ 4fb4d7f45d1cf-6b4d3289b13mr10634683a12.0.1793764768813; Tue, 03 Nov 2026
+ 19:59:28 -0800 (PST)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261103_191255_119176_495695A6 
-X-CRM114-Status: UNSURE (   5.22  )
-X-CRM114-Notice: Please train this message.
-X-Spam-Score: -2.1 (--)
+References: <2382a0ee-cb6d-4572-be6e-ce3cf4d006e5@app.fastmail.com> <20261103102941.11087-1-dongtai.guo@linux.dev>
+In-Reply-To: <20261103102941.11087-1-dongtai.guo@linux.dev>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 4 Nov 2026 11:59:14 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5Vse=pKC3Beqhqxa7fqadiGVNqkSy_06HZ3Luw2Pmj5Q@mail.gmail.com>
+X-Gm-Features: AclHuK_D5CUCusV0Gl1o9MYw2oMRSISAj8jwmHzHqtDwF9y7DdV5NfyDMepEVEM
+Message-ID: <CAAhV-H5Vse=pKC3Beqhqxa7fqadiGVNqkSy_06HZ3Luw2Pmj5Q@mail.gmail.com>
+Subject: Re: [PATCH v6 1/8] efi: Pass KHO state to the next kernel in a
+ configuration table
+To: George Guo <dongtai.guo@linux.dev>
+Cc: ardb@kernel.org, pratyush@kernel.org, rppt@kernel.org, 
+	pasha.tatashin@soleen.com, shuah@kernel.org, ilias.apalodimas@linaro.org, 
+	akpm@linux-foundation.org, baoquan.he@linux.dev, ruirui.yang@linux.dev, 
+	guodongtai@kylinos.cn, kernel@xen0n.name, graf@amazon.com, 
+	liukexin@kylinos.cn, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	kexec@lists.infradead.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org, linux-efi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -133,37 +83,39 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-
-On Sat, Oct 31, 2026 at 10:40:12AM +0100, David Hildenbrand (Arm) wrote:
->PFN mappings such as VFIO PCI BAR mappings can use PUD leaves while
->allowing VMA splits at page granularity. However, vma_adjust_trans_huge()
->only handles PMDs.
+On Tue, Nov 3, 2026 at 6:29=E2=80=AFPM George Guo <dongtai.guo@linux.dev> w=
+rote:
 >
->After faulting a writable PUD-sized VFIO BAR mapping, changing its first
->page to read-only with mprotect() makes the PMD walk treat the PUD leaf
->as a PMD table. Applying MADV_DONTFORK to the first PMD-sized chunk leaves
->the PUD spanning two VMAs: the PMD-aligned boundary skips splitting.
+> Hi Ard, Pratyush,
 >
->Walk the page tables once at each adjusted boundary and split a huge
->PUD or PMD leaf as needed. Handle PUD leaves even when the boundary is
->PMD-aligned.
+> On Thu, Oct 29 2026, Ard Biesheuvel wrote:
+> > Can we handle this as an arch table then, and handle everything in
+> > the LoongArch arch code?
 >
->Fixes: f9e54c3a2f5b7 ("vfio/pci: implement huge_fault support")
->Cc: stable@vger.kernel.org
->Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
->Reviewed-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
->Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
->---
+> Ard, LoongArch is currently the only user, so I understand the suggestion
+> to keep the handling in the architecture code.
+>
+> My preference is to keep the table definition and handling common, given
+> the potential for x86 to use it as Pratyush described in his reply, to
+> replace setup_data once x86 gains EFI support. The table contains no
+> LoongArch-specific fields, and only the LoongArch stub installs it. On
+> systems without the table, the common code does nothing.
+>
+> Would that be acceptable, or would you prefer to keep the handling in
+> LoongArch until a second architecture adopts it?
+I prefer to keep it in LoongArch until a second architecture, and I
+think Ard is the same. But this is not a strong objection to Pratyush.
 
-Nice work!
+Huacai
 
-Reviewed-by: Lance Yang <lance.yang@linux.dev>
+>
+> Thanks,
+> George
 
