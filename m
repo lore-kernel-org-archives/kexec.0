@@ -2,116 +2,124 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95EC5606C925
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 20:55:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A657E6078974
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 21:00:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=YlC50B2x;
-	dkim=pass (2048-bit key, unprotected) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=ZIybCcyP
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=L/IYqBng;
+	dkim=pass (2048-bit key, unprotected) header.d=arndb.de header.i=@arndb.de header.a=rsa-sha256 header.s=fm2 header.b=cKOYknYY;
+	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=4+o1zQjd
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
-	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Subject:References:In-Reply-To:Message-Id:Cc:To:From:Date:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=aqgdpi7gCkH60Z/isUI3USxyApBzH2FtqkjwxCL88mU=; b=YlC50B2x9wQZTi
-	SAQBP44nVPdil6KsxRdq24nfu1vZlB42bALNhxFG3Tk9lYm8+jNpgV34MHOMeMhxeCFBxnBxxyhEJ
-	tJK8JFMS9NovPhgGDmVbfjYkZf6MdhhkYumJSIsQouEnmT6JlLfWFWS/n+68Fsxt2JwvMJX54JvRI
-	b5KjcaQTTaWhIXxQB507Pi3P4vV8JpNRD3lgVGs/kd1wx0wE2Ozrvip23+MuaB1RI9gIlcd/62Laf
-	7G6GlVzRV3q8IkpiTw3r3iXlzM2TsO/OrLzZDVjVS65jO+Fxc5RgJ2g/cDw0u1B7Jogq6sU2xvBDu
-	ijcIKUGIO/p/99xc2xRg==;
+	List-Owner; bh=0kNaDaN7VzGkf9l540YM+342pLPmeRVN7bIHtngSK/k=; b=L/IYqBng51Ofkh
+	LBHw29Hwx13jalz16Ri3KB92SPouWEtO4QXk+fucxnHbF3VVXCHorNHxO4T9jwz10f580GfAx9lRt
+	QwVu4P+FsbgHGxXooSTreGD1h5WlrMFXZDcbB52h28dEF7BBefkYr1p9DpFc89WXhEFG7XwD0fTam
+	kgh1fS7sauix1SvpDMM7wCS0F4mmBZ7B5xQas5OiHECkKqzXwTQ0h4BybPVYtPrp3g9b1Uj/EfgU9
+	nDbtSAuXJg/ms+0U8OL2jOnOiPiAAESW5dSjCL9Rs4dzMy8L94jvxw0yapoZKhZUjrjSZCBRnhUNP
+	WKmAoOT/ykY0QvYulHSQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOi0m-00000006xMT-3UWW;
-	Wed, 04 Nov 2026 20:55:12 +0000
-Received: from mail-vs1-xe2b.google.com ([2607:f8b0:4864:20::e2b])
+	id 1xOi5n-00000006yQD-2ynA;
+	Wed, 04 Nov 2026 21:00:23 +0000
+Received: from fhigh-a2-smtp.messagingengine.com ([103.168.172.153])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOi0k-00000006xLO-1HVx
+	id 1xOi5l-00000006yO3-179k
 	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 20:55:11 +0000
-Received: by mail-vs1-xe2b.google.com with SMTP id ada2fe7eead31-7cc603a168fso368889137.3
-        for <kexec@lists.infradead.org>; Wed, 04 Nov 2026 12:55:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1793825709; x=1794430509; darn=lists.infradead.org;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=aqgdpi7gCkH60Z/isUI3USxyApBzH2FtqkjwxCL88mU=;
-        b=ZIybCcyPanH4twBl9Riu8LG9ZfPVxHnxyR20V6rSE9qKaz/gu/GENqqvG2KHnWqbpj
-         iC4GqZe5uvI+9PQ5whZQdxXY+el75n0GZDvicArY2bJRb5/2BN9rg0Jo2SW8dK09eGpS
-         NRcXXWVkbLQ6jRV0y+YGGP7OBQejbQFAuHDA7AwA3SmIIFcb6E0q77H8lRHhkhyL/Z7A
-         nY9mZvSwUi1odDoCZr+WNrzj86cH4MbkHUAhFl4RWaPM2qM9ZnfrKRPklDcWEfU/5GFi
-         gsUoKtoYwxzWN7NnP0n80YkRtU8ySVOL31vj5EDsrxwi4KSA6lupSUUI7Lo2Vrkv94ul
-         Z4sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793825709; x=1794430509;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=aqgdpi7gCkH60Z/isUI3USxyApBzH2FtqkjwxCL88mU=;
-        b=b3+oerRodgbxWa/PrI5AarTDXuRr+ZkwQ2ckQstOiFYVBDmeT80rFqJqOgOlUFeorY
-         vatMJfpKx+U7zWrzW96GPk16hh1JJN1KD24Wqwez/T52WCE7KesUANCf+P4Q4EPS+HB2
-         fy0suJNR2phF3MS+u/KbFmTx5luKUTYQxOoprJOYUXJwGv3VqAg+RjW0DgkkiotmwFwy
-         tBXQTr0jx5via56EEYTTTgNrQ9ZzV7PNXFXaLX+tprjl07IwR/Fm8jGDNCCmr+f2ZAWp
-         6FY1/VxhIi7K7fWZ11ZtsZyqhgGDfHh1lKWnljLuReNYko7kj4ExXXm6i8uO+LlZ+qBl
-         xhAg==
-X-Forwarded-Encrypted: i=1; AKwUvBy3CjExkchzhIfFVCxNVEeLSKitxPzC3eaVfNRDJKlVYSAKV2PYaBDCkmsJNVAKrb5JaCl21A==@lists.infradead.org
-X-Gm-Message-State: APuU4Z9mYtxtW7lfY4hyw4mPq7kobk5jfDS8ZwvBI4dXy9eXsRaCu5um
-	zDLeDghr8KsD55+wOCpmzBbDDrHZk364YYwTLaPF9InWZ+TntBZ2vgL/giEFbBH40do=
-X-Gm-Gg: AYBFou1uTW+w9BBAt9B30PeyNTcUEaVdpVMQJQ8yt/WmxUJ1NwoDcg4F2sy6QYsy/RW
-	s97F0m5DbDRRMlNQwFm7eruHk5BEhkpkNuZw/h5W6MDZ97scObhRt/urEKZ/KVB+lT5JrnT8w8P
-	Nd9mQIp5G+s/QuqEmZl/iJrwuw8zK1IhxgPR8arQEwJ3hemVMAdOfcdAouKi/BjXFN6si2U+Icy
-	lJnwjTjTw0NppiluvGlfukxRBtkhMtDdfZpUmFtSScGkkyybJNCNiyKuaFtBeID9toJluvYUVNw
-	n1MY9a8ccwG3uMb9/PM583GZctHl72R5uMrLumQH0wg/NgCbllEg68qLtlQjse6udBmMKMa87zT
-	PCnjBYkPuXkD3PxtrTBqn12AkQ0hF6QCCEEriKESEIU/06bSQQssTnz6yvwZi7+oWjIfr9MxyH5
-	MbvopqmpLQcFfl2drkt2YAeCa7TaMnrsvQF+/W5gGmB/618FKvwAoRJv9UVR7fdpxkiWJuWSTkb
-	4cUf0DEFcRBCq4SmI50w0OnHTOxChnSw52MMndbV1bSfYnf6tBGOoUnV4kj/kYDl7DbQpVgefzc
-	uiiYKbl9OZxw4CCGhSIUeRAZ3+sd99/f4jHdTRHfc1/t8ZzgyBytyDnHepwEZRlFY1zlN9KrYZd
-	cY1KGn5yRtMxOaqELBjIDhsI9ulbNS6Cl81SmbG50GXaTs+8=
-X-Received: by 2002:a05:6102:1623:b0:7a6:a24e:8140 with SMTP id ada2fe7eead31-7d072c2ba18mr6112103137.14.1793825707582;
-        Wed, 04 Nov 2026 12:55:07 -0800 (PST)
-Received: from soleen.c.googlers.com (64.167.245.35.bc.googleusercontent.com. [35.245.167.64])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-998d91d212bsm2888015241.6.2026.11.04.12.55.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Nov 2026 12:55:07 -0800 (PST)
+	Wed, 04 Nov 2026 21:00:22 +0000
+Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 874A11400113
+	for <kexec@lists.infradead.org>; Wed,  4 Nov 2026 16:00:19 -0500 (EST)
+Received: from ams-imap-03 ([10.64.2.23])
+  by ams-compute-02.internal (MEProxy); Wed, 04 Nov 2026 16:00:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1793826015;
+	 x=1793912415; bh=0kNaDaN7VzGkf9l540YM+342pLPmeRVN7bIHtngSK/k=; b=
+	cKOYknYYKdTNm7gT3ervxg7QOU52Utgs5UOoxtrbubT1te5NsIbZVFPMKvQimH1F
+	Ib2iv8RWV6UqdraJhvlS5yd33G4tYwFGshUdIGAdvuU3cFdG8rbWC3+KHemVIdXr
+	NUc2JhM2u+Fuhup590pgyYcIA58JTAMOd7A5s6PKYEJ1G0nSYzo1JqwOw8UaY8u5
+	i/e5W+IkaQrQVH55p1WK2J1BV0dLB4esSzLf+T0EU8o8dUzyZbsKE9LFW1LDbbbW
+	3WekMdVJHEFYWXzfbmA+mnv9lsFDEQ8/WTpzFsEFp8PLVP/iIhwhjwYa5asbRMbg
+	mwFkIJvImo19SYtH1YbLFg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1793826015; x=
+	1793912415; bh=0kNaDaN7VzGkf9l540YM+342pLPmeRVN7bIHtngSK/k=; b=4
+	+o1zQjd3Z41zn3sTJs2UJJfBufYk9JKTqk39/upRC6nT7pcYjQfD/I3Zc3xUL5rZ
+	yuWYIf/gUkcGIG93Az/bYc/7Dc36FemWDLmMf3KdtapwF2oa2w/hKyx55r0w2YUM
+	V1EYzS32YyXpJWz9G1QAPLPbcO4Rj1H3ZHMRG+wciXebn7B5UGdXi7RurV8D/iRI
+	Mn6GcSLvThSgYji/hJ1bPQnO+PItKOtN0ZsnHfstInXC5rC1hVaZ6YaPEsEdm0yc
+	0R36LQL2uTJuSjbl9z/FM5BsolZktLXLkNXGb742PsVtn0O1xFxlsHd+7j9NJrAn
+	JhBSW6gy6x+a9LlNZnrYw==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
+	repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
+	action=sign d=arndb.de a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1793826015; d=arndb.de;
+	mf=PGFybmRAYXJuZGIuZGU+;
+	rt=PGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmc+;
+	s=fm2:rsa-sha256:O15CxX6+6h5HbEDhs4TZTDMQt4GNfCIHhGc0rm6XSYTD7tw
+	iqBj+qn/9ktEuGBL8rZRwQS0EaBLWbzq1Vowguwwxhedc87YwCXM+OK07/EIlmkd
+	2WE/o7Xr/7bO6tWki9zPxayaBCRGSaFtWOkslBYaqLUCXIqOhzrs0n8xafWFGQog
+	eew8Rgq1+8Ttr3swGA5/XtoQEe+aM+7b8soJOFjZfEmfuY865W7U7kgU7xquNeXC
+	qzWvEXKVHUuGL2WtnFto9EeT147IQQ6RfoKEZ/6xRxYL55pQMrvZQgUnEGzgYsHS
+	DXZ+fcGSto7ZESX8xeuoIbhVkb6gdKgVXQpeiOg==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
+	repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
+	action=mi-m=1; hc=12;
+	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
+	from,in-reply-to,message-id,mime-version,references,subject,to;
+Message-Instance: m=1; h=sha256:fUmINlirdU2Tk6RCoHByTkIj3YlbxSUxiZjtoAUaQGk=:tYBOb+5dGuOjuQrd6XKBAFeuLK+8HRMkrzwfvErc19o=;
+X-ME-Sender: <xms:2pzrapVO1PgXZib1J1FOBsiKZcp-1a2WMaiCzkWr12POCmkiMBllIQ>
+    <xme:2pzrakYn6jOelhw810z9h7PtEocyxoQVs5edVa43zi1qGGxRlmYuFXHNs-zWUktAf
+    1eaLGQCpfHbNQjIOw-5G3gdFqd4lzB-2-cTc4Rd0zl-ciJQRX21O57K>
+X-ME-Proxy-Cause: dmFkZTEmmuOD0DZhwLvQ1jMu+N+9f1/bshj4za9fBQJ9CLi5nyqGXS3WVLocnYlOrqOSIB
+    6FfId29nGSaJXnRDBuWEgopsKFsk9kKCdZMlOaAKHZiJOecJXJK5tvhHf4ExHC129SPRTn
+    ywDnpmZfc6lQS9TUXA9FcCx2VPLS6+9LolLspxAgWuT9gBQtAauE01L1amFsAnhggz9Thz
+    K4Y3OubtvjuJtHSnf7zo7wc1RCs2RvOov96x4Gnlg/5v1Dl92DGS7mO3qjvUBcf5+r+W1w
+    M2Ah/4lcKnXI+AD7UM9xPoqDsnA90jhXogV/fJUgnmX/RUCq0OsQxlztOfBV5r2ctGxleQ
+    P5q62C7C+Ai5m3jgBR8Ubc00tyJArfAVOnKr/LvHUrlJi8kOqvjG2g82xVHp9aqznRs3V3
+    qL03F8W2Hy1HAOhL5fLwctcAInLF+bXJ6DMyIU9W9OVVQKGXo0PkiWCRWrFzYVMWb8g6fV
+    eOAXmA93VZa4o3zcfq4qC55WNbV+Uz9zvISGAgRFmjFpNzNLlp+B8xe7yw0wZcaXUiz9CP
+    FSjGKKuU4t5zdMcRPV6nUzYzMnaxK1H39SW4qpWKaXsgxT1D4VgfsnklufIjUbsHlO2R9H
+    0wX5c25K5kQzHuWxQqT1Z6BAnytUuqd787ITw5dkM92Cg9y6+rLOuyjydRhw
+X-ME-Proxy: <xmx:3JzrangpKATqgrFY9U5FKngYXRcRvPlOj3GrvzIj0yk4F1827md9hA>
+    <xmx:3JzraqDv_f2Y3-RNnCmohuE0avDMpLZVmJc-xMja_czk7Lxx7RTNoQ>
+    <xmx:3Jzrah4wqYWgSCUZ4-OLOKBLl26x6kjGdzjCooKYvcBTxAagK-vDaw>
+    <xmx:3JzranGBXgwi1mFDP_mObr_pbEak_8hTCfhVqNcPvwprpGKJxslj8A>
+    <xmx:35zralsJWlZ9ZXZAEn7SjmPWpVp6jklZ58NKQFrEjXOYvm9PpdyfvIPu>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.ams.internal (Postfix, from userid 501)
+	id 9380F32A0099; Wed,  4 Nov 2026 16:00:10 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v2] kho: Remove redundant 0x prefixes
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: Thorsten Blum <blum@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
- Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, 
- Changyuan Lyu <changyuanl@google.com>, kexec@lists.infradead.org, 
+X-ThreadId: AgP3mv5Dxly7
+Date: Wed, 04 Nov 2026 21:59:50 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Pasha Tatashin" <pasha.tatashin@soleen.com>,
+ "Thorsten Blum" <blum@kernel.org>
+Cc: "Mike Rapoport" <rppt@kernel.org>, "Pratyush Yadav" <pratyush@kernel.org>,
+ "Alexander Graf" <graf@amazon.com>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Changyuan Lyu" <changyuanl@google.com>, kexec@lists.infradead.org,
  linux-mm@kvack.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20261104162352.140836-3-blum@kernel.org>
+Message-Id: <34a03ed8-5b75-49b5-bfd5-e5cdf48dbfd4@app.fastmail.com>
+In-Reply-To: <179382570401.2089669.6201187990672133004.b4-review@b4>
 References: <20261104162352.140836-3-blum@kernel.org>
-Date: Wed, 04 Nov 2026 15:55:04 -0500
-Message-Id: <179382570401.2089669.6201187990672133004.b4-review@b4>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1110;
- i=pasha.tatashin@soleen.com; h=from:subject:message-id;
- bh=nf/pbrG/3HMY+E3Xb9PYIXXf5eFKpBebgul3T9w7Tns=;
- b=owEBbQKS/ZANAwAKAbt3KEzbc3reAcsmYgBq65uqenFbBMaztBsCNPi+5jP4Gy+jdHDzzMCE0
- AC8artOAtiJAjMEAAEKAB0WIQRBMaqT7LRvGvB/NmK7dyhM23N63gUCauubqgAKCRC7dyhM23N6
- 3g6FEACxKJFKSeWDmcpF4MW+HdGHBych9VYleOaeLks4H5Jobe5OdO4PZ1BxPgjlf33ihIu0Cvy
- qUJll+5ee/BP7ue8XHEoKp+bs5J7/hJbsqiU9RBst4yORNBrHOTl8M1xUhUG2mLxA8t+3Q1zQqc
- JqLug6dfJmV22HOKmvtZZ5KnHz9hvhbXBWMpwgnBkg/9/dW/Cy7pZSeouW9JY8018P0hAAl7yET
- Gffrvg4Q952YZhd2yBktR7RjQ7nwTM/ntrpQLek4b7CLUg8NpCezTuNXXvkpi3ijzsJyluEzX9P
- SbLmD14CRvA8bQtgoW9rAKf+h7aRMxeemVftJ6EuV9Rr+ydhlygMqW9NTLTEHVEH+j8L8ULw9ZT
- tYXpnXcjNN6SUxD1WAhZd3UWDlSb5i4VemuPUjoaMgTp0Pxy4gbnkg+w/KZl/ytltxii7mMBjmv
- oaY/iz6jEO3XpHdRGNVCENGOesj1my4WTYt4aJikQngaKQyZzTdPzxjJFB0tllSy8LZ5yeojFbG
- 1kTU5jsSvUOmJTifsIPYsrapvlZMhaLTP4t9nS5qGAGYwORWKAoHe46sW01S9FfU+PUhpjv2ZXU
- D2jgjT+p1VLkkOI59RjeZ1Hi1YLkfqzORCz1Tgxqtk+R7Rl6ZcZ7RZxA0J/I3d4mzxn0+gtKhfS
- 04eqDdxWL00PXFg==
-X-Developer-Key: i=pasha.tatashin@soleen.com; a=openpgp;
- fpr=CAAAB722DD22A081F0D49F35633A6A993D43B569
+ <179382570401.2089669.6201187990672133004.b4-review@b4>
+Subject: Re: [PATCH v2] kho: Remove redundant 0x prefixes
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261104_125510_361216_7D4B891B 
-X-CRM114-Status: GOOD (  14.61  )
+X-CRM114-CacheID: sfid-20261104_130021_655590_D1D892FA 
+X-CRM114-Status: GOOD (  15.60  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -123,42 +131,43 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-> The %pa format specifier already includes the 0x prefix. Remove the
-> redundant prefixes to avoid printing 0x0x.
-> 
-> Use phys_addr_t for size to match the expected type.
-> 
-> Fixes: c609c144b0e8 ("kexec: add KHO parsing support")
-> Signed-off-by: Thorsten Blum <blum@kernel.org>
+On Wed, Nov 4, 2026, at 21:55, Pasha Tatashin wrote:
+>> The %pa format specifier already includes the 0x prefix. Remove the
+>> redundant prefixes to avoid printing 0x0x.
+>> 
+>> Use phys_addr_t for size to match the expected type.
+>> 
+>> Fixes: c609c144b0e8 ("kexec: add KHO parsing support")
+>> Signed-off-by: Thorsten Blum <blum@kernel.org>
+>>
+>> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+>> index 6f1f55fe3181..6a7600a0a7d5 100644
+>> --- a/kernel/liveupdate/kexec_handover.c
+>> +++ b/kernel/liveupdate/kexec_handover.c
+>> @@ -2010,16 +2010,16 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+>>  	 */
+>>  	for (int i = 0; i < bootmem_cnt; i++) {
+>>  		struct kho_bootmem *area = &bootmem[i];
+>> -		u64 size = area->size;
+>> +		phys_addr_t size = area->size;
 >
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-> index 6f1f55fe3181..6a7600a0a7d5 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -2010,16 +2010,16 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
->  	 */
->  	for (int i = 0; i < bootmem_cnt; i++) {
->  		struct kho_bootmem *area = &bootmem[i];
-> -		u64 size = area->size;
-> +		phys_addr_t size = area->size;
+> I am not sure; having a variable size of type phys_addr_t looks strange 
+> to me. Furthermore, KHO only works on 64-bit platforms because of how 
+> our radix tree is designed, and we do not plan to add support for 32-bit 
+> systems.
+>
+> I would keep u64, or if using %pa for u64 is still an eyesore, use 
+> 0x%llx for the size field.
 
-I am not sure; having a variable size of type phys_addr_t looks strange 
-to me. Furthermore, KHO only works on 64-bit platforms because of how 
-our radix tree is designed, and we do not plan to add support for 32-bit 
-systems.
+area->size is also a phys_addr_t, so using a local variable of the
+same type makes sense for consistency.
 
-I would keep u64, or if using %pa for u64 is still an eyesore, use 
-0x%llx for the size field.
-
--- 
-Pasha
-
+      Arnd
 
