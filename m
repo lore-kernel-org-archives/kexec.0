@@ -2,62 +2,117 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10630606A33B
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 17:09:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA71606D80E
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 17:27:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=4r1k0lTI;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZO+bMQM2
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=JR5KoNFP;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QnqKLYh2
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
-	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=rKSitA4GhO3iXo6/sM1DqbwM0oZP8831TgqTTx7U8Yw=; b=4r1k0lTIDt1cdp
-	pkukshechWr75TQvgR1FLiNi6Y1lmntbiBCp1QDSkIOxo6V4niNglf2877+/cSz2FoUsVPDjM+/vC
-	uiACZpqObx8/O1sMVesfducv2LDT2TS28yCboy5XzUU9pywd6a6D8nHiMAWeDCMoWsioDo3dQoCbd
-	hPMi992OC2IGaZE1wM3GcUJ3C7lfhTKoiLrKixv95kSk7JsN1UvMJo2TvX08+u2QC/ZfsjDQorxtH
-	KRgYIIPxeiApwMo8FLOXHSPulZ/tHdqb5amWd5NdQr2eTg7xqPTtW+gG0pCZIHOL6016ag2X1q+2R
-	lO4WCniDlPdF7xsmRhXQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Unsubscribe-Post:List-Owner;
+	bh=lAdqJZq7DckAfewXRPAVCUONZuQAofOCOPOWHFZTOPQ=; b=JR5KoNFPo+fVGOBVBgJE1/hnbG
+	5MyLTQjC4BRv8N9V9sccDXp9vi78Q7MxSdFD/6zXDDmSM+ihJ7ZZicv7M1suvZldFlIYcdaGMS75c
+	tqATpy1aXzW3ffFf6huhlvRKjFU1rznnqsXNuJjHfP38tn1hw0+xLD1zFU61HNccxGqbWsX0qTmh3
+	hF5iKHj4hU+SqG8CMXbFMCCcjGtMua+wNXD5Qo2QnuN+gkfhuGVKyxQvYPa3EzdEtw9y68pcev8T2
+	KmpcStL5QhzO27QRFQXwMM2Oxf9Jp3QNTnBxTN9nggRmreUa4gRfGK0squ3dw4OCq2A6R0sW6z4jN
+	3ix+FWVA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOeUI-000000069k2-2qgK;
-	Wed, 04 Nov 2026 17:09:26 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xOelY-00000006Cai-2Ubb;
+	Wed, 04 Nov 2026 17:27:16 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOeUH-000000069jh-15tT
-	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 17:09:25 +0000
+	id 1xOelX-00000006CaC-24kj;
+	Wed, 04 Nov 2026 17:27:15 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id D785441452;
-	Wed,  4 Nov 2026 17:09:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B9DF1F000C1;
-	Wed,  4 Nov 2026 17:09:22 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id B661F601EF;
+	Wed,  4 Nov 2026 17:27:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4F031F00A02;
+	Wed,  4 Nov 2026 17:26:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793812164;
-	bh=rKSitA4GhO3iXo6/sM1DqbwM0oZP8831TgqTTx7U8Yw=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=ZO+bMQM2HPlq92f7QNDpBuxeZ+BfI0Cg9C4IcKYdsvwAtqDeicKjU0j+Ex7z2Ug2h
-	 iAcK43Oug7C/9Yhilc8KJ6DqyN0QyOdXsYtzGLcUyj4e9vkx2b/rsY1gr6+ksOMcx7
-	 R2ije2b9dYDCOqNznuUrfA0mjC5b0j5tjyS2Gg3D+DFZKV3ToMsR9Jo36cIJ/j3Vn0
-	 y3OAx6kwWKkr3as4pmXDWQTz+E6TfSb3Zu7/Um8YRfxPPXR0sQgQgnZDBiqzZwlSVX
-	 AIbFqs9vx5gIwa2J4XAesfziIs2wiZPh6lNYEmv2NcW20tLhNcdqYtNcp0BLbyJELh
-	 zBZ8xrMULVd8Q==
+	s=k20260515; t=1793813234;
+	bh=lAdqJZq7DckAfewXRPAVCUONZuQAofOCOPOWHFZTOPQ=;
+	h=From:To:Cc:Subject:Date;
+	b=QnqKLYh2fAMD+U5HTXeOnACd1cOBaWr2au0sexyO6Tega8pNFvJ3KwBqyWlewJUso
+	 MIi2fzXRHEQROZC9gLvS1bZZ/9/KcmfDhERzkLaXXdIl+Qf8wPegziV2OdOn/5z79r
+	 3iTqL/OK9DAdbhv97um4MytPwotOejrYkLFgVhoshHzNg842ittp+lNu4zRCpPsoG2
+	 KqhP8Ng8p49cNRXsXj5NGkMfzBM+kKXiniguFgYtTFtMwPvnenK73TWNMd887NGQbI
+	 1pG3OChIWDhqEolCKBiLCVppfrBMevoWgaGWalA6fc1c1Jt43H5RxZZPnk2L1SezgW
+	 Bq+TYnLLsbzyA==
+From: Christian Brauner <brauner@kernel.org>
+To: linux-fsdevel@vger.kernel.org
+Cc: Christian Brauner <brauner@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Jann Horn <jannh@google.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Chris Mason <mason@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Eric Dumazet <edumazet@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Christoph Hellwig <hch@lst.de>,
+	Greg Kroah-Hartman <gregkh@suse.de>,
+	Joel Granados <joel.granados@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Jan Kara <jack@suse.com>,
+	linux-kernel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	linux-wireless@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	netdev@vger.kernel.org,
+	ntfs3@lists.linux.dev,
+	platform-driver-x86@vger.kernel.org,
+	coreteam@netfilter.org,
+	kexec@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	ibm-acpi-devel@lists.sourceforge.net,
+	jfs-discussion@lists.sourceforge.net,
+	linux-alpha@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-fbdev@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-sh@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	samba-technical@lists.samba.org,
+	sparclinux@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org,
+	linux-doc@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-atm-general@lists.sourceforge.net,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Takashi Iwai <tiwai@suse.de>,
+	linux-input@vger.kernel.org,
+	linux-raid@vger.kernel.org,
+	linux-ext4@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	linux-debuggers@vger.kernel.org
+Subject: [PATCH v2 0/7] proc: move procfs to what kernfs does
+Date: Wed,  4 Nov 2026 18:26:54 +0100
+Message-ID: <20261104-trompete-gejagt-raddampfer-9fb5640a6102@brauner>
+X-Mailer: git-send-email 2.53.0
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v2] mm/memfd_luo: don't use memfd_pin_folios()
-From: Mike Rapoport <rppt@kernel.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
- kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
-In-Reply-To: <20261103172251.2348370-1-pratyush@kernel.org>
-References: <20261103172251.2348370-1-pratyush@kernel.org>
-Date: Wed, 04 Nov 2026 19:09:19 +0200
-Message-Id: <179381215936.28814.9050829645096838793.b4-review@b4>
-X-Mailer: b4 0.16.1-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6699; i=brauner@kernel.org; h=from:subject:message-id; bh=vwrWu4QhJtoloSbOepgjr6FTno3vPTd4Ym/VDTikOkw=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9zrofyGH5UuGlf8QM041zGftlZmtyqi7/2jv5suCKX cadvXNTOkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACaSkMjI8PXT/ahLzms2tG95 p/y6Wd4h+MQHNf/VL1dGn7i1utyl/SQjw+WcTXp/Xn+/v4hxooZnZYRWmPKsDU2ur9N2RKRMsj5 7gh0A
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -68,128 +123,144 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-> memfd_luo takes a snapshot of the folios in the file's mapping. To make
-> sure the snapshot does not go out of sync, it pins the folios in the
-> file via memfd_pin_folios(). The pinning also migrates the folios out of
-> MIGRATE_MOVABLE to make sure doesn't land in KHO boot memory or in a CMA
-> region.
-> 
-> memfd_pin_folios() does not lock the folios. So it can race with
-> shmem_writeout(). A folio returned by memfd_pin_folios() might already
-> be in swap cache. This happens to work but is fragile. memfd_luo looks
-> at folio flags and index on a folio that isn't in the memfd's page
-> cache.
-> 
-> In addition, memfd_pin_folios() needs the caller to allocate an array of
-> folios. memfd_luo does not really need that since it will vmalloc
-> folios_ser and store the information there anyway. The folios array is
-> unnecessary overhead.
-> 
-> Finally, memfd_pin_folios() fills in holes in the memfd. This makes
-> preserving sparse memfds very expensive in both compute and memory.
-> While this patch doesn't yet stop filling in the holes, it sets up the
-> infrastructure to make it simpler.
-> 
-> Fix all this by walking the page cache directly using shmem_get_folio()
-> with SGP_CACHE. This returns a locked folio with an elevated refcount.
-> memfd_luo holds that reference until the memfd is unpreserved. This
-> blocks compaction, migration, etc.
-> 
-> There is still a need to migrate folios out of MIGRATE_MOVABLE page
-> blocks. This is because those might be CMA or KHO scratch. memfd_luo
-> will hold a longterm reference to the folios so it will block migration
-> in that pageblock. Introduce memfd_luo_migrate_folio() to do this.
-> 
-> Also factor out folio unpreservation logic into memfd_luo_put_folios()
-> and use it from memfd_luo_unpreserve_folios() and from error paths in
-> memfd_luo_preserve_folios().
-> 
-> Since shmem_get_folio() always returns uptodate folios, drop the folio
-> zeroing logic.
-> 
-> This change also improves preservation performance, shown in the table
-> below.
-> 
-> |------------------+----------+------------+-------|
-> | memfd            | baseline | this patch | delta |
-> |------------------+----------+------------+-------|
-> | 4K pages, 32 GiB | 748 ms   | 600 ms     |  -20% |
-> | THP, 4 GiB       | 0.59 ms  | 0.59 ms    |    0% |
-> | THP, 16 GiB      | 2.99 ms  | 2.61 ms    |  -13% |
-> | THP, 32 GiB      | 4.83 ms  | 5.21 ms    |   +8% |
-> | sparse, 32 GiB   | 8695 ms  | 7269 ms    |  -16% |
-> |------------------+----------+------------+-------|
-> 
-> Acked-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+This series aims to get rid of copying to and from userspace while pinning
+procfs entries allowing userspace to delay removal as long as it wants.
 
-With a few nits below
+In essence, it aligns procfs with what kernfs is already doing. That
+gets rid of a big attack surface and a whole bug class in one go. The
+bounce buffer will come with some costs but luckily some codepaths (like
+readdir) have been so criminally slow and buggy that massaging them ends
+up speeding things up or at least leaving them on par with mainline even
+with a bounce buffer in the mix.
 
-Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+There was a hackish and very narrow AI solution to a small part of this
+bug class which was sent off-list. In essence, it used a second
+buffering mechanism on top of seqfiles which was really nasty. It also
+didn't address any of the non-seqfile users.
 
-> +/*
-> + * Move a folio out of ZONE_MOVABLE or CMA, so it can be held until the next
+If we want to get rid of the this whole bug class we need a bigger
+hammer. That means reworking how procfs handles data. So I tried to work
+through all of that. The series is now in a decent shape (I'm not saying
+"glorious" as there's so so many warts. If they were ironed out it could
+be a lot nicer but that's for another day.).
 
-"held until next kernel" - here and below - I feel that something is off
-here, but can't pinpoint what exactly.
+I understand it's big but I think it is nicer to be able to look at the
+end result since we have some transitory states that are gone at the end
+of the series.
 
-> + * kernel. Called with a reference on the unlocked folio, which is always
-> + * dropped. The caller must look up the folio again afterwards.
+I have polished this a bit more and have sorted out a few more bugs and
+tried to clean up some codepaths given the current constraints. Again, I
+think we could go a lot further there if we wanted to but I think that
+blows this out of proportion and at some point it becomes difficult to
+grasp the scope.
 
-I'm having hard time parsing "called with a reference" sentence :)
+So, remove_proc_entry() waits until every call into the procfs entry has
+returned. Most of those calls copy to or from userspace with the entry
+pinned.
 
-> +/*
-> + * Look up the folio at @index, allocating it if needed, and make sure it can be
-> + * held until the next kernel. Folios that are not longterm pinnable are migrated
-> + * out first, retrying a few times if someone else has them isolated.
-> + *
-> + * On success, returns 0 with *@foliop locked and holding a reference.
-> + */
-> +static int memfd_luo_get_folio(struct inode *inode, pgoff_t index,
-> +			       struct folio **foliop)
-> +{
-> +	int err, busy_retries = 0;
-> +	struct folio *folio;
-> +
-> +	for (;;) {
+A reader or writer can induce a page fault in that copy take as long as
+it wants. For example, with userfaultfd or by punching holes into a
+memfd over and over. Plus, the callers of remove_proc_entry() like to
+hold locks while they wait. For example, addrconf holds RTNL when it
+removes /proc/net/dev_snmp6/<dev> and xt_hashlimit holds a mutex that
+all network namespaces share.
 
-Won't
-	for (retry = 0; retry < MEMFD_LUO_MIGRATE_RETRIES; retry++) {
+So every network device with IPv6 gets a /proc/net/dev_snmp6/<dev> that
+everyone can read, and addrconf_ifdown() removes it with RTNL held. So
+any local user can keep RTNL for as long as their read stays stalled.
+Until then no device can be registered, removed or renamed and no
+network namespace can be created or torn down.
 
-look better and the body simpler?
+If the caller lacks privileges for userfaultfd a FUSE mount in a user
+namespace whose daemon never answers is enough to stall the copy.
+Killing the reader ends it, but until then whoever removes the file sits
+in D state.
 
-> +		err = shmem_get_folio(inode, index, 0, &folio, SGP_CACHE);
-> +		if (err)
-> +			return err;
-> +
-> +		if (likely(folio_is_longterm_pinnable(folio)))
-> +			break;
-> +
-> +		folio_unlock(folio);
-> +		err = memfd_luo_migrate_folio(folio);
-> +		/* Someone else might have it isolated, retry a bit. */
-> +		if (err == -EBUSY && ++busy_retries < MEMFD_LUO_MIGRATE_RETRIES)
-> +			continue;
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	*foliop = folio;
-> +	return 0;
-> +}
+xt_hashlimit removes the proc file of a table with hashlimit_mutex
+held. Every rule insert in every network namespace takes that mutex and
+so does network namespace cleanup. cleanup_net() runs on a single
+workqueue with pernet_ops_rwsem held, so a stalled reader also stops
+every later network namespace teardown and every module load that
+registers pernet operations. xt_recent does the same with recent_mutex.
 
-.
+And of course, it's not specific to networking. remove_proc_entry(),
+proc_remove() and remove_proc_subtree() have over 200 callers and plenty
+of them hold locks. For example, a stalled reader of
+/proc/fs/ext4/<dev>/options holds up the unmount of that filesystem with
+s_umount held, and every sync(2) with it. The same goes for PCI
+hot-removal, for freeing IRQ descriptors, which CPU bring-up waits on,
+and for unplugging a USB sound card.
+
+And btw, syzbot has hit removal under locks before (cf. [1]), and the
+xt_recent deadlock fixed in (1) below is another one.
+
+Stalling the kernel in a copy to or from userspace is a well-known
+exploitation primitive. It's why unprivileged userfaultfd can't do it
+by default anymore since v5.11 (d0d4730ac2e4), and FUSE has been used
+the same way.
+
+This series touches just about every ->proc_read(), ->proc_write() and
+->proc_ioctl() in the tree, so I've split it up into seven series. They
+go out as replies to this mail:
+
+Part 1/7: proc: fix a few old bugs in /proc handlers (51 patches)
+
+    Bugs in the handlers and in procfs itself that are a lot older than
+    the conversion and that reviewing it turned up. Most of them are for
+    stable. They come first so they can go there on their own and the
+    conversion doesn't have to bother with that crap.
+
+Part 2/7: proc: let procfs own the data path (23 patches)
+
+    The procfs side. procfs owns the seq_file of an entry, copies in
+    writes, copies out reads and copies ioctl arguments in and out, and
+    only calls into an entry with it pinned. The open files procfs has
+    to know and the wait queue a pollable entry is polled on live in an
+    open node that only those entries get, the entry is pinned around
+    the vm_operations of its mappings, and lockdep checks the pin.
+    proc_create_seq() and friends and the plain seq_file users are
+    switched over here too.
+
+Part 3/7: proc: convert the arch and platform entries (23 patches)
+Part 4/7: proc: convert the driver entries (26 patches)
+Part 5/7: proc: convert the fs, kernel and mm entries (30 patches)
+Part 6/7: proc: convert the net entries and the kfifo samples (13 patches)
+
+Part 7/7: proc: drop the __user methods (6 patches)
+
+    Drops the old methods. kcore, kmsg and the kpage files, which are
+    never removed and keep reading straight into userspace, get
+    file_operations of their own, so nothing in struct proc_ops takes a
+    __user pointer anymore, and the new methods get the names kernfs
+    uses, ->proc_read(), ->proc_write() and ->proc_ioctl(). The last
+    patch takes the poll_table away from ->proc_poll(). This needs all
+    four conversion series.
+
+Parts 1 and 2 are the base. Parts 3 to 6 go on top of part 2 in any
+order and don't depend on each other. Part 7 needs all four.
+
+The series should all indicate cleanly what dependencies they have so b4
+should be able to pull it for review.
+
+With all of it on a KASAN and lockdep kernel the removal selftests of
+every part pass, the proc, pktgen and allocinfo selftests behave like
+without it and the bugs from (1) that reproduce in a VM are gone. Every
+patch builds on its own on x86_64 and i386, and with W=1 on the
+architectures it touches.
+
+[1]: https://lore.kernel.org/r/000000000000f24f4705b6988f3e@google.com
+[2]: https://lore.kernel.org/r/20231109212251.213873-7-johannes@sipsolutions.net
+
+---
+Link to v1: https://patch.msgid.link/20261102-defizit-jobaussicht-kurios-7016c6e67442@brauner
 
 -- 
-Sincerely yours,
-Mike.
-
+Christian Brauner <brauner@kernel.org>
 
