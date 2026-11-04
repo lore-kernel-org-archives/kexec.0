@@ -2,79 +2,93 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9F760B909E
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 20:15:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B632A606AC3D
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 20:42:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ILVaVk0L;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gocBBGef
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=czyg3PHT;
+	dkim=fail reason="signature verification failed" (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=IKcDV15F
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=5hs0yObu632v5VqYscPdHVqsnq/hS9vQJRHPhHsRg0A=; b=ILVaVk0LGGNd56
-	4v265FsjMHRJPzhMo7VQWmE/MVpymeyw6SkmJCJHOF4IzHJD3MZ50nmYqqSqTzLNCx67Ov4ue3Jfy
-	AsaSkNB8dqwzad4eNeiI4FF+Jvhl+k7j94v8xvQTlnNeQcPtSXqA5W68pUtCR/boxzcnUOR2NKlBo
-	fY5DT+YYYqQrq0fXMaQ379pxpUoAYhqVTSstahd9/9YT+bMhtatUFLfYgII1r0K+LHkIk+Rn+3c3w
-	QKjHNojLh6jr8jh/de3sQJSBQstV0aly5HkrHWQFQzo5Wnr6L1rnNoOMosIqGiytGjPDnLgA/sM0M
-	B38nXy7Cipztgu3gJ4sg==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Unsubscribe-Post:List-Owner;
+	bh=h6dwKVBh50DCzDeIRT2L9U5TfDV06YRfq9HuX25Gdcw=; b=czyg3PHTEik3ELtg3LwSMbgUN4
+	9L0SWTNuD29/4q6chkNtACMV5muShoGq7+RrWSrhNd9Rn3kfOZ8P4v+s6oJ+9Hkb6eJQyFLm3snGj
+	c+PINU15yNL/s+3596yq6MIFdc0D4E0N4Jpd3q6JFJhfbNrjiq8YuEd1t6F+FxcoKlCI3kY9ikfNg
+	wYZ/x6E0CP/oMGCX7EnUM9pA4vR3qi9QOFyYcoGVsMZh+vZ17nllZLJKoJE3LnZpN7jY4YuK56RGA
+	OpnuwXiC+ekSTeO8tq1mncG940JP8cY6Fs+srRgSegfeFubBr6XS3KAzJ8td1wvTYKG7rF/FlEB+6
+	YZuGGGVg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOhO3-00000006s9o-0j55;
-	Wed, 04 Nov 2026 20:15:11 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xOhoj-00000006vdV-0GSX;
+	Wed, 04 Nov 2026 20:42:45 +0000
+Received: from mail-wm1-x329.google.com ([2a00:1450:4864:20::329])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOhO1-00000006s8p-43lX
+	id 1xOhog-00000006vbz-15Jr
 	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 20:15:10 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 0CDCB41470
-	for <kexec@lists.infradead.org>; Wed,  4 Nov 2026 20:15:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E297D1F00A02
-	for <kexec@lists.infradead.org>; Wed,  4 Nov 2026 20:15:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793823308;
-	bh=5hs0yObu632v5VqYscPdHVqsnq/hS9vQJRHPhHsRg0A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=gocBBGefUS86VeDGr2GnpTXWHIBcyehEC2BzWYaGTs+R5yXx9Am/8Bh5+zeBlQHk8
-	 PmhLKfvq8zVEbvNUsXvs7sMBwkgWDqScd2gBkB7tdvNcnSQ1CpRA81wa96QKKdGiP+
-	 NKezweyP7HIPECGSFAQQ99swLRmH3aHllYpNahkuGi0/kw9zYNCwq4ciTGyB1Wwczm
-	 N2BxU7G15rVtzlE+3zhsr0aieZPwhUfbwbnno+A7oNNVdrJ5ZQQ/bD8E1KRhsYD9tl
-	 CerEHtHV04E2LVDCt47D3yJET0J2yudAl+Kjy5RxwskxCEEO8qQzUVpokNNIjQshiE
-	 59nbqAC5vAy1g==
-Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-15dd124bbe7so2280828c88.1
-        for <kexec@lists.infradead.org>; Wed, 04 Nov 2026 12:15:08 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AKwUvBxzg/FfqWSdTBuHI7ffXXZBA1FUxieq/YYBUBWyZUEksvRz+bQ6/obXp01q+D/uHoAtDctWPg==@lists.infradead.org
-X-Gm-Message-State: APuU4Z8NMAxvvmvbJuIf8E9Z7xVKW4RLUQp5kFw7tKCvliaQu5zxuRst
-	N3rPeWAZMTgZrasT9KRYodqmMWUFOMosXeBRR6qotOtTI868gmMzajh7xuQeN227XR63am6+8td
-	WxKw4zZlgqmJbtBgAzS/Rh7VdSy1IE7s=
-X-Received: by 2002:a05:7022:5f0b:b0:1ab:de8b:5f0f with SMTP id
- a92af1059eb24-1ac5cb18717mr23723691c88.40.1793823308323; Wed, 04 Nov 2026
- 12:15:08 -0800 (PST)
+	Wed, 04 Nov 2026 20:42:43 +0000
+Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-4a214c5c4c0so10358735e9.3
+        for <kexec@lists.infradead.org>; Wed, 04 Nov 2026 12:42:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793824960; x=1794429760; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=h6dwKVBh50DCzDeIRT2L9U5TfDV06YRfq9HuX25Gdcw=;
+        b=IKcDV15Fm0JVoJqMbqYHDr2La1NSQR3lKr0N+jv38SJWuDs9afqN7gm0tzFC995JOB
+         45yQIDTTgUKZ7d4huqEZZxPAaY+e6hkNu68wpGFkH13L2uzk5m1jwiVN+LG7+oaQWaVn
+         DEys3mA5yawSwmHa3XhX9wj6ik/7M0Hcg1hI69wtvTXluFbxFxMQ0JJMPLJRAZoWMF8g
+         wJj7oSXxvTriRKBMq4xyu+inSDXGz0oLximR6Qkl1Qkj8+y+9011s9UXOJpP2qSa6UhJ
+         4b/xWpeCgHSKjPwVttREgRLBpaPuQt11IaFgCEANYKEz1KpsStCjXcIOXUt7mmsHNscG
+         i6aQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793824960; x=1794429760;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=h6dwKVBh50DCzDeIRT2L9U5TfDV06YRfq9HuX25Gdcw=;
+        b=u+5Acx7MJ2/cNd9myliOxk4Wnx6lp0UYMo4FQx/EGRMcVIE/tE7kMUWUwjomtRksdr
+         8945D3GLaDvMYlgDoLVPg9S4Jr/YE0SF8V1+l5CCsx7kZmg5LU+lrKUAcfwPu96xUxYz
+         ecs0Hxi+KktaKx/OWV/nZwShbZBGo/CV0T+1lwYbaZw3VZd9aXzYl3zOQd9pweGMegl/
+         /uhGC1anW9VfXl5URpymKXqHMfIeMLL6Kp689GcGSAIoXrKvyMobKWqNTZAmJqJF9K72
+         NU3ZWWukqahHs6lPJbKNhzXVKJi43EGr2yQITTPvg9wuDX24GOIUz0IopHNdz/Gyho4F
+         Mjmw==
+X-Forwarded-Encrypted: i=1; AKwUvBxt9pQ3q5bFhtIJc0aEe/BG2M3coTbY5EW5qlbTml0MH2cspe19mzrzIFsSKMsf3mU7fgNnWQ==@lists.infradead.org
+X-Gm-Message-State: APuU4Z9HdOb+qM6+qFx994xt6mNj1SH2zsxmlGb6DCw/j5ofUNz3vBe6
+	2MKYm0163v0O4QCV1bkTB4cXNVQATHRb0b8830FG5FSsC5hYMoOcW9gu
+X-Gm-Gg: AYBFou3jdNckBoPbvW6TG5th5d72Mnxk5Mi+LYzhilFGREW8BW0Ot+qb88trzo6dHct
+	vHFD0iMWFtI2X65KOaNe32Nqk525Wq0vkxR4qC2R3TguU2RNCI/ziXmAdM3zZ1qwuNnrEQKAs+b
+	mJt/HFkC/UtMmsLhT/ZsV6nmHhnRmSbB0kKKkLATy+2h2PGmfIcHIip86ushT4Y3AHit4SKj7GV
+	63NY5RHa9yEGZ1HTu0ev4oGNd9oYlbv478tYmpAkiMC4nsUSd6mWtOLUoWF+oM51wo8JWQZmIOk
+	gzueTFQJq/9J8HzVZrX8jvk1CCBMKWQgonPmcv2EUdqczk1RnFPlhiTq7YgVsbS7sC2qX9ixzWZ
+	b336e9nrcpfC/hl91dxM/A3Bo/8saoguey4OI2QPh/ZLJXy6gUlQCdsYL468anAemaJUVx2+G67
+	4C7dz8gZL58ekk+sdabVbWynP7ht3wUmAdi2y9sdThGrmOXj2HOsqRaFAjz771jdEkz+mmn7sL6
+	3j1CFELCDDJyzZFL9yYIU9P+dFtN2oWNvKRSGhQJwkhsqNOkRs8WObCCVtNhF+cHSCMUP3ziItC
+	/X/zxAmufrq1Dg==
+X-Received: by 2002:a05:600c:4f55:b0:4a3:d327:6ed with SMTP id 5b1f17b1804b1-4ac182dcba3mr424220875e9.17.1793824959945;
+        Wed, 04 Nov 2026 12:42:39 -0800 (PST)
+Received: from nobara ([83.231.69.9])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48fecac1a1csm5716451f8f.12.2026.11.04.12.42.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Nov 2026 12:42:39 -0800 (PST)
+From: "Jose A. Perez de Azpillaga" <azpijr@gmail.com>
+To: Mike Rapoport <rppt@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <kees@kernel.org>,
+	Changyuan Lyu <changyuanl@google.com>,
+	Alexander Graf <graf@amazon.com>
+Subject: [PATCH v2] memblock: don't allocate new reserve_mem regions on a KHO boot
+Date: Wed,  4 Nov 2026 21:42:17 +0100
+Message-ID: <20261104204235.9066-1-azpijr@gmail.com>
+X-Mailer: git-send-email 2.56.0
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-References: <20261029-b4-ipe-keyring-rfc-v2-0-77727b205844@nvidia.com> <20261029-b4-ipe-keyring-rfc-v2-1-77727b205844@nvidia.com>
-In-Reply-To: <20261029-b4-ipe-keyring-rfc-v2-1-77727b205844@nvidia.com>
-From: Fan Wu <wufan@kernel.org>
-Date: Wed, 4 Nov 2026 12:14:57 -0800
-X-Gmail-Original-Message-ID: <CAKtyLkHtZeToq7YN7n2jffK0DmR7Axu3cQ+Kac_+RYvtsF=+cw@mail.gmail.com>
-X-Gm-Features: AclHuK825M3Tp0Q3mYcH1rJyDUZVk5uCyEMH07CZFl9zj20qOO90PZscL7Din2Q
-Message-ID: <CAKtyLkHtZeToq7YN7n2jffK0DmR7Axu3cQ+Kac_+RYvtsF=+cw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] ipe: add the .ipe policy keyring
-To: manuelh@nvidia.com
-Cc: Fan Wu <wufan@kernel.org>, David Howells <dhowells@redhat.com>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Christian Brauner <brauner@kernel.org>, 
-	Andrew Halaney <andrew@amutable.com>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Luca Boccassi <luca.boccassi@gmail.com>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261104_124242_310685_7C22F186 
+X-CRM114-Status: GOOD (  14.64  )
+X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,79 +98,72 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Cc: Tony Luck <tony.luck@intel.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Jose A. Perez de Azpillaga" <azpijr@gmail.com>, Pratyush Yadav <pratyush@kernel.org>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Wed, Oct 28, 2026 at 5:31=E2=80=AFPM Manuel Huber via B4 Relay
-<devnull+manuelh.nvidia.com@kernel.org> wrote:
->
-> From: Manuel Huber <manuelh@nvidia.com>
->
-> Add a dedicated .ipe keyring for IPE policy signature verification.
-> With this, userspace can provision its own keys into the keyring,
-> then restrict it and activate it for IPE policy signature verification.
->
-> Gate creation of the keyring behind a new by-default disabled
-> CONFIG_SECURITY_IPE_KEYRING Kconfig option. When created, the keyring
-> is empty and writable. The keyring is used as a fallback after the
-> existing policy trust sources only when it is created, non-empty, and
-> restricted with restrict_link_reject.
->
-> This enables scenarios in which a trusted userspace component generates
-> an IPE policy, and creates an ephemeral policy-signing key pair,
-> provisions its public certificate, and restricts the IPE keyring during
-> the early lifetime of a system. The trusted component can then sign the
-> IPE policy, destroy the private key, and load and activate the policy.
-> During that phase, the system is considered in a trusted state whereas
-> the system transitions into a possibly untrusted state afterwards,
-> running arbitrary user-provided applications. In such a scenario, the
-> trusted userspace component could reside on a dm-verity protected
-> rootfs disk, and applications would reside on additional dm-verity
-> protected disks. The latter disks would be dynamically attached and
-> their dm-verity root hashes and/or signatures not known a priori to
-> launching the system.
->
-> A concrete usage scenario could be Kata Containers, which enables
-> running Kubernetes pods in ephemeral, headless utility VMs, possibly
-> without systemd. The rootfs disk is static and known beforehand, but
-> containerd's image layers might be acquired and transported into the
-> VM using the erofs snapshotter and dynamic block device attachment
-> using dm-verity. While in that usage scenario, signing a per-guest
-> policy with a pre-provisioned policy-signing certificate in the
-> builtin, secondary, or platform keyrings would be technically possible,
-> it would require including its corresponding private key in the guest
-> build artifacts. Making it possible to use an ephemeral,
-> userspace-provided key avoids shipping a static policy-signing private
-> key with the guest rootfs.
->
+On a KHO boot, a reserve_mem region that can't be revived is allocated
+from KHO_NOPRSRV memory, which includes the bootmem the next kernel
+boots out of. With CONFIG_KEXEC_HANDOVER_DEBUG, preserving the region
+then fails:
 
-Reading through this scenario again, I have a question about the design.
+  WARNING: kernel/liveupdate/kexec_handover.c:1245 at kho_preserve_pages+0x168/0x180
+  failed to prepare memblock FDT for KHO: -22
 
-I suspect the reason you need a signing key inside the guest rootfs is
-that you are running the snapshotter inside the VM. Have you
-considered generating the snapshots on the VM host, signing the policy
-there, and passing it into the guest?
+Without it, the next kernel puts its memmap on top of the region and
+the ramoops records in it are lost.
 
-The workflow would be:
+There is no use case for adding regions across a live update, so fail
+instead of allocating, and drop the TODO.
 
-1. The host generates an ephemeral signing key pair for the VM and
-injects the public certificate into the guest's platform keyring via
-firmware.
-2. The host prepares the image snapshots, computes their dm-verity
-root hashes, and signs the resulting IPE policy which allows execution
-by dm-verity root hash with the ephemeral private key.
-3. The host attaches the snapshot block devices and passes the signed
-policy into the guest, where the guest simply loads and activates it
-against .platform.
+Fixes: f99230780211 ("memblock: add KHO support for reserve_mem")
+Signed-off-by: Jose A. Perez de Azpillaga <azpijr@gmail.com>
+---
+Changes in v2:
+- fail on a KHO boot instead of allocating outside bootmem, as agreed
+  with Pratyush [1]. this drops v1's patch 1.
+- not an RFC anymore.
+- based on v7.4-rc1.
 
-That way no private key ever needs to live in the guest, and it
-confines the TCB to the VM host. Would this approach work for your
-setup?
+v1: https://lore.kernel.org/all/20261021211058.83483-3-azpijr@gmail.com/
 
-Fan
+[1] https://lore.kernel.org/all/2vxzfqxglrg6.fsf@kernel.org/
+
+ mm/memblock.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/mm/memblock.c b/mm/memblock.c
+index a450092a80fb..e325e0542c9a 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -2827,7 +2827,16 @@ static int __init reserve_mem(char *p)
+ 	if (reserve_mem_kho_revive(name, size, align))
+ 		return 1;
+ 
+-	/* TODO: Allocation must be outside of KHO_NOPRSRV region */
++	/*
++	 * On a KHO boot memblock only allocates from KHO_NOPRSRV memory here,
++	 * which includes the bootmem the next kernel boots out of. Only regions
++	 * handed over by the previous kernel are supported.
++	 */
++	if (is_kho_boot()) {
++		pr_err("reserve_mem: can't allocate \"%s\" on a KHO boot\n", name);
++		return -EOPNOTSUPP;
++	}
++
+ 	start = memblock_phys_alloc(size, align);
+ 	if (!start) {
+ 		pr_err("reserve_mem: memblock allocation failed\n");
+
+base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+-- 
+2.56.0
+
 
