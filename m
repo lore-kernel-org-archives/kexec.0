@@ -2,46 +2,46 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4368560728FD
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:41:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE476072D6B
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:41:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=GqDnIT7J;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TFjDqZZ/
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=IKbCVSuu;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a4qjG/En
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=zr7obOUiLNzJ4M2rJicyi/Ze6HCzMDPfBdGpZnrgFfM=; b=GqDnIT7JMqP7xY
-	6lOw9dlUYODI+Wf+k1poee8fKtAPXG7q6mIYu8DAzho6lOGyHJd/zP+0/zK7OYxugue53e123flLq
-	T1GMwnaYl8AEMuMnOrYwNgG5MCfHlAVPMDNVEkb6QmS5orQ+J+zIx7MqE776+FTNWwjjlBwPWDhnw
-	VAMKbqTjH1xVPkHNhlGYIEEwX5Em38t8HUlWgv1KoEIWwCBFw6/FwhqEr62eoU22nAi+eMLhuRdNc
-	yDj+IIkb00E7W39rN0NGKzHU+8rIIyiDfOdB4Z3OCl+Srww+IJ3/HDhwd3oiWLUMTIE4RPGeD8RGP
-	taKumuaIPpCBFGRYngJQ==;
+	List-Owner; bh=QnuUeY+9+QMi3OegoRzUMDksdZE42uDQ+p1ThOeCsVw=; b=IKbCVSuuWFHpb8
+	8VK7pP+XEsCsQaUFEdgGG9994M1Zx8hbtKALZIp89F3pMWJcluQ4xqAzKgpIh+QQidyg5XajqYhiW
+	wcYyAW1qU+41AkOejQVyxxlOniB4ekHwmBIv3veFxEa0e5F7gnzL/IoeQVsAoMKbhaPyOaX818TTA
+	YjFuex20mHxJhWkdIS+yKa12vw1ekiX41075Q0DNkftPlaOLtCTXRBx/rekRqhgx6N0GAlxJ47p2H
+	jC41CxNFeM8zUfkYiLfdMkckn5yI/iRN6P27STPAtw4vWc6+5nwUXwcwM3fVTaHr8czxFdQT6hjPR
+	Bl5flfI+po1eHzbmG1Aw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgrH-00000006iMx-43JF;
-	Wed, 04 Nov 2026 19:41:19 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xOgrX-00000006iUC-0xdL;
+	Wed, 04 Nov 2026 19:41:35 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgrG-00000006iLj-0JNv;
-	Wed, 04 Nov 2026 19:41:18 +0000
+	id 1xOgrV-00000006iTn-2XJ3;
+	Wed, 04 Nov 2026 19:41:33 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id CC49F417B9;
-	Wed,  4 Nov 2026 19:41:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79D881F00919;
-	Wed,  4 Nov 2026 19:41:05 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 0C03F609F9;
+	Wed,  4 Nov 2026 19:41:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 876321F000C1;
+	Wed,  4 Nov 2026 19:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793821277;
-	bh=zr7obOUiLNzJ4M2rJicyi/Ze6HCzMDPfBdGpZnrgFfM=;
+	s=k20260515; t=1793821292;
+	bh=QnuUeY+9+QMi3OegoRzUMDksdZE42uDQ+p1ThOeCsVw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=TFjDqZZ/yUzLlq0AHrRb5nxWFxABXvXQCDCDepRKxtO/+DBoiHd924rOXqwV39mBk
-	 7xCkrI7XXqopmEBEygr+d7LVUhWDkEjbtByAS2BeniVcX7cUeVHz8fQauHPvv0iTAN
-	 N7eRvtbhE1tCTi/bRw9rc3UYJbpqIAjFGWaWNdO/ByRLbrk2T4vEZCSk1IeyoJGCNP
-	 l+FooINdTw1eqVGKCx+YGE50hLogaFCmEhwRPgTTm9Jo8wQRCWb1gsfGDrq+Yb3o2r
-	 eWpzM29PtQ6IavQhyK8jALEj1OfP2htX9ROHmW9j/4lxcAS1kM28pIz9UvG9ZDYqie
-	 36VczlHeApOTg==
+	b=a4qjG/Enl784wKvVxl/9ldVwuuHEc87Y0LUedobA/KdwuI3SCxAckwhwEAtDdOOqU
+	 UqZPPnd0i1wsEQPINzLmBf7fes9X1w97pMqml0mB5btMrfd8uToyQFpFM0Tl2wlAjD
+	 kgF4RA3JR3lH8viB9FAeGA4ZqAZXhhvVqKaCxsHsidrZt3ppkwceT62jwKoGEsMlOx
+	 78OYFlBnZIcEweu6rx9OyaYzVUpLMbaYn5Kxkk/UsZEPHpo8JcSdi7maG+VD8tqYHf
+	 NonEOsq87sjklv+/uShbdJtRlOOZ5V+hHfFMq2FNCALvQq2gchvAnrCclCithYaHdM
+	 zs/aDQjJX2z7g==
 From: Christian Brauner <brauner@kernel.org>
 To: linux-fsdevel@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
@@ -102,16 +102,16 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	linux-debuggers@vger.kernel.org,
 	"Christian Brauner (Amutable)" <brauner@kernel.org>,
 	Chuck Lever <cel@kernel.org>
-Subject: [PATCH RESEND v2 22/23] PNP: pnpbios: let procfs copy in writes
-Date: Wed,  4 Nov 2026 20:41:03 +0100
-Message-ID: <20261104-work-procfs-arch-v2-22-2aeb952c9597@kernel.org>
+Subject: [PATCH RESEND v2 23/23] PNP: isapnp: let procfs copy out reads
+Date: Wed,  4 Nov 2026 20:41:18 +0100
+Message-ID: <20261104-work-procfs-arch-v2-23-2aeb952c9597@kernel.org>
 In-Reply-To: <20261104-work-procfs-arch-v2-0-2aeb952c9597@kernel.org>
 References: <20261104-work-procfs-arch-v2-0-2aeb952c9597@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1575; i=brauner@kernel.org; h=from:subject:message-id; bh=IXYMr4OIXAB8ydnfVDKQ7NIihIFaHGo221DwmHIwdwA=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS97mR/NSPT6HkaC/vt8vZrrZOf7cn8cOajzZze4try1 XtLbIuDO0pZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACYy7RvDf9eUspCkiD7zz/mp M1Q770my3G5f1nJheSLzi75vySe2PWX4K9E+OSP6wK3TV2dX82rV71go8lKvXe+0OfMZ0ZTd8x/ MYgAA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1810; i=brauner@kernel.org; h=from:subject:message-id; bh=O9tLcZSRMcgAQbB8Pp6p1hVEIxcx9tANJYkp4CgYVW0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS97uRoSC+OPd30eNcyzvc/yy/YbGGdvPLwp7wL4ZnJy 2++kTT52VHKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjCRoLeMDKvtZufJ1LDZnWzr aM1t2LBM8N+nLa95p/c8m1iiUHw97gDDP8vnB0xly+JWrdKTyXnq2i/YvW3iPe61nAKrrcqOL/1 xhQUA
 X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
@@ -132,50 +132,66 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Implement ->proc_write_buf() so procfs copies in what is written to
-/proc/bus/pnp/<node> before it pins the entry, and take the node data
-from that copy. A node with more than PAGE_SIZE - 1 bytes of data can't
-be written anymore. I don't think there are any.
+Implement ->proc_read_buf() so procfs copies what is read from
+/proc/bus/isapnp/<card>/<dev> to userspace after it unpinned the entry.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- drivers/pnp/pnpbios/proc.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/pnp/isapnp/proc.c | 20 +++++++-------------
+ 1 file changed, 7 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/pnp/pnpbios/proc.c b/drivers/pnp/pnpbios/proc.c
-index 14632a8d0da0..00163aedd738 100644
---- a/drivers/pnp/pnpbios/proc.c
-+++ b/drivers/pnp/pnpbios/proc.c
-@@ -171,7 +171,7 @@ static int pnpbios_proc_show(struct seq_file *m, void *v)
- 	return 0;
+diff --git a/drivers/pnp/isapnp/proc.c b/drivers/pnp/isapnp/proc.c
+index 1829c20d5446..2634db5f41e2 100644
+--- a/drivers/pnp/isapnp/proc.c
++++ b/drivers/pnp/isapnp/proc.c
+@@ -19,40 +19,34 @@ static loff_t isapnp_proc_bus_lseek(struct file *file, loff_t off, int whence)
+ 	return fixed_size_llseek(file, off, whence, 256);
  }
  
--static ssize_t pnpbios_proc_write(struct file *file, const char __user *buf,
-+static ssize_t pnpbios_proc_write(struct file *file, char *buf,
- 				  size_t count, loff_t *pos)
+-static ssize_t isapnp_proc_bus_read(struct file *file, char __user * buf,
++static ssize_t isapnp_proc_bus_read(struct file *file, char *buf,
+ 				    size_t nbytes, loff_t * ppos)
  {
- 	void *data = pde_data(file_inode(file));
-@@ -191,10 +191,7 @@ static ssize_t pnpbios_proc_write(struct file *file, const char __user *buf,
- 		ret = -EINVAL;
- 		goto out;
- 	}
--	if (copy_from_user(node->data, buf, count)) {
--		ret = -EFAULT;
--		goto out;
--	}
-+	memcpy(node->data, buf, count);
- 	if (pnp_bios_set_dev_node(node->handle, boot, node) != 0) {
- 		ret = -EINVAL;
- 		goto out;
-@@ -207,7 +204,7 @@ out:
+ 	struct pnp_dev *dev = pde_data(file_inode(file));
+ 	loff_t pos = *ppos;
+-	int cnt, size = 256;
++	int size = 256;
++	size_t cnt;
+ 	int ret;
  
- static const struct proc_ops pnpbios_proc_ops = {
- 	.proc_show	= pnpbios_proc_show,
--	.proc_write	= pnpbios_proc_write,
-+	.proc_write_buf	= pnpbios_proc_write,
+ 	if (pos >= size)
+ 		return 0;
+ 	if (nbytes > size - pos)
+ 		nbytes = size - pos;
+-	cnt = nbytes;
+-
+-	if (!access_ok(buf, cnt))
+-		return -EINVAL;
+ 
+ 	ret = isapnp_cfg_begin(dev->card->number, dev->number);
+ 	if (ret)
+ 		return ret;
+-	for (; pos < 256 && cnt > 0; pos++, buf++, cnt--) {
+-		unsigned char val;
+-		val = isapnp_read_byte(pos);
+-		put_user(val, buf);
+-	}
++	for (cnt = 0; cnt < nbytes; cnt++)
++		buf[cnt] = isapnp_read_byte(pos + cnt);
+ 	isapnp_cfg_end();
+ 
+-	*ppos = pos;
++	*ppos = pos + nbytes;
+ 	return nbytes;
+ }
+ 
+ static const struct proc_ops isapnp_proc_bus_proc_ops = {
+ 	.proc_lseek	= isapnp_proc_bus_lseek,
+-	.proc_read	= isapnp_proc_bus_read,
++	.proc_read_buf	= isapnp_proc_bus_read,
  };
  
- int pnpbios_interface_attach_device(struct pnp_bios_node *node)
+ static int isapnp_proc_attach_device(struct pnp_dev *dev)
 
 -- 
 2.53.0
