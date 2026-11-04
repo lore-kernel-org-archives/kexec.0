@@ -2,117 +2,60 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDFD860AFC6B
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:36:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178D260AFC6D
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:36:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=mqvdsH+B;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LE2xhvlf
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Fj6EbyKY;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kHogC9f+
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=pQQ1Vs9Ggdq4tGJpsZZ2KAKh5WKICEOKhSgV+25xKrE=; b=mqvdsH+BuTNHbz
-	GAqE7IRskaKSOKfjFGOz3HnLjkUFzEeN32eXeug63G8wvKTcME2vip9S7bFGqA338eg1Sl5XK909o
-	p1UYvJHXqovpTA8G0qXDHemamQL8q7MCElok9u8tSURKtk3EBVsDS80kYsE9IP/L6lBjKjYJ66Rrg
-	oDkfMvyEt8M+Yn+fJLhr7TvGki4sJV4oQwNW1mFDPh4AMHkmPDatUlYGB2YdGQOi8mOMqD0PApVa9
-	P5QGdkN+X5g3Ub6zwkMjZeVv4krDPpB6jDQwIaPjLsF0V3EUG3p0yehWrqzqxIOahAWpfUynolAZH
-	aRmJuHbM0ALANegpeezQ==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Unsubscribe-Post:List-Owner;
+	bh=Itb/+XUxzwDjuKQwsAJFR47NDknmWF5dyrfvKBFmIfk=; b=Fj6EbyKY1zXWupP8jhgy1FIaPe
+	YdBNsuN0Nj84przpGqC+8YCXbLRe34YxmMql/Uk1+T2MWUyK+fWe49KeaPb+yqO8tFWY/YblcpX6u
+	iCcvduyz6vqePRhq7jqwl+2K0Z8yDBHHaSZcgoDjuapbKn8GJtrqiUk4fcgZUbGV/3Oe0O7eN65aI
+	imJlynyOhqA0eWu7ztrWKu4OuaLYQSplXTJehU3JMEanoAjH+zGIRDztIRSJ7Ynby+wxSeJxtnFHI
+	4QtSeiuHPhCsTKyOcmcc4qTpAKZ6UdnEvpFbA0DNdNUBw9cptoBCFsB67oIVxhvNDRD+D62sX65ZP
+	pvqufQYA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgmj-00000006gEi-2JYx;
-	Wed, 04 Nov 2026 19:36:37 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xOgmm-00000006gHW-3K5m;
+	Wed, 04 Nov 2026 19:36:40 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgmi-00000006gEP-04J5;
-	Wed, 04 Nov 2026 19:36:36 +0000
+	id 1xOgml-00000006gGP-3BJY
+	for kexec@lists.infradead.org;
+	Wed, 04 Nov 2026 19:36:39 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id C0A3A43C5E;
-	Wed,  4 Nov 2026 19:36:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC6AC1F00A17;
-	Wed,  4 Nov 2026 19:36:23 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 506D141392;
+	Wed,  4 Nov 2026 19:36:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F1551F00919;
+	Wed,  4 Nov 2026 19:36:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793820995;
-	bh=pQQ1Vs9Ggdq4tGJpsZZ2KAKh5WKICEOKhSgV+25xKrE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=LE2xhvlfg0ggjtQBi7k/yBWe0FPcdQ+k5fjG+wAjpCj+7mLg+pQWGjB8uBtCBJNXU
-	 1hm3hiNz0BzNx64SJ+0v+umYt/gvnmwmjNeM7eZmZjkMKK3r7ZsY2rCE/cB6Vuoyyh
-	 hIm4cNe2e5X+iWpnmRoQvIMbMtlTbV9ryhFiKp2B2qAh/B+heLylm9TXu09jUtvetc
-	 89Djht6RVz/zMTf2pNKVsSpvsCd9UrC3EC7He4FCRXcjO86xQhz9K0fnAZaQmRvf1V
-	 LQvwsJ7brRbuX4lwrdJ3+wt3Lk3D3kEIgaBKvZYk9sv9eiUC/NwIjt9LAfL6Wez6nR
-	 7HlhFAAkWGJPA==
-From: Christian Brauner <brauner@kernel.org>
-To: linux-fsdevel@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Jann Horn <jannh@google.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Chris Mason <mason@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	NeilBrown <neil@brown.name>,
-	Eric Dumazet <edumazet@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Christoph Hellwig <hch@lst.de>,
-	Greg Kroah-Hartman <gregkh@suse.de>,
-	Joel Granados <joel.granados@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Jan Kara <jack@suse.com>,
-	linux-kernel@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	linux-wireless@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	netdev@vger.kernel.org,
-	ntfs3@lists.linux.dev,
-	platform-driver-x86@vger.kernel.org,
-	coreteam@netfilter.org,
+	s=k20260515; t=1793820999;
+	bh=Itb/+XUxzwDjuKQwsAJFR47NDknmWF5dyrfvKBFmIfk=;
+	h=From:To:Cc:Subject:Date;
+	b=kHogC9f+CSu/YIkuUTNAcDq003+8HXU+ITLFDlsbwhw1GoU2HyvqiJyoPVfMQzBgE
+	 9HruiKS/bFPfYumogbwljnXrOHutj64vVseMoFoRn9i9mEavOHl0UIm0bjUPQpKJ9W
+	 T+T13Jpx4AwuUkCdMUsJAyIDWZPplt4C3fqsFD0uoRK87ngTX/FkNtSN4mm9zNeQ89
+	 ucg9ydD5/4kJQX+WxSqyzRaqQQWjsfb+WO/hSRgnJ4+ICMb+o+FB7fNM+mDTr7RlDj
+	 xaY+CJhUWXFYOBMcFjGyDgsjpo6sAl6wCBhhBBD08MBSCq7EWW21waQ625FLE1khsw
+	 M5STEaQpYDSOQ==
+From: Sasha Levin <sashal@kernel.org>
+To: Shuah Khan <shuah@kernel.org>
+Cc: Baoquan He <baoquan.he@linux.dev>,
 	kexec@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	netfilter-devel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	ibm-acpi-devel@lists.sourceforge.net,
-	jfs-discussion@lists.sourceforge.net,
-	linux-alpha@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-fbdev@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-sh@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	samba-technical@lists.samba.org,
-	sparclinux@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org,
-	linux-doc@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-atm-general@lists.sourceforge.net,
-	Takashi Iwai <tiwai@suse.de>,
-	linux-input@vger.kernel.org,
-	linux-raid@vger.kernel.org,
-	linux-ext4@vger.kernel.org,
-	linux-modules@vger.kernel.org,
-	linux-debuggers@vger.kernel.org,
-	"Christian Brauner (Amutable)" <brauner@kernel.org>,
-	Chuck Lever <cel@kernel.org>
-Subject: [PATCH RESEND v2 03/23] ARM: atags: let procfs copy out reads of /proc/atags
-Date: Wed,  4 Nov 2026 20:36:21 +0100
-Message-ID: <20261104-work-procfs-arch-v2-3-2aeb952c9597@kernel.org>
-In-Reply-To: <20261104-work-procfs-arch-v2-0-2aeb952c9597@kernel.org>
-References: <20261104-work-procfs-arch-v2-0-2aeb952c9597@kernel.org>
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests/kexec: don't fail the build on other architectures
+Date: Wed,  4 Nov 2026 14:36:37 -0500
+Message-ID: <20261104193637.333158-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.53.0
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1063; i=brauner@kernel.org; h=from:subject:message-id; bh=T/gtJK8LVC1DZFUM73wYroC67tSKwFUXW93lvLyJ5ro=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS97vgw51B0y7b3epsi2Y5kbPn1fPGCaewfFUu+1k53Z JidtfhtX0cpC4MYF4OsmCKLQ7tJuNxynorNRpkaMHNYmUCGMHBxCsBEOMsY/odG5F5OSDr8hjPk wnRp9d45CfqTm+89/PDpwqGEq92fBBoYGf4+yNE6FyxcodQt3qaa4nQ2ZtEpUeWA3P6OmgtKL/Z zswMA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -132,38 +75,44 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Implement ->proc_read_buf() so procfs copies what is read to userspace
-after it unpinned the entry.
+The kexec tests are only built for x86 and ppc64le. On other
+architectures the Makefile defines no rules, so building or installing
+the suite fails:
 
-Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
+  make[1]: *** No targets.  Stop.
+
+Give the Makefile empty targets there, as sparc64 and
+drivers/s390x/uvdevice do, so that the suite builds and installs
+nothing.
+
+Fixes: a802ed0dd9c2 ("selftests/ima: kexec_load syscall test")
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/atags_proc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Found with KernelCI-style TuxMake builds that record per-suite results
+with KSFT_BUILD_REPORT. x86_64 builds don't change, and arm64 and arm
+builds now succeed without installing anything.
 
-diff --git a/arch/arm/kernel/atags_proc.c b/arch/arm/kernel/atags_proc.c
-index 8411fbfbcb8b..ff28bf24dd30 100644
---- a/arch/arm/kernel/atags_proc.c
-+++ b/arch/arm/kernel/atags_proc.c
-@@ -10,15 +10,15 @@ struct buffer {
- 	char data[] __counted_by(size);
- };
- 
--static ssize_t atags_read(struct file *file, char __user *buf,
-+static ssize_t atags_read(struct file *file, char *buf,
- 			  size_t count, loff_t *ppos)
- {
- 	struct buffer *b = pde_data(file_inode(file));
--	return simple_read_from_buffer(buf, count, ppos, b->data, b->size);
-+	return memory_read_from_buffer(buf, count, ppos, b->data, b->size);
- }
- 
- static const struct proc_ops atags_proc_ops = {
--	.proc_read	= atags_read,
-+	.proc_read_buf	= atags_read,
- 	.proc_lseek	= default_llseek,
- };
- 
+With ARCH=powerpc, as passed by the kernel's kselftest targets and by
+CI, the ppc64le check doesn't match either, so the tests are only built
+on powerpc when ARCH is taken from uname -m. This patch leaves that
+alone.
 
+ tools/testing/selftests/kexec/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/tools/testing/selftests/kexec/Makefile b/tools/testing/selftests/kexec/Makefile
+index 874cfdd3b75b3..11b30d49a7f23 100644
+--- a/tools/testing/selftests/kexec/Makefile
++++ b/tools/testing/selftests/kexec/Makefile
+@@ -17,4 +17,8 @@ endif
+ 
+ include ../lib.mk
+ 
++else
++nothing:
++.PHONY: all clean run_tests install
++.SILENT:
+ endif
 -- 
 2.53.0
 
