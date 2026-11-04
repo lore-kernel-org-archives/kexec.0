@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193CC606A31B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F03C606A326
 	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 01:03:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=QBRrGiu6;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jKNHYWtf
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Aq0CXTZt;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ILbT5fWD
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=VjQj72weLtRUEeeA7pEXpvTgVlPTwRiBgG+W6jPCuAk=; b=QBRrGiu6k2Dsk5ilFThIYkUGCR
-	3UQzcNCf3Ezf0oyyJGkH5lNLlmA1my+apodE9UdDmROQ9PqvpoHCEfjDo5SrTaveJiCKWqRNoPV+/
-	THD+lsRWO5hEKRmzSPkWLqSOoCyX22olhSYQ1bWeMfvugiUh9fnwbPTzsp252L3MdZpYiCA0krknz
-	xEWkF6IHEsuUBbC3vN9uo7cVJIEBG/s9WIa6vUyIZer+m1hbXkE6Od/PZ0W4kvJoNr7VZRHPpmLbj
-	HQ0KAT2G/TAFYoRc6pzIvz12Za1VTkb//xB52E+t/LrHnusxV465kCls0ZXV7sXKssXsfAYqpcC1H
-	oSFLZ2gA==;
+	bh=e6z6ENp9mw2d0XbLY45BrfnOczEiRPfheO2Dw1rG1q0=; b=Aq0CXTZtZYZSCQCoTnEQ7K/pX8
+	bSk/DRJ97qhs5em1zBNNAjfqP1oSroMSBrCMNNIMLNXGHFKaa9gPDfexFRHaoxfCcxqdkZDlX5KOE
+	1j/shV6L9U0r+DdgyZDjTTanQmY/DZDCsxaFlhtRPdSffeZyuHZKyOpvfE7Ws4vicT6/N2ORSTRJp
+	SGKLGJ/iSZaVL8gksXWNvQOKgXkg6ghielIfX1IEdUMc05GW9n6x7AgaH6wIJEKoOfbk69PO67kBY
+	xDJhNV5nImPbhIwDYKehLh+ShbRmZHZmhJVkIuqXqWI0sxHoAlm3Kue0FaX6ZDSXjowZ1XJ+LjSr7
+	w3DKLbTA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOPPX-000000042O1-3QHg;
+	id 1xOPPX-000000042O9-3k8D;
 	Wed, 04 Nov 2026 01:03:31 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOPPV-000000042Kx-2byR
+	id 1xOPPW-000000042Mu-2ohp
 	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 01:03:29 +0000
+	Wed, 04 Nov 2026 01:03:30 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 02B7E43995;
+	by sea.source.kernel.org (Postfix) with ESMTP id 6CC8A43CFE;
+	Wed,  4 Nov 2026 01:03:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 604AA1F000C1;
 	Wed,  4 Nov 2026 01:03:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0E141F00919;
-	Wed,  4 Nov 2026 01:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793754208;
-	bh=VjQj72weLtRUEeeA7pEXpvTgVlPTwRiBgG+W6jPCuAk=;
+	s=k20260515; t=1793754210;
+	bh=e6z6ENp9mw2d0XbLY45BrfnOczEiRPfheO2Dw1rG1q0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jKNHYWtfvxIENEJmYuKJVD82YnLLgeQU/XLqdGMXg9IPKe+FrOAPTOy+YK7dMezJW
-	 LnpMR6qCjSyv0/0F4Ouun2kcLvSIUikEqaZGIvFNrZvtOkqflsv4d/zgkE9A2TuvuI
-	 o5fIOw7tl+nP447L4/68IFSh8aiXAP9QGR893g8Djq4bxjpDoRmp0tFOjb/OvJGYlB
-	 ebMFsalym2S7/ZusnUKOTe8TbMcEosVqwLp0ypT6PNgE+s2LgDoRhgjJVAueOS6nUU
-	 t3JlmWaOV9grDiYuXXm7+lcSTHQ47aMW3BxVZM/q0r5/3X5iWBKHieIPVHuG8z1r/i
-	 /3kgPw6nuTO9w==
-Message-ID: <sashiko-outbox-196336@kernel.org>
+	b=ILbT5fWDFPO9tw7ha78DMgUGqs0aGpNmOfANCl0MaXhwSvFIgaHgLsAWrt8HU79d1
+	 fjcbZMvQkTmskorIFBhWSbXP2aQZgU8TuiEcdD7HXCybZcdYUaUEKPA7f8iV1C1N3M
+	 CmD5Uj1MjmmydBq6Jkk9c/DxkgXMSadUBSIAzPS/O6GCbjmNGntyKk2ndGbVyOSGQ1
+	 6s59aZcp2hf2Xz3tZz5dY/x9SuDLPW0UH3/puVxae5LIOxBXxaYJwkh0TNa5RQCRfj
+	 Omg2O2x77LkzKkfr+AqIVlrRzuVteif6R7uba3xOYRGl84luhGTz1N71K3C5PNdxWb
+	 XtXCfgaMwFbxw==
+Message-ID: <sashiko-outbox-196337@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 05/10] liveupdate: Don't WARN if tracking a retrieved
- file fails
+Subject: Re: [PATCH v3 06/10] mm/shmem_luo: Don't make early retrieve
+ failures permanent
 To: "David Matlack" <dmatlack@google.com>, kexec@lists.infradead.org
 Cc: "Alexander Graf" <graf@amazon.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Baolin
  Wang" <baolin.wang@linux.alibaba.com>, "Christian Brauner" <brauner@kernel.org>, "David
@@ -58,12 +58,12 @@ Cc: "Alexander Graf" <graf@amazon.com>, "Andrew Morton" <akpm@linux-foundation.o
  Dunlap" <rdunlap@infradead.org>, "Samiullah Khawaja" <skhawaja@google.com>, "Shuah
  Khan" <skhan@linuxfoundation.org>, "Suren Baghdasaryan" <surenb@google.com>, "Vlastimil
  Babka" <vbabka@kernel.org>
-In-Reply-To: <20261103010216.3447716-6-dmatlack@google.com>
+In-Reply-To: <20261103010216.3447716-7-dmatlack@google.com>
 References: <20261103010216.3447716-1-dmatlack@google.com>
- <20261103010216.3447716-6-dmatlack@google.com>
+ <20261103010216.3447716-7-dmatlack@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 01:03:27 +0000
+Date: Wed, 04 Nov 2026 01:03:29 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,27 +83,27 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Handle a failure to add a retrieved file to luo_preserved_files instead
-> of triggering a WARN_ON(). Make the failure permanent, and keep the file
-> until the file set is finished, like any other retrieved file.
+> Mark failures in shmem_luo_retrieve() before it starts restoring the
+> folios as retryable, and return the error without freeing the serialized
+> state. If no retrieve succeeds, finish() frees the preserved folios,
+> like it does for a file that was never retrieved.
 >=20
-> xa_insert() can fail with -ENOMEM, and userspace can trigger that with
-> LIVEUPDATE_SESSION_RETRIEVE_FD, so warning about it lets userspace crash
-> systems with panic_on_warn.
+> Nothing has consumed the preserved state before the folios are
+> restored, so the retrieve can be tried again.
 >=20
-> The handler has already consumed the preserved state when this happens,
-> so the retrieve can't be retried. Keeping the file ensures that its
-> resources are not released before the file set is finished. Finishing
-> the file set then erases the file from luo_preserved_files, which does
-> nothing for a file that was never added.
+> This also fixes leaking the preserved folios when one of these early
+> steps fails, e.g. because the file has seals that this kernel doesn't
+> support. The retrieve freed the serialized state but not the folios, and
+> finish() then skipped the file because its retrieve had failed. There is
+> no Fixes tag, since the fix relies on args->retryable, which was only
+> added earlier in this series.
 >=20
-> Fixes: 00d0b372374f ("liveupdate: prevent double management of files")
 > Signed-off-by: David Matlack <dmatlack@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103010216.3447=
-716-1-dmatlack@google.com?part=3D5
+716-1-dmatlack@google.com?part=3D6
 
 
