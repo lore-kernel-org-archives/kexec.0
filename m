@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A48606E832
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 22:32:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC9F606AB2F
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 22:35:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ufLxCiNx;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=KZuHrX20
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=0WevHOdh;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=R3xnNN00
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -14,72 +14,74 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=AqrMQTautnZWVcHeal8+VHryjxTdMHJnQLEYqFDhRfQ=; b=ufLxCiNxZd7O+LUzf++fTk4hCp
-	a5DCRf6918GrZvSsRHDrVAG+e8pRi29r8AqCAsbCCSaZJsP3xqnsamPgSx5blV1RUjEfLskWcT9B1
-	6RIV0B/cVUJ+W57XpDMRYXVzIwNMXszl7u8tq+07FPHx4lz++9M/D/7Ih/QKcA7YL1ZX+lGiGR7vD
-	pKVy8CAhny0uHLPTzs2imGc48VgXpjF5sWhLFSXD+49oy51sVmSZWRqB1E3uxBRCUK+QWdYoTRSJe
-	3cpJNGMe9v6cEGSOSug3T1CPCexvcxOHpbjFkUzwheObu3XyiQ55NmNJquqv+yhZTdMcv4ew5EB8G
-	8FlkXcPg==;
+	bh=Osoc1/zc3WCPxn/uivsVACevUkiPfuARX2+mZ1FpT3s=; b=0WevHOdhY6tNKHhGqooMXkhntG
+	CsVYi1b/1RwhbZIvskTYmZEpYbjm3cLEWxWcEm5VNmc3gNGgwhUETgI2T3bjf/FkGxohIKdKp4Uhw
+	kIJxSLQVtFDw+5neRrNS3zcCUHMD0Zq7vQJE/9acA4mvKwfagxnIgGSyQsmeQWbrKsArejYgvzAS0
+	E/FoVAXog6dGCqhPoI/2fIFHeKZMgKAFgdATxp8srkGbOAieWe4gQiP8b0OrNffoFTXz/NX3GcSb+
+	6FCqTtwIfMgey58Ii8Tb/jaatjv1mlWqrvk6o6X91Vr01ZfjR3Fom65YnyZLuUXn4LQtUbUcWQymq
+	FRWN5RJw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOjWr-000000079tD-0P3k;
-	Wed, 04 Nov 2026 22:32:25 +0000
-Received: from mail-pl1-x632.google.com ([2607:f8b0:4864:20::632])
+	id 1xOjZr-00000007ADU-31Nb;
+	Wed, 04 Nov 2026 22:35:31 +0000
+Received: from mail-pf1-x42a.google.com ([2607:f8b0:4864:20::42a])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOjWo-000000079se-2pBE
+	id 1xOjZn-00000007ACy-22dQ
 	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 22:32:23 +0000
-Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-2e60f9af6e6so12126315ad.3
-        for <kexec@lists.infradead.org>; Wed, 04 Nov 2026 14:32:22 -0800 (PST)
+	Wed, 04 Nov 2026 22:35:30 +0000
+Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-8b1a705b88aso425340b3a.2
+        for <kexec@lists.infradead.org>; Wed, 04 Nov 2026 14:35:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793831542; x=1794436342; darn=lists.infradead.org;
+        d=google.com; s=20260707; t=1793831726; x=1794436526; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=AqrMQTautnZWVcHeal8+VHryjxTdMHJnQLEYqFDhRfQ=;
-        b=KZuHrX20AQDbjSxQmVnkS11l7sNgC4ewGigC762Uk+iXi8+Qe7/V88vfAS4YaJ0WhF
-         qCoYcpHhI4HldJdFpbYY4REhmKvRlW0XukZnHh9PRk6WZqSjDDamK0rXLWCgdtHTdp9o
-         0UjJVxgigG65k0yDY7jlEtuH1ae41U2Hi7tCrd0+c7ZV6/mD8UsS8A83L7WrOGuHE53Q
-         My0kGeaQdT6DJFGuelkaLwDy1SwvElIXWgjT7raeE8+BOS7SIA6AdbchrKSu3sHVrwgm
-         csKN6rTIwcPvfvbgJo6xjv/gwUuo7olFFn1kP93DsGsIdLi1u5kVQdVkMgM6casjNddZ
-         EdvA==
+        bh=Osoc1/zc3WCPxn/uivsVACevUkiPfuARX2+mZ1FpT3s=;
+        b=R3xnNN00WBIUqz8uz8t+M4hDkrHBS4lWD4Dnwgef7A8WLaOf7f8PIb1O40EMX9HH6Q
+         ipBmdvx9JFNPeVjh0c7HYoSnnuTz7zCzag0xqy7l7MGft9TpMG/LHRin//gU769kw2NT
+         2xKdRGcliqnMGneIiuuXdzAPj1QlHfyXAr2Crax88lFzI6pst1PffzIj1u62faZIa+5i
+         T5DmQkY0SDasC4yB89I8y7lkipHSZ1UzOjPiclDqPqBS1SOekGPcIUuywXeaRkZN8eXd
+         cwclXDSehsquAjxFA10ncuzzVqFN+GoO9hJxZ7DicVOT1ef/245GTmno/PDlOXEK1g74
+         lyEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793831542; x=1794436342;
+        d=1e100.net; s=20260707; t=1793831726; x=1794436526;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=AqrMQTautnZWVcHeal8+VHryjxTdMHJnQLEYqFDhRfQ=;
-        b=lHcpFJnGFKCBFVoZO8bHY7HWZ1KqMxN9B5jA7bO+ZQBoGEAvmBSD2N3NXW92qRB173
-         XRMarsdJzWo98OMqLABiEdvCG6nkXFifKXcsMrP7P3t1GZwebpGRUHSMPGmzVEwKquX4
-         WWYfy5CoSgX23qWoqT1UZJMJ5pH9x7KLZ5riEOg6rc2UJ2kxv1LYV4KK1Me7EsO4ukPu
-         cKqcEms5rGXSoksfuiKKZPOU3nhKg0WmQWeMiGa0/3cKTVzfsuHo3B1d8NXHiZqBCezS
-         rYjgnBcVUrAoGzZojcD0FN74kSZbMvijjLA2TZa4LOJM53tp/5uc/4j1cZRWfj7sULIF
-         UDkA==
-X-Gm-Message-State: APuU4Z/PB0Jx+t06cr4UiXgyPz1z6FYO1FGxK4HpUP+JUzC3efDQ/w+I
-	xyPBKaSngtlIN08KpZhdpE6SzrU2yC/fuxJ2Lx4GIHPUWmYWpMijwlsM6jpPZxxiVA==
-X-Gm-Gg: AYBFou1+VSmWKJoOqlvCB0gYSUNDgCcxqulWoBoG8ZBQ3TAmkGVLILIOLI0mCic9n+5
-	uEUQBYBdWgBukc16PAlb1KCr9GCmq+8ZAp+BPlMkiQDz6EvSwcZ+MzEPn9KG8AntuhD5lOiC5Uj
-	yOVSuii4Pd4j/I1Bk8+UPSjRC8O6RClX44uPohMaeIqz7mdHfQiIhS0oerlu/xkXm57Y3caOxor
-	uIGANxafgavulqiAoTer0PK+Ofm0y3xc7L8ZeMF2gx5dFLn73fe6AMZnjJOX0aVHsuyy/pHfpOI
-	xF4u65VNYYjeiiq/zZLhWjlWGhZfM+10r4SlPrIYMAZwsxiSgC9wAsXoTB/ONCEluUbM6AYr5yU
-	sPacvudgnwWAPSDN1RpBbmna/lwpHq2iU7Yv5McKMcUBo1Ab1L7NDU8XnUUhgA8rJ5o364CI1/f
-	K+R27bsjjBM/j9i+cuQVrTZ7ioOncJazn1Tp+f5NS8RH1iGUDiRqTmiJj/0o8kKmEjZCNxdoPQ9
-	Zy7r0BUW00nUi4d1tflAxzH81LhK/ysFQ9NP9VZD/uAjN5fmSBzO9/QO3X/qxYMij5JB9pisphW
-	QWzKFCNcHoOhwq5BuNJ2lvfKvhLrLXUNNcBP/i7XeI4Ai+UgrJBRvUvGLmUAq2nFvagt9yv5ITR
-	VG/K2wUrklA==
-X-Received: by 2002:a17:902:f603:b0:2ed:130f:869d with SMTP id d9443c01a7336-2ed130fba9bmr22390155ad.43.1793831541004;
-        Wed, 04 Nov 2026 14:32:21 -0800 (PST)
+        bh=Osoc1/zc3WCPxn/uivsVACevUkiPfuARX2+mZ1FpT3s=;
+        b=eJqbuf7SWDcYWsSXTWERxooQnUlzpJG90MjMzwEoXj0C4RAJpZ/ngVevNVoHTtRHpl
+         SgrP3Tr8kV605rIsxoydLC6HQA+BtvEUlrBgbhWWayF8wifJg2buuJ9ZZQNDVLexedmJ
+         w9eO4X5dWInzlsKa5JPI2csmv8luCkesezJWbzRiG7V/u42CXQo6kuFZ36O0ylSmNh+9
+         peXeYl5VyutFBSegNhnLXqKNaz1h5Bx3UzVA2mft/O58BtnUf/TWu2b4JoEuFw3OSuQt
+         nKj/eYgkhzUTx+EII/nJejYaoUzqSOGadLTcn7mdMWNJdji82qi8jpIpKLEHujYwBc4k
+         dDBg==
+X-Forwarded-Encrypted: i=1; AKwUvBxffFP7Qx/GETx0yeWyIsfoDRwh/hX7KSrRQAsAJ8e/UeJsLHwj9F4v2uiNeW+AF6DUYEMgyA==@lists.infradead.org
+X-Gm-Message-State: APuU4Z/emiwnKmQKbDOu4cFMZ5k0FqEF2qAUREK/xpWvqVBaRQCOxRvw
+	PDAQJyqD4SFw79M9dHY4wf/cv1Y5cI87W9mJOvI9w0X5OXzRmPcOyX6ksGWGGnMvqw==
+X-Gm-Gg: AYBFou2zbbm1U7EyLnQsAIfmOpVpxT6oJ9rNMx7GUOGe9j/Hxnw27omdE/EqOPYop7X
+	ttKHSr9AR7WoMukOW85DFbgHT8dlmOvOgXqYldA2SpvKDqCR4Ik0wtVkLMboZZwJvi/2At5imEQ
+	3yDA8EOWMvbxmtFTmsp02+/6zEZSYou8JUyhdA60FQXkWPzyO3iH/YaT3g/6AgfWusgFFPU7AaA
+	wulsuroOU2RfGuC+xIZ2qmyWS1/tulJLmiFAIFwor+BKiXa1s3+CuiOcJQffnQeT3g+QUtEsXcc
+	GNBSuVAdU4nMkH/ZkaHxZ7CRM4W1/3D+6+YxlkLJLL50ZeFFPuDIMPQVcJFmjUwlqdc/XYUd8IL
+	wFg4ppiPYXrpeW4y/IYyyNY9ih3D9nV7mYnJ1BxGfK6J8Cb+3XUjug4rzlOfYNEy4lhg0BaDu4a
+	M4iId99nD/QxPIwML8roWafC8hOtSELqdyJ8+wjL/Bz4wI/W90be77MzIo0WafMNjJRwocvvYmm
+	m1fCjSFGTDxVCRSiyOWNWsz/BQeXE8KAfO1/6BUgE8mkxzA1lsdXti3lOOFxDqyI8UcmUbhnBfs
+	OrLOY34HkrIEz1AUhS91tFg2VGbwBVdafGa5U/norxGUspzGhhIa82nbnzkw7uBJ/L8piiUoG6+
+	JTwwgAFxhIA==
+X-Received: by 2002:a05:6a00:1f0b:b0:899:67fe:3c52 with SMTP id d2e1a72fcca58-8a9be1a4461mr15308534b3a.15.1793831725909;
+        Wed, 04 Nov 2026 14:35:25 -0800 (PST)
 Received: from google.com (33.79.127.34.bc.googleusercontent.com. [34.127.79.33])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ed090a1475sm11919255ad.41.2026.11.04.14.32.19
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8b09b569495sm1376244b3a.37.2026.11.04.14.35.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Nov 2026 14:32:20 -0800 (PST)
-Date: Wed, 4 Nov 2026 22:32:15 +0000
+        Wed, 04 Nov 2026 14:35:25 -0800 (PST)
+Date: Wed, 4 Nov 2026 22:35:20 +0000
 From: David Matlack <dmatlack@google.com>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org, Alexander Graf <graf@amazon.com>,
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+	Alexander Graf <graf@amazon.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Baolin Wang <baolin.wang@linux.alibaba.com>,
 	Christian Brauner <brauner@kernel.org>,
@@ -88,26 +90,26 @@ Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
 	"Liam R. Howlett" <liam@infradead.org>,
 	Lorenzo Stoakes <ljs@kernel.org>, Michal Hocko <mhocko@suse.com>,
 	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
 	Randy Dunlap <rdunlap@infradead.org>,
 	Samiullah Khawaja <skhawaja@google.com>,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	Suren Baghdasaryan <surenb@google.com>,
 	Vlastimil Babka <vbabka@kernel.org>
-Subject: Re: [PATCH v3 08/10] mm/shmem_luo: Allow preserving tmpfs files that
- are still linked
-Message-ID: <auuyb7FYBX7xdr5z@google.com>
+Subject: Re: [PATCH v3 09/10] mm/shmem_luo: Allow retrieving tmpfs files with
+ O_RDONLY
+Message-ID: <auuzKNZsPD10XM4q@google.com>
 References: <20261103010216.3447716-1-dmatlack@google.com>
- <20261103010216.3447716-9-dmatlack@google.com>
- <2vxza4nok0ji.fsf@kernel.org>
+ <20261103010216.3447716-10-dmatlack@google.com>
+ <2vxz5wyck08d.fsf@kernel.org>
+ <auuJ4msatqzoOrjN@google.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2vxza4nok0ji.fsf@kernel.org>
+In-Reply-To: <auuJ4msatqzoOrjN@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261104_143222_715287_9E8E4E51 
-X-CRM114-Status: GOOD (  14.94  )
+X-CRM114-CacheID: sfid-20261104_143527_548605_CE25B337 
+X-CRM114-Status: GOOD (  20.11  )
 X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -127,21 +129,41 @@ X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 2026-11-04 05:45 PM, Pratyush Yadav wrote:
-[...]
-> > + * Preserving a file requires it to be opened for reading, since the retrieved
-> > + * file can be read. It also requires permission to write to the file, since
-> > + * preserving it affects all of its users, as described below. But the file
-> > + * doesn't need to be opened for writing. For example, a binary that is being
-> > + * executed can be preserved through a read-only file descriptor. The owner of
+On 2026-11-04 02:45 PM, Pasha Tatashin wrote:
+> On 11-04 17:52, Pratyush Yadav wrote:
+> > On Tue, Nov 03 2026, David Matlack wrote:
+> > [...]
+> > 
+> > Can't you put all your binaries in a separate session, retrieve it as
+> > the very first thing, and then finish the session? Then you can execute
+> > those and retrieve all the other sessions.
 > 
-> Why are you talking about preserving binaries being executed? Seems
-> oddly specific. I didn't know that was a use case we cared about.
+> This is a good workaround. I am not opposed to this patch for 
+> completeness of functionality, but if we decide to keep it, perhaps it 
+> should simply be squashed into an earlier patch. The current diffstat
+> looks bad, as it mostly deletes code that was introduced earlier in this 
+> series.
+> 
+> In any case, given Pratyush's suggestion, we could also drop it.
+> 
+> > 
+> > Why do we need to support this in the kernel?
 
-It's the reason the check looks at permission on the inode instead of
-requiring an fd opened for writing: a running binary can't be opened for
-writing (-ETXTBSY), so requiring a writable fd would make it impossible
-to preserve. Preserving binaries is a use case we care about, e.g. to
-carry over the binaries of services across a Live Update. I'll keep the
-comment shorter and more general in v4.
+That would work for binaries, and I agree that use case alone doesn't
+justify this. But I see O_RDONLY as part of the retrieve interface, not
+a feature for one use case. The retrieve argument is modeled on
+openat(), and openat() lets you open an existing file read-only.
+
+open(O_TMPFILE) only requires write access because it creates an empty
+file, and an empty read-only file is useless. A retrieved file isn't
+empty, it has the preserved contents, so O_RDONLY makes as much sense as
+it does for any other existing file. Without it, every retrieved file is
+writable, even when userspace only needs to read it.
+
+Preserve already works the same way: a file can be preserved through a
+read-only fd, as long as the caller has permission to write to it.
+
+If we keep it, I'll squash it into patch 7 in v4, so retrieve supports
+O_RDONLY from the start. The commit message will lead with the openat()
+reasoning and keep binaries as just an example.
 
