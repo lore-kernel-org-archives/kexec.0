@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F12606A31B
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 09:20:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D33606A334
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 09:21:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=WIUG8KBZ;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BcEaKSaA
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=1fL++pHQ;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RlGTCzi8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -14,37 +14,37 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=O/cNspokMh0UNXOA6wOkvv54jlnPVAhKOKNo3zScL80=; b=WIUG8KBZW0j3M6c+eGexe2EsnA
-	Hqy75L1rivpfJKE9TqwmgiWdr1W9ZiJVU28R8hl0l/z8LLUJITTDQhDc6RiQA3GzpEejZSpH7IoMy
-	stIQCsIMt3qs39pVH9cCawdGw50vWyFUBaRRk8XTrYSMYzvVChqnjE+RHJndTBoOa1FN3RuEVt93w
-	lXLJurzsAEsM5eooOM4U+gAAIGjJJXrdnMwCtBKK9kqIgZ8uGT7GxFyJLug8CVTPRIu9m/NFiUk3R
-	OOKtfF9zq8Owedijp867coPJG8Scv6LxuGF2I8Sap3D4giI7OhPw9E+tUw+CPBP/af7DisR49GG6n
-	4nlITTWw==;
+	bh=TLWmGN3SfRKJzJtFGqy9xXljoZdTMIGgQAZ0U5pRqZ0=; b=1fL++pHQOsCWNWruo/09uuHmjT
+	5TKO7j9yoHgzT/6POl4FWPfKNS3cKxUWihqsOaC1/eOCbY9NkV1mFnMCcR9vlJ50smqTIO9aq1eAi
+	O5whv5r+aXCKTXdHJ1kp2TMNQ8+rRkGd6sGWKjdNQLfeQ2gPk6ofV7JyBGgVYDzebCw4TbuEDh1zM
+	030IRIAkqyeDx0Zw+DhTv0AQ58ml7qe1w8Ph6MnoGFaWRSoxXvAOL1acJsTrbF4/0crnMuw8e98GS
+	zFWrxOv7ZTAXYel0a5iyBLrPvoWmyXIFuTtOKNw8qQ42D8FHg2KgCz0k3eIgqfQC31+06dO93ODnm
+	r7KzTMXg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOXAt-00000004rCp-1cCq;
-	Wed, 04 Nov 2026 09:20:55 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xOXBQ-00000004rKf-2Ds9;
+	Wed, 04 Nov 2026 09:21:28 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOXAm-00000004rBg-428Y
+	id 1xOXBP-00000004rKS-3wJe
 	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 09:20:48 +0000
+	Wed, 04 Nov 2026 09:21:27 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id B40B54344C;
-	Wed,  4 Nov 2026 09:20:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 884BF1F000C1;
-	Wed,  4 Nov 2026 09:20:38 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 43B4360142;
+	Wed,  4 Nov 2026 09:21:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CC751F00A1B;
+	Wed,  4 Nov 2026 09:21:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793784048;
-	bh=O/cNspokMh0UNXOA6wOkvv54jlnPVAhKOKNo3zScL80=;
+	s=k20260515; t=1793784087;
+	bh=TLWmGN3SfRKJzJtFGqy9xXljoZdTMIGgQAZ0U5pRqZ0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=BcEaKSaAGlv24CwtAidx4vgcs6qvpVaJft+GsrdUwgsUzcXrxh3uKvNOUoNaojM0u
-	 zeaAufJdghxwNsRVYbDAL/xLeKpNsJ3Qayq8R/yEjD/hXG6tybWAoeeY/Tcg+J2REY
-	 2VHx7FHMLCTTzYzu20RNN6+W/eGKH3XQSxBPLu21a3FQK4L4xV10mVduwGQuGwRq6Y
-	 1A0ZHeMOGLNd3RiETXNw1XPlv0+sn3aHbmYt6VyuIs0KUjdL9KaF/E0tjXUuJZvvKv
-	 OzKIqB04C/jh70SwJGTPrT4CcqF9fgN0yPVMCzRgZsEpdaIpp/2cLp+CNRnZLAYstK
-	 OnLeMUpNmqPkw==
-Date: Wed, 4 Nov 2026 10:20:35 +0100
+	b=RlGTCzi8pu88TVAb0kwn4joxUiR7mlBDOdPpezl4XmsvQd8kAh4iDFU4pQONkMHIu
+	 eliic42rAIpabkq9bUb6HqnW9ZOmOC+nO6hIz58hrOaEoVJAOD6f1NccFejHSUbQEg
+	 UcTtVvMVrKX8rkKsqChfbeyKOblU3iUz404/VcCwAESFTSpzfmuSYLv6tIXqWgvwx4
+	 JsaFcHO4jSLDa+WNzQE5ZJzqGGlwKjwInimlKuIR6uaQtqBJZavxLJ41GnGzP1qeFj
+	 IB/K6cI148TQ1ND1SEtNwA24wzZ0dXL4wMxQ/4D3P3yQeU5Lj8YAihYUT5N5BdD20o
+	 LKB+GT+o55caw==
+Date: Wed, 4 Nov 2026 10:21:13 +0100
 From: Christian Brauner <brauner@kernel.org>
 To: sashiko-reviews@lists.linux.dev
 Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
@@ -65,17 +65,17 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	Anna Schumaker <anna@kernel.org>, yukuai@fygo.io, Heiko Carstens <hca@linux.ibm.com>, 
 	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
 	Christian Borntraeger <borntraeger@linux.ibm.com>
-Subject: Re: [PATCH RFC 36/38] selftests/proc: check that faulting sysctl
- accesses don't hold up removal
-Message-ID: <20261104-aktionen-endlich-ruhmreich-92f35a0ee397@brauner>
+Subject: Re: [PATCH RFC 38/38] selftests/proc: check that a faulting
+ readlink() doesn't hold up removal
+Message-ID: <20261104-erwecken-pulsieren-anarchie-9a5a7582621e@brauner>
 References: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
- <20261102-work-procfs-bugfixes-v1-36-59422ed3e465@kernel.org>
- <sashiko-outbox-195508@kernel.org>
+ <20261102-work-procfs-bugfixes-v1-38-59422ed3e465@kernel.org>
+ <sashiko-outbox-195510@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <sashiko-outbox-195508@kernel.org>
+In-Reply-To: <sashiko-outbox-195510@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,8 +93,8 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Tue, Nov 03, 2026 at 02:48:40PM +0000, sashiko-bot@kernel.org wrote:
-> - [Medium] selftests/proc: getdents test faults in dir_emit_dots() before entry lookup
+On Tue, Nov 03, 2026 at 02:48:45PM +0000, sashiko-bot@kernel.org wrote:
+> - [Medium] selftests/proc: Makefile adds nonexistent proc-remove-slow-reader target
 
 Fixed.
 
