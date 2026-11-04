@@ -2,46 +2,46 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED11A6090495
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:50:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EDB8609177C
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:50:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=DNdbmSHs;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dYsPe7EK
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ZEcJNgip;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ViWv5liE
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=o8L0vvGY5Km24xgHgPbylEP8c5DuS625RCEauDmBOHw=; b=DNdbmSHs1z9egD
-	L6fWPMDdXuytuiOpjUZqILJT5n1d6jcvxB+NBXI0faAo/svi3rygJmbIBsvsibGBTCPX0tIDSUf+2
-	xw7oZBuudEqN97PU2dE8k8OwWuRookLtCCI41oUJkjK496eY9f5TlbEgsLyEilaxxSLLqAMecn11E
-	5X8GAEymziy+Ad7tmWdpL4wn+533gtCc1BlnjMxq9Z9XqLSjPkr3bjqLgbPn2nTOMsZe+I6PUKsPc
-	3q8b1g2p3H6NnxCeyABmGt+pLbAsjJ0aLkEn4yP4QYEFCVuh0nYLeW7RutKjw8jpR2W3L/HK71JuW
-	a9lOfcX3PmGhaS4e0peQ==;
+	List-Owner; bh=gDybWaXH0yVqSHGh6cSao1kY+huQ+XTPXQ1Vld4D+UM=; b=ZEcJNgipexSVOH
+	ckuRlMcuFH++5+B0zQvq+BhkNe0NQ7tUbu1KwwYLaVJwhZwvzRFSzaGYC93JDw8QV8nANFtvFbUOL
+	8ebBy25dwY848ecUW6uPADVIfhEPecvJjbKv4gR21xfeS6ZIENA9uA/P8jnzQP8J9aYBxSl3/74If
+	S8WKQ3F/89qOqveWsdqhbm7ctOjXO87VxqL5pqazJp9mU3cZ1tvWpLIIk2hIxES1rjBzkK4xtTzf8
+	aL7IMCo985UEZfjmXCvsLjsXRaHTePbXznAWHKDGoRKQkJjaB6K+GdnpMYLCmuvFUZCs/Zmma1NMe
+	8gkBourekZCJk/MprUBQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgzo-00000006lgx-2ob1;
-	Wed, 04 Nov 2026 19:50:08 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xOh02-00000006lnW-470V;
+	Wed, 04 Nov 2026 19:50:22 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgzm-00000006lgd-3cNQ;
-	Wed, 04 Nov 2026 19:50:06 +0000
+	id 1xOh01-00000006lmd-30pP;
+	Wed, 04 Nov 2026 19:50:21 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 66EFF43A0C;
-	Wed,  4 Nov 2026 19:50:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 004D31F000C1;
-	Wed,  4 Nov 2026 19:49:53 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 2B36B60F38;
+	Wed,  4 Nov 2026 19:50:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF5EE1F000C1;
+	Wed,  4 Nov 2026 19:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793821806;
-	bh=o8L0vvGY5Km24xgHgPbylEP8c5DuS625RCEauDmBOHw=;
+	s=k20260515; t=1793821820;
+	bh=gDybWaXH0yVqSHGh6cSao1kY+huQ+XTPXQ1Vld4D+UM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=dYsPe7EK9xlznqxSarRjMWb/keF20UxFAAIxFblrc1DyDdCICYC0tZhLXHGBEjv2m
-	 wlolIDJ7YESPSIUpyajqx3Pi5Z9zhYfRI4siggX085u5ZCM59zXJsjvpX8buE3Tg23
-	 SlNWXDQdYn3g1vBGkIMitmFjx3pOOiiqYXRBb4AvwUHkH0/o2nSoE/7xM2+bGZtgQ5
-	 OviczvtzIq+aURT2ywz7ETtS4VmDmtvxHciSqzRG/NUK0pmlve0K75uh+30R9f7Khm
-	 DjfChaLv0h87xnlfhv41ydwZ032RXJPkYnLbVO+AjaHCHz+rJCzl03k7b2tSTGaF4A
-	 finR4PnDyeWlA==
+	b=ViWv5liEfHdMHPO8R1wapbcJqOA3zpGPpbB02hMT5/E0508nWx30DxqIPL6KtEmgU
+	 u+pmFn3FsOd19p4MgLsNq//oFD4EhVxfbRb3hFQDajUha4PG308MHKfbBxuQRI2T+1
+	 gpfAFci1AHyTvujOOroEbIobGBHWkRbja9thyu+sIlV6GnLkbKj+7KO+0ZAH32xVH8
+	 iBv7uhmdL2bAAOXVUHaVgSNDhqWBsAdgXyxjuxMQt4FvbC+ZMkyYx1jsvDEISH0f4o
+	 af3/XVxyIwOpd+kA2KJQBzwNtAgTJZ+nIEKqRvJiOre/ZrMnKSk9pNUZKOAQUsYWh4
+	 hiwj+uPWiEFJg==
 From: Christian Brauner <brauner@kernel.org>
 To: linux-fsdevel@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
@@ -102,16 +102,16 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	linux-debuggers@vger.kernel.org,
 	"Christian Brauner (Amutable)" <brauner@kernel.org>,
 	Chuck Lever <cel@kernel.org>
-Subject: [PATCH RESEND v2 01/30] jbd2: let procfs own the seq_file of the info file
-Date: Wed,  4 Nov 2026 20:49:51 +0100
-Message-ID: <20261104-work-procfs-fs-v2-1-319e0f9a8aae@kernel.org>
+Subject: [PATCH RESEND v2 02/30] jfs: let procfs copy in writes to the loglevel file
+Date: Wed,  4 Nov 2026 20:50:06 +0100
+Message-ID: <20261104-work-procfs-fs-v2-2-319e0f9a8aae@kernel.org>
 In-Reply-To: <20261104-work-procfs-fs-v2-0-319e0f9a8aae@kernel.org>
 References: <20261104-work-procfs-fs-v2-0-319e0f9a8aae@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2318; i=brauner@kernel.org; h=from:subject:message-id; bh=4wXeP/X63evRQ0XlRmaO+RfgvVw7qBYaC3PXgCgMk/I=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS97tFWfOxU95GH3XdJTEYBl8knnmuK/UXrVrUrzorQz FINDXTtKGVhEONikBVTZHFoNwmXW85TsdkoUwNmDisTyBAGLk4BmEieL8P/uohlXprsW1qaIpK+ b1x9yGKVsvXjy55Vj5KKjk2tPrHQnZFh1Trl08dUnn26v0t1fseh4COavFYvfAQPnCsMWqPzN0G SEQA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1370; i=brauner@kernel.org; h=from:subject:message-id; bh=izEZyN2ciF2azWBwOiarD7rxdH5SrLb74RUgxhmuQ3M=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS97tGJzso6nn/w61mbive7Xqy3zX3zdMnSHJ2eBVw3m Q2DcmIjOkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACZyciEjw/nFJ7zrmRr3TTvN 7yT61kBSiuve9sV8G24zvhXijXX584zhr/RSZtXdspF7F/LOFVzmc/vt+qo5X9YsanqxkXF3yLP QUzwA
 X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
@@ -132,81 +132,45 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Declare the seq_operations and the size of the session state and let
-procfs open and free the seq_file of /proc/fs/jbd2/<dev>/info.
-->proc_open() only takes the snapshot of the statistics now and
-->proc_release() frees it. Reading the file then no longer holds up its
-removal when the journal goes away.
+Implement ->proc_write_buf() so procfs copies in what is written before
+it pins the entry, and take the level from that copy. Writes larger than
+PAGE_SIZE - 1 bytes fail with -EINVAL now and so do empty writes, which
+looked at a byte that wasn't written before.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- fs/jbd2/journal.c | 33 +++++++++------------------------
- 1 file changed, 9 insertions(+), 24 deletions(-)
+ fs/jfs/jfs_debug.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index 3a4f3f613ead..1e4f4e95a00e 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -1173,51 +1173,36 @@ static const struct seq_operations jbd2_seq_info_ops = {
- 	.show   = jbd2_seq_info_show,
- };
- 
-+/* procfs opened the seq_file and allocated @s */
- static int jbd2_seq_info_open(struct inode *inode, struct file *file)
- {
- 	journal_t *journal = pde_data(inode);
--	struct jbd2_stats_proc_session *s;
--	int rc, size;
-+	struct jbd2_stats_proc_session *s = ((struct seq_file *)file->private_data)->private;
-+	int size = sizeof(struct transaction_stats_s);
- 
--	s = kmalloc_obj(*s);
--	if (s == NULL)
--		return -ENOMEM;
--	size = sizeof(struct transaction_stats_s);
- 	s->stats = kmalloc(size, GFP_KERNEL);
--	if (s->stats == NULL) {
--		kfree(s);
-+	if (s->stats == NULL)
- 		return -ENOMEM;
--	}
- 	spin_lock(&journal->j_history_lock);
- 	memcpy(s->stats, &journal->j_stats, size);
- 	s->journal = journal;
- 	spin_unlock(&journal->j_history_lock);
--
--	rc = seq_open(file, &jbd2_seq_info_ops);
--	if (rc == 0) {
--		struct seq_file *m = file->private_data;
--		m->private = s;
--	} else {
--		kfree(s->stats);
--		kfree(s);
--	}
--	return rc;
--
-+	return 0;
+diff --git a/fs/jfs/jfs_debug.c b/fs/jfs/jfs_debug.c
+index 5eb35b0d420f..e1c0211a6a32 100644
+--- a/fs/jfs/jfs_debug.c
++++ b/fs/jfs/jfs_debug.c
+@@ -23,13 +23,10 @@ static int jfs_loglevel_proc_show(struct seq_file *m, void *v)
+ 	return 0;
  }
  
- static int jbd2_seq_info_release(struct inode *inode, struct file *file)
+-static ssize_t jfs_loglevel_proc_write(struct file *file,
+-		const char __user *buffer, size_t count, loff_t *ppos)
++static ssize_t jfs_loglevel_proc_write(struct file *file, char *buffer,
++		size_t count, loff_t *ppos)
  {
- 	struct seq_file *seq = file->private_data;
- 	struct jbd2_stats_proc_session *s = seq->private;
-+
- 	kfree(s->stats);
--	kfree(s);
--	return seq_release(inode, file);
-+	return 0;
- }
+-	char c;
+-
+-	if (get_user(c, buffer))
+-		return -EFAULT;
++	char c = buffer[0];
  
- static const struct proc_ops jbd2_info_proc_ops = {
-+	.proc_seq_ops	= &jbd2_seq_info_ops,
-+	.proc_state_size = sizeof(struct jbd2_stats_proc_session),
- 	.proc_open	= jbd2_seq_info_open,
--	.proc_read	= seq_read,
--	.proc_lseek	= seq_lseek,
- 	.proc_release	= jbd2_seq_info_release,
+ 	/* yes, I know this is an ASCIIism.  --hch */
+ 	if (c < '0' || c > '9')
+@@ -40,7 +37,7 @@ static ssize_t jfs_loglevel_proc_write(struct file *file,
+ 
+ static const struct proc_ops jfs_loglevel_proc_ops = {
+ 	.proc_show	= jfs_loglevel_proc_show,
+-	.proc_write	= jfs_loglevel_proc_write,
++	.proc_write_buf	= jfs_loglevel_proc_write,
  };
+ #endif
  
 
 -- 
