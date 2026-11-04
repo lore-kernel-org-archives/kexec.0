@@ -2,108 +2,118 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A03760C54C2
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:45:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B46F86082BF4
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:45:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=XVyf+I7T;
-	dkim=pass (2048-bit key, unprotected) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=gxkPR8YT
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=K0UnZeSK;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ju9Cdiwd
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Unsubscribe-Post:List-Owner;
-	bh=AhauLcYrkNfZ4d386lPMrnU0qCgiFUOVmgX6lCm/lmo=; b=XVyf+I7T36qeyZRl010t4Qg9Kz
-	Bdkf/tEl8aXDMigESZcQJLARzHDqtugmjJGpeCsMOmGI8fvunrOQUSmu4/xlwpkcB0acHUrkb50Jt
-	lW5Je7vLj5M9w0SancGqBwgchkytVkNKaNjJWuUhh0jaDIMRqcun25SUxXKt118IqURt4o85nRNdf
-	TCePuL9DJWvQPtmx0IwkqJawpYlijScCXJoCJEzMRPMUXVF4lHjBKuFXUnEFQUZSYXws8GdppPS6V
-	MLJug58tD3PD40dyFPdMlv7qXqkPY8z6bezgTVekTxMjyRn+vdC9Fx3XDYgVrnVjy548ZYFoAWNCp
-	ZvRyT8bw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=oFfWvBKtBhqs+rwLAKfNEZHrMKd6RrVgssTSPyI9nB8=; b=K0UnZeSKRxsAYd
+	1UYP6T6FutqFOt5r0U684Nf0mxq3P5BFOTucb/n26eKR/fhYQl0tckyutpHNE7HZBLVqy8PeBpkKg
+	1yq4VTyV7Io3CnAlZGBw2R4+dTR+4MP5MPoLOIE4LuXQl7jAjaGuTyPy2y9du9/GwVYa4o+/mjQeQ
+	Llr9Qlv1t+dtqKaRVGOmRwnijGWdE/xIGOS42dov/kRN4oOEPJjq+RTpVNffprF2ZCjUM4u3qt5+d
+	NkmcDiDIn6prc4PpsAPJV64wZ7bF++6GEdKZyxFV2zMcD5Qnl7fW6ozavWwjifJf3mlRm5QwKutTa
+	TmyYz6i/6PANbBtvTFdw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgvK-00000006jvA-0oyf;
-	Wed, 04 Nov 2026 19:45:30 +0000
-Received: from mail-vk1-xa31.google.com ([2607:f8b0:4864:20::a31])
+	id 1xOgvV-00000006k32-1egd;
+	Wed, 04 Nov 2026 19:45:41 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgvG-00000006js6-3L54
-	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 19:45:28 +0000
-Received: by mail-vk1-xa31.google.com with SMTP id 71dfb90a1353d-5eafa528803so391243e0c.1
-        for <kexec@lists.infradead.org>; Wed, 04 Nov 2026 11:45:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1793821524; x=1794426324; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=AhauLcYrkNfZ4d386lPMrnU0qCgiFUOVmgX6lCm/lmo=;
-        b=gxkPR8YTBg6kp7dAeAY7fqihbcbg/jwe+GBMeuotTqS2bgbrqqwHex2zbvaEp7xWng
-         7lPoypeNLp0/XwvGuHLkuVmvjF45XMwAYqkEvUqiFl5AYmtkp9YW3DgziGOduFqqJIuU
-         dawvxyKqG3OQWgwJA9gvE12v8vKAyg/jRusKdixtXjkmiX6p4yWsjYYBgb3epdbeqmwc
-         gPFNMKaaoFfXlQQFn9+cWkeYU/wIp8GNiAVsThHOT1x48wfSdVftJp5Ccc5Og1ms/QzV
-         ynEJ1O8wJF871ablyxMSWSHCOAgfKLODoZbY72ajB77mlXzNHRnjJWDZ6BHBNBZ8UIOe
-         jH2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793821524; x=1794426324;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=AhauLcYrkNfZ4d386lPMrnU0qCgiFUOVmgX6lCm/lmo=;
-        b=GtwkGmg/+T13L4+WciAeCoCgTlMuJGuogexVp60szoP2Tsdp/nOMkScfcwSIuYOyW0
-         GOyVeOcotk2f7rNUAut8mEKNz93AiP+HZolddzyM5KFXTcCWVPImSFJ8ciHkeoKoYyNU
-         w6nts3ZdJcL0IsOL//J/+TndKpNsU7RuSjfzBaUCQlZrdjqLyLkI89oKafZctZnZATwd
-         oy22g9levgDt1oESWShV23/eASdAU44FeR421b89hkIRr5az0gPuaAfyvDIlXOgR0LR9
-         izL6m/SiLLEtVt47iAoy6qkLJK21R6T/BdVYCT+RIyEO22YbQSMg3G0HktvlsazNqr8a
-         PCag==
-X-Forwarded-Encrypted: i=1; AKwUvBxLsQ03DQwgSGYYwJjNjMpKVpp6uT0XS0vlfDjuvir/ujmJ/w93a1OgnG06nAI/T7nhMm/rlA==@lists.infradead.org
-X-Gm-Message-State: APuU4Z+XQW4AdOmlCVsET/RUtuFP+bF+Q9F/6vU69xh81FW10dFy61QE
-	+5fSmMtBCLrZ1BkS1z1EYHmeNaRgFs9Up13v5jWNAPzK+tu1FR+2MSEhzacoA8aJr9w=
-X-Gm-Gg: AYBFou2XgDqTCN/YNyQDqGF1MFAyn4Krw+ZVroJ8+PLPUwe/uTI2f3kBEcixGdolGVH
-	NY1AqusRJwbb5B+Yrtk0MVx2Sa2fcaxJlTrqbp+7md24cXJcOOVTPj3XHciv82sdoO+/IQHOYO9
-	mUdnEViRpVjnACULvp49xIcVeenAF6x+Efn0d7dlpd1T9CiK1xeojCmKUChoGGnmnDu/GxQ379G
-	TN0HmsCBmEYMvQroW0ub3zXq1adJGpxstaqRfuUBd0z5AKorekrp9KqF7V290nDC/AEnWpuErfE
-	uNi4q0b4NVodCEznWHGzQBq205OUnkCD1O4LMD0P5jXifjARjW88zdxATHavusMCihjGRB6B7NV
-	3KTMFcwJLLKlaFs3VeUl9wZ3vNOO9/aXVSVC2YEl/R0TcM4J4j7QTSR21bss6CGzx5xcRxImRP/
-	HOPQSTJzTJsGS4FgV0uhgX/m0LrnA2OZs5wez9E6oxqJCOVgd0pHgwYVIEp+o+ICa/QubpBjCPe
-	CCQepZWwBaX2gKwOCxUE0nhtt5eBM8koY2KSkwv3C+kGh3tOnqzLGsaA0mGQi7eont34OAGNW4h
-	wt1nAbAuIcNcbiS6/Ij0ea/TSs5oCBNAkYSFTv/PGRjFMH5l+84SWIlcbgecNElsorAfPEh6Ni0
-	Pdi6bpol8IuCjvn3V7a5LZN71bNoC
-X-Received: by 2002:a05:6122:54e:b0:5e5:29f7:489 with SMTP id 71dfb90a1353d-5ec6899f507mr7074700e0c.22.1793821524335;
-        Wed, 04 Nov 2026 11:45:24 -0800 (PST)
-Received: from google.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5eca889381asm2496927e0c.0.2026.11.04.11.45.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Nov 2026 11:45:23 -0800 (PST)
-Date: Wed, 4 Nov 2026 14:45:23 -0500
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: David Matlack <dmatlack@google.com>, kexec@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, Alexander Graf <graf@amazon.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Christian Brauner <brauner@kernel.org>, David Hildenbrand <david@kernel.org>, 
-	Hugh Dickins <hughd@google.com>, Jonathan Corbet <corbet@lwn.net>, 
-	"Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>, Michal Hocko <mhocko@suse.com>, 
-	Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Samiullah Khawaja <skhawaja@google.com>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Vlastimil Babka <vbabka@kernel.org>
-Subject: Re: [PATCH v3 09/10] mm/shmem_luo: Allow retrieving tmpfs files with
- O_RDONLY
-Message-ID: <auuJ4msatqzoOrjN@google.com>
-References: <20261103010216.3447716-1-dmatlack@google.com>
- <20261103010216.3447716-10-dmatlack@google.com>
- <2vxz5wyck08d.fsf@kernel.org>
+	id 1xOgvT-00000006k2I-0NCU;
+	Wed, 04 Nov 2026 19:45:39 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id D2752414AA;
+	Wed,  4 Nov 2026 19:45:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A19331F00919;
+	Wed,  4 Nov 2026 19:45:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793821538;
+	bh=oFfWvBKtBhqs+rwLAKfNEZHrMKd6RrVgssTSPyI9nB8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=ju9Cdiwdukzo03f6p3hrq4bQpCrNgWvbzSyS1vs9NG/W3HaXXkao3M2u4LfrHoe8e
+	 wxtviWGSsoNjRsbvKzRys/CwzzFLfUcvMKaGQhYPmPxrbu1L7QiWnV3ZTrh/R1Otfg
+	 qrZBJdrHCIeziUsqnpGD0JFkLrcuH8m4/I4Ww7FZSJ/tfeBBZ2ylMzghmAuc9eeX6s
+	 vgBVV5T3IgnlsvU9YQnkv2d3jFbbKDOzj/iykYH1zv74/Pa9kQYvwQBnjIDHwdeuOQ
+	 S5F8Z7xCaT1zZASn9AYJ/xAtcbrp0J7I7xiLDkK+QT5iUpaPPLtpiC82DCigeWcdXX
+	 vjvXnJgaA/cBQ==
+From: Christian Brauner <brauner@kernel.org>
+To: linux-fsdevel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Jann Horn <jannh@google.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Chris Mason <mason@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Eric Dumazet <edumazet@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Christoph Hellwig <hch@lst.de>,
+	Greg Kroah-Hartman <gregkh@suse.de>,
+	Joel Granados <joel.granados@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Jan Kara <jack@suse.com>,
+	linux-kernel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	linux-wireless@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	netdev@vger.kernel.org,
+	ntfs3@lists.linux.dev,
+	platform-driver-x86@vger.kernel.org,
+	coreteam@netfilter.org,
+	kexec@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	ibm-acpi-devel@lists.sourceforge.net,
+	jfs-discussion@lists.sourceforge.net,
+	linux-alpha@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-fbdev@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-sh@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	samba-technical@lists.samba.org,
+	sparclinux@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org,
+	linux-doc@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-atm-general@lists.sourceforge.net,
+	Takashi Iwai <tiwai@suse.de>,
+	linux-input@vger.kernel.org,
+	linux-raid@vger.kernel.org,
+	linux-ext4@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	linux-debuggers@vger.kernel.org,
+	"Christian Brauner (Amutable)" <brauner@kernel.org>,
+	Chuck Lever <cel@kernel.org>
+Subject: [PATCH RESEND v2 13/26] scsi: sg: let procfs own the seq_file of allow_dio and def_reserved_size
+Date: Wed,  4 Nov 2026 20:45:24 +0100
+Message-ID: <20261104-work-procfs-drivers-v2-13-245e54e87116@kernel.org>
+In-Reply-To: <20261104-work-procfs-drivers-v2-0-245e54e87116@kernel.org>
+References: <20261104-work-procfs-drivers-v2-0-245e54e87116@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2vxz5wyck08d.fsf@kernel.org>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261104_114526_885917_ED53CB16 
-X-CRM114-Status: GOOD (  22.17  )
-X-Spam-Score: -2.1 (--)
+Content-Type: text/plain; charset="utf-8"
+X-Mailer: b4 0.17-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3098; i=brauner@kernel.org; h=from:subject:message-id; bh=VSyXtwS/L1yz+NXwjilFwHBHf/9gGBvzhq16zAIuGuA=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS97mpK3v7SU35CpJ+xYm16aqH2yss8t52nRXwy2L6hU PiyM6N8RykLgxgXg6yYIotDu0m43HKeis1GmRowc1iZQIYwcHEKwEScShgZ/oS0JG41sBdwnT31 V9JTpX/eEnvWXFfxXHvv8uNV8wXXGzL8ZGzdvX7L3xQtdoGX5tttZ9355tPw6sDfkq152YVBvd6 fuAE=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -114,58 +124,96 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 11-04 17:52, Pratyush Yadav wrote:
-> On Tue, Nov 03 2026, David Matlack wrote:
-> 
-> > Allow userspace to pass O_RDONLY in struct liveupdate_shmem_retrieve_arg
-> > to retrieve a tmpfs file read-only.
-> >
-> > open() requires write access for O_TMPFILE, so create the file writable
-> > like before, then reopen it read-only with dentry_open() using the flags
-> > of the writable file, which file_open_root() normalized, and drop the
-> > writable file. Like open(), which grants the requested access to a new
-> > file regardless of its mode, don't check permission for the read-only
-> > open.
-> >
-> > Retrieving a file read-only allows a restored binary to be executed
-> > before the session is finished. LUO keeps the retrieved file open until
-> > then, and executing a binary that is open for writing fails with
-> > -ETXTBSY. Being able to execute restored binaries right away matters
-> > when they are needed to finish restoring the system, e.g. to bring up
-> > the services that retrieve and finish the remaining sessions.
-> 
-> Can't you put all your binaries in a separate session, retrieve it as
-> the very first thing, and then finish the session? Then you can execute
-> those and retrieve all the other sessions.
+Pass the integer they show as the data of the entry and declare the
+show function, procfs then opens and frees the seq_file. That makes the
+open functions unnecessary.
 
-This is a good workaround. I am not opposed to this patch for 
-completeness of functionality, but if we decide to keep it, perhaps it 
-should simply be squashed into an earlier patch. The current diffstat
-looks bad, as it mostly deletes code that was introduced earlier in this 
-series.
+Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
+---
+ drivers/scsi/sg.c | 28 ++++++----------------------
+ 1 file changed, 6 insertions(+), 22 deletions(-)
 
-In any case, given Pratyush's suggestion, we could also drop it.
-
-> 
-> Why do we need to support this in the kernel?
-> 
-> Also, please put the motivation as on the top-ish of the commit message,
-> and the mechanics later. For example, your second paragraph should
-> likely come below this one.
-> 
-> [...]
-> 
-> -- 
-> Regards,
-> Pratyush Yadav
+diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
+index 6551f1284d44..fb3ab74e8727 100644
+--- a/drivers/scsi/sg.c
++++ b/drivers/scsi/sg.c
+@@ -2288,26 +2288,18 @@ sg_get_dev(int dev)
+ #ifdef CONFIG_SCSI_PROC_FS
+ static int sg_proc_seq_show_int(struct seq_file *s, void *v);
+ 
+-static int sg_proc_single_open_adio(struct inode *inode, struct file *file);
+ static ssize_t sg_proc_write_adio(struct file *filp, const char __user *buffer,
+ 			          size_t count, loff_t *off);
+ static const struct proc_ops adio_proc_ops = {
+-	.proc_open	= sg_proc_single_open_adio,
+-	.proc_read	= seq_read,
+-	.proc_lseek	= seq_lseek,
++	.proc_show	= sg_proc_seq_show_int,
+ 	.proc_write	= sg_proc_write_adio,
+-	.proc_release	= single_release,
+ };
+ 
+-static int sg_proc_single_open_dressz(struct inode *inode, struct file *file);
+ static ssize_t sg_proc_write_dressz(struct file *filp, 
+ 		const char __user *buffer, size_t count, loff_t *off);
+ static const struct proc_ops dressz_proc_ops = {
+-	.proc_open	= sg_proc_single_open_dressz,
+-	.proc_read	= seq_read,
+-	.proc_lseek	= seq_lseek,
++	.proc_show	= sg_proc_seq_show_int,
+ 	.proc_write	= sg_proc_write_dressz,
+-	.proc_release	= single_release,
+ };
+ 
+ static int sg_proc_seq_show_version(struct seq_file *s, void *v);
+@@ -2348,9 +2340,11 @@ sg_proc_init(void)
+ 	if (!p)
+ 		return 1;
+ 
+-	proc_create("allow_dio", S_IRUGO | S_IWUSR, p, &adio_proc_ops);
++	proc_create_data("allow_dio", S_IRUGO | S_IWUSR, p, &adio_proc_ops,
++			 &sg_allow_dio);
+ 	proc_create_seq("debug", S_IRUGO, p, &debug_seq_ops);
+-	proc_create("def_reserved_size", S_IRUGO | S_IWUSR, p, &dressz_proc_ops);
++	proc_create_data("def_reserved_size", S_IRUGO | S_IWUSR, p,
++			 &dressz_proc_ops, &def_reserved_size);
+ 	proc_create_single("device_hdr", S_IRUGO, p, sg_proc_seq_show_devhdr);
+ 	proc_create_seq("devices", S_IRUGO, p, &dev_seq_ops);
+ 	proc_create_seq("device_strs", S_IRUGO, p, &devstrs_seq_ops);
+@@ -2365,11 +2359,6 @@ static int sg_proc_seq_show_int(struct seq_file *s, void *v)
+ 	return 0;
+ }
+ 
+-static int sg_proc_single_open_adio(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, sg_proc_seq_show_int, &sg_allow_dio);
+-}
+-
+ static ssize_t 
+ sg_proc_write_adio(struct file *filp, const char __user *buffer,
+ 		   size_t count, loff_t *off)
+@@ -2386,11 +2375,6 @@ sg_proc_write_adio(struct file *filp, const char __user *buffer,
+ 	return count;
+ }
+ 
+-static int sg_proc_single_open_dressz(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, sg_proc_seq_show_int, &def_reserved_size);
+-}
+-
+ static ssize_t 
+ sg_proc_write_dressz(struct file *filp, const char __user *buffer,
+ 		     size_t count, loff_t *off)
 
 -- 
-Pasha
+2.53.0
+
 
