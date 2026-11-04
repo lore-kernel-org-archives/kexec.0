@@ -2,60 +2,117 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178D260AFC6D
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:36:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D0F60B1642
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:36:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Fj6EbyKY;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kHogC9f+
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=vXfZOOsq;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WXAwkLYs
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Unsubscribe-Post:List-Owner;
-	bh=Itb/+XUxzwDjuKQwsAJFR47NDknmWF5dyrfvKBFmIfk=; b=Fj6EbyKY1zXWupP8jhgy1FIaPe
-	YdBNsuN0Nj84przpGqC+8YCXbLRe34YxmMql/Uk1+T2MWUyK+fWe49KeaPb+yqO8tFWY/YblcpX6u
-	iCcvduyz6vqePRhq7jqwl+2K0Z8yDBHHaSZcgoDjuapbKn8GJtrqiUk4fcgZUbGV/3Oe0O7eN65aI
-	imJlynyOhqA0eWu7ztrWKu4OuaLYQSplXTJehU3JMEanoAjH+zGIRDztIRSJ7Ynby+wxSeJxtnFHI
-	4QtSeiuHPhCsTKyOcmcc4qTpAKZ6UdnEvpFbA0DNdNUBw9cptoBCFsB67oIVxhvNDRD+D62sX65ZP
-	pvqufQYA==;
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=wEPnWAoxjJOkMqmLZaf/U9t0SZ8y5Jr9Z0MZeAu0+Kc=; b=vXfZOOsqbAdc23
+	tzV/lNwrnufJRl29V8W66G/j+uQfWkjO3schX2nZzpcfhRklnAxD37vlDCESrt5BtPc0iH4CYNJ9p
+	s70/HvmXPV4lrOLu3ADft1CTCvqU1r5HK5bhJ4s2deEIdIitvhLfM7S21b7jYVn8FYupjc35mTbJW
+	kV2wlx4k/lTCWuPI3B7VeHAfKdqR+RZEItKDd7P3le8/fSVQszjD2FzIG6ouIdaQfJoNMN6hq2UPC
+	oqjpBBiv8wYlRiEveQL5fY7qwzdMFPpGK7OL0BpCj/Fya9If9/+fMDhGyKx0Obq5OMR8atxWI8Lqu
+	nuKEHw5bkdxJvSf5Z2yA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgmm-00000006gHW-3K5m;
-	Wed, 04 Nov 2026 19:36:40 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xOgmx-00000006gM3-3jIT;
+	Wed, 04 Nov 2026 19:36:51 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgml-00000006gGP-3BJY
-	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 19:36:39 +0000
+	id 1xOgmx-00000006gLr-1fkN;
+	Wed, 04 Nov 2026 19:36:51 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 506D141392;
-	Wed,  4 Nov 2026 19:36:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F1551F00919;
+	by tor.source.kernel.org (Postfix) with ESMTP id CEDA060DA5;
+	Wed,  4 Nov 2026 19:36:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B64E1F000C1;
 	Wed,  4 Nov 2026 19:36:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793820999;
-	bh=Itb/+XUxzwDjuKQwsAJFR47NDknmWF5dyrfvKBFmIfk=;
-	h=From:To:Cc:Subject:Date;
-	b=kHogC9f+CSu/YIkuUTNAcDq003+8HXU+ITLFDlsbwhw1GoU2HyvqiJyoPVfMQzBgE
-	 9HruiKS/bFPfYumogbwljnXrOHutj64vVseMoFoRn9i9mEavOHl0UIm0bjUPQpKJ9W
-	 T+T13Jpx4AwuUkCdMUsJAyIDWZPplt4C3fqsFD0uoRK87ngTX/FkNtSN4mm9zNeQ89
-	 ucg9ydD5/4kJQX+WxSqyzRaqQQWjsfb+WO/hSRgnJ4+ICMb+o+FB7fNM+mDTr7RlDj
-	 xaY+CJhUWXFYOBMcFjGyDgsjpo6sAl6wCBhhBBD08MBSCq7EWW21waQ625FLE1khsw
-	 M5STEaQpYDSOQ==
-From: Sasha Levin <sashal@kernel.org>
-To: Shuah Khan <shuah@kernel.org>
-Cc: Baoquan He <baoquan.he@linux.dev>,
-	kexec@lists.infradead.org,
+	s=k20260515; t=1793821010;
+	bh=wEPnWAoxjJOkMqmLZaf/U9t0SZ8y5Jr9Z0MZeAu0+Kc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=WXAwkLYs5CMjRrIik+svwhbWUt5bDEP/6QOWaHqgQGnGt34I1o6T853RqAuV7Hurk
+	 nJguWnT7WS2BCr/MHOaCcfo/y2YF8uonfqwKBD1vvV5BxItKSThPtia6lCKm8tXqBj
+	 HyK614i5nL+pOdjZyJiH0sAw1f5liFCfXPhf+aJITyPVYu1xz3l6R95T55JjSVbsGG
+	 gsd77y2zC/YQYCVOozDP6pBG6pwL8RsS6zHpDLqsqfvlDhE+Y1bJWPNUxKRk6rTJsi
+	 AUUQYXCgIz2oR7YPa2yFabJiCl27Vqc82eAQrsoGb+Ydr/D+wm+kQ1Kp63UoGu/D5M
+	 SSv/nmv1lJgcw==
+From: Christian Brauner <brauner@kernel.org>
+To: linux-fsdevel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Jann Horn <jannh@google.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Chris Mason <mason@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Eric Dumazet <edumazet@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Christoph Hellwig <hch@lst.de>,
+	Greg Kroah-Hartman <gregkh@suse.de>,
+	Joel Granados <joel.granados@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Jan Kara <jack@suse.com>,
+	linux-kernel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests/kexec: don't fail the build on other architectures
-Date: Wed,  4 Nov 2026 14:36:37 -0500
-Message-ID: <20261104193637.333158-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.53.0
+	linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	linux-wireless@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	netdev@vger.kernel.org,
+	ntfs3@lists.linux.dev,
+	platform-driver-x86@vger.kernel.org,
+	coreteam@netfilter.org,
+	kexec@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	ibm-acpi-devel@lists.sourceforge.net,
+	jfs-discussion@lists.sourceforge.net,
+	linux-alpha@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-fbdev@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-sh@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	samba-technical@lists.samba.org,
+	sparclinux@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org,
+	linux-doc@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-atm-general@lists.sourceforge.net,
+	Takashi Iwai <tiwai@suse.de>,
+	linux-input@vger.kernel.org,
+	linux-raid@vger.kernel.org,
+	linux-ext4@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	linux-debuggers@vger.kernel.org,
+	"Christian Brauner (Amutable)" <brauner@kernel.org>,
+	Chuck Lever <cel@kernel.org>
+Subject: [PATCH RESEND v2 04/23] m68k/bootinfo: let procfs copy out reads of /proc/bootinfo
+Date: Wed,  4 Nov 2026 20:36:36 +0100
+Message-ID: <20261104-work-procfs-arch-v2-4-2aeb952c9597@kernel.org>
+In-Reply-To: <20261104-work-procfs-arch-v2-0-2aeb952c9597@kernel.org>
+References: <20261104-work-procfs-arch-v2-0-2aeb952c9597@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Mailer: b4 0.17-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1117; i=brauner@kernel.org; h=from:subject:message-id; bh=Lp2WfN6gRzyIoXXnYjqLNGRBgINOkMledynPew9Qa8Y=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS97vi4tPTP9WOBc0V6N/fIbxTfPI/lUfoLfZZ8TRene TrRPhfPdpSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzkUBPDPzO9krgvvw5fYBV+ 9H1XqQXvdO7wtZP+r/5w1yl9W/zGBWyMDK/aPsbxCnmcPB2wcdUkBYmzJVbHot9pzTMK2f0zZ9c se04A
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -75,44 +132,38 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-The kexec tests are only built for x86 and ppc64le. On other
-architectures the Makefile defines no rules, so building or installing
-the suite fails:
+Implement ->proc_read_buf() so procfs copies what is read to userspace
+after it unpinned the entry.
 
-  make[1]: *** No targets.  Stop.
-
-Give the Makefile empty targets there, as sparc64 and
-drivers/s390x/uvdevice do, so that the suite builds and installs
-nothing.
-
-Fixes: a802ed0dd9c2 ("selftests/ima: kexec_load syscall test")
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
-Found with KernelCI-style TuxMake builds that record per-suite results
-with KSFT_BUILD_REPORT. x86_64 builds don't change, and arm64 and arm
-builds now succeed without installing anything.
+ arch/m68k/kernel/bootinfo_proc.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-With ARCH=powerpc, as passed by the kernel's kselftest targets and by
-CI, the ppc64le check doesn't match either, so the tests are only built
-on powerpc when ARCH is taken from uname -m. This patch leaves that
-alone.
-
- tools/testing/selftests/kexec/Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/tools/testing/selftests/kexec/Makefile b/tools/testing/selftests/kexec/Makefile
-index 874cfdd3b75b3..11b30d49a7f23 100644
---- a/tools/testing/selftests/kexec/Makefile
-+++ b/tools/testing/selftests/kexec/Makefile
-@@ -17,4 +17,8 @@ endif
+diff --git a/arch/m68k/kernel/bootinfo_proc.c b/arch/m68k/kernel/bootinfo_proc.c
+index 857fa2aaa748..4936cf44e86a 100644
+--- a/arch/m68k/kernel/bootinfo_proc.c
++++ b/arch/m68k/kernel/bootinfo_proc.c
+@@ -19,15 +19,15 @@ static char bootinfo_tmp[1536] __initdata;
+ static void *bootinfo_copy;
+ static size_t bootinfo_size;
  
- include ../lib.mk
+-static ssize_t bootinfo_read(struct file *file, char __user *buf,
++static ssize_t bootinfo_read(struct file *file, char *buf,
+ 			  size_t count, loff_t *ppos)
+ {
+-	return simple_read_from_buffer(buf, count, ppos, bootinfo_copy,
++	return memory_read_from_buffer(buf, count, ppos, bootinfo_copy,
+ 				       bootinfo_size);
+ }
  
-+else
-+nothing:
-+.PHONY: all clean run_tests install
-+.SILENT:
- endif
+ static const struct proc_ops bootinfo_proc_ops = {
+-	.proc_read	= bootinfo_read,
++	.proc_read_buf	= bootinfo_read,
+ 	.proc_lseek	= default_llseek,
+ };
+ 
+
 -- 
 2.53.0
 
