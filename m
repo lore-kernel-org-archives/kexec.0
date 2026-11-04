@@ -2,46 +2,46 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9989D606CA14
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:53:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B6226078011
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:54:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=OPWNyIrb;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ay5fDaWt
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=lauLtnS3;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hDIYsiNB
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=f4E5LhgvAcYWZljBgO/W1U3MMJwdn+qZCE/pQraBe8U=; b=OPWNyIrbj+SP9C
-	b41KVXSs7FE+lqCMN4l4cpUM9LdbUqCNVyH2N0rd7UlDzDaYg0KtHmFGs5AZUBddK2L2kh+hUfT7M
-	rXJmZQKSLnm4ghUVskF4kQfc8S6Yq2NDVfvlEaIYHnTT4juWPvdPiAV5jqustP2L7kmFnBnFRU/kf
-	TxeRLpQEHbDsQAIsb1VVDHX1DPaCOGoG+6HuEyYb894+D6uLXopYMrY5bisi/aPtjhpxo6k7fh8Wc
-	EikzUGFyDtGlTWMjLCFDlsaPeWVGxTTFlt4+fwZliq9VGr0eMx1iQOXuEW3jvWaHJxzLzl5f/uU3Z
-	d5Ye1cWxCxaKBGB36byQ==;
+	List-Owner; bh=Wa2DxwoY96vQ+as6UgZb3UJIgeJzEwCZb2I3vpV0xHo=; b=lauLtnS37oCMLw
+	GxjXwUpr4pZ28nih4m1mzPVJUr0d4qMtK6nkiMuTQHUPMGYqqUFIePcnGyIO6bsPxtyfgnRU+yKn7
+	QdY8YlVDA9gAxLW15jT1kDNnpiAMUG/I8n4a4ST83tVhRz3GzAcikB4eaVvFUMsegJ9xI/uewqwZp
+	SlBRVYEWw0+fKvjBJ3KyfCx4RmOhYJc6T2qe+ctFCHJrwoyL5df5zRVpVFZl4GB2AKli1/mzru/Kl
+	v+3/DCZ6Cf4WHT/WfTvkCSoMhVyEcKliIdf39smWLM33Yvjg6yxCzaEepJPuPL4U1DHTY9VAob6ZY
+	NtzrmQmJZ/8YXgfyYe6w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOh3R-00000006nKJ-1QoQ;
-	Wed, 04 Nov 2026 19:53:53 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xOh3h-00000006nR0-3B9L;
+	Wed, 04 Nov 2026 19:54:09 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOh3Q-00000006nJr-17Tr;
-	Wed, 04 Nov 2026 19:53:52 +0000
+	id 1xOh3e-00000006nQD-2f41;
+	Wed, 04 Nov 2026 19:54:08 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 7C9C660F33;
-	Wed,  4 Nov 2026 19:53:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AAC11F00919;
-	Wed,  4 Nov 2026 19:53:39 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id E2FFF6143B;
+	Wed,  4 Nov 2026 19:54:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD3BB1F000C1;
+	Wed,  4 Nov 2026 19:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793822031;
-	bh=f4E5LhgvAcYWZljBgO/W1U3MMJwdn+qZCE/pQraBe8U=;
+	s=k20260515; t=1793822045;
+	bh=Wa2DxwoY96vQ+as6UgZb3UJIgeJzEwCZb2I3vpV0xHo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Ay5fDaWtG/yWIDOYM+DggFzTN2LWbh0BW6otP+jIWAHXSuBEsVaLRZz5ZGfpgRvCE
-	 6shldu61dY4NwBfkCYbw7q4cTqz3itoS1DSO0jJ/m80wdS5Zd4cXDBc3qovYZ0srLC
-	 U+IQP3Cf9hMAd3vazbsilUbA8DkxquoHSwEkBJ+7nEkOcCIfxO9SZLsKEJkxUQ3qC/
-	 DcxdbWZq7MCNC9JXaZdePv4FyzB69QN2POFSFhjzDTIlCOpxPJ8V89Q5VWoSMQ/EHp
-	 J1FcUjC8ycDtKpuAOuzPui/5hlEvRP7hunia1FQ4b8dx3JEke6caIeMQIFr6OP34Hm
-	 Nxddkhn+cC83A==
+	b=hDIYsiNBBbAB6nCICl2CgYVmu1Hc5MI7vg03BuY69s+e6pJT+WUTVg0+E2R7BXucW
+	 ASIEwQD/8dKh5gLCW56yPPqhr/8yzBSB3mWD610B6YBFxv2MwcgJq3I6t4BOpmtLEi
+	 w6X4zToEWrG1oxCry2goo1fqiSX0980JJHxIp/b3+x2Ri2+ReMv/Jb0QANsRd2Di7t
+	 Rzpga7r+AFVcSz5t835+amCK62QzA458xk0IuFMIaQ5wJCfI9SpgS4G48o8mHpSNgB
+	 +voP9K2fVkENG08+Y1lBh+7RUetaZbq4uubBe+qWoiy60DFlrYcnLc2yMGlLbTHf9s
+	 swfqQ47cYsOow==
 From: Christian Brauner <brauner@kernel.org>
 To: linux-fsdevel@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
@@ -102,16 +102,16 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	linux-debuggers@vger.kernel.org,
 	"Christian Brauner (Amutable)" <brauner@kernel.org>,
 	Chuck Lever <cel@kernel.org>
-Subject: [PATCH RESEND v2 16/30] profiling: mark /proc/profile permanent
-Date: Wed,  4 Nov 2026 20:53:37 +0100
-Message-ID: <20261104-work-procfs-fs-v2-16-319e0f9a8aae@kernel.org>
+Subject: [PATCH RESEND v2 17/30] sched/psi: let procfs own the seq_file of the pressure files
+Date: Wed,  4 Nov 2026 20:53:51 +0100
+Message-ID: <20261104-work-procfs-fs-v2-17-319e0f9a8aae@kernel.org>
 In-Reply-To: <20261104-work-procfs-fs-v2-0-319e0f9a8aae@kernel.org>
 References: <20261104-work-procfs-fs-v2-0-319e0f9a8aae@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=817; i=brauner@kernel.org; h=from:subject:message-id; bh=G0gwYdZ16oKFC7EZJsDlPxepqJg/P4CRWLJP6izrYeU=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS97rGrTu0wWKSzkuXO+Urv0AN64bf3zr/V5uClEO3wY I7J/p1/OkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACZyag7DP5V5JQ833nexiq6f s5gt0f6uqxUzZ/T9PH2FDXJ9PK+sWhkZJl1nDLj2O2fpAYUv714J5enO/mdzabLGrvDt7b2/l0U pcQAA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2971; i=brauner@kernel.org; h=from:subject:message-id; bh=pvcY7H3zDMUPKTR5VRDjfAM6gaPdAO9YnwSNmLk0d3g=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS97rGfE8i72E/yhZutqDL7PN47uzQ8K50TT+4w3Hhbf vutkt0VHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABNZfZWR4efcj3di9RK3nt10 KDbRd+L7jS/X575VFDqYfmbv94ueCxcyMqxquv8teNcGj2WSIeec/c4dzeWyOO2pu//Is1kJNi7 cT1kA
 X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
@@ -127,33 +127,105 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=4.0.1
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-/proc/profile is created when profiling is turned on and never removed.
-Say so with PROC_ENTRY_PERMANENT, procfs then calls into it without
-pinning it.
+Declare the show functions and let procfs open and free the seq_file of
+/proc/pressure/*. That makes the open functions unnecessary and
+->proc_release() only destroys the trigger now.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- kernel/profile.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/psi.c | 38 +++++---------------------------------
+ 1 file changed, 5 insertions(+), 33 deletions(-)
 
-diff --git a/kernel/profile.c b/kernel/profile.c
-index 64f6a45834b1..0c2672adcbb5 100644
---- a/kernel/profile.c
-+++ b/kernel/profile.c
-@@ -203,7 +203,7 @@ static ssize_t write_profile(struct file *file, char *buf, size_t count,
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index 8b59635e95d4..9f1d9742bac9 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -1535,21 +1535,6 @@ static int psi_cpu_show(struct seq_file *m, void *v)
+ 	return psi_show(m, &psi_system, PSI_CPU);
  }
  
- static const struct proc_ops profile_proc_ops = {
--	.proc_flags	= PROC_ENTRY_FULL_READS,
-+	.proc_flags	= PROC_ENTRY_PERMANENT | PROC_ENTRY_FULL_READS,
- 	.proc_read_buf	= read_profile,
- 	.proc_write_buf	= write_profile,
- 	.proc_lseek	= default_llseek,
+-static int psi_io_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, psi_io_show, NULL);
+-}
+-
+-static int psi_memory_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, psi_memory_show, NULL);
+-}
+-
+-static int psi_cpu_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, psi_cpu_show, NULL);
+-}
+-
+ static ssize_t psi_write(struct file *file, const char __user *user_buf,
+ 			 size_t nbytes, enum psi_res res)
+ {
+@@ -1635,31 +1620,25 @@ static int psi_fop_release(struct inode *inode, struct file *file)
+ 	struct seq_file *seq = file->private_data;
+ 
+ 	psi_trigger_destroy(seq->private);
+-	return single_release(inode, file);
++	return 0;
+ }
+ 
+ static const struct proc_ops psi_io_proc_ops = {
+-	.proc_open	= psi_io_open,
+-	.proc_read	= seq_read,
+-	.proc_lseek	= seq_lseek,
++	.proc_show	= psi_io_show,
+ 	.proc_write	= psi_io_write,
+ 	.proc_poll	= psi_fop_poll,
+ 	.proc_release	= psi_fop_release,
+ };
+ 
+ static const struct proc_ops psi_memory_proc_ops = {
+-	.proc_open	= psi_memory_open,
+-	.proc_read	= seq_read,
+-	.proc_lseek	= seq_lseek,
++	.proc_show	= psi_memory_show,
+ 	.proc_write	= psi_memory_write,
+ 	.proc_poll	= psi_fop_poll,
+ 	.proc_release	= psi_fop_release,
+ };
+ 
+ static const struct proc_ops psi_cpu_proc_ops = {
+-	.proc_open	= psi_cpu_open,
+-	.proc_read	= seq_read,
+-	.proc_lseek	= seq_lseek,
++	.proc_show	= psi_cpu_show,
+ 	.proc_write	= psi_cpu_write,
+ 	.proc_poll	= psi_fop_poll,
+ 	.proc_release	= psi_fop_release,
+@@ -1671,11 +1650,6 @@ static int psi_irq_show(struct seq_file *m, void *v)
+ 	return psi_show(m, &psi_system, PSI_IRQ);
+ }
+ 
+-static int psi_irq_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, psi_irq_show, NULL);
+-}
+-
+ static ssize_t psi_irq_write(struct file *file, const char __user *user_buf,
+ 			     size_t nbytes, loff_t *ppos)
+ {
+@@ -1683,9 +1657,7 @@ static ssize_t psi_irq_write(struct file *file, const char __user *user_buf,
+ }
+ 
+ static const struct proc_ops psi_irq_proc_ops = {
+-	.proc_open	= psi_irq_open,
+-	.proc_read	= seq_read,
+-	.proc_lseek	= seq_lseek,
++	.proc_show	= psi_irq_show,
+ 	.proc_write	= psi_irq_write,
+ 	.proc_poll	= psi_fop_poll,
+ 	.proc_release	= psi_fop_release,
 
 -- 
 2.53.0
