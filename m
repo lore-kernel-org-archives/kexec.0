@@ -2,46 +2,46 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03153606D4E5
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:19:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F12A606E805
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:19:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=KdzXXUT3;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ijnLltQe
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=yX6HxfoK;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gxIENLz0
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=mdnthwMs9LvqnLJy6kPpeiwqrlhi6ADC7izliWiN2IE=; b=KdzXXUT3CB1XA9
-	0FJ/XrTZ7YYpEohz/i8UVeb2XkJIXGXRxb3dc8PbbsA6HvuCu0dgQzrUp4EROMEPCipVL0FNKWT6M
-	qu1/9bYqM/wL1x4YbInEzS2PksK77AlCLK6XHhCQsqdTHWdC/7jZ4eaKAfBsoIpuITzXiMevs/1eK
-	5d0rjAsLF/hOhdMIYoVYk4oAuOOIh9qTStchUzcc8uosE73/NZmCOvsYFlzp+krwx3M6vuDHBg+J0
-	jRN5Cnhb2FCwjd0LLYL54g/f2l8914Zwnv0ZxTa3wkYLCQBGu2TpGLAePG2+rRwxhfoFhMUiesMCJ
-	SWskw+TqYX/oDeuW7eQw==;
+	List-Owner; bh=+QMuJvtMuQ+CXnn6xLeWoxU7H9VJY0mzKEyTXi76/+M=; b=yX6HxfoKPGLxKY
+	r0LzGNDRRzv2iakeCRK4L+dcP82HxNP2Or+cG0tFz4JiKg0u4VQ+X5u8nqEFMM6j6Ngs3kG570Ip7
+	XXqNbv9smFWy4+mceknir6u8fRe6qdq94xrOKGiRJAPAHljoN+UoUEmkT7aGdoum559GMGefgKpSa
+	+M0yJrOZXYLvE649n+Ud+XVk1WQEZcDFWA0qgkbgT8n0hJQNlRHfBDtrWVo1bTq7IQ4tXVkO4OK4T
+	9cTE5DOvvQGeLt2sd9OjXKxn1T2aAIY6deAJUUOYGeNCLxUurea05vzNkfs8KCFHe0jBmYNJANes+
+	bZkIx+X2CTFQUlHNTtWw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgVs-00000006YiP-2JvX;
-	Wed, 04 Nov 2026 19:19:12 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xOgW5-00000006Yok-3EWg;
+	Wed, 04 Nov 2026 19:19:25 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgVq-00000006Yi3-1IbP;
-	Wed, 04 Nov 2026 19:19:10 +0000
+	id 1xOgW4-00000006Yo6-1SYP;
+	Wed, 04 Nov 2026 19:19:24 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id B8B2660AA2;
-	Wed,  4 Nov 2026 19:19:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C86A61F000C1;
-	Wed,  4 Nov 2026 19:18:57 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 1D28B43EF3;
+	Wed,  4 Nov 2026 19:19:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07C301F00919;
+	Wed,  4 Nov 2026 19:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793819949;
-	bh=mdnthwMs9LvqnLJy6kPpeiwqrlhi6ADC7izliWiN2IE=;
+	s=k20260515; t=1793819964;
+	bh=+QMuJvtMuQ+CXnn6xLeWoxU7H9VJY0mzKEyTXi76/+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ijnLltQe5Qk+CqE+VUlDwwHbbObH+9ltW/RmuNk6+QVTedz2m/LYfiuF9co7AFJwE
-	 sjrkuOfRO38+K7HcQrICBAwdPPqSWw81opUhQAieZFdKhLDYrT6ksUVuCvctpIzPGG
-	 5IfV2bo/AIGZF92z/NIw2/tSYbEzpTKjlj5R/IpCOGOCq9t1qLgWWrxzM1Ldm3iL6v
-	 jl4JL0l0pT78R+g4k6uEp1SAko5fY5xHs148DGpmxVJocVPvD8ORDyvyCDVv0yKLOp
-	 0BGiObxQ1YUEMDTuDs/OR2Xrm+87BYRn1BsklV+azupKzmP8Z1i0K9CmVfX9sZIjIF
-	 wvV04uPKt3MdQ==
+	b=gxIENLz0UJSM86XrOE1Sp3JOvLA1u1MA6tN2TKsN8z69sY8YtYsnY9pKSo3aFOcfQ
+	 It+yrAGN09WT7v77bOcS26Rrfp6yDzWLpkBPnc74ur6LeQ3oTzrvuG6Ky0kmVgi5Bb
+	 Z3j0QjnFD8aYVcI8yWVigWpiQHEHJJZHAuuleBaspMz1mpQ5rRYAMWLJX0zRU4vJo6
+	 RVoQiNLCqpiXG3Q/pt4TC6GrXdJ/RtFA4o6YSTd9QUZ7eQ0PuRnoorZ/GGmdi0VNty
+	 8+ElarT6h6fA4UlBB9caj85En7ce0T5GP9cwgZFrj2EBL5oKo+5dRL8rx9quzBAg6O
+	 vLwWBgOdvm1Pw==
 From: Christian Brauner <brauner@kernel.org>
 To: linux-fsdevel@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
@@ -101,17 +101,18 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	linux-modules@vger.kernel.org,
 	linux-debuggers@vger.kernel.org,
 	"Christian Brauner (Amutable)" <brauner@kernel.org>,
-	Chuck Lever <cel@kernel.org>
-Subject: [PATCH RESEND v2 12/51] powerpc/rtas: consume the whole write to /proc/powerpc/rtas/progress
-Date: Wed,  4 Nov 2026 20:18:55 +0100
-Message-ID: <20261104-work-procfs-bugfixes-v2-12-021c84d852e0@kernel.org>
+	Chuck Lever <cel@kernel.org>,
+	stable@vger.kernel.org
+Subject: [PATCH RESEND v2 13/51] sched/psi: don't drop the last byte of a trigger write
+Date: Wed,  4 Nov 2026 20:19:09 +0100
+Message-ID: <20261104-work-procfs-bugfixes-v2-13-021c84d852e0@kernel.org>
 In-Reply-To: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
 References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1217; i=brauner@kernel.org; h=from:subject:message-id; bh=uNEn+pHXbIRRMkqtNF6NnFXDW3eMy9Pk3SJ7wJuNwck=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9brzZHzRlctZde+1Go+8eGv7b1+cVSZ7+f//NhYzz+ 8+/DW/t7ChlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZhI5ROG/2mHUo8Ur0zzZ3Z9 kx7D/2mua/jtI8eaYjr1fyTPTo02WcfIcOywWBSj5altb2eddZvFnrJ1ZrTjumSG/rNnerMtg50 vcgMA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1310; i=brauner@kernel.org; h=from:subject:message-id; bh=/5ST8groFWC3ZYrB9+5K2L5OtN8hrslkTr6MpvXzbng=; b=kA0DAAoWkcYbwGV43KIByyZiAGrrgdqjlnhsS+Xn2bQzAZGlod8csUEIbzAtYr5Z7PKO7g1AP Ih1BAAWCgAdFiEEQIc0Vx6nDHizMmkokcYbwGV43KIFAmrrgdoACgkQkcYbwGV43KLVfgEA1c1M +KyfIhJG/BAv6BFn00vAnDN1zj94NkCXNtd8aaQBAIjacXos/OXrlYuIrWKCfCTQiGjILl4kpqo N1Eyu2lMK
 X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
@@ -132,38 +133,41 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-ppc_rtas_progress_write() shows the first 255 bytes of a write and
-returns that many, so a writer that loops until everything is written
-shows the rest as a second message. Return the whole count, the rest is
-ignored.
+psi_write() copies at most 32 bytes of the write into its buffer and
+terminates the buffer by overwriting its last byte. For a write shorter
+than 32 bytes that is the last byte the writer sent. A trigger written
+without a trailing newline loses its last digit then, "some 150000
+1000000" turns into "some 150000 100000", and a shorter one like
+"some 150 10000" fails with -EINVAL because the window doesn't fit
+anymore. Only writes that end in a newline parse as intended.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Copy at most 31 bytes and terminate behind them.
+
+Fixes: 0e94682b73bf ("psi: introduce psi monitor")
+Cc: stable@vger.kernel.org
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- arch/powerpc/kernel/rtas-proc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/sched/psi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kernel/rtas-proc.c b/arch/powerpc/kernel/rtas-proc.c
-index f38df72e64b8..89b165986851 100644
---- a/arch/powerpc/kernel/rtas-proc.c
-+++ b/arch/powerpc/kernel/rtas-proc.c
-@@ -311,6 +311,7 @@ static int ppc_rtas_poweron_show(struct seq_file *m, void *v)
- static ssize_t ppc_rtas_progress_write(struct file *file,
- 		const char __user *buf, size_t count, loff_t *ppos)
- {
-+	size_t len = count;
- 	unsigned long hex;
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index 7c5381423334..8b59635e95d4 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -1566,11 +1566,11 @@ static ssize_t psi_write(struct file *file, const char __user *user_buf,
+ 	if (!nbytes)
+ 		return -EINVAL;
  
- 	if (count >= MAX_LINELENGTH)
-@@ -324,7 +325,7 @@ static ssize_t ppc_rtas_progress_write(struct file *file,
- 	hex = simple_strtoul(progress_led, NULL, 10);
+-	buf_size = min(nbytes, sizeof(buf));
++	buf_size = min(nbytes, sizeof(buf) - 1);
+ 	if (copy_from_user(buf, user_buf, buf_size))
+ 		return -EFAULT;
  
- 	rtas_progress ((char *)progress_led, hex);
--	return count;
-+	return len;
+-	buf[buf_size - 1] = '\0';
++	buf[buf_size] = '\0';
  
- 	/* clear the line */
- 	/* rtas_progress("                   ", 0xffff);*/
+ 	seq = file->private_data;
+ 
 
 -- 
 2.53.0
