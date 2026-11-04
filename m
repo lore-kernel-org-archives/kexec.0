@@ -2,85 +2,84 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1338606B2EA
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 22:17:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3031C606B2C6
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 22:17:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=P26xEKR6;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=SW9ciDkz
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=e/T8MaId;
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Pq20fc31
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=AoRyT2gWGztVgBxsNZy1AlqhQ+YolidchQOTos+xRqQ=; b=P26xEKR6eXuVzo
-	sg1h9V40S0Vc/zxoTTJQVm11X4kNJc6otoq8Z4bs0ldGWsbJgmYpahqMbeQqMW9uFRCrhi99by9ke
-	xZpimW6BWsNo7Yv+LjaVKcMShI7qJHtlTQpxx03kGl5kz+VNUC+7rBULMGcrCANRAgH1E8yYF/6v+
-	dNFcq3Zi67xa9rp28OX4Q9mhACz5Q3yST80f7Lsf8aapPh9RnzWQNt7g6UQET44OoWnaIege5xAV7
-	atHpzrCsP0+cQJ6qxvh/tyT6W8CMJAieQEdA9v5FUchnyuSzjOHNIX6LBBHkGOKevBEbKYUxmeKd7
-	M0/dJGdjF21fE5prsOLw==;
+	List-Owner; bh=Zy3RXc1tcA1988kqstuh2d2K+SulFtJvQ4wEaNytXWM=; b=e/T8MaIdukwra7
+	KS46nXwYdc/NM0UjJZIyrbhjt91IYsLwl2Bz4AdFvjhSEQGzjM4JA4lI58ag0NMY0H3oN2JOTRw1t
+	XU3EfOycEiitoqOydSUCITFeGdxG3rZx0sdvBV3qXIAbJA+tzaSxXUd6pt6hQPEUCZOQDQ+++VJcl
+	3fABZwukB7yyeyy4gtPfpCxSoWfNE0Y40eiLfKSxi4YrF+asaQGDT6hN82UufDGMdghGzHXavcp4C
+	UZimno4cdLVdGmSD0345nQTmwl+69G+OK6T66jIy6cQA4DV1HiZAUAX9ZavsGqEHpuo0ePk4hV8g1
+	Q+mIugQDmFth1nyTIxNQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOjI2-000000078en-0v7Q;
-	Wed, 04 Nov 2026 22:17:06 +0000
-Received: from mail-wr1-x42f.google.com ([2a00:1450:4864:20::42f])
+	id 1xOjIg-000000078ix-3Zjt;
+	Wed, 04 Nov 2026 22:17:46 +0000
+Received: from mail-wm1-x329.google.com ([2a00:1450:4864:20::329])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOjHz-000000078dx-2hIK
+	id 1xOjIc-000000078iW-0OHf
 	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 22:17:05 +0000
-Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-48af4d4e61fso860696f8f.2
-        for <kexec@lists.infradead.org>; Wed, 04 Nov 2026 14:17:03 -0800 (PST)
+	Wed, 04 Nov 2026 22:17:43 +0000
+Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-4a207b02a2cso8442825e9.1
+        for <kexec@lists.infradead.org>; Wed, 04 Nov 2026 14:17:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793830622; x=1794435422; darn=lists.infradead.org;
+        d=gmail.com; s=20260707; t=1793830660; x=1794435460; darn=lists.infradead.org;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=AoRyT2gWGztVgBxsNZy1AlqhQ+YolidchQOTos+xRqQ=;
-        b=SW9ciDkz+1lRQyAqIUW8CbJV0wXqpKqdriwA02j1piQijRuts+8pVwLPzDIildgzLL
-         UhPOkhBbwUjcSo3k9VbZKl1KSA5Su3l/SzNKQ12ilDmcOp+qSJPUgx2wdDBzt6OLcE/h
-         0NQhU8pcBIqS0bhlEVR065UDjdlFVPY343imshlrTxYNuUCH2/BCf3nZwvlJy0dlQE2j
-         +qevlS88SFWVOFJTrD434HgCk4U6g0S8CHEo/NdpUJQUBqNRyGp8Ns3vSGegWP7OmBFH
-         BuOVPXDGmVOWzMmg589f7ddsp4wLN2/3LBKjIgqS2nrMUVipaqyWt2o39mtE4dcf+Smx
-         WDeA==
+        bh=Zy3RXc1tcA1988kqstuh2d2K+SulFtJvQ4wEaNytXWM=;
+        b=Pq20fc31H23yLxGlbPWRdLjVzf9BQrlGgS1ZVsaN6O47x7XDdCqsyG99JdsiHwy75N
+         HvJar0QSDbT8cVl5NalEfFtc5kYt3rsAF6ZIa+vLzvglNq4dUVOQ9z4Re6hO58uPFsRb
+         sZZklKpdSExR2d/3RWJ6uiRYjwmCZA4S1CeZ7BfS2qW/u2+6SzYwMjBL641frx/4GPj+
+         Ib32FqsVLyOaegtQdsagEseDnKkXyao5PI164qtKabTUenn2gQ+R4yUmRmaelzmopVa6
+         WLcuFrALzf64wcDhQ8N/gx4RptNY7n15aAECoLZi+KUUtwbiZFAgp9HCKLBGEstvO4Zd
+         5G3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793830622; x=1794435422;
+        d=1e100.net; s=20260707; t=1793830660; x=1794435460;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=AoRyT2gWGztVgBxsNZy1AlqhQ+YolidchQOTos+xRqQ=;
-        b=SLrLD3ouxaSfAU4OAHju1V79klvdOK2JVy7ETXrEvnJQtkfjTwCLU/Lq+YaaqfYpv4
-         NlKkpdXhhztPXaOPG0A7LgpPagpqHUcapeeCOA8pIL4VSvQoTc0LFYORwQVJ5/28s/Yo
-         ux2msaZ1DTu4SnMc54IPLQkBOGVPUUnnplLw3MVPpKZ/QQNGpY31qv/eo1pIXC7DTO8w
-         r0/IhttUm/clu9IvLItYc5dwjieSaSiGI+/HC3gpk/ysrLs/CYAwfiaImoNMdi29Kwqa
-         nJmxVYLjT/sgPBBCCT8kVxm3gjFBr4IIlHqYy3LJugPiFWdvAz9kFIHa3WkX9NmFijvl
-         KhHA==
-X-Forwarded-Encrypted: i=1; AKwUvBwqSxzrgOg1h51AWXfs3/4UsMzl6dh34C+afc6Qs1vjTvEx2eepQR4enpoNqnXRmj07axgVcQ==@lists.infradead.org
-X-Gm-Message-State: APuU4Z/IjRcU4NjveO7gxkMbWIgvjIWiHln1K3/hpej4clFaqLK8TE0A
-	m+Yrf1uPvz6sQm+wqevBxi+KZ4rcZOViAW2IgX5SX04RwxD97csHhda9
-X-Gm-Gg: AYBFou1TG15yv1CRTUZsuciWme8fDQymj6RKeUzSdw8GmHg/WLNiTXbxiYWwd80q4Ry
-	X3sf1DwIQBYQzlsgfI7CxxIpsB1B4Xe64ahgG/tiH4/fzusyJM0L/mV3hmuUqBTWuKp5WOUUVX3
-	gUqvc7dW20UXABe/4DkaxlOLxysuzoegFFGbVWuOo9maFROCZJh88i+mF1rjPIuxSlBH7roGCZ3
-	L1FlsEVVPjM91OOWkj0Mq2G53siu3jKlleCWdHn2jCuqc8FlXrOi3tEErJ3dd/THRLBT7iPdmhI
-	1warvxySY7jlVdKtqlmnbjDyo4tdaIpLHB5D8YILAutc5XpxiD17SaVd5s418AAVbaUAG5SqMz7
-	K8khEE0Z+Z3V5L26dh46Ck46syADsZkZILkjWFBijC1H9BW13kwIsdeduEAAkg9myzAoeFzNNtp
-	Jj6waQlF/dgVKCFp6GeovXg6moDBy9ienJCDVlnD5v/oJxLD9hLnteS6wl3m7wuwuQ6driYojuI
-	/c2pByIqqJuO75xWzwvljrEYvueiLhTv0wrOWXHuVstHWgygitcLG5e5N3NsdNiNj07zuAlqxzt
-	uE8ZTF9GW2m94iXsJZrPTzA=
-X-Received: by 2002:a05:600c:e548:20b0:4ac:86c9:b09c with SMTP id 5b1f17b1804b1-4ac86c9b146mr248866895e9.13.1793830621562;
-        Wed, 04 Nov 2026 14:17:01 -0800 (PST)
+        bh=Zy3RXc1tcA1988kqstuh2d2K+SulFtJvQ4wEaNytXWM=;
+        b=Swk3p3CggV1pcqnGpEsQ9rYCh11yyoCqmtjKd3LE9CNnwHWudQUx4/ROErqsjR/tPp
+         6XzW2tg5UMGIbKmLRsrBEaycFC5wE4cQ1M5e173uZBBj0S8SjwV3dJ2n6my3YHwKFAsO
+         iPnAqMNuFCmoqn6lrSS42mu0bVI6PafiGk3SpFi/rAEdQWbL1unLH2xD0TDjWt6BrilV
+         KCxLZ+wClDbkvbnps1ujqFOWtBl0VexoKfpGCEo6CC32tt6iD/1mvKBeRAyMd17NZadR
+         DPoMXel4fHDLzXBsQwlaRheOygsgeu8EufbN4E494E+CVTe+8Lz6n33bZOM96G7rReZA
+         5fIg==
+X-Forwarded-Encrypted: i=1; AKwUvBzPQEjX9qGJ3vRGxc+I5oUGjWvBM0Xe765AxxLAYm80bH8fJIIUxDfbHpEtjjN2KJ8eE0Kl1A==@lists.infradead.org
+X-Gm-Message-State: APuU4Z+yC4PNYlkUA0woqHtaE8cNLelmKZxsMRLdWG8JBfGt89VkuBbC
+	8sTJl+NwheWCB4MYBfSvmH/U3heISE9UT9i0jnxfbaeqwMuwgUxFm8Tl
+X-Gm-Gg: AYBFou0KG6M7dOaLkuC1jq7q/Xf1h4ly0M5PbePMBNPwEMUR/1B/OlThT7JeOKhY8Et
+	/WZ9jgz5dhHUqKCy0395MB5tdN+t3WGpaH1xGyzcNUJxyPNb41nouXvNI61qE8sQm4OhCtOwV8E
+	VM2D1EWjt8chc7EhQvIbw+7suUITsRE6fc/cmtVCNH1gr9WPaAFQvXQeYfyQxhuWxSllN6da5iZ
+	SpXaQZBJx/wX8vHwgutpbDhJELuF7hknSbP+AbxEneDQes1wyl/WXEDYFcmaVS95uEhoPU5oiV1
+	tRGa7SCSGwwGhz9wR5FAYjzzrsLpAFr9jZ9AatBJN3zMctIwTQngUiPSuYzKUfUWzZmWrOwxrEU
+	GoSbYy+5DR3Qbn2K19DVIdA1y7qHe1tLcKDNp7/VrWpk6+NDP1xqAT5Bx+yJ5ShfqRheriEeYQJ
+	TdRXikh+mFzn7S3XYvzrWgk0HrQnlHuxGkQAY6evaSPLFd/ryzmkiDQ2TX9K8QHqCFLyyAfUA8J
+	FWIoPPesRFyUe5Z/AXiHRMlrvRrn68hSJ75FVfKa3gispEdcF11H/zkVLUZ6St0b1OTPLYDGWxN
+	GBfZ1cVaMfG/g0E/k4tctnQE
+X-Received: by 2002:a05:600c:1f93:b0:4a3:2f35:38b6 with SMTP id 5b1f17b1804b1-4ac180f1e69mr370561825e9.24.1793830660020;
+        Wed, 04 Nov 2026 14:17:40 -0800 (PST)
 Received: from [192.168.1.22] ([83.231.69.9])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b56ef2e968sm16301645e9.8.2026.11.04.14.17.00
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b56b78d656sm16661715e9.0.2026.11.04.14.17.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Nov 2026 14:17:01 -0800 (PST)
-Message-ID: <be34e0ca-4706-44a8-8264-3b9827829e9b@gmail.com>
-Date: Wed, 4 Nov 2026 23:17:00 +0100
+        Wed, 04 Nov 2026 14:17:39 -0800 (PST)
+Message-ID: <7b3388a4-31c1-4966-af92-367e1219cb42@gmail.com>
+Date: Wed, 4 Nov 2026 23:17:38 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] kho: skip zero-sized lowmem and global bootmem
- areas
+Subject: Re: [PATCH v2 3/3] kho: fix bootmem sizing
 To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
  Pasha Tatashin <pasha.tatashin@soleen.com>,
  Pratyush Yadav <pratyush@kernel.org>
@@ -90,15 +89,15 @@ Cc: Alexander Graf <graf@amazon.com>,
  Kexin Liu <liukexin@kylinos.cn>, Sourabh Jain <sourabhjain@linux.ibm.com>,
  kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
 References: <20261104-kho-bootmem-sizing-v2-0-b0d1a834780f@kernel.org>
- <20261104-kho-bootmem-sizing-v2-2-b0d1a834780f@kernel.org>
+ <20261104-kho-bootmem-sizing-v2-3-b0d1a834780f@kernel.org>
 Content-Language: en-US
 From: "Jose A. Perez de Azpillaga" <azpijr@gmail.com>
-In-Reply-To: <20261104-kho-bootmem-sizing-v2-2-b0d1a834780f@kernel.org>
+In-Reply-To: <20261104-kho-bootmem-sizing-v2-3-b0d1a834780f@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261104_141703_702727_1981EAD1 
-X-CRM114-Status: GOOD (  10.38  )
+X-CRM114-CacheID: sfid-20261104_141742_175021_0EC10D4E 
+X-CRM114-Status: GOOD (  16.48  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -119,22 +118,48 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
 On 11/4/26 5:50 PM, Mike Rapoport (Microsoft) wrote:
-> The lowmem and the global bootmem areas can have zero size, for example
-> when none or all of the memory is below ARCH_LOW_ADDRESS_LIMIT, or when
-> either of those areas is explicitly set to zero with kho_bootmem=.
+> Bootmem areas are sized from overlapping views of the memory reserved in
+> memblock:
 > 
-> For a zero-sized allocation memblock returns an address without reserving
-> anything, and that empty area is recorded in kho_bootmem. If there is no
-> memory below ARCH_LOW_ADDRESS_LIMIT, allocation of the empty lowmem area
-> fails and KHO gets disabled.
+> * the global area is sized from all reserved memory, including memory
+>   allocated on specific nodes, so on NUMA systems everything allocated
+>   on a node is accounted in both the global area and the area of that
+>   node.
+> * per-node sizes are calculated after the lowmem and the global areas
+>   are reserved. With CONFIG_NUMA=n all memblock regions belong to node 0,
+>   so the lowmem and the global areas are accounted in the size of node 0
+>   area and scaled once again.
 > 
-> Extract a helper that checks for zero size and allocates memory from
-> memblock, and use it to skip empty areas the same way as empty per-node
-> areas are skipped.
+> As a result, bootmem is about twice bigger than it should be on NUMA
+> systems and about four times bigger with CONFIG_NUMA=n. On small systems
+> reservation of the bootmem may fail and then KHO gets disabled.
+> 
+> Make the areas cover separate parts of the reserved memory: the lowmem
+> area covers allocations below ARCH_LOW_ADDRESS_LIMIT, per-node areas
+> cover allocations above it on each node and the global area covers
+> allocations that are not bound to any node. Calculate all sizes before
+> reserving any of the areas.
+> 
+> With CONFIG_NUMA=n the global area becomes empty and it is not reserved.
+> 
+> If ARCH_LOW_ADDRESS_LIMIT covers all memory, as may happen on arm64, any
+> area can serve lowmem allocations, so don't reserve the lowmem area.
+> 
+> Bootmem sizes in MiB in x86 QEMU VMs, before -> after:
+> 
+>                      CONFIG_NUMA=y     CONFIG_NUMA=n
+>   1G,  1 node         176 ->   92       320 ->   80
+>   4G,  1 node         508 ->  332      1264 ->  316
+>   16G, 2 nodes       1268 ->  704      2944 ->  736
+>   32G, 4 nodes       2296 -> 1224      5196 -> 1300
+>   64G, 4 nodes       4344 -> 2248      9664 -> 2420
 > 
 > Fixes: 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation helpers")
-> Reported-by: Chen Pei <cp0613@linux.alibaba.com>
-> Closes: https://lore.kernel.org/all/20261026131851.9942-1-cp0613@linux.alibaba.com
+> Reported-by: Kexin Liu <liukexin@kylinos.cn>
+> Reported-by: George Guo <guodongtai@kylinos.cn>
+> Closes: https://lore.kernel.org/all/20260904025101.9959-1-dongtai.guo@linux.dev
+> Reported-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+> Closes: https://lore.kernel.org/all/20260922131217.698809-1-sourabhjain@linux.ibm.com
 > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Reviewed-by: Jose A. Perez de Azpillaga <azpijr@gmail.com>
 
