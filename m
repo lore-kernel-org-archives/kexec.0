@@ -2,46 +2,46 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E84C6082091
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:39:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95FAF6082089
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:39:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Lnm2HDSV;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EkijSZeV
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=FTfbN5nj;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EaJvHiAM
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=2GaZul5nsAkiA2gFzaNhtmiz6cl7FK3FoYt1S3NMwg0=; b=Lnm2HDSVbxcZjf
-	IICNm14HCr1VDUcxseh+meHlSZ+Dv1q5OCc4wUY7aUaB5WpYV5uCqqkxILxpx/LP+/i8Xd6gKmpA1
-	AGhDB+z7IFt0rF8uWK3sEn5ql8tBXeXty38NcJj7N655YFEXm/TRWFVeYdpyP6h93HXTKoe72lv0u
-	keNkEh7yw30TvOEtk3OQATc80+pYBBkr1Hb3rtfUhBxd7HKgcEDpZ1JQG12n0pZhgsLfCa+w+h5lV
-	Hd0NNSi3u2eH5AQqyAyEZoYCUY63jl5WiR9CeBKaVr3y2IYBnhQd11iSTMMbqZ5xB4PJzuAxL9xqF
-	bLKICXdAKI6TXb/K0EOQ==;
+	List-Owner; bh=08oqN1TE6XF/zda2aaIy/jJ7rzXSJoF5jY3Jq8EQn3I=; b=FTfbN5njrbizHl
+	UMI5dyFDj6V7rUMF8ZC4lpYk2ZbbCp8QDhUvxNelwOHGJFvTAykZZIwF5VhhKY8zMryUIzHZnyU69
+	u7E/KaJBQrtRsTnpbvm5Nv3Z8ZYqxTBNQWpM269pLLIiHT6HJkxEGSvuEl20rfgCsqeE+pY1o9os+
+	Zld3/g+FqWVjsVcTv/E+EIdwtOjI3EUkuFXJmlHiUAKvS/qnWQt795ji48EOj19mpqbHO9QDImNaC
+	T2z2xuNYiW2vVeIE38UYQJOUMp7LUS+HSY7oNqFqQjpABfINzGllywjWO6FY3qywoDUgGUyrqYDa5
+	H1dpUO2Z3THWgUsR/KHQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgp8-00000006hM8-0Thw;
-	Wed, 04 Nov 2026 19:39:06 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xOgpN-00000006hRJ-1Kfp;
+	Wed, 04 Nov 2026 19:39:21 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgp6-00000006hLs-1WDX;
-	Wed, 04 Nov 2026 19:39:04 +0000
+	id 1xOgpL-00000006hQx-3Ktt;
+	Wed, 04 Nov 2026 19:39:19 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 203E742ADC;
-	Wed,  4 Nov 2026 19:39:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB9AA1F00919;
-	Wed,  4 Nov 2026 19:38:51 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 3E5AE60DA8;
+	Wed,  4 Nov 2026 19:39:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8DC61F000C1;
+	Wed,  4 Nov 2026 19:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793821144;
-	bh=2GaZul5nsAkiA2gFzaNhtmiz6cl7FK3FoYt1S3NMwg0=;
+	s=k20260515; t=1793821158;
+	bh=08oqN1TE6XF/zda2aaIy/jJ7rzXSJoF5jY3Jq8EQn3I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=EkijSZeVjK/rxqWkFZ0OqjZPZ2MuDjt77EIGi3oeRCPyvddqFu9s+uEMPbZyav6JU
-	 wR/usgrscOo+Xc/2BlwsQalbhrpqMfSzzRqIgv3T6yJ6Su3/KnDPj8UujUmSRlInc2
-	 OA+qa1pxZU+tpV0mOirJD8BdIgxcL9++M7vpMuIqy3oTTRQjm4+QyaGOZOJJljVRFM
-	 978mJ2y34/rrUxqJu2rf6osm9UbeqCNqVT1ww1vX9zJuceB82ZbPSNli3Pn90tp1pC
-	 vGmWMHMmL/iqTgm2FqrZJJMi0EDtSQb0qpfJ2D2g7q68SgWPBjHVtue51SAG0k/VAQ
-	 m6xHCkuZygl4A==
+	b=EaJvHiAMOM44mJ4AYyNn4VsI9tCdPZkXSAVa50U3NrOibefU8zFHhtlwKggezxc6f
+	 wnraA02g8NJXIrS3SZrOw/ckLDW5FYvi7jxpCw0K00BYbn5RYhILqubA1RmFr09QV/
+	 k8Ctg/JVPDQToSJB15j4p4jKQY0itLX/D67pNlmoINjEoJlweC93iKdvLzgAObEB/x
+	 Em9ifBMZxzKnjasz1lK0O58rkh4J6xzSeJOqNNv+26qOtx9ntPbRT5XujsHFDMwoNN
+	 HTnCPQ1IABzvSMZrUrPP3tBDAg5ZtkrqubTQztGluNNIqQgLtUfcYWfLXYTWYVi5vn
+	 yQ86hX5tNJ3+g==
 From: Christian Brauner <brauner@kernel.org>
 To: linux-fsdevel@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
@@ -102,16 +102,16 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	linux-debuggers@vger.kernel.org,
 	"Christian Brauner (Amutable)" <brauner@kernel.org>,
 	Chuck Lever <cel@kernel.org>
-Subject: [PATCH RESEND v2 13/23] x86/mtrr: let procfs own the seq_file of /proc/mtrr
-Date: Wed,  4 Nov 2026 20:38:49 +0100
-Message-ID: <20261104-work-procfs-arch-v2-13-2aeb952c9597@kernel.org>
+Subject: [PATCH RESEND v2 14/23] x86/mtrr: let procfs copy in writes to /proc/mtrr
+Date: Wed,  4 Nov 2026 20:39:04 +0100
+Message-ID: <20261104-work-procfs-arch-v2-14-2aeb952c9597@kernel.org>
 In-Reply-To: <20261104-work-procfs-arch-v2-0-2aeb952c9597@kernel.org>
 References: <20261104-work-procfs-arch-v2-0-2aeb952c9597@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1271; i=brauner@kernel.org; h=from:subject:message-id; bh=JKCg0Vsec4l/XR03sLy8l8PQ6sAjtJH7fHwWHPLe1EE=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS97vjDc7H1uCrz7Lca1inL3TMkhJlv3fnENrvceu2S/ ReZTC3Od5SyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzk+F6G/2VugSv8pq08ZPfu Tmr9gR2hu+24ZwgWX2kN2zjp1ecfLS8YGa7UCoX+OCF32/XDAz/vezHLIq7fqM/cGxRkcUSq91z LXx4A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1645; i=brauner@kernel.org; h=from:subject:message-id; bh=soK7T1bbUsg7MQd+qkvxTDp2+B/10GD8og0zR7/9Z5c=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS97vgbYnk5w1TAv+cR/19mB87Hxr1yYY5rHB54MaZe7 z00yU+vo5SFQYyLQVZMkcWh3SRcbjlPxWajTA2YOaxMIEMYuDgFYCKfFzEyTOHm/S1/MZHxwIv8 7dtPVu6S3Lllwdu7ZYHrrz/Q+cjbY83IsGb+7VvZO/dOnXhuMvvjlQVn3RZfi/jDsjPicIm1t/+ HZBYA
 X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
@@ -127,49 +127,54 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=4.0.1
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Declare the show function and let procfs open and free the seq_file.
-->proc_open() only does the checks now and ->proc_release() only drops
-the MTRRs the file added.
+Implement ->proc_write_buf() so procfs copies in what is written before
+it pins the entry, and parse the command from that copy. Writes larger
+than PAGE_SIZE - 1 bytes fail with -EINVAL now.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- arch/x86/kernel/cpu/mtrr/if.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/x86/kernel/cpu/mtrr/if.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/mtrr/if.c b/arch/x86/kernel/cpu/mtrr/if.c
-index 4049235b1bfe..9510e01d5103 100644
+index 9510e01d5103..038e2dc38797 100644
 --- a/arch/x86/kernel/cpu/mtrr/if.c
 +++ b/arch/x86/kernel/cpu/mtrr/if.c
-@@ -349,7 +349,7 @@ static int mtrr_close(struct inode *ino, struct file *file)
- 		kfree(fcount);
- 		FILE_FCOUNT(file) = NULL;
- 	}
--	return single_release(ino, file);
-+	return 0;
- }
+@@ -91,7 +91,7 @@ mtrr_file_del(unsigned long base, unsigned long size,
+  *    "base=%Lx size=%Lx type=%s" or "disable=%d"
+  */
+ static ssize_t
+-mtrr_write(struct file *file, const char __user *buf, size_t len, loff_t * ppos)
++mtrr_write(struct file *file, char *buf, size_t len, loff_t * ppos)
+ {
+ 	int i, err;
+ 	unsigned long reg;
+@@ -103,9 +103,8 @@ mtrr_write(struct file *file, const char __user *buf, size_t len, loff_t * ppos)
+ 	memset(line, 0, LINE_SIZE);
  
- static int mtrr_seq_show(struct seq_file *seq, void *offset)
-@@ -391,13 +391,12 @@ static int mtrr_open(struct inode *inode, struct file *file)
- 		return -ENXIO;
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EPERM;
--	return single_open(file, mtrr_seq_show, NULL);
-+	return 0;
- }
+ 	len = min_t(size_t, len, LINE_SIZE - 1);
+-	length = strncpy_from_user(line, buf, len);
+-	if (length < 0)
+-		return length;
++	length = strnlen(buf, len);
++	memcpy(line, buf, length);
  
+ 	ptr = line + length - 1;
+ 	if (length && *ptr == '\n')
+@@ -397,7 +396,7 @@ static int mtrr_open(struct inode *inode, struct file *file)
  static const struct proc_ops mtrr_proc_ops = {
-+	.proc_show		= mtrr_seq_show,
+ 	.proc_show		= mtrr_seq_show,
  	.proc_open		= mtrr_open,
--	.proc_read		= seq_read,
--	.proc_lseek		= seq_lseek,
- 	.proc_write		= mtrr_write,
+-	.proc_write		= mtrr_write,
++	.proc_write_buf		= mtrr_write,
  	.proc_ioctl		= mtrr_ioctl,
  #ifdef CONFIG_COMPAT
+ 	.proc_compat_ioctl	= mtrr_ioctl,
 
 -- 
 2.53.0
