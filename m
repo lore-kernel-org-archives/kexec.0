@@ -2,46 +2,46 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B066076CF7
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:22:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62860606D82B
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:22:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=LG8cB7Ob;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m4qlh5ad
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=1qXSMbsD;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mXEJh7D8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=frXlYovGKxKiSN/Oj3/IY9GUET6etUhHzbC1M94LuG8=; b=LG8cB7ObElbeoU
-	IvdbiuSVvUNtjRw/1VroV2jR+TQ3LsmoOphczwQO63PRF2UeJSGOCNM2aWSVvG6+k/YoODCugZeOM
-	XN+n5mEOxIwwGkDdfQn9y4zoKMvoSqRZk+c52XZoUXy78ldVVCNm4mJXQhTIZp0cA5NQDjbHWUZJR
-	gJhzHSOiTctZZf2EvhpUOCEc1anxJK+2EyMiBtgt/7Me0dUmdh1HRd5iRD3+y9y4N7yVKdeBFmXfj
-	MPxAc2VqrzLfboxOok5JFRuUPp9r74Jbktk02zue8BI46CpactCv6h11lB/2uRlu3yNF9nmDE/16/
-	ryF5grkoxxOSzroeJbWw==;
+	List-Owner; bh=S8IXtzTL1USde6aV/lVKsFPWulIUW0ciUvC5Tm4lMm4=; b=1qXSMbsDoV7GHs
+	56pCfNqTS3k4dV80sOXDofpe9tI/W+BiDdtOTZlWro2E3w1DnK6Tg9JHx8f4bdZIFoRz9dIPulWkC
+	0q15JBBqxoK5QDiJJxl1O4GE82OZdSgWYoqa56njPbkEZuaV0CmH3kkd5SUSKtMDSmjnu6K0sT5Yl
+	kuqrkfV+2CAohN7UoT+xnQWnRJw1km3Zdq2jo/dKOzA6nMapHKeLkiXOK//qDaAQRGedxy/cDsofN
+	r/2kvR8jnEntHq3OGbP1gLHwNbO5thk3yNVP+k1jreXNvhfeG6Bre6+/ceTeLKv3v+sg65ZqJnB1X
+	+/47eKji73gi3f73W/3w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgYv-00000006Zsg-1rKQ;
-	Wed, 04 Nov 2026 19:22:21 +0000
+	id 1xOgZA-00000006ZyP-0Szr;
+	Wed, 04 Nov 2026 19:22:36 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgYu-00000006ZsM-1McU;
-	Wed, 04 Nov 2026 19:22:20 +0000
+	id 1xOgZ9-00000006Zy4-0xWr;
+	Wed, 04 Nov 2026 19:22:35 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id BEC3B60A77;
-	Wed,  4 Nov 2026 19:22:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A39E1F000C1;
-	Wed,  4 Nov 2026 19:22:07 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id A8B406061B;
+	Wed,  4 Nov 2026 19:22:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 293831F000C1;
+	Wed,  4 Nov 2026 19:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793820139;
-	bh=frXlYovGKxKiSN/Oj3/IY9GUET6etUhHzbC1M94LuG8=;
+	s=k20260515; t=1793820154;
+	bh=S8IXtzTL1USde6aV/lVKsFPWulIUW0ciUvC5Tm4lMm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=m4qlh5adzIihmnlMCPV3MfzvM9clEODdoNPI2uMqY4fs5tXjOCWDUSzu6mv2JPcnd
-	 rIPr1zKO2U3CjW3V1MIfmNbgfh1n07E+bfpMs8tk02/3DnE87bHvJw3d0jbyRKMVJD
-	 IyG1TCJ8IDfIKO9zXzTPhcHA+ABY+MPRa3JEdRoY9H5TpyzNGzOxFD39D4e/nEzri/
-	 xV3khedTdJnJfO/uoKUxMN3c9AMOVj129ZcQ4wKqGT6ApGnU+0jvS+ZI/4rijimnGb
-	 2/KGqEkHg6aA14vgzVafdv5HLYM59RkWvexV7pVOwnU2YNnoy7SUAi1RAXlTmBHVKt
-	 aZyeLWcmGYS+Q==
+	b=mXEJh7D86UeSEY8jNu82u3NLmId2OsI/Nv9nh3XWpLINGlBuLP5Nz+YiwtOsAqIVJ
+	 oVeO2qxhNxAYSigqHIpjEKTcnXIbhPS7yHKiS4GRdJ9UYEuLBunN2o2SvnznlXI6BM
+	 F5O9M7fZaaFETXY9Ej5mVQrFRkhRZM5mDYAGBCUg69fzwRq+8JjZKWRp58tNqeKTw9
+	 Mus1vHfCqkTiD6xzM+KlO6h9c7TF92UrHaTiLn5L+jl6joxLiUSdcubt7/4SNRaTm5
+	 vJlimOOsTIbLAxnLoArtNJAZUqCCnnAwocr+VwIzPakK1nD/ZdjgCu3EIbAcmKwTRk
+	 HrfU9Pt62XfOQ==
 From: Christian Brauner <brauner@kernel.org>
 To: linux-fsdevel@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
@@ -101,17 +101,18 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	linux-modules@vger.kernel.org,
 	linux-debuggers@vger.kernel.org,
 	"Christian Brauner (Amutable)" <brauner@kernel.org>,
-	Chuck Lever <cel@kernel.org>
-Subject: [PATCH RESEND v2 25/51] wifi: libipw: don't return 0 from writes to debug_level
-Date: Wed,  4 Nov 2026 20:22:05 +0100
-Message-ID: <20261104-work-procfs-bugfixes-v2-25-021c84d852e0@kernel.org>
+	Chuck Lever <cel@kernel.org>,
+	stable@vger.kernel.org
+Subject: [PATCH RESEND v2 26/51] scsi: core: NUL-terminate what is written to the host proc files
+Date: Wed,  4 Nov 2026 20:22:19 +0100
+Message-ID: <20261104-work-procfs-bugfixes-v2-26-021c84d852e0@kernel.org>
 In-Reply-To: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
 References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1059; i=brauner@kernel.org; h=from:subject:message-id; bh=PSZyn/5j7f+UAGnOkF9zGJ8rErtLF7uTzeHltQyv5ig=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9bny1/eaz260dbT8unLZwrN5tXTy3yfvErX9TPsXMM V8nc4f3WkcpC4MYF4OsmCKLQ7tJuNxynorNRpkaMHNYmUCGMHBxCsBEjHoY/iffUCphqBDzD6jS 3KKZ9/nt+Yxbx7kDk6dL8t/4/j9YjZmR4beq8vlDlkeLZQ/dKD+x8ZzFnrPzDR5/5vD+ZfFD7WF 3CS8A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1011; i=brauner@kernel.org; h=from:subject:message-id; bh=jBwXVCCRpDjmnAajxR/zAvEvmAtZKAE0jCj6+Cnx3v0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9bnztk+R5Surix3hvm7CKvXpyq57/KmExl721cvVL/ tOc37nndZSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzkuw7DXxHBqOn8F95zMNyd M6k2rOaLgMESqZzyjQvM9reKiH4XkGX4X/ewceXxBbldmy+3PQ+Iunxzrnshe95/o/05vCxbvk/ mZwMA
 X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
@@ -132,31 +133,31 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-debug_level_proc_write() returns the length of the string it parsed. A
-write that starts with a NUL byte thus returns 0 and writers that use
-stdio retry it forever. Return the number of bytes that were written
-instead, which also stops writes longer than the 11 bytes it looks at
-from coming up short.
+proc_scsi_host_write() copies what is written into a page and hands it
+to ->write_info() without terminating it. ppa and imm parse it with
+strncmp() and simple_strtoul(), which read on past what was written into
+whatever the page held before. Terminate the copy. A write is at most
+PROC_BLOCK_SIZE bytes, so the page always has room for that.
 
-Fixes: b453872c35cf ("[NET] ieee80211 subsystem")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable@vger.kernel.org
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- drivers/net/wireless/intel/ipw2x00/libipw_module.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/scsi_proc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/intel/ipw2x00/libipw_module.c b/drivers/net/wireless/intel/ipw2x00/libipw_module.c
-index 22358b2c2ecd..552c8ff3928b 100644
---- a/drivers/net/wireless/intel/ipw2x00/libipw_module.c
-+++ b/drivers/net/wireless/intel/ipw2x00/libipw_module.c
-@@ -236,7 +236,7 @@ static ssize_t debug_level_proc_write(struct file *file,
- 	else
- 		libipw_debug_level = val;
- 
--	return strnlen(buf, len);
-+	return count;
- }
- 
- static const struct proc_ops debug_level_proc_ops = {
+diff --git a/drivers/scsi/scsi_proc.c b/drivers/scsi/scsi_proc.c
+index fdc355d783da..dbd03360b5a4 100644
+--- a/drivers/scsi/scsi_proc.c
++++ b/drivers/scsi/scsi_proc.c
+@@ -80,6 +80,7 @@ static ssize_t proc_scsi_host_write(struct file *file, const char __user *buf,
+ 		ret = -EFAULT;
+ 		if (copy_from_user(page, buf, count))
+ 			goto out;
++		page[count] = '\0';
+ 		ret = shost->hostt->write_info(shost, page, count);
+ 	}
+ out:
 
 -- 
 2.53.0
