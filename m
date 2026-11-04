@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DFBD606D824
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 09:27:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE8B606A335
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 09:28:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=KH7qXvpi;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hKMrkOmt
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=onK5N0D2;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X1jgy3lG
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -14,37 +14,37 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=pha1RY94GjOtnqXrQOQE3qKs4iPAcIL8wQlgIsnD1VI=; b=KH7qXvpitH2r0UcbcisRh8D2tr
-	wMbxvj/6OYFeCnp+twhcmkLU4sQ1d/FMnHBRd2c8kmukwSbtdSycdbD9/otdtyY0UhFfYrVIwA4UD
-	0Gg2NubU5mv54kCM6LY2/R66iFsrwFAl1l/OjUuUoZh78sszHcPxB+AmLPuOEVu5CGoiJc7xNyoJf
-	jOLJ7hiktS5jBd3x3N48A4I9TCppYWeKZaxlRlFSv8pV6CHAco6tybw/PIkxPs5ppMnwl92tu6d2Y
-	WomOaUSs97nulnuoWYdwNs30D2xBJNCUfpfUmc98fu1g0k2iE/g3Kr4uw81k31ub5/MJLuqHzYwX7
-	Wh7tYINQ==;
+	bh=Gr7svhS/YSc9d7laFr7PXJQ2SsJ994DEnu6A9NyzDrI=; b=onK5N0D2tbIGL/XAyOgIQgh07F
+	DpIPylLXOXOOmT/npoa46iAFBssOxHayeH5HUv7QEbY4ANRXmlRwIG3kCs1DxhYDRs1QcpT706MVv
+	1Z3IhD0AZlPkh6tAGxn0/UAXgJkqIJRtwqFcX0rskZQYbwdHjGx4g73/odowq/R9GFGlpKD0iHA2k
+	2LXdZRfNal5OD3GHT35jU1x0BRGjZgHdzFlkOXWfQ7PsTYbp822MCHUK59EyF0BVo2oQi22VfiUPw
+	GdwnsnBG1I1q02KP5S4E7Vi+HqyXicWADwSOsvWZV4Q0vYVRPYHGEcnYMLNJkyBHxu/Wqlq0u5YLb
+	bvDK19iA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOXH8-00000004sVM-430B;
-	Wed, 04 Nov 2026 09:27:22 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xOXHu-00000004sfG-0WbQ;
+	Wed, 04 Nov 2026 09:28:10 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOXH7-00000004sUi-1asv
+	id 1xOXHs-00000004sey-2b3d
 	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 09:27:21 +0000
+	Wed, 04 Nov 2026 09:28:08 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id BD9FC43E30;
-	Wed,  4 Nov 2026 09:27:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E48201F000C1;
-	Wed,  4 Nov 2026 09:27:10 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id C108060098;
+	Wed,  4 Nov 2026 09:28:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E4001F00A17;
+	Wed,  4 Nov 2026 09:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793784440;
-	bh=pha1RY94GjOtnqXrQOQE3qKs4iPAcIL8wQlgIsnD1VI=;
+	s=k20260515; t=1793784487;
+	bh=Gr7svhS/YSc9d7laFr7PXJQ2SsJ994DEnu6A9NyzDrI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=hKMrkOmtm3B2gZiQeO5JvnZ9p2ma/4Ab4QoV2RY1r26cux4zCCLh9wEH2c33BbHXK
-	 fbNgj5kWSSvaYoEB4LaR958tQgbKkBQGFEq4mxLA85jgB1KOgLoszMSGVrY9Ha931r
-	 D0hMpbsmsCVo3Bmo207nmKQT+W9saDNTG/2QCtQUHOWdxFm2doY6iFV0wGD7GNxdFv
-	 FmgbHDeh91BIDzv96YPjHlswJc8awRukjfsVnSPjYTrsCRqLuc7lscOjkrPunvesMJ
-	 Tjwc/nSfJXhQ01Nzv2q6cSJ99acGT39x8EGT/eIVENZ4EHlmNUtg6FDEG8FGp/Kj5W
-	 DRZXkXKQhuqlg==
-Date: Wed, 4 Nov 2026 10:27:08 +0100
+	b=X1jgy3lGK+B8wHnMJmPUlW00+DythG+u8ZdEslw9l+mYGsCluF0yALGaeLj7ksrDg
+	 EcNjCUMoKMdxcyD0WsxPb4Cp4iKUAxNR9okqjQhF+09x5q+3kuYpexwXQlXsHIw+os
+	 TkFeMF2FhQ5UjzAqNfBp6xMNGmn825VDWt1gtK+nxiDDItHSDAD0XUEkYDsawNyiA7
+	 /4Xh7LGcOgeD7u3hApqggi+GDOh8nhBNcBO0pFhjuZykmUExXJEtisP76hRDnMqyNT
+	 NxfQEUBzADkSfaq0PsDOx4woXNhrClwQtQmsRawkfviLN+SXF+cZMarB1vamQDxvXp
+	 LI66cNBmM2ktw==
+Date: Wed, 4 Nov 2026 10:27:55 +0100
 From: Christian Brauner <brauner@kernel.org>
 To: sashiko-reviews@lists.linux.dev
 Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
@@ -65,17 +65,17 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	Anna Schumaker <anna@kernel.org>, yukuai@fygo.io, Heiko Carstens <hca@linux.ibm.com>, 
 	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
 	Christian Borntraeger <borntraeger@linux.ibm.com>
-Subject: Re: [PATCH RFC 13/16] proc: let procfs copy out reads that don't go
- through seq_file
-Message-ID: <20261104-weswegen-magen-gezaubert-373ca765d28c@brauner>
+Subject: Re: [PATCH RFC 15/16] proc: let procfs copy ioctl arguments in and
+ out
+Message-ID: <20261104-muskel-filmabend-parklandschaft-f02c910a4fb4@brauner>
 References: <20261102-work-procfs-core-v1-0-75df35e4f8b8@kernel.org>
- <20261102-work-procfs-core-v1-13-75df35e4f8b8@kernel.org>
- <sashiko-outbox-195540@kernel.org>
+ <20261102-work-procfs-core-v1-15-75df35e4f8b8@kernel.org>
+ <sashiko-outbox-195542@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <sashiko-outbox-195540@kernel.org>
+In-Reply-To: <sashiko-outbox-195542@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,8 +93,15 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Tue, Nov 03, 2026 at 03:01:30PM +0000, sashiko-bot@kernel.org wrote:
-> - [Low] proc: define and initialize __free(kvfree) variable buf in one statement in pde_read_buf()
+On Tue, Nov 03, 2026 at 03:01:36PM +0000, sashiko-bot@kernel.org wrote:
+> - [Medium] proc: unguarded zero-length user copies in pde_ioctl_buf()
+
+Hm, a zero-length copy isn't a nop on every arch. Adventurous. It's
+skipped now.
+
+> - [Low] proc: split declaration and initialization of __free() variable in pde_ioctl_buf()
 
 Intentional.
+
+-- 
 
