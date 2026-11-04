@@ -2,78 +2,92 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234DA606A336
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 09:11:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC862606A333
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 09:13:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=maAtNYUM;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bPUGyJe8
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=SbyHgkyy;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dRpMfbpZ
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=+BWGMpp+CGdBx3er7fkKiPSgFKGZi9UN3j89ZX4ZK/I=; b=maAtNYUMlHPSvb
-	NYdBknGmEDO7Ae18tg5/gNPHwXlT5J2Tg9Lbzfd/dXMx2wQGcOInJZfgcXommIQId+v8gBfOl7Eqg
-	MhhtYzBUbDmXpZWkL50OV7vJYl5c9G1u7lHtDSQq0BM853rVRlyVE48g988FGqtkZRZZh+OGiffxp
-	cgtldsXyXGxHLJcZV4GtbgUa5PDr1TmJiUj/I4G6YO/HhCWnGup+3wOa5iltdsXl7Go0r9tC6Lj9n
-	xi8bsIbxcN6qVPugn9bRaXwhaAPoOzIql+B3QXq20oA0aMKW5BwfKPU3NcUarWDvfRXvhw7p2Shkt
-	N4JmHB9gLc0YO9x/UKZA==;
+	List-Owner; bh=LoVFgUlolmEAFzVK6w+JrxJ56f3iy7qOBFWwy6NZkbw=; b=SbyHgkyyJ7pHS/
+	W1DPIjf/euIT+Jo4bbQLHI07PWoRnd6CsvSXSr7sadfSXOm81uSjcOmTKWnMEswU1L0SdLpDuTU+T
+	yoHHtA+Xw1b8HKJ/f9nrzuYPFqCF2JBv/sRXbXuT7f3BWWCmDW+ipg1RNhLXJuftkEsKy1P+T6aQT
+	VNO5UiPAoRtHYiI6LfjZN6WgcjoPeTFyKiLtMD/uLcFHCvcKo1dvSyiTp8sFowwg4Odyhv9OaHIzq
+	H+N7sA0ff+8bnayqEZVn7RupJIRvpf4AlDLYa34m+l3Vaufw5Lsnwe/gFl9vc355YdPzEfjKuKspn
+	zJVCosSgU1Hqj8tAMYng==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOX1p-00000004q31-3xdp;
-	Wed, 04 Nov 2026 09:11:33 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xOX3q-00000004qTS-1iRW;
+	Wed, 04 Nov 2026 09:13:38 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOX1o-00000004q2j-3QcB
+	id 1xOX3o-00000004qTJ-3PHR
 	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 09:11:32 +0000
+	Wed, 04 Nov 2026 09:13:36 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 1794D431CE;
-	Wed,  4 Nov 2026 09:11:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD4141F00A16;
-	Wed,  4 Nov 2026 09:11:16 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id D4DCE602BE;
+	Wed,  4 Nov 2026 09:13:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 943551F000C1;
+	Wed,  4 Nov 2026 09:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793783492;
-	bh=+BWGMpp+CGdBx3er7fkKiPSgFKGZi9UN3j89ZX4ZK/I=;
+	s=k20260515; t=1793783615;
+	bh=LoVFgUlolmEAFzVK6w+JrxJ56f3iy7qOBFWwy6NZkbw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=bPUGyJe8jTsIlbF1xVTN5nX4l/yeQqqr6KUSLqOk5CwA8zaane6up/uXHy/A6ETFN
-	 8GMdYQkC/9pvmhBP2zcSqtRvRTHOksDMwvx7gtNR3V/dSa5XbcrFjusMb5bbHlPAqY
-	 FtbHm8MMjkmKP//Sey/LKddohMLPyRf4C7s+5IntPmGQ+G5m0rp18ZxLjCBmoTbsqX
-	 6+sBf9cofe3crMJ9E65oq/xyI3vlQ9WK8JdqiYXb7nE+wHWgrx4QfKgjh+C53e4xEw
-	 hQtZGro3VXx5kNioH4KUnh6d9IwsWjAmh0kD1m7YN8VI3LyBQcu4wnCHz5d6QOS+Jm
-	 8qsGDtkKaCKQw==
-Message-ID: <45508a75-7549-40e2-a71a-807a824ea026@kernel.org>
-Date: Wed, 4 Nov 2026 10:11:14 +0100
+	b=dRpMfbpZeYPKVhajyjXkLtGaqpGPvrZkk4yFqG2ypBe4K+tDcX4rTCHEt04jW5/KG
+	 2F+gxMEZuG9fPh97FKiWfCEdg8Jkd9hbf+LLNrRXCcKFvn8ZuFpn4P+uJKcQMwTJ09
+	 rh79VO2vtKtrO/B+TP5cbe5rQcohMc86qrFv09zuy8OQLIMUXYdZHWE6CAu6WuPmYE
+	 xfKiLlcRwOeZxwMqBPFoAG31ac8gFp6BGwX8n+2lfkFQTHQixGQd2zGd4yCTJ0vdqK
+	 iCa7zTYm1z7zGE+0f4dAUL13T6KfHHlugQYFxBLi62Qg3c5Sl/7BCdxw3EpxOPHEG6
+	 HvH2dL3dmOm7w==
+Message-ID: <979fb046-32dc-4af8-b6a3-177c78f1e557@kernel.org>
+Date: Wed, 4 Nov 2026 10:13:15 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 43/47] mm/huge_memory: split huge PUDs when adjusting
- VMA boundaries
-To: Lance Yang <lance.yang@linux.dev>
-Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, mhocko@kernel.org,
- qi.zheng@linux.dev, shakeel.butt@linux.dev, ljs@kernel.org,
- kasong@tencent.com, baohua@kernel.org, axelrasmussen@google.com,
- yuanchu@google.com, weixugc@google.com, baoquan.he@linux.dev,
- baolin.wang@linux.alibaba.com, liam@infradead.org, vbabka@kernel.org,
- rppt@kernel.org, surenb@google.com, mhocko@suse.com, kees@kernel.org,
- peterz@infradead.org, jannh@google.com, pfalcato@suse.de, hughd@google.com,
- pasha.tatashin@soleen.com, pratyush@kernel.org, willy@infradead.org,
- jack@suse.cz, ziy@nvidia.com, riel@surriel.com, harry@kernel.org,
- apopple@nvidia.com, nico.pache@linux.dev, ryan.roberts@arm.com,
- dev.jain@arm.com, usama.arif@linux.dev, kas@kernel.org,
- matthew.brost@intel.com, jhubbard@nvidia.com, peterx@redhat.com,
- will@kernel.org, aneesh.kumar@kernel.org, npiggin@gmail.com,
- osalvador@suse.de, minchan@kernel.org, muchun.song@linux.dev,
- xu.xin@linux.dev, chengming.zhou@linux.dev, chrisl@kernel.org,
- shikemeng@huaweicloud.com, nphamcs@gmail.com, youngjun.park@lge.com,
- gourry@gourry.net, joshua.hahnjy@gmail.com, rakie.kim@sk.com,
- ying.huang@linux.alibaba.com, jgg@ziepe.ca, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
- linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-cxl@vger.kernel.org, stable@vger.kernel.org, usama.anjum@arm.com
-References: <20261031-fixes_core-v3-43-d6437171ecc3@kernel.org>
- <20261104031245.9524-1-lance.yang@linux.dev>
+Subject: Re: [PATCH v3 18/47] mm/khugepaged: check if PTE table is empty in
+ try_collapse_pte_mapped_thp()
+To: Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
+ Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+ Baoquan He <baoquan.he@linux.dev>, "Liam R. Howlett" <liam@infradead.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Kees Cook <kees@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+ Hugh Dickins <hughd@google.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
+ Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
+ <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
+ Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>,
+ Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
+ Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
+ Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
+ Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
+ Muhammad Usama Anjum <usama.anjum@arm.com>
+References: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
+ <20261031-fixes_core-v3-18-d6437171ecc3@kernel.org>
+ <62268831-f6f3-4666-a32f-a77546b95432@linux.alibaba.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -120,9 +134,9 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20261104031245.9524-1-lance.yang@linux.dev>
+In-Reply-To: <62268831-f6f3-4666-a32f-a77546b95432@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -133,44 +147,78 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 11/4/26 04:12, Lance Yang wrote:
+On 11/2/26 09:20, Baolin Wang wrote:
 > 
-> On Sat, Oct 31, 2026 at 10:40:12AM +0100, David Hildenbrand (Arm) wrote:
->> PFN mappings such as VFIO PCI BAR mappings can use PUD leaves while
->> allowing VMA splits at page granularity. However, vma_adjust_trans_huge()
->> only handles PMDs.
+> 
+> On 10/31/26 5:39 PM, David Hildenbrand (Arm) wrote:
+>> The existing code is rather horrible and already resulted in bugs in the
+>> past: we special-case UFFD inserting anonymous folios by grabbing the PMD
+>> lock early, but ignore any other markers (guard, poison through uffd) that
+>> could have been inserted into the page table in the meantime, effectively
+>> dropping them.
 >>
->> After faulting a writable PUD-sized VFIO BAR mapping, changing its first
->> page to read-only with mprotect() makes the PMD walk treat the PUD leaf
->> as a PMD table. Applying MADV_DONTFORK to the first PMD-sized chunk leaves
->> the PUD spanning two VMAs: the PMD-aligned boundary skips splitting.
+>> Let's just unify and simplify the locking: try to grab the PMD table
+>> lock and if that fails, flush the TLB, drop the PTE lock, take PT locks in
+>> the right order and check if the page table is still empty.
 >>
->> Walk the page tables once at each adjusted boundary and split a huge
->> PUD or PMD leaf as needed. Handle PUD leaves even when the boundary is
->> PMD-aligned.
+>> We still perform the heavy lifting (zapping the folio ptes) under PTE table
+>> lock only.
 >>
->> Fixes: f9e54c3a2f5b7 ("vfio/pci: implement huge_fault support")
->> Cc: stable@vger.kernel.org
+>> Include <linux/hugetlb.h> for now, as x86's flush_tlb_range() macro
+>> depends on hugetlb helpers. This dependency needs a separate cleanup.
+>>
+>> Both issues this fixes are rather corner cases. Let's not CC stable for
+>> now.
+>>
+>> Fixes: f807123d578d ("mm: allow guard regions in file-backed and read-only
+>> mappings")
+>> Fixes: 1043173eb5eb ("mm/khugepaged: collapse_pte_mapped_thp() with
+>> mmap_read_lock()")
+>> Tested-by: Gregory Price (Meta) <gourry@gourry.net>
+>> Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
 >> Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
->> Reviewed-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
 >> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 >> ---
+>>   mm/khugepaged.c | 64 ++++++++++++++++++++++++++++-----------------------------
+>>   1 file changed, 31 insertions(+), 33 deletions(-)
+>>
+>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>> index ce794d9760a87..ad07c8caa3bd9 100644
+>> --- a/mm/khugepaged.c
+>> +++ b/mm/khugepaged.c
+>> @@ -10,6 +10,7 @@
+>>   #include <linux/mm_inline.h>
+>>   #include <linux/kthread.h>
+>>   #include <linux/khugepaged.h>
+>> +#include <linux/hugetlb.h>
+>>   #include <linux/freezer.h>
+>>   #include <linux/mman.h>
+>>   #include <linux/hashtable.h>
+>> @@ -1832,6 +1833,17 @@ static enum scan_result set_huge_pmd(struct
+>> vm_area_struct *vma, unsigned long a
+>>       return SCAN_SUCCEED;
+>>   }
+>>   +static bool pte_table_empty(pte_t *pte)
+>> +{
+>> +    int i;
+>> +
+>> +    for (i = 0; i < HPAGE_PMD_NR; i++, pte++) {
 > 
-> Nice work!
-> 
-> Reviewed-by: Lance Yang <lance.yang@linux.dev>
+> Using PTRS_PER_PTE to iterate PTEs seems more straightforward? Otherwise LGTM.
 
-Thanks for the review! Please do keep reviewing, but note that more trailers
-(including this one) will likely not make it upstream as I am about to prepare
-the PR to get most of these things here upstream.
+As I pulled this patch out from the stable fixes, I fixed it up.
+
+I realized that this helper should likely move to some header later and be
+reused elsewehere (zap_pte_table_if_empty), but that's something for a later
+cleanup.
 
 -- 
 Cheers,
