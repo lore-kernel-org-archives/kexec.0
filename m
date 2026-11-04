@@ -2,46 +2,46 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6448A609D0AE
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:56:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB22360E7509
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:56:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=y2ko6XwW;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aKP7JyYG
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=T+T+2mia;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=e2uxiHux
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=LBl2/qBMA7OV4BMTYua5kVHXByvRuxQ8RJbkH2xlEeQ=; b=y2ko6XwWkDqt4z
-	uDfDNo50yIzDSGSPKZeLb96te9YJDi8HCOUUR6a/ZQmW0t8q4kYMVGeydDutLoBChq5BMT624AOjo
-	CtRI2e202ibNtskHpgZM7wNjeMimSpXCgVvpKpNgW3VwN1b2A0F3+7fGG+mIu14O0qbEr4lz4epN8
-	UbCfIPBtDRmoJLUpnsn7bbj132MJ4QYl4XGh77FxPJ+tyD7tvNCc1UjAbpTVCUhyhmKVZ8SanU7bz
-	3hZENAwOuH2JdQz0/Aw0CrOVaaG0hLA588RQPZiszOANKNMscId0gE03+89hxZ+QsfkeAYeoqKHbS
-	G10nAjWSfyDN8ia8MZTw==;
+	List-Owner; bh=9vYsQ2z6p4kEQ26Jb8WOubzMzQn6P43ATzZz2gRYd8s=; b=T+T+2miaYyKZLf
+	kDFkDc7aFtwf5CQyBH41CqV3qS6qwOgy/eLeEcWKok+izCy+6HtFNh6zrOf5A/uDaK8yjcS1MQRQ6
+	jE0whV4rHaQUNX5M60F1UVxjkM+G89mdaQATq3TtqDZ9gNWKJDh80fqQ06b/wKWFuWzus9gWSabDF
+	MgWlz56vBVB4NfUTnKCHrld/5xaAgn54IosPJqNHy/jkVskUDYqbUL98kemO6DGbtwyoB1qVAUI4l
+	IpC8+5Yo835o9s4K+dUfG3olnU6IFp9f7Eb4jveg6g7cvEuzr/NjxJC8dBiAnmKSMF7M4s7ygws+M
+	DplInDNWS+WcEVz46tAA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOh63-00000006oWF-0Gfd;
-	Wed, 04 Nov 2026 19:56:35 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xOh6G-00000006oci-1h6a;
+	Wed, 04 Nov 2026 19:56:48 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOh61-00000006oVp-3SBY;
-	Wed, 04 Nov 2026 19:56:33 +0000
+	id 1xOh6F-00000006ocT-3FYN;
+	Wed, 04 Nov 2026 19:56:47 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 3A74160F1B;
-	Wed,  4 Nov 2026 19:56:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B86BA1F000C1;
-	Wed,  4 Nov 2026 19:56:20 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 844B84010A;
+	Wed,  4 Nov 2026 19:56:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B8051F000C1;
+	Wed,  4 Nov 2026 19:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793822192;
-	bh=LBl2/qBMA7OV4BMTYua5kVHXByvRuxQ8RJbkH2xlEeQ=;
+	s=k20260515; t=1793822207;
+	bh=9vYsQ2z6p4kEQ26Jb8WOubzMzQn6P43ATzZz2gRYd8s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=aKP7JyYGkDXXcZgiOMyJDOMnJ3YKXipcdyKMOhnZ/kDushdocc5j2aUosHVgdFjuG
-	 W8NqrAjXIVJtlk3D6BRdnDPijmdfnyH55xY4/5GIe8B7ijNhQWuqM7VHbGTChu/S5p
-	 bjawb6WUZLBB8pnefyGL4zorD4j/72K+4RlaEoOxwLWCBU80eFeiO+LKNoVR3cDXsM
-	 3PJy33mjWSy8B1p5T5flpR5Cr9VBJtwZuxs51UHe1Pt2cbGiY3/+T4y9EH9bSAjyVG
-	 E7eQOJVTxndTF1qhOS06r3zzRaWFs4kd9ALYhL3GOdUn4eRB1X31/INX4f8HZSXd4y
-	 I59kxqMTzVXsw==
+	b=e2uxiHuxfEJdhmjLozO9LVNrgHWWCvyZHjL6HCg7amaM22yI9yG0olu1uJ96j73/Z
+	 xTQNcQbMhTyIG8P3vbMDLmuT2phtFdMJBnVFMbLXmKKNtZbqq02BRamAUB44uazdL3
+	 urCr5eyZbIruy/giy8yhCYSK2FnSUIzF0uuLJu8guQkWA1W37endcFSgwzxgmXgdpv
+	 WgWqivOuiipmtpXNrqJUTWyUBgi0SwINwwt/Cqe2dz7mNJDn9EIm/pVofRmhuImUVo
+	 H8QqbrQNf9HFXNZ1hUfz4Fw5j+PPHT9mjrfkR6KYflVEzz/AoZKdc8Eb+kMcDaWwM1
+	 H1CvOEcsSWIHA==
 From: Christian Brauner <brauner@kernel.org>
 To: linux-fsdevel@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
@@ -102,16 +102,16 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	linux-debuggers@vger.kernel.org,
 	"Christian Brauner (Amutable)" <brauner@kernel.org>,
 	Chuck Lever <cel@kernel.org>
-Subject: [PATCH RESEND v2 27/30] mm/swapfile: let procfs own the seq_file of /proc/swaps
-Date: Wed,  4 Nov 2026 20:56:18 +0100
-Message-ID: <20261104-work-procfs-fs-v2-27-319e0f9a8aae@kernel.org>
+Subject: [PATCH RESEND v2 28/30] mm/swapfile: let procfs own the wait queue of /proc/swaps
+Date: Wed,  4 Nov 2026 20:56:33 +0100
+Message-ID: <20261104-work-procfs-fs-v2-28-319e0f9a8aae@kernel.org>
 In-Reply-To: <20261104-work-procfs-fs-v2-0-319e0f9a8aae@kernel.org>
 References: <20261104-work-procfs-fs-v2-0-319e0f9a8aae@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1169; i=brauner@kernel.org; h=from:subject:message-id; bh=xP8svTINdkdtOq03sFDyUkKM00LKGtRsGg97ENBLGtM=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS97vHhXJd8Kth7+zWufRt8tZu59658dXe75H+F8xvTV ml+XhRg2lHKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjCRqbMZ/kps+sao8ittxlXf /G8XPGKtjMsDSyLXBR7ut+jjuGbTHMHwP7A9pOPMY4eI2fw/JsV8unzukJPgecs1+ql+y/k/6SR 1sAAA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2019; i=brauner@kernel.org; h=from:subject:message-id; bh=VLC7S5nkyALdZiiw9586D7569GKKbKISIa7jUul9ZSQ=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS97vEV3KXoYc6wwNTta5J2SbyikafkWx/po6m7FWtOr PLmcCroKGVhEONikBVTZHFoNwmXW85TsdkoUwNmDisTyBAGLk4BmMhMA4Z/KivFpjxV2sx0std/ mh+/+VeZnyvk60UXbOG53vWE+fLyG4wMk7fu+rgnv6JzYR1H2t24xj6e5tmlRd9mX90acdHdM9y RDwA=
 X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
@@ -132,48 +132,64 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Declare the seq_operations and let procfs open and free the seq_file.
-->proc_open() only records the event count for ->proc_poll() now.
+swaps_poll() sleeps the poller on a queue of its own. procfs owns the
+queue poll() uses now, so leave the poll_wait() to it and wake its
+pollers when a swap area comes or goes.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- mm/swapfile.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+ mm/swapfile.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
 diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 254ce86fa923..ee4868ecc3a7 100644
+index ee4868ecc3a7..1d063a1cef43 100644
 --- a/mm/swapfile.c
 +++ b/mm/swapfile.c
-@@ -3410,26 +3410,19 @@ static const struct seq_operations swaps_op = {
- 	.show =		swap_show
- };
+@@ -111,7 +111,7 @@ static struct kmem_cache *swap_table_cachep;
+ /* Protects si->swap_file for /proc/swaps usage */
+ static DEFINE_MUTEX(swapon_mutex);
  
-+/* procfs opens the seq_file */
- static int swaps_open(struct inode *inode, struct file *file)
+-static DECLARE_WAIT_QUEUE_HEAD(proc_poll_wait);
++static struct proc_dir_entry *proc_swaps;
+ /* Activity counter to indicate that a swapon or swapoff has occurred */
+ static atomic_t proc_poll_event = ATOMIC_INIT(0);
+ 
+@@ -3307,7 +3307,7 @@ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
+ 
+ 	err = 0;
+ 	atomic_inc(&proc_poll_event);
+-	wake_up_interruptible(&proc_poll_wait);
++	proc_poll_notify(proc_swaps);
+ 
+ out_dput:
+ 	filp_close(victim, NULL);
+@@ -3319,8 +3319,6 @@ static __poll_t swaps_poll(struct file *file, poll_table *wait)
  {
--	struct seq_file *seq;
--	int ret;
--
--	ret = seq_open(file, &swaps_op);
--	if (ret)
--		return ret;
-+	struct seq_file *seq = file->private_data;
+ 	struct seq_file *seq = file->private_data;
  
--	seq = file->private_data;
- 	seq->poll_event = atomic_read(&proc_poll_event);
+-	poll_wait(file, &proc_poll_wait, wait);
+-
+ 	if (seq->poll_event != atomic_read(&proc_poll_event)) {
+ 		seq->poll_event = atomic_read(&proc_poll_event);
+ 		return EPOLLIN | EPOLLRDNORM | EPOLLERR | EPOLLPRI;
+@@ -3428,7 +3426,7 @@ static const struct proc_ops swaps_proc_ops = {
+ 
+ static int __init procswaps_init(void)
+ {
+-	proc_create("swaps", 0, NULL, &swaps_proc_ops);
++	proc_swaps = proc_create("swaps", 0, NULL, &swaps_proc_ops);
  	return 0;
  }
+ __initcall(procswaps_init);
+@@ -3907,7 +3905,7 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
  
- static const struct proc_ops swaps_proc_ops = {
- 	.proc_flags	= PROC_ENTRY_PERMANENT,
-+	.proc_seq_ops	= &swaps_op,
- 	.proc_open	= swaps_open,
--	.proc_read	= seq_read,
--	.proc_lseek	= seq_lseek,
--	.proc_release	= seq_release,
- 	.proc_poll	= swaps_poll,
- };
+ 	mutex_unlock(&swapon_mutex);
+ 	atomic_inc(&proc_poll_event);
+-	wake_up_interruptible(&proc_poll_wait);
++	proc_poll_notify(proc_swaps);
  
+ 	error = 0;
+ 	goto out;
 
 -- 
 2.53.0
