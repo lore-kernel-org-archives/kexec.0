@@ -2,61 +2,66 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AABC606A31B
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 13:42:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5A4606A328
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 13:46:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2VZjzYTH;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=m1/TBuwl
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Fhp012Bc;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=cQg6Fz14
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=4IqEotgPDT1hegyi7/J8DGunAd5SP02PqdK9DhD9Exc=; b=2VZjzYTHXVW5y6
-	KUUPC83LBJmjUechurarjAXVJrkSq1Yb0+HXAOLjSl6//t6wjfQ9FD8gaTRRIfOoSTbf8iKeJZhbD
-	AGd0vMEUVZmv2IzbQs+zlDEVGlKj9wn9qZripoODOtKzuSA75XYReBj4peSVFfMPLR9nQnEDBbJ3H
-	A5JRZtVM5ftaftrDeXlEdDeAqteApY+giph+6CT/94TbUakHGV3eBGnB7++1tWXQefb67T5UqAv0F
-	r6351mtzD6xhM81dgUQa6k0nZntw5RfUlwGVNwrGn9QOTf4q7xV0OKeoNKWXIsYk+rIoFY9Dz994a
-	gIgmobqL9jJctbt38wsA==;
+	List-Owner; bh=QGFVMoJRZR79GkB1zDENh+lvuQ8N4gNHeoEkuezJ4HQ=; b=Fhp012Bctc9nx3
+	kRpihpZiknGxsjjbcIniLjt/PXBA/ZVK6lWh18tYKuFO/mLisE0k+Qlem5eivu415pn/6PFatL02e
+	DzquA1GVLd+jUeOsg75aZM4NWNVsiAZT+DGhaEylrSJX/Lb+rEHVCmOJZLYFUZxLmOtCi+CtGdb0m
+	hlT2qjD+RO8BbUr5e4m6gUTmfNELg+g2rFC9TZ8HHYEgoyOviTeM9/ZZE7LQNEXCglYMvZ3jqdAJy
+	oVaGpD/XEMDX+ldGzX/OFiCXKTfSKn5HBQ4tfKNmwlUhvyhyiTlBDDon5FtPA1W/Mv7CPvcixs3ma
+	opHb8KpB8tX+NSk3zBjQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xObFa-00000005VMh-0sj5;
-	Wed, 04 Nov 2026 13:42:02 +0000
-Received: from out30-97.freemail.mail.aliyun.com ([115.124.30.97])
+	id 1xObJQ-00000005VwB-2IHK;
+	Wed, 04 Nov 2026 13:46:00 +0000
+Received: from out30-111.freemail.mail.aliyun.com ([115.124.30.111])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xObFX-00000005VLC-11ZO
+	id 1xObJO-00000005VvL-0KyN
 	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 13:42:00 +0000
+	Wed, 04 Nov 2026 13:45:59 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1793799715; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=4IqEotgPDT1hegyi7/J8DGunAd5SP02PqdK9DhD9Exc=;
-	b=m1/TBuwluJUKU9g0aPAqQr0SgawskW5qRgQsyijNC5RnRFR+8C4FGgYE8LXPk1udR8IKKA3paslVHFCz7DNBwpxBKmkOt/6WhOiWl8HsvzqQENxJR8AmmJxOj+aaU3ZSMY4ZDMfbMzKTm2RnuyfUn3ZrQQfIxHUA075lLESdo5c=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R711e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0XE5r9Xj_1793799708;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0XE5r9Xj_1793799708 cluster:ay36)
+	t=1793799955; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=QGFVMoJRZR79GkB1zDENh+lvuQ8N4gNHeoEkuezJ4HQ=;
+	b=cQg6Fz141ge859rVLWY64KUCghhlsaItbkiCFQe6EVIflNVQlxpPjgQMulwHxXxIXqftbxwIOLwAU1osu38QwTZ1OVStPuUGAovtEsadxQm01p3GSgKBymPQtuN1TW+voyCN+Gr1lEcocPn8GUXgA4uoWCSUxL8Z6twnuz2211k=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R971e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0XE5sgSS_1793799951;
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0XE5sgSS_1793799951 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Wed, 04 Nov 2026 21:41:54 +0800
+          Wed, 04 Nov 2026 21:45:55 +0800
 From: Chen Pei <cp0613@linux.alibaba.com>
-To: pratyush@kernel.org
-Cc: graf@amazon.com,
+To: sashiko-bot@kernel.org
+Cc: alex@ghiti.fr,
+	graf@amazon.com,
+	guoren@kernel.org,
 	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
+	palmer@dabbelt.com,
 	pasha.tatashin@soleen.com,
-	rppt@kernel.org
-Subject: Re: [PATCH] kho: Skip zero-sized bootmem areas
-Date: Wed,  4 Nov 2026 21:39:56 +0800
-Message-ID: <20261104134147.1695-1-cp0613@linux.alibaba.com>
+	pjw@kernel.org,
+	pratyush@kernel.org,
+	rppt@kernel.org,
+	shuah@kernel.org
+Subject: Re: [PATCH v2 3/5] riscv: Add support for kexec handover (KHO)
+Date: Wed,  4 Nov 2026 21:45:47 +0800
+Message-ID: <20261104134550.1779-1-cp0613@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <2vxz8q38lqp4.fsf@kernel.org>
-References: <20261026131851.9942-1-cp0613@linux.alibaba.com> <2vxzld7kpmmi.fsf@kernel.org> <20261027074028.13042-1-cp0613@linux.alibaba.com> <2vxz8q38lqp4.fsf@kernel.org>
+In-Reply-To: <sashiko-outbox-196857@kernel.org>
+References: <20261103080926.2079-1-cp0613@linux.alibaba.com> <20261103080926.2079-4-cp0613@linux.alibaba.com> <sashiko-outbox-196857@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261104_054159_502332_0E10CD5A 
-X-CRM114-Status: UNSURE (   4.04  )
+X-CRM114-CacheID: sfid-20261104_054558_295553_0E79A3AE 
+X-CRM114-Status: UNSURE (   4.64  )
 X-CRM114-Notice: Please train this message.
 X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
@@ -77,15 +82,14 @@ X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-> Mike sent out [0] recently which should fix this problem. Please take a
-> look at that, and see if it works for you.
+> As reported by Sashiko on v1 [1], will kho_reserve_bootmem() fail on 64-bit
+> RISC-V platforms where DRAM starts at or above 4 GiB, or record a 0-byte
+> region when all DRAM lies below 4 GiB?
 
-Yes, that covers it. The zero check sits in the one helper all three
-allocations go through, so the three cases in my other mail are all
-handled and my patch is not needed - please consider it withdrawn, there
-is no competing change from my side.
+Both, confirmed by measurement, and neither is riscv code. Mike Rapoport
+has a patch that resolves it, so this series carries nothing for it:
 
-Thanks for pointing me at it, and thanks Mike for picking this up.
+https://lore.kernel.org/kexec/20261103-kho-bootmem-sizing-v1-1-45aa74098f34@kernel.org/
 
 Best regards,
 Chen
