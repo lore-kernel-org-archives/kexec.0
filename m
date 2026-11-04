@@ -2,118 +2,144 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F3236086E79
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 21:17:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ADE9606C589
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 21:24:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=e4Hi8SXi;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=S3SzdWSz
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=w1Nd4nPc
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:References:Message-ID:Subject:Cc:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=zeHs9UAP7YIb3jk19VW8WXuXpSby7HHZ4SLZ7Ya7qeg=; b=e4Hi8SXiIpiZvH
-	jw31c4PM2cu+9+VoBbOUqyIi3GheT9IwmZ5xCEQXJ3TOquRt9X0c5+X+2tZ3qdlw0sUkf8wvjazyP
-	ov4FG/ob1JhAgcUrl1uCIH2NfqCn5dkVYmfJTm1XtpvGGwimBSsliNkjsc+GoyyxOsIGBM6TfaS/F
-	BmVYYq2YkB3O8jqKKan7gjgwCOXlxRN8lE1mO69vL0brEjGddOOJxiurlEOdbh49o9i2c7gLdPy91
-	kAmr4ONTwnnP3DpKq3BcwjXo4QrhFKG+hOrBZC4RwM5UGBqCGlKRNU/1HJmZ82FDoXN1NxC8/pSZk
-	3jAjvzDj8cMyYYRxA2FQ==;
+	List-Owner; bh=ZvbyKWbvjRXfdCahcmMw/zZ48pSDnL9iKfnxz5mk/hI=; b=w1Nd4nPcagZMTa
+	uXR+OZgMvbna4AmdlJ0Q3vn9EZQYVfz1p+Cc8WFNVOEWEYsAMWNYT3GhmQnkJYtVBHq8sejtm4ujq
+	yTDBBHJ3KZoTiTpftU5KoWulzsuSykRyfNaeA/apQ/oeA3zYdF5Ec5Xc8WEnM74wWaI3cKzCc08jz
+	g8XlmoNbBzwE0hfpISCstaLRoUTIkMNHKDkNNlICD9pR2ACfQXmnbmdOJW9HYqRcBGBkNavWS9pLY
+	7iZaACDNJ46oAVeZ+SfPkKanYXBJXc6LZaB5Xf+m52hP+8wI0U+7OUh5jLqj4aETmZcSCBa7cvvCY
+	RzOKYEbWOk3UiqtDYDtw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOiLv-000000070r6-0yPF;
-	Wed, 04 Nov 2026 21:17:03 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xOiTC-000000071Wh-1zQ6;
+	Wed, 04 Nov 2026 21:24:34 +0000
+Received: from mail-uksouthazlp170120005.outbound.protection.outlook.com ([2a01:111:f403:c205::5] helo=LO0P265CU003.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOiLt-000000070qT-1yql;
-	Wed, 04 Nov 2026 21:17:01 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 2A16544D84;
-	Wed,  4 Nov 2026 21:17:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07AC31F00A02;
-	Wed,  4 Nov 2026 21:16:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793827021;
-	bh=zeHs9UAP7YIb3jk19VW8WXuXpSby7HHZ4SLZ7Ya7qeg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=S3SzdWSzW86Oi7IX1tUBoRNN3T1qaKpCsD195aJc0q3DFSVT8WBvY060bSLKhgobb
-	 ozqt92gwXbw5PQb0azuNQvXlPB7WnJ6cBECkdsTADqTj+zV4KFstm2CIoVK3RnyKHw
-	 qukYCNAdRUYdRI6RQkFYFD46MOjD+1c8YqXVIsSOalpjdzN976W0rXYKybUDWkvkIa
-	 rfbNpjRPuRxsQxtxAfSij5iqz5tsGOkFhdPq9CXCzRhQ5vabAbm6JESEBXYkE7I8Zz
-	 Xcw2dOWqmhnKSnz+HejYopwm49XOlRK/JAYtCOxhFx3vpJFr7q8EZmlKY7qc7HALif
-	 bf0zrDFVpbYqg==
-From: Christian Brauner <brauner@kernel.org>
-To: linux-fsdevel@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Jann Horn <jannh@google.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Chris Mason <mason@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	NeilBrown <neil@brown.name>,
-	Eric Dumazet <edumazet@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Christoph Hellwig <hch@lst.de>,
-	Greg Kroah-Hartman <gregkh@suse.de>,
-	Joel Granados <joel.granados@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Jan Kara <jack@suse.com>,
-	linux-kernel@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	linux-wireless@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	netdev@vger.kernel.org,
-	ntfs3@lists.linux.dev,
-	platform-driver-x86@vger.kernel.org,
-	coreteam@netfilter.org,
-	kexec@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	netfilter-devel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	ibm-acpi-devel@lists.sourceforge.net,
-	jfs-discussion@lists.sourceforge.net,
-	linux-alpha@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-fbdev@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-sh@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	samba-technical@lists.samba.org,
-	sparclinux@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org,
-	linux-doc@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-atm-general@lists.sourceforge.net,
-	Takashi Iwai <tiwai@suse.de>,
-	linux-input@vger.kernel.org,
-	linux-raid@vger.kernel.org,
-	linux-ext4@vger.kernel.org,
-	linux-modules@vger.kernel.org,
-	linux-debuggers@vger.kernel.org,
-	"Christian Brauner (Amutable)" <brauner@kernel.org>,
-	Chuck Lever <cel@kernel.org>
-Subject: [PATCH RESEND v2 6/6] proc: drop the poll_table from ->proc_poll()
-Date: Wed,  4 Nov 2026 22:16:46 +0100
-Message-ID: <20261104-work-procfs-cleanup-v2-6-1e6687e226b1@kernel.org>
-In-Reply-To: <20261104-work-procfs-cleanup-v2-0-1e6687e226b1@kernel.org>
-References: <20261104-work-procfs-cleanup-v2-0-1e6687e226b1@kernel.org>
+	id 1xOiT8-000000071VF-4Aob
+	for kexec@lists.infradead.org;
+	Wed, 04 Nov 2026 21:24:33 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=G6NsO0r4xCNeZX6jUviRajHvXxBhECwlo8UdIoRtyVsYaAW3/6ZTU1ytjUUjl8dtU+hRZ5ZH1GgriFwwWxAwV41mdc7rh8408segnS4icCc49CVK3q1c8RlaPdIcca8skG7kmauyrr1MbcSHSsblllJVIwhuwkQ1FqSwFLPT4Oq8IqZ54N+hp6lJ5klepcOYA0Mk4xyUqp664wmkqjwYShVd4Kc1dCaCezm4vBmdyL6Tb9EEcRPUR7qSWRG1Ni1nra7VgoO4PiYAUdhgSDOr8MVge3iCZstZ8v+jSeFGs0anZz+dLqk08VG7eOxsWGu2QrBFmLDty5hhFKGGfhfp6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
+ bh=ZvbyKWbvjRXfdCahcmMw/zZ48pSDnL9iKfnxz5mk/hI=;
+ b=Cg6tDfhFZO6GU53VHwZmE6miLHANG+kxVHAjMmq83V0anqcR//IFLdvnmrafibIvu9qdtVPNTXUuEM5K5VDYarc+3ywyHVIpSdRDBTASygm11Z3qy6Zw4CxnihdbFpKmTSGgsnrValB6HQvuYg1IzEoRfA1HCXNHputbIQ802SHVqe7XxolAbR5wF1oS2fzBV9wLyS51H4Z/dMnZeqtKtzUaLVUU8AzFT7wqZbcGHCHmvkX8DR5Jhk4aG+C0wwWneeLeK0rLuzhOMujM0TMW6aig6cbwMDoXqnjOgYn6QD7/shmXdPc0y+kYog7j0mWi8AfFpbFcV1hh/xSWg2oleQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:163::8)
+ by LOYP123MB3006.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:f3::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.8; Wed, 4 Nov 2026
+ 21:24:24 +0000
+Received: from LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::f71f:a9f:c4de:687a]) by LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::f71f:a9f:c4de:687a%5]) with mapi id 15.21.0592.009; Wed, 4 Nov 2026
+ 21:24:23 +0000
+Date: Wed, 4 Nov 2026 16:24:19 -0500
+From: Aaron Tomlin <atomlin@atomlin.com>
+To: sashiko-reviews@lists.linux.dev
+Cc: pmladek@suse.com, john.ogness@linutronix.de, rostedt@goodmis.org, 
+	senozhatsky@chromium.org, mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de, 
+	vschneid@redhat.com, kprateek.nayak@amd.com, akpm@linux-foundation.org, 
+	baoquan.he@linux.dev, rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org, 
+	ruirui.yang@linux.dev, david@kernel.org, ljs@kernel.org, liam@infradead.org, 
+	vbabka@kernel.org, surenb@google.com, mhocko@suse.com, kees@kernel.org, 
+	anna-maria@linutronix.de, frederic@kernel.org, tglx@kernel.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, brendan.jackman@linux.dev, hannes@cmpxchg.org, ziy@nvidia.com, 
+	bigeasy@linutronix.de, clrkwllms@kernel.org, kexec@lists.infradead.org, 
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
+	linux-rt-devel@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 2/5] mm/show_mem: Avoid blocking on zone->lock
+ during Oops or panic
+Message-ID: <ygc3ylz5hxlkqt7n5xnl6klydhmjtflkctidr4qabf3p4dxxsq@64gqisbenf5k>
+References: <20261103024453.922373-1-atomlin@atomlin.com>
+ <20261103024453.922373-3-atomlin@atomlin.com>
+ <sashiko-outbox-196525@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <sashiko-outbox-196525@kernel.org>
+X-ClientProxiedBy: BL1P223CA0018.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:208:2c4::23) To LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:163::8)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5605; i=brauner@kernel.org; h=from:subject:message-id; bh=xctjOvW/3SEZoVIWJreYFKvLSI3LgHd/aggSpp1K3Wc=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9XpDCwWfSYe8eveS8yHFO7St6c86UqkTd43v8XXbxs eORD9pDOkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACYivoGRYdl9h7P19TJf4stb 3x3lv8VUfL7o3Cmvh99vBMo/PlY8S4bhn/KGbxquT4Jf+f7xcV3IcHfqg01FBpdsX2pJecw75bG miBMA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LO2P123MB4190:EE_|LOYP123MB3006:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5936cbd9-4fda-4842-de67-08df3ab9ff2d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|7416014|376014|366016|1800799024|56012099006|261021135927099003|261022105027099003|4143699003|261022075727099003|261009223027099003|261026140227099003|261028144727099003|10067099003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info: B4MoVTGX6QLPHc+rDooe8rpV0f7vcatJRj14LiHX5sUs3tpra6pgmap5fY4PgUJPhDztj/sQ4L2bvD+gAtoPXI6N3MG+W3SBbhWP/AFMzdio0ss6A8/FJrrVP8bwYQXDYeNM1Cdqvkvz/bXoztWTrL3NoACdkSq4XIAtGGwOekt9g3VwO5eFtCBaoxMaKQSERahZS+7TVOGJL1arxhzKslqWQStJ09nfJxHmCq8ncehglf+PHoYDX1jbg2/zjcXAHU+R1ZK+10a0sxSKDCYAkZgtMvDg9zfXatynLgEv9JUgqzAk27Rw1/wpTmLDfN0O5wCFol6Yz6JbcSnOpJGqnKnoYVrhgio3gS66upSlQjijf3Ucv57UrMwAr13qmILc+YrWWLJ6otjpp0hDF2GFeXn20PgGlxgBFBRMwFzXTpw/I4PPsQxrMXFS7D0uNRJ1HJhCRN4fRQv/HgYFd0qfkcQeLNlv7Tx0VJSnKAGONRpaZkjiF7tI86nn9ONVr+jvuT9y+PpQKFy/z6XhNr36HUyJ+nwNnVY+LaY7g9ZSUqgT0HtizqxKOntAp4seBKGwslto086V+CNvszriBp547KONbG/iLmvMfv/r7qVMorY=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(376014)(366016)(1800799024)(56012099006)(261021135927099003)(261022105027099003)(4143699003)(261022075727099003)(261009223027099003)(261026140227099003)(261028144727099003)(10067099003)(22082099003)(18002099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?U0VPVTJuVklUMTZNdW51SXU1dlFySm81LzlEZWY4WnNHN1pVbFFtV2dMR1NY?=
+ =?utf-8?B?anlEbGFQbFRweGd5Q1hqeFNMVUN3SUV2L0hxVmwyZDZyS25RQnBPemRwbEhM?=
+ =?utf-8?B?aWlqdW8ySDRkcldaS2lrNkxvVW5SUE81b29COEFCSjlGTS9rbTVuYXNjM2x6?=
+ =?utf-8?B?UnZMNHdNN09qZGE5RkE5bnlxM2psN1ZLZS8vT21VWVpZbWgxZHdPWkxBeXZ0?=
+ =?utf-8?B?ZVk3V0ZtSGo0Mk95WDJ6RlFEYUEwUklUckJ0NkVPbGdtMTU5MU15S05FQXlu?=
+ =?utf-8?B?MjlYQmxMVTZsZElxUHFVUlVlaDNnVkxZNzJ3eTl6WGNtWUlBa0JZSTRjTkg5?=
+ =?utf-8?B?Sy9nSGh0MmkxU1N0bmZkK2EzS3pob2FUN3gvNC9oMnhObDNuTEtYN0xQd2Zv?=
+ =?utf-8?B?VWtkdk1JdXBhSEU5bThQNFR3R0RLU3pBRzlFMU1yM0NVQklFWUNnckpXblhG?=
+ =?utf-8?B?OHkxYW4rd1Y2Z2RKd1RXcjNFTHdSTjRTNkpnUmRlWHhkQysrbkM1SExSRlBJ?=
+ =?utf-8?B?Ly9sS3dOTU42N200d1A3d0VyTW8xTEpPcXZ5SkM1aE9zUTN6VkJ5SkhxZ0pP?=
+ =?utf-8?B?eWJ1cVp6eDdVWEUyOWZZbEtRTzVXMnBlU1R5Ulhic1ZJOGljekthd1lXcHBn?=
+ =?utf-8?B?OHB6ZlRZd2NDajRXRXZsWUJ4NnkwanpMM3U3WTZ3QTFrUCtTSHhPTXdBZ09s?=
+ =?utf-8?B?RVZiYWhidGo4dFJaMVRSRWdsWEFyclhucnUxQW02amRlYk5iUDl2NHFONGJH?=
+ =?utf-8?B?Nzc1eTJNS2V6Rm0zc2MwWXlMTjZPS0FTVlhodVIwRzdmS2pxUy96WCtiRkN0?=
+ =?utf-8?B?YStraStmY0VjbzN4cndQcWZTZ3VsRlRhZXNRalp3eldBWFBWZzJSQmhyRks3?=
+ =?utf-8?B?RWhyR1laWWc0a0NwR3NSSDAwR1lvOVIwT1UzakhYNmI0T0wwNlZjcmdyMnpa?=
+ =?utf-8?B?NWE4aGpNWFR2TnN3TlFCemVXSWNaNDcybms0dllPM1hJc0NVcG9XL0tKRFdI?=
+ =?utf-8?B?VU5IRFRIZEZMeG5sWFFxK0xDekxxejNzdU9SeG1EVHowV3ZIWHFZMWtYMGpF?=
+ =?utf-8?B?T1VuSjFQMHVRb09JMHlBcmF5RWJJc2Joa0V4RVluVU1VQ2FrWDZnSjdTczF0?=
+ =?utf-8?B?VHduc0Jaei9sZm1aQVI3MXF1NGp5UVNYVTVLbnJWVjhhWFBzWGlEdzc5cTN4?=
+ =?utf-8?B?YUlMSWp2bmVRK3Y5UnRrajJrVkFpOVRneWdtc3kzYnVsQWpBM0NMcnE3YnEz?=
+ =?utf-8?B?Uk16VzZ0OWwycHVab0k3Ti9BVSt5QWNTbUlmSkh4b2pudU9vMkJqUFZlMzI0?=
+ =?utf-8?B?ZU9Eb0tTeWZLY1RaY2hWWDZqMEhxblhoSzc2VW1kWmtoeGF6YWNBMlQvNGZN?=
+ =?utf-8?B?cjFKUDc1Tm5qNWhSSjlEU0QrSDI0b3hHUVUrVU1sYXlaQVVNVXZIY3k1Qk16?=
+ =?utf-8?B?bXVxY2pPMUtncE00MWNUT0xpcVUwQysrWFREQ011UjhIYnJzMVkxOW45cVdp?=
+ =?utf-8?B?dVpGYU53NllZMkxsNEFMUlY0OHZPb0VLcE9RMEtqNi9GR1FCT29iTVJ0eVc0?=
+ =?utf-8?B?aTlZb3hYRlJkb1FWYjQ1NFAzeTFhUTFpU0Z5OElmMWdrVVdXWUNLYmc1bFdH?=
+ =?utf-8?B?cHl5UFN6dFo2TXpzV1lKRzFIYk9jd1orRVRHTzNNaWZQcldwYWNQT2paR2k0?=
+ =?utf-8?B?VDRiczBsT2dZVS9WaW9oMVpUTGRyb3Uyb085cU93bDVHWU1pQzRPZUxkWEc4?=
+ =?utf-8?B?K2F6dnlIN3VvTnQxV21qdVJtckpoSlQ5NllYM0tvYWtJZ2hDUFcyckxyUm9K?=
+ =?utf-8?B?dU84U3FnVmdKQWZJSmhYTWJLUFhnaWwwMHVWUkw1cWxqYmMzdzIrWUVUbk80?=
+ =?utf-8?B?b1JOOXZLVTA1d1R0ekplNlU1eGxVUWZ3U3hkTVBRV3F2K0lpeDk2a2VnWXdS?=
+ =?utf-8?B?SDRKU2NYaFY5TFZxWkpDU2s4TTZ6ekpkUGo4MS9rYUlvKzVCN2RqYVdnYmd3?=
+ =?utf-8?B?dkpoa2dTcVBsaFdGaHhUZEdRWFR1a1dadlpla2FVdU8zeWNscGxhSmx1LzlO?=
+ =?utf-8?B?aWYzUEs5ZUU4WFNaMGR2S3NzWVJvSytVMGFoTFZDaFpKNnZEcjdjbXBIMHo1?=
+ =?utf-8?B?OS9aZGRlQk9JU2NodmkxbXdFbk5mNUVNY1hGbnJQN1BicjB4T1VkUFB0MlEw?=
+ =?utf-8?B?WTBuZkJnNFhjTlpjbWI5ZVNBRUtwd2xrTWJBb3QyTkExVmlpQ2I0SmRzLzdq?=
+ =?utf-8?B?SWlGMXV5WnZhYUZrTTZKd3lEZHdPc1VDdGdMMHo3YUFtNSsyZDNNTW9rdTFa?=
+ =?utf-8?B?aGlEdnBuUXRtTE44Y2hLdW5zZituSThsczByYTNwcXE5NFZZV1ZrUT09?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5936cbd9-4fda-4842-de67-08df3ab9ff2d
+X-MS-Exchange-CrossTenant-AuthSource: LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Nov 2026 21:24:23.6745
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mX83XXz0UDS6Kd6a3dostHVE/ly4PP7cXSCUxkqCM/OEnhV61pwEeyjX1e94r/wQgKwvWWz40ckXFkOdBC7r2w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOYP123MB3006
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261104_132431_056882_772985F2 
+X-CRM114-Status: GOOD (  21.40  )
+X-Spam-Score: -1.9 (-)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -124,164 +150,90 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Every entry sleeps its pollers on the wait queue procfs owns for it
-now, so take the poll_table away from the method. An entry can't hand
-procfs a queue of its own anymore then, which is what went wrong for
-sunrpc, and the method only reports the mask.
+On Wed, Nov 04, 2026 at 02:49:19AM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Medium] mm/show_mem: false lock contention warning in show_free_areas()
+> --
+> 
+> commit e1c6e11316c0b99b2f700b8251c5ed2b76aad84a
+> Author: Aaron Tomlin <atomlin@atomlin.com>
+> 
+> mm/show_mem: Avoid blocking on zone->lock during Oops or panic
+> 
+> This commit updates show_free_areas() in mm/show_mem.c to avoid unconditionally calling spin_lock_irqsave() on zone->lock during Oops, panic, or NMI/atomic contexts, skipping zones when acquiring the lock is unsafe or contended.
+> 
+> > diff --git a/mm/show_mem.c b/mm/show_mem.c
+> > index b938cbcd774a1..77098077523a9 100644
+> > --- a/mm/show_mem.c
+> > +++ b/mm/show_mem.c
+> > @@ -367,10 +367,17 @@ static void show_free_areas(unsigned int filter, const nodemask_t *nodemask,
+> >  			continue;
+> >  		if (show_mem_node_skip(filter, zone_to_nid(zone), nodemask))
+> >  			continue;
+> > -		show_node(zone);
+> > -		printk(KERN_CONT "%s: ", zone->name);
+> >  
+> > -		spin_lock_irqsave(&zone->lock, flags);
+> > +		if (!can_spin_trylock() || in_nmi() ||
+> > +		    oops_in_progress || panic_in_progress()) {
+> > +			if (!can_spin_trylock() ||
+> > +			    !spin_trylock_irqsave(&zone->lock, flags)) {
+> > +				pr_warn("zone %s lock contended\n", zone->name);
+> > +				continue;
+> > +			}
+> > +		} else {
+> > +			spin_lock_irqsave(&zone->lock, flags);
+> > +		}
+> 
+> [Severity: Medium]
+> In show_free_areas(), when can_spin_trylock() returns false (such as in NMI or
+> hardirq context under CONFIG_PREEMPT_RT, or in NMI context under !CONFIG_SMP):
+> 
+> mm/internal.h:can_spin_trylock() {
+> 	if (IS_ENABLED(CONFIG_PREEMPT_RT) && (in_nmi() || in_hardirq()))
+> 		return false;
+> 
+> 	/* On UP, spin_trylock() always succeeds even when it is locked */
+> 	if (!IS_ENABLED(CONFIG_SMP) && in_nmi())
+> 		return false;
+> 
+> 	return true;
+> }
+> 
+> the inner !can_spin_trylock() check short-circuits before
+> spin_trylock_irqsave() is ever called, yet still prints "zone %s lock
+> contended" for every populated zone even when zone->lock is completely
+> uncontended.
+> 
+> The commit message also states:
+> 
+>   Check can_spin_trylock() and use spin_trylock_irqsave() when
+>   !can_spin_trylock(), in_nmi(), oops_in_progress, or panic_in_progress()
+>   is active
+> 
+> Additionally, because show_node(zone) is moved after spin_unlock_irqrestore()
+> below, skipping a zone here only logs zone->name (for example, Normal or
+> DMA32) without the NUMA node ID on CONFIG_NUMA systems.
+> 
+> Should the !can_spin_trylock() case avoid claiming that zone->lock is
+> contended (and match the commit message description), and should the skipped
+> zone message include the node ID?
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20261103024453.922373-1-atomlin@atomlin.com?part=2
 
-Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
----
- arch/powerpc/kernel/rtasd.c | 2 +-
- drivers/input/input.c       | 2 +-
- drivers/md/md.c             | 2 +-
- fs/proc/inode.c             | 2 +-
- include/linux/proc_fs.h     | 9 +++++----
- kernel/sched/psi.c          | 4 ++--
- mm/swapfile.c               | 2 +-
- net/sunrpc/cache.c          | 2 +-
- sound/core/info.c           | 2 +-
- 9 files changed, 14 insertions(+), 13 deletions(-)
+I have updated the commit message in the next revision to accurately
+describe this two-stage check, and updated the pr_warn() message to include
+the NUMA node ID via zone_to_nid(zone).
 
-diff --git a/arch/powerpc/kernel/rtasd.c b/arch/powerpc/kernel/rtasd.c
-index 49036790b67c..34705234db57 100644
---- a/arch/powerpc/kernel/rtasd.c
-+++ b/arch/powerpc/kernel/rtasd.c
-@@ -343,7 +343,7 @@ static ssize_t rtas_log_read(struct file * file, char * buf,
- 	return error;
- }
- 
--static __poll_t rtas_log_poll(struct file *file, poll_table * wait)
-+static __poll_t rtas_log_poll(struct file *file)
- {
- 	if (rtas_log_size)
- 		return EPOLLIN | EPOLLRDNORM;
-diff --git a/drivers/input/input.c b/drivers/input/input.c
-index a984810eb80d..5a0547296c6c 100644
---- a/drivers/input/input.c
-+++ b/drivers/input/input.c
-@@ -1097,7 +1097,7 @@ struct input_seq_state {
- 	int input_devices_state;
- };
- 
--static __poll_t input_proc_devices_poll(struct file *file, poll_table *wait)
-+static __poll_t input_proc_devices_poll(struct file *file)
- {
- 	struct seq_file *seq = file->private_data;
- 	struct input_seq_state *state = seq->private;
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 7560dcf0f5c8..94926a7c3d6f 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -9176,7 +9176,7 @@ static int md_seq_open(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
--static __poll_t mdstat_poll(struct file *filp, poll_table *wait)
-+static __poll_t mdstat_poll(struct file *filp)
- {
- 	struct seq_file *seq = filp->private_data;
- 	__poll_t mask;
-diff --git a/fs/proc/inode.c b/fs/proc/inode.c
-index 7f6c63885f53..c35e13b44eed 100644
---- a/fs/proc/inode.c
-+++ b/fs/proc/inode.c
-@@ -546,7 +546,7 @@ static __poll_t proc_reg_poll(struct file *file, struct poll_table_struct *pts)
- 	poll_wait(file, &pde->open->poll, pts);
- 	if (!pde_pin(pde))
- 		return DEFAULT_POLLMASK | EPOLLERR | EPOLLPRI;
--	rv = pde->proc_ops->proc_poll(file, pts);
-+	rv = pde->proc_ops->proc_poll(file);
- 	pde_unpin(pde);
- 	return rv;
- }
-diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
-index 872f3bd54c11..6e2bcdf3c1b5 100644
---- a/include/linux/proc_fs.h
-+++ b/include/linux/proc_fs.h
-@@ -84,11 +84,12 @@ struct proc_ops {
- 	int	(*proc_release)(struct inode *, struct file *);
- 	/*
- 	 * procfs owns a wait queue for an entry with a ->proc_poll() and
--	 * does the poll_wait() on it before it calls the method. The owner
--	 * wakes the pollers with proc_poll_notify(). A poll on a removed
--	 * entry reports EPOLLERR | EPOLLPRI.
-+	 * does the poll_wait() on it before it calls the method, which only
-+	 * reports the mask. The owner wakes the pollers with
-+	 * proc_poll_notify(). A poll on a removed entry reports
-+	 * EPOLLERR | EPOLLPRI.
- 	 */
--	__poll_t (*proc_poll)(struct file *, struct poll_table_struct *);
-+	__poll_t (*proc_poll)(struct file *);
- 	/*
- 	 * procfs pins the entry around ->proc_mmap() and wraps the
- 	 * vm_operations of the mapping so that ->open(), ->fault(),
-diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-index 9362c27d47ab..ecb9028b5c49 100644
---- a/kernel/sched/psi.c
-+++ b/kernel/sched/psi.c
-@@ -1606,11 +1606,11 @@ static ssize_t psi_cpu_write(struct file *file, char *buf, size_t nbytes,
- 	return psi_write(file, buf, nbytes, PSI_CPU);
- }
- 
--static __poll_t psi_fop_poll(struct file *file, poll_table *wait)
-+static __poll_t psi_fop_poll(struct file *file)
- {
- 	struct seq_file *seq = file->private_data;
- 
--	return psi_trigger_poll(&seq->private, wait);
-+	return psi_trigger_poll(&seq->private, NULL);
- }
- 
- static int psi_fop_release(struct inode *inode, struct file *file)
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 1d063a1cef43..e7c019871e35 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -3315,7 +3315,7 @@ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
- }
- 
- #ifdef CONFIG_PROC_FS
--static __poll_t swaps_poll(struct file *file, poll_table *wait)
-+static __poll_t swaps_poll(struct file *file)
- {
- 	struct seq_file *seq = file->private_data;
- 
-diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-index b8f70d8c3b0c..4854a42d43a2 100644
---- a/net/sunrpc/cache.c
-+++ b/net/sunrpc/cache.c
-@@ -1588,7 +1588,7 @@ static ssize_t cache_write_procfs(struct file *filp, char *buf, size_t count,
- 	return ret ? ret : count;
- }
- 
--static __poll_t cache_poll_procfs(struct file *filp, poll_table *wait)
-+static __poll_t cache_poll_procfs(struct file *filp)
- {
- 	struct cache_detail *cd = pde_data(file_inode(filp));
- 
-diff --git a/sound/core/info.c b/sound/core/info.c
-index 3439ae341e26..8e64d8e3e5b2 100644
---- a/sound/core/info.c
-+++ b/sound/core/info.c
-@@ -184,7 +184,7 @@ static ssize_t snd_info_entry_write(struct file *file, char *buffer,
- 	return size;
- }
- 
--static __poll_t snd_info_entry_poll(struct file *file, poll_table *wait)
-+static __poll_t snd_info_entry_poll(struct file *file)
- {
- 	struct snd_info_private_data *data = file->private_data;
- 	struct snd_info_entry *entry = data->entry;
-
+Kind regards,
 -- 
-2.53.0
-
+Aaron Tomlin
 
