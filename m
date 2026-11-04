@@ -2,68 +2,75 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5A4606A328
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 13:46:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7F0F606EE80
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 14:12:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Fhp012Bc;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=cQg6Fz14
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=U1eMWC9y;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YL0mHBdN
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=QGFVMoJRZR79GkB1zDENh+lvuQ8N4gNHeoEkuezJ4HQ=; b=Fhp012Bctc9nx3
-	kRpihpZiknGxsjjbcIniLjt/PXBA/ZVK6lWh18tYKuFO/mLisE0k+Qlem5eivu415pn/6PFatL02e
-	DzquA1GVLd+jUeOsg75aZM4NWNVsiAZT+DGhaEylrSJX/Lb+rEHVCmOJZLYFUZxLmOtCi+CtGdb0m
-	hlT2qjD+RO8BbUr5e4m6gUTmfNELg+g2rFC9TZ8HHYEgoyOviTeM9/ZZE7LQNEXCglYMvZ3jqdAJy
-	oVaGpD/XEMDX+ldGzX/OFiCXKTfSKn5HBQ4tfKNmwlUhvyhyiTlBDDon5FtPA1W/Mv7CPvcixs3ma
-	opHb8KpB8tX+NSk3zBjQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=onQfzVmJC7HohmP0cLeGwtdRODbHCJknVIWGqjziqDY=; b=U1eMWC9yMFMTQC9mpZLpRtOfeJ
+	h+iinMb/3NR2EzhzJpxaOxYlwHIZ3+qo9kpQ7rHK1UelDdSbyDMG0K5ouPVfxjJ6ettmO53HfNqsT
+	wZKJEpU8gLgrlA4QqeQjNL9XKd5HZ6Brtn7ShZjAaI+goQwGndg2AdCc/9JgyQym+AnZJYS6T3LV7
+	I0lGabbpLlZbyRpmVEdzS0x6DmsPjYZOgXqXcxfCi4+xrrWYeEW2op/90nxMz6w+ZgAl8s2vl9BIQ
+	mS16UK2h54k9mz26qj/logi+njiEHYCJGeqhauufcpvGpXUB844JQ1morFDrmPiCvai0DNdxvmpah
+	PkR/VJ0g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xObJQ-00000005VwB-2IHK;
-	Wed, 04 Nov 2026 13:46:00 +0000
-Received: from out30-111.freemail.mail.aliyun.com ([115.124.30.111])
+	id 1xObj7-00000005asC-3gHP;
+	Wed, 04 Nov 2026 14:12:33 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xObJO-00000005VvL-0KyN
+	id 1xObj6-00000005as1-327F
 	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 13:45:59 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1793799955; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=QGFVMoJRZR79GkB1zDENh+lvuQ8N4gNHeoEkuezJ4HQ=;
-	b=cQg6Fz141ge859rVLWY64KUCghhlsaItbkiCFQe6EVIflNVQlxpPjgQMulwHxXxIXqftbxwIOLwAU1osu38QwTZ1OVStPuUGAovtEsadxQm01p3GSgKBymPQtuN1TW+voyCN+Gr1lEcocPn8GUXgA4uoWCSUxL8Z6twnuz2211k=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R971e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0XE5sgSS_1793799951;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0XE5sgSS_1793799951 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 04 Nov 2026 21:45:55 +0800
-From: Chen Pei <cp0613@linux.alibaba.com>
-To: sashiko-bot@kernel.org
-Cc: alex@ghiti.fr,
-	graf@amazon.com,
-	guoren@kernel.org,
-	kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	palmer@dabbelt.com,
-	pasha.tatashin@soleen.com,
-	pjw@kernel.org,
-	pratyush@kernel.org,
-	rppt@kernel.org,
-	shuah@kernel.org
-Subject: Re: [PATCH v2 3/5] riscv: Add support for kexec handover (KHO)
-Date: Wed,  4 Nov 2026 21:45:47 +0800
-Message-ID: <20261104134550.1779-1-cp0613@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <sashiko-outbox-196857@kernel.org>
-References: <20261103080926.2079-1-cp0613@linux.alibaba.com> <20261103080926.2079-4-cp0613@linux.alibaba.com> <sashiko-outbox-196857@kernel.org>
+	Wed, 04 Nov 2026 14:12:32 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 3CA6943A73;
+	Wed,  4 Nov 2026 14:12:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 432C31F0093A;
+	Wed,  4 Nov 2026 14:12:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793801552;
+	bh=onQfzVmJC7HohmP0cLeGwtdRODbHCJknVIWGqjziqDY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=YL0mHBdNDiunlG8rrAEkkTaGCj1hrgX75U4z1Ml7hTgNdeY1G7/Lqev+aLVQR+Qpn
+	 TdKK4Vzx6TtBRwXZ0bt3OeqzYSVcAzAuv0DOqjLJZibnLWMQIU/66PYdTMkEiIBUUg
+	 oj0qzD5GM57Kb7BUN+tcdPhyVuRQ5maPjgC4q1aYirAW4HGo5HdtYvdCLd2VdgR5bZ
+	 xrKT2Zx3kw/mDTMaP3mQK8OQ527/ncS5Cy74zMQDkUzrend2XgDr7ldd3EqnS2iipS
+	 eCkX7zd4zq9sxqWgYQwz2VRR/vrIFIjwhVNMy7fdS2JG63WulEzNoe96K2ooNFMRV5
+	 mw0Ektf6TZZCQ==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: David Matlack <dmatlack@google.com>
+Cc: kexec@lists.infradead.org,  linux-doc@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  linux-kselftest@vger.kernel.org,
+  linux-mm@kvack.org,  Alexander Graf <graf@amazon.com>,  Andrew Morton
+ <akpm@linux-foundation.org>,  Baolin Wang <baolin.wang@linux.alibaba.com>,
+  Christian Brauner <brauner@kernel.org>,  David Hildenbrand
+ <david@kernel.org>,  Hugh Dickins <hughd@google.com>,  Jonathan Corbet
+ <corbet@lwn.net>,  "Liam R. Howlett" <liam@infradead.org>,  Lorenzo
+ Stoakes <ljs@kernel.org>,  Michal Hocko <mhocko@suse.com>,  Mike Rapoport
+ <rppt@kernel.org>,  Pasha Tatashin <pasha.tatashin@soleen.com>,  Pratyush
+ Yadav <pratyush@kernel.org>,  Randy Dunlap <rdunlap@infradead.org>,
+  Samiullah Khawaja <skhawaja@google.com>,  Shuah Khan
+ <skhan@linuxfoundation.org>,  Suren Baghdasaryan <surenb@google.com>,
+  Vlastimil Babka <vbabka@kernel.org>
+Subject: Re: [PATCH v3 03/10] liveupdate: Allow file handlers to mark
+ retrieve failures as retryable
+In-Reply-To: <20261103010216.3447716-4-dmatlack@google.com> (David Matlack's
+	message of "Tue, 3 Nov 2026 01:02:09 +0000")
+References: <20261103010216.3447716-1-dmatlack@google.com>
+	<20261103010216.3447716-4-dmatlack@google.com>
+Date: Wed, 04 Nov 2026 15:12:26 +0100
+Message-ID: <2vxzv76ck7n9.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261104_054558_295553_0E79A3AE 
-X-CRM114-Status: UNSURE (   4.64  )
-X-CRM114-Notice: Please train this message.
-X-Spam-Score: -17.6 (-----------------)
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,23 +81,47 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-> As reported by Sashiko on v1 [1], will kho_reserve_bootmem() fail on 64-bit
-> RISC-V platforms where DRAM starts at or above 4 GiB, or record a 0-byte
-> region when all DRAM lies below 4 GiB?
+On Tue, Nov 03 2026, David Matlack wrote:
 
-Both, confirmed by measurement, and neither is riscv code. Mike Rapoport
-has a patch that resolves it, so this series carries nothing for it:
+> From: Pasha Tatashin <pasha.tatashin@soleen.com>
+>
+> When luo_retrieve_file() invokes a handler's .retrieve() callback and it
+> returns an error, LUO currently records the error in
+> luo_file->retrieve_status and blocks any subsequent retrieve attempts.
+> This is necessary when the handler has already partially consumed or
+> freed the preserved KHO state.
+>
+> However, with user arguments passed to .retrieve(), a handler may fail
+> early while validating caller-supplied parameters (such as a missing
+> argument, an invalid or read-only target file descriptor, or a non-empty
+> target file) before touching any preserved KHO state. In such cases,
+> userspace should be able to fix the argument and retry
+> LIVEUPDATE_SESSION_RETRIEVE_FD, and if the file is never retrieved,
+> .finish() must still run to release the preserved KHO state.
+>
+> Add a retryable output flag to struct liveupdate_file_op_args. When a
+> handler sets args->retryable = true on error, luo_retrieve_file() leaves
+> luo_file->retrieve_status at 0 so the retrieve operation can be retried
+> and .finish() will still clean up the unconsumed preserved state if the
+> session is finished without retrieving the file.
 
-https://lore.kernel.org/kexec/20261103-kho-bootmem-sizing-v1-1-45aa74098f34@kernel.org/
+Should we give some sort of signal to userspace whether the error is
+retriable or not? How would it know it can or should try again?
 
-Best regards,
-Chen
+>
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> Signed-off-by: David Matlack <dmatlack@google.com>
+[...]
+
+-- 
+Regards,
+Pratyush Yadav
 
