@@ -2,46 +2,46 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B46F86082BF4
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:45:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07BB9608B1EC
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:45:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=K0UnZeSK;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ju9Cdiwd
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=nEhFkN+6;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KSlee+0X
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=oFfWvBKtBhqs+rwLAKfNEZHrMKd6RrVgssTSPyI9nB8=; b=K0UnZeSKRxsAYd
-	1UYP6T6FutqFOt5r0U684Nf0mxq3P5BFOTucb/n26eKR/fhYQl0tckyutpHNE7HZBLVqy8PeBpkKg
-	1yq4VTyV7Io3CnAlZGBw2R4+dTR+4MP5MPoLOIE4LuXQl7jAjaGuTyPy2y9du9/GwVYa4o+/mjQeQ
-	Llr9Qlv1t+dtqKaRVGOmRwnijGWdE/xIGOS42dov/kRN4oOEPJjq+RTpVNffprF2ZCjUM4u3qt5+d
-	NkmcDiDIn6prc4PpsAPJV64wZ7bF++6GEdKZyxFV2zMcD5Qnl7fW6ozavWwjifJf3mlRm5QwKutTa
-	TmyYz6i/6PANbBtvTFdw==;
+	List-Owner; bh=9IR2jOxQyurV4Y0UWx6k8fIXiSGUImfiuKIP9CXfPTA=; b=nEhFkN+6qJnKZl
+	qwk5RxalQec5J1PdYemF5/fsnAJeBh5krilYZlfrACzr7v3FB7fzuZYYNNvyvHrUI4/HZd2smBQ4g
+	5ICkY1jkVd1ADggcZo8+JlmzrUmS/HmlAn3wGr2frnsZqeSqmji1u+n1vubJM6w/5pQjOoIquTEJw
+	Nne6IBpG500paOuBrMVrcsxRgKooIKkjnnLj6gGGDd9A1u/JuXEh32rsEq3jvmBJgrYy6KkhWX/jQ
+	Eae9J4pj2xNxN37nA3MIdMen+t6W+w0fY0j8ipflWdoxWb0FU1tLavM47FKcO9WcHRb2aaxiwwqst
+	KH4WBrnyvwYIRGJVXGvQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgvV-00000006k32-1egd;
-	Wed, 04 Nov 2026 19:45:41 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xOgvj-00000006k92-32U7;
+	Wed, 04 Nov 2026 19:45:55 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgvT-00000006k2I-0NCU;
-	Wed, 04 Nov 2026 19:45:39 +0000
+	id 1xOgvi-00000006k8V-2JKj;
+	Wed, 04 Nov 2026 19:45:54 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id D2752414AA;
-	Wed,  4 Nov 2026 19:45:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A19331F00919;
-	Wed,  4 Nov 2026 19:45:26 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 01CD460F2F;
+	Wed,  4 Nov 2026 19:45:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BE861F000C1;
+	Wed,  4 Nov 2026 19:45:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793821538;
-	bh=oFfWvBKtBhqs+rwLAKfNEZHrMKd6RrVgssTSPyI9nB8=;
+	s=k20260515; t=1793821553;
+	bh=9IR2jOxQyurV4Y0UWx6k8fIXiSGUImfiuKIP9CXfPTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ju9Cdiwdukzo03f6p3hrq4bQpCrNgWvbzSyS1vs9NG/W3HaXXkao3M2u4LfrHoe8e
-	 wxtviWGSsoNjRsbvKzRys/CwzzFLfUcvMKaGQhYPmPxrbu1L7QiWnV3ZTrh/R1Otfg
-	 qrZBJdrHCIeziUsqnpGD0JFkLrcuH8m4/I4Ww7FZSJ/tfeBBZ2ylMzghmAuc9eeX6s
-	 vgBVV5T3IgnlsvU9YQnkv2d3jFbbKDOzj/iykYH1zv74/Pa9kQYvwQBnjIDHwdeuOQ
-	 S5F8Z7xCaT1zZASn9AYJ/xAtcbrp0J7I7xiLDkK+QT5iUpaPPLtpiC82DCigeWcdXX
-	 vjvXnJgaA/cBQ==
+	b=KSlee+0XDq+bm+ysUh8nPtikOnchu9TkIAW1VCY3OCd0AvNcw44e5Hzp54rCEEeNB
+	 L3jWndaPZFN6e+WP3JcpT+3RG0ZhvSz3tOpGSVIOUGFO+0FYAr1NPl7u7cOMMQ0fPJ
+	 +knaMWTjbKoGzcmxQNH3DFEm9Ec3Nl5logdXw9qRd0FXTv0BIExvBcdGtMlpPD+P5X
+	 hC9PgG8J3C1XX9TXnT/LOUtJaj+Lvw1tPb/+ixseUzpgnUtzTmNqW0vZ9e3rfcGTmn
+	 SADjUJW9oNfrCSPr0BRrs6Hxsxw5J/g7bKH0shcxqMZgd6mz8rvFTNgLc1cdCHqadt
+	 VP8DK/LvUQzHQ==
 From: Christian Brauner <brauner@kernel.org>
 To: linux-fsdevel@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
@@ -102,16 +102,16 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	linux-debuggers@vger.kernel.org,
 	"Christian Brauner (Amutable)" <brauner@kernel.org>,
 	Chuck Lever <cel@kernel.org>
-Subject: [PATCH RESEND v2 13/26] scsi: sg: let procfs own the seq_file of allow_dio and def_reserved_size
-Date: Wed,  4 Nov 2026 20:45:24 +0100
-Message-ID: <20261104-work-procfs-drivers-v2-13-245e54e87116@kernel.org>
+Subject: [PATCH RESEND v2 14/26] scsi: sg: let procfs copy in writes
+Date: Wed,  4 Nov 2026 20:45:39 +0100
+Message-ID: <20261104-work-procfs-drivers-v2-14-245e54e87116@kernel.org>
 In-Reply-To: <20261104-work-procfs-drivers-v2-0-245e54e87116@kernel.org>
 References: <20261104-work-procfs-drivers-v2-0-245e54e87116@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3098; i=brauner@kernel.org; h=from:subject:message-id; bh=VSyXtwS/L1yz+NXwjilFwHBHf/9gGBvzhq16zAIuGuA=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS97mpK3v7SU35CpJ+xYm16aqH2yss8t52nRXwy2L6hU PiyM6N8RykLgxgXg6yYIotDu0m43HKeis1GmRowc1iZQIYwcHEKwEScShgZ/oS0JG41sBdwnT31 V9JTpX/eEnvWXFfxXHvv8uNV8wXXGzL8ZGzdvX7L3xQtdoGX5tttZ9355tPw6sDfkq152YVBvd6 fuAE=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2854; i=brauner@kernel.org; h=from:subject:message-id; bh=PgyqcOYZULSLqb7qnigRBp/yeFf2Hrq3aYxTKZd6WWw=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS97mpZWdQr2n5nhfa9hbuuMma3507NEd2z6qhK4rplW k3LP34/01HKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjCRYzMZfrPUzUxT2rba7uSD Anbzi5PuGN7V3NNXoe7+56FVZPzfOCeG36y1zXIX/9lqb7zUZV/JZH9mTlfh9l/TZrc98K+uDN6 7lxEA
 X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
@@ -132,86 +132,83 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Pass the integer they show as the data of the entry and declare the
-show function, procfs then opens and frees the seq_file. That makes the
-open functions unnecessary.
+Implement ->proc_write_buf() for allow_dio and def_reserved_size so
+procfs copies in what is written before it pins the entry, and parse
+the number from that copy.
+
+kstrtoul_from_user() looked at the first 66 bytes of whatever was
+written. Now the whole write is parsed, and anything larger than
+PAGE_SIZE - 1 bytes fails with -EINVAL from procfs before the
+capability check.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- drivers/scsi/sg.c | 28 ++++++----------------------
- 1 file changed, 6 insertions(+), 22 deletions(-)
+ drivers/scsi/sg.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
-index 6551f1284d44..fb3ab74e8727 100644
+index fb3ab74e8727..df955896e65f 100644
 --- a/drivers/scsi/sg.c
 +++ b/drivers/scsi/sg.c
-@@ -2288,26 +2288,18 @@ sg_get_dev(int dev)
+@@ -2288,18 +2288,18 @@ sg_get_dev(int dev)
  #ifdef CONFIG_SCSI_PROC_FS
  static int sg_proc_seq_show_int(struct seq_file *s, void *v);
  
--static int sg_proc_single_open_adio(struct inode *inode, struct file *file);
- static ssize_t sg_proc_write_adio(struct file *filp, const char __user *buffer,
+-static ssize_t sg_proc_write_adio(struct file *filp, const char __user *buffer,
++static ssize_t sg_proc_write_adio(struct file *filp, char *buffer,
  			          size_t count, loff_t *off);
  static const struct proc_ops adio_proc_ops = {
--	.proc_open	= sg_proc_single_open_adio,
--	.proc_read	= seq_read,
--	.proc_lseek	= seq_lseek,
-+	.proc_show	= sg_proc_seq_show_int,
- 	.proc_write	= sg_proc_write_adio,
--	.proc_release	= single_release,
+ 	.proc_show	= sg_proc_seq_show_int,
+-	.proc_write	= sg_proc_write_adio,
++	.proc_write_buf	= sg_proc_write_adio,
  };
  
--static int sg_proc_single_open_dressz(struct inode *inode, struct file *file);
  static ssize_t sg_proc_write_dressz(struct file *filp, 
- 		const char __user *buffer, size_t count, loff_t *off);
+-		const char __user *buffer, size_t count, loff_t *off);
++		char *buffer, size_t count, loff_t *off);
  static const struct proc_ops dressz_proc_ops = {
--	.proc_open	= sg_proc_single_open_dressz,
--	.proc_read	= seq_read,
--	.proc_lseek	= seq_lseek,
-+	.proc_show	= sg_proc_seq_show_int,
- 	.proc_write	= sg_proc_write_dressz,
--	.proc_release	= single_release,
+ 	.proc_show	= sg_proc_seq_show_int,
+-	.proc_write	= sg_proc_write_dressz,
++	.proc_write_buf	= sg_proc_write_dressz,
  };
  
  static int sg_proc_seq_show_version(struct seq_file *s, void *v);
-@@ -2348,9 +2340,11 @@ sg_proc_init(void)
- 	if (!p)
- 		return 1;
- 
--	proc_create("allow_dio", S_IRUGO | S_IWUSR, p, &adio_proc_ops);
-+	proc_create_data("allow_dio", S_IRUGO | S_IWUSR, p, &adio_proc_ops,
-+			 &sg_allow_dio);
- 	proc_create_seq("debug", S_IRUGO, p, &debug_seq_ops);
--	proc_create("def_reserved_size", S_IRUGO | S_IWUSR, p, &dressz_proc_ops);
-+	proc_create_data("def_reserved_size", S_IRUGO | S_IWUSR, p,
-+			 &dressz_proc_ops, &def_reserved_size);
- 	proc_create_single("device_hdr", S_IRUGO, p, sg_proc_seq_show_devhdr);
- 	proc_create_seq("devices", S_IRUGO, p, &dev_seq_ops);
- 	proc_create_seq("device_strs", S_IRUGO, p, &devstrs_seq_ops);
-@@ -2365,11 +2359,6 @@ static int sg_proc_seq_show_int(struct seq_file *s, void *v)
- 	return 0;
+@@ -2360,7 +2360,7 @@ static int sg_proc_seq_show_int(struct seq_file *s, void *v)
  }
  
--static int sg_proc_single_open_adio(struct inode *inode, struct file *file)
--{
--	return single_open(file, sg_proc_seq_show_int, &sg_allow_dio);
--}
--
  static ssize_t 
- sg_proc_write_adio(struct file *filp, const char __user *buffer,
+-sg_proc_write_adio(struct file *filp, const char __user *buffer,
++sg_proc_write_adio(struct file *filp, char *buffer,
  		   size_t count, loff_t *off)
-@@ -2386,11 +2375,6 @@ sg_proc_write_adio(struct file *filp, const char __user *buffer,
- 	return count;
+ {
+ 	int err;
+@@ -2368,7 +2368,7 @@ sg_proc_write_adio(struct file *filp, const char __user *buffer,
+ 
+ 	if (!capable(CAP_SYS_ADMIN) || !capable(CAP_SYS_RAWIO))
+ 		return -EACCES;
+-	err = kstrtoul_from_user(buffer, count, 0, &num);
++	err = kstrtoul(buffer, 0, &num);
+ 	if (err)
+ 		return err;
+ 	sg_allow_dio = num ? 1 : 0;
+@@ -2376,7 +2376,7 @@ sg_proc_write_adio(struct file *filp, const char __user *buffer,
  }
  
--static int sg_proc_single_open_dressz(struct inode *inode, struct file *file)
--{
--	return single_open(file, sg_proc_seq_show_int, &def_reserved_size);
--}
--
  static ssize_t 
- sg_proc_write_dressz(struct file *filp, const char __user *buffer,
+-sg_proc_write_dressz(struct file *filp, const char __user *buffer,
++sg_proc_write_dressz(struct file *filp, char *buffer,
  		     size_t count, loff_t *off)
+ {
+ 	int err;
+@@ -2385,7 +2385,7 @@ sg_proc_write_dressz(struct file *filp, const char __user *buffer,
+ 	if (!capable(CAP_SYS_ADMIN) || !capable(CAP_SYS_RAWIO))
+ 		return -EACCES;
+ 
+-	err = kstrtoul_from_user(buffer, count, 0, &k);
++	err = kstrtoul(buffer, 0, &k);
+ 	if (err)
+ 		return err;
+ 	if (k <= 1048576) {	/* limit "big buff" to 1 MB */
 
 -- 
 2.53.0
