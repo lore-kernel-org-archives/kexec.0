@@ -2,118 +2,59 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9ED6087D11
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:42:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C8E60BE2D9
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:42:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=R0wIRtV6;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CY3vhRi4
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=APxqzXZm;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ASwnm6fD
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=uhE82sMafPzxvfPBNz7KCycPN06o3nm9WBF7ozqhvvQ=; b=R0wIRtV6CMtjPW
-	+c4T3qPOUP+cE7mZ16idCORfVO87AdCScZB9WZf8/w7l+st0hl8AVLLxBQywokhk0iklmbpRw0VQ6
-	OuZEKVfiAlu8GKIu0tXcoBiziHrJhUDXxWbPxVSC7HWBy6YNuyMGiFheiGwppkAe7NvekRJQpiNLn
-	Y9VJxRMMKGnVfuhaJLVzcxlpA2CdstC+fFqHjzFtLPrRecZSBcYs5mK82pTajhE9jb1qkEGbfK+GB
-	r6AT2vKnS/9ZUDAjgbRwGV9934Iy9ROTZiHv4ixwcllgTtRNyVae89r7iXRtlb2wng9aJjrOJhhO6
-	c2X63fJqNht8dpmc+VTw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
+	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=QSRnjp/0rnoDmXn15a3UnEZghiwDbvR/Tytx1Mp0bYU=; b=APxqzXZmJHykFgu2TNYgznEe5q
+	WxPI+reKaJq6Xc0xzLXIH8OYFfhVQ0sZq5W5k3WlnfoJky3QXg+amN+/5jhHrnJxu2cHTiCrkV4wU
+	/DzSf3rGj8iZc6W9z/1x7vFmOSSmiA23WpQWqKd1kqxWFZooJ0hGvI2tgy/vU4ZfFER5mMmGf26Ce
+	1aThAUnWQzaSWBUlTDMcI9W73luUF4auWCPOQjqK0kI3lQbIfgAYlfT8RFeZQ5bjS00GZJRNipxwi
+	qu1bRdMbk6NgyS+Nf/F//cIB19ElLpQiyjJ//ESHo2USfBKharudBemA8yUhs08WcG5AYqasFl/Fl
+	RO8AdZvQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgsd-00000006ilL-3t0E;
-	Wed, 04 Nov 2026 19:42:43 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xOgsi-00000006iog-1KXQ;
+	Wed, 04 Nov 2026 19:42:48 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgsc-00000006ikt-1oFQ;
-	Wed, 04 Nov 2026 19:42:42 +0000
+	id 1xOgsh-00000006inM-1bB1
+	for kexec@lists.infradead.org;
+	Wed, 04 Nov 2026 19:42:47 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id A9CCE60F10;
-	Wed,  4 Nov 2026 19:42:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43B831F000C1;
-	Wed,  4 Nov 2026 19:42:29 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 7759D60D83;
+	Wed,  4 Nov 2026 19:42:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E367E1F000C1;
+	Wed,  4 Nov 2026 19:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793821361;
-	bh=uhE82sMafPzxvfPBNz7KCycPN06o3nm9WBF7ozqhvvQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=CY3vhRi4hQxkqcpQ1Mm/O3l6e+OzedeN/4+37SeNZjOvlqXmy34qriVvD3TH67ywH
-	 DQzl6FzuyIa5uiOv7Dc7vMjmQMkxqYHlBr0eMd+Xera9VB0QWJPHsXDK0rpkNzXBBK
-	 tX9Y7Jq5/fQhLGsvIaKNSEhYv51qK+oUfD0NCrdQZjRmHE0FizjDeNxZM3dzQpWJZy
-	 HRwBQTyj5k9AawVsBYNGBCFZHPpK+UsKw3yqcCB9jomRWBq8KMKMHMiOAFjbyWU1JH
-	 JbXTNMiiUjnz72MrV0u90yAZ2M59tRnRkIXF5dI/J/zo2XxESLkUQl4Q5E9EaHZPuO
-	 H5e07M+u+h5bw==
-From: Christian Brauner <brauner@kernel.org>
-To: linux-fsdevel@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Jann Horn <jannh@google.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Chris Mason <mason@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	NeilBrown <neil@brown.name>,
-	Eric Dumazet <edumazet@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Christoph Hellwig <hch@lst.de>,
-	Greg Kroah-Hartman <gregkh@suse.de>,
-	Joel Granados <joel.granados@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Jan Kara <jack@suse.com>,
-	linux-kernel@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	linux-wireless@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	netdev@vger.kernel.org,
-	ntfs3@lists.linux.dev,
-	platform-driver-x86@vger.kernel.org,
-	coreteam@netfilter.org,
-	kexec@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	netfilter-devel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	ibm-acpi-devel@lists.sourceforge.net,
-	jfs-discussion@lists.sourceforge.net,
-	linux-alpha@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-fbdev@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-sh@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	samba-technical@lists.samba.org,
-	sparclinux@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org,
-	linux-doc@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-atm-general@lists.sourceforge.net,
-	Takashi Iwai <tiwai@suse.de>,
-	linux-input@vger.kernel.org,
-	linux-raid@vger.kernel.org,
-	linux-ext4@vger.kernel.org,
-	linux-modules@vger.kernel.org,
-	linux-debuggers@vger.kernel.org,
-	"Christian Brauner (Amutable)" <brauner@kernel.org>,
-	Chuck Lever <cel@kernel.org>
-Subject: [PATCH RESEND v2 01/26] nubus: let procfs own the seq_file of the resource files
-Date: Wed,  4 Nov 2026 20:42:27 +0100
-Message-ID: <20261104-work-procfs-drivers-v2-1-245e54e87116@kernel.org>
-In-Reply-To: <20261104-work-procfs-drivers-v2-0-245e54e87116@kernel.org>
-References: <20261104-work-procfs-drivers-v2-0-245e54e87116@kernel.org>
-X-Archived-By: <archiver.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1301; i=brauner@kernel.org; h=from:subject:message-id; bh=x7z4QEHcj9RNvDtDgoKANKctl9Sfloc7qmQpa+Y73Ns=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS97ioOOa68o/Kq2fmOY5NWuTU8iP3ZEGF+bqWx4z+Wl OQWlcZPHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABP5yMrIcHHmjxMtv47deeBR f8hmwmHx04XBoiyTn7ROi1p5ovDEfjGGf0pS7v/tJ675tu3LE5ZOszvfVmhY9L9Rd7yQdf+7rII THxsA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+	s=k20260515; t=1793821366;
+	bh=QSRnjp/0rnoDmXn15a3UnEZghiwDbvR/Tytx1Mp0bYU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=ASwnm6fDYIYqujJhujIxd2aiYOQNgdLPmE0+JMDFiVZe/Kx7lkfnuwT2o+IPViML8
+	 r64TVW8PvoTN0KJapcp40g+soG9o0mudLh/aq5H1VadTxGy49E6jZ+TBi6H/TwkPPZ
+	 V6ev2TOQ8JLvXA77GOaBUD90ATlfMNsUkcIS9j2AmeXY04I8SofdSd9OB7piD25VFr
+	 cwFEcq+XeiRtA2HhBb69TTDRPU2h4w0QmtQm2ddgnZ0+k63WQJnST20ByIid+OBfCT
+	 hEjjjRfqTa6jQ3xxzR/vTgNDVjplQTWQ8E9bb9keywPYY8+dHS/hbwq1GNMjy5yOym
+	 CXzFSL+wvmqug==
+Message-ID: <sashiko-outbox-197974@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] selftests/kexec: don't fail the build on other
+ architectures
+To: "Sasha Levin" <sashal@kernel.org>, "Shuah Khan" <shuah@kernel.org>
+Cc: "Baoquan He" <baoquan.he@linux.dev>, kexec@lists.infradead.org
+In-Reply-To: <20261104193637.333158-1-sashal@kernel.org>
+References: <20261104193637.333158-1-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 04 Nov 2026 19:42:45 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -123,56 +64,33 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
+X-Archived-By: <archiver.kernel.org>
 
-Get the inode from the file instead of ->private, declare the show
-function and let procfs open and free the seq_file.
+> The kexec tests are only built for x86 and ppc64le. On other
+> architectures the Makefile defines no rules, so building or installing
+> the suite fails:
+>=20
+>   make[1]: *** No targets.  Stop.
+>=20
+> Give the Makefile empty targets there, as sparc64 and
+> drivers/s390x/uvdevice do, so that the suite builds and installs
+> nothing.
+>=20
+> Fixes: a802ed0dd9c2 ("selftests/ima: kexec_load syscall test")
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
----
- drivers/nubus/proc.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+Sashiko has reviewed this patch and found no issues.
 
-diff --git a/drivers/nubus/proc.c b/drivers/nubus/proc.c
-index 3ea3d1738eae..cb21ad1d9964 100644
---- a/drivers/nubus/proc.c
-+++ b/drivers/nubus/proc.c
-@@ -107,7 +107,7 @@ nubus_proc_alloc_pde_data(unsigned char *ptr, unsigned int size)
- 
- static int nubus_proc_rsrc_show(struct seq_file *m, void *v)
- {
--	struct inode *inode = m->private;
-+	struct inode *inode = file_inode(m->file);
- 	struct nubus_proc_pde_data *pded;
- 
- 	pded = pde_data(inode);
-@@ -138,16 +138,8 @@ static int nubus_proc_rsrc_show(struct seq_file *m, void *v)
- 	return 0;
- }
- 
--static int nubus_rsrc_proc_open(struct inode *inode, struct file *file)
--{
--	return single_open(file, nubus_proc_rsrc_show, inode);
--}
--
- static const struct proc_ops nubus_rsrc_proc_ops = {
--	.proc_open	= nubus_rsrc_proc_open,
--	.proc_read	= seq_read,
--	.proc_lseek	= seq_lseek,
--	.proc_release	= single_release,
-+	.proc_show	= nubus_proc_rsrc_show,
- };
- 
- void nubus_proc_add_rsrc_mem(struct proc_dir_entry *procdir,
-
--- 
-2.53.0
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104193637.3331=
+58-1-sashal@kernel.org?part=3D1
 
 
