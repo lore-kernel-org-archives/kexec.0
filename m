@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CAA7606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6A4606A328
 	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 08:10:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=oJ1o0wDh;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KoojDrfl
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=FiZZ/NAb;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Kna3JVVw
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,47 +14,47 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Pw1RA8b/0wqWpwAG8rn8nMbI8/CS2La9EFhpCnYgEt4=; b=oJ1o0wDhnjC3TlPlOqc8VWfwdY
-	W7bNEnvmEGkbrMA8Md3YoAVXdodaXzyDt/ts0mAnhQQzgYfcvz0kvY5vBUPv0ee8wbTMco4zUW3NS
-	XJG+uKuBcF4Se0LVbBURO/qVst3yNf43Hqx7u1cdOfriNi+WoQXu0SliJRV/S4FBbZXaw1KZwSYXM
-	lE1o/H/NJ9f70B0/0dkTYjPcaj+LQwMhZ13gz8b4LEoxotY8pxcar8/eGZMFUvqYEXqOOkzvh6qOq
-	Zx7CL0G3NuBoQAiPFCsiBBIeG5qqn4/ZYMiQuOPkU2plxjGecw1ohZ6Q+gY9vOgIDePnQ7IZjGQM7
-	6snpgi8A==;
+	bh=VaZhfXTmLjhwqCHtCLPIuohnj/qES/J9mc/nqkBvXyM=; b=FiZZ/NAbuolj42fyb9898pjCtq
+	kbL6j/eLemKdnKj0KUrLp2RprArtrMpx3VED2fbUesT9snxhwe5OYeiZsnEh4piXk3Vr5nYk6LEaV
+	Bd19Pj5pQEpQllA6xeoAhgi7tYnA8fsN/uaq/6u4J4UJ4mRq17h6NqEc/tdcchg80FB5J5YuUaVUb
+	ADrZQK6/lxwKtTvBnN7Wm1knSYHf8woLQci5OMfbs04cSWoNL6W+CjsSx4I+CF2M0nWTEtzMVpm7Z
+	IVawa72nZq0UUCw2mXXyf+J0FhuE8hcutpiEPXKT+9AzFhw410xfhO4YZYlnRTYdbKOOje9WYHwUJ
+	UrHUfiqQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOW4j-00000004edW-46uA;
-	Wed, 04 Nov 2026 08:10:29 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xOW4k-00000004edv-0Php;
+	Wed, 04 Nov 2026 08:10:30 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOW4f-00000004eaY-3HIO
+	id 1xOW4g-00000004eao-0Xql
 	for kexec@lists.infradead.org;
 	Wed, 04 Nov 2026 08:10:28 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 008D260D9B;
+	by sea.source.kernel.org (Postfix) with ESMTP id D643D43C83;
 	Wed,  4 Nov 2026 08:10:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 178811F00A02;
-	Wed,  4 Nov 2026 08:10:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36C011F00A15;
+	Wed,  4 Nov 2026 08:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793779824;
-	bh=Pw1RA8b/0wqWpwAG8rn8nMbI8/CS2La9EFhpCnYgEt4=;
+	s=k20260515; t=1793779825;
+	bh=VaZhfXTmLjhwqCHtCLPIuohnj/qES/J9mc/nqkBvXyM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=KoojDrflsyT352+kmH6suq8he+NSQ6/q6xmVHkGlSicSPJjOeWsqaXFoQ7hIB8OFX
-	 YVtkEK9bOARfkuo/urulh2JSAXw612CS1tUEjXQASxf4obq5lilY4IgBXG+6HiwOld
-	 scTQVVre6Gq0jzmFai+h55fzFB+XejmC5wDvDkSLWOG8m4PKVItjB5l7OVULSarR+p
-	 UeCaVPkVzinfoYpzgwd6QYJh+6wQpXEv9zRRSrZBUtzhGirQWWP4kZt8sVtKps5k/E
-	 4A41XuinKlgZwFv63c37Rml1ZcF07flt71FjoPVGLVW6u28r6GLh6x5UOvrIEy7yV2
-	 hjIViDB11k3jA==
-Message-ID: <sashiko-outbox-196857@kernel.org>
+	b=Kna3JVVwClv9e5zwkerb7reM8DP1e9M7yxQ2YJ+AwDlkfKGhKhC3QFN6RwGjFZWv6
+	 36lqzCpVOhpqYUbFxt/J5qbMdm2BqliDg6FJrB9QzVNnBaMGV8dyVJb3WA50LnouB9
+	 /TeXPvdkKjlyOSq2QPGSOjOs+4ies+fpGQVjWn21wO0/Drdc85pC8Hq8AgkWtyLk05
+	 MXretq5F/sLoCdcxlmm5jyzjGkvBzOzapw8GzmVQnBBeHE/0H7iQbzoQGsMfVDCh0R
+	 jBzFowXTTgTWs4BAn+3pFzNVzj1HA9UzpyFANLUf8MFND8aDoM9u5dKkRAo0mJ77T+
+	 izJba5GOpAv4g==
+Message-ID: <sashiko-outbox-196858@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 3/5] riscv: Add support for kexec handover (KHO)
+Subject: Re: [PATCH v2 4/5] selftests: kho: Add riscv support
 To: "Chen Pei" <cp0613@linux.alibaba.com>, pjw@kernel.org, palmer@dabbelt.com, alex@ghiti.fr, rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org, graf@amazon.com, shuah@kernel.org
-Cc: guoren@kernel.org, linux-mm@kvack.org, kexec@lists.infradead.org
-In-Reply-To: <20261103080926.2079-4-cp0613@linux.alibaba.com>
+Cc: guoren@kernel.org, kexec@lists.infradead.org
+In-Reply-To: <20261103080926.2079-5-cp0613@linux.alibaba.com>
 References: <20261103080926.2079-1-cp0613@linux.alibaba.com>
- <20261103080926.2079-4-cp0613@linux.alibaba.com>
+ <20261103080926.2079-5-cp0613@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 08:10:23 +0000
+Date: Wed, 04 Nov 2026 08:10:24 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -68,102 +68,27 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] riscv: kho: bootmem reservation fails when DRAM starts at or abo=
-ve 4 GiB
---
+> Teach the KHO vmtest runner about riscv64: map the target to ARCH
+> riscv and describe the QEMU virt machine, the kernel image and its
+> console -- a 16550A port probed from the device tree on virt, hence
+> the SERIAL_8250{,_CONSOLE} and SERIAL_OF_PLATFORM symbols.  Also
+> select CONFIG_SPARSEMEM_MANUAL: the runner requires
+> CONFIG_DEFERRED_STRUCT_PAGE_INIT, which depends on SPARSEMEM, while
+> riscv falls back to FLATMEM (no ARCH_SPARSEMEM_DEFAULT), so without
+> it the test would just be skipped.
+>=20
+> Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
 
-commit 25f3cc12aa8edcc1fbb1363f837f61e462a57ad6
-Author: Chen Pei <cp0613@linux.alibaba.com>
-
-riscv: Add support for kexec handover (KHO)
-
-This commit enables kexec handover (KHO) support on 64-bit RISC-V systems w=
-ith
-MMU enabled by defining ARCH_SUPPORTS_KEXEC_HANDOVER in arch/riscv/Kconfig.
-
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 435da07132437..e11463a923a32 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -1125,6 +1125,9 @@ config ARCH_SELECTS_KEXEC_FILE
->  config ARCH_SUPPORTS_KEXEC_PURGATORY
->  	def_bool ARCH_SUPPORTS_KEXEC_FILE
-> =20
-> +config ARCH_SUPPORTS_KEXEC_HANDOVER
-> +	def_bool 64BIT && MMU
-
-[Severity: Medium]
-As reported by Sashiko on v1 [1], will kho_reserve_bootmem() fail on 64-bit
-RISC-V platforms where DRAM starts at or above 4 GiB, or record a 0-byte
-region when all DRAM lies below 4 GiB?
-
-Unlike arm64 (which defines ARCH_LOW_ADDRESS_LIMIT as arm64_dma_phys_limit =
-- 1
-and clamps it to memblock_end_of_DRAM() when DRAM starts above 4 GiB), RISC=
--V
-falls back to the default in include/linux/memblock.h:
-
-#ifndef ARCH_LOW_ADDRESS_LIMIT
-#define ARCH_LOW_ADDRESS_LIMIT  0xffffffffUL
-#endif
-
-However, 64-bit RISC-V supports platforms where all DRAM starts at or above
-4 GiB, as seen in arch/riscv/mm/init.c:arch_mm_preinit():
-
-	bool swiotlb =3D max_pfn > PFN_DOWN(dma32_phys_limit) &&
-		       memblock_start_of_DRAM() < dma32_phys_limit;
-
-When KHO is enabled at boot, mm_core_init() -> kho_memory_init() ->
-kho_reserve_bootmem() unconditionally allocates both lowmem and global boot=
-mem
-without checking whether their computed sizes in bootmem_size_update() are =
-0:
-
-kernel/liveupdate/kexec_handover.c:kho_reserve_bootmem() {
-	...
-	size =3D bootmem_size_lowmem;
-	addr =3D memblock_phys_alloc_range(size, BOOTMEM_ALIGNMENT_BYTES, 0,
-					 ARCH_LOW_ADDRESS_LIMIT);
-	if (!addr) {
-		pr_err("Failed to reserve lowmem bootmem\n");
-		goto err_free_bootmem_desc;
-	}
-
-	kho_bootmem[i].addr =3D addr;
-	kho_bootmem[i].size =3D size;
-	i++;
-
-	/* reserve large contiguous area for allocations without nid */
-	size =3D bootmem_size_global;
-	addr =3D memblock_phys_alloc(size, BOOTMEM_ALIGNMENT_BYTES);
-	if (!addr) {
-		pr_err("Failed to reserve global bootmem\n");
-		goto err_free_bootmem_areas;
-	}
-	...
-}
-
-On 64-bit RISC-V systems where DRAM starts at or above 4 GiB,
-bootmem_size_lowmem is 0 and memblock_phys_alloc_range(0, ..., 0,
-ARCH_LOW_ADDRESS_LIMIT) finds no memory below 0xffffffffUL, returning 0 and
-disabling KHO. Conversely, when all DRAM lies below 4 GiB, bootmem_size_glo=
-bal
-is 0 and kho_reserve_bootmem() records a 0-byte entry in kho_bootmem[], whi=
-ch
-later causes kho_locate_mem_hole() to construct an inverted struct resource
-with end =3D start - 1.
-
-[1] https://lore.kernel.org/r/sashiko-outbox-183678@kernel.org
+Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103080926.2079=
--1-cp0613@linux.alibaba.com?part=3D3
+-1-cp0613@linux.alibaba.com?part=3D4
+
 
