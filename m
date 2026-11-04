@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F03C606A326
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 01:03:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE74606A31B
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 01:03:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Aq0CXTZt;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ILbT5fWD
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Maw1vqH1;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=B2Hh1Iwy
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=e6z6ENp9mw2d0XbLY45BrfnOczEiRPfheO2Dw1rG1q0=; b=Aq0CXTZtZYZSCQCoTnEQ7K/pX8
-	bSk/DRJ97qhs5em1zBNNAjfqP1oSroMSBrCMNNIMLNXGHFKaa9gPDfexFRHaoxfCcxqdkZDlX5KOE
-	1j/shV6L9U0r+DdgyZDjTTanQmY/DZDCsxaFlhtRPdSffeZyuHZKyOpvfE7Ws4vicT6/N2ORSTRJp
-	SGKLGJ/iSZaVL8gksXWNvQOKgXkg6ghielIfX1IEdUMc05GW9n6x7AgaH6wIJEKoOfbk69PO67kBY
-	xDJhNV5nImPbhIwDYKehLh+ShbRmZHZmhJVkIuqXqWI0sxHoAlm3Kue0FaX6ZDSXjowZ1XJ+LjSr7
-	w3DKLbTA==;
+	bh=9HfIaUVMh9ori0XHVA0Kw+TkFHlpDTR33QZVSpPLais=; b=Maw1vqH19snJ4dHOJKMpue5APp
+	7qv7HcyboUdeL5A9Gp0KJXIuA5jxTdmgLuTktY4Xx6/yKGXcZI/d+5TYN9DNZJvChlQK3KoJnm/RM
+	Hls8aDWCphNgsNW9/CleyoB+j/79ydRLwnNb0WyNFCzyzDsx40mfhd/WfDx+QXraRKWahN4tOJ+7a
+	lHzjCzqnAxgJlkW/tZrOz7mIv/qlEpeuxmoLArpBzT6qJvhX0e2OYkKG3An/YU7UToZH+0XEDWukE
+	zjgP2MbOpUOBDg4QRHRpGM+SinMBw1M8uBR5ceOiwWaLPn2/8zTOaRAFcVuFk4I4d4du5bHyRBX/T
+	7d568hIg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOPPX-000000042O9-3k8D;
-	Wed, 04 Nov 2026 01:03:31 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xOPPa-000000042SJ-47BD;
+	Wed, 04 Nov 2026 01:03:34 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOPPW-000000042Mu-2ohp
+	id 1xOPPY-000000042P4-2VDc
 	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 01:03:30 +0000
+	Wed, 04 Nov 2026 01:03:32 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 6CC8A43CFE;
+	by tor.source.kernel.org (Postfix) with ESMTP id 1220F60D8B;
+	Wed,  4 Nov 2026 01:03:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB3D21F000C1;
 	Wed,  4 Nov 2026 01:03:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 604AA1F000C1;
-	Wed,  4 Nov 2026 01:03:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793754210;
-	bh=e6z6ENp9mw2d0XbLY45BrfnOczEiRPfheO2Dw1rG1q0=;
+	s=k20260515; t=1793754211;
+	bh=9HfIaUVMh9ori0XHVA0Kw+TkFHlpDTR33QZVSpPLais=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ILbT5fWDFPO9tw7ha78DMgUGqs0aGpNmOfANCl0MaXhwSvFIgaHgLsAWrt8HU79d1
-	 fjcbZMvQkTmskorIFBhWSbXP2aQZgU8TuiEcdD7HXCybZcdYUaUEKPA7f8iV1C1N3M
-	 CmD5Uj1MjmmydBq6Jkk9c/DxkgXMSadUBSIAzPS/O6GCbjmNGntyKk2ndGbVyOSGQ1
-	 6s59aZcp2hf2Xz3tZz5dY/x9SuDLPW0UH3/puVxae5LIOxBXxaYJwkh0TNa5RQCRfj
-	 Omg2O2x77LkzKkfr+AqIVlrRzuVteif6R7uba3xOYRGl84luhGTz1N71K3C5PNdxWb
-	 XtXCfgaMwFbxw==
-Message-ID: <sashiko-outbox-196337@kernel.org>
+	b=B2Hh1IwyiQW9rMHSHfbsC2qZNnH8t6SIWKR+R3mQOL7bPLUx0KacvuubCArZYt3XV
+	 uBdUL2KSAkzAhxpMFsoZEh9KDmeBsZ86qcfGIA+dmqvIrsBJB0Q8cGBQflH2x+cs08
+	 EST84eZyhBqeG30wBDsFky7rTnmsysSSzhsQB5bd6T6d10M2HBSS56tsQWQnO2D+IK
+	 kDzML7xUsOPUqzJFTDYfNPf3sPrOp+rVOHemmi5eTPrRi9HqsLH6btCDLlccF0C96E
+	 IBTTGeOkQTHOwEerXB4otDM8rah62WDBfnZkOqR7fmLINvsRNRM/0CjjaWbeujgcPu
+	 bO4gIkpFS516Q==
+Message-ID: <sashiko-outbox-196338@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 06/10] mm/shmem_luo: Don't make early retrieve
- failures permanent
+Subject: Re: [PATCH v3 07/10] mm/shmem_luo: Retrieve tmpfs files onto a
+ tmpfs mount chosen by userspace
 To: "David Matlack" <dmatlack@google.com>, kexec@lists.infradead.org
 Cc: "Alexander Graf" <graf@amazon.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Baolin
  Wang" <baolin.wang@linux.alibaba.com>, "Christian Brauner" <brauner@kernel.org>, "David
@@ -58,12 +58,12 @@ Cc: "Alexander Graf" <graf@amazon.com>, "Andrew Morton" <akpm@linux-foundation.o
  Dunlap" <rdunlap@infradead.org>, "Samiullah Khawaja" <skhawaja@google.com>, "Shuah
  Khan" <skhan@linuxfoundation.org>, "Suren Baghdasaryan" <surenb@google.com>, "Vlastimil
  Babka" <vbabka@kernel.org>
-In-Reply-To: <20261103010216.3447716-7-dmatlack@google.com>
+In-Reply-To: <20261103010216.3447716-8-dmatlack@google.com>
 References: <20261103010216.3447716-1-dmatlack@google.com>
- <20261103010216.3447716-7-dmatlack@google.com>
+ <20261103010216.3447716-8-dmatlack@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 01:03:29 +0000
+Date: Wed, 04 Nov 2026 01:03:30 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,20 +83,25 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Mark failures in shmem_luo_retrieve() before it starts restoring the
-> folios as retryable, and return the error without freeing the serialized
-> state. If no retrieve succeeds, finish() frees the preserved folios,
-> like it does for a file that was never retrieved.
+> Retrieve files that were preserved from a tmpfs mount onto a tmpfs mount
+> chosen by userspace, instead of as memfds on the internal tmpfs mount.
+> Add struct liveupdate_shmem_retrieve_arg, which userspace passes as the
+> retrieve argument of LIVEUPDATE_SESSION_RETRIEVE_FD to choose the mount.
+> Record which mount a file was on with a new SHMEM_LUO_FLAG_TMPFS flag in
+> struct shmem_luo_ser, based on the superblock of the file.
 >=20
-> Nothing has consumed the preserved state before the folios are
-> restored, so the retrieve can be tried again.
+> shmem_luo already accepts unlinked tmpfs files, such as files created
+> with O_TMPFILE, and a following commit also accepts linked ones. The
+> mount such a file was on doesn't exist in the new kernel, and userspace
+> may want to put the file elsewhere anyway.
 >=20
-> This also fixes leaking the preserved folios when one of these early
-> steps fails, e.g. because the file has seals that this kernel doesn't
-> support. The retrieve freed the serialized state but not the folios, and
-> finish() then skipped the file because its retrieve had failed. There is
-> no Fixes tag, since the fix relies on args->retryable, which was only
-> added earlier in this series.
+> Model struct liveupdate_shmem_retrieve_arg on open(): The kernel creates
+> a new file as if by openat(dirfd, ".", O_TMPFILE | flags, mode), so the
+> file gets the owner, permission checks and security labels of any new
+> [ ... ]
+>=20
+> Like the other failures before the folios are restored, problems with
+> the argument and with creating the file can be retried.
 >=20
 > Signed-off-by: David Matlack <dmatlack@google.com>
 
@@ -104,6 +109,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103010216.3447=
-716-1-dmatlack@google.com?part=3D6
+716-1-dmatlack@google.com?part=3D7
 
 
