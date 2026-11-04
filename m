@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F3A606A330
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 02:49:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102D9606A32E
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 02:49:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=bLPxm6qs;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cgTxz2yg
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=BOUalY26;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jb96h4h0
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,48 +14,48 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=ThIbPidvBK4i6Csq/pIkivMxZjIx7r0x4v2l4wVxXBw=; b=bLPxm6qsO1hu0x1x+s3qWAmdoL
-	/sqOJh9U+7mJJTBJT+RofxvTelA5mTWbxD/Ybt9wmFtmH5iFIHm7aJfZjDsy0Pz3vKuL2RT0wU3oc
-	AGvU3d8bJPGMm87Gn4yjZ3/UlPtuKzZT+imY6Ywjuze+OX0vmHclH8EtNLo6c4xE5kPq8gflXQuMf
-	cB3ofG9xoBiWv18XiPemaDYCFOrXLGysVTATiCCxgJJ/zrPeDoz2VL7+Zr7vppX9e925NABsFTv8r
-	xLoxEGTmHF5RjMWJEMK0YxFTRiDMOCzrLkb/qpe67lQZYBWRLQoUZ1N+pJQcOQ2Z5o2zUkjZmQqKL
-	Kmv0EQ5Q==;
+	bh=cGl7bC3fWAoAUhJbWEmSTM5Y06Elv8KWXkaBb9P48hA=; b=BOUalY26xE7LvwHwemmlHiz2L1
+	6jec+/1/tstkrLyndtdG7MUVFUXpVscFyiUbAOk2dg5byP2BoFJZfQuWcDQLlGBtO0Kb6kKVlf9cx
+	CfVR0+iBBQfnZVjTGOSI+1grexxTJ1iaPCsVSrhqTKyfdr4hEyZXNWpkEUtYczHdswuQWUp6Xflfk
+	xlpjMwCDwsaj9YxnEo7iU9FfNBweQi8ZlSKK+0KD0cjX0DXWyZrkiLrCigG7cytQ70gve4lsGCa/1
+	sfUyZVLvo+BucWbEsVum1/2UcPIiBIGWypn/cSWndR2N2RUYBopgl037yqBaG5G71OYynDCBCvwd4
+	aCMy9qkw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOR3x-00000004Crs-2u7Y;
-	Wed, 04 Nov 2026 02:49:21 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xOR3z-00000004CsV-3Dkn;
+	Wed, 04 Nov 2026 02:49:23 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOR3w-00000004Crh-1EEX
+	id 1xOR3y-00000004Crr-0KzL
 	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 02:49:20 +0000
+	Wed, 04 Nov 2026 02:49:22 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 37DF5602C3;
+	by sea.source.kernel.org (Postfix) with ESMTP id 5DDAF43B2D;
+	Wed,  4 Nov 2026 02:49:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 657D51F00919;
 	Wed,  4 Nov 2026 02:49:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 487AC1F00919;
-	Wed,  4 Nov 2026 02:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793760558;
-	bh=ThIbPidvBK4i6Csq/pIkivMxZjIx7r0x4v2l4wVxXBw=;
+	s=k20260515; t=1793760561;
+	bh=cGl7bC3fWAoAUhJbWEmSTM5Y06Elv8KWXkaBb9P48hA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=cgTxz2yghtz136oSvsEgNWxDK1UKzIAz4bUm2ta8Oek1uOr1sjN/JU7idKBzyVbM+
-	 gZPRxn2jAkF+uFEoqh/WGp+va2Gtf6j6EdKSSILE1bZDoBc67WVUqbCPTOzXJM1dPI
-	 I8d4vThVTyw5reTsH+tPqHvfmLLjhfq51GCcf4IWcOLbErwBixQ8NXjj8bBFxg/YiJ
-	 pxZxxSb7c6tC+orl5EReGxSWQrlG/ZQdai7CpK39WuzwQiHes6P5LMASf9bUnYm29D
-	 ZD1E/TdusmxaP1yUZxzL9vGf/mZY8uvoRP0HxfI4ybyclYsndU3plwKUFVepNIWafQ
-	 gwZoKEMu5YFag==
-Message-ID: <sashiko-outbox-196524@kernel.org>
+	b=jb96h4h0oM3x4HuMId9uj2LqKZoeAZgCuatFL0X+g/wCJ7W3yMOe0X+dGWF5LZ1Bh
+	 RJgMrUz3AHHIUC+Z4+HAGKWnlgwAZ9sGm1hChg1XwsbZwTUL/TrZPNINyYw/XIX/ZG
+	 G30TzK2SZ8L+TUdKRouOFuOavuK9HgEczJgXAsaU0LjsPd6BEZYiIs9ndCujj6YC3M
+	 74rzfop9P769vcC6l+1fnC6yfgQwNV3B8wKFg0bvJLdTiJ6mZxinQL54u8rpdtn6et
+	 ThQeKLK7GDRuz9JleE7CZdoIlyEP2yoD0Isb0vVwMAbdqEsQGFhpadeotBCvbBSezs
+	 SepM0zq9kLE7w==
+Message-ID: <sashiko-outbox-196525@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v2 1/5] panic, sys_info: Fix duplicate and dropped
- all-CPU backtraces in panic
+Subject: Re: [RFC PATCH v2 2/5] mm/show_mem: Avoid blocking on zone->lock
+ during Oops or panic
 To: "Aaron Tomlin" <atomlin@atomlin.com>, pmladek@suse.com, john.ogness@linutronix.de, rostedt@goodmis.org, senozhatsky@chromium.org, mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, kprateek.nayak@amd.com, akpm@linux-foundation.org, baoquan.he@linux.dev, rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org, ruirui.yang@linux.dev, david@kernel.org, ljs@kernel.org, liam@infradead.org, vbabka@kernel.org, surenb@google.com, mhocko@suse.com, kees@kernel.org, anna-maria@linutronix.de, frederic@kernel.org, tglx@kernel.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, brendan.jackman@linux.dev, hannes@cmpxchg.org, ziy@nvidia.com, bigeasy@linutronix.de, clrkwllms@kernel.org
-Cc: kexec@lists.infradead.org
-In-Reply-To: <20261103024453.922373-2-atomlin@atomlin.com>
+Cc: kexec@lists.infradead.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, linux-kernel@vger.kernel.org
+In-Reply-To: <20261103024453.922373-3-atomlin@atomlin.com>
 References: <20261103024453.922373-1-atomlin@atomlin.com>
- <20261103024453.922373-2-atomlin@atomlin.com>
+ <20261103024453.922373-3-atomlin@atomlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 02:49:16 +0000
+Date: Wed, 04 Nov 2026 02:49:19 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -69,39 +69,89 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> When sys_info() was factored out of kernel/panic.c by
-> commit b76e89e50fc3 ("panic: generalize panic_print's function to show
-> sys info"), __sys_info() gained an unconditional call to
-> trigger_all_cpu_backtrace() when SYS_INFO_ALL_BT is set, while
-> panic_other_cpus_shutdown() retained its own call to
-> panic_trigger_all_cpu_backtrace().
->=20
-> This causes two problems during a kernel panic:
->=20
->     1.  vpanic() invokes panic_trigger_all_cpu_backtrace() inside
->         panic_other_cpus_shutdown() before stopping secondary CPUs, and
->         then invokes trigger_all_cpu_backtrace() a second time inside
->         sys_info(panic_print) after secondary CPUs have already been
->         shut down, stalling for up to 10 seconds waiting for offline
->         CPUs to respond to NMIs. Furthermore, if SYS_INFO_ALL_BT is
-> [ ... ]
-> panic_try_start(), and route SYS_INFO_ALL_BT in __sys_info()
-> through panic_trigger_all_cpu_backtrace() on the panicking CPU.
->=20
-> Fixes: b76e89e50fc3 ("panic: generalize panic_print's function to show sy=
-s info")
-> Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] mm/show_mem: false lock contention warning in show_free_areas()
+--
 
-Sashiko has reviewed this patch and found no issues.
+commit e1c6e11316c0b99b2f700b8251c5ed2b76aad84a
+Author: Aaron Tomlin <atomlin@atomlin.com>
+
+mm/show_mem: Avoid blocking on zone->lock during Oops or panic
+
+This commit updates show_free_areas() in mm/show_mem.c to avoid uncondition=
+ally calling spin_lock_irqsave() on zone->lock during Oops, panic, or NMI/a=
+tomic contexts, skipping zones when acquiring the lock is unsafe or contend=
+ed.
+
+> diff --git a/mm/show_mem.c b/mm/show_mem.c
+> index b938cbcd774a1..77098077523a9 100644
+> --- a/mm/show_mem.c
+> +++ b/mm/show_mem.c
+> @@ -367,10 +367,17 @@ static void show_free_areas(unsigned int filter, co=
+nst nodemask_t *nodemask,
+>  			continue;
+>  		if (show_mem_node_skip(filter, zone_to_nid(zone), nodemask))
+>  			continue;
+> -		show_node(zone);
+> -		printk(KERN_CONT "%s: ", zone->name);
+> =20
+> -		spin_lock_irqsave(&zone->lock, flags);
+> +		if (!can_spin_trylock() || in_nmi() ||
+> +		    oops_in_progress || panic_in_progress()) {
+> +			if (!can_spin_trylock() ||
+> +			    !spin_trylock_irqsave(&zone->lock, flags)) {
+> +				pr_warn("zone %s lock contended\n", zone->name);
+> +				continue;
+> +			}
+> +		} else {
+> +			spin_lock_irqsave(&zone->lock, flags);
+> +		}
+
+[Severity: Medium]
+In show_free_areas(), when can_spin_trylock() returns false (such as in NMI=
+ or
+hardirq context under CONFIG_PREEMPT_RT, or in NMI context under !CONFIG_SM=
+P):
+
+mm/internal.h:can_spin_trylock() {
+	if (IS_ENABLED(CONFIG_PREEMPT_RT) && (in_nmi() || in_hardirq()))
+		return false;
+
+	/* On UP, spin_trylock() always succeeds even when it is locked */
+	if (!IS_ENABLED(CONFIG_SMP) && in_nmi())
+		return false;
+
+	return true;
+}
+
+the inner !can_spin_trylock() check short-circuits before
+spin_trylock_irqsave() is ever called, yet still prints "zone %s lock
+contended" for every populated zone even when zone->lock is completely
+uncontended.
+
+The commit message also states:
+
+  Check can_spin_trylock() and use spin_trylock_irqsave() when
+  !can_spin_trylock(), in_nmi(), oops_in_progress, or panic_in_progress()
+  is active
+
+Additionally, because show_node(zone) is moved after spin_unlock_irqrestore=
+()
+below, skipping a zone here only logs zone->name (for example, Normal or
+DMA32) without the NUMA node ID on CONFIG_NUMA systems.
+
+Should the !can_spin_trylock() case avoid claiming that zone->lock is
+contended (and match the commit message description), and should the skipped
+zone message include the node ID?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103024453.9223=
-73-1-atomlin@atomlin.com?part=3D1
-
+73-1-atomlin@atomlin.com?part=3D2
 
