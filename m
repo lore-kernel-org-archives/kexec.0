@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC9F606AB2F
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 22:35:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18AC3606D80C
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 22:42:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=0WevHOdh;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=R3xnNN00
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=IFP/PAO2;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=gbIfVlux
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -14,68 +14,67 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Osoc1/zc3WCPxn/uivsVACevUkiPfuARX2+mZ1FpT3s=; b=0WevHOdhY6tNKHhGqooMXkhntG
-	CsVYi1b/1RwhbZIvskTYmZEpYbjm3cLEWxWcEm5VNmc3gNGgwhUETgI2T3bjf/FkGxohIKdKp4Uhw
-	kIJxSLQVtFDw+5neRrNS3zcCUHMD0Zq7vQJE/9acA4mvKwfagxnIgGSyQsmeQWbrKsArejYgvzAS0
-	E/FoVAXog6dGCqhPoI/2fIFHeKZMgKAFgdATxp8srkGbOAieWe4gQiP8b0OrNffoFTXz/NX3GcSb+
-	6FCqTtwIfMgey58Ii8Tb/jaatjv1mlWqrvk6o6X91Vr01ZfjR3Fom65YnyZLuUXn4LQtUbUcWQymq
-	FRWN5RJw==;
+	bh=76+aUQcUn4RSh9/vkGb8GrJJ6hK0vTzaCEd5JGs9ODc=; b=IFP/PAO2MXvMtDFxcOH2zuYeHK
+	7lBjkMgSdhVw5IduwL3yQGgBEvLf7cA+LRCpgC7HmLVd+0l7aQ/NdVCWCMHGR5Y/5jV4jSGt46uDu
+	sa+1cak7i286YBDszAkzKppMzftn91xGE2gzGPQeMukhrw4hvHyfmCmclKoiarNJviojAHxpNAOfX
+	BJmCWZx13gBYA4K39XGaya7owJU9dIZVgL0nT9q7V8Czr+4KF6xqNQwIN/KlSiVpboEka9vqn9KQ4
+	Ypjqs1o0ed4CJIFmQQ4iZsABg79CLPC1Rkc4Ag6mKEolPkbD67vN5nBTbRmbE9WaTmZh43gE4FeEv
+	a9UNdVqw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOjZr-00000007ADU-31Nb;
-	Wed, 04 Nov 2026 22:35:31 +0000
-Received: from mail-pf1-x42a.google.com ([2607:f8b0:4864:20::42a])
+	id 1xOjgr-00000007Ahx-2RKn;
+	Wed, 04 Nov 2026 22:42:45 +0000
+Received: from mail-pf1-x42c.google.com ([2607:f8b0:4864:20::42c])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOjZn-00000007ACy-22dQ
+	id 1xOjgp-00000007AhW-0U8m
 	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 22:35:30 +0000
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-8b1a705b88aso425340b3a.2
-        for <kexec@lists.infradead.org>; Wed, 04 Nov 2026 14:35:27 -0800 (PST)
+	Wed, 04 Nov 2026 22:42:44 +0000
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-8a064fac8cbso970405b3a.1
+        for <kexec@lists.infradead.org>; Wed, 04 Nov 2026 14:42:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793831726; x=1794436526; darn=lists.infradead.org;
+        d=google.com; s=20260707; t=1793832162; x=1794436962; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=Osoc1/zc3WCPxn/uivsVACevUkiPfuARX2+mZ1FpT3s=;
-        b=R3xnNN00WBIUqz8uz8t+M4hDkrHBS4lWD4Dnwgef7A8WLaOf7f8PIb1O40EMX9HH6Q
-         ipBmdvx9JFNPeVjh0c7HYoSnnuTz7zCzag0xqy7l7MGft9TpMG/LHRin//gU769kw2NT
-         2xKdRGcliqnMGneIiuuXdzAPj1QlHfyXAr2Crax88lFzI6pst1PffzIj1u62faZIa+5i
-         T5DmQkY0SDasC4yB89I8y7lkipHSZ1UzOjPiclDqPqBS1SOekGPcIUuywXeaRkZN8eXd
-         cwclXDSehsquAjxFA10ncuzzVqFN+GoO9hJxZ7DicVOT1ef/245GTmno/PDlOXEK1g74
-         lyEA==
+        bh=76+aUQcUn4RSh9/vkGb8GrJJ6hK0vTzaCEd5JGs9ODc=;
+        b=gbIfVlux8JEIQXi/ngiMAOXEexZiRk8ska4IAetXOi6xwJV9kIqA9mXRkOnHSwQygW
+         6l7mDP4riZEGj2og4sXrqzzVXjxa/sYJlUJCp3kSkz+T+1a2yIykkauNQqSjgPJXUOrN
+         WFXJinyXRsTN3qguYSXzFwpnaUfiH/1GzQgn7lXojMC7ujEChsN0NW1VIZorDphUmFgb
+         HGFGGaPypcCKYt7ApdoySKVaieXno/Q3Izsqe4VymKTqu2nc+m94VNkyj8q48Mgf/Q7o
+         3+GoXWtQmxN2jJHLB5SuyDxHToGdKHhs8+DYhwU2/zh3wVXXs9ExqiKmE1XUu16REi+1
+         mGjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793831726; x=1794436526;
+        d=1e100.net; s=20260707; t=1793832162; x=1794436962;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Osoc1/zc3WCPxn/uivsVACevUkiPfuARX2+mZ1FpT3s=;
-        b=eJqbuf7SWDcYWsSXTWERxooQnUlzpJG90MjMzwEoXj0C4RAJpZ/ngVevNVoHTtRHpl
-         SgrP3Tr8kV605rIsxoydLC6HQA+BtvEUlrBgbhWWayF8wifJg2buuJ9ZZQNDVLexedmJ
-         w9eO4X5dWInzlsKa5JPI2csmv8luCkesezJWbzRiG7V/u42CXQo6kuFZ36O0ylSmNh+9
-         peXeYl5VyutFBSegNhnLXqKNaz1h5Bx3UzVA2mft/O58BtnUf/TWu2b4JoEuFw3OSuQt
-         nKj/eYgkhzUTx+EII/nJejYaoUzqSOGadLTcn7mdMWNJdji82qi8jpIpKLEHujYwBc4k
-         dDBg==
-X-Forwarded-Encrypted: i=1; AKwUvBxffFP7Qx/GETx0yeWyIsfoDRwh/hX7KSrRQAsAJ8e/UeJsLHwj9F4v2uiNeW+AF6DUYEMgyA==@lists.infradead.org
-X-Gm-Message-State: APuU4Z/emiwnKmQKbDOu4cFMZ5k0FqEF2qAUREK/xpWvqVBaRQCOxRvw
-	PDAQJyqD4SFw79M9dHY4wf/cv1Y5cI87W9mJOvI9w0X5OXzRmPcOyX6ksGWGGnMvqw==
-X-Gm-Gg: AYBFou2zbbm1U7EyLnQsAIfmOpVpxT6oJ9rNMx7GUOGe9j/Hxnw27omdE/EqOPYop7X
-	ttKHSr9AR7WoMukOW85DFbgHT8dlmOvOgXqYldA2SpvKDqCR4Ik0wtVkLMboZZwJvi/2At5imEQ
-	3yDA8EOWMvbxmtFTmsp02+/6zEZSYou8JUyhdA60FQXkWPzyO3iH/YaT3g/6AgfWusgFFPU7AaA
-	wulsuroOU2RfGuC+xIZ2qmyWS1/tulJLmiFAIFwor+BKiXa1s3+CuiOcJQffnQeT3g+QUtEsXcc
-	GNBSuVAdU4nMkH/ZkaHxZ7CRM4W1/3D+6+YxlkLJLL50ZeFFPuDIMPQVcJFmjUwlqdc/XYUd8IL
-	wFg4ppiPYXrpeW4y/IYyyNY9ih3D9nV7mYnJ1BxGfK6J8Cb+3XUjug4rzlOfYNEy4lhg0BaDu4a
-	M4iId99nD/QxPIwML8roWafC8hOtSELqdyJ8+wjL/Bz4wI/W90be77MzIo0WafMNjJRwocvvYmm
-	m1fCjSFGTDxVCRSiyOWNWsz/BQeXE8KAfO1/6BUgE8mkxzA1lsdXti3lOOFxDqyI8UcmUbhnBfs
-	OrLOY34HkrIEz1AUhS91tFg2VGbwBVdafGa5U/norxGUspzGhhIa82nbnzkw7uBJ/L8piiUoG6+
-	JTwwgAFxhIA==
-X-Received: by 2002:a05:6a00:1f0b:b0:899:67fe:3c52 with SMTP id d2e1a72fcca58-8a9be1a4461mr15308534b3a.15.1793831725909;
-        Wed, 04 Nov 2026 14:35:25 -0800 (PST)
+        bh=76+aUQcUn4RSh9/vkGb8GrJJ6hK0vTzaCEd5JGs9ODc=;
+        b=kQiHtVREuBp8tTdrVnLOLteNL+e8yMDUatt54ROw//cFB/X8LNCXAvzhEFK9aDKz8h
+         X931KntVFi+ji8ReypVtbW+CZtTW4K3VazbY4qEEotjPzFR+Xjfbgc905Qgc2Nlxn/8x
+         XMDpEfaN6HzjT2ijPYU0Z7GLnf1gtaBiXtQDSzQvyZWezdubR4kRqXumJRaFOggkyrdE
+         DSMiHchIKF/P64kBkcMdUaaW+lFESRBnBJc2gLkR2eZlCcn6LjjkNkJ8c8x4Ok5+TPpV
+         jVTlaVSMIKk8QLw1fZE+RWUfV8wNsxm+A3xoeOiyp3rAl9big3p4Cvm/Ri0hDSuJ3jaW
+         qwNQ==
+X-Forwarded-Encrypted: i=1; AKwUvBz8qGM6L/zIBfVFUCLly/dw54YD4lLsflaiE/KyyoLM+srWUcGa82DUWx+KOUBArKbQR2F4Xg==@lists.infradead.org
+X-Gm-Message-State: APuU4Z+PlYR9oSuCEkoQnmDYsAx7Cd8cHcVTlKoVLcqcyRdXekaqLLXh
+	DvLzY/uksLAhs7wV7FLOscvUXRUGehxnMH8cAm8YNEMJBbKESzYQn5x9Iw93KwYU3w==
+X-Gm-Gg: AYBFou2ALxTRrbJASTBw08hkguKuQ+cUQmhzfbqLlSd6wcQEfGJQgd51CxWkGEr+VTW
+	sF3LvMjUf06IxhbziBTXUj3WZw7tugufbQeXkz5O+MXc6gBkXl2EGzviIYC90FvXZdNjM/KfWKL
+	2qlo50NCqBtKSVSNqOtys8bzLUYyij0PbzwFhGf0/j9dJ+dV4YRdlKCRXK6OikmxbX+ztugsLUE
+	aZrCJL4cd597h1yU1hI5kSN6hihIzhVq6BFGi2o2JxCn1wQT0Hmjv3Esr/puENwXLqcbME9o3O/
+	DQXdBEdT+JezQztNGWCmmNiPspKMb9rTXBsRq3YcCVbEOWimM5iR/CRgWKxfShruM//4c+KIOcP
+	CP7ftRmqItyHupsiwPDOXnvYMo1pN9p61qNmKLDwyT81kPvgU8SS3ApEjyUyL3iA6pVubuAxcwq
+	GxaMBRRulCaCCVkgavkDqRs7PBL29+3Dijvxw6FPu5yFdmmqlrNEQq2LBA8QCDOytioUxLkzUei
+	cpdd5IUbEz0tMCuj2/Vc/9W5L98KXTXHqDnStGIO7v8a0aqi7wyMxPc/hhYXi6LdtWzsFE+NBaR
+	vfhK5vCpxiN3H9oO0GWlXU1aMOtsRgf5gTXFEGkjyW7P08udIlu8Cszv+aTr4FQg
+X-Received: by 2002:a05:6a00:32c5:b0:878:34d7:697c with SMTP id d2e1a72fcca58-8a9bf811624mr14694461b3a.42.1793832161677;
+        Wed, 04 Nov 2026 14:42:41 -0800 (PST)
 Received: from google.com (33.79.127.34.bc.googleusercontent.com. [34.127.79.33])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8b09b569495sm1376244b3a.37.2026.11.04.14.35.23
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8b1209b473dsm1079338b3a.36.2026.11.04.14.42.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Nov 2026 14:35:25 -0800 (PST)
-Date: Wed, 4 Nov 2026 22:35:20 +0000
+        Wed, 04 Nov 2026 14:42:39 -0800 (PST)
+Date: Wed, 4 Nov 2026 22:42:35 +0000
 From: David Matlack <dmatlack@google.com>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>
 Cc: Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org,
@@ -95,21 +94,21 @@ Cc: Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	Suren Baghdasaryan <surenb@google.com>,
 	Vlastimil Babka <vbabka@kernel.org>
-Subject: Re: [PATCH v3 09/10] mm/shmem_luo: Allow retrieving tmpfs files with
- O_RDONLY
-Message-ID: <auuzKNZsPD10XM4q@google.com>
+Subject: Re: [PATCH v3 10/10] selftests/liveupdate: Add a test for preserving
+ tmpfs files
+Message-ID: <auu02-iDbVaEL-4v@google.com>
 References: <20261103010216.3447716-1-dmatlack@google.com>
- <20261103010216.3447716-10-dmatlack@google.com>
- <2vxz5wyck08d.fsf@kernel.org>
- <auuJ4msatqzoOrjN@google.com>
+ <20261103010216.3447716-11-dmatlack@google.com>
+ <2vxz1p90jzx4.fsf@kernel.org>
+ <auuJM8c-bE43NP54@google.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <auuJ4msatqzoOrjN@google.com>
+In-Reply-To: <auuJM8c-bE43NP54@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261104_143527_548605_CE25B337 
-X-CRM114-Status: GOOD (  20.11  )
+X-CRM114-CacheID: sfid-20261104_144243_169516_095B15E1 
+X-CRM114-Status: GOOD (  22.22  )
 X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -129,41 +128,43 @@ X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 2026-11-04 02:45 PM, Pasha Tatashin wrote:
-> On 11-04 17:52, Pratyush Yadav wrote:
+On 2026-11-04 02:37 PM, Pasha Tatashin wrote:
+> On 11-04 17:59, Pratyush Yadav wrote:
 > > On Tue, Nov 03 2026, David Matlack wrote:
 > > [...]
 > > 
-> > Can't you put all your binaries in a separate session, retrieve it as
-> > the very first thing, and then finish the session? Then you can execute
-> > those and retrieve all the other sessions.
-> 
-> This is a good workaround. I am not opposed to this patch for 
-> completeness of functionality, but if we decide to keep it, perhaps it 
-> should simply be squashed into an earlier patch. The current diffstat
-> looks bad, as it mostly deletes code that was introduced earlier in this 
-> series.
-> 
-> In any case, given Pratyush's suggestion, we could also drop it.
-> 
+> > Umm, no way I am reading all this...
 > > 
-> > Why do we need to support this in the kernel?
+> > LLMs are great at generating tests, and I'm not saying there is no value
+> > in this. It is just that this massive code dump is unreviewable by
+> > humans. It is also unfair to the human reviewer because it took many
+> > orders of magnitude less effort to _write_ them with an LLM.
+> > 
+> > What do you all reckon we should do about this? Trust the LLM to get the
+> > testing right? Do we give up human maintenance of tests entirely? Do we
+> > do fault injection to test the tests themselves?
+> > 
+> > Or do we make the tests smaller and more human reviewable?
+> 
+> We need good test coverage, but I believe we can break this patch down 
+> into smaller changes where tested features are incrementally added.
 
-That would work for binaries, and I agree that use case alone doesn't
-justify this. But I see O_RDONLY as part of the retrieve interface, not
-a feature for one use case. The retrieve argument is modeled on
-openat(), and openat() lets you open an existing file read-only.
+Agreed that it needs to be easier to review, but I'd like to keep the
+coverage. Here's what I have in mind for v4:
 
-open(O_TMPFILE) only requires write access because it creates an empty
-file, and an empty read-only file is useless. A retrieved file isn't
-empty, it has the preserved contents, so O_RDONLY makes as much sense as
-it does for any other existing file. Without it, every retrieved file is
-writable, even when userspace only needs to read it.
+ - Move the preserve-side checks that don't need a kexec into
+   liveupdate.c, like Pasha suggested in his earlier reply: which files
+   can be preserved (permissions, read-only and append-only files), the
+   frozen size while preserved, and unpreserve. Those then run with the
+   regular kselftests instead of only in vmtest.sh.
 
-Preserve already works the same way: a file can be preserved through a
-read-only fd, as long as the caller has permission to write to it.
+ - Split the rest of luo_tmpfs into several smaller commits that add the
+   tested features incrementally, e.g. one for the test infrastructure
+   and basic retrieve, one for the open() flags and creation checks, and
+   one for block accounting. That makes the series longer, but each
+   commit is a few hundred lines and can be reviewed on its own.
 
-If we keep it, I'll squash it into patch 7 in v4, so retrieve supports
-O_RDONLY from the start. The commit message will lead with the openat()
-reasoning and keep binaries as just an example.
+It will still be long, but I think having the test coverage is worth it.
+
+Does that sound reasonable?
 
