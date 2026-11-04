@@ -2,46 +2,46 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7493B606EE85
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:36:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FEFB607D860
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:36:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2CIzu0BX;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ME/FJRfX
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=RU1T4gGN;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=g53FbUkZ
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=RCWYzTdROaZ//Ublq96X/PsjFPNs26aKqDomYMjplOg=; b=2CIzu0BXxvWehu
-	BZufivIBizJAMLSLlkCTWFPLEbPOMHEP3NKEvTKIG4KKoXjS1Dp1NhFwqThP2NNlIgdosREXVwxJ4
-	s0TaGJrh8vkzs+DjVVGLws4RFk/eEEeZhd+dBy5pQKcoQr5UcQV0WwK3/7TFxAq3FLy1Nn0F3kDgf
-	79Eq7NL4dRzPCsx5vIBlW+oneM3XlkXswjsJdJuMOmhSAKDfxXnDAf2YUkwBTaoGy2HIZUS9JQixh
-	LHvROAVskMyaA/ProFQvbkVU2+cmMO1Eil8bQC3+e5K/1rmEWfHfFd2oC7Eo4xzLeCiqwV1z5bd3C
-	WOwHAlD3bXX3ilVa5GKw==;
+	List-Owner; bh=qVgyj+FYQ9g7uHqmkN/6kOivRqdCDmjAyQM7m79vY9A=; b=RU1T4gGN2ruDa+
+	4I5CCXnNIwAaMs3FpUz1B8OsvYsjBD79n2WFT/TaWLGDb50xm/2J/jarSa9zBa7ICnpeF/RaoO3qY
+	888Bs905I79+pH+MbjjgrhuHVbuyewIhJi6Is6P5n8J85KTlKWAxYtHvI0n8G1HmqAdApzqtoi7jQ
+	jQtD8AbkvKwslEHtiBslUCxQSoqtQfOyJiB/5LV1HF6eYFFF+FiiC56ZDN/dJ1/hyx1KXf+N0UGQG
+	F3cP4fBygO6sC5KQv+Gcrki8a6cmBJjselW3UmljJgSi6kPac1RPvMLdHsCN8McossFggRHF0JQTB
+	kJkb03fsNuYtoh6fXO5Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgmG-00000006g37-0hJw;
-	Wed, 04 Nov 2026 19:36:08 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xOgmU-00000006g8Q-1YTl;
+	Wed, 04 Nov 2026 19:36:22 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOgmF-00000006g2t-0DFN;
-	Wed, 04 Nov 2026 19:36:07 +0000
+	id 1xOgmT-00000006g81-2UqG;
+	Wed, 04 Nov 2026 19:36:21 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id B748743B3B;
-	Wed,  4 Nov 2026 19:36:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95AA31F000C1;
-	Wed,  4 Nov 2026 19:35:54 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 58AFE4307F;
+	Wed,  4 Nov 2026 19:36:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3312C1F00A17;
+	Wed,  4 Nov 2026 19:36:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793820966;
-	bh=RCWYzTdROaZ//Ublq96X/PsjFPNs26aKqDomYMjplOg=;
+	s=k20260515; t=1793820981;
+	bh=qVgyj+FYQ9g7uHqmkN/6kOivRqdCDmjAyQM7m79vY9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ME/FJRfXHJFiJdRPuFY8HbJeu+GJeM1uYMSHhRXC3OyCBFoBbHe/D+KeCbkSHUcc+
-	 kLRnw4KPAQXBd/Lm2rxl+osnRqATeVzThclIJcTYxyw83fwPKWjsdttrzz2MJEJ/6F
-	 npCV8gjOwaHDC61e0ru1NTfEA8b0b9x7dSf/HzSrhuivx0LurSS5jZoyjtt0F/X5HF
-	 VXCm5Gcq8bWGfXJvVTfcnPDEXQVmN0yImiDrAgCIzYQ7ciRBherm+QOR9W6FvpFf9V
-	 +E2b6pif2bObHvbMb8emuD8Je5Z+LHQE+m9YVr5ffRfEUXrIRpnoiS5t/MTpZE9nue
-	 yYDTpnmmsO8rw==
+	b=g53FbUkZCSWNwnfejXhy6s2nelprEnvO5Q4YohPFBJHS+h/+Bis4YhN2/N/AQPc6j
+	 fzYwibXDmXurtiMkWQn5u+VqbndlNGJtHCg2mWpnoK5k3yXNh3AEwdUXjS/Wn8YgAp
+	 DsbkdUjLTcZjtiVPGmJw8p0/O2ZWUM6qG/u1JQ1LS7FQsul73LZQiypnKRi3hmBJNn
+	 pWa+EONoOhGPwjSkAXUgj9sc5Wf8Ushz0fe45yGX+M0rWNNO/OogEaHlzCPeH+AsK7
+	 UOZddBvu39FXQ3nOy8HZZvj2XFYHPYSGv2QlAmtdpAP6TIhnKozmF8NTYKArJ9/gig
+	 pdBxHcmOh0+mA==
 From: Christian Brauner <brauner@kernel.org>
 To: linux-fsdevel@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
@@ -102,16 +102,16 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	linux-debuggers@vger.kernel.org,
 	"Christian Brauner (Amutable)" <brauner@kernel.org>,
 	Chuck Lever <cel@kernel.org>
-Subject: [PATCH RESEND v2 01/23] alpha: srm_env: let procfs copy in writes
-Date: Wed,  4 Nov 2026 20:35:52 +0100
-Message-ID: <20261104-work-procfs-arch-v2-1-2aeb952c9597@kernel.org>
+Subject: [PATCH RESEND v2 02/23] ARM: alignment: let procfs copy in writes
+Date: Wed,  4 Nov 2026 20:36:07 +0100
+Message-ID: <20261104-work-procfs-arch-v2-2-2aeb952c9597@kernel.org>
 In-Reply-To: <20261104-work-procfs-arch-v2-0-2aeb952c9597@kernel.org>
 References: <20261104-work-procfs-arch-v2-0-2aeb952c9597@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1631; i=brauner@kernel.org; h=from:subject:message-id; bh=ud6jo66qun6GxlQdhdvRvLMRIAP9XF8+raIGbqJmJWQ=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS97ngrnBxmYyak9tmw1FJNeJLkRYtVzupn21htlqi1O tScYHfuKGVhEONikBVTZHFoNwmXW85TsdkoUwNmDisTyBAGLk4BmMjpJkaGRUtzVix3XJqTVWf1 dU6h87OwGM+PZ2ve597KXb144TfGWIZ/ZoovQk90zVv4S5HDJPnSp5RpZyfb5iyb8PbjaTdr44T nLAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1378; i=brauner@kernel.org; h=from:subject:message-id; bh=zhi1nqFEpiSFVRrnQoKgWCc9KudbEGTZB0sdbQtmzK0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS97njXfbbxoNI5d7tgS3+dmRcrGv6d2Z0Tv6xkukLGh 2eO1xfe6ihlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZiITgLDX+mF5S+vT7n7/+IW 5t66y78vbZh5fg+zoqqy103BXpsgljCGf/rni1NaxQ39Co13b8868UXRoW/v43tTZjz4Lhnc/Iu pmREA
 X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
@@ -133,58 +133,44 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
 Implement ->proc_write_buf() so procfs copies in what is written to
-/proc/srm_environment/* before it pins the entry, and hand that copy to
-the console callback through the page it used before.
+/proc/cpu/alignment before it pins the entry, and take the mode from
+that copy. Writes larger than PAGE_SIZE - 1 bytes fail with -EINVAL now.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- arch/alpha/kernel/srm_env.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ arch/arm/mm/alignment.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/alpha/kernel/srm_env.c b/arch/alpha/kernel/srm_env.c
-index faafc2df7886..6a1742b09a82 100644
---- a/arch/alpha/kernel/srm_env.c
-+++ b/arch/alpha/kernel/srm_env.c
-@@ -81,7 +81,7 @@ static int srm_env_proc_show(struct seq_file *m, void *v)
- 	return ret;
+diff --git a/arch/arm/mm/alignment.c b/arch/arm/mm/alignment.c
+index 3e5e30968634..11ceefdfa388 100644
+--- a/arch/arm/mm/alignment.c
++++ b/arch/arm/mm/alignment.c
+@@ -144,14 +144,13 @@ static int alignment_proc_show(struct seq_file *m, void *v)
+ 	return 0;
  }
  
--static ssize_t srm_env_proc_write(struct file *file, const char __user *buffer,
-+static ssize_t srm_env_proc_write(struct file *file, char *buffer,
- 				  size_t count, loff_t *pos)
+-static ssize_t alignment_proc_write(struct file *file, const char __user *buffer,
++static ssize_t alignment_proc_write(struct file *file, char *buffer,
+ 				    size_t count, loff_t *pos)
  {
- 	int res;
-@@ -92,13 +92,8 @@ static ssize_t srm_env_proc_write(struct file *file, const char __user *buffer,
- 	if (!buf)
- 		return -ENOMEM;
+ 	char mode;
  
--	res = -EINVAL;
--	if (count >= PAGE_SIZE)
--		goto out;
--
- 	res = -EFAULT;
--	if (copy_from_user(buf, buffer, count))
--		goto out;
-+	memcpy(buf, buffer, count);
- 	buf[count] = '\0';
- 
- 	ret1 = callback_setenv(id, buf, count);
-@@ -109,14 +104,13 @@ static ssize_t srm_env_proc_write(struct file *file, const char __user *buffer,
- 		res = (int) ret1;
+ 	if (count > 0) {
+-		if (get_user(mode, buffer))
+-			return -EFAULT;
++		mode = buffer[0];
+ 		if (mode >= '0' && mode <= '5')
+ 			ai_usermode = safe_usermode(mode - '0', true);
  	}
+@@ -160,7 +159,7 @@ static ssize_t alignment_proc_write(struct file *file, const char __user *buffer
  
-- out:
- 	free_page((unsigned long)buf);
- 	return res;
- }
- 
- static const struct proc_ops srm_env_proc_ops = {
- 	.proc_show	= srm_env_proc_show,
--	.proc_write	= srm_env_proc_write,
-+	.proc_write_buf	= srm_env_proc_write,
+ static const struct proc_ops alignment_proc_ops = {
+ 	.proc_show	= alignment_proc_show,
+-	.proc_write	= alignment_proc_write,
++	.proc_write_buf	= alignment_proc_write,
  };
+ #endif /* CONFIG_PROC_FS */
  
- static int __init
 
 -- 
 2.53.0
