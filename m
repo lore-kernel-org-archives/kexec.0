@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7AB606A326
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 01:03:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3185606A31B
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 01:03:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=e3TItm7X;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FGmiCuxI
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=jNFsOzLH;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=T8MpI2jg
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Ds/UOfmOvJuR4wrZT7xOsfABBaxA7lDS0xMWduVSe/g=; b=e3TItm7XrfvVNJs1Q9DbSF6w2L
-	StkTqoUCtRustINnMaW8UXF5I3aowB7b+MnDk6TKncC9yetNqqDnQXkooCQ2+Eu2/1jc2n7NfwjyR
-	R4cViRFHpqZXeI2upCeZUh8Qe+pevl6WdihRfP9fG04mstaP9Bc1vDqfugxjiATqwx0yjJJPA5fft
-	wFkXhWAKRe1XXJAXDeOCKKgjViDoDJPVUr/bNr77QhlW+LbxeISDOVdYO1afW71cevssZ6Ch/OkEj
-	HsPKOoj7WadspBMM9IUZCD6FMsiiPL1QOws2Eg5NFUU25InBKaWGV9Ok7dpcfbEmEdTariAybqTAe
-	GWlLDs/g==;
+	bh=bpj0dvVUVpi7RsWayoERG6Te1lUJztO07bOfw6gaN/o=; b=jNFsOzLH0FuibSX6upwrztx9pU
+	JyoC1Q7QmHrnX6Cql3FNjGR+BthNeju1+oyY15P00CgUAC8rqYbnxgnTxhZTGf1NWQ7h7sduhbLOw
+	0TEnx5MrZjw3uMocCZJ5dHVvaZHCeeAM9hRnyPvchsgzYy+IvNdC0N824QVPKDEBfN086DQRzTckF
+	PMh6nEhavgN/6Y1JaoEqqPxOUeyRpxp3h5/myp4VTSJGw/9izsnHs1Ed6eNT9eUcTg94Y1T94pXlA
+	3lL9BZjDoqHm8Hq0Y/keWw7AjHf2d3UDu2SZ9E8Qx96C8tjlDgVNTMye+PlUF4Oiqtj1dK7diVv97
+	cSaiq9GQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOPPc-000000042U6-1794;
-	Wed, 04 Nov 2026 01:03:36 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xOPPe-000000042Wx-1UaI;
+	Wed, 04 Nov 2026 01:03:38 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOPPa-000000042Ra-3Koh
+	id 1xOPPc-000000042V9-3jTY
 	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 01:03:34 +0000
+	Wed, 04 Nov 2026 01:03:36 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 82ACC40598;
+	by sea.source.kernel.org (Postfix) with ESMTP id A193A43995;
+	Wed,  4 Nov 2026 01:03:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D62401F000C1;
 	Wed,  4 Nov 2026 01:03:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E2741F000C1;
-	Wed,  4 Nov 2026 01:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793754214;
-	bh=Ds/UOfmOvJuR4wrZT7xOsfABBaxA7lDS0xMWduVSe/g=;
+	s=k20260515; t=1793754216;
+	bh=bpj0dvVUVpi7RsWayoERG6Te1lUJztO07bOfw6gaN/o=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FGmiCuxIMEo4PfiK5wDWDqKO9ioOYOT10Q+/s4I9HzzzSEmfpY28pZ2yQ53yvRkCR
-	 3eb+eTya1lHrl4zGKw3GKiK083UPvSW2fhMOYO0ATc2UAxg1ml7Xx8esy71OLR0Ejr
-	 4Pds7FdyP/wefIADkTjysL6iMxqgywYhIbsKiPb7wKrqzRfbqzUD6qgzL3KPyc+gqT
-	 RZRAyQDLQRb7bHd8kc7aavZKPSypVLnnn1ztT1kglRYz9Z8RwjqKxuAmQo9WjKTxpd
-	 tBL6pVIPJGU9x1klIzD0DW/IrY41u3y2Yj7KRohhBUKtTTfNQ4OpKO2UyNI6thhKYU
-	 E06vj7HHGWBQw==
-Message-ID: <sashiko-outbox-196340@kernel.org>
+	b=T8MpI2jgP8tTroGfgdwNiv+2ANrVhEvvg1CoPn6Wgs63Q30GZAghhqgJ7FBP92E14
+	 tD06MxD7NESv5VzEZTgqzx26oT64AHPE+0s6atQcEg83Rmwklb0nKySkMkbu/pPd1g
+	 6tshSlSDmo55BYqLpXlVvTgRm0kCM08BkBftVC+v+KbXtrnBBN4Z6pE4jYB+8MfBP2
+	 Ymbo/rCwbvdAAQItf20e5nlLFimYSeAsSabsd5hdL3UJuWT4BDDCpsAY4RlgHxgQzN
+	 Xs5u1MevAY3da+yysTQKX2vy23KRsh9tR3DqPi2+PJN/5YL8NgKEMlqZf6VbCjD046
+	 pIYN+73Gy0Iuw==
+Message-ID: <sashiko-outbox-196341@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 09/10] mm/shmem_luo: Allow retrieving tmpfs files
- with O_RDONLY
+Subject: Re: [PATCH v3 10/10] selftests/liveupdate: Add a test for
+ preserving tmpfs files
 To: "David Matlack" <dmatlack@google.com>, kexec@lists.infradead.org
 Cc: "Alexander Graf" <graf@amazon.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Baolin
  Wang" <baolin.wang@linux.alibaba.com>, "Christian Brauner" <brauner@kernel.org>, "David
@@ -58,12 +58,12 @@ Cc: "Alexander Graf" <graf@amazon.com>, "Andrew Morton" <akpm@linux-foundation.o
  Dunlap" <rdunlap@infradead.org>, "Samiullah Khawaja" <skhawaja@google.com>, "Shuah
  Khan" <skhan@linuxfoundation.org>, "Suren Baghdasaryan" <surenb@google.com>, "Vlastimil
  Babka" <vbabka@kernel.org>
-In-Reply-To: <20261103010216.3447716-10-dmatlack@google.com>
+In-Reply-To: <20261103010216.3447716-11-dmatlack@google.com>
 References: <20261103010216.3447716-1-dmatlack@google.com>
- <20261103010216.3447716-10-dmatlack@google.com>
+ <20261103010216.3447716-11-dmatlack@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 01:03:33 +0000
+Date: Wed, 04 Nov 2026 01:03:34 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,22 +83,25 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Allow userspace to pass O_RDONLY in struct liveupdate_shmem_retrieve_arg
-> to retrieve a tmpfs file read-only.
+> Add luo_tmpfs, a kexec test for preserving tmpfs files and memfds, and
+> for retrieving tmpfs files onto a tmpfs mount with struct
+> liveupdate_shmem_retrieve_arg.
 >=20
-> open() requires write access for O_TMPFILE, so create the file writable
-> like before, then reopen it read-only with dentry_open() using the flags
-> of the writable file, which file_open_root() normalized, and drop the
-> writable file. Like open(), which grants the requested access to a new
-> file regardless of its mode, don't check permission for the read-only
-> open.
+> Stage 1 preserves the source files of each test case. Stage 2 runs
+> each test case in its own directory, with its own tmpfs mounts, so that
+> block usage can be checked exactly with statfs() and st_blocks. The test
+> cases cover:
 >=20
-> Retrieving a file read-only allows a restored binary to be executed
-> before the session is finished. LUO keeps the retrieved file open until
-> then, and executing a binary that is open for writing fails with
-> -ETXTBSY. Being able to execute restored binaries right away matters
-> when they are needed to finish restoring the system, e.g. to bring up
-> the services that retrieve and finish the remaining sessions.
+>  - The restored file: contents, size, position, seals and holes, for
+>    linked and unlinked source files.
+>=20
+>  - Creating the file: it is created like with open(O_TMPFILE), with the
+>    requested mode minus the umask, owned by the caller, and not linked
+>    until userspace links it, unless it asked for O_EXCL. Also O_RDONLY
+> [ ... ]
+>=20
+> tmpfs quotas are not tested, since the test runs as root, which is not
+> subject to quota limits.
 >=20
 > Signed-off-by: David Matlack <dmatlack@google.com>
 
@@ -106,6 +109,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103010216.3447=
-716-1-dmatlack@google.com?part=3D9
+716-1-dmatlack@google.com?part=3D10
 
 
