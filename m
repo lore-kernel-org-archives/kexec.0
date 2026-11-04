@@ -2,46 +2,46 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B099960703D1
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 17:56:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65346071681
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 17:57:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=NWjOotlg;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dr8wSvAV
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2YancalI;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jJ+YsSS1
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=v5t8qKNo68SCWoforDimF8hL2ZYL+p0Okj8bWoZ1JT0=; b=NWjOotlgz/2Uah
-	UJqaTOBgEz1RtXcTxIjFX2MVeP4gUZE2MaRdlAMGFAuTIOXCel46Mm/vdLEzk2rFB7tJ2sR3ScGev
-	lmJZ9Mj+XTfZbz9TWKK4rUcOpFvZm6JmIpCGC/Z18Jyacf9piXDfmMMYqBCGpgJV3CZXsZ++GObOE
-	dnDtacdLOb4kLmsM5kNY25LT7y3eXOIBRz3mkJJUrgCd6wHO8ijjgkj/pNQpzsvUzLnEvfQneXYMv
-	tBY1R5DHJ9xCl4KcOAk6UYcKyqVJQ4+Nq2Xit5vhxTVd19clmI5Jp1jWm4TXE+YuBcLjNwtG4K0uI
-	wPTdc9hTx7Hahb/8a5kQ==;
+	List-Owner; bh=qeQgphPdxdiWtw36JzKqWooMSgzPZU+EeD4NlyLVhDM=; b=2YancalI1TIXJV
+	82Yoo7N45iCvQPh3rsiN9BbXVJYvt92P5/bs1/dJP2sXDG1OXvgpxTvRxXt4WtdjjxKflYO1RVjU2
+	hK9m0iNM1pLSuxHBWeallNqQRDUdiRIpgGLqPNMltugJDQvQAr+/1af/SAG5eapsL8cGh9vz/TXwU
+	SCiulcyYvMhEvK6wALgjuiaVHXikxlGN//Z5pNLKDXX70qz/qJozkwND49oMZNymLLp2N/pcHQuVe
+	uS9ALASrulE8mda2ZfUzqPnDc0ZbV+eKMzcVzhNpIY39EtnY1iOvoee19XeApNwcfbp526RHFbZf0
+	dn713u8G/AWoEFtCaswA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOfE7-00000006KZH-1IRg;
-	Wed, 04 Nov 2026 17:56:47 +0000
+	id 1xOfEL-00000006KfC-2BW3;
+	Wed, 04 Nov 2026 17:57:01 +0000
 Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOfE3-00000006KYM-2mm6;
-	Wed, 04 Nov 2026 17:56:45 +0000
+	id 1xOfEK-00000006Ken-3R94;
+	Wed, 04 Nov 2026 17:57:00 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 688A343313;
+	by sea.source.kernel.org (Postfix) with ESMTP id 908A743A59;
+	Wed,  4 Nov 2026 17:57:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0110B1F000C1;
 	Wed,  4 Nov 2026 17:56:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F33CA1F00919;
-	Wed,  4 Nov 2026 17:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793815003;
-	bh=v5t8qKNo68SCWoforDimF8hL2ZYL+p0Okj8bWoZ1JT0=;
+	s=k20260515; t=1793815020;
+	bh=qeQgphPdxdiWtw36JzKqWooMSgzPZU+EeD4NlyLVhDM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=dr8wSvAVbxP/ZcIFTBwPH9dzXvhuBn9mA9nVh+Xgz7CJcVvdC39CZkNme4AyXP6YJ
-	 FWGyi7uuOUICVXiiTT/mIG9BdyZemGP4/ngMXLnrprJvuOVJflcC9gK/hPD0oGCWag
-	 aT5p1c3BKTvIpwJq4lWpELTuhZe/zgt3mUlYbqxRoekrxsz67uxzSSFqG5FXwM9E/o
-	 G1ugeyanFn0rXRDRijLJnbwzKap1acFDZxxJu4ignABfVoZxvW4pCLBHKwBhqj5cvl
-	 DjsJARsAA6SkUoD00o6dTzmSQNCeteiSTEpImZSPqwk0YU1IwQ0d1qUYo0SM+byxVD
-	 zCyAfk3cQXcsg==
+	b=jJ+YsSS1mKgXVutXvIprPjWbk/f3EaiHLkE0iUZZAD8UlGdeiTsq37AMjiJ1LQO42
+	 s7IKloTcsbSWCr6Lc4020v768o++Pni3fgFkFO5tp1ySQmamfYyvOlYF89oN/AE0uz
+	 cDBLCJtKpTc2bEc32o8AER5NNVvUQIyxG/58XGRNwW4UebnC4TzH2w4THg6Y4IuZEE
+	 HY4QLlr1k8HjiamlPJYs4KZrW3+I6WmOXTXZ8NvkX2h2a4OGzF5wxpPCxFfmNGgkxC
+	 TEjrpd9SN8JK0f/Vf8mgRK+nlmhJ6yDeGzIC6DtBcVm6ZCj3+6Kd0iuDWQx/Ae1YSo
+	 KOmYuIt4jqdDw==
 From: Christian Brauner <brauner@kernel.org>
 To: linux-fsdevel@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
@@ -103,16 +103,16 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	"Christian Brauner (Amutable)" <brauner@kernel.org>,
 	Chuck Lever <cel@kernel.org>,
 	stable@vger.kernel.org
-Subject: [PATCH v2 38/51] powerpc/crash_dump: check ioremap_cache() in copy_oldmem_page()
-Date: Wed,  4 Nov 2026 18:47:24 +0100
-Message-ID: <20261104-work-procfs-bugfixes-v2-38-bbf7d5546809@kernel.org>
+Subject: [PATCH v2 39/51] powerpc/crash_dump: recover from a machine check in copy_oldmem_page()
+Date: Wed,  4 Nov 2026 18:47:25 +0100
+Message-ID: <20261104-work-procfs-bugfixes-v2-39-bbf7d5546809@kernel.org>
 In-Reply-To: <20261104-work-procfs-bugfixes-v2-0-bbf7d5546809@kernel.org>
 References: <20261104-work-procfs-bugfixes-v2-0-bbf7d5546809@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1312; i=brauner@kernel.org; h=from:subject:message-id; bh=2dbZnDPFapx3dAW5qeN54CL6hHWBvjsrs28L3h6tsIk=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9znt7V9L6ks/CitImMTaFT/P3tq0qmfiJVas86t5hC 6GvD3+pdJSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEwkXpbhf8Xs/zMjY/xX/2qd /0Cs7fedC69yp7xLetqeaik/5Q+3dQEjw6/vcxdp8XXWMTbHvTmdmR79flXw2aaoGkbuF4vOPfZ YwQ0A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2421; i=brauner@kernel.org; h=from:subject:message-id; bh=VIVKq8y+KdCJwnDd/z4L2OCrr1yqDfObdGoCOSjiCdM=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9znu/ZLFx05xpnp+TTtxLuaWnvKXR5q5SRcWM5RNFJ +7uuXKbraOUhUGMi0FWTJHFod0kXG45T8Vmo0wNmDmsTCBDGLg4BWAi0wIZ/nB7KCi471/L1Nq6 9n0/51Uea/Fd3qy9fnsOr1vwmcnr62yG/yWGkZU+VvatQgcYS97WRSfuKtivn95TcozLZv5XWWl eDgA=
 X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
@@ -133,36 +133,56 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-copy_oldmem_page() maps a page of the old kernel that isn't in the
-linear mapping with ioremap_cache() and copies from it without checking
-whether the mapping worked. If it didn't, the copy reads from an offset
-into the NULL page. That oopses unless the copy happens to be a user
-copy, whose exception table entries turn the fault into a short copy.
+A capture kernel reads the memory of the crashed kernel, and that memory
+may well have uncorrectable errors. On powerpc a machine check in the
+kernel is only recovered from if the instruction that took it has an
+exception table entry (cf. mce_common_process_ue()). copy_oldmem_page()
+copies with copy_to_iter(). For a read() of /proc/vmcore that is a user
+copy, all of whose loads have exception table entries, so the machine
+check turns into a short copy and read_from_oldmem() returns -EFAULT.
 
-Return -ENOMEM like the other architectures do. read_from_oldmem()
-turns that into -EFAULT like any other short copy.
+But since commit 4a22fd20379c ("vmcore: convert __read_vmcore to use an
+iov_iter") /proc/vmcore can be spliced too, and splice(), sendfile()
+and copy_file_range() copy into kernel pages with memcpy(), which has
+no exception table entries. A machine check there panics the capture
+kernel. The same goes for the reads of the ELF headers and notes that
+vmcore does itself, and those have been memcpy() for as long as
+copy_oldmem_page() has had its kernel buffer branch, since commit
+54c32021eb6f ("[PATCH] powerpc: Add arch-dependent copy_oldmem_page").
+
+Copy with _copy_mc_to_iter() instead. PPC64 selects ARCH_HAS_COPY_MC
+and there it uses copy_mc_generic() for kernel and user destinations
+alike, which has the exception table entries. Everywhere else it is
+_copy_to_iter().
 
 Reported-by: Chris Mason <mason@kernel.org>
 Fixes: 54c32021eb6f ("[PATCH] powerpc: Add arch-dependent copy_oldmem_page")
+Fixes: 4a22fd20379c ("vmcore: convert __read_vmcore to use an iov_iter")
 Cc: stable@vger.kernel.org
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- arch/powerpc/kernel/crash_dump.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/powerpc/kernel/crash_dump.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/powerpc/kernel/crash_dump.c b/arch/powerpc/kernel/crash_dump.c
-index 103b6605dd68..1543917bd3e1 100644
+index 1543917bd3e1..ca7e019ae3e9 100644
 --- a/arch/powerpc/kernel/crash_dump.c
 +++ b/arch/powerpc/kernel/crash_dump.c
-@@ -86,6 +86,8 @@ ssize_t copy_oldmem_page(struct iov_iter *iter, unsigned long pfn,
- 		csize = copy_to_iter(vaddr + offset, csize, iter);
+@@ -83,12 +83,12 @@ ssize_t copy_oldmem_page(struct iov_iter *iter, unsigned long pfn,
+ 
+ 	if (memblock_is_region_memory(paddr, csize)) {
+ 		vaddr = __va(paddr);
+-		csize = copy_to_iter(vaddr + offset, csize, iter);
++		csize = _copy_mc_to_iter(vaddr + offset, csize, iter);
  	} else {
  		vaddr = ioremap_cache(paddr, PAGE_SIZE);
-+		if (!vaddr)
-+			return -ENOMEM;
- 		csize = copy_to_iter(vaddr + offset, csize, iter);
+ 		if (!vaddr)
+ 			return -ENOMEM;
+-		csize = copy_to_iter(vaddr + offset, csize, iter);
++		csize = _copy_mc_to_iter(vaddr + offset, csize, iter);
  		iounmap(vaddr);
  	}
+ 
 
 -- 
 2.53.0
