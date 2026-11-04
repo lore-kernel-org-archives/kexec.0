@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE74606A31B
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 01:03:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDD5606A31B
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 01:03:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Maw1vqH1;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=B2Hh1Iwy
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=chlQpFwi;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SieJqreB
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=9HfIaUVMh9ori0XHVA0Kw+TkFHlpDTR33QZVSpPLais=; b=Maw1vqH19snJ4dHOJKMpue5APp
-	7qv7HcyboUdeL5A9Gp0KJXIuA5jxTdmgLuTktY4Xx6/yKGXcZI/d+5TYN9DNZJvChlQK3KoJnm/RM
-	Hls8aDWCphNgsNW9/CleyoB+j/79ydRLwnNb0WyNFCzyzDsx40mfhd/WfDx+QXraRKWahN4tOJ+7a
-	lHzjCzqnAxgJlkW/tZrOz7mIv/qlEpeuxmoLArpBzT6qJvhX0e2OYkKG3An/YU7UToZH+0XEDWukE
-	zjgP2MbOpUOBDg4QRHRpGM+SinMBw1M8uBR5ceOiwWaLPn2/8zTOaRAFcVuFk4I4d4du5bHyRBX/T
-	7d568hIg==;
+	bh=4axXO3nL7G5bgijsfeANN8KYpkb6wMVtpEHlvk23Fcc=; b=chlQpFwi7l6EjOj0vbSNb5HQu3
+	1QynFt6t2rTAjy/tf8XAZvWlZyv03RNKimnvrIJ4HNEfkvNsgmAb42xI14BD79xNKcM8oDVDvW6II
+	t7O6Mcp7AJOMOx4/CaqeoMh2A4koTXEpeU2AiNQKTn7qr6D684Wm9qgz85zNrLvAEwxTb3Y/QuLcs
+	eMEmshS8L1zVKV188EVdfhtVEJ5KRy2YoBf0duhWxOORFg/q3JlZjRLnRuAEEvAKhXeJXlGu8WhnA
+	+IPWANGaeVC3687gBvgxW3Kf51hnR2TeAvHILnhVY06r/4HeL2HViZO2ih8Nyod1dlgife17pC48R
+	X2zJHG5g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOPPa-000000042SJ-47BD;
-	Wed, 04 Nov 2026 01:03:34 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xOPPc-000000042Tv-0Sgt;
+	Wed, 04 Nov 2026 01:03:36 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOPPY-000000042P4-2VDc
+	id 1xOPPa-000000042Ql-1die
 	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 01:03:32 +0000
+	Wed, 04 Nov 2026 01:03:34 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 1220F60D8B;
+	by tor.source.kernel.org (Postfix) with ESMTP id 6588D60D85;
+	Wed,  4 Nov 2026 01:03:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ED401F000C1;
 	Wed,  4 Nov 2026 01:03:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB3D21F000C1;
-	Wed,  4 Nov 2026 01:03:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793754211;
-	bh=9HfIaUVMh9ori0XHVA0Kw+TkFHlpDTR33QZVSpPLais=;
+	s=k20260515; t=1793754213;
+	bh=4axXO3nL7G5bgijsfeANN8KYpkb6wMVtpEHlvk23Fcc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=B2Hh1IwyiQW9rMHSHfbsC2qZNnH8t6SIWKR+R3mQOL7bPLUx0KacvuubCArZYt3XV
-	 uBdUL2KSAkzAhxpMFsoZEh9KDmeBsZ86qcfGIA+dmqvIrsBJB0Q8cGBQflH2x+cs08
-	 EST84eZyhBqeG30wBDsFky7rTnmsysSSzhsQB5bd6T6d10M2HBSS56tsQWQnO2D+IK
-	 kDzML7xUsOPUqzJFTDYfNPf3sPrOp+rVOHemmi5eTPrRi9HqsLH6btCDLlccF0C96E
-	 IBTTGeOkQTHOwEerXB4otDM8rah62WDBfnZkOqR7fmLINvsRNRM/0CjjaWbeujgcPu
-	 bO4gIkpFS516Q==
-Message-ID: <sashiko-outbox-196338@kernel.org>
+	b=SieJqreB9CvP6QrZes4bq2SUXxisTj7TQfJdTpET9m/wQP5Q25KVKN8oefzmB3R3O
+	 FLIMzLz5+g67iDAeuHqX5zUD0byPqcJXNGfrsyaHUq9yVpcERADEo/gqKbCaU/V369
+	 OwsBiYvs/sABqTNFQNJaG7TiyGKDCy1/qFGDnWrCcnC39t1zv2ZpiSxmPYS2D42cp8
+	 IY3DpTmYal25XhQUgmVLfOZBnm0QfBNrkBAiRBMguBLBPVHIfk5338HalAZqFEuLCB
+	 u5bRa/JpQraZXpB9huOKdw2ZML2yip2jFjwcPEYFXXcnA9WPSAJVWCwx9RkgF1vIBN
+	 HNmFKrnLqLiog==
+Message-ID: <sashiko-outbox-196339@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 07/10] mm/shmem_luo: Retrieve tmpfs files onto a
- tmpfs mount chosen by userspace
+Subject: Re: [PATCH v3 08/10] mm/shmem_luo: Allow preserving tmpfs files
+ that are still linked
 To: "David Matlack" <dmatlack@google.com>, kexec@lists.infradead.org
 Cc: "Alexander Graf" <graf@amazon.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Baolin
  Wang" <baolin.wang@linux.alibaba.com>, "Christian Brauner" <brauner@kernel.org>, "David
@@ -58,12 +58,12 @@ Cc: "Alexander Graf" <graf@amazon.com>, "Andrew Morton" <akpm@linux-foundation.o
  Dunlap" <rdunlap@infradead.org>, "Samiullah Khawaja" <skhawaja@google.com>, "Shuah
  Khan" <skhan@linuxfoundation.org>, "Suren Baghdasaryan" <surenb@google.com>, "Vlastimil
  Babka" <vbabka@kernel.org>
-In-Reply-To: <20261103010216.3447716-8-dmatlack@google.com>
+In-Reply-To: <20261103010216.3447716-9-dmatlack@google.com>
 References: <20261103010216.3447716-1-dmatlack@google.com>
- <20261103010216.3447716-8-dmatlack@google.com>
+ <20261103010216.3447716-9-dmatlack@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 01:03:30 +0000
+Date: Wed, 04 Nov 2026 01:03:31 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,25 +83,25 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Retrieve files that were preserved from a tmpfs mount onto a tmpfs mount
-> chosen by userspace, instead of as memfds on the internal tmpfs mount.
-> Add struct liveupdate_shmem_retrieve_arg, which userspace passes as the
-> retrieve argument of LIVEUPDATE_SESSION_RETRIEVE_FD to choose the mount.
-> Record which mount a file was on with a new SHMEM_LUO_FLAG_TMPFS flag in
-> struct shmem_luo_ser, based on the superblock of the file.
+> Allow preserving tmpfs files that are still linked. To preserve any
+> file, require permission to write to it and the file to be opened for
+> reading, and reject append-only files.
 >=20
-> shmem_luo already accepts unlinked tmpfs files, such as files created
-> with O_TMPFILE, and a following commit also accepts linked ones. The
-> mount such a file was on doesn't exist in the new kernel, and userspace
-> may want to put the file elsewhere anyway.
+> shmem_luo already accepts any shmem file without links, which includes
+> unlinked tmpfs files and files created with O_TMPFILE. Accepting linked
+> files means that userspace doesn't have to unlink files to preserve them
+> and can keep using them by path until the live update.
 >=20
-> Model struct liveupdate_shmem_retrieve_arg on open(): The kernel creates
-> a new file as if by openat(dirfd, ".", O_TMPFILE | flags, mode), so the
-> file gets the owner, permission checks and security labels of any new
+> The path of the file isn't preserved. Like other files from tmpfs
+> mounts, a linked file is retrieved onto a tmpfs mount chosen by
+> userspace, which can then link it at the path it wants.
+>=20
+> While a file is preserved, its size is frozen, so truncating it,
+> fallocate() and writes past its end fail with -EPERM. For a linked file,
 > [ ... ]
+> and for immutable files.
 >=20
-> Like the other failures before the folios are restored, problems with
-> the argument and with creating the file can be retried.
+> Document the frozen size and the permission requirements.
 >=20
 > Signed-off-by: David Matlack <dmatlack@google.com>
 
@@ -109,6 +109,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103010216.3447=
-716-1-dmatlack@google.com?part=3D7
+716-1-dmatlack@google.com?part=3D8
 
 
