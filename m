@@ -2,46 +2,46 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E544F60EA983
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:59:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2778F606D4EE
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 19:59:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=zDkauTR8;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KuEw75ZJ
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=n2GUzzpq;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cG3jfP4l
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=Q3KuHwYfVxA2BKW9aXWNrUpzpjPKgJiiNONww6sd1HY=; b=zDkauTR8Hl/xf/
-	k8v216oCGqGcdudFtQGgOwQ1axs13nabJ8KMOnRHEzd1jKlwEjvmJC5ysjQ3UDGMtS7RkBy1yWgvF
-	AgNTD2azBl65SMb08kl9xcBppnS2Pf2TRPaRXDVTMcqCzT6TRS/1tKr3kobCCc29+2m9nhV/IKflY
-	ISNcjDef6Zjs6dxFnMyJLfGgxCpoXZMlsImrA+9Bu7h+ZRyiE/RcMvxn+4dkhqVNmGXzGl31s1OQL
-	bjvyh4OROPDh00ecBDOXtkHcMJG8m+X/YFgtW2Um9M4cFkH394xbZfLwAhtV7QKtOwswLoYHyiSQh
-	DfQglJZS/4CFHGUNCP5g==;
+	List-Owner; bh=fxIBhh7BKiMVxtDmu4/U+E0RVHzkWKjhatO8Mz/jm1g=; b=n2GUzzpqITPgb6
+	izruQwTbarTUeQQ15PEGNXMnXBXDu1bxeTO+8UAbCV6CQhAP6Jmz9nOccPFD+VlGU9tYPPkQENh8R
+	ZqgqVdgsC9ylEnq/E4rkYsul7m7XAXsxLYiM1XOCWik43rkdkWQuiUTWZ17Laar8pT1p+98PWTAnc
+	zJqlnwQmEpBhtEv0r7N7OOGPDO4AnS0tIDJ7yr4UmBbwdH0j2OeyawzJN+rnKACTAPmzOTfYdkLnv
+	9L9oYgtTEALlGWUdtpAJKoIT1r2dQBWVFVlVchX5Qn+IsS1c7CEk75AeCxdn0zDAYRIq8uF9Qm7D6
+	Vm6U9/3AzgZaT1StWjUA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOh8X-00000006pVL-2ihx;
-	Wed, 04 Nov 2026 19:59:09 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xOh8l-00000006pb7-3bR5;
+	Wed, 04 Nov 2026 19:59:23 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOh8V-00000006pUg-3yRe;
-	Wed, 04 Nov 2026 19:59:08 +0000
+	id 1xOh8k-00000006paL-1NDq;
+	Wed, 04 Nov 2026 19:59:22 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 0EC6C61DDE;
-	Wed,  4 Nov 2026 19:59:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 044D51F00919;
-	Wed,  4 Nov 2026 19:58:54 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 979586154C;
+	Wed,  4 Nov 2026 19:59:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FF811F000C1;
+	Wed,  4 Nov 2026 19:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793822346;
-	bh=Q3KuHwYfVxA2BKW9aXWNrUpzpjPKgJiiNONww6sd1HY=;
+	s=k20260515; t=1793822361;
+	bh=fxIBhh7BKiMVxtDmu4/U+E0RVHzkWKjhatO8Mz/jm1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=KuEw75ZJhJWFk4/5j/u2bOa+7AhH2+fwulBHYqhzPzRCBHuO79mUpmvrjD0ahvKTk
-	 tMMZB0uhduFqD7adhZiOSmSX6H7pUU+Iz/7fWtjCvnMrG3tjuNjl57qfHN8JLiB+Oq
-	 Rm3Oh0NCtCkqXkQz/53JQM+5nP4aVm6NoL6aw41ZGwVH+gIjQScKsibl7t28PMzX8J
-	 Relz0swIFmj1/UzelogqSD10+6zvUTgti41r7AxT6l0SRAeqLuXeHIz+lQBCMEudJ8
-	 D0gnjIUhzk1S8cbTK7duy1QIkzoOq9EjAM3ep+eRVQ08x7iwdviy9H2Isj/FwB5UIH
-	 +hsUDCjAUPclg==
+	b=cG3jfP4ltLZ0emEodeqGyV0F81UQdOK9veUjoQYm4vphxyhicVcIAruAa+hQZp+vv
+	 LuOy8c/zGjrkusiVcA2VvKJPewsxQtOI7YmD/bcmyRhjnxtsLluEEVPgV3DQNWk47/
+	 mSdpjmiWy5tp6Q3PNAMQqcpNrwMMBVMexQqgPaJs3Iy/UBHTYwpQM+Lc5KFKqelFF1
+	 ody93CB96hEImqNd69y/UCjV7GfX81amWcZ+7LnqODBl023Evc/9fAIcSNlwwSooaK
+	 2T20X1BwYkngzdsHGxYvyb9SWZRkV/ciSqqkihKqF4dLUBJm1YcXlGUFPGXCxWvkvY
+	 4eJobVyd6CS9A==
 From: Christian Brauner <brauner@kernel.org>
 To: linux-fsdevel@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
@@ -102,16 +102,16 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	linux-debuggers@vger.kernel.org,
 	"Christian Brauner (Amutable)" <brauner@kernel.org>,
 	Chuck Lever <cel@kernel.org>
-Subject: [PATCH RESEND v2 05/13] netfilter: xt_recent: let procfs copy in writes
-Date: Wed,  4 Nov 2026 20:58:52 +0100
-Message-ID: <20261104-work-procfs-net-v2-5-221e2437fed1@kernel.org>
+Subject: [PATCH RESEND v2 06/13] SUNRPC: let procfs own the seq_file of the cache content file
+Date: Wed,  4 Nov 2026 20:59:07 +0100
+Message-ID: <20261104-work-procfs-net-v2-6-221e2437fed1@kernel.org>
 In-Reply-To: <20261104-work-procfs-net-v2-0-221e2437fed1@kernel.org>
 References: <20261104-work-procfs-net-v2-0-221e2437fed1@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1724; i=brauner@kernel.org; h=from:subject:message-id; bh=gfCX4go650si/jmePs4ghyuoQlNEiWKnWuOHaoexE2I=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS97tPgfnpmuaqac2LLJosupqrIeQbiDbdNDT4dmvzo/ DFR21+WHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABPpn8vIMOlw/R+eP/7CM+xs f+8t/fr+Wv4HSZ077vpfLO+H/1bx0WL4n5Sf/jFhe7/3hinn+vZsSZ0htMuiNFR9e88x7jnfa+s e8QAA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1629; i=brauner@kernel.org; h=from:subject:message-id; bh=psvvZ7JIZLE0CRNp8kUfwlc9JvUIb4uUwK5YCFxYJEI=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS97tM6n7F9Us5PDZO+pQGKZ6Zs1PCcwb/5cVO9pcRsm 2mK1t//dpSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEwkZiUjw8UVnRyhZ297By25 0hTRu+CuzNW6RbKizFpOAUYq+3ujLRkZjva/ZpdLVCpwYrJbpltzfc1blUefGwUv7OU14v60a1o EOwA=
 X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
@@ -132,50 +132,55 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Implement ->proc_write_buf() so procfs copies in what is written to
-/proc/net/xt_recent/<table> before it pins the entry, and take the
-address from that copy. The removal of a table runs under recent_mutex
-and doesn't wait for a writer that faults on its buffer anymore. Writes
-larger than PAGE_SIZE - 1 bytes fail with -EINVAL now.
+Declare the seq_operations and let procfs open and free the seq_file of
+/proc/net/rpc/<cache>/content. ->proc_open() and ->proc_release() only
+take and drop the module reference and set up ->private now. The
+rpc_pipefs file is unchanged. Reading the procfs file then no longer
+holds up its removal when the network namespace goes away.
 
+Acked-by: Chuck Lever <cel@kernel.org>
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- net/netfilter/xt_recent.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ net/sunrpc/cache.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/net/netfilter/xt_recent.c b/net/netfilter/xt_recent.c
-index a43fff5308da..72407eeaa9a6 100644
---- a/net/netfilter/xt_recent.c
-+++ b/net/netfilter/xt_recent.c
-@@ -553,8 +553,7 @@ static int recent_seq_open(struct inode *inode, struct file *file)
- }
- 
- static ssize_t
--recent_mt_proc_write(struct file *file, const char __user *input,
--		     size_t size, loff_t *loff)
-+recent_mt_proc_write(struct file *file, char *input, size_t size, loff_t *loff)
- {
- 	struct recent_table *t = pde_data(file_inode(file));
- 	struct recent_entry *e;
-@@ -568,8 +567,7 @@ recent_mt_proc_write(struct file *file, const char __user *input,
- 		return 0;
- 	if (size > sizeof(buf))
- 		size = sizeof(buf);
--	if (copy_from_user(buf, input, size) != 0)
--		return -EFAULT;
-+	memcpy(buf, input, size);
- 
- 	/* Strict protocol! */
- 	if (*loff != 0)
-@@ -625,7 +623,7 @@ static const struct proc_ops recent_mt_proc_ops = {
- 	.proc_seq_ops	= &recent_seq_ops,
- 	.proc_state_size = sizeof(struct recent_iter_state),
- 	.proc_open	= recent_seq_open,
--	.proc_write	= recent_mt_proc_write,
-+	.proc_write_buf	= recent_mt_proc_write,
+diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+index 1ceaea7e01b9..007521e8a57f 100644
+--- a/net/sunrpc/cache.c
++++ b/net/sunrpc/cache.c
+@@ -1606,24 +1606,28 @@ static const struct proc_ops cache_channel_proc_ops = {
+ 	.proc_release	= cache_release_procfs,
  };
  
- static int __net_init recent_proc_net_init(struct net *net)
++/* procfs opens the seq_file */
+ static int content_open_procfs(struct inode *inode, struct file *filp)
+ {
+ 	struct cache_detail *cd = pde_data(inode);
+ 
+-	return content_open(inode, filp, cd);
++	if (!cd || !try_module_get(cd->owner))
++		return -EACCES;
++	((struct seq_file *)filp->private_data)->private = cd;
++	return 0;
+ }
+ 
+ static int content_release_procfs(struct inode *inode, struct file *filp)
+ {
+ 	struct cache_detail *cd = pde_data(inode);
+ 
+-	return content_release(inode, filp, cd);
++	module_put(cd->owner);
++	return 0;
+ }
+ 
+ static const struct proc_ops content_proc_ops = {
++	.proc_seq_ops	= &cache_content_op,
+ 	.proc_open	= content_open_procfs,
+-	.proc_read	= seq_read,
+-	.proc_lseek	= seq_lseek,
+ 	.proc_release	= content_release_procfs,
+ };
+ 
 
 -- 
 2.53.0
