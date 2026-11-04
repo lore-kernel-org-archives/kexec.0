@@ -2,144 +2,79 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ADE9606C589
-	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 21:24:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558A2607099B
+	for <kexec@archiver.kernel.org>; Wed,  4 Nov 2026 21:52:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=w1Nd4nPc
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=aZkDaMNI;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=YUqCGuzE
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:References:Message-ID:Subject:Cc:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=ZvbyKWbvjRXfdCahcmMw/zZ48pSDnL9iKfnxz5mk/hI=; b=w1Nd4nPcagZMTa
-	uXR+OZgMvbna4AmdlJ0Q3vn9EZQYVfz1p+Cc8WFNVOEWEYsAMWNYT3GhmQnkJYtVBHq8sejtm4ujq
-	yTDBBHJ3KZoTiTpftU5KoWulzsuSykRyfNaeA/apQ/oeA3zYdF5Ec5Xc8WEnM74wWaI3cKzCc08jz
-	g8XlmoNbBzwE0hfpISCstaLRoUTIkMNHKDkNNlICD9pR2ACfQXmnbmdOJW9HYqRcBGBkNavWS9pLY
-	7iZaACDNJ46oAVeZ+SfPkKanYXBJXc6LZaB5Xf+m52hP+8wI0U+7OUh5jLqj4aETmZcSCBa7cvvCY
-	RzOKYEbWOk3UiqtDYDtw==;
+	List-Owner; bh=EOQecW951XnrbiS/Up+TYLD26Kqi5K026ERWTR9xkgQ=; b=aZkDaMNIYs0nIW
+	U5EOsX6DNgWBIJt2wvXDz99emNjgJs5YsXoSySmo/C22bWktqtkcGVKKDiIeb6mJzUvQAeoerNITs
+	M4FKaHVhnKNGnAYjDBvu6msi4xeYgZa16czi2yVp92v1pmVVJVik/n6jcUMffu6xN7Ck92q/I4iWc
+	IRyblAsGeHpzdQyZDxGyruw2pw0BZiampw5HeFmA4UIBakjyBTg+97EMK+x8RnDRVD+vRNMzOp7mY
+	X6Y/8intw0/T/INjL6C0K9UQ+29hwu/qUIhZiHHGAm6M8BvRud6F+ZEs4gdENZlPLPGRSgIZztP3O
+	h/DyRLut62EGCUyWOI1g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOiTC-000000071Wh-1zQ6;
-	Wed, 04 Nov 2026 21:24:34 +0000
-Received: from mail-uksouthazlp170120005.outbound.protection.outlook.com ([2a01:111:f403:c205::5] helo=LO0P265CU003.outbound.protection.outlook.com)
+	id 1xOiuX-000000075sP-2D0W;
+	Wed, 04 Nov 2026 21:52:49 +0000
+Received: from out-54.mta0.migadu.com ([2001:41d0:1004:224b::36] helo=mta0.migadu.com)
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOiT8-000000071VF-4Aob
+	id 1xOiuU-000000075rF-3VFD
 	for kexec@lists.infradead.org;
-	Wed, 04 Nov 2026 21:24:33 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=G6NsO0r4xCNeZX6jUviRajHvXxBhECwlo8UdIoRtyVsYaAW3/6ZTU1ytjUUjl8dtU+hRZ5ZH1GgriFwwWxAwV41mdc7rh8408segnS4icCc49CVK3q1c8RlaPdIcca8skG7kmauyrr1MbcSHSsblllJVIwhuwkQ1FqSwFLPT4Oq8IqZ54N+hp6lJ5klepcOYA0Mk4xyUqp664wmkqjwYShVd4Kc1dCaCezm4vBmdyL6Tb9EEcRPUR7qSWRG1Ni1nra7VgoO4PiYAUdhgSDOr8MVge3iCZstZ8v+jSeFGs0anZz+dLqk08VG7eOxsWGu2QrBFmLDty5hhFKGGfhfp6Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=ZvbyKWbvjRXfdCahcmMw/zZ48pSDnL9iKfnxz5mk/hI=;
- b=Cg6tDfhFZO6GU53VHwZmE6miLHANG+kxVHAjMmq83V0anqcR//IFLdvnmrafibIvu9qdtVPNTXUuEM5K5VDYarc+3ywyHVIpSdRDBTASygm11Z3qy6Zw4CxnihdbFpKmTSGgsnrValB6HQvuYg1IzEoRfA1HCXNHputbIQ802SHVqe7XxolAbR5wF1oS2fzBV9wLyS51H4Z/dMnZeqtKtzUaLVUU8AzFT7wqZbcGHCHmvkX8DR5Jhk4aG+C0wwWneeLeK0rLuzhOMujM0TMW6aig6cbwMDoXqnjOgYn6QD7/shmXdPc0y+kYog7j0mWi8AfFpbFcV1hh/xSWg2oleQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:163::8)
- by LOYP123MB3006.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:f3::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.8; Wed, 4 Nov 2026
- 21:24:24 +0000
-Received: from LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
- ([fe80::f71f:a9f:c4de:687a]) by LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
- ([fe80::f71f:a9f:c4de:687a%5]) with mapi id 15.21.0592.009; Wed, 4 Nov 2026
- 21:24:23 +0000
-Date: Wed, 4 Nov 2026 16:24:19 -0500
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: pmladek@suse.com, john.ogness@linutronix.de, rostedt@goodmis.org, 
-	senozhatsky@chromium.org, mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de, 
-	vschneid@redhat.com, kprateek.nayak@amd.com, akpm@linux-foundation.org, 
-	baoquan.he@linux.dev, rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org, 
-	ruirui.yang@linux.dev, david@kernel.org, ljs@kernel.org, liam@infradead.org, 
-	vbabka@kernel.org, surenb@google.com, mhocko@suse.com, kees@kernel.org, 
-	anna-maria@linutronix.de, frederic@kernel.org, tglx@kernel.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, brendan.jackman@linux.dev, hannes@cmpxchg.org, ziy@nvidia.com, 
-	bigeasy@linutronix.de, clrkwllms@kernel.org, kexec@lists.infradead.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	linux-rt-devel@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 2/5] mm/show_mem: Avoid blocking on zone->lock
- during Oops or panic
-Message-ID: <ygc3ylz5hxlkqt7n5xnl6klydhmjtflkctidr4qabf3p4dxxsq@64gqisbenf5k>
-References: <20261103024453.922373-1-atomlin@atomlin.com>
- <20261103024453.922373-3-atomlin@atomlin.com>
- <sashiko-outbox-196525@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <sashiko-outbox-196525@kernel.org>
-X-ClientProxiedBy: BL1P223CA0018.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:208:2c4::23) To LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:163::8)
+	Wed, 04 Nov 2026 21:52:48 +0000
+X-Envelope-To: kexec@lists.infradead.org
+DKIM-Signature: a=rsa-sha256; bh=M0FIOF1DLHsXObG+kd/KQNs8mRLPiwWKZte8OxN1x/M=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793829164; v=1; x=1794433964;
+ b=YUqCGuzEVdhMmFNJfjT5gW9ZPjpsGP70FP3YGkFSa5bivcYI+PaGCHrR9BqQ4erw0r34A6Yy
+ kpGJv7LjfZOy5qSSS46MCpnaJXL2wCEWyJv2vrMIlpOEwZhyMB0o5uggci15ileavOnMI6EBWge
+ k7BiymnnIx4JTkIDEo9lx74k=
+X-Envelope-To: kexec@lists.infradead.org
+Received: by mta11.migadu.com with ESMTPS id a0a1d10de7c52127;
+	Wed, 04 Nov 2026 21:52:44 +0000
+X-Mizu-Trace-ID: a0a1d10de7c52127
+X-Migadu-Flow: FLOW_OUT
+From: Usama Arif <usama.arif@linux.dev>
+To: Bradley Morgan <brads@mainlining.org>
+Cc: Usama Arif <usama.arif@linux.dev>,
+	akpm@linux-foundation.org,
+	baoquan.he@linux.dev,
+	david@kernel.org,
+	hannes@cmpxchg.org,
+	hbathini@linux.ibm.com,
+	jbohac@suse.cz,
+	kas@kernel.org,
+	kernel-team@meta.com,
+	kexec@lists.infradead.org,
+	leitao@debian.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	pasha.tatashin@soleen.com,
+	pratyush@kernel.org,
+	riel@surriel.com,
+	rppt@kernel.org,
+	ruirui.yang@linux.dev,
+	shakeel.butt@linux.dev
+Subject: Re: [PATCH] crash: keep crashkernel C =?US-ASCII?Q?MA_pages_reserved_if_activation_fails?=
+Date: Wed,  4 Nov 2026 13:52:36 -0800
+Message-ID: <20261104215237.203332-1-usama.arif@linux.dev>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <661AFDEC-B8DF-4A5B-8C58-1D39F518F068@mainlining.org>
+References: 
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LO2P123MB4190:EE_|LOYP123MB3006:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5936cbd9-4fda-4842-de67-08df3ab9ff2d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|7416014|376014|366016|1800799024|56012099006|261021135927099003|261022105027099003|4143699003|261022075727099003|261009223027099003|261026140227099003|261028144727099003|10067099003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info: B4MoVTGX6QLPHc+rDooe8rpV0f7vcatJRj14LiHX5sUs3tpra6pgmap5fY4PgUJPhDztj/sQ4L2bvD+gAtoPXI6N3MG+W3SBbhWP/AFMzdio0ss6A8/FJrrVP8bwYQXDYeNM1Cdqvkvz/bXoztWTrL3NoACdkSq4XIAtGGwOekt9g3VwO5eFtCBaoxMaKQSERahZS+7TVOGJL1arxhzKslqWQStJ09nfJxHmCq8ncehglf+PHoYDX1jbg2/zjcXAHU+R1ZK+10a0sxSKDCYAkZgtMvDg9zfXatynLgEv9JUgqzAk27Rw1/wpTmLDfN0O5wCFol6Yz6JbcSnOpJGqnKnoYVrhgio3gS66upSlQjijf3Ucv57UrMwAr13qmILc+YrWWLJ6otjpp0hDF2GFeXn20PgGlxgBFBRMwFzXTpw/I4PPsQxrMXFS7D0uNRJ1HJhCRN4fRQv/HgYFd0qfkcQeLNlv7Tx0VJSnKAGONRpaZkjiF7tI86nn9ONVr+jvuT9y+PpQKFy/z6XhNr36HUyJ+nwNnVY+LaY7g9ZSUqgT0HtizqxKOntAp4seBKGwslto086V+CNvszriBp547KONbG/iLmvMfv/r7qVMorY=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(376014)(366016)(1800799024)(56012099006)(261021135927099003)(261022105027099003)(4143699003)(261022075727099003)(261009223027099003)(261026140227099003)(261028144727099003)(10067099003)(22082099003)(18002099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?U0VPVTJuVklUMTZNdW51SXU1dlFySm81LzlEZWY4WnNHN1pVbFFtV2dMR1NY?=
- =?utf-8?B?anlEbGFQbFRweGd5Q1hqeFNMVUN3SUV2L0hxVmwyZDZyS25RQnBPemRwbEhM?=
- =?utf-8?B?aWlqdW8ySDRkcldaS2lrNkxvVW5SUE81b29COEFCSjlGTS9rbTVuYXNjM2x6?=
- =?utf-8?B?UnZMNHdNN09qZGE5RkE5bnlxM2psN1ZLZS8vT21VWVpZbWgxZHdPWkxBeXZ0?=
- =?utf-8?B?ZVk3V0ZtSGo0Mk95WDJ6RlFEYUEwUklUckJ0NkVPbGdtMTU5MU15S05FQXlu?=
- =?utf-8?B?MjlYQmxMVTZsZElxUHFVUlVlaDNnVkxZNzJ3eTl6WGNtWUlBa0JZSTRjTkg5?=
- =?utf-8?B?Sy9nSGh0MmkxU1N0bmZkK2EzS3pob2FUN3gvNC9oMnhObDNuTEtYN0xQd2Zv?=
- =?utf-8?B?VWtkdk1JdXBhSEU5bThQNFR3R0RLU3pBRzlFMU1yM0NVQklFWUNnckpXblhG?=
- =?utf-8?B?OHkxYW4rd1Y2Z2RKd1RXcjNFTHdSTjRTNkpnUmRlWHhkQysrbkM1SExSRlBJ?=
- =?utf-8?B?Ly9sS3dOTU42N200d1A3d0VyTW8xTEpPcXZ5SkM1aE9zUTN6VkJ5SkhxZ0pP?=
- =?utf-8?B?eWJ1cVp6eDdVWEUyOWZZbEtRTzVXMnBlU1R5Ulhic1ZJOGljekthd1lXcHBn?=
- =?utf-8?B?OHB6ZlRZd2NDajRXRXZsWUJ4NnkwanpMM3U3WTZ3QTFrUCtTSHhPTXdBZ09s?=
- =?utf-8?B?RVZiYWhidGo4dFJaMVRSRWdsWEFyclhucnUxQW02amRlYk5iUDl2NHFONGJH?=
- =?utf-8?B?Nzc1eTJNS2V6Rm0zc2MwWXlMTjZPS0FTVlhodVIwRzdmS2pxUy96WCtiRkN0?=
- =?utf-8?B?YStraStmY0VjbzN4cndQcWZTZ3VsRlRhZXNRalp3eldBWFBWZzJSQmhyRks3?=
- =?utf-8?B?RWhyR1laWWc0a0NwR3NSSDAwR1lvOVIwT1UzakhYNmI0T0wwNlZjcmdyMnpa?=
- =?utf-8?B?NWE4aGpNWFR2TnN3TlFCemVXSWNaNDcybms0dllPM1hJc0NVcG9XL0tKRFdI?=
- =?utf-8?B?VU5IRFRIZEZMeG5sWFFxK0xDekxxejNzdU9SeG1EVHowV3ZIWHFZMWtYMGpF?=
- =?utf-8?B?T1VuSjFQMHVRb09JMHlBcmF5RWJJc2Joa0V4RVluVU1VQ2FrWDZnSjdTczF0?=
- =?utf-8?B?VHduc0Jaei9sZm1aQVI3MXF1NGp5UVNYVTVLbnJWVjhhWFBzWGlEdzc5cTN4?=
- =?utf-8?B?YUlMSWp2bmVRK3Y5UnRrajJrVkFpOVRneWdtc3kzYnVsQWpBM0NMcnE3YnEz?=
- =?utf-8?B?Uk16VzZ0OWwycHVab0k3Ti9BVSt5QWNTbUlmSkh4b2pudU9vMkJqUFZlMzI0?=
- =?utf-8?B?ZU9Eb0tTeWZLY1RaY2hWWDZqMEhxblhoSzc2VW1kWmtoeGF6YWNBMlQvNGZN?=
- =?utf-8?B?cjFKUDc1Tm5qNWhSSjlEU0QrSDI0b3hHUVUrVU1sYXlaQVVNVXZIY3k1Qk16?=
- =?utf-8?B?bXVxY2pPMUtncE00MWNUT0xpcVUwQysrWFREQ011UjhIYnJzMVkxOW45cVdp?=
- =?utf-8?B?dVpGYU53NllZMkxsNEFMUlY0OHZPb0VLcE9RMEtqNi9GR1FCT29iTVJ0eVc0?=
- =?utf-8?B?aTlZb3hYRlJkb1FWYjQ1NFAzeTFhUTFpU0Z5OElmMWdrVVdXWUNLYmc1bFdH?=
- =?utf-8?B?cHl5UFN6dFo2TXpzV1lKRzFIYk9jd1orRVRHTzNNaWZQcldwYWNQT2paR2k0?=
- =?utf-8?B?VDRiczBsT2dZVS9WaW9oMVpUTGRyb3Uyb085cU93bDVHWU1pQzRPZUxkWEc4?=
- =?utf-8?B?K2F6dnlIN3VvTnQxV21qdVJtckpoSlQ5NllYM0tvYWtJZ2hDUFcyckxyUm9K?=
- =?utf-8?B?dU84U3FnVmdKQWZJSmhYTWJLUFhnaWwwMHVWUkw1cWxqYmMzdzIrWUVUbk80?=
- =?utf-8?B?b1JOOXZLVTA1d1R0ekplNlU1eGxVUWZ3U3hkTVBRV3F2K0lpeDk2a2VnWXdS?=
- =?utf-8?B?SDRKU2NYaFY5TFZxWkpDU2s4TTZ6ekpkUGo4MS9rYUlvKzVCN2RqYVdnYmd3?=
- =?utf-8?B?dkpoa2dTcVBsaFdGaHhUZEdRWFR1a1dadlpla2FVdU8zeWNscGxhSmx1LzlO?=
- =?utf-8?B?aWYzUEs5ZUU4WFNaMGR2S3NzWVJvSytVMGFoTFZDaFpKNnZEcjdjbXBIMHo1?=
- =?utf-8?B?OS9aZGRlQk9JU2NodmkxbXdFbk5mNUVNY1hGbnJQN1BicjB4T1VkUFB0MlEw?=
- =?utf-8?B?WTBuZkJnNFhjTlpjbWI5ZVNBRUtwd2xrTWJBb3QyTkExVmlpQ2I0SmRzLzdq?=
- =?utf-8?B?SWlGMXV5WnZhYUZrTTZKd3lEZHdPc1VDdGdMMHo3YUFtNSsyZDNNTW9rdTFa?=
- =?utf-8?B?aGlEdnBuUXRtTE44Y2hLdW5zZituSThsczByYTNwcXE5NFZZV1ZrUT09?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5936cbd9-4fda-4842-de67-08df3ab9ff2d
-X-MS-Exchange-CrossTenant-AuthSource: LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Nov 2026 21:24:23.6745
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mX83XXz0UDS6Kd6a3dostHVE/ly4PP7cXSCUxkqCM/OEnhV61pwEeyjX1e94r/wQgKwvWWz40ckXFkOdBC7r2w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOYP123MB3006
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261104_132431_056882_772985F2 
-X-CRM114-Status: GOOD (  21.40  )
-X-Spam-Score: -1.9 (-)
+X-CRM114-CacheID: sfid-20261104_135247_106924_705CB9B4 
+X-CRM114-Status: GOOD (  19.85  )
+X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -150,90 +85,75 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Wed, Nov 04, 2026 at 02:49:19AM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] mm/show_mem: false lock contention warning in show_free_areas()
-> --
-> 
-> commit e1c6e11316c0b99b2f700b8251c5ed2b76aad84a
-> Author: Aaron Tomlin <atomlin@atomlin.com>
-> 
-> mm/show_mem: Avoid blocking on zone->lock during Oops or panic
-> 
-> This commit updates show_free_areas() in mm/show_mem.c to avoid unconditionally calling spin_lock_irqsave() on zone->lock during Oops, panic, or NMI/atomic contexts, skipping zones when acquiring the lock is unsafe or contended.
-> 
-> > diff --git a/mm/show_mem.c b/mm/show_mem.c
-> > index b938cbcd774a1..77098077523a9 100644
-> > --- a/mm/show_mem.c
-> > +++ b/mm/show_mem.c
-> > @@ -367,10 +367,17 @@ static void show_free_areas(unsigned int filter, const nodemask_t *nodemask,
-> >  			continue;
-> >  		if (show_mem_node_skip(filter, zone_to_nid(zone), nodemask))
-> >  			continue;
-> > -		show_node(zone);
-> > -		printk(KERN_CONT "%s: ", zone->name);
-> >  
-> > -		spin_lock_irqsave(&zone->lock, flags);
-> > +		if (!can_spin_trylock() || in_nmi() ||
-> > +		    oops_in_progress || panic_in_progress()) {
-> > +			if (!can_spin_trylock() ||
-> > +			    !spin_trylock_irqsave(&zone->lock, flags)) {
-> > +				pr_warn("zone %s lock contended\n", zone->name);
-> > +				continue;
-> > +			}
-> > +		} else {
-> > +			spin_lock_irqsave(&zone->lock, flags);
-> > +		}
-> 
-> [Severity: Medium]
-> In show_free_areas(), when can_spin_trylock() returns false (such as in NMI or
-> hardirq context under CONFIG_PREEMPT_RT, or in NMI context under !CONFIG_SMP):
-> 
-> mm/internal.h:can_spin_trylock() {
-> 	if (IS_ENABLED(CONFIG_PREEMPT_RT) && (in_nmi() || in_hardirq()))
-> 		return false;
-> 
-> 	/* On UP, spin_trylock() always succeeds even when it is locked */
-> 	if (!IS_ENABLED(CONFIG_SMP) && in_nmi())
-> 		return false;
-> 
-> 	return true;
-> }
-> 
-> the inner !can_spin_trylock() check short-circuits before
-> spin_trylock_irqsave() is ever called, yet still prints "zone %s lock
-> contended" for every populated zone even when zone->lock is completely
-> uncontended.
-> 
-> The commit message also states:
-> 
->   Check can_spin_trylock() and use spin_trylock_irqsave() when
->   !can_spin_trylock(), in_nmi(), oops_in_progress, or panic_in_progress()
->   is active
-> 
-> Additionally, because show_node(zone) is moved after spin_unlock_irqrestore()
-> below, skipping a zone here only logs zone->name (for example, Normal or
-> DMA32) without the NUMA node ID on CONFIG_NUMA systems.
-> 
-> Should the !can_spin_trylock() case avoid claiming that zone->lock is
-> contended (and match the commit message description), and should the skipped
-> zone message include the node ID?
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20261103024453.922373-1-atomlin@atomlin.com?part=2
+On Wed, 04 Nov 2026 19:16:42 +0000 Bradley Morgan <brads@mainlining.org> wrote:
 
-I have updated the commit message in the next revision to accurately
-describe this two-stage check, and updated the pr_warn() message to include
-the NUMA node ID via zone_to_nid(zone).
+> On 4 November 2026 14:56:00 GMT, Usama Arif <usama.arif@linux.dev> wrote:
+> >reserve_crashkernel_cma() adds each crashkernel CMA area to
+> >crashk_cma_ranges[] as soon as it is declared. If the area later fails
+> >activation, e.g. because movablecore= put the ZONE_MOVABLE boundary
+> >inside it, cma_activate_area() releases the pages to the buddy allocator
+> >as ordinary memory. The range is still handed to the crash kernel and
+> >excluded from the vmcore, so kernel data that lands there is overwritten
+> >by the crash kernel and missing from the dump.
+> >
+> >Mark the areas with cma_reserve_pages_on_error(), so that a failed
+> >activation leaves the pages reserved: lost to the first kernel, but safe
+> >for the crash kernel to use.
+> >
+> >Fixes: ab475510e042 ("kdump: implement reserve_crashkernel_cma")
+> >Signed-off-by: Usama Arif <usama.arif@linux.dev>
+> >---
+> > kernel/crash_reserve.c | 1 +
+> > 1 file changed, 1 insertion(+)
+> >
+> >diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
+> >index a03f0a4305a4e..a4b616ed49482 100644
+> >--- a/kernel/crash_reserve.c
+> >+++ b/kernel/crash_reserve.c
+> >@@ -498,6 +498,7 @@ void __init reserve_crashkernel_cma(unsigned long long cma_size)
+> > 			continue;
+> > 		}
+> > 
+> >+		cma_reserve_pages_on_error(res);
+> 
+> You do know that this will activate under every bitmap_zalloc() failure,
+> right? Is that accounted for?
 
-Kind regards,
--- 
-Aaron Tomlin
+Yes, that's intended. By the time cma_activate_area() runs, the range is
+already in crashk_cma_ranges[], so the crash kernel will use it no matter
+why activation failed. Keeping the pages reserved is the only way to make
+sure the first kernel has nothing there that gets overwritten or goes
+missing from the vmcore; the area then behaves like a regular
+crashkernel= reservation of the same size.
+
+fadump made the same choice; it is what cma_reserve_pages_on_error() was
+added for in commit 27d121d0ec6d ("mm/cma: provide option to opt out
+from exposing pages on activation failure").
+
+The bitmap is one bit per page (32 KiB per GiB with 4K pages) and is
+allocated at core_initcall, so a failure there is very unlikely.
+
+The alternative is to give the memory back and to drop the
+range from crashk_cma_ranges[] when activation fails, leaving the crash
+kernel with less memory than requested. I do think that is acceptable as
+well. But we do need either whats done in this patch or give the memory
+back. Happy to send the alternative as v2 is everyone thinks that the
+better way forward.
+
+> 
+> > 		crashk_cma_ranges[crashk_cma_cnt].start = cma_get_base(res);
+> > 		crashk_cma_ranges[crashk_cma_cnt].end =
+> > 			crashk_cma_ranges[crashk_cma_cnt].start +
+> >
+> 
+> --- Thanks!
+> 
 
