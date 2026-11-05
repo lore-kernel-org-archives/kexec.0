@@ -2,14 +2,14 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D966606D821
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 11:41:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3C6606A336
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 11:52:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=tsAWEBBM;
-	dkim=pass (1024-bit key, unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=sVeVtJRH;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=vuwkzsBE;
-	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=sVeVtJRH;
-	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=vuwkzsBE
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=LOqw2eg9;
+	dkim=pass (1024-bit key, unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=IlDc2Fvh;
+	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=vvDSWJYG;
+	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=IlDc2Fvh;
+	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=vvDSWJYG
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -17,73 +17,74 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=lCeU7WqtPlFL0u28tAWE4TptrCsWoJqXXac/H5Y8UUQ=; b=tsAWEBBMh1Hjp1HrJPYBF8OFua
-	jCqwvefI6Yr1cASHBiBx2SzuHVjKhDgnB9MiDTTvIN7xMcPND9HvrvKiODO4l5QPgbTVU7+j9rwB2
-	eaLtWlMqxlCfBGrks+gYKkoQsu1lUqDJbJTi81k3J9eJBscEyDiCpwbc6IuWbhjL/TafQ+O1HD5t8
-	mD+58yp7br41+8a+Xy7pvURISbTn0+PCjFIuvPcsVdL13hbTHIanIgwmXUfjFGtp4Fs07fU0ULEMI
-	YkUyksmKacsyiALQqJDIe/TklwtmbaX8/37ZYcAI45KoSSz0FeqqnVkCBj2rH389erZnpRmcHwyl1
-	5WVfJXCw==;
+	bh=XTBVvV1llMrY8oPUgGAOljMGttnFmdc1n4iSvCofGvk=; b=LOqw2eg9bPzeu661tL86qBO8QR
+	pE4bvZQOTTGWCZIvxZcr4wKDISRfNRp6BlJ6zKKU7QoTMOQK4QpFjjnfBqQX4HlkWMPeqjq5WoOuC
+	UeR+6RZNYlTni+1wXVIQdHsaavDd3k0O6eGMkMkh4akRevDsYtWfRBZ5CvQCHFkxZDFLKurV65T88
+	t5o/uyzvPrRJyGOKKBWxNJJ04TcL6ck936KAR7qHlr7pbpSWQqDxo6hiEPh+tt0jdoLmbdjqq8mI/
+	3LSbUpy4r6PB2JbspiIP4eLiMgpn3+7yFGDH67UY4t1IvCPhvYZSXuQGEqsgWLJNnxWADD8Bi8yKO
+	mYTUr6Iw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOvqT-00000008hVy-46lw;
-	Thu, 05 Nov 2026 11:41:29 +0000
-Received: from smtp-out1.suse.de ([2a07:de40:b251:101:10:150:64:1])
+	id 1xOw1X-00000008mRf-3L0e;
+	Thu, 05 Nov 2026 11:52:55 +0000
+Received: from smtp-out2.suse.de ([2a07:de40:b251:101:10:150:64:2])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOvqR-00000008hV8-0k9q;
-	Thu, 05 Nov 2026 11:41:28 +0000
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	id 1xOw1U-00000008mQQ-2czP;
+	Thu, 05 Nov 2026 11:52:54 +0000
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 0FD6521EC6;
-	Thu,  5 Nov 2026 11:41:25 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 090681F785;
+	Thu,  5 Nov 2026 11:52:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1793878885; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1793879570; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lCeU7WqtPlFL0u28tAWE4TptrCsWoJqXXac/H5Y8UUQ=;
-	b=sVeVtJRHmCez1LTgkgxlC7ymMIoqBUxHEcpbPuiTw+LbDT4oPlHADz2Nup5Y4XkVnbVoDk
-	it5vmGnaVZfno1DYDqX11TE+/cZqz+5DBii4SNDMZd47SSrwV/j/qOrqaptU0Cbv8IOz2R
-	SNKUKTm79wLZzIjQ8Z0k9Nr+vLNViV0=
+	bh=XTBVvV1llMrY8oPUgGAOljMGttnFmdc1n4iSvCofGvk=;
+	b=IlDc2FvhESlDd8QXX4z/a9lq2dVMhaxW+HuiTJo6x+4vVVqrVz8k3f/Wr+Mze0vHlceBFP
+	JaL/+k/+YFdhkL/6vCq7Bg2Jyl3kffnaUQoNLw7CYQNpyydj2pmW97ukL1Mouho+skqqWs
+	9mNCq/qpRDGAphiHFTSprMwCLm6e0Vk=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1793878885;
+	s=susede2_ed25519; t=1793879570;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lCeU7WqtPlFL0u28tAWE4TptrCsWoJqXXac/H5Y8UUQ=;
-	b=vuwkzsBEcCG36qlub78Ir05oWJttjLgL1QqDCsASqboi7pG0u6LKGZy4KCtzu9Qqsj7mam
-	/axyOJZeWj8zunDA==
-Authentication-Results: smtp-out1.suse.de;
-	none
+	bh=XTBVvV1llMrY8oPUgGAOljMGttnFmdc1n4iSvCofGvk=;
+	b=vvDSWJYGu2lVXhJVWrbpDbn5nEUGh3VUqLxrYRbdmdLlIIqOha94poMzPs0o88aMpXXTQC
+	GveF9mKsY1fCOgBQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=IlDc2Fvh;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=vvDSWJYG
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1793878885; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1793879570; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lCeU7WqtPlFL0u28tAWE4TptrCsWoJqXXac/H5Y8UUQ=;
-	b=sVeVtJRHmCez1LTgkgxlC7ymMIoqBUxHEcpbPuiTw+LbDT4oPlHADz2Nup5Y4XkVnbVoDk
-	it5vmGnaVZfno1DYDqX11TE+/cZqz+5DBii4SNDMZd47SSrwV/j/qOrqaptU0Cbv8IOz2R
-	SNKUKTm79wLZzIjQ8Z0k9Nr+vLNViV0=
+	bh=XTBVvV1llMrY8oPUgGAOljMGttnFmdc1n4iSvCofGvk=;
+	b=IlDc2FvhESlDd8QXX4z/a9lq2dVMhaxW+HuiTJo6x+4vVVqrVz8k3f/Wr+Mze0vHlceBFP
+	JaL/+k/+YFdhkL/6vCq7Bg2Jyl3kffnaUQoNLw7CYQNpyydj2pmW97ukL1Mouho+skqqWs
+	9mNCq/qpRDGAphiHFTSprMwCLm6e0Vk=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1793878885;
+	s=susede2_ed25519; t=1793879570;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lCeU7WqtPlFL0u28tAWE4TptrCsWoJqXXac/H5Y8UUQ=;
-	b=vuwkzsBEcCG36qlub78Ir05oWJttjLgL1QqDCsASqboi7pG0u6LKGZy4KCtzu9Qqsj7mam
-	/axyOJZeWj8zunDA==
+	bh=XTBVvV1llMrY8oPUgGAOljMGttnFmdc1n4iSvCofGvk=;
+	b=vvDSWJYGu2lVXhJVWrbpDbn5nEUGh3VUqLxrYRbdmdLlIIqOha94poMzPs0o88aMpXXTQC
+	GveF9mKsY1fCOgBQ==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C5448134F4;
-	Thu,  5 Nov 2026 11:41:24 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CB5FC134F4;
+	Thu,  5 Nov 2026 11:52:49 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id CwQAKmRr7Go1dQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 05 Nov 2026 11:41:24 +0000
+	id FWlQIxFu7GoAAwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 05 Nov 2026 11:52:49 +0000
 Received: by quack.suse.cz (Postfix, from userid 1000)
-	id 60CBBB6BA; Thu, 05 Nov 2026 12:41:20 +0100 (CET)
-Date: Thu, 5 Nov 2026 12:41:20 +0100
+	id 45F61B6C1; Thu, 05 Nov 2026 12:52:41 +0100 (CET)
+Date: Thu, 5 Nov 2026 12:52:41 +0100
 From: Jan Kara <jack@suse.cz>
 To: Christian Brauner <brauner@kernel.org>
 Cc: linux-fsdevel@vger.kernel.org, 
@@ -108,43 +109,52 @@ Cc: linux-fsdevel@vger.kernel.org,
 	Takashi Iwai <tiwai@suse.de>, linux-input@vger.kernel.org, linux-raid@vger.kernel.org, 
 	linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, linux-debuggers@vger.kernel.org, 
 	Chuck Lever <cel@kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH RFC 16/38] proc: don't walk through a non-directory when
- resolving a name
-Message-ID: <xhnd2xzehnh35nmgphm2euuyulbwoz2fbxf7zmfn3hvdbcualr@ltehycoskzll>
+Subject: Re: [PATCH RFC 18/38] proc: don't WARN about a name that is already
+ registered
+Message-ID: <qaqawx4ajooiiqzu3ngxc46khpnq74u6sl5tz6az4uyssxzly4@346lsx342het>
 References: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
- <20261102-work-procfs-bugfixes-v1-16-59422ed3e465@kernel.org>
+ <20261102-work-procfs-bugfixes-v1-18-59422ed3e465@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261102-work-procfs-bugfixes-v1-16-59422ed3e465@kernel.org>
-X-Spamd-Result: default: False [-11.30 / 50.00];
+In-Reply-To: <20261102-work-procfs-bugfixes-v1-18-59422ed3e465@kernel.org>
+X-Spamd-Result: default: False [-11.51 / 50.00];
 	SUSE_INTERNAL_BYPASS(-9.00)[];
 	BAYES_HAM(-3.00)[100.00%];
 	SUSPICIOUS_RECIPS(1.50)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RL63fqwwx8ot6gmekemcs76f9d)];
+	MX_GOOD(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_THREE(0.00)[3];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	R_RATELIMIT(0.00)[to_ip_from(RLpnapcpkwxdkc5mopt1ezhhna)];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
 	RCPT_COUNT_GT_50(0.00)[60];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,imap1.dmz-prg2.suse.org:helo,suse.com:email]
-X-Spam-Score: -11.30
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:dkim,suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -11.51
 X-Spam-Level: 
+X-Rspamd-Queue-Id: 090681F785
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261105_034127_387855_32C8032E 
-X-CRM114-Status: GOOD (  26.41  )
+X-CRM114-CacheID: sfid-20261105_035252_959861_5364C3E9 
+X-CRM114-Status: GOOD (  26.11  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -159,77 +169,76 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Mon 02-11-26 15:21:31, Christian Brauner wrote:
-> __xlate_proc_name() walks the components of a name like "a/b/c" and
-> takes whatever it finds for "a" and "b" as the directory to go on in.
-> It never checks that they actually are directories. So
-> proc_create("file/x") hangs x into the subdir tree of the regular file
-> "file". Nobody can look x up there, but remove_proc_subtree() on the
-> file removes and frees x along with it, behind the back of whoever
-> registered x.
+On Mon 02-11-26 15:21:33, Christian Brauner wrote:
+> proc_register() WARNs when the directory already has an entry of the
+> same name and fails the registration. Callers that pick their names
+> themselves should never get there but some take names from userspace.
+> pktgen creates a file for each device a writer of "add_device" adds,
+> named after the device. A device can have any name, including "pgctrl"
+> or "kpktgend_0", the names of pktgen's own files:
 > 
-> pktgen passes the name the writer of "add_device" picks to
-> proc_create_data(), and only the part in front of the '@' has to name
-> a network device:
+>   ip link set lo name pgctrl
+>   ip link set pgctrl up
+>   echo "add_device pgctrl" > /proc/net/pktgen/kpktgend_0
 > 
->   echo "add_device lo@"   > /proc/net/pktgen/kpktgend_0
->   echo "add_device lo@/x" > /proc/net/pktgen/kpktgend_1
->   echo "rem_device_all"   > /proc/net/pktgen/kpktgend_0
->   echo "rem_device_all"   > /proc/net/pktgen/kpktgend_1
-> 
-> The third write frees both entries and the fourth one makes kpktgend_1
-> call proc_remove() on the freed second one:
-> 
->   BUG: KASAN: slab-use-after-free in proc_remove+0x8f/0xa0
->   Read of size 8 at addr ff110001134c8e70 by task kpktgend_1/243
+>   proc_dir_entry 'pktgen/pgctrl' already registered
+>   WARNING: fs/proc/generic.c:404 at proc_register+0x555/0x8b0, CPU#0: bash/241
 >   Call Trace:
->    proc_remove+0x8f/0xa0
->    pktgen_remove_device.isra.0+0x118/0x500
->    pktgen_rem_all_ifs+0xeb/0x1a0
->    pktgen_thread_worker+0x1b42/0x7280
+>    proc_create_data+0x9f/0xf0
+>    pktgen_thread_write+0xd9b/0x1780
+>    proc_reg_write+0x1c2/0x3c0
+>    vfs_write+0x1cd/0xfa0
 > 
 > The files of a network namespace belong to the root of its user
-> namespace and these writes don't require a capability. So once pktgen
-> is loaded an unprivileged user can do this in namespaces of its own.
+> namespace and none of this requires a capability. So once pktgen is
+> loaded an unprivileged user can taint the kernel, or crash it with
+> panic_on_warn, from namespaces of its own. pktgen itself copes with
+> the failed registration just fine.
 > 
-> Treat a component that isn't a directory like one that doesn't exist.
-> All names with a '/' that the tree passes in as literals only walk
-> through directories. pktgen is fixed separately to not pass such names
-> in the first place.
+> So go back to what proc_register() did before commit 6c2f91e077f1
+> ("proc: use WARN() rather than printk+backtrace") and what
+> sysfs_warn_dup() does for sysfs: report the name with pr_warn() and
+> dump the stack. While at it, do that after dropping proc_subdir_lock
+> instead of printing a backtrace while holding the lock that every
+> lookup and readdir in procfs needs.
 > 
 > Reported-by: Chris Mason <mason@kernel.org>
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Fixes: 6c2f91e077f1 ("proc: use WARN() rather than printk+backtrace")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
-Looks good. Feel free to add:
+Makes sense. Feel free to add:
 
 Reviewed-by: Jan Kara <jack@suse.cz>
 
 								Honza
 
 > ---
->  fs/proc/generic.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  fs/proc/generic.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
 > diff --git a/fs/proc/generic.c b/fs/proc/generic.c
-> index 2b1971da4a85..c560c96a64eb 100644
+> index c560c96a64eb..ef804cd3ec45 100644
 > --- a/fs/proc/generic.c
 > +++ b/fs/proc/generic.c
-> @@ -170,7 +170,7 @@ static int __xlate_proc_name(const char *name, struct proc_dir_entry **ret,
->  	de = *ret ?: &proc_root;
->  	while ((next = strchr(cp, '/')) != NULL) {
->  		de = pde_subdir_find(de, cp, next - cp);
-> -		if (!de) {
-> +		if (!de || !S_ISDIR(de->mode)) {
->  			WARN(1, "name '%s'\n", name);
->  			return -ENOENT;
->  		}
+> @@ -401,9 +401,10 @@ struct proc_dir_entry *proc_register(struct proc_dir_entry *dir,
+>  	write_lock(&proc_subdir_lock);
+>  	dp->parent = dir;
+>  	if (pde_subdir_insert(dir, dp) == false) {
+> -		WARN(1, "proc_dir_entry '%s/%s' already registered\n",
+> -		     dir->name, dp->name);
+>  		write_unlock(&proc_subdir_lock);
+> +		pr_warn("proc_dir_entry '%s/%s' already registered\n",
+> +			dir->name, dp->name);
+> +		dump_stack();
+>  		goto out_free_inum;
+>  	}
+>  	write_unlock(&proc_subdir_lock);
 > 
 > -- 
 > 2.53.0
