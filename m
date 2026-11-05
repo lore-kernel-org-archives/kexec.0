@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC36606A33D
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:57:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29CA6606A31B
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:57:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=X8IOlDzj;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ej+uoOdy
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=cBWUESDM;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TJ6pjbyS
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=7NQAKY8HY4DbdjDd6x8DZF/XgVJse33xFSaScTuQDsM=; b=X8IOlDzjWH7YgkAzJN/iQnX/dH
-	nO2c9CnC709kFCwJhuwFrSIUUM2cRp5n8lxDh9VT+beKI3/J29hA9ZBZRRdyPQo1LhApTY3fpWwRG
-	u/PQ+G11Ab55nbyHjI0lsgUBqcM07mNFU4G2uXZB6ArHgWzbdF3c3j445ZizYscsS53Khk5+LDtPn
-	l2XnxWodeJCwJwTnD89udMfUyNsRSYi3pkewKOckt+9BD9pjIBGGRU3J51LC9AzACbzOKA0DGyHyR
-	Cc81xR4CizhwHRf7+7+L4e7O+cZa5vBxTWh8E72nIRZvG/ZYnApBZPZzpXvNYhDt4w3FYPkFvm67U
-	vfcMpLOg==;
+	bh=Wdq9ubmWttjgXl8+8abc/GBLatPB6YvLkctn10o4MJ0=; b=cBWUESDMa8dtVYjD8xOQTJQlW3
+	csxsG30oLM3OJRqLjtF57YA3eHIwKBUTSmYc44dqBI+CPkE48tPYIoRLGmXCOIge0+7zLsTBeyVNl
+	Ea9m+s3o9XhXJNFnaHhstbYREM9tc7fOp862sKObpWfnJ8l57RiBs9Zz8ytpzcfz1a9zZznSnl8i9
+	RLnGVsiC/6Z3NFJcc6F+jcT+e/ZVBjVxncAV2zPPsEal5RFuSbhpBqQkjh8v7n/sgZo24puPq/ZsT
+	SOpZU0ta1viBgHqrYFMpW1NzqrplCt6eAcZI3hata1CBjayjVI3VQW2veb2zzMTDe22qt/fPG5pZz
+	NX+BOEwQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3Cb-0000000ALro-2pAL;
-	Thu, 05 Nov 2026 19:32:49 +0000
+	id 1xP3aU-0000000ASQI-3Eie;
+	Thu, 05 Nov 2026 19:57:30 +0000
 Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3A7-0000000AKlO-00c2
+	id 1xP3aT-0000000ASPk-28fE
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 19:30:17 +0000
+	Thu, 05 Nov 2026 19:57:30 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id BD698414C3;
-	Thu,  5 Nov 2026 19:30:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0F3A1F0093A;
-	Thu,  5 Nov 2026 19:30:12 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 35593414D4;
+	Thu,  5 Nov 2026 19:57:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9252D1F008A1;
+	Thu,  5 Nov 2026 19:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793907014;
-	bh=7NQAKY8HY4DbdjDd6x8DZF/XgVJse33xFSaScTuQDsM=;
+	s=k20260515; t=1793908649;
+	bh=Wdq9ubmWttjgXl8+8abc/GBLatPB6YvLkctn10o4MJ0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ej+uoOdyy0zraix1fQ7r25PJRrh/4Y9jENiNfRHcNQYKQbamB19zOZWAIYTZP936k
-	 525AiogVEAMXoo8f3U/2wtiLHom345+woamQXZG812Wqw1iTBWxzB4lfrEhY0L2dNa
-	 EJvLiN1GfSZ7KXDdLY1rJb97KQOIpQcpSkmrSySn132O264dcPg7eLs6XEwEHRR2Jx
-	 kAAmy8CviFoouXet9NS4WJJqFN+2BooXsbNYrMheRfZVdZNv+l80ODw7nu/l90jVkJ
-	 HWjhC78V1gjM0l/DaNa2Rbj7gbXnQcngNdr12ijFwDhs3Ny03+eY9pKEJ0LhfAJkZh
-	 SgFF9W+xXiDtw==
-Message-ID: <sashiko-outbox-199904@kernel.org>
+	b=TJ6pjbySwYPW4bkV01Rt/FbOgOqtmyAOPGD+O3TVHeq99rf/KXFpC7uZkHXuQh2Sk
+	 lB1yfJfNloihr3VqdG4yyojYVlPmqgN4VM9TGihxuSSgWgGXfVzHF7AfncQjyDCnY3
+	 pBqfcM8lMgy6okNe8/A3xSvVLA/lFiGj5We/OdiFdUURLaIR+EC/N0nvBgfQ1x8XGA
+	 XNDHxytc8FZkJM52EHmNjCpiqXkT1r9WWykbQNf2AKXGunxR3m71gqzdclIhVQc1x4
+	 grrssyB4i93FgdFCR/cDyuNHXcp8uHCwB8OC/y8mz6vTZaCbzl8Kd478uO85QBG5hj
+	 oGiy809F91fOA==
+Message-ID: <sashiko-outbox-200035@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 41/51] scsi: esas2r: bound the lengths of the
- HBA, SMP and firmware ioctls
+Subject: Re: [PATCH RESEND v2 01/30] jbd2: let procfs own the seq_file of
+ the info file
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -55,18 +55,16 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Gleixner" <tglx@kernel.org>, "Al Viro" <viro@zeniv.linux.org.uk>, "Jonathan
  Corbet" <corbet@lwn.net>, "Christoph Hellwig" <hch@lst.de>, "Greg
  Kroah-Hartman" <gregkh@suse.de>, "Joel Granados" <joel.granados@kernel.org>, "Kees
- Cook" <kees@kernel.org>, "Jan Kara" <jack@suse.cz>, "Jan Kara" <jack@suse.com>, linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org, linux-mm@kvack.org, linux-usb@vger.kernel.org, samba-technical@lists.samba.org, sparclinux@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-serial@vger.kernel.org, "Takashi
- Iwai" <tiwai@suse.de>, linux-input@vger.kernel.org, linux-raid@vger.kernel.org, linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, "Chuck
- Lever" <cel@kernel.org>, tytso@mit.edu, dmitry.torokhov@gmail.com, "Petr
- Pavlu" <petr.pavlu@suse.com>, "Anna Schumaker" <anna@kernel.org>, yukuai@fygo.io, "Heiko
+ Cook" <kees@kernel.org>, "Jan Kara" <jack@suse.cz>, "Jan Kara" <jack@suse.com>, linux-s390@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, linux-pci@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-usb@vger.kernel.org, samba-technical@lists.samba.org, linux-m68k@lists.linux-m68k.org, linux-serial@vger.kernel.org, "Takashi
+ Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-bugfixes-v2-41-021c84d852e0@kernel.org>
-References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
- <20261104-work-procfs-bugfixes-v2-41-021c84d852e0@kernel.org>
+In-Reply-To: <20261104-work-procfs-fs-v2-1-319e0f9a8aae@kernel.org>
+References: <20261104-work-procfs-fs-v2-0-319e0f9a8aae@kernel.org>
+ <20261104-work-procfs-fs-v2-1-319e0f9a8aae@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:30:12 +0000
+Date: Thu, 05 Nov 2026 19:57:23 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,93 +78,24 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] scsi: esas2r: double fetch of data_length in handle_hba_ioctl()
---
+> Declare the seq_operations and the size of the session state and let
+> procfs open and free the seq_file of /proc/fs/jbd2/<dev>/info.
+> ->proc_open() only takes the snapshot of the statistics now and
+> ->proc_release() frees it. Reading the file then no longer holds up its
+> removal when the journal goes away.
+>=20
+> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
-commit a2397b86d116881b0f288e71fe8885d678578a5f
-Author: Christian Brauner <brauner@kernel.org>
-
-scsi: esas2r: bound the lengths of the HBA, SMP and firmware ioctls
-
-This commit bounds the lengths of the HBA, SMP, and firmware ioctls in
-esas2r against the remaining room in struct atto_express_ioctl (or
-sizeof(struct atto_ioctl) for read_hw()) to prevent out-of-bounds DMA buffer
-reads and writes.
-
-> diff --git a/drivers/scsi/esas2r/esas2r_ioctl.c b/drivers/scsi/esas2r/esa=
-s2r_ioctl.c
-> index c93d9265e1008..80ae5b9d45db1 100644
-> --- a/drivers/scsi/esas2r/esas2r_ioctl.c
-> +++ b/drivers/scsi/esas2r/esas2r_ioctl.c
-
-[ ... ]
-
-> @@ -1221,11 +1231,16 @@ static void hba_ioctl_done_callback(struct esas2r=
-_adapter *a,
->  	}
->  }
-> =20
-> +/* @room is the size of the buffer that starts with @ioctl_hba. */
->  u8 handle_hba_ioctl(struct esas2r_adapter *a,
-> -		    struct atto_ioctl *ioctl_hba)
-> +		    struct atto_ioctl *ioctl_hba, size_t room)
->  {
->  	struct esas2r_buffered_ioctl bi;
-> =20
-> +	/* The data follows @ioctl_hba in the same buffer. */
-> +	if (ioctl_hba->data_length > room - sizeof(struct atto_ioctl))
-> +		return IOCTL_INVALID_PARAM;
-> +
->  	memset(&bi, 0, sizeof(bi));
-> =20
->  	bi.a =3D a;
->  	bi.ioctl =3D ioctl_hba;
->  	bi.length =3D sizeof(struct atto_ioctl) + ioctl_hba->data_length;
-
-[Severity: High]
-As reported by Sashiko on RFC [1], in drivers/scsi/esas2r/esas2r_main.c,
-read_hw() and write_hw() access the shared a->local_atto_ioctl buffer
-(allocated as sizeof(struct atto_ioctl)) without any driver lock:
-
-drivers/scsi/esas2r/esas2r_main.c:read_hw() {
-	...
-	if (handle_hba_ioctl(a, a->local_atto_ioctl,
-			     sizeof(struct atto_ioctl)) !=3D IOCTL_SUCCESS)
-		return -ENOMEM;
-	...
-}
-
-drivers/scsi/esas2r/esas2r_main.c:write_hw() {
-	...
-	memset(a->local_atto_ioctl, 0, sizeof(struct atto_ioctl));
-	memcpy(a->local_atto_ioctl, buf, length);
-	...
-}
-
-Because kernfs only serializes sysfs bin_attribute operations per open file
-description, concurrent read_hw() and write_hw() calls on two separate open
-file descriptors for the sysfs hw attribute can race on a->local_atto_ioctl.
-
-In handle_hba_ioctl(), ioctl_hba->data_length is read once for the bounds
-check against room - sizeof(struct atto_ioctl) and read a second time when
-computing bi.length. If a concurrent write_hw() overwrites
-a->local_atto_ioctl->data_length from 0 to a non-zero value between those t=
-wo
-reads, wouldn't handle_buffered_ioctl() still read and write bi.length bytes
-past the end of a->local_atto_ioctl?
-
-[1] https://lore.kernel.org/r/sashiko-outbox-195500@kernel.org
+Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D41
+s-fs-v2-0-319e0f9a8aae@kernel.org?part=3D1
+
 
