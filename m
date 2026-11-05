@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3C8606D80C
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 20:32:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D42F606A326
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 20:36:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=4EP/42De;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=l4Eko/RK
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=qtuA/MkL;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=U6caPqpR
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Yw+/Du8pHsdCvYl6IbYLuKH+OGLUIcbJDiY7LJnllJI=; b=4EP/42DehoNjSaeepTYr8tPdUC
-	Ix38C6hddqEPP+1rDUTW5fFkBB1Y6sap8atlGAvxxjc/Pjrs1SJtMi8/GUNec+JqHn6Us+aiZwzzC
-	B7vYdZ2WGFADz4VdzoauX5U4UPffpZcpfQD3/wUB+ySDSlOoxfPcRtCQODOXIwNHZH2aAsObahIhh
-	hraItgeT6pFxJXP25E3CWq/7uZhNw5rCFbiPZqaMUVzTfSOwaXmrcyHUcTr7rMAFBqF2SlfnJ9VVq
-	eksP1CUOkSEqfXxkacGCfi6nh552MOJAotHW4XxlmBzMrKkn1Tf1Zd+0uPctZWM5JieXrBxxmrsmF
-	eNlqTMEw==;
+	bh=y9V1CIpIY4360pJxVlHm+5yZoVNA43rbHggh2CYfgcQ=; b=qtuA/MkLMIpugIOqvad4ABu9Ji
+	QsGBmO3IoLceD0inGgOTUSo5e83T5hmeiwr8bgswZ6frwVaJlywA2foBnW9zi7e7sF1AnwHn/FLui
+	VcZ407zTZGfXdSyViEdku0fX5p2mqe2gd6Fri06oC0SV/Xka5OA/69r5YBbbab8e9t+phCIsb+fek
+	0/XriDqkJxx3mLrBnCp+vejkAYEsbU47qk7MPWwnBEkH+/z3cVe/rtZRNhxI6b0WfgVHq8Y5geBZN
+	BhGL4DmjuTi3qBIrdUHa55NcfNtSSBTKlcvLN4LYCbjLMXHRA2evpOif4uPZfcBdn1OE27Njn2h7F
+	HaZAKGOw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3Ax-0000000AKrt-1xEl;
-	Thu, 05 Nov 2026 19:31:07 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xP3Cc-0000000ALta-1tUE;
+	Thu, 05 Nov 2026 19:32:50 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP39L-0000000AKIk-0sZJ
+	id 1xP3AC-0000000AKmf-3MZK
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 19:29:28 +0000
+	Thu, 05 Nov 2026 19:30:27 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id A7F42601C7;
-	Thu,  5 Nov 2026 19:29:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCDBE1F00919;
-	Thu,  5 Nov 2026 19:29:24 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 8DA4340487;
+	Thu,  5 Nov 2026 19:30:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF0FC1F00A16;
+	Thu,  5 Nov 2026 19:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793906966;
-	bh=Yw+/Du8pHsdCvYl6IbYLuKH+OGLUIcbJDiY7LJnllJI=;
+	s=k20260515; t=1793907020;
+	bh=y9V1CIpIY4360pJxVlHm+5yZoVNA43rbHggh2CYfgcQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=l4Eko/RKkbQXervUh+9BCXJ+sLsI4u38jjERwv2HDU2tKr1bCDnCCw/QT/dKc1MrD
-	 nG24sg/ARdKOAaioqHnqlbMFng54iK9sFGR2MBxpRI9bPa3il41oD5LUCxrnPRtNn5
-	 DKJ+CPjlIN85/i9wz8h3zAaLEB0HSX87FOiOgckHHu/HvAH0MfRD7oR6NdGDjHmHBp
-	 bZGWS58CuzW9/drusy9qDOn77viubLposGHA42hn0poE0IRqBJ9Hb2OJZL55U5B7t6
-	 /9ggt31U3dXthnEYRs2zWGFTAlTOnVxIM8pubtNQkp2PuptVcHbgqPWl/ETNFUYpMm
-	 KKXNeYjAU9H1Q==
-Message-ID: <sashiko-outbox-199881@kernel.org>
+	b=U6caPqpRAcq7s3jABurFLTYAOyQNLF7KNwFcz7vL0owaKAFz2/Kmb1CSUDdsXURja
+	 KndJt79cCtvWCvNOTwi2inAusJtSM7xFcxVXh2P+h26yFHpcllhdCgktUZVCkwtiG9
+	 /H3yjzLcrbjdiUSj7RiWzxjqFY9BFACxF6rXGygYvdaL3HgamlM8WqSmnW73wwg/9a
+	 HWJvJwieWwnyodMNwSKhOSyeyO8OGNd1qplxfETbINtVIeYgtd4CJo1Ro5mX0HKNqx
+	 xq+lWhJhP5SWQhNMI4K00P+V9JGUm/enmo6/5lUN5kqo3zAD4JBvrPHNPgj7bQqo45
+	 NaifRmjsniAKg==
+Message-ID: <sashiko-outbox-199907@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 18/51] platform/x86: toshiba_acpi: reject
- malformed brightness and fan writes
+Subject: Re: [PATCH RESEND v2 44/51] proc: sysctl: resume readdir after the
+ last name it returned
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-bugfixes-v2-18-021c84d852e0@kernel.org>
+In-Reply-To: <20261104-work-procfs-bugfixes-v2-44-021c84d852e0@kernel.org>
 References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
- <20261104-work-procfs-bugfixes-v2-18-021c84d852e0@kernel.org>
+ <20261104-work-procfs-bugfixes-v2-44-021c84d852e0@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:29:24 +0000
+Date: Thu, 05 Nov 2026 19:30:18 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,18 +84,31 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> When lcd_proc_write() and fan_proc_write() were refactored their checks
-> were inverted but the && stayed. They only fail if sscanf() didn't
-> parse anything and the value is out of range at the same time, and for
-> the brightness value < 0 && value > levels can't be true at all. So an
-> out of range brightness or fan setting is passed on to the hardware,
-> and so is the uninitialized value if nothing could be parsed.
+> proc_sys_readdir() counts the entries of a directory and resumes a
+> listing at the number getdents64() stopped at. The entries are sorted
+> by name, so one that is registered or unregistered in between shifts
+> everything behind it by one. Listing /proc/sys/net/ipv4/conf with a
+> buffer that holds ".", ".." and "all" and registering a device whose
+> name sorts before "all" makes the next call return "all" a second time.
+> Unregistering one that sorted before the position makes it skip an
+> entry instead. So a listing that takes more than one call shows a name
+> twice, or not at all. Even the 64k buffer of ls needs a second call to
+> find the end of the directory, so a device that comes up right then
+> repeats the last entry.
 >=20
-> Restore the checks as they were before the refactoring.
+> So remember the name of the last entry a call emitted in the file and
+> resume at the first usable entry after it, like kernfs resumes after
+> the node it stopped at. The entry itself can't be pinned across calls,
+> unregistering waits for that. If the position was moved by a seek in
+> between the listing counts from the start like before, seeking to an
+> arbitrary position has never been better than that.
 >=20
-> Fixes: e1a949c1b988 ("toshiba_acpi: Refactor *{get, set} functions return=
- value")
-> Fixes: 3e07e5baa2af ("toshiba_acpi: Add set_fan_status function")
+> That also takes one walk down the tree to resume instead of a walk over
+> every entry in front of the position with a round trip through
+> sysctl_lock for each of them.
+>=20
+> Fixes: 77b14db502cb ("[PATCH] sysctl: reimplement the sysctl proc support=
+")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -103,6 +116,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D18
+s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D44
 
 
