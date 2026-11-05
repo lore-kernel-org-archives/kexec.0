@@ -2,160 +2,114 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3C6606A336
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 11:52:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3764D606A32C
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 11:56:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=LOqw2eg9;
-	dkim=pass (1024-bit key, unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=IlDc2Fvh;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=vvDSWJYG;
-	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=IlDc2Fvh;
-	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=vvDSWJYG
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Bind5DCl;
+	dkim=fail reason="signature verification failed" (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=oLmkxrFn;
+	dkim=fail reason="signature verification failed" (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=dgLrNkta
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
+	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:To:Subject
+	:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=XTBVvV1llMrY8oPUgGAOljMGttnFmdc1n4iSvCofGvk=; b=LOqw2eg9bPzeu661tL86qBO8QR
-	pE4bvZQOTTGWCZIvxZcr4wKDISRfNRp6BlJ6zKKU7QoTMOQK4QpFjjnfBqQX4HlkWMPeqjq5WoOuC
-	UeR+6RZNYlTni+1wXVIQdHsaavDd3k0O6eGMkMkh4akRevDsYtWfRBZ5CvQCHFkxZDFLKurV65T88
-	t5o/uyzvPrRJyGOKKBWxNJJ04TcL6ck936KAR7qHlr7pbpSWQqDxo6hiEPh+tt0jdoLmbdjqq8mI/
-	3LSbUpy4r6PB2JbspiIP4eLiMgpn3+7yFGDH67UY4t1IvCPhvYZSXuQGEqsgWLJNnxWADD8Bi8yKO
-	mYTUr6Iw==;
+	bh=RAC3JyCcPbrtGRCcu9CD6bbgq1BaxglIl3X5ZCQ3VwI=; b=Bind5DCl2y5eefBeHpvn0ZD036
+	AK8cJgYWxJt8/3K+bmYNQ5OQMd9F0bp7taLR/jYrR9SGUpMOyB7MkRgmsSzG8xw4JuF9M64fRABlO
+	bjVjauweAoMaPYW8OiSg252RyJTqcxir+rCp88PP8X0yaIwVaI25N0ch2qL0bAaIChyLf5ow+aN8W
+	+cOeSAiHeZ2TQ6X67dQ/ZPV6sFGAVlUDAy7kUJDBG7PTwCCVa0W06qpzTqLy3cErqySPTFUXllzjj
+	QnE/TqY/C8sBK3pIaYqfMJqdQMNDkaHEfFn1/LM1ZP+2hrUo78QTNsSGUWQ519HuhuDEJyZN4ZI4e
+	mKGfZ/lA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOw1X-00000008mRf-3L0e;
-	Thu, 05 Nov 2026 11:52:55 +0000
-Received: from smtp-out2.suse.de ([2a07:de40:b251:101:10:150:64:2])
+	id 1xOw52-00000008n3q-3hUg;
+	Thu, 05 Nov 2026 11:56:32 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOw1U-00000008mQQ-2czP;
-	Thu, 05 Nov 2026 11:52:54 +0000
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 090681F785;
-	Thu,  5 Nov 2026 11:52:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1793879570; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XTBVvV1llMrY8oPUgGAOljMGttnFmdc1n4iSvCofGvk=;
-	b=IlDc2FvhESlDd8QXX4z/a9lq2dVMhaxW+HuiTJo6x+4vVVqrVz8k3f/Wr+Mze0vHlceBFP
-	JaL/+k/+YFdhkL/6vCq7Bg2Jyl3kffnaUQoNLw7CYQNpyydj2pmW97ukL1Mouho+skqqWs
-	9mNCq/qpRDGAphiHFTSprMwCLm6e0Vk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1793879570;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XTBVvV1llMrY8oPUgGAOljMGttnFmdc1n4iSvCofGvk=;
-	b=vvDSWJYGu2lVXhJVWrbpDbn5nEUGh3VUqLxrYRbdmdLlIIqOha94poMzPs0o88aMpXXTQC
-	GveF9mKsY1fCOgBQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=IlDc2Fvh;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=vvDSWJYG
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1793879570; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XTBVvV1llMrY8oPUgGAOljMGttnFmdc1n4iSvCofGvk=;
-	b=IlDc2FvhESlDd8QXX4z/a9lq2dVMhaxW+HuiTJo6x+4vVVqrVz8k3f/Wr+Mze0vHlceBFP
-	JaL/+k/+YFdhkL/6vCq7Bg2Jyl3kffnaUQoNLw7CYQNpyydj2pmW97ukL1Mouho+skqqWs
-	9mNCq/qpRDGAphiHFTSprMwCLm6e0Vk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1793879570;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XTBVvV1llMrY8oPUgGAOljMGttnFmdc1n4iSvCofGvk=;
-	b=vvDSWJYGu2lVXhJVWrbpDbn5nEUGh3VUqLxrYRbdmdLlIIqOha94poMzPs0o88aMpXXTQC
-	GveF9mKsY1fCOgBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CB5FC134F4;
-	Thu,  5 Nov 2026 11:52:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id FWlQIxFu7GoAAwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 05 Nov 2026 11:52:49 +0000
-Received: by quack.suse.cz (Postfix, from userid 1000)
-	id 45F61B6C1; Thu, 05 Nov 2026 12:52:41 +0100 (CET)
-Date: Thu, 5 Nov 2026 12:52:41 +0100
-From: Jan Kara <jack@suse.cz>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Jann Horn <jannh@google.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Chris Mason <mason@kernel.org>, Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
-	Eric Dumazet <edumazet@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Jonathan Corbet <corbet@lwn.net>, Christoph Hellwig <hch@lst.de>, 
-	Greg Kroah-Hartman <gregkh@suse.de>, Joel Granados <joel.granados@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Jan Kara <jack@suse.cz>, Jan Kara <jack@suse.com>, 
-	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	linux-um@lists.infradead.org, linux-wireless@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	netdev@vger.kernel.org, ntfs3@lists.linux.dev, platform-driver-x86@vger.kernel.org, 
-	coreteam@netfilter.org, kexec@lists.infradead.org, linux-pci@vger.kernel.org, 
-	linux-sound@vger.kernel.org, netfilter-devel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	ibm-acpi-devel@lists.sourceforge.net, jfs-discussion@lists.sourceforge.net, 
-	linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-cifs@vger.kernel.org, 
-	linux-fbdev@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-mm@kvack.org, 
-	linux-sh@vger.kernel.org, linux-usb@vger.kernel.org, samba-technical@lists.samba.org, 
-	sparclinux@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-doc@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-atm-general@lists.sourceforge.net, 
-	Takashi Iwai <tiwai@suse.de>, linux-input@vger.kernel.org, linux-raid@vger.kernel.org, 
-	linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, linux-debuggers@vger.kernel.org, 
-	Chuck Lever <cel@kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH RFC 18/38] proc: don't WARN about a name that is already
- registered
-Message-ID: <qaqawx4ajooiiqzu3ngxc46khpnq74u6sl5tz6az4uyssxzly4@346lsx342het>
-References: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
- <20261102-work-procfs-bugfixes-v1-18-59422ed3e465@kernel.org>
+	id 1xOw51-00000008n2e-2sZ7
+	for kexec@bombadil.infradead.org;
+	Thu, 05 Nov 2026 11:56:31 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=RAC3JyCcPbrtGRCcu9CD6bbgq1BaxglIl3X5ZCQ3VwI=; b=oLmkxrFnJGXK3w6m/eIKyh9AQP
+	lKcUxMvP1uQxrH/gZqB7pfGOgEfwhWdZabpyU/2Rz/YCAplhMOl5RXRDHKF7KOezC9peomc4bbudp
+	VHEgNCZsgu1kmGcM5t8v9Z5pUm4UDsSm7QMkvlAwL76xlzLENeRF9MZtrRuYoZQo3xrcKHFf3QFQR
+	NbVSeBklhmlzhVpjqf5123b3JltgDVoa4K0T6ZSmZY/IvMtXN/vVfrj1nN881BIIjJ2nWwPEVu2dt
+	Xtj8ZNwakqMpe3YegSkwg5BKZNa3ieCWX83FLVW/fF+VFhNInav6w5juT3mDbyuiDfSiBTIvRwVAv
+	4vozne4Q==;
+Received: from mail-wm1-x32e.google.com ([2a00:1450:4864:20::32e])
+	by desiato.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xOw4y-00000002vRs-3Yeu
+	for kexec@lists.infradead.org;
+	Thu, 05 Nov 2026 11:56:30 +0000
+Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-4a35a60499eso13904755e9.0
+        for <kexec@lists.infradead.org>; Thu, 05 Nov 2026 03:56:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793879787; x=1794484587; darn=lists.infradead.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=RAC3JyCcPbrtGRCcu9CD6bbgq1BaxglIl3X5ZCQ3VwI=;
+        b=dgLrNktayybW0UNiTZ7t2Al0fzTMZNwoPRPE1FuGjv/bhALzp4/lbQeXBPySSmdmn5
+         8B+WLGkwURHjsoS0U3FzulPGdxEub0z7vykUawdhbAsSUZUFK2skDmqB4sDtrlNGEEX4
+         iK3H0/Za789ry2NcCixFUuBZkFrvvemhUzHtNVg5pMx82RBhUDkclDlaLGR4HKaSVlCE
+         xSns1xfYL421nEo04CIuk16tCLZox6gvozjf6h1yFtJz01RYoECZKvg2K6L/OOPXDyoq
+         usdcNyH2+loinXrZ4taUyW3taGGQ2JCGHgSiW+rTFe4mfvvinNVWu6C6hW5SMaCcdeDb
+         qcKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793879787; x=1794484587;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=RAC3JyCcPbrtGRCcu9CD6bbgq1BaxglIl3X5ZCQ3VwI=;
+        b=QWq1CXLJp3YoMEGNig4ApdoK5ZRWv7zf7MJvmOxrZP9IY4AisbeuqESoF7CmECKiM3
+         TbV5d1UlXHq41X3ir54zyzObCWcFQMXV8OedNjBjIYlHUe6+TGBSkNld5EyVnWmxbZYt
+         pNIcE+8S8atPsbXrPWYIbe1wZWe+EBk5JDWuC8Czo+Aa7c5N3m5oICax1t1n4hmNUe/q
+         wMNcLucC5xhL4GYyvQg77WxC/M6Putp2EGlmLGSAu2xmHNX3sB+hmXT2fPEDQn2OJYtH
+         riBG0weVt531lvhq0oxt074pG71/LDagVQfLiMf3K7EUD+2iy0BWtWGpZmb8OfASH/TT
+         xeuw==
+X-Forwarded-Encrypted: i=1; AKwUvBxV9gpL7u7yEoACH09r56H/Y1YsPBwRlwnsp7tx+3K3uaEaJzbUhhcKQoGPpvt6+33z7JMu4w==@lists.infradead.org
+X-Gm-Message-State: APuU4Z+/O/Wqz8Mzkub0yZyWOAhR0WpajTFjRWji2IPCKoJ2k4YBX/JH
+	kKbOXA3/PqgL35HWEQ7kvvXNja8GZYy2GUt9JLHuS+Yxfq6/TsOVHk1K
+X-Gm-Gg: AYBFou3o9iNhJcR2Q2Buev2E2c5kzMsffmvz25pfQTxvplcdSoC6mn/BTerR5PftY2+
+	POHjFP7fz0yEkfF+VSIR34UgdB+VXYgXurh1Vz5CJJVPJCVFz/yIgvHvo00jdJGl9VZwwFE5Bey
+	BZn0+U3uBzJqicQbF5W2c8fpEMvUwlszDDrds6ebXJOx4017phnJL2E7VhqMfCz8Tu3eyXw+im0
+	wNAFSMvMhx7HVIS3OK/ouIY4ubJkt+vbu+ezO4Yn6IFi5pI78HSqYuQ0gIPAnqRCsbUr0nrNOFu
+	JKE1lgL4QI81hxsJhEeurjagl4dij0En9kuy6m7dz3Pt0zwwScJqZqcq2HK3PnWFHcniNiP/Yqi
+	BNrTSrKr/LmfcaNoXd+F+LwoHlABUW7YBAxea8moVMEkOb2RXJUQcnbIX/W95aAQqwMYhHuFtCz
+	lYsl3sPgNeOiSZlBINGCBUcadcQh9NejCqVKP61tiBtwdcfI8aZJpA9CJlr5QIDMVLrX/Itk9n/
+	PDjMdFAQwuMKjQz7ncgiS5JBvys1FP6seN3q0u60D9GcO05NSSeHXX3158naI5+pF/RymVkGkaT
+	TBi9fP3ug3jqhNW0Xlk6ag5q/Y3ZWdJG8P62FIDUCNlI
+X-Received: by 2002:a05:600c:6212:b0:4a4:de70:2ad4 with SMTP id 5b1f17b1804b1-4ac17ffa395mr398423355e9.22.1793879786986;
+        Thu, 05 Nov 2026 03:56:26 -0800 (PST)
+Received: from [192.168.1.22] ([83.231.69.9])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48fea181085sm9708651f8f.1.2026.11.05.03.56.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Nov 2026 03:56:26 -0800 (PST)
+Message-ID: <d2965cb2-428f-484a-bd81-55b78b770b96@gmail.com>
+Date: Thu, 5 Nov 2026 12:56:24 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261102-work-procfs-bugfixes-v1-18-59422ed3e465@kernel.org>
-X-Spamd-Result: default: False [-11.51 / 50.00];
-	SUSE_INTERNAL_BYPASS(-9.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_THREE(0.00)[3];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	R_RATELIMIT(0.00)[to_ip_from(RLpnapcpkwxdkc5mopt1ezhhna)];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[60];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:dkim,suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -11.51
-X-Spam-Level: 
-X-Rspamd-Queue-Id: 090681F785
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] memblock: don't allocate new reserve_mem regions on a
+ KHO boot
+To: Mike Rapoport <rppt@kernel.org>
+References: <20261104204235.9066-1-azpijr@gmail.com>
+ <auw3dtAMp4CjNwY2@kernel.org>
+Content-Language: en-US
+From: "Jose A. Perez de Azpillaga" <azpijr@gmail.com>
+In-Reply-To: <auw3dtAMp4CjNwY2@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261105_035252_959861_5364C3E9 
-X-CRM114-Status: GOOD (  26.11  )
-X-Spam-Score: -2.1 (--)
+X-CRM114-CacheID: sfid-20261105_115628_822053_CBD994E2 
+X-CRM114-Status: GOOD (  20.18  )
+X-Spam-Score: -0.2 (/)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -165,85 +119,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Cc: Tony Luck <tony.luck@intel.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org, Kees Cook <kees@kernel.org>, Changyuan Lyu <changyuanl@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, Pratyush Yadav <pratyush@kernel.org>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Mon 02-11-26 15:21:33, Christian Brauner wrote:
-> proc_register() WARNs when the directory already has an entry of the
-> same name and fails the registration. Callers that pick their names
-> themselves should never get there but some take names from userspace.
-> pktgen creates a file for each device a writer of "add_device" adds,
-> named after the device. A device can have any name, including "pgctrl"
-> or "kpktgend_0", the names of pktgen's own files:
+On 11/5/26 8:59 AM, Mike Rapoport wrote:
+> On Wed, Nov 04, 2026 at 09:42:17PM +0100, Jose A. Perez de Azpillaga wrote:
+>> On a KHO boot, a reserve_mem region that can't be revived is allocated
+>> from KHO_NOPRSRV memory, which includes the bootmem the next kernel
+>> boots out of. With CONFIG_KEXEC_HANDOVER_DEBUG, preserving the region
+>> then fails:
+>>
+>>   WARNING: kernel/liveupdate/kexec_handover.c:1245 at kho_preserve_pages+0x168/0x180
+>>   failed to prepare memblock FDT for KHO: -22
+>>
+>> Without it, the next kernel puts its memmap on top of the region and
+>> the ramoops records in it are lost.
+>>
+>> There is no use case for adding regions across a live update, so fail
+>> instead of allocating, and drop the TODO.
+>>
+>> Fixes: f99230780211 ("memblock: add KHO support for reserve_mem")
+>> Signed-off-by: Jose A. Perez de Azpillaga <azpijr@gmail.com>
+>> ---
+>> Changes in v2:
+>> - fail on a KHO boot instead of allocating outside bootmem, as agreed
+>>   with Pratyush [1]. this drops v1's patch 1.
+>> - not an RFC anymore.
+>> - based on v7.4-rc1.
+>>
+>> v1: https://lore.kernel.org/all/20261021211058.83483-3-azpijr@gmail.com/
+>>
+>> [1] https://lore.kernel.org/all/2vxzfqxglrg6.fsf@kernel.org/
+>>
+>>  mm/memblock.c | 11 ++++++++++-
+>>  1 file changed, 10 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/mm/memblock.c b/mm/memblock.c
+>> index a450092a80fb..e325e0542c9a 100644
+>> --- a/mm/memblock.c
+>> +++ b/mm/memblock.c
+>> @@ -2827,7 +2827,16 @@ static int __init reserve_mem(char *p)
+>>  	if (reserve_mem_kho_revive(name, size, align))
+>>  		return 1;
+>>  
+>> -	/* TODO: Allocation must be outside of KHO_NOPRSRV region */
+>> +	/*
+>> +	 * On a KHO boot memblock only allocates from KHO_NOPRSRV memory here,
+>> +	 * which includes the bootmem the next kernel boots out of. Only regions
+>> +	 * handed over by the previous kernel are supported.
+>> +	 */
+>> +	if (is_kho_boot()) {
 > 
->   ip link set lo name pgctrl
->   ip link set pgctrl up
->   echo "add_device pgctrl" > /proc/net/pktgen/kpktgend_0
-> 
->   proc_dir_entry 'pktgen/pgctrl' already registered
->   WARNING: fs/proc/generic.c:404 at proc_register+0x555/0x8b0, CPU#0: bash/241
->   Call Trace:
->    proc_create_data+0x9f/0xf0
->    pktgen_thread_write+0xd9b/0x1780
->    proc_reg_write+0x1c2/0x3c0
->    vfs_write+0x1cd/0xfa0
-> 
-> The files of a network namespace belong to the root of its user
-> namespace and none of this requires a capability. So once pktgen is
-> loaded an unprivileged user can taint the kernel, or crash it with
-> panic_on_warn, from namespaces of its own. pktgen itself copes with
-> the failed registration just fine.
-> 
-> So go back to what proc_register() did before commit 6c2f91e077f1
-> ("proc: use WARN() rather than printk+backtrace") and what
-> sysfs_warn_dup() does for sysfs: report the name with pr_warn() and
-> dump the stack. While at it, do that after dropping proc_subdir_lock
-> instead of printing a backtrace while holding the lock that every
-> lookup and readdir in procfs needs.
-> 
-> Reported-by: Chris Mason <mason@kernel.org>
-> Fixes: 6c2f91e077f1 ("proc: use WARN() rather than printk+backtrace")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
+> This breaks memblock tests, please add a stub there.
 
-Makes sense. Feel free to add:
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+oops, sorry. will add it in v3 :)
 
-								Honza
-
-> ---
->  fs/proc/generic.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/proc/generic.c b/fs/proc/generic.c
-> index c560c96a64eb..ef804cd3ec45 100644
-> --- a/fs/proc/generic.c
-> +++ b/fs/proc/generic.c
-> @@ -401,9 +401,10 @@ struct proc_dir_entry *proc_register(struct proc_dir_entry *dir,
->  	write_lock(&proc_subdir_lock);
->  	dp->parent = dir;
->  	if (pde_subdir_insert(dir, dp) == false) {
-> -		WARN(1, "proc_dir_entry '%s/%s' already registered\n",
-> -		     dir->name, dp->name);
->  		write_unlock(&proc_subdir_lock);
-> +		pr_warn("proc_dir_entry '%s/%s' already registered\n",
-> +			dir->name, dp->name);
-> +		dump_stack();
->  		goto out_free_inum;
->  	}
->  	write_unlock(&proc_subdir_lock);
-> 
-> -- 
-> 2.53.0
-> 
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+cheers,
+jose a. p-a
 
