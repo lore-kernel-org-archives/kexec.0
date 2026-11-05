@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8C7606D812
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 20:28:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB95606A335
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 20:29:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Yr7ke3Fz;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=icO3rWLw
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2yD3Zg5c;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VVy9ydzD
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=QnupmpJjcDSUenY+8iHhV2pDdP26FR+grPEd9BKN+Wg=; b=Yr7ke3FzJ0tWPiyi5knRRx3Z/U
-	loc1Q3s72z2kPyxjNXBw+6mupiONkDPd8WnqG7PkFw9P4z4NoP6eN2gJSveQbSfF3Z+wdOvESdzWT
-	L6MtbZnAKUwH2S0vF220DQsrq2VHBlMZaQrcTsx1vxqdGsFHDqDK6Kg7yHtF2M/5wqsaq8u6efVeA
-	nhqpoah+7aO4OzR9r2C11eDZFkZbyObTtB1d9UUmTcbXjKP5ONXkbrTPeSSH817eMl3Fx8jAnY5dS
-	0PUnzBWbDMVG8N45YgsQ3I2tJmshrhbeDrjejmHhm2KLAERFpoWnOQ0B3Ze3CBqmkHmRVo+54vNlk
-	iHJWwFDA==;
+	bh=l5G/lSqezWnwCKCStpatk32BvJD6IXrDlHThvqht2Tc=; b=2yD3Zg5clm95/bjvtTEqPk7Rf/
+	2StitFstzuB8Sz4EhySleXhLLr+DkIzQ//5+v37RYloNWpA9VmDLUvsuzgg7j0gZOvSF3QLfnnhrt
+	Fyf6dOS2eLXblnwB5fEqWlUdpbLaTJUzZZ4RHH1T2s58wFgKmfMeD4GMpBxyc2njeZ7ZHMyiM5QJL
+	pXyn9SWce0tahzSmuDu5DrT3x7LidzRjDJ3PSkx40od3/TxU//dS8JRK5DCdPuJGm/pB/q5XwROsm
+	3rjfDV72Y9SNIf7FDCxhoME0gLPZr4oiIR5XsOrVjHqK+hGQnJb6+AQuyAAdrvDSFGuWuB2tfhyJ8
+	THcO8KUA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3Fg-0000000AN56-43pf;
-	Thu, 05 Nov 2026 19:36:02 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xP3Ax-0000000AKsE-2XBA;
+	Thu, 05 Nov 2026 19:31:07 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3FE-0000000AMrE-0OfL
+	id 1xP39J-0000000AKIc-0RWa
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 19:35:32 +0000
+	Thu, 05 Nov 2026 19:29:28 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id B12BC43B0A;
-	Thu,  5 Nov 2026 19:35:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E09C1F008A1;
-	Thu,  5 Nov 2026 19:35:29 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 8C033601C4;
+	Thu,  5 Nov 2026 19:29:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD8691F00A02;
+	Thu,  5 Nov 2026 19:29:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793907331;
-	bh=QnupmpJjcDSUenY+8iHhV2pDdP26FR+grPEd9BKN+Wg=;
+	s=k20260515; t=1793906964;
+	bh=l5G/lSqezWnwCKCStpatk32BvJD6IXrDlHThvqht2Tc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=icO3rWLw6nKGObCQJgYMxAh2P6PTRzIdDeuA404d8zGUUVnEp22awIUt/ONskepjG
-	 FQyNYgueaW+0iYJhp0FqJ+XOW2y+yurI0uUuh+dfsOclM2Nh3qdwIC3ytuTEQmNhzr
-	 MTetr7AbbAQJrQhhBXugv5fx//leXY88njWHb3TZ3743y/bVbrU4sQkjQK81piouKz
-	 MGYh6ZeJ6sFNsrOgjNWWNWno+Xud511eRRatEpGCbh1xHAr4ri1vGAQGPMtUR0YyMD
-	 sstDXtwDG9/n6Jsu5U178yWJP4hODLvoqYoWfkpM7RkF01wue3ewhl7sYNSjaz7bA6
-	 sSwHZw/oTnT7A==
-Message-ID: <sashiko-outbox-199938@kernel.org>
+	b=VVy9ydzDdwrK5cUkSQY+dtAoabFVfA9e0V3qgpjVjrIB5KvMO1MvQGDUHk5rAvgfm
+	 iSf6w+1kKcvdBAFR8ELGlwwFEK1XZJXOrXKCPvRouxy2Jazs+nmQAJSesB401a9CCa
+	 vxio34XgVPMayf8Fmf2wRqb4Hs5BmvdwkdXQYrWsL8VIX0WNnzZbN65SIXxRDOYRkF
+	 eSdSep7Up4ys5dzeLjGW5O3+D7EGEYwGaI66O+jjQoRyelrpDYdY1cW3+4VkosJ21x
+	 VBLkNWVbLXjLlwjMd0uLQ3706fcKWPjDKmaSPAZcoVtTTzHDmgl+ieo3UPtj39/IgW
+	 0E/kdo3j/YNww==
+Message-ID: <sashiko-outbox-199880@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 08/23] proc: let procfs own the seq_file of
- proc_create_seq() and friends
+Subject: Re: [PATCH RESEND v2 17/51] s390/dasd: don't look in front of the
+ buffer on an empty write
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -55,18 +55,16 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Gleixner" <tglx@kernel.org>, "Al Viro" <viro@zeniv.linux.org.uk>, "Jonathan
  Corbet" <corbet@lwn.net>, "Christoph Hellwig" <hch@lst.de>, "Greg
  Kroah-Hartman" <gregkh@suse.de>, "Joel Granados" <joel.granados@kernel.org>, "Kees
- Cook" <kees@kernel.org>, "Jan Kara" <jack@suse.cz>, "Jan Kara" <jack@suse.com>, linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org, linux-mm@kvack.org, linux-usb@vger.kernel.org, samba-technical@lists.samba.org, sparclinux@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-serial@vger.kernel.org, "Takashi
- Iwai" <tiwai@suse.de>, linux-input@vger.kernel.org, linux-raid@vger.kernel.org, linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, "Chuck
- Lever" <cel@kernel.org>, tytso@mit.edu, dmitry.torokhov@gmail.com, "Petr
- Pavlu" <petr.pavlu@suse.com>, "Anna Schumaker" <anna@kernel.org>, yukuai@fygo.io, "Heiko
+ Cook" <kees@kernel.org>, "Jan Kara" <jack@suse.cz>, "Jan Kara" <jack@suse.com>, linux-s390@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, linux-pci@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-usb@vger.kernel.org, samba-technical@lists.samba.org, linux-m68k@lists.linux-m68k.org, linux-serial@vger.kernel.org, "Takashi
+ Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-core-v2-8-76ace653a773@kernel.org>
-References: <20261104-work-procfs-core-v2-0-76ace653a773@kernel.org>
- <20261104-work-procfs-core-v2-8-76ace653a773@kernel.org>
+In-Reply-To: <20261104-work-procfs-bugfixes-v2-17-021c84d852e0@kernel.org>
+References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
+ <20261104-work-procfs-bugfixes-v2-17-021c84d852e0@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:35:29 +0000
+Date: Thu, 05 Nov 2026 19:29:22 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,84 +78,24 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] proc: unused-but-set variable p in seq_open_net() when CONFIG_NET_N=
-S=3Dn
---
+> dasd_get_user_string() strips a trailing newline by looking at the last
+> byte that was written. For an empty write that's the byte in front of
+> the buffer it just allocated. Only look if something was written.
+>=20
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
-commit 4dea51dab83a49a4131e34ad5f96bc9822052389
-Author: Christian Brauner <brauner@kernel.org>
-
-proc: let procfs own the seq_file of proc_create_seq() and friends
-
-This commit updates proc_create_seq_private(), proc_create_single_data(), a=
-nd
-their network namespace variants so that procfs owns the seq_file directly =
-via
-PROC_ENTRY_proc_seq_ops and PROC_ENTRY_proc_show. For the network namespace
-variants, ->proc_open() and ->proc_release() are simplified to only manage =
-the
-network namespace reference.
-
-> diff --git a/fs/proc/proc_net.c b/fs/proc/proc_net.c
-> index df5484813d5dd..9973f846c4674 100644
-> --- a/fs/proc/proc_net.c
-> +++ b/fs/proc/proc_net.c
-> @@ -37,13 +37,13 @@ static struct net *get_proc_net(const struct inode *i=
-node)
->  	return maybe_get_net(PDE_NET(PDE(inode)));
->  }
-> =20
-> +/* procfs opened the seq_file and allocated its state, see pde_seq_start=
-() */
->  static int seq_open_net(struct inode *inode, struct file *file)
->  {
-> -	unsigned int state_size =3D PDE(inode)->state_size;
-> -	struct seq_net_private *p;
-> +	struct seq_net_private *p =3D ((struct seq_file *)file->private_data)->=
-private;
->  	struct net *net;
-> =20
-> -	WARN_ON_ONCE(state_size < sizeof(*p));
-> +	WARN_ON_ONCE(PDE(inode)->state_size < sizeof(*p));
-> =20
->  	if (file->f_mode & FMODE_WRITE && !PDE(inode)->write)
->  		return -EACCES;
-> @@ -51,12 +51,6 @@ static int seq_open_net(struct inode *inode, struct fi=
-le *file)
->  	net =3D get_proc_net(inode);
->  	if (!net)
->  		return -ENXIO;
-> -
-> -	p =3D __seq_open_private(file, PDE(inode)->seq_ops, state_size);
-> -	if (!p) {
-> -		put_net(net);
-> -		return -ENOMEM;
-> -	}
->  #ifdef CONFIG_NET_NS
->  	p->net =3D net;
->  	netns_tracker_alloc(net, &p->ns_tracker, GFP_KERNEL);
-
-[Severity: Low]
-When CONFIG_NET_NS is disabled, does initializing p unconditionally in
-seq_open_net() trigger a -Wunused-but-set-variable warning?
-
-Previously, p was assigned via __seq_open_private() and checked with if (!p)
-outside the #ifdef CONFIG_NET_NS block. With that check removed, the only
-remaining reference outside #ifdef CONFIG_NET_NS is sizeof(*p) in
-WARN_ON_ONCE(), which is an unevaluated context and does not read the value=
- of
-p.
+Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-core-v2-0-76ace653a773@kernel.org?part=3D8
+s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D17
+
 
