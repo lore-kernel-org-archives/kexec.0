@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A42A606A6C3
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:51:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A11606A33C
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:52:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=fC6He1Z8;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Yj1T0ugz
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=dEHJEX2K;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Nyw43+S2
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=kmHJbewKimZexXI7BH61QhHVq1nSYkHQpCykfrWP8B0=; b=fC6He1Z8HjhoJhHdar32SGHBf0
-	UHLAgpyOoD5xHJSv7uRp6MdujQlm9B5CK1PYp1XgmEVX0wEUPS9kW8jR1rpieZwR0zrcVqgO10Joi
-	+P4C69fgu2F8QkKjFK4uD74nsmGr012UeGkt+CXeNT+ZwKmMYkBhFBH9a75Rf+gIPMdWMNdMzCi3k
-	XVMs1cVoP86WteLrIUmG/8MWikMgOsPkA3bwtRVV85/BtJkHpyI/P/7aj4M+6Zygw13SvPYl/5R4P
-	1OHJnOn18DDp5ilOMr/EFuDxluVbAMTsL+SozwASwrAWcO5SS+64s2VxgZb4ZMbvPzAvW/Ufhv0nS
-	iYFfvjqQ==;
+	bh=R0jppsKfpO8c+Wfs9tyOHakvTx4OM727OOcLj9g2iGM=; b=dEHJEX2K+fVRx/20a9ETWhqm0M
+	xtPwqJ6lYZd0c5yq3Ho93sZaumoV0NTA2F23J7yoOUFOjpFFDmnZhqA5WpaI1t4GoBtX9VwgH2C6Q
+	ui8VImW+nM6ieGJfDdSTEhUKKmSAyAPAdwZnpcaAL5kmayTM9hcL4dL1JWNXqhWEeOxgOpbG4a3I7
+	yKRz27SCwjJq2r2tUqCyjva/YflKuoMvcvA17ZhVDHjHYHIRjXSbzzAKHzkxn/xypJHcsJsp6l8En
+	GJi6hmBUBMZL/RHvYwrO9TzuAoQJyVxLGX+8SLCIhL19pS+KxOwxOo7KubcwNiJQSoPBu/jWQo4vU
+	qLAADStg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3Uo-0000000AQhR-0DOu;
-	Thu, 05 Nov 2026 19:51:38 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xP3VE-0000000AQmU-0zuY;
+	Thu, 05 Nov 2026 19:52:04 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3TG-0000000AQ8k-2FLU
+	id 1xP3TI-0000000AQAQ-2xvs
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 19:50:02 +0000
+	Thu, 05 Nov 2026 19:50:08 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 4C365406F7;
+	by sea.source.kernel.org (Postfix) with ESMTP id 7633443EC5;
+	Thu,  5 Nov 2026 19:50:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A981C1F008A3;
 	Thu,  5 Nov 2026 19:50:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 715111F008A2;
-	Thu,  5 Nov 2026 19:50:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793908202;
-	bh=kmHJbewKimZexXI7BH61QhHVq1nSYkHQpCykfrWP8B0=;
+	s=k20260515; t=1793908204;
+	bh=R0jppsKfpO8c+Wfs9tyOHakvTx4OM727OOcLj9g2iGM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Yj1T0ugzNifTsvf+LRAo6+kTszK1EniN9dz6kA/nDqLCRZF2Fj1Zd7rJFSGBEbQ+X
-	 o/5NfGjv+8aOBHVfX8oSOHfQ+Gz59qMKbXPRS2+BZBLCXy/7kFLBmE+QT3SmH4FAJ4
-	 wPQvsR/Sik9KmFbNWPMtyeQunJpC6DisUVgMzC5SuOgY1oz8179bClmAx/xBMh4q2P
-	 TrxmpaxUEYPEEnDTC+tl87U7YaJYsKqr9QH+yTEa/K2OfqI7BOn3gluSDHOOvJ2PUF
-	 dgYEv6jHD8p9iv+S1FUedwISadA75xm6wTiLQLiLH63DyUtVuZfEv4oraoEUVwZ4+7
-	 CXIteZ1K8OvIA==
-Message-ID: <sashiko-outbox-200011@kernel.org>
+	b=Nyw43+S2a/7VyDX8w6xahvn9ZApqn4TJ0kh3YRsaUxeU/PqvpCGltRfC1pm+S/RKN
+	 0nLdp7uPjhnxLJrT4PEIRs99H7SQAAMyW5Dpkk6h/SVdZvIPpBfgtxl/1VwXucqMCF
+	 OoxStV4jZM3fRilLNS/gPiJHRRMgCNmYxkJQFK62QUdzRl0BOMQxUyKfrlaAVb+wzL
+	 8MBqjgPOLXXRGgYlOZpPHg6AXB4EGv8eXqVu+otJc/X3aF3UdhH2Sq2mQmlcePMx97
+	 MQvhPaBzySigSxDPgMHxqO1ydd1YUYiYyo8odeK6rXwGa0X8QKpBySn/dsFO67X87C
+	 imselCmGHpGHQ==
+Message-ID: <sashiko-outbox-200012@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 25/26] ALSA: info: drop the ioctl hook of data
- entries
+Subject: Re: [PATCH RESEND v2 26/26] ALSA: info: drop the poll_table from
+ the info entry poll op
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-drivers-v2-25-245e54e87116@kernel.org>
+In-Reply-To: <20261104-work-procfs-drivers-v2-26-245e54e87116@kernel.org>
 References: <20261104-work-procfs-drivers-v2-0-245e54e87116@kernel.org>
- <20261104-work-procfs-drivers-v2-25-245e54e87116@kernel.org>
+ <20261104-work-procfs-drivers-v2-26-245e54e87116@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:49:59 +0000
+Date: Thu, 05 Nov 2026 19:50:02 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,7 +84,10 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> No driver implements ->ioctl() of struct snd_info_entry_ops.
+> procfs owns the wait queue a /proc/asound file is polled on and wakes
+> the pollers through proc_poll_notify(), so the poll op of an info entry
+> has nothing to do with the poll_table anymore and only reports the
+> mask. Nothing in the tree implements the op.
 >=20
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -92,6 +95,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-drivers-v2-0-245e54e87116@kernel.org?part=3D25
+s-drivers-v2-0-245e54e87116@kernel.org?part=3D26
 
 
