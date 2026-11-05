@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F785606D53E
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:58:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE2B606D813
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:58:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=jbxtXhUv;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F2b0FoPl
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=1PLLRCGG;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=L+xOHoP2
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=AmN7iDpzjJ1PM6HacIbA4oMAV9jT2VXf3oFN7TUN1kQ=; b=jbxtXhUvZVeSUWGyYYk+x7i9w+
-	dv5XNBWoAgrD/rglovub/t1arJoaunK1GU2rseLSuXoKhkQpRdPI8jJp0QKGaC5ZIcd1EI5cF7L29
-	RSBefUUIVETMJTYVQ+uO23zHOYfLaQemHNuYHFlXEFZi1hxIU/Z9cMzIC3FFKJS/uWRD5iTgNp8Ro
-	WXA77F95gQQrYzSWKMLGfjol2pR5P3NXOpR6HztqwRWYR3tEHoTGlKvvWTpocVOkLNOXOceBKw6OD
-	SPlVxpp88bqZIwtKKpkKcyunqP83iZUs/7KC3MByyDgLo/RChSM4fAW1+5OohP1zqHm1BXr8nnikB
-	+g1toCBg==;
+	bh=cJix24xlgst9n1WrSlWeglZeAB5lHupKhKyXWNZp4cA=; b=1PLLRCGGdRPshMrXF/U9dBiTlR
+	Z0hL44TR5NXSJTXIeRFRYr8VX7X4wWSzvdlfqJMnVSr1pM5oJIrJD/ceA0BCW0C/X/p0doam4blLI
+	2FSprsqN4zOYcU5Chs/kqyWFGHBB1ekB7+c9Cb2ICsbA1xilkVqeSRm0dC+OZqXjTF8vf1jPE/GaZ
+	BpqxHo5x8VHkUVpv5XuI4J93kNqubFnJBfNlXnkIU32wtjcBtNLUVn7n5mSK8dQu7m+xZEd2S15au
+	oGUdlfjEk3T1QHV//eph4h9Ks1D/cRL1pwkIyZPugSl0CyfCkEbsfhNKUvJuzNJykFzgmHhB5YSSE
+	NWThnNgw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3Gk-0000000ANX9-1epp;
-	Thu, 05 Nov 2026 19:37:06 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xP3Gj-0000000ANSm-1jNB;
+	Thu, 05 Nov 2026 19:37:05 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3FW-0000000AN3Z-28m0
+	id 1xP3FN-0000000AMxt-37j0
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 19:35:50 +0000
+	Thu, 05 Nov 2026 19:35:47 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 4266943DCF;
-	Thu,  5 Nov 2026 19:35:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4C061F0089E;
-	Thu,  5 Nov 2026 19:35:48 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 809D643E8B;
+	Thu,  5 Nov 2026 19:35:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE9761F008A1;
+	Thu,  5 Nov 2026 19:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793907350;
-	bh=AmN7iDpzjJ1PM6HacIbA4oMAV9jT2VXf3oFN7TUN1kQ=;
+	s=k20260515; t=1793907341;
+	bh=cJix24xlgst9n1WrSlWeglZeAB5lHupKhKyXWNZp4cA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=F2b0FoPlGpVNh9mR9X4mwXarD/KuCYBVnvUmH6E7tZhJtBt5PCXx933IV6aiReouK
-	 LnK4sp79dqsWsQgIRBB52e6C2scR+7O9aq42OmuiMuAhSvxgt8qaQEjRMxcJps+5xW
-	 VdeI/08WnjHl5IfcKYrPNVcCkskBx+YzqyRBgsiWHP62+S9vXdFt+dSnKmNPdL54Gi
-	 Fu1iRVyhor6sLsyNi3KpdJnVwZfldWCmfqPHKyXacsYeRvCGc5d0g5zBMwG5Z1zMa4
-	 riwDW9+fwdB3AHVr9RxmUYb4iBKW9d+rhmsuBt5B7UD8oM7aTO9IwB8MyCJWnccLPv
-	 tGGpP6SDL1kpA==
-Message-ID: <sashiko-outbox-199947@kernel.org>
+	b=L+xOHoP2Qx5/9+jDvNfdYODhXjxiK8RqXCJAGAloJ6qzD7Elus2F01gxdiUGPSQLg
+	 3hE59XNDGx3Za7IV7IDFhB9LofEWxPBNwNN/k2HxtiMoqi+Vht+upRCGoGgUOFkH3t
+	 K7IF2X+TmYn4ZurNmoxh4WyCS1bWuRxOE2FTEP388C89fXUcunpJ8ImJUn3klOcRfi
+	 1QcyMSKwSstZGjhnH3nI7Wpv2CbW+x291Woe+gaojDGoMmhzCTYy/uDNTr87TxD1Wq
+	 B6dVO0t+pEqWn986xFrR6AlFJZfPthvQSSC5s4G8lgOL5oeFUjLAQkfCfoj1cM0Jd4
+	 LCM5TqqMHZEYg==
+Message-ID: <sashiko-outbox-199943@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 17/23] fs/proc/vmcore: let procfs copy out
- reads
+Subject: Re: [PATCH RESEND v2 13/23] proc: let procfs own the seq_file of
+ /proc/stat
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-core-v2-17-76ace653a773@kernel.org>
+In-Reply-To: <20261104-work-procfs-core-v2-13-76ace653a773@kernel.org>
 References: <20261104-work-procfs-core-v2-0-76ace653a773@kernel.org>
- <20261104-work-procfs-core-v2-17-76ace653a773@kernel.org>
+ <20261104-work-procfs-core-v2-13-76ace653a773@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:35:48 +0000
+Date: Thu, 05 Nov 2026 19:35:39 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,23 +84,8 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Implement ->proc_read_buf() so procfs copies what is read to userspace
-> after it unpinned the entry. __read_vmcore() fills procfs' buffer
-> through a kvec iov_iter. So a read goes through that buffer now instead
-> of straight from the old memory into the reader's, which is what
-> splice() did already. mmap() isn't affected. On ppc64 a machine check
-> while reading the old memory used to be recovered through the exception
-> table of copy_to_user(), by accident. copy_oldmem_page() copies with
-> _copy_mc_to_iter() now, so a read through procfs' buffer recovers from
-> it as well.
->=20
-> The buffer is 128k, which keeps the entry pinned for one such piece at
-> a time, and /proc/vmcore asks for PROC_ENTRY_FULL_READS so that a
-> larger read is filled in pieces. kexec-tools treats a short read of it
-> as fatal. A read that faults on its buffer in a later piece returns the
-> pieces before it now instead of failing with -EFAULT. fadump removes
-> /proc/vmcore when its memory is released and that no longer waits for a
-> reader that faults on its buffer.
+> Declare the show function and let procfs open and free the seq_file.
+> ->proc_open() only preallocates the buffer now.
 >=20
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -108,6 +93,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-core-v2-0-76ace653a773@kernel.org?part=3D17
+s-core-v2-0-76ace653a773@kernel.org?part=3D13
 
 
