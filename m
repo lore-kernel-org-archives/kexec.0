@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F21606A326
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:28:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6FD606A31B
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:28:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=SpB2/hEM;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=N8czzOm3
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=u2rocRpF;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bw/WUc87
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=t5ltLRfeO7A4ze3tr9EcZS3s3I93T55/6iRGXRatBcI=; b=SpB2/hEMSigEokREU5alhDhDZo
-	/euwv/IChcS0nusjiMl3s2ITNWp5FmojJZWni7bYF1/VyLgSiR9/Vm7eOBhoMGWb1OYI7JDrkz9Iq
-	6hEkVIqe9ZEelilDx14MtGmch8VhvU2xCC+vzVQLkE+Ovrxq1MvyLrQcxEfWaLKaGsyjwbWFOiISb
-	X0giaTHSkaodnKPevoNhTu+WYleuH7ZSf+1XakNhEy9UWY0Y/VuaI1BeNpxnc81fgEJxOe/nzM1vi
-	mGxmcvB3Zq4EuG4UZBiTj6faAZwfyfkS/01ZrouNzcmDlvulkCjRUrKSOF0XEKqnC1rhfKu6chMTn
-	mL8rsHYw==;
+	bh=VSHZyt2HX6jrf2329Ijyz/9CIcWqtdZcAyFYcq/4Bq8=; b=u2rocRpF0Gprbwgg0O3FjxqrOp
+	QeH7nrXn2czzeZn6tqRD9RP3wC5/dV7pg23oMMz81sz9lMqIoR1Nl6gOSsPPvfndjCcdj5DbugsO0
+	7oX/GHoH6Wz77LlW5PI0dzhw4gOGz1CUUbRjFvfhZb10KfOuUXskYvK8ljGR/9Ug0NiUU59P7tWw9
+	qs4B2cayNmj/Z70v1nxwyHAMmK75JS7z/SIuZixclqylnTCb5knPoJ5aTDuhv5goQPGhsX7H8uB+T
+	wmp1KjLhQ2i5vUhA8uxQTVPQhHX6RB/k8W+WUlt6KUy/EJJQ1A7dTvFubQGW074CG3Zzz9EuiefOv
+	U8TL9j2Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP38l-0000000AK38-2aA3;
-	Thu, 05 Nov 2026 19:28:51 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xP38o-0000000AK4V-3mME;
+	Thu, 05 Nov 2026 19:28:54 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP38k-0000000AK2l-2CxW
+	id 1xP38m-0000000AK3M-3kYN
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 19:28:50 +0000
+	Thu, 05 Nov 2026 19:28:52 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 0C4684168D;
+	by tor.source.kernel.org (Postfix) with ESMTP id 40E8C6017D;
+	Thu,  5 Nov 2026 19:28:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69BD71F00A1A;
 	Thu,  5 Nov 2026 19:28:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17F791F00919;
-	Thu,  5 Nov 2026 19:28:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793906929;
-	bh=t5ltLRfeO7A4ze3tr9EcZS3s3I93T55/6iRGXRatBcI=;
+	s=k20260515; t=1793906932;
+	bh=VSHZyt2HX6jrf2329Ijyz/9CIcWqtdZcAyFYcq/4Bq8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=N8czzOm3uss/Nev41wWI2HCgtA/JJ30J5ZI/5HvqHyryejYB/vPH/hBylXVkVGrv6
-	 OielTQZZJsAgzXMX0XY5+ywbGo0mmqbyFRwY2koxZomesAs/TJ9/gk+vP/71ryRjrz
-	 T4vkNotZqPxmBNAvJ14HURgj7iVi6JGCZi7FoFu5UsPJYhvBEXafmV8KZulQt0TLUa
-	 bnhBhsrybsI04J6qaEoTmohzhtxxwuJRWFtL3gmSrI+vhB1bjBR5l4UtjzfZC6c0lO
-	 DCD02LTUhjPPRIlhUjpD4vyOQAhRmKBCDZpyL6ta2I03KLDunRpmQHSavStcgYROjy
-	 RlifknHgKJUtA==
-Message-ID: <sashiko-outbox-199864@kernel.org>
+	b=bw/WUc87dAK9OgwLDerM/G7Pe9RKageq/S7vyIMIV+dxKfDT/6+AqyOaZ6Fy24Sf5
+	 xZ0+NlTB1ife40KhyEO8/2i3RZt4uYwfQUof6r8FI5lnRq/LcyHfWASkm3/MjWrdRi
+	 BgQ8a/ZYKTrhKL/NQvAtS4X8/cdEouDrtzAKSt2JTd0adgchhl1YlumOBJltoAEeGN
+	 vYbB+LfXceHt3UW6QGLdXHtaAnZDe7rNdeXAjPjeo8fIdhcgFV0G7rwEhhGvDXSfkE
+	 wVgK162apTb1SAAInG0qnJMlwH5s5bUi5ICww4nLneNlWhcy3veuvsSne6hkFWvg7u
+	 jpKMdfeHfDQsw==
+Message-ID: <sashiko-outbox-199865@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 01/51] alloc_tag: don't remove /proc/allocinfo
- under the codetag module lock
+Subject: Re: [PATCH RESEND v2 02/51] scsi: esas2r: don't copy kernel
+ pointers out in EXPRESS_IOCTL_GET_MOD_INFO
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -55,18 +55,16 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Gleixner" <tglx@kernel.org>, "Al Viro" <viro@zeniv.linux.org.uk>, "Jonathan
  Corbet" <corbet@lwn.net>, "Christoph Hellwig" <hch@lst.de>, "Greg
  Kroah-Hartman" <gregkh@suse.de>, "Joel Granados" <joel.granados@kernel.org>, "Kees
- Cook" <kees@kernel.org>, "Jan Kara" <jack@suse.cz>, "Jan Kara" <jack@suse.com>, linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org, linux-mm@kvack.org, linux-usb@vger.kernel.org, samba-technical@lists.samba.org, sparclinux@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-serial@vger.kernel.org, "Takashi
- Iwai" <tiwai@suse.de>, linux-input@vger.kernel.org, linux-raid@vger.kernel.org, linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, "Chuck
- Lever" <cel@kernel.org>, tytso@mit.edu, dmitry.torokhov@gmail.com, "Petr
- Pavlu" <petr.pavlu@suse.com>, "Anna Schumaker" <anna@kernel.org>, yukuai@fygo.io, "Heiko
+ Cook" <kees@kernel.org>, "Jan Kara" <jack@suse.cz>, "Jan Kara" <jack@suse.com>, linux-s390@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, linux-pci@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-usb@vger.kernel.org, samba-technical@lists.samba.org, linux-m68k@lists.linux-m68k.org, linux-serial@vger.kernel.org, "Takashi
+ Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-bugfixes-v2-1-021c84d852e0@kernel.org>
+In-Reply-To: <20261104-work-procfs-bugfixes-v2-2-021c84d852e0@kernel.org>
 References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
- <20261104-work-procfs-bugfixes-v2-1-021c84d852e0@kernel.org>
+ <20261104-work-procfs-bugfixes-v2-2-021c84d852e0@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:28:47 +0000
+Date: Thu, 05 Nov 2026 19:28:50 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,74 +78,27 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] alloc_tag: unused function shutdown_mem_profiling_async() when !CON=
-FIG_MODULES
---
+> EXPRESS_IOCTL_GET_MOD_INFO fills in the addresses of the adapter, its
+> pci_dev and its Scsi_Host and copies the whole struct back to userspace.
+> Nothing in userspace can do anything with those addresses, and the
+> ioctl is reachable through /proc/scsi/esas2r/ATTONode, which is created
+> with mode 0444. Only pass the host number.
+>=20
+> Fixes: 26780d9e12ed ("[SCSI] esas2r: ATTO Technology ExpressSAS 6G SAS/SA=
+TA RAID Adapter Driver")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
-commit ec0095b3ecdd2d01651f48bc80cc81d976e06106
-Author: Christian Brauner <brauner@kernel.org>
-
-alloc_tag: don't remove /proc/allocinfo under the codetag module lock
-
-This commit defers removing /proc/allocinfo to a work item when
-reserve_module_tags() fails, avoiding a deadlock between remove_proc_entry()
-waiting on active procfs readers and allocinfo_start() waiting on the codet=
-ag
-module lock.
-
-> diff --git a/mm/alloc_tag.c b/mm/alloc_tag.c
-> index 82e2c3448dcf2..7d7ad67049537 100644
-> --- a/mm/alloc_tag.c
-> +++ b/mm/alloc_tag.c
-
-[ ... ]
-
-> @@ -604,6 +605,26 @@ static void shutdown_mem_profiling(bool remove_file)
->  	mem_profiling_support =3D false;
->  }
-> =20
-> +static void remove_allocinfo_file(struct work_struct *work)
-> +{
-> +	remove_proc_entry(ALLOCINFO_FILE_NAME, NULL);
-> +}
-> +static DECLARE_WORK(remove_allocinfo_work, remove_allocinfo_file);
-> +
-> +/*
-> + * A module's tags are reserved with the codetag module lock held for
-> + * writing, and a reader of /proc/allocinfo takes that lock with the ent=
-ry
-> + * pinned. Removing the entry there would wait for that reader for good,=
- so
-> + * let a work item do it.
-> + */
-> +static void shutdown_mem_profiling_async(void)
-> +{
-> +	if (!mem_profiling_support)
-> +		return;
-> +	shutdown_mem_profiling(false);
-> +	schedule_work(&remove_allocinfo_work);
-> +}
-
-[Severity: Low]
-All callers of shutdown_mem_profiling_async() are in reserve_module_tags(),
-which is inside the #ifdef CONFIG_MODULES block further down in
-mm/alloc_tag.c.
-
-When building with CONFIG_MEM_ALLOC_PROFILING=3Dy and CONFIG_MODULES=3Dn, w=
-ill
-defining remove_allocinfo_file(), remove_allocinfo_work, and
-shutdown_mem_profiling_async() outside #ifdef CONFIG_MODULES trigger an
-unused-function compiler warning?
+Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D1
+s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D2
+
 
