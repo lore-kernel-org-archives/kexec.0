@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1DE606A336
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 16:52:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6075A606A32D
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:12:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=AbTmUrb6;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=fevxLUfT
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=bIuQAixJ;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=afm5Fdnb
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -14,99 +14,98 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=7+a5U8fHtsX3E5MaoZwCfMwFhX7Hac3DauAHwFYDfPc=; b=AbTmUrb6SVunn0M165P/eBaA8T
-	X3aRbqlAlVENw5weNB9lAvqMxp7ytSdIi2FFlb8ZZXWO906VMwyNm0Q/LZkhG+u7u+5fSk5sSeISH
-	49EvmdbP9xirQbH0s9CF9fmjVDHgndUzankcqOSowVW1AiiG34QNQLytuMVjobJHVfhZea3yIKrbe
-	DwIteygs43BLo7U7wWP/9kNlMCeR7wTOSaHwHbV/8UhRs9DOcCEa19jutfY0gtOjKTPqHl5tSwI9T
-	DS1KhO9j1ZnA83VKYRCH/VQgq0zVZBSZXRDnuvFU+xObeFskoNWHq7JHy+otARUmc/GSDaH9m+D9M
-	UMGepCZA==;
+	bh=QH8EWm3WpJvKmm+3SH11RyockHxBeCCGhqou8vP+rPk=; b=bIuQAixJShiHbF7BRPXKs5AyEr
+	Qy76ir53tZaKnPRP6f68KXaVDNp8jLr2MOVWpW/WRJ//ZybhtGPSKNItkJUuKhTBoEz8j6E026JZU
+	9BiGkPFi8IpcPTo2a0xUM+9h9IGY1qSn5w4HcUEsnwOyip9B0o9eUOG2+OXiDUOP3QIAcor6dUiSO
+	/ms5m9PJY37Mqxj6O3+I0UySpy8LWozWXdnHb2JMlqN/DL8XUbn7hiGVdjWHjXMpnHACNnoxzSAD1
+	Wz0Y9wvS7L6toU5LfRq49pyNZ35qp62MKvFXNdCMOU9ivI1Uesb25uwyoFq2xvx8YJa3USZcbEI90
+	pd/5YG/w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP0hZ-00000009hxz-497U;
-	Thu, 05 Nov 2026 16:52:37 +0000
-Received: from mail-pf1-x432.google.com ([2607:f8b0:4864:20::432])
+	id 1xP2ss-0000000AIVB-432S;
+	Thu, 05 Nov 2026 19:12:26 +0000
+Received: from mail-pg1-x533.google.com ([2607:f8b0:4864:20::533])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP0hY-00000009hx6-2W04
+	id 1xP2sq-0000000AIUn-14n1
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 16:52:37 +0000
-Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-8a06ca6e8f4so1516297b3a.1
-        for <kexec@lists.infradead.org>; Thu, 05 Nov 2026 08:52:36 -0800 (PST)
+	Thu, 05 Nov 2026 19:12:25 +0000
+Received: by mail-pg1-x533.google.com with SMTP id 41be03b00d2f7-cdab8873d9dso945324a12.1
+        for <kexec@lists.infradead.org>; Thu, 05 Nov 2026 11:12:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793897556; x=1794502356; darn=lists.infradead.org;
+        d=google.com; s=20260707; t=1793905942; x=1794510742; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=7+a5U8fHtsX3E5MaoZwCfMwFhX7Hac3DauAHwFYDfPc=;
-        b=fevxLUfTOdhHp8o5PmLFnQ0NiqTonA24ifFQ2FxoCoTMM5xLiGjYuqFXfTrfV3/iy9
-         9Ae0SATZ/2huM16cbgf91Ta133+mVoVNX+dJXuu0fDg4cpPf/T0rCHe9+8/mCMjqGztF
-         giOh7uhNwuqOUFc685tVEqqzAw8AZtkvq7nSZs/ckeM0X0F/mfsEGtLBl+ZYSfSVOH2R
-         iGMcEqrqLukKh6EJ5v97EhomyNlrvbCHe3JGioTPYH7Xzi1cYeKc/QlihdI8M6mshIFJ
-         DbBKEPUymn26HPjOMTk4IsvG/vflADLKESDyrPCJ3cRnF+3q/498PGXsQl8z/XV1/xMr
-         FyEg==
+        bh=QH8EWm3WpJvKmm+3SH11RyockHxBeCCGhqou8vP+rPk=;
+        b=afm5FdnbqudN3Xsc/Qq///VR+bPkL6TmrI0MHy7c6KSGiNphTm1g8Vpj8wOmcGHoxg
+         0OWh3HIN/QrHfsT0yfbGEqy59iQu36OB7y7GhWWcGMZbp3WOydahzJUzWH+xffG9uaDf
+         BdElF6qky+nLe8x37fPjGn8Gaz1splW/cX7f4T50OKFyDQ/JjWsYKj/ztImL0fkv14/N
+         Oo4SSLiccg1j9yN+VarUsWHPf2bD8hIGoZm6ZhAefZciSLnNpemef+H4X1rWpyu2vQRt
+         DHqOyAGpyhBzmET+T4wMX9fBXP+iqH3cdh/WdA+cWQ1iC/ukkdYoO3l1Iw/unX7ijSqc
+         l2IQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793897556; x=1794502356;
+        d=1e100.net; s=20260707; t=1793905942; x=1794510742;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=7+a5U8fHtsX3E5MaoZwCfMwFhX7Hac3DauAHwFYDfPc=;
-        b=XkTQzKCGELJBIvfr4udRon6VINMkt2sRAIEyKQgGhDYllhN6zO0rGKRt2amLrNVyvx
-         EctaGaHWY8TmCRqztZfCskcAKqRzV1lehX+Dbu7lGu4+98AFzLpL/0N8g970DMK5ibYU
-         aQnnZLtzLj9vLq+dIUXQsMX13OJSBExy9HFn3uHb2wmeAtl8qYW3ms9M2wEg7MIgQ3KD
-         8gVuD8jlq8yIVMwaISYkERXSQoI6OTE8FfefQ+OtopmT2nZlNoS7BqYjLJC5wPU/rO1n
-         rOMQp9ZYyNKiQ6+nIYb5uYjYCd2zESwzPI2nT0wH4Keze4/3s573ZCI8yO+mv0wivldv
-         d/hA==
-X-Gm-Message-State: APuU4Z+n8s2GWjjk/+G6D9tyf9XnmzWVNqAN2poKau5x5RBw7ZL+6ODl
-	yZq5IdwZPJYc5iYIwFzYmlzxFsUtb4zJvAys2aFN2oxEgJbuLZIwi5mUmDtjAA6ynw==
-X-Gm-Gg: AYBFou3ZEsTWzU+3KMAbk/GGDLhWRAfZgfal5+PFLBe7HX0l2YubErCdalJU6IFCvXS
-	Wxs25oiiAaeOcuQdOxyBttEetE19qdfbOGz+2z5EvtPc1V7IpxVNA6awTZ4demmq7vPyyTzJVeL
-	YswDpVI7Zv8E1FQcyuStXRWWd/IeH/qOqlHBLyXOefFDV8VRWOeecGMddlOCAnwL953zL/1Wckg
-	ckzmd1b17m5vJgdf38tu3vsjSryzYVJJH1TT7IxpWPoVI3ELV8NChj5iUcYuzDOZTkS999Ntk8E
-	w1owsOPuhAoRNydsOQ9CdltlI4xR4J/Del9BFowkv50GMnaTmvds8E4HXgNQwUjy6Y/2S0gmcbQ
-	ZK2Eum7aZFhRYp2Ohb48bnLnXhOH5vfzTMrZMfOgKDxQTUXnmJLgt4BQnkRW2hDuKo81/uKLdm8
-	RNUe7hJEyE1k5sL5eh8am5UMgHA1eYbqmtDZ2gKjpYrDAr5efzHv23nLzyjuhMLDLHBXVlySrzb
-	iGCVtVFL1ECqou4WcUGpHTFnEluVRXFdSnr7elJHgynwgGO7Re0OZhHx2U0yAu9FYj6PUwejCE8
-	yToanIIBe9rRKYFIJ7EdSu6o9EW2qgKkK7+/pi6an36zyb1tOPdm9IZOoUPmckVFxuHrAIWdCGq
-	tmRAtGUkoMw==
-X-Received: by 2002:a05:6a00:e11:b0:882:359f:ef17 with SMTP id d2e1a72fcca58-8a9bb7a0b64mr18260859b3a.12.1793897555111;
-        Thu, 05 Nov 2026 08:52:35 -0800 (PST)
+        bh=QH8EWm3WpJvKmm+3SH11RyockHxBeCCGhqou8vP+rPk=;
+        b=FlK9Gb/a/R3YLobUajA3ps+Tkbr0Vq+5qATmIEU4jTvelbHzzPRyAGanBNIkt5YviE
+         nS5raewWCfa3aNgQ7z0bn10jVpi4c9to/mg3gz0B2PSKjftpwmoXmJ7s0oMZJgEuNKFu
+         TUBWcRpC6A0RdKXf5xrsNWG7RhadFkGbOPrtR1NdUdnnMt2GwcjRNfmcwo+75337a3cz
+         WPfnDHhA2SoiXveEndzCxlqJ42uWZ1fha3SUwIEVDmNMgXI7FydvJaQUB4xHDsdAk9ms
+         MXBefFzxiWDplJcjvE8tE0EpxXS03euqc3DDzK4E3bXc6IG8mQsSO1nDGLyW4WzNhYK3
+         +shw==
+X-Gm-Message-State: APuU4Z90LLMOQAam57Wpt5407S2RyqH3BCGfy3iClV0f1S1LA4vIoAkt
+	m5pJvkktQGwyBq9muf5JPgFUCjgwAnKCVH5juw/pUkfe05BezKhe6bBUqou9EWcU+g==
+X-Gm-Gg: AYBFou3g3Hml9TqD6OoGtP30p9McUgMbsC9ts3d1HHGadOPoOgNO8eR7J54uRWEzb0W
+	XCqsXPL6YpGtMGpgm5YfKM56Z4AbHAV3+ugS0egeKYvu9oXT/QO526oYdA5TYJYHON2oCl/JwKQ
+	4MmHLJeYrv2VPvHeId8ynhkJeZaLB7nTDScquS/jvj3FCoczvkPTx4sac4R7C1cJ7GTF2OJKg9n
+	8MKG/xWpeOkWbTV3+0fERX3XlKU7FAFUOawny8U+4tVx2AuWrqr2niITfhfDUvZDy0liNqqu3JR
+	x4O2IfF4oA3+PwpJyBUccoJdMPX3mjAwZlBl+7nRKkF9OwLh9C6BorNeo2MkYCq7vQd7ahEI4nj
+	PlID/n9Q8mEmGOP54y+DIfVHLiccoDE45rlZ8SKcLWvU5IINZFwIROqkf6jZYF6aMPr4MKBkhj5
+	RO0zvht10sJ4+PmzvdSirTDUNmwBGu5nLifVGToJ2H2TmchalCxGM4XQSycaOSPdduPgEHyC3Kc
+	fteCFkrOKPeUxYsZhBUDFqy3XMtQSltijIYu7cGSU7IujvC5Fq14kCEYfPX6X4faQn6BRmsLRNe
+	c86q8H9YHN22OdONCBHO6j6+EPGSUjwpnHzZyC2+TRdlTDLY+CWlbui8XHLVpXcP
+X-Received: by 2002:a17:90b:268a:b0:3ac:7c52:faeb with SMTP id 98e67ed59e1d1-3ae89769d66mr17879218a91.41.1793905941532;
+        Thu, 05 Nov 2026 11:12:21 -0800 (PST)
 Received: from google.com (33.79.127.34.bc.googleusercontent.com. [34.127.79.33])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8b09bb48410sm2298197b3a.46.2026.11.05.08.52.33
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b0944eb1d1sm5401592a91.0.2026.11.05.11.12.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Nov 2026 08:52:33 -0800 (PST)
-Date: Thu, 5 Nov 2026 16:52:30 +0000
+        Thu, 05 Nov 2026 11:12:20 -0800 (PST)
+Date: Thu, 5 Nov 2026 19:12:17 +0000
 From: David Matlack <dmatlack@google.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org, Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	David Hildenbrand <david@kernel.org>,
-	Hugh Dickins <hughd@google.com>, Jonathan Corbet <corbet@lwn.net>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Lorenzo Stoakes <ljs@kernel.org>, Michal Hocko <mhocko@suse.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Vlastimil Babka <vbabka@kernel.org>
-Subject: Re: [PATCH v3 00/10] liveupdate: Preserve tmpfs files across Live
- Update
-Message-ID: <auy0ThryqW5nVx20@google.com>
-References: <20261103010216.3447716-1-dmatlack@google.com>
- <20261105-sitzordnung-nahkampf-ausbleiben-6db911d0333e@brauner>
+To: Vipin Sharma <vipinsh@google.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org,
+	ajayachandra@nvidia.com, alex@shazbot.org, amastro@fb.com,
+	ankita@nvidia.com, apopple@nvidia.com, bhelgaas@google.com,
+	chrisl@kernel.org, christian.koenig@amd.com, corbet@lwn.net,
+	graf@amazon.com, jacob.pan@linux.microsoft.com, jgg@nvidia.com,
+	jgg@ziepe.ca, jrhilke@google.com, julianr@linux.ibm.com,
+	kees@kernel.org, kevin.tian@intel.com, leon@kernel.org,
+	leonro@nvidia.com, lukas@wunner.de, mattev@meta.com,
+	michal.winiarski@intel.com, parav@nvidia.com,
+	pasha.tatashin@soleen.com, praan@google.com, pratyush@kernel.org,
+	rananta@google.com, rdunlap@infradead.org, rientjes@google.com,
+	rodrigo.vivi@intel.com, rppt@kernel.org, saeedm@nvidia.com,
+	schnelle@linux.ibm.com, skhan@linuxfoundation.org,
+	skhawaja@google.com, vivek.kasireddy@intel.com, witu@nvidia.com,
+	yanjun.zhu@linux.dev, yi.l.liu@intel.com
+Subject: Re: [PATCH v6 07/27] vfio/pci: Preserve vfio-pci device files across
+ Live Update
+Message-ID: <auzVEUpFEoWltpVg@google.com>
+References: <20261102153656.1431701-1-vipinsh@google.com>
+ <20261102153656.1431701-8-vipinsh@google.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261105-sitzordnung-nahkampf-ausbleiben-6db911d0333e@brauner>
+In-Reply-To: <20261102153656.1431701-8-vipinsh@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261105_085236_639683_DF4060DB 
-X-CRM114-Status: GOOD (  26.82  )
+X-CRM114-CacheID: sfid-20261105_111224_342682_A9C63EE7 
+X-CRM114-Status: GOOD (  28.25  )
 X-Spam-Score: -14.3 (--------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -118,75 +117,121 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 2026-11-05 04:42 PM, Christian Brauner wrote:
-> On Tue, Nov 03, 2026 at 01:02:06AM +0000, David Matlack wrote:
-> >   4. Retrieve files that were preserved from a tmpfs mount onto a tmpfs
-> >      mount chosen by userspace, via the new struct
-> >      liveupdate_shmem_retrieve_arg. The kernel creates the file as if by
-> >      openat(dirfd, ".", O_TMPFILE | flags, mode), so the file gets the
-> >      same flags, owner, permission checks and security labels as any
-> >      other new file in that directory, and is charged to that mount.
-> >      The kernel fills the file before returning it, so nothing else can
-> >      access the file before it is complete, and userspace links it at
-> >      the path it wants with linkat() (patch 7).
->
-> No, sorry. That's not what we discussed at LPC and it's not what the RFC
-> and v1 did.
+On 2026-11-02 07:36 AM, Vipin Sharma wrote:
+>  * TOCTOU synchronization: vfio_pci_dev_is_frozen() is checked locklessly
+>    on entry to the ioctl, read/write and mmap paths, and re-checked under
+>    a lock that freeze() holds before any operation that could change the
+>    device or vconfig: under vdev->igate in vfio_pci_ioctl_set_irqs() and
+>    around every config-space write in vfio_pci_config_rw_single(), under
+>    vdev->memory_lock in vfio_pci_runtime_pm_entry(),
+>    vfio_pci_ioctl_reset() and the SR-IOV enable path of
+>    vfio_pci_core_sriov_configure(), and under dev_set->lock in
+>    vfio_pci_dev_set_hot_reset(). A racing operation thus either completes
+>    before freeze() takes its snapshot or fails, while existing BAR mmaps,
+>    ioeventfds and dma-bufs keep working. Serializing config writes on
+>    igate covers the PCI_COMMAND, INTx disable emulation, power state and
+>    FLR paths at one point (the INTx disable emulation now uses the
+>    igate-held __vfio_pci_intx_mask() and __vfio_pci_intx_unmask()
+>    helpers), and also serializes the irq_type and virq_disabled accesses
+>    of config writes with VFIO_DEVICE_SET_IRQS.
 
-[...]
+I think there's a simpler way to do this. Checking the frozen flag
+locklessly and then re-checking it under whichever lock covers each
+path spreads the synchronization across igate, memory_lock and
+dev_set->lock. That makes it hard to convince yourself every path that
+can change the device is covered. It also makes every config space
+write take igate, for all vfio-pci users, even when
+CONFIG_VFIO_PCI_LIVEUPDATE=n.
 
-> So instead of LUO handing out a file descriptor for a file it invented,
-> let userspace create the file, O_TMPFILE, O_CREAT, whatever it likes,
-> with the owner, mode and xattrs it wants, and let LUO put the contents
-> into it. That's what the RFC did.
+Instead, I suggest adding a per-device rw_semaphore to struct
+vfio_device in the VFIO core, e.g. liveupdate_rwsem, that protects a
+liveupdate_frozen flag:
 
-I'm fine with going back to that in v4. The retrieve argument will just
-be a file descriptor for the target file, and LUO will only restore the
-contents and size into it. Everything else about the file is up to
-userspace.
+ - vfio_device_fops_unl_ioctl(), vfio_device_fops_read() and
+   vfio_device_fops_write() take liveupdate_rwsem for read and fail
+   with -EIO if the device is frozen. That covers every device ioctl in
+   one place, including the ones handled by the VFIO core
+   (VFIO_DEVICE_FEATURE, VFIO_DEVICE_GET_REGION_INFO and
+   VFIO_DEVICE_{ATTACH,DETACH}_IOMMUFD_PT). This patch doesn't block
+   the last two at all today.
 
-> The checks on the target are trivial: a writable fd to an empty shmem
-> file with the inode lock held while you fill it. A tmpfs file can't be
-> sealed, it only ever has F_SEAL_SEAL, so there's nothing to restore but
-> contents and size anyway.
+ - freeze() and unfreeze() take liveupdate_rwsem for write, before any
+   other lock, and flip the flag. preserve() doesn't need it since it
+   only serializes state that doesn't change after the device is
+   opened.
 
-Sounds good. The one other check I plan to add is rejecting a target
-that LUO is already managing, e.g. a file that is preserved in an
-outgoing session and whose size is frozen.
+Putting this in the VFIO core also means other VFIO drivers can reuse
+it if they add Live Update support in the future.
 
-LUO will also add the folios while i_size is still 0, and set i_size
-last. So reads, page faults and memfd_pin_folios() wouldn't see the
-folios until the file is complete, and if the retrieve fails partway
-through the target is left empty.
+The lock order then becomes:
 
-> I also really dislike file_open_root() for this. It's an openat()
-> emulation inside an ioctl which is completely terrible.
+  liveupdate_rwsem -> dev_set->lock -> igate -> memory_lock
 
-That is fair, it is ugly. That all goes away in v4.
+freeze() can still take igate and memory_lock to check irq_type,
+pm_runtime_engaged and sriov_active. But the ioctl, read and write
+paths no longer need to re-check anything under those locks. So you
+can drop the igate change in vfio_pci_config_rw_single(), the
+open-coded vfio_pci_zap_and_down_write_memory_lock() in
+vfio_pci_runtime_pm_entry() and vfio_pci_ioctl_reset(), and the
+smp_load_acquire()/smp_store_release() pair.
 
-> > - Is patch 9 (retrieving tmpfs files with O_RDONLY) worth merging?
->
-> No. With userspace creating the file this doesn't exist.
+Two paths still need their own handling because they don't go through
+the device's file:
 
-Ack.
+ - vfio_pci_core_sriov_configure() is reached through sysfs. Take
+   liveupdate_rwsem for read around the frozen check and the
+   sriov_active update.
 
-LUO holds a reference to every retrieved file until the session is
-finished. Since the target has to be writable, executing a restored file
-will fail with -ETXTBSY until userspace finishes the session. But as
-Pratyush pointed out, userspace can put binaries in a special session
-that can be finished immediately so that the binaries can than be
-executed.
+ - VFIO_DEVICE_PCI_HOT_RESET issued on one device also resets the other
+   devices in its dev_set. Keep the check in
+   vfio_pci_dev_set_hot_reset() under dev_set->lock. freeze() sets the
+   flag while holding both liveupdate_rwsem and dev_set->lock, so
+   holding either one is enough to read it. Please don't take the other
+   devices' liveupdate_rwsem there, since that would invert the lock
+   order relative to freeze().
 
-> The preserve side seems fine to me. If you freeze the size of a file
-> for everyone you better be allowed to write to it.
+I don't think mmap needs to be blocked at all. Creating a new mapping
+doesn't change the device or any of the state that gets preserved, and
+existing mappings already keep working while the device is frozen.
+Leaving mmap alone also avoids taking liveupdate_rwsem under mmap_lock,
+which could deadlock: the ioctl, read and write paths can fault on user
+memory (taking mmap_lock) while holding liveupdate_rwsem for read, and
+freeze() may be waiting for the write lock. Please update the comment
+in freeze() and the DOC section to match.
 
-Thanks for taking a look.
+> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> index 9914f3ac69ae..1f1ac7a798aa 100644
+> --- a/drivers/vfio/pci/vfio_pci_config.c
+> +++ b/drivers/vfio/pci/vfio_pci_config.c
+> @@ -644,10 +644,10 @@ static int vfio_basic_config_write(struct vfio_pci_core_device *vdev, int pos,
+>  
+>  		if (virt_intx_disable && !vdev->virq_disabled) {
+>  			vdev->virq_disabled = true;
+> -			vfio_pci_intx_mask(vdev);
+> +			__vfio_pci_intx_mask(vdev);
+>  		} else if (!virt_intx_disable && vdev->virq_disabled) {
+>  			vdev->virq_disabled = false;
+> -			vfio_pci_intx_unmask(vdev);
+> +			__vfio_pci_intx_unmask(vdev);
+>  		}
+>  	}
+
+With the rwsem, config writes no longer need igate, so this change
+isn't needed. If config writes and VFIO_DEVICE_SET_IRQS really do race
+on irq_type and virq_disabled today, that's unrelated to Live Update.
+Please send it as a separate fix.
+
+Lastly, please add the freeze infrastructure and the checks in their
+own commit ahead of this one, e.g. "vfio: Add infrastructure to freeze
+devices for Live Update". Then this patch only has to implement
+freeze() and unfreeze() on top of it, which will make both easier to
+review.
 
