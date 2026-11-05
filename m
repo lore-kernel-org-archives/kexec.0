@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3393606D802
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 20:30:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98320606A328
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 20:31:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=OPwXIs4L;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MKTd/AG4
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=np8Swkpe;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WP5zysBl
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=3aycYEBDbjdfc7/kYe/T64Q9jvyJ2iWA9tEfOPLcA+E=; b=OPwXIs4Lr6s+Vg7jJ9uo3ioZpf
-	RHjH4bB4z0OmuABPurwD14giQRLpHOqiJ2/rW3lhCJ5zfMGzefLsDFLo8IGfEAlNTFmiNvweqKX7W
-	+V/Ka6jpyczOn3gVzyssJSk7Kzpf/h4JW7OsOXjr+5MX54uBWGw8mi1Fd3ANASvRgzTV/rR4TVtqL
-	FUs5MREUn9RMNCJ5TGB/dJ/yjFDPeyy5IgWoAuwt8ZbGsvd/0MTJUfcT1Gg14ncqQ2tIj+5dbh+Dg
-	KReuz8tObe0IthAmhsohbZnUQYNP+VBfXR9/t0IEgx/uJeU9yyFhqbkUb6eFEeKtx5GWen05g3Ddb
-	CXT/rOnw==;
+	bh=Qw513NKzixnVetQs2aPch799inLwFwvqjGlTZsHFgHc=; b=np8Swkpe3xWt1m1cn+eVc47O/h
+	fcQuJB2IOJMkaa4+pdRRGxUzQxgu42lkTeoQkLvc/X0W5130nP1J/PoBKAEpEQBjhNdi7BlUqeVVp
+	gwEgXjOUiP09tBEdOmxhGUWIkQyVJzjVZMcMDumpXH9PwiJk0fZCnaYLL10xH9sGd4VHZfk5ZxJfs
+	KViJdFH/CCvtUncVRrK0i3LDEM75o2PfXDid0XTGcI0lAQNHOO6ZNaE46MCRgYUM+DypPZmq6j+D9
+	Zuhgl5hkJGzZ89m5ggxXLO4X6GFdO/vn3QREhdmziGnkKRcnszo6lZE++W98l2TmW4Dx1PUz7HuuJ
+	HmA3+ymQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3Ax-0000000AKsj-35Tw;
+	id 1xP3Ax-0000000AKro-1SQ7;
 	Thu, 05 Nov 2026 19:31:07 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP39G-0000000AKIQ-2yNd
+	id 1xP39F-0000000AKI0-196W
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 19:29:24 +0000
+	Thu, 05 Nov 2026 19:29:21 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 75BD0437D5;
-	Thu,  5 Nov 2026 19:29:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F10DE1F000C1;
+	by tor.source.kernel.org (Postfix) with ESMTP id B405F60154;
 	Thu,  5 Nov 2026 19:29:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF3F21F000C1;
+	Thu,  5 Nov 2026 19:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793906962;
-	bh=3aycYEBDbjdfc7/kYe/T64Q9jvyJ2iWA9tEfOPLcA+E=;
+	s=k20260515; t=1793906960;
+	bh=Qw513NKzixnVetQs2aPch799inLwFwvqjGlTZsHFgHc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=MKTd/AG4bVwkR+b2GF208LnMZfWrUlqFbm1pMBbSDD3WYnbXwqUy5VQ+lWyM6SNJu
-	 lz/dclSSpegfq5SEGEfBf6625Y4g8OyF4QW4OLSTxiOfTue470fGd1TPQdSpTqnj43
-	 ICV2RKLESKaBxJNaibArgn3ldui1C2dpKkNatkQarCY+t3PhxnSOeaKuRbWfL6/xAE
-	 ZShLGqZSqpc+z4DdGoHy5h26wpa023m96jQ73G3zVSjOVmGegLWzLyUhy4LNOhpUwH
-	 uKO6G2AHPC0IQqrlvprv/L1ZgqClTdg3drPRJPRNRieMLhpDrh7lJjuN+buWWBl5ZP
-	 SWx5hlboXGHTA==
-Message-ID: <sashiko-outbox-199879@kernel.org>
+	b=WP5zysBlV6QoE+ebdO994NPOQCHtVK69BSl7GA0TkgCejzw4yv+Qi/dIb/BiTtwJI
+	 CtwiPcppWeOxu8qxGDLb2NNs4muOnWOkbdTfgMZetnT6EYIraiEzVZgwrSfKYuy20p
+	 lq1YQ+ODYgN/fNYKxtV+Y3MBG2phtgSlbN/PnX4DhhLfO11dC92+odtKZZNAdRC5BY
+	 cOK2uw6yB5xGSlQ2pqLEJNTrF9NrssiHaYNsRIIVDX79TmltA0T6xLv6ahSmhYnicd
+	 7xH40xuqXjCm2XXdHJHYyElfh7nUle5CnSYYX4imcJF/N71eKI1RK/06V3FFapNV/j
+	 F1VfvpFqH1/NA==
+Message-ID: <sashiko-outbox-199878@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 16/51] PNP: isapnp: don't read past the end of
- the buffer on a large pread()
+Subject: Re: [PATCH RESEND v2 15/51] PCI/proc: don't truncate the position
+ of config space accesses
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -56,16 +56,15 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Corbet" <corbet@lwn.net>, "Christoph Hellwig" <hch@lst.de>, "Greg
  Kroah-Hartman" <gregkh@suse.de>, "Joel Granados" <joel.granados@kernel.org>, "Kees
  Cook" <kees@kernel.org>, "Jan Kara" <jack@suse.cz>, "Jan Kara" <jack@suse.com>, linux-s390@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, linux-pci@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-usb@vger.kernel.org, samba-technical@lists.samba.org, linux-m68k@lists.linux-m68k.org, linux-serial@vger.kernel.org, "Takashi
- Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>,
- =?utf-8?b?UmFmYWVsIEouIFd5c29ja2kgKEludGVsKQ==?= <rafael@kernel.org>, tytso@mit.edu, "Heiko
+ Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-bugfixes-v2-16-021c84d852e0@kernel.org>
+In-Reply-To: <20261104-work-procfs-bugfixes-v2-15-021c84d852e0@kernel.org>
 References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
- <20261104-work-procfs-bugfixes-v2-16-021c84d852e0@kernel.org>
+ <20261104-work-procfs-bugfixes-v2-15-021c84d852e0@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:29:20 +0000
+Date: Thu, 05 Nov 2026 19:29:18 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,17 +84,24 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> isapnp_proc_bus_read() truncates the position to an int. A pread() at
-> an offset like 0xfffffc00 turns it negative, the check against the size
-> of the configuration space passes, and the loop then puts everything
-> from that position up to byte 256 into the reader's buffer, no matter
-> how few bytes were asked for.
+> proc_bus_pci_write() truncates the file position to an int. A pwrite()
+> at an offset like 0xfffff000 turns it negative, the check against the
+> size of the config space passes and the count it clamps to ends up
+> larger than what was written. The loop then reads past the end of the
+> caller's buffer and writes all of it into config space at negative
+> offsets, which pci_user_write_config_*() pass on to the config
+> accessors unchecked. The write also returns more than it was asked to
+> write.
 >=20
-> Keep the position as a loff_t and clamp the count against what is left
-> of the configuration space.
+> An offset above 4G that truncates to a small positive value writes to
+> the start of config space instead. proc_bus_pci_read() keeps the
+> position in an unsigned int, so a read at such an offset returns the
+> start of config space instead of hitting EOF.
+>=20
+> Check the position against the size of the config space before
+> narrowing it.
 >=20
 > Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Reviewed-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -103,6 +109,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D16
+s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D15
 
 
