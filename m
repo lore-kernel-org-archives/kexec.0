@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B60606D82B
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:28:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92315606EE95
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:29:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=T/wG0XkC;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jS5u1c3K
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=IoZWScUH;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JGXjVaZA
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Dl7+6TE3klHc2brN+bZbN2jvo5bJeOK9y0vggKbBQEw=; b=T/wG0XkCkWIbGYgny7smv90X+e
-	Ghs4Z8B+5cc+60N+bLXd+KOQ2LTjVaUqAw5uqc6GPBQynQjOIFMVgltKdS/gT3qM+zyFkfTY1xyLV
-	4nOD5ediMSajWKzojqsUPNYXtIC9A2nF95rT81cWHnigW+sL92hXa/MoHROz6wQ6DS5nGZCIV1hpI
-	TvHU8hiRwNH3uytZ2LlIAJ37K3hnhegRbc+xbtyRd8n5WEb5HSkallxaWB8EgI6lx14b1DorJKc7Z
-	Md0zqRZhnAZLye7NDu6hdgDyObNFWK7jR7qhKNDp7Bz/E9x/YKkTxCYML6atJjrL7yC0P3xksPb9N
-	LWNcN1ww==;
+	bh=8+PUUisCWtmjpXGFSnEzEH85bwtBLwjRqMOjM3Vmjmk=; b=IoZWScUH1xxT4zy1ILMoDEoyLv
+	bAiTcSSJ8HKddnzNXxwCvxy+USJ5HI3kPhtZXlgdqMtV88LlcMOqqNVfG02fdoiX9FsoYxW0spYU0
+	az+iOlOkpuYa2GQ5vERqNVd8U3DMjs8pvWuf74cUx5R6cDOTIzLVUOd4KBRrKc+XwDJ7G6b/EMbLD
+	LDi/mDipaZpABTpzNaGinTwY/sHkRpgKyt8Ri6lcn8wB3NoGV0d+xNCMXFSNCFD0v3UH/UVntqELz
+	b+W1+nW3zODmX5Qz9w6wkLDnyXFvbJ/bzz5+iHKPoh7r2zUKIqtqo+6VFEVLdvDx9ZYz4R1Q7hyR1
+	3k0gkGSw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP38p-0000000AK5L-4AJB;
-	Thu, 05 Nov 2026 19:28:55 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xP38y-0000000AKBJ-11Rc;
+	Thu, 05 Nov 2026 19:29:04 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP38o-0000000AK4D-20CG
+	id 1xP38s-0000000AK7q-1LGl
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 19:28:54 +0000
+	Thu, 05 Nov 2026 19:28:58 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 25F9A41643;
-	Thu,  5 Nov 2026 19:28:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73A841F00919;
-	Thu,  5 Nov 2026 19:28:52 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 1650D418CF;
+	Thu,  5 Nov 2026 19:28:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 680F41F0093A;
+	Thu,  5 Nov 2026 19:28:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793906934;
-	bh=Dl7+6TE3klHc2brN+bZbN2jvo5bJeOK9y0vggKbBQEw=;
+	s=k20260515; t=1793906938;
+	bh=8+PUUisCWtmjpXGFSnEzEH85bwtBLwjRqMOjM3Vmjmk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jS5u1c3K7ImMy0Crh/Iyk2SB/21MWY/WEpvgJVP8JqocmivL2vqyijNAqT7WiHjiW
-	 6Ua6xCh3Ij5H7KLcgaQqR8ixyHADZco61udOB+jlfTExiv59U4z+85rPVir6KFx0I1
-	 ObSC7TmsTyRLViUk/SGlKk2mUSVLDinXNea60PUpTBUb3+Z2hC3lUIZS8S2tOJbqUr
-	 AKLtI1OGNz8Uwoag5jqRzukuHqTD25SiOWs27vYk4NAWf9jGI4TCW+iBo9EUmmHNnG
-	 9mVPo4N3xUODMaacXqbONIqxB5Wjo2lV603RHlVY2XtZFGaIEcNZr1t9RV/1OvaXBn
-	 v83WwqOK20reg==
-Message-ID: <sashiko-outbox-199866@kernel.org>
+	b=JGXjVaZAK0CFDggQJdQ+YxBvHhKA1VCtqeH0C7UlBLv6f9VG7skZu2dEAbXlkszW+
+	 sJTw0vxxWmvEmoZ//n7adNnR8rVGdWKpWloXAc/ZnMiIcC1Z7LfAxfJ1lZKXvGWlIS
+	 PhuWRh2l7d+X+aiKaVkZ1til7ZTDouBvsGp4ZrUVot4KXntqybtMcWLZq8dMoH9KMN
+	 yQdRKjUGTGwZGlm1bL3/t2/RiEaT3aD77Fgz7S3aVXIsJYSEDz2AoydnPR6UJrVtty
+	 1L9zuHgLTxVXIrW2mhh+h+95gf4FNjVSdlwVAZRJPDPN2gARWlGlHNxwoYxHNUqah+
+	 h0Hn80dmMBTsA==
+Message-ID: <sashiko-outbox-199868@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 03/51] ALSA: cs46xx: hand the region to the
- region proc files
+Subject: Re: [PATCH RESEND v2 05/51] xtensa: simdisk: remove the proc entry
+ before the disk
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-bugfixes-v2-3-021c84d852e0@kernel.org>
+In-Reply-To: <20261104-work-procfs-bugfixes-v2-5-021c84d852e0@kernel.org>
 References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
- <20261104-work-procfs-bugfixes-v2-3-021c84d852e0@kernel.org>
+ <20261104-work-procfs-bugfixes-v2-5-021c84d852e0@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:28:52 +0000
+Date: Thu, 05 Nov 2026 19:28:56 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,13 +84,13 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> snd_cs46xx_proc_init() stores the chip in the private data of the five
-> region entries, but snd_cs46xx_io_read() reads that back as the region,
-> so a read of /proc/asound/cardN/CS46xx_BA0 and friends copies from
-> whatever sits at the region's offset in struct snd_cs46xx instead of
-> the mapped registers. Store the region.
+> simdisk_teardown() frees the gendisk and only then removes
+> /proc/simdisk/<n>. A write to that entry in between attaches the file
+> that was written to the disk, and simdisk_attach() sets the capacity of
+> the gendisk that is gone. Remove the entry first, remove_proc_entry()
+> waits for a writer that is in the middle of that.
 >=20
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Fixes: b6c7e873daf7 ("xtensa: ISS: add host file-based simulated disk")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -98,6 +98,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D3
+s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D5
 
 
