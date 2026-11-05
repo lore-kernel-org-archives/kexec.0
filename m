@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600AC606D83D
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:29:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09551608360C
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:29:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=cXiQWm1J;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JWpGZ4Rl
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=O6KDtgUj;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MRlIi4Su
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=DrjTmat1J2FdEKELfc0tb5qP5SKO3u8dr9sn5WHr8X8=; b=cXiQWm1J0CGwBmFu7MdFe9gDEl
-	3gksR5LewZMC2LJigUUZsDQgdLcoBa965ZjaJ1k/RsXVzHZvcwM8Yl7XWO4t9JcwUtucryAlHlCyf
-	4IoiAoS+GbX29VCUUj1C/aUxY1yqO/fBZri55amp+zGT2yrVAp4zc/BImvyL9Zkq2ePo41ZIPbE5b
-	UGYjyMzx/U/bEKQpQrTmdJlIei3pOomxK5ORHu0aY6t7tHZ9NFCjlzKJBc78a0yq3DlAA5vf4HTiA
-	dLq6xHgmcF/vXV79pnBi2f7ame5mSXu5twI6LSukKGUxeLkdCTgbip1fBLwN8/svgwkngP7p8GOPG
-	fzXRW3yw==;
+	bh=RPopwINq+xMgMWtXglTyha+UOv+CcUS7lcSD7KMhNFg=; b=O6KDtgUj+q68awrW091hi5EmjH
+	izvN7nfeam/uTPq8Hc/fh04d3lV7fWaNw5YGJk8oKgKnzWhJglseRJav5kmBGDUEFOVXnVkNvogIk
+	tAZ06nFH9zx/+v+fCUS1XtKGjPOQgyfhYRFa9VX8hiswJQvCkK8CYP5r17l0ZGjztLiqHFJ6KAoCg
+	PBFmIPz+cwwSUwF8JqtQFvldcB5l9QBQbOkWcc16gz6Cdi1EYKTjYAYHzgnDtGaV0+BTiXnAAiZbO
+	Kj4j/D5aIX4Z/prt+/cW/SAIzC/TqCSWOIY3DzGbTrD9I6nOzGGqKZAZAJEGJrlwqxsFpJdr06k7b
+	HKke5FTQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP38x-0000000AK9s-3oiT;
-	Thu, 05 Nov 2026 19:29:04 +0000
+	id 1xP39E-0000000AKHp-1tWc;
+	Thu, 05 Nov 2026 19:29:24 +0000
 Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP38q-0000000AK6M-36Uv
+	id 1xP38x-0000000AKAD-0xp4
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 19:28:56 +0000
+	Thu, 05 Nov 2026 19:29:03 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 312C5601C3;
-	Thu,  5 Nov 2026 19:28:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FBED1F00A28;
-	Thu,  5 Nov 2026 19:28:54 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id AC66860180;
+	Thu,  5 Nov 2026 19:29:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEB1C1F00A18;
+	Thu,  5 Nov 2026 19:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793906935;
-	bh=DrjTmat1J2FdEKELfc0tb5qP5SKO3u8dr9sn5WHr8X8=;
+	s=k20260515; t=1793906942;
+	bh=RPopwINq+xMgMWtXglTyha+UOv+CcUS7lcSD7KMhNFg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=JWpGZ4RlWoj2+o7rDOgbYtLD5GBP94pE2VNBU3WyFn6daNIqMb569ZSjbdA0EeSOr
-	 tAzkET2HaIHRbLQu45I3uimLTu8RZeZWJbIffcQ2/w3JGBj4a++BqBYReMLzdb5Sog
-	 qVScSeuBZeP4+0XkYuqIPKV1z9HgOT23/QBUP6cy8q34hHyhoqKFStqPtFfmyeBPB9
-	 XZe3Tm76jQQVReuVAANs6Njr2e6pTi5vPjaUYZ9qEi/4DpJTujoziNZjE6lkL79ePk
-	 nQQYT+CwPf4q1428aPXyvT5gzbZSHUrL2Gr9aiSU4j1DnnvA0JPFAyBjqU1sPq9vkw
-	 JeDEpGzOxTYeQ==
-Message-ID: <sashiko-outbox-199867@kernel.org>
+	b=MRlIi4SuEm+9lYf675R0mxP3GdNLM2xUEtY8ZG2WMxPIoEfeSqyBFYM2gtCBsBs3m
+	 WLw30oAHvmuPRU77FU8jeUvz4+Ind8Zmzv1Ekyjvc/tn8qGqLccX6vUQqQSX7hq1/k
+	 Y8Bgfu+NLVYMkBEN9Y8HxMzqgT+miO99k+v6W3uJKkYJtPSLid+kFxUhwkrKegwdQq
+	 aec8VpuFnlT1J+sjdVpGBEgq/WGixqqQvkO/tslmViTsizxwSIjmrkO988XX0OlAJW
+	 1qP4k5WxxEbBvXF8Yd4+nLhk3lLXIWrGZE5yrlrRH0hPB/6I0M1oCh0q2rmSXP6Ekk
+	 kU0ykjAB0e/9w==
+Message-ID: <sashiko-outbox-199870@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 04/51] PNP: isapnp: don't go on when
- isapnp_cfg_begin() fails
+Subject: Re: [PATCH RESEND v2 07/51] lockd: don't hand out the terminator of
+ nlm_end_grace
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-bugfixes-v2-4-021c84d852e0@kernel.org>
+In-Reply-To: <20261104-work-procfs-bugfixes-v2-7-021c84d852e0@kernel.org>
 References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
- <20261104-work-procfs-bugfixes-v2-4-021c84d852e0@kernel.org>
+ <20261104-work-procfs-bugfixes-v2-7-021c84d852e0@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:28:54 +0000
+Date: Thu, 05 Nov 2026 19:29:00 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,23 +84,17 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> isapnp_cfg_begin() refuses a logical device number above 10 and a bad
-> card number with -EINVAL before it takes isapnp_cfg_mutex. The callers
-> that read and write the device's configuration, the proc file included,
-> don't look at that: they go on talking to whatever device the card
-> currently has selected and then unlock a mutex they never took in
-> isapnp_cfg_end(). isapnp_create_device() hands out logical device
-> numbers without a bound, so a card with twelve or more logical devices
-> gets there. Return the error instead.
+> nlm_end_grace_read() answers with "Y\n" or "N\n" from a three byte
+> buffer and hands out all three bytes, the terminating NUL included.
+> Leave the NUL out.
 >=20
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Cc: stable@vger.kernel.org
+> Fixes: d68e3c4aa416 ("lockd: add a /proc/fs/lockd/nlm_end_grace file")
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D4
+s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D7
 
 
