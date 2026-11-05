@@ -2,82 +2,60 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F9D606A329
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 07:52:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194DF606A334
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 08:00:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=iO38vUo1;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ewqv2x7q
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=rBz6MU/y;
+	dkim=fail reason="signature verification failed" (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=guQbtF2j
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Type:MIME-Version:References:Message-ID:Subject:To:From:Date:Reply-To
+	:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=PshXrkjIu/oVh8H0uuMMexWF+3wbEqyJSvZGNZ3+nBg=; b=iO38vUo1jwJwH/16CzzRsgz4Ih
-	b6NA65jjfImyw5roMKr7lkmT0ONoPZGwsKiiwGqkZFpv8aKaS7rrZPU9iBs6BsTwSFtdh/+iwD+ni
-	mmeLqjhkZJoPDVo3x7V1r55Cq7k4pVnq5VAGcx4T53jcFsfcRwQo25Tdw94WyfDVYVLZE8JlaTmmH
-	Rx46sIhCwU6GKnYEtysJp3bNMBmScbLg3GuvNO/735VEvBXbVMRGBIjwOIU9600GRJxFpYf+qoPJf
-	liS7NjmJ5jzTNdlnEIVosnsNJAuMQRSR6xCrhY1txyzQ8ycnVbIUnPkOdW6J9z5ZusBYwP72da0Mj
-	ZP1isI2g==;
+	bh=b3t/AZZXgpUUBPoN/8EcWLM6aSitZao8sMvkUu7sQcw=; b=rBz6MU/y//gyWMsXF5/5pBTsGs
+	tgNPMpT/Lm/B0b1IxXaWAI0p/ZajH/eIj46X7ETr0re2gIiVVgvkL3IXYQJAYomuTLhBt78oLdZtb
+	R9MDOBtWrG5gPKjauGei5vFz3AmuKFw7FYaYAlvoMHlUsxZ9mupDkamWFdjBJDPr5wxwBVHS/eLOT
+	DsehCXrj3Q8LXAM7Bb2l/aCsOEmcV2N8aQPxX34EhHXLXss56lVyjmzSLoI31h1k33ShVeVtdbBC2
+	DZyhJ+ThEucvsMTxMLrg04eAPNG49SqQ0W9jm9cGlmWFQH8KKgayN6giVIqqcchjwpfz8uRsvwEaf
+	sRIIay+w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOsGw-000000083ZG-0rlw;
-	Thu, 05 Nov 2026 07:52:34 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xOsO9-000000085Kk-2dFS;
+	Thu, 05 Nov 2026 08:00:01 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOsGu-000000083Yx-26Tx;
-	Thu, 05 Nov 2026 07:52:32 +0000
+	id 1xOsO6-000000085Jl-37PP
+	for kexec@lists.infradead.org;
+	Thu, 05 Nov 2026 07:59:58 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 82C67605FF;
-	Thu,  5 Nov 2026 07:52:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90ABD1F00A15;
-	Thu,  5 Nov 2026 07:52:14 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 6BB6C43B86;
+	Thu,  5 Nov 2026 07:59:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 425191F0093A;
+	Thu,  5 Nov 2026 07:59:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793865151;
-	bh=PshXrkjIu/oVh8H0uuMMexWF+3wbEqyJSvZGNZ3+nBg=;
+	s=k20260515; t=1793865598;
+	bh=b3t/AZZXgpUUBPoN/8EcWLM6aSitZao8sMvkUu7sQcw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Ewqv2x7qC/seZGztnmn60Jxwl1553DY/3Df5K32EVdXJ/LFXDDt8XPm0md4mvIdbe
-	 O7baTlLtl+fjfHYpiP6NcAphW25/jd9J02KuH6IpVpOf128w6Gk/QhyuyYiZ8AkWEd
-	 5I8acWTijjPru9qgJ7HQjHMGzi6ZlJdrE9q8FPGTREZLPcuF2t9RZCaCb3gZIq0i2F
-	 0CenpiJNcoERzlwxTs0A3D2xG24ySM7ZrAY0uQR/yg7LLM7PxiAALyYLO9ZiDNOVS8
-	 XhlU+5NQ65DYU30sIL8WOqi4fmSQc0g+DhJNmCoP27d9xfq6w4CfLjfd7xU/0Ji7zb
-	 e/wsPKB9qBz9g==
-Date: Thu, 5 Nov 2026 09:52:10 +0200
+	b=guQbtF2jldVKgx4ac787ghXRGdDM4Ye6jRjYUwcllIkG+O5epTzarqTG/si+Dq7cd
+	 8SAQXX3JwughkvqUx9Ef6WOTuPu9qLF3Qyqyf+MPL0zMS+bKGmlqJ8zmyzBmZqD3vF
+	 dEt4/oPS7+PqkIpO9cQ2jJSEsfB3Kp4ifdiqTxmcNuNuT1pIexCUI/Ft441pXEgt4s
+	 ltwwL3cFcpsnoAa45emlUhoxiDyKEHWddO+SR1XkpvsE8z9U9ysIjcLz9ege4L4IUV
+	 ZGHcgwYNvLUFYWrREJXvQ3Ph63X2uBayjKz3okeaKiP2/QLBfaDLvop+6MMV6CpbQr
+	 hdR+Mx+Mq+T3w==
+Date: Thu, 5 Nov 2026 09:59:50 +0200
 From: Mike Rapoport <rppt@kernel.org>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-	chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org,
-	ritesh.list@gmail.com, sshegde@linux.ibm.com, pjw@kernel.org,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
-	tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com,
-	akpm@linux-foundation.org, baoquan.he@linux.dev,
-	pasha.tatashin@soleen.com, pratyush@kernel.org, thuth@redhat.com,
-	leitao@debian.org, yeoreum.yun@arm.com, robh@kernel.org,
-	sourabhjain@linux.ibm.com, kees@kernel.org, coiby.xu@gmail.com,
-	Yeking@red54.com, tangyouling@kylinos.cn, maqianga@uniontech.com,
-	zhangtianyang@loongson.cn, guodongtai@kylinos.cn, blum@kernel.org,
-	adityag@linux.ibm.com, hui.wang@canonical.com,
-	sohammetha01@gmail.com, guoren@kernel.org, gaohan@iscas.ac.cn,
-	kai.huang@intel.com, kas@kernel.org, vishal.l.verma@intel.com,
-	piliu@redhat.com, jbouron@amazon.com, mclapinski@google.com,
-	me@linux.beauty, graf@amazon.com, bgwin@google.com, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, kexec@lists.infradead.org
-Subject: Re: [PATCH v7 00/15] kexec: Fix CMA and elf header leaks and rework
-Message-ID: <auw1qgmjWko52oS_@kernel.org>
-References: <20261026075201.699550-1-ruanjinjie@huawei.com>
- <179380419709.28814.2122135856184991710.b4-review@b4>
- <932cdfda-7030-4829-8b43-062d208450e4@huawei.com>
+To: "Jose A. Perez de Azpillaga" <azpijr@gmail.com>
+Subject: Re: [PATCH v2] memblock: don't allocate new reserve_mem regions on a
+ KHO boot
+Message-ID: <auw3dtAMp4CjNwY2@kernel.org>
+References: <20261104204235.9066-1-azpijr@gmail.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <932cdfda-7030-4829-8b43-062d208450e4@huawei.com>
+In-Reply-To: <20261104204235.9066-1-azpijr@gmail.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,43 +65,75 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Cc: Tony Luck <tony.luck@intel.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org, Kees Cook <kees@kernel.org>, Changyuan Lyu <changyuanl@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, Pratyush Yadav <pratyush@kernel.org>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Thu, Nov 05, 2026 at 11:45:39AM +0800, Jinjie Ruan wrote:
-> 在 2026/11/4 22:56, Mike Rapoport 写道:
->
-> >> Patches 8-10 pass the kbuf fields to crash_prepare_headers() to
-> >> simplfy code.
-> >>
-> >> Patch 11 frees the elf core header from the generic post-load cleanup.
-> >>
-> >> Patches 12-15 add kexec_load_other_segments() and convert the three
-> >> architectures, and arch_kexec_setup_other_segments() builds
-> >> the architecture specific boot parameters (a DTB or a command line).
-> > 
-> > I think the refactoring should go before the identical fixes in arch/
-> > code.
+On Wed, Nov 04, 2026 at 09:42:17PM +0100, Jose A. Perez de Azpillaga wrote:
+> On a KHO boot, a reserve_mem region that can't be revived is allocated
+> from KHO_NOPRSRV memory, which includes the bootmem the next kernel
+> boots out of. With CONFIG_KEXEC_HANDOVER_DEBUG, preserving the region
+> then fails:
 > 
-> However, this will cause trouble for the fix patch in the stable round.
+>   WARNING: kernel/liveupdate/kexec_handover.c:1245 at kho_preserve_pages+0x168/0x180
+>   failed to prepare memblock FDT for KHO: -22
+> 
+> Without it, the next kernel puts its memmap on top of the region and
+> the ramoops records in it are lost.
+> 
+> There is no use case for adding regions across a live update, so fail
+> instead of allocating, and drop the TODO.
+> 
+> Fixes: f99230780211 ("memblock: add KHO support for reserve_mem")
+> Signed-off-by: Jose A. Perez de Azpillaga <azpijr@gmail.com>
+> ---
+> Changes in v2:
+> - fail on a KHO boot instead of allocating outside bootmem, as agreed
+>   with Pratyush [1]. this drops v1's patch 1.
+> - not an RFC anymore.
+> - based on v7.4-rc1.
+> 
+> v1: https://lore.kernel.org/all/20261021211058.83483-3-azpijr@gmail.com/
+> 
+> [1] https://lore.kernel.org/all/2vxzfqxglrg6.fsf@kernel.org/
+> 
+>  mm/memblock.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index a450092a80fb..e325e0542c9a 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -2827,7 +2827,16 @@ static int __init reserve_mem(char *p)
+>  	if (reserve_mem_kho_revive(name, size, align))
+>  		return 1;
+>  
+> -	/* TODO: Allocation must be outside of KHO_NOPRSRV region */
+> +	/*
+> +	 * On a KHO boot memblock only allocates from KHO_NOPRSRV memory here,
+> +	 * which includes the bootmem the next kernel boots out of. Only regions
+> +	 * handed over by the previous kernel are supported.
+> +	 */
+> +	if (is_kho_boot()) {
 
-That's right, but since actual fixes anyway require changes to kexec core,
-I think it's better to refactor first. The core than will take care of
-proper freeing in the most cases.
+This breaks memblock tests, please add a stub there.
 
-And since CMA support in kexec is quite new I think the entire set can be
-backported to stable then.
-
-I'm planning to have a closer look at the refactoring Really Soon :) 
-
+> +		pr_err("reserve_mem: can't allocate \"%s\" on a KHO boot\n", name);
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+>  	start = memblock_phys_alloc(size, align);
+>  	if (!start) {
+>  		pr_err("reserve_mem: memblock allocation failed\n");
+> 
+> base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
 > -- 
-> Best regards,
-> Jinjie
+> 2.56.0
 > 
 
 -- 
