@@ -2,155 +2,95 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41517606EEAB
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 00:10:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C641606A32C
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 02:14:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=CuaMFLOH;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=atzIIchk
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=YzH+/YwX;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=j2sTp789
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:In-Reply-To:References:Message-ID:Date
-	:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Unsubscribe-Post:List-Owner;
-	bh=RbLaBmegHuTWz4ig9duBlXPz0JYHFjAvKSf+rWhU910=; b=CuaMFLOHI4MuXgpfAAiw9udjxB
-	scT+ervNlISo8NgFM2hWzKfSMLLxpGT3q31ajILX1P1b5lOLj3CpMvmqhokK/eAweSLbdWAzvrZEo
-	UN+G6Rym12zJT5I//6YN6Q3tUpTZ8xuhdzggBcw0qjgIHC8PIF1VRqx1TX5Sqk5QoUnijoBM2BWRQ
-	5vXoJrL5z+XMMHLs5zXRLHxoDAbwdpfQVDQF/bXdHxDjp70bSp/NyKFZYpDUICw8pDO+teJA5q+HY
-	vXRXpmQtj4sNPAWc51it0f8MJbGuoBjrw6Yrnzy9DAJ6Si1VcaaVKyyyo/O5bm/LHAQCay+OUkBI8
-	AAx6zQ7Q==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=tXeq94tKXH8bHOz1amsH5XRU51n2PYOOTkgxfF1PjyI=; b=YzH+/YwX7vW6st
+	UDnk4y2S5SGSE2vEGWD4TpvYzlObwAgKCbNKwBT/RxGCj1J6UlUl8P+u3boS0FTPnv41sq+q8Byk0
+	/YMdTDz/pCxYoM3QlJgQJAX5Fzo198XWgkmHPMyvqEq0CIs1kYw67O7HpYHLeTL0A1IkHLDsHMP2x
+	3p8k6lIm7nQ+5aQ1+HnCTy0U80ak9Zzds9njl/rv4EjSHBUIkBbIwWQMkyd7CUoQOkqrM5ch6EqGZ
+	mkn8+0/OwCzF0RsEadp0+tsSljeXgYsJzbL9tRAEcwetIudvyaC/sPodx/awhrPTxHhJsnmTsfQQ0
+	ZMBPYKs7sUEFPa5TmVJQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOl3e-00000007KAL-48FE;
-	Thu, 05 Nov 2026 00:10:22 +0000
-Received: from mail-southcentralusazlp170130001.outbound.protection.outlook.com ([2a01:111:f403:c10c::1] helo=SA9PR02CU001.outbound.protection.outlook.com)
+	id 1xOmzV-00000007YVn-0wq0;
+	Thu, 05 Nov 2026 02:14:13 +0000
+Received: from out-106.mta1.migadu.com ([95.215.58.106] helo=mta1.migadu.com)
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOl3c-00000007K9f-0Exn
+	id 1xOmzP-00000007YTM-1u7k
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 00:10:21 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jiuGCOrL7Bsdc0I+Yh+VcChnZMcBNVw4plNFQlgaH3Fnb07tIWBBXq1ZIMEIZRg36SQUw7cv144p6wKQ1fFhdY5FaTY71t14h9tlbjpHunWXK+MR4PGW2k4VoXbv/IEmRbTVGaP08QLGIgZKy+OtXjptTVSbNPChD5IZGnHm8aYKWIZ7Z6znAjoxuXYb4LRiTKJAAAhyOWAKZHDyTXQep4BuFtDKpDB+N40rQydFLx4RmJxmKtySm651qn7tM5sBaTuoUAKueMTDmHu8dRJyXkBHQSdlBMY4BIJ3M61ejzIshPwB5WXq9rMg6DL9/fIByuUegnvKBY2PXWHCVLaJxQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RbLaBmegHuTWz4ig9duBlXPz0JYHFjAvKSf+rWhU910=;
- b=sXPIkk0HH6COXKS2g/NEFOZCSYi3g/x3nqscPFymfSVIZyKpe15Cbb+VhojTOZt4DqE6b24NFvwpwcm/KgvlU5X99y7e6bFv/zb0TRSuINsFZfpEHR7rcBKk4e8LS6cqJvILe/i9HFewBiYEHLsatK2WJtGOPsaJvmGSwd7YGVNujQGaz93xjz61xhOBAuo6Tczdx1pmpQrnOczpWYv8HCDUr+a9MDiswWHExcISyNkZQUry6wTHeoxwGKn8hWMT0QghAljgbLsqyNSFm8v+txVgjCiCVQLqvKsCsHYe3AuYduQ+kNYNAXGaH0iw+EmpWCkCdq8SlfnOhlMUUoa4uQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RbLaBmegHuTWz4ig9duBlXPz0JYHFjAvKSf+rWhU910=;
- b=atzIIchk2CJadkjk/kMSc3mDB/rVrhZyCC7eHkbofXx59o7VjmTcDQ3C6ltINqDTbX++zOpPnloIBFNKtI8VOoVsiKPiiS5BCWVsmLy3On3id/GI/Pxvff1XVuen24Uwft5VPU/TD2oTIvMOZcV91/VkHMgd9L6NxLmcLeWg+GuSPTeV3+QVfronHNmw7MtqlJeBvDoQA+EPgO0apaxANo7urU+hAdHsQjRuaFSRgy8Jz+HOxJHeWLfVeU1fIKDaHFC7eD5imW1oKRj+QndT63PxVN6Eueil4lHrcFFDHbOJjem+lyySeTnpSzE0QRI8B/UyKycSjaZ7FApP2LiSiQ==
-Received: from SJ1PR12MB6124.namprd12.prod.outlook.com (2603:10b6:a03:459::15)
- by DS0PR12MB7826.namprd12.prod.outlook.com (2603:10b6:8:148::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.8; Thu, 5 Nov 2026
- 00:10:10 +0000
-Received: from SJ1PR12MB6124.namprd12.prod.outlook.com
- ([fe80::18d1:68c9:ae0d:7d82]) by SJ1PR12MB6124.namprd12.prod.outlook.com
- ([fe80::18d1:68c9:ae0d:7d82%6]) with mapi id 15.21.0592.007; Thu, 5 Nov 2026
- 00:10:10 +0000
-From: Manuel Huber <manuelh@nvidia.com>
-To: Fan Wu <wufan@kernel.org>
-CC: David Howells <dhowells@redhat.com>, Jarkko Sakkinen <jarkko@kernel.org>,
-	Christian Brauner <brauner@kernel.org>, Andrew Halaney <andrew@amutable.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge E.
- Hallyn" <serge@hallyn.com>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
-	<skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Luca
- Boccassi <luca.boccassi@gmail.com>, James Bottomley
-	<James.Bottomley@hansenpartnership.com>,
-	"linux-security-module@vger.kernel.org"
-	<linux-security-module@vger.kernel.org>, "keyrings@vger.kernel.org"
-	<keyrings@vger.kernel.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "kexec@lists.infradead.org"
-	<kexec@lists.infradead.org>
-Subject: Re: [PATCH v2 1/3] ipe: add the .ipe policy keyring
-Thread-Topic: [PATCH v2 1/3] ipe: add the .ipe policy keyring
-Thread-Index: AQHdZzzTq01P8UHk60+Ce2yq7RogGrceY9iAgAAyxbA=
-Date: Thu, 5 Nov 2026 00:10:09 +0000
-Message-ID: <SJ1PR12MB6124F08E6BA4F0D1D7BBD9EBDE772@SJ1PR12MB6124.namprd12.prod.outlook.com>
-References: <20261029-b4-ipe-keyring-rfc-v2-0-77727b205844@nvidia.com>
- <20261029-b4-ipe-keyring-rfc-v2-1-77727b205844@nvidia.com>
- <CAKtyLkHtZeToq7YN7n2jffK0DmR7Axu3cQ+Kac_+RYvtsF=+cw@mail.gmail.com>
-In-Reply-To: <CAKtyLkHtZeToq7YN7n2jffK0DmR7Axu3cQ+Kac_+RYvtsF=+cw@mail.gmail.com>
-Accept-Language: en-CA, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SJ1PR12MB6124:EE_|DS0PR12MB7826:EE_
-x-ms-office365-filtering-correlation-id: 69b0385e-1b6e-4d85-14bd-08df3ad1275b
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016|23010399003|10067099003|18002099003|22082099003|38070700021|56012099006|4143699003|11063799006|261102123227099003|261028144727099003|261026140227099003|261026121527099003|261009223027099003|261021123027099003|261021121427099003|261022105027099003;
-x-microsoft-antispam-message-info: ICnszfWUsEBHv4A0faAIxDC73i5Y+ES0cdqQG8ZtYmwr3n74lt51UQSEzQamcgIPdrDIhMxGtd1xG/De9slPZNyi7+XkGK3yJh6Vkvo2YCkaNluhVRytfoOeqx/VL5AJeVxhG5ChzeG30thxUARqMbJaK+cFNWHYh3aQDYn8gcS9FDjwrWQoyKnIdgX5FN0aRq8ew8SOZF2l5MbFVLWOwK0Hg6FE9FUKvlD+LGmr9IerJ7zuW7E5Ax1Z1Q4O3HJo51jVts4vxt4QHyjlNyZwr3VYHEFHtMdsb6SiBdJcex1CKnlJ3aUD7rPKCeLBxQfk1Jaa198yb+xjxgUVSzSFOVuRjvI3dyOhCOi/ajFdWJKz8ynkpfRshcTf3oT58ZVSU/mHgk3/5hKaaaHz1+P+ZrsWqEOsIb/behwyZRmzZmuoyaBgUe0Mw4yi2b8L/LVTfA+XfuXradH0DvaKtcFHwoSdZvkvawCXwlPrbjwZBKt6pK7oZCTyjsPa+DKBCrXSw4C1RQ7C+bfEtWlUOULQvodxeBM0dVjZCNNQXbxfmnNez72Ko+k3qQUV4d+ZbvfOhayIrkCVTE7/tbG/nifq0pwbzGD9j3hcp0JaK/DbA5ESXAbzLqok+Ww9omVQIpLTTgMyY/Dv1PR6dpHRzzJmWG05HHravLHFA5TUTY7QH5JeFKhtdUh3DSgrh0eBX5UjS/EMV6KScCaPy41Ug1GG7LNJiXv9BQPKJ81w3Jw1Il8=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR12MB6124.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(23010399003)(10067099003)(18002099003)(22082099003)(38070700021)(56012099006)(4143699003)(11063799006)(261102123227099003)(261028144727099003)(261026140227099003)(261026121527099003)(261009223027099003)(261021123027099003)(261021121427099003)(261022105027099003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?RDd2K29qRS9BRkxVZzhiTzc0Zml4QWdaTjRIcGpuOXZMeUdtcXluRzlJbnFQ?=
- =?utf-8?B?WGFDeGFlZjU0MUJvNWxoU2tkbUxVNE5SUjUxK003UkFCbFR2Y2lvK0o3UmZB?=
- =?utf-8?B?YkkwUG1iOUdDUThsazZQc0IyanFKOUJmK205ejVjYlBiK0JmNm1UMHMyTnFV?=
- =?utf-8?B?NVRpcXhmYm1uWkh0cWpBQllSVk9JZzNiaCtuKzVneEdZV1R0eUwvV3FueXlm?=
- =?utf-8?B?UDYrZkxhUXhMMlNuUGduYVBWMDB1Wk4rRjhlQkRmRlM2WUFRNjJmOFIwR0hN?=
- =?utf-8?B?WmwrbkRYSVFjVFNueEVVVjJZTlhyYzlJV1VVbmJuN2crdlRlSC9saHk1d0NW?=
- =?utf-8?B?Yjg5MnRrRTYvTys1RmJtVnEvV2t5d2l5YWFyVmwzOWNyRStpeFdybXZZR1Q3?=
- =?utf-8?B?aWNpTmZrUlNmOWxTLzhEUXpiREp5OUJqRm8veTgxODFtSysvTm9KRzV0T2lX?=
- =?utf-8?B?ai9DeWMwZk5xTEFTNyt3VDBxYWFCeWovcVY1c01GY3JoYkVudlZ6cmlqdFlL?=
- =?utf-8?B?Mi9EQ0dTMHQzSHVDZmZXZEVTbXVpSXEwSmNOcHhncFdUZDltUXk1ckw5Wjln?=
- =?utf-8?B?MUN3WVdIM0ZKWk5kUGdhK0FZaG0yQjh5Rlcyak5aSlowOHBiRXlxWTdPUDN5?=
- =?utf-8?B?N2IrUUFWRjdEMG9WWGxHRkF3Q3h1R3NDdkR3eGdsUm50R21nU3E3NnNNUGhP?=
- =?utf-8?B?NVZHSzBTd0tMN1NUMG1BdFN5bmJDajd3YlppSXczVSt6TFBJREJCcmpNcWJz?=
- =?utf-8?B?dXU2WWhzOXRhVXJPVFBFRGc2elhJc0JXbjd1Vmk5a2V0cEJoV0xVb09CV252?=
- =?utf-8?B?ZGpMWlhISlFhUWxidExjSU1iMGlDL25nSlJZeDFYM0dNbmJBb1kwUE1zYmxl?=
- =?utf-8?B?eGFadElLejNXUmZYV1diS1FEMTlhQXhjclVBdG9sb2xWS0IrL3VuMmJpaUps?=
- =?utf-8?B?SVYyeE9KZjBOcHROaHV6QU5HUmtRaElJemVWaTNwTHlXREYvUWtwM3d4bUMz?=
- =?utf-8?B?aW1Na3h5MWhyTlJoT29COS9ncmlGclFIWDN3bEZYMDM5Mlc3ekloUGR0cTlZ?=
- =?utf-8?B?TytJZ2tCak9QM0ZUL29jSDk0VW9QS3pyNXRjOUF4WE9xK041ZlBmTlpCcmpN?=
- =?utf-8?B?RUZqRUNtZTNLbE1zUVBzcmgrSzFhNlZzUzhQNmZvWVNjVldQY0dEWWl6UGRm?=
- =?utf-8?B?YU1Bb3JLYXBnYW9mRU9kTHpFQis1ckQyY1hSdDIvNkRkUFZlQ3NKS1dlUmwr?=
- =?utf-8?B?cnZ2b1JLUHZEYnpwdk5RSjVURHpZR1g1amVqb0loNjFoV1gvdE05L0tMSkNE?=
- =?utf-8?B?TXVUcXduVlFoWWFQaDR2eHRzcE1BV2RIb3Jmc0ZScFhuN0FLaVVHajFXWGVJ?=
- =?utf-8?B?UUh0Tm1BVlk5UTVsRTV0WHRDVHQ1VEhNU2o5TlRmYUs3Y2RMeGdKRWZvc1Y5?=
- =?utf-8?B?YzVHQmMwYytETkVQd09qSko0Uzd5NnBleDZlbTF5Y2w5ZEVSNEJFOUpDN1R0?=
- =?utf-8?B?M3J1Z3JkMnErekxQcm5GQXNJeFQyTUM4ZnVVQTNJZUUyOFRVTDF5eFRuc2pF?=
- =?utf-8?B?SlVQVkczRFIrZXJxV0hqODFCT3RXMmhRNXBiRTE2VzRWeVQ4TnJvRmRFTXhT?=
- =?utf-8?B?am1kbnliZDcwLysvU2Jlam1uN2gvRmhqb1VtM0VSQ0RlZkEwS3ozME1WVnBi?=
- =?utf-8?B?RG42dnBydjFrZVFDWVF5WTdYcU5nZHl3dXdHQ3lIMWcyMmU1VFJsZ0s1U0JD?=
- =?utf-8?B?MnNTeGZNQzEvSENyb3gyQ09xUzhrenptc0lBRGU1WkhuMDFZbStKTDNlSUg1?=
- =?utf-8?B?ZmQxejJGRGZnZS82MEFVTzhTbW1FTWdkMURkLytVdDU3UzZwemFJZGFNODRs?=
- =?utf-8?B?QXVHYllXNVFqcmVKTXFoa0NHSCtJc290a29wWHMyTG5OS0tpVDhoaXZCWDFt?=
- =?utf-8?B?QURwTXRZakVFTklPRlo1OUtSWHByMzVkdjhKNkI0NS9Cd0lFRzBQRG5KOFVG?=
- =?utf-8?B?NE81L295MDJPaGxOQkpVZHJabVNXaTV5Qzl2WnB1L3VuZmlhblZiRnlXUW1k?=
- =?utf-8?B?dm05Um1CTllnYmpNdzlmQ2VaNVFPakw0ZkdZcmpzWHJETlpzQWYzV0ZobzBC?=
- =?utf-8?B?RmY3TkNtRyttNjMyVjZuUWpyb001YkFUa2ZlRmZ5SEFtaUpkTy90YWpyVE5i?=
- =?utf-8?B?YzU4S1BkL2hLRytGM3FWQlhuUjl1U0FlWmk3OGducDRSdis5cmcrc1RiVFZo?=
- =?utf-8?B?dC8za2hVK25oRTN3SGsvdTY5MEcxWGNjVmNvaU00YS9PUkVpSktUUElzOGVL?=
- =?utf-8?Q?8CVtxrvAKjOMVN96bF?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	Thu, 05 Nov 2026 02:14:09 +0000
+X-Envelope-To: kexec@lists.infradead.org
+DKIM-Signature: a=rsa-sha256; bh=l5hRS8qgzR0WOCPLF0tQbQ+of37lp1oZsgw+XUQqwhg=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793844844; v=1; x=1794449644;
+ b=j2sTp789TAzH4+lGZ7lYWfaDwj4tzc9cwnz9VymVYz+93eIx1j2P1wIewQP0NcIfVbJQKLyf
+ 0DO8NIIghKzDouBSBnDym1wAnQyGpqJsD9irj2dQSZrGObeDZJB96QtjMGxheDIwPErfv1cfpzT
+ zdnAQ3fG/Xx2Ge3hDWonFfXo=
+X-Envelope-To: kexec@lists.infradead.org
+Received: by smtp.migadu.com with ESMTPS id 7ce234fbb2517b84;
+	Thu, 05 Nov 2026 02:14:03 +0000
+X-Mizu-Trace-ID: 7ce234fbb2517b84
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <fc4939cc-84ec-4c5c-88a7-658ca800377d@linux.dev>
+Date: Thu, 5 Nov 2026 10:15:13 +0800
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ1PR12MB6124.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 69b0385e-1b6e-4d85-14bd-08df3ad1275b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Nov 2026 00:10:09.2627
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3TKJWzd8o/JO0eXKfS3ajsIP8LHlOpxcKCoLh0Azg+VWkuljOYucQ0LgLmEQjq2tpCenoVgRGUJ+oamORj3kIg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7826
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v2 01/51] alloc_tag: don't remove /proc/allocinfo
+ under the codetag module lock
+To: Christian Brauner <brauner@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Jann Horn <jannh@google.com>, Josef Bacik <josef@toxicpanda.com>,
+ Chris Mason <mason@kernel.org>, Jeff Layton <jlayton@kernel.org>,
+ NeilBrown <neil@brown.name>, Eric Dumazet <edumazet@kernel.org>,
+ Thomas Gleixner <tglx@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+ Jonathan Corbet <corbet@lwn.net>, Christoph Hellwig <hch@lst.de>,
+ Greg Kroah-Hartman <gregkh@suse.de>, Joel Granados
+ <joel.granados@kernel.org>, Kees Cook <kees@kernel.org>,
+ Jan Kara <jack@suse.cz>, Jan Kara <jack@suse.com>,
+ linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-um@lists.infradead.org, linux-wireless@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+ ntfs3@lists.linux.dev, platform-driver-x86@vger.kernel.org,
+ coreteam@netfilter.org, kexec@lists.infradead.org,
+ linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
+ netfilter-devel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ ibm-acpi-devel@lists.sourceforge.net, jfs-discussion@lists.sourceforge.net,
+ linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-cifs@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-mm@kvack.org, linux-sh@vger.kernel.org,
+ linux-usb@vger.kernel.org, samba-technical@lists.samba.org,
+ sparclinux@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+ linux-doc@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-atm-general@lists.sourceforge.net, Takashi Iwai <tiwai@suse.de>,
+ linux-input@vger.kernel.org, linux-raid@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org,
+ linux-debuggers@vger.kernel.org, Chuck Lever <cel@kernel.org>,
+ stable@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ Suren Baghdasaryan <surenb@google.com>
+References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
+ <20261104-work-procfs-bugfixes-v2-1-021c84d852e0@kernel.org>
+Content-Language: en-US
+From: Hao Ge <hao.ge@linux.dev>
+In-Reply-To: <20261104-work-procfs-bugfixes-v2-1-021c84d852e0@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261104_161020_102097_A00F5C52 
-X-CRM114-Status: UNSURE (   9.06  )
-X-CRM114-Notice: Please train this message.
-X-Spam-Score: -2.1 (--)
+X-CRM114-CacheID: sfid-20261104_181407_664175_BCC356D8 
+X-CRM114-Status: GOOD (  30.93  )
+X-Spam-Score: -2.8 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -161,31 +101,155 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-T24gV2VkLCBOb3YgMDQsIDIwMjYgYXQgMTI6MTQ6NTdQTSAtMDgwMCwgRmFuIFd1IHdyb3RlOg0K
-PiBUaGF0IHdheSBubyBwcml2YXRlIGtleSBldmVyIG5lZWRzIHRvIGxpdmUgaW4gdGhlIGd1ZXN0
-LCBhbmQgaXQNCj4gY29uZmluZXMgdGhlIFRDQiB0byB0aGUgVk0gaG9zdC4gV291bGQgdGhpcyBh
-cHByb2FjaCB3b3JrIGZvcg0KPiB5b3VyIHNldHVwPw0KDQpNeSBtYWluIGFuZ2xlIGlzIGNvbmZp
-ZGVudGlhbCBLYXRhIGNvbnRhaW5lcnMgWzFdLCBhIHVzYWdlIHNjZW5hcmlvIGluIHdoaWNoIChL
-dWJlcm5ldGVzKSB3b3JrbG9hZCBjb250YWluZXJzIHJ1biBpbiB0cnVzdGVkLCBjb25maWRlbnRp
-YWwgVk1zIG9uIHVudHJ1c3RlZCBob3N0cy4gVGhpcyBzY2VuYXJpbyBpbnZvbHZlcyBoYXJkd2Fy
-ZSBURUVzLCBhdHRlc3RhdGlvbiwgYW5kIGZpbmUtZ3JhaW5lZCBwb2xpY2luZyBvZiBob3N0LXNp
-ZGUgaW5wdXRzLiBXaXRob3V0IGdldHRpbmcgaW50byB0b28gbWFueSBkZXRhaWxzLCBoYXZpbmcg
-YW4gdW50cnVzdGVkIGhvc3QgYmFrZSB0cnVzdCBhbmNob3JzIGludG8gdGhlIGd1ZXN0IG9uIHRo
-ZSBmbHkgd291bGQgdW5kZXJtaW5lIHRoZSB0aHJlYXQgbW9kZWwuIFRoZSBwcm9wb3NlZCBJUEUg
-a2V5cmluZyBnaXZlcyB0aGUgdHJ1c3RlZCBndWVzdCB0aGUgYWJpbGl0eSB0byBjb25zdHJ1Y3Qg
-YW5kIHNpZ24gdGhlIElQRSBwb2xpY3kgaW5kZXBlbmRlbnRseS4gQWxzbyBub3RlLCBvdXRzaWRl
-IG9mIHRoZSBjb25maWRlbnRpYWwgc2NlbmFyaW8gZm9yIEthdGEgY29udGFpbmVycywgdmFyaW91
-cyBLYXRhIGNvbnRhaW5lcnMgZmxhdm9ycyBhcmUgdmVyeSBvcGluaW9uYXRlZCBvbiB0aGUgZ3Vl
-c3QgYm9vdCBmbG93LCBzbyBJIGNhbm5vdCByZWx5IG9uIFVFRkkgYmVpbmcgcHJlc2VudC4gSGF2
-aW5nIGEgc2VsZi1jb250YWluZWQgbWVjaGFuaXNtIGluZGVwZW5kZW50IG9mIGZpcm13YXJlIGNl
-cnRpZmljYXRlIHByb3Zpc2lvbmluZyB3b3VsZCB0aGVyZWZvcmUgYmUgaGlnaGx5IHByZWZlcnJh
-YmxlLiANCg0KWzFdIGh0dHBzOi8vY29uZmlkZW50aWFsY29udGFpbmVycy5vcmcvZG9jcy9hcmNo
-aXRlY3R1cmUvDQo=
+Cc Suren
+
+Hi Christian
+
+On 2026/11/5 03:06, Christian Brauner wrote:
+> codetag_alloc_module_section() takes the codetag type's mod_lock for
+> writing and calls reserve_module_tags() with it held. When that can't
+> reserve the tags, because the section's alignment doesn't fit, because
+> there are too many tags for the page flag bits or because the memory
+> for them can't be allocated, it shuts memory allocation profiling down
+> and removes /proc/allocinfo, still with mod_lock held.
+> 
+> remove_proc_entry() waits until every reader of the entry has let go of
+> it, and a reader of /proc/allocinfo takes mod_lock for reading in
+> allocinfo_start() while it holds the entry. So a module load that hits
+> one of those paths while /proc/allocinfo is being read waits for the
+> reader and the reader waits for the module load, for good.
+> 
+> Let a work item remove the entry in that case. The profiling is shut
+> down right away like before, the file just goes a moment later.
+> 
+> Fixes: 4835f747d3ed ("alloc_tag: support for page allocation tag compression")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
+
+Thanks.
+
+is this a problem you have hit in practice?
+Sashiko discovered this issue earlier and reported it as follows:
+
+> diff --git a/mm/alloc_tag.c b/mm/alloc_tag.c
+> index 2070e682fe106..112a014d4b890 100644
+> --- a/mm/alloc_tag.c
+> +++ b/mm/alloc_tag.c
+> @@ -950,10 +950,12 @@ static void *reserve_module_tags(struct module *mod, unsigned long size,
+>  		int grow_res;
+>  
+>  		module_tags.size = offset + size;
+> -		if (mem_alloc_profiling_enabled() && !tags_addressable()) {
+> +		if (!tags_addressable()) {
+>  			shutdown_mem_profiling(true);
+This is a pre-existing issue, but does this shutdown_mem_profiling(true) call
+introduce an AB-BA deadlock between /proc/allocinfo file readers (pde->in_use)
+and module loading (cttype->mod_lock)?
+A user reading /proc/allocinfo acquires the procfs in_use reference in
+use_pde(), then blocks on down_read(&alloc_tag_cttype->mod_lock) in
+allocinfo_start().
+Concurrently, if a module loads and tags_addressable() fails,
+codetag_alloc_module_section() holds down_write(&cttype->mod_lock) and calls
+shutdown_mem_profiling(true), which removes the proc entry. This removal waits
+indefinitely for the in_use reference to drop to zero, hanging both procfs
+reads and module loading.
+> -			pr_warn("With module %s there are too many tags to fit in %d page flag bits. Memory allocation profiling is disabled!\n",
+> -				mod->name, NR_UNUSED_PAGEFLAG_BITS);
+> +			pr_warn_once("With module %s there are too many tags to fit in %d page flag bits. Memory allocation profiling is disabled!\n",
+> +				     mod->name, NR_UNUSED_PAGEFLAG_BITS);
+> +			release_module_tags(mod, false);
+> +			return ERR_PTR(-EAGAIN);
+>  		}
+>  
+>  		grow_res = vm_module_tags_populate();
+
+I previously sent a patch with a comparable idea, though Sashiko remained unconvinced.
+
+[patch]: https://lore.kernel.org/all/20260817062726.106511-3-hao.ge@linux.dev/
+
+[Sashiko's objections]: https://sashiko.dev/#/patchset/20260817062726.106511-1-hao.ge@linux.dev
+
+Could this patch perhaps wait for mine? No worries if this is inconvenient.
+
+Best regards                                                                                                                                                                                                                                                                  
+Hao
+
+> ---
+>  mm/alloc_tag.c | 27 ++++++++++++++++++++++++---
+>  1 file changed, 24 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/alloc_tag.c b/mm/alloc_tag.c
+> index 82e2c3448dcf..7d7ad6704953 100644
+> --- a/mm/alloc_tag.c
+> +++ b/mm/alloc_tag.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/seq_file.h>
+>  #include <linux/string_choices.h>
+>  #include <linux/vmalloc.h>
+> +#include <linux/workqueue.h>
+>  #include <linux/kmemleak.h>
+>  #include <uapi/linux/alloc_tag.h>
+>  
+> @@ -604,6 +605,26 @@ static void shutdown_mem_profiling(bool remove_file)
+>  	mem_profiling_support = false;
+>  }
+>  
+> +static void remove_allocinfo_file(struct work_struct *work)
+> +{
+> +	remove_proc_entry(ALLOCINFO_FILE_NAME, NULL);
+> +}
+> +static DECLARE_WORK(remove_allocinfo_work, remove_allocinfo_file);
+> +
+> +/*
+> + * A module's tags are reserved with the codetag module lock held for
+> + * writing, and a reader of /proc/allocinfo takes that lock with the entry
+> + * pinned. Removing the entry there would wait for that reader for good, so
+> + * let a work item do it.
+> + */
+> +static void shutdown_mem_profiling_async(void)
+> +{
+> +	if (!mem_profiling_support)
+> +		return;
+> +	shutdown_mem_profiling(false);
+> +	schedule_work(&remove_allocinfo_work);
+> +}
+> +
+>  void __init alloc_tag_sec_init(void)
+>  {
+>  	struct alloc_tag *last_codetag;
+> @@ -855,7 +876,7 @@ static void *reserve_module_tags(struct module *mod, unsigned long size,
+>  		align = 1;
+>  
+>  	if (!ensure_alignment(align, &prepend)) {
+> -		shutdown_mem_profiling(true);
+> +		shutdown_mem_profiling_async();
+>  		pr_err("%s: alignment %lu is incompatible with allocation tag indexing. Memory allocation profiling is disabled!\n",
+>  			mod->name, align);
+>  		return ERR_PTR(-EINVAL);
+> @@ -905,14 +926,14 @@ unlock:
+>  
+>  		module_tags.size = offset + size;
+>  		if (mem_alloc_profiling_enabled() && !tags_addressable()) {
+> -			shutdown_mem_profiling(true);
+> +			shutdown_mem_profiling_async();
+>  			pr_warn("With module %s there are too many tags to fit in %d page flag bits. Memory allocation profiling is disabled!\n",
+>  				mod->name, NR_UNUSED_PAGEFLAG_BITS);
+>  		}
+>  
+>  		grow_res = vm_module_tags_populate();
+>  		if (grow_res) {
+> -			shutdown_mem_profiling(true);
+> +			shutdown_mem_profiling_async();
+>  			pr_err("Failed to allocate memory for allocation tags in the module %s. Memory allocation profiling is disabled!\n",
+>  			       mod->name);
+>  			return ERR_PTR(grow_res);
+> 
 
