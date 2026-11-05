@@ -2,114 +2,98 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9320B606A31B
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 10:02:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60FD1606A335
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 11:36:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=HdD+tBlK
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=gesyHpvl;
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=kH6kTpAi
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=+mKdlgKO27T7zaM0EZirUNSUHhSIV/TKUV4SSUSBbFc=; b=HdD+tBlK/fH4IbZy7mB2vCICBS
-	o5Zx2iQnSZ8jVbZYr79kps5iQpKoqCWlVD3a0fDaxhGvncbobZouTHJPSOg7WiHp8VoN/RTLO56Nz
-	mfwutwd7FX+gGb3GymysMiGqiiL7kvyvzLvHIqIdOlv+u+XVh/sQLkJzxwVPLDfAKfIOO8fPitJ+h
-	mJxuRzkk6qzeBSKuucLgcpmibh2eZOtFl9m/IXIlWm9W2I5zRXxWOFaayLoZNwNrAJzDYvQWBnz3R
-	lyATFKOQj20Tgc2+H8ZwdlIkX+BAktE9knl6fDPL3nDVUsA/IK0XYUEfnf0ADG0vRIRd/HVYYwkyD
-	xKGWv3rg==;
+	bh=30J4sbOlYJiNq7Z4tRszcjWu8hBcWrg7tEn3jlctPwo=; b=gesyHpvlKe1ikfpIucqcnRmpUB
+	DhPAYYdo0mEEO5wlKtm/sPksFiUjIJToxQDtVvvdsw/9H8TYGAuotOQCjloAcks/YVon+6l0cbZKc
+	bROv/HAHwvmkUc0Dhy1m0n0qAvefjSKAT8sR6N1M/3qjUvzFvIul36F69iEG9iBH9otXBuXWeUkmw
+	HvJEfgKfDKAZXC822k4osijlu3ORGiXBni5zGAq2YLZNI4ZiQittIU0DMlq/kaY8bLPoil7RPt/js
+	tz1OtrmbTRFEiM0Egr14cwgA8yao5ws+BLEZZtHImWMF5JolPokO9RmLWm80e+OURYg+roddk8vN0
+	n9BVmZZw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOuIe-00000008O0D-1JUh;
-	Thu, 05 Nov 2026 10:02:28 +0000
-Received: from mail-ot1-f41.google.com ([209.85.210.41])
+	id 1xOvlz-00000008fs0-0Wsm;
+	Thu, 05 Nov 2026 11:36:51 +0000
+Received: from mgamail.intel.com ([192.198.163.8])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOuIZ-00000008NzY-2Yxw
-	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 10:02:24 +0000
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-83bbcfba0ffso1148377a34.0
-        for <kexec@lists.infradead.org>; Thu, 05 Nov 2026 02:02:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793872942; x=1794477742;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=+mKdlgKO27T7zaM0EZirUNSUHhSIV/TKUV4SSUSBbFc=;
-        b=ziACJ6Oyv2jrU7tXCHkwPh5sYMII1ArniXkmbpeuO7viiE2SbFGpexhy065zHriExT
-         nIAMdFePXFxmOnwLreMRwscapNhE04Ka1remYbNrpUnk4xS4W1K0kLGPFSo4Xu4BtqsF
-         6rO9lcKDaIXYt1ucFJs5O1B4soLp8aSJmC91FQ81c++ldLJZpzh8aL6ticyUwal4eE5n
-         oa/4x1qp381oO6nnZFnkz60DCgh+IAFCkyCjdubscXSpXTngJamBB7jlJQuaFDTFXzfp
-         phQPB6NOt69TUKrmM/8c5tJjNvjsYu+WMzXYBE0ADKj2ACLRd8f2SEASmQ36wHCocoA3
-         4myw==
-X-Forwarded-Encrypted: i=1; AKwUvBxN8Ok3lDfnNtKhXEmJgjqTMPugVnwoGvdWmxgBZdIYVeVStpWFAgB+a54AaQK8Zrh1/5TAiw==@lists.infradead.org
-X-Gm-Message-State: APuU4Z8STX6gOdF9PqmuEMNurhQxMwbSuBu7ex82z1jOIPQZV9iifMM/
-	HdsC95qX6pL1cjqDxlnjbzeW9PlqZ80KmfrPoPbdSihUXuyyAAIOkOTvAyNe2QODpKo=
-X-Gm-Gg: AYBFou39LoaUoPgtoeMfvEVvhfxSxig1XiEKe0vpQXx6AHbKsfhNKMZfaFTT44Ewjlo
-	4sjo0rkbZtwwIpwKILLg5c5FcRpr5RAk1DQvcK62Bu8H8N29YxC7kq2Zyk8jFDX+IKskfjk2vkq
-	FnYqxmKmfqGsBWmMYOy0Hh5IuFbqdJzAe6UVyiZXQvGgqjE7I42j0C5rISCKoczns36FWcDXrgC
-	Q83ASL0zQrgcZ6vrmBiNrk+40DNSgSFHb0euPq9V2hgxrQXHXYFn/8bEifFtnxjNCZe35uS5mlg
-	Y9UcD1x9xCOV4m+gKCiFLDEIWcQJGJcJxB0tpdQa/Q/wDzE9ncYX4OBOG3u9mXybxzUpSg2nmFD
-	Ztc+smifrT6G8S/U2Nn1f6FnhZzucsvGye9Dks2M9JKZ4b1J1MTZM1cFTZ4WHgdPcLHBJPFB68S
-	HBFQtAg7cXL+0cH+GObOr7Gi+lLCMjntngCRhoYMASrg6MiigV6knRgAqQY4yR1X7+ml+eI95jS
-	026ZuSyBr249AOOLrt052o3DcOVm+laCIKvfqHaWo+PodosiJw7H1q7ZjuBx9hwd2m9KgLkhAAF
-	UwDWM1fmdDG/gYPr3yc1lwr1Wo7wfcBEXNRdzEVdJVwRpxSTAcDrAQLzxJH9QAY0EKeDNEGxRrl
-	nfrdDmEYFY5Y0L50=
-X-Received: by 2002:a05:6808:f0b:b0:4f5:1cd4:d2be with SMTP id 5614622812f47-5640d67aa60mr15963756b6e.0.1793872942402;
-        Thu, 05 Nov 2026 02:02:22 -0800 (PST)
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com. [209.85.167.178])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-567aa022a51sm3920617b6e.17.2026.11.05.02.02.20
-        for <kexec@lists.infradead.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Nov 2026 02:02:21 -0800 (PST)
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-4d198f1a591so982295b6e.2
-        for <kexec@lists.infradead.org>; Thu, 05 Nov 2026 02:02:20 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AKwUvBwPM67Uf6Bw45mJ6zJxX+NMYhLHDj9MSxrI807Bpv5OHmZYOuQ9VqfbJbqsHgMChkGCApTwwQ==@lists.infradead.org
-X-Received: by 2002:a05:6102:950:b0:7b3:8f0a:f76c with SMTP id
- ada2fe7eead31-7d072bb3726mr8218716137.13.1793872596997; Thu, 05 Nov 2026
- 01:56:36 -0800 (PST)
+	id 1xOvll-00000008fgl-2Cu2;
+	Thu, 05 Nov 2026 11:36:39 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793878598; x=1825414598;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=J9dOmPMshDIpYmZ/TrqPMjz7mHsp3Z6+Ou1qHQ88q2c=;
+  b=kH6kTpAiQCWPXNnHfol4Ir8+s9VJjZqKUrEiOYYXZ519D9v6B5xP2gry
+   GnxiwbeLFhRczydH6mZJ0OLOiGGGZE6rGnuWsdi7YptLDmfnzWYK9ipH0
+   dFC+58sXrURL/5et1b81u3MYRwTIazl4W9H6PFyG6JrBjGDynR8P86946
+   XGW7UEKjEwT0v0iPok/BKikScign00RZapSIvNNIiIqAoLcjFjvBcwcNF
+   mL/HcsTXXDUec0Erc9ynncQVAqW6Z3TJ/1Z9sXlIVcBTPVZLkkuPAbbCG
+   vltsW6FpoPg9oXfRHm1xluCStSwpy0jt6Dfl66lBwsO3byRFQOjk4dw6n
+   g==;
+X-CSE-ConnectionGUID: MnK2oyOyR5GL2nPOvprT4Q==
+X-CSE-MsgGUID: e4YSEWZKTTiEEKZbLmoQAg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11956"; a="2547432"
+X-IronPort-AV: E=Sophos;i="6.27,197,1787036400"; 
+   d="scan'208";a="2547432"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2026 03:36:37 -0800
+X-CSE-ConnectionGUID: NU49M+y7SoqJQQ7rq8Z1Cw==
+X-CSE-MsgGUID: /gbM1bnkQwynnPU6B2caeg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,197,1787036400"; 
+   d="scan'208";a="7163862"
+Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 05 Nov 2026 03:36:29 -0800
+Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1xOvlZ-00000000m7v-0S9w;
+	Thu, 05 Nov 2026 11:36:25 +0000
+Date: Thu, 5 Nov 2026 19:35:46 +0800
+From: kernel test robot <lkp@intel.com>
+To: Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Jann Horn <jannh@google.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Chris Mason <chris.mason@fusionio.com>,
+	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+	Eric Dumazet <edumazet@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>, Jonathan Corbet <corbet@lwn.net>,
+	Christoph Hellwig <hch@lst.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Joel Granados <joel.granados@kernel.org>,
+	Kees Cook <kees@kernel.org>, Jan Kara <jack@suse.cz>,
+	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+	linux-um@lists.infradead.org, linux-wireless@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+	ntfs3@lists.linux.dev, platform-driver-x86@vger.kernel.org,
+	coreteam@netfilter.org, kexec@lists.infradead.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH RESEND v2 01/51] alloc_tag: don't remove /proc/allocinfo
+ under the codetag module lock
+Message-ID: <202611051923.pLSSWWkA-lkp@intel.com>
+References: <20261104-work-procfs-bugfixes-v2-1-021c84d852e0@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-References: <20261104-work-procfs-cleanup-v2-0-1e6687e226b1@kernel.org> <20261104-work-procfs-cleanup-v2-5-1e6687e226b1@kernel.org>
-In-Reply-To: <20261104-work-procfs-cleanup-v2-5-1e6687e226b1@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 5 Nov 2026 10:56:26 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWkL=-oCgLA3HB0_Js_TdJ+P9FDBPF-u2z7uHrL+m7g-g@mail.gmail.com>
-X-Gm-Features: AclHuK_YSG69l_UQ8CXymziWm2hhXR-Ce9gvdG6ZGXmuBEE26IV_RBgt33sxH_I
-Message-ID: <CAMuHMdWkL=-oCgLA3HB0_Js_TdJ+P9FDBPF-u2z7uHrL+m7g-g@mail.gmail.com>
-Subject: Re: [PATCH RESEND v2 5/6] proc: drop the _buf suffix from the new methods
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Jann Horn <jannh@google.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Chris Mason <mason@kernel.org>, 
-	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, Eric Dumazet <edumazet@kernel.org>, 
-	Thomas Gleixner <tglx@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Jonathan Corbet <corbet@lwn.net>, Christoph Hellwig <hch@lst.de>, Greg Kroah-Hartman <gregkh@suse.de>, 
-	Joel Granados <joel.granados@kernel.org>, Kees Cook <kees@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Jan Kara <jack@suse.com>, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	linux-um@lists.infradead.org, linux-wireless@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org, ntfs3@lists.linux.dev, 
-	platform-driver-x86@vger.kernel.org, coreteam@netfilter.org, 
-	kexec@lists.infradead.org, linux-pci@vger.kernel.org, 
-	linux-sound@vger.kernel.org, netfilter-devel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, ibm-acpi-devel@lists.sourceforge.net, 
-	jfs-discussion@lists.sourceforge.net, linux-alpha@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-cifs@vger.kernel.org, 
-	linux-fbdev@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-mm@kvack.org, 
-	linux-sh@vger.kernel.org, linux-usb@vger.kernel.org, 
-	samba-technical@lists.samba.org, sparclinux@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linux-doc@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-atm-general@lists.sourceforge.net, 
-	Takashi Iwai <tiwai@suse.de>, linux-input@vger.kernel.org, linux-raid@vger.kernel.org, 
-	linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, 
-	linux-debuggers@vger.kernel.org, Chuck Lever <cel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261104-work-procfs-bugfixes-v2-1-021c84d852e0@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261105_020223_794071_014446C6 
-X-CRM114-Status: GOOD (  19.79  )
-X-Spam-Score: -1.6 (-)
+X-CRM114-CacheID: sfid-20261105_033637_578379_9E7B2DDB 
+X-CRM114-Status: GOOD (  12.75  )
+X-Spam-Score: -4.4 (----)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -120,40 +104,59 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Wed, 4 Nov 2026 at 22:16, Christian Brauner <brauner@kernel.org> wrote:
-> The _buf suffix told them apart from ->proc_write(), ->proc_read() and
-> ->proc_ioctl(), which copied to and from userspace themselves. Those
-> are gone now. So drop the suffix. ->proc_write(), ->proc_read() and
-> ->proc_ioctl() are the methods that work on procfs' buffers from now
-> on, which is what kernfs calls its read and write as well.
->
-> Done with sed. The flags and helpers in fs/proc that go with them are
-> renamed to match.
->
-> No functional changes.
->
-> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
+Hi Christian,
 
->  arch/m68k/kernel/bootinfo_proc.c                   |  2 +-
->  drivers/zorro/proc.c                               |  2 +-
+kernel test robot noticed the following build warnings:
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k/zorro
+[auto build test WARNING on 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4]
 
-Gr{oetje,eeting}s,
+url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Brauner/alloc_tag-don-t-remove-proc-allocinfo-under-the-codetag-module-lock/20261104-200606
+base:   6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+patch link:    https://lore.kernel.org/r/20261104-work-procfs-bugfixes-v2-1-021c84d852e0%40kernel.org
+patch subject: [PATCH RESEND v2 01/51] alloc_tag: don't remove /proc/allocinfo under the codetag module lock
+config: sh-randconfig-1001-20261105 (https://download.01.org/0day-ci/archive/20261105/202611051923.pLSSWWkA-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 16.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261105/202611051923.pLSSWWkA-lkp@intel.com/reproduce)
 
-                        Geert
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202611051923.pLSSWWkA-lkp@intel.com/
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+All warnings (new ones prefixed by >>):
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>> mm/alloc_tag.c:620:13: warning: 'shutdown_mem_profiling_async' defined but not used [-Wunused-function]
+     620 | static void shutdown_mem_profiling_async(void)
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/shutdown_mem_profiling_async +620 mm/alloc_tag.c
+
+   613	
+   614	/*
+   615	 * A module's tags are reserved with the codetag module lock held for
+   616	 * writing, and a reader of /proc/allocinfo takes that lock with the entry
+   617	 * pinned. Removing the entry there would wait for that reader for good, so
+   618	 * let a work item do it.
+   619	 */
+ > 620	static void shutdown_mem_profiling_async(void)
+   621	{
+   622		if (!mem_profiling_support)
+   623			return;
+   624		shutdown_mem_profiling(false);
+   625		schedule_work(&remove_allocinfo_work);
+   626	}
+   627	
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
