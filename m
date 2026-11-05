@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056816077C97
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:49:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51015606F955
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:50:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2qcGlbSo;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=E/XdMXes
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=19klPtm6;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=K2B1lxv/
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=sxquOEf8juQSLAzFmlu5IaItGv71yt8v9hs1pwQFBN4=; b=2qcGlbSox7B7ydIdSz8i8HIK9Y
-	TvhN/rnW1BtNKT2gIkqyeFQ/CP+R9taPD2vsefn9nrLQLD8t8/u1wsBH3yN/Xk4b4dhdx44djYRvN
-	VWzdXizGO/kxHFD1S8pGIs8us+rUsP26a7MMKAm6Fd2//joWUUD/gMAfqiPD2+7KmTlg/sSjedb+A
-	c4cC9Hz1nJ8ejbySy76R+k0xZKsUPF20vn8oTLx/6hEtZLdDC9XeawFNlELwZR/TsVi5clD62Gv4+
-	+fDnwvvGsgUUjdtobEr7OFR2hranZMi0/5Sja8vpy2SXVGL7jl7if51g7cgpsnSDxzaM+ASNSuZfi
-	ynl9yrTw==;
+	bh=5aGzsp5KdgMuXiH4cPLLqfuaFSwdYC0fVhuh3RxhPKI=; b=19klPtm6u8zMIX7eBvmSqUlaI4
+	muYTBUaPG/tjODSbbd0NOSVuOCFXwXYy8m6pmOzKcH9o94aKExss6W1SvUUzhP7aNiSEZAHpzuqPV
+	9hlGwMr5aIPEEdZ6JwYzUFTif8pcdBND3olaky+OsuMIIZQ0weBBaJRtrIBkwuGgslKkOP8AieqzY
+	QVAdJNyHalv7wS1MEEcS8wNRFAzZUlA1mrbockMo8HnZW/9e6CDxT7piUYqp6JIx3fGoy80oH2Ow0
+	O0qv8wjUgsvyKWIMyDrLnfupTo1UQ0gHDPbvuDa9O6b34ZM6eZBvsd6DDElYkJimajgKsLgaeHQlK
+	88PzS6Cg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3T4-0000000APzB-2k4d;
-	Thu, 05 Nov 2026 19:49:50 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xP3Cs-0000000AM5k-0KMS;
+	Thu, 05 Nov 2026 19:33:06 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3Sp-0000000APlr-024b
+	id 1xP3AN-0000000AKnW-0ddD
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 19:49:35 +0000
+	Thu, 05 Nov 2026 19:30:40 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id BFCEA41513;
-	Thu,  5 Nov 2026 19:49:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28A0F1F0089F;
-	Thu,  5 Nov 2026 19:49:33 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id E26DD40E48;
+	Thu,  5 Nov 2026 19:30:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F19C1F00A16;
+	Thu,  5 Nov 2026 19:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793908174;
-	bh=sxquOEf8juQSLAzFmlu5IaItGv71yt8v9hs1pwQFBN4=;
+	s=k20260515; t=1793907030;
+	bh=5aGzsp5KdgMuXiH4cPLLqfuaFSwdYC0fVhuh3RxhPKI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=E/XdMXesPnzqArTQVj/vATbkPn9quAwWR4+QvOPhtuJvzjYcOtcBO9km77xt5leiV
-	 S36ywlp96IrE9g21mEHWOGsT1m0Z9aOWEiIXFWbARiBzLKcWhp4eAWsmDEe6zU6OpH
-	 6s22Rj0Fz2TXY7KACfjilQeCEgSAyXU8UMGgTUXfxlp2luB6StU6tJ1htLCF3/JA0N
-	 ZeVUX86qfj8DTna8IOIQTukgCGNc6dHpxdehzyd/TuYj16FfRUpYgC0TnCxA7pfYZC
-	 /oGLJvhxn0mEr8KsQkB3j/eQ+ramUsjt1AdHgzTdj1h9sH6id/6TgB+HEEasDYiBEQ
-	 5EAf63o4bAUaw==
-Message-ID: <sashiko-outbox-199999@kernel.org>
+	b=K2B1lxv/jKFYgwMG1NDGekYrwHfux9B7Lr7YpeIbjYFC35OEbhjW8Gpq8v4zquLqB
+	 Z4pB43t0ZFCbMfNEQFK14pwDCS+MJMSzNhKmk4jye3m4E8h1z5FlvpH2Ti6nWmlmXv
+	 PD4sVjRltWsq+GUhSR8G+N2nMA8hfy3KQopKQglQ52iAbw6oo1rkFrb2wRdkx4DFbD
+	 yAw1hWQRYtDcwJ1O5ly6RFK6tEeSZ1CDKnU+TKvYYEVsr5f+ntmDyz/BK/XOWfo5X+
+	 SdsaxDQDu2u1NgohRkw33LgDeTvk29zCkDLG7cFajkOaw7uVHNhan/wbprVyf7LjAW
+	 sAMrc6/lSDo7A==
+Message-ID: <sashiko-outbox-199912@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 13/26] scsi: sg: let procfs own the seq_file
- of allow_dio and def_reserved_size
+Subject: Re: [PATCH RESEND v2 49/51] selftests/proc: check that faulting
+ sysctl accesses don't hold up removal
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-drivers-v2-13-245e54e87116@kernel.org>
-References: <20261104-work-procfs-drivers-v2-0-245e54e87116@kernel.org>
- <20261104-work-procfs-drivers-v2-13-245e54e87116@kernel.org>
+In-Reply-To: <20261104-work-procfs-bugfixes-v2-49-021c84d852e0@kernel.org>
+References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
+ <20261104-work-procfs-bugfixes-v2-49-021c84d852e0@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:49:32 +0000
+Date: Thu, 05 Nov 2026 19:30:29 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,9 +84,23 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Pass the integer they show as the data of the entry and declare the
-> show function, procfs then opens and frees the seq_file. That makes the
-> open functions unnecessary.
+> Read, write and list /proc/sys/net/ipv6/conf/<dev>/ of a tun device
+> with a buffer whose first page is backed by userfaultfd and remove the
+> device while the task sleeps in its copy from or to userspace:
+>=20
+> - unregistering the table doesn't wait for a faulting read(), write()
+>   or getdents64()
+>=20
+> - the read still gets the value that was produced before the removal
+>   and the next read fails with -ENOENT
+>=20
+> - the write is copied in after the removal and fails with -ENOENT
+>=20
+> - getdents64() still lists what it looked up before the removal and
+>   fails with -ENOENT afterwards
+>=20
+> The tables are unregistered under RTNL, so a regression stalls each
+> test for five seconds before it fails.
 >=20
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -94,6 +108,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-drivers-v2-0-245e54e87116@kernel.org?part=3D13
+s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D49
 
 
