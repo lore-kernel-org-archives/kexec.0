@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99108606A32C
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 21:22:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4653E606A328
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 21:26:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=gml+r8TO;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LTnFsgeX
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=3rCC5thI;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EzbFf2vH
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=E7qO1H9A1A9rieSqfjYXZ8cAx/UooTrw7Di+0o9YRTQ=; b=gml+r8TOYO0s8Ezgitva1dlT17
-	2azzVzsGqLMHMQgwAzjh0J/ysrWDfP2VllDBoNXAGNGHattZ0wkuXi8f9QmwP+KM1fw1x09F7/kH0
-	7o0FnXCYOIKtpyu5WLyXs+vxhIcExvwoM4oZTDn1BxuPwUH1O5WgL3rD7LrNRGxkJrmS3G7BYU4tb
-	o2GxQquvnvL87XcFzpfMHbIfEXmmrdXgXmrRU5cU34Fk0p/2RGIbdEwHaW/JactCRXn2mNXe1F3NX
-	O9GMZnq8L36dENaK8ooUlrSxax7H7vTNCTuK9VVwGMxnUpPBEjXtSAQwebPQf0QomPDlnyl3idMTc
-	nEoCUswQ==;
+	bh=7PHyXsRCh8nUckWf/52BHUGTboWFHsh+IL6ljZbS9tU=; b=3rCC5thIHLvl/7+Gzmlkt+iQjR
+	F6qbcphSK+sBtlssz9n9ypXNc1HlqYhJj+Zlag0MavAXcUlruBx1ixoqP8gQHN2UEZcgp4ZFluhNp
+	o8ov03CMVI4YPydgOtDrsJpV8QksLnm0oEtu1TgPoapYvRuOTKl0LGTrOKAUJm59IbIfvqEWrwDqN
+	wNj6KzoNRD1CwKgw+rgBpjzRhthNqiCkXQifrxdcddfrV3dkzkkBhZ+HkXAFAAIPUHw7QthedoMxm
+	8McgRU95j3RE3Uu9dqGG2SrRvCms513QCLDqG1SLQgEBWKVd/9uHtTJjahdrd3i6f7iquGlS63HlQ
+	/wJSuJFA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3B2-0000000AKz3-3uwC;
-	Thu, 05 Nov 2026 19:31:12 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xP3Br-0000000ALb4-3tKE;
+	Thu, 05 Nov 2026 19:32:04 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP39f-0000000AKRy-40YC
+	id 1xP3A0-0000000AKkW-14np
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 19:29:48 +0000
+	Thu, 05 Nov 2026 19:30:09 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 94C3A418C8;
-	Thu,  5 Nov 2026 19:29:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02EDB1F00A15;
-	Thu,  5 Nov 2026 19:29:45 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id AC3A1601D6;
+	Thu,  5 Nov 2026 19:30:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 058331F00A17;
+	Thu,  5 Nov 2026 19:30:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793906987;
-	bh=E7qO1H9A1A9rieSqfjYXZ8cAx/UooTrw7Di+0o9YRTQ=;
+	s=k20260515; t=1793907007;
+	bh=7PHyXsRCh8nUckWf/52BHUGTboWFHsh+IL6ljZbS9tU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=LTnFsgeXELuRS1S19Bt/pzQ+cb+pUBBhn3cNJZvSOUysjbUq7RfCfegDbQCabe1Pb
-	 qSe0NkrKJlORAbTMYxgPieHtNxM2nzEmoUwuiF3r26/1OK2XfIdOA+5L1tOq0YmoQv
-	 kS68U1ggMoMNz6N4N4yBl8B2pEM9tNDSdKY9SQ5yrP3x+RqPWA9Q56h+xU/e6TiGG8
-	 sl7lOr3tc8GVntL/4M2vfxQsKG06zotuUAj5ygmG4uiLR8oRC56KdW3GXGEqaLnYx+
-	 SXwoQ9Tsqzr3DNeN0YRvJ+KZeq2LgvQhPsotMl/HyES9FpciEvKivqFYkYflC1YUa1
-	 McABk20UGjloQ==
-Message-ID: <sashiko-outbox-199892@kernel.org>
+	b=EzbFf2vH4rdYmLSxg3HKN+VvXLe/yE1Tm+i03FhW8mezL4sHWQcUkoSNnFKVwq0bi
+	 AzCp++9TnQnkMVuRyQ7av+BkhgA/SJE164Miit54lB2OO3Lai0csSIQhWlpUru6waD
+	 +VBsr4BCGwCfqkHgRxJDlwr2XEGmEoMwpsrj5goVIQBSCqw3VOFqGx53PTILkt5ust
+	 nbutmvvSCT+eOLEdguPUYLn5ci6I+dEQYyb70GenJ18ODID+H7xgdB1VM3a+sCkvVh
+	 WEBmPTJH++5VB3kciDdK1xZpG8yPpTWbkTU6g4v0sBHmmzlPDXWv2561dDq3nEbTxS
+	 FmCid2KQ7rxdA==
+Message-ID: <sashiko-outbox-199901@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 29/51] proc: don't walk through a
- non-directory when resolving a name
+Subject: Re: [PATCH RESEND v2 38/51] powerpc/crash_dump: check
+ ioremap_cache() in copy_oldmem_page()
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-bugfixes-v2-29-021c84d852e0@kernel.org>
+In-Reply-To: <20261104-work-procfs-bugfixes-v2-38-021c84d852e0@kernel.org>
 References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
- <20261104-work-procfs-bugfixes-v2-29-021c84d852e0@kernel.org>
+ <20261104-work-procfs-bugfixes-v2-38-021c84d852e0@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:29:45 +0000
+Date: Thu, 05 Nov 2026 19:30:05 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,25 +84,18 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> __xlate_proc_name() walks the components of a name like "a/b/c" and
-> takes whatever it finds for "a" and "b" as the directory to go on in.
-> It never checks that they actually are directories. So
-> proc_create("file/x") hangs x into the subdir tree of the regular file
-> "file". Nobody can look x up there, but remove_proc_subtree() on the
-> file removes and frees x along with it, behind the back of whoever
-> registered x.
+> copy_oldmem_page() maps a page of the old kernel that isn't in the
+> linear mapping with ioremap_cache() and copies from it without checking
+> whether the mapping worked. If it didn't, the copy reads from an offset
+> into the NULL page. That oopses unless the copy happens to be a user
+> copy, whose exception table entries turn the fault into a short copy.
 >=20
-> pktgen passes the name the writer of "add_device" picks to
-> proc_create_data(), and only the part in front of the '@' has to name
-> a network device:
->=20
->   echo "add_device lo@"   > /proc/net/pktgen/kpktgend_0
->   echo "add_device lo@/x" > /proc/net/pktgen/kpktgend_1
->   echo "rem_device_all"   > /proc/net/pktgen/kpktgend_0
-> [ ... ]
+> Return -ENOMEM like the other architectures do. read_from_oldmem()
+> turns that into -EFAULT like any other short copy.
 >=20
 > Reported-by: Chris Mason <mason@kernel.org>
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Fixes: 54c32021eb6f ("[PATCH] powerpc: Add arch-dependent copy_oldmem_pag=
+e")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -110,6 +103,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D29
+s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D38
 
 
