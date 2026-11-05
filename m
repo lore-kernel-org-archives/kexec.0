@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6356082BDB
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:29:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C88560A263E
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:29:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=u9A04CLY;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=i9LZ2DKZ
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=um8cpop2;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FKfmSIG1
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=qYpt67HnextFoZu9a0KvUobhiMrlWn0ba92Ucxvlod0=; b=u9A04CLY6TtkPZDGTXX0pAkYj1
-	wBiNh+Co2v9rGIlFDu9PzE8iHm2cY+G6pxid4JKHkKc/b49WAZXF8NLKxi/6wJeCss73TAd0rd8Ni
-	h3FSYBj6c0ZOnOSBvILsPzoq/jzzMwPA93wjWAnOYmyaTHdrP5shtm+61+AjAvoDuroOD+pGNkI4h
-	KAj+8n7x6fsbQ6AnpueJiJSc7HJEzt3RGBFM8rjAvLQwC1PZmXNcquIGHzLT/It+rLXzUeHlyOmTN
-	S2F37HROOIpZZXOUhkgi+K9CAlRap8piFsTLUC7y9J4L16L2NNTOH57o67Q5Aqyh/D7v6Zq6q1Pr+
-	x9NFVsRA==;
+	bh=Nyk6A7Xm43ba6GqhnkPuqyLDv4V2ioid2McoXcJIDec=; b=um8cpop2RqPA4rc6lLHYm31EPj
+	nBEjzPQL7azX9vIQkJTl0CtF6x2CIpsLb7M98XoUuXqZk4Sg83h7wSuKrQWryaF0qAsIo6LoRioi0
+	izZEIkccOsBCTpCqZFchpR39ZcqXEHbyS/MNJ9vQvF4gki/c/fhc32Zoz72MmrOvHFkuTi71j+QIG
+	fEaiwU1A3OBQ7wgAx3TuI1uny44OAxU3O0mCYleXmHfxEZfTvLdyVKEeDuxfh+dKhPaExzWa5Iqrf
+	l6fUHl+h47DyX6fIYJ9oyrfvBA/Tbhkoas82wHridFcv6qSZtA5/IvYdwQ0eWgkGb6wSQDGyv7KfV
+	yy2Qjiiw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP39S-0000000AKND-45ec;
-	Thu, 05 Nov 2026 19:29:34 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xP39g-0000000AKUp-3XaS;
+	Thu, 05 Nov 2026 19:29:48 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP397-0000000AKDh-2hj0
+	id 1xP39A-0000000AKG1-2mtA
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 19:29:15 +0000
+	Thu, 05 Nov 2026 19:29:19 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 6790D4229A;
-	Thu,  5 Nov 2026 19:29:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB4D81F00A02;
-	Thu,  5 Nov 2026 19:29:11 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 6B600410BD;
+	Thu,  5 Nov 2026 19:29:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB75C1F000C1;
+	Thu,  5 Nov 2026 19:29:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793906953;
-	bh=qYpt67HnextFoZu9a0KvUobhiMrlWn0ba92Ucxvlod0=;
+	s=k20260515; t=1793906956;
+	bh=Nyk6A7Xm43ba6GqhnkPuqyLDv4V2ioid2McoXcJIDec=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=i9LZ2DKZwHnYK5IpY8mSgV5ajhfjdPLY2QdoXn1KOHQtU3MNPMIIkqzWJ+l61PaHV
-	 U4dn1Zre5ud+JMQhyzSRt0SahDPp8PERyeSmTGAPSvYaVGithpx7UUiCiDIS5aP7o8
-	 yiknyv3w+lNWb8nJUJPnGF9DnIsx87AjkTzdJfhMDt1aWvCVUScDfBwaHfX8FD/oDj
-	 FjUdNKDwK332+g6e7b3tL5KcI0s45HVKxfoQTPNCErl+nxaNU2QdXrNYqhlAfGWWfV
-	 VnoGmeqjnxuET0EKbWs+mWU2b1yq1VMOdgFBtgPIpmMZpWj0oHgAkiQaF9fwq+c8bn
-	 4Bjmd0UpxAgSw==
-Message-ID: <sashiko-outbox-199875@kernel.org>
+	b=FKfmSIG1UN/LwBVQXjOkvO7J6MY6CD67myw1qrW+OIpPGU2VpRAVBUgr+00ywjUWT
+	 wLAm/Bi+zzx7OZ9FQjICLzYsmc1028tuWSIQeurLxH8ygiIABX308i+7xPLywURc/W
+	 7ILU32xExlaMpEA2rjZnORa7iwKiD+dh6YvkbgZ7JZXLtf1bwIEbU7n8vEFRB7/ma6
+	 Tswhvw73a0gcOElR+tDfQALqyP4oqfrfBTv8JnT2i6bX4N7GoCW5irT/YJ10btLD9v
+	 GZ/E7p4fjablgkPiTgV19jmiyQHA7eshOJIpKb/a+kzle33JJ/83PDvWIIc14A1u69
+	 eI/S8mKdJSVKA==
+Message-ID: <sashiko-outbox-199876@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 12/51] powerpc/rtas: consume the whole write
- to /proc/powerpc/rtas/progress
+Subject: Re: [PATCH RESEND v2 13/51] sched/psi: don't drop the last byte of
+ a trigger write
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-bugfixes-v2-12-021c84d852e0@kernel.org>
+In-Reply-To: <20261104-work-procfs-bugfixes-v2-13-021c84d852e0@kernel.org>
 References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
- <20261104-work-procfs-bugfixes-v2-12-021c84d852e0@kernel.org>
+ <20261104-work-procfs-bugfixes-v2-13-021c84d852e0@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:29:11 +0000
+Date: Thu, 05 Nov 2026 19:29:13 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,18 +84,24 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> ppc_rtas_progress_write() shows the first 255 bytes of a write and
-> returns that many, so a writer that loops until everything is written
-> shows the rest as a second message. Return the whole count, the rest is
-> ignored.
+> psi_write() copies at most 32 bytes of the write into its buffer and
+> terminates the buffer by overwriting its last byte. For a write shorter
+> than 32 bytes that is the last byte the writer sent. A trigger written
+> without a trailing newline loses its last digit then, "some 150000
+> 1000000" turns into "some 150000 100000", and a shorter one like
+> "some 150 10000" fails with -EINVAL because the window doesn't fit
+> anymore. Only writes that end in a newline parse as intended.
 >=20
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Copy at most 31 bytes and terminate behind them.
+>=20
+> Fixes: 0e94682b73bf ("psi: introduce psi monitor")
+> Cc: stable@vger.kernel.org
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D12
+s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D13
 
 
