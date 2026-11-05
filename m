@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C11B606A329
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 20:53:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FBC606A31B
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 20:54:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=v0KYyNhK;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=H5d/fGZi
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=kYL1kiDX;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nB2XodGr
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=hhNNwe04L4FKYQylx+fx8GowXeOCuwfY4bU4uoMs+Zk=; b=v0KYyNhK104rsp/RxUSHT391Io
-	bo1GxWZBFwpzL/LVDc6C9ylsFagzBWsmkf/QSjBRXQ/MRSQGOXKdZW08M/8b4lDVEua4b0ocyBcr3
-	M1+ptzUlUx6Btc9GV8pUb/aBxGfOmeuR++boBnvJv/fWawLW56BDzOIaquTv0YPxNhYhMoLfIJSuu
-	0NdsiTykivHB6/fLws7fG9tFR7O8ETAOlzR4JoK3N5sneyY90mpQ6z86lXN58GxhBPFa6UZQcBabV
-	ZANDBTjeCe6B3nqXrTVeCf7X7rM3UaxMTztqt56/oYkJCC6x6AmvyMcZSgTeI6WMEGKbHR0CMuvSA
-	0mVQOadA==;
+	bh=6kdeb8slgi5Epc3AUJlZlnTJq9uw2LtJTfzJG8aoTok=; b=kYL1kiDXDG58nMy9IhhxZ4ka+v
+	lT6Q0DcdaNEotFfOOhjiRHPcFCCl7QtJGSQ7k7OhecIwZ284WRRAnLWmoNOQN2CmEPkGqkg2ifmC8
+	i9EKtGBvX1M0L1ZOw9dBKAf3y0vfBNpwAaDrvckDkhVQKrIZ8IIyQXOTFHqEbrcAr8O1IH6hphYxs
+	t8+AnFA8C0mmxnulRP7wigS1/gNyb99moaEdIjNOafAlDD/9II0dYG0Jh4lMOoT9kC23sfDhVlOCO
+	kKl2MHMjNiBrQ8mHrpq1/GR68utRsyE8f3d1v8T2Br349Dg2VlSzyvWEP0QS5kIOgU8S14b3ymJZr
+	OZICuyTg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3Cq-0000000AM3t-3OrG;
-	Thu, 05 Nov 2026 19:33:04 +0000
+	id 1xP3FG-0000000AMrG-3TPO;
+	Thu, 05 Nov 2026 19:35:34 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3AS-0000000AKnd-07Sv
+	id 1xP3F3-0000000AMl6-0Sgf
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 19:30:40 +0000
+	Thu, 05 Nov 2026 19:35:21 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 79E07601F5;
-	Thu,  5 Nov 2026 19:30:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCA2F1F000C1;
-	Thu,  5 Nov 2026 19:30:33 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 5F70F6014C;
+	Thu,  5 Nov 2026 19:35:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 879B61F0089E;
+	Thu,  5 Nov 2026 19:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793907035;
-	bh=hhNNwe04L4FKYQylx+fx8GowXeOCuwfY4bU4uoMs+Zk=;
+	s=k20260515; t=1793907320;
+	bh=6kdeb8slgi5Epc3AUJlZlnTJq9uw2LtJTfzJG8aoTok=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=H5d/fGZie/GoRN7MHtK+vOB/Ap1IgYNrnS7OIFVYrIl3BAh2twEoWoV2v1D1ANr82
-	 Z88cSeALKxyTaNGZMcx6eAjOqVsj7JMMVVHDzaMXh9vzmIx4JwInJVfr9Glo3L+Jbr
-	 EcyVSXsNPriCocoRBtla7Tbb+aIbDHKYiN5X3R3O6c36//3BOWw3M4U+PaEq112AWQ
-	 9c6EaQ95R7dZEkoNxWPFXpR5y//vT+nN/V5TXpwOF2BZ/cJsAVeFgDgQAnT/m8f7XF
-	 3V3fQRCNlNmMpcBNkB0tSssvWsyXhfdHIwU6LUOeywmgh0K3F4lJUnYbrVCAdczb3x
-	 LI5cY1vDJVFeA==
-Message-ID: <sashiko-outbox-199914@kernel.org>
+	b=nB2XodGrsltbbE61/MY+yy8aN79qXnaMrW8LLWpZP+0dzW4JXJ0pwkuPXIFbqI8o+
+	 aUuDiq/2IV6LrgueMm0fcGlLznRR27RNE+StoOyZgUUBrn113C9xbA5rh81VwXMVPK
+	 VUjsVxMGM3JYpmYf1PTEDk/e5Uf7TRieH5oanj3YbSEWS4MEoLAes6OJHouq9acGzE
+	 TUHH7dJOYKuCMwdG4wrNuNFJ7FHrzzaOQAVegH3vF65CM3UFN2gW35V1Z8zXxDuW+B
+	 Eq7SEBOj2oNuM5B+HjWikWursJuaXfKRpHoFMZ/wvqpsIgG8z33e9DQBOwbZIzS+yU
+	 fbyKBvVlkA2pA==
+Message-ID: <sashiko-outbox-199933@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 51/51] selftests/proc: check that a faulting
- readlink() doesn't hold up removal
+Subject: Re: [PATCH RESEND v2 03/23] proc: share the readdir cursor with
+ sysctl
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-bugfixes-v2-51-021c84d852e0@kernel.org>
-References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
- <20261104-work-procfs-bugfixes-v2-51-021c84d852e0@kernel.org>
+In-Reply-To: <20261104-work-procfs-core-v2-3-76ace653a773@kernel.org>
+References: <20261104-work-procfs-core-v2-0-76ace653a773@kernel.org>
+ <20261104-work-procfs-core-v2-3-76ace653a773@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:30:32 +0000
+Date: Thu, 05 Nov 2026 19:35:17 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,17 +84,13 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Add the symlink case:
+> proc_readdir_de() and proc_sys_readdir() both resume a listing after
+> the last entry it emitted and each remembers that entry in the open
+> file with a cursor of its own: the same struct, the same way of
+> setting it, the same release. Keep one in generic.c and let sysctl
+> use it.
 >=20
-> - readlink() /proc/asound/<id> of a dummy card into a buffer backed by
->   userfaultfd
->=20
-> - change the card's id through sysfs while the reader faults, which
->   removes the symlink with snd_card_mutex and info_mutex held
->=20
-> - expect that to finish without waiting for the reader
->=20
-> Skipped without snd-dummy.
+> No functional changes.
 >=20
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -102,6 +98,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D51
+s-core-v2-0-76ace653a773@kernel.org?part=3D3
 
 
