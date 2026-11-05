@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FEA606A326
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 20:55:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2CF606A326
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 21:05:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Xw2sYZQb;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n1pRV84z
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=oA32ThnA;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=B6WJiRfI
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=hsy7qPadddcHp1yz4RskpjuPCs9z+iyUZQjRxWR0tno=; b=Xw2sYZQbaDuuNYZhdarL7SLIQ6
-	kVq37yT5t8xakRxklpqM24aWbBRjU5p9zbYw4+pxpIp+JbDm7W8XGuask9wvWzVzEcTeNO87UToop
-	BF/rQ0PSIt0PW0Ebp+LYU/m9Ud/0aw62+ll2gm8WzBTW89LRYk+UQt+T6RTjWN7koYF75onfvzTNy
-	CZfKsJ5dPNfybIYNGiX+q1KoKmeH4Dp5qsVsNGumTzD/8crfmsfufjh6MAV6wYXYjMZV5H3OPC5S0
-	ddTo3JAVscg+3+2yzqBaJPVyyWvLjqdtG/cmHvDIKKWKVb6nJnOBwVYxhYcjc9hR8/MvHRUt8yAUb
-	llHwLbPQ==;
+	bh=T7HKYtQp5vMTiukaVd7EQNWwSXS9b7eC5j/PqagBtrM=; b=oA32ThnAFEDzxQik6AITX2L56b
+	vUq71xyuWaoD65Dt7NmjK2c+yqf8fbb81z9Nf9oThaszD3Sy83qTasL5XLMUGaWUx/yIAoEIgAj54
+	tMXrbfJAHbc6alfs3qUuhNqs5rzmY6cuFvTDiBy5zX8I7jycFvyq5R3/FUqm/K7GZO+8rEBZImw7x
+	aRunBQiF/ol0voGfOV+Imlfxmhm3279iUzW4CFs24E+K3EO5TkU9LvL2Xc8NKfDME/DtrcccfM/DO
+	7g0BS5JDX9gFILl4j2G2xtAST0/SyHnQtt9DeXR4QJXEWx42RD5424ryR/baX6sPMLggbaqkq4KRD
+	1FVoCHrg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3Bm-0000000ALVR-1ykK;
-	Thu, 05 Nov 2026 19:31:59 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xP3CU-0000000ALmG-1aWY;
+	Thu, 05 Nov 2026 19:32:43 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP39y-0000000AKjK-1Uue
+	id 1xP3A4-0000000AKlG-2CjO
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 19:30:06 +0000
+	Thu, 05 Nov 2026 19:30:17 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id C8743601DD;
-	Thu,  5 Nov 2026 19:30:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D006D1F000C1;
-	Thu,  5 Nov 2026 19:30:03 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 4A0FC406C9;
+	Thu,  5 Nov 2026 19:30:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A13601F00A16;
+	Thu,  5 Nov 2026 19:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793907005;
-	bh=hsy7qPadddcHp1yz4RskpjuPCs9z+iyUZQjRxWR0tno=;
+	s=k20260515; t=1793907012;
+	bh=T7HKYtQp5vMTiukaVd7EQNWwSXS9b7eC5j/PqagBtrM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=n1pRV84zJKUUtgUv1TYLImkQPkvmaqLjvwYZrx2oyTCwObzhdrQFqivFQJG2KSTyQ
-	 eTIbvYnu/am2gKJ0v2gg99xx3HGgCRhK3jtKYYV/hEN32FiOkUwOd5qfCd1EvNlRbU
-	 /wDWKpQlTW9sg368vKkBt979aVtHTwB7aqgs1lZ3cZ7yuOwpmH/5K72S+3ZXzvHDZJ
-	 zCVaJA/NGoQ3f5O/ZIg5OD8CZV38pYz/7PwHfRkFO2BSCEBpwk5KemMFv7yST4FY/7
-	 ke1edsHonMb+SJ+aejvls7v7xGnvSnNsG3bwmscXuAXx4DTCqwdtiudcPMpO6x6AMq
-	 QMz7+TNSVPVMQ==
-Message-ID: <sashiko-outbox-199900@kernel.org>
+	b=B6WJiRfIIOZmOenToT8Gl5tE/rjKUnG8bXyiNR5Srz9jcDxPJtwtowXS9szFn8cZr
+	 WN8BdWyUKqvCnlBB0nB37arSWwZ4beEyi9ft4NxFCy8Ur5VfbU/c52RTQ9hy3/QF1U
+	 v8/Ob/jZ2E7l/WVUEKgZTcfqZIxhwV0avNcWMK5lb15TTd5+xb7ZJRFOTEDpL/V4LQ
+	 qqiDfkcwDN94YOHXnBhonf/JZ0Eqfk+ZCjvAseT2pzEyIrELKIXF+gmxk2Mho54u/K
+	 HI7UbMQ3PVHktWHk2inE3o+Ppb+j2wOf42ropi7s62Nha54jVE7mLXq+Gbm6pXyIYe
+	 37E10HbcM17tQ==
+Message-ID: <sashiko-outbox-199903@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 37/51] proc/vmcore: don't let vmcore_cleanup()
- run twice at once
+Subject: Re: [PATCH RESEND v2 40/51] sunrpc: make queue_wait a global wait
+ queue again
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-bugfixes-v2-37-021c84d852e0@kernel.org>
+In-Reply-To: <20261104-work-procfs-bugfixes-v2-40-021c84d852e0@kernel.org>
 References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
- <20261104-work-procfs-bugfixes-v2-37-021c84d852e0@kernel.org>
+ <20261104-work-procfs-bugfixes-v2-40-021c84d852e0@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:30:03 +0000
+Date: Thu, 05 Nov 2026 19:30:10 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,26 +84,26 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> vmcore_cleanup() has a single caller, fadump's release_mem_store() on
-> powerpc. That checks fw_dump.dump_active without a lock and calls
-> vmcore_cleanup() without one, and kernfs only serializes the writers of
-> one open file. So two tasks that write to
-> /sys/kernel/fadump/release_mem through different files run
-> vmcore_cleanup() at the same time.
+> Since commit 552d0e17ea04 ("sunrpc: convert queue_wait from global to
+> per-cache-detail waitqueue") poll() and epoll queue their waiters for a
+> channel file on the queue_wait head in struct cache_detail. But the
+> cache_detail can be freed while its channel file is still open and
+> waited on.
 >=20
-> The first one removes /proc/vmcore and waits for its readers in
-> proc_remove(). The second one finds the entry already unlinked, returns
-> from proc_remove() right away and frees vmcore_list, the ELF headers
-> and the device dumps while those readers still walk them. Or both of
-> them free the same lists at once.
+> The procfs channel files of a network namespace are removed when the
+> namespace goes away. Removing a procfs file waits for the callers that
+> are in one of its methods right now and then calls ->release on every
+> file that is still open (cf. close_pdeo()). The waiters that poll() and
+> epoll left on the head stay queued until their file is really closed.
+> So:
 >=20
-> Serialize vmcore_cleanup() with a mutex of its own. It can't be
-> vmcore_mutex, removing /proc/vmcore calls release_vmcore() which takes
-> it. The second caller then finds nothing left to free.
->=20
+>   sunrpc_exit_net()
+>   -> ip_map_cache_destroy()
+> [ ... ]
 > Reported-by: Chris Mason <mason@kernel.org>
-> Fixes: b500afff11f6 ("fadump: Invalidate registration and release reserve=
-d memory for general use.")
+> Fixes: 552d0e17ea04 ("sunrpc: convert queue_wait from global to per-cache=
+-detail waitqueue")
+> Acked-by: Chuck Lever <cel@kernel.org>
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -111,6 +111,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D37
+s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D40
 
 
