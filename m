@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C88560A263E
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:29:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889C060A3835
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:29:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=um8cpop2;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FKfmSIG1
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Ku2ikHCP;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dlMl9M/r
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Nyk6A7Xm43ba6GqhnkPuqyLDv4V2ioid2McoXcJIDec=; b=um8cpop2RqPA4rc6lLHYm31EPj
-	nBEjzPQL7azX9vIQkJTl0CtF6x2CIpsLb7M98XoUuXqZk4Sg83h7wSuKrQWryaF0qAsIo6LoRioi0
-	izZEIkccOsBCTpCqZFchpR39ZcqXEHbyS/MNJ9vQvF4gki/c/fhc32Zoz72MmrOvHFkuTi71j+QIG
-	fEaiwU1A3OBQ7wgAx3TuI1uny44OAxU3O0mCYleXmHfxEZfTvLdyVKEeDuxfh+dKhPaExzWa5Iqrf
-	l6fUHl+h47DyX6fIYJ9oyrfvBA/Tbhkoas82wHridFcv6qSZtA5/IvYdwQ0eWgkGb6wSQDGyv7KfV
-	yy2Qjiiw==;
+	bh=2jOjP+w+HiO6pPFlf+UtXLVpbUo8fVoVCMG/gzgxPSY=; b=Ku2ikHCP6ivys390X0vV+E3thJ
+	1RwNOZJPa2GoEbUvzwf0A080Ypw1si5/AqvB8b3Gv+m13Xu9oV1Nj9/1eY3uIrG2XdCeLQjXpOnPM
+	8uUtZ3Sm8ODacQV4Bt+McKqhvzGt843nFZ/zd8kaFnRvgv88WV5FVqtrfhI9lobSaeivKuOOrSmn9
+	PjaOWixtv2wSv4+aukdYBZAC5EeClhdioKEherkOCkdoW9Qsx1p9E9AEWMiurotQC4hJjZbphjrY5
+	hScmuspZO7Dg4agmFDRG+hfa5wxJpxxUI9Jio1OS8m0LUZsNdGq/cxktcNiYgHZND6t4rph4tVq11
+	dhA9XZaw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP39g-0000000AKUp-3XaS;
-	Thu, 05 Nov 2026 19:29:48 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xP39q-0000000AKby-0DQn;
+	Thu, 05 Nov 2026 19:29:58 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP39A-0000000AKG1-2mtA
+	id 1xP39D-0000000AKG8-0GFW
 	for kexec@lists.infradead.org;
 	Thu, 05 Nov 2026 19:29:19 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 6B600410BD;
+	by tor.source.kernel.org (Postfix) with ESMTP id 8159B6015B;
+	Thu,  5 Nov 2026 19:29:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1D611F00919;
 	Thu,  5 Nov 2026 19:29:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB75C1F000C1;
-	Thu,  5 Nov 2026 19:29:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793906956;
-	bh=Nyk6A7Xm43ba6GqhnkPuqyLDv4V2ioid2McoXcJIDec=;
+	s=k20260515; t=1793906958;
+	bh=2jOjP+w+HiO6pPFlf+UtXLVpbUo8fVoVCMG/gzgxPSY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FKfmSIG1UN/LwBVQXjOkvO7J6MY6CD67myw1qrW+OIpPGU2VpRAVBUgr+00ywjUWT
-	 wLAm/Bi+zzx7OZ9FQjICLzYsmc1028tuWSIQeurLxH8ygiIABX308i+7xPLywURc/W
-	 7ILU32xExlaMpEA2rjZnORa7iwKiD+dh6YvkbgZ7JZXLtf1bwIEbU7n8vEFRB7/ma6
-	 Tswhvw73a0gcOElR+tDfQALqyP4oqfrfBTv8JnT2i6bX4N7GoCW5irT/YJ10btLD9v
-	 GZ/E7p4fjablgkPiTgV19jmiyQHA7eshOJIpKb/a+kzle33JJ/83PDvWIIc14A1u69
-	 eI/S8mKdJSVKA==
-Message-ID: <sashiko-outbox-199876@kernel.org>
+	b=dlMl9M/rPNxEZu6+Ri3OXa9FPI28S+nKPOVBymLRvAUIbEdACYesn7GaasG71a1si
+	 Jkdk1nguj1FW0I6rEhmRyL6rCf6iGgz0RsNmgA2Aax7T6dfl/bLd0reMK3dxl47No2
+	 cZOPksbLnHyzXhnv8X6aqtgNCaUxaH8zvMCcgysEle4NYPvSVucRgboVQsljfhslI1
+	 t38Nm+rBEGJUAgtRVOrBLiUgvSsBb85o5UOO6lhjVE/GMpZGzwjSdxGKJTR11kjWCO
+	 BXN98+TIo2Yx9dB8Tl/s4rDba6W5uK4F2hW8KmNF5r4lJJBlBYlOLW1lUh+7tDsUMj
+	 MzavIifWHwTQQ==
+Message-ID: <sashiko-outbox-199877@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 13/51] sched/psi: don't drop the last byte of
- a trigger write
+Subject: Re: [PATCH RESEND v2 14/51] proc: sysctl: don't stop readdir at an
+ entry that is being unregistered
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-bugfixes-v2-13-021c84d852e0@kernel.org>
+In-Reply-To: <20261104-work-procfs-bugfixes-v2-14-021c84d852e0@kernel.org>
 References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
- <20261104-work-procfs-bugfixes-v2-13-021c84d852e0@kernel.org>
+ <20261104-work-procfs-bugfixes-v2-14-021c84d852e0@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:29:13 +0000
+Date: Thu, 05 Nov 2026 19:29:16 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,17 +84,25 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> psi_write() copies at most 32 bytes of the write into its buffer and
-> terminates the buffer by overwriting its last byte. For a write shorter
-> than 32 bytes that is the last byte the writer sent. A trigger written
-> without a trailing newline loses its last digit then, "some 150000
-> 1000000" turns into "some 150000 100000", and a shorter one like
-> "some 150 10000" fails with -EINVAL because the window doesn't fit
-> anymore. Only writes that end in a newline parse as intended.
+> proc_sys_fill_cache() creates the inode of an entry that has no dentry
+> yet. Since ace0c791e6c3 ("proc/sysctl: Don't grab i_lock under
+> sysctl_lock.") proc_sys_make_inode() refuses to do that once the table
+> is being unregistered and fails with -ENOENT. readdir takes every table
+> it lists into use and unregister_sysctl_table() marks the table as
+> being unregistered before it waits for readdir to let go of it. So an
+> entry that is unregistered right then makes proc_sys_fill_cache() fail,
+> proc_sys_readdir() stops there and returns 0. If that getdents64() call
+> hadn't emitted anything before that entry userspace sees the end of the
+> directory and never gets the entries behind it. A listing of
+> /proc/sys/net/ipv6/conf can end early that way while a device goes
+> away.
 >=20
-> Copy at most 31 bytes and terminate behind them.
+> So skip an entry whose table is being unregistered, like readdir
+> already skips a link it can't follow. Lookup treats such an entry as
+> gone too since ea5751ccd665 ("proc/sysctl: don't return ENOMEM on
+> lookup when a table is unregistering").
 >=20
-> Fixes: 0e94682b73bf ("psi: introduce psi monitor")
+> Fixes: ace0c791e6c3 ("proc/sysctl: Don't grab i_lock under sysctl_lock.")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -102,6 +110,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D13
+s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D14
 
 
