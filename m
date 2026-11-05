@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F296D606A6EE
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:58:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7D2606A6EE
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:58:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=u6DqL0y6;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Z6BhYpOi
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=NV8dDmDC;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fSi/szdb
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,39 +14,39 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=gSLc/NFQPVB0jheaKA5TG3vFdDVh7lUm2wF5CPMLjBE=; b=u6DqL0y6YGUoY9lYjSYaTMol2H
-	CQsFVA1mqDRzZelW8+V5J6u7eTMOzRyvzMtLZKgB2dHQxdgHzfa8MQYQK2PGbB3LWsrpRvmmStlaf
-	vPc5Uer2Z4USvAVv3262E03Xxn5lSnItejeBeiDsYhbpzaoiyxne7XQNG93fJO97xBQ915k8BzgPo
-	BRBikK3hRhh6EM5Jslf4zCWw/BOJsVdLv+3psFMDEIyuyP+1Rb07zTbIz92+Bq5/buVoM9Er2/sHy
-	aMtjCaerW8bIKbShiaSaF9fFlSxLRW/mMscwIjX6pfxqQiOMhmSCgov/7o5bsjWXeR1VX1l+bD3z3
-	X5JfP09A==;
+	bh=Q42XyBK1Bo1UPboqeH08upoo4muH+m6/vw8nLMpS0Pk=; b=NV8dDmDC15yRk5xjVKoX6mPOr1
+	9GM5FFX7HPH2hjmsy2DSzrpYw17Hon5zRztVUOHFL/LH2KOt0PryNY4mjwchLCiWY8+yHQP+RLXrz
+	O2PAJdLy1rkhhQEbTNl4l5MaZ0+wNTRopvZNovxBIJ0YOQqN7kZprZALNCJLEZwYmFxcAZhjRbzEr
+	weTBQbJGO4QZVY1cMdTgfHJG7HWgqv49+NZ3NPkN6twvLyS65GSEpdsrSg9D2y3zA8emtQdPXuuuC
+	2sZO8UxD9tZ5MNDEFFgGzQHPRWqf0YLWA3vvCtpu+tYc/+AsuYhnOsBxwVpUN2DK6BDR7xmI064ls
+	77y+0uhA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3bi-0000000AT3O-2UBJ;
-	Thu, 05 Nov 2026 19:58:46 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xP3bj-0000000AT4R-3JKA;
+	Thu, 05 Nov 2026 19:58:47 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3ay-0000000ASf2-2MXx
+	id 1xP3aw-0000000ASeX-0bg8
 	for kexec@lists.infradead.org;
 	Thu, 05 Nov 2026 19:58:02 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 068BB601E2;
-	Thu,  5 Nov 2026 19:58:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D0EC1F008A2;
-	Thu,  5 Nov 2026 19:57:58 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id E176B40B2E;
+	Thu,  5 Nov 2026 19:57:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 573781F008A5;
+	Thu,  5 Nov 2026 19:57:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793908679;
-	bh=gSLc/NFQPVB0jheaKA5TG3vFdDVh7lUm2wF5CPMLjBE=;
+	s=k20260515; t=1793908677;
+	bh=Q42XyBK1Bo1UPboqeH08upoo4muH+m6/vw8nLMpS0Pk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Z6BhYpOihLUJ9I+BP48G0ZYNFSOmcO+AiYj1AAUb8k2LZd2aIQW/Swc7nv4VCWJfU
-	 DHtDKlv9N2qiG9qzTkTwwCGFIPw9k93r1XJF3AEFu5fiy0J0WZMBVfvlSMpYGeYdhw
-	 yryw8xnqryz2kJag/16i+WPnykBtp5uQM3G6UgfxYyijk+piqbU5EzXTtFkwS4uuX/
-	 wc6k8A9uOeN/qdMXjzHeoAqeBHqGjjz921QAkO+pzMyUFXL0yIl4mvV2eIfMpCgJj8
-	 218TNw4Q4fOoKCdM5IjaNdVPdMjBKOOWdhv5uws8exAyge4Ilrrm1ePkGt0v9MVEra
-	 +vemf0Bh6IyOA==
-Message-ID: <sashiko-outbox-200049@kernel.org>
+	b=fSi/szdbjktVrgoUr62B1bGTBvTg/JXYR5HsAaNjPMAKPu/DFgJ5LU7EVq3LbauBI
+	 OV7laZ5WHx/owfqUsSmgh/LiGdgMWJSvQ51LPQmP6Exgz1iuYkBqMs8RObI4sSEK1E
+	 rai89FD/sZhBqT8ufpSLaHhgg9AxbvXedvNqVjnXXUu4yHIzFYTk39p2ftt4QSuWYI
+	 k/z/QOJ+B5PP+E/QNeQ1OoIxGFDQpSWRVe/kByJRYDZbPCn+jitoJsAHH3BrAPvGv0
+	 JhwqlLAYll8A0fQ91VWgRy34TFB9XZM0s5Xn4mfFoe5NZteWT8DZRZULqWUF0VpE/t
+	 iGL8DBqA2a6fQ==
+Message-ID: <sashiko-outbox-200048@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 15/30] profiling: let procfs copy out reads of
+Subject: Re: [PATCH RESEND v2 14/30] profiling: let procfs copy in writes to
  /proc/profile
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-fs-v2-15-319e0f9a8aae@kernel.org>
+In-Reply-To: <20261104-work-procfs-fs-v2-14-319e0f9a8aae@kernel.org>
 References: <20261104-work-procfs-fs-v2-0-319e0f9a8aae@kernel.org>
- <20261104-work-procfs-fs-v2-15-319e0f9a8aae@kernel.org>
+ <20261104-work-procfs-fs-v2-14-319e0f9a8aae@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:57:57 +0000
+Date: Thu, 05 Nov 2026 19:57:55 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,11 +84,9 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Fill the buffer procfs hands to ->proc_read_buf() instead of reading
-> straight into userspace. readprofile reads the whole file in one go, so
-> ask for PROC_ENTRY_FULL_READS and procfs fills such a read in pieces.
-> The file is read through ->read_iter() now, so sendfile() and splice()
-> work on it like on the other converted entries.
+> Implement ->proc_write_buf() so procfs copies in what is written before
+> it pins the entry, and take the multiplier from that copy. Writes
+> larger than PAGE_SIZE - 1 bytes fail with -EINVAL now.
 >=20
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -96,6 +94,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-fs-v2-0-319e0f9a8aae@kernel.org?part=3D15
+s-fs-v2-0-319e0f9a8aae@kernel.org?part=3D14
 
 
