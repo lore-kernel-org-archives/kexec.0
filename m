@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98320606A328
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 20:31:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC76606A326
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 20:32:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=np8Swkpe;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WP5zysBl
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Sw8t6zHK;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XbZWqE5b
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Qw513NKzixnVetQs2aPch799inLwFwvqjGlTZsHFgHc=; b=np8Swkpe3xWt1m1cn+eVc47O/h
-	fcQuJB2IOJMkaa4+pdRRGxUzQxgu42lkTeoQkLvc/X0W5130nP1J/PoBKAEpEQBjhNdi7BlUqeVVp
-	gwEgXjOUiP09tBEdOmxhGUWIkQyVJzjVZMcMDumpXH9PwiJk0fZCnaYLL10xH9sGd4VHZfk5ZxJfs
-	KViJdFH/CCvtUncVRrK0i3LDEM75o2PfXDid0XTGcI0lAQNHOO6ZNaE46MCRgYUM+DypPZmq6j+D9
-	Zuhgl5hkJGzZ89m5ggxXLO4X6GFdO/vn3QREhdmziGnkKRcnszo6lZE++W98l2TmW4Dx1PUz7HuuJ
-	HmA3+ymQ==;
+	bh=BQI+a8njiZ/gI4hynXalYGlHTbeuK2z4PeQyurW9I7E=; b=Sw8t6zHKesxilOfs7iUDS7+dgI
+	qkeWBdruY1fvdCTnMBhhMhMxycBrnh62/N1njWZZu8W6FLrgpUbwiSQFKbiTYgISU5L9yV9jwJqvN
+	H2SZlvvmuOkYqKiTw6ewrZZZDt0UtafMjcrIVB9IZ7wrPlAWBPM1YaM7zOEpzKn9KiW95kFZOZBZe
+	c7jQ3vBSxcWFajCIIY494bnecNRPMI4tE/6Mv4DFoKjyzuxuG31eyTfdncOuzTzPzWgKX49UMvCjE
+	GXLMKiPoEA0VEA1iO+UBDeUVNjCrc77wM7fE7FSEuI76xFZdFzc6lFJ0gpLIvypnSomp6+NyZNf5K
+	9Ozjdosg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3Ax-0000000AKro-1SQ7;
+	id 1xP3Ax-0000000AKsy-3Ygk;
 	Thu, 05 Nov 2026 19:31:07 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP39F-0000000AKI0-196W
+	id 1xP39M-0000000AKJ1-2qB6
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 19:29:21 +0000
+	Thu, 05 Nov 2026 19:29:32 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id B405F60154;
-	Thu,  5 Nov 2026 19:29:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF3F21F000C1;
-	Thu,  5 Nov 2026 19:29:18 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 6DDEE40DFF;
+	Thu,  5 Nov 2026 19:29:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D932E1F000C1;
+	Thu,  5 Nov 2026 19:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793906960;
-	bh=Qw513NKzixnVetQs2aPch799inLwFwvqjGlTZsHFgHc=;
+	s=k20260515; t=1793906968;
+	bh=BQI+a8njiZ/gI4hynXalYGlHTbeuK2z4PeQyurW9I7E=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=WP5zysBlV6QoE+ebdO994NPOQCHtVK69BSl7GA0TkgCejzw4yv+Qi/dIb/BiTtwJI
-	 CtwiPcppWeOxu8qxGDLb2NNs4muOnWOkbdTfgMZetnT6EYIraiEzVZgwrSfKYuy20p
-	 lq1YQ+ODYgN/fNYKxtV+Y3MBG2phtgSlbN/PnX4DhhLfO11dC92+odtKZZNAdRC5BY
-	 cOK2uw6yB5xGSlQ2pqLEJNTrF9NrssiHaYNsRIIVDX79TmltA0T6xLv6ahSmhYnicd
-	 7xH40xuqXjCm2XXdHJHYyElfh7nUle5CnSYYX4imcJF/N71eKI1RK/06V3FFapNV/j
-	 F1VfvpFqH1/NA==
-Message-ID: <sashiko-outbox-199878@kernel.org>
+	b=XbZWqE5bV1/7AJYMx+wz+v1eHMIKkyE8SQclRs/OPZo9iXZQoLwkmOhiyxQQQlhJE
+	 8sowAoifBDVNyDNDLEaP8lelRK7/+buyxRsYnpXg78dXMLTw7E9r/wWQq/tiEDzR6y
+	 aX+wD8fLSCGmqTUIYxuEFc1dqwu6r8nwV6Y//hBCH/Ixikoyl/tEaip/uUdqQ2AyFO
+	 Hsl7wCQ5MJ8vCIV28zr9nojYTBgUQpEh6I3Qfn7gkQr2IO9fL1vbfhzhhz3jhjCt/q
+	 EfQn7sAzxdZYYzvTAFpHP0LITOOhjBJNmZidQGsmC3cKnW5zohL3e3FGKtD5LfWZ7w
+	 nN9DEaZl88tjA==
+Message-ID: <sashiko-outbox-199882@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 15/51] PCI/proc: don't truncate the position
- of config space accesses
+Subject: Re: [PATCH RESEND v2 19/51] xtensa: simdisk: don't read the file
+ name without the lock
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-bugfixes-v2-15-021c84d852e0@kernel.org>
+In-Reply-To: <20261104-work-procfs-bugfixes-v2-19-021c84d852e0@kernel.org>
 References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
- <20261104-work-procfs-bugfixes-v2-15-021c84d852e0@kernel.org>
+ <20261104-work-procfs-bugfixes-v2-19-021c84d852e0@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:29:18 +0000
+Date: Thu, 05 Nov 2026 19:29:26 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,24 +84,12 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> proc_bus_pci_write() truncates the file position to an int. A pwrite()
-> at an offset like 0xfffff000 turns it negative, the check against the
-> size of the config space passes and the count it clamps to ends up
-> larger than what was written. The loop then reads past the end of the
-> caller's buffer and writes all of it into config space at negative
-> offsets, which pci_user_write_config_*() pass on to the config
-> accessors unchecked. The write also returns more than it was asked to
-> write.
+> proc_read_simdisk() looks at dev->filename without holding dev->lock. A
+> write to the same file detaches the disk and frees the name under the
+> lock, so a concurrent reader can copy out freed memory. Copy the name
+> with the lock held.
 >=20
-> An offset above 4G that truncates to a small positive value writes to
-> the start of config space instead. proc_bus_pci_read() keeps the
-> position in an unsigned int, so a read at such an offset returns the
-> start of config space instead of hitting EOF.
->=20
-> Check the position against the size of the config space before
-> narrowing it.
->=20
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Fixes: b6c7e873daf7 ("xtensa: ISS: add host file-based simulated disk")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -109,6 +97,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D15
+s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D19
 
 
