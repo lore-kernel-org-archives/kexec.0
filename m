@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4653E606A328
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 21:26:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FB8606A32C
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 21:26:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=3rCC5thI;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EzbFf2vH
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=wo+iYWtv;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ckZU7d4Q
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=7PHyXsRCh8nUckWf/52BHUGTboWFHsh+IL6ljZbS9tU=; b=3rCC5thIHLvl/7+Gzmlkt+iQjR
-	F6qbcphSK+sBtlssz9n9ypXNc1HlqYhJj+Zlag0MavAXcUlruBx1ixoqP8gQHN2UEZcgp4ZFluhNp
-	o8ov03CMVI4YPydgOtDrsJpV8QksLnm0oEtu1TgPoapYvRuOTKl0LGTrOKAUJm59IbIfvqEWrwDqN
-	wNj6KzoNRD1CwKgw+rgBpjzRhthNqiCkXQifrxdcddfrV3dkzkkBhZ+HkXAFAAIPUHw7QthedoMxm
-	8McgRU95j3RE3Uu9dqGG2SrRvCms513QCLDqG1SLQgEBWKVd/9uHtTJjahdrd3i6f7iquGlS63HlQ
-	/wJSuJFA==;
+	bh=GA0+/owkDdniY30l313rN8euuBjyhEchmg5u4LglfRs=; b=wo+iYWtv/bjWqKjRcynbrPlW8T
+	nQRMJQVhi+iLP4uYb3txRYk7KWWzNMNmPc9Av0HtZ2yuGvrI3bKo4WOaUkv8peJFmaLsS1WcU8T8t
+	SGgMIvJ72ijHZieq2tD9yd3WV5MWLou8fG6XY4fdbX70Ey9Vx6D2p2CgBVc7caceL8jPoi9volyeR
+	shIMUIpJ4x/f5I6zFFTZfWh4QhhhtFQV+5VRzfOVZyfBHwWOodVbVDK4th93A0HRrdPrRJHlbLUfp
+	tZ5x7e7nzzPZaRO5wxZu6xb4n/T/hWIv7liY60S5yJHs8L5QXKplUuL9Vxujdk9ndHKtdzvUfYbW9
+	Cp562Rkg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3Br-0000000ALb4-3tKE;
-	Thu, 05 Nov 2026 19:32:04 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xP3Cr-0000000AM4P-0Kwr;
+	Thu, 05 Nov 2026 19:33:05 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3A0-0000000AKkW-14np
+	id 1xP3AP-0000000AKnY-2hXy
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 19:30:09 +0000
+	Thu, 05 Nov 2026 19:30:40 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id AC3A1601D6;
-	Thu,  5 Nov 2026 19:30:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 058331F00A17;
-	Thu,  5 Nov 2026 19:30:05 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 1B40E601DF;
+	Thu,  5 Nov 2026 19:30:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 472581F000C1;
+	Thu,  5 Nov 2026 19:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793907007;
-	bh=7PHyXsRCh8nUckWf/52BHUGTboWFHsh+IL6ljZbS9tU=;
+	s=k20260515; t=1793907032;
+	bh=GA0+/owkDdniY30l313rN8euuBjyhEchmg5u4LglfRs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=EzbFf2vH4rdYmLSxg3HKN+VvXLe/yE1Tm+i03FhW8mezL4sHWQcUkoSNnFKVwq0bi
-	 AzCp++9TnQnkMVuRyQ7av+BkhgA/SJE164Miit54lB2OO3Lai0csSIQhWlpUru6waD
-	 +VBsr4BCGwCfqkHgRxJDlwr2XEGmEoMwpsrj5goVIQBSCqw3VOFqGx53PTILkt5ust
-	 nbutmvvSCT+eOLEdguPUYLn5ci6I+dEQYyb70GenJ18ODID+H7xgdB1VM3a+sCkvVh
-	 WEBmPTJH++5VB3kciDdK1xZpG8yPpTWbkTU6g4v0sBHmmzlPDXWv2561dDq3nEbTxS
-	 FmCid2KQ7rxdA==
-Message-ID: <sashiko-outbox-199901@kernel.org>
+	b=ckZU7d4QUH1rI3q+4mXcCPdzjI6S3s0l6AJ0++PpkI/VthC4KY9jc1TUbXEy7w09a
+	 QS42jHvzTWmhpuR4sNrCVakO0luPXYf1Pep1PJq3hRlnM+G5j7LV9MiNuMbPYmYvh8
+	 szoCOMpIPlXI4pmYgqd4WZv3emt2hKmkx/g4Acbw06/hy66OKKSy4eyXseR+7sXoS4
+	 h0IZpdjtLDWYruhg3kAkHHame5PmfbBbyj3BLPwhrZvYj7hO9dMH7e37xj2nGdqfxY
+	 8c7pfm36HFDGPa1muEyl/868i4Nqv0yBIOEge1rhlL08kefXVk1eQWlAc5aoAoUcje
+	 mrqw0O6Z+CNMQ==
+Message-ID: <sashiko-outbox-199913@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 38/51] powerpc/crash_dump: check
- ioremap_cache() in copy_oldmem_page()
+Subject: Re: [PATCH RESEND v2 50/51] proc: don't pin a symlink's entry while
+ readlink() copies it out
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-bugfixes-v2-38-021c84d852e0@kernel.org>
+In-Reply-To: <20261104-work-procfs-bugfixes-v2-50-021c84d852e0@kernel.org>
 References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
- <20261104-work-procfs-bugfixes-v2-38-021c84d852e0@kernel.org>
+ <20261104-work-procfs-bugfixes-v2-50-021c84d852e0@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:30:05 +0000
+Date: Thu, 05 Nov 2026 19:30:30 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,18 +84,22 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> copy_oldmem_page() maps a page of the old kernel that isn't in the
-> linear mapping with ioremap_cache() and copies from it without checking
-> whether the mapping worked. If it didn't, the copy reads from an offset
-> into the NULL page. That oopses unless the copy happens to be a user
-> copy, whose exception table entries turn the fault into a short copy.
+> proc_get_link() pins the entry with use_pde() and the delayed call
+> unpins it. vfs_readlink() copies the link to userspace in between. So a
+> page fault in that copy holds up remove_proc_entry() just like the
+> copies of reads and writes do, and the callers hold locks while they
+> wait. /proc/asound/<id> is removed with snd_card_mutex and info_mutex
+> held when a card changes its id.
 >=20
-> Return -ENOMEM like the other architectures do. read_from_oldmem()
-> turns that into -EFAULT like any other short copy.
+> The pin doesn't keep anything alive. proc_symlink() copies the target
+> and pde_free() frees it with the entry, and the inode holds a reference
+> to the entry. What the pin does is keep a removed symlink from being
+> followed. So check ->in_use instead and drop the delayed call. That
+> also takes an atomic pair off every traversal of /proc/net and
+> /proc/mounts.
 >=20
-> Reported-by: Chris Mason <mason@kernel.org>
-> Fixes: 54c32021eb6f ("[PATCH] powerpc: Add arch-dependent copy_oldmem_pag=
-e")
+> Fixes: 7e0e953bb0cf ("procfs: fix race between symlink removals and trave=
+rsals")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -103,6 +107,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D38
+s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D50
 
 
