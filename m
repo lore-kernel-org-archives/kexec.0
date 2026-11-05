@@ -2,10 +2,10 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A9F606A328
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 09:44:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68EAB606A334
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 10:01:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=W0SpKnM/
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=jY02RlzI
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
@@ -13,70 +13,70 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=SqrTjgENN7Dfs+HehxbKPgACeb32UvvfMAFijNHd6N4=; b=W0SpKnM/HsVkNTZCy9KeNrksNX
-	sFbggCsJ/Y5fr2FE1zaitfBgSFH4RGAK+I3F/q98zW7ppL51m75cB8V9u7urGo97OVEmyyauevX8W
-	/foEwC/B6TQpvmZ05G/KE1FR7vBRwiRlz0eucM3A1UWRpm0HILwOde3CkioNZjTtXeGIUE+HNqxUA
-	e0/AuwsVRHKP5eN/fvl9wT2FmxtYb/JCJL5ZCqUtx/e5RMP/2sWFnS4+iTKRVWf1X7XNY81RHi1a+
-	dB65SblEoC5tE3RJo70bt4WuFa36/pnpx7nP3sjxpW/QmTd7Pz2t603aXiJ5zMseujDsyHfwSg66v
-	sdEzPy3A==;
+	bh=LrgDMUrSYXpYgkAhfsYKg0ebb/uLgOfOMhqzX4yL0j4=; b=jY02RlzIcIDTXMK0KrXaW+UVYn
+	XW2bg9rh735GDMFLaDIOHWoWVdOrQ0Q8Ff/LBcVQpyOmI3fnJiiaQcB9LmtxCBQXGzecG3S+6cx5S
+	t4Q3sf0FdwKCcMdgpqgq4UBzJ6VxOfmWTaSkX5pA52/lsi9Z26/IBx0S8gviz/JLpxGxhqr68MD7g
+	wuxzIg2jXECdsZMCYk/NoaC2DnG7L0efMOF0RyKbRaCWYaCfbL4h9gxxDrq9WYpVMt3Uf3BD1p9NU
+	c4wGyRIYFc8dj9CKB60+Kcd4Bk06hgkeCLQ+qA6xf0iKtzSze5nuMHAdlS8Xtry2UcZgW7LqN4amk
+	d5SXIylw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOu1f-00000008LpO-2b7C;
-	Thu, 05 Nov 2026 09:44:55 +0000
-Received: from mail-vs1-f45.google.com ([209.85.217.45])
+	id 1xOuHS-00000008Nop-2wWp;
+	Thu, 05 Nov 2026 10:01:14 +0000
+Received: from mail-qk1-f178.google.com ([209.85.222.178])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xOu1c-00000008Lod-2Sx9
+	id 1xOuHP-00000008NoP-2mOi
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 09:44:53 +0000
-Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-7cc0e865dd1so513978137.1
-        for <kexec@lists.infradead.org>; Thu, 05 Nov 2026 01:44:52 -0800 (PST)
+	Thu, 05 Nov 2026 10:01:12 +0000
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-93e7ad9f78dso201217885a.1
+        for <kexec@lists.infradead.org>; Thu, 05 Nov 2026 02:01:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793871891; x=1794476691;
+        d=1e100.net; s=20260707; t=1793872870; x=1794477670;
         h=content-type:cc:to:subject:message-id:date:from:in-reply-to
          :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=SqrTjgENN7Dfs+HehxbKPgACeb32UvvfMAFijNHd6N4=;
-        b=ZXZqzjQ3r/CQiuD5q9PJHuLXxy6DWBLbSB59+8qjwlNPFQ8LJSbaoPbtnHGjOCNBUA
-         B3McifMWUc3y/nMmX9gUI+lLvgfPCpLdHLqgwbRPtuOoSqtrDiJjMgPg/MxXRXiQ9I4f
-         C71JqiiwVXxWmL2u//c/SXCdC4SulW98hs/HzWMrTYXieS2mQrrs0mEp+AwGdnE23qVz
-         5+wLMdq+HUMx+EedsXMVsxhKIdAn4e66ALAp7mb+8YW2/3RVdv2vFWnRY0nOX2pH//tG
-         GXiwZf0o76vOhqadJ6mBRuW9geLVHgA4UgIeJL7q0fDJnf10juiw+/gJE4zCOLUrAxn6
-         7nTg==
-X-Forwarded-Encrypted: i=1; AKwUvByOx5VtahCVjw++qbO+PQShgB9p6PEsLBp25vybcNT9a7R1NXdrieAAjT09ESwcnEtPBqpoog==@lists.infradead.org
-X-Gm-Message-State: APuU4Z8kgxkXFsiYswELwSAtnIADWqSkkeGUOwAqu+9gGlWagNXYa4Mt
-	TPtZqcwv+V3VVH8wNajyiMZqpfoNRTg3ELp7C7WI9Z3VJTaPlndATESaOWsxlYNGpOw=
-X-Gm-Gg: AYBFou0/8iHW/xiFXbEroOPJZFgxSgqh0LimEShTyhSy8e/7YP+GXYHcmzY9T1AJska
-	5WttxbcvUDbU4UP1cZEYDkMBMAQtfZZfYS+pD/D7fW2ANuJJk5+fPJ3n6wMxxyxu/6HqiJWRhDq
-	YXTk4bY5RVOQ4zwk+CJaTKbGiP29IFwnAdoAYWS/1jYILI5Ek9tgc1vSqotWVuAB8SAJwdopWvL
-	p3hnjowKip9EC+j7m7SQG5qlJSDmvrQBOHFuBlnMy7ts41/R7Iy3s7MiXaNWeiTTHl/g3HH84Dj
-	aS7V9RxbRmARPRyoKxDAiUJ8GfPVROphpMmqvmZxByKh/bDFkoaANJsS7nxGiBdb1cvGNHqReVd
-	UHuoMBwF1eqywIr1XsNQn9L8xZH3hG5iAeLJrxwrbwz/ZXuiWLJoYfPnCAYTdykDLZcLX+bmMYJ
-	uA+m8zgWSbaQbE4XKHO4FhazkeK4Dwu54nOIO1ST19VpPKB2AXJ1nq4aKDM/qdrZXRTAwm268BO
-	NbF6HpUeGl/NKaQgu6DnDeWLt8/5cyyp5p1xH17bPNrcVBJRmrg268udJf7KblxFgg3zb8MCO4D
-	RGYLcFGdhPaHectOqQ6oqbTfvFjf7SgxzPOMdfw/NhNsKxw13IXLxJ+iq+U5Y5xtFQ==
-X-Received: by 2002:a05:6102:f12:b0:7d2:7c63:5a08 with SMTP id ada2fe7eead31-7d27c637376mr2173786137.32.1793871891192;
-        Thu, 05 Nov 2026 01:44:51 -0800 (PST)
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-998d91d2693sm4020511241.7.2026.11.05.01.44.45
+        bh=LrgDMUrSYXpYgkAhfsYKg0ebb/uLgOfOMhqzX4yL0j4=;
+        b=Fm4UYT4cD7CQxsmDaQxd8/SIeMzaePDB92tNEG75SizqmQ8WKGci8/Fszf8H1L/3ou
+         0Mxg9xo9WNiPg6wWtIW6TNl3E7lrOc3VG8DP0QxYDEx7WX65bwycq54L4ji6TgHTuxPY
+         3StvLv3Ju39XyVuDEYKvD5djzVgLdHOaKZC0YLOjXeg91L/qGp+im7+UhtR7IGuVFMdP
+         2Jf8HpYc4YKJG4GLdB+zlS0k4kayRuJF9H8xUW90cVIiaOuSEMLdQek1Kmw4djKMNZis
+         fz2w+X631ZodvcWEzGb2IjBO9SGO3egMM9rrqB8+w7cIX3wVyfEGamk8agGLLXRMqnEm
+         MnPg==
+X-Forwarded-Encrypted: i=1; AKwUvBzgwlkXb+QKOGUXDqDMVZMlMQsozgYgHiXWgcB/TpaiZCRz0rDxzGOFRxEpulpq7jF4eWXnIQ==@lists.infradead.org
+X-Gm-Message-State: APuU4Z/mXg7/lcaCCQkXHe8oNgLiaZ0iEnrj1jJT+Q7tf8PuUUUQCiUZ
+	khGQANlT1KwDsmYVuoUa/UiuRLFvBR15gTTFybImmWIonlBW3RO/jNflrmsfAZZ35+k=
+X-Gm-Gg: AYBFou0DDc7eBPOwcolqkdDzW8Arg70O9sFWHSrxupR9VvntDfwadu5hypvv114CB7F
+	Ab63Y9viLJhkmaT/GpxMFk9abk+mxL4bJbs6q3oDgUJTzuJ7Y1RmsQ428d56FSf3GVevUgAANe1
+	lP2kIWNfqCkIV5kbFkWM5lXxlZMgnaai6w3JhDkYevUQ/GHlvGXEkwXEG5FVWv5hjKeEwE0EUT2
+	93+sSn7thV5tFaJ7O8kZNKK7gaSHfQti5h4ZrWM09XbNOZxxg6e7bBBuc0q3LfRgQtp+G6zdQQu
+	sWFT8tgYS6kMjzJsSaAhiEWslAG/2UKB1h1Xg5r+Hk5CxrzJWps0quk+EbycQ0R9Z+K2TXIChP9
+	0qkFs2PYaYMOO2NsJzbhrY8vA/bn9WpE9MQnre5E2dZ8Dzgn+zZCXBTM/W7UAADz9J//ffPip7K
+	4BSE0XE4C5lxu6G1d54RDqjgJ052NvVCTcasmN7g9XuMrcQidRMwIWpmkmNUojhyUKihAg+ITau
+	MGJ+o2meB4MP71xHEUy3J5xZJzXcO739khMcp7uPWuXvVPU8HEUL57f+2rhROLZK8CniVuko4vs
+	Fr3Tq9eskLGB1i6HuwQmEDa6r9Eb+Veh6oiBcNwqLs/ZJHz9y0u/y8c5wROiw9NwDU5BZQ==
+X-Received: by 2002:a05:620a:6292:b0:93f:26d6:d70b with SMTP id af79cd13be357-944217108f8mr2973437085a.29.1793872869879;
+        Thu, 05 Nov 2026 02:01:09 -0800 (PST)
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com. [209.85.222.179])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-945d479a81asm426106385a.14.2026.11.05.02.01.09
         for <kexec@lists.infradead.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Nov 2026 01:44:48 -0800 (PST)
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-7cc2bb73cd9so498928137.3
-        for <kexec@lists.infradead.org>; Thu, 05 Nov 2026 01:44:45 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AKwUvByFpJHNS8lU3VD3asj8fQ/59RZjEYSu+5BhP6Apn+tSY/Br5glFBKBbTrIcUI6nb3RKYvUpRw==@lists.infradead.org
-X-Received: by 2002:a05:6102:3ec5:b0:7cc:2bb7:131d with SMTP id
- ada2fe7eead31-7d072baa484mr7324212137.9.1793871885062; Thu, 05 Nov 2026
- 01:44:45 -0800 (PST)
+        Thu, 05 Nov 2026 02:01:09 -0800 (PST)
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-945ae2daa3eso203193085a.0
+        for <kexec@lists.infradead.org>; Thu, 05 Nov 2026 02:01:09 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AKwUvBxNFvV3WY8ZQNk0Wo2euGrEkbiRA8ilE450G2USAZNa9bLn8cbxFp/xysHTsRlEGe4BXocHoQ==@lists.infradead.org
+X-Received: by 2002:a05:6102:5108:b0:7cc:56a:58e5 with SMTP id
+ ada2fe7eead31-7d072d84a58mr8269567137.37.1793872526219; Thu, 05 Nov 2026
+ 01:55:26 -0800 (PST)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org> <20261104-work-procfs-bugfixes-v2-10-021c84d852e0@kernel.org>
-In-Reply-To: <20261104-work-procfs-bugfixes-v2-10-021c84d852e0@kernel.org>
+References: <20261104-work-procfs-drivers-v2-0-245e54e87116@kernel.org> <20261104-work-procfs-drivers-v2-2-245e54e87116@kernel.org>
+In-Reply-To: <20261104-work-procfs-drivers-v2-2-245e54e87116@kernel.org>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 5 Nov 2026 10:44:33 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUy1RYKG0g8OWss3AD-jyYx3DXL0K7ABYkFUdxTxZ9VdQ@mail.gmail.com>
-X-Gm-Features: AclHuK9D-nB8icBns0zdoQH8fV1cfUPJ6LOey8o_VlUZpDIGqKC4cFf8-j5-HdE
-Message-ID: <CAMuHMdUy1RYKG0g8OWss3AD-jyYx3DXL0K7ABYkFUdxTxZ9VdQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND v2 10/51] zorro: size the proc files like what they serve
+Date: Thu, 5 Nov 2026 10:55:15 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVHxQvKnJyKHrOZhaOg9Rn2hMeRU1JnMFFEEi31FPZaGg@mail.gmail.com>
+X-Gm-Features: AclHuK_UsJ1nGicdWEWcMLQAICTi1A7pGF3yhNkxXkXRPqohle17eXAHHNBsR6k
+Message-ID: <CAMuHMdVHxQvKnJyKHrOZhaOg9Rn2hMeRU1JnMFFEEi31FPZaGg@mail.gmail.com>
+Subject: Re: [PATCH RESEND v2 02/26] zorro: let procfs copy out reads
 To: Christian Brauner <brauner@kernel.org>
 Cc: linux-fsdevel@vger.kernel.org, 
 	Linus Torvalds <torvalds@linux-foundation.org>, Jann Horn <jannh@google.com>, 
@@ -106,8 +106,8 @@ Cc: linux-fsdevel@vger.kernel.org,
 	linux-debuggers@vger.kernel.org, Chuck Lever <cel@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261105_014452_632722_A8358D64 
-X-CRM114-Status: GOOD (  16.91  )
+X-CRM114-CacheID: sfid-20261105_020111_731360_7D7B3DBF 
+X-CRM114-Status: GOOD (  17.32  )
 X-Spam-Score: -1.6 (-)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -126,12 +126,10 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Wed, 4 Nov 2026 at 20:18, Christian Brauner <brauner@kernel.org> wrote:
-> The files under /proc/bus/zorro hand out a struct ConfigDev and seek
-> within that, but their size says sizeof(struct zorro_dev). Say
-> sizeof(struct ConfigDev).
+On Wed, 4 Nov 2026 at 20:43, Christian Brauner <brauner@kernel.org> wrote:
+> Implement ->proc_read_buf() so procfs copies what is read from
+> /proc/bus/zorro/<slot> to userspace after it unpinned the entry.
 >
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
 Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
