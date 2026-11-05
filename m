@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889C060A3835
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:29:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9AF606A329
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:47:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Ku2ikHCP;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dlMl9M/r
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=WH4gRyFI;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZVanxKXY
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=2jOjP+w+HiO6pPFlf+UtXLVpbUo8fVoVCMG/gzgxPSY=; b=Ku2ikHCP6ivys390X0vV+E3thJ
-	1RwNOZJPa2GoEbUvzwf0A080Ypw1si5/AqvB8b3Gv+m13Xu9oV1Nj9/1eY3uIrG2XdCeLQjXpOnPM
-	8uUtZ3Sm8ODacQV4Bt+McKqhvzGt843nFZ/zd8kaFnRvgv88WV5FVqtrfhI9lobSaeivKuOOrSmn9
-	PjaOWixtv2wSv4+aukdYBZAC5EeClhdioKEherkOCkdoW9Qsx1p9E9AEWMiurotQC4hJjZbphjrY5
-	hScmuspZO7Dg4agmFDRG+hfa5wxJpxxUI9Jio1OS8m0LUZsNdGq/cxktcNiYgHZND6t4rph4tVq11
-	dhA9XZaw==;
+	bh=qZX6TqimGj0FPnu/ads2TGWZcJdWF3Hg9sf4zFcOy0g=; b=WH4gRyFIkNiO9JWEegmsgITu0c
+	CSbM6olNSuGWWikklFJCpbyfVeHqjVNMVLKvRvumjsGUeLitslIcCqS5XdHk9uChcZ849Rbptx+g9
+	5nFhdA2KssuZF41vA//p7N4GwEfBYCHZYnuP57JXcmS36DRvwARLyzZKz0RswiIawnrARnk8lm7lB
+	Pq697TWLbChm5IaDEfcI4Y4L4FQXUomMtvWD9k4Uvm08pEEmXRznQv0j/AEbiFH+OAjvcBpKdU1Q8
+	8Xpq/55xZUogZB2BwCfXPJojqltWM3AUF0EySgGrfeiXaAf30j+TryDguDKsaGl6CMCnCTmSPu+9f
+	aw8cK9YA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP39q-0000000AKby-0DQn;
-	Thu, 05 Nov 2026 19:29:58 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xP3BA-0000000AL5D-4C5D;
+	Thu, 05 Nov 2026 19:31:21 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP39D-0000000AKG8-0GFW
+	id 1xP39e-0000000AKQd-1TzT
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 19:29:19 +0000
+	Thu, 05 Nov 2026 19:29:47 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 8159B6015B;
-	Thu,  5 Nov 2026 19:29:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1D611F00919;
-	Thu,  5 Nov 2026 19:29:16 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id C9162601D7;
+	Thu,  5 Nov 2026 19:29:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F0D01F00919;
+	Thu,  5 Nov 2026 19:29:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793906958;
-	bh=2jOjP+w+HiO6pPFlf+UtXLVpbUo8fVoVCMG/gzgxPSY=;
+	s=k20260515; t=1793906985;
+	bh=qZX6TqimGj0FPnu/ads2TGWZcJdWF3Hg9sf4zFcOy0g=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=dlMl9M/rPNxEZu6+Ri3OXa9FPI28S+nKPOVBymLRvAUIbEdACYesn7GaasG71a1si
-	 Jkdk1nguj1FW0I6rEhmRyL6rCf6iGgz0RsNmgA2Aax7T6dfl/bLd0reMK3dxl47No2
-	 cZOPksbLnHyzXhnv8X6aqtgNCaUxaH8zvMCcgysEle4NYPvSVucRgboVQsljfhslI1
-	 t38Nm+rBEGJUAgtRVOrBLiUgvSsBb85o5UOO6lhjVE/GMpZGzwjSdxGKJTR11kjWCO
-	 BXN98+TIo2Yx9dB8Tl/s4rDba6W5uK4F2hW8KmNF5r4lJJBlBYlOLW1lUh+7tDsUMj
-	 MzavIifWHwTQQ==
-Message-ID: <sashiko-outbox-199877@kernel.org>
+	b=ZVanxKXYs5ktHoZYv4D/uQQVfoZK40PC7mYX3MUUXNsjdgxlVN2mUV1CZyN0px3sS
+	 anXxwuSYs+8OfnMy1a61hJGPZSr8HsyYjUlLU0R+HHnCLVFbUeJZ4hqEvcD9OSxhNm
+	 b4yUcMf4KwRiwGKBG+O0J1WrPYTgdG7asoElB+ql62bi3qmtvieZQyAcNv0MXUEfLh
+	 DNPU06edIHuWUKftt7sZUQ/o1KlFN2EELj5lVnxD3jwTWFSvVtMFCs/jL4yOLC2wT0
+	 hwh0T0s0JGhXVBidtrd5QVgPIgEG9Rt/BldgHb+FXPeJchUpFRsxIMco2Y7J0eyQf+
+	 Pc1dVZ24TuZ+w==
+Message-ID: <sashiko-outbox-199891@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 14/51] proc: sysctl: don't stop readdir at an
- entry that is being unregistered
+Subject: Re: [PATCH RESEND v2 28/51] ntfs3: don't warn when a huge label is
+ written
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-bugfixes-v2-14-021c84d852e0@kernel.org>
+In-Reply-To: <20261104-work-procfs-bugfixes-v2-28-021c84d852e0@kernel.org>
 References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
- <20261104-work-procfs-bugfixes-v2-14-021c84d852e0@kernel.org>
+ <20261104-work-procfs-bugfixes-v2-28-021c84d852e0@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:29:16 +0000
+Date: Thu, 05 Nov 2026 19:29:43 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,25 +84,14 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> proc_sys_fill_cache() creates the inode of an entry that has no dentry
-> yet. Since ace0c791e6c3 ("proc/sysctl: Don't grab i_lock under
-> sysctl_lock.") proc_sys_make_inode() refuses to do that once the table
-> is being unregistered and fails with -ENOENT. readdir takes every table
-> it lists into use and unregister_sysctl_table() marks the table as
-> being unregistered before it waits for readdir to let go of it. So an
-> entry that is unregistered right then makes proc_sys_fill_cache() fail,
-> proc_sys_readdir() stops there and returns 0. If that getdents64() call
-> hadn't emitted anything before that entry userspace sees the end of the
-> directory and never gets the entries behind it. A listing of
-> /proc/sys/net/ipv6/conf can end early that way while a device goes
-> away.
+> ntfs3_label_write() allocates as many bytes as are written with plain
+> kmalloc(). A write that is larger than what kmalloc() can hand out then
+> trips the page allocator's warning, which panics a panic_on_warn kernel.
+> Use memdup_user(), which fails such an allocation quietly with -ENOMEM
+> like before.
 >=20
-> So skip an entry whose table is being unregistered, like readdir
-> already skips a link it can't follow. Lookup treats such an entry as
-> gone too since ea5751ccd665 ("proc/sysctl: don't return ENOMEM on
-> lookup when a table is unregistering").
->=20
-> Fixes: ace0c791e6c3 ("proc/sysctl: Don't grab i_lock under sysctl_lock.")
+> Fixes: 7832e123490a ("fs/ntfs3: Add support /proc/fs/ntfs3/<dev>/volinfo =
+and /proc/fs/ntfs3/<dev>/label")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -110,6 +99,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D14
+s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D28
 
 
