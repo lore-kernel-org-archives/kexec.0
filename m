@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346CF606A326
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 20:18:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B2D606A332
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 20:19:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ophzvE60;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HfWNy4Y5
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=kA0f6gP7;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MqLSjmTq
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=1DrTL1ac6XN1wKtHpceRQArmb2bB9IIZ8TJ6poNHDCM=; b=ophzvE605AHbzGWgPBX9APpLS/
-	6sVwKWMKCN4XPVKPTxmquvGG8SOJKNAdR8X3Wr+mXWbYrc3tJa4lUbe26irY8pbRzH7VjAJpijB6H
-	vgwJSOAbQgoTjrSiVoyIIjIqL6Rgl+9ANyjMWbEIg5y25LodfAOGszI12VVSvGGLwl2Vq+4Fgvyrs
-	ElcITwIEtuoTi2C1FEKMigaGKVQr3rn5My9DZOCDbC/u45VKWjjm4OQ6T1yIgwLZBphJOVa7HL+ga
-	ReT4+lEdcxoeEa8KyrRAdSxjs8UCisFYdSiiVrRlCdxSDPgmz0jsGNt5Qeu9SwB8qmp/gN+Myn/kR
-	RVjMJ37g==;
+	bh=b6fUC6kkwZa6jGlElTDwWL2u3gjCO7plwWOIGlwpTiE=; b=kA0f6gP7xI+VAcPCTo4Sm3R/oH
+	f0qpe1MXt1gUh+x54sPhB7v1Ib58j3auGAlt1Gy5mOodNnmEYuCRWrDXYYgwpWS1Q9bCOhY+RfacV
+	MUEBgntT3cOw0v4tkV9J7vP23bbRWtMnGcFegpX2gQCKyhOTQI1XdnD67QlY7ujKxtQdFlzcuWz7s
+	9uYvd7e7d2cr5Q2cIoPvq1yrHgzMCcmHxRvVQobktf/PpL+pKUOwATqj+fJmdwIbaE7XJYGmtGSCS
+	L8J/1WVnSD1dGZLsxE8DS//oIf3xYPrVNaSDF8daNZ5vp1oaAQ0rD7O74+IpVSw6jU6+FnHjOe8eA
+	fDGP6t8Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3GN-0000000ANLc-4BZX;
-	Thu, 05 Nov 2026 19:36:44 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xP3BK-0000000ALCn-1f5L;
+	Thu, 05 Nov 2026 19:31:30 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3FK-0000000AMvF-0u16
+	id 1xP39Y-0000000AKQ8-0sMX
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 19:35:39 +0000
+	Thu, 05 Nov 2026 19:29:47 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id A7D62601FE;
-	Thu,  5 Nov 2026 19:35:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1946E1F0089E;
-	Thu,  5 Nov 2026 19:35:36 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id F170240269;
+	Thu,  5 Nov 2026 19:29:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 759BC1F00A15;
+	Thu,  5 Nov 2026 19:29:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793907337;
-	bh=1DrTL1ac6XN1wKtHpceRQArmb2bB9IIZ8TJ6poNHDCM=;
+	s=k20260515; t=1793906979;
+	bh=b6fUC6kkwZa6jGlElTDwWL2u3gjCO7plwWOIGlwpTiE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HfWNy4Y5RPfNBoKBQHLyyjYyTxbbnjJDdOqRHr0CwmBLc51x1jcm75ZAAgEad1VZu
-	 tS6QZvZfn8sUpNi6mOF5f5DFfUZLIhS4vvvi+iGswUv6KjXZx0o+EpcIZvbbxZe+4c
-	 w+eyoQ8QFIDLRMjiWYtJN8zfopCPPudrCbntig5HUXMXa/Rmrt2bn8OYImFZC4VNa2
-	 R+83Zs+Eu4feiqusBCRRhe6e1B6nEi14J/AHyHRRYVVXAOiMjE6L8AhoiK91X8uzKE
-	 CLf8tyLGMi9vrUilCTGfT/2QMby2aoyrPQEHnvKWwCxXAzjQDLba28dyRTo132ATHY
-	 jJoKKmYLJAz8A==
-Message-ID: <sashiko-outbox-199941@kernel.org>
+	b=MqLSjmTqIqsb3uOWNf5itle2+YYZN7QrWSpoAg2AznNJeMGlmfOcDv+I+qQC/PV4q
+	 oM/ttZIktk3u2UEYRLi7imIYWeewjGd3g46pq6DVdFDvsmQYVdGsBKqCqZVdWS7N0i
+	 tpm6VNMiWBiuscCgtZGDWjujl0tFlJwCL6trdEqlTYYAMvmUvXMpnGyxWVrHMwosBq
+	 djqV34NaddaXWJ7uOvgZCHtGYdGCHAEcWmVpgX6aM+BtPqPLPWgB3dldmaWXncEaVj
+	 WhGPLyMA3oP8jfMvyP0VXsBlKe1NFyI8lrBj+VpezDdETg3MRYQS3J8VE12drFITzt
+	 Ytd9Y83ZFgpZw==
+Message-ID: <sashiko-outbox-199888@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 11/23] selftests/proc: check that a faulting
- reader doesn't hold up removal
+Subject: Re: [PATCH RESEND v2 25/51] wifi: libipw: don't return 0 from
+ writes to debug_level
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-core-v2-11-76ace653a773@kernel.org>
-References: <20261104-work-procfs-core-v2-0-76ace653a773@kernel.org>
- <20261104-work-procfs-core-v2-11-76ace653a773@kernel.org>
+In-Reply-To: <20261104-work-procfs-bugfixes-v2-25-021c84d852e0@kernel.org>
+References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
+ <20261104-work-procfs-bugfixes-v2-25-021c84d852e0@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:35:35 +0000
+Date: Thu, 05 Nov 2026 19:29:38 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,25 +84,19 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Read /proc/net/dev_snmp6/<dev> of a tun device into a buffer whose first
-> page is backed by userfaultfd and remove the device while the reader
-> sleeps in its copy to userspace:
+> debug_level_proc_write() returns the length of the string it parsed. A
+> write that starts with a NUL byte thus returns 0 and writers that use
+> stdio retry it forever. Return the number of bytes that were written
+> instead, which also stops writes longer than the 11 bytes it looks at
+> from coming up short.
 >=20
-> - removing the entry doesn't wait for the reader
->=20
-> - the reader still gets what was printed before the removal
->=20
-> - and the next read fails with -EIO
->=20
-> The entry is removed under RTNL, so a regression stalls the test for
-> five seconds before it fails.
->=20
+> Fixes: b453872c35cf ("[NET] ieee80211 subsystem")
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-core-v2-0-76ace653a773@kernel.org?part=3D11
+s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D25
 
 
