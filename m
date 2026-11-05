@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9639606C88D
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:58:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7B7606C890
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:58:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=b7bO7RjW;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DLjGD6ne
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=RMHgC1xg;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ddZWhmtY
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=xQw5Y21Jefdqk+NLJ1bgD2wYB6yjyjtlILHzStlkXtg=; b=b7bO7RjWMku8o8Bd52X4f56tAJ
-	7uxyJ/sukvF+g7thNalavZZG1ql/OZ3ih+4hncKD1zjFp9eUJ47V+5RLiM39qhe8Rl8Y+VLhhSZ4h
-	NddxyFRJMAb83L4m/KU0aI/17lqjei3Zifwb7VoHJTdmcDvvqC9JXKlygmPgDd92kE7HV+5NRDV48
-	bhNV1nF5E7ujdDlLEG+iJFDY/UKLuyuWbw91uHkAA945SkqCsQoCDeHLuFrxWS7hBVqLdQxXrgiG3
-	2nvl3s1UqMKT63KYLdKNc/Tue/tayEz7KFEOPQO/V3nP3psmlgY4TaaJCNaXzU0/65euwzNgP0vlf
-	LkpcytDA==;
+	bh=BB5sJR9C7Zx/9Pk3o44DtUSAxu92dNwmvstpQumGNJA=; b=RMHgC1xg4RwBFb6O/K3/33Kq5w
+	XEZM0sp1HiDei1L0CcSAKkN8Cd9SBA800QLQdNOX/nx13Yfzv7l/NiO53LPSrBpkpi29AaSbizK33
+	0osImj+xIWrFFJGeAejQiqtyiMsT9Z4BCebYEkG+ocFnJNpKDsNHFpWhjhKSasGPiP6y/4aAxwFtO
+	923/fl7wvdBrkPmmqMk/8T1zQGPzJ/sKfSjvX6uQsURK/bmR6sV9fYZ5xTqvF5ZPd8czu+iH+asYz
+	KeavQV4TGQDMO2A6dlu2n17dcjutdvYunp369wUrn7DcuodXdn8kNLmfgkDWqm3n7B21Ki6u9bEXX
+	clPd73kg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3bn-0000000AT7R-1mQw;
+	id 1xP3bn-0000000AT7u-2nXN;
 	Thu, 05 Nov 2026 19:58:51 +0000
 Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3b2-0000000ASiV-0t3z
+	id 1xP3b4-0000000ASid-0TTo
 	for kexec@lists.infradead.org;
 	Thu, 05 Nov 2026 19:58:08 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id F165F40A73;
-	Thu,  5 Nov 2026 19:58:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69FFC1F008A2;
-	Thu,  5 Nov 2026 19:58:02 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id DA24A414E1;
+	Thu,  5 Nov 2026 19:58:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57A401F008A1;
+	Thu,  5 Nov 2026 19:58:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793908683;
-	bh=xQw5Y21Jefdqk+NLJ1bgD2wYB6yjyjtlILHzStlkXtg=;
+	s=k20260515; t=1793908685;
+	bh=BB5sJR9C7Zx/9Pk3o44DtUSAxu92dNwmvstpQumGNJA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DLjGD6ne+zHJ6l2NtLBp7WGG5HHEcKsAxosFKuR0a7RNuYJAWYFmlP+Eo4EW1JlwF
-	 0VqWA8iJu/xUCfFf45PRI6wxw6ubU1MPAtOe4gnsizzUCn5G90TIhkS+JaYX/xS0Rt
-	 KJgyyZLcQTrRIU+/OkMZbrLRNYgpvjs3AQ62AWHHgn+9vKzQLgChpIiAzq6Sfn7mbe
-	 QHvGzpOfFXUXvhf6Sp6Bstrs4fyt+JGWdnKOviq93faMpWfzEPEWnjRXTOWMz15JYf
-	 bGpLKj6EreLgLDC1RKy7AynA060/DZ2MLXiHudUwyVC6r2EJBdb29sdOTmnyqWnhCd
-	 8WBHWj+qczWmQ==
-Message-ID: <sashiko-outbox-200051@kernel.org>
+	b=ddZWhmtYBTIjf16jcYyGuxkBHMP752cDre+YlbjE8K+pVsumLJ8cuoV8TN+HdBxjY
+	 0HL/wMxsPD9cDiEJ8ml8GmDV8iXPn1Ljx0/Mbh4eTVFT4Ps/yYu4X08RdE9yor95Xm
+	 NuoqE+Twd9eWDq17omIHGvd8uduh6YXldarMHP0FxHZ49T3VqEGy9CjMVJiLafNZ4q
+	 crkTm3bGTJeqOEjZuZhyTPgE93yIG7wSXYRHJTke0ePJIwoq11jQIi8x0dAUWr1jPU
+	 6dWitI2BDr+qt4m712CrJfv0OpT4tmwX9rbzOOpgVyVyJTCJ6SFDofjIfM0DhjSDjJ
+	 fhaCI95uj6cEg==
+Message-ID: <sashiko-outbox-200052@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 17/30] sched/psi: let procfs own the seq_file
- of the pressure files
+Subject: Re: [PATCH RESEND v2 18/30] sched/psi: let procfs copy in trigger
+ writes
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-fs-v2-17-319e0f9a8aae@kernel.org>
+In-Reply-To: <20261104-work-procfs-fs-v2-18-319e0f9a8aae@kernel.org>
 References: <20261104-work-procfs-fs-v2-0-319e0f9a8aae@kernel.org>
- <20261104-work-procfs-fs-v2-17-319e0f9a8aae@kernel.org>
+ <20261104-work-procfs-fs-v2-18-319e0f9a8aae@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:58:02 +0000
+Date: Thu, 05 Nov 2026 19:58:03 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,9 +84,10 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Declare the show functions and let procfs open and free the seq_file of
-> /proc/pressure/*. That makes the open functions unnecessary and
-> ->proc_release() only destroys the trigger now.
+> Implement ->proc_write_buf() for the files in /proc/pressure so procfs
+> copies in what is written before it pins the entry, and take the
+> trigger from that copy. Only the first 31 bytes were ever looked at.
+> Writes larger than PAGE_SIZE - 1 bytes fail with -EINVAL now.
 >=20
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -94,6 +95,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-fs-v2-0-319e0f9a8aae@kernel.org?part=3D17
+s-fs-v2-0-319e0f9a8aae@kernel.org?part=3D18
 
 
