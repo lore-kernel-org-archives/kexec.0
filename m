@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0B4F606C89A
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:57:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B421606D500
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 19:57:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=yQBa3mV6;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cyklZAYd
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=xByR7Oko;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=injc9oEb
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=1ucq80d/HBPFI1YIkIEFNdSOXOIK1pX2sWoSRce4LGk=; b=yQBa3mV6/mf2EGMmIz4cP4cLBF
-	UMfffnntltVm3f31KdxMDF3MPGtIoBt+KZRTMzLbcFh5URFUPWCqODUeFvDyrt1fHZc7P2Z7pCuFO
-	FFBnQlb+E08qEbgDz7/JyDFfyHSDVGQIsIZpUTDxvBKsUzK4u1jq31WImX/c8i3Mo2OKcrai8MlXr
-	z8UZfZpEbQkBHoWSciEril1xdVJ4Qjkre7fugU2S24VuaPj/Kops41ZI4Q3tSjQhx1/vxuq8462+D
-	tVmXBX0oW4enSh+5aiBmKLlscSutkc7Kv5tE1NGzkNG9eR2mN1//o5Bf+F3pPCcnwhQwtBQwmgXCY
-	rzErhcsg==;
+	bh=q36wdAfT3M4q+Cutem6dQ8ae+d9ONuWCi9SleDJwiW0=; b=xByR7OkoDfJtlQUYdJn0FfEATj
+	rfgHMgum3s1T6kvzqv51Vggrvd+qO+DFaxlOMHBfg65b/5aHI1KmHAiBRBLr1YjR80sJysal27TcZ
+	PqKa1SEv3Y7BRcO+HNqsLWMOLG0QNp2/pswwkSPXxXarLqQIKzWZSDNj6/lxjJH5dow/D4e1662Nv
+	sITluA8+eHZp5UVoO/scb4Fs+J3gAdu+SurLhZk+P9SgREP9g3aXPXVqrslJuNucCD5NV0W9/E/QB
+	h6KYC+E23ZQNBw98w//f7k+UZDDWxo6cRA4OSbh4cwRru7y0rG7h/DTUU9xJqTgjZPNz0SoNsBAwC
+	XgXGdZrQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3ao-0000000ASX5-2Ugj;
-	Thu, 05 Nov 2026 19:57:50 +0000
+	id 1xP3as-0000000ASbG-3Z9X;
+	Thu, 05 Nov 2026 19:57:54 +0000
 Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3ag-0000000ASSX-2WZ9
+	id 1xP3ad-0000000ASSH-0BwW
 	for kexec@lists.infradead.org;
 	Thu, 05 Nov 2026 19:57:44 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 5BA8A406BF;
-	Thu,  5 Nov 2026 19:57:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4CAC1F008A7;
-	Thu,  5 Nov 2026 19:57:40 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id AE85442D8E;
+	Thu,  5 Nov 2026 19:57:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 351841F008A2;
+	Thu,  5 Nov 2026 19:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793908662;
-	bh=1ucq80d/HBPFI1YIkIEFNdSOXOIK1pX2sWoSRce4LGk=;
+	s=k20260515; t=1793908658;
+	bh=q36wdAfT3M4q+Cutem6dQ8ae+d9ONuWCi9SleDJwiW0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=cyklZAYdu0ZVZTXCtdmNiCr7HiuHeOQyL+0S7CFmQsIMMFfQNly59rhkWaVoLt25u
-	 GJWHmTWEJKwUQ3jEJYZRj8f0gumZIfwawo6h0vxZMknc3/HmVH0Cy+FDJgc4U1e5Jm
-	 T7qHR2VsrYj78ByH806qRFBswbz63IekHv3Cvnq52k0GiBF4SJQjnw1YKFUxkcxM7V
-	 f8oPRK0Sk4UnkzaejQ6R5LFelnNPmHaMgfodZ9a79DjRBdXTM0VSqVCS2MZtqqfHSG
-	 VITqB4tE5wR5v6/XkuPGTmojFSNSLFTaqw3nVHzkB1jGn3Zm8qRlfF/iUUSqvdE60Q
-	 I7YHfXHpobwTg==
-Message-ID: <sashiko-outbox-200040@kernel.org>
+	b=injc9oEbe5u0rMyptfS9zP82jPa6RN+/mt43pW4RrzZ4fqV8lFqqaZay7tq+gFrUt
+	 mJbkmSaacLkGWg5NplOvP3NFE2t9+pKrWjd1QvRc/1a2pMaieaiwQ/9iDjsjHM/XFk
+	 zSXzZ3RWVG43ppIECUCewZhgzmIHnC4nKqAkFBRHgj3pL3JWPmyNgTX+QXXiEaTfoL
+	 Vfq2AQ9lOdZ2AVPzmO6pMyuEBv8Sfd2kD+IBIi2mDxQw+GwgkVOpZCsu5rYAp1zUX7
+	 rHoRcWqVKztUt4jkkOAMRq59T+ccqw+Xfuexii4BpQBB+uZsgkAIFsedXfWIExYz3f
+	 lrOwI/QAJ+4mw==
+Message-ID: <sashiko-outbox-200039@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 06/30] nfsd: let procfs own the seq_file of
- /proc/fs/nfs/exports
+Subject: Re: [PATCH RESEND v2 05/30] nfsd: factor out setting up the exports
+ seq_file
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-fs-v2-6-319e0f9a8aae@kernel.org>
+In-Reply-To: <20261104-work-procfs-fs-v2-5-319e0f9a8aae@kernel.org>
 References: <20261104-work-procfs-fs-v2-0-319e0f9a8aae@kernel.org>
- <20261104-work-procfs-fs-v2-6-319e0f9a8aae@kernel.org>
+ <20261104-work-procfs-fs-v2-5-319e0f9a8aae@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:57:40 +0000
+Date: Thu, 05 Nov 2026 19:57:35 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,10 +84,12 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Declare the seq_operations and let procfs open and free the seq_file.
-> ->proc_open() and ->proc_release() only set up ->private and take and
-> drop the reference to the network namespace now. Reading the file then
-> no longer holds up its removal.
+> Move setting up ->private and taking the reference to the network
+> namespace into exports_net_init() and dropping it into
+> exports_net_put(). The procfs file needs them without the seq_open()
+> and seq_release() around them.
+>=20
+> No functional changes.
 >=20
 > Acked-by: Chuck Lever <cel@kernel.org>
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
@@ -96,6 +98,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-fs-v2-0-319e0f9a8aae@kernel.org?part=3D6
+s-fs-v2-0-319e0f9a8aae@kernel.org?part=3D5
 
 
