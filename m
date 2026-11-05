@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC76606A326
-	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 20:32:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3C8606D80C
+	for <kexec@archiver.kernel.org>; Thu,  5 Nov 2026 20:32:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Sw8t6zHK;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XbZWqE5b
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=4EP/42De;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=l4Eko/RK
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=BQI+a8njiZ/gI4hynXalYGlHTbeuK2z4PeQyurW9I7E=; b=Sw8t6zHKesxilOfs7iUDS7+dgI
-	qkeWBdruY1fvdCTnMBhhMhMxycBrnh62/N1njWZZu8W6FLrgpUbwiSQFKbiTYgISU5L9yV9jwJqvN
-	H2SZlvvmuOkYqKiTw6ewrZZZDt0UtafMjcrIVB9IZ7wrPlAWBPM1YaM7zOEpzKn9KiW95kFZOZBZe
-	c7jQ3vBSxcWFajCIIY494bnecNRPMI4tE/6Mv4DFoKjyzuxuG31eyTfdncOuzTzPzWgKX49UMvCjE
-	GXLMKiPoEA0VEA1iO+UBDeUVNjCrc77wM7fE7FSEuI76xFZdFzc6lFJ0gpLIvypnSomp6+NyZNf5K
-	9Ozjdosg==;
+	bh=Yw+/Du8pHsdCvYl6IbYLuKH+OGLUIcbJDiY7LJnllJI=; b=4EP/42DehoNjSaeepTYr8tPdUC
+	Ix38C6hddqEPP+1rDUTW5fFkBB1Y6sap8atlGAvxxjc/Pjrs1SJtMi8/GUNec+JqHn6Us+aiZwzzC
+	B7vYdZ2WGFADz4VdzoauX5U4UPffpZcpfQD3/wUB+ySDSlOoxfPcRtCQODOXIwNHZH2aAsObahIhh
+	hraItgeT6pFxJXP25E3CWq/7uZhNw5rCFbiPZqaMUVzTfSOwaXmrcyHUcTr7rMAFBqF2SlfnJ9VVq
+	eksP1CUOkSEqfXxkacGCfi6nh552MOJAotHW4XxlmBzMrKkn1Tf1Zd+0uPctZWM5JieXrBxxmrsmF
+	eNlqTMEw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP3Ax-0000000AKsy-3Ygk;
+	id 1xP3Ax-0000000AKrt-1xEl;
 	Thu, 05 Nov 2026 19:31:07 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP39M-0000000AKJ1-2qB6
+	id 1xP39L-0000000AKIk-0sZJ
 	for kexec@lists.infradead.org;
-	Thu, 05 Nov 2026 19:29:32 +0000
+	Thu, 05 Nov 2026 19:29:28 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 6DDEE40DFF;
-	Thu,  5 Nov 2026 19:29:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D932E1F000C1;
+	by tor.source.kernel.org (Postfix) with ESMTP id A7F42601C7;
 	Thu,  5 Nov 2026 19:29:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCDBE1F00919;
+	Thu,  5 Nov 2026 19:29:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793906968;
-	bh=BQI+a8njiZ/gI4hynXalYGlHTbeuK2z4PeQyurW9I7E=;
+	s=k20260515; t=1793906966;
+	bh=Yw+/Du8pHsdCvYl6IbYLuKH+OGLUIcbJDiY7LJnllJI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=XbZWqE5bV1/7AJYMx+wz+v1eHMIKkyE8SQclRs/OPZo9iXZQoLwkmOhiyxQQQlhJE
-	 8sowAoifBDVNyDNDLEaP8lelRK7/+buyxRsYnpXg78dXMLTw7E9r/wWQq/tiEDzR6y
-	 aX+wD8fLSCGmqTUIYxuEFc1dqwu6r8nwV6Y//hBCH/Ixikoyl/tEaip/uUdqQ2AyFO
-	 Hsl7wCQ5MJ8vCIV28zr9nojYTBgUQpEh6I3Qfn7gkQr2IO9fL1vbfhzhhz3jhjCt/q
-	 EfQn7sAzxdZYYzvTAFpHP0LITOOhjBJNmZidQGsmC3cKnW5zohL3e3FGKtD5LfWZ7w
-	 nN9DEaZl88tjA==
-Message-ID: <sashiko-outbox-199882@kernel.org>
+	b=l4Eko/RKkbQXervUh+9BCXJ+sLsI4u38jjERwv2HDU2tKr1bCDnCCw/QT/dKc1MrD
+	 nG24sg/ARdKOAaioqHnqlbMFng54iK9sFGR2MBxpRI9bPa3il41oD5LUCxrnPRtNn5
+	 DKJ+CPjlIN85/i9wz8h3zAaLEB0HSX87FOiOgckHHu/HvAH0MfRD7oR6NdGDjHmHBp
+	 bZGWS58CuzW9/drusy9qDOn77viubLposGHA42hn0poE0IRqBJ9Hb2OJZL55U5B7t6
+	 /9ggt31U3dXthnEYRs2zWGFTAlTOnVxIM8pubtNQkp2PuptVcHbgqPWl/ETNFUYpMm
+	 KKXNeYjAU9H1Q==
+Message-ID: <sashiko-outbox-199881@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND v2 19/51] xtensa: simdisk: don't read the file
- name without the lock
+Subject: Re: [PATCH RESEND v2 18/51] platform/x86: toshiba_acpi: reject
+ malformed brightness and fan writes
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.com>, "Josef
  Bacik" <josef@toxicpanda.com>, "Chris Mason" <mason@kernel.org>, "Jeff
@@ -59,12 +59,12 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Jann Horn" <jannh@google.
  Iwai" <tiwai@suse.de>, linux-ext4@vger.kernel.org, "Chuck Lever" <cel@kernel.org>, tytso@mit.edu, "Heiko
  Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
  Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261104-work-procfs-bugfixes-v2-19-021c84d852e0@kernel.org>
+In-Reply-To: <20261104-work-procfs-bugfixes-v2-18-021c84d852e0@kernel.org>
 References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
- <20261104-work-procfs-bugfixes-v2-19-021c84d852e0@kernel.org>
+ <20261104-work-procfs-bugfixes-v2-18-021c84d852e0@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:29:26 +0000
+Date: Thu, 05 Nov 2026 19:29:24 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,12 +84,18 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> proc_read_simdisk() looks at dev->filename without holding dev->lock. A
-> write to the same file detaches the disk and frees the name under the
-> lock, so a concurrent reader can copy out freed memory. Copy the name
-> with the lock held.
+> When lcd_proc_write() and fan_proc_write() were refactored their checks
+> were inverted but the && stayed. They only fail if sscanf() didn't
+> parse anything and the value is out of range at the same time, and for
+> the brightness value < 0 && value > levels can't be true at all. So an
+> out of range brightness or fan setting is passed on to the hardware,
+> and so is the uninitialized value if nothing could be parsed.
 >=20
-> Fixes: b6c7e873daf7 ("xtensa: ISS: add host file-based simulated disk")
+> Restore the checks as they were before the refactoring.
+>=20
+> Fixes: e1a949c1b988 ("toshiba_acpi: Refactor *{get, set} functions return=
+ value")
+> Fixes: 3e07e5baa2af ("toshiba_acpi: Add set_fan_status function")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
@@ -97,6 +103,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-work-procf=
-s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D19
+s-bugfixes-v2-0-021c84d852e0@kernel.org?part=3D18
 
 
