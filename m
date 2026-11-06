@@ -2,110 +2,67 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78ABD606A32E
-	for <kexec@archiver.kernel.org>; Fri,  6 Nov 2026 03:58:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538E9606A33B
+	for <kexec@archiver.kernel.org>; Fri,  6 Nov 2026 07:15:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=HYoYBn7H;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=WkqpfmLb
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=GwP+GLbB;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qeJpSyEC
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=9akG+nDtIvJDcRYJ/oAtRMDaGCKBlqt1RbnUpTcKFrU=; b=HYoYBn7Hrj4YvA
-	7ohYD/+mv0MHHmqDLWILys8GLFgX6PT73KXmf9m2zsrPC9Y35e/f5vno9NWX95XqUvpjIRS604i9V
-	GMiq73Tpzmnt498GZ5s+BIKG2bVNWalGxpbW82RIBQl665TAwwY4cwrhxw6IcvIuWwtJr5T8FGLOZ
-	CIuU8wIRmCTfhRBW8WUas5X2vYAeSZI8qLPvmfpbusfMHohs0ZhflF3N5OJuYZl4KdBA6NGgN9BWC
-	pcKf+SFbRC+5lG+WtG/zbD4oxy26UhgFx0oAj8ljywCRi/LQTrXs1xUwpb9q0b5rKVfyCL5RSmQYz
-	c7deyYGwDHEygo6YFNbA==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Unsubscribe-Post:List-Owner;
+	bh=Bi1Umej3UF4Ax9j2KGl5zOTvpdxOlN8avyZ39eWeMGs=; b=GwP+GLbBE27AmB61dkPZYJXIWp
+	hY4SfBvOoCMckFw8uZarICNEaqAn4wwAAGi6P883ujNMQfcg42pH1Kw0NxBvm0AzLIt0NgjE0RYsK
+	dMG2U+OgAxTWIv6vwhyPFq+4BYpXqFCGacB2wSMANmxroi8STsrX4OuUqy0oEIgFQm78k73bZjVe0
+	JYynLB0KWgMZCegScLjL5PLIDrBRbrir258eqVDhaiBdNfp6QPV/hl/ZG3SryIemiW0C1aRh/wNzc
+	O09VVwk3yZOlLSfiNmNZLApMV6j3/Qzjxwq62SxGtZYV5UipqwEB3HikPf/qQU9dsz7Mt8dSMm1Lj
+	VPMvUFmQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xPB5X-0000000BC7E-2rqh;
-	Fri, 06 Nov 2026 03:58:03 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1xPEAI-0000000BPr6-1BBF;
+	Fri, 06 Nov 2026 07:15:10 +0000
+Received: from out30-113.freemail.mail.aliyun.com ([115.124.30.113])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xPB5V-0000000BC6i-0fyl
-	for kexec@lists.infradead.org;
-	Fri, 06 Nov 2026 03:58:02 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1793937480;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9akG+nDtIvJDcRYJ/oAtRMDaGCKBlqt1RbnUpTcKFrU=;
-	b=WkqpfmLb86STo6pkTZCgVlyjM8fHpT4OE0FMuHzSKSBdgnoyMuf/GlITl9h+0PL8XRmwCl
-	Eb2NHC2uh7SqpC2sgeeWcgniXsv1SKxYVksWUdcMt/aB+uXuxzVGLsCcI4hk5fRpOISp/V
-	YQvL4NZY/YsHTBmHvkHMXHxylitcO1Y=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-384-LKm-F8FsN6Gyb7JPIdHlgQ-1; Thu, 05 Nov 2026 22:57:59 -0500
-X-MC-Unique: LKm-F8FsN6Gyb7JPIdHlgQ-1
-X-Mimecast-MFC-AGG-ID: LKm-F8FsN6Gyb7JPIdHlgQ_1793937478
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2ed00709df0so2443415ad.0
-        for <kexec@lists.infradead.org>; Thu, 05 Nov 2026 19:57:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793937478; x=1794542278;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=9akG+nDtIvJDcRYJ/oAtRMDaGCKBlqt1RbnUpTcKFrU=;
-        b=1zeeC9rj81ogEg5jMolars23Yl+mm38jwQVzMXRph6UmJDD99GgHoMb8MUunZfn3pu
-         3OuYEfhvOMhjn3rw7jGqDwBtnP+MadyPaD0fjRsy9gkTZoHy3uc8VFxaPaYpj3aRtP+y
-         x1laK7Gc1JuKQhg6d02kX1IZEF8cAnn0nTMPhnGY++5/lxC/BVxPOJLvMftWCa8BiKS9
-         r3rFsl2VYwPTKjXgZRCvFOqaN6GhO+VDCeC1wtdf6Zveh6HUxCkTVO6FdIn+0UOGVGbq
-         pDco77SxwwRL0sVkRx9MOkxHEdBCexNScLwzpXIf63ZHSRtxiCJqMvhAZb0Mf7Lh/UcA
-         nx7Q==
-X-Forwarded-Encrypted: i=1; AL+hErEd3Vg+QqqTiDQIvg06qmLMHq0dGSTCtQt2bCqwZGqdIYw4MTSahJdhn2slb4SY6ZXOr2ZPfg==@lists.infradead.org
-X-Gm-Message-State: APuU4Z8BNLvmgPpQ1hUUtifLvyCQW9IrJiRprlP4mK2nr8EJzrGTNq6a
-	cAX7pvuKij2I6B1lIR9/pazGHsk/5LD9lkKpDHtj0HSy2aE04p1eT9WtrcPMtYntd5Kn5ykBzSt
-	x84/mIyHVTyq8Eh4XSyscIQyjyIfXdsOs2wJijZcqNV3E1Cgxtuv7QmFjSC29pQ==
-X-Gm-Gg: AYBFou1PR4pUcV5b7YKgVZknIzQfCxiZx1XpdVkdfFChi4p2YV+ZnSLIObzAG6aOsTA
-	BPPYEdcqSZtCQ1vA7vVKpPom8uLaqKjYGy0QZCFLMR5eftzVVvvB7PsdNjIY79RRHh5FTLyVXZ7
-	iOrnAWnznQGUwUEqBuAyQYaMQIfZXaFgmIMGN58OgQR7qEHX/dlTGrq8vKXOO8HOsLZLmJL5Kd2
-	Dy8aL/VREur1RPB1acTN6L7ucHk+1ybrHTN3q0iO7Ze7rBCiBioJcASXMHptpE6lkzEemetOWKn
-	5zCCOQv4QZILxO7M5FpvvFU0TfMJtlSGz9a67+N9/MWgZ4D3xPoH7teRLx5t2wLMY65FF3rkKF5
-	HeBAuRNB4zN/rKpBgsAzemSVfIV7Az/WvyDcL4gDE4fTLDPUTJ5xxrliXbiV1Z7uHAEG3Moj9MI
-	4KvZYGwb4G6A7M592jmU4sGzYUKfqEceZVHpHxHg==
-X-Received: by 2002:a17:903:3d10:b0:2ed:69b:9e76 with SMTP id d9443c01a7336-2ed40c59069mr18818695ad.28.1793937477814;
-        Thu, 05 Nov 2026 19:57:57 -0800 (PST)
-X-Received: by 2002:a17:903:3d10:b0:2ed:69b:9e76 with SMTP id d9443c01a7336-2ed40c59069mr18818435ad.28.1793937477119;
-        Thu, 05 Nov 2026 19:57:57 -0800 (PST)
-Received: from ?IPV6:2401:4900:1f28:63e0:a033:fd4:21a3:8f1? ([2401:4900:1f28:63e0:a033:fd4:21a3:8f1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ed477a941csm1173495ad.18.2026.11.05.19.57.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Nov 2026 19:57:56 -0800 (PST)
-Message-ID: <d928099c-4e43-4af8-a929-b510819967ce@redhat.com>
-Date: Fri, 6 Nov 2026 09:27:50 +0530
+	id 1xPEAF-0000000BPpE-10c8;
+	Fri, 06 Nov 2026 07:15:08 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1793949304; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=Bi1Umej3UF4Ax9j2KGl5zOTvpdxOlN8avyZ39eWeMGs=;
+	b=qeJpSyEC0rtOQjFs4B0uPLRSJ/qVYJjXe0u60dN4ksjCnPEzgErkz3gjxoeACsVv0vTDBhIKTOXJiZ0AetMWLeaD3BbNCS1EInfjJui/scP7BfB8DPu6kTHOBSjuJNy7WZgYT8Ut9jNseWMu0cBEIn5y5LxZtuqR+d7nTrvlmWU=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0XEAtjKg_1793949299;
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0XEAtjKg_1793949299 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 06 Nov 2026 15:15:03 +0800
+From: Chen Pei <cp0613@linux.alibaba.com>
+To: pjw@kernel.org,
+	palmer@dabbelt.com,
+	alex@ghiti.fr,
+	rppt@kernel.org,
+	pasha.tatashin@soleen.com,
+	pratyush@kernel.org,
+	graf@amazon.com,
+	shuah@kernel.org
+Cc: guoren@kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	kexec@lists.infradead.org
+Subject: [PATCH v3 0/4] riscv: Enable kexec handover and live update
+Date: Fri,  6 Nov 2026 15:14:55 +0800
+Message-ID: <20261106071459.2003-1-cp0613@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] memblock: don't allocate new reserve_mem regions on a
- KHO boot
-To: "Jose A. Perez de Azpillaga" <azpijr@gmail.com>,
- Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- Kees Cook <kees@kernel.org>, Changyuan Lyu <changyuanl@google.com>,
- Alexander Graf <graf@amazon.com>
-Cc: Tony Luck <tony.luck@intel.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org,
- kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
- Pratyush Yadav <pratyush@kernel.org>
-References: <20261105213153.9572-1-azpijr@gmail.com>
-From: Mukesh Pilaniya <mpilaniy@redhat.com>
-In-Reply-To: <20261105213153.9572-1-azpijr@gmail.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: UoO2EpAzIMTd_KTGjZRKEA98_SBb0-m_rqL2NfzJT_g_1793937478
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261105_195801_291651_B63744F1 
-X-CRM114-Status: GOOD (  29.59  )
-X-Spam-Score: -2.8 (--)
+X-CRM114-CacheID: sfid-20261105_231507_472533_00D34E29 
+X-CRM114-Status: GOOD (  16.93  )
+X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -116,120 +73,105 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-26.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Hi Jose, Thanks for the patch!
+Host kernel updates in the cloud should not require draining the
+machine: next to live migration to another host, replacing the kernel in
+place while preserving selected workload state ("live update") is what
+KHO/LUO were built for, and LUO's documentation names hypervisor hosts as
+its primary use case. This series closes the gap for riscv64 and
+validates it with both upstream test runners.
 
-On 06/11/26 3:01 am, Jose A. Perez de Azpillaga wrote:
-> On a KHO boot, a reserve_mem region that can't be revived is allocated
-> from KHO_NOPRSRV memory, which includes the bootmem the next kernel
-> boots out of. With CONFIG_KEXEC_HANDOVER_DEBUG, preserving the region
-> then fails:
-> 
->   WARNING: kernel/liveupdate/kexec_handover.c:1245 at kho_preserve_pages+0x168/0x180
->   failed to prepare memblock FDT for KHO: -22
-> 
-> Without it, the next kernel puts its memmap on top of the region and
-> the ramoops records in it are lost.
-> 
-> There is no use case for adding regions across a live update, so fail
-> instead of allocating, and drop the TODO.
-> 
-> Add an is_kho_boot() stub so the memblock tests still build.
-> 
-> Fixes: f99230780211 ("memblock: add KHO support for reserve_mem")
-> Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> Signed-off-by: Jose A. Perez de Azpillaga <azpijr@gmail.com>
-> ---
-> Changes in v3:
-> - add an is_kho_boot() stub to the memblock tests (Mike).
-> - add Pasha's Reviewed-by.
-> 
-> Changes in v2:
-> - fail on a KHO boot instead of allocating outside bootmem, as agreed
->   with Pratyush [1]. this drops v1's patch 1.
-> - not an RFC anymore.
-> - based on v7.4-rc1.
-> 
-> v2: https://lore.kernel.org/all/20261104204235.9066-1-azpijr@gmail.com/
-> v1: https://lore.kernel.org/all/20261021211058.83483-3-azpijr@gmail.com/
-> 
-> [1] https://lore.kernel.org/all/2vxzfqxglrg6.fsf@kernel.org/
-> 
->  mm/memblock.c                     | 11 ++++++++++-
->  tools/testing/memblock/internal.h |  5 +++++
->  2 files changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index a450092a80fb..e325e0542c9a 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -2827,7 +2827,16 @@ static int __init reserve_mem(char *p)
->  	if (reserve_mem_kho_revive(name, size, align))
->  		return 1;
->  
-> -	/* TODO: Allocation must be outside of KHO_NOPRSRV region */
-> +	/*
-> +	 * On a KHO boot memblock only allocates from KHO_NOPRSRV memory here,
-> +	 * which includes the bootmem the next kernel boots out of. Only regions
-> +	 * handed over by the previous kernel are supported.
-> +	 */
-> +	if (is_kho_boot()) {
-> +		pr_err("reserve_mem: can't allocate \"%s\" on a KHO boot\n", name);
-> +		return -EOPNOTSUPP;
-> +	}
-I think this over-restricts when KHO is explicitly disabled. kho= is an
-early_param parsed before reserve_mem=, but kho_populate records the
-incoming FDT without checking kho_enable. So a KHO payload booted with
-kho=off ends up with is_kho_boot() == true and kho_is_enabled() ==false.
+KHO has been architecture independent since it was merged: the outgoing
+kernel publishes the handover FDT and the bootmem descriptor array in
+the /chosen node of the DTB it builds for the incoming kernel, and the
+incoming kernel collects both while scanning that node -- which is why
+the arm64 integration (commit 274cdcb1c004) needed only three lines of
+arch code.
 
-In that config nothing can be handed over again; reserve_mem_init
-returns early on !kho_is_enabled(), and kho_fill_kimage bails on
-!kho_enable. Allocating the region from KHO_NOPRSRV is therefore
-harmless, and the documented best-effort reserve_mem= behaviour is
-preserved.
-That said, a new reserve_mem= line is rejected and its ramoops/ftrace
-boot-instance consumers lose their region.
+RISC-V already walks those generic paths. The blocker is ordering:
+setup_arch() runs early_ioremap_setup() after parse_dtb(), so the early
+mapping kho_populate() needs for the handover FDT is not set up yet and
+the handover is dropped. Patch 1 fixes that ordering, matching arm64 and
+x86, and stands on its own regardless of KHO. Patch 2 enables
+ARCH_SUPPORTS_KEXEC_HANDOVER as "def_bool 64BIT && MMU" rather than
+arm64's "def_bool y": ARCH_SUPPORTS_KEXEC_FILE is already 64BIT only, and
+KEXEC_HANDOVER selects CMA, which depends on MMU. LIVEUPDATE depends only
+on KEXEC_HANDOVER, so patch 2 makes it selectable on riscv as well.
+Patches 3 and 4 teach the two upstream vmtest runners about riscv64.
 
-So, Would
+This series depends on Greg Thelen's fix to is_kho_boot() [1].
 
-	if (kho_is_enabled() && is_kho_boot())
+No DT schema changes are needed: linux,kho-fdt / linux,kho-bootmem are
+the properties arm64 introduced (commit 274cdcb1c004), and their binding
+lives in the external dt-schema repository [2] rather than in
+Documentation.
 
-be better here? If so, the memblock tests will also need a
-kho_is_enabled() stub, since
-tools/testing/memblock/linux/kexec_handover.h is empty and reserve_mem()
-sits outside the CONFIG_KEXEC_HANDOVER ifdef.
+[1] https://lore.kernel.org/all/20261023054518.3258350-1-gthelen@google.com
+[2] https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/chosen.yaml
 
-Otherwise, the patch looks good to me.
-> +
->  	start = memblock_phys_alloc(size, align);
->  	if (!start) {
->  		pr_err("reserve_mem: memblock allocation failed\n");
-> diff --git a/tools/testing/memblock/internal.h b/tools/testing/memblock/internal.h
-> index ba4d1c02fde5..84f22a964510 100644
-> --- a/tools/testing/memblock/internal.h
-> +++ b/tools/testing/memblock/internal.h
-> @@ -51,4 +51,9 @@ static inline bool kho_bootmem_overlap(phys_addr_t phys, size_t size)
->  	return false;
->  }
->  
-> +static inline bool is_kho_boot(void)
-> +{
-> +	return false;
-> +}
-> +
->  #endif
-> 
-> base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+Changes since v2:
+ - Dropped "kho: Do not translate the handover FDT address in
+   is_kho_boot()", which Greg Thelen's [1] does as well.
+ - Commit messages cut back to the reason for the change.
+ - Rebased onto linux-next-20261105 (ddfe51b0a0f5).
 
+Changes since v1:
+ - New patch 1: kho: Do not translate the handover FDT address in
+   is_kho_boot(), a generic fix the riscv enablement needs.
+ - Rebased onto linux-next-20261102 (2637bdec0535).
+
+Test
+----
+Testing on linux-next-20261105 (ddfe51b0a0f5) with qemu-system-riscv64
+(virt, -cpu max, TCG); method and logs under the --- of patches 3 and 4:
+  - kho vmtest: "ok 1 KHO succeeded", Totals pass:1 fail:0
+  - liveupdate vmtest, all four suites passed one by one (simple,
+    multi-session, 500 files, 2000 sessions)
+  - riscv defconfig with and without CONFIG_KEXEC_HANDOVER both boot to
+    userspace with no oops on the console; builds: riscv defconfig
+    (+KHO), rv32_defconfig, arm64 defconfig (+KHO), x86_64 defconfig
+    (+KHO)
+  - UEFI handover boot (edk2 on pflash over OpenSBI fw_dynamic,
+    DEBUG_VIRTUAL=y): with [1] applied, 32 consecutive handovers and no
+    BUG; without it the first handover dies in
+    linear_mapping_pa_to_va()
+
+Additionally, a workload-continuity test was run outside the selftests:
+a counter process was snapshot with criu 4.3, the dump was carried
+across the kexec in an LUO-preserved memfd, and criu restored it in the
+new kernel. The process resumed with the same PID and open log file and
+kept counting from where it was dumped (500007 -> 500008, no lost or
+duplicated ticks).
+
+
+Chen Pei (4):
+  riscv: Call early_ioremap_setup() before parsing the DTB
+  riscv: Add support for kexec handover (KHO)
+  selftests: kho: Add riscv support
+  selftests: liveupdate: Add riscv support
+
+ arch/riscv/Kconfig                                | 3 +++
+ arch/riscv/kernel/setup.c                         | 2 +-
+ tools/testing/selftests/kho/riscv.conf            | 9 +++++++++
+ tools/testing/selftests/kho/vmtest.sh             | 3 ++-
+ tools/testing/selftests/liveupdate/config.riscv64 | 3 +++
+ tools/testing/selftests/liveupdate/run-vmtests.sh | 2 +-
+ tools/testing/selftests/liveupdate/vmtest.sh      | 8 +++++++-
+ 7 files changed, 26 insertions(+), 4 deletions(-)
+ create mode 100644 tools/testing/selftests/kho/riscv.conf
+ create mode 100644 tools/testing/selftests/liveupdate/config.riscv64
+
+
+base-commit: ddfe51b0a0f5dc9e415cc2c8ad8db17532dd426b
 -- 
-Regards,
-Mukesh Pilaniya
+2.50.1
 
 
