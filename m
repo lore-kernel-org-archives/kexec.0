@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44364606EEBD
-	for <kexec@archiver.kernel.org>; Fri,  6 Nov 2026 00:43:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBBB606D80B
+	for <kexec@archiver.kernel.org>; Fri,  6 Nov 2026 00:43:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=dyR6pKUt;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=kx5KteiF
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=JxvUcVqG;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=QLMR+nb3
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
@@ -14,63 +14,63 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=VfIh1JSY3MeIq0CEtKa0epmsvwLqQj8oYtgMnnQZzbo=; b=dyR6pKUtZ2oCiYVbOMP4yzYUOV
-	CN4/W/KtqdRK6oIumn5m9D1Ky9u4vfcCrLODJHJd0BKwij5lIvqGtoTY/WgM3T/pLMWyjuHZtPgc1
-	RkTJVd3BcyYYnQnq4qyePs+fFHChmaDC4zLriVTJGGqO6SQi5NZhMqp8nw3O/D61cMeLvRu7jKeVr
-	NX59OJqaOD1uFhhBSqShFqTNywr72MujJ14wjOcgeJKSkQm+RvSNLF6MeVoT8xn5bP32boy1vK8ih
-	FAiL80nE5zAX0eYo2MCXE5ReNnVAmxOZHafwPcSRGOYFHpq/U+SkTlirRggBzkGGPxdFMI75xKS6M
-	OTTcZsNQ==;
+	bh=L+Hzdt+LObwzKPIKo4htZh/cma3z4S09Q2AYbp2zhRQ=; b=JxvUcVqGkb3bBaQ7FSqAXAuKQC
+	niAc9NIvzhz2BzPQf1KsgXDydS2ubmkXvfkwN9xyTqr1hCOOTX+19p30KvF7ELNCpTwirPQR3LDka
+	IM8FWnulDfe3Uq3RWMb5j+8w3BhpzKEYTrcVBZgRXxJd3i8fMRWOmesNQhyPfVqGLTvybwbP1/mUf
+	86KLGEcu6enrdwJYufrRZpkp6xIUNAB+Gw/n6AQKBE33zeHoeCUAaA5m5F3DJdCWZNpawLQqMebq5
+	V77xLrzom/sTit40crWacCib6TQkzfejgPRsKBBF6Lz1GaUC2b0/khp0XuXkYT8ePjzFSakuKLHNV
+	4JuGzmfA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP832-0000000AvyA-2p9v;
-	Fri, 06 Nov 2026 00:43:16 +0000
-Received: from mail-oi1-x248.google.com ([2607:f8b0:4864:20::248])
+	id 1xP82x-0000000AvqU-2a9g;
+	Fri, 06 Nov 2026 00:43:11 +0000
+Received: from mail-oi1-x246.google.com ([2607:f8b0:4864:20::246])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP82y-0000000Avps-0GB8
+	id 1xP82u-0000000Avjn-0reh
 	for kexec@lists.infradead.org;
-	Fri, 06 Nov 2026 00:43:14 +0000
-Received: by mail-oi1-x248.google.com with SMTP id 5614622812f47-4b26d8d2498so69495b6e.2
-        for <kexec@lists.infradead.org>; Thu, 05 Nov 2026 16:43:11 -0800 (PST)
+	Fri, 06 Nov 2026 00:43:09 +0000
+Received: by mail-oi1-x246.google.com with SMTP id 5614622812f47-4cc89e86e4dso86768b6e.2
+        for <kexec@lists.infradead.org>; Thu, 05 Nov 2026 16:43:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793925791; x=1794530591; darn=lists.infradead.org;
+        d=google.com; s=20260707; t=1793925787; x=1794530587; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=VfIh1JSY3MeIq0CEtKa0epmsvwLqQj8oYtgMnnQZzbo=;
-        b=kx5KteiFXuP4a5hrIroEPTLvH4zRPGvGnn6UFqdy1BVAacRk2FukVIhWSQckMn3mGr
-         NMQalbAbxrZhWcd6mxltYVlEcDi+O0w8yt99YMVgVb/ct6PRU0Qf4VuawOgtUccZeJyu
-         nOknPbEnEX6TYLDgtVnorf3bl5rN4pefphyEC2S+o3czbGyaJHmM6A+54Jd6kcfRGZhZ
-         Q0oHjFpSKb72ztANT+/N4tzkzJVV3s+O40oLPFRjTNSOqo/q3UyU1aHLGCy92L6XCfNI
-         Yb7nNyTR896X4fwQ07KuPqn0OvBCHd9iO/MFe8WJ/A6vrOB03at1t6pG7hRunKbCX6PU
-         iQcQ==
+        bh=L+Hzdt+LObwzKPIKo4htZh/cma3z4S09Q2AYbp2zhRQ=;
+        b=QLMR+nb3+EK+BtHcRd+U0Akej/IESAy7GPCYdYB0CVPKI4mJOKd6VXqxNe8e5PU7jc
+         obaG0+UAWh+f3wVdRc8tkOt6zqWkdqC1ZyNth4lxcfKTjK7qyoHHVpafvkm2P+iiAWHp
+         gVKhG45XuWcxB4inhSjVupHSHXk6KKkzK7klyNR9QOpfW7+36Tmy8WNeiP3jGbljLE0u
+         VM66Vf4U4CSY4zC1o4yFX7yOjwW2xhVxGc2cn4kxPrK1RxkbrzPwHVDurROvzd42Uyrp
+         Dpi2U7CJh/3mCpCWU+KRXYfS0sHZPmMfEoW/aewoEOyx/YxZlXmRvvp2IAd+N2hrQLIt
+         Li5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793925791; x=1794530591;
+        d=1e100.net; s=20260707; t=1793925787; x=1794530587;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=VfIh1JSY3MeIq0CEtKa0epmsvwLqQj8oYtgMnnQZzbo=;
-        b=BItZN48HiYNo4vIAoiX5OIfNZIrX0AtU5ObtLp5Kk92NkBkHe8VwXPawwLFCOkrG+8
-         9nsDl3ZaVuZlCqWb/Q8r44J4jG/vM1TbOqONx9xCRjGYGGnO8/7S6wlkmKAKTfz/sgUo
-         zAg/QyVLgju1L/jqGMkvmY2b+RbnF/uJKrbzOzoT/I1J9SwotftEVBumMnamGB6h3bLM
-         yj06kF3SG34nq/QlwatkpDVPvLue13BJkp7/a4VEkQu2umb95MLikmjvFC8/kU9+Uf9u
-         7AYTZJnuuZscGzOahWj6HdGg9l4jud+62dAhCruj4mWJHxqZOsw2h+ewQYK8N3x1H7Ey
-         85aQ==
-X-Gm-Message-State: APuU4Z/QKfG3LrmeNZ0mO8NRzCEbrlhKDgfSg9L11aJlBXdXp8MU2DLX
-	NuuhI9W/JnDAao/uJ+5CXX+pFvprHmJ4CXoxgVfx6aWcEV7negPZfaadzjNtfPr3hPKB7EDK4kx
-	1KTugsjvt577D5oie4sbqutlybYYg++a6icArs89Ik/QlvrGQqG9kuAbMDoH/c/wPXYFghj/zss
-	Coy1LMgFmoB4DkVsKIU6o4CCgULU1pYOKi0xvXvgVOhjIunuVF7Dk=
-X-Received: from ioo11-n1.prod.google.com ([2002:a05:6602:864b:10b0:9e2:221a:fd83])
+        bh=L+Hzdt+LObwzKPIKo4htZh/cma3z4S09Q2AYbp2zhRQ=;
+        b=Zj0bWNuUj0QaS/8TkUxtcYl8ngFANMQRnXFuLdLOFnCgixVMpGxHUXa1W2zmGh/w5H
+         l+sr2Pn8ZaeNrQ4mtg0jsx6x0mwHi8TgENVDBf9Im064YrdBWw5lY/bv3iGkAvZxQHJv
+         K8v7fHPfzGD2HR096shRNysBXtWHKR3chH+joNTOOZdTXgNVgqyPOaKI73w8DGahlOAC
+         n7g4NyOJnKsFge8tAiaDAwrtuix764qPXp55mPOVfF03/iqrUzk15voZYFYZwRFhzPKK
+         B0+UfVrpT9e4BZoMTKTePoNSSvfmRsd8Nuox53n+HQ7yT2OM+3kAdobRH4t0OUCPb5Up
+         LQrg==
+X-Gm-Message-State: APuU4Z+5990862mnsMJ2KWg6ohSJlrjvXV5G13kri+ARXfv5s0nkQeVy
+	/8kbcuHMOhO7MwmqqVDaiX010Y/eFpOGV3LPXKH6R/JR5oy+hLPJ29WXhIyBdIaJE+thVB8Rb+D
+	/wFjsOe4DYIVoDYLIeDvRgTlCwWLQ9qes7HwUq+ujyTcunUioO+muz+BXLt/pFIuqg1wRe510vv
+	7U1AfUoS/80/nQdfGdJehFcSXAB5wMJWZw1SJgtrt75bVAWoP5uF4=
+X-Received: from iozd24.prod.google.com ([2002:a05:6602:3298:b0:9c7:85f4:7637])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6808:1a21:b0:561:fa43:1b2f with SMTP id 5614622812f47-567e0fc17c3mr657310b6e.20.1793925790093;
- Thu, 05 Nov 2026 16:43:10 -0800 (PST)
-Date: Fri,  6 Nov 2026 00:42:12 +0000
+ 2002:a05:6808:23cf:b0:532:d9f5:1de6 with SMTP id 5614622812f47-567e182dc9fmr636250b6e.65.1793925786350;
+ Thu, 05 Nov 2026 16:43:06 -0800 (PST)
+Date: Fri,  6 Nov 2026 00:42:09 +0000
 In-Reply-To: <20261106004218.604799-1-dmatlack@google.com>
 X-Archived-By: <archiver.kernel.org>
 Mime-Version: 1.0
 References: <20261106004218.604799-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.56.0.455.g6c5a503b38-goog
-Message-ID: <20261106004218.604799-12-dmatlack@google.com>
-Subject: [PATCH v2 11/17] PCI/DPC: Save DPC state in the saved capability store
+Message-ID: <20261106004218.604799-9-dmatlack@google.com>
+Subject: [PATCH v2 08/17] PCI/AER: Save AER state in the saved capability store
 From: David Matlack <dmatlack@google.com>
 To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, 
@@ -85,8 +85,8 @@ Cc: Alexander Graf <graf@amazon.com>, Alex Williamson <alex@shazbot.org>,
 	Vipin Sharma <vipinsh@google.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261105_164312_134493_519CE7D8 
-X-CRM114-Status: GOOD (  14.05  )
+X-CRM114-CacheID: sfid-20261105_164308_257594_FFE5AF95 
+X-CRM114-Status: GOOD (  17.02  )
 X-Spam-Score: -9.5 (---------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -106,93 +106,148 @@ X-Spam-Status: No, score=-26.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Save and restore the DPC Control register through the per-device saved
-capability store instead of a private pci_cap_saved_state buffer.
+Save and restore the AER mask, severity, capability and root command
+registers through the per-device saved capability store instead of a
+private pci_cap_saved_state buffer.
 
-Key the save and restore paths off pdev->dpc_cap rather than
-pci_is_pcie(). The old code relied on the save buffer existing only when
-the capability did, and the store has no per-capability entry to check.
+Describe the registers in aer_saved_regs[] and drive the reservation, save,
+and restore loops from it. Previously the three had to be kept in the same
+order by hand, and pci_aer_init() encoded the register count as a bare 4 or
+5.
 
-Reserve the register in pci_reserve_dpc_state(), called from
-pci_dpc_init().
+Reserve the registers in pci_reserve_aer_state(), called from
+pci_aer_init(), and report a refused reservation. pci_aer_init() ignored
+the return value of pci_add_ext_cap_save_buffer(), so a failed
+allocation left AER state unsaved without any message. An allocation
+failure is now reported once by pci_saved_caps_finalize().
 
-No functional change intended.
+No other functional change intended.
 
 Signed-off-by: David Matlack <dmatlack@google.com>
 ---
- drivers/pci/pcie/dpc.c | 37 +++++++++++++++----------------------
- 1 file changed, 15 insertions(+), 22 deletions(-)
+ drivers/pci/pcie/aer.c | 85 +++++++++++++++++++++++-------------------
+ 1 file changed, 46 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index b7f79266f66d..16203e9ef240 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -45,34 +45,18 @@ static const char * const rp_pio_error_string[] = {
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index d8dcd238fda1..25436bcf9fb9 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -352,54 +352,68 @@ int pci_aer_clear_status(struct pci_dev *dev)
+ 	return pci_aer_raw_clear_status(dev);
+ }
  
- void pci_save_dpc_state(struct pci_dev *dev)
+-void pci_save_aer_state(struct pci_dev *dev)
++/*
++ * AER registers saved and restored by the PCI core. PCI_ERR_ROOT_COMMAND is
++ * only implemented by Root Ports and Root Complex Event Collectors (PCIe
++ * r6.0, sec 7.8.4.9) and so must come last.
++ */
++static const u16 aer_saved_regs[] = {
++	PCI_ERR_UNCOR_MASK,
++	PCI_ERR_UNCOR_SEVER,
++	PCI_ERR_COR_MASK,
++	PCI_ERR_CAP,
++	PCI_ERR_ROOT_COMMAND,
++};
++
++static unsigned int aer_nr_saved_regs(struct pci_dev *dev)
  {
+-	int aer = dev->aer_cap;
 -	struct pci_cap_saved_state *save_state;
--	u16 *cap;
--
--	if (!pci_is_pcie(dev))
+-	u32 *cap;
++	if (pcie_cap_has_rtctl(dev))
++		return ARRAY_SIZE(aer_saved_regs);
+ 
+-	if (!aer)
 -		return;
--
--	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
++	return ARRAY_SIZE(aer_saved_regs) - 1;
++}
+ 
+-	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ERR);
 -	if (!save_state)
-+	if (!dev->dpc_cap)
- 		return;
- 
--	cap = (u16 *)&save_state->cap.data[0];
--	pci_read_config_word(dev, dev->dpc_cap + PCI_EXP_DPC_CTL, cap);
-+	pci_save_cap_word(dev, dev->dpc_cap + PCI_EXP_DPC_CTL);
- }
- 
- void pci_restore_dpc_state(struct pci_dev *dev)
- {
--	struct pci_cap_saved_state *save_state;
--	u16 *cap;
--
--	if (!pci_is_pcie(dev))
--		return;
--
--	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
--	if (!save_state)
-+	if (!dev->dpc_cap)
- 		return;
- 
--	cap = (u16 *)&save_state->cap.data[0];
--	pci_write_config_word(dev, dev->dpc_cap + PCI_EXP_DPC_CTL, *cap);
-+	pci_restore_cap_word(dev, dev->dpc_cap + PCI_EXP_DPC_CTL);
- }
- 
- static DECLARE_WAIT_QUEUE_HEAD(dpc_completed_waitqueue);
-@@ -400,6 +384,16 @@ static irqreturn_t dpc_irq(int irq, void *context)
- 	return IRQ_HANDLED;
- }
- 
-+static void pci_reserve_dpc_state(struct pci_dev *pdev)
++void pci_save_aer_state(struct pci_dev *dev)
 +{
++	unsigned int i;
++
++	if (!dev->aer_cap)
+ 		return;
+ 
+-	cap = &save_state->cap.data[0];
+-	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, cap++);
+-	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_SEVER, cap++);
+-	pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK, cap++);
+-	pci_read_config_dword(dev, aer + PCI_ERR_CAP, cap++);
+-	if (pcie_cap_has_rtctl(dev))
+-		pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, cap++);
++	for (i = 0; i < aer_nr_saved_regs(dev); i++)
++		pci_save_cap_dword(dev, dev->aer_cap + aer_saved_regs[i]);
+ }
+ 
+ void pci_restore_aer_state(struct pci_dev *dev)
+ {
+-	int aer = dev->aer_cap;
+-	struct pci_cap_saved_state *save_state;
+-	u32 *cap;
++	unsigned int i;
+ 
+-	if (!aer)
++	if (!dev->aer_cap)
+ 		return;
+ 
+-	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ERR);
+-	if (!save_state)
+-		return;
++	for (i = 0; i < aer_nr_saved_regs(dev); i++)
++		pci_restore_cap_dword(dev, dev->aer_cap + aer_saved_regs[i]);
++}
+ 
+-	cap = &save_state->cap.data[0];
+-	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, *cap++);
+-	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_SEVER, *cap++);
+-	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, *cap++);
+-	pci_write_config_dword(dev, aer + PCI_ERR_CAP, *cap++);
+-	if (pcie_cap_has_rtctl(dev))
+-		pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, *cap++);
++static void pci_reserve_aer_state(struct pci_dev *dev)
++{
++	unsigned int i;
 +	int rc;
 +
-+	rc = pci_reserve_saved_cap(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, sizeof(u16));
-+	if (rc)
-+		pci_err(pdev, "unable to reserve DPC save state (%pe)\n",
-+			ERR_PTR(rc));
-+}
++	for (i = 0; i < aer_nr_saved_regs(dev); i++) {
++		unsigned int off = dev->aer_cap + aer_saved_regs[i];
 +
- void pci_dpc_init(struct pci_dev *pdev)
++		rc = pci_reserve_saved_cap(dev, off, sizeof(u32));
++		if (rc) {
++			pci_err(dev, "unable to reserve AER save state (%pe)\n",
++				ERR_PTR(rc));
++			return;
++		}
++	}
+ }
+ 
+ void pci_aer_init(struct pci_dev *dev)
  {
- 	u16 cap;
-@@ -408,8 +402,7 @@ void pci_dpc_init(struct pci_dev *pdev)
- 	if (!pdev->dpc_cap)
+-	int n;
+-
+ 	dev->aer_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ERR);
+ 	if (!dev->aer_cap)
  		return;
+@@ -415,14 +429,7 @@ void pci_aer_init(struct pci_dev *dev)
+ 	ratelimit_state_init(&dev->aer_info->nonfatal_ratelimit,
+ 			     DEFAULT_RATELIMIT_INTERVAL, DEFAULT_RATELIMIT_BURST);
  
--	if (pci_add_ext_cap_save_buffer(pdev, PCI_EXT_CAP_ID_DPC, sizeof(u16)))
--		pci_err(pdev, "unable to allocate suspend buffer for DPC\n");
-+	pci_reserve_dpc_state(pdev);
+-	/*
+-	 * We save/restore PCI_ERR_UNCOR_MASK, PCI_ERR_UNCOR_SEVER,
+-	 * PCI_ERR_COR_MASK, and PCI_ERR_CAP.  Root and Root Complex Event
+-	 * Collectors also implement PCI_ERR_ROOT_COMMAND (PCIe r6.0, sec
+-	 * 7.8.4.9).
+-	 */
+-	n = pcie_cap_has_rtctl(dev) ? 5 : 4;
+-	pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ERR, sizeof(u32) * n);
++	pci_reserve_aer_state(dev);
  
- 	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
- 	if (!(cap & PCI_EXP_DPC_CAP_RP_EXT))
+ 	/*
+ 	 * Advisory Non-Fatal Errors are masked by default (PCIe r7.0, sec
 -- 
 2.56.0.455.g6c5a503b38-goog
 
