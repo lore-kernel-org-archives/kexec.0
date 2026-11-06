@@ -2,77 +2,118 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51EA2606A333
-	for <kexec@archiver.kernel.org>; Fri,  6 Nov 2026 10:13:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37CC4606A326
+	for <kexec@archiver.kernel.org>; Fri,  6 Nov 2026 10:43:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=KMA6tQVb;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=W9HAG1jE
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=b7glqAEN;
+	dkim=pass (2048-bit key, unprotected) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=FH9l+0PC
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
-	From:Date:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
 	List-Unsubscribe-Post:List-Owner;
-	bh=9a4H54mptecAQP9EnIQDdGdKkCxjGGpoa2eRsKx7NuQ=; b=KMA6tQVb2MxdLXkpVst45wG5r4
-	K5fF64X+I1W/LWmmuueTW/F4/0RLY3P7Hc9eWkU9/aZ5QnPFQe7W/CcEQJ9PoRnOj7hcKQF4zo18R
-	QnogkWUIuxTsW0DQ5kCHbr+z43WVqX9gMsSbLch16tYe9vdUdeMwYI9/eaFSMMVGLfyahrpMK+Lqo
-	56nGgl39DlhsCjs6ciZ3QLUEeMlAnb7CYriWWqF6CjFPyP+2p5GCjFyBwLLC2qYna7V0y4nlhhLnn
-	8lXlgw5T8h7/kWYXw3n10NK9tyGN/ay5krJg83cYGrIwR+1+b3xFblXThVRTN/CoPy74mk3e/w42B
-	bsr5PpWw==;
+	bh=hsjGKsAeD8QaxYplDPt0EpldWweYT+Xkhb2l+NcQA2k=; b=b7glqAEN/Ljkhehaxhy058+TQz
+	7h++5lXuSx1jTWi0zSHD7Ie7Dqu7DaoPDYv+OerFtiF/p2I2X+WR1B8V3F++kp9Sposw76mHHennr
+	TPqN9Y2aBQ7o1QBqTbwHDUgwnDKIHVQc7XFXh5U6ftjWTwGPmGArjh3yLZidofGfbnyKpP69x85CW
+	OyfKLnid6SvQmE2RBcmTiCvoGUoo0Pr8uadmbimnoCfXzCkpzQHbVTfKBKgpimLO+lVGVUpUIGGs/
+	O6OFLGqtMY+rEF5Gdh8lac7ddtQuY93Yzsi3+W0rq6CTPKsHCrIMwjVmOwp8zjpQPsHIwGNB4rmdJ
+	JV66pgcQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xPGwT-0000000BsAk-0tKW;
-	Fri, 06 Nov 2026 10:13:05 +0000
-Received: from mgamail.intel.com ([198.175.65.14])
+	id 1xPHPp-0000000Bz8s-30mD;
+	Fri, 06 Nov 2026 10:43:25 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xPGwQ-0000000Bs9q-0h51
+	id 1xPHPn-0000000Bz8B-3J9t
 	for kexec@lists.infradead.org;
-	Fri, 06 Nov 2026 10:13:03 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793959982; x=1825495982;
-  h=date:from:to:cc:subject:message-id;
-  bh=2D9PNvXBTZ9bM32aDE8qR87mlDDwoxnNcgNrDemIwyY=;
-  b=W9HAG1jE8AwkFQySjB4ddYSuCiqmjJ5qNDMvQvp50yDxA0WWeN7ZANFl
-   tsrL/4MeByTS//XrEmp91cxW9m9fqoxS3QMOD5v2l4+msR0p0sLY8gv2W
-   tS4clpcmWtg13vOC7/EKEkJ5IalUJJ7U3qZnwb07Q0dCs4MAV+xq+ppRN
-   aYiHJoe5D+DTYasGHWGTN2/KhnAvx/f3YZkDAx/BKtl4etQwmBxs74BNK
-   qGEW3l45Q8etBNnyCZVBRo5F/El3wRSm1E0vyUiwToS+Yt1w0f75ZF0tE
-   6RGv1ubE7FTRRTb10+3k97wjksaNgrLXWFxKtdkakDb/UNup9dbF/BsPg
-   Q==;
-X-CSE-ConnectionGUID: o6fL45EoT4aD79l5WJZnLg==
-X-CSE-MsgGUID: d/d/aJP7R+uDxYhK+bZy6A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11957"; a="2664197"
-X-IronPort-AV: E=Sophos;i="6.27,197,1787036400"; 
-   d="scan'208";a="2664197"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2026 02:13:02 -0800
-X-CSE-ConnectionGUID: na4ew8pCRB+jNfd4BkUg/w==
-X-CSE-MsgGUID: hfFI9dTeT+qVsZ92VB4+XA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,197,1787036400"; 
-   d="scan'208";a="7122738"
-Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 06 Nov 2026 02:13:00 -0800
-Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1xPGwL-00000000oxl-2qRS;
-	Fri, 06 Nov 2026 10:12:57 +0000
-Date: Fri, 06 Nov 2026 18:12:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org
-Subject: [liveupdate:fixes] BUILD SUCCESS
- cc448e44f6e9fc83f1527f926f52ebfa5a3d1ce9
-Message-ID: <20261106181239.yg7eBdDs-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	Fri, 06 Nov 2026 10:43:25 +0000
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6A67i72r1759530;
+	Fri, 6 Nov 2026 10:43:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=hsjGKsAeD8QaxYplDPt0EpldWweYT+Xkhb2l+NcQA
+	2k=; b=FH9l+0PCV+uL1gCx7gxdqtoa3VUvUUqiYG7FljwN1nKMk+/z16tla3Ufw
+	OzUTVBDDCtVyvMnpDhh+5mW7ulDwZtS578x4dAIQGfazQoLunLhAYDs2I88v6CLN
+	TjiKjfVut6GFgyOXyjTOoEIcCwxs035eKYKOmWwI1uWCgCRST2WYZy3aFcsQEaPh
+	sQH+KcqPArxoxZhQzqrphQxBvVsMSoDh0gLuxHKZRVPzQbYLOV0yYm4w/jvNV2C6
+	kSO3t+6INSTJUVB92U11Yu7KrRUh0pkHQI+uULDHbyG0WHN2wvqamDKV/m0rCWCT
+	zKQR+AWAKYad6GPvXtaGI1H8wTIRw==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4hs3r9br7y-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Fri, 06 Nov 2026 10:43:14 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6A6AYx0i3268955;
+	Fri, 6 Nov 2026 10:43:13 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4hrka70m0n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 06 Nov 2026 10:43:13 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6A6Ah9RQ17498386
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 6 Nov 2026 10:43:09 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B511820043;
+	Fri,  6 Nov 2026 10:43:09 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 72F1520040;
+	Fri,  6 Nov 2026 10:43:09 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  6 Nov 2026 10:43:09 +0000 (GMT)
+From: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <baoquan.he@linux.dev>
+Cc: Mike Rapoport <rppt@kernel.org>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Pratyush Yadav <pratyush@kernel.org>,
+        Dave Young <ruirui.yang@linux.dev>, Jiri Bohac <jbohac@suse.cz>,
+        David Hildenbrand <david@kernel.org>,
+        Usama Arif <usama.arif@linux.dev>, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>, kexec@lists.infradead.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] kdump: Give crashkernel CMA areas unique names
+Date: Fri,  6 Nov 2026 11:43:09 +0100
+Message-ID: <20261106104309.3669583-1-zaslonko@linux.ibm.com>
+X-Mailer: git-send-email 2.53.0
+X-Archived-By: <archiver.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=LKHz05W9 c=1 sm=1 tr=0 ts=6aedaf42 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8 a=hR5eV2nCcz1Zz8vUuPwA:9
+X-Proofpoint-GUID: CVJwi85HMVi4di98wVuO7BMLHM0mh7Rm
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTA2MDA0MCBTYWx0ZWRfX46OaJdwxmACt
+ eJ0su/177/KowBAIMk7OoWdwirMtqYrcLXeRoqSw7RAD5eyoCk8yh/wwbBr77pE5rpQXZSvawB7
+ 892uXMCU08MJVU79OyYVCtYtwag7kBg=
+X-Proofpoint-ORIG-GUID: CVJwi85HMVi4di98wVuO7BMLHM0mh7Rm
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTA2MDA0MCBTYWx0ZWRfX80Zh2xVqO8L8
+ D+Reh8yqrxwfG5pOc3L0Bwk2oYeYPnyyDec3iAiVYVSh6jG25dMlrtybpM8rLpHWeA/h1W2u6Ow
+ BjdrIvJ7F/XJZcAt+Y+FNaDBZW2qjeMTdxChMZlDzx4Pd4NCsffzHeKP8Y73+u4GvO69bG8Lbv5
+ GhwygeZQRGGRkUkGmCiLHw9hdXRJpR1qfXCukeE06hKF3z0zZtNSKfNF6ZE8WL7aI5ksJwJbxEr
+ myQmewboZPFPGjPQrBWY+xAZPOaCqd2aS5mO7+8mGZILcE9DCiCvDtPWWoesvlvJE28pdk44MT6
+ vj1QVwMC7RszoQyZ8MPc20F1fambmUPHdyv95efjGMO5BLV2Wcp7ZIdMtKCB1kaeTObHpAT5VeJ
+ cbiYiApP49Z3WGbzDMVY8EwXTF7ouxQVRNBWDqBasMRaVtj//rISaUX5Ld/TaYECQbZz1D67RjK
+ /nMwsxAnCLxXwOUk59g==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-11-06_02,2026-11-04_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 impostorscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1011 malwarescore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2611040001 definitions=main-2611060040
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261106_021302_298045_D3F980F3 
-X-CRM114-Status: UNSURE (   4.55  )
-X-CRM114-Notice: Please train this message.
-X-Spam-Score: -4.4 (----)
+X-CRM114-CacheID: sfid-20261106_024323_947982_7B2B7446 
+X-CRM114-Status: GOOD (  17.37  )
+X-Spam-Score: -2.6 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,227 +124,67 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-16.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
-X-Archived-By: <archiver.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git fixes
-branch HEAD: cc448e44f6e9fc83f1527f926f52ebfa5a3d1ce9  liveupdate: check for duplicate session before growing block set
+reserve_crashkernel_cma() names every CMA area it reserves
+"crashkernel". If the requested size can't be reserved in one piece,
+it falls back to several smaller areas, all with the same name.
+With CONFIG_CMA_SYSFS, cma_sysfs_init() then fails to create the second
+directory:
 
-elapsed time: 1065m
+  sysfs: cannot create duplicate filename '/kernel/mm/cma/crashkernel'
 
-configs tested: 199
-configs skipped: 3
+and the error path removes the sysfs entries of all CMA areas.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+With CONFIG_CMA_DEBUGFS, debugfs refuses the duplicate directories as
+well:
 
-tested configs:
-alpha                              allnoconfig    gcc-16.2.0
-alpha                             allyesconfig    gcc-16.2.0
-alpha                                defconfig    gcc-16.2.0
-arc                               allmodconfig    clang-24
-arc                                allnoconfig    gcc-16.2.0
-arc                               allyesconfig    clang-24
-arc                           axs103_defconfig    clang-19
-arc                                  defconfig    gcc-16.2.0
-arc                   randconfig-1000-20261106    gcc-8.5.0
-arc                   randconfig-1001-20261106    gcc-8.5.0
-arm                                allnoconfig    gcc-16.2.0
-arm                               allyesconfig    clang-24
-arm                                  defconfig    gcc-16.2.0
-arm                       integrator_defconfig    gcc-16.2.0
-arm                          lpc32xx_defconfig    clang-17
-arm                   randconfig-1000-20261106    gcc-8.5.0
-arm                   randconfig-1001-20261106    gcc-8.5.0
-arm                   randconfig-1002-20261106    gcc-8.5.0
-arm                   randconfig-1003-20261106    gcc-8.5.0
-arm                          s3c6400_defconfig    gcc-16.2.0
-arm                            sunxi_defconfig    gcc-16.2.0
-arm64                             allmodconfig    clang-24
-arm64                              allnoconfig    gcc-16.2.0
-arm64                                defconfig    gcc-16.2.0
-arm64                 randconfig-1000-20261106    clang-17
-arm64                 randconfig-1001-20261106    clang-17
-arm64                 randconfig-1002-20261106    clang-17
-arm64                 randconfig-1003-20261106    clang-17
-csky                              allmodconfig    gcc-16.2.0
-csky                               allnoconfig    gcc-16.2.0
-csky                                 defconfig    gcc-16.2.0
-csky                  randconfig-1000-20261106    clang-17
-csky                  randconfig-1001-20261106    clang-17
-hexagon                           allmodconfig    gcc-16.2.0
-hexagon                            allnoconfig    gcc-16.2.0
-hexagon                              defconfig    gcc-16.2.0
-hexagon               randconfig-1000-20261106    gcc-14.4.0
-hexagon               randconfig-1001-20261106    gcc-14.4.0
-i386                              allmodconfig    clang-22
-i386                               allnoconfig    gcc-16.2.0
-i386                              allyesconfig    clang-22
-i386        buildonly-randconfig-1000-20261106    clang-22
-i386        buildonly-randconfig-1001-20261106    clang-22
-i386        buildonly-randconfig-1002-20261106    clang-22
-i386        buildonly-randconfig-1003-20261106    clang-22
-i386        buildonly-randconfig-1004-20261106    clang-22
-i386        buildonly-randconfig-1005-20261106    clang-22
-i386                                 defconfig    gcc-16.2.0
-i386                  randconfig-1000-20261106    gcc-14
-i386                  randconfig-1001-20261106    gcc-14
-i386                  randconfig-1002-20261106    gcc-14
-i386                  randconfig-1003-20261106    gcc-14
-i386                  randconfig-1004-20261106    gcc-14
-i386                  randconfig-1005-20261106    gcc-14
-i386                  randconfig-1006-20261106    gcc-14
-i386                  randconfig-1007-20261106    gcc-14
-i386                  randconfig-1008-20261106    gcc-14
-i386                  randconfig-1009-20261106    gcc-14
-i386                  randconfig-1010-20261106    gcc-14
-i386                  randconfig-1011-20261106    gcc-14
-i386                  randconfig-1012-20261106    gcc-14
-i386                  randconfig-1013-20261106    gcc-14
-loongarch                         allmodconfig    clang-24
-loongarch                          allnoconfig    gcc-16.2.0
-loongarch                            defconfig    clang-24
-loongarch             randconfig-1000-20261106    gcc-14.4.0
-loongarch             randconfig-1001-20261106    gcc-14.4.0
-m68k                              allmodconfig    gcc-16.2.0
-m68k                               allnoconfig    gcc-16.2.0
-m68k                              allyesconfig    clang-24
-m68k                                 defconfig    clang-24
-m68k                       m54418evb_defconfig    clang-19
-m68k                          nettel_defconfig    gcc-16.2.0
-microblaze                         allnoconfig    gcc-16.2.0
-microblaze                        allyesconfig    gcc-16.2.0
-microblaze                           defconfig    clang-24
-mips                              allmodconfig    gcc-16.2.0
-mips                               allnoconfig    gcc-16.2.0
-mips                              allyesconfig    gcc-16.2.0
-mips                   cavium_octeon_defconfig    gcc-16.2.0
-mips                            ip28_defconfig    gcc-16.2.0
-mips                       loongson3_defconfig    gcc-16.2.0
-mips                     maltaup_xpa_defconfig    clang-19
-nios2                             allmodconfig    clang-20
-nios2                              allnoconfig    clang-24
-nios2                                defconfig    clang-24
-nios2                 randconfig-1000-20261106    gcc-14.4.0
-nios2                 randconfig-1001-20261106    gcc-14.4.0
-openrisc                          allmodconfig    clang-20
-openrisc                           allnoconfig    clang-24
-openrisc                    de0_nano_defconfig    clang-19
-openrisc                             defconfig    gcc-16.2.0
-openrisc                  simple_smp_defconfig    gcc-16.2.0
-parisc                            allmodconfig    gcc-16.2.0
-parisc                             allnoconfig    clang-24
-parisc                            allyesconfig    clang-17
-parisc                               defconfig    gcc-16.2.0
-parisc                randconfig-1000-20261106    clang-19
-parisc                randconfig-1001-20261106    clang-19
-parisc64                             defconfig    clang-24
-powerpc                           allmodconfig    gcc-16.2.0
-powerpc                            allnoconfig    clang-24
-powerpc                       ep88xc_defconfig    clang-17
-powerpc                     gamecube_defconfig    clang-19
-powerpc                       mgcoge_defconfig    clang-17
-powerpc                      mpc512x_defconfig    gcc-16.2.0
-powerpc                   mpc885_ads_defconfig    clang-19
-powerpc                       pcm030_defconfig    gcc-16.2.0
-powerpc               randconfig-1000-20261106    clang-19
-powerpc               randconfig-1001-20261106    clang-19
-powerpc                      tqm8555_defconfig    clang-19
-powerpc                  xes_mpc85xx_defconfig    clang-17
-powerpc64             randconfig-1000-20261106    clang-19
-powerpc64             randconfig-1001-20261106    clang-19
-riscv                             allmodconfig    clang-24
-riscv                              allnoconfig    clang-24
-riscv                             allyesconfig    clang-24
-riscv                                defconfig    gcc-16.2.0
-riscv              nommu_k210_sdcard_defconfig    gcc-16.2.0
-riscv                 randconfig-1000-20261106    gcc-14.4.0
-riscv                 randconfig-1001-20261106    gcc-14.4.0
-s390                              alldefconfig    clang-17
-s390                              allmodconfig    clang-17
-s390                               allnoconfig    clang-24
-s390                              allyesconfig    gcc-16.2.0
-s390                                 defconfig    gcc-16.2.0
-s390                  randconfig-1000-20261106    gcc-14.4.0
-s390                  randconfig-1001-20261106    gcc-14.4.0
-sh                                allmodconfig    gcc-16.2.0
-sh                                 allnoconfig    clang-24
-sh                                allyesconfig    clang-17
-sh                                   defconfig    gcc-14
-sh                              espt_defconfig    gcc-16.2.0
-sh                  kfr2r09-romimage_defconfig    clang-17
-sh                           polaris_defconfig    gcc-16.2.0
-sh                    randconfig-1000-20261106    gcc-14.4.0
-sh                    randconfig-1001-20261106    gcc-14.4.0
-sh                         sh7757lcr_defconfig    gcc-16.2.0
-sh                              shx3_defconfig    clang-17
-sh                              shx3_defconfig    gcc-16.2.0
-sparc                              allnoconfig    clang-24
-sparc                                defconfig    gcc-16.2.0
-sparc                 randconfig-1000-20261106    gcc-15.3.0
-sparc                 randconfig-1001-20261106    gcc-15.3.0
-sparc64                           allmodconfig    clang-20
-sparc64                              defconfig    gcc-14
-sparc64               randconfig-1000-20261106    gcc-15.3.0
-sparc64               randconfig-1001-20261106    gcc-15.3.0
-um                                alldefconfig    gcc-16.2.0
-um                                allmodconfig    clang-17
-um                                 allnoconfig    clang-24
-um                                allyesconfig    gcc-16.2.0
-um                                   defconfig    gcc-14
-um                              i386_defconfig    gcc-14
-um                    randconfig-1000-20261106    gcc-15.3.0
-um                    randconfig-1001-20261106    gcc-15.3.0
-um                            x86_64_defconfig    gcc-14
-x86_64                            alldefconfig    clang-19
-x86_64                            allmodconfig    clang-22
-x86_64                             allnoconfig    clang-24
-x86_64                            allyesconfig    clang-22
-x86_64      buildonly-randconfig-1000-20261106    gcc-13
-x86_64      buildonly-randconfig-1001-20261106    gcc-13
-x86_64      buildonly-randconfig-1002-20261106    gcc-13
-x86_64      buildonly-randconfig-1003-20261106    gcc-13
-x86_64      buildonly-randconfig-1004-20261106    gcc-13
-x86_64      buildonly-randconfig-1005-20261106    gcc-13
-x86_64                               defconfig    gcc-14
-x86_64                                   kexec    clang-22
-x86_64                randconfig-1000-20261106    clang-22
-x86_64                randconfig-1001-20261106    clang-22
-x86_64                randconfig-1002-20261106    clang-22
-x86_64                randconfig-1003-20261106    clang-22
-x86_64                randconfig-1004-20261106    clang-22
-x86_64                randconfig-1005-20261106    clang-22
-x86_64                randconfig-1006-20261106    clang-22
-x86_64                randconfig-1007-20261106    clang-22
-x86_64                randconfig-1008-20261106    clang-22
-x86_64                randconfig-1009-20261106    clang-22
-x86_64                randconfig-1010-20261106    clang-22
-x86_64                randconfig-1011-20261106    clang-22
-x86_64                randconfig-1012-20261106    gcc-14
-x86_64                randconfig-1013-20261106    gcc-14
-x86_64                randconfig-1014-20261106    gcc-14
-x86_64                randconfig-1015-20261106    gcc-14
-x86_64                randconfig-1016-20261106    gcc-14
-x86_64                randconfig-1017-20261106    gcc-14
-x86_64                                rhel-9.4    clang-22
-x86_64                            rhel-9.4-bpf    gcc-14
-x86_64                           rhel-9.4-func    clang-22
-x86_64                     rhel-9.4-kselftests    clang-22
-x86_64                          rhel-9.4-kunit    gcc-14
-x86_64                            rhel-9.4-ltp    gcc-14
-x86_64                           rhel-9.4-rust    clang-22
-xtensa                             allnoconfig    clang-24
-xtensa                            allyesconfig    clang-20
-xtensa                randconfig-1000-20261106    gcc-15.3.0
-xtensa                randconfig-1001-20261106    gcc-15.3.0
-xtensa                     xip_kc705_defconfig    clang-17
+  debugfs: 'crashkernel' already exists in 'cma'
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+so only the first area shows up in debugfs.
+
+Keep the name of the first area and add the index to the others:
+crashkernel, crashkernel1, crashkernel2, ...
+
+Fixes: ab475510e042 ("kdump: implement reserve_crashkernel_cma")
+Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+---
+Found while adding crashkernel CMA support for s390.
+
+ kernel/crash_reserve.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
+index eee37a11380c..e58318b1e092 100644
+--- a/kernel/crash_reserve.c
++++ b/kernel/crash_reserve.c
+@@ -483,10 +483,16 @@ void __init reserve_crashkernel_cma(unsigned long long cma_size)
+ 	while (cma_size > reserved_size &&
+ 	       crashk_cma_cnt < CRASHKERNEL_CMA_RANGES_MAX) {
+ 
++		char name[CMA_MAX_NAME];
+ 		struct cma *res;
+ 
++		/* CMA area names show up in sysfs and debugfs, keep them unique */
++		if (crashk_cma_cnt)
++			snprintf(name, sizeof(name), "crashkernel%d", crashk_cma_cnt);
++		else
++			strscpy(name, "crashkernel");
+ 		if (cma_declare_contiguous(0, request_size, 0, 0, 0, false,
+-				       "crashkernel", &res)) {
++				       name, &res)) {
+ 			/* reservation failed, try half-sized blocks */
+ 			if (request_size <= PAGE_SIZE)
+ 				break;
+
+base-commit: f66469d9905b39d2c260a15d7d6db450f4db67c1
+-- 
+2.55.0
+
 
