@@ -2,72 +2,75 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5B3606D810
-	for <kexec@archiver.kernel.org>; Fri,  6 Nov 2026 00:43:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6095606D812
+	for <kexec@archiver.kernel.org>; Fri,  6 Nov 2026 00:43:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Dcs/jbS7;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=WdW2xPHL
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ForHl5u7;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=SixgKgx0
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=j3QnOqT1bd63wcrV6KvOAip3wCLe11FN2NBTadJaa9M=; b=Dcs/jbS7BqvW4+//3CTskOAlfX
-	jiW8C+iLo4a7/Y2MvfRGN3uobgcuTNYhiElURsRF0oX1WLNDZphcRCdVMOqQXqmm5G+jXziCciqO4
-	7I5pHNijONUk7R84riEsJdHWLlHj6W0TptMtdrwEOZ3vI8fb0DSaSYVikap7eTMAvQ+GxYF6W6vYv
-	qgdZlFJSmHZSljzMJXyK9xhu02LrhDzQqgUiZVazfVwzG4bzuTq8ncnz3w1svaCILGozU41kdNXka
-	tpSUsizaesD9SBezlv1a2yFz2naymyL+fT62opXOqUFrU7qOa3+dLOIhOP0G61sKFs3oiU+Fy4AhN
-	oKoXICvw==;
+	bh=7sjq9VdN6W+I9NBwFH2LvF9xugKaVKfSc0OTWV+x1HY=; b=ForHl5u7lX/8PqE8XM5j9IrEfv
+	Q6aWFpqTP9NeP7IJPtTl6qc1sA9WtvF7yd4xZli8wy8krFNsl9kenG/kusX9FWjTnS83TpRGVv1Jt
+	HTBB07qP6TpKZiDCZtfdRVUBeMmCyXIpU3Qe5muj7nX2QCnXPWDbuPQ/c5yGFck0KWvVd0zyDVQix
+	vGePbm9rMGcK/YFmqtnJbKtIu02vyFpOJci8muRMivJObNwuDfqCEL4EadSe49mL/euIF5NUpjBED
+	s/pB+n/Rh3+5mHeRvzxjTu1JUpTROycgLlfmt7+UxPlbnh8v8jN0bgI6uQ6K2x0GqiDAEmq75Wm0B
+	QcZLI8qg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP82m-0000000Ave0-1X3w;
-	Fri, 06 Nov 2026 00:43:00 +0000
-Received: from mail-ot1-x348.google.com ([2607:f8b0:4864:20::348])
+	id 1xP82r-0000000AvhA-2IoR;
+	Fri, 06 Nov 2026 00:43:05 +0000
+Received: from mail-oi1-x247.google.com ([2607:f8b0:4864:20::247])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP82k-0000000AvdO-0YZF
+	id 1xP82o-0000000Ave8-1gUX
 	for kexec@lists.infradead.org;
-	Fri, 06 Nov 2026 00:42:59 +0000
-Received: by mail-ot1-x348.google.com with SMTP id 46e09a7af769-84fe2593525so236771a34.3
-        for <kexec@lists.infradead.org>; Thu, 05 Nov 2026 16:42:57 -0800 (PST)
+	Fri, 06 Nov 2026 00:43:03 +0000
+Received: by mail-oi1-x247.google.com with SMTP id 5614622812f47-4db3db8687fso127490b6e.0
+        for <kexec@lists.infradead.org>; Thu, 05 Nov 2026 16:43:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793925776; x=1794530576; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=j3QnOqT1bd63wcrV6KvOAip3wCLe11FN2NBTadJaa9M=;
-        b=WdW2xPHLG/3ZbRMO3/Lfrgg9pns3wAUnEU1z2zQ5JyJTuFpV5Y9aMA94Z/Mmw8UJ6c
-         aE5x3F2/TH8bVoPGtJfmAxgIR6D/aXqZlO86i7yEV9BtMyo0P9r8qu7rtmofvk9A4yv5
-         Cqp7MXnlgJ4cxoapr1z/TwTJD0NNwDArEk0jrDdrhtGPkZ/NKZsRsshanM1DfUFL+3p6
-         5lpyABGEi99bpUE5f8ckhFeUokUce6DjG1t57flRma1bs8zkwToijIxcB4GNUmut8K4z
-         yiZnctnHNedVeuNb2D08c4J+blwz1Y2ogJGfdKS+P1K0I/cTsz0DSP7x1wfDiSx/RYRe
-         B/sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793925776; x=1794530576;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20260707; t=1793925781; x=1794530581; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=j3QnOqT1bd63wcrV6KvOAip3wCLe11FN2NBTadJaa9M=;
-        b=hEiQSginTxAWUlyD7x+XbQRrcSbhEbAgOzF7Tf2DZlxYLiSMCb2MZNbj/ACwF7hJHv
-         J1ypy8NVsQXOmyxwQj4LYMPTUo8bRUeMUqg9NJWyZt8zZ7uE7ah8MKMJyJP+g7beaeqf
-         bfbW72vXcz+z2d4nezZwwEoJODxhZ+oJOeURIoc/M+PBLHPcZhK3F/tNiY+itd4HIkNy
-         HDhgb8QGEwIJAHOwkfAGTFSgiocaeSk5i88+6VeI4f94T96YI7kKmtlNqK9H3vVP1Xk3
-         D3XNLD7prIrn/j3KMz3Eq2Vo9NduzrV1HNDKxdEvBjvd3ie6FOWHRUjv1zJzJyhScIuC
-         vElw==
-X-Gm-Message-State: APuU4Z+F6V7ZSHvN0L/LYiPN2nO0V2vccKnYAyjwlXFnkXvBNqd2rAzB
-	T4w0OY+OLUFC5sew5jo+jvu44kyYL4+o2SppevE4stepXBE2MrtJ9CvpTVvC8793Ntb990CxqTU
-	NcIQA4HPlLr4l+69Zu5It0jI6IkewI/k+Zq1/qX2LrSrj3qSH+ZW1qabA++7vDMbuUNOQxWZl45
-	/2AUE3hwL3HOrixCpc2NbWJvPFr3m1K2X4+zTn93p7s/VAcDQuD80=
-X-Received: from ilmt14.prod.google.com ([2002:a05:6e02:10e:b0:50d:9814:cccb])
+        bh=7sjq9VdN6W+I9NBwFH2LvF9xugKaVKfSc0OTWV+x1HY=;
+        b=SixgKgx0CrOteK/OIpMXGz1RdhHycpEY+/elKPIl1onjGl3QpF8dz6mHQ+EMqxBsdu
+         /OpmPMxuaeEe0orBEthTiSvAoFUkqEcgTwic5IQFKxHrR0FEoR1PRY4OVJVYodvuRIY/
+         hZM7G1Y5l2SxFCL+IKlUA7qUrAlj1Da4AQdwrC9DreQEtrouHSQljqu9yxSjyIMM1Gdl
+         YF6s44VoX10guFFnstJWhnZEBDSGePbuJr3+LB1cTMw8J8arxk2eU3xnErpWpMQ54osp
+         cqc5p58mQVMufYFt90AeNeBxqxiO8bhY592V8Hkk0lWB5oI00xeyN3mQa5RCky4GulHz
+         QgwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793925781; x=1794530581;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=7sjq9VdN6W+I9NBwFH2LvF9xugKaVKfSc0OTWV+x1HY=;
+        b=lmog/huN/YaNFc5vPhzpJrm2hwmJQALsFEPnBWJ47rwgoc261JJJVkEBkkRTrE5ogv
+         FvmJqPfCykrdt5fR1DQuzSOSfR4AoCCH31AVu71r7qyXynsB/F5NdxS2WkHlnOba8TR4
+         69sJcBqAxQdUq7tI79EzdDSObCXdz0WN5zNXqSGPGlHYQVMC5O9eX/ChYV+Q05NrkiTU
+         +0hfEtaI9iU2abTrFN+1xAy7MHt2okx0jwCC6IDN1SPZzMsgatsvqbcbwO5G6oOuly1+
+         IJtB49R4LUbNtOw4bNixqMDdva+sYZlY+Nyy/+OE/0SMaRUIZ8JqNN4IFTcz4cs9LpeR
+         RFoQ==
+X-Gm-Message-State: APuU4Z+2qqw/Aj93b74vQpKRYNP8HyxX1C8Cm8IxAb6zMqPntjJaCaNG
+	ISy07TcY1BTIW/YYAxk+vK1po6/AGWvHotq3IgV4igcqJ2igcRuuyAw0cLUG/e5mfQEZ3NIOZ8M
+	F+AaRfN9R9xHLot7+uGplVUYmpRnMSNFRiEDdSdJGPrqRsqYMsJgc0FSsXBxmmo+O1/IrBymHQA
+	4kNs+4Af4BQGUMbxB/sKqIuexKXRV5fxh/AuIBJzR0/jxnOp2bZSo=
+X-Received: from jaan3-n1.prod.google.com ([2002:a05:6638:aac3:10b0:61c:f758:dde6])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6808:3a0d:b0:540:5827:6d8a with SMTP id 5614622812f47-567e185afd4mr616724b6e.66.1793925776141;
- Thu, 05 Nov 2026 16:42:56 -0800 (PST)
-Date: Fri,  6 Nov 2026 00:42:01 +0000
+ 2002:a05:6808:6f92:b0:55c:6ea:3e3f with SMTP id 5614622812f47-567e1038164mr750724b6e.28.1793925780223;
+ Thu, 05 Nov 2026 16:43:00 -0800 (PST)
+Date: Fri,  6 Nov 2026 00:42:04 +0000
+In-Reply-To: <20261106004218.604799-1-dmatlack@google.com>
 X-Archived-By: <archiver.kernel.org>
 Mime-Version: 1.0
+References: <20261106004218.604799-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.56.0.455.g6c5a503b38-goog
-Message-ID: <20261106004218.604799-1-dmatlack@google.com>
-Subject: [PATCH v2 00/17] PCI: Index saved capability state by configuration
+Message-ID: <20261106004218.604799-4-dmatlack@google.com>
+Subject: [PATCH v2 03/17] PCI: Lay out struct pci_saved_state by configuration
  space offset
 From: David Matlack <dmatlack@google.com>
 To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
@@ -83,8 +86,8 @@ Cc: Alexander Graf <graf@amazon.com>, Alex Williamson <alex@shazbot.org>,
 	Vipin Sharma <vipinsh@google.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261105_164258_197013_D1BB07CF 
-X-CRM114-Status: GOOD (  32.73  )
+X-CRM114-CacheID: sfid-20261105_164302_465878_3C852765 
+X-CRM114-Status: GOOD (  26.88  )
 X-Spam-Score: -9.5 (---------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -98,257 +101,239 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-26.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-This series can be found on GitHub:
+Store a device's saved state as a bitmap of the configuration space DWORDs
+that were saved plus their values, instead of a copy of the configuration
+space header followed by a list of pci_cap_saved_data records.
 
-  https://github.com/dmatlack/linux/tree/liveupdate/pci/savedstate/v2
+The old layout is described entirely by the kernel: which capabilities have
+a record, how large each record is, and what each word within a record
+means are all properties of the code that happens to be saving them. That
+ties the blob to the kernel that produced it, so VFIO cannot carry a
+device's saved state across a Live Update. The new layout is
+described by the device: a value's position is the offset of its
+register in the device's own configuration space.
 
-This series replaces the per-capability save buffers with a single
-per-device store indexed by configuration space offset, lays out struct
-pci_saved_state the same way, and adds helpers for drivers to preserve
-struct pci_saved_state across a Live Update.
+Keep refusing state that the device has nowhere to put in
+pci_load_saved_state(), the equivalent of the old check that the
+capability existed and its record was the expected size. Use
+pci_saved_cap_reserved() for the check, since state saved from another
+device or kernel can legitimately name an offset that this device did
+not reserve.
 
-The main motivation here is Live Update. VFIO snapshots a device's state
-with pci_store_saved_state() when the device is first opened and
-restores it with pci_load_and_free_saved_state() when it is last closed.
-A Live Update can happen in between, so VFIO needs to pass this state to
-the next kernel.
+No capability uses the store yet, and the patches that follow move them
+into it one at a time, so keep appending the records of the capabilities
+that still have their own buffer after the saved DWORDs. The blob
+therefore continues to describe all of a device's saved state at every
+step; a later patch drops the records once there are none left.
 
-This is not safe today because the layout of struct pci_saved_state is
-defined by the kernel that produced it: which capabilities get a record,
-how large each record is, and what each word in it means.  Nothing ties
-a saved value back to the register it came from, so preserving it as is
-would turn the private layout of every capability save buffer into Live
-Update ABI [1]. Indexing saved values by configuration space offset
-makes the layout a property of the hardware rather than of the kernel
-version, so it can be preserved as a bitmap of saved DWORDs plus their
-values, and the next kernel can decide per register what to restore.
+struct pci_saved_state is opaque to everything outside drivers/pci, so no
+caller needs to change.
 
-[1] https://lore.kernel.org/linux-pci/aukvTvnfyAvahb51@google.com/
+Signed-off-by: David Matlack <dmatlack@google.com>
+---
+ drivers/pci/pci.c        | 89 +++++++++++++++++++++++++++++++++++-----
+ drivers/pci/pci.h        |  4 ++
+ drivers/pci/saved-caps.c | 14 +++++++
+ 3 files changed, 96 insertions(+), 11 deletions(-)
 
-The same change also makes saving and restoring capabilities simpler
-and more robust:
-
-  - Capability save buffers were allocated at ten sites (plus one
-    hand-built by a quirk) across three phases of a device's life, and
-    four of them (AER, DPC, PTM, TPH) ignored allocation failure, so the
-    capability silently went unsaved (patch 1 fixes DPC). Now each
-    device has exactly one allocation, and its failure is reported.
-
-  - Each capability's save and restore routines had to walk the same
-    registers in the same order through a buffer cursor, and code
-    elsewhere had to know which slot held which register. Now saving is
-    a single pass over a bitmap of reserved registers, each restore
-    routine names its registers by offset, and the common logic lives
-    in one small helper library (drivers/pci/saved-caps.c).
-
-Patches 1-16 are roughly net-neutral in size. Outside of the new helper
-library (half of which is comments), this series removes about 250
-lines from the PCI core.
-
-Series Overview
----------------
-
-This series implements the following:
-
-  1. Allocate the DPC save buffer during device setup instead of when
-     the portdrv DPC service binds, so that every capability is set up
-     in the same phase, and a reset before the service binds no longer
-     loses the DPC Control register (patch 1).
-
-  2. Add the per-device store. Capabilities reserve registers by offset
-     during device setup, and the values are allocated in one array once
-     every capability has been initialized (patch 2).
-
-  3. Lay out struct pci_saved_state as a bitmap of saved DWORDs plus
-     their values (patch 3).
-
-  4. Convert PCIe, PCI-X, LTR, L1SS, AER, PTM, TPH, DPC, ACS and VC to
-     the store, one capability at a time (patches 4-14).
-
-  5. Replace the per-capability save functions with a single pass over
-     the reservation bitmap (patch 15).
-
-  6. Remove struct pci_cap_saved_state and the code that managed it
-     (patch 16).
-
-  7. Add helpers that preserve a struct pci_saved_state in KHO memory
-     for the next kernel, which callers reference by its physical
-     address (patch 17).
-
-Design Notes
-------------
-
-  - The store only covers capability registers. The configuration space
-    header is still saved in pci_dev.saved_config_space.
-
-  - Registers are saved a DWORD at a time, since configuration space
-    reads have no side effects, but restored at their own width, since a
-    neighbouring register in the same DWORD may be RW1C (e.g.
-    PCI_EXP_DEVCTL and PCI_EXP_DEVSTA).
-
-  - struct pci_saved_state describes a device's complete saved state at
-    every commit, so a bisect landing in the middle of the series does
-    not silently lose state in pci_load_saved_state().
-
-  - PCIe capability registers are now saved with raw DWORD reads instead
-    of pcie_capability_read_word(), which returns 0 for registers the
-    device does not implement. Restore still goes through
-    pcie_capability_write_word(), which skips them.
-
-  - The reservation bitmap is embedded in struct pci_dev so that
-    reserving cannot fail. This grows struct pci_dev by 136 bytes on
-    x86_64 (2448 to 2584), which stays in the same kmalloc-4k bucket.
-    Removing the per-capability allocations, each with a 24-byte header,
-    saves 32 to 160 bytes of slab per device. The blob from
-    pci_store_saved_state() grows (e.g. from 192 to 256 bytes for a
-    typical endpoint), since it now carries a 128-byte bitmap.
-
-  - Along the way, quirk_intel_qat_vf_cap() no longer builds a PCIe save
-    buffer by hand, and pci_load_saved_state() no longer performs
-    potentially unaligned 32-bit reads of packed records.
-
-Merge Plan
-----------
-
-This series applies on top of v10 of the PCI core support for Live
-Update series [2], which is targeting Linux 7.5. This series is
-targeting Linux 7.5 as well.
-
-Both series will be merged through liveupdate.git, matching the
-agreed-upon tree in the MAINTAINERS entry for PCI LIVE UPDATE.
-
-[2] https://lore.kernel.org/linux-pci/20261013162529.1928093-1-dmatlack@google.com/
-
-Testing
--------
-
-All patches were build-tested individually. The series was tested
-using the VFIO selftests, which reset devices many times and so exercise
-the PCI core's save and restore paths. The tests were run in a QEMU VM
-using an emulated igb device, and on bare metal using an Intel DSA
-device on an Intel server.
-
-To check that the series does not change what gets restored, every PCI
-config write made by the kernel with and without this series was traced
-in QEMU (pci_cfg_write trace event) while performing FLR, PM and VF
-resets, runtime suspend/resume under vfio-pci, and the VFIO selftests on
-an igb device below a PCIe Root Port, and while resetting a PCIe switch
-Downstream Port. The writes to all of these devices were identical. Of
-the capabilities this series touches, that setup covers PCIe and AER.
-
-The series was also build-tested on x86_64, i386, arm64 and ppc64le,
-with gcc and clang at W=1, with sparse, with CONFIG_PCI_LIVEUPDATE
-enabled and disabled, and with each of CONFIG_PCIEAER, CONFIG_PCIE_DPC,
-CONFIG_PCIE_PTM, CONFIG_PCIEASPM and CONFIG_PCI_IOV disabled.
-
-The helpers in patch 17 were tested across a Live Update selftests (not
-yet posted), extended so that the test driver preserves each device's
-struct pci_saved_state along with the device. On x86_64 and arm64 in
-QEMU, for every tested topology, the next kernel got back the state that
-was preserved, dropped a saved DWORD that it does not reserve, and
-restoring the state wrote back a register that had been changed before
-the Live Update. The full set of patches used for testing can be found
-on GitHub:
-
-  https://github.com/dmatlack/linux/tree/liveupdate/pci/savedstate/v2-test
-
-Future Work
------------
-
-The next version of the VFIO PCI Live Update series will use the new
-helpers to preserve the state that VFIO captures with
-pci_store_saved_state(), in place of [PATCH v6 05/27] [3]. Please see
-the PCI core Live Update Roadmap for the rest of the planned work:
-
-  https://lore.kernel.org/linux-pci/20261001232133.560284-1-dmatlack@google.com/
-
-[3] https://lore.kernel.org/linux-pci/20261102153656.1431701-6-vipinsh@google.com/
-
-Separately, the one remaining saved state allocation could be made fatal
-to device setup. pci_device_add() returns void today, so a device whose
-saved state could not be allocated is still added.
-
-AI Assistance
--------------
-
-This series was developed with the help of an LLM-based coding
-assistant, which was used to draft code and commit messages and to
-review the series. I reviewed every change and take full responsibility
-for all of it.
-
-Changelog
----------
-
-v2:
- - Rebase onto v10 of the PCI core support for Live Update series, and
-   target liveupdate.git.
- - Add patch 12 to convert the ACS save buffer added by the PCI core
-   support for Live Update series to the store.
- - Add patch 17 with helpers to preserve struct pci_saved_state across
-   Live Update, replacing [PATCH v6 05/27] of the VFIO PCI Live Update
-   series [3] (Vipin, Bjorn).
- - Drop the Assisted-by tags, which upstream no longer asks for, and
-   describe the use of AI tools in the cover letter instead.
- - Add pci_saved_cap_shift() so the code reading and writing 16-bit
-   saved registers shares one shift calculation (Josh).
- - Move the rename of pci_allocate_cap_save_buffers() to
-   pci_reserve_saved_caps() from patch 16 to patch 14, where it stops
-   allocating, and mention ACS and VC in the comment at its call site
-   (Josh).
- - Fix inaccuracies in the commit messages of patches 2, 7 and 15
-   (Josh).
-
-v1: https://lore.kernel.org/linux-pci/20260924173501.856380-1-dmatlack@google.com/
-
-
-David Matlack (17):
-  PCI/DPC: Allocate the DPC save buffer during device setup
-  PCI: Add an offset-indexed store for saved capability registers
-  PCI: Lay out struct pci_saved_state by configuration space offset
-  PCI: Save PCIe state in the saved capability store
-  PCI: Save PCI-X state in the saved capability store
-  PCI/ASPM: Save LTR state in the saved capability store
-  PCI/ASPM: Save L1SS state in the saved capability store
-  PCI/AER: Save AER state in the saved capability store
-  PCI/PTM: Save PTM state in the saved capability store
-  PCI/TPH: Save TPH state in the saved capability store
-  PCI/DPC: Save DPC state in the saved capability store
-  PCI: Save ACS state in the saved capability store
-  PCI/VC: Split the VC Resource Control restore into a helper
-  PCI/VC: Save VC state in the saved capability store
-  PCI: Save reserved capability registers in a single pass
-  PCI: Remove the per-capability save buffers
-  PCI: liveupdate: Add helpers to preserve struct pci_saved_state
-
- Documentation/PCI/liveupdate.rst |   3 +
- drivers/pci/Makefile             |   3 +-
- drivers/pci/liveupdate.c         | 133 ++++++++++-
- drivers/pci/pci.c                | 383 +++++++++++--------------------
- drivers/pci/pci.h                |  59 ++---
- drivers/pci/pcie/aer.c           |  80 +++----
- drivers/pci/pcie/aspm.c          | 111 ++++-----
- drivers/pci/pcie/dpc.c           |  41 ++--
- drivers/pci/pcie/ptm.c           |  42 ++--
- drivers/pci/probe.c              |   9 +-
- drivers/pci/quirks.c             |  30 +--
- drivers/pci/saved-caps.c         | 308 +++++++++++++++++++++++++
- drivers/pci/tph.c                |  68 ++----
- drivers/pci/vc.c                 | 272 +++++++++++-----------
- include/linux/kho/abi/pci.h      |  32 +++
- include/linux/pci.h              |  31 ++-
- include/linux/pci_liveupdate.h   |  23 ++
- 17 files changed, 959 insertions(+), 669 deletions(-)
- create mode 100644 drivers/pci/saved-caps.c
-
-
-base-commit: 312200e9211ede3f9a03cc17d094805e06e4674e
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e5b960ca26e6..007f9bb289d5 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -2032,11 +2032,40 @@ void pci_restore_state(struct pci_dev *dev)
+ }
+ EXPORT_SYMBOL(pci_restore_state);
+ 
++/**
++ * struct pci_saved_state - a device's saved configuration space
++ * @dword_map: one bit per DWORD of configuration space, set if that DWORD
++ *	       was saved
++ * @dword_val: saved values, in ascending configuration space offset order
++ *
++ * Laid out so that the position of every value is described by the device's
++ * configuration space rather than by the kernel.
++ *
++ * Capabilities that have not moved to the saved capability store yet keep
++ * their own buffer, and their records trail @dword_val until the last of
++ * those buffers goes away. Both areas vary in length and only one of them
++ * can be a flexible array member, so the records are reached with
++ * pci_saved_state_records() rather than declared here.
++ */
+ struct pci_saved_state {
+-	u32 config_space[16];
+-	struct pci_cap_saved_data cap[];
++	unsigned long	dword_map[BITS_TO_LONGS(PCI_CFG_SPACE_EXP_DWORDS)];
++	u32		dword_val[];
++	/* struct pci_cap_saved_data cap[] follows dword_val */
+ };
+ 
++/*
++ * The records that follow the saved DWORDs, one per capability that still has
++ * its own save buffer, terminated by an empty record.
++ */
++static struct pci_cap_saved_data *
++pci_saved_state_records(struct pci_saved_state *state)
++{
++	unsigned int nr_dwords = bitmap_weight(state->dword_map,
++					       PCI_CFG_SPACE_EXP_DWORDS);
++
++	return (struct pci_cap_saved_data *)&state->dword_val[nr_dwords];
++}
++
+ /**
+  * pci_store_saved_state - Allocate and return an opaque struct containing
+  *			   the device saved state.
+@@ -2046,16 +2075,28 @@ struct pci_saved_state {
+  */
+ struct pci_saved_state *pci_store_saved_state(struct pci_dev *dev)
+ {
+-	struct pci_saved_state *state;
++	DECLARE_BITMAP(map, PCI_CFG_SPACE_EXP_DWORDS);
++	struct pci_saved_caps *caps = &dev->saved_caps;
+ 	struct pci_cap_saved_state *tmp;
+ 	struct pci_cap_saved_data *cap;
++	struct pci_saved_state *state;
++	unsigned int dword, nr_dwords, i = 0;
+ 	size_t size;
+ 
+ 	if (!dev->state_saved)
+ 		return NULL;
+ 
+-	size = sizeof(*state) + sizeof(struct pci_cap_saved_data);
++	bitmap_zero(map, PCI_CFG_SPACE_EXP_DWORDS);
++	bitmap_set(map, 0, PCI_STD_HEADER_DWORDS);
++	if (caps->dword_val)
++		bitmap_or(map, map, caps->dword_map, PCI_CFG_SPACE_EXP_DWORDS);
++
++	nr_dwords = bitmap_weight(map, PCI_CFG_SPACE_EXP_DWORDS);
++
++	size = struct_size(state, dword_val, nr_dwords);
+ 
++	/* Room for the buffers that are left, and for the terminator */
++	size += sizeof(struct pci_cap_saved_data);
+ 	hlist_for_each_entry(tmp, &dev->saved_cap_space, next)
+ 		size += sizeof(struct pci_cap_saved_data) + tmp->cap.size;
+ 
+@@ -2063,16 +2104,25 @@ struct pci_saved_state *pci_store_saved_state(struct pci_dev *dev)
+ 	if (!state)
+ 		return NULL;
+ 
+-	memcpy(state->config_space, dev->saved_config_space,
+-	       sizeof(state->config_space));
++	bitmap_copy(state->dword_map, map, PCI_CFG_SPACE_EXP_DWORDS);
+ 
+-	cap = state->cap;
++	for_each_set_bit(dword, state->dword_map, PCI_CFG_SPACE_EXP_DWORDS) {
++		u32 *val = &state->dword_val[i++];
++
++		if (dword < PCI_STD_HEADER_DWORDS)
++			*val = dev->saved_config_space[dword];
++		else
++			pci_read_saved_cap_dword(dev, dword * sizeof(u32), val);
++	}
++
++	cap = pci_saved_state_records(state);
+ 	hlist_for_each_entry(tmp, &dev->saved_cap_space, next) {
+ 		size_t len = sizeof(struct pci_cap_saved_data) + tmp->cap.size;
++
+ 		memcpy(cap, &tmp->cap, len);
+ 		cap = (struct pci_cap_saved_data *)((u8 *)cap + len);
+ 	}
+-	/* Empty cap_save terminates list */
++	/* Empty record terminates the list */
+ 
+ 	return state;
+ }
+@@ -2087,16 +2137,33 @@ int pci_load_saved_state(struct pci_dev *dev,
+ 			 struct pci_saved_state *state)
+ {
+ 	struct pci_cap_saved_data *cap;
++	unsigned int dword, i = 0;
+ 
+ 	dev->state_saved = false;
+ 
+ 	if (!state)
+ 		return 0;
+ 
+-	memcpy(dev->saved_config_space, state->config_space,
+-	       sizeof(state->config_space));
++	for_each_set_bit(dword, state->dword_map, PCI_CFG_SPACE_EXP_DWORDS) {
++		unsigned int off = dword * sizeof(u32);
++		u32 val = state->dword_val[i++];
++
++		if (dword < PCI_STD_HEADER_DWORDS) {
++			dev->saved_config_space[dword] = val;
++			continue;
++		}
++
++		/*
++		 * Refuse state that the device has nowhere to put, e.g.
++		 * because it was saved from a different device.
++		 */
++		if (!pci_saved_cap_reserved(dev, off))
++			return -EINVAL;
++
++		pci_write_saved_cap_dword(dev, off, val);
++	}
+ 
+-	cap = state->cap;
++	cap = pci_saved_state_records(state);
+ 	while (cap->size) {
+ 		struct pci_cap_saved_state *tmp;
+ 
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 6676177706ba..206e0d04e06e 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -258,6 +258,9 @@ struct pci_cap_saved_state *pci_find_saved_cap(struct pci_dev *dev, char cap);
+ struct pci_cap_saved_state *pci_find_saved_ext_cap(struct pci_dev *dev,
+ 						   u16 cap);
+ 
++/* DWORDs of the configuration space header, i.e. pci_dev.saved_config_space */
++#define PCI_STD_HEADER_DWORDS	(PCI_STD_HEADER_SIZEOF / sizeof(u32))
++
+ void pci_saved_caps_finalize(struct pci_dev *dev);
+ void pci_saved_caps_release(struct pci_dev *dev);
+ int pci_reserve_saved_cap(struct pci_dev *dev, unsigned int off, unsigned int len);
+@@ -269,6 +272,7 @@ void pci_restore_cap_dword(struct pci_dev *dev, unsigned int off);
+ bool pci_read_saved_cap_word(struct pci_dev *dev, unsigned int off, u16 *val);
+ bool pci_read_saved_cap_dword(struct pci_dev *dev, unsigned int off, u32 *val);
+ void pci_write_saved_cap_word(struct pci_dev *dev, unsigned int off, u16 val);
++void pci_write_saved_cap_dword(struct pci_dev *dev, unsigned int off, u32 val);
+ 
+ #define PCI_PM_D2_DELAY         200	/* usec; see PCIe r4.0, sec 5.9.1 */
+ #define PCI_PM_D3HOT_WAIT       10	/* msec */
+diff --git a/drivers/pci/saved-caps.c b/drivers/pci/saved-caps.c
+index 92865891514e..4647ce59ce74 100644
+--- a/drivers/pci/saved-caps.c
++++ b/drivers/pci/saved-caps.c
+@@ -211,6 +211,20 @@ void pci_write_saved_cap_word(struct pci_dev *dev, unsigned int off, u16 val)
+ 	*slot |= (u32)val << shift;
+ }
+ 
++/**
++ * pci_write_saved_cap_dword - change the saved value of a 32-bit register
++ * @dev: the PCI device
++ * @off: offset of the register in configuration space
++ * @val: value to save
++ */
++void pci_write_saved_cap_dword(struct pci_dev *dev, unsigned int off, u32 val)
++{
++	u32 *slot = pci_saved_cap_slot(dev, off);
++
++	if (slot)
++		*slot = val;
++}
++
+ /**
+  * pci_restore_cap_dword - restore a 32-bit capability register
+  * @dev: the PCI device
 -- 
 2.56.0.455.g6c5a503b38-goog
 
