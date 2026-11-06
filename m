@@ -2,79 +2,123 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6E3606A31C
-	for <kexec@archiver.kernel.org>; Sun,  8 Nov 2026 08:26:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6D3606A31C
+	for <kexec@archiver.kernel.org>; Sun,  8 Nov 2026 09:34:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=s1CWeH1J;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Oq7mXUay
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=48nSoE61;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=c5Gq5RgZ
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=p4OcSAvcvQKsjkU4ru+MvGNBWR2vHDxkyHmPg+JgZAI=; b=s1CWeH1JIPzOdE
-	IuW0W05Knlc4E35HJ5wN6J7AZ2TSpvOAYq3BWoRdc/rLrfJOTxbIAzzIZau2Bv0i1/jffl9QEDmzU
-	09nH405xIg0VuJME8AjLBrytqL8CgzXNEomYJBB5/Tnqr9Eko8PssGjA7yT6eFGCwypW3JTYfLnoT
-	3gazMUpDcGOipl8q+f12ZbQQKRqN5DKnlQfCYCN5rhAAxWpSklDKi2pNEf4Mip8b4uogNyIv05r+D
-	5GXRQTjff66e1gHvzDw1Uhhx+9GC79y8Qi7S5xSlkT3ydHTfS3u9st5AIFTkLSmlZeJxiMeBhGtBT
-	flF7GAO6qS+xJelu2tFQ==;
+	List-Owner; bh=26mdlMVJY/cCagL9S9DgkIy3gT2A9gcY1ogtAJRX8+o=; b=48nSoE61pMOYqo
+	TQ3f81W15qVvjlA9ekIsyVz4SCKd8We0/5eqfoKxLTgN5qqNNfIY1Yysg4VsIzZ8VE2DQQFvKlJLC
+	qMy7GwsaXFA48m07f2yU20eUaitKwpNb/f0rnFIXZVFRKB62+w0S+LV34e13JTDXf7stjjkJtWuNy
+	+BtsIZ8jZMmcH9gIaWW94SldDZzbhx9qXClBl04WL2CRnxIYb3U+TNenDtmjmQnkM4EOicrU1kxz1
+	vmeaC0fzXU7YquFSJbacbIqjQMIh4Kmm0voEmiZwPe3Hkc01QVklEPa6ONfNp0uGvG7W5HoEhrtaR
+	YGMJGdb7VebxsaF9YITg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xPyEr-0000000FqXA-1fiu;
-	Sun, 08 Nov 2026 08:26:57 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xPzIQ-0000000FueH-45j5;
+	Sun, 08 Nov 2026 09:34:43 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xPyEp-0000000FqX4-3zGv
+	id 1xPzIN-0000000Fudp-48Ur
 	for kexec@lists.infradead.org;
-	Sun, 08 Nov 2026 08:26:55 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 53CEF44879
-	for <kexec@lists.infradead.org>; Sun,  8 Nov 2026 08:26:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 364471F008BF
-	for <kexec@lists.infradead.org>; Sun,  8 Nov 2026 08:26:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794126415;
-	bh=p4OcSAvcvQKsjkU4ru+MvGNBWR2vHDxkyHmPg+JgZAI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=Oq7mXUayhQTDePVUjrfThAEG1V7e8Y9jHk7AEkIGpjTfkJ74OuNKPp2JUR7gO6tjO
-	 gK8sjs0oIZYhKDO6UAQr8qwL/YVbv56dLKzgtpDd7Ua8fA1u/US0Lt6Z7nqH5rpA4e
-	 /IbdbI//jYesPChnrmZ3wF53SnhaOo9IpQJRu/gjg2BgoiNbccUOk2BlPXeSHLr2bJ
-	 W+AKvkmtSnFlVXENHlF79lpkVV5/tb9l3kXutdiZPrBwEESDq5a9oN/zvlNORF7AkL
-	 cVdyb9kv+rjJRYxLzhIkLE1kUTtu2vZibPxBIDsg25TnlJwIVxiE8uI0sMGN6rYzyO
-	 hqnXX48hdsztA==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6b571979178so286284a12.2
-        for <kexec@lists.infradead.org>; Sun, 08 Nov 2026 00:26:55 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AL+hErF1niTHovVI6zChdbnwWsdbWRRWTyPcSvvSKHttdHneQ5nd8yMOfLu2tf/t5R+Wl58rl2/5Og==@lists.infradead.org
-X-Gm-Message-State: APuU4Z+fQGLEpnNJ9Ya4VJGSEFwsiDDUhSMrnfNYfHem/tYITxSeODid
-	zQ9LmM102MwGeegznPMcN+6aGW+G/ttsxVzUdpuzH8CPSGpjk4icftPGxiYZDmJ4csxcV+Hyv6R
-	XmHtEUMK1jhhB4JEMcu7mytQbJE/DNN0=
-X-Received: by 2002:a05:6402:1ecc:b0:6b7:1c:eaf2 with SMTP id
- 4fb4d7f45d1cf-6b7224041dfmr591123a12.7.1794126413758; Sun, 08 Nov 2026
- 00:26:53 -0800 (PST)
+	Sun, 08 Nov 2026 09:34:41 +0000
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6A87iX853944789;
+	Sun, 8 Nov 2026 09:34:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=26mdlM
+	VJY/cCagL9S9DgkIy3gT2A9gcY1ogtAJRX8+o=; b=c5Gq5RgZxdtde19j+ldiu7
+	qUPj8Hcyz+4M/yKrvg4PSJwws9J/Sz28XFeTebERCG9SHk2g4tI3Fxdi2w3ubouF
+	Zlh/xnP4JG/GTS/Hj+4wr2f7njVxD0+hayPcpCMrfRg+2AOzSss1XTBMUbevaMPZ
+	9X3f12T+L/RWxcEi1OR3Rc5WnfnsV8VKeYwbUYXkd5IHSoHBl6xO5U3sLRfhvYnC
+	Xb78b5ZZ2EHyT6uAZ7P4L+bDd0fPBFi1FqBAy4Y40+hMFP2TcrQ7+ruYOlMyZHNo
+	WRmop5LsNDWbwfrAJd5LtrQp/sVSEsos8A4+kqpYPorUmciQej8a5riq9jfDhUuw
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4hsumue2um-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Sun, 08 Nov 2026 09:34:11 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6A87ns221117441;
+	Sun, 8 Nov 2026 09:34:10 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4htghfs6mu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 08 Nov 2026 09:34:10 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6A89Y8R455181806
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 8 Nov 2026 09:34:09 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9078F25C83;
+	Sun,  8 Nov 2026 09:33:34 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E3CDD24EA1;
+	Fri,  6 Nov 2026 08:59:13 +0000 (GMT)
+Received: from [9.43.97.220] (unknown [9.43.97.220])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  6 Nov 2026 08:59:12 +0000 (GMT)
+Message-ID: <b361a5d7-d107-4fbd-a08f-1c89d71e3886@linux.ibm.com>
+Date: Fri, 6 Nov 2026 14:29:11 +0530
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-References: <20261029172956.20791-1-dongtai.guo@linux.dev> <20261029172956.20791-6-dongtai.guo@linux.dev>
- <aux9Hm0QFJLUDPWv@kernel.org> <CAAhV-H7Dsnz03iXChzE6nYM2cs+D6fdDFiWrDxX5jM13kYL6HA@mail.gmail.com>
- <auypq8_7T-vml5_B@kernel.org> <CAAhV-H6aO_QNEzV-r6+FbNa=9EUQgv1vH0ET-ETXAH5x6oQGjA@mail.gmail.com>
- <avAvdiYY7SJ_Gfwt@kernel.org>
-In-Reply-To: <avAvdiYY7SJ_Gfwt@kernel.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 8 Nov 2026 16:26:41 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5q2SiDJC+ZSA4F7kw2vO=Y+c5J-aNg=PNMoh_CZ7qWdg@mail.gmail.com>
-X-Gm-Features: AclHuK9UKAm9d_ZAky8YF1Z-Jn3w5G8u3fB621EiI1G-bSq5xcRQq5mtls0NIdA
-Message-ID: <CAAhV-H5q2SiDJC+ZSA4F7kw2vO=Y+c5J-aNg=PNMoh_CZ7qWdg@mail.gmail.com>
-Subject: Re: [PATCH v6 5/8] LoongArch: Allow memblock arrays to resize
-To: Mike Rapoport <rppt@kernel.org>
-Cc: George Guo <dongtai.guo@linux.dev>, pasha.tatashin@soleen.com, pratyush@kernel.org, 
-	ardb@kernel.org, shuah@kernel.org, ilias.apalodimas@linaro.org, 
-	akpm@linux-foundation.org, baoquan.he@linux.dev, ruirui.yang@linux.dev, 
-	guodongtai@kylinos.cn, kernel@xen0n.name, graf@amazon.com, 
-	liukexin@kylinos.cn, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, linux-efi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] powerpc/crash: Add only the onlined CPU's node to the
+ crash FDT
+To: Vishal Chourasia <vishalc@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        x86@kernel.org
+Cc: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+        chleroy@kernel.org, sshegde@linux.ibm.com, tglx@kernel.org,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        akpm@linux-foundation.org, baoquan.he@linux.dev, rppt@kernel.org,
+        pasha.tatashin@soleen.com, pratyush@kernel.org, ruirui.yang@linux.dev,
+        seanjc@google.com, sourabhjain@linux.ibm.com
+References: <20261104053848.1381005-1-vishalc@linux.ibm.com>
+Content-Language: en-US
+From: samir <samir@linux.ibm.com>
+In-Reply-To: <20261104053848.1381005-1-vishalc@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTA4MDAzNiBTYWx0ZWRfXx7pUdwHhJFGz
+ yCTjm5dI5XqXlRiYqUY/9zcvBG16CagNbNgfUlOt3H8iDhVBPHe8mTcvex7NOhUDJ6In1nQG886
+ vMelCwX268psW3gI2gStrmWfShcpt50=
+X-Authority-Analysis: v=2.4 cv=GISdgeNK c=1 sm=1 tr=0 ts=6af04214 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8
+ a=WK97a0cl3x871QaWk5EA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: gGX8h1OsfJFICuAbGlI8T9wEWLmMFXFU
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTA4MDAzNiBTYWx0ZWRfXzlg6L82NvpKt
+ 5EDxA821838PbQ/WML3iKPSslEaxlJuJegrrmXyRbqyUs3Niyt+woF4cmDjLSOzDL1Ejor2pNi8
+ fhrwD+W7OdQdDIYb42n70K+pe/UhiTMMcgGziiHE2QcshyVkUjgn4Lqel6OKWt5L8RI+VKWj5b5
+ oLsApvVHeY851pPP3H+lLl3Ls5OM1IKgiWm/d19U0YfUMImbwri0b99SoRFaU2BIuhBK/66sZJa
+ PtedTTvJ7t24lraI9mfweW6OrXDs0ThKWtJVbykQxC3Rhd2GnTeyWNLYRMIFDWeLH99oXGpdhk7
+ e2MdIBrNnuXoGakDNtAcALjavGjRvARrR5a6pQ4RnrxVPuEJ/VKuFHgQmhO6R3E6zyndtAVZojH
+ uxfybuIAq9GnUEEkk5Dd267aD9UySuTNjxBIdhpFlPWM4C1c+t9+gGyGyQZwKMESWsrewgtDF8h
+ a2jPZYvFYxYPXM77tzg==
+X-Proofpoint-ORIG-GUID: DAss56jNuKtoIAlVmp3D2uTiX8ErBuW8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-11-08_03,2026-11-06_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 bulkscore=0 impostorscore=0 clxscore=1011 adultscore=0
+ priorityscore=1501 phishscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2611040001 definitions=main-2611080036
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261108_013440_175884_CE30ABFC 
+X-CRM114-Status: GOOD (  46.63  )
+X-Spam-Score: -2.6 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,79 +129,256 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-15.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Sun, Nov 8, 2026 at 4:14=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wrot=
-e:
->
-> On Fri, Nov 06, 2026 at 10:35:01PM +0800, Huacai Chen wrote:
-> > On Fri, Nov 6, 2026 at 12:07=E2=80=AFAM Mike Rapoport <rppt@kernel.org>=
- wrote:
-> > >
-> > > On Thu, Nov 05, 2026 at 11:07:01PM +0800, Huacai Chen wrote:
-> > > > Hi, Mike,
-> > > >
-> > > > On Thu, Nov 5, 2026 at 8:57=E2=80=AFPM Mike Rapoport <rppt@kernel.o=
-rg> wrote:
-> > > > >
-> > > > > On Fri, Oct 30, 2026 at 02:29:52AM +0900, George Guo wrote:
-> > > > > > From: George Guo <guodongtai@kylinos.cn>
-> > > > > >
-> > > > > > LoongArch never calls memblock_allow_resize(), so the reserved =
-region
-> > > > > > array cannot grow beyond INIT_MEMBLOCK_RESERVED_REGIONS entries
-> > > > > > (INIT_MEMBLOCK_REGIONS + NR_CPUS).
-> > > > >
-> > > > > This might be something to fix independent of KHO.
-> > > > >
-> > > > > Huacai,
-> > > > >
-> > > > > What's the reason LoongArch never enables memblock resizing and w=
-hy it
-> > > > > defines INIT_MEMBLOCK_RESERVED_REGIONS to include NR_CPUS?
-> > > > At first we didn't define INIT_MEMBLOCK_RESERVED_REGIONS, then we g=
-ot
-> > > > boot failures on a 128-cores machine, so define it, and the value i=
-s
-> > > > similar to arm64.
-> > >
-> > > AFAIR, arm64 had to reserve some per cpu data before they could enabl=
-e
-> > > memblock resizing, so they had to make it static.
-> > LoongArch is similar, so below 64-cores machine has no problem.
-> >
-> > >
-> > > > The reason LoongArch never enables memblock resizing is because the=
- mm
-> > > > code is derived from MIPS, and MIPS never enables it.
-> > >
-> > > If that's the only reason, you might want to revisit that :)
-> > Yes, it seems we need memblock_allow_resize(), but maybe it is better
-> > to bring back paging_init()? Most other archs call
-> > memblock_allow_resize() in paging_init().
->
-> paging_init() is a historical relict that hugely misnamed everywhere :)
->
-> I think platform_init() should be fine.
-If paging_init() is unnecessary, then arch_mem_init() is better than
-platform_init(), at least the name is better.
+Hi All,
 
-Huacai
+On 04/11/26 11:08 am, Vishal Chourasia wrote:
+> A CPU coming online never changes the nodes that are already in the FDT,
+> so add only the node of that CPU. update_crash_fdt() looks up the device
+> node of the onlined CPU and does nothing if the FDT already has a node of
+> that name, which is the case when an offlined CPU comes back online. Only
+> when the node is missing, the crash image is invalidated while the node is
+> created with fdt_add_subnode() and its properties are copied from the live
+> device node with fdt_setprop(). All of this is done directly in
+> update_crash_fdt().
+>
+> fdt_add_subnode() inserts the node as the first child of /cpus, which is
+> the same position a node attached to the live device tree takes, so the
+> FDT keeps the order of the live tree.
+>
+> Signed-off-by: Vishal Chourasia <vishalc@linux.ibm.com>
+> ---
+>   arch/powerpc/kexec/crash.c | 65 +++++++++++++++++++++++++++++++-------
+>   arch/x86/kernel/crash.c    |  2 +-
+>   kernel/crash_core.c        | 11 +++++--
+>   3 files changed, 64 insertions(+), 14 deletions(-)
+>
+> diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
+> index 775895f31037..ca37006bddea 100644
+> --- a/arch/powerpc/kexec/crash.c
+> +++ b/arch/powerpc/kexec/crash.c
+> @@ -18,6 +18,7 @@
+>   #include <linux/types.h>
+>   #include <linux/libfdt.h>
+>   #include <linux/memory.h>
+> +#include <linux/of.h>
+>   
+>   #include <asm/processor.h>
+>   #include <asm/machdep.h>
+> @@ -584,32 +585,71 @@ static int get_fdt_index(struct kimage *image)
+>   }
+>   
+>   /**
+> - * update_crash_fdt - updates the cpus node of the crash FDT.
+> + * update_crash_fdt - add the node of the onlined CPU to the crash FDT.
+>    *
+>    * @image: a pointer to kexec_crash_image
+> + * @cpu: the CPU that was onlined
+> + *
+> + * The node is added as the first child of /cpus, the same position a node
+> + * attached to the live device tree takes. Nothing is done if the FDT already
+> + * has the node, for example when an offlined CPU comes back.
+>    */
+> -static void update_crash_fdt(struct kimage *image)
+> +static void update_crash_fdt(struct kimage *image, unsigned int cpu)
+>   {
+> +	struct device_node *dn;
+> +	struct property *pp;
+>   	void *fdt;
+> -	int fdt_index;
+> +	int fdt_index, cpus_offset, node_offset;
+> +
+> +	dn = of_get_cpu_node(cpu, NULL);
+> +	if (!dn) {
+> +		pr_err("No device node found for CPU %u\n", cpu);
+> +		return;
+> +	}
+>   
+>   	fdt_index = get_fdt_index(image);
+>   	if (fdt_index < 0) {
+>   		pr_err("Unable to locate FDT segment.\n");
+> -		return;
+> +		goto put;
+>   	}
+>   
+>   	fdt = __va((void *)image->segment[fdt_index].mem);
+>   
+> -	/* Temporarily invalidate the crash image while it is replaced */
+> +	cpus_offset = fdt_path_offset(fdt, "/cpus");
+> +	if (cpus_offset < 0) {
+> +		pr_err("Malformed device tree: error reading /cpus node: %s\n",
+> +		       fdt_strerror(cpus_offset));
+> +		goto put;
+> +	}
+> +
+> +	/* Node already present, e.g. an offlined CPU came back online */
+> +	if (fdt_subnode_offset(fdt, cpus_offset, dn->full_name) >= 0)
+> +		goto put;
+> +
+> +	/* Temporarily invalidate the crash image while it is updated */
+>   	xchg(&kexec_crash_image, NULL);
+>   
+> -	/* update FDT to reflect changes in CPU resources */
+> -	if (update_cpus_node(fdt))
+> -		pr_err("Failed to update crash FDT");
+> +	node_offset = fdt_add_subnode(fdt, cpus_offset, dn->full_name);
+> +	if (node_offset < 0) {
+> +		pr_err("Unable to add %s subnode: %s\n", dn->full_name,
+> +		       fdt_strerror(node_offset));
+> +		goto out;
+> +	}
+>   
+> +	for_each_property_of_node(dn, pp) {
+> +		int ret = fdt_setprop(fdt, node_offset, pp->name, pp->value, pp->length);
+> +
+> +		if (ret < 0) {
+> +			pr_err("Unable to add %s property: %s\n", pp->name,
+> +			       fdt_strerror(ret));
+> +			break;
+> +		}
+> +	}
+> +out:
+>   	/* The crash image is now valid once again */
+>   	xchg(&kexec_crash_image, image);
+> +put:
+> +	of_node_put(dn);
+>   }
+>   
+>   int arch_crash_hotplug_support(struct kimage *image, unsigned long kexec_flags)
+> @@ -625,10 +665,11 @@ int arch_crash_hotplug_support(struct kimage *image, unsigned long kexec_flags)
+>    * arch_crash_handle_hotplug_event - Handle crash CPU/Memory hotplug events to update the
+>    *				     necessary kexec segments based on the hotplug event.
+>    * @image: a pointer to kexec_crash_image
+> - * @arg: struct memory_notify handler for memory hotplug case and NULL for CPU hotplug case.
+> + * @arg: struct memory_notify handler for memory hotplug case and pointer to the
+> + *	 cpu number for CPU hotplug case.
+>    *
+>    * Update the kdump image based on the type of hotplug event, represented by image->hp_action.
+> - * CPU add: Update the FDT segment to include the newly added CPU.
+> + * CPU add: Add the node of the newly added CPU to the FDT segment, if missing.
+>    * CPU remove: No action is needed, with the assumption that it's okay to have offline CPUs
+>    *	       part of the FDT.
+>    * Memory add/remove: No action is taken as this is not yet supported.
+> @@ -636,13 +677,15 @@ int arch_crash_hotplug_support(struct kimage *image, unsigned long kexec_flags)
+>   void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
+>   {
+>   	struct memory_notify *mn;
+> +	unsigned int cpu;
+>   
+>   	switch (image->hp_action) {
+>   	case KEXEC_CRASH_HP_REMOVE_CPU:
+>   		return;
+>   
+>   	case KEXEC_CRASH_HP_ADD_CPU:
+> -		update_crash_fdt(image);
+> +		cpu = *(unsigned int *)arg;
+> +		update_crash_fdt(image, cpu);
+>   		break;
+>   
+>   	case KEXEC_CRASH_HP_REMOVE_MEMORY:
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index e6f23933a6df..1660f26f3a44 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -441,7 +441,7 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
+>    * arch_crash_handle_hotplug_event() - Handle hotplug elfcorehdr changes
+>    * @image: a pointer to kexec_crash_image
+>    * @arg: struct memory_notify handler for memory hotplug case and
+> - *       NULL for CPU hotplug case.
+> + *       pointer to the cpu number (unused here) for CPU hotplug case.
+>    *
+>    * Prepare the new elfcorehdr and replace the existing elfcorehdr.
+>    */
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index d0bd2d0cf899..53d4f2c1760c 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -651,6 +651,9 @@ int crash_check_hotplug_support(void)
+>    * NR_CPUS and CRASH_MAX_MEMORY_RANGES. The elfcorehdr is
+>    * excluded from SHA verification by default if the architecture
+>    * supports crash hotplug.
+> + *
+> + * @arg is a struct memory_notify pointer for memory hotplug events and a
+> + * pointer to the unsigned int cpu number for CPU hotplug events.
+>    */
+>   static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu, void *arg)
+>   {
+> @@ -676,10 +679,14 @@ static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu,
+>   		goto out;
+>   
+>   	if (hp_action == KEXEC_CRASH_HP_ADD_CPU ||
+> -		hp_action == KEXEC_CRASH_HP_REMOVE_CPU)
+> +		hp_action == KEXEC_CRASH_HP_REMOVE_CPU) {
+>   		pr_debug("hp_action %u, cpu %u\n", hp_action, cpu);
+> -	else
+> +		/* CPU events are raised with no argument, the CPU number is passed instead */
+> +		WARN_ON(arg);
+> +		arg = &cpu;
+> +	} else {
+>   		pr_debug("hp_action %u\n", hp_action);
+> +	}
+>   
+>   	/*
+>   	 * The elfcorehdr_index is set to -1 when the struct kimage
 
->
-> As far as I can tell, by the time platform_init() calls init_numa_memory(=
-),
-> all memory reservations that must happen before any memblock allocations
-> are done.
->
-> > Huacai
->
-> --
-> Sincerely yours,
-> Mike.
+I tested the patch with the following configuration and performed 
+performance and functional validation
+
+Test Configuration:
+-------------------
+System         : PowerPC LPAR
+LPAR Mode      : Dedicated
+CPU/Memory     : 50 cores / 80 GB
+Kernel Version : 7.4.0-rc1
+
+Case 1: SMT Switching Performance
+---------------------------------
+We measured SMT ON/OFF times with and without the patches, with
+expedited RCU enabled via /sys/kernel/rcu_expedited and the crash
+kernel image loaded (kexec_crash_loaded verified).
+
+SMT Mode | Without Patch (s) | With Patch (s) | Improvement (%)
+----------------------------------------------------------------
+SMT ON   |      66.331       |      6.155     |  90.72% faster
+SMT OFF  |       6.402       |      6.339     |   0.98% faster
+
+Observation:
+With the crash kernel loaded, SMT ON takes significantly longer
+without the patches. The patches reduce SMT ON time by 90.72%,
+while SMT OFF performance remains nearly unchanged.
+
+Case 2: Functional Validation
+-----------------------------
+
+Test 1: Crash Dump Collection
+-----------------------------
+After performing CPU DLPAR with the crash kernel enabled, we
+triggered a crash on CPU 3 using:
+
+echo 1 > /proc/sys/kernel/sysrq
+taskset -c 3 bash -c "echo c > /proc/sysrq-trigger"
+
+Result: PASS - The crash kernel successfully collected the vmcore.
+
+Test 2: CPU/NUMA Node Verification
+----------------------------------
+Verified that the newly added CPUs after DLPAR were correctly
+reflected in NUMA node 5, including the updated CPU count and
+adjusted logical CPU numbering.
+
+Result: PASS
+
+Overall, the patch significantly improve SMT ON performance,
+and both functional validation tests passed.
+
+
+Regards,
+Samir
 
