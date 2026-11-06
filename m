@@ -2,108 +2,119 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A22F606D822
-	for <kexec@archiver.kernel.org>; Fri,  6 Nov 2026 00:43:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C6C606A33F
+	for <kexec@archiver.kernel.org>; Fri,  6 Nov 2026 00:47:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=gupvcgso;
-	dkim=fail reason="signature verification failed" (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=Mx0tMBBq;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=dwtX3U+M
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=lrB84jTO;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=WpEplBVu
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Unsubscribe-Post:List-Owner;
-	bh=kkvlpSHI6oVXBaKs0yGdR4zokFApEJwfw+eXrMywXPI=; b=gupvcgsopED+viNi8UfUWUUhrv
-	1sXS7zZOogfrsJFWUjmSl0y9bQYFev5PfHR25sfF570ESt7B5VqiFZS8exq78Fp4jJAZq1av8/Wf0
-	ic2nZzXsnCMzFs7kRvg9OAdh2TizUZUeB+/i2R1Nb6s0JgdOdJ4LYMRMVa2GIws3euJY2KVuWS6yJ
-	hAAjc92OyiLxDYmf2kU3c4DhqoWgmUp3rDkesrdq4Yl9+IfKEFpPvr/ZAnNoXyTnMS5iUFHswG5iz
-	tv+IPfKSJ9URgrkH9yJlt29Z/McW++YdaCVmml05+hTGw1lCNdTiwurSGYnqouDrpKUqrLxAITQEm
-	1hIywyfA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=Q/Pn/3oT6XlOFb2SsTcDdo2UH2iFiBAGJC3TZJWHkxg=; b=lrB84jTOLzjjm3
+	nhnCF9ekkFjxv5Mb1LVlmD4TcFKW4YBMNbANZz1bVcP/+yAD5lql1Gsb+Q0nDCCPS1+3CoZD55yoy
+	EwGjnJl8EqqaovYtXaGBlxnPaZibv4aQ7oRqI5qd7hqluKGo/rMtG73cVV+B4EYFwCPVpY6QZUGM+
+	zzTbarwVgdvvX4UckcrrxpT76QhR6uatW+bMFOKsVW3Q1onUVbpRQsUuHjBDkA92znjawzvrmKx18
+	dA1fYX2nXoO6uewso/JfmgfQHqH/Wj2AaEhsd8K3zN0nfPHiZd+gtQDIl54KQdonhWmBmr7hChG7u
+	X+KqL2WB5Lt+AXHPHvHA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP83D-0000000AwBs-02De;
-	Fri, 06 Nov 2026 00:43:27 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1xP877-0000000Awaa-2MRU;
+	Fri, 06 Nov 2026 00:47:29 +0000
+Received: from mail-ej1-x62f.google.com ([2a00:1450:4864:20::62f])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP83A-0000000Aw8O-3lOU
-	for kexec@bombadil.infradead.org;
-	Fri, 06 Nov 2026 00:43:25 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Type:Cc:To:From:Subject:
-	Message-ID:References:Mime-Version:In-Reply-To:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=kkvlpSHI6oVXBaKs0yGdR4zokFApEJwfw+eXrMywXPI=; b=Mx0tMBBqBhZjE4PWh6AzX6H5oU
-	ZtbdTtBo+VidTanLsCWjkLsPNQp/0mexJGONByefI74oRfSMft2SfKL+mU+5auDW1qloSL7CBaeqs
-	M6vIQogMvJASWbf4PC+R/QHRMkjU+xf4SRAII0OWDeFBWSw4gVtkFbXNUBCKbla0Edu/vvrkRjpXY
-	2thU6K2SxJuNaNruEF3fEIhsX0T5MD4Jj6AY7h2f0ZbUpkxqec4BMiginZztNDEqQrsazCc7BY5pU
-	JhCn75chrQ20TvdUs/vPpR4D/okq1rQdZ9/uky/TKGtxCjyNcMrGrOq/oFEqD8Nq69Y8n6VPIP1zB
-	rzcNtkug==;
-Received: from mail-oi1-x246.google.com ([2607:f8b0:4864:20::246])
-	by desiato.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xP837-00000003hbo-2oR0
+	id 1xP875-0000000Awa7-1Jsd
 	for kexec@lists.infradead.org;
-	Fri, 06 Nov 2026 00:43:23 +0000
-Received: by mail-oi1-x246.google.com with SMTP id 5614622812f47-4a7de733fa9so84515b6e.3
-        for <kexec@lists.infradead.org>; Thu, 05 Nov 2026 16:43:19 -0800 (PST)
+	Fri, 06 Nov 2026 00:47:28 +0000
+Received: by mail-ej1-x62f.google.com with SMTP id a640c23a62f3a-c4550d8ab15so12259566b.2
+        for <kexec@lists.infradead.org>; Thu, 05 Nov 2026 16:47:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1793926045; cv=none;
+        d=google.com; s=arc-20260327;
+        b=TgnVTeakV0UtRs0nFuQvFYo3vOoCsfBKqKpNVoufVWgetbKiWZt0dVCwmKiZaXKtEm
+         Bzj3wIJ+NM2T6fdufPtvtbXFkW77i8rBPmaMvIWXf4NbammRM9VRlxuz0ioCZ/lalgz1
+         xXoJDy41kQ1l7713BHkXX5hrvD8VyTBO9bA5I8C/6Qe3lYFTgWrpEyErQi6+5CP350mK
+         UfqUlacBqMb+XH8fSAOo8LNHX77k6/Kfe+lrn8+jFmBn6/JpeIP9uEVZn7RD6Rdf+7CN
+         xwiDSrpEss1SNacvpGayHZa3oefIVBtMwQk9LhKRrOnoLaRKORqe9YZyjd5Drz0ss5AX
+         SMBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Q/Pn/3oT6XlOFb2SsTcDdo2UH2iFiBAGJC3TZJWHkxg=;
+        fh=jAeegDHH2Y/plIB50mNA8JUFMbxUlL6MbxIBK9hSRnQ=;
+        b=LuEz9qCbg+WVgzmnvwitUZY2otYCeVJyk+00r+2SiEUYn2UDyb/6sVBmiG7MFPxHwD
+         ssDjvwv0Mxt7koXsGtnP1KEMZ8avHOE3C2yWuYrZYBTXRDWP/scFiX80LaFdt9Rmzi28
+         YkvBi3wEmVHLrkDGgzOZ7QIfPbLwDavljCY0EynhmKKNYxNFSOyS2AoXdERVYv2Bp4HZ
+         nwD3c9ySLUSy/dRQff90uI6WzzUk0/z+DhZR4jrKhdkkGdOzPCJAC7sADrU8LUfMjXPY
+         s3+Ah4Q9vR57gdPRbaynUHFjNECxVY25EXO0p4bwYOQW9eAgyWA3imtjv07X9GlnXve4
+         hdDw==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793925798; x=1794530598; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=kkvlpSHI6oVXBaKs0yGdR4zokFApEJwfw+eXrMywXPI=;
-        b=dwtX3U+M2Hgdv8Xb5eWmeAJq1V97LrN9QBzj0AIntZa8k80Vzych+qhHxyhceeUndv
-         0Q4zotp6WRYmyXZ9HWyP9+rn4k3YNfGCdULM+VnxAS1DO4K1dBcahzD/ftPtWmigfmt/
-         XouHmzNUUStOdUSyBOeeAmTuXlqD01tad5hGQ3gersP50c6kS8J/QHtZ27dfwRn+Q/j0
-         KgjX+umUurQ74Z1ZFvj9vvvRBTqzstc6fSP9/ICS4+mtY6wsp8Ze0ZjB4RnDGG7KV/xc
-         ZoL+127kYEWBDIEv0I6GJDpdn+d5tmvR/CaH8DeY6k23BSPdGLkuCVa+cukZTp8Mqn1d
-         1TxA==
+        d=google.com; s=20260707; t=1793926045; x=1794530845; darn=lists.infradead.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Q/Pn/3oT6XlOFb2SsTcDdo2UH2iFiBAGJC3TZJWHkxg=;
+        b=WpEplBVuVKW0R3knYmsewK6dMzkLoO5lJu5kjIKYBhT7hjihzY8+E040gUruuT5LeY
+         b1Z2SfDMnVKkx3hI2z4rvpvnZWvm/LvCSUuLs3lcRVyzk0nAy+mx1grv4yFTLshy3YBT
+         HCvAVthlrmKVHEWCorInXFLffPjuait4UsEDNsXeGx2xuWWbdKaj6qf72EZwmcNCQYRO
+         2HRCyeuB3leyN8iKJ9K4dRzz2GtwLV1F/CDBm0dQJVxmqaITKXcnOz5JrTz0QXCLIqui
+         qDWPn9+H1xyuq0LhO/W6JpPqmIFu4lzwxoYs9GuIiDYYt0LPrADCF4yz+XtVeWuVHltV
+         w3eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793925798; x=1794530598;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=kkvlpSHI6oVXBaKs0yGdR4zokFApEJwfw+eXrMywXPI=;
-        b=g+gSZAsgjeZ9gjdPSddEJmfuwes09MBtvxwr6DRLvxF0h227orvx1glct2s7Z1f2+V
-         QY58QIMZ7aBumIEiWrbrme7/G8HKRkjUamt3gT/JWe9JYZPOAUi6QzHTeREnTuTRY9Il
-         n7tGjplXDfnG1LlVZL467xRYC/6Se+PcbKHSdG6A7tG4Vom5ZseZyQhBtFCxmjLHcFmC
-         EOi5xgglK+PWrkp1H3Lyu1jsGdnNvIOZAxkjj/5vMLGrBjBvd052YlyUiDkUt2gdacWl
-         yIE6bh5ED4oBEuY7x1V25pdWSR2Iy0kl2aY24FSXDGiH1mxHHa/5RAkIKaUETRoFCJlc
-         zJeA==
-X-Gm-Message-State: APuU4Z8rm2Dj8eiVKV3517mBJVg6F7iX5w0ujsqkZ3uan5LuQkmvBEbH
-	LYwOB485DPg/TZm1q6g7eN58ub3VRAOQLjOLJ+UP+Y5M7qi0SKgM9X5rpjLPWt9TS2ksqcROjZN
-	pGTMdbPQfYUZp9b4LA1Yk6Ak0t7LIkWcjP7H7nEbSI4yfwYCvE6RmbNAU6PyeQEKM4sgkvkLjUl
-	AiCYxfV9MHGmg4+faSW+85983ErGVuo5+82UGIJ9aIUE524V6Y74M=
-X-Received: from jasv5.prod.google.com ([2002:a05:6638:12c5:b0:615:c1f0:a936])
- (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6808:1914:b0:500:5e36:3a9d with SMTP id 5614622812f47-567e106112amr663076b6e.30.1793925797580;
- Thu, 05 Nov 2026 16:43:17 -0800 (PST)
-Date: Fri,  6 Nov 2026 00:42:18 +0000
-In-Reply-To: <20261106004218.604799-1-dmatlack@google.com>
+        d=1e100.net; s=20260707; t=1793926045; x=1794530845;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Q/Pn/3oT6XlOFb2SsTcDdo2UH2iFiBAGJC3TZJWHkxg=;
+        b=A7YtDilRPq//4jLgn2e20J6qJLf1hNrdGlNR5HeBCcdi06scPCFJHPGLiDcC7rZWTs
+         hmvBoQQVcgy/fTc8L8XKd636Fd7vSuU6iI5cF/+QQviroSgrI0oFtNoIzYlGNvHG1/Yd
+         HrPzUbmNYqcRVr2zUhjWxf9zIDbKY2t236V5/pUJzYjKfNTnIBRV05jRxUfYGXfm3Ynr
+         kCyJiAriv1MuBjw1pjWq7yr1jvs6uNSOWdIVzGSxo/qI2us3oXbgtApfjUKsYIIp06Lt
+         OkM5aBn2mBID1X+S3l8H5UuNUHrmcCPIZJuZg8vFvfdOqPTeVi6V+48+yoP0AhzymZUX
+         rWWA==
+X-Gm-Message-State: APuU4Z98mo2B69et8J5oc/KZncJx5euUSGO2z33Kx/v2j6YXgzXh55pZ
+	TK8j90mAma37OmABHK55lmfs5ytdtF8dKPh4ywo/OOS4bsPyYMEhirQ9vryN6clCF28ltMNKIHL
+	A6r1k0+Qbu0bmTnIkgU3s+NyvJwHvz/JwBXl7ppMNB3/7ZkjvJfzpVmWB/SQ=
+X-Gm-Gg: AYBFou3Zf1l3YUF+1KNypk4QU2nU6kW64JM5XLPLkPxIPwb5s2ATEHOeZx4ntsCRXcR
+	uBBsCp54UmBe3toGxr1mC3s82h8HVhTjcAeZcnvcsWGMoujuzRG37XBNvl/u5VWCBBQK8g334hy
+	b1LtSIryrZTZV5WvA2fhNAEuAc1jwr1ojdmzy5xlU1ZGh0W+yTjSpztsr6+XKjVqTWx7Xsz7I2h
+	bXJQL5UYDGEiLD96wtlNsTxTb/pHhzos7I9vMfbihMvvjGmppl4kJycsglAYShXpFzfDw4PB0dl
+	GeKH9fPD+/fJyBFozPx3PBeCPBjbrgPbuJHKexBrw9gzHI4agkHwCW2vKomN7M6hH03Z59VJuNP
+	p3ez5nSof6iVWe22JSgLPE5+Asxol6Bjgo6ZZpw==
+X-Received: by 2002:a17:907:8687:b0:c48:a838:c16d with SMTP id
+ a640c23a62f3a-c4d34c333bdmr88685166b.30.1793926044754; Thu, 05 Nov 2026
+ 16:47:24 -0800 (PST)
 X-Archived-By: <archiver.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 References: <20261106004218.604799-1-dmatlack@google.com>
-X-Mailer: git-send-email 2.56.0.455.g6c5a503b38-goog
-Message-ID: <20261106004218.604799-18-dmatlack@google.com>
-Subject: [PATCH v2 17/17] PCI: liveupdate: Add helpers to preserve struct pci_saved_state
+In-Reply-To: <20261106004218.604799-1-dmatlack@google.com>
 From: David Matlack <dmatlack@google.com>
+Date: Thu, 5 Nov 2026 16:46:58 -0800
+X-Gm-Features: AclHuK-6t-LHK5FESHi0261vrVlL_qd-J_ZV2n6hQwmFkPQFVA0JTaSgUA12BTs
+Message-ID: <CALzav=dOnBUdYKN8ucD8tMF_5RuQZOzYG2aW=K9Grd5itgvnMw@mail.gmail.com>
+Subject: Re: [PATCH v2 00/17] PCI: Index saved capability state by
+ configuration space offset
 To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, 
 	linuxppc-dev@lists.ozlabs.org
 Cc: Alexander Graf <graf@amazon.com>, Alex Williamson <alex@shazbot.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, David Matlack <dmatlack@google.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, 
-	Lukas Wunner <lukas@wunner.de>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Mike Rapoport <rppt@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Josh Hilke <jrhilke@google.com>, Lukas Wunner <lukas@wunner.de>, 
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Mike Rapoport <rppt@kernel.org>, 
 	"Oliver O'Halloran" <oohall@gmail.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
 	Pratyush Yadav <pratyush@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
 	Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
 	Vipin Sharma <vipinsh@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261106_004322_027232_950ADEA7 
-X-CRM114-Status: GOOD (  34.87  )
-X-Spam-Score: -7.6 (-------)
+X-CRM114-CacheID: sfid-20261105_164727_373980_C7D9B2E8 
+X-CRM114-Status: GOOD (  11.04  )
+X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -114,337 +125,31 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-26.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Add pci_liveupdate_preserve_saved_state(), which copies a struct
-pci_saved_state into memory preserved with KHO and returns its physical
-address, and pci_liveupdate_retrieve_saved_state(), which rebuilds the
-struct pci_saved_state from that address in the next kernel and frees
-the preserved memory. Add pci_liveupdate_unpreserve_saved_state() to
-free the memory if the device ends up not being preserved. If
-pci_liveupdate_retrieve_saved_state() fails, it leaves the memory in
-place so that the caller can try again.
+On Thu, Nov 5, 2026 at 4:42=E2=80=AFPM David Matlack <dmatlack@google.com> =
+wrote:
 
-Drivers that keep a device running across Live Update need to hand the
-state they captured with pci_store_saved_state() to the next kernel,
-since by the time the next kernel boots the device is no longer in that
-state. VFIO, for example, captures it at first open and uses it to
-restore the device when the last user closes it. Callers record only
-the physical address in their own preserved state, so the layout of the
-saved state stays private to the PCI core.
+> Merge Plan
+> ----------
+>
+> This series applies on top of v10 of the PCI core support for Live
+> Update series [2], which is targeting Linux 7.5. This series is
+> targeting Linux 7.5 as well.
+>
+> Both series will be merged through liveupdate.git, matching the
+> agreed-upon tree in the MAINTAINERS entry for PCI LIVE UPDATE.
 
-Define the layout as struct pci_saved_state_ser in
-include/linux/kho/abi/pci.h: a bitmap with one bit per DWORD of
-configuration space, followed by the saved DWORDs in ascending offset
-order, mirroring struct pci_saved_state. Each value is identified only
-by its offset, so the format does not change when a kernel starts or
-stops saving a register.
-
-Drop saved capability registers that the next kernel does not reserve,
-since it would never restore them and pci_load_saved_state() would
-reject the whole state because of them. This lets the PCI core stop
-saving a register without breaking Live Update from older kernels. A
-register that the next kernel restores but the previous kernel did not
-save keeps its current saved value in the next kernel.
-
-Co-developed-by: Vipin Sharma <vipinsh@google.com>
-Signed-off-by: Vipin Sharma <vipinsh@google.com>
-Signed-off-by: David Matlack <dmatlack@google.com>
----
- Documentation/PCI/liveupdate.rst |   3 +
- drivers/pci/liveupdate.c         | 118 +++++++++++++++++++++++++++++++
- drivers/pci/pci.c                |  14 ----
- drivers/pci/pci.h                |  14 ++++
- include/linux/kho/abi/pci.h      |  32 +++++++++
- include/linux/pci_liveupdate.h   |  23 ++++++
- 6 files changed, 190 insertions(+), 14 deletions(-)
-
-diff --git a/Documentation/PCI/liveupdate.rst b/Documentation/PCI/liveupdate.rst
-index 96b1d7f5df3a..b6cd9621b3b3 100644
---- a/Documentation/PCI/liveupdate.rst
-+++ b/Documentation/PCI/liveupdate.rst
-@@ -25,6 +25,9 @@ Live Update ABI
- .. kernel-doc:: include/linux/kho/abi/pci.h
-    :doc: PCI File-Lifecycle Bound (FLB) Live Update ABI
- 
-+.. kernel-doc:: include/linux/kho/abi/pci.h
-+   :doc: PCI Saved State Live Update ABI
-+
- .. kernel-doc:: include/linux/kho/abi/pci.h
-    :internal:
- 
-diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-index 8334e6fdd3ec..c1f1b71e5959 100644
---- a/drivers/pci/liveupdate.c
-+++ b/drivers/pci/liveupdate.c
-@@ -1037,3 +1037,121 @@ void pci_liveupdate_unregister_flb(struct liveupdate_file_handler *fh)
- 	liveupdate_unregister_flb(fh, &pci_liveupdate_flb);
- }
- EXPORT_SYMBOL_GPL(pci_liveupdate_unregister_flb);
-+
-+static_assert(PCI_SAVED_STATE_SER_DWORDS == PCI_CFG_SPACE_EXP_DWORDS);
-+
-+/**
-+ * pci_liveupdate_preserve_saved_state() - Preserve a struct pci_saved_state
-+ * @state: Saved state returned by pci_store_saved_state().
-+ * @phys: Returns the physical address of the preserved state.
-+ *
-+ * Copy @state into memory preserved for the next kernel, laid out as struct
-+ * pci_saved_state_ser. The caller records @phys in its own preserved state and
-+ * passes it to pci_liveupdate_retrieve_saved_state() in the next kernel. If
-+ * the device ends up not being preserved, the caller must unpreserve the state
-+ * with pci_liveupdate_unpreserve_saved_state().
-+ *
-+ * Return: 0 on success, <0 on failure.
-+ */
-+int pci_liveupdate_preserve_saved_state(const struct pci_saved_state *state,
-+					u64 *phys)
-+{
-+	struct pci_saved_state_ser *ser;
-+	unsigned int nr_dwords;
-+
-+	if (!state)
-+		return -EINVAL;
-+
-+	nr_dwords = bitmap_weight(state->dword_map, PCI_CFG_SPACE_EXP_DWORDS);
-+
-+	ser = kho_alloc_preserve(struct_size(ser, dword_val, nr_dwords));
-+	if (IS_ERR(ser))
-+		return PTR_ERR(ser);
-+
-+	bitmap_to_arr64(ser->dword_map, state->dword_map,
-+			PCI_CFG_SPACE_EXP_DWORDS);
-+	memcpy(ser->dword_val, state->dword_val, nr_dwords * sizeof(u32));
-+
-+	*phys = virt_to_phys(ser);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(pci_liveupdate_preserve_saved_state);
-+
-+/**
-+ * pci_liveupdate_unpreserve_saved_state() - Unpreserve a struct pci_saved_state
-+ * @phys: Physical address returned by pci_liveupdate_preserve_saved_state().
-+ *
-+ * Unpreserve and free the state, e.g. because the device will not be
-+ * preserved after all.
-+ */
-+void pci_liveupdate_unpreserve_saved_state(u64 phys)
-+{
-+	kho_unpreserve_free(phys_to_virt(phys));
-+}
-+EXPORT_SYMBOL_GPL(pci_liveupdate_unpreserve_saved_state);
-+
-+/*
-+ * The configuration space header is always restored. Capability registers are
-+ * only restored if this kernel reserved room for them.
-+ */
-+static bool pci_saved_state_dword_restorable(struct pci_dev *dev,
-+					     unsigned int dword)
-+{
-+	return dword < PCI_STD_HEADER_DWORDS ||
-+	       pci_saved_cap_reserved(dev, dword * sizeof(u32));
-+}
-+
-+/**
-+ * pci_liveupdate_retrieve_saved_state() - Retrieve a struct pci_saved_state
-+ * @dev: The PCI device the state was saved from.
-+ * @phys: Physical address that the previous kernel's
-+ *        pci_liveupdate_preserve_saved_state() returned.
-+ *
-+ * Rebuild the struct pci_saved_state that the previous kernel preserved, for
-+ * use with pci_load_saved_state(), and free the preserved memory. If this
-+ * fails, the preserved memory is left in place so that the caller can try
-+ * again.
-+ *
-+ * The saved configuration space header is always kept. Saved capability
-+ * registers that this kernel does not restore for @dev are dropped.
-+ *
-+ * Return: The saved state, to be freed with kfree(), or an ERR_PTR() on
-+ * failure.
-+ */
-+struct pci_saved_state *
-+pci_liveupdate_retrieve_saved_state(struct pci_dev *dev, u64 phys)
-+{
-+	struct pci_saved_state_ser *ser = phys_to_virt(phys);
-+	DECLARE_BITMAP(map, PCI_CFG_SPACE_EXP_DWORDS);
-+	unsigned int dword, nr_dwords = 0, i = 0, j = 0;
-+	struct pci_saved_state *state;
-+
-+	bitmap_from_arr64(map, ser->dword_map, PCI_CFG_SPACE_EXP_DWORDS);
-+
-+	for_each_set_bit(dword, map, PCI_CFG_SPACE_EXP_DWORDS) {
-+		if (pci_saved_state_dword_restorable(dev, dword))
-+			nr_dwords++;
-+	}
-+
-+	state = kzalloc(struct_size(state, dword_val, nr_dwords), GFP_KERNEL);
-+	if (!state)
-+		return ERR_PTR(-ENOMEM);
-+
-+	for_each_set_bit(dword, map, PCI_CFG_SPACE_EXP_DWORDS) {
-+		u32 val = ser->dword_val[i++];
-+
-+		if (!pci_saved_state_dword_restorable(dev, dword))
-+			continue;
-+
-+		__set_bit(dword, state->dword_map);
-+		state->dword_val[j++] = val;
-+	}
-+
-+	if (i != j)
-+		pci_info(dev, "Dropped %u saved DWORDs this kernel does not restore\n",
-+			 i - j);
-+
-+	kho_restore_free(ser);
-+	return state;
-+}
-+EXPORT_SYMBOL_GPL(pci_liveupdate_retrieve_saved_state);
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index d2a9718b6a65..5b3c1fd6ba1e 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1987,20 +1987,6 @@ void pci_restore_state(struct pci_dev *dev)
- }
- EXPORT_SYMBOL(pci_restore_state);
- 
--/**
-- * struct pci_saved_state - a device's saved configuration space
-- * @dword_map: one bit per DWORD of configuration space, set if that DWORD
-- *	       was saved
-- * @dword_val: saved values, in ascending configuration space offset order
-- *
-- * Laid out so that the position of every value is described by the device's
-- * configuration space rather than by the kernel.
-- */
--struct pci_saved_state {
--	unsigned long	dword_map[BITS_TO_LONGS(PCI_CFG_SPACE_EXP_DWORDS)];
--	u32		dword_val[];
--};
--
- /**
-  * pci_store_saved_state - Allocate and return an opaque struct containing
-  *			   the device saved state.
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index bc92b037b9d1..623f70cb57c1 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -242,6 +242,20 @@ void pci_reserve_saved_caps(struct pci_dev *dev);
- /* DWORDs of the configuration space header, i.e. pci_dev.saved_config_space */
- #define PCI_STD_HEADER_DWORDS	(PCI_STD_HEADER_SIZEOF / sizeof(u32))
- 
-+/**
-+ * struct pci_saved_state - a device's saved configuration space
-+ * @dword_map: one bit per DWORD of configuration space, set if that DWORD
-+ *	       was saved
-+ * @dword_val: saved values, in ascending configuration space offset order
-+ *
-+ * Laid out so that the position of every value is described by the device's
-+ * configuration space rather than by the kernel.
-+ */
-+struct pci_saved_state {
-+	unsigned long	dword_map[BITS_TO_LONGS(PCI_CFG_SPACE_EXP_DWORDS)];
-+	u32		dword_val[];
-+};
-+
- void pci_saved_caps_finalize(struct pci_dev *dev);
- void pci_saved_caps_release(struct pci_dev *dev);
- int pci_reserve_saved_cap(struct pci_dev *dev, unsigned int off, unsigned int len);
-diff --git a/include/linux/kho/abi/pci.h b/include/linux/kho/abi/pci.h
-index c2e3a5949f73..ee37d7c84758 100644
---- a/include/linux/kho/abi/pci.h
-+++ b/include/linux/kho/abi/pci.h
-@@ -93,4 +93,36 @@ struct pci_ser {
- 	u64 devices;
- } __packed;
- 
-+/**
-+ * DOC: PCI Saved State Live Update ABI
-+ *
-+ * A driver that keeps a PCI device running across a Live Update can hand the
-+ * state it captured with pci_store_saved_state() to the next kernel. The PCI
-+ * core copies the state into memory preserved with KHO, laid out as struct
-+ * pci_saved_state_ser, and returns the physical address of that memory, which
-+ * the driver records in its own preserved state.
-+ *
-+ * Every saved value is identified only by the configuration space offset of
-+ * the register it was read from. The layout therefore does not depend on which
-+ * registers the kernel that saved them chose to save, and the next kernel can
-+ * drop values for registers it does not restore.
-+ */
-+
-+/* Number of DWORDs in a PCI Express configuration space (4 KiB). */
-+#define PCI_SAVED_STATE_SER_DWORDS 1024
-+
-+/**
-+ * struct pci_saved_state_ser - Serialized struct pci_saved_state
-+ *
-+ * @dword_map: One bit per DWORD of configuration space. Bit N, i.e. bit
-+ *             (N % 64) of @dword_map[N / 64], is set if the DWORD at
-+ *             configuration space offset N * 4 was saved.
-+ * @dword_val: The saved DWORDs, one per bit set in @dword_map, in ascending
-+ *             configuration space offset order.
-+ */
-+struct pci_saved_state_ser {
-+	u64 dword_map[PCI_SAVED_STATE_SER_DWORDS / 64];
-+	u32 dword_val[];
-+} __packed;
-+
- #endif /* _LINUX_KHO_ABI_PCI_H */
-diff --git a/include/linux/pci_liveupdate.h b/include/linux/pci_liveupdate.h
-index bb79348769b7..9fe260fde5ee 100644
---- a/include/linux/pci_liveupdate.h
-+++ b/include/linux/pci_liveupdate.h
-@@ -32,6 +32,7 @@ struct pci_liveupdate {
- };
- 
- struct pci_dev;
-+struct pci_saved_state;
- 
- #ifdef CONFIG_PCI_LIVEUPDATE
- int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh);
-@@ -40,6 +41,11 @@ int pci_liveupdate_preserve(struct pci_dev *dev);
- void pci_liveupdate_unpreserve(struct pci_dev *dev);
- void pci_liveupdate_finish(struct pci_dev *dev);
- bool pci_liveupdate_is_incoming(struct pci_dev *dev);
-+int pci_liveupdate_preserve_saved_state(const struct pci_saved_state *state,
-+					u64 *phys);
-+void pci_liveupdate_unpreserve_saved_state(u64 phys);
-+struct pci_saved_state *
-+pci_liveupdate_retrieve_saved_state(struct pci_dev *dev, u64 phys);
- #else
- static inline int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh)
- {
-@@ -67,6 +73,23 @@ static inline bool pci_liveupdate_is_incoming(struct pci_dev *dev)
- {
- 	return false;
- }
-+
-+static inline int
-+pci_liveupdate_preserve_saved_state(const struct pci_saved_state *state,
-+				    u64 *phys)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static inline void pci_liveupdate_unpreserve_saved_state(u64 phys)
-+{
-+}
-+
-+static inline struct pci_saved_state *
-+pci_liveupdate_retrieve_saved_state(struct pci_dev *dev, u64 phys)
-+{
-+	return ERR_PTR(-EOPNOTSUPP);
-+}
- #endif
- 
- #endif /* LINUX_PCI_LIVEUPDATE_H */
--- 
-2.56.0.455.g6c5a503b38-goog
-
+Apologies, an update I made here got lost. The PCI core support for
+Live Update is targeting 7.5, via liveupdate.git. _This_ series should
+probably target 7.6. I doubt we can get reviews in time for 7.5. And
+as for which tree, I am not sure. This series is mostly PCI core
+changes, so I lean towards merging through the PCI tree. Only the last
+commit touches drivers/pci/liveupdate.c.
 
