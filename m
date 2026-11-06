@@ -2,86 +2,81 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8685606A331
-	for <kexec@archiver.kernel.org>; Fri,  6 Nov 2026 16:52:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06FE8606A331
+	for <kexec@archiver.kernel.org>; Fri,  6 Nov 2026 16:52:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Zcc0JB4b;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=bPqw6NbJ
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2F4z/oqz;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cI45v+f0
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Ih+iDlrj3r7NL7Ai+FglogMaI8/aMZhKxMjTZ6H5+5U=; b=Zcc0JB4bIgg/b6q1287aFCtYbG
-	2ydVCu0k+6q+YCD6jG0f74gHif6aFKzN3kJjQFkBeSOf+xxyw49iFOXgvCL3eXvLlq7TiA3f7746I
-	NZ9AUdp++uUGkwzK/cplu6JPnN+c3DJ9EZ60gj+RhsWJh5isPhjlGygatx5Ko4er+Jh8VplpVO/sf
-	TRYK1AvRmekfWcpZw1Dly6+gZX9P4zGsTFfZycGU5g8DuPle/jxU3xRjsNQt3kHY9tOV1Lq1avwsV
-	BXcKAOUDCqP/EtHHdnTut+TD/5Kvdk/2glNjcrCJYN41nXbH7r6pj7jYQ4kvvyEL3kasztGoPTC5S
-	phF/3khA==;
+	bh=0GBqk7PwbRwMX6gNDukUKTzmIWqbadT93aqSV8DjoD8=; b=2F4z/oqzKwaHdJvANFESTdsHcg
+	HSC1dY1M4su3FTzIup+u0XaYmOhmhqN7LYiS3KHo1j4Sw9YCDNPjwiZ4bT+SjiyxhNribAF7KI2oC
+	UsFZm57/ZLV0IafZcTH155gcqVutssHleob4qUD+jtg3AaIohEm0OrS++iZ83f/nH4ltKMVSx+HpE
+	iaTTAz+tYus0QHcaoxJ0nDtb1mgiyiyYSZrAwADzr/9l8Q4UXACbGR1coYVwoGQ2cNbNb+lr7orT1
+	EDoaAI5AAN6S65P7MyOfjstBPdSVzV2NCBLmM+dffkW+5AkrhtKZbm4HFK8p4nnUhsovTMO6HhTwh
+	SMHVX37Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xPNAY-0000000D7Xr-1P1W;
-	Fri, 06 Nov 2026 16:52:02 +0000
-Received: from out-93.mta0.migadu.com ([2001:41d0:1004:224b::5d] helo=mta0.migadu.com)
+	id 1xPNAh-0000000D7bS-2DvU;
+	Fri, 06 Nov 2026 16:52:11 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xPNAU-0000000D7X1-3gZh
+	id 1xPNAg-0000000D7av-0zDv
 	for kexec@lists.infradead.org;
-	Fri, 06 Nov 2026 16:52:00 +0000
-X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=RV6/M9ghU95I4P0I347Vc9s9wi8pglint13ZRPe8DNI=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793983916; v=1; x=1794588716;
- b=bPqw6NbJ3HteiGer8MDq5/ZVAm+E4Ht5PGUjOLbQNpV9rJNWn48Uv7/2zePASEUgslkoAdnB
- qJeecuSKIwz7bmt54QcoQ3Vc0+0NebzQcpVMK52lKuG+x2YZFCjpO7M+HKqUBgP5C6sp1WpLr7c
- wRp0VQschG6Snuhs9iq0+kKA=
-X-Envelope-To: kexec@lists.infradead.org
-Received: by mta12.migadu.com with ESMTPS id 41e0a40f040e2912;
-	Fri, 06 Nov 2026 16:51:56 +0000
-X-Mizu-Trace-ID: 41e0a40f040e2912
-X-Migadu-Flow: FLOW_OUT
-From: Usama Arif <usama.arif@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	baoquan.he@linux.dev,
-	rppt@kernel.org,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	ruirui.yang@linux.dev,
-	corbet@lwn.net,
-	skhan@linuxfoundation.org,
-	rdunlap@infradead.org,
-	muchun.song@linux.dev,
-	osalvador@suse.de,
-	david@kernel.org,
-	jbohac@suse.cz,
-	sourabhjain@linux.ibm.com,
-	ruanjinjie@huawei.com,
-	leitao@debian.org,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-doc@vger.kernel.org,
-	linux-mm@kvack.org,
-	kas@kernel.org,
-	hannes@cmpxchg.org,
-	riel@surriel.com,
-	shakeel.butt@linux.dev,
-	zaslonko@linux.ibm.com,
-	brads@mainlining.org,
-	kernel-team@meta.com
-Cc: Usama Arif <usama.arif@linux.dev>
-Subject: [PATCH v2] mm/hugetlb: allow crashkernel to reuse hugetlb CMA memory
-Date: Fri,  6 Nov 2026 08:51:42 -0800
-Message-ID: <20261106165142.2847916-1-usama.arif@linux.dev>
-X-Mailer: git-send-email 2.53.0
+	Fri, 06 Nov 2026 16:52:10 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 9D3BE601E1;
+	Fri,  6 Nov 2026 16:52:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 277FA1F0089F;
+	Fri,  6 Nov 2026 16:52:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793983929;
+	bh=0GBqk7PwbRwMX6gNDukUKTzmIWqbadT93aqSV8DjoD8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To;
+	b=cI45v+f0/pFfW/l9cBYi43EbJkyQO7f/mRlHPxFPjN3dYFIkHL+RjATxJPYRa6ajw
+	 6OOWi0ZmB5+k3+rRQXc6efznIU+6X79NnQz+6W/mcE+bTjqyb+0ZnShshvuKfyJcxG
+	 dAAvvErMlYbFyn8UroFPD1lM3w+D2EfcOSb2zkBU+Ia6Cx/zuP1+IJGUfPSnU0dAhU
+	 UQsKYO0x4GOPFI3iUeIKnYKjuNzfsqCS7g7I5lYF8WvnHqIpyO0c+mfHtwMu/B0qrI
+	 0HKdchO50chebxILJOr91mBRgVfgm1+bgQobsPq0ZlW732g+zn40744dgTGis2/9aI
+	 ibQ/D58ASXeuA==
+Date: Fri, 6 Nov 2026 10:52:07 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: David Matlack <dmatlack@google.com>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Alexander Graf <graf@amazon.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
+	Josh Hilke <jrhilke@google.com>,
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pranjal Shrivastava <praan@google.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v10 01/13] PCI: liveupdate: Set up FLB handler for the
+ PCI core
+Message-ID: <20261106165207.GA1631699@bhelgaas>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261106_085159_201698_9C3AEFF0 
-X-CRM114-Status: GOOD (  27.77  )
-X-Spam-Score: -2.1 (--)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261013162529.1928093-2-dmatlack@google.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,511 +87,574 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-20.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=4.0.1
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-crashkernel=size,cma reserves a separate CMA pool. On systems that
-already reserve several gigabytes with hugetlb_cma= (which is common in
-the Meta fleet), the crash kernel cannot use that existing memory as
-part of its working set. With hugetlb_cma=6G, requesting another 2G
-with crashkernel=2G,cma brings the total CMA reservation to 8G, none of
-which can serve unmovable kernel allocations.
+On Tue, Oct 13, 2026 at 04:25:17PM +0000, David Matlack wrote:
+> Set up a File-Lifecycle-Bound (FLB) handler so that the PCI core can
+> preserve its own state across a Live Update kexec.
+> 
+> Preserving a PCI device across kexec requires preserving two independent
+> sets of state:
+> 
+>  - Driver state, e.g. everything vfio-pci needs so that userspace can
+>    keep using the device in the new kernel. The driver preserves this
+>    itself and the PCI core is not involved.
+> 
+>  - PCI core state, e.g. which devices are preserved, so that the new
+>    kernel knows not to disturb them while they are still running and
+>    doing DMA. That is what this commit adds, serialized into struct
+>    pci_ser.
+> 
+> Userspace, not the kernel, decides which devices are preserved, and it
+> does so through the Live Update Orchestrator's (LUO) support for file
+> preservation: a driver exposes a file that represents a single PCI
+> device, and userspace preserves that device with
+> ioctl(LIVEUPDATE_SESSION_PRESERVE_FD) on that file. Binding preservation
+> to a file gives it proper lifecycle management, e.g. the preservation is
+> undone if userspace cancels it or goes away. How a driver exposes that
+> file is up to the driver and invisible to the PCI core (vfio-pci variant
+> drivers, the first intended use-case, use their per-device cdev).
+> 
+> LUO only knows that a file was preserved; it does not know that it
+> represents a PCI device, or which one. Bridging that gap, drivers
+> register their liveupdate_file_handler with the PCI core:
+> 
+>   pci_liveupdate_register_flb(driver_file_handler);
+>   pci_liveupdate_unregister_flb(driver_file_handler);
+> 
+> LUO then keeps a reference count on the PCI core's FLB for the files
+> preserved by that handler, and that reference count drives the lifetime
+> of struct pci_ser:
+> 
+>  - On the first preserved file, luo_flb_file_preserve_one() calls
+>    pci_flb_preserve(), which allocates struct pci_ser and preserves it
+>    with KHO.
+> 
+>  - On the last unpreserved file (i.e. preservation cancelled),
+>    liveupdate_flb_put_outgoing() calls pci_flb_unpreserve(), which
+>    unpreserves and frees struct pci_ser.
+> 
+>  - In the next kernel, pci_flb_retrieve() hands the PCI core the struct
+>    pci_ser built by the previous kernel, whenever the PCI core asks for
+>    it (e.g. during enumeration), and pci_flb_finish() frees it once the
+>    PCI core is done with it.
+> 
+> So the flow for preserving a device, once a driver has registered, looks
+> like this:
+> 
+>   ioctl(LIVEUPDATE_SESSION_PRESERVE_FD)
+>     luo_session_preserve_fd()
+>       luo_preserve_file()
+>         luo_flb_file_preserve()
+>           luo_flb_file_preserve_one()  # only on the first preserved file
+>             pci_flb_preserve()         # alloc + KHO-preserve pci_ser
+>         fh->ops->preserve()            # driver callback, e.g. vfio-pci
+> 
+> Note that struct pci_ser is deliberately not allocated when a driver
+> calls pci_liveupdate_register_flb(). A driver can be loaded for the
+> lifetime of the machine without ever preserving a device, and there is
+> no reason to allocate memory and hand it to the next kernel in that
+> case. Letting LUO own the lifetime also means the PCI core does not have
+> to duplicate LUO's reference counting and unwind logic for preservation
+> failures, session aborts and fd close, and the incoming side
+> (retrieve/finish) comes from the same object rather than requiring a
+> separate KHO FDT entry owned by the PCI core.
+> 
+> struct pci_ser begins with required_flags and optional_flags, rather
+> than a version number, so that the ABI can be extended without breaking
+> compatibility between kernels. A kernel that sets a bit in
+> required_flags requires the next kernel to understand the corresponding
+> feature, while bits in optional_flags can be safely ignored. The size of
+> each struct pci_dev_ser is recorded in struct pci_ser as well, so that
+> new fields can be appended to it.
+> 
+> Note: This commit only allocates struct pci_ser and preserves it across
+> Live Update. A subsequent commit adds pci_liveupdate_preserve(), the API
+> drivers call from their fh->ops->preserve() callback to tell the PCI
+> core exactly which devices are being preserved.
+> 
+> Note: There is no reason to check for kho_is_enabled() since it can be
+> assumed to return true. If KHO was not enabled then Live Update would
+> not be enabled and these routines would never run.
+> 
+> Note: PCI_LIVEUPDATE depends on 64BIT so that a device's domain and BDF
+> always fit in an unsigned long, which a subsequent commit uses as the
+> key when looking up incoming preserved devices.
+> 
+> Reviewed-by: Pranjal Shrivastava <praan@google.com>
+> Reviewed-by: Samiullah Khawaja <skhawaja@google.com>
+> Signed-off-by: David Matlack <dmatlack@google.com>
 
-Use existing HugeTLB CMA memory first for crashkernel=size,cma and
-reserve dedicated CMA areas only for the remainder. With hugetlb_cma=6G,
-a 2G request reuses 2G without reserving more CMA. With hugetlb_cma=2G,
-a 4G request reuses 2G and reserves another 2G.
+Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
 
-The full HugeTLB CMA pool remains available to HugeTLB and movable
-allocations during normal operation. After a crash, the capture kernel
-can use the selected ranges as working memory. The conventional
-reservation is still required to hold the kernel image and initrd.
-
-The ,cma option already opts into excluding userspace memory from the
-vmcore. This includes allocated HugeTLB pages in the selected ranges,
-which the capture kernel can overwrite. The existing dump completeness
-and pending DMA risks apply to these ranges as well.
-
-Have architecture code record the requested CMA size and perform the
-reservation in mm_core_init_early(), immediately after
-hugetlb_cma_reserve(). The HugeTLB CMA areas are then available for reuse
-while memblock can still reserve any remainder.
-
-Use the existing four range slots for both reused and dedicated memory.
-Limit reused memory to the page-aligned request, account for dedicated
-CMA alignment, and report any shortfall. Ignore malformed optional sizes
-and reject requests that would overflow page rounding.
-
-Suggested-by: Breno Leitao <leitao@debian.org>
-Signed-off-by: Usama Arif <usama.arif@linux.dev>
----
-v1 -> v2:
-- Use existing HugeTLB CMA memory first for crashkernel=size,cma and
-  reserve dedicated CMA areas only for the remainder. (Kiryl)
----
- .../ABI/testing/sysfs-kernel-kexec-kdump      |  3 ++
- Documentation/admin-guide/kdump/kdump.rst     | 22 ++++++--
- .../admin-guide/kernel-parameters.txt         | 16 +++++-
- arch/arm64/mm/init.c                          |  2 +-
- arch/powerpc/include/asm/kexec.h              |  2 -
- arch/powerpc/kexec/core.c                     | 12 ++---
- arch/powerpc/mm/mem.c                         |  6 +--
- arch/riscv/mm/init.c                          |  2 +-
- arch/x86/kernel/setup.c                       |  2 +-
- include/linux/crash_reserve.h                 | 14 ++++-
- include/linux/hugetlb.h                       | 12 +++++
- kernel/crash_reserve.c                        | 51 ++++++++++++++-----
- mm/hugetlb_cma.c                              | 50 ++++++++++++++++++
- mm/mm_init.c                                  |  2 +
- 14 files changed, 159 insertions(+), 37 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-kernel-kexec-kdump b/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
-index f59051b5d96d7..9197cbbcbe7c8 100644
---- a/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
-+++ b/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
-@@ -58,4 +58,7 @@ Description:	read only
- 		the Contiguous Memory Allocator (CMA) area that are allocated
- 		to the crash (kdump) kernel. It lists the start and end physical
- 		addresses of CMA regions assigned for crashkernel use.
-+		This includes existing HugeTLB CMA memory selected with
-+		crashkernel=size,cma. These ranges remain usable
-+		by the running kernel and are excluded from the vmcore.
- User:		kdump service
-diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-index 7587caadbae1a..91779205d1456 100644
---- a/Documentation/admin-guide/kdump/kdump.rst
-+++ b/Documentation/admin-guide/kdump/kdump.rst
-@@ -313,9 +313,25 @@ crashkernel syntax
- 
- 4) crashkernel=size,cma
- 
--	Reserve additional crash kernel memory from CMA. This reservation is
--	usable by the first system's userspace memory and kernel movable
--	allocations (memory balloon, zswap). Pages allocated from this memory
-+	Reserve additional crash kernel memory from CMA. Existing HugeTLB CMA
-+	memory is used first, and dedicated CMA areas are reserved for any
-+	remaining amount. For example, this reuses 2G from the existing 6G pool
-+	without reserving additional CMA memory::
-+
-+	    hugetlb_cma=6G crashkernel=256M crashkernel=2G,cma
-+
-+	With a smaller HugeTLB CMA pool, the remainder is reserved separately::
-+
-+	    hugetlb_cma=2G crashkernel=256M crashkernel=4G,cma
-+
-+	This reuses the existing 2G and reserves another 2G of dedicated CMA.
-+	Both kinds of area use the same limit of four physical ranges. If there
-+	is insufficient memory or too few range slots, the kernel reports the
-+	shortfall. Normal CMA alignment applies to dedicated reservations.
-+
-+	The selected memory remains usable by the first system's userspace,
-+	including HugeTLB allocations, and kernel movable allocations
-+	(memory balloon, zswap). Pages allocated from this memory
- 	range will not be included in the vmcore so this should not be used if
- 	dumping of userspace memory is intended and it has to be expected that
- 	some movable kernel pages may be missing from the dump.
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 0b3c140babd94..a1fb40e500097 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1100,7 +1100,21 @@ Kernel parameters
- 			or memory reserved is below 4G.
- 	crashkernel=size[KMG],cma
- 			[KNL, X86, ARM64, RISCV, PPC] Reserve additional crash
--			kernel memory from CMA. This reservation is usable by
-+			kernel memory from CMA. Existing hugetlb_cma memory is
-+			used first, and dedicated CMA areas are reserved for any
-+			remaining amount. For example:
-+			  hugetlb_cma=6G crashkernel=256M crashkernel=2G,cma
-+			reuses 2G without reserving more CMA, while:
-+			  hugetlb_cma=2G crashkernel=256M crashkernel=4G,cma
-+			reuses 2G and reserves another 2G of dedicated CMA.
-+
-+			Both kinds of area use the same limit of four physical
-+			ranges. If the available memory or range slots cannot
-+			cover the requested size, the kernel reports the
-+			shortfall. Normal CMA alignment applies to dedicated
-+			reservations.
-+
-+			The selected memory remains usable by
- 			the first system's userspace memory and kernel movable
- 			allocations (memory balloon, zswap). Pages allocated
- 			from this memory range will not be included in the vmcore
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 4e7682dfe366c..a781cc60b4282 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -114,7 +114,7 @@ static void __init arch_reserve_crashkernel(void)
- 		return;
- 
- 	reserve_crashkernel_generic(crash_size, crash_base, low_size, high);
--	reserve_crashkernel_cma(cma_size);
-+	crashkernel_cma_set_size(cma_size);
- }
- 
- static phys_addr_t __init max_zone_phys(phys_addr_t zone_limit)
-diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
-index e02710d6a2e1a..d3b5028102cdd 100644
---- a/arch/powerpc/include/asm/kexec.h
-+++ b/arch/powerpc/include/asm/kexec.h
-@@ -117,11 +117,9 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt, struct crash_mem
- #ifdef CONFIG_CRASH_RESERVE
- int __init overlaps_crashkernel(unsigned long start, unsigned long size);
- extern void arch_reserve_crashkernel(void);
--extern void kdump_cma_reserve(void);
- #else
- static inline void arch_reserve_crashkernel(void) {}
- static inline int overlaps_crashkernel(unsigned long start, unsigned long size) { return 0; }
--static inline void kdump_cma_reserve(void) { }
- #endif
- 
- #if defined(CONFIG_CRASH_DUMP)
-diff --git a/arch/powerpc/kexec/core.c b/arch/powerpc/kexec/core.c
-index dc44f11be353e..1b70eb10beac2 100644
---- a/arch/powerpc/kexec/core.c
-+++ b/arch/powerpc/kexec/core.c
-@@ -62,8 +62,6 @@ void machine_kexec(struct kimage *image)
- 
- #ifdef CONFIG_CRASH_RESERVE
- 
--static unsigned long long crashk_cma_size;
--
- static unsigned long long __init get_crash_base(unsigned long long crash_base)
- {
- 
-@@ -107,6 +105,7 @@ static unsigned long long __init get_crash_base(unsigned long long crash_base)
- void __init arch_reserve_crashkernel(void)
- {
- 	unsigned long long crash_size, crash_base, crash_end;
-+	unsigned long long cma_size = 0;
- 	unsigned long long kernel_start, kernel_size;
- 	unsigned long long total_mem_sz;
- 	int ret;
-@@ -115,7 +114,7 @@ void __init arch_reserve_crashkernel(void)
- 
- 	/* use common parsing */
- 	ret = parse_crashkernel(boot_command_line, total_mem_sz, &crash_size,
--				&crash_base, NULL, &crashk_cma_size, NULL);
-+				&crash_base, NULL, &cma_size, NULL);
- 
- 	if (ret)
- 		return;
-@@ -133,12 +132,7 @@ void __init arch_reserve_crashkernel(void)
- 	}
- 
- 	reserve_crashkernel_generic(crash_size, crash_base, 0, false);
--}
--
--void __init kdump_cma_reserve(void)
--{
--	if (crashk_cma_size)
--		reserve_crashkernel_cma(crashk_cma_size);
-+	crashkernel_cma_set_size(cma_size);
- }
- 
- int __init overlaps_crashkernel(unsigned long start, unsigned long size)
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index b617b69452cd6..d6e84dc1e24c5 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -272,12 +272,10 @@ void __init arch_mm_preinit(void)
- {
- 
- 	/*
--	 * Reserve large chunks of memory for use by CMA for kdump, fadump, KVM
--	 * and hugetlb. These must be called after pageblock_order is
--	 * initialised.
-+	 * Reserve large chunks of memory for use by CMA for fadump and KVM.
-+	 * These must be called after pageblock_order is initialised.
- 	 */
- 	fadump_cma_init();
--	kdump_cma_reserve();
- 	kvm_cma_reserve();
- 
- 	/*
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index e822fce0af4b0..194045dc3fed6 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -1357,7 +1357,7 @@ static void __init arch_reserve_crashkernel(void)
- 		return;
- 
- 	reserve_crashkernel_generic(crash_size, crash_base, low_size, high);
--	reserve_crashkernel_cma(cma_size);
-+	crashkernel_cma_set_size(cma_size);
- }
- 
- void __init paging_init(void)
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 19fc8e1714e64..8848e207780b5 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -627,7 +627,7 @@ static void __init arch_reserve_crashkernel(void)
- 	}
- 
- 	reserve_crashkernel_generic(crash_size, crash_base, low_size, high);
--	reserve_crashkernel_cma(cma_size);
-+	crashkernel_cma_set_size(cma_size);
- }
- 
- static struct resource standard_io_resources[] = {
-diff --git a/include/linux/crash_reserve.h b/include/linux/crash_reserve.h
-index 30864d90d7f50..b11d7814979cc 100644
---- a/include/linux/crash_reserve.h
-+++ b/include/linux/crash_reserve.h
-@@ -5,6 +5,7 @@
- #include <linux/linkage.h>
- #include <linux/elfcore.h>
- #include <linux/elf.h>
-+#include <linux/range.h>
- #ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
- #include <asm/crash_reserve.h>
- #endif
-@@ -31,7 +32,18 @@ int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
- 		unsigned long long *low_size, unsigned long long *cma_size,
- 		bool *high);
- 
--void __init reserve_crashkernel_cma(unsigned long long cma_size);
-+#if defined(CONFIG_CRASH_RESERVE) && defined(CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION)
-+void __init crashkernel_cma_set_size(unsigned long long size);
-+void __init reserve_crashkernel_cma(void);
-+#else
-+static inline void __init crashkernel_cma_set_size(unsigned long long size)
-+{
-+}
-+
-+static inline void __init reserve_crashkernel_cma(void)
-+{
-+}
-+#endif
- 
- #ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
- #ifndef arch_add_crash_res_to_iomem
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 58f755e70e966..69732e4cc03e2 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -1349,12 +1349,24 @@ static inline spinlock_t *huge_pte_lock(struct hstate *h,
- 	return ptl;
- }
- 
-+struct range;
-+
- #if defined(CONFIG_HUGETLB_PAGE) && defined(CONFIG_CMA)
- extern void __init hugetlb_cma_reserve(void);
-+unsigned long long __init
-+hugetlb_cma_add_crashkernel_ranges(unsigned long long size, struct range *ranges,
-+				   int *nr_ranges, int max_ranges);
- #else
- static inline __init void hugetlb_cma_reserve(void)
- {
- }
-+
-+static inline unsigned long long
-+hugetlb_cma_add_crashkernel_ranges(unsigned long long size, struct range *ranges,
-+				   int *nr_ranges, int max_ranges)
-+{
-+	return 0;
-+}
- #endif
- 
- #ifdef CONFIG_HUGETLB_PMD_PAGE_TABLE_SHARING
-diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
-index eee37a11380ce..53d76ba6b3c31 100644
---- a/kernel/crash_reserve.c
-+++ b/kernel/crash_reserve.c
-@@ -16,6 +16,7 @@
- #include <linux/kmemleak.h>
- #include <linux/cma.h>
- #include <linux/crash_reserve.h>
-+#include <linux/hugetlb.h>
- 
- #include <asm/page.h>
- #include <asm/sections.h>
-@@ -340,9 +341,9 @@ int __init parse_crashkernel(char *cmdline,
- 	 * optional CMA reservation
- 	 * cma_base is ignored
- 	 */
--	if (cma_size)
--		__parse_crashkernel(cmdline, 0, cma_size,
--			&cma_base, suffix_tbl[SUFFIX_CMA]);
-+	if (cma_size && __parse_crashkernel(cmdline, 0, cma_size,
-+					    &cma_base, suffix_tbl[SUFFIX_CMA]))
-+		*cma_size = 0;
- #endif
- 	if (!*crash_size)
- 		ret = -EINVAL;
-@@ -470,21 +471,41 @@ void __init reserve_crashkernel_generic(unsigned long long crash_size,
- }
- 
- struct range crashk_cma_ranges[CRASHKERNEL_CMA_RANGES_MAX];
-+static unsigned long long crashkernel_cma_size __initdata;
-+
-+void __init crashkernel_cma_set_size(unsigned long long cma_size)
-+{
-+	crashkernel_cma_size = cma_size;
-+}
-+
- #ifdef CRASHKERNEL_CMA
- int crashk_cma_cnt;
--void __init reserve_crashkernel_cma(unsigned long long cma_size)
-+void __init reserve_crashkernel_cma(void)
- {
--	unsigned long long request_size = roundup(cma_size, PAGE_SIZE);
--	unsigned long long reserved_size = 0;
-+	unsigned long long cma_size = crashkernel_cma_size;
-+	unsigned long long request_size, reserved_size, reused_size;
- 
--	if (!cma_size)
-+	if (!cma_size || crashk_res.start >= crashk_res.end)
- 		return;
- 
-+	if (cma_size > ULLONG_MAX - (PAGE_SIZE - 1)) {
-+		pr_warn("crashkernel CMA size is too large\n");
-+		return;
-+	}
-+	cma_size = roundup(cma_size, PAGE_SIZE);
-+	reused_size = hugetlb_cma_add_crashkernel_ranges(cma_size,
-+							 crashk_cma_ranges,
-+							 &crashk_cma_cnt,
-+							 CRASHKERNEL_CMA_RANGES_MAX);
-+	reserved_size = reused_size;
-+	request_size = cma_size - reused_size;
-+
- 	while (cma_size > reserved_size &&
- 	       crashk_cma_cnt < CRASHKERNEL_CMA_RANGES_MAX) {
- 
- 		struct cma *res;
- 
-+		request_size = min(request_size, cma_size - reserved_size);
- 		if (cma_declare_contiguous(0, request_size, 0, 0, 0, false,
- 				       "crashkernel", &res)) {
- 			/* reservation failed, try half-sized blocks */
-@@ -500,21 +521,23 @@ void __init reserve_crashkernel_cma(unsigned long long cma_size)
- 			crashk_cma_ranges[crashk_cma_cnt].start +
- 			cma_get_size(res) - 1;
- 		++crashk_cma_cnt;
--		reserved_size += request_size;
-+		reserved_size += cma_get_size(res);
- 	}
- 
- 	if (cma_size > reserved_size)
--		pr_warn("crashkernel CMA reservation failed: %lld MB requested, %lld MB reserved in %d ranges\n",
--			cma_size >> 20, reserved_size >> 20, crashk_cma_cnt);
-+		pr_warn("crashkernel CMA reservation failed: %llu MB requested, %llu MB reused, %llu MB newly reserved in %d ranges\n",
-+			cma_size >> 20, reused_size >> 20,
-+			(reserved_size - reused_size) >> 20, crashk_cma_cnt);
- 	else
--		pr_info("crashkernel CMA reserved: %lld MB in %d ranges\n",
--			reserved_size >> 20, crashk_cma_cnt);
-+		pr_info("crashkernel CMA: %llu MB reused, %llu MB newly reserved in %d ranges\n",
-+			reused_size >> 20, (reserved_size - reused_size) >> 20,
-+			crashk_cma_cnt);
- }
- 
- #else /* CRASHKERNEL_CMA */
--void __init reserve_crashkernel_cma(unsigned long long cma_size)
-+void __init reserve_crashkernel_cma(void)
- {
--	if (cma_size)
-+	if (crashkernel_cma_size)
- 		pr_warn("crashkernel CMA reservation not supported\n");
- }
- #endif
-diff --git a/mm/hugetlb_cma.c b/mm/hugetlb_cma.c
-index cd6a64986278a..cd6f64da31a2c 100644
---- a/mm/hugetlb_cma.c
-+++ b/mm/hugetlb_cma.c
-@@ -11,6 +11,8 @@
- #include <linux/memblock.h>
- #include <linux/math.h>
- #include <linux/math64.h>
-+#include <linux/range.h>
-+#include "cma.h"
- #include "internal.h"
- #include "hugetlb_cma.h"
- 
-@@ -387,6 +389,54 @@ void __init hugetlb_cma_reserve(void)
- 		hugetlb_cma_size = 0;
- }
- 
-+/**
-+ * hugetlb_cma_add_crashkernel_ranges - share HugeTLB CMA with the crash kernel
-+ * @size: maximum number of bytes to share, aligned to PAGE_SIZE
-+ * @ranges: crash kernel memory ranges
-+ * @nr_ranges: number of entries already in @ranges, updated on return
-+ * @max_ranges: capacity of @ranges
-+ *
-+ * The shared memory remains available to the HugeTLB allocator until a crash.
-+ * Only physical ranges belonging to successfully reserved CMA areas are added.
-+ *
-+ * Return: number of bytes shared.
-+ */
-+unsigned long long __init
-+hugetlb_cma_add_crashkernel_ranges(unsigned long long size, struct range *ranges,
-+				   int *nr_ranges, int max_ranges)
-+{
-+	unsigned long long shared_size = 0;
-+	int nid, i;
-+
-+	for_each_node_mask(nid, hugetlb_bootmem_nodes) {
-+		struct cma *cma = hugetlb_cma[nid];
-+
-+		if (!cma)
-+			continue;
-+
-+		for (i = 0; i < cma->nranges; i++) {
-+			struct cma_memrange *cmr = &cma->ranges[i];
-+			unsigned long long range_size;
-+			struct range *range;
-+
-+			if (shared_size == size || *nr_ranges == max_ranges)
-+				return shared_size;
-+
-+			range_size = min_t(unsigned long long,
-+					   PFN_PHYS(cmr->count), size - shared_size);
-+			range = &ranges[(*nr_ranges)++];
-+			range->start = PFN_PHYS(cmr->base_pfn);
-+			range->end = range->start + range_size - 1;
-+			shared_size += range_size;
-+
-+			/* Keep shared pages reserved if CMA activation fails. */
-+			cma_reserve_pages_on_error(cma);
-+		}
-+	}
-+
-+	return shared_size;
-+}
-+
- bool hugetlb_cma_exclusive_alloc(void)
- {
- 	return hugetlb_cma_only;
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index a9d848c92678b..2367af05570bd 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -28,6 +28,7 @@
- #include <linux/swap.h>
- #include <linux/cma.h>
- #include <linux/crash_dump.h>
-+#include <linux/crash_reserve.h>
- #include <linux/execmem.h>
- #include <linux/sizes.h>
- #include <linux/vmstat.h>
-@@ -2686,6 +2687,7 @@ void __init mm_core_init_early(void)
- 	free_area_init();
- 
- 	hugetlb_cma_reserve();
-+	reserve_crashkernel_cma();
- 	hugetlb_bootmem_alloc();
- 
- 	sparse_init();
--- 
-2.53.0-Meta
-
+> ---
+>  Documentation/core-api/liveupdate.rst |   4 +
+>  MAINTAINERS                           |  13 ++
+>  drivers/pci/Kconfig                   |  15 ++
+>  drivers/pci/Makefile                  |   1 +
+>  drivers/pci/liveupdate.c              | 208 ++++++++++++++++++++++++++
+>  include/linux/kho/abi/pci.h           |  96 ++++++++++++
+>  include/linux/pci.h                   |   1 +
+>  include/linux/pci_liveupdate.h        |  30 ++++
+>  8 files changed, 368 insertions(+)
+>  create mode 100644 drivers/pci/liveupdate.c
+>  create mode 100644 include/linux/kho/abi/pci.h
+>  create mode 100644 include/linux/pci_liveupdate.h
+> 
+> diff --git a/Documentation/core-api/liveupdate.rst b/Documentation/core-api/liveupdate.rst
+> index 5a292d0f3706..b3c689e633c1 100644
+> --- a/Documentation/core-api/liveupdate.rst
+> +++ b/Documentation/core-api/liveupdate.rst
+> @@ -1,5 +1,7 @@
+>  .. SPDX-License-Identifier: GPL-2.0
+>  
+> +.. _luo:
+> +
+>  ========================
+>  Live Update Orchestrator
+>  ========================
+> @@ -18,6 +20,8 @@ LUO Preserving File Descriptors
+>  .. kernel-doc:: kernel/liveupdate/luo_file.c
+>     :doc: LUO File Descriptors
+>  
+> +.. _flb:
+> +
+>  LUO File Lifecycle Bound Global Data
+>  ====================================
+>  .. kernel-doc:: kernel/liveupdate/luo_flb.c
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3a19da74d00c..bb9ef5460b5c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -21046,6 +21046,19 @@ L:	linux-pci@vger.kernel.org
+>  S:	Supported
+>  F:	Documentation/PCI/pci-error-recovery.rst
+>  
+> +PCI LIVE UPDATE
+> +M:	David Matlack <dmatlack@google.com>
+> +R:	Pasha Tatashin <pasha.tatashin@soleen.com>
+> +R:	Mike Rapoport <rppt@kernel.org>
+> +R:	Pratyush Yadav <pratyush@kernel.org>
+> +L:	kexec@lists.infradead.org
+> +L:	linux-pci@vger.kernel.org
+> +S:	Maintained
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git
+> +F:	drivers/pci/liveupdate.c
+> +F:	include/linux/kho/abi/pci.h
+> +F:	include/linux/pci_liveupdate.h
+> +
+>  PCI MSI DRIVER FOR ALTERA MSI IP
+>  L:	linux-pci@vger.kernel.org
+>  S:	Orphan
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 0c7408509ba2..8af20f558086 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -271,6 +271,21 @@ config VGA_ARB_MAX_GPUS
+>  	  Reserves space in the kernel to maintain resource locking for
+>  	  multiple GPUS.  The overhead for each GPU is very small.
+>  
+> +config PCI_LIVEUPDATE
+> +	bool "PCI Live Update Support"
+> +	depends on PCI && LIVEUPDATE && 64BIT
+> +	help
+> +	  Enable PCI core support for preserving PCI devices across Live
+> +	  Update. This, in combination with support in a device's driver,
+> +	  enables PCI devices to run and perform memory transactions
+> +	  uninterrupted during a kexec for Live Update.
+> +
+> +	  This option should only be enabled by users who plan to use Live
+> +	  Update for kernel upgrades and require preserving PCI devices during
+> +	  those upgrades.
+> +
+> +	  If unsure, say N.
+> +
+>  source "drivers/pci/hotplug/Kconfig"
+>  source "drivers/pci/controller/Kconfig"
+>  source "drivers/pci/endpoint/Kconfig"
+> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+> index 41ebc3b9a518..e8d003cb6757 100644
+> --- a/drivers/pci/Makefile
+> +++ b/drivers/pci/Makefile
+> @@ -16,6 +16,7 @@ obj-$(CONFIG_PROC_FS)		+= proc.o
+>  obj-$(CONFIG_SYSFS)		+= pci-sysfs.o slot.o
+>  obj-$(CONFIG_ACPI)		+= pci-acpi.o
+>  obj-$(CONFIG_GENERIC_PCI_IOMAP) += iomap.o
+> +obj-$(CONFIG_PCI_LIVEUPDATE)	+= liveupdate.o
+>  endif
+>  
+>  obj-$(CONFIG_OF)		+= of.o
+> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+> new file mode 100644
+> index 000000000000..5f065dccbd7b
+> --- /dev/null
+> +++ b/drivers/pci/liveupdate.c
+> @@ -0,0 +1,208 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/*
+> + * Copyright (c) 2026, Google LLC.
+> + * David Matlack <dmatlack@google.com>
+> + */
+> +
+> +/**
+> + * DOC: PCI Live Update
+> + *
+> + * The PCI subsystem participates in the Live Update process to enable drivers
+> + * to preserve their PCI devices across kexec.
+> + *
+> + * Preserving a device requires preserving two independent sets of state: the
+> + * driver's own state, which the driver preserves with no involvement from the
+> + * PCI core, and the PCI core's state about the device, which the next kernel
+> + * needs so that enumeration does not disturb a device that is still running.
+> + * The rest of this document describes the latter.
+> + *
+> + * :ref:`FLB <flb>` Data
+> + * =====================
+> + *
+> + * Userspace decides which devices are preserved, using :ref:`LUO <luo>` file
+> + * preservation: a driver exposes a file that represents a single PCI device,
+> + * and userspace preserves the device with
+> + * ``ioctl(LIVEUPDATE_SESSION_PRESERVE_FD)`` on that file. Binding preservation
+> + * to a file gives it proper lifecycle management, e.g. the preservation is
+> + * undone if userspace cancels it or goes away. How a driver exposes that file
+> + * is up to the driver and invisible to the PCI core (vfio-pci variant drivers,
+> + * the first intended use-case, use their per-device cdev).
+> + *
+> + * LUO only knows that a file was preserved; it does not know that the file
+> + * represents a PCI device. Drivers therefore register their
+> + * struct liveupdate_file_handler with the PCI core:
+> + *
+> + *  * ``pci_liveupdate_register_flb(driver_file_handler)``
+> + *  * ``pci_liveupdate_unregister_flb(driver_file_handler)``
+> + *
+> + * LUO then keeps a reference count on the PCI core's FLB for the files
+> + * preserved by that handler, and that reference count drives the lifetime of
+> + * struct pci_ser: pci_flb_preserve() allocates and preserves it when the first
+> + * file is preserved, and pci_flb_unpreserve() frees it when the last file is
+> + * unpreserved. In the next kernel, pci_flb_retrieve() hands the PCI core the
+> + * struct pci_ser built by the previous kernel, whenever the PCI core asks for
+> + * it (e.g. during enumeration), and pci_flb_finish() frees it once the PCI
+> + * core is done with it.
+> + *
+> + * Call Flow
+> + * ---------
+> + *
+> + * ::
+> + *
+> + *   # Driver initialization
+> + *   pci_liveupdate_register_flb(fh)
+> + *
+> + *   # Userspace: ioctl(LIVEUPDATE_SESSION_PRESERVE_FD, devfd)
+> + *   luo_preserve_file()
+> + *     luo_flb_file_preserve()
+> + *       luo_flb_file_preserve_one()      # first preserved file only
+> + *         pci_flb_preserve()             # alloc and preserve struct pci_ser
+> + *     fh->ops->preserve()                # driver callback
+> + *
+> + *   # Userspace: preservation cancelled or session torn down
+> + *   luo_file_unpreserve_files()
+> + *     luo_flb_file_unpreserve()
+> + *       liveupdate_flb_put_outgoing()    # last unpreserved file only
+> + *         pci_flb_unpreserve()           # free struct pci_ser
+> + *
+> + *   # ---------------- kexec ----------------
+> + *
+> + *   # New kernel: the PCI core asks for the previous kernel's state
+> + *   liveupdate_flb_get_incoming()
+> + *     luo_flb_retrieve_one()             # first request only
+> + *       pci_flb_retrieve()               # previous kernel's struct pci_ser
+> + *
+> + *   # Userspace: ioctl(LIVEUPDATE_SESSION_FINISH)
+> + *   luo_file_finish_one()
+> + *     fh->ops->finish()                  # driver callback
+> + *     luo_flb_file_finish()
+> + *       liveupdate_flb_put_incoming()    # last incoming file only
+> + *         pci_flb_finish()               # free struct pci_ser
+> + */
+> +
+> +#define pr_fmt(fmt) "PCI: liveupdate: " fmt
+> +
+> +#include <linux/io.h>
+> +#include <linux/kexec_handover.h>
+> +#include <linux/kho/abi/pci.h>
+> +#include <linux/kho_block.h>
+> +#include <linux/liveupdate.h>
+> +#include <linux/mm.h>
+> +#include <linux/mutex.h>
+> +#include <linux/pci.h>
+> +#include <linux/slab.h>
+> +
+> +/**
+> + * struct pci_flb_outgoing - Outgoing PCI FLB object
+> + * @ser: Pointer to the preserved struct pci_ser.
+> + * @block_set: The KHO block set holding the outgoing devices.
+> + *
+> + * This structure holds the runtime state for the outgoing PCI Live Update
+> + * state. It wraps the serialized pci_ser and the block_set used to manage
+> + * the serialized entries.
+> + */
+> +struct pci_flb_outgoing {
+> +	struct pci_ser *ser;
+> +	struct kho_block_set block_set;
+> +};
+> +
+> +static int pci_flb_preserve(struct liveupdate_flb_op_args *args)
+> +{
+> +	struct pci_flb_outgoing *outgoing __free(kfree) = NULL;
+> +	struct pci_ser *ser;
+> +
+> +	outgoing = kzalloc_obj(*outgoing);
+> +	if (!outgoing)
+> +		return -ENOMEM;
+> +
+> +	ser = kho_alloc_preserve(sizeof(*ser));
+> +	if (IS_ERR(ser))
+> +		return PTR_ERR(ser);
+> +
+> +	ser->required_flags = 0;
+> +	ser->optional_flags = 0;
+> +	ser->dev_ser_size = sizeof(struct pci_dev_ser);
+> +	ser->nr_devices = 0;
+> +	ser->devices = 0;
+> +
+> +	outgoing->ser = ser;
+> +	kho_block_set_init(&outgoing->block_set, sizeof(struct pci_dev_ser));
+> +
+> +	args->obj = no_free_ptr(outgoing);
+> +	args->data = virt_to_phys(ser);
+> +	pr_debug("Preserved struct pci_ser (0x%llx)\n", args->data);
+> +	return 0;
+> +}
+> +
+> +static void pci_flb_unpreserve(struct liveupdate_flb_op_args *args)
+> +{
+> +	struct pci_flb_outgoing *outgoing = args->obj;
+> +
+> +	pr_debug("Unpreserving struct pci_ser (0x%llx)\n", args->data);
+> +
+> +	WARN_ON(outgoing->ser->nr_devices);
+> +	kho_block_set_destroy(&outgoing->block_set);
+> +	kho_unpreserve_free(outgoing->ser);
+> +	kfree(outgoing);
+> +}
+> +
+> +static int pci_flb_retrieve(struct liveupdate_flb_op_args *args)
+> +{
+> +	pr_debug("Retrieving struct pci_ser (0x%llx)\n", args->data);
+> +	args->obj = phys_to_virt(args->data);
+> +	return 0;
+> +}
+> +
+> +static void pci_flb_finish(struct liveupdate_flb_op_args *args)
+> +{
+> +	pr_debug("Finished struct pci_ser (0x%llx)\n", args->data);
+> +	kho_restore_free(args->obj);
+> +}
+> +
+> +static struct liveupdate_flb_ops pci_liveupdate_flb_ops = {
+> +	.preserve = pci_flb_preserve,
+> +	.unpreserve = pci_flb_unpreserve,
+> +	.retrieve = pci_flb_retrieve,
+> +	.finish = pci_flb_finish,
+> +	.owner = THIS_MODULE,
+> +};
+> +
+> +static struct liveupdate_flb pci_liveupdate_flb = {
+> +	.ops = &pci_liveupdate_flb_ops,
+> +	.compatible = PCI_LUO_FLB_COMPATIBLE,
+> +};
+> +
+> +/**
+> + * pci_liveupdate_register_flb() - Register a file handler with the PCI core
+> + * @fh: The file handler to register.
+> + *
+> + * Drivers that support preserving PCI devices across Live Update must call
+> + * pci_liveupdate_register_flb() to register their
+> + * struct liveupdate_file_handler with the PCI core, typically at module init,
+> + * and always before any file managed by @fh can be preserved.
+> + *
+> + * Registering links the PCI core's FLB to @fh, so that LUO allocates the PCI
+> + * core's outgoing struct pci_ser (via pci_flb_preserve()) when the first file
+> + * managed by any registered handler is preserved, and frees it (via
+> + * pci_flb_unpreserve()) when the last such file is unpreserved.
+> + *
+> + * Return: 0 on success, <0 on failure.
+> + */
+> +int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh)
+> +{
+> +	pr_debug("Registering file handler \"%s\"\n", fh->compatible);
+> +	return liveupdate_register_flb(fh, &pci_liveupdate_flb);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_liveupdate_register_flb);
+> +
+> +/**
+> + * pci_liveupdate_unregister_flb() - Unregister a file handler with the PCI core
+> + * @fh: The file handler to unregister.
+> + */
+> +void pci_liveupdate_unregister_flb(struct liveupdate_file_handler *fh)
+> +{
+> +	pr_debug("Unregistering file handler \"%s\"\n", fh->compatible);
+> +	liveupdate_unregister_flb(fh, &pci_liveupdate_flb);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_liveupdate_unregister_flb);
+> diff --git a/include/linux/kho/abi/pci.h b/include/linux/kho/abi/pci.h
+> new file mode 100644
+> index 000000000000..c2e3a5949f73
+> --- /dev/null
+> +++ b/include/linux/kho/abi/pci.h
+> @@ -0,0 +1,96 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +/*
+> + * Copyright (c) 2026, Google LLC.
+> + * David Matlack <dmatlack@google.com>
+> + */
+> +
+> +#ifndef _LINUX_KHO_ABI_PCI_H
+> +#define _LINUX_KHO_ABI_PCI_H
+> +
+> +#include <linux/bug.h>
+> +#include <linux/compiler.h>
+> +#include <linux/stddef.h>
+> +#include <linux/types.h>
+> +
+> +/**
+> + * DOC: PCI File-Lifecycle Bound (FLB) Live Update ABI
+> + *
+> + * The PCI core preserves its state across kexec as Live Update
+> + * File-Lifecycle Bound (FLB) data, identified by the compatible string
+> + * ``"pci"`` and laid out as described by the structs below.
+> + *
+> + * This layout is a contract between kernels. Rather than being versioned, it
+> + * is extended according to the following rules:
+> + *
+> + *  * Existing fields must never be moved, resized, removed, or have their
+> + *    meaning changed. New fields may only be appended to the end of a struct.
+> + *
+> + *  * A bit set in ``pci_ser.required_flags`` marks a feature that the next
+> + *    kernel must understand to safely take over the preserved devices. The
+> + *    next kernel panics if it finds a bit it does not know how to handle.
+> + *
+> + *  * A bit set in ``pci_ser.optional_flags`` marks a feature that the next
+> + *    kernel can safely ignore if it does not understand it.
+> + *
+> + *  * Fields appended to struct pci_ser must be accompanied by a flag that
+> + *    indicates they are present, since the size of struct pci_ser is not
+> + *    recorded.
+> + *
+> + *  * The size of each struct pci_dev_ser is recorded in
+> + *    ``pci_ser.dev_ser_size`` and is never smaller than
+> + *    ``PCI_DEV_SER_MIN_SIZE``. The next kernel ignores any fields beyond the
+> + *    ones it knows about, and must handle entries that are smaller than its
+> + *    own struct pci_dev_ser.
+> + */
+> +
+> +#define PCI_LUO_FLB_COMPATIBLE "pci"
+> +
+> +/**
+> + * struct pci_dev_ser - Serialized state about a single PCI device.
+> + *
+> + * @domain: The device's PCI domain number (segment).
+> + * @bdf: The device's PCI bus, device, and function number.
+> + * @refcount: Reference count used by the PCI core to keep track of whether it
+> + *            is done using a device's struct pci_dev_ser. The value of the
+> + *            reference count is equal to the number of preserved devices at or
+> + *            below it in the PCI hierarchy when the struct pci_dev_ser is in
+> + *            use, and 0 otherwise.
+> + */
+> +struct pci_dev_ser {
+> +	u32 domain;
+> +	u16 bdf;
+> +	u16 refcount;
+> +} __packed;
+> +
+> +/*
+> + * The size of struct pci_dev_ser when this ABI was introduced. Since fields
+> + * can only be appended, every struct pci_dev_ser is at least this large.
+> + */
+> +#define PCI_DEV_SER_MIN_SIZE offsetofend(struct pci_dev_ser, refcount)
+> +
+> +/**
+> + * struct pci_ser - PCI Subsystem Live Update State
+> + *
+> + * This struct tracks state about all devices that are being preserved across
+> + * a Live Update for the next kernel. It contains only state owned by the PCI
+> + * core; the state a driver needs to resume its device is preserved separately
+> + * by that driver.
+> + *
+> + * @required_flags: Features that the next kernel must support to take over
+> + *                  the preserved devices. No flags are currently defined.
+> + * @optional_flags: Features that the next kernel may ignore if it does not
+> + *                  support them. No flags are currently defined.
+> + * @dev_ser_size: The size in bytes of each struct pci_dev_ser in @devices.
+> + * @nr_devices: The number of devices that were preserved.
+> + * @devices: Physical address of the first KHO block containing pci_dev_ser.
+> + */
+> +struct pci_ser {
+> +	u64 required_flags;
+> +	u64 optional_flags;
+> +	u32 dev_ser_size;
+> +	u32 nr_devices;
+> +	u64 devices;
+> +} __packed;
+> +
+> +#endif /* _LINUX_KHO_ABI_PCI_H */
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index d31a8d107b1e..95b723aecb08 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -43,6 +43,7 @@
+>  #include <uapi/linux/pci.h>
+>  
+>  #include <linux/pci_ids.h>
+> +#include <linux/pci_liveupdate.h>
+>  
+>  #define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY  | \
+>  			       PCI_STATUS_SIG_SYSTEM_ERROR | \
+> diff --git a/include/linux/pci_liveupdate.h b/include/linux/pci_liveupdate.h
+> new file mode 100644
+> index 000000000000..8ec98beefcb4
+> --- /dev/null
+> +++ b/include/linux/pci_liveupdate.h
+> @@ -0,0 +1,30 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * PCI Live Update support (Public/Driver API)
+> + *
+> + * Copyright (c) 2026, Google LLC.
+> + * David Matlack <dmatlack@google.com>
+> + */
+> +#ifndef LINUX_PCI_LIVEUPDATE_H
+> +#define LINUX_PCI_LIVEUPDATE_H
+> +
+> +#include <linux/liveupdate.h>
+> +#include <linux/types.h>
+> +
+> +struct pci_dev;
+> +
+> +#ifdef CONFIG_PCI_LIVEUPDATE
+> +int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh);
+> +void pci_liveupdate_unregister_flb(struct liveupdate_file_handler *fh);
+> +#else
+> +static inline int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static inline void pci_liveupdate_unregister_flb(struct liveupdate_file_handler *fh)
+> +{
+> +}
+> +#endif
+> +
+> +#endif /* LINUX_PCI_LIVEUPDATE_H */
+> -- 
+> 2.56.0.385.gd3acb90ef8-goog
+> 
 
