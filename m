@@ -2,135 +2,76 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23177606A332
-	for <kexec@archiver.kernel.org>; Fri,  6 Nov 2026 14:13:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623DF606A329
+	for <kexec@archiver.kernel.org>; Fri,  6 Nov 2026 14:14:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=DOYkHKMC;
-	dkim=pass (1024-bit key, unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=pvRI/D8R;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=AzVXIHVV;
-	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=pvRI/D8R;
-	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=AzVXIHVV
+	dkim=pass (2048-bit key, unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=gd8WNHIb;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QZiZxI9G
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=DbWVk74jXjpvpjgKYrK4/CAQhS2u1tHZBMZnBzvHIS8=; b=DOYkHKMCJPVLvADw2nJkEvIJOA
-	Mn7gGlbQBw8jeBgYs2pp5MeUUAfEAATrtAAbFQuNnddjI70vJ5QFvytAoYMvGFz4NB1JaF99n4nTU
-	FGW/ruF7xS5Mu688Y/v4Pc4FX68X7F4sslMHqL92WBmR1zZvq+DSYAJ9f30zglhVTT4csa/K2wZgQ
-	kk+qTm9/NM8Aa52gRXC0RPD0BjLOYMylCTjjBnDSc7EGyiySWDZfQjfRSi68z3GoFwWDYX1Hc9IDx
-	7CwSFjQEZWVfDWL+csieQ6zMx2rkgxOs68AGxze11ROp7bYt/6zZtxETAJwkdqfHrHow5NKFse9V/
-	++V48x3A==;
+	bh=RDov0eoVo/jXZsEH8waw4PclHfxr4UeOoI1jJZ0wFVU=; b=gd8WNHIbEVzQ8YzymlFSprNnth
+	ky/yJVF7R/exx82eRSq/a2ZkDyfGxofkyB0Nfaj9QhwvhjhlO454bgm7Xv3VAx7nrmCn6Z8EQERvU
+	A2GIpAxlfaxw6Qq4M9/mKB9HJM4a6NhtEBrrAiL87I8Yt77FwT50UUMCiperRanxcZebAhWHqa4gr
+	7d+oC3NhTbJCiQZLYgEOsQdBzyBgbrHLiuZqU0yhK976lATn1OGjBXqbFqZ9Ak94NwQRglbe6vULb
+	m7aZo85mJSGYUKvo7OfHxFO+LeD8FR1uMJVV0MSzbj3mZe91O8ZrqDed7YU7CK0BZdFftyRVtzKco
+	6SQwMxlA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xPKhY-0000000CcCJ-3SzY;
-	Fri, 06 Nov 2026 14:13:56 +0000
-Received: from smtp-out1.suse.de ([195.135.223.130])
+	id 1xPKiD-0000000CcK1-0JK9;
+	Fri, 06 Nov 2026 14:14:37 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xPKhV-0000000CcB4-47tK
+	id 1xPKiB-0000000CcJa-1FWR
 	for kexec@lists.infradead.org;
-	Fri, 06 Nov 2026 14:13:55 +0000
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A268E22130;
-	Fri,  6 Nov 2026 14:13:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1793974430; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DbWVk74jXjpvpjgKYrK4/CAQhS2u1tHZBMZnBzvHIS8=;
-	b=pvRI/D8RopcbFtgNPfW+iZ2eH21pmmfyjNXaTBk2vE1ikaUyi5ZiBfpUI9DBHxSg056LZ/
-	bgaYzzIfmdjyGKdvkKYDTONndhOEEdBNMQoBgWoZ/a8TN+unCtfVpYKTENumVFgNiyx8PU
-	jzG6MUyNuwxCdK8tH73YdFpwQlrjj68=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1793974430;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DbWVk74jXjpvpjgKYrK4/CAQhS2u1tHZBMZnBzvHIS8=;
-	b=AzVXIHVVE8uagLfECKc27F9aiHHqwykOgSHiYeP032HqnsmkIBLN0HR+sxphwH+ZhZ+jLJ
-	ogoAPHclIxaMcyCQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1793974430; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DbWVk74jXjpvpjgKYrK4/CAQhS2u1tHZBMZnBzvHIS8=;
-	b=pvRI/D8RopcbFtgNPfW+iZ2eH21pmmfyjNXaTBk2vE1ikaUyi5ZiBfpUI9DBHxSg056LZ/
-	bgaYzzIfmdjyGKdvkKYDTONndhOEEdBNMQoBgWoZ/a8TN+unCtfVpYKTENumVFgNiyx8PU
-	jzG6MUyNuwxCdK8tH73YdFpwQlrjj68=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1793974430;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DbWVk74jXjpvpjgKYrK4/CAQhS2u1tHZBMZnBzvHIS8=;
-	b=AzVXIHVVE8uagLfECKc27F9aiHHqwykOgSHiYeP032HqnsmkIBLN0HR+sxphwH+ZhZ+jLJ
-	ogoAPHclIxaMcyCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7AC9C134E9;
-	Fri,  6 Nov 2026 14:13:50 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Ao+wFZ7g7WoTZAAAD6G6ig
-	(envelope-from <jbohac@suse.cz>); Fri, 06 Nov 2026 14:13:50 +0000
-Date: Fri, 6 Nov 2026 15:13:50 +0100
-From: Jiri Bohac <jbohac@suse.cz>
-To: Mikhail Zaslonko <zaslonko@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Dave Young <ruirui.yang@linux.dev>,
-	David Hildenbrand <david@kernel.org>,
-	Usama Arif <usama.arif@linux.dev>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	kexec@lists.infradead.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kdump: Give crashkernel CMA areas unique names
-Message-ID: <au3gnsckVTK6tUs5@dwarf.suse.cz>
-References: <20261106104309.3669583-1-zaslonko@linux.ibm.com>
+	Fri, 06 Nov 2026 14:14:35 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id BAC4860204;
+	Fri,  6 Nov 2026 14:14:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9485A1F0089F;
+	Fri,  6 Nov 2026 14:14:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793974474;
+	bh=RDov0eoVo/jXZsEH8waw4PclHfxr4UeOoI1jJZ0wFVU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=QZiZxI9GAjrir92IAFfKGitZXVtY1jvK5zvkVio451cKaNQy+4alLSBiO8n4IXk5a
+	 FeU8B/aZpr2kFUdrrLErUTcJxOy0VJSqfsasS4uw81KAuNjyZAdjxKj1wiOj7JAxBR
+	 mbCHQFfN6Q4wIrn+IpBW0KIgDBUhwENIZc64nO3QfIl87WE6M+kj1UTV6sgxuXYxMn
+	 NBH9mBHcgEDIzbAvb8xyON+HXQ/hi5v/jPOplklBmwp+o7m+ZKVqOoBmQIYtXJQb1s
+	 3Or4fuYh0VQ6PHIfJzhif/V26peoD/pmRt4Txg9M2arpzKsXqRwdmfeKOE1qfqnC9v
+	 wxbaO2Ww9a69A==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: David Matlack <dmatlack@google.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  kexec@lists.infradead.org,
+  linux-doc@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-kselftest@vger.kernel.org,  linux-mm@kvack.org,  Alexander Graf
+ <graf@amazon.com>,  Andrew Morton <akpm@linux-foundation.org>,  Baolin
+ Wang <baolin.wang@linux.alibaba.com>,  Christian Brauner
+ <brauner@kernel.org>,  David Hildenbrand <david@kernel.org>,  Hugh Dickins
+ <hughd@google.com>,  Jonathan Corbet <corbet@lwn.net>,  "Liam R. Howlett"
+ <liam@infradead.org>,  Lorenzo Stoakes <ljs@kernel.org>,  Michal Hocko
+ <mhocko@suse.com>,  Mike Rapoport <rppt@kernel.org>,  Pasha Tatashin
+ <pasha.tatashin@soleen.com>,  Randy Dunlap <rdunlap@infradead.org>,
+  Samiullah Khawaja <skhawaja@google.com>,  Shuah Khan
+ <skhan@linuxfoundation.org>,  Suren Baghdasaryan <surenb@google.com>,
+  Vlastimil Babka <vbabka@kernel.org>
+Subject: Re: [PATCH v3 06/10] mm/shmem_luo: Don't make early retrieve
+ failures permanent
+In-Reply-To: <auuxi10mmCQrq-y2@google.com> (David Matlack's message of "Wed, 4
+	Nov 2026 22:28:27 +0000")
+References: <20261103010216.3447716-1-dmatlack@google.com>
+	<20261103010216.3447716-7-dmatlack@google.com>
+	<2vxzik2ck5dp.fsf@kernel.org> <auuxi10mmCQrq-y2@google.com>
+Date: Fri, 06 Nov 2026 15:14:29 +0100
+Message-ID: <2vxzo6c2hwsa.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261106104309.3669583-1-zaslonko@linux.ibm.com>
-X-Spamd-Result: default: False [-13.30 / 50.00];
-	SUSE_INTERNAL_BYPASS(-9.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	RCVD_TLS_ALL(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -13.30
-X-Spam-Level: 
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261106_061354_196908_51121314 
-X-CRM114-Status: GOOD (  15.20  )
-X-Spam-Score: -4.4 (----)
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -141,47 +82,62 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Fri, Nov 06, 2026 at 11:43:09AM +0100, Mikhail Zaslonko wrote:
-> reserve_crashkernel_cma() names every CMA area it reserves
-> "crashkernel". If the requested size can't be reserved in one piece,
-> it falls back to several smaller areas, all with the same name.
-> With CONFIG_CMA_SYSFS, cma_sysfs_init() then fails to create the second
-> directory:
-> 
->   sysfs: cannot create duplicate filename '/kernel/mm/cma/crashkernel'
-> 
-> and the error path removes the sysfs entries of all CMA areas.
-> 
-> With CONFIG_CMA_DEBUGFS, debugfs refuses the duplicate directories as
-> well:
-> 
->   debugfs: 'crashkernel' already exists in 'cma'
-> 
-> so only the first area shows up in debugfs.
-> 
-> Keep the name of the first area and add the index to the others:
-> crashkernel, crashkernel1, crashkernel2, ...
-> 
-> Fixes: ab475510e042 ("kdump: implement reserve_crashkernel_cma")
-> Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+On Wed, Nov 04 2026, David Matlack wrote:
 
-Thanks for fixing this.
+> On 2026-11-04 04:01 PM, Pratyush Yadav wrote:
+>> On Tue, Nov 03 2026, David Matlack wrote:
+>> 
+>> > Mark failures in shmem_luo_retrieve() before it starts restoring the
+>> > folios as retryable, and return the error without freeing the serialized
+>> > state. If no retrieve succeeds, finish() frees the preserved folios,
+>> > like it does for a file that was never retrieved.
+>> >
+>> > Nothing has consumed the preserved state before the folios are
+>> > restored, so the retrieve can be tried again.
+>> >
+>> > This also fixes leaking the preserved folios when one of these early
+>> > steps fails, e.g. because the file has seals that this kernel doesn't
+>> > support. The retrieve freed the serialized state but not the folios, and
+>> > finish() then skipped the file because its retrieve had failed. There is
+>> > no Fixes tag, since the fix relies on args->retryable, which was only
+>> > added earlier in this series.
+>> 
+>> If the seals don't match, the retrieve is not retryable. It will always
+>> fail.
+>> 
+>> I think the only retriable part is memfd_alloc_file(), although even
+>> that is quite unlikely to fail. But I think that also fits pretty well
+>> with the most important type of error you want to retry on, which is bad
+>> arguments. In later patches, you check the argument on
+>> shmem_luo_create_tmpfs_file() or shmem_luo_create_memfd(), so perhaps
+>> set retriable in those functions?
+>
+> When retryable is set, LUO leaves the file unretrieved and finish()
+> frees the preserved folios. If the seal failure did not set retryable,
+> finish() would skip the file and the folios would leak.
 
-I don't think we really need the special case for crashk_cma_cnt == 0 
-and that "crashkernel0" would be fine. But I don't mind either way.
+Yes, but in that case you free the folios on the error path of
+retrieve().
 
-Acked-by: Jiri Bohac <jbohac@suse.cz>
+>
+> In v4 I can move the seal checks into shmem_luo_create_memfd() and
+> shmem_luo_create_tmpfs_file(), since the valid seals differ between the
+> two, and reword the commit message so it doesn't suggest that a bad seal
+> can be fixed by retrying.
+
+I think it is important to signal to _userspace_ too that bad seals
+aren't retriable either. So I would really suggest doing some sort of
+non-retriable errors for bad payloads.
 
 -- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
-
+Regards,
+Pratyush Yadav
 
