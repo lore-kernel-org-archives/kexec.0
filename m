@@ -2,68 +2,89 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A20606A32C
-	for <kexec@archiver.kernel.org>; Sat,  7 Nov 2026 15:27:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F6E6083629
+	for <kexec@archiver.kernel.org>; Sat,  7 Nov 2026 16:10:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=TZThLwaI;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=NftaLBSd
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=eHujaaRH;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DudqRbSQ
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=VBHdHG0IvkfIox653vorDa3irUr9xVe5wSK7A8Aj0NM=; b=TZThLwaIgso8/t
-	7xGe+i9LhSDMYD9pwleSZ9r9BDRYkk5qvXr+y/C6gYNQyO2vsNVqpLVMhjDvBqM/xz3i/IOdytawA
-	/VAzLOJjZsTVqoK41Qonhfm+FvydGaKiKXZcZQ75HYcrRhL8CCG6hVeJ7zZA/oNHFcMQ2mU4lSk+f
-	NfiGb7xjLD/m1aTUndiGkmgvIg4dHtU5snGhEYwWBVfj02IzRgoigbl4h5lhZatiqe7cLJB0wcrk/
-	exELulPg90YXyiMp1Ju1EiKXVdSsr0Y11wzAjynPNRkAbkY6bv8cqH8Zy9/jxpfei6lbYxHeiumTg
-	l9sbWawldhSBfaeWSrcA==;
+	List-Owner; bh=yrl1fDgvB8SejpyA+O0u1vRjlm41/COeTHtKBCR1yZ8=; b=eHujaaRH7Tv9um
+	1SEDabdNbtntNp+89brdTjtab3Hc1l0CHsp7YyTI72j58KoGLUDDQnnh38UUAS1K2QVnz6yT9hDNs
+	qQbOOtjPXxPel8S8AKIAO35BZGjF21sk5sYNFcq36nEZ0nW9vqwsf0qe9az0+7kwe0/C8A6RlPC70
+	NUmtrhu4KaqRPE9FdkyCTh7kGL1VFrdTckL5Z0JvDBsIK6L/AmlaigGWBoqS6Ap2EozJuK7h/JX78
+	Rd62atwTorD+i1mG0qRZ4O99Sun3KCu0NfQFJrT1PSxXYR9rqLy+W1wnSYZq9eupRmqgjTjyvf2Mw
+	pLYecE1K5UgPZ9sYhdxw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xPiKU-0000000Etwa-0JCL;
-	Sat, 07 Nov 2026 15:27:42 +0000
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130])
+	id 1xPj00-0000000EyQp-0eHm;
+	Sat, 07 Nov 2026 16:10:36 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xPiKQ-0000000Etvd-26G9
-	for kexec@lists.infradead.org;
-	Sat, 07 Nov 2026 15:27:40 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1794065253; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=VBHdHG0IvkfIox653vorDa3irUr9xVe5wSK7A8Aj0NM=;
-	b=NftaLBSd8viefNCtqZMIEChVV70uT5GRcJFArIQLasXx3ASF1SMeFh+NvDqayRva7y1PxX9gPtdta6kED6K4aS3uYCWH3oWkKn2BUEuXYpiWl2xuY0ZYgigixREErjdFNsnDJktMCB5NpcaYV6DvIUvkuT1F931hizk9EQWeE5Q=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0XEEpSZY_1794065244;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0XEEpSZY_1794065244 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sat, 07 Nov 2026 23:27:32 +0800
-From: Chen Pei <cp0613@linux.alibaba.com>
-To: sashiko-bot@kernel.org
-Cc: alex@ghiti.fr,
-	graf@amazon.com,
-	guoren@kernel.org,
-	kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	palmer@dabbelt.com,
-	pasha.tatashin@soleen.com,
-	pjw@kernel.org,
-	pratyush@kernel.org,
-	rppt@kernel.org,
-	shuah@kernel.org
-Subject: Re: [PATCH v3 2/4] riscv: Add support for kexec handover (KHO)
-Date: Sat,  7 Nov 2026 23:27:21 +0800
-Message-ID: <20261107152723.847-1-cp0613@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <sashiko-outbox-202683@kernel.org>
-References: <20261106071459.2003-1-cp0613@linux.alibaba.com> <20261106071459.2003-3-cp0613@linux.alibaba.com> <sashiko-outbox-202683@kernel.org>
+	id 1xPizw-0000000EyQa-2okj;
+	Sat, 07 Nov 2026 16:10:33 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 8275861877;
+	Sat,  7 Nov 2026 16:10:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1758C1F0089F;
+	Sat,  7 Nov 2026 16:10:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794067830;
+	bh=yrl1fDgvB8SejpyA+O0u1vRjlm41/COeTHtKBCR1yZ8=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References;
+	b=DudqRbSQXCpr6NhdcgkB28/OJ09fv/xb+ZGVAY2ZZcm0NtXYxKjH24XfLPv1YVH+1
+	 N2Smc+eQQaJmUtmHSjIuIOHPbXtdHkwnaUWqwn18l1Zgme7MhVjd/tmwPXx2sHiZmJ
+	 bVG7HcpDVP0TwBfdMqAH6zxIyHwUkaCeHOVhR2aYppt91bZLwCTiFYtodZA1aRzQhT
+	 JFzXQc4CJvaSMHUeBSzyyst4sJaPobtuTL08pUib1PO2/6JKi1TR0Oc7vVJSOMiTRg
+	 di9pOtOgBcjQKNqN/zgV0r2ojSo7IUXfYme+kVAZvSpJolvZJtmmOXjKLjiXPaiu1m
+	 qPutBKIcKy2tg==
+Date: Sat, 07 Nov 2026 08:10:28 -0800
+From: Kees Cook <kees@kernel.org>
+To: Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org
+CC: Linus Torvalds <torvalds@linux-foundation.org>, Jann Horn <jannh@google.com>,
+ Josef Bacik <josef@toxicpanda.com>, Chris Mason <mason@kernel.org>,
+ Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+ Eric Dumazet <edumazet@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+ Al Viro <viro@zeniv.linux.org.uk>, Jonathan Corbet <corbet@lwn.net>,
+ Christoph Hellwig <hch@lst.de>, Greg Kroah-Hartman <gregkh@suse.de>,
+ Joel Granados <joel.granados@kernel.org>, Jan Kara <jack@suse.cz>,
+ Jan Kara <jack@suse.com>, linux-kernel@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-s390@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-um@lists.infradead.org,
+ linux-wireless@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ netdev@vger.kernel.org, ntfs3@lists.linux.dev,
+ platform-driver-x86@vger.kernel.org, coreteam@netfilter.org,
+ kexec@lists.infradead.org, linux-pci@vger.kernel.org,
+ linux-sound@vger.kernel.org, netfilter-devel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, ibm-acpi-devel@lists.sourceforge.net,
+ jfs-discussion@lists.sourceforge.net, linux-alpha@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-cifs@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-mm@kvack.org,
+ linux-sh@vger.kernel.org, linux-usb@vger.kernel.org,
+ samba-technical@lists.samba.org, sparclinux@vger.kernel.org,
+ linux-m68k@lists.linux-m68k.org, linux-doc@vger.kernel.org,
+ linux-serial@vger.kernel.org, linux-atm-general@lists.sourceforge.net,
+ Takashi Iwai <tiwai@suse.de>, linux-input@vger.kernel.org,
+ linux-raid@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-debuggers@vger.kernel.org,
+ "Christian Brauner (Amutable)" <brauner@kernel.org>,
+ Chuck Lever <cel@kernel.org>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_RESEND_v2_07/23=5D_proc=3A_let_pr?=
+ =?US-ASCII?Q?ocfs_own_the_seq=5Ffile_of_seq=5Ffile_entries?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20261104-work-procfs-core-v2-7-76ace653a773@kernel.org>
+References: <20261104-work-procfs-core-v2-0-76ace653a773@kernel.org> <20261104-work-procfs-core-v2-7-76ace653a773@kernel.org>
+Message-ID: <8A21EE2A-F392-40B7-9152-CBC440FDDA70@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261107_072739_091699_72EA2785 
-X-CRM114-Status: UNSURE (   4.64  )
-X-CRM114-Notice: Please train this message.
-X-Spam-Score: -17.6 (-----------------)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,33 +95,37 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=4.0.1
+	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-> [Severity: High]
-> Does enabling KEXEC_HANDOVER here hit BUG_ON(!kernel_map.va_pa_offset) in
-> linear_mapping_pa_to_va() during early boot on UEFI systems with
-> CONFIG_DEBUG_VIRTUAL=y?
 
-Greg Thelen has a fix for it [1].
 
-> [Severity: Medium]
-> Can kho_reserve_bootmem() fail on 64-bit RISC-V systems where DRAM starts
-> at or above 4 GiB?
+On November 4, 2026 11:30:58 AM PST, Christian Brauner <brauner@kernel=2Eo=
+rg> wrote:
+> [=2E=2E=2E]
+>+static int pde_init_seq_direct(struct proc_dir_entry *pde)
+>+{
+>+	struct seq_operations *ops;
+>+
+>+	if (!pde_is_seq_file(pde))
+>+		return 0;
+>+	ops =3D kmalloc(sizeof(*ops), GFP_KERNEL);
 
-Mike Rapoport has a fix for it [2].
+Please use the new style typed allocation calls for objects:
 
-Both are generic KHO issues rather than riscv code, and both are already
-being addressed upstream, so there is nothing for this series to carry.
+ops =3D kmalloc_obj(*ops);
 
-[1] https://lore.kernel.org/all/20261023054518.3258350-1-gthelen@google.com/
-[2] https://lore.kernel.org/kexec/20261104-kho-bootmem-sizing-v2-0-b0d1a834780f@kernel.org/
+(This happened to jump out at me, but please check the other patches for t=
+his pattern=2E)
 
-Best regards,
-Chen
+> 		dp->open =3D kzalloc(sizeof(*dp->open), GFP_KERNEL);
+
+Same, etc=2E
+
+--=20
+Kees Cook
 
