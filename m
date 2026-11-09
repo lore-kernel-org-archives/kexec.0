@@ -2,77 +2,165 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83925606D804
-	for <kexec@archiver.kernel.org>; Mon,  9 Nov 2026 09:41:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9CF606A33B
+	for <kexec@archiver.kernel.org>; Mon,  9 Nov 2026 09:51:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=d0GKFiLD;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gw/yqQ2v
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=BZU+RlKS;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bhqNNQOV
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
-	From:Date:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Unsubscribe-Post:List-Owner;
-	bh=D17o7J+LUZefGMnEPDEm3K/yb3wK/9GcqQupGxazR+A=; b=d0GKFiLDZkWFLkH1Ozs4b8jVyW
-	RDrcQ48k5yPjv4HSoWlCiROnLLd0/OrmTxfHy4dNqN7gV4JXH2ZseB0mbsqL1zcDmTzqH/kZSMRRS
-	qEgVn/PwH+ycMpyUPQ1cbeOJ5C1Re67rjnSdXSHgtRZQiPESz27Iax2weHMonG1NUThsBhodt+6zr
-	0xDFr8qRZKe3UL503IteRyI6/S0j2NogwK3sdFYWQi9S8O2O5DifrhQDAvonUcCINUe1ihiXkxBN8
-	DUZ+VI0xsKEw8FTjVWZeqtFNZylv5G4iZyTDUAfmpE2CkAqrC6gb4Q0aKihQQRrFpBRG00oPHsn3F
-	WJzNZSOw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=Evsm93Jf7an7afCmpYNcizJpvuoFJEVrWxhvJjq1VG0=; b=BZU+RlKSNdKriD
+	z1KY1747Db+1aInTpPTHkA2i5gzaq+EhHTPCKopiFg62MKFoA/kvxTMP5iaUmJB8cs5lrOFoC3Grt
+	cDE9xAzQpzzFInwuYqp9N34pPpKXv5/my1Qse4wRRRxyD3S5t7OOgYQIodQGfShdHGqNARWhWiyjX
+	wOyWS5Kneqzd6w8gEDWSsnnnizJWVZ6aqUOVdfMBgPyipFA8npUT7btSNlmKfrnqfj5rDhfv9BKA5
+	fxvoIOOmM7RaMs8z9mOLPAqXAoGnutKXXZ9B5NjmtMWEsf0NnARWEe78aBZdR7L0YhZp6LdDYstZ3
+	+B1l7t8W2xDrLFe2abTQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQLs6-00000000Hb9-10tz;
-	Mon, 09 Nov 2026 09:41:02 +0000
-Received: from mgamail.intel.com ([192.198.163.15])
+	id 1xQM2M-00000000IvH-3SN4;
+	Mon, 09 Nov 2026 09:51:38 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQLs1-00000000HZi-0JQU
+	id 1xQM2L-00000000Iuy-2ylk
 	for kexec@lists.infradead.org;
-	Mon, 09 Nov 2026 09:40:58 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794217257; x=1825753257;
-  h=date:from:to:cc:subject:message-id;
-  bh=vBooA6VhsYcZAMEnY3jaYFIR2pJxRARTDoXMpAPgUto=;
-  b=gw/yqQ2vz0DKJqzVU8Q5Lt7FHWg1S38jGkd+LjLuUBzScj5I3PKUZOoQ
-   447roC8docK6W2+lBsuO5LNlcxg0wC5WWz5K6KH8AX7oTJBxb97l881Uf
-   NndR9i34PRYwtfC0eTEcfHQsUC0vXuFr/ZMJvR/BGPAXCRjU4+wVYGIDl
-   lZvrV8xaTGU6ltSXW/hkyHakiEOoIOUlRXy7ZXZDxhrDNTeCBEtj/VOZJ
-   3Mv6g2Ma5C8+gQ0wKvl3jY59ij+pTpnYnn4lEiuE1aFbAmBdgOd9Y95rx
-   y6e1Mq1v7USPSzRagnpkiLjgM79IN+ADvE2cvj9rKfMXsbe7E2kfn7RmG
-   g==;
-X-CSE-ConnectionGUID: 5QxzswuDQ8iEu6CGaTyFWw==
-X-CSE-MsgGUID: GaGGnuvnSuCojw2vrvL7qw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11960"; a="2930226"
-X-IronPort-AV: E=Sophos;i="6.27,203,1787036400"; 
-   d="scan'208";a="2930226"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2026 01:40:53 -0800
-X-CSE-ConnectionGUID: Gb+MBri1RIGsk2h3PhcTig==
-X-CSE-MsgGUID: jUmQsXU2QAO62R0ALOgD+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,203,1787036400"; 
-   d="scan'208";a="7637032"
-Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 09 Nov 2026 01:40:51 -0800
-Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1xQLrs-00000000uGH-2Z3p;
-	Mon, 09 Nov 2026 09:40:48 +0000
-Date: Mon, 09 Nov 2026 17:40:47 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org
-Subject: [liveupdate:next] BUILD SUCCESS
- fe0dae88a39894ee8ff9500cc0f04e24e7f058d2
-Message-ID: <20261109174047.2Wb9U6N6-lkp@intel.com>
-User-Agent: s-nail v14.9.25
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261109_014057_169249_51216E96 
-X-CRM114-Status: UNSURE (   4.59  )
-X-CRM114-Notice: Please train this message.
-X-Spam-Score: -4.4 (----)
+	Mon, 09 Nov 2026 09:51:37 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 20B1340790;
+	Mon,  9 Nov 2026 09:51:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 398411F0089F;
+	Mon,  9 Nov 2026 09:51:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794217897;
+	bh=Evsm93Jf7an7afCmpYNcizJpvuoFJEVrWxhvJjq1VG0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=bhqNNQOV9B10W1Kf+7AkY4klAiBwSyMS64uCIN5C2ry9FaHossio85/T+jcSxZFth
+	 zbBBi0sFWCFeSqS8KvSvajPokW1ehMJQfPzYOOyGXxzRPbsXl8EjF2/8ONP7xUM+XW
+	 sYwl2qRVwZseaif7xlBE9tCwEt6iL279YjBiJREbwO8R/mPiUOak4T7h/DbViQTQZg
+	 hXPJaTP8JI+Wj4hIFzuQ6JmkvfH1TEn65uzoxqrA6mEtLh5yvVX/D/he1p2v1Ocgin
+	 1AMXAeTnbw0i2zeG1M5YIXiTSUZdO4ESqh5MnIOOwJVmtGYcCZA38e8rLX9i1b48Ub
+	 rOqb9dsZR9vMw==
+Message-ID: <db93735f-2452-453f-bfe2-f1cef00f143a@kernel.org>
+Date: Mon, 9 Nov 2026 10:51:20 +0100
+X-Archived-By: <archiver.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 09/47] mm/rmap: handle device-exclusive entries in
+ folio_referenced_one()
+To: "Garg, Shivank" <shivankg@amd.com>,
+ "pratyush@kernel.org" <pratyush@kernel.org>,
+ "osalvador@suse.de" <osalvador@suse.de>, "xu.xin@linux.dev"
+ <xu.xin@linux.dev>, "peterx@redhat.com" <peterx@redhat.com>,
+ "aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>,
+ "baoquan.he@linux.dev" <baoquan.he@linux.dev>,
+ "riel@surriel.com" <riel@surriel.com>,
+ "ryan.roberts@arm.com" <ryan.roberts@arm.com>,
+ "mhocko@suse.com" <mhocko@suse.com>,
+ "usama.arif@linux.dev" <usama.arif@linux.dev>,
+ "hannes@cmpxchg.org" <hannes@cmpxchg.org>, "jack@suse.cz" <jack@suse.cz>,
+ "pfalcato@suse.de" <pfalcato@suse.de>,
+ "lance.yang@linux.dev" <lance.yang@linux.dev>,
+ "shakeel.butt@linux.dev" <shakeel.butt@linux.dev>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "weixugc@google.com" <weixugc@google.com>, "kees@kernel.org"
+ <kees@kernel.org>, "kasong@tencent.com" <kasong@tencent.com>,
+ "jannh@google.com" <jannh@google.com>, "chrisl@kernel.org"
+ <chrisl@kernel.org>, "liam@infradead.org" <liam@infradead.org>,
+ "yuanchu@google.com" <yuanchu@google.com>,
+ "youngjun.park@lge.com" <youngjun.park@lge.com>,
+ "ying.huang@linux.alibaba.com" <ying.huang@linux.alibaba.com>,
+ "joshua.hahnjy@gmail.com" <joshua.hahnjy@gmail.com>,
+ "rppt@kernel.org" <rppt@kernel.org>,
+ "axelrasmussen@google.com" <axelrasmussen@google.com>,
+ "nphamcs@gmail.com" <nphamcs@gmail.com>,
+ "gourry@gourry.net" <gourry@gourry.net>,
+ "willy@infradead.org" <willy@infradead.org>,
+ "baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>,
+ "surenb@google.com" <surenb@google.com>,
+ "qi.zheng@linux.dev" <qi.zheng@linux.dev>,
+ "matthew.brost@intel.com" <matthew.brost@intel.com>,
+ "minchan@kernel.org" <minchan@kernel.org>,
+ "dev.jain@arm.com" <dev.jain@arm.com>, "will@kernel.org" <will@kernel.org>,
+ "hughd@google.com" <hughd@google.com>,
+ "nico.pache@linux.dev" <nico.pache@linux.dev>,
+ "npiggin@gmail.com" <npiggin@gmail.com>,
+ "baohua@kernel.org" <baohua@kernel.org>,
+ "muchun.song@linux.dev" <muchun.song@linux.dev>,
+ "harry@kernel.org" <harry@kernel.org>,
+ "chengming.zhou@linux.dev" <chengming.zhou@linux.dev>,
+ "apopple@nvidia.com" <apopple@nvidia.com>, "ziy@nvidia.com"
+ <ziy@nvidia.com>, "vbabka@kernel.org" <vbabka@kernel.org>,
+ "jhubbard@nvidia.com" <jhubbard@nvidia.com>, "ljs@kernel.org"
+ <ljs@kernel.org>, "shikemeng@huaweicloud.com" <shikemeng@huaweicloud.com>,
+ "mhocko@kernel.org" <mhocko@kernel.org>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+ "pasha.tatashin@soleen.com" <pasha.tatashin@soleen.com>,
+ "kas@kernel.org" <kas@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
+ "rakie.kim@sk.com" <rakie.kim@sk.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "josef@toxicpanda.com" <josef@toxicpanda.com>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "usama.anjum@arm.com" <usama.anjum@arm.com>
+References: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
+ <20261031-fixes_core-v3-9-d6437171ecc3@kernel.org>
+ <50c50262c50da19f6a2b27f848324772b0e3c707.camel@amd.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <50c50262c50da19f6a2b27f848324772b0e3c707.camel@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,256 +171,97 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
-X-Archived-By: <archiver.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git next
-branch HEAD: fe0dae88a39894ee8ff9500cc0f04e24e7f058d2  Merge branch 'lu-pci-preservation' into next
+On 11/9/26 06:22, Garg, Shivank wrote:
+> On Sat, 2026-10-31 at 10:39 +0100, David Hildenbrand (Arm) wrote:
+>> page_vma_mapped_walk() can return non-present device-exclusive entries,
+>> but folio_referenced_one() passes them to PTE young-bit accessors that
+>> require present PTEs.
+>>
+>> We must neither call clear_flush_young_ptes_notify() nor
+>> folio_pte_batch() with non-present entries. For example, clearing the
+>> young bit on non-present PTEs can corrupt the entry: on arm64
+>> PTE_AF overlaps the swap type, so clearing it turns a device-exclusive
+>> entry into an ordinary swap entry.
+>>
+>> folio_pte_batch() will VM_WARN_ON_FOLIO.
+>>
+>> Apply the same approach as the previous fixes to e.g., damon_ptep_mkold():
+>> treat these entries as old from the CPU's perspective and obtain their
+>> young state through the MMU notifier.
+>>
+>> Skip PTE batching and MGLRU look-around for non-present entries, and
+>> don't modify non-present PTEs.
+>>
+>> Fixes: b756a3b5e7ea ("mm: device exclusive memory access")
+>> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+>> Cc: stable@vger.kernel.org
+>> Reported-by: Josef Bacik <josef@toxicpanda.com>
+>> Reviewed-by: Harry Yoo (Meta) <harry@kernel.org>
+>> Reviewed-by: Barry Song <baohua@kernel.org>
+>> Reviewed-by: Dev Jain <dev.jain@arm.com>
+>> Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+>> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+>> ---
+>>  mm/rmap.c | 23 +++++++++++++++++++----
+>>  1 file changed, 19 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/mm/rmap.c b/mm/rmap.c
+>> index 1131b76bbbc28..0faef46806e5c 100644
+>> --- a/mm/rmap.c
+>> +++ b/mm/rmap.c
+>> @@ -924,6 +924,7 @@ static bool folio_referenced_one(struct folio *folio,
+>>  	DEFINE_FOLIO_VMA_WALK(pvmw, folio, vma, address, 0);
+>>  	int ptes = 0, referenced = 0;
+>>  	unsigned int nr;
+>> +	pte_t pteval;
+>>  
+>>  	while (page_vma_mapped_walk(&pvmw)) {
+>>  		address = pvmw.address;
+>> @@ -968,10 +969,12 @@ static bool folio_referenced_one(struct folio *folio,
+>>  			return false;
+>>  		}
+>>  
+>> -		if (pvmw.pte && folio_test_large(folio)) {
+>> +		if (pvmw.pte)
+>> +			pteval = ptep_get(pvmw.pte);
+>> +
+>> +		if (pvmw.pte && pte_present(pteval) && folio_test_large(folio)) {
+>>  			const unsigned long end_addr = pmd_addr_end(address, vma->vm_end);
+>>  			const unsigned int max_nr = (end_addr - address) >> PAGE_SHIFT;
+>> -			pte_t pteval = ptep_get(pvmw.pte);
+>>  
+>>  			nr = folio_pte_batch(folio, pvmw.pte, pteval, max_nr);
+>>  		}
+>> @@ -981,11 +984,23 @@ static bool folio_referenced_one(struct folio *folio,
+>>  		 * are. —they could be on active/inactive lists or on MGLRU. So the
+>>  		 * simplest approach is to disable this look-around optimization.
+>>  		 */
+>> -		if (lru_gen_enabled() && !lru_gen_switching() && pvmw.pte) {
+>> +		if (lru_gen_enabled() && !lru_gen_switching() && pvmw.pte &&
+>> +		    pte_present(pteval)) {
+>>  			if (lru_gen_look_around(&pvmw, nr))
+>>  				referenced++;
+>>  		} else if (pvmw.pte) {
+>> -			if (clear_flush_young_ptes_notify(vma, address, pvmw.pte, nr))
+> 
+> This was the only caller of clear_flush_young_ptes_notify(), so this
+> leaves both definitions in mm/internal.h unused.
+> 
+> Would you prefer to remove them, or keep them for company with their
+> still used test_and_clear_young_ptes_notify friend?
 
-elapsed time: 958m
+Can you send a cleanup? Thanks!
 
-configs tested: 228
-configs skipped: 11
+-- 
+Cheers,
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                              allnoconfig    gcc-16.2.0
-alpha                             allyesconfig    gcc-16.2.0
-alpha                                defconfig    gcc-16.2.0
-alpha                                defconfig    gcc-16.2.0
-arc                               allmodconfig    clang-24
-arc                                allnoconfig    gcc-16.2.0
-arc                               allyesconfig    clang-24
-arc                               allyesconfig    gcc-16.2.0
-arc                           axs103_defconfig    gcc-16.2.0
-arc                                  defconfig    gcc-16.2.0
-arc                      haps_hs_smp_defconfig    gcc-16.2.0
-arc                   randconfig-1000-20261109    clang-24
-arc                   randconfig-1001-20261109    clang-24
-arm                               alldefconfig    gcc-16.2.0
-arm                                allnoconfig    gcc-16.2.0
-arm                               allyesconfig    clang-24
-arm                        aspeed_g5_defconfig    clang-24
-arm                          bcm2835_defconfig    clang-24
-arm                                  defconfig    gcc-16.2.0
-arm                        imx_v4_v5_defconfig    gcc-16.2.0
-arm                             mps2_defconfig    clang-24
-arm                         multi_v7_defconfig    gcc-16.2.0
-arm                         mvebu_v7_defconfig    gcc-16.2.0
-arm                          orion5x_defconfig    gcc-16.2.0
-arm                   randconfig-1000-20261109    clang-24
-arm                   randconfig-1001-20261109    clang-24
-arm                   randconfig-1002-20261109    clang-24
-arm                   randconfig-1003-20261109    clang-24
-arm                           sp7021_defconfig    gcc-16.2.0
-arm64                             allmodconfig    clang-24
-arm64                              allnoconfig    gcc-16.2.0
-arm64                                defconfig    gcc-16.2.0
-arm64                 randconfig-1000-20261109    gcc-13.5.0
-arm64                 randconfig-1001-20261109    gcc-13.5.0
-arm64                 randconfig-1002-20261109    gcc-13.5.0
-arm64                 randconfig-1003-20261109    gcc-13.5.0
-csky                              allmodconfig    gcc-16.2.0
-csky                               allnoconfig    gcc-16.2.0
-csky                                 defconfig    gcc-16.2.0
-csky                  randconfig-1000-20261109    gcc-13.5.0
-csky                  randconfig-1001-20261109    gcc-13.5.0
-hexagon                           allmodconfig    gcc-16.2.0
-hexagon                            allnoconfig    gcc-16.2.0
-hexagon                              defconfig    gcc-16.2.0
-hexagon               randconfig-1000-20261109    clang-19
-hexagon               randconfig-1001-20261109    clang-19
-i386                              allmodconfig    clang-22
-i386                               allnoconfig    gcc-16.2.0
-i386                              allyesconfig    clang-22
-i386        buildonly-randconfig-1000-20261109    clang-22
-i386        buildonly-randconfig-1001-20261109    clang-22
-i386        buildonly-randconfig-1002-20261109    clang-22
-i386        buildonly-randconfig-1003-20261109    clang-22
-i386        buildonly-randconfig-1004-20261109    clang-22
-i386        buildonly-randconfig-1005-20261109    clang-22
-i386                                 defconfig    gcc-16.2.0
-i386                  randconfig-1000-20261109    gcc-14
-i386                  randconfig-1001-20261109    gcc-14
-i386                  randconfig-1002-20261109    gcc-14
-i386                  randconfig-1003-20261109    gcc-14
-i386                  randconfig-1004-20261109    gcc-14
-i386                  randconfig-1005-20261109    gcc-14
-i386                  randconfig-1006-20261109    gcc-14
-i386                  randconfig-1007-20261109    gcc-12
-i386                  randconfig-1008-20261109    gcc-12
-i386                  randconfig-1009-20261109    gcc-12
-i386                  randconfig-1010-20261109    gcc-12
-i386                  randconfig-1011-20261109    gcc-12
-i386                  randconfig-1012-20261109    gcc-12
-i386                  randconfig-1013-20261109    gcc-12
-loongarch                         allmodconfig    clang-24
-loongarch                          allnoconfig    gcc-16.2.0
-loongarch                            defconfig    clang-24
-loongarch             randconfig-1000-20261109    clang-19
-loongarch             randconfig-1001-20261109    clang-19
-m68k                              allmodconfig    gcc-16.2.0
-m68k                               allnoconfig    gcc-16.2.0
-m68k                              allyesconfig    clang-24
-m68k                                 defconfig    clang-24
-m68k                        m5235evb_defconfig    gcc-16.2.0
-m68k                        m5329evb_defconfig    gcc-16.2.0
-m68k                        m5475evb_defconfig    gcc-16.2.0
-m68k                          nettel_defconfig    clang-24
-m68k                          nettel_defconfig    gcc-16.2.0
-microblaze                         allnoconfig    gcc-16.2.0
-microblaze                        allyesconfig    gcc-16.2.0
-microblaze                           defconfig    clang-24
-mips                              allmodconfig    gcc-16.2.0
-mips                               allnoconfig    gcc-16.2.0
-mips                              allyesconfig    gcc-16.2.0
-mips                           ath79_defconfig    clang-24
-mips                         bcm47xx_defconfig    gcc-16.2.0
-mips                         bcm63xx_defconfig    gcc-16.2.0
-mips                       bmips_stb_defconfig    gcc-16.2.0
-mips                      cu1000-neo_defconfig    gcc-16.2.0
-mips                          db1xxx_defconfig    gcc-16.2.0
-mips                       fuloong2e_defconfig    gcc-16.2.0
-mips                            gcw0_defconfig    gcc-16.2.0
-mips                             gpr_defconfig    gcc-16.2.0
-mips                            ip27_defconfig    gcc-16.2.0
-mips                            ip28_defconfig    gcc-16.2.0
-mips                       loongson3_defconfig    gcc-16.2.0
-nios2                             allmodconfig    clang-20
-nios2                              allnoconfig    clang-24
-nios2                                defconfig    clang-24
-nios2                 randconfig-1000-20261109    clang-19
-nios2                 randconfig-1001-20261109    clang-19
-openrisc                          allmodconfig    clang-20
-openrisc                           allnoconfig    clang-24
-openrisc                             defconfig    gcc-16.2.0
-openrisc                   or1klitex_defconfig    gcc-16.2.0
-openrisc                        virt_defconfig    gcc-16.2.0
-parisc                            allmodconfig    gcc-16.2.0
-parisc                             allnoconfig    clang-24
-parisc                            allyesconfig    clang-17
-parisc                               defconfig    gcc-16.2.0
-parisc                randconfig-1000-20261109    gcc-8.5.0
-parisc                randconfig-1001-20261109    gcc-8.5.0
-parisc64                             defconfig    clang-24
-powerpc                           allmodconfig    gcc-16.2.0
-powerpc                            allnoconfig    clang-24
-powerpc                      asp8347_defconfig    gcc-16.2.0
-powerpc                        ebony_defconfig    clang-24
-powerpc                           g5_defconfig    gcc-16.2.0
-powerpc                  mpc8315_rdb_defconfig    gcc-16.2.0
-powerpc                  mpc837x_rdb_defconfig    clang-24
-powerpc                       pmac32_defconfig    gcc-16.2.0
-powerpc                        ppc64_defconfig    gcc-16.2.0
-powerpc               randconfig-1000-20261109    gcc-8.5.0
-powerpc               randconfig-1001-20261109    gcc-8.5.0
-powerpc                      redwood_defconfig    gcc-16.2.0
-powerpc                      skiroot_defconfig    gcc-16.2.0
-powerpc                      taishan_defconfig    gcc-16.2.0
-powerpc64             randconfig-1000-20261109    gcc-8.5.0
-powerpc64             randconfig-1001-20261109    gcc-8.5.0
-riscv                             allmodconfig    clang-24
-riscv                              allnoconfig    clang-24
-riscv                             allyesconfig    clang-24
-riscv                                defconfig    gcc-16.2.0
-riscv                                defconfig    gcc-16.2.0
-riscv                 randconfig-1000-20261109    gcc-8.5.0
-riscv                 randconfig-1001-20261109    gcc-8.5.0
-s390                              allmodconfig    clang-17
-s390                               allnoconfig    clang-24
-s390                              allyesconfig    gcc-16.2.0
-s390                                 defconfig    gcc-16.2.0
-s390                  randconfig-1000-20261109    gcc-8.5.0
-s390                  randconfig-1001-20261109    gcc-8.5.0
-sh                                allmodconfig    gcc-16.2.0
-sh                                 allnoconfig    clang-24
-sh                                allyesconfig    clang-17
-sh                                   defconfig    gcc-14
-sh                         dreamcast_defconfig    gcc-16.2.0
-sh                 ecovec24-romimage_defconfig    gcc-16.2.0
-sh                           lboxre2_defconfig    gcc-16.2.0
-sh                             migor_defconfig    gcc-16.2.0
-sh                    randconfig-1000-20261109    gcc-8.5.0
-sh                    randconfig-1001-20261109    gcc-8.5.0
-sh                       rts7751r2d1_defconfig    gcc-16.2.0
-sh                           sdk7780_defconfig    clang-24
-sh                           sdk7786_defconfig    gcc-16.2.0
-sh                            se7751_defconfig    gcc-16.2.0
-sh                    secureedge5410_defconfig    gcc-16.2.0
-sh                              sh03_defconfig    gcc-16.2.0
-sh                    sh7770_generic_defconfig    gcc-16.2.0
-sh                             titan_defconfig    gcc-16.2.0
-sh                           urquell_defconfig    gcc-16.2.0
-sparc                             alldefconfig    gcc-16.2.0
-sparc                              allnoconfig    clang-24
-sparc                                defconfig    gcc-16.2.0
-sparc                 randconfig-1000-20261109    gcc-8.5.0
-sparc                 randconfig-1001-20261109    gcc-8.5.0
-sparc                        sparc32_defconfig    gcc-16.2.0
-sparc                        sparc64_defconfig    gcc-16.2.0
-sparc64                           allmodconfig    clang-20
-sparc64                              defconfig    gcc-14
-sparc64               randconfig-1000-20261109    gcc-8.5.0
-sparc64               randconfig-1001-20261109    gcc-8.5.0
-um                                allmodconfig    clang-17
-um                                 allnoconfig    clang-24
-um                                allyesconfig    gcc-16.2.0
-um                                   defconfig    gcc-14
-um                              i386_defconfig    gcc-14
-um                    randconfig-1000-20261109    gcc-8.5.0
-um                    randconfig-1001-20261109    gcc-8.5.0
-um                            x86_64_defconfig    gcc-14
-x86_64                            allmodconfig    clang-22
-x86_64                             allnoconfig    clang-24
-x86_64                            allyesconfig    clang-22
-x86_64      buildonly-randconfig-1000-20261109    clang-22
-x86_64      buildonly-randconfig-1001-20261109    clang-22
-x86_64      buildonly-randconfig-1002-20261109    clang-22
-x86_64      buildonly-randconfig-1003-20261109    clang-22
-x86_64      buildonly-randconfig-1004-20261109    clang-22
-x86_64      buildonly-randconfig-1005-20261109    clang-22
-x86_64                               defconfig    gcc-14
-x86_64                                   kexec    clang-22
-x86_64                randconfig-1000-20261109    clang-22
-x86_64                randconfig-1001-20261109    clang-22
-x86_64                randconfig-1002-20261109    clang-22
-x86_64                randconfig-1003-20261109    clang-22
-x86_64                randconfig-1004-20261109    clang-22
-x86_64                randconfig-1005-20261109    clang-22
-x86_64                randconfig-1006-20261109    gcc-14
-x86_64                randconfig-1007-20261109    gcc-14
-x86_64                randconfig-1008-20261109    gcc-14
-x86_64                randconfig-1009-20261109    gcc-14
-x86_64                randconfig-1010-20261109    gcc-14
-x86_64                randconfig-1011-20261109    gcc-14
-x86_64                randconfig-1012-20261109    clang-22
-x86_64                randconfig-1013-20261109    clang-22
-x86_64                randconfig-1014-20261109    clang-22
-x86_64                randconfig-1015-20261109    clang-22
-x86_64                randconfig-1016-20261109    clang-22
-x86_64                randconfig-1017-20261109    clang-22
-x86_64                                rhel-9.4    clang-22
-x86_64                            rhel-9.4-bpf    gcc-14
-x86_64                           rhel-9.4-func    clang-22
-x86_64                     rhel-9.4-kselftests    clang-22
-x86_64                          rhel-9.4-kunit    gcc-14
-x86_64                            rhel-9.4-ltp    gcc-14
-x86_64                           rhel-9.4-rust    clang-22
-xtensa                             allnoconfig    clang-24
-xtensa                            allyesconfig    clang-20
-xtensa                   audio_kc705_defconfig    gcc-16.2.0
-xtensa                 generic_kc705_defconfig    gcc-16.2.0
-xtensa                randconfig-1000-20261109    gcc-8.5.0
-xtensa                randconfig-1001-20261109    gcc-8.5.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+David
 
