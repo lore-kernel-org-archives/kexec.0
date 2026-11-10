@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170AB60A380C
-	for <kexec@archiver.kernel.org>; Tue, 10 Nov 2026 05:02:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D9E606B08E
+	for <kexec@archiver.kernel.org>; Tue, 10 Nov 2026 05:02:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=1i5NoZ5I;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=S/0Lb/4h
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=0NpXvfxv;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=lroROn1l
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
@@ -14,63 +14,63 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Jomqh3EBPc599hlxv7mE3jDDZh0m6vOE0Julqd7EtAs=; b=1i5NoZ5IBB6Op8EDWAX5DLerRF
-	p0A2GFAq2X82HQ9CT52/qfwZVoGd0VJND24QgXJnqlz3D5DkKtgg8Dm6zgEpc9o3/96/nC4vmzZ/M
-	QaEMXopHcv5kGXsS/1xQ5Lh1PJ1+zt9hGjDYvKDdOVOozWb4N0mBD2j3WhhRKHuWS1qHtCyCIMHIz
-	0aOFT19yRt7tD84ttX3rAYbO+j6Nq4cBkHP0BySwOTsOCsaxMJYTpKt6apMv1E/QwW1aKYYVB1HcI
-	WSPZ0ORwvD99tiX+s3f2MFNxzkAqKBlWi8WuJ5jS+KDO4C6pKTBaAGrMIk4bOkJKGJ6al/rWLcHlR
-	5yrb310g==;
+	bh=hqbeun0C1/XgWjYnTEG1QqOg75mMAInimMPRhrMj/I8=; b=0NpXvfxvRsx7DTslrqTTQwsu3B
+	FL8UjZ2urp5AcMVN8Zc6PIYY6HcHg0qNeN04dxMkr6FhBtmbeKV8YE0dQd2RJwgHuWZ/9eItM9vwa
+	EC+lwW6FS2OuLPNDw+sFSdpNO7iqXfqTJi7zevDKrfWFaWg00vjkhWwHsqNssehzRm4hTVVCLRcL1
+	WbLs1ZJZEAVqYBs9ofLZMwjIlWFMWtRQJDHkK7h5zK0jpy4T1JA4ObyOTx14Ig+8fZRr/uX0wwy6I
+	caDtrLopMls9GSZMwbQkINHk/BJx2v2jVglGZDvRBWIEyUGX0QTrzCGcCQ26ix0rzFQkNbC/xfwg+
+	RHd5C3dg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQe0E-00000002Rvo-0MG2;
-	Tue, 10 Nov 2026 05:02:38 +0000
+	id 1xQe0G-00000002S1F-1opM;
+	Tue, 10 Nov 2026 05:02:40 +0000
 Received: from mail-ej1-x647.google.com ([2a00:1450:4864:20::647])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQdzw-00000002RQ5-2ozB
+	id 1xQdzx-00000002RRV-3BBo
 	for kexec@lists.infradead.org;
-	Tue, 10 Nov 2026 05:02:23 +0000
-Received: by mail-ej1-x647.google.com with SMTP id a640c23a62f3a-c50549f6cf1so9144566b.3
-        for <kexec@lists.infradead.org>; Mon, 09 Nov 2026 21:02:19 -0800 (PST)
+	Tue, 10 Nov 2026 05:02:25 +0000
+Received: by mail-ej1-x647.google.com with SMTP id a640c23a62f3a-c49df8fe86eso118463466b.2
+        for <kexec@lists.infradead.org>; Mon, 09 Nov 2026 21:02:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794286938; x=1794891738; darn=lists.infradead.org;
+        d=google.com; s=20260707; t=1794286940; x=1794891740; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Jomqh3EBPc599hlxv7mE3jDDZh0m6vOE0Julqd7EtAs=;
-        b=S/0Lb/4hoJAQatZ84H7WmmxaG0vjXVeBySIlLVJn9Alp2Fuw3buz77nNeCw0kWpKCI
-         tx3oaDXeeXLfQWMkyxN0c5tFmOC4oik4PpAYX9oElMMrZREbtd7NJpx/WJUVLaZWilv9
-         URiNDC7ZgkSH6w2cNhtONGlSE9EGgPEWACyppmyOoJ+jn+UBPCq5B+eKmxOWAgK37a4o
-         qx9zE1BlWgO+ZXCxevhH5XP6mt2OL2ZlCub02DKcIXpEGMu5KQzMg7K+W0lUMO0nUqJA
-         Px8EexLtDdeVrQlq6O7xHXHL6qRr8UP3WB4lNT1SsK7rWnLNWd0vlnqeB3+R3XkKwTwW
-         KZIA==
+        bh=hqbeun0C1/XgWjYnTEG1QqOg75mMAInimMPRhrMj/I8=;
+        b=lroROn1lNiA9x6e701IBz5Fy+DX6vMMIVVzawCcQPOZ3OXwM3uZZeMTOugBWALm9wG
+         dcwlg9A1ZCe63u9R7J/Q1sY5701CmdU/EFfL8uJ2hsmHv+a2H90rORSIxKziaf11Enbx
+         QRZVTgMnHJRxagGX9JntTqVHi+57oSnEmmuZXljiCm3K+UAbVKqfpGk+MN1m4/G1MxdA
+         AruF6L1ienHtjVthAjBoPy+2Rv7GfYSAqz/iqJTri0Qi6gSIqsW7tatkmDtUtdDGfyzf
+         muFp/fzL+w2g9myUlyEUY2uA5qnmEr4SN4KB9OniCu57uWkIa5chBBs2g8urkN3wxlli
+         yRaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794286938; x=1794891738;
+        d=1e100.net; s=20260707; t=1794286940; x=1794891740;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Jomqh3EBPc599hlxv7mE3jDDZh0m6vOE0Julqd7EtAs=;
-        b=vpBUt74OS9+okwU+xgVcE7W2eEW4pZRaYNeenthC5hgn9ckB5MU+opJk1b1a0xctZw
-         I1Jt4e4jyZloBbUiLvjvDuX3sBCdzPzmFtlNyEIIHQH56fz8bJNGjvquihepo6+YYjCY
-         4iA23J/tc1IZZ6JLmgc2GvNvkhAiR6XJ8keb9A+RRDUErlHSLcPKrRcDAFhTtgSz1kD2
-         wvq2nqPC2+Z7H2X/Qb9L6eJAWK+Ntj//BVLL+zMf66YHDoNNPSUjDfPRsdW0GxEmbsZG
-         LmOul6lV+Ofkv79rmMoCnnW9NRn/pWPTHTojmixMIaLArmp1BBUL4vIeFk4FUrXXoK1e
-         W8Cw==
-X-Forwarded-Encrypted: i=1; AL+hErET2Mz5vIGI1hvExml6Uy0ZRYvXcDtCXZI/46TULa2f82j7lIOo4SyLPlNPmSXOyStMRKX+DQ==@lists.infradead.org
-X-Gm-Message-State: APuU4Z8yqafls+cwwiJUvSewJ1B3jVyt935j7A6JvsS7tpcRdsLBgh5U
-	ZlRKv3qkHTDlQ3q2Y63j+ynjUFIucuTfR78LTSqbuyYA55VHDAFFH9mRs+G1PJEMsA7KS4OK7zK
-	JZzkkM8nA5GMckJrCcg==
-X-Received: from edzg2.prod.google.com ([2002:a05:6402:902:b0:6b5:8540:2bf])
+        bh=hqbeun0C1/XgWjYnTEG1QqOg75mMAInimMPRhrMj/I8=;
+        b=igl+JwQBxDeYCGP4kUB5f2zfBevjSgSx9a6GuFmTWztVy647DZq17UsfQYiHq48Nj+
+         472YiEYwg082a31Ojuh4Cao0r53tRIixtNi6fTNtEopZ0tbxO0M+YXRNwcieQFM2LIBq
+         KUMBtLLgj5kv474PC1uBKNHg2PPK05sjI1nJViAG4+tGrvAIkWwNob0zVnLKJWXWrR3W
+         xvc4MyrTFi7zwnfwZutMhI02wL5G5pKqnpr5s9nS7DM02WAjSyr0uf1rfT4nvAZZL6Cw
+         P3fVFfJfxlwkaA0rfhr0XUbiC1iwShlOrhuVPHUsIVS72DSHkJScATRj1YubUjaA6cy5
+         cy+g==
+X-Forwarded-Encrypted: i=1; AL+hErE3t5QWlUs2Xh5KsNiJwndmEKbiPa1H3HxWmwr8oVxmW7fvUCGNzwKwZx1D35b2xqEqqKJptA==@lists.infradead.org
+X-Gm-Message-State: APuU4Z8Due7+AuR26NDKfDVga9VQLR8jQ3ogL0eJjSS7jBGuln0pQVoo
+	ssDgiZ7sXHExn2qI0PJxBVQw/GuX8NMiVpxmkCelxrcToi7Tz5k739kGhs4FvoL5K3C1VjqySF2
+	dM5QjuMgUuDkBc5AIqQ==
+X-Received: from ejqs13.prod.google.com ([2002:a17:906:454d:b0:c3f:2fd1:c5c])
  (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:907:3d8f:b0:c48:a838:c16d with SMTP id a640c23a62f3a-c5049629dbbmr100182566b.30.1794286938072;
- Mon, 09 Nov 2026 21:02:18 -0800 (PST)
-Date: Tue, 10 Nov 2026 05:01:55 +0000
+ 2002:a17:907:6d0d:b0:c41:e0c0:e6b7 with SMTP id a640c23a62f3a-c504951cddfmr104842866b.12.1794286939400;
+ Mon, 09 Nov 2026 21:02:19 -0800 (PST)
+Date: Tue, 10 Nov 2026 05:01:56 +0000
 In-Reply-To: <20261110050202.529473-1-tarunsahu@google.com>
 X-Archived-By: <archiver.kernel.org>
 Mime-Version: 1.0
 References: <20261110050202.529473-1-tarunsahu@google.com>
 X-Mailer: git-send-email 2.56.0.506.g506a7eabc5-goog
-Message-ID: <20261110050202.529473-13-tarunsahu@google.com>
-Subject: [PATCH v4 12/19] liveupdate: Add feature header to struct luo_file_ser
+Message-ID: <20261110050202.529473-14-tarunsahu@google.com>
+Subject: [PATCH v4 13/19] liveupdate: Add feature header to struct luo_flb_header_ser
 From: Tarun Sahu <tarunsahu@google.com>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>, robin.murphy@arm.com, 
 	maz@kernel.org, will@kernel.org, David Matlack <dmatlack@google.com>, 
@@ -87,8 +87,8 @@ Cc: kvmarm@lists.linux.dev, linux-pci@vger.kernel.org,
 	Tarun Sahu <tarunsahu@google.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261109_210220_779561_48F5D766 
-X-CRM114-Status: GOOD (  15.01  )
+X-CRM114-CacheID: sfid-20261109_210221_847044_B5FAF7CA 
+X-CRM114-Status: GOOD (  16.93  )
 X-Spam-Score: -9.5 (---------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -108,124 +108,147 @@ X-Spam-Status: No, score=-26.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Precede each serialized file entry in a LUO file set KHO block set with
-struct kho_ser_hdr via DECLARE_KHO_SER so future per-file metadata
-features can append fields to struct luo_file_ser without breaking
-compatibility between adjacent kernels.
+Precede struct luo_flb_header_ser with struct kho_ser_hdr via
+DECLARE_KHO_SER so future File-Lifecycle-Bound (FLB) header features can
+append fields to struct luo_flb_header_ser without breaking compatibility
+between adjacent kernels.
 
-Initialize file set block sets with kho_ser_size(luo_file_ser), initialize
-each entry feature header in luo_file_freeze(), and validate the incoming
-feature header in luo_file_deserialize_one() before accessing the struct
-luo_file_ser payload.
+Initialize the header in luo_flb_setup_outgoing() and place the outgoing
+entry array immediately after kho_ser_size(luo_flb_header_ser). On the
+incoming path in luo_flb_setup_incoming(), validate the feature header
+with kho_ser_validate() and locate the incoming entry array at
+fhdr->size so entries remain properly aligned even if the source kernel
+serialized a different header layout.
 
 Signed-off-by: Tarun Sahu <tarunsahu@google.com>
 ---
- include/linux/kho/abi/luo.h  |  6 +++---
- kernel/liveupdate/luo_file.c | 26 +++++++++++++++++++-------
- 2 files changed, 22 insertions(+), 10 deletions(-)
+ include/linux/kho/abi/luo.h      |  6 ++----
+ kernel/liveupdate/luo_core.c     |  4 +---
+ kernel/liveupdate/luo_flb.c      | 36 +++++++++++++++++++++-----------
+ kernel/liveupdate/luo_internal.h |  2 +-
+ 4 files changed, 28 insertions(+), 20 deletions(-)
 
 diff --git a/include/linux/kho/abi/luo.h b/include/linux/kho/abi/luo.h
-index bd19211c64e1..38b4658183a2 100644
+index 38b4658183a2..4913707ba0d3 100644
 --- a/include/linux/kho/abi/luo.h
 +++ b/include/linux/kho/abi/luo.h
-@@ -92,6 +92,8 @@ DECLARE_KHO_SER(luo_ser, 24, 0, 0);
-  * @compatible:  File handler compatible string.
-  * @data:        Private data
-  * @token:       User provided token for this file
-+ *
+@@ -157,16 +157,14 @@ DECLARE_KHO_SER(luo_session_ser, 72, 0, 0);
+  * This structure is located at the physical address specified by the
+  * flbs_pa in luo_ser.
+  *
+- * If this structure is modified, `LUO_ABI_COMPATIBLE` must be updated.
 + * Preceded by &struct kho_ser_hdr.
   */
- struct luo_file_ser {
- 	char compatible[LIVEUPDATE_HNDL_COMPAT_LENGTH];
-@@ -99,9 +101,7 @@ struct luo_file_ser {
- 	u64 token;
+ struct luo_flb_header_ser {
+ 	u64 pgcnt;
+ 	u64 count;
  };
  
--static_assert(sizeof(struct luo_file_ser) == 64);
+-static_assert(sizeof(struct luo_flb_header_ser) == 16);
 -static_assert(!IS_ENABLED(CONFIG_64BIT) ||
--	      __alignof__(struct luo_file_ser) == 8);
-+DECLARE_KHO_SER(luo_file_ser, 64, 0, 0);
+-	      __alignof__(struct luo_flb_header_ser) == 8);
++DECLARE_KHO_SER(luo_flb_header_ser, 16, 0, 0);
  
  /**
-  * struct luo_file_set_ser - Represents the serialized metadata for file set
-diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
-index 02d09a80d785..2da327f8bdae 100644
---- a/kernel/liveupdate/luo_file.c
-+++ b/kernel/liveupdate/luo_file.c
-@@ -486,10 +486,12 @@ int luo_file_freeze(struct luo_file_set *file_set,
- 	kho_block_set_it_init(&it, &file_set->block_set);
+  * struct luo_flb_ser - Represents the serialized state of a single FLB object.
+diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
+index d0f72f27001d..79bb5f64bfac 100644
+--- a/kernel/liveupdate/luo_core.c
++++ b/kernel/liveupdate/luo_core.c
+@@ -131,9 +131,7 @@ static int __init luo_early_startup(void)
+ 	if (err)
+ 		goto out_free_ser;
  
- 	list_for_each_entry(luo_file, &file_set->files_list, list) {
--		struct luo_file_ser *file_ser = kho_block_set_it_reserve_entry(&it);
-+		DECLARE_KHO_SER_HDR(luo_file_ser, *fhdr) =
-+			kho_block_set_it_reserve_entry(&it);
-+		struct luo_file_ser *file_ser;
+-	luo_flb_setup_incoming(luo_ser->flbs_pa);
+-
+-	err = 0;
++	err = luo_flb_setup_incoming(luo_ser->flbs_pa);
  
- 		/* This should not fail normally as blocks were pre-allocated */
--		if (WARN_ON_ONCE(!file_ser)) {
-+		if (WARN_ON_ONCE(!fhdr)) {
- 			err = -ENOSPC;
- 			goto err_unfreeze;
- 		}
-@@ -502,6 +504,8 @@ int luo_file_freeze(struct luo_file_set *file_set,
- 			goto err_unfreeze;
- 		}
+ out_free_ser:
+ 	kho_restore_free(fhdr);
+diff --git a/kernel/liveupdate/luo_flb.c b/kernel/liveupdate/luo_flb.c
+index cd715a7c1d99..a8dcdb8456fd 100644
+--- a/kernel/liveupdate/luo_flb.c
++++ b/kernel/liveupdate/luo_flb.c
+@@ -53,7 +53,7 @@
  
-+		kho_ser_init(fhdr, luo_file_ser);
-+		file_ser = kho_ser_payload(fhdr, luo_file_ser);
- 		strscpy(file_ser->compatible, luo_file->fh->compatible,
- 			sizeof(file_ser->compatible));
- 		file_ser->data = luo_file->serialized_data;
-@@ -742,11 +746,19 @@ int luo_file_finish(struct luo_file_set *file_set)
+ #define LUO_FLB_PGCNT		1ul
+ #define LUO_FLB_MAX		(((LUO_FLB_PGCNT << PAGE_SHIFT) -	\
+-		sizeof(struct luo_flb_header_ser)) / sizeof(struct luo_flb_ser))
++		kho_ser_size(luo_flb_header_ser)) / sizeof(struct luo_flb_ser))
+ 
+ struct luo_flb_header {
+ 	struct luo_flb_header_ser *header_ser;
+@@ -559,33 +559,45 @@ int liveupdate_flb_get_outgoing(struct liveupdate_flb *flb, void **objp)
+ 
+ int __init luo_flb_setup_outgoing(u64 *flbs_pa)
+ {
++	DECLARE_KHO_SER_HDR(luo_flb_header_ser, *fhdr);
+ 	struct luo_flb_header_ser *header_ser;
+ 
+-	header_ser = kho_alloc_preserve(LUO_FLB_PGCNT << PAGE_SHIFT);
+-	if (IS_ERR(header_ser))
+-		return PTR_ERR(header_ser);
++	fhdr = kho_alloc_preserve(LUO_FLB_PGCNT << PAGE_SHIFT);
++	if (IS_ERR(fhdr))
++		return PTR_ERR(fhdr);
+ 
+-	*flbs_pa = virt_to_phys(header_ser);
++	kho_ser_init(fhdr, luo_flb_header_ser);
++	header_ser = kho_ser_payload(fhdr, luo_flb_header_ser);
++
++	*flbs_pa = virt_to_phys(fhdr);
+ 
+ 	header_ser->pgcnt = LUO_FLB_PGCNT;
+ 	luo_flb_global.outgoing.header_ser = header_ser;
+-	luo_flb_global.outgoing.ser = (void *)(header_ser + 1);
++	luo_flb_global.outgoing.ser = (void *)fhdr + kho_ser_size(luo_flb_header_ser);
+ 	luo_flb_global.outgoing.active = true;
+ 
+ 	return 0;
  }
  
- static int luo_file_deserialize_one(struct luo_file_set *file_set,
--				    struct luo_file_ser *ser)
-+				    DECLARE_KHO_SER_HDR(luo_file_ser, *fhdr))
+-void __init luo_flb_setup_incoming(u64 flbs_pa)
++int __init luo_flb_setup_incoming(u64 flbs_pa)
  {
- 	struct liveupdate_file_handler *fh;
- 	bool handler_found = false;
-+	struct luo_file_ser *ser;
- 	struct luo_file *luo_file;
+-	struct luo_flb_header_ser *header_ser;
++	DECLARE_KHO_SER_HDR(luo_flb_header_ser, *fhdr);
 +	int err;
-+
-+	err = kho_ser_validate(fhdr, luo_file_ser);
+ 
+ 	if (!flbs_pa)
+-		return;
++		return 0;
+ 
+-	header_ser = phys_to_virt(flbs_pa);
+-	luo_flb_global.incoming.header_ser = header_ser;
+-	luo_flb_global.incoming.ser = (void *)(header_ser + 1);
++	fhdr = phys_to_virt(flbs_pa);
++	err = kho_ser_validate(fhdr, luo_flb_header_ser);
 +	if (err)
 +		return err;
 +
-+	ser = kho_ser_payload(fhdr, luo_file_ser);
- 
- 	down_read(&luo_register_rwlock);
- 	list_private_for_each_entry(fh, &luo_file_handler_list, list) {
-@@ -810,7 +822,7 @@ int luo_file_deserialize(struct luo_file_set *file_set,
- 			 DECLARE_KHO_SER_HDR(luo_file_set_ser, *file_set_fhdr))
- {
- 	struct luo_file_set_ser *file_set_ser;
--	struct luo_file_ser *file_ser;
-+	DECLARE_KHO_SER_HDR(luo_file_ser, *fhdr);
- 	struct kho_block_set_it it;
- 	int err;
- 
-@@ -848,8 +860,8 @@ int luo_file_deserialize(struct luo_file_set *file_set,
- 	 * reliably reset devices and reclaim memory.
- 	 */
- 	kho_block_set_it_init(&it, &file_set->block_set);
--	while ((file_ser = kho_block_set_it_read_entry(&it))) {
--		err = luo_file_deserialize_one(file_set, file_ser);
-+	while ((fhdr = kho_block_set_it_read_entry(&it))) {
-+		err = luo_file_deserialize_one(file_set, fhdr);
- 		if (err)
- 			goto err_destroy_blocks;
- 		file_set->count++;
-@@ -883,7 +895,7 @@ int luo_file_deserialize(struct luo_file_set *file_set,
- void luo_file_set_init(struct luo_file_set *file_set)
- {
- 	INIT_LIST_HEAD(&file_set->files_list);
--	kho_block_set_init(&file_set->block_set, sizeof(struct luo_file_ser));
-+	kho_block_set_init(&file_set->block_set, kho_ser_size(luo_file_ser));
++	luo_flb_global.incoming.header_ser =
++		kho_ser_payload(fhdr, luo_flb_header_ser);
++	luo_flb_global.incoming.ser = (void *)fhdr + fhdr->size;
+ 	luo_flb_global.incoming.active = true;
++
++	return 0;
  }
  
- void luo_file_set_destroy(struct luo_file_set *file_set)
+ /**
+diff --git a/kernel/liveupdate/luo_internal.h b/kernel/liveupdate/luo_internal.h
+index e22a8cf39d91..df8306d73768 100644
+--- a/kernel/liveupdate/luo_internal.h
++++ b/kernel/liveupdate/luo_internal.h
+@@ -121,7 +121,7 @@ void luo_flb_file_unpreserve(struct liveupdate_file_handler *fh);
+ void luo_flb_file_finish(struct liveupdate_file_handler *fh);
+ void luo_flb_unregister_all(struct liveupdate_file_handler *fh);
+ int __init luo_flb_setup_outgoing(u64 *flbs_pa);
+-void __init luo_flb_setup_incoming(u64 flbs_pa);
++int __init luo_flb_setup_incoming(u64 flbs_pa);
+ void luo_flb_serialize(void);
+ 
+ #ifdef CONFIG_LIVEUPDATE_TEST
 -- 
 2.56.0.506.g506a7eabc5-goog
 
