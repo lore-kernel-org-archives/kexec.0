@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3329A606E4B3
-	for <kexec@archiver.kernel.org>; Tue, 10 Nov 2026 05:02:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA38606F162
+	for <kexec@archiver.kernel.org>; Tue, 10 Nov 2026 05:02:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=3D3sB8TH;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=iR4Xslnb
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=TKbV3sKI;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=SJ1/HD6j
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
@@ -14,63 +14,63 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=ktkwbxS31+AJAEtLgON1FC5vgxwtOH8mMNa0BnHkPzQ=; b=3D3sB8THdYKpruPYc1rxVLa4/q
-	x16LVuw0EjjhW1mpvlKmdhwN2Dlnezt0fM6Xx+C02PcQrtguKCD2yBEbHVGpMI14UYdED4eFwdvGU
-	dvU5hXMRPWtFMlUXcknHNuMCUQMqAsaKpK0Np6IzuJqfVDWVeDMerS/eoU+Sy2LCxGWMBbEvy7uoG
-	5JIrSHJgGvbMi8SAA+w/zihn47mLIAxFNt8J2bTl6xIvZ2e4zA+ibSBhZzdBiZ0mHCwCuKdjUP3eL
-	kpcoB1Z9Vxq+9kRQIh51oY2lUEzeZ2kyG5baV+gJHR2tY6hNCZXekeCAhX1NawMr2mFqvQriRuJer
-	Xs2Hd1pA==;
+	bh=Ebeh5Rs4TXuXQtxviE5PkM1eDaH/25gqcmQnH1h2ass=; b=TKbV3sKITqJNIHp81/2pMwfaRo
+	ATJ5jkZqCIajJfPBebWJbttrvnF4+eZfHPxdBySNojAE5BCmpBQgByK4lgWQM2ppoOyoynags7gMH
+	dI2iyVbB80aI+V7MCF7Dk9b4NKGkJx88Glewx5PI7UCodzB1aelomWn2jZsWfV81ndVPWnrLKj44x
+	PtuWp3RsKpNQFLTvJYBXSy33vshxJXWHNRxejZdA9K4RqlqKEucIp2WezfnvHKz3fVdEZHCLEEdaQ
+	6yEglE9iI0/fSICKLpkjV46bc9kNfpjBKUsD+E2f90YOftP7Fu7GXqLR76OLOZKaawGB0jMdJ8q32
+	x+6zsmog==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQe02-00000002Rb4-1ula;
-	Tue, 10 Nov 2026 05:02:26 +0000
-Received: from mail-ed1-x546.google.com ([2a00:1450:4864:20::546])
+	id 1xQe04-00000002RfR-0jNJ;
+	Tue, 10 Nov 2026 05:02:28 +0000
+Received: from mail-ed1-x545.google.com ([2a00:1450:4864:20::545])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQdzo-00000002RFd-49Bx
+	id 1xQdzr-00000002RJs-1Mja
 	for kexec@lists.infradead.org;
-	Tue, 10 Nov 2026 05:02:17 +0000
-Received: by mail-ed1-x546.google.com with SMTP id 4fb4d7f45d1cf-6b6ed7a9ffaso1586811a12.0
-        for <kexec@lists.infradead.org>; Mon, 09 Nov 2026 21:02:12 -0800 (PST)
+	Tue, 10 Nov 2026 05:02:19 +0000
+Received: by mail-ed1-x545.google.com with SMTP id 4fb4d7f45d1cf-6b6f881bcc4so1444182a12.0
+        for <kexec@lists.infradead.org>; Mon, 09 Nov 2026 21:02:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794286931; x=1794891731; darn=lists.infradead.org;
+        d=google.com; s=20260707; t=1794286933; x=1794891733; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=ktkwbxS31+AJAEtLgON1FC5vgxwtOH8mMNa0BnHkPzQ=;
-        b=iR4Xslnb3jdcvIY0+OstNr5iq6Vd+iDzMSfwnMYLzXcJpOCwWv3coFaI2LFeowS+k0
-         0jeCp2uasM8R7v8TTc4PwL90xhi8bGuB59Gb8lMsdyKk/SrgKPDZ/oavUXVJdOGJD650
-         Y7hWX+yKm9px2yvFQ9SGmMQJVtU7YP+F/YnkJu/0s7ZVZ1YzwFPwssk0fh76gOrHoQvM
-         6VZR1/N3wGG7+Rbmo/EDLi7pOnoxkZKLxDkEcnytnBTCru1MtM2Cd20leeobqu7AipBs
-         jYxkFrbgNOaJmGypO9SJEf8NHZZJ2To5G6PhtVEvvv7jCbpOwtzSQb5n2cBVT7B46PIl
-         zUfQ==
+        bh=Ebeh5Rs4TXuXQtxviE5PkM1eDaH/25gqcmQnH1h2ass=;
+        b=SJ1/HD6je2AO/S5VJDvS0OZESJjxkErJPDvSPD9D/p4QHRzU92VGinTE9wi080PBy2
+         piObDiOqkvMnhhF/ufMsHgWTMeZEM5A90J0ZYq5BPKAhWDjJQNbuXwnq7lvMh1RCXejK
+         RHJEaKnIOMr5tSIA09SdrbxC15/EfbE7hTz2galITfamtDxfBxrMX2iWSFLuEzXOx8z3
+         j/953FFU/WcX6tKbxez9sSG2SaKt7u0z5eXCe7e1NpOqF5thZPBv7to9XT8sb3mcDXcy
+         A2Gzce0GDNScv+3H+RBelwDaoz10wptL04REcVrpM6HgTXlQJu6a7DdsVV4EKDCW6TWN
+         cvuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794286931; x=1794891731;
+        d=1e100.net; s=20260707; t=1794286933; x=1794891733;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=ktkwbxS31+AJAEtLgON1FC5vgxwtOH8mMNa0BnHkPzQ=;
-        b=cx5O50n08qEryck34xabZ3J0N4btuMYhOzaP6jOymMTWcj/chZon7qjvoqq5H++DyO
-         gOcMyx56Gb+nKAZr7FeC24ePwx8SmGkkRX2dCRhVNWmcA7mgHLqeM4k26UOoAwB91kLL
-         bgFDZCeEzSug/UZu4LNyT/aefL7UQMmFDKyB0IGfGemEglZdrCy1/PTZOumjoki3Pzfr
-         /kk4jRTBIsuStTTiXREwmy633H3GGI3oh5plFZrmriY4IW1/n1SvvYgksbnai+K7vbu3
-         3QbWXKFPly7sEMqr9emTzhORju1cJyjVf4oixT/+d4M1AgS/v2We25r4yQwtBYGSo1eP
-         rZsQ==
-X-Forwarded-Encrypted: i=1; AL+hErEjxBnUfCkpvy4zzZX3vXArwu3FcFchhz9VUA15d8Uy8b3wF954pyJ2m/ZuifdBtH1/seG/Ww==@lists.infradead.org
-X-Gm-Message-State: APuU4Z9gaOtvIYuEw629A0UeV3f/eWVr2VbZvM/6oeLt+NF6cqk6EsA3
-	am4ZN7hEOvuc1OcI6rJoWDbh6Zz2gqbmzw2zcXa78iihZ7Ww6iCZqUqgF+6AIzjvY/xNRBbU6TK
-	AIVeRzKwz72JDLK63rw==
-X-Received: from edra14.prod.google.com ([2002:aa7:d90e:0:b0:6b1:af33:7d07])
+        bh=Ebeh5Rs4TXuXQtxviE5PkM1eDaH/25gqcmQnH1h2ass=;
+        b=TvUmnwGBtqNPVJFjdeDPJMIFRKRbPnQQM4dW4FrW0yrSUb/YUsJ3ZGQVmwXMqSVXva
+         dLPz3jq/Bh7JJIsw2yTp7JBy63kN6o81Aq6KpxR+56kXH7y928uFE0Ow6ezTyRxF0ni5
+         m/Q0W4OxoJxSIxv8H47dgpw/KpIB7WSsXTvZLx7wJXBnc/BYUFdRcI8Ol2vsWNlDq/Ej
+         t1wbddtt3vCtOV1EDOglYw/RgFqGn0KTzvMMM8KKTEFcg+gDMNo1lKQMREZ6fi/QmXAN
+         DD6lBevoSmQHeM6MonZ/DLRHCJ0tcphH/9Ze1QBbqLR9F5K08Xg456/cnFa9Nm+vDzUp
+         ji4g==
+X-Forwarded-Encrypted: i=1; AL+hErFDOJ2bcmnXwNRoOU0496xt9Wcj6WunuXK+oYm+6b71NTV1GH/NdYusQ8Ev4XKUJWIebtirPg==@lists.infradead.org
+X-Gm-Message-State: APuU4Z/OQKuYdy9VfzdoggM+gaObS7nOoQYUB391T5hDZ3IWq9l+Jv9q
+	zAXN2QDH7F3ZeYFz04DMWox2oy0hNqHFErI2G2/vqN/MlRhAGjoWVfGvhGWQ+ZrmhQyMEe8j1iV
+	U9K/P+8jrQxQbE/wocA==
+X-Received: from edsa5.prod.google.com ([2002:aa7:d745:0:b0:6af:ab34:1a21])
  (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6402:947:b0:6b1:b97b:750 with SMTP id 4fb4d7f45d1cf-6b7564fbe2fmr835079a12.16.1794286930545;
- Mon, 09 Nov 2026 21:02:10 -0800 (PST)
-Date: Tue, 10 Nov 2026 05:01:48 +0000
+ 2002:a05:6402:43cb:b0:6b7:1bb8:5a5 with SMTP id 4fb4d7f45d1cf-6b756ad506dmr1143844a12.19.1794286933123;
+ Mon, 09 Nov 2026 21:02:13 -0800 (PST)
+Date: Tue, 10 Nov 2026 05:01:50 +0000
 In-Reply-To: <20261110050202.529473-1-tarunsahu@google.com>
 X-Archived-By: <archiver.kernel.org>
 Mime-Version: 1.0
 References: <20261110050202.529473-1-tarunsahu@google.com>
 X-Mailer: git-send-email 2.56.0.506.g506a7eabc5-goog
-Message-ID: <20261110050202.529473-6-tarunsahu@google.com>
-Subject: [PATCH v4 05/19] kho: Add feature header for fine-grained ABI compatibility
+Message-ID: <20261110050202.529473-8-tarunsahu@google.com>
+Subject: [PATCH v4 07/19] kho: vmalloc: Add the feature header
 From: Tarun Sahu <tarunsahu@google.com>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>, robin.murphy@arm.com, 
 	maz@kernel.org, will@kernel.org, David Matlack <dmatlack@google.com>, 
@@ -87,8 +87,8 @@ Cc: kvmarm@lists.linux.dev, linux-pci@vger.kernel.org,
 	Tarun Sahu <tarunsahu@google.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261109_210213_273502_DA3280D7 
-X-CRM114-Status: GOOD (  27.31  )
+X-CRM114-CacheID: sfid-20261109_210215_562931_5615CDCA 
+X-CRM114-Status: GOOD (  24.06  )
 X-Spam-Score: -9.5 (---------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -108,515 +108,482 @@ X-Spam-Status: No, score=-26.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Serialized structures in KHO and Live Update Orchestrator currently rely
-on whole-structure compatibility strings or monolithic version fields to
-validate handed-over state across kexec. Any change to a serialized
-structure, even an optional additive field, requires bumping the
-compatibility string or version number and breaks live update between
-adjacent kernels.
+Register struct kho_vmalloc with the KHO serialization feature header
+mechanism to allow future additive fields or feature extensions without
+breaking live update ABI compatibility.
 
-Introduce a generic feature header (struct kho_ser_hdr) for serialized
-binary structures in include/linux/kho/abi/feature.h. Each subsystem
-groups the fields of its serialized structure under feature indices,
-starting with index 0 for base fields. When a subsystem adds a new
-capability, it appends new fields to the end of its payload structure
-under a new feature index. Retired fields are kept in place so existing
-field offsets never shift; if the type or format of a field needs to
-change, the existing field and feature are kept intact until retired and
-a new feature index with an appended field of the new type is added.
-Only when a change requires a complete break in the serialized layout or
-semantics that feature flags cannot handle, a new handler or format can
-be introduced with an incremented version number.
+Add DECLARE_KHO_SER(kho_vmalloc, 16, 0, 0) to register the 16-byte
+structure with 0 required and 0 optional features. Update function
+prototypes in include/linux/kexec_handover.h to take
+DECLARE_KHO_SER_HDR(kho_vmalloc, *fhdr) parameters, documenting which
+registered structure the feature header belongs to while enforcing
+compile-time type verification.
 
-Each feature belongs to either a required feature space or an optional
-feature space. Both spaces are numbered independently starting from 0.
-In the serialized header, required features occupy the first nr_required
-bits, followed immediately by nr_optional bits for optional features:
+In kho_preserve_vmalloc(), initialize the feature header with
+kho_ser_init() and access the payload fields via kho_ser_payload().
+In kho_restore_vmalloc(), validate incoming required features with
+kho_ser_validate() and access payload fields via kho_ser_payload().
+In kho_unpreserve_vmalloc(), access payload fields via kho_ser_payload().
+The chunk page format and traversal remain unchanged.
 
-  struct kho_ser_hdr {
-          __u32 size;
-          __u16 nr_required;
-          __u16 nr_optional;
-          __aligned_u64 flags[];
-  };
+Update memfd_luo and test_kho to pass typed feature header pointers
+and use kho_ser_size() for allocation sizing.
 
-A set bit indicates that the feature is present in the payload. The
-truth table for deserialization:
-
-  Source bit       Target            Action
-  Not set          -                 Accept: feature absent
-  Optional set     unknown or known  Accept: ignore or use the data
-  Required set     known             Accept: use the feature data
-  Required set     unknown           Reject: -EOPNOTSUPP
-
-During deserialization, the target kernel only validates required
-features: if the source set any required feature bit at or beyond the
-known required feature count of the target kernel, validation fails with
--EOPNOTSUPP. Optional features are never rejected; the target kernel
-simply checks whether known optional features are present before reading
-their data.
-
-No subsystem defines feature flags yet. Every converted structure is
-registered with 0 required and 0 optional features, producing a compact
-8-byte header with no flags entries. Feature enums can be added later as
-needed, once the first additive feature is introduced for a particular
-serialized structure. With nr_required set to 0, kho_ser_validate()
-rejects any incoming required feature bit while ignoring optional bits,
-allowing future kernels with additive features to evolve smoothly in
-both directions.
-
-Each subsystem registers its serialized structure with:
-
-        DECLARE_KHO_SER(name, payload_size, nr_required, nr_optional)
-
-This establishes compile-time assertions and provides type-checked
-helpers: kho_ser_size() for total allocation size, kho_ser_init() to
-initialize the header, kho_ser_payload() to access the typed payload at
-its dynamic offset, and kho_ser_validate() to validate required features
-during restoration. DECLARE_KHO_SER_HDR(name, *fhdr) declares a struct
-kho_ser_hdr pointer while verifying at compile time that name was
-registered with DECLARE_KHO_SER(), allowing callers to document which
-structure a feature header pointer represents.
-
-An example demonstrating how a hypothetical structure defines its
-features:
-
-  enum foo_ser_required {
-          FOO_SER_REQ_BAR,
-          __FOO_SER_NR_REQUIRED,
-  };
-
-  enum foo_ser_optional {
-          FOO_SER_OPT_BAZ,
-          __FOO_SER_NR_OPTIONAL,
-  };
-
-  struct foo_ser {
-          __u64 base;     /* base fields, always present */
-          __u64 bar;      /* FOO_SER_REQ_BAR */
-          __u64 baz;      /* FOO_SER_OPT_BAZ */
-  };
-
-  DECLARE_KHO_SER(foo_ser, 24,
-                  __FOO_SER_NR_REQUIRED, __FOO_SER_NR_OPTIONAL);
-
-  /* Serialize */
-  kho_ser_init(fhdr, foo_ser);
-  ser = kho_ser_payload(fhdr, foo_ser);
-  ser->bar = ...;
-  kho_ser_set_required(fhdr, FOO_SER_REQ_BAR);
-  ser->baz = ...;
-  kho_ser_set_optional(fhdr, FOO_SER_OPT_BAZ);
-
-  /* Restore */
-  err = kho_ser_validate(fhdr, foo_ser);
-  ser = kho_ser_payload(fhdr, foo_ser);
-  if (kho_ser_has_required(fhdr, FOO_SER_REQ_BAR))
-          use ser->bar;
-  if (kho_ser_has_optional(fhdr, FOO_SER_OPT_BAZ))
-          use ser->baz;
-
-Required and optional features each have their own enum, numbered
-independently from 0. New features are only appended at the end of their
-enum, never reordered or reused. The last entry of each enum (e.g.
-__FOO_SER_NR_REQUIRED) is the feature count passed to DECLARE_KHO_SER and
-stays last. The fields of a new feature are appended at the end of the
-payload. A reader accesses the fields of a feature only when its bit is set
-in the incoming header (kho_ser_has_required() or kho_ser_has_optional()),
-because an older source kernel does not serialize them. Use required for
-data the target must understand to restore correctly, and optional for
-data it can safely ignore. Variable length data that follows the payload,
-such as an array of entries, starts at fhdr->size, the size recorded by the
-source kernel, so it stays correct when a later feature appends fields to
-the payload. Document that serialization helpers describe this kernel's
-layout while deserialization helpers follow the incoming header.
-
-Suggested-by: David Matlack <dmatlack@google.com>
-Suggested-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 Signed-off-by: Tarun Sahu <tarunsahu@google.com>
 ---
- include/linux/kho/abi/feature.h | 372 ++++++++++++++++++++++++++++++++
- 1 file changed, 372 insertions(+)
- create mode 100644 include/linux/kho/abi/feature.h
+ include/linux/kexec_handover.h         | 15 +++----
+ include/linux/kho/abi/kexec_handover.h |  5 +--
+ include/linux/kho/abi/memfd.h          |  8 ++--
+ kernel/liveupdate/kexec_handover.c     | 60 ++++++++++++++++++--------
+ lib/test_kho.c                         | 35 +++++++--------
+ mm/memfd_luo.c                         | 21 ++++-----
+ 6 files changed, 83 insertions(+), 61 deletions(-)
 
-diff --git a/include/linux/kho/abi/feature.h b/include/linux/kho/abi/feature.h
-new file mode 100644
-index 000000000000..55ff1b9e9b73
---- /dev/null
-+++ b/include/linux/kho/abi/feature.h
-@@ -0,0 +1,372 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
+diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
+index ef2b188c8ed0..b52e7a5173f8 100644
+--- a/include/linux/kexec_handover.h
++++ b/include/linux/kexec_handover.h
+@@ -6,10 +6,9 @@
+ #include <linux/errno.h>
+ #include <linux/types.h>
+ #include <linux/mm.h>
++#include <linux/kho/abi/kexec_handover.h>
+ #include <asm-generic/kexec_handover.h>
+ 
+-struct kho_vmalloc;
+-
+ struct folio;
+ struct page;
+ 
+@@ -21,14 +20,14 @@ int kho_preserve_folio(struct folio *folio);
+ void kho_unpreserve_folio(struct folio *folio);
+ int kho_preserve_pages(struct page *page, unsigned long nr_pages);
+ void kho_unpreserve_pages(struct page *page, unsigned long nr_pages);
+-int kho_preserve_vmalloc(void *ptr, struct kho_vmalloc *preservation);
+-void kho_unpreserve_vmalloc(struct kho_vmalloc *preservation);
++int kho_preserve_vmalloc(void *ptr, DECLARE_KHO_SER_HDR(kho_vmalloc, *fhdr));
++void kho_unpreserve_vmalloc(DECLARE_KHO_SER_HDR(kho_vmalloc, *fhdr));
+ void *kho_alloc_preserve(size_t size);
+ void kho_unpreserve_free(void *mem);
+ void kho_restore_free(void *mem);
+ struct folio *kho_restore_folio(phys_addr_t phys);
+ struct page *kho_restore_pages(phys_addr_t phys, unsigned long nr_pages);
+-void *kho_restore_vmalloc(const struct kho_vmalloc *preservation);
++void *kho_restore_vmalloc(const DECLARE_KHO_SER_HDR(kho_vmalloc, *fhdr));
+ int kho_add_subtree(const char *name, void *blob, size_t size);
+ void kho_remove_subtree(void *blob);
+ int kho_retrieve_subtree(const char *name, phys_addr_t *phys, size_t *size);
+@@ -74,12 +73,12 @@ static inline int kho_preserve_pages(struct page *page, unsigned int nr_pages)
+ static inline void kho_unpreserve_pages(struct page *page, unsigned int nr_pages) { }
+ 
+ static inline int kho_preserve_vmalloc(void *ptr,
+-				       struct kho_vmalloc *preservation)
++				       DECLARE_KHO_SER_HDR(kho_vmalloc, *fhdr))
+ {
+ 	return -EOPNOTSUPP;
+ }
+ 
+-static inline void kho_unpreserve_vmalloc(struct kho_vmalloc *preservation) { }
++static inline void kho_unpreserve_vmalloc(DECLARE_KHO_SER_HDR(kho_vmalloc, *fhdr)) { }
+ 
+ static inline void *kho_alloc_preserve(size_t size)
+ {
+@@ -100,7 +99,7 @@ static inline struct page *kho_restore_pages(phys_addr_t phys,
+ 	return NULL;
+ }
+ 
+-static inline void *kho_restore_vmalloc(const struct kho_vmalloc *preservation)
++static inline void *kho_restore_vmalloc(const DECLARE_KHO_SER_HDR(kho_vmalloc, *fhdr))
+ {
+ 	return NULL;
+ }
+diff --git a/include/linux/kho/abi/kexec_handover.h b/include/linux/kho/abi/kexec_handover.h
+index bee75a7006e8..f9b9b18f5820 100644
+--- a/include/linux/kho/abi/kexec_handover.h
++++ b/include/linux/kho/abi/kexec_handover.h
+@@ -13,6 +13,7 @@
+ #include <linux/bits.h>
+ #include <linux/build_bug.h>
+ #include <linux/kconfig.h>
++#include <linux/kho/abi/feature.h>
+ #include <linux/log2.h>
+ #include <linux/math.h>
+ #include <linux/types.h>
+@@ -179,9 +180,7 @@ struct kho_vmalloc {
+ 	unsigned short order;
+ };
+ 
+-static_assert(sizeof(struct kho_vmalloc) == 16);
+-static_assert(!IS_ENABLED(CONFIG_64BIT) ||
+-	      __alignof__(struct kho_vmalloc) == 8);
++DECLARE_KHO_SER(kho_vmalloc, 16, 0, 0);
+ 
+ /**
+  * DOC: KHO persistent memory tracker
+diff --git a/include/linux/kho/abi/memfd.h b/include/linux/kho/abi/memfd.h
+index 7b49dd6d7e2a..b0597c438973 100644
+--- a/include/linux/kho/abi/memfd.h
++++ b/include/linux/kho/abi/memfd.h
+@@ -80,9 +80,9 @@ static_assert(!IS_ENABLED(CONFIG_64BIT) ||
+  * @seals:     The seals present on the memfd. The seals are uABI so it is safe
+  *             to directly use them in the ABI.
+  * @flags:     Flags for the file. Unused flag bits must be set to 0.
+- * @nr_folios: Number of folios in the folios array.
+- * @folios:    Pointer to KHO vmalloc descriptor for the array of
+- *             struct memfd_luo_folio_ser.
++ * @nr_folios:   Number of folios in the folios array.
++ * @folios_fhdr: Pointer to KHO vmalloc descriptor for the array of
++ *               struct memfd_luo_folio_ser.
+  */
+ struct memfd_luo_ser {
+ 	u64 pos;
+@@ -90,7 +90,7 @@ struct memfd_luo_ser {
+ 	u32 seals;
+ 	u32 flags;
+ 	u64 nr_folios;
+-	DECLARE_KHOSER_PTR(folios, struct kho_vmalloc *);
++	DECLARE_KHOSER_PTR(folios_fhdr, DECLARE_KHO_SER_HDR(kho_vmalloc, *));
+ };
+ 
+ static_assert(sizeof(struct memfd_luo_ser) == 40);
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index 641a3b4c88fb..6e428df717cc 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -1378,20 +1378,20 @@ static void kho_vmalloc_unpreserve_chunk(struct kho_vmalloc_chunk *chunk,
+ /**
+  * kho_preserve_vmalloc - preserve memory allocated with vmalloc() across kexec
+  * @ptr: pointer to the area in vmalloc address space
+- * @preservation: placeholder for preservation metadata
++ * @fhdr:         placeholder for preservation metadata
+  *
+  * Instructs KHO to preserve the area in vmalloc address space at @ptr. The
+  * physical pages mapped at @ptr will be preserved and on successful return
+- * @preservation will hold the physical address of a structure that describes
+- * the preservation.
++ * @fhdr will hold the preservation metadata.
+  *
+  * NOTE: The memory allocated with vmalloc_node() variants cannot be reliably
+  * restored on the same node
+  *
+  * Return: 0 on success, error code on failure
+  */
+-int kho_preserve_vmalloc(void *ptr, struct kho_vmalloc *preservation)
++int kho_preserve_vmalloc(void *ptr, DECLARE_KHO_SER_HDR(kho_vmalloc, *fhdr))
+ {
++	struct kho_vmalloc *vmalloc_ser;
+ 	struct kho_vmalloc_chunk *chunk;
+ 	struct vm_struct *vm = find_vm_area(ptr);
+ 	unsigned int order, flags, nr_contig_pages;
+@@ -1404,13 +1404,18 @@ int kho_preserve_vmalloc(void *ptr, struct kho_vmalloc *preservation)
+ 	if (vm->flags & ~KHO_VMALLOC_SUPPORTED_FLAGS)
+ 		return -EOPNOTSUPP;
+ 
++	kho_ser_init(fhdr, kho_vmalloc);
 +
-+/**
-+ * DOC: KHO Serialization Feature Header ABI
-+ *
-+ * Generic feature header for serialized binary data structures preserved
-+ * across kexec via KHO or Live Update Orchestrator (LUO).
-+ *
-+ * Serialized structures start with an 8-byte base header (struct kho_ser_hdr)
-+ * containing the total structure size (size, including header, flags, and
-+ * payload) in bytes, the number of required features (nr_required), and the
-+ * number of optional features (nr_optional). Following the header is a
-+ * flexible array of 64-bit flags entries (flags[]) containing one bit per
-+ * feature.
-+ *
-+ * Feature bits:
-+ *   - Required feature N is at bit N of flags[].
-+ *   - Optional feature N is at bit (nr_required + N) of flags[].
-+ *   - The number of __u64 entries in flags[] is
-+ *     DIV_ROUND_UP(nr_required + nr_optional, 64).
-+ *   - When nr_required == 0 and nr_optional == 0, flags[] has zero entries
-+ *     and the header is exactly 8 bytes.
-+ *
-+ * A set bit indicates that the feature is present in the payload.
-+ *
-+ * Deserialization truth table:
-+ *
-+ *   Source bit       Target            Action
-+ *   ----------       ------            ------
-+ *   Not set          -                 Accept: feature absent
-+ *   Optional set     unknown or known  Accept: ignore or use the data
-+ *   Required set     known             Accept: use the feature data
-+ *   Required set     unknown           Reject: -EOPNOTSUPP
-+ *
-+ * Validation trusts the incoming header: only set required feature bits at or
-+ * beyond the target's known required feature count are rejected (-EOPNOTSUPP).
-+ * Optional feature bits are never validated.
-+ *
-+ * Defining features:
-+ *
-+ * A serialized structure defines its features using enums and registers with
-+ * DECLARE_KHO_SER()::
-+ *
-+ *   enum foo_ser_required {
-+ *           FOO_SER_REQ_BAR,
-+ *           __FOO_SER_NR_REQUIRED,
-+ *   };
-+ *
-+ *   enum foo_ser_optional {
-+ *           FOO_SER_OPT_BAZ,
-+ *           __FOO_SER_NR_OPTIONAL,
-+ *   };
-+ *
-+ *   struct foo_ser {
-+ *           __u64 base;     // base fields, always present
-+ *           __u64 bar;      // FOO_SER_REQ_BAR
-+ *           __u64 baz;      // FOO_SER_OPT_BAZ
-+ *   };
-+ *
-+ *   DECLARE_KHO_SER(foo_ser, 24,
-+ *                   __FOO_SER_NR_REQUIRED, __FOO_SER_NR_OPTIONAL);
-+ *
-+ *   // Serialize
-+ *   kho_ser_init(fhdr, foo_ser);
-+ *   ser = kho_ser_payload(fhdr, foo_ser);
-+ *   ser->bar = ...;
-+ *   kho_ser_set_required(fhdr, FOO_SER_REQ_BAR);
-+ *   ser->baz = ...;
-+ *   kho_ser_set_optional(fhdr, FOO_SER_OPT_BAZ);
-+ *
-+ *   // Restore
-+ *   err = kho_ser_validate(fhdr, foo_ser);
-+ *   ser = kho_ser_payload(fhdr, foo_ser);
-+ *   if (kho_ser_has_required(fhdr, FOO_SER_REQ_BAR))
-+ *           use ser->bar;
-+ *   if (kho_ser_has_optional(fhdr, FOO_SER_OPT_BAZ))
-+ *           use ser->baz;
-+ *
-+ * Rules:
-+ *   - Required and optional features each have their own enum, numbered
-+ *     independently from 0.
-+ *   - New features are only appended at the end of their enum, never
-+ *     reordered or reused.
-+ *   - The last entry of each enum (e.g. __FOO_SER_NR_REQUIRED) is the
-+ *     feature count passed to DECLARE_KHO_SER and stays last.
-+ *   - The fields of a new feature are appended at the end of the payload.
-+ *   - A reader accesses the fields of a feature only when its bit is set in
-+ *     the incoming header (kho_ser_has_required() or
-+ *     kho_ser_has_optional()), because an older source kernel does not
-+ *     serialize them.
-+ *   - Use required for data the target must understand to restore
-+ *     correctly, and optional for data it can safely ignore.
-+ *   - Variable length data that follows the payload, such as an array of
-+ *     entries, starts at fhdr->size, the size recorded by the source kernel,
-+ *     so it stays correct when a later feature appends fields to the
-+ *     payload.
-+ *
-+ * Writing and reading:
-+ *
-+ * kho_ser_size(), kho_ser_init(), kho_ser_set_required() and
-+ * kho_ser_set_optional() (and the clear variants) use the values this
-+ * kernel registered with DECLARE_KHO_SER(), so they describe this
-+ * kernel's layout and are used when serializing.
-+ *
-+ * A reader of handed-over data uses only the incoming header:
-+ * kho_ser_validate(), kho_ser_hdr_size(), kho_ser_payload(),
-+ * kho_ser_has_required(), kho_ser_has_optional() and fhdr->size, so
-+ * it follows the layout of the kernel that wrote the data. On data
-+ * this kernel serialized, these give the same result.
-+ *
-+ * Use DECLARE_KHO_SER_HDR(name, *fhdr) (or const
-+ * DECLARE_KHO_SER_HDR(name, *fhdr)) to document which registered
-+ * structure a feature header pointer belongs to while verifying at
-+ * compile time that the structure is registered with DECLARE_KHO_SER().
-+ */
++	vmalloc_ser = kho_ser_payload(fhdr, kho_vmalloc);
 +
-+#ifndef _LINUX_KHO_ABI_FEATURE_H
-+#define _LINUX_KHO_ABI_FEATURE_H
+ 	flags = vmalloc_flags_to_kho(vm->flags);
+ 	order = get_vm_area_page_order(vm);
++	vmalloc_ser->order = order;
+ 
+ 	chunk = new_vmalloc_chunk(NULL);
+ 	if (!chunk)
+ 		return -ENOMEM;
+-	KHOSER_STORE_PTR(preservation->first, chunk);
++	KHOSER_STORE_PTR(vmalloc_ser->first, chunk);
+ 
+ 	nr_contig_pages = (1 << order);
+ 	for (int i = 0; i < vm->nr_pages; i += nr_contig_pages) {
+@@ -1431,33 +1436,39 @@ int kho_preserve_vmalloc(void *ptr, struct kho_vmalloc *preservation)
+ 		}
+ 	}
+ 
+-	preservation->total_pages = vm->nr_pages;
+-	preservation->flags = flags;
+-	preservation->order = order;
++	vmalloc_ser->total_pages = vm->nr_pages;
++	vmalloc_ser->flags = flags;
+ 
+ 	return 0;
+ 
+ err_free:
+-	kho_unpreserve_vmalloc(preservation);
++	kho_unpreserve_vmalloc(fhdr);
+ 	return err;
+ }
+ EXPORT_SYMBOL_GPL(kho_preserve_vmalloc);
+ 
+ /**
+  * kho_unpreserve_vmalloc - unpreserve memory allocated with vmalloc()
+- * @preservation: preservation metadata returned by kho_preserve_vmalloc()
++ * @fhdr:         preservation metadata returned by kho_preserve_vmalloc()
+  *
+  * Instructs KHO to unpreserve the area in vmalloc address space that was
+  * previously preserved with kho_preserve_vmalloc().
+  */
+-void kho_unpreserve_vmalloc(struct kho_vmalloc *preservation)
++void kho_unpreserve_vmalloc(DECLARE_KHO_SER_HDR(kho_vmalloc, *fhdr))
+ {
+-	struct kho_vmalloc_chunk *chunk = KHOSER_LOAD_PTR(preservation->first);
++	struct kho_vmalloc *vmalloc_ser;
++	struct kho_vmalloc_chunk *chunk;
 +
-+#include <linux/build_bug.h>
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/math.h>
-+#include <linux/string.h>
-+#include <linux/types.h>
++	if (!fhdr)
++		return;
 +
-+/**
-+ * struct kho_ser_hdr - Header for serialized data structures in KHO.
-+ * @size:        Total size in bytes (header + flags + payload).
-+ * @nr_required: Number of required features known to the source kernel.
-+ * @nr_optional: Number of optional features known to the source kernel.
-+ * @flags:       Bitmask of present features (required, then optional).
-+ */
-+struct kho_ser_hdr {
-+	__u32 size;
-+	__u16 nr_required;
-+	__u16 nr_optional;
-+	__aligned_u64 flags[];
-+};
++	vmalloc_ser = kho_ser_payload(fhdr, kho_vmalloc);
++	chunk = KHOSER_LOAD_PTR(vmalloc_ser->first);
+ 
+ 	while (chunk) {
+ 		struct kho_vmalloc_chunk *tmp = chunk;
+ 
+-		kho_vmalloc_unpreserve_chunk(chunk, preservation->order);
++		kho_vmalloc_unpreserve_chunk(chunk, vmalloc_ser->order);
+ 
+ 		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
+ 		free_page((unsigned long)tmp);
+@@ -1468,16 +1479,17 @@ EXPORT_SYMBOL_GPL(kho_unpreserve_vmalloc);
+ /**
+  * kho_restore_vmalloc - recreates and populates an area in vmalloc address
+  * space from the preserved memory.
+- * @preservation: preservation metadata.
++ * @fhdr:         preservation metadata.
+  *
+  * Recreates an area in vmalloc address space and populates it with memory that
+  * was preserved using kho_preserve_vmalloc().
+  *
+  * Return: pointer to the area in the vmalloc address space, NULL on failure.
+  */
+-void *kho_restore_vmalloc(const struct kho_vmalloc *preservation)
++void *kho_restore_vmalloc(const DECLARE_KHO_SER_HDR(kho_vmalloc, *fhdr))
+ {
+-	struct kho_vmalloc_chunk *chunk = KHOSER_LOAD_PTR(preservation->first);
++	const struct kho_vmalloc *vmalloc_ser;
++	struct kho_vmalloc_chunk *chunk;
+ 	kasan_vmalloc_flags_t kasan_flags = KASAN_VMALLOC_PROT_NORMAL;
+ 	unsigned int align, order, shift, vm_flags;
+ 	unsigned long total_pages, contig_pages;
+@@ -1487,19 +1499,29 @@ void *kho_restore_vmalloc(const struct kho_vmalloc *preservation)
+ 	unsigned int idx = 0;
+ 	int err;
+ 
+-	vm_flags = kho_flags_to_vmalloc(preservation->flags);
++	if (!fhdr)
++		return NULL;
 +
-+static_assert(sizeof(struct kho_ser_hdr) == 8);
-+static_assert(__alignof__(struct kho_ser_hdr) == 8);
++	err = kho_ser_validate(fhdr, kho_vmalloc);
++	if (err)
++		return NULL;
 +
-+#define KHO_SER_NR_FLAGS(nr_required, nr_optional) \
-+	DIV_ROUND_UP((__u32)(nr_required) + (__u32)(nr_optional), 64)
++	vmalloc_ser = kho_ser_payload(fhdr, kho_vmalloc);
 +
-+/**
-+ * kho_ser_hdr_size - Calculate header size in bytes including flags.
-+ * @fhdr: Pointer to the serialization header.
-+ *
-+ * Return: Size of the header and flags array in bytes.
-+ */
-+static inline size_t kho_ser_hdr_size(const struct kho_ser_hdr *fhdr)
-+{
-+	return sizeof(*fhdr) + sizeof(__u64) *
-+		KHO_SER_NR_FLAGS(fhdr->nr_required, fhdr->nr_optional);
-+}
-+
-+/**
-+ * kho_ser_set_required - Mark a required feature present in the payload.
-+ * @fhdr:  Pointer to the serialization header.
-+ * @feat: Required feature index to set.
-+ */
-+static inline void kho_ser_set_required(struct kho_ser_hdr *fhdr, unsigned int feat)
-+{
-+	if (feat < fhdr->nr_required)
-+		fhdr->flags[feat / 64] |= 1ULL << (feat % 64);
-+}
-+
-+/**
-+ * kho_ser_clear_required - Clear a required feature in the payload.
-+ * @fhdr:  Pointer to the serialization header.
-+ * @feat: Required feature index to clear.
-+ */
-+static inline void kho_ser_clear_required(struct kho_ser_hdr *fhdr, unsigned int feat)
-+{
-+	if (feat < fhdr->nr_required)
-+		fhdr->flags[feat / 64] &= ~(1ULL << (feat % 64));
-+}
-+
-+/**
-+ * kho_ser_set_optional - Mark an optional feature present in the payload.
-+ * @fhdr:  Pointer to the serialization header.
-+ * @feat: Optional feature index to set.
-+ */
-+static inline void kho_ser_set_optional(struct kho_ser_hdr *fhdr, unsigned int feat)
-+{
-+	if (feat < fhdr->nr_optional) {
-+		unsigned int bit = (unsigned int)fhdr->nr_required + feat;
-+
-+		fhdr->flags[bit / 64] |= 1ULL << (bit % 64);
-+	}
-+}
-+
-+/**
-+ * kho_ser_clear_optional - Clear an optional feature in the payload.
-+ * @fhdr:  Pointer to the serialization header.
-+ * @feat: Optional feature index to clear.
-+ */
-+static inline void kho_ser_clear_optional(struct kho_ser_hdr *fhdr, unsigned int feat)
-+{
-+	if (feat < fhdr->nr_optional) {
-+		unsigned int bit = (unsigned int)fhdr->nr_required + feat;
-+
-+		fhdr->flags[bit / 64] &= ~(1ULL << (bit % 64));
-+	}
-+}
-+
-+/**
-+ * kho_ser_has_required - Check if a required feature is present in the payload.
-+ * @fhdr:  Pointer to the serialization header.
-+ * @feat: Required feature index to check.
-+ *
-+ * Return: True if the feature is present, false otherwise or if the index
-+ *         exceeds the header's known required feature count.
-+ */
-+static inline bool kho_ser_has_required(const struct kho_ser_hdr *fhdr,
-+					unsigned int feat)
-+{
-+	if (feat >= fhdr->nr_required)
-+		return false;
-+	return !!(fhdr->flags[feat / 64] & (1ULL << (feat % 64)));
-+}
-+
-+/**
-+ * kho_ser_has_optional - Check if an optional feature is present in the payload.
-+ * @fhdr:  Pointer to the serialization header.
-+ * @feat: Optional feature index to check.
-+ *
-+ * Return: True if the feature is present, false otherwise or if the index
-+ *         exceeds the header's known optional feature count.
-+ */
-+static inline bool kho_ser_has_optional(const struct kho_ser_hdr *fhdr,
-+					unsigned int feat)
-+{
-+	unsigned int bit;
-+
-+	if (feat >= fhdr->nr_optional)
-+		return false;
-+	bit = (unsigned int)fhdr->nr_required + feat;
-+	return !!(fhdr->flags[bit / 64] & (1ULL << (bit % 64)));
-+}
-+
-+/**
-+ * __kho_ser_init - Initialize a serialization header and flags.
-+ * @fhdr:          Pointer to the memory for the serialization header.
-+ * @payload_size: Size of the payload structure in bytes.
-+ * @nr_required:  Number of required features known by the caller.
-+ * @nr_optional:  Number of optional features known by the caller.
-+ */
-+static inline void __kho_ser_init(struct kho_ser_hdr *fhdr, __u32 payload_size,
-+				  __u16 nr_required, __u16 nr_optional)
-+{
-+	__u32 nr_flags = KHO_SER_NR_FLAGS(nr_required, nr_optional);
-+
-+	fhdr->size = sizeof(*fhdr) + sizeof(__u64) * nr_flags + payload_size;
-+	fhdr->nr_required = nr_required;
-+	fhdr->nr_optional = nr_optional;
-+	memset(fhdr->flags, 0, sizeof(__u64) * nr_flags);
-+}
-+
-+/**
-+ * __kho_ser_payload - Return pointer to the payload following the header.
-+ * @fhdr: Pointer to the serialization header.
-+ *
-+ * Return: Pointer to payload memory immediately after the flags array.
-+ */
-+static inline void *__kho_ser_payload(const struct kho_ser_hdr *fhdr)
-+{
-+	return (void *)((const char *)fhdr + kho_ser_hdr_size(fhdr));
-+}
-+
-+/**
-+ * __kho_ser_validate - Validate an incoming header against target capabilities.
-+ * @fhdr:                Pointer to the serialization header.
-+ * @target_nr_required: Number of required features supported by the target.
-+ *
-+ * Checks that the source did not set any required feature bits that the target
-+ * kernel does not support (index >= @target_nr_required).
-+ *
-+ * Return: 0 if all required features are supported, or -EOPNOTSUPP on failure.
-+ */
-+static inline int __kho_ser_validate(const struct kho_ser_hdr *fhdr,
-+				     __u16 target_nr_required)
-+{
-+	unsigned int i;
-+
-+	for (i = target_nr_required; i < fhdr->nr_required; i++) {
-+		if (fhdr->flags[i / 64] & (1ULL << (i % 64)))
-+			return -EOPNOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * DECLARE_KHO_SER - Register a serialized payload structure with KHO.
-+ * @name:         Structure tag name (e.g. luo_ser).
-+ * @payload_size: Compile-time expected size of struct @name in bytes.
-+ * @nr_required:  Total number of defined required features.
-+ * @nr_optional:  Total number of defined optional features.
-+ *
-+ * Size and 8-byte alignment are asserted under CONFIG_64BIT: KHO and LUO are
-+ * 64-bit only, while !CONFIG_KEXEC_HANDOVER stubs pull ABI headers into
-+ * 32-bit builds where u64 has 4-byte or 2-byte alignment.
-+ */
-+#define DECLARE_KHO_SER(name, payload_size, nr_required, nr_optional)	\
-+	static_assert(!IS_ENABLED(CONFIG_64BIT) ||			\
-+		      sizeof(struct name) == (payload_size),		\
-+		      "struct " #name " size mismatch");		\
-+	static_assert(!IS_ENABLED(CONFIG_64BIT) ||			\
-+		      __alignof__(struct name) == 8,			\
-+		      "struct " #name " must be 8-byte aligned");	\
-+	extern struct kho_ser_hdr __kho_ser_hdr_##name;			\
-+	enum {								\
-+		__KHO_SER_SIZE_##name = (payload_size),			\
-+		__KHO_SER_NR_REQUIRED_##name = (nr_required),		\
-+		__KHO_SER_NR_OPTIONAL_##name = (nr_optional),		\
-+	}
-+
-+/**
-+ * DECLARE_KHO_SER_HDR - Declare a feature header variable, field, or parameter.
-+ * @name: Structure tag name registered with DECLARE_KHO_SER().
-+ * @decl: Declarator (e.g. *fhdr, **out_fhdr, or * inside DECLARE_KHOSER_PTR).
-+ *
-+ * Declares @decl with type struct kho_ser_hdr while checking at compile time
-+ * that @name was registered with DECLARE_KHO_SER(), documenting which
-+ * serialized payload structure a feature header pointer belongs to.
-+ */
-+#define DECLARE_KHO_SER_HDR(name, decl)	typeof(__kho_ser_hdr_##name) decl
-+
-+/**
-+ * kho_ser_size - Total size of header, flags, and payload for a structure.
-+ * @name: Structure tag name registered with DECLARE_KHO_SER().
-+ */
-+#define kho_ser_size(name)						\
-+	(sizeof(struct kho_ser_hdr) +					\
-+	 sizeof(__u64) * KHO_SER_NR_FLAGS(__KHO_SER_NR_REQUIRED_##name,	\
-+					  __KHO_SER_NR_OPTIONAL_##name) +\
-+	 __KHO_SER_SIZE_##name)
-+
-+/**
-+ * kho_ser_init - Initialize a serialization header for a registered structure.
-+ * @fhdr:  Pointer to allocated memory.
-+ * @name: Structure tag name registered with DECLARE_KHO_SER().
-+ */
-+#define kho_ser_init(fhdr, name)						\
-+	__kho_ser_init((fhdr), __KHO_SER_SIZE_##name,			\
-+		       __KHO_SER_NR_REQUIRED_##name,			\
-+		       __KHO_SER_NR_OPTIONAL_##name)
-+
-+/**
-+ * kho_ser_payload - Return typed pointer to payload following the header.
-+ * @fhdr:  Pointer to the serialization header.
-+ * @name: Structure tag name registered with DECLARE_KHO_SER().
-+ *
-+ * The first operand only fails the build when DECLARE_KHO_SER(name) is
-+ * missing.
-+ */
-+#define kho_ser_payload(fhdr, name)					\
-+	((void)__KHO_SER_SIZE_##name,					\
-+	 (struct name *)__kho_ser_payload(fhdr))
-+
-+/**
-+ * kho_ser_validate - Validate incoming required features for a structure.
-+ * @fhdr:  Pointer to the incoming serialization header.
-+ * @name: Structure tag name registered with DECLARE_KHO_SER().
-+ */
-+#define kho_ser_validate(fhdr, name)					\
-+	__kho_ser_validate((fhdr), __KHO_SER_NR_REQUIRED_##name)
-+
-+#endif /* _LINUX_KHO_ABI_FEATURE_H */
++	vm_flags = kho_flags_to_vmalloc(vmalloc_ser->flags);
+ 	if (vm_flags & ~KHO_VMALLOC_SUPPORTED_FLAGS)
+ 		return NULL;
+ 
+-	total_pages = preservation->total_pages;
++	total_pages = vmalloc_ser->total_pages;
+ 	pages = kvmalloc_objs(*pages, total_pages);
+ 	if (!pages)
+ 		return NULL;
+-	order = preservation->order;
++	order = vmalloc_ser->order;
+ 	contig_pages = (1 << order);
+ 	shift = PAGE_SHIFT + order;
+ 	align = 1 << shift;
+ 
++	chunk = KHOSER_LOAD_PTR(vmalloc_ser->first);
+ 	while (chunk) {
+ 		struct page *page;
+ 
+diff --git a/lib/test_kho.c b/lib/test_kho.c
+index cd0f183ff68e..cfd80b8b3c6d 100644
+--- a/lib/test_kho.c
++++ b/lib/test_kho.c
+@@ -34,7 +34,7 @@ struct kho_test_state {
+ 	unsigned int nr_folios;
+ 	struct folio **folios;
+ 	phys_addr_t *folios_info;
+-	DECLARE_KHOSER_PTR(folios_info_phys, struct kho_vmalloc *);
++	DECLARE_KHOSER_PTR(folios_info_fhdr, DECLARE_KHO_SER_HDR(kho_vmalloc, *));
+ 	int nr_folios_preserved;
+ 	struct folio *fdt;
+ 	__wsum csum;
+@@ -47,8 +47,8 @@ static void kho_test_unpreserve_data(struct kho_test_state *state)
+ 	for (int i = 0; i < state->nr_folios_preserved; i++)
+ 		kho_unpreserve_folio(state->folios[i]);
+ 
+-	if (KHOSER_LOAD_PTR(state->folios_info_phys))
+-		kho_unpreserve_vmalloc(KHOSER_LOAD_PTR(state->folios_info_phys));
++	if (KHOSER_LOAD_PTR(state->folios_info_fhdr))
++		kho_unpreserve_vmalloc(KHOSER_LOAD_PTR(state->folios_info_fhdr));
+ 	vfree(state->folios_info);
+ }
+ 
+@@ -61,7 +61,7 @@ static int kho_test_preserve_data(struct kho_test_state *state)
+ 	if (!folios_info)
+ 		return -ENOMEM;
+ 
+-	err = kho_preserve_vmalloc(folios_info, KHOSER_LOAD_PTR(state->folios_info_phys));
++	err = kho_preserve_vmalloc(folios_info, KHOSER_LOAD_PTR(state->folios_info_fhdr));
+ 	if (err)
+ 		goto err_free_info;
+ 
+@@ -109,8 +109,8 @@ static int kho_test_prepare_fdt(struct kho_test_state *state, ssize_t fdt_size)
+ 	err |= fdt_begin_node(fdt, "data");
+ 	err |= fdt_property(fdt, "nr_folios", &state->nr_folios,
+ 			    sizeof(state->nr_folios));
+-	err |= fdt_property(fdt, "folios_info", &state->folios_info_phys,
+-			    sizeof(state->folios_info_phys));
++	err |= fdt_property(fdt, "folios_info", &state->folios_info_fhdr,
++			    sizeof(state->folios_info_fhdr));
+ 	err |= fdt_property(fdt, "csum", &state->csum, sizeof(state->csum));
+ 	err |= fdt_end_node(fdt);
+ 
+@@ -122,18 +122,18 @@ static int kho_test_prepare_fdt(struct kho_test_state *state, ssize_t fdt_size)
+ 
+ static int kho_test_preserve(struct kho_test_state *state)
+ {
+-	struct kho_vmalloc *folios_vmalloc;
++	DECLARE_KHO_SER_HDR(kho_vmalloc, *folios_fhdr);
+ 	ssize_t fdt_size, alloc_size;
+ 	int err;
+ 
+ 	fdt_size = state->nr_folios * sizeof(phys_addr_t) + PAGE_SIZE;
+-	alloc_size = fdt_size + sizeof(struct kho_vmalloc);
++	alloc_size = fdt_size + kho_ser_size(kho_vmalloc);
+ 	state->fdt = folio_alloc(GFP_KERNEL, get_order(alloc_size));
+ 	if (!state->fdt)
+ 		return -ENOMEM;
+ 
+-	folios_vmalloc = folio_address(state->fdt) + fdt_size;
+-	KHOSER_STORE_PTR(state->folios_info_phys, folios_vmalloc);
++	folios_fhdr = folio_address(state->fdt) + fdt_size;
++	KHOSER_STORE_PTR(state->folios_info_fhdr, folios_fhdr);
+ 
+ 	err = kho_preserve_folio(state->fdt);
+ 	if (err)
+@@ -238,8 +238,9 @@ static int kho_test_save(void)
+ 
+ static int kho_test_restore_data(const void *fdt, int node)
+ {
+-	const DECLARE_KHOSER_PTR(*folios_info_phys, struct kho_vmalloc *);
+-	const struct kho_vmalloc *folios_vmalloc;
++	const DECLARE_KHOSER_PTR(*folios_fhdr_phys,
++				 DECLARE_KHO_SER_HDR(kho_vmalloc, *));
++	const DECLARE_KHO_SER_HDR(kho_vmalloc, *folios_fhdr);
+ 	const unsigned int *nr_folios;
+ 	phys_addr_t *folios_info;
+ 	const __wsum *old_csum;
+@@ -256,15 +257,15 @@ static int kho_test_restore_data(const void *fdt, int node)
+ 	if (!old_csum || len != sizeof(*old_csum))
+ 		return -EINVAL;
+ 
+-	folios_info_phys = fdt_getprop(fdt, node, "folios_info", &len);
+-	if (!folios_info_phys || len != sizeof(*folios_info_phys))
++	folios_fhdr_phys = fdt_getprop(fdt, node, "folios_info", &len);
++	if (!folios_fhdr_phys || len != sizeof(*folios_fhdr_phys))
+ 		return -EINVAL;
+ 
+-	folios_vmalloc = KHOSER_LOAD_PTR(*folios_info_phys);
+-	if (!folios_vmalloc)
++	folios_fhdr = KHOSER_LOAD_PTR(*folios_fhdr_phys);
++	if (!folios_fhdr)
+ 		return -EINVAL;
+ 
+-	folios_info = kho_restore_vmalloc(folios_vmalloc);
++	folios_info = kho_restore_vmalloc(folios_fhdr);
+ 	if (!folios_info)
+ 		return -EINVAL;
+ 
+diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
+index 4471cced57db..74c1ff5877c3 100644
+--- a/mm/memfd_luo.c
++++ b/mm/memfd_luo.c
+@@ -103,7 +103,7 @@ static int memfd_luo_preserve_folios(struct file *file,
+ 	 * are not set.
+ 	 */
+ 	if (!size) {
+-		ser->folios.phys = 0;
++		ser->folios_fhdr.phys = 0;
+ 		ser->nr_folios = 0;
+ 		*out_folios_ser = NULL;
+ 		return 0;
+@@ -200,7 +200,7 @@ static int memfd_luo_preserve_folios(struct file *file,
+ 		pfolio->index = folio->index;
+ 	}
+ 
+-	err = kho_preserve_vmalloc(folios_ser, KHOSER_LOAD_PTR(ser->folios));
++	err = kho_preserve_vmalloc(folios_ser, KHOSER_LOAD_PTR(ser->folios_fhdr));
+ 	if (err)
+ 		goto err_unpreserve;
+ 
+@@ -227,7 +227,7 @@ static int memfd_luo_preserve_folios(struct file *file,
+ 	return err;
+ }
+ 
+-static void memfd_luo_unpreserve_folios(struct kho_vmalloc *kho_vmalloc,
++static void memfd_luo_unpreserve_folios(DECLARE_KHO_SER_HDR(kho_vmalloc, *folios_fhdr),
+ 					struct memfd_luo_folio_ser *folios_ser,
+ 					u64 nr_folios)
+ {
+@@ -236,7 +236,7 @@ static void memfd_luo_unpreserve_folios(struct kho_vmalloc *kho_vmalloc,
+ 	if (!nr_folios)
+ 		return;
+ 
+-	kho_unpreserve_vmalloc(kho_vmalloc);
++	kho_unpreserve_vmalloc(folios_fhdr);
+ 
+ 	for (i = 0; i < nr_folios; i++) {
+ 		const struct memfd_luo_folio_ser *pfolio = &folios_ser[i];
+@@ -256,15 +256,16 @@ static void memfd_luo_unpreserve_folios(struct kho_vmalloc *kho_vmalloc,
+ 
+ static size_t memfd_luo_ser_size(void)
+ {
+-	return sizeof(struct memfd_luo_ser) + sizeof(struct kho_vmalloc);
++	return sizeof(struct memfd_luo_ser) + kho_ser_size(kho_vmalloc);
+ }
+ 
+ static struct memfd_luo_ser *memfd_luo_ser_init(void *mem)
+ {
+-	struct kho_vmalloc *kho_vmalloc = mem + sizeof(struct memfd_luo_ser);
++	DECLARE_KHO_SER_HDR(kho_vmalloc, *folios_fhdr);
+ 	struct memfd_luo_ser *ser = mem;
+ 
+-	KHOSER_STORE_PTR(ser->folios, kho_vmalloc);
++	folios_fhdr = mem + sizeof(struct memfd_luo_ser);
++	KHOSER_STORE_PTR(ser->folios_fhdr, folios_fhdr);
+ 	return ser;
+ }
+ 
+@@ -365,7 +366,7 @@ static void memfd_luo_unpreserve(struct liveupdate_file_op_args *args)
+ 
+ 	ser = phys_to_virt(args->serialized_data);
+ 
+-	memfd_luo_unpreserve_folios(KHOSER_LOAD_PTR(ser->folios),
++	memfd_luo_unpreserve_folios(KHOSER_LOAD_PTR(ser->folios_fhdr),
+ 				    args->private_data,
+ 				    ser->nr_folios);
+ 
+@@ -416,7 +417,7 @@ static void memfd_luo_finish(struct liveupdate_file_op_args *args)
+ 		return;
+ 
+ 	if (ser->nr_folios) {
+-		folios_ser = kho_restore_vmalloc(KHOSER_LOAD_PTR(ser->folios));
++		folios_ser = kho_restore_vmalloc(KHOSER_LOAD_PTR(ser->folios_fhdr));
+ 		if (!folios_ser)
+ 			goto out;
+ 
+@@ -567,7 +568,7 @@ static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
+ 	i_size_write(file_inode(file), ser->size);
+ 
+ 	if (ser->nr_folios) {
+-		folios_ser = kho_restore_vmalloc(KHOSER_LOAD_PTR(ser->folios));
++		folios_ser = kho_restore_vmalloc(KHOSER_LOAD_PTR(ser->folios_fhdr));
+ 		if (!folios_ser) {
+ 			err = -EINVAL;
+ 			goto put_file;
 -- 
 2.56.0.506.g506a7eabc5-goog
 
