@@ -2,110 +2,72 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D02F606BD46
-	for <kexec@archiver.kernel.org>; Tue, 10 Nov 2026 06:44:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE7B606A331
+	for <kexec@archiver.kernel.org>; Tue, 10 Nov 2026 08:47:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=A26udsUv;
-	dkim=pass (2048-bit key) header.d=multikernel-io.20260707.gappssmtp.com header.i=@multikernel-io.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=JmK4Viuk
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=DHXpdG1E;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=E2rOEA41
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=z3Hb/ilx/b4fjyZAOC7azdPBoN2aJE2v6bttuYM0sMY=; b=A26udsUvB/jtXB
-	Dn8ufaJOtOc/yes7gC7z0QhF04Ti0uqmeKKMaIZbgNkheHjY2HxfNziTgVSMKenjUFvq9E2Ibyst2
-	ymtyEGFd5chsPkf7VphFsV+KzU4g4U2vbkuf9/BD8X4o0K1jN8ZoSqk29AtfSAs0HWQBrsNS1IDEJ
-	fy7CfwkKrOGeKTIGJCQeZMQzMki7EO+PPg83EAWYvo6HDVaqW8f1MlnlR5gMaMcwDCpgGvoB5/IPR
-	Vb9fb+qJ8XuQ0AZbcTa3cR/RM5Ar18KWu9Z3pm5c0C+2LApi5/61XzOl3fldRF+g5krVWlOXFWUzJ
-	PTEYSrVCf9q+LXy1QsXQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=971CVAco0wRsepZ2O+DuyJQLTFxXmiUWfADT6vKykDg=; b=DHXpdG1Ek3kLXVuFd4CCZ+huUz
+	lWeuhCKo8nDLYjwAcsz1pP2fZzaBY1DXo3faDkRCx+oRrVrnjQa5b4xH0gDD8CEBCQYdJXPp2pJjv
+	kIcuhqBj54t03XaBxribMFHF38wKLf8URfWTW493/ME//DfgqUj9R9yBL0GPFWZa0LLFZHrSb5NLA
+	p15bvgc91hdSx6pc+Ub0wbE6e7UNlXX3ystADvUAkiBn5F8PBX5TdR1qhUt3NQEIYmJKzCCZ6lmje
+	y6kdR+KfWXhfN0U35ff1CxUtnA7aOmSBaa6u3t5Twyvv6l4ewlJkfpuLBXk6ucwzt5G3k5YcJAi1N
+	RI0W3eFQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQfaV-00000002hPM-3GLi;
-	Tue, 10 Nov 2026 06:44:11 +0000
-Received: from mail-ej1-x62f.google.com ([2a00:1450:4864:20::62f])
+	id 1xQhWC-00000003A9Z-3znR;
+	Tue, 10 Nov 2026 08:47:52 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQfaS-00000002hOj-2oyH
-	for kexec@lists.infradead.org;
-	Tue, 10 Nov 2026 06:44:10 +0000
-Received: by mail-ej1-x62f.google.com with SMTP id a640c23a62f3a-c4d58c50743so58529666b.1
-        for <kexec@lists.infradead.org>; Mon, 09 Nov 2026 22:44:07 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794293046; cv=none;
-        d=google.com; s=arc-20260327;
-        b=rOX+vzuTvqznEC+vTjMgv9JU130yICpIMHfMUZQXBR710sRD3liBTc9Xfhlw13QoFC
-         kKiG93j0wtTiZhTtErFpcrhuxv5Ytl3bWox0DeGj8ANLeVvPJ6yESdvUgag7Z3hLwH35
-         Niaw3q9VawsCUuE1K06frntzsZqL0X14Hqh7pZCNhZ7zNXtPSdBVAq5141voa1iJGB8K
-         X8ymv7i3jRnk2e648hNRXTP4JuXxsoDFzbpZbC2O8/JubpgiEcUVKRpQtzMCx8+G+EKu
-         hFzSBwK0kUS3uq24yyYT/GylL9mkm8200Zqz2YGKW+de/2wWJyzCHoB5xzQCcm1IVDud
-         1Yqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=z3Hb/ilx/b4fjyZAOC7azdPBoN2aJE2v6bttuYM0sMY=;
-        fh=DeXj+kOZx8Dx2AO5pNZrtrpbSZad3oKWDbAMKU0RZFY=;
-        b=EHp8FhQryYhzeE7D7p8jDRNLpf0a1r72Wpt12zrNhzA9e4TSQ0uFMJ6VKmi/WyEEhH
-         Nw+G1bvMm1WRIv5+uITYBrtHxak3PaG8LJCHBU3O8n4YKWVST/iJRq6QdQjNA8tKJMfb
-         Xa6Y2pfd/V7V7h22G04lSuNWvFCmI/gBknShJwvnsegrWkMpD0DJEqYErb1CLThnYKz8
-         YAUrEC+1xRJFrUf8Wbp/5hCO12JLSrm/mT8CjUUmFxG6KXc+NAMyl7SU/HpPNseiVn8a
-         +ZViu6jMjm/2NW1u/v2KtxcMZA7DHtwJPTe2Z19q6Sdg+5WrL+hKOTxJTousxs89a4BL
-         Afrw==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=multikernel-io.20260707.gappssmtp.com; s=20260707; t=1794293046; x=1794897846; darn=lists.infradead.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=z3Hb/ilx/b4fjyZAOC7azdPBoN2aJE2v6bttuYM0sMY=;
-        b=JmK4ViukuzpVQ24p4gg48tN/3vfvbVbtj6m1sMcC6xeUlYGU2xtIv7aWegcAkccu61
-         Tu1+l04DY8vxjT0fJHekH9ZtMSX0JuZfkG4miC8TOQVnY7GPurq2guDE8Emx8lh4Zq2p
-         oBZM/GByQu7H7iTHbT50SiUUU6mjr83HmdpF3XS0XoKmIhLmxGQsqfon/VV9g6sGqbJq
-         afcq8VW+Psf06ovYhQa9jRkQIr7IxGhLFKF6U/Bu8v4J4R8+xfM7q6lTVXm6T5Qnoq4y
-         ALCDcp7I+UZp7rCSH457/EnaTKv7IrvqLZE9ocqEAEr1T3K8aZ0kbayu9scbRfHAizN6
-         epTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794293046; x=1794897846;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=z3Hb/ilx/b4fjyZAOC7azdPBoN2aJE2v6bttuYM0sMY=;
-        b=FLcvLHdkOWxfZ1HTDAWXQBR4C8u0b7aAL/vJ/Zk7sePUCjOI7QPba8z//Er/66nSW7
-         zNz+T5G9h8jxC6V/Pq6i5e8T4MkHvt4243dhwp5RoLQNDrRS65holR+SJoK7K/qydXvy
-         uWl0XiD+kr04lDtuJ/MsSz5byNAfuVQiw0K9US4t/MjPjth+gc+HUBQBhXxVoP88+fX4
-         2Ytnbu0nAj42BJiQJtO8AqiyAGsmgI6hImQfMkiiP7LI5qSbbAm1f+D8f3GL+7ReSy/K
-         ejiymAxbOf2jp99FqofxtZj0xRTwYLercWrRSf8DJvupqR8Qc3YM1a/l7d6Wxi2krTE4
-         MisQ==
-X-Gm-Message-State: APuU4Z/98YSc/Oikax2DtRcf9hpXUrXNf3X9wYHLfWlPtmsogUpglqaS
-	xC0rW71tXEA/rzCducgwrOmyYZrIv2JEZLU4EEzwtshCBEVZL1ApL5nI02UQ0ho3ZJKSMrEdvyn
-	2avfB6W9xCbC/H8FKEkIizV9ew65icNFBECQrFK0b7S4njoFydR4+aiTD1Q==
-X-Gm-Gg: AYBFou3B8sCU2znVoE6yXFZfS3eD8Xs4qZmJKJYzMbgjdUplXJ8BNrHQNbT0yJK7wNT
-	NhtcJdHZ5O1cJAtoLNmq/QPFui1aXcLH+HlbAFY1gedBs4L9jwhcOriYtYo9y2n48NIs16Ls83V
-	ev0q/LMTZQ86QgJfWm8/99CieOUuSDDAdHxeSqXy1Tymqn2dae/PVQ6lFeqQdesrfjJTGXSMjA1
-	oDZK+eUcX3u+nMIvwpvPb+Zc2teckaGA99awlnImVOX7P9h3YWpMQzymaexAcvZ/VaqrFfdNQ/1
-	t+yofoiecVFYxu8LncAgarJWHqFTFT0YpwsVORo/bxr0tFqB0QdO0LIYd6NpDhoxHOv+AHGVeyg
-	n2+p9CVmaI8euEJ0qiwjyNwMyPd7/1I0+7a2mBIcCVz0Slnea349l8YCIxfE2XvUUUtRbFzfeY3
-	jIx4Em5aqDkf1oNmOU7AUJf84Y/ZjxZWgkJd/Abzy8KE/H2cU=
-X-Received: by 2002:a17:907:3ea8:b0:c46:d837:b358 with SMTP id
- a640c23a62f3a-c504922a4demr124994466b.3.1794293046031; Mon, 09 Nov 2026
- 22:44:06 -0800 (PST)
+	id 1xQhWA-00000003A8V-2WWs;
+	Tue, 10 Nov 2026 08:47:50 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 1C87B631A3;
+	Tue, 10 Nov 2026 08:47:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68B911F008A1;
+	Tue, 10 Nov 2026 08:47:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794300468;
+	bh=971CVAco0wRsepZ2O+DuyJQLTFxXmiUWfADT6vKykDg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=E2rOEA417uw2D2zqDfgokpjiUXSld29mrsEuVXHxP9GLTFMBlE9QpzHB6cYJTRj/s
+	 bNb9RuSh51wCZosf6cEmHsHb6r69dXLTOsubsj2wByaWqCyXZUHjmBKEw6LaYFbXfo
+	 tOTCOlCqR3rDCMMlaykpekQZGQflPc8CBcScbJuftXTOg43KZQzuE6dJ9pYq2BHlsc
+	 E13UUPMqzYhMiYC3vMc84UcC6JglBm/DDXTSCvJyPCXIVwgjYBXJuZB+eFqVYzkZk4
+	 BmfdxZ6u5kOCqxW439hUAZML7ys1hMaZACoMClSmusSg0Z35PJoD2xdz7m/LBLHBsf
+	 L5ZzCcDj9+wBw==
+Date: Tue, 10 Nov 2026 10:47:35 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Wandun <chenwandun1@gmail.com>
+Cc: robh@kernel.org, baoquan.he@linux.dev, m.szyprowski@samsung.com,
+	catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+	chenhuacai@kernel.org, kernel@xen0n.name, pjw@kernel.org,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+	tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	saravanak@kernel.org, akpm@linux-foundation.org,
+	pasha.tatashin@soleen.com, pratyush@kernel.org,
+	ruirui.yang@linux.dev, robin.murphy@arm.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, kexec@lists.infradead.org,
+	linux-mm@kvack.org, iommu@lists.linux.dev
+Subject: Re: [PATCH v9 0/8] kdump: reduce vmcore size and capture time
+Message-ID: <avLaJxIrrnMQngO9@kernel.org>
+References: <20261021083011.2170525-1-chenwandun1@gmail.com>
+ <7773d026-4aef-4169-866a-71ec9a91da21@gmail.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-References: <20261108004716.3828406-1-7z0423arsenova@proton.me>
-In-Reply-To: <20261108004716.3828406-1-7z0423arsenova@proton.me>
-From: Cong Wang <cwang@multikernel.io>
-Date: Mon, 9 Nov 2026 22:43:53 -0800
-X-Gm-Features: AclHuK84aRayHJ63zdxJTtuA3kZ57aahgNSGGmfmWS_Wu36kmtAL2yYbd74IWAk
-Message-ID: <CAGHCLaRQDEELHFtJNzh-m3jhJGndBQgjGC=ZP0gye73Ch__WKg@mail.gmail.com>
-Subject: Re: [kmorph] QEMU test report: takeover OK, a build break, two config traps
-To: Yun Wang <7z0423arsenova@proton.me>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261109_224409_001993_5BA8E35D 
-X-CRM114-Status: GOOD (  31.61  )
-X-Spam-Score: -1.9 (-)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7773d026-4aef-4169-866a-71ec9a91da21@gmail.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -116,140 +78,173 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Hi Yun,
+Hi Wandun,
 
-On Sat, Nov 7, 2026 at 4:49=E2=80=AFPM Yun Wang <7z0423arsenova@proton.me> =
-wrote:
->
-> Hi Cong,
->
-> After your announcement [1] I tried multikernel + kmorph in a QEMU/KVM
-> guest on x86_64. The takeover itself worked: 10 of 10 runs, with the
-> predecessor crashed by sysrq-c. I also hit a build break and two
-> configuration traps that the next tester will probably meet; details
-> and a fix below.
+On Mon, Nov 09, 2026 at 08:23:16PM +0800, Wandun wrote:
+> 
+> On 10/21/26 16:30, Wandun Chen wrote:
+> > From: Wandun Chen <chenwandun@lixiang.com>
+> > 
+> > On SoCs that carve out large firmware-owned reserved memory (GPU,
+> > camera ISP, ...), kdump currently dumps those carveouts as part of
+> > system RAM even though their contents are firmware state that is not
+> > useful for kernel crash analysis.
+> > 
+> > ACPI systems already filter reserved memory out of the vmcore through
+> > their existing path: firmware reports those carveouts as unusable in
+> > the EFI memory map, they get MEMBLOCK_NOMAP set in memblock.memory
+> > (is_usable_memory(), efi-init.c), and the ELF header builder has
+> > always skipped nomap regions; only DT-based systems currently fail
+> > to filter these regions, which is what this series addresses.
+> > 
+> > This series introduces a MEMBLOCK_NODUMP flag (suggested by Rob) in
+> > memblock to filter reserved memory on DT-based architectures. A new
+> > flag is needed because MEMBLOCK_NOMAP can only express regions without
+> > a linear mapping, while MEMBLOCK_NODUMP can filter regions that are
+> > linearly mapped. Reserved regions are marked MEMBLOCK_NODUMP by default
+> > so kdump omits them; reusable CMA regions are different because their
+> > pages are handed back to the buddy allocator and may carry crash-relevant
+> > data.
+> > 
+> > Since the reserved memory regions are filtered out, the vmcore is
+> > smaller in size and faster to produce.
+> > 
+> > The series is based on linux-next and is organized as follows:
+> > 
+> > Patches 1-3: Preparation and bugfixes: switch riscv crash_mem to
+> >              memblock, fold the duplicated per-arch memblock walks
+> >              into the weak defaults, and serialize crash header
+> >              preparation against memory hotplug.
+> > Patches 4-7: NODUMP infrastructure: switch crash_core to
+> >              for_each_mem_region(), introduce the MEMBLOCK_NODUMP
+> >              flag, add a dumpable flag to struct reserved_mem, and
+> >              mark /reserved-memory entries with MEMBLOCK_NODUMP.
+> > Patch 8:     Skip MEMBLOCK_NODUMP regions when building the vmcore
+> >              ELF header.
+> 
+> Hi all,
+> 
+> A gentle ping on this series.
+> 
+> I'd appreciate any further feedback, particularly on the
+> MEMBLOCK_NODUMP discussion and the issues raised in the Sashiko
+> review.
 
-Thanks for your tests and detailed report.
+I'm fine with MEMBLOCK_NODUMP.
+The issue Sashiko raised about bound check against cmem->max_nr_ranges
+seems valid. 
 
->
-> Tested: multikernel/linux 57fd249 (7.0.0-mk4), kmorph 9ec046e,
-> GCC 16.2.1, QEMU 11.1.3 (q35, KVM, 4 vCPUs, 4 GiB). The lines named
-> below are unchanged on master (77a05a4), and kmorph main is still
-> 9ec046e.
->
-> 1) Build break: CONFIG_INTEL_IOMMU=3Dy with CONFIG_IRQ_REMAP=3Dn
->
->      drivers/iommu/intel/iommu.c:2806:35: error: 'struct intel_iommu'
->      has no member named 'ir_table'
->
->    intel_iommu_claim() uses iommu->ir_table unconditionally, but the
->    member only exists under CONFIG_IRQ_REMAP (iommu.h:733).
->    x86_64_defconfig + kvm_guest.config + the MULTIKERNEL options hits
->    it, and so does this one command after "make prepare" on that
->    config:
->
->      make O=3Dbuild drivers/iommu/intel/iommu.o
->
->    The patch below follows the intel_irq_remap_claim() pattern already
->    in iommu.h: a small helper in irq_remapping.c, a stub for
->    !CONFIG_IRQ_REMAP next to the existing one, and iommu.c calls only
->    the helper, so there is no #ifdef in the .c file. checkpatch
->    --strict is clean. With it, the config that failed above builds as
->    a full bzImage (0 errors, 0 warnings), drivers/iommu/intel/ also
->    builds with IRQ_REMAP on, and kmorph takeovers worked on the
->    patched IRQ_REMAP=3Dn kernel in QEMU (10 of 10). QEMU has no vIOMMU
->    here, so intel_iommu_claim() itself did not run. The three files are
->    identical on master (77a05a4), so it applies there as is.
+I didn't check the reserved mem one.
+ 
+> Please let me know if there are any other concerns or suggestions
+> before I prepare the next revision.
 
-Do you mind submitting a PR here https://github.com/multikernel/linux
-for your patch?
+I believe that should be rebased to account for reserved memory changes.
+The riscv change from resources to memblock needs an Ack from riscv
+maintainers.
 
-(We are not upstream yet, so we still rely on GitHub for collaboration.
-That would also reduce noises for upstream too.)
+And with all that I can take the next version via kexec tree.
+ 
+> Thanks,
+> Wandun
+> 
+> > 
+> > v8 --> v9:
+> > 1. Patch 7: Avoid a potential boot panic on SH when NODUMP marking requires
+> >    memblock resizing before it is allowed, found by Sashiko in [1]. SH supports
+> >    neither CONFIG_KEXEC_FILE nor CONFIG_CRASH_HOTPLUG, so skip marking when
+> >    both are disabled.
+> > 
+> > v6 --> v8 (v7 mainly tried to fix the initrd issue on release in v6,
+> > that approach is superseded here):
+> > 1. Stop marking /memreserve/ regions with NODUMP. v6 marked
+> >    /memreserve/ regions with NODUMP. But a bootloader may specify
+> >    a /memreserve/ entry for memory that the kernel later frees
+> >    (e.g. the initrd), and those pages would then be wrongly
+> >    filtered out of the vmcore after being reused as normal memory.
+> >    The v7 fix (clearing the flag in free_reserved_area()) caused
+> >    a lockless runtime mutation of memblock.memory [2]. Better solutions
+> >    exist but need extra preparation, so temporarily dropped the patch
+> >    that introduced the problem to keep this series simple in v8.
+> > 2. Fix a build failure in patch 2 with both ARCH_KEEP_MEMBLOCK and
+> >    MEMORY_HOTPLUG are unset. There the memblock arrays live in
+> >    .init.data, and the weak defaults referencing them create section
+> >    mismatches, which turn into build errors when SECTION_MISMATCH_WARN_ONLY
+> >    is also unset.
+> > 3. RISCV recently gained crash hotplug support, so adapt its handler
+> >    like x86 in patch 3: use __crash_prepare_headers() instead of
+> >    crash_prepare_headers() to avoid self-deadlock.
+> > 4. Update the cover letter per review feedback: describe how ACPI
+> >    systems filter reserved memory and why a new flag is needed
+> >    instead of reusing NOMAP.
+> > 
+> > v6 --> v7:
+> > 1. Fix a stale MEMBLOCK_NODUMP flag issue [3]. Memory reserved and
+> >    marked as NODUMP may later be freed (the initrd, for example),
+> >    so the NODUMP flag must be cleared accordingly. Since the fix is
+> >    part of the NODUMP infrastructure introduced by patch 5, it has
+> >    been folded into that patch.
+> > 2. Drop the "generic" related description in the cover letter.
+> > 3. Collect the Acked-by and Reviewed-by tags received during the v6
+> >    review (thanks to Baoquan, Mike, Rob and Marek). Patch 5 is the
+> >    only one without a tag, as its Reviewed-by was dropped when the
+> >    fix was folded in.
+> > 4. Drop patch 1 of v6, which has been merged separately.
+> > 
+> > 
+> > v5 --> v6:
+> > 1. Serialize crash header preparation against memory hotplug to avoid
+> >    out-of-bounds or use-after-free issues.
+> > 2. MEMBLOCK_NODUMP marking is now done after memblock allows resizing,
+> >    avoiding a panic from too few regions before resize is permitted.
+> > 3. Reordered the patches, put pre-existing bugfixes earlier in the series.
+> > 
+> > [1] https://sashiko.dev/#/patchset/20261016061549.4181390-1-chenwandun1@gmail.com?part=7
+> > [2] https://lore.kernel.org/lkml/20260922090252.B01541F000FF@smtp.kernel.org/
+> > [3] https://sashiko.dev/#/message/20260917220750.GA4013814-robh%40kernel.org
+> > 
+> > v5: https://lore.kernel.org/lkml/20260806093519.2907771-1-chenwandun1@gmail.com/
+> > v4: https://lore.kernel.org/lkml/20260630074715.4126796-1-chenwandun1@gmail.com/
+> > 
+> > Wandun Chen (8):
+> >   riscv: build crash_mem ranges from memblock instead of resource tree
+> >   crash_core: fold duplicated memblock arch hooks into the weak default
+> >   crash_core: serialize crash header preparation against hotplug
+> >   crash_core: replace for_each_mem_range() with for_each_mem_region()
+> >   memblock: introduce MEMBLOCK_NODUMP flag
+> >   of: reserved_mem: add dumpable flag to opt-in vmcore
+> >   of: reserved_mem: mark /reserved-memory entries with MEMBLOCK_NODUMP
+> >   crash_core: skip MEMBLOCK_NODUMP regions when building vmcore ELF
+> >     header
+> > 
+> >  arch/arm64/kernel/machine_kexec_file.c     | 29 ------------
+> >  arch/loongarch/kernel/machine_kexec_file.c | 27 -----------
+> >  arch/riscv/Kconfig                         |  2 +-
+> >  arch/riscv/kernel/crash.c                  |  2 +-
+> >  arch/riscv/kernel/machine_kexec_file.c     | 33 --------------
+> >  arch/x86/kernel/crash.c                    |  2 +-
+> >  drivers/of/fdt.c                           |  1 +
+> >  drivers/of/of_private.h                    |  1 +
+> >  drivers/of/of_reserved_mem.c               | 18 ++++++++
+> >  include/linux/crash_core.h                 |  2 +
+> >  include/linux/memblock.h                   |  9 ++++
+> >  include/linux/of_reserved_mem.h            |  1 +
+> >  kernel/crash_core.c                        | 53 +++++++++++++++++++++-
+> >  kernel/dma/contiguous.c                    |  1 +
+> >  mm/memblock.c                              | 16 +++++++
+> >  15 files changed, 103 insertions(+), 94 deletions(-)
+> > 
+> 
 
-
-> 2) "kmorph arm" fails with ENOMEM on a 2 GiB x86_64 guest
->
->      Baseline: failed to allocate 132 MB on node -1: -12
->      kmorph: error: pool initialisation failed: Cannot allocate memory
->
->    mk_take_memory() only tries ZONE_MOVABLE and ZONE_NORMAL, and below
->    4 GiB x86_64 has neither: /proc/zoneinfo shows Normal and Movable
->    with present 0, everything is in DMA32. With -m 4G (2 GiB above the
->    PCI hole) "kmorph arm" takes 0.6 to 0.8 s. The README transcript
->    shows 2047 MB of RAM, so a clearer error or a README note would
->    help. I did not try movablecore=3D.
-
-I created a Github issue to track this:
-https://github.com/multikernel/kmorph/issues/6
-
->
-> 3) A successor with no boot-time PCI device adopts no PCI function
->
->    Without devices=3D in kmorph.conf the takeover logs
->
->      Failed to move device 0000:00:1f.2: -1
->      kmorphd: adopted 0 devices: 0 reset, 0 quiesced
->
->    From reading the code: mk_pcifront_host_fenced() returns early when
->    the successor has no PCI bus, so mk_pcifront_direct_access stays
->    false and mk_pcifront_adopt_function() returns -EPERM
->    (pcifront.c:150-153 and 704). The same VM with
->    devices=3D0000:01:00.0 instead logs "Host fenced: config space is
->    reached directly through ECAM", adopts three functions, and the
->    e1000e comes up as eth1. Without devices=3D, kmorphd's network
->    restore also waits about 3 s per NIC that never shows up, so
->    panic -> TAKEN_OVER took 6.8 s instead of 0.9 s (7 runs). The
->    README lists devices=3D as optional. This one is also on the kmorph
->    tracker, with the log lines:
->
->      https://github.com/multikernel/kmorph/issues/2
-
-I appreciate it. I fixed it earlier today.
-
->
-> Timing with devices=3D set and the defaults (5 x 100 ms probes), n =3D 10=
-,
-> min / median / max in seconds on one host clock:
->
->    panic -> fence starts                 0.51 / 0.56 / 0.61
->    fence starts -> TAKEN_OVER            0.29 / 0.34 / 0.39
->    panic -> shell on successor console   0.93 / 0.97 / 1.04
->
-> Two more sessions of 10 runs (the second on the patched kernel above)
-> gave the same picture: median panic -> TAKEN_OVER 0.91 and 0.90 s.
-> The series were run by scripts Claude generated; I also re-ran the
-> README commands by hand once (10 of 10, median 0.91 s).
->
-> This is a console-only image: no service, no traffic, no real
-> hardware, no vIOMMU. It says nothing about the nginx figure.
->
-> Two smaller things. kmorphd logs through one /dev/kmsg fd, which the
-> kernel rate-limits to 10 lines per 5 s unless printk.devkmsg=3Don, so on
-> a default command line "state TAKEN_OVER" never shows. Details:
->
->    https://github.com/multikernel/kmorph/issues/1
-
-Ditto. Fixed.
-
->
-> And the successor boots without a swiotlb ("No low mem": its 128 MB
-> are above 4 GiB). I did not test a 32-bit-DMA device after a takeover,
-> so that one is a question, not a bug.
->
-> The QEMU rig, the logs and the exact commands are available if you
-> want them.
->
-> [1] https://lore.kernel.org/all/au5M_M_RzWfXLr0T@pop-os.localdomain/
->
-
-Regards,
-Cong
+-- 
+Sincerely yours,
+Mike.
 
