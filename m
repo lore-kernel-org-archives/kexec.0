@@ -2,108 +2,72 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE85606A32E
-	for <kexec@archiver.kernel.org>; Tue, 10 Nov 2026 19:02:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCBE3606A338
+	for <kexec@archiver.kernel.org>; Tue, 10 Nov 2026 20:07:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=DVaRAM3U;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=IVOL8RGL
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Q8UvAznu;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h2PAuiZb
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Rc92iNBDR3TpfE1Wb0FPlqB33KW4gheFc7Efbj9D4zA=; b=DVaRAM3UOYw2eF7274v7ORBOL/
-	+6G8A9OXK/7j//319njYknnN+6eoVyOA/AFmsgaFPQWRo8XQhEZ/UTkYaAM43EWYDM1m0JtSzAgWW
-	OWld49TvTKF5gpXhDIkjy6+TS/ppLsspSxopItIEA88d4MPHFQI6T+fGVl1y6oQA2qcaIQk6et2y0
-	/9Z7NwdfnAp1wRnbCOoErHyz62VO76KisgddDGq9zdRKDRlLRsf1gqDyGu2MShBuwMc7VYFxH9WHT
-	oDCrU230O91Kedjm0CwDCLTJERo9Ri/yN+Oy+DJZ/JrNIJnxsRY0CDyR5/zOBNSshLMEQ4cN/O+Fc
-	UHZEOQ/A==;
+	bh=fFSfGgw6bVYeUu0kiLvEaiITNG7sY4O64OeTREfeGfo=; b=Q8UvAznu7aXIFBpumplgyv+K8+
+	elUOPPdePOXcL/b7zHafZkk3qpPJG9g8vz9qy/dsSGr9hp6fCJFlo+Dozh96qpyYLgh+/SkD1aDFT
+	VpqaIeQKQMQg88MEtt9VOt54tE2xS94DFFBU+mmw5LCil49H9ka5qIsFfwNskIHwORLmrmvhSh19L
+	10cIzYQpEeT5l++xg35vw4fO+tzi/byg/wf6O7v+Ggnr3pk7i1C51AwWWWB9Yv9scUm6MOV086blY
+	ar65a0N7xKcgjiuSAOW4uTKY0JM8yCdU7JDIkjxcz+iu0vTmAlx6Z7mL5gFWVaJ7kKQ9lcA1p21cW
+	SAJvfgwg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQr6r-00000004rhO-2x52;
-	Tue, 10 Nov 2026 19:02:21 +0000
-Received: from mail-pl1-x635.google.com ([2607:f8b0:4864:20::635])
+	id 1xQs87-00000004xKf-1o6c;
+	Tue, 10 Nov 2026 20:07:43 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQr6o-00000004rgZ-3aDy
+	id 1xQs86-00000004xKU-3My7
 	for kexec@lists.infradead.org;
-	Tue, 10 Nov 2026 19:02:20 +0000
-Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-2e9f6a16afcso5875ad.1
-        for <kexec@lists.infradead.org>; Tue, 10 Nov 2026 11:02:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794337338; x=1794942138; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Rc92iNBDR3TpfE1Wb0FPlqB33KW4gheFc7Efbj9D4zA=;
-        b=IVOL8RGLsJ0+TCP0tAk7dPHAE15K0DjISkQW4ZAMdwwUF3IeiQrnQskGC1OKCHspHG
-         H7pUZLzArOaP1z//XnO7e0wV168oQqy5zK/wGurDBYOhJRRXjelUPEoe8FBszSmnad7J
-         /1+vbfUnf0+KRT9N+CRaikN9NYxFIGq74wE/WfORTeFkCr3SuhSBPf3ssfJbSk40bGDq
-         DsoyqyKidfakmNF6rHp1m2njPvl9uO682pd/yw1JyAkC9VSSAL/8/fU5mkjWEOpY21+c
-         9UfRhGbmrY+CaTWW8gWwpDfc6O2ZwvtrdaT6oxwjYreNa7woP3xeOChDzpdS+XkK+ByR
-         qgtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794337338; x=1794942138;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Rc92iNBDR3TpfE1Wb0FPlqB33KW4gheFc7Efbj9D4zA=;
-        b=aQ25ehdAQ0rbI8LE/PukxPfjaeJGqeqJ9FxWhF5rUh/1H8CzbDxhuXP3M4c9eg+B9+
-         0AxfntI04PDES/gnWv0Dx8TPqyt7SdiMW2gg1N1L9V3mhs4l9g8DRbk4l+X+UwXaj01b
-         u0MHxh3SsMY1hfED0RzpoPLnEQzJx4jllA+LQgwnBqRSQ4s/bXVMGNmdZtFPuH61Fc4D
-         miXrXTzsXKX/dU6gSWunbJYUaLeedLPdOG0XbLsmSzmzPtlJFIbVGtVrjjD1AXyRYzNc
-         lgY4bgk8OANT09umpt0+Ewq3BhezYhrEpigceLG/RdFpTx63Vla3rvbIMHfM9uewE9Ig
-         K4Yg==
-X-Gm-Message-State: APuU4Z/8R/k+LsfY+pt2BzV22AwcYQi0ngsVWIP2Iz/ihfSixaHNHZRP
-	k1fRMLz2HxC/QfwbioY9YgV8u3gnStgRWZg/RxmrdCl+cjgTn/XWHr9NBAo5SbyqvA==
-X-Gm-Gg: AYBFou1PcQQvl2MhYmPg31c9Cq4tmRI3cU8JwNRrRp2YyvxqLctYFIPCMtKaasHMMcG
-	6t5HIrEq1RsZ+op62yaQeaYcnbIpkcqZSYHCTyl0zpKo8M8zFgsf+XI5/1YeeNxdjER1oWg4daQ
-	vxb9NREJo8hfUqkyBgWgxwT1fKvnHNK9BFRbnUJjuoQEueDMJDeslehDg+i8O6HU3d+rnpLWUWJ
-	+5oZEzuQNq9U8etmpMqBFX2+4ERkPNneMZZWSDQyh7bGkQVCsqjKJmYO9qT/B1QG1icCc4KmZ5h
-	wsQCTq6z03gjBFexNxCx9iLPQ8p2W26w18pcr4Vzqci5O2BOaJPGFLVCb8D9mWEJ573hhyXm9Ij
-	8ZmZ6fj/nsnNwdfAMgwsSrc2f37U0086ye977xx854vwqGBTjDO/BzSrYjOeEvF2eVlz8itdj64
-	EOaSx4WOa++MfVYdPUDPn54sMD3RwQGAQQVkBAuJEQ381Qjweh5MmEz4mrKdFr2kO4xHStkN2Ti
-	rg3Zwx8nbrrXaoLYz8SgiZiNVWYMtt1GtvlT/4l8VUUwtfbnKxg7xmhR/pGrTzSr49A32IEtiJc
-	DF8mEbrrZpsIxI9jLNscwApkAtLq6agArzvgKGm9YCbmPplTK+0+BmJYzO1hQQuE
-X-Received: by 2002:a17:903:1b44:b0:2d5:db38:8010 with SMTP id d9443c01a7336-2edba3e2a10mr5113665ad.15.1794337336971;
-        Tue, 10 Nov 2026 11:02:16 -0800 (PST)
-Received: from google.com (60.89.247.35.bc.googleusercontent.com. [35.247.89.60])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b17db31cafsm914394a91.3.2026.11.10.11.02.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Nov 2026 11:02:15 -0800 (PST)
-Date: Tue, 10 Nov 2026 11:02:11 -0800
-From: Vipin Sharma <vipinsh@google.com>
-To: Samiullah Khawaja <skhawaja@google.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org, ajayachandra@nvidia.com, 
-	alex@shazbot.org, amastro@fb.com, ankita@nvidia.com, apopple@nvidia.com, 
-	bhelgaas@google.com, chrisl@kernel.org, christian.koenig@amd.com, corbet@lwn.net, 
-	dmatlack@google.com, graf@amazon.com, jacob.pan@linux.microsoft.com, jgg@nvidia.com, 
-	jgg@ziepe.ca, jrhilke@google.com, julianr@linux.ibm.com, kees@kernel.org, 
-	kevin.tian@intel.com, leon@kernel.org, leonro@nvidia.com, lukas@wunner.de, 
-	mattev@meta.com, michal.winiarski@intel.com, parav@nvidia.com, 
-	pasha.tatashin@soleen.com, praan@google.com, pratyush@kernel.org, rananta@google.com, 
-	rdunlap@infradead.org, rientjes@google.com, rodrigo.vivi@intel.com, rppt@kernel.org, 
-	saeedm@nvidia.com, schnelle@linux.ibm.com, skhan@linuxfoundation.org, 
-	vivek.kasireddy@intel.com, witu@nvidia.com, yanjun.zhu@linux.dev, yi.l.liu@intel.com
-Subject: Re: [PATCH v6 04/27] vfio/pci: Register a file handler with Live
- Update Orchestrator
-Message-ID: <20261110185305.GC519525.vipinsh@google.com>
-References: <20261102153656.1431701-1-vipinsh@google.com>
- <20261102153656.1431701-5-vipinsh@google.com>
- <au5T7qouVfxJSDmr@google.com>
+	Tue, 10 Nov 2026 20:07:42 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 4284161CD3;
+	Tue, 10 Nov 2026 20:07:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2C381F008A5;
+	Tue, 10 Nov 2026 20:07:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794341262;
+	bh=fFSfGgw6bVYeUu0kiLvEaiITNG7sY4O64OeTREfeGfo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=h2PAuiZbL8+C9cFGu0hLkY/GW6LSnwFsQlh72teyZqoevLpXQn9BDXr5lwI6W2S9U
+	 oTPN/ufmKJHWcds6dUuuA0Jd+trPON6z/PfR9Y1KfVFLWbP3oX4WFz8J6qpkZe/06+
+	 SRmC3dEP0M2Y63yi3A/6GIl5Q1TsPA5akE4xonvE7PWdTQ5QIefsR60dNZ2t8G/E4U
+	 +YjEWFgkB3D4cTaLXQAr5DIDR8EGa8+SvKr6hGQtH/iUmLAFkysVFTJ90fPne3SYrO
+	 F+gDw62x3g4d4og21o9Ff0IrTVbcKTKLUPM+6lJsW38SZtn/RcSSuxL2AZot1hVl4x
+	 jEt3A4OZQ/jHA==
+Date: Tue, 10 Nov 2026 22:07:35 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: =?iso-8859-1?B?Suly6W15?= Jean <Jeremy.Jean@oss.cyber.gouv.fr>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>,
+	linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org, stable@vger.kernel.org
+Subject: Re: [PATCH] ima: fix kexec measurement buffer overflow after failed
+ loads
+Message-ID: <avN5hyR2V9C_4GPR@kernel.org>
+References: <20261108190404.1397829-2-Jeremy.Jean@oss.cyber.gouv.fr>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <au5T7qouVfxJSDmr@google.com>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261110_110218_907679_350B780E 
-X-CRM114-Status: GOOD (  25.49  )
-X-Spam-Score: -17.6 (-----------------)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20261108190404.1397829-2-Jeremy.Jean@oss.cyber.gouv.fr>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -114,74 +78,94 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-23.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Fri, Nov 06, 2026 at 10:29:06PM +0000, Samiullah Khawaja wrote:
-> On Mon, Nov 02, 2026 at 07:36:33AM -0800, Vipin Sharma wrote:
-> > Register a live update file handler for vfio-pci device files. Add stub
-> > implementations of all required callbacks so that registration does not
-> > fail. Register it with both live update framework and PCI subsystem.
-> > 
-> > This file handler will be extended in subsequent commits to enable a
-> > device bound to vfio-pci to run without interruption while the host is
-> > going through a kexec Live Update.
-> > 
-> > Put this support behind a new Kconfig VFIO_PCI_LIVEUPDATE. Initial
-> > support is added for no-iommu model vfio-pci devices.
-> > 
-> > Co-developed-by: David Matlack <dmatlack@google.com>
-> > Signed-off-by: David Matlack <dmatlack@google.com>
-> > Signed-off-by: Vipin Sharma <vipinsh@google.com>
-> > ---
-> > MAINTAINERS                            |  1 +
-> > drivers/vfio/pci/Kconfig               | 11 ++++
-> > drivers/vfio/pci/Makefile              |  1 +
-> > drivers/vfio/pci/vfio_pci.c            | 11 +++-
-> > drivers/vfio/pci/vfio_pci_liveupdate.c | 75 ++++++++++++++++++++++++++
-> > drivers/vfio/pci/vfio_pci_priv.h       | 14 +++++
-> > include/linux/kho/abi/vfio_pci.h       | 28 ++++++++++
-> > 7 files changed, 140 insertions(+), 1 deletion(-)
-> > create mode 100644 drivers/vfio/pci/vfio_pci_liveupdate.c
-> > create mode 100644 include/linux/kho/abi/vfio_pci.h
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 5d1b58271989..167aa9d66ce8 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -28662,6 +28662,7 @@ F:	Documentation/ABI/testing/debugfs-vfio
-> > F:	Documentation/ABI/testing/sysfs-devices-vfio-dev
-> > F:	Documentation/driver-api/vfio.rst
-> > F:	drivers/vfio/
-> > +F:	include/linux/kho/abi/vfio_pci.h
-> > F:	include/linux/vfio.h
-> > F:	include/linux/vfio_pci_core.h
-> > F:	include/uapi/linux/vfio.h
-> > diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
-> > index 296bf01e185e..e8285ad93a69 100644
-> > --- a/drivers/vfio/pci/Kconfig
-> > +++ b/drivers/vfio/pci/Kconfig
-> > @@ -42,6 +42,17 @@ config VFIO_PCI_IGD
-> > 	  and LPC bridge config space.
-> > 
-> > 	  To enable Intel IGD assignment through vfio-pci, say Y.
-> > +
-> > +config VFIO_PCI_LIVEUPDATE
-> > +	bool "VFIO PCI support for Live Update in no-iommu mode"
-> > +	depends on PCI_LIVEUPDATE && VFIO_NOIOMMU
-> 
-> Can we handle this dependency in code instead of doing through
-> configs? Are there any build dependencies on noiommu?
+On Sun, Nov 08, 2026 at 07:04:04PM +0000, Jérémy Jean wrote:
+> When kexec_file_load() fails to install a new image, it can leave the
+> global IMA scratch buffer larger than the IMA segment of the current
+> image. When that image is executed, ima_update_kexec_buffer() copies
+> the larger log past the end of its reserved segment. In a test, KASAN
+> reports it as:
 
-I can remove it but then by itself VFIO series will enable LIVEUPDATE
-irrespective of VFIO_NOIOMMU and it will just fail when someone tries to
-enable it. So, kconfig looks cleaner to me.
+...
 
-Can your series modify this kconfig and add (VFIO_NOIOMMU ||
-IOMMU_LIVEUPDATE)? Will that work for you?
+> Limit the dump to the smaller value between the scratch size and the
+> installed image segment size. Update the IMA mapping only after
+> machine_kexec_post_load() succeeds.
+
+These are two different bugs and the changelog only explains the first.
+The second one is that if machine_kexec_post_load() fails (e.g. -ENOMEM
+in trans_pgd on arm64), ima_kexec_buffer is already switched to the
+segment of the image that is about to be freed, so the installed image
+loses the IMA update and kexec -e writes into freed pages.
+Please spell this out, or better split it into a separate patch.
+
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -206,11 +206,13 @@ kimage_validate_signature(struct kimage *image)
+>  
+>  static int kexec_post_load(struct kimage *image, unsigned long flags)
+>  {
+> +	int ret = machine_kexec_post_load(image);
+> +
+>  #ifdef CONFIG_IMA_KEXEC
+> -	if (!(flags & KEXEC_FILE_ON_CRASH))
+> +	if (!ret && !(flags & KEXEC_FILE_ON_CRASH))
+>  		ima_kexec_post_load(image);
+>  #endif
+> -	return machine_kexec_post_load(image);
+> +	return ret;
+
+Nit: an early "if (ret) return ret;" reads better than folding the error
+into the IMA condition.
+
+> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -98,12 +97,14 @@ static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
+> +	/* A failed replacement load may have resized the scratch buffer. */
+> +	ima_kexec_file.size = min_t(size_t, ima_kexec_file.size, segment_size);
+
+This prevents the overflow, but it treats the symptom at execute time.
+The actual problem is that ima_add_kexec_buffer() updates global state
+(ima_kexec_file and kexec_segment_size) for an image that may never be
+installed.
+
+When the failed load had a smaller measurement list (with staging the
+list can shrink), the dump is still truncated to the failed image's
+size and the next kernel gets an incomplete log. kexec_segment_size
+reported in the "kexec_execute" event is also the failed image's one.
+
+With the first hunk ima_kexec_post_load() runs only for an image that
+is going to be installed, so wouldn't it be cleaner to (re)size the
+scratch buffer and kexec_segment_size there, from image->ima_buffer_size?
+Then the comment you removed would actually become true.
+
+> @@ -239,7 +240,8 @@ static int ima_update_kexec_buffer(struct notifier_block *self,
+> -	ret = ima_dump_measurement_list(&buf_size, &buf, kexec_segment_size);
+> +	ret = ima_dump_measurement_list(&buf_size, &buf,
+> +					kexec_image->ima_buffer_size);
+
+ima_kexec_buffer is not tied to kexec_image. After a successful
+kexec_file_load() followed by KEXEC_FILE_UNLOAD or by a successful
+kexec_load(), the old image is freed but ima_kexec_buffer still maps its
+pages. kexec_image->ima_buffer_size is 0 for a kexec_load() image, so
+with this patch the dump fails, but buf_size is still the header size
+and memcpy() writes it into freed pages.
+
+That's pre-existing and not a reason to hold this patch, but it's the
+same class of bug and I think IMA should check that ima_kexec_buffer
+belongs to kexec_image (or drop the mapping when the image is replaced)
+rather than rely on sizes matching.
+
+--
+Sincerely yours,
+Mike.
+
 
