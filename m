@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C926606A9E2
-	for <kexec@archiver.kernel.org>; Tue, 10 Nov 2026 16:54:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D1F60A5BD0
+	for <kexec@archiver.kernel.org>; Tue, 10 Nov 2026 16:55:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=JmsGIaq1;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kUjnB7jj
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=QPlqJPrq;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UHn0uj+s
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
@@ -14,36 +14,36 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Ex4dVJ9I9Q8lqhJNdjzHP1bMR0am48AWVaJF7+qsMjA=; b=JmsGIaq1G0VqkqHu55hQ/0XvlE
-	WaGzqcsmRb/WlXyiG8gHp2NzcWKFDwxdp1MSiWSLiRY0ogBSY3vBShxy0Uxgw85SNF/6S3jw3Gtzh
-	DmRtaYbhdwqy10WyVVW1hUf1fywLkOBF2bMBa119Wlz9587CTR5dewIssEWysHp2StuJWzC1nPckm
-	2n0M9YotAfg28rl0CknbYSJPCPOMdZQwX4GHMPuApLxlnB8fjeKdlohggYEChGElgqnWUTTNyZF3k
-	V1KsZYUlxe6Sy/4XjA00ZPJbWyLKlDhDmm0tRgRCwD8A2sZ0xy34NDia++bOPXt1eBQdWA2FteF2B
-	ZYr6QKWQ==;
+	bh=fX75Z40RlddIrDkoWsoAk3U6fOiHoJGDsJ5/Aw5b1AE=; b=QPlqJPrqxNdWr6Oo8Ug+Lit+2f
+	x3H2gVU+AVzwaGzwxg/s9wyyoz0jMY03Akesx19P/ewkyOJHLg+RROeyRy+8bw1eNnTpQR8wgXQHa
+	O2DDjKNZ3KuYLKuoVd4/idn6RFB2+4zZAh+t9MrUHAcJJdPkFaS3ummasinBI5sdkuJYBvVUticsf
+	oljDYRkrfYTg+hR6CXTDRo2xXuoWUsIT0+z2Y3TOcj2PYxtCIdz1Q86pEcQj1NCbGfR8JHG/gW++A
+	pgzzFskqR1SwXbZ0TuP7kHW/tm6fy3KMIaq1yTMSkwDiO2arv9THEbMTI9UeJUb3w1oNYmidyf8UA
+	+xBLqDvQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQp6q-00000004bdH-1EBW;
-	Tue, 10 Nov 2026 16:54:12 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xQp7m-00000004bkO-2A15;
+	Tue, 10 Nov 2026 16:55:10 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQp6o-00000004bd8-39sl
+	id 1xQp7k-00000004bk0-3Tv8
 	for kexec@lists.infradead.org;
-	Tue, 10 Nov 2026 16:54:10 +0000
+	Tue, 10 Nov 2026 16:55:08 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id F220461DB4;
-	Tue, 10 Nov 2026 16:54:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 953741F0089F;
-	Tue, 10 Nov 2026 16:54:07 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 75F5247298;
+	Tue, 10 Nov 2026 16:55:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BEFF1F008A1;
+	Tue, 10 Nov 2026 16:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794329649;
-	bh=Ex4dVJ9I9Q8lqhJNdjzHP1bMR0am48AWVaJF7+qsMjA=;
+	s=k20260515; t=1794329708;
+	bh=fX75Z40RlddIrDkoWsoAk3U6fOiHoJGDsJ5/Aw5b1AE=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=kUjnB7jjWwbn6apvOgtDPvTzekBFurc2yWAt+G4hqRvI8O5lNsAhUcsIyDTfsh+Si
-	 SeTF3N+b4eOamAS0Ibbv55mh92DVwaX96cf8VKOxWASg0HLYtUZDtqVANs7j9tRUP8
-	 TdLmGIphHJhyp8LCoz8oSqLhi1QjBhg8jqNjDAmOy1kOkVNjq3Xkn2Psn99hvE9mvb
-	 fnx1bzYQWtKg+xG5bi7ehexY1sbmWYYUIBOAzUFGoE2RFDDE75jnLYKjjzuedaWMup
-	 nxzG8Nb7E5fD248tLjuX7ToqybB/EqltODzgwyJErS2Q5swvfHJrAkZur0+Ici9BMR
-	 vLYdm4F5aVAUg==
+	b=UHn0uj+sFtGKGaLst/9muipxKqjAxKUpZ+JoQnL+duqe8G78dsi/abK5ag6CP9hJm
+	 OP5wzOYOlDurhfr842HXp3hCAWB8YDNogKdbp/kzN6pDU7wNgpzn5749pSO1boCZlt
+	 6wKejwWgFp+/su6c8JaDG20/CEgau226J8buSe7UDs9TKi6Sya0uZAbn2NkUxGa0fo
+	 Et6Ef7UU2hOmBhoAKI5VBA2QYe5TXWmSOwZBsfBCWaIAh+OEfwpcnPN03mNODB/uDY
+	 ZVJy6DuuviuuIuoQaLsxRS67TEQW/x2dI791szWv2aYwJ9hb0qxQUwxo47LjbLxQwd
+	 9MBtuukDIdtTw==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,  Pratyush Yadav
@@ -52,13 +52,14 @@ Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,  Pratyush Yadav
  Guo <guodongtai@kylinos.cn>,  Kexin Liu <liukexin@kylinos.cn>,  Sourabh
  Jain <sourabhjain@linux.ibm.com>,  kexec@lists.infradead.org,
   linux-kernel@vger.kernel.org,  linux-mm@kvack.org
-Subject: Re: [PATCH v2 3/3] kho: fix bootmem sizing
-In-Reply-To: <20261104-kho-bootmem-sizing-v2-3-b0d1a834780f@kernel.org> (Mike
-	Rapoport's message of "Wed, 04 Nov 2026 18:50:11 +0200")
+Subject: Re: [PATCH v2 2/3] kho: skip zero-sized lowmem and global bootmem
+ areas
+In-Reply-To: <20261104-kho-bootmem-sizing-v2-2-b0d1a834780f@kernel.org> (Mike
+	Rapoport's message of "Wed, 04 Nov 2026 18:50:10 +0200")
 References: <20261104-kho-bootmem-sizing-v2-0-b0d1a834780f@kernel.org>
-	<20261104-kho-bootmem-sizing-v2-3-b0d1a834780f@kernel.org>
-Date: Tue, 10 Nov 2026 17:54:06 +0100
-Message-ID: <2vxz33t8iq4x.fsf@kernel.org>
+	<20261104-kho-bootmem-sizing-v2-2-b0d1a834780f@kernel.org>
+Date: Tue, 10 Nov 2026 17:55:04 +0100
+Message-ID: <2vxzy0b0hbiv.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
@@ -83,48 +84,22 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 
 On Wed, Nov 04 2026, Mike Rapoport (Microsoft) wrote:
 
-> Bootmem areas are sized from overlapping views of the memory reserved in
-> memblock:
+> The lowmem and the global bootmem areas can have zero size, for example
+> when none or all of the memory is below ARCH_LOW_ADDRESS_LIMIT, or when
+> either of those areas is explicitly set to zero with kho_bootmem=.
 >
-> * the global area is sized from all reserved memory, including memory
->   allocated on specific nodes, so on NUMA systems everything allocated
->   on a node is accounted in both the global area and the area of that
->   node.
-> * per-node sizes are calculated after the lowmem and the global areas
->   are reserved. With CONFIG_NUMA=n all memblock regions belong to node 0,
->   so the lowmem and the global areas are accounted in the size of node 0
->   area and scaled once again.
+> For a zero-sized allocation memblock returns an address without reserving
+> anything, and that empty area is recorded in kho_bootmem. If there is no
+> memory below ARCH_LOW_ADDRESS_LIMIT, allocation of the empty lowmem area
+> fails and KHO gets disabled.
 >
-> As a result, bootmem is about twice bigger than it should be on NUMA
-> systems and about four times bigger with CONFIG_NUMA=n. On small systems
-> reservation of the bootmem may fail and then KHO gets disabled.
->
-> Make the areas cover separate parts of the reserved memory: the lowmem
-> area covers allocations below ARCH_LOW_ADDRESS_LIMIT, per-node areas
-> cover allocations above it on each node and the global area covers
-> allocations that are not bound to any node. Calculate all sizes before
-> reserving any of the areas.
->
-> With CONFIG_NUMA=n the global area becomes empty and it is not reserved.
->
-> If ARCH_LOW_ADDRESS_LIMIT covers all memory, as may happen on arm64, any
-> area can serve lowmem allocations, so don't reserve the lowmem area.
->
-> Bootmem sizes in MiB in x86 QEMU VMs, before -> after:
->
->                      CONFIG_NUMA=y     CONFIG_NUMA=n
->   1G,  1 node         176 ->   92       320 ->   80
->   4G,  1 node         508 ->  332      1264 ->  316
->   16G, 2 nodes       1268 ->  704      2944 ->  736
->   32G, 4 nodes       2296 -> 1224      5196 -> 1300
->   64G, 4 nodes       4344 -> 2248      9664 -> 2420
+> Extract a helper that checks for zero size and allocates memory from
+> memblock, and use it to skip empty areas the same way as empty per-node
+> areas are skipped.
 >
 > Fixes: 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation helpers")
-> Reported-by: Kexin Liu <liukexin@kylinos.cn>
-> Reported-by: George Guo <guodongtai@kylinos.cn>
-> Closes: https://lore.kernel.org/all/20260904025101.9959-1-dongtai.guo@linux.dev
-> Reported-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-> Closes: https://lore.kernel.org/all/20260922131217.698809-1-sourabhjain@linux.ibm.com
+> Reported-by: Chen Pei <cp0613@linux.alibaba.com>
+> Closes: https://lore.kernel.org/all/20261026131851.9942-1-cp0613@linux.alibaba.com
 > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
 Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
