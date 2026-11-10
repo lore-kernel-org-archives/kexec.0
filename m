@@ -2,129 +2,70 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3153F60A2611
-	for <kexec@archiver.kernel.org>; Tue, 10 Nov 2026 01:21:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7544A606A900
+	for <kexec@archiver.kernel.org>; Tue, 10 Nov 2026 01:40:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=eWXCQjAS;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.a=rsa-sha256 header.s=google header.b=eL8Srwgj
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=qinAZTrz;
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=z/pehWdh
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
 	List-Unsubscribe-Post:List-Owner;
-	bh=m2qXctBTC0OPADf0V2KkMb6r2GA0JgabIuFAMe6ERzQ=; b=eWXCQjASmceZCAPPyo6dALDYwl
-	n41xApZMVwIGzkfUaT92+StBtu+du9KW/sXrrbWM2XgqCU+e2jbtBCBW4xQx9O1bV5Jty7xhLRYuv
-	XU/iKqAff5Gkat2S1YzyLI1bY8n4xKiOjGXEje//XUiCFwSS8YAzq29EkH2n1kqmEbtTu7lVKBlif
-	RhxTG454LJ/qdczWqQ3DT0q2u4uupdRTlFhWXkD+MbA4aYrdY9Htzv8+yGwvuc8UjycsIZhLlHlaH
-	xrrIlXvlO+Bl6VwQPGSP3ZaoB4vvtK6JKyOR11VVJCBOWuEDhL2U5WjkHFwC6t74oAW5XvqfOtQZg
-	uqPS4XSg==;
+	bh=AK/SgB0NJhyyMo/+uhJJDQ0snfVmLXzbzA7HTWtNTBs=; b=qinAZTrz3b/S6eREpsk+7m+z1b
+	6VbDL4t8prldQBkxbQhgw0cU0CsemJrT/SWBxvdK9nhw76V3au02QJtKaCv0N5idw4LCE/ZTrVCHm
+	BLXcDfVdUij67Cnzofgr/CJVGJPNZ6tO8Hoq591LZ3FOL5MJgup9qxpzdz1y1bkijskM8z6YWvVMH
+	LMBWTA6dabcIWwTnXZfTbcX8xWj/D/R8zbSro8lh5iOAUdZvKh2n3DgqRme4kOCK8km/5lxhdzhkL
+	RFBJwfd8W3Jtf3Op7P2gKDXKkI7AChD9FiA5P9JebagjUeshRo/XacPFqYRkwO0bSS8c2NY6k9VJR
+	beWS0mVQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQaYe-000000023vk-3bXm;
-	Tue, 10 Nov 2026 01:21:56 +0000
-Received: from mail-ed1-x536.google.com ([2a00:1450:4864:20::536])
+	id 1xQaqh-00000002789-4A6V;
+	Tue, 10 Nov 2026 01:40:35 +0000
+Received: from [113.46.200.222] (helo=canpmsgout07.his.huawei.com)
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQaYc-000000023rn-0rzU
+	id 1xQaqY-0000000274y-35xt
 	for kexec@lists.infradead.org;
-	Tue, 10 Nov 2026 01:21:55 +0000
-Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-6b6e7a05225so2032475a12.0
-        for <kexec@lists.infradead.org>; Mon, 09 Nov 2026 17:21:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1794273712; x=1794878512; darn=lists.infradead.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=m2qXctBTC0OPADf0V2KkMb6r2GA0JgabIuFAMe6ERzQ=;
-        b=eL8SrwgjG3KWhr+2EeMG+sj4XBGI+KlAkbjzkSpKfR37YsLJk3RTZMl3SzAl/GwIhh
-         c7EnX7sZWnqlOBdr77WFlpfeN/oxy92mJjfYpY3qOSVDsJhYwo8iloClv+/QVDEFBQma
-         0c2S8sGgTm6yNpEee2RZcb+g4xSrjIWATM+cc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794273712; x=1794878512;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=m2qXctBTC0OPADf0V2KkMb6r2GA0JgabIuFAMe6ERzQ=;
-        b=eAIICUVZT7u/VbczxkrA/HucvIPkN3Z6rCDFEueaVejLciQXKqpSozEVQuU4KyHZOW
-         3HCn94nQXZSgMVfFmhQwWFCmKkR3d2yDsLvh8fTuzhmAq5g8AcbmxQwvwqsKJOX4Chl4
-         tQUQdf2H+xG5ll75evs2AsjMf8QaHq80ME0aAdgjYwSxXG6DZZUUJPJBSMuNlgwgZae4
-         vOX/SeShHXUK2aUNhSGcIbbXFTQXJOWNmsxGLVnwsiPEsFG4WZhWp2PqU0ci5BXdFx8h
-         QN/g+ibAqgNJxP8w8VgLEoDGxENZ7UYiITAfJ+LyTsdYbDj49tnistZUNfayOHUpz+Sm
-         H1Wg==
-X-Forwarded-Encrypted: i=1; AL+hErHG4WI4Cgl2Z4ENPWmkKL6z930/O612ryAgHaSYpeeYKZ9R3dhzoIx5DDWPk1ZD8mMJhfHfDw==@lists.infradead.org
-X-Gm-Message-State: APuU4Z9zUM7dhkf6oglq8xNy/+cQdhz3muPgGoc428eMclCXJFsVcVM6
-	WsgiN4fkWiM9A/mwwkr2Fd0ncoyDgoE/oSfAv3qyLEqTl0Sa/7Bf9MvHJTPD00+AckXNHVBjAFM
-	GTb/pNqRTZA==
-X-Gm-Gg: AYBFou3RvyOft58xXcgcX6unyKKkuZfGnxaSYTQRhXNVpc9KINdB+HhCWqcjTmuQii2
-	bDkp8WhxkUQAqhj0Wpyec3QNG6C1ib/t3pnAE3a1uHidDYOJBeQgqMTVgGIahZqBoDgTCiheO9U
-	ZLWrnOu8eT8SXijOkGI+hcjBmIoTuwKbdHua5JbiL6DBdSANLdrLycBn7Ietl0dQ3LJ1Vnj6NVl
-	zsqgMACIeWZP5+iMmn0VF3cmTlkDDp91VN8soRhfSfPYFlzhvRks7x1IUsCpEZu4bxrGuEiFl3w
-	Ws7ZmVAaAO3VbOE2Jim0He5vJUfQdCFaMzM3yX+upZ8TgRGqoJvIx8kCuzs+j4PyoWB7fGaqo9e
-	32vBj1V7FYF9bx4sl4CaTp50xEYcQ9fweAjr5uXWQbKDYcpl6Mps3W54RTzUAOJZZicA1aJ0aMy
-	dPBQOniKnzaWtEBqEyCT+sWUXLnfbvJoZ3xtZFb4y/23FICpcmTSN0pMD+CTvIhFB3TA6h3WZHV
-	aR38wzbYKoURhzo1i5PBJa6vovXp6QjXdDKh/4KPDWYVib+uW+M35kfX0Zj2oYQ9uVzYuZThJO9
-	YcnOhivqGx6N8YRKt0vf26zPbZsepunR7jBKNX5QGGf8ZR9BS48iXdaSo00lbU+mzs5GtSb4xDh
-	R/Q==
-X-Received: by 2002:aa7:d813:0:b0:6b7:834:4eb3 with SMTP id 4fb4d7f45d1cf-6b7564f9db8mr682491a12.7.1794273712247;
-        Mon, 09 Nov 2026 17:21:52 -0800 (PST)
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com. [209.85.208.51])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b7578bcc7csm420007a12.10.2026.11.09.17.21.52
-        for <kexec@lists.infradead.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Nov 2026 17:21:52 -0800 (PST)
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6b577addee9so2037863a12.1
-        for <kexec@lists.infradead.org>; Mon, 09 Nov 2026 17:21:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AL+hErHSXvfWXqwC1d7eOJ7Peal+0ULd44xChdz8Mq/Sqtp+3zdl3gDt3s96XfnFP2gM4dLJNEgeuQ==@lists.infradead.org
-X-Received: by 2002:a17:907:9451:b0:c41:1750:59a2 with SMTP id
- a640c23a62f3a-c50495dfbd5mr87253466b.12.1794273275844; Mon, 09 Nov 2026
- 17:14:35 -0800 (PST)
+	Tue, 10 Nov 2026 01:40:33 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=AK/SgB0NJhyyMo/+uhJJDQ0snfVmLXzbzA7HTWtNTBs=;
+	b=z/pehWdhVRd/ELfMH/gt5hqXy00rS0mSKpMJfKKpoUb95Kz3+hvKZOcvSGcXpUCFCOFyeTo6I
+	O44kGYOmFW4yb8HA+sfsJmWg8arK1dkAdareBWdQ3WJGeKw2j35GImzfqDptOFrUXROU/JdNmN3
+	XSi3f3715y4lEoE7y1XpwCk=
+Received: from mail.maildlp.com (unknown [172.19.162.92])
+	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4jNq8P4HRgzLlvw;
+	Tue, 10 Nov 2026 09:39:49 +0800 (CST)
+Received: from whupemk300004.china.huawei.com (unknown [7.152.185.168])
+	by mail.maildlp.com (Postfix) with ESMTPS id EFD2940586;
+	Tue, 10 Nov 2026 09:40:03 +0800 (CST)
+Received: from huawei.com (10.67.174.33) by whupemk300004.china.huawei.com
+ (7.152.185.168) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Tue, 10 Nov
+ 2026 09:40:02 +0800
+From: Gu Bowen <gubowen5@huawei.com>
+To: David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>, Ignat
+ Korchagin <ignat@linux.win>, Herbert Xu <herbert@gondor.apana.org.au>
+CC: <keyrings@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+	<kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<stable@vger.kernel.org>, <lujialin4@huawei.com>
+Subject: [PATCH] crypto: asymmetric_keys: verify_pefile: fix integer underflow in pefile_strip_sig_wrapper
+Date: Tue, 10 Nov 2026 09:56:57 +0800
+Message-ID: <20261110015657.528337-1-gubowen5@huawei.com>
+X-Mailer: git-send-email 2.43.0
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-References: <20261104-work-procfs-core-v2-14-76ace653a773@kernel.org>
- <CAMuHMdVfakapgBK6TBhO1iWX8qzvLDk8jzRS=t2MVa5G=MCUeg@mail.gmail.com>
- <20261107-akteur-gemieden-eckdaten-21304d085e35@brauner> <20261108185953.28054fb3@pumpkin>
- <alpine.DEB.2.21.2611090504170.17804@angie.orcam.me.uk> <20261109214558.0d9d5228@pumpkin>
-In-Reply-To: <20261109214558.0d9d5228@pumpkin>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 9 Nov 2026 17:14:19 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whsA3tKcUCBJDj_vmJ11rVGT9rivgnKjGRgMO21CPmCxg@mail.gmail.com>
-X-Gm-Features: AclHuK-x8jcOOQUqd2amGoGEAKER9jIFGaeL4LxxWAd0cGV7dz_RR64PtDogpPU
-Message-ID: <CAHk-=whsA3tKcUCBJDj_vmJ11rVGT9rivgnKjGRgMO21CPmCxg@mail.gmail.com>
-Subject: Re: [PATCH RESEND v2 14/23] proc: let procfs copy in writes before
- pinning the entry
-To: David Laight <david.laight.linux@gmail.com>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, Christian Brauner <brauner@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, linux-fsdevel@vger.kernel.org, 
-	Jann Horn <jannh@google.com>, Josef Bacik <josef@toxicpanda.com>, Chris Mason <mason@kernel.org>, 
-	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, Eric Dumazet <edumazet@kernel.org>, 
-	Thomas Gleixner <tglx@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Jonathan Corbet <corbet@lwn.net>, Christoph Hellwig <hch@lst.de>, Greg Kroah-Hartman <gregkh@suse.de>, 
-	Joel Granados <joel.granados@kernel.org>, Kees Cook <kees@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Jan Kara <jack@suse.com>, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	linux-um@lists.infradead.org, linux-wireless@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org, ntfs3@lists.linux.dev, 
-	platform-driver-x86@vger.kernel.org, coreteam@netfilter.org, 
-	kexec@lists.infradead.org, linux-pci@vger.kernel.org, 
-	linux-sound@vger.kernel.org, netfilter-devel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, ibm-acpi-devel@lists.sourceforge.net, 
-	jfs-discussion@lists.sourceforge.net, linux-alpha@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-cifs@vger.kernel.org, 
-	linux-fbdev@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-mm@kvack.org, 
-	linux-sh@vger.kernel.org, linux-usb@vger.kernel.org, 
-	samba-technical@lists.samba.org, sparclinux@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linux-doc@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-atm-general@lists.sourceforge.net, 
-	Takashi Iwai <tiwai@suse.de>, linux-input@vger.kernel.org, linux-raid@vger.kernel.org, 
-	linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, 
-	linux-debuggers@vger.kernel.org, Chuck Lever <cel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ whupemk300004.china.huawei.com (7.152.185.168)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261109_172154_255987_93BED55D 
-X-CRM114-Status: GOOD (  10.30  )
-X-Spam-Score: -1.8 (-)
+X-CRM114-CacheID: sfid-20261109_174027_381245_D19D3BF5 
+X-CRM114-Status: GOOD (  13.73  )
+X-Spam-Score: -1.3 (-)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -135,23 +76,87 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Mon, 9 Nov 2026 at 13:46, David Laight <david.laight.linux@gmail.com> wrote:
->
-> Just that the cast would have to be:
->         u8 *foo = (u8 *)bar;
-> where 'bar' is 'char *', and I don't think you need a cast there when
-> char is unsigned.
+The pefile_strip_sig_wrapper() function validates the win_certificate
+wrapper that precedes the PKCS#7 signature in a PE binary.  It checks
+that the wrapper length does not exceed the certificate table size
+(``wrapper.length > ctx->sig_len``) but fails to verify that the
+wrapper length is at least ``sizeof(struct win_certificate)`` (8 bytes).
 
-.. and just to clarify: 'char' is always unsigned in the kernel on all
-architectures since commit 3bc753c06dd0 ("kbuild: treat char as always
-unsigned") back four years ago...
+When a crafted PE image supplies a wrapper with ``length`` in the range
+[1, 7], the subsequent arithmetic::
 
-            Linus
+    ctx->sig_len = wrapper.length;      /* e.g. 1 */
+    ctx->sig_offset += sizeof(wrapper);
+    ctx->sig_len -= sizeof(wrapper);    /* 1 - 8 = 0xFFFFFFF9 (unsigned) */
+
+underflows the unsigned ``ctx->sig_len`` to a value near UINT_MAX.  The
+following ``sig_len < 4`` sanity check is bypassed because 0xFFFFFFF9 is
+greater than 4.
+
+The underflowed ``sig_len`` is then passed to verify_pkcs7_signature()
+and onwards to asn1_ber_decoder().  The ASN.1 decoder's own
+``datalen > 65535`` entry guard can be satisfied by constructing a
+PKCS#7 length field of exactly 65535 (e.g. ``30 82 ff fb``), allowing
+the decoder to proceed and attempt to read OID octets beyond the
+allocated vmalloc buffer, triggering a page fault in look_up_OID()::
+
+  BUG: unable to handle page fault for address: ffffd1e986cb2000
+  #PF: supervisor read access in kernel mode
+  RIP: 0010:look_up_OID+0x14/0x100
+  Call Trace:
+   pkcs7_note_OID+0x33/0xa0
+   asn1_ber_decoder+0x363/0xbd0
+   pkcs7_parse_message+0xd9/0x1b0
+   verify_pkcs7_signature+0x24/0x80
+   verify_pefile_signature+0x7b/0xf0
+   kexec_kernel_verify_pe_sig+0x1b/0x40
+   kimage_file_alloc_init+0x1d8/0x3f0
+   __se_sys_kexec_file_load+0xc6/0x270
+
+This is reachable through the kexec_file_load syscall on architectures
+that verify PE signatures (x86 bzImage with
+CONFIG_KEXEC_BZIMAGE_VERIFY_SIG, arm64 Image with
+CONFIG_KEXEC_IMAGE_VERIFY_SIG), requiring CAP_SYS_BOOT.
+
+The oops occurs while the caller holds kexec_lock; if the faulting task
+is killed, the lock is never released, leaving all subsequent kexec and
+kdump operations permanently returning -EBUSY until reboot.
+
+Add a lower-bound check on wrapper.length before the subtraction to
+prevent the underflow.
+
+Fixes: 09dacbbda935 ("pefile: Strip the wrapper off of the cert data block")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gu Bowen <gubowen5@huawei.com>
+---
+ crypto/asymmetric_keys/verify_pefile.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/crypto/asymmetric_keys/verify_pefile.c b/crypto/asymmetric_keys/verify_pefile.c
+index cec99db14129..cfa85ccb1cf7 100644
+--- a/crypto/asymmetric_keys/verify_pefile.c
++++ b/crypto/asymmetric_keys/verify_pefile.c
+@@ -146,6 +146,11 @@ static int pefile_strip_sig_wrapper(const void *pebuf,
+ 			ctx->sig_len, wrapper.length);
+ 		return -ELIBBAD;
+ 	}
++	if (wrapper.length < sizeof(wrapper)) {
++		pr_warn("Signature wrapper too small (%x < %zx)\n",
++			wrapper.length, sizeof(wrapper));
++		return -ELIBBAD;
++	}
+ 	if (wrapper.revision != WIN_CERT_REVISION_2_0) {
+ 		pr_warn("Signature is not revision 2.0\n");
+ 		return -ENOTSUPP;
+-- 
+2.43.0
+
 
