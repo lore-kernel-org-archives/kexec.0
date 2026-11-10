@@ -2,56 +2,56 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36E3606A325
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2299606A321
 	for <kexec@archiver.kernel.org>; Tue, 10 Nov 2026 11:35:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=IALn6eY1;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SojfBxAW
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=FYpddMa3;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZHTiUZdN
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=pIobF44epXYdR6yL6sepPdu2m7vejqUYIZiVtYJT+UM=; b=IALn6eY1+eAaek
-	sMIequbPPzjW/RzeWLmzL+9ZSJE4fmGpuzext/yzLSFwYamDFJF6AxVZQS2LQ4qKK6ZCpu7oiB0zE
-	VOwa0gW7LZWQnUtu7U25ckIA/hIbalquTngnGT5RQUteLuUgLUDmjbuXGjYARwXZtgUK21e3c6U1E
-	2FxTquw16kDFAA6cS2wX4JPSlzucWmKlKqLtGqJMeQF7Q5PI30QOeINQ23R8t2puyuDKuiHVtov6J
-	vhjs/E1FGMA8hl65COOp2WXEzqEhxr3oOwrZC2yfEvJF6WvtoIEPvHWZ2Z2SjVocIR6rSmsv5etq2
-	pgKy2P+kN7MasYH6ONrA==;
+	List-Owner; bh=Nii9+woBobFNzWI2zsiCQL6n12SwB6EKdsqGbp7DAw8=; b=FYpddMa3/28hzd
+	hf1/WqDe7/hRnM6kRqrtLXT2eztHPFmhNyZrYcI83kB3knPnhVsR8BGHHtMEZFgtimvm2H48XbLY2
+	YVB7OlgVL/tlUFj9Ubb/QDxqokvbQE3pqZlQy0TngOyS21e8RdQo7sOCCiA+xpVtbjof6vxfGWM5g
+	kJsiDrUoghgMUfIyLD5i9vTizdyFKuwti7drGF3h6YfN+DrhofgBvVluSRgVcLSi6PYg7cSvAd1oE
+	kBe0Td5XoJL8Mm62zdmI2yHWrY/s5l3LLpN2M9wfs9TuvRDB4EScJrUB/ojOsLZqTFyJpbu4PgRVm
+	6QM7BEd3XQs4Pn+RGDnw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQk8R-00000003ePE-25MA;
+	id 1xQk8R-00000003ePS-2RP2;
 	Tue, 10 Nov 2026 11:35:31 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQk8O-00000003eNV-2Bkw
+	id 1xQk8O-00000003eNz-3ebD
 	for kexec@lists.infradead.org;
 	Tue, 10 Nov 2026 11:35:28 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id C5DBB638A3;
+	by sea.source.kernel.org (Postfix) with ESMTP id 8F4C641A9E;
+	Tue, 10 Nov 2026 11:35:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFCFA1F008A1;
 	Tue, 10 Nov 2026 11:35:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E29311F008A1;
-	Tue, 10 Nov 2026 11:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794310527;
-	bh=pIobF44epXYdR6yL6sepPdu2m7vejqUYIZiVtYJT+UM=;
+	s=k20260515; t=1794310528;
+	bh=Nii9+woBobFNzWI2zsiCQL6n12SwB6EKdsqGbp7DAw8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=SojfBxAWYSj2TVZ9Ma8lAevrj5f1pjwlMNgIKmxYnw3KTF/lNjwrdrU+tpcpOhYsu
-	 xZOQ5vLs9CgaKtbKzxDkC1s8fJTFBeVPO8NUMtntPuQIkl+RHkhf4MJUyQJjpIcpdo
-	 W5pK/SgAT3JzrH7BLImU4+4c33IwWR6oUoRg3Bwka9QqBq1lhHSObgtyy99bJlpKZ/
-	 fI3u6fK6xHXtVWVax5FhrJrCRI4onptiQaUwYDJmSdRjNgky8kp9QDIXw/badFH3B+
-	 pWuduJtG71wMZwS/vJhu208X9aU00SnA2gM0H2JpqjPYGo8k30zWUTGM5gsbz/BDuj
-	 W384wxtcjBCaQ==
+	b=ZHTiUZdNwNU3z79VuulnqfAE7FkXTKDJX9gmgFkuU0SrhtWfzUcCzHbzkA7QK2Ach
+	 eySP7O2/4m6dh0FQ5oXiKICNDTZ4yDB4i1PXMxypbL09dPozn76NkjC0/gmG4wDD1n
+	 AiHvK+o0ly4xyV+0OuMBAiGRJQYvWSxU+1Y0Jmlq78b8pwM4sQwcvUVPs9xkfDDDtM
+	 lUu2AMjUJ3Xo7pXgB10IsXG8uwq1XleehddxNcxwhrwF5M/7bhyZosh2XjNP2Fuylf
+	 9ch1ZnZ/j5/R9nNPpou2uv8Vg85bzk9N/dc4KpPyOuFGXblt7QDWitmuFEAy7alVCY
+	 xVUFpVuXxIHvw==
 From: Simon Horman <horms@kernel.org>
-Date: Tue, 10 Nov 2026 11:35:17 +0000
-Subject: [PATCH kexec-tools 2/3] uImage: add bounds checks when parsing
- gzip headers in uImage_gz_load()
+Date: Tue, 10 Nov 2026 11:35:18 +0000
+Subject: [PATCH kexec-tools 3/3] pe-zboot: fix integer overflow in payload
+ bounds check in pez_prepare()
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261110-2x-overflow-v1-2-8f3598b31a43@kernel.org>
+Message-Id: <20261110-2x-overflow-v1-3-8f3598b31a43@kernel.org>
 References: <20261110-2x-overflow-v1-0-8f3598b31a43@kernel.org>
 In-Reply-To: <20261110-2x-overflow-v1-0-8f3598b31a43@kernel.org>
 To: kexec@lists.infradead.org
@@ -75,87 +75,54 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-When unpacking a gzip-compressed uImage payload in uImage_gz_load(),
-optional header fields (EXTRA_FIELD, ORIG_NAME, COMMENT, HEAD_CRC)
-are parsed using offset arithmetic and unbounded NUL-terminator scans.
+In pez_prepare(), z->payload_offset and z->payload_size are uint32_t
+values read from the untrusted file header. The validation check:
 
-If a corrupted or truncated uImage is supplied, skip can exceed the
-buffer length len, or the string scanner can read past the end of the
-buffer searching for '\0', ultimately leading to out-of-bounds reads
-or an underflow of strm.avail_in and a crash in inflate().
+    if (buf_sz < z->payload_offset + z->payload_size)
 
-Add explicit bounds checking for each optional gzip header field to
-ensure skip never exceeds len.
+performs 32-bit unsigned addition. If the sum wraps around, the bounds
+check succeeds, causing a subsequent out-of-bounds heap access when
+writing the payload to the temporary decompression file.
+
+Also, ensure buf_sz is large enough to contain the zboot header before
+dereferencing its fields.
+
+Prevent the overflow by checking that z->payload_offset does not exceed
+buf_sz and that the remaining buffer (buf_sz - z->payload_offset) is at
+least z->payload_size.
 
 Patch written with LLM assistance.
 
 Reported-by: Tristan <TristanInSec@gmail.com>
 Signed-off-by: Simon Horman <horms@kernel.org>
 ---
- kexec/kexec-uImage.c | 36 +++++++++++++++++++++++++++++-------
- 1 file changed, 29 insertions(+), 7 deletions(-)
+ kexec/kexec-pe-zboot.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/kexec/kexec-uImage.c b/kexec/kexec-uImage.c
-index 76b8c73a3494..50893e7318ee 100644
---- a/kexec/kexec-uImage.c
-+++ b/kexec/kexec-uImage.c
-@@ -153,6 +153,9 @@ static int uImage_gz_load(const char *buf, off_t len,
+diff --git a/kexec/kexec-pe-zboot.c b/kexec/kexec-pe-zboot.c
+index c09f2ae7714b..c60e543b68e3 100644
+--- a/kexec/kexec-pe-zboot.c
++++ b/kexec/kexec-pe-zboot.c
+@@ -51,6 +51,9 @@ int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd,
+ 	struct pe32plus_opt_hdr *opt_hdr;
+ 	struct data_directory *dir;
  
- 	memset(&strm, 0, sizeof(strm));
- 
-+	if (len < 10)
-+		goto err_free;
++	if (buf_sz < (off_t)sizeof(*z))
++		return -1;
 +
- 	/* Skip magic, method, time, flags, os code ... */
- 	skip = 10;
+ 	z = (const struct linux_pe_zboot_header *)(crude_buf);
  
-@@ -167,20 +170,39 @@ static int uImage_gz_load(const char *buf, off_t len,
+ 	if (memcmp(&z->image_type, "zimg", sizeof(z->image_type))) {
+@@ -69,7 +72,8 @@ int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd,
+ 		return -1;
  	}
  
- 	if (flags & EXTRA_FIELD) {
-+		unsigned int extra_len;
-+
-+		if (len - skip < 2)
-+			goto err_free;
-+		extra_len = (unsigned char)buf[skip] |
-+			    (unsigned char)buf[skip + 1] << 8;
- 		skip += 2;
--		skip += buf[10];
--		skip += buf[11] << 8;
-+		if (len - skip < extra_len)
-+			goto err_free;
-+		skip += extra_len;
+-	if (buf_sz < z->payload_offset + z->payload_size) {
++	if ((uint64_t)buf_sz < z->payload_offset ||
++	    (uint64_t)buf_sz - z->payload_offset < z->payload_size) {
+ 		dbgprintf("%s: PE too small to contain complete payload.\n", __func__);
+ 		return -1;
  	}
- 	if (flags & ORIG_NAME) {
--		while (buf[skip++])
--			;
-+		while (skip < len && buf[skip] != '\0')
-+			skip++;
-+		if (skip >= len)
-+			goto err_free;
-+		skip++; /* skip the '\0' */
- 	}
- 	if (flags & COMMENT) {
--		while (buf[skip++])
--			;
-+		while (skip < len && buf[skip] != '\0')
-+			skip++;
-+		if (skip >= len)
-+			goto err_free;
-+		skip++; /* skip the '\0' */
- 	}
--	if (flags & HEAD_CRC)
-+	if (flags & HEAD_CRC) {
-+		if (len - skip < 2)
-+			goto err_free;
- 		skip += 2;
-+	}
-+
-+	if (skip >= len)
-+		goto err_free;
- 
- 	strm.avail_in = len - skip;
- 	strm.next_in = (void *)buf + skip;
 
 -- 
 2.56.0
