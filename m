@@ -2,75 +2,129 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D9F9606A33E
-	for <kexec@archiver.kernel.org>; Mon,  9 Nov 2026 22:28:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3153F60A2611
+	for <kexec@archiver.kernel.org>; Tue, 10 Nov 2026 01:21:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=zAKYhl/g;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iOW+0cZp
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=eWXCQjAS;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.a=rsa-sha256 header.s=google header.b=eL8Srwgj
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
+	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=wc4/ml/eH1O4k3Y1BTYhWYiLh1fjGgzYV80i4p3jK2o=; b=zAKYhl/gVpOBrw4kbzz8U5WavZ
-	pcvE1O9C5mcpwQuOMthcCX2Xj2J/r7q/lZ2PZnbJiy9JnzHbc/9fEWwGr4ePbp6+qsYHPyE6xIxHr
-	KyYQ9idUgOjgAv4pQ2oiH0GGtmBkpKX5K6xvpPb3IDsADS/5eNKdzr8/Zfx0Hz4Z55FOIaJJlEWdT
-	VnnJvIvBrgpL0zOOK31b9B/Tfy2bQYqOeIj7dpikkxE4kIJePmj8fY9Z9Up35dLoB1r8FgK4wrfrQ
-	rQlf4rRW6vZsRKWYhFZaMNdXy/bIgSBkkgUlJH7tshJzqrzW5HlI/UFpCiflXvSyTrTFXnxH2JzL5
-	N3yZfcCA==;
+	bh=m2qXctBTC0OPADf0V2KkMb6r2GA0JgabIuFAMe6ERzQ=; b=eWXCQjASmceZCAPPyo6dALDYwl
+	n41xApZMVwIGzkfUaT92+StBtu+du9KW/sXrrbWM2XgqCU+e2jbtBCBW4xQx9O1bV5Jty7xhLRYuv
+	XU/iKqAff5Gkat2S1YzyLI1bY8n4xKiOjGXEje//XUiCFwSS8YAzq29EkH2n1kqmEbtTu7lVKBlif
+	RhxTG454LJ/qdczWqQ3DT0q2u4uupdRTlFhWXkD+MbA4aYrdY9Htzv8+yGwvuc8UjycsIZhLlHlaH
+	xrrIlXvlO+Bl6VwQPGSP3ZaoB4vvtK6JKyOR11VVJCBOWuEDhL2U5WjkHFwC6t74oAW5XvqfOtQZg
+	uqPS4XSg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQXqR-00000001say-3wzg;
-	Mon, 09 Nov 2026 22:28:07 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xQaYe-000000023vk-3bXm;
+	Tue, 10 Nov 2026 01:21:56 +0000
+Received: from mail-ed1-x536.google.com ([2a00:1450:4864:20::536])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQXqQ-00000001saj-1suz
+	id 1xQaYc-000000023rn-0rzU
 	for kexec@lists.infradead.org;
-	Mon, 09 Nov 2026 22:28:06 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 83CF3611FB;
-	Mon,  9 Nov 2026 22:28:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42A821F0089F;
-	Mon,  9 Nov 2026 22:28:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794263285;
-	bh=wc4/ml/eH1O4k3Y1BTYhWYiLh1fjGgzYV80i4p3jK2o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=iOW+0cZp8ZdjOcgvFLbFD+uA/y2u0ZimDukX5XfB+ExEssnw8F1bq1kKoI/2ZVJpY
-	 rbMTfE8olAdPf/hq54a+GiYhF7qaSsw3xa+8SNgZmpY17+Q1mnxXKsLUWJQaEbP9zs
-	 0dzJ7ubdV4evJffpMob/nnc3cboCInYpRD1J/5uTE1+LiUmyKSRFLci9D+HKq/JJEu
-	 5wm9OuTG8htEB7WROWFNmXrXxuXlbIKT4u5t8gH9S0kh6t8x7jcedJ1JUlF/8JdNZb
-	 bpU6EVSOVm2hYAmPTiq5ue2/UrtMqKRZrNNkYnsXHFmeUdHRJ5iF2Vzm1Dxb8bPj22
-	 wxWFi6w7Rgl1g==
-From: Thomas Gleixner <tglx@kernel.org>
-To: Aaron Tomlin <atomlin@atomlin.com>, pmladek@suse.com,
- john.ogness@linutronix.de, rostedt@goodmis.org, senozhatsky@chromium.org,
- mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, dietmar.eggemann@arm.com, bsegall@google.com,
- mgorman@suse.de, vschneid@redhat.com, kprateek.nayak@amd.com,
- akpm@linux-foundation.org, baoquan.he@linux.dev, rppt@kernel.org,
- pasha.tatashin@soleen.com, pratyush@kernel.org, ruirui.yang@linux.dev,
- david@kernel.org, ljs@kernel.org, liam@infradead.org, vbabka@kernel.org,
- surenb@google.com, mhocko@suse.com, kees@kernel.org,
- anna-maria@linutronix.de, frederic@kernel.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, brendan.jackman@linux.dev,
- hannes@cmpxchg.org, ziy@nvidia.com, bigeasy@linutronix.de,
- clrkwllms@kernel.org
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
- linux-rt-devel@lists.linux.dev
-Subject: Re: [RFC PATCH v2 3/5] timers: Avoid blocking on hrtimer_cpu_base
- lock during Oops or panic
-In-Reply-To: <20261103024453.922373-4-atomlin@atomlin.com>
-References: <20261103024453.922373-1-atomlin@atomlin.com>
- <20261103024453.922373-4-atomlin@atomlin.com>
-Date: Mon, 09 Nov 2026 23:28:01 +0100
-Message-ID: <87y0b1tzbi.ffs@fw13>
+	Tue, 10 Nov 2026 01:21:55 +0000
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-6b6e7a05225so2032475a12.0
+        for <kexec@lists.infradead.org>; Mon, 09 Nov 2026 17:21:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1794273712; x=1794878512; darn=lists.infradead.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=m2qXctBTC0OPADf0V2KkMb6r2GA0JgabIuFAMe6ERzQ=;
+        b=eL8SrwgjG3KWhr+2EeMG+sj4XBGI+KlAkbjzkSpKfR37YsLJk3RTZMl3SzAl/GwIhh
+         c7EnX7sZWnqlOBdr77WFlpfeN/oxy92mJjfYpY3qOSVDsJhYwo8iloClv+/QVDEFBQma
+         0c2S8sGgTm6yNpEee2RZcb+g4xSrjIWATM+cc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794273712; x=1794878512;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=m2qXctBTC0OPADf0V2KkMb6r2GA0JgabIuFAMe6ERzQ=;
+        b=eAIICUVZT7u/VbczxkrA/HucvIPkN3Z6rCDFEueaVejLciQXKqpSozEVQuU4KyHZOW
+         3HCn94nQXZSgMVfFmhQwWFCmKkR3d2yDsLvh8fTuzhmAq5g8AcbmxQwvwqsKJOX4Chl4
+         tQUQdf2H+xG5ll75evs2AsjMf8QaHq80ME0aAdgjYwSxXG6DZZUUJPJBSMuNlgwgZae4
+         vOX/SeShHXUK2aUNhSGcIbbXFTQXJOWNmsxGLVnwsiPEsFG4WZhWp2PqU0ci5BXdFx8h
+         QN/g+ibAqgNJxP8w8VgLEoDGxENZ7UYiITAfJ+LyTsdYbDj49tnistZUNfayOHUpz+Sm
+         H1Wg==
+X-Forwarded-Encrypted: i=1; AL+hErHG4WI4Cgl2Z4ENPWmkKL6z930/O612ryAgHaSYpeeYKZ9R3dhzoIx5DDWPk1ZD8mMJhfHfDw==@lists.infradead.org
+X-Gm-Message-State: APuU4Z9zUM7dhkf6oglq8xNy/+cQdhz3muPgGoc428eMclCXJFsVcVM6
+	WsgiN4fkWiM9A/mwwkr2Fd0ncoyDgoE/oSfAv3qyLEqTl0Sa/7Bf9MvHJTPD00+AckXNHVBjAFM
+	GTb/pNqRTZA==
+X-Gm-Gg: AYBFou3RvyOft58xXcgcX6unyKKkuZfGnxaSYTQRhXNVpc9KINdB+HhCWqcjTmuQii2
+	bDkp8WhxkUQAqhj0Wpyec3QNG6C1ib/t3pnAE3a1uHidDYOJBeQgqMTVgGIahZqBoDgTCiheO9U
+	ZLWrnOu8eT8SXijOkGI+hcjBmIoTuwKbdHua5JbiL6DBdSANLdrLycBn7Ietl0dQ3LJ1Vnj6NVl
+	zsqgMACIeWZP5+iMmn0VF3cmTlkDDp91VN8soRhfSfPYFlzhvRks7x1IUsCpEZu4bxrGuEiFl3w
+	Ws7ZmVAaAO3VbOE2Jim0He5vJUfQdCFaMzM3yX+upZ8TgRGqoJvIx8kCuzs+j4PyoWB7fGaqo9e
+	32vBj1V7FYF9bx4sl4CaTp50xEYcQ9fweAjr5uXWQbKDYcpl6Mps3W54RTzUAOJZZicA1aJ0aMy
+	dPBQOniKnzaWtEBqEyCT+sWUXLnfbvJoZ3xtZFb4y/23FICpcmTSN0pMD+CTvIhFB3TA6h3WZHV
+	aR38wzbYKoURhzo1i5PBJa6vovXp6QjXdDKh/4KPDWYVib+uW+M35kfX0Zj2oYQ9uVzYuZThJO9
+	YcnOhivqGx6N8YRKt0vf26zPbZsepunR7jBKNX5QGGf8ZR9BS48iXdaSo00lbU+mzs5GtSb4xDh
+	R/Q==
+X-Received: by 2002:aa7:d813:0:b0:6b7:834:4eb3 with SMTP id 4fb4d7f45d1cf-6b7564f9db8mr682491a12.7.1794273712247;
+        Mon, 09 Nov 2026 17:21:52 -0800 (PST)
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com. [209.85.208.51])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b7578bcc7csm420007a12.10.2026.11.09.17.21.52
+        for <kexec@lists.infradead.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Nov 2026 17:21:52 -0800 (PST)
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6b577addee9so2037863a12.1
+        for <kexec@lists.infradead.org>; Mon, 09 Nov 2026 17:21:52 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AL+hErHSXvfWXqwC1d7eOJ7Peal+0ULd44xChdz8Mq/Sqtp+3zdl3gDt3s96XfnFP2gM4dLJNEgeuQ==@lists.infradead.org
+X-Received: by 2002:a17:907:9451:b0:c41:1750:59a2 with SMTP id
+ a640c23a62f3a-c50495dfbd5mr87253466b.12.1794273275844; Mon, 09 Nov 2026
+ 17:14:35 -0800 (PST)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20261104-work-procfs-core-v2-14-76ace653a773@kernel.org>
+ <CAMuHMdVfakapgBK6TBhO1iWX8qzvLDk8jzRS=t2MVa5G=MCUeg@mail.gmail.com>
+ <20261107-akteur-gemieden-eckdaten-21304d085e35@brauner> <20261108185953.28054fb3@pumpkin>
+ <alpine.DEB.2.21.2611090504170.17804@angie.orcam.me.uk> <20261109214558.0d9d5228@pumpkin>
+In-Reply-To: <20261109214558.0d9d5228@pumpkin>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 9 Nov 2026 17:14:19 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whsA3tKcUCBJDj_vmJ11rVGT9rivgnKjGRgMO21CPmCxg@mail.gmail.com>
+X-Gm-Features: AclHuK-x8jcOOQUqd2amGoGEAKER9jIFGaeL4LxxWAd0cGV7dz_RR64PtDogpPU
+Message-ID: <CAHk-=whsA3tKcUCBJDj_vmJ11rVGT9rivgnKjGRgMO21CPmCxg@mail.gmail.com>
+Subject: Re: [PATCH RESEND v2 14/23] proc: let procfs copy in writes before
+ pinning the entry
+To: David Laight <david.laight.linux@gmail.com>
+Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, Christian Brauner <brauner@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, linux-fsdevel@vger.kernel.org, 
+	Jann Horn <jannh@google.com>, Josef Bacik <josef@toxicpanda.com>, Chris Mason <mason@kernel.org>, 
+	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, Eric Dumazet <edumazet@kernel.org>, 
+	Thomas Gleixner <tglx@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Jonathan Corbet <corbet@lwn.net>, Christoph Hellwig <hch@lst.de>, Greg Kroah-Hartman <gregkh@suse.de>, 
+	Joel Granados <joel.granados@kernel.org>, Kees Cook <kees@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Jan Kara <jack@suse.com>, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, 
+	linux-um@lists.infradead.org, linux-wireless@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org, ntfs3@lists.linux.dev, 
+	platform-driver-x86@vger.kernel.org, coreteam@netfilter.org, 
+	kexec@lists.infradead.org, linux-pci@vger.kernel.org, 
+	linux-sound@vger.kernel.org, netfilter-devel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, ibm-acpi-devel@lists.sourceforge.net, 
+	jfs-discussion@lists.sourceforge.net, linux-alpha@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-cifs@vger.kernel.org, 
+	linux-fbdev@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-mm@kvack.org, 
+	linux-sh@vger.kernel.org, linux-usb@vger.kernel.org, 
+	samba-technical@lists.samba.org, sparclinux@vger.kernel.org, 
+	linux-m68k@lists.linux-m68k.org, linux-doc@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-atm-general@lists.sourceforge.net, 
+	Takashi Iwai <tiwai@suse.de>, linux-input@vger.kernel.org, linux-raid@vger.kernel.org, 
+	linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, 
+	linux-debuggers@vger.kernel.org, Chuck Lever <cel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261109_172154_255987_93BED55D 
+X-CRM114-Status: GOOD (  10.30  )
+X-Spam-Score: -1.8 (-)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,491 +135,23 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Mon, Nov 02 2026 at 21:44, Aaron Tomlin wrote:
-
-> When sysrq_timer_list_show() dumps active high-resolution timers across
-> all online CPUs, it calls ktime_get() (which spins on tk_core.seq) and
-> print_active_timers() unconditionally acquires each CPU's
-> base->cpu_base->lock via raw_spin_lock_irqsave(). If invoked from an
-> Oops, NMI, or panic context while the crashing CPU or a wedged remote
-> CPU is inside a timekeeping write section or already holds
-> base->cpu_base->lock, sysrq_timer_list_show() will spin indefinitely
-> and prevent panic recovery or kexec from completing.
+On Mon, 9 Nov 2026 at 13:46, David Laight <david.laight.linux@gmail.com> wrote:
 >
-> Use the NMI-safe ktime_get_mono_fast_ns() helper in
-> sysrq_timer_list_show() and raw_spin_trylock_irqsave() in
-> print_active_timers() when in_nmi(), oops_in_progress, or
-> panic_in_progress() is active, noting any contended lock and returning cleanly instead of
-> deadlocking.
->
-> Fixes: d999bd9392de ("panic: add options to print system info when panic happens")
-> Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
-> ---
->  kernel/time/timer_list.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/time/timer_list.c b/kernel/time/timer_list.c
-> index 0406bf4488e9..4973650c4ae5 100644
-> --- a/kernel/time/timer_list.c
-> +++ b/kernel/time/timer_list.c
-> @@ -68,7 +68,15 @@ static void print_active_timers(struct seq_file *m, struct hrtimer_clock_base *b
->  
->  	touch_nmi_watchdog();
->  
-> -	raw_spin_lock_irqsave(&base->cpu_base->lock, flags);
-> +	if (in_nmi() || oops_in_progress || panic_in_progress()) {
-> +		if ((!IS_ENABLED(CONFIG_SMP) && in_nmi()) ||
-> +		    !raw_spin_trylock_irqsave(&base->cpu_base->lock, flags)) {
-> +			SEQ_printf(m, "  [cpu_base lock contended]\n");
-> +			return;
-> +		}
-> +	} else {
-> +		raw_spin_lock_irqsave(&base->cpu_base->lock, flags);
-> +	}
+> Just that the cast would have to be:
+>         u8 *foo = (u8 *)bar;
+> where 'bar' is 'char *', and I don't think you need a cast there when
+> char is unsigned.
 
-TBH, that's horrible and unreadable gunk.
+.. and just to clarify: 'char' is always unsigned in the kernel on all
+architectures since commit 3bc753c06dd0 ("kbuild: treat char as always
+unsigned") back four years ago...
 
-Clearly the approach of all of this is:
-
-   1) Pick some existing code
-   2) Invoke it
-   3) Hope that it works
-   4) If not add bandaids to make it "work"
-
-Seriously?
-
-Each of the callers of sys_info() knows the exact context in which it is
-invoked, right?
-
-So the obvious and clean solution is to hand exactly that context
-information into sys_info() and further down into the invoked
-functions so they can make informed decisions and eventually omit
-pointless information which is otherwise emitted in proc/sysrq-t.
-
-Something like the uncompiled mockup below should give you an idea.
-
->  	curr = timerqueue_linked_first(&base->active);
->  	/*
-> @@ -262,7 +270,8 @@ static inline void timer_list_header(struct seq_file *m, ktime_t now)
->  
->  void sysrq_timer_list_show(void)
->  {
-> -	ktime_t now = ktime_get();
-> +	ktime_t now = (in_nmi() || oops_in_progress || panic_in_progress()) ?
-> +		      ns_to_ktime(ktime_get_mono_fast_ns()) : ktime_get();
-
-That's a pointless exercise. Just use ktime_get_mono_fast_ns()
-unconditionally. It's perfectly fine for the purpose of this in all
-contexts.
-
-Thanks,
-
-        tglx
----
---- a/kernel/time/timer_list.c
-+++ b/kernel/time/timer_list.c
-@@ -17,10 +17,16 @@
- 
- #include "tick-internal.h"
- 
-+struct tlctx {
-+	struct	seq_file	*seq_file;
-+	ktime_t			ts_now;
-+	enum sysinfo_context	si_ctx;
-+};
-+
- struct timer_list_iter {
--	int cpu;
--	bool second_pass;
--	ktime_t now;
-+	int	cpu;
-+	bool	second_pass;
-+	ktime_t	now;
- };
- 
- /*
-@@ -28,35 +34,51 @@ struct timer_list_iter {
-  * to the console (on SysRq-Q):
-  */
- __printf(2, 3)
--static void SEQ_printf(struct seq_file *m, const char *fmt, ...)
-+static void SEQ_printf(struct tlctx *ctx, const char *fmt, ...)
- {
- 	va_list args;
- 
- 	va_start(args, fmt);
- 
--	if (m)
--		seq_vprintf(m, fmt, args);
-+	if (ctx->seq_file)
-+		seq_vprintf(ctx->seq_file, fmt, args);
- 	else
- 		vprintk(fmt, args);
- 
- 	va_end(args);
- }
- 
--static void
--print_timer(struct seq_file *m, struct hrtimer *taddr, struct hrtimer *timer,
--	    int idx, ktime_t now)
--{
--	SEQ_printf(m, " #%d: <%p>, %ps", idx, taddr, ACCESS_PRIVATE(timer, function));
--	SEQ_printf(m, ", S:%02x", timer->is_queued);
--	SEQ_printf(m, "\n");
--	SEQ_printf(m, " # expires at %lld-%lld nsecs [in %lld to %lld nsecs]\n",
--		(long long)hrtimer_get_softexpires(timer),
--		(long long)hrtimer_get_expires(timer),
--		(long long)ktime_sub(hrtimer_get_softexpires(timer), now),
--		(long long)ktime_sub(hrtimer_get_expires(timer), now));
-+static void print_timer(struct tlctx *ctx, struct hrtimer *taddr, struct hrtimer *timer,
-+			int idx, ktime_t now)
-+{
-+	SEQ_printf(ctx, " #%d: <%p>, %ps", idx, taddr, ACCESS_PRIVATE(timer, function));
-+	SEQ_printf(ctx, ", S:%02x", timer->is_queued);
-+	SEQ_printf(ctx, "\n");
-+	SEQ_printf(ctx, " # expires at %lld-%lld nsecs [in %lld to %lld nsecs]\n",
-+		   (long long)hrtimer_get_softexpires(timer),
-+		   (long long)hrtimer_get_expires(timer),
-+		   (long long)ktime_sub(hrtimer_get_softexpires(timer), now),
-+		   (long long)ktime_sub(hrtimer_get_expires(timer), now));
-+}
-+
-+static bool lock_hrtimer_base(struct tlctx *ctx, struct hrtimer_clock_base *base,
-+			      unsigned long *flags)
-+{
-+	switch (ctx->si_ctx) {
-+	case SYSINFO_CTX_LOCK_SAFE:
-+		raw_spin_lock_irqsave(&base->cpu_base->lock, *flags);
-+		return true;
-+	case SYSINFO_CTX_TRYLOCK_SAFE:
-+		if (raw_spin_trylock_irqsave(&base->cpu_base->lock, *flags))
-+			return true;
-+		fallthrough;
-+	default:
-+		SEQ_printf(ctx, "  Unsafe context: Skip timers.\n");
-+		return false;
-+	}
- }
- 
--static void print_active_timers(struct seq_file *m, struct hrtimer_clock_base *base, ktime_t now)
-+static void print_active_timers(struct tlctx *ctx, struct hrtimer_clock_base *base, ktime_t now)
- {
- 	struct timerqueue_linked_node *curr;
- 	struct hrtimer *timer, tmp;
-@@ -64,13 +86,14 @@ static void print_active_timers(struct s
- 	unsigned long flags;
- 
- next_one:
--	if (m && seq_has_overflowed(m))
-+	if (ctx->seq_file && seq_has_overflowed(ctx->seqfile))
- 		return;
- 	i = 0;
- 
- 	touch_nmi_watchdog();
- 
--	raw_spin_lock_irqsave(&base->cpu_base->lock, flags);
-+	if (!lock_hrtimer_base(ctx, base, &flags))
-+		return;
- 
- 	curr = timerqueue_linked_first(&base->active);
- 	/*
-@@ -83,51 +106,48 @@ static void print_active_timers(struct s
- 	}
- 
- 	if (curr) {
--
- 		timer = container_of(curr, struct hrtimer, node);
- 		tmp = *timer;
- 		raw_spin_unlock_irqrestore(&base->cpu_base->lock, flags);
- 
--		print_timer(m, timer, &tmp, i, now);
-+		print_timer(ctx, timer, &tmp, i, now);
- 		next++;
- 		goto next_one;
- 	}
- 	raw_spin_unlock_irqrestore(&base->cpu_base->lock, flags);
- }
- 
--static void
--print_base(struct seq_file *m, struct hrtimer_clock_base *base, ktime_t now)
-+static void print_base(struct tlctx *ctx, struct hrtimer_clock_base *base)
- {
--	SEQ_printf(m, "  .base:       %p\n", base);
--	SEQ_printf(m, "  .index:      %d\n", base->index);
-+	SEQ_printf(ctx, "  .base:       %p\n", base);
-+	SEQ_printf(ctx, "  .index:      %d\n", base->index);
- 
--	SEQ_printf(m, "  .resolution: %u nsecs\n", hrtimer_resolution);
-+	SEQ_printf(ctx, "  .resolution: %u nsecs\n", hrtimer_resolution);
- #ifdef CONFIG_HIGH_RES_TIMERS
--	SEQ_printf(m, "  .offset:     %lld nsecs\n",
--		   (long long) base->offset);
-+	SEQ_printf(ctx, "  .offset:     %lld nsecs\n", (long long) base->offset);
- #endif
--	SEQ_printf(m,   "active timers:\n");
--	print_active_timers(m, base, ktime_add(now, base->offset));
-+	SEQ_printf(ctx,   "active timers:\n");
-+	print_active_timers(ctx, base, ktime_add(ctx->ts_mono, base->offset));
- }
- 
--static void print_cpu(struct seq_file *m, int cpu, ktime_t now)
-+static void print_cpu(struct tlctx *ctx, int cpu)
- {
- 	struct hrtimer_cpu_base *cpu_base = &per_cpu(hrtimer_bases, cpu);
- 	int i;
- 
--	SEQ_printf(m, "cpu: %d\n", cpu);
-+	SEQ_printf(ctx, "cpu: %d\n", cpu);
- 	for (i = 0; i < HRTIMER_MAX_CLOCK_BASES; i++) {
--		SEQ_printf(m, " clock %d:\n", i);
--		print_base(m, cpu_base->clock_base + i, now);
-+		SEQ_printf(ctx, " clock %d:\n", i);
-+		print_base(ctx, cpu_base->clock_base + i);
- 	}
- 
- #define DIAG_READ(x) data_race(READ_ONCE(x))
- 
- #define P(x)				     \
--	SEQ_printf(m, "  .%-15s: %llu\n", #x, \
-+	SEQ_printf(ctx, "  .%-15s: %llu\n", #x, \
- 		   (unsigned long long)DIAG_READ(cpu_base->x))
- #define P_ktime(x) \
--	SEQ_printf(m, "  .%-15s: %lld nsecs\n", #x, (long long)DIAG_READ(cpu_base->x))
-+	SEQ_printf(ctx, "  .%-15s: %lld nsecs\n", #x, (long long)DIAG_READ(cpu_base->x))
- 
- #ifdef CONFIG_HIGH_RES_TIMERS
- 	P_ktime(expires_next);
-@@ -141,13 +161,12 @@ static void print_cpu(struct seq_file *m
- #undef P_ktime
- 
- #ifdef CONFIG_TICK_ONESHOT
--# define P(x) \
--	SEQ_printf(m, "  .%-15s: %llu\n", #x, \
--		   (unsigned long long)DIAG_READ(ts->x))
--# define P_ktime(x) \
--	SEQ_printf(m, "  .%-15s: %lld nsecs\n", #x, (long long)DIAG_READ(ts->x))
--# define P_flag(x, f)			    \
--	SEQ_printf(m, "  .%-15s: %d\n", #x, !!(DIAG_READ(ts->flags) & (f)))
-+# define P(x)										\
-+	SEQ_printf(ctx, "  .%-15s: %llu\n", #x, (unsigned long long)DIAG_READ(ts->x))
-+# define P_ktime(x)									\
-+	SEQ_printf(ctx, "  .%-15s: %lld nsecs\n", #x, (long long)DIAG_READ(ts->x))
-+# define P_flag(x, f)									\
-+	SEQ_printf(ctx, "  .%-15s: %d\n", #x, !!(DIAG_READ(ts->flags) & (f)))
- 
- 	{
- 		struct tick_sched *ts = tick_get_tick_sched(cpu);
-@@ -162,8 +181,7 @@ static void print_cpu(struct seq_file *m
- 		P(last_jiffies);
- 		P(next_timer);
- 		P_ktime(idle_expires);
--		SEQ_printf(m, "jiffies: %llu\n",
--			   (unsigned long long)jiffies);
-+		SEQ_printf(ctx, "jiffies: %llu\n", (unsigned long long)jiffies);
- 	}
- #endif
- 
-@@ -171,129 +189,138 @@ static void print_cpu(struct seq_file *m
- #undef P_ktime
- #undef P_flag
- #undef DIAG_READ
--	SEQ_printf(m, "\n");
-+	SEQ_printf(ctx, "\n");
- }
- 
- #ifdef CONFIG_GENERIC_CLOCKEVENTS
--static void
--print_tickdevice(struct seq_file *m, struct tick_device *td, int cpu)
-+static void print_tickdevice(struct tlctx *ctx, struct tick_device *td, int cpu)
- {
- 	struct clock_event_device *dev = td->evtdev;
- 
- 	touch_nmi_watchdog();
- 
--	SEQ_printf(m, "Tick Device: mode:     %d\n", td->mode);
-+	SEQ_printf(ctx, "Tick Device: mode:     %d\n", td->mode);
- 	if (cpu < 0)
--		SEQ_printf(m, "Broadcast device\n");
-+		SEQ_printf(ctx, "Broadcast device\n");
- 	else
--		SEQ_printf(m, "Per CPU device: %d\n", cpu);
-+		SEQ_printf(ctx, "Per CPU device: %d\n", cpu);
- 
--	SEQ_printf(m, "Clock Event Device: ");
-+	SEQ_printf(ctx, "Clock Event Device: ");
- 	if (!dev) {
--		SEQ_printf(m, "<NULL>\n");
-+		SEQ_printf(ctx, "<NULL>\n");
- 		return;
- 	}
--	SEQ_printf(m, "%s\n", dev->name);
--	SEQ_printf(m, " max_delta_ns:   %llu\n",
--		   (unsigned long long) dev->max_delta_ns);
--	SEQ_printf(m, " min_delta_ns:   %llu\n",
--		   (unsigned long long) dev->min_delta_ns);
--	SEQ_printf(m, " mult:           %u\n", dev->mult);
--	SEQ_printf(m, " shift:          %u\n", dev->shift);
--	SEQ_printf(m, " mode:           %d\n", clockevent_get_state(dev));
--	SEQ_printf(m, " next_event:     %lld nsecs\n", (long long)dev->next_event);
-+	SEQ_printf(ctx, "%s\n", dev->name);
-+	SEQ_printf(ctx, " max_delta_ns:   %llu\n", (unsigned long long) dev->max_delta_ns);
-+	SEQ_printf(ctx, " min_delta_ns:   %llu\n", (unsigned long long) dev->min_delta_ns);
-+	SEQ_printf(ctx, " mult:           %u\n", dev->mult);
-+	SEQ_printf(ctx, " shift:          %u\n", dev->shift);
-+	SEQ_printf(ctx, " mode:           %d\n", clockevent_get_state(dev));
-+	SEQ_printf(ctx, " next_event:     %lld nsecs\n", (long long)dev->next_event);
- 
--	SEQ_printf(m, " set_next_event: %ps\n", dev->set_next_event);
-+	SEQ_printf(ctx, " set_next_event: %ps\n", dev->set_next_event);
- 
- 	if (dev->set_state_shutdown)
--		SEQ_printf(m, " shutdown:       %ps\n",
--			dev->set_state_shutdown);
-+		SEQ_printf(ctx, " shutdown:       %ps\n", dev->set_state_shutdown);
- 
- 	if (dev->set_state_periodic)
--		SEQ_printf(m, " periodic:       %ps\n",
--			dev->set_state_periodic);
-+		SEQ_printf(ctx, " periodic:       %ps\n", dev->set_state_periodic);
- 
- 	if (dev->set_state_oneshot)
--		SEQ_printf(m, " oneshot:        %ps\n",
--			dev->set_state_oneshot);
-+		SEQ_printf(ctx, " oneshot:        %ps\n", dev->set_state_oneshot);
- 
- 	if (dev->set_state_oneshot_stopped)
--		SEQ_printf(m, " oneshot stopped: %ps\n",
--			dev->set_state_oneshot_stopped);
-+		SEQ_printf(ctx, " oneshot stopped: %ps\n", dev->set_state_oneshot_stopped);
- 
- 	if (dev->tick_resume)
--		SEQ_printf(m, " resume:         %ps\n",
--			dev->tick_resume);
-+		SEQ_printf(ctx, " resume:         %ps\n", dev->tick_resume);
- 
--	SEQ_printf(m, " event_handler:  %ps\n", dev->event_handler);
--	SEQ_printf(m, "\n");
--	SEQ_printf(m, " retries:        %lu\n", dev->retries);
-+	SEQ_printf(ctx, " event_handler:  %ps\n", dev->event_handler);
-+	SEQ_printf(ctx, "\n");
-+	SEQ_printf(ctx, " retries:        %lu\n", dev->retries);
- 
- #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
- 	if (cpu >= 0) {
- 		const struct clock_event_device *wd = tick_get_wakeup_device(cpu);
- 
--		SEQ_printf(m, "Wakeup Device: %s\n", wd ? wd->name : "<NULL>");
-+		SEQ_printf(ctx, "Wakeup Device: %s\n", wd ? wd->name : "<NULL>");
- 	}
- #endif
--	SEQ_printf(m, "\n");
-+	SEQ_printf(ctx, "\n");
- }
- 
- static void timer_list_show_tickdevices_header(struct seq_file *m)
- {
- #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
--	print_tickdevice(m, tick_get_broadcast_device(), -1);
--	SEQ_printf(m, "tick_broadcast_mask: %*pb\n",
-+	print_tickdevice(ctx, tick_get_broadcast_device(), -1);
-+	SEQ_printf(ctx, "tick_broadcast_mask: %*pb\n",
- 		   cpumask_pr_args(tick_get_broadcast_mask()));
- #ifdef CONFIG_TICK_ONESHOT
--	SEQ_printf(m, "tick_broadcast_oneshot_mask: %*pb\n",
-+	SEQ_printf(ctx, "tick_broadcast_oneshot_mask: %*pb\n",
- 		   cpumask_pr_args(tick_get_broadcast_oneshot_mask()));
- #endif
--	SEQ_printf(m, "\n");
-+	SEQ_printf(ctx, "\n");
- #endif
- }
- #endif
- 
--static inline void timer_list_header(struct seq_file *m, ktime_t now)
-+static inline void timer_list_header(struct seq_file *ctx)
- {
--	SEQ_printf(m, "Timer List Version: v0.11\n");
--	SEQ_printf(m, "HRTIMER_MAX_CLOCK_BASES: %d\n", HRTIMER_MAX_CLOCK_BASES);
--	SEQ_printf(m, "now at %lld nsecs\n", (long long)now);
--	SEQ_printf(m, "\n");
-+	SEQ_printf(ctx, "Timer List Version: v0.11\n");
-+	SEQ_printf(ctx, "HRTIMER_MAX_CLOCK_BASES: %d\n", HRTIMER_MAX_CLOCK_BASES);
-+	SEQ_printf(ctx, "now at %lld nsecs\n", (long long)ctx->ts_mono);
-+	SEQ_printf(ctx, "\n");
- }
- 
--void sysrq_timer_list_show(void)
-+static void sys_timer_list_show(struct tlctx *ctx)
- {
--	ktime_t now = ktime_get();
-+	ctx->ts_mono = ktime_get_ns_fast();
- 	int cpu;
- 
--	timer_list_header(NULL, now);
-+	timer_list_header(ctx);
- 
- 	for_each_online_cpu(cpu)
--		print_cpu(NULL, cpu, now);
-+		print_cpu(ctx, cpu);
- 
- #ifdef CONFIG_GENERIC_CLOCKEVENTS
--	timer_list_show_tickdevices_header(NULL);
-+	timer_list_show_tickdevices_header(ctx);
- 	for_each_online_cpu(cpu)
--		print_tickdevice(NULL, tick_get_device(cpu), cpu);
-+		print_tickdevice(ctx, tick_get_device(cpu), cpu);
- #endif
--	return;
-+}
-+
-+void sysinfo_timer_list_show(enum sysinfo_context si_ctx)
-+{
-+	struct tlctx ctx = { .si_ctx = si_ctx, };
-+
-+	sys_timer_list_show(&ctx);
-+}
-+
-+void sysrq_timer_list_show(void)
-+{
-+	struct tlctx ctx = {};
-+
-+	sys_timer_list_show(&ctx);
- }
- 
- #ifdef CONFIG_PROC_FS
- static int timer_list_show(struct seq_file *m, void *v)
- {
- 	struct timer_list_iter *iter = v;
-+	struct tlctx ctx = {
-+		.seq_file	= m,
-+		.ts_mono	= iter->now,
-+	};
- 
- 	if (iter->cpu == -1 && !iter->second_pass)
--		timer_list_header(m, iter->now);
-+		timer_list_header(&ctx, iter->now);
- 	else if (!iter->second_pass)
--		print_cpu(m, iter->cpu, iter->now);
-+		print_cpu(&ctx, iter->cpu);
- #ifdef CONFIG_GENERIC_CLOCKEVENTS
- 	else if (iter->cpu == -1 && iter->second_pass)
--		timer_list_show_tickdevices_header(m);
-+		timer_list_show_tickdevices_header(&ctx);
- 	else
--		print_tickdevice(m, tick_get_device(iter->cpu), iter->cpu);
-+		print_tickdevice(&ctx, tick_get_device(iter->cpu), iter->cpu);
- #endif
- 	return 0;
- }
-
-
-
+            Linus
 
