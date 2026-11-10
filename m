@@ -2,105 +2,108 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E029606A325
-	for <kexec@archiver.kernel.org>; Tue, 10 Nov 2026 18:45:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C701606A320
+	for <kexec@archiver.kernel.org>; Tue, 10 Nov 2026 18:56:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=VioE0wKR;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=VbKC6XJg
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=xWeqKU5Y;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=LT3Ve+nk
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Unsubscribe-Post:List-Owner;
-	bh=j6HenvetdiqKK5Mv1KKa157Ln9/E8xXqIQ72cYSu+2Y=; b=VioE0wKR0UFvjqvDt9SKJkrpOw
-	YrMoCL5NhoY0gsKefd8I8n/HnT/q/yBIESAKEWmIc6KOE+vUI6bAgLj1yPbU2KeejMcpkUyoKdmfV
-	qKk0KY8vHVbD76bTfOvPVZY/HhOQK2tCC8AOLIzn7Pvv/Y39q7cMUx62/tq2I+bbsKjvCC6poAELu
-	fIm2cJgQD+6cjoS5Wb9Fu6IPL/CsVE6TJ13+/xOk5C+nOOjNbldfKo3osYMWxr8EqyqBIcL/hisZM
-	d88p9XZWRNEJ699BIAoz+pPwuFFwuer48w6z/RgsquYJk8yoZZyazKCdqcU0dFhjknd46jP5Kp2fZ
-	BoWOSjvQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:
+	Subject:Cc:To:From:Message-Id:Date:Content-Type:Content-Transfer-Encoding:
+	Mime-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=g8kKfDytD/v7OOrYEkkTE88iqH3WPJ5eP+WcohkLFA8=; b=xWeqKU5YK6MqPM
+	LgTN44JjLGlMPO0Axvh174mofXX8+jLloY0SXMLHJTQP2NRfmZgmecgCH3NoE7rrKaJs0POQFt8bL
+	EUsc4ajkDCugfkzSn4xorDTkdmjVfQXX2a/aYYAKWOE4l0uwYmSiat46hjksNGWwsyn7QcBhkax+D
+	XgYxqXvQnJNW7bzq+qTIbTbyztxxZy+fXt9tMBo/U4RHerAtGzPGY1iTVdkA5JJ3NUgWHC2BCGCTW
+	FrFHNxFIocWsE76Vtjyj50Pp8VZ0cP1rHSC1HRAlpgIrLAu1PvZ680afdx3M+7atsmu4RAs83TzgJ
+	PZIilkQl52oLou6dHsRQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQqqk-00000004pQM-2Xvq;
-	Tue, 10 Nov 2026 18:45:42 +0000
-Received: from mail-pl1-x62b.google.com ([2607:f8b0:4864:20::62b])
+	id 1xQr1I-00000004r8z-2CWm;
+	Tue, 10 Nov 2026 18:56:36 +0000
+Received: from mail-pf1-x42f.google.com ([2607:f8b0:4864:20::42f])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQqqh-00000004pPc-37tv
+	id 1xQr1D-00000004r8P-05pF
 	for kexec@lists.infradead.org;
-	Tue, 10 Nov 2026 18:45:41 +0000
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-2e8d6fcbba0so4865ad.1
-        for <kexec@lists.infradead.org>; Tue, 10 Nov 2026 10:45:38 -0800 (PST)
+	Tue, 10 Nov 2026 18:56:34 +0000
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-8b6b22be970so929942b3a.1
+        for <kexec@lists.infradead.org>; Tue, 10 Nov 2026 10:56:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794336338; x=1794941138; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=j6HenvetdiqKK5Mv1KKa157Ln9/E8xXqIQ72cYSu+2Y=;
-        b=VbKC6XJgcte3HeYRY46YzTnPsObSF/iLcAD+mKz6dGEGNZlHYnQu/W3oYnX90+JX/M
-         oU0I6eZ/m2m9+4DhDtCxmulger4ByJ3QpbBYV1jiBsVUxVIdKQ47ere7c1ypETjjDbL9
-         pvm3E75PGqsruTnUaBSLnDvwWS43fs2vKdvGEy+vj/FectMue8ueyvhtLuKTukBcGfBz
-         ZTRSdku0fbvIwlD3fQfdMHK6A3olWmOxrslL3Zf7vgv80QngD4rgn836R8jKeWGzWyO8
-         Eqkwt/ku6GXCaSYg19qmhgBlLIjBvsoWhHzUAH81nzj3bR68FvyPKL+4+InUjATQGAWy
-         sWzA==
+        d=google.com; s=20260707; t=1794336990; x=1794941790; darn=lists.infradead.org;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-type:content-transfer-encoding:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=g8kKfDytD/v7OOrYEkkTE88iqH3WPJ5eP+WcohkLFA8=;
+        b=LT3Ve+nk6UWlgNlqvH4mvPNttZmvq9Kss9I8WoQ2blA8WGcUvPMcvXbQZVakGTc9K+
+         l5VDGZ5lqeDxHPnEHfI/6KOFdQ6sIT/hzabJ/+yj+ME9nHWqgWX3+thmRq1CwwDmHNs0
+         muxBpBpHih9sQ6DB/HLq6XbGybopcuJJ8nXT2Q/wCBc5HFmEMyTLU7UoN5vLl3YhZHWr
+         fUZFh968C63jMw+IH7OCJF1e9VoRndC3UWKU3nBXL+jec0qUYUKagLN4eDwSEKPeAFY1
+         QRjz3dsrz+FofKyltFMgQVteMzhnhAM1AIILQla9PCTMBDHj+pSqnHkvJXVUGtYBFXEL
+         bAbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794336338; x=1794941138;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
+        d=1e100.net; s=20260707; t=1794336990; x=1794941790;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-type:content-transfer-encoding:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=j6HenvetdiqKK5Mv1KKa157Ln9/E8xXqIQ72cYSu+2Y=;
-        b=kt7iJDduxs6SeUrIaiP+iCWdh/noazObWJYky556yiFVUHAoi1lL0ibD3WtQkLVFNI
-         Oc43tkq2gl6Lr3NT14KmUN6Q60uL6b7+Fl0afP3oXG3ER5iNDLIeesjJfa7kC1uHqkip
-         VPwyRisAFVQB7lHp3B0p8qQJrMMBmQRaAEoFuN2aa+xDuEDGIj0Mx1cdJe2+iAwiDHyT
-         BkiXx5YGlOzX3c9XXeMTavtyXQuA0ajsIRrpA25jrS6XhdZq2TeFj8Q6oflRo/a/6+ND
-         MzGK/7siHkesGQPpkimeIp3hei/pPIoPnSf9zgTCkI8xki5N1bnhP3l9r+gkwFB3d5WA
-         y9Ew==
-X-Gm-Message-State: APuU4Z/ADe/VmCCwvD0CusqJQJu0Z1DthCUIidNnsBLMT6mjsshkc2Ar
-	dyasP8dilkq3T/Lg3ML8i90vthRFl2z/ght2rpFJXmv+YCXHEMrFjEqMlowcGooqOQ==
-X-Gm-Gg: AYBFou0TMzShnCXMYXaQtHlXoc/3uuK0Y9rN9D36JSZWvKm1N7abBU3IEl/boHvNJqJ
-	ZPOEu1iri75mFjFzB1ZA8NqF3yxv7Dx3G8BcZztmfNi4d7qeMVbi73wK/CoFB2uL7EjyGqgiuW5
-	SPvxgAGvsSQckpbdMlk9OljV29yWDkKIsARSqxs8g91E+aVtjj793H3PgGnQywI1LMPFnsdg+5y
-	TL6n00cRFgAnsPcfsUzbiJv9Pu5lozrHDe5jBbo+Qo588w4HGiqLhsgA50eczwmgO7zKDqgY+Qw
-	LVoYrFdDCLblZmE1zy9nVz09TTu4RMgl2pw5sQGhQHSJhWPEzmeHFCeohRvsHG8f58GCFZNPT2/
-	zFcEV1/4lKscaBQGh/zkG20oKmKcZj7VYs7eRfvha58V/ZCELLT/PHFrrN+sxL4etJ3eD8Tkl8O
-	c6T6QxGzILkrAR6DpeG7PEO94myzjNL7HFxXWzsGPGKpa1hUX2qHIiSOnCLmQ7HS6gltpX01YDt
-	r5Ipkf0qDX8sfkyq624062s4lqQNV/i6eC3dv9VNhJ3tGVDf19lSP3oqIyen7eOwos4XxezhkJk
-	js8td1tK3SRfFaAL7STYbL6me//PvLHC4+ASLmqG4SGqjO4++Wd9sRuwz4QIBzs5
-X-Received: by 2002:a17:903:2a86:b0:2bd:3bfd:74f1 with SMTP id d9443c01a7336-2edd7110fa8mr255665ad.2.1794336337416;
-        Tue, 10 Nov 2026 10:45:37 -0800 (PST)
-Received: from google.com (60.89.247.35.bc.googleusercontent.com. [35.247.89.60])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8baaa86ce5fsm1317128b3a.21.2026.11.10.10.45.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Nov 2026 10:45:36 -0800 (PST)
-Date: Tue, 10 Nov 2026 10:45:32 -0800
-From: Vipin Sharma <vipinsh@google.com>
-To: David Matlack <dmatlack@google.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org, ajayachandra@nvidia.com, 
-	alex@shazbot.org, amastro@fb.com, ankita@nvidia.com, apopple@nvidia.com, 
-	bhelgaas@google.com, chrisl@kernel.org, christian.koenig@amd.com, corbet@lwn.net, 
-	graf@amazon.com, jacob.pan@linux.microsoft.com, jgg@nvidia.com, jgg@ziepe.ca, 
-	jrhilke@google.com, julianr@linux.ibm.com, kees@kernel.org, kevin.tian@intel.com, 
-	leon@kernel.org, leonro@nvidia.com, lukas@wunner.de, mattev@meta.com, 
-	michal.winiarski@intel.com, parav@nvidia.com, pasha.tatashin@soleen.com, praan@google.com, 
-	pratyush@kernel.org, rananta@google.com, rdunlap@infradead.org, rientjes@google.com, 
-	rodrigo.vivi@intel.com, rppt@kernel.org, saeedm@nvidia.com, schnelle@linux.ibm.com, 
-	skhan@linuxfoundation.org, skhawaja@google.com, vivek.kasireddy@intel.com, witu@nvidia.com, 
-	yanjun.zhu@linux.dev, yi.l.liu@intel.com
-Subject: Re: [PATCH v6 00/27] VFIO PCI Live Update (noiommu mode)
-Message-ID: <20261110184339.GB519525.vipinsh@google.com>
-References: <20261102153656.1431701-1-vipinsh@google.com>
- <DMOH7D1PZUM4.1X82LVQK7E54Q@google.com>
+        bh=g8kKfDytD/v7OOrYEkkTE88iqH3WPJ5eP+WcohkLFA8=;
+        b=lUHGExEFpxp98y+SHM1VvMOdnPpRZTHYAyaEP7H2bl1+H3MbU1UeCnvm/H4r4Y++oh
+         xJdbt23sj0+oz+UiXov52cYVTeE4Omn/gZ69tYVE7l9l0u+lBL8XLBSpoO2Mronv1DHE
+         +MJswJrDeixFEl8Xr1g8a7sVNzHSA3jWPoxK/Z2V0pZyZgOq2yOe+vA6MwLTglAqITSl
+         TdNGiElOCIfCtsrky9980HKZCswVykpH877zkfLcIevTaD84fHoE2qQNaInNWZn8PW4o
+         IaJtRQMtqSaRTqHWFPLEHDY9Cu9kUmwvC+HiIGP4VuaaXd2oMfBokHGuePDZwAiQldIU
+         UdYw==
+X-Forwarded-Encrypted: i=1; AL+hErEaYhj0U/RW5H2vYtWCKWhhIzzrZ4qgXFi6R6bbWz9lr4GN1slZvzA7YxIk4MegdsdffevhRg==@lists.infradead.org
+X-Gm-Message-State: APuU4Z9z0JCWbpdudF2aj7jhD0SqQQagAKNSRWWxzVoH1Z2+knOi1tvf
+	R6H2qOoQAcg5auMNfF4kfn2TAFbhwTGeIksU8Yg8bHqv+fuwsUZKvmMC3DYf+kD9MA==
+X-Gm-Gg: AYBFou2piswca7GjZ8e3n9SLF3Vv2rANgaGCMZq/SieYyumy4+6ia1QnyXLrkBs7ncj
+	ZMjF3oFDxLPXHjEkzGGOEk0bBXauv6AK1L4qmmP+WmXZ6+7MGjbIJBYDkT7cTBZola4O+ORXMy2
+	hivDhSuwz3pQoA2i89722EsngdtKiDlV8PF4eHrsT3SF4Dc0NyqecnMEsx0E6lizbpI68UpwBQW
+	y23C3FaMctlq0rJJPRaFLlj201nHGvuuOXzy3SqiCzRXsKCDSO2OZhKAX2/ygzFBBkTlXmgh6LV
+	SQd1R/IxWwDHqE7ooreYaxbQwGeTYJdDPfDaTNLcJHSIJvJ7qQ0M1wW4EkoF5zJeHaTu5pEA3Ph
+	0t59alu8+t94JLP+wDBe/jbUQs/kQMya6gd3j2j7/vpNFg4t5fPEcyC0wS7RBFeZxmDbVp0V/Vc
+	XyXYYfUupJd7LXatOYA93E5MUKpaFSoE+0feDapLIkWV3nwUaYQii6Fee+QijSkzVP0+63gScn/
+	jEwsc/Eea9fqaStmO89VqOS+p4bQpgaD4ILWqrhOLH7g/YG8zQNjWnUcut/gHfSs/LxOPlQAR87
+	RjmwbGmB8ZFTtd7lHaDilfHZHorluxz5d+9qD0Fc8XkCW40+SoAAoUR5edJbSJsL
+X-Received: by 2002:a05:6a00:2349:b0:89f:7a1b:2bf4 with SMTP id d2e1a72fcca58-8bc1b6feb8bmr5444b3a.16.1794336989281;
+        Tue, 10 Nov 2026 10:56:29 -0800 (PST)
+Received: from localhost (33.79.127.34.bc.googleusercontent.com. [34.127.79.33])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8baab21835fsm1302972b3a.42.2026.11.10.10.56.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Nov 2026 10:56:27 -0800 (PST)
 X-Archived-By: <archiver.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DMOH7D1PZUM4.1X82LVQK7E54Q@google.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 10 Nov 2026 10:56:26 -0800
+Message-Id: <DMRRDJZ8UQ2D.30SLE82GDTH48@google.com>
+From: "David Matlack" <dmatlack@google.com>
+To: "Pratyush Yadav" <pratyush@kernel.org>, "David Matlack"
+ <dmatlack@google.com>
+Cc: "Christian Brauner" <brauner@kernel.org>, <kexec@lists.infradead.org>,
+ <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <linux-mm@kvack.org>, "Alexander Graf"
+ <graf@amazon.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Baolin
+ Wang" <baolin.wang@linux.alibaba.com>, "David Hildenbrand"
+ <david@kernel.org>, "Hugh Dickins" <hughd@google.com>, "Jonathan Corbet"
+ <corbet@lwn.net>, "Liam R. Howlett" <liam@infradead.org>, "Lorenzo Stoakes"
+ <ljs@kernel.org>, "Michal Hocko" <mhocko@suse.com>, "Mike Rapoport"
+ <rppt@kernel.org>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Randy
+ Dunlap" <rdunlap@infradead.org>, "Samiullah Khawaja" <skhawaja@google.com>,
+ "Shuah Khan" <skhan@linuxfoundation.org>, "Suren Baghdasaryan"
+ <surenb@google.com>, "Vlastimil Babka" <vbabka@kernel.org>
+Subject: Re: [PATCH v3 00/10] liveupdate: Preserve tmpfs files across Live
+ Update
+X-Mailer: aerc 0.21.0
+References: <20261103010216.3447716-1-dmatlack@google.com>
+ <20261105-sitzordnung-nahkampf-ausbleiben-6db911d0333e@brauner>
+ <auy0ThryqW5nVx20@google.com> <2vxzbj7witb7.fsf@kernel.org>
+In-Reply-To: <2vxzbj7witb7.fsf@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261110_104539_785347_7AF0AB70 
-X-CRM114-Status: GOOD (  16.46  )
+X-CRM114-CacheID: sfid-20261110_105631_088714_1CD05007 
+X-CRM114-Status: GOOD (  23.52  )
 X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -120,50 +123,56 @@ X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Fri, Nov 06, 2026 at 10:20:10PM +0000, David Matlack wrote:
-> On Mon Nov 2, 2026 at 3:36 PM UTC, Vipin Sharma wrote:
-> 
-> > David Matlack (4):
-> >   vfio: Enforce preserved devices are retrieved via
-> >     LIVEUPDATE_SESSION_RETRIEVE_FD
-> >   docs: liveupdate: Add documentation for VFIO PCI
-> >   vfio: selftests: Add vfio_pci_liveupdate_uapi_test
-> >   vfio: selftests: Add Makefile support for TEST_GEN_PROGS_EXTENDED
-> >
-> > Vipin Sharma (23):
-> >   vfio/pci: Factor out the reset logic in VFIO PCI device close path
-> >   vfio: Export various helpers from VFIO
-> >   liveupdate: Export symbols needed by modules
-> >   vfio/pci: Register a file handler with Live Update Orchestrator
-> >   PCI: liveupdate: Add helpers to preserve struct pci_saved_state
-> >   vfio: Add helpers to identify device files that can be preserved
-> >   vfio/pci: Preserve vfio-pci device files across Live Update
-> >   vfio: Introduce vfio_find_device() helper
-> >   vfio: Refactor vfio_device_fops_cdev_open()
-> >   vfio: Add API to open cdev device for Live Update restore
-> >   vfio/pci: Retrieve preserved device files after Live Update
-> >   vfio/pci: Protect incoming preserved devices until they finish Live
-> >     Update
-> >   vfio/pci: Take over preserved devices without resetting them
-> >   vfio: selftests: Build liveupdate library in VFIO selftests
-> >   vfio: selftests: Initialize vfio_pci_device using a VFIO cdev FD
-> >   vfio: selftests: Add iommufd noiommu mode
-> >   vfio: selftests: Add helpers to map DMA memory at IOVA == PA in
-> >     noiommu mode
-> >   vfio: selftests: Add helpers for Live Update DMA memory and sysfs
-> >     state
-> >   vfio: selftests: Add an attach() driver op
-> >   vfio: selftests: Test preserving noiommu devices in
-> >     vfio_pci_liveupdate_uapi_test
-> >   vfio: selftests: Add vfio_pci_liveupdate_kexec_test
-> >   vfio: selftests: Verify that opening VFIO device fails during Live
-> >     Update
-> >   vfio: selftests: Add continuous DMA to vfio_pci_liveupdate_kexec_test
-> 
-> This series is getting quite long. I would consider splitting out the
-> selftests into its own series and we can iterate on each separately.
+On Tue Nov 10, 2026 at 7:45 AM PST, Pratyush Yadav wrote:
+> On Thu, Nov 05 2026, David Matlack wrote:
+>> On 2026-11-05 04:42 PM, Christian Brauner wrote:
+>>> The checks on the target are trivial: a writable fd to an empty shmem
+>>> file with the inode lock held while you fill it. A tmpfs file can't be
+>>> sealed, it only ever has F_SEAL_SEAL, so there's nothing to restore but
+>>> contents and size anyway.
+>>
+>> Sounds good. The one other check I plan to add is rejecting a target
+>> that LUO is already managing, e.g. a file that is preserved in an
+>> outgoing session and whose size is frozen.
+>
+> I have been playing with this idea too, and I also stumbled onto this
+> problem.
+>
+> You also need to make sure a preserve doesn't race with a retrieve.
+> Since userspace has access to the file, it can do both at the same time.
+> I think LUO should expose a "register file" function that registers the
+> file in luo_preserved_files. This should be the very first thing
+> retrieve does.
 
-I think it is a good idea. In next version, v7,  I will send two series,
-kernel and selftests patches.
+Agreed, that's what I have queued up for v4, which I'm hoping to send by
+tomorrow.
 
+LUO gets two new functions for .retrieve() callbacks:
+
+ - liveupdate_claim_file() inserts the target into luo_preserved_files,
+   and fails with -EBUSY if it's already there, e.g. because it's
+   preserved in an outgoing session or was retrieved before.
+
+ - liveupdate_unclaim_file() undoes it. If .retrieve() claimed the file
+   it returns, LUO doesn't insert it again after the callback, and a
+   callback that fails after claiming must unclaim.
+
+On the preserve side, LUO inserts the file into luo_preserved_files
+before calling the file handler .preserve(), so whichever of the two
+inserts first wins and the other fails with -EBUSY.
+
+> Also, today LUO core expects a fresh file from file handlers, so it
+> always installs a FD to that file in the task. When doing the "retrieve
+> into FD" thing, that will result in two FDs to the same file. While it
+> isn't a strict problem, it seems kinda ugly from a uAPI prespective.
+>
+> Perhaps we should let retrieve signal to LUO core that "I already
+> installed the file", or a "I have no file to install", or something
+> similar?
+
+Makes sense, I'll do that in v4. The file handler will tell LUO that it
+restored into an existing fd, and LIVEUPDATE_SESSION_RETRIEVE_FD will
+return that fd instead of installing a new one. Retrieving the token
+again later still returns a new fd for the same file, like it does today
+for any file that was already retrieved.
 
