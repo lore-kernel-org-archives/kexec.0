@@ -2,61 +2,63 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2299606A321
-	for <kexec@archiver.kernel.org>; Tue, 10 Nov 2026 11:35:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62DC1606A325
+	for <kexec@archiver.kernel.org>; Tue, 10 Nov 2026 12:31:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=FYpddMa3;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZHTiUZdN
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=A0NlB7zj;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lPqzm62S
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
-	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
-	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=Nii9+woBobFNzWI2zsiCQL6n12SwB6EKdsqGbp7DAw8=; b=FYpddMa3/28hzd
-	hf1/WqDe7/hRnM6kRqrtLXT2eztHPFmhNyZrYcI83kB3knPnhVsR8BGHHtMEZFgtimvm2H48XbLY2
-	YVB7OlgVL/tlUFj9Ubb/QDxqokvbQE3pqZlQy0TngOyS21e8RdQo7sOCCiA+xpVtbjof6vxfGWM5g
-	kJsiDrUoghgMUfIyLD5i9vTizdyFKuwti7drGF3h6YfN+DrhofgBvVluSRgVcLSi6PYg7cSvAd1oE
-	kBe0Td5XoJL8Mm62zdmI2yHWrY/s5l3LLpN2M9wfs9TuvRDB4EScJrUB/ojOsLZqTFyJpbu4PgRVm
-	6QM7BEd3XQs4Pn+RGDnw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
+	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=Der7fgiXvRnpihogyZCLRPVXoT2AJly7UPQnFlw9TSg=; b=A0NlB7zjjJLYsJeqOA/qw2nBJF
+	g/XC4Zxdanh/h5UffpVwj+7TNtYmGbF63YYVAZ0+6CyYRn6FMCYz3p8cqBLxWDMcUTE3MRGzJV0/z
+	Uj9xMYJT2cSzRMiRohzBa//awa0naoJ4eBvQWIu09bkF4zq7ufUhMhf8qMKOTh8MzMfHPtV9EYqHX
+	RDMga1PIi2zOqg1yKbH5VkUQ2NWvlO39M4dDfXrPBX35z9gLMX1fSMAkeV1XmIjFbH9RXgbex/M4s
+	DOD7RavhlPiuU/NTC1CMGKO7TTyIk9btF61PgqqsrT0WfvSmtdwrZI83G+KaMLcaIYnD9mqEjtQNq
+	fRQUfBrg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQk8R-00000003ePS-2RP2;
-	Tue, 10 Nov 2026 11:35:31 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xQl0t-00000003rGz-0UHq;
+	Tue, 10 Nov 2026 12:31:47 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQk8O-00000003eNz-3ebD
+	id 1xQl0s-00000003rGn-0Z29
 	for kexec@lists.infradead.org;
-	Tue, 10 Nov 2026 11:35:28 +0000
+	Tue, 10 Nov 2026 12:31:46 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 8F4C641A9E;
-	Tue, 10 Nov 2026 11:35:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFCFA1F008A1;
-	Tue, 10 Nov 2026 11:35:27 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 75D7E614A1;
+	Tue, 10 Nov 2026 12:31:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DD9C1F008A2;
+	Tue, 10 Nov 2026 12:31:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794310528;
-	bh=Nii9+woBobFNzWI2zsiCQL6n12SwB6EKdsqGbp7DAw8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=ZHTiUZdNwNU3z79VuulnqfAE7FkXTKDJX9gmgFkuU0SrhtWfzUcCzHbzkA7QK2Ach
-	 eySP7O2/4m6dh0FQ5oXiKICNDTZ4yDB4i1PXMxypbL09dPozn76NkjC0/gmG4wDD1n
-	 AiHvK+o0ly4xyV+0OuMBAiGRJQYvWSxU+1Y0Jmlq78b8pwM4sQwcvUVPs9xkfDDDtM
-	 lUu2AMjUJ3Xo7pXgB10IsXG8uwq1XleehddxNcxwhrwF5M/7bhyZosh2XjNP2Fuylf
-	 9ch1ZnZ/j5/R9nNPpou2uv8Vg85bzk9N/dc4KpPyOuFGXblt7QDWitmuFEAy7alVCY
-	 xVUFpVuXxIHvw==
-From: Simon Horman <horms@kernel.org>
-Date: Tue, 10 Nov 2026 11:35:18 +0000
-Subject: [PATCH kexec-tools 3/3] pe-zboot: fix integer overflow in payload
- bounds check in pez_prepare()
-X-Archived-By: <archiver.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261110-2x-overflow-v1-3-8f3598b31a43@kernel.org>
-References: <20261110-2x-overflow-v1-0-8f3598b31a43@kernel.org>
-In-Reply-To: <20261110-2x-overflow-v1-0-8f3598b31a43@kernel.org>
-To: kexec@lists.infradead.org
-Cc: Tristan <TristanInSec@gmail.com>, Simon Horman <horms@kernel.org>
-X-Mailer: b4 0.14.3
+	s=k20260515; t=1794313905;
+	bh=Der7fgiXvRnpihogyZCLRPVXoT2AJly7UPQnFlw9TSg=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=lPqzm62SEhz9MXyscDTgAIY9hS9jrO4A2j+jhVsvH/DF11gTeoMkOk3VYS2Pj+HhV
+	 tB7hur8fS9ffeaylGHJ6tBWGvoz8z2pCTkr0zbjuqWgLhD0Yx5ESop9yqFVqS4Md9v
+	 4mGs+5LDR2QKqsUOlSH68maUMZMkvszKcr8+YA7oy8DVbwQT1AgGhYXxtSEjvL9SxO
+	 GgCE8cjne2ZuViI67moEQChYEoZ3HgkbwDZxDdCVYp9c1IYGgSiArYTeG6X2Som3Cx
+	 K+bpGG150YooOReRZjq8YjX4kPpS3LxHeWzes2cQe+r1JojLNmsnVCCMtl0uzE+D/L
+	 60GVNiSM5D6JA==
+Message-ID: <sashiko-outbox-207026@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH printk 5/6] printk: Add panic+kexec flush point
+To: "John Ogness" <john.ogness@linutronix.de>, "Petr Mladek" <pmladek@suse.com>
+Cc: "Sergey Senozhatsky" <senozhatsky@chromium.org>, "Steven Rostedt" <rostedt@goodmis.org>, "Ryan
+ Roberts" <ryan.roberts@arm.com>, "Breno Leitao" <leitao@debian.org>, "Andrew
+ Morton" <akpm@linux-foundation.org>, "Baoquan He" <baoquan.he@linux.dev>, "Mike
+ Rapoport" <rppt@kernel.org>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Pratyush
+ Yadav" <pratyush@kernel.org>, "Dave Young" <ruirui.yang@linux.dev>, kexec@lists.infradead.org
+In-Reply-To: <20261109123127.489676-6-john.ogness@linutronix.de>
+References: <20261109123127.489676-1-john.ogness@linutronix.de>
+ <20261109123127.489676-6-john.ogness@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 10 Nov 2026 12:31:44 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -66,65 +68,32 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
+X-Archived-By: <archiver.kernel.org>
 
-In pez_prepare(), z->payload_offset and z->payload_size are uint32_t
-values read from the untrusted file header. The validation check:
+> During panic, nbcon consoles transition to atomic printing. However,
+> there are consoles that do not support safe atomic printing
+> (CON_NBCON_ATOMIC_UNSAFE). Such consoles will only flush during
+> panic if their unsafe flush policy allows them to do so.
+>=20
+> The unsafe flush policy NBCON_PANIC_FLUSH only allows unsafe
+> flushing when particular flushes are explicitly invoked. Call
+> printk_trigger_flush(PR_FLUSH_RESTART) before performing the kexec
+> in order to give such consoles a chance to perform an unsafe flush.
+>=20
+> Signed-off-by: John Ogness <john.ogness@linutronix.de>
 
-    if (buf_sz < z->payload_offset + z->payload_size)
+Sashiko has reviewed this patch and found no issues.
 
-performs 32-bit unsigned addition. If the sum wraps around, the bounds
-check succeeds, causing a subsequent out-of-bounds heap access when
-writing the payload to the temporary decompression file.
-
-Also, ensure buf_sz is large enough to contain the zboot header before
-dereferencing its fields.
-
-Prevent the overflow by checking that z->payload_offset does not exceed
-buf_sz and that the remaining buffer (buf_sz - z->payload_offset) is at
-least z->payload_size.
-
-Patch written with LLM assistance.
-
-Reported-by: Tristan <TristanInSec@gmail.com>
-Signed-off-by: Simon Horman <horms@kernel.org>
----
- kexec/kexec-pe-zboot.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/kexec/kexec-pe-zboot.c b/kexec/kexec-pe-zboot.c
-index c09f2ae7714b..c60e543b68e3 100644
---- a/kexec/kexec-pe-zboot.c
-+++ b/kexec/kexec-pe-zboot.c
-@@ -51,6 +51,9 @@ int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd,
- 	struct pe32plus_opt_hdr *opt_hdr;
- 	struct data_directory *dir;
- 
-+	if (buf_sz < (off_t)sizeof(*z))
-+		return -1;
-+
- 	z = (const struct linux_pe_zboot_header *)(crude_buf);
- 
- 	if (memcmp(&z->image_type, "zimg", sizeof(z->image_type))) {
-@@ -69,7 +72,8 @@ int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd,
- 		return -1;
- 	}
- 
--	if (buf_sz < z->payload_offset + z->payload_size) {
-+	if ((uint64_t)buf_sz < z->payload_offset ||
-+	    (uint64_t)buf_sz - z->payload_offset < z->payload_size) {
- 		dbgprintf("%s: PE too small to contain complete payload.\n", __func__);
- 		return -1;
- 	}
-
--- 
-2.56.0
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261109123127.4896=
+76-1-john.ogness@linutronix.de?part=3D5
 
 
