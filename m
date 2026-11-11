@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B33860700A6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB8D607009D
 	for <kexec@archiver.kernel.org>; Wed, 11 Nov 2026 00:24:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=P975wdzP;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=mhNBSAnJ
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=LsDVDEdY;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ESxN7l/d
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
@@ -14,63 +14,63 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=vbpaElakptIh2hFwmXWUs/sq4k+QmnD2y26Qhgoo1AI=; b=P975wdzPTizU3j9wus62bk031O
-	2iiY4MjDgE26ELCTeWO4Mh6V2az86agYlfYqhFHbTw44jJIeh6wDZNA4O4NhhNtW8UJr4XhyRE70N
-	dO/yG8EXoc2TeFKhNeYScCH7ONGxbr1TPY9YRkTTn6gooDa5rMlPYHhn8XU2Hw28FTfLL6PqFrWSU
-	HX/Hpr0UwBhW4WfTKsbLfV56UbhrBFrCPNWYXiR1H4Wc9Ian9Owej8P/6W2B/Sv9Ttzs58zJXXfRa
-	kx7r1P+AloPjGTRSINHHAWvs+g3NdB/Eb5hGYbSJDqPaHkJYZzcxfDWOxLghbNzTKwGKj2fcH3j01
-	OaXlOz6g==;
+	bh=/dKUASXcgtiRNT2+c3YhFYhMVcr51Eig0y+PlMV5erc=; b=LsDVDEdYc8NeYBITAP5PGgpeKE
+	tN+5dLT0sarPPxF4rhOlySG3DDfanZtpH8CIH4GcXrWWIf9Z3oko5MqkR6JK2QoZs9bnO9OCchgWq
+	85cI0jgT6Z9x4r849ougaoPksF3HaghL0Hh1dReZJM63H4INGNd2L0HO8DakpABej/Mcr4VDpxO4S
+	xZmw7ncrlxvpsRMtS1siHpr9Onq3fuDB4009Q1iwfFW/ZDDKQL+Sp6rSCONsoZqLRXpOm4vidcDV6
+	lyyaQpGSNr/VKxTW1OkG7UdPwJC0MV7t5ykJGi2FoaW434S7eT822lj308J9oQ8TzgmZn2jJMluDs
+	TRNF3crQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQw8a-00000005IzC-0Yr9;
+	id 1xQw8a-00000005Izr-1XMy;
 	Wed, 11 Nov 2026 00:24:28 +0000
-Received: from mail-ot1-x347.google.com ([2607:f8b0:4864:20::347])
+Received: from mail-ot1-x346.google.com ([2607:f8b0:4864:20::346])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xQw8S-00000005InR-2Tei
+	id 1xQw8V-00000005IrC-0hM4
 	for kexec@lists.infradead.org;
-	Wed, 11 Nov 2026 00:24:25 +0000
-Received: by mail-ot1-x347.google.com with SMTP id 46e09a7af769-82315dbce25so1739116a34.2
-        for <kexec@lists.infradead.org>; Tue, 10 Nov 2026 16:24:20 -0800 (PST)
+	Wed, 11 Nov 2026 00:24:26 +0000
+Received: by mail-ot1-x346.google.com with SMTP id 46e09a7af769-83c2311eb1dso3874004a34.1
+        for <kexec@lists.infradead.org>; Tue, 10 Nov 2026 16:24:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794356659; x=1794961459; darn=lists.infradead.org;
+        d=google.com; s=20260707; t=1794356662; x=1794961462; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=vbpaElakptIh2hFwmXWUs/sq4k+QmnD2y26Qhgoo1AI=;
-        b=mhNBSAnJvbYaMLTEipLr6fQ+DLYFGrTyGE9ZOqZnM8sCGqBCMYWWV+yeNItjRnSfwX
-         i18kWp1B9DybQX7jdOwCpEEwPzce1W7QZOHt2HjDrJJ+DJyLx3HrdSy+ATbSGJNUrGQK
-         HraI7WDvju4TDZthjhj5MW3SMBMwKY9dvAJeDVyPd7iwDgiYe3GT6Yt2I9aq/w6H3Mwv
-         HrtKTYgnP8SqEwblx3OM0fy5IvA5/PxT1giK5AOIkVuu0++phLIX+JPFngxkg21gwYce
-         Q1mSKh60zw0GSy383FEDxVFDsGi2qZIjGUwRUILS11TClIS8hJOznJ+L4VAcFENZV7W4
-         Qq2A==
+        bh=/dKUASXcgtiRNT2+c3YhFYhMVcr51Eig0y+PlMV5erc=;
+        b=ESxN7l/dKX8FZh0w4r4ijA0PjsQ0x+taMmmp3kxOxi3VlKlDosZMkAogONal7HOPJu
+         XFw5XNuX1Mn8BnLRTeY5EE0heska44quM9UtCbTLwanLKCHaasZjIgv3rfPWPsz/5WIq
+         a0rnsq9RxhtzzaPJdijVPuzSRuR/4659a77/6ijslowxcaoObOHyZ9KPeR/MWDNi7QVo
+         tEZWtyqP1JmauloCY6UwiCQgdSFn50DjpIcUUp1t00aTpFm7pskpnvBFpWrfkjmcnfTQ
+         pFWWCuXUFJku1LPLA7yLFql9xDnUQppNBoL5wHr92vDphUU7UU/YefaOITBaf8Rvi+3K
+         Z6XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794356659; x=1794961459;
+        d=1e100.net; s=20260707; t=1794356662; x=1794961462;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=vbpaElakptIh2hFwmXWUs/sq4k+QmnD2y26Qhgoo1AI=;
-        b=gandjrWTbTFC0D4CHHMZq6+7Eav2PyD/Lj6XJW+h+sVrDHCBBMI8zpRRMgDJcjBBJc
-         HZE4+oWrqcb8VpCZhjFBR6IH8MqjTxeYfAmm2VNq7xs66ZI3PboKthByix7CU1UIwut7
-         GTKDsUW/93vLRg41/Ny6EW/tYnHtLuyCAt4GOnL+1QKaoGCXVqqvE8T+mXKK4DH4maln
-         tuUYLSrMofAuksAk+proxUSIoH4CNSsvDkOGzcmASDlAlOhtT/1HGiFj1yMgKmdM7utZ
-         xbPlGc8P2c4Tdud38BtM+58kaWBFbpbUTBTYKxCTAhS2DJcaT/JfAGqOejayLBAommUs
-         Zfew==
-X-Gm-Message-State: APuU4Z+P4F1Kewk6Y1+UU9JnQxUuc/i4xurHc8jgVoopT4rjSoc22sZa
-	df18L+saSJvNPfN0bQkMjqmZAjdsJWhws+PG7SaLOIf1MXwN6NDdm+sArigKBC0yCgxHIae6xpV
-	gFlRCJK3dQgb7KWRJn5wCIbCIFZIGJ0rYp0034xOwGhiyFoM1ceDUwmmu8MqhmhN9sbngMdqJKV
-	LkWnZrFK5t2spNPNTjMOz90HDp6Y0gaAdEnFHfuilo3dZiBHpgIFA=
-X-Received: from ilben19-n1.prod.google.com ([2002:a05:6e02:5113:10b0:524:c21c:a8de])
+        bh=/dKUASXcgtiRNT2+c3YhFYhMVcr51Eig0y+PlMV5erc=;
+        b=eA0WRVBw9hQwnfB+IUqzH4/CtUxDvM0bag1uqBp9rtK/ta7EjwFmmlizz59OrEGxpV
+         BtN2wS+gEu762LmKkr+YdATIn9QlJj7dd5NhmldNoKlkFEhNrhlBBYlBzUPA7ymPN3RB
+         AJxG25WNZcBLma/CsA6QXCNFCxtICDEcyOjA78twBSK3wl8aGejDmGl8/sqlWJdFrrU5
+         xeql1LGp67JfDx8yzEb0BHFh4rLqQt5gj/fBNXagc2Aj2jJViHBaj9gv2evpmk1+05cx
+         8mPQmOAzF9mGXPETE3AehGm4/XI9U7DjLOeVfIJrblGqo+EboQGX3DFOkHpr4IEPAjwX
+         2tTg==
+X-Gm-Message-State: APuU4Z8qjJUfH7j+oUbCymFQdyQJJpHCW1yOFgnQDiAwgULDazor2zOf
+	tcWoMnerXO/9HDJzCmZ+nstao52azYWcHdfz3hxn7X0OwX551v2Er/t5/wZXfKqBltCCYQrLFca
+	WDikQsExUobAoNGxBOK4EJvuXaUgk7MyEHNbcz/dAIqr8Auecua6XfP4nQPm9FEiNHrFwYfJzkn
+	qt/8/RruimOAweEbhYge5pJMrIqbaLVbdVVIPmnpGOc/awCWTFzhw=
+X-Received: from iocou21-n2.prod.google.com ([2002:a05:6602:c315:20b0:9c7:6af8:db91])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6808:19a8:b0:539:596f:6623 with SMTP id 5614622812f47-56b98228b8bmr731061b6e.64.1794356659004;
- Tue, 10 Nov 2026 16:24:19 -0800 (PST)
-Date: Wed, 11 Nov 2026 00:23:47 +0000
+ 2002:a05:6808:1246:b0:53b:f634:83b2 with SMTP id 5614622812f47-56b903e2f53mr602569b6e.0.1794356661391;
+ Tue, 10 Nov 2026 16:24:21 -0800 (PST)
+Date: Wed, 11 Nov 2026 00:23:49 +0000
 In-Reply-To: <20261111002358.1842967-1-dmatlack@google.com>
 X-Archived-By: <archiver.kernel.org>
 Mime-Version: 1.0
 References: <20261111002358.1842967-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.56.0.542.g3ef89b7020-goog
-Message-ID: <20261111002358.1842967-10-dmatlack@google.com>
-Subject: [PATCH v4 09/19] mm/shmem_luo: Leave freeing the preserved state to finish()
+Message-ID: <20261111002358.1842967-12-dmatlack@google.com>
+Subject: [PATCH v4 11/19] mm/shmem_luo: Require permission to preserve a file
 From: David Matlack <dmatlack@google.com>
 To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
@@ -86,8 +86,8 @@ Cc: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>,
 	David Matlack <dmatlack@google.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261110_162420_675215_EE905FEB 
-X-CRM114-Status: GOOD (  21.32  )
+X-CRM114-CacheID: sfid-20261110_162423_229248_AF391D89 
+X-CRM114-Status: GOOD (  21.68  )
 X-Spam-Score: -9.5 (---------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -107,140 +107,107 @@ X-Spam-Status: No, score=-26.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Don't free the serialized state in shmem_luo_retrieve(), whether the
-retrieve succeeds or fails, and let finish() free whatever is left of
-the preserved state of every file. Once retrieve() has restored the
-folios, it sets nr_folios in the serialized state to 0, so that
-finish() only frees the rest.
+Require the file to be opened for reading and the caller to have
+permission to write to it in order to preserve it. Also let the owner
+preserve a file that is immutable or on a read-only superblock, and
+reject append-only files.
 
-This fixes leaking the preserved folios when the retrieve fails before
-it restores them, e.g. because the file has seals that this kernel
-doesn't support, or because memfd_alloc_file() fails. The retrieve freed
-the serialized state but not the folios, and finish() then skipped the
-file because its retrieve had failed, so the folios were never freed.
+While a file is preserved, its size is frozen for all of its users:
+truncating it, fallocate() and writes past its end fail with -EPERM.
+Today any process with an fd for a memfd can do that, even one that was
+only given a read-only fd. Requiring write permission limits this to
+callers that could truncate the file themselves. A file descriptor
+opened for writing isn't required, since that would rule out preserving
+a running binary, which can't be opened for writing. Only the permission
+of the inode is checked, so the mount doesn't need to be writable
+either. The size of an immutable file or of a file on a read-only
+superblock can't change anyway, so its owner may also preserve it.
+Append-only files are rejected, since their writers can only append to
+them, and freezing the size would stop all writes.
 
-Preserved folios may also be in use until the session is finished, e.g.
-by a device that was preserved with DMA mappings of them, so they must
-not be freed before finish().
+The retrieved file can be read, so also require the file to be opened
+for reading. Otherwise a caller with a write-only fd could preserve the
+file to read its contents.
 
-Fixes: f85b1c6af5bc ("liveupdate: luo_file: remember retrieve() status")
+Document the frozen size and the permission requirements.
+
 Signed-off-by: David Matlack <dmatlack@google.com>
+Acked-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- mm/shmem_luo.c | 64 +++++++++++++++++++++++++++-----------------------
- 1 file changed, 35 insertions(+), 29 deletions(-)
+ mm/shmem_luo.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
 diff --git a/mm/shmem_luo.c b/mm/shmem_luo.c
-index e747a0442295..b48d7f460493 100644
+index dc6ede528822..bdf90aac5820 100644
 --- a/mm/shmem_luo.c
 +++ b/mm/shmem_luo.c
-@@ -390,13 +390,10 @@ static void shmem_luo_finish(struct liveupdate_file_op_args *args)
- 	struct shmem_luo_ser *ser;
- 
- 	/*
--	 * If retrieve was successful, nothing to do. If it failed, retrieve()
--	 * already cleaned up everything it could. So nothing to do there
--	 * either. Only need to clean up when retrieve was not called.
-+	 * Preserved folios may be in use until the session is finished, so
-+	 * retrieve() leaves freeing the preserved state to finish(), whether it
-+	 * succeeds or not.
- 	 */
--	if (args->retrieve_status)
--		return;
--
- 	ser = phys_to_virt(args->serialized_data);
- 	if (!ser)
- 		return;
-@@ -515,9 +512,34 @@ static int shmem_luo_retrieve_folios(struct file *file,
- 	return err;
+@@ -27,6 +27,15 @@
+  * the file are preserved. All others are reset to default. The preserved
+  * properties are described below.
+  *
++ * Preserving a file requires it to be opened for reading and the caller to have
++ * permission to write to it, but it doesn't need to be opened for writing. The
++ * owner of a file that is immutable or on a read-only superblock may also
++ * preserve it. Append-only files can't be preserved.
++ *
++ * While a file is preserved, its size can't change and no holes can be punched
++ * into it: Truncating the file, ``fallocate()`` and writes past the end of the
++ * file fail with ``-EPERM``. This applies to all users of the file.
++ *
+  * .. note::
+  *    The LUO API is not stabilized yet, so the preserved properties of a memfd
+  *    are also not stable and are subject to backwards incompatible changes.
+@@ -255,6 +264,30 @@ static void shmem_luo_unpreserve_folios(struct kho_vmalloc *kho_vmalloc,
+ 	vfree(folios_ser);
  }
  
--static int shmem_luo_retrieve(struct liveupdate_file_op_args *args)
 +/*
-+ * Restore the preserved folios into @file. This consumes them even if it fails,
-+ * since they are then either in @file or freed, so make sure finish() doesn't
-+ * free them again.
++ * Preserving a file freezes its size for all of its users, and the retrieved
++ * file can be read. So require a file opened for reading, and permission to
++ * write to the file or ownership of a file whose size can't change anyway.
++ * Reject append-only files, since freezing their size would stop all writes.
 + */
-+static int shmem_luo_restore_folios(struct file *file,
-+				    struct shmem_luo_ser *ser)
- {
- 	struct shmem_luo_folio_ser *folios_ser;
-+	u64 nr_folios = ser->nr_folios;
-+	int err;
++static int shmem_luo_may_preserve(struct file *file)
++{
++	const struct mnt_idmap *idmap = file_mnt_idmap(file);
++	struct inode *inode = file_inode(file);
 +
-+	if (!nr_folios)
++	if (!(file->f_mode & FMODE_READ))
++		return -EBADF;
++
++	if (IS_APPEND(inode))
++		return -EPERM;
++
++	if ((sb_rdonly(inode->i_sb) || IS_IMMUTABLE(inode)) &&
++	    inode_owner_or_capable(idmap, inode))
 +		return 0;
 +
-+	ser->nr_folios = 0;
-+
-+	folios_ser = kho_restore_vmalloc(&ser->folios);
-+	if (!folios_ser)
-+		return -EINVAL;
-+
-+	err = shmem_luo_retrieve_folios(file, folios_ser, nr_folios);
-+	vfree(folios_ser);
-+	return err;
++	return inode_permission(idmap, inode, MAY_WRITE);
 +}
 +
-+static int shmem_luo_retrieve(struct liveupdate_file_op_args *args)
-+{
- 	struct shmem_luo_ser *ser;
- 	struct file *file;
- 	int err;
-@@ -527,10 +549,8 @@ static int shmem_luo_retrieve(struct liveupdate_file_op_args *args)
- 		return -EINVAL;
+ static int shmem_luo_preserve(struct liveupdate_file_op_args *args)
+ {
+ 	struct inode *inode = file_inode(args->file);
+@@ -264,6 +297,11 @@ static int shmem_luo_preserve(struct liveupdate_file_op_args *args)
+ 	int err = 0, seals;
  
- 	/* Make sure the file only has seals supported by this version. */
--	if (ser->seals & ~SHMEM_LUO_ALL_SEALS) {
--		err = -EOPNOTSUPP;
--		goto free_ser;
--	}
-+	if (ser->seals & ~SHMEM_LUO_ALL_SEALS)
-+		return -EOPNOTSUPP;
- 
- 	/*
- 	 * The seals are preserved. Allow sealing here so they can be added
-@@ -539,8 +559,7 @@ static int shmem_luo_retrieve(struct liveupdate_file_op_args *args)
- 	file = memfd_alloc_file("", MFD_ALLOW_SEALING);
- 	if (IS_ERR(file)) {
- 		pr_err("failed to setup file: %pe\n", file);
--		err = PTR_ERR(file);
--		goto free_ser;
-+		return PTR_ERR(file);
- 	}
- 
- 	err = memfd_add_seals(file, ser->seals);
-@@ -552,28 +571,15 @@ static int shmem_luo_retrieve(struct liveupdate_file_op_args *args)
- 	vfs_setpos(file, ser->pos, MAX_LFS_FILESIZE);
- 	i_size_write(file_inode(file), ser->size);
- 
--	if (ser->nr_folios) {
--		folios_ser = kho_restore_vmalloc(&ser->folios);
--		if (!folios_ser) {
--			err = -EINVAL;
--			goto put_file;
--		}
--
--		err = shmem_luo_retrieve_folios(file, folios_ser, ser->nr_folios);
--		vfree(folios_ser);
--		if (err)
--			goto put_file;
--	}
-+	err = shmem_luo_restore_folios(file, ser);
+ 	inode_lock(inode);
++
++	err = shmem_luo_may_preserve(args->file);
 +	if (err)
-+		goto put_file;
++		goto err_unlock_inode;
++
+ 	shmem_freeze(inode, true);
  
- 	args->file = file;
--	kho_restore_free(ser);
--
- 	return 0;
- 
- put_file:
- 	fput(file);
--free_ser:
--	kho_restore_free(ser);
+ 	/* Allocate the main serialization structure in preserved memory */
+@@ -317,6 +355,7 @@ static int shmem_luo_preserve(struct liveupdate_file_op_args *args)
+ 	kho_unpreserve_free(ser);
+ err_unlock:
+ 	shmem_freeze(inode, false);
++err_unlock_inode:
+ 	inode_unlock(inode);
  	return err;
  }
- 
 -- 
 2.56.0.542.g3ef89b7020-goog
 
