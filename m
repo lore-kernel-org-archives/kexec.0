@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87768606A326
-	for <kexec@archiver.kernel.org>; Wed, 11 Nov 2026 23:43:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83DE606A31C
+	for <kexec@archiver.kernel.org>; Wed, 11 Nov 2026 23:43:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=GJBaVrMG;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=j3W2x16o
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=AGemxVaz;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kzqpPxlf
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,39 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=T9zc5UMk3mCiANRWKI4odT4nNxiEiREHUA2uJ27fhqo=; b=GJBaVrMGxqVS4925QY7zsWo+QM
-	Sbaqjiacgpj26tFgb+1TJlM3uxBoUqtinQOknxGoN6zLymldN4Kl8hLf7NghdhHDMs9g+mwEm/USQ
-	Dnlxsnpu1SZVNISEVheXcMvq175AZ08MjXTNgifJFK9RoEr9nzx2jULg/vza/+hJWBrQb5bBqNcH5
-	0P/C2nGPZTeNGEQPOn4NrgmO8MyiVD7dj+NhTtXHB2zW8Z2sSscuzm7iV7mGha+SiMVJK4fFDlVMC
-	TtwwdyDCIdKsWUOaLsQB+tMuhr37p8+RVYod2NB+oSX2p34JnvnxyogvwDzp/xoGliErNfSAtVzlI
-	HSkOIQ2g==;
+	bh=BDXI5t6HYFkwBkTs5giGrH4imh+3Bz2X2SUCTz6+bNM=; b=AGemxVazqWs64PIjzJ+WMzs0ru
+	KyUIKQ4CML1HEUPcfHLkHB2mYbuK1/egNQzV7X/I1Gk/Mk8A35U/W6wJTb0ZASrADyYRW51dGBfn2
+	egN83UOLVCF+XItgqyLXv+r/rGPfYgAyt+65BWMGvsDKYYJlqu2oQSp0UpduHtkgq0MfGkB7Uzr4x
+	BHY/nZeJFUxAZTCq9riWuE9TwlDIwkC/zmC60EOxcydHqPDsKr6Bk+GYtN7fFrE1v5BeG8Awi6vpN
+	2N4c/QpVTnuuCLhl4sfLkgJhBwvMDOAPQtR0TOIIk3rReylk/zUTvkkgTxM9alYNoZB670VeReEC0
+	8F81TDBQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRHy2-00000008A69-2DsF;
-	Wed, 11 Nov 2026 23:43:02 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xRHyC-00000008A8k-2XQ5;
+	Wed, 11 Nov 2026 23:43:12 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRHy1-00000008A5x-0nYa
+	id 1xRHyB-00000008A8c-3KJw
 	for kexec@lists.infradead.org;
-	Wed, 11 Nov 2026 23:43:01 +0000
+	Wed, 11 Nov 2026 23:43:11 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 3FD66605D4;
-	Wed, 11 Nov 2026 23:43:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FBE71F00A05;
-	Wed, 11 Nov 2026 23:42:59 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 2D61540E83;
+	Wed, 11 Nov 2026 23:43:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71E921F00A05;
+	Wed, 11 Nov 2026 23:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794440580;
-	bh=T9zc5UMk3mCiANRWKI4odT4nNxiEiREHUA2uJ27fhqo=;
+	s=k20260515; t=1794440591;
+	bh=BDXI5t6HYFkwBkTs5giGrH4imh+3Bz2X2SUCTz6+bNM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=j3W2x16o4OjoMPm7QoY2Xi6mrho9ddXVAv1ZbhNQ/i1SZ0gt/uoXH8G++MfhE2Bxg
-	 O1VXoJf7YE5kWx+JJk9++fMMQXZWW9usp00dRTgjVZ1qm5BNahbPpzgb5ieUgHdJEn
-	 XWqCHwnE/dGJCKqAZcgP0QLGOO9hN8D0bQ9pcczogOnt0wc0VLMEWgaqDq97noQWjb
-	 V3DSbHSDq0OiZQLouPaUMk7G4W+pNWyqq93goaZcAB7CH33lz0LO0fVV60rGsoOBRL
-	 k1g+EQ8+buxCsOQ8xADis18TFyMu2jNhPIIRw8XWAb5+XLY8G1Oo4AnCqC6ivESuEh
-	 pYg8Mg8KkBneg==
-Message-ID: <sashiko-outbox-209862@kernel.org>
+	b=kzqpPxlfc1R1Tp8Fxl543PtXrV22+J6O6JcG14poCNnjWlBl7uctEIsGiV8eFFO/k
+	 R51Pi+t8YPCfIbhGw/UTu4RYX0COAlZxdC8d1nROneRj2m/7LrapJtiYQzx+wYyJcE
+	 99cRkw6GO4EyQmBXxh17NwcTyf0VzkoU1MEXzQxci6HUJ4eMs46WDiOzS3I8EXeMvT
+	 WoXhVZqJ4Z8WP1KYaXTmvU3qtt/yVT6SEeDEMe+3uS28ZLQT91g3BksYtgEYzVwdE8
+	 5WmE63uyrztKOzIwTDAXoDvVMFmBFLKiQM0y79OB0FrckAfwEJHuM6oPVRZqRQYbkU
+	 Cca7elTtYdkAQ==
+Message-ID: <sashiko-outbox-209863@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/2] arm64: kexec: use a typed entry to fix kCFI oops
+Subject: Re: [PATCH v2 2/2] arm64: hibernate: use a typed entry to drop
+ __nocfi
 To: "Ben Cressey" <ben@cressey.dev>, "Catalin Marinas" <catalin.marinas@arm.com>, "Will
  Deacon" <will@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>, "Pasha
  Tatashin" <pasha.tatashin@soleen.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Pavel
@@ -54,12 +55,12 @@ To: "Ben Cressey" <ben@cressey.dev>, "Catalin Marinas" <catalin.marinas@arm.com>
 Cc: "Kees Cook" <kees@kernel.org>, "Sami Tolvanen" <samitolvanen@google.com>, kexec@lists.infradead.org, "Nathan
  Chancellor" <nathan@kernel.org>, "Zhaoyang Huang" <zhaoyang.huang@unisoc.com>, "Jeson
  Gao" <jeson.gao@unisoc.com>
-In-Reply-To: <20261111-arm64-kexec-nocfi-v2-1-ddf0c4aa326f@cressey.dev>
+In-Reply-To: <20261111-arm64-kexec-nocfi-v2-2-ddf0c4aa326f@cressey.dev>
 References: <20261111-arm64-kexec-nocfi-v2-0-ddf0c4aa326f@cressey.dev>
- <20261111-arm64-kexec-nocfi-v2-1-ddf0c4aa326f@cressey.dev>
+ <20261111-arm64-kexec-nocfi-v2-2-ddf0c4aa326f@cressey.dev>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 11 Nov 2026 23:42:58 +0000
+Date: Wed, 11 Nov 2026 23:43:10 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,35 +80,32 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> An arm64 Linux kernel built with CONFIG_CFI=3Dy oopses after "Bye!" on
-> every kexec that relocates the image. Crash images load in place and are
-> not affected. The oops reproduces under QEMU:
+> swsusp_arch_resume() calls the safe page's copy of
+> swsusp_arch_suspend_exit() indirectly, without a kCFI check. The MMU is
+> on at the call and TTBR0 maps only that page. The copy starts at the
+> page's first byte, so the check's load of the type hash in front of it
+> would fault. SYM_CODE_START() also gives the routine no hash.
+> Commit e2f8216ca2d8 ("arm64: Set __nocfi on swsusp_arch_resume()")
+> disabled the check "for now", since the entry had to be first
+> in .hibernate_exit.text.
 >=20
->  Unable to handle kernel paging request at virtual address 00000000544bff=
-fc
->  pc : machine_kexec+0x104/0x274
->  Code: d5182008 d5033fdf aa1303e0 f9418a68 (b85fc110)
+> SYM_TYPED_FUNC_START() emits the hash inside that section, and
+> create_safe_exec_page() already copies the whole section, at most 4 KiB,
+> to the page's start, so the page holds both hash and entry. Relax the
+> linker script's ASSERT, so the entry need only be in the section.
 >=20
-> b85fc110 is "ldur w16, [x8, #-4]", the kCFI check's load of the type
-> hash in front of the callee. Commit efc2d0f20a9d ("arm64: kexec: keep
-> MMU enabled during kexec relocation") made machine_kexec() call the
-> control page's copy of arm64_relocate_new_kernel() indirectly, while
-> TTBR0 maps only that page. The copy starts at the page's first byte, so
-> the load faults. SYM_CODE_START() also gives the routine no hash.
+> Fix by typing the routine, with a C prototype, entering the copy at the
+> symbol's offset in the section, and dropping __nocfi.
 >=20
-> [ ... ]
-> Fixes: efc2d0f20a9d ("arm64: kexec: keep MMU enabled during kexec relocat=
-ion")
-> Cc: stable@vger.kernel.org
-> Suggested-by: Kees Cook <kees@kernel.org>
-> Link: https://lore.kernel.org/linux-arm-kernel/202609241804.BB23BF10@kees=
-cook/
+> Suggested-by: Mark Rutland <mark.rutland@arm.com>
+> Link: https://lore.kernel.org/linux-arm-kernel/arZSe8hNnRPM5FqY@J2N7QTR9R=
+3.cambridge.arm.com/
 > Signed-off-by: Ben Cressey <ben@cressey.dev>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111-arm64-kexe=
-c-nocfi-v2-0-ddf0c4aa326f@cressey.dev?part=3D1
+c-nocfi-v2-0-ddf0c4aa326f@cressey.dev?part=3D2
 
 
