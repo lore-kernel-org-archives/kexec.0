@@ -2,102 +2,88 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BB3606A31C
-	for <kexec@archiver.kernel.org>; Wed, 11 Nov 2026 11:45:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E86B606A334
+	for <kexec@archiver.kernel.org>; Wed, 11 Nov 2026 11:54:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ZT6YiX96;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=JtlQtMUH
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=j7Uf1qAz;
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=vV5nh+mu
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:To:
-	From:Subject:Cc:Message-Id:Date:Content-Type:Content-Transfer-Encoding:
-	Mime-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=kVFpNKJHonPsoU0rKznaV1aSGj2r5pa7n7k1+LB8yBg=; b=ZT6YiX96Up5FIO
-	Op8ej4DbAHTZiZHDYoREmm+o6Bqr1a1nK3fusXw4XVcjreYtI4OfCmbc3GShpxHUKLqqhoNM3DKxq
-	7ci4n6n1jHigbOyFyjwZZgOB8ieZIb8n4k8dnW+j9QEuH5MC72uCw9Its/9c01l6EYlQ2Ol1HRn9Q
-	wKmeMFwpYVpzKJgr+AHn99NRtMIRU8fRUU/VSu7AExUxrbxcTdqc/a2UQ7RRynRsHhp6LLjR3PmJJ
-	NJL/ujqzdN4dzQ7XFZtmTKWLHcQ/1jr83uy9pBdUBb0nUNF4JHBSzTT8qENEZ3qvXdAHhapux4RkB
-	lfGdD79mm8QlPCvdUjaw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=Ep5AJlsUvRo/Sl9Rg+NwP6D7Lq/wQPVEaLy1Gie9QQ4=; b=j7Uf1qAz/EFrIRIqaQDoc39Jcv
+	u2Iwak3gEINWtmcpeyNaZGCzA5Q3VFR6e6Aa/zJ4z5ZZ/T99lutehnRKTpaZLL7AJXkf5cAqbUGoC
+	AhWoDwM0RC3UiFiI1JoQsxq8NCA6flwajtY3UFsT/ujxMiCnO3Y9/M776XA2/wVaB5hhmQEgjvLtl
+	ymhr7Qw+t2YDpj8J//FZCojT4L/5OZmYXJyrSRSBO6EW50N1PmHYXpyDefoK2YXu/c6IXMFjZmgio
+	Eu6nSe5oGQ2asaU0zU1NYzTJ1+QqilnWLizC9CkdJnA9CiGt+Y0OFWFqdZoZXxWc7fB1SHcVu19rt
+	t843Z4WA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xR6lS-00000006Woh-39eK;
-	Wed, 11 Nov 2026 11:45:18 +0000
-Received: from mail-ua1-x92e.google.com ([2607:f8b0:4864:20::92e])
+	id 1xR6uT-00000006Yxs-0mvB;
+	Wed, 11 Nov 2026 11:54:37 +0000
+Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xR6lQ-00000006WnK-1Rim
-	for kexec@lists.infradead.org;
-	Wed, 11 Nov 2026 11:45:17 +0000
-Received: by mail-ua1-x92e.google.com with SMTP id a1e0cc1a2514c-998749fe872so1486600241.0
-        for <kexec@lists.infradead.org>; Wed, 11 Nov 2026 03:45:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1794397515; x=1795002315; darn=lists.infradead.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:content-transfer-encoding:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=kVFpNKJHonPsoU0rKznaV1aSGj2r5pa7n7k1+LB8yBg=;
-        b=JtlQtMUHhD80abuE4kFMRk1nYI1IJGY+mUx1RXh+wU7JaFAO5HWwXcRrppyS6qs82A
-         lGacNbcHlUQjb+l1XwDE1tMmhHpmhEZrYHA/kN8q4ufc5+7n/0yGfo27xQIqieiHbVYB
-         9ZW+QTzXb7UTuR6YwAL+C1fS/u15ARTIiH7dQkjP8Mo5fA+Tb1JPV8I7QwqvZ+Q0FOIx
-         oOgWCCTGGh3us4R3VUQArHfSQr5HqJ7v3Qr/TTgMjEbdzybhB1XmjnTLd5caG0OLFyTZ
-         t4dcsIjXjcuo2xEy0VS0d/5xYX/MFU0pPsOycFYLu3rVWCs58/zNOJTMzmfxh0njSsdv
-         bV4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794397515; x=1795002315;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:content-transfer-encoding:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=kVFpNKJHonPsoU0rKznaV1aSGj2r5pa7n7k1+LB8yBg=;
-        b=hUYr3AxTlVnrT+51eJ5Na8L5ym0q/wIWiQP9SPguRDtsLZc2O2lYajpNV+E/1cX13F
-         Nj3yth2REnbRdKqW9q2iPW+veB+wNglc60Mqs1WmWBDiqv9hkadgdbTeTj6dR4AQZrRr
-         SijzTtfts4cH9LMshSdohgrtR8Q9Tq76pFabzYSWfD22eDJpUhKhR1uYRMQtWRxwHu/u
-         RW58VaZsdQr8AW6cjWRpr1Cu6AW03Id1zBsVcMz2axI69nCw9CgSLkwaJRWkpgnKlZ9g
-         7RlbcOr0vETFfAcwY1vcEMtY08R/t4kAVqoQZg0j2AE8wyCoV9LGns4YZkA0xWDtZMS1
-         lVbg==
-X-Forwarded-Encrypted: i=1; AL+hErHHGRtln9DQrrmUXvBQ/aiWkFwAJEiwgOnk3i/eZu2m88woMDHI1JX53/GC4aUjP6zooA8swg==@lists.infradead.org
-X-Gm-Message-State: APuU4Z/DsqeScFF1tBA8PcbxAGWrukERtFVbnP7Tv4HBCQA7YSjvXA6b
-	dIGBEp22WEWlQzzSRxLeBcFfAXsiIU5EPo4WjIuRyJU/VgZmVLvajhSPrXvPH73SEOs=
-X-Gm-Gg: AYBFou2fg4NKR00HLYqvtQ34kUPqLo+756DF297Qj5IPrzfa+LwhnyxxgKO1mJn/QDe
-	wglJRW2u0N5IE0mq6HGZ8OeA/VbQOazTXVE9r/mBbMfYe5aehcxBkS/3TaekRfmlnwjQoEN8md+
-	ya0Ixvdf6Sa310dp9oVlYhHoLmBaWEvECbCemfjdtH+kFcL/Zx/ywxcVWUPcZjD0S4Hw/YmI37Z
-	2eLm1rNFWgGoK8SvRwtJqt+zCwo674lzWqaZVPS1NXQbm5NTITyjEydwAOE2dU8ns0iFHwxlMKV
-	yMBn8BgmYRxkv3RvAd3KGfm4ngX8HMTBSRICh5ttvGK71q7snU92vPTpxsh0u8bQo+Jab/fklz6
-	I/qQBcdJmvaSe0apYfTK7/jb3UcVx/zwzi4ZAU7Po9m+edlvQXy1KeI+87X+0qZnHmaUzgoV0UR
-	MSP6rb6sADnAd6iLKERK+gHXWcBO5XlPMGhnsWCKSEU9juXL0KmuKKbLVKWIvEP0724lQxx0Xvg
-	aEStWC17i4xfJ7g6MR6DAFjNpYS3MaA3+9CekdfRq+jXU37MuGdgYKSNiAQQ5QC4CjKsi79thJv
-	N6MMDXt11B6tMJCuj+OfIqMzjiqWCutl9cXHc4iiI+KQeCnueIujZyTrAFbjUFBKJFW61W81dQg
-	HK1MuV9HZ9/jnmQnZBqLeYnW4TOG2fpQ=
-X-Received: by 2002:a05:6102:5241:b0:7cc:306:d3ab with SMTP id ada2fe7eead31-7d4efab730fmr666726137.5.1794397515001;
-        Wed, 11 Nov 2026 03:45:15 -0800 (PST)
-Received: from localhost (64.167.245.35.bc.googleusercontent.com. [35.245.167.64])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-7d3023543casm3548860137.5.2026.11.11.03.45.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Nov 2026 03:45:14 -0800 (PST)
+	id 1xR6uP-00000006Yv3-3T65;
+	Wed, 11 Nov 2026 11:54:34 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Ep5AJlsUvRo/Sl9Rg+NwP6D7Lq/wQPVEaLy1Gie9QQ4=; b=vV5nh+muii9KUwMXfoK65C9FPK
+	aNSl0OiG0j4I+LFXc7WeA74kYOFf834TBtI7qS+ZEF0cf7hSHSrnoI47iOSAXQPCAXQU9fne6O/8R
+	G2wk/XluU5ugbAZ7f5jU4JBscAk6nd/VyyPFhAk65/tq7U9wZjt9SJD8a8A/m2R6Cxj7l7C76kg9H
+	1KIPLAQYQ/Fv+JWvD04uouKwGYT/8gu4uHiCPUf9Bg4PxVdqeWdNvrfltP4AIW+MdO1/5WBfOmizl
+	DellelcAiKmJM9KaaC82wP83/72jAdgWurCb/I4tMo/beG16KgajqNT/PO+VCT1shIIGmoQlyuzr0
+	Arg3hVEA==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1xR6u3-00DA6f-37;
+	Wed, 11 Nov 2026 11:54:12 +0000
+Date: Wed, 11 Nov 2026 03:54:00 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Jann Horn <jannh@google.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Chris Mason <mason@kernel.org>, Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
+	Eric Dumazet <edumazet@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Jonathan Corbet <corbet@lwn.net>, Christoph Hellwig <hch@lst.de>, 
+	Greg Kroah-Hartman <gregkh@suse.de>, Joel Granados <joel.granados@kernel.org>, 
+	Kees Cook <kees@kernel.org>, Jan Kara <jack@suse.cz>, Jan Kara <jack@suse.com>, 
+	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, 
+	linux-um@lists.infradead.org, linux-wireless@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	netdev@vger.kernel.org, ntfs3@lists.linux.dev, platform-driver-x86@vger.kernel.org, 
+	coreteam@netfilter.org, kexec@lists.infradead.org, linux-pci@vger.kernel.org, 
+	linux-sound@vger.kernel.org, netfilter-devel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	ibm-acpi-devel@lists.sourceforge.net, jfs-discussion@lists.sourceforge.net, 
+	linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-cifs@vger.kernel.org, 
+	linux-fbdev@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-mm@kvack.org, 
+	linux-sh@vger.kernel.org, linux-usb@vger.kernel.org, samba-technical@lists.samba.org, 
+	sparclinux@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-doc@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-atm-general@lists.sourceforge.net, 
+	Takashi Iwai <tiwai@suse.de>, linux-input@vger.kernel.org, linux-raid@vger.kernel.org, 
+	linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, linux-debuggers@vger.kernel.org, 
+	Chuck Lever <cel@kernel.org>, stable@vger.kernel.org
+Subject: Re: [PATCH RFC 25/38] powerpc/crash_dump: check ioremap_cache() in
+ copy_oldmem_page()
+Message-ID: <avRXHYDKemkiDvoj@gmail.com>
+References: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
+ <20261102-work-procfs-bugfixes-v1-25-59422ed3e465@kernel.org>
 X-Archived-By: <archiver.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 11 Nov 2026 06:45:13 -0500
-Message-Id: <DMSCTXTWCJWK.QF8T3E7OJ7L2@soleen.com>
-Cc: <linux-kselftest@vger.kernel.org>, <shuah@kernel.org>,
- <linux-mm@kvack.org>, <skhan@linuxfoundation.org>,
- <linux-doc@vger.kernel.org>, <vipinsh@google.com>,
- <linux-kernel@vger.kernel.org>, <corbet@lwn.net>, <dmatlack@google.com>,
- <kexec@lists.infradead.org>, <pratyush@kernel.org>,
- <rdunlap@infradead.org>, <graf@amazon.com>
-Subject: Re: [PATCH v5 0/6] liveupdate: Add LIVEUPDATE_SESSION_FREEZE ioctl
-From: "Pasha Tatashin" <pasha.tatashin@soleen.com>
-To: "Mike Rapoport" <rppt@kernel.org>, "Pasha Tatashin"
- <pasha.tatashin@soleen.com>
-X-Mailer: aerc 0.22.0-39-g5d7784875be2
-References: <20261105050053.3063001-1-pasha.tatashin@soleen.com>
- <179439592040.425130.10808690337075841196.b4-review@b4>
-In-Reply-To: <179439592040.425130.10808690337075841196.b4-review@b4>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261102-work-procfs-bugfixes-v1-25-59422ed3e465@kernel.org>
+X-Debian-User: leitao
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261111_034516_401454_8E44BF69 
-X-CRM114-Status: GOOD (  10.62  )
-X-Spam-Score: -2.1 (--)
+X-CRM114-CacheID: sfid-20261111_035433_869633_856DFF3D 
+X-CRM114-Status: GOOD (  12.13  )
+X-Spam-Score: -4.4 (----)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,47 +94,28 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Wed Nov 11, 2026 at 6:18 AM EST, Mike Rapoport wrote:
-> Hi,
->
->> Currently, LUO freezes outgoing sessions only inside the
->> reboot(LINUX_REBOOT_CMD_KEXEC) syscall path, serially under global write
->> locks, and binds every outgoing session's lifetime strictly to an open
->> session FD until reboot.
->>=20
->> On hosts running many workloads (such as VMs or stateful daemons),
->> workloads do not all pause simultaneously inside reboot(): they quiesce
->> one by one ahead of the host kexec. Userspace needs an explicit
->> per-session freeze point to snapshot final file state (.freeze()) as
->> each workload pauses -- concurrently across sessions under per-session
->> locks -- along with a way to commit a frozen session into KHO so it
->> survives closing the session FD.
->>=20
->> This series introduces LIVEUPDATE_SESSION_FREEZE on session FDs:
->>=20
->> 1. Freeze (flags =3D=3D 0):
->>    Freezes all preserved files in the session under the per-session
->>    mutex while keeping session lifetime tied to the session FD. The
->>    session stays frozen as long as the FD remains open; closing the
->>    session FD before reboot (for example, to abort the session or on
->>    process exit/crash) runs .unfreeze() and .unpreserve() and reclaims
->>    all resources. At kexec time, already-frozen sessions skip the late
->>    auto-freeze step and are published into the outgoing KHO subtree.
->
-> Let me bikeshed for a moment :)
-> I'm not fond of "published" terminology. We just moved serialization
-> from one place to another, why not keep the naming?
+On Mon, Nov 02, 2026 at 03:21:40PM +0100, Christian Brauner wrote:
+> copy_oldmem_page() maps a page of the old kernel that isn't in the
+> linear mapping with ioremap_cache() and copies from it without checking
+> whether the mapping worked. If it didn't, the copy reads from an offset
+> into the NULL page. That oopses unless the copy happens to be a user
+> copy, whose exception table entries turn the fault into a short copy.
+> 
+> Return -ENOMEM like the other architectures do. read_from_oldmem()
+> turns that into -EFAULT like any other short copy.
+> 
+> Reported-by: Chris Mason <mason@kernel.org>
+> Fixes: 54c32021eb6f ("[PATCH] powerpc: Add arch-dependent copy_oldmem_page")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
-sgtm, I serialization it is.
-
---=20
-Pasha
-
+Reviewed-by: Breno Leitao <leitao@debian.org>
 
