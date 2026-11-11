@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBCD1606A324
-	for <kexec@archiver.kernel.org>; Wed, 11 Nov 2026 06:16:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191AB606A327
+	for <kexec@archiver.kernel.org>; Wed, 11 Nov 2026 06:16:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=YgYVyIaB;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TSQRUEek
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=tJoTukGv;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cyRy82Vv
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,52 +14,52 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Wm+QBXzWox8/MSAn20XhSTfS6IOUVHhSpLLWhk/HeBw=; b=YgYVyIaBGg2oyqGLVMV2IZZEkY
-	DRjvSxRAtjTN34yW3p92/aVQKhuCGgsJfoBpCo1wSXJShT4b1assuBQ+q+K3lhgcTZu5EgNQIJfv5
-	JGAJTdoPSG0uwONNGMKC9zZonHw7Ms8kji2P/bhtcrmkRxj0EIvnZrkAIBR+rRpFv0QzYXVllqoFu
-	EeQBpMJ2W0TIl4AD5nK73eEMcViwI8C2WI7kKeiBOR9TFfCvVm7bivkz4+6xPJyeQan9H4drlNLQL
-	Z8Y5ndRRsqD+bvfAU0wU/l3Fu2gVp2Qfvoppp25NVrlBzFBzpPO93BPJV1e5tI9AaO9UzDhU2zYnd
-	+g4ZJqpg==;
+	bh=V38D8Zzjhgp2B9wmXpv51p2+0Uz9/PgRrujbOQbcK2U=; b=tJoTukGvqe02d5MrS4zvIkX9Z1
+	paT8lEgY0r+yLedWelLaFDd0RU40HrnFvsU383RKRkcmQjEbxH5YvthzX0QoajvTbW+3aa06XtLH6
+	Fz+wMC3Qs5tgL1p9jfCWKhxPxHbUT5QSdAuT5iF0ezp+O7qqB/YxC99bTY0k7BD9hJ00zW/bQKgar
+	WO3cJfu7oHxkeNZfa/xHb2j4nYMOtdaZncdILpM4asb0ebyJcgRAC7g2rQKvJfbUfExYa0g0Rdfnz
+	6zYMOxCEzYKQTFnekSrgBTkeMa6cQ2My9B4bL4vAXR8mm3ZEM3FlmlnA5TD8GPqjjTdfGTuAG8As3
+	MVM27AiA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xR1dH-00000005iwn-32rM;
-	Wed, 11 Nov 2026 06:16:31 +0000
+	id 1xR1dJ-00000005ixJ-3K4i;
+	Wed, 11 Nov 2026 06:16:33 +0000
 Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xR1dG-00000005iwU-1LZp
+	id 1xR1dH-00000005iwk-2spF
 	for kexec@lists.infradead.org;
-	Wed, 11 Nov 2026 06:16:30 +0000
+	Wed, 11 Nov 2026 06:16:31 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 694DB612BF;
+	by tor.source.kernel.org (Postfix) with ESMTP id 26C9361D3B;
+	Wed, 11 Nov 2026 06:16:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99C0A1F00A07;
 	Wed, 11 Nov 2026 06:16:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBD671F00A05;
-	Wed, 11 Nov 2026 06:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794377789;
-	bh=Wm+QBXzWox8/MSAn20XhSTfS6IOUVHhSpLLWhk/HeBw=;
+	s=k20260515; t=1794377790;
+	bh=V38D8Zzjhgp2B9wmXpv51p2+0Uz9/PgRrujbOQbcK2U=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TSQRUEekdkwGDLq2LTN3GpGBXdfZ0KxjVfw1G/H3ctBMN+1gGe6dsT4aoct25Juk4
-	 RC2k5L2Wzt255/pRIiYYzul4oYZOEDbAvn21gL0CXCXTqrLwNg/Ek1ppeJKUI6nnqn
-	 LpX26y68ngPrK14CYEUiFFg9OnXkKdCPdFxNguAV/ZnBQ9ggBtPlPFUSJd6R2/Cp0P
-	 0LwXznFmywYWVdRdykNiRvonxDbsnT3Oyh2UXYXnTNN4s4GPYg737ndvazO1Odinpb
-	 LCEsg8yrQX+7ewzrEjofiw0AWPjpdeye4IcdgxjXYTPu1c2jWfNqFCPtTgGa9B/aeo
-	 lRIUpxC23ir2w==
-Message-ID: <sashiko-outbox-208404@kernel.org>
+	b=cyRy82VvGymEHSlX2UujKZtj3TAKx4SdCgF0wU7SLG+5++Y0Gwd63UMAm7W1BfNZ+
+	 w4AhvZAZOHkwws9Bzc2uLY22yQAGyc+t0mIjiw1DSJiJ5mc4yaOS3spFWnBrFIYCg7
+	 3fphGrqq+kSm5+cmODm9pHjIzIoRHM1K6jGBsXEf/qTio16yEnwsb2iKvLPzQ6M1XE
+	 C3Yp2Ey6QZDuigxpfmAeelDE/dVoKQtkn529xEVjmSqrQPmMOurl0/gU8cnsyw0IPP
+	 AkYlrh3MgW6s8xM8tNKNZQHbx15XAEdMbj8C0q6lWz2ts1n/K6bOGRc9vQe4yGZVUO
+	 8rLKSAutAHHIg==
+Message-ID: <sashiko-outbox-208405@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 01/19] liveupdate, kho: Remove __packed from KHO, LUO
- and memfd ABI structures
+Subject: Re: [PATCH v4 02/19] kho: block: Record the entry size in the block
+ header
 To: "Tarun Sahu" <tarunsahu@google.com>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Mike
  Rapoport" <rppt@kernel.org>, robin.murphy@arm.com, maz@kernel.org, will@kernel.org, "David
  Matlack" <dmatlack@google.com>, "Alexander Graf" <graf@amazon.com>, seanjc@google.com, jgg@nvidia.com, loganodell@google.com, arnd@arndb.de, dwmw2@infradead.org, baolu.lu@linux.intel.com, "Bjorn
  Helgaas" <bhelgaas@google.com>, oupton@kernel.org, alex@shazbot.org, gle.com@google.com, pbonzini@redhat.com, "Andrew
  Morton" <akpm@linux-foundation.org>, kevin.tian@intel.com, joro@8bytes.org
 Cc: linux-pci@vger.kernel.org, "Pratyush Yadav" <pratyush@kernel.org>, kexec@lists.infradead.org, skhawaja@google.com, sagis@google.com
-In-Reply-To: <20261110050202.529473-2-tarunsahu@google.com>
+In-Reply-To: <20261110050202.529473-3-tarunsahu@google.com>
 References: <20261110050202.529473-1-tarunsahu@google.com>
- <20261110050202.529473-2-tarunsahu@google.com>
+ <20261110050202.529473-3-tarunsahu@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 11 Nov 2026 06:16:27 +0000
+Date: Wed, 11 Nov 2026 06:16:29 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,23 +79,34 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> All structures in include/linux/kho/abi/block.h (struct
-> kho_block_header_ser), include/linux/kho/abi/luo.h (struct luo_ser,
-> struct luo_file_ser, struct luo_file_set_ser, struct luo_session_ser,
-> struct luo_flb_header_ser, struct luo_flb_ser) and
-> include/linux/kho/abi/memfd.h (struct memfd_luo_folio_ser, struct
-> memfd_luo_ser) have naturally aligned fields on 64-bit architectures,
-> with no padding holes between fields or tail padding. Assert both the
-> structure size and 8-byte alignment under CONFIG_64BIT at compile time.
-> Any future unaligned field addition should come with reserved field to
-> keep the structure aligned.
+> Subsystems using the KHO Serialization Blocks framework currently do
+> not record the serialized entry size in the block header. The entry size
+> is only known to individual callers, which must track and store it in an
+> owning serialized data structure. If a newer source kernel adds fields
+> to an entry, the changed entry size breaks the stride when an older
+> target kernel iterates over blocks.
 >=20
+> Add an entry_size field to struct kho_block_header_ser. On the outgoing
+> side, record bs->entry_size into every block header during allocation.
+> During restoration, derive the entry stride directly from the block
+> header instead of relying on caller-supplied dimensions. The
+> kho_block_set_init() interface remains unchanged. A zero entry size,
+> or one that differs between blocks of a set, is rejected during
+> restoration.
+>=20
+> This change modifies the serialized layout of struct kho_block_header_ser
+> and shifts the offset of serialized entries within preserved blocks.
+> Bump KHO_FDT_COMPATIBLE from kho-v4 to kho-v5 so that pre-v5 and post-v5
+> kernels cleanly reject mismatched handover state during boot. Also
+> update the stale compatible string example in the documentation.
+>=20
+> Suggested-by: Pratyush Yadav <pratyush@kernel.org>
 > Signed-off-by: Tarun Sahu <tarunsahu@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261110050202.5294=
-73-1-tarunsahu@google.com?part=3D1
+73-1-tarunsahu@google.com?part=3D2
 
 
