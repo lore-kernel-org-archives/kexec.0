@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFEDB60A2606
-	for <kexec@archiver.kernel.org>; Wed, 11 Nov 2026 07:53:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7FD606A32D
+	for <kexec@archiver.kernel.org>; Wed, 11 Nov 2026 07:53:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=glUfpG2f;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=DBs0ZX16
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=BnQBlUAa;
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=CIob77H5
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -14,67 +14,67 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=2Kx3wzBfUwksk18ANuXPfQbbKvvrdq3wbuLdN7ATve0=; b=glUfpG2fITQlk9Z00KXqWHe16c
-	Mas2GVIWhj9ucCQh4/tfalop9+njwQ+qeh+eOFOxMGkNjnpomSM4ki3N55bGf5LD5/rKzyTI15rBE
-	WRG5Ypqb53P8NjtJJhZYz6ndHsmBOtEz1A0U+C9/Vs5B68elCeyg3Q6jX5OUZ+YLrxr35HJuoZ3lb
-	/Vhotar7tyMFQFFf3uF7TBlOtWfoEjWTBQfV6KBzWwwyYkKZwmsmEwIw0tFC9z6SKty5iMq0/rwMv
-	LGYcmLeg+6ClA0yLmDHxBEk3Awegug+XVknRXMyTsoL5Y3co3OUfIR87Wze5I1XerpM+E3SW1aRQ2
-	Fw+M+S7w==;
+	bh=oahx99XEloIqEujazr6llRd2iV3ppRMwlmYjmySRohQ=; b=BnQBlUAaLynQeYTbQu88INKx9L
+	6wzuj+Doxc+hUH4kSKtdY7HHG1Aj5gGoZRTzHIcdW68M5UEmG4PQNgdB8cQ/TanGuYeervQr67LpD
+	4f9hYUhALA9UPMxVdDCYIyjegE+aVUnOOmRFaACI3vXqNEuxYv2kruH97Qqv1XsPlHZzZIRrsFCCb
+	I+Dm5/fWIPJFwVi9tLm7NV3jttjx4sg8UmtRYKKwaxZVLpyhEy/0K4Rb7BUpcVsD+dtEcAXg0b8MP
+	cm6yRz8bp1pp4q20Dv5PPrDyge3SvnPfJOBURyFAu7Y+2gtZYcxhNqBGqls7lhj247Ia7yakP3NSc
+	LuY0adoQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xR38z-00000005xs0-2SH8;
-	Wed, 11 Nov 2026 07:53:21 +0000
-Received: from mail-pg1-x530.google.com ([2607:f8b0:4864:20::530])
+	id 1xR398-00000005xwB-2pDJ;
+	Wed, 11 Nov 2026 07:53:30 +0000
+Received: from mail-pj1-x1031.google.com ([2607:f8b0:4864:20::1031])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xR38w-00000005xrS-41Ua
+	id 1xR393-00000005xtb-1cwe
 	for kexec@lists.infradead.org;
-	Wed, 11 Nov 2026 07:53:20 +0000
-Received: by mail-pg1-x530.google.com with SMTP id 41be03b00d2f7-cd62c570b5dso1764839a12.2
-        for <kexec@lists.infradead.org>; Tue, 10 Nov 2026 23:53:18 -0800 (PST)
+	Wed, 11 Nov 2026 07:53:30 +0000
+Received: by mail-pj1-x1031.google.com with SMTP id 98e67ed59e1d1-3acb11973c3so2355821a91.3
+        for <kexec@lists.infradead.org>; Tue, 10 Nov 2026 23:53:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google; t=1794383598; x=1794988398; darn=lists.infradead.org;
+        d=chrisdown.name; s=google; t=1794383604; x=1794988404; darn=lists.infradead.org;
         h=user-agent:in-reply-to:content-disposition:content-type
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to:content-type;
-        bh=2Kx3wzBfUwksk18ANuXPfQbbKvvrdq3wbuLdN7ATve0=;
-        b=DBs0ZX16NIOVjava7/i7jf1I6/DJTw9QDRDV8+q+KA9fqoJYezzh49VlgOErHoyiOi
-         1S8pnZnnH1WZXW4RCzB6dQmrDIbbDqQ3H/wv6wo6rmENqog7wYxgbj2cE5tT3SJ0oZVN
-         cEIR/3Zq9kMeEVsHlw9MSplvFmoNt6qkeviCQ=
+        bh=oahx99XEloIqEujazr6llRd2iV3ppRMwlmYjmySRohQ=;
+        b=CIob77H5OyxsLbYfVJIxCg/1hLjLPMW2nXTP5/84aLrM8AYK2vcWnM+NpGiHKrOgyl
+         kNAkPzTH1g8soaH97Hr9zOu7dGXksCvSlABGJb1jsQTaHh96doREr9c9KkO1VJ7N3Z+J
+         ZofjmQRlTQ8qN7pcHurbhZdtzec4gKgZDQnA8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794383598; x=1794988398;
+        d=1e100.net; s=20260707; t=1794383604; x=1794988404;
         h=user-agent:in-reply-to:content-disposition:content-type
          :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=2Kx3wzBfUwksk18ANuXPfQbbKvvrdq3wbuLdN7ATve0=;
-        b=tnnW9sluMdxm4mb/YocBNJZ2wQ8PvvzAlKAFX+DytqCi0dZ0eYobee/qiGXLqfFuub
-         Od2HbQenirYw+co/CAHr3WWl5GJaqyFenpI6eD5C+GDtE5VNtDvV6OYEua31Kr4feac6
-         dnFloSw/uG9V4MkIPpb0SnG4EPC/U+HogcmWP8GUCJky2qNFj+MP0Bqm2sDCLq+kkVXh
-         fvvxYiU9t6HFKJf3edneZSoUxv3H2Fx4MkV02dNT/UX2ln+Rp6DVHXzR5YFK1QmBw0lM
-         AhCEZj8zThrvROnSi0ogNl/vXCeqqKr28whL7rqtdpESfq4JdIsOZ+AxoJcTvyaVvaUe
-         UnkA==
-X-Forwarded-Encrypted: i=1; AL+hErFnnnA6Q6Sceph0Yh607l4GtQUfgPWkbhMdEwYTVGUiW7UA0Go9NMjM/CvkwIhFBQ+7CZ1A0g==@lists.infradead.org
-X-Gm-Message-State: APuU4Z+008sxREZT5Pg72ZAfV/nakKl+hfkWm9NbdjnKOthTCZgEr37i
-	yFXXc43kUhkaF8G3mdk0QD8UEUKuDRO3AiYAlsiSP76Yuf706OKlaC7Iv+0t1CfVydI=
-X-Gm-Gg: AYBFou1fXbvZo/Kdkga6oDJ/FoFnQVT3KS9tzfLu07zwHr8EzBCxkUqIZC7VXdEDj0k
-	Mf7yIimVWMhgmQyiFIW8lCVHr/yqKRD+FvWqJG8ATYGj3AR44bZGseN0fd45MRGPW840y6rwiJN
-	3gByRHS73iy6xisJfbp8Jauxn6/8cEbDFkjFeOdjg4G+f8M7ZMYmvzV18szvVi8Bwlgp0nA+gGX
-	SloYk+KLNuXZM7rfN8X3FrSFvz9YR2YenSerzyQ2UZJdoXZQOBm6y+J+/nv5vrfb89zwjVKHEVq
-	7gEOVDRBex7AAr83+PDBrVqkOdbB/US85iUxt4aUMQZzx+2Z5MVRhhWvgMVWk4yq+U1EWMAidAL
-	M08P3kHVBO2Ph8Bfx3IUwDKCQUbIL9G/oKoczJjAsm0Y5R99WuHJX9G6fkzGKWLNJpEYG3iXzVg
-	RhooGSyFWWK22xPVZ6yOTBvR2T3bMf6N05tbvxLQe4eHe7dgcnQ1RBI8mrS3iyVoj/hQFw2mlk0
-	/GTI96y8P2kwFBCRqyWmeKmwPrPXoMa1iEfEHt768ml6DDMifJe8EadTL8dRW4zx4ZLSSjj6Og0
-	WSKaj/BG++w7UnBcHYDjSqeMLnsRgRemRtkn439tdsRgD9SHK60jpJpJjGNT6lCZ3XmLyLQESXF
-	HOF4rtm8l8u1RoJMMXEyEFC9egnvvROqUflG4nBYHjf/5dDi70MwoqYW74qvJbS9cAEVKe4OllE
-	iVzTV3kpCm3l0Y1MDOnzxZQUjIzS6ch7UXfZ8mWPr2eCnSiL7sn1wFgf6ghcS4+HgVNaDZBXhLE
-	g==
-X-Received: by 2002:a17:90b:4c4d:b0:3b0:9691:a240 with SMTP id 98e67ed59e1d1-3b182ee8638mr1751151a91.47.1794383598151;
-        Tue, 10 Nov 2026 23:53:18 -0800 (PST)
+        bh=oahx99XEloIqEujazr6llRd2iV3ppRMwlmYjmySRohQ=;
+        b=U0Hcmhy4UIDHS4wrKiYemdtRSljTMqbyOgBehnKSF3rw3mg34jiPEyIwbZ6L3N1tqy
+         0Y4FTcqNBeK2GWmLwHuPptP/ksQxHpjMSaMJZPeP7R4heJQyEuelcpSrfQ6L+qIUVH6p
+         qye697U/fJsJS+J+ZmjF5bDvPH1WGn/U1I5fwP9cpe7jzEmyCMFawp6z4eMncDvtmmlU
+         +7x5l4Vp5EggTlS3351ISC/wOI4ps7c5PsOwb98Prqq/US9gxY8YgVyii4+uB/yifcyn
+         6cgyv/NTJNTXickF3PbHAUal9WjEw37OvCARAofVT/hntLUEfPawWkDI+VpEjOz0RxDK
+         7MRA==
+X-Forwarded-Encrypted: i=1; AL+hErGjq24fbPGqFIRvoKY8RAjchbhTtb3U2X3gLEZ7zrFcJC1BrVdoqYsUi4+L7jCnCs1Wh/D8sw==@lists.infradead.org
+X-Gm-Message-State: APuU4Z9woGGXH1QjgDuq9uTKnsLbnVDnhWUosA8RKSx+wseNEfl0ZLUD
+	mA7JtpWS7H0VkaQDQV/jKKIu08nc0pUrL7TiGvsaSnCFwCq3PrzWcwZc6eRtSecQ96M=
+X-Gm-Gg: AYBFou2op4P/gCJrEil9H/A8mFWhD0S5uVpQa1McdgxhEMI2abS6Or36UAV/3cKK7Uc
+	M1Lr6NDMUfDpjI8iTNnohN73J/xMxRLuIIZmguvxbBYO4HAIvRcubEt4S+c0q32RF32A0jinJk4
+	y8V4v3M2Z5w6/bKB208snXyHhilkTgrnI06CZDZ4dArAfzw0A8k1t09rh7FecIzbb+juTPxbsQc
+	va6CcQMkCQBC1Gyjzi8twnJxkM8SHBDEkhzOoAqK8V19N0Cbm3sqaJs72mIXOZHBMcKAvHBQ6d5
+	pmxoqvMPmdJD1fKSCnO7mRY/xywE8vhQ3EuvnrQl/WYWMP+E8BR7YQwiHWjbrSHaXCWCuqU0ZzK
+	2H1i9vMRIksAumywzKQml08oNQ8LUeJslyfpR3rG4vWexgcFstfjLZhVj7USI2puaatHuL0kRba
+	pwHUXcq9zbF/OamkW2HWn8EPkWWZ6nrE5wfLpcsm1PgECd21cRyDJW+wsQV2iq80Rw8Bv0F4Fbh
+	L6JJe514yVnAGGGxrclw2HkxR+/MYwz26x95Fr4LGL8HQgvirU6OEouCGph9U5rGZ8aHxvCzMNp
+	8pW+lkmW/49pyCquZpOOP7i/pOoV3tFp33//FsC7aQmFbpBKlIO0HvX82wyPWPsJxZBnmNmTrzK
+	EYMmD3kCuM0nVW29gjMfgBc/140P0liGhalaDPbOoZ2kav8hsPRPj8pswXOmXebswxWvHFByWFt
+	4+V9ZMOswVWbP39KRriR79ZlLKNLr68Ng1kfdhjxQbDN7P8kLy9DVr76y8F3RS/FPnGo1DdpCxT
+	w==
+X-Received: by 2002:a17:90b:3ecd:b0:3b0:ae41:2706 with SMTP id 98e67ed59e1d1-3b182defae2mr1841105a91.4.1794383604238;
+        Tue, 10 Nov 2026 23:53:24 -0800 (PST)
 Received: from localhost ([199.201.64.8])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b17dbcbaf5sm3506003a91.0.2026.11.10.23.53.16
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b17dba5ed0sm3393597a91.17.2026.11.10.23.53.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Nov 2026 23:53:17 -0800 (PST)
-Date: Tue, 10 Nov 2026 23:53:14 -0800
+        Tue, 10 Nov 2026 23:53:23 -0800 (PST)
+Date: Tue, 10 Nov 2026 23:53:20 -0800
 From: Chris Down <chris@chrisdown.name>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>,
 	Mike Rapoport <rppt@kernel.org>,
@@ -85,9 +85,9 @@ Cc: Alexander Graf <graf@amazon.com>, Baoquan He <baoquan.he@linux.dev>,
 	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
 	kernel-team@meta.com
-Subject: [PATCH 3/9] liveupdate: Make failed retrieves distinguishable from
- dropped files
-Message-ID: <772c150d0a90139a327803cecf087f6865702753.1794383544.git.chris@chrisdown.name>
+Subject: [PATCH 4/9] selftests/liveupdate: Catch incorrect file accounting
+ across kexec
+Message-ID: <d339c0af9c4ee54a5ee8052d5fe59c81302d82a7.1794383544.git.chris@chrisdown.name>
 References: <cover.1794383544.git.chris@chrisdown.name>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
@@ -96,8 +96,8 @@ Content-Disposition: inline
 In-Reply-To: <cover.1794383544.git.chris@chrisdown.name>
 User-Agent: Mutt/2.3.3 (9073d26d) (2026-06-12)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261110_235319_038045_6AB5D861 
-X-CRM114-Status: GOOD (  31.60  )
+X-CRM114-CacheID: sfid-20261110_235325_462279_A9D151B0 
+X-CRM114-Status: GOOD (  23.52  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -109,331 +109,292 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-22.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=4.0.1
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-At Meta, we want to use live update to upgrade hypervisors in place and
-preserve service fd stores across systemctl kexec. Our kernel rollout
-stops automatically when host health checks fail.
-
-We need it to stop if the new kernel can't give back state that a VMM or
-service handed over. We also want to track files that userspace never
-asks for.
-
-Today the process that tries a retrieve sees its error, but a fleet
-collector can't see that error or tell whether a session went unclaimed.
-Opening /dev/liveupdate to check would itself trigger deserialisation on
-the first open and can get in the way of the real restorer because the
-device is exclusive-open. The collector polls procfs and sysfs, so it
-needs a result it can read after the event.
-
-Let's expose the incoming deserialisation state and aggregate session
-and file counts under /sys/class/misc/liveupdate/incoming/. A collector
-can stop the rollout on state=failed or files_failed > 0, and track
-files that were dropped or are still held. The session owner already
-knows which VM or service it belongs to, so there is no need to expose
-session names.
+Check that each retrieve is counted while the session is still open.
+Finishing the session should count its unretrieved file as dropped,
+while a file in an unclaimed session should still be held.
 
 Signed-off-by: Chris Down <chris@chrisdown.name>
 ---
- .../ABI/testing/sysfs-class-misc-liveupdate   | 44 ++++++++++++++++
- Documentation/userspace-api/liveupdate.rst    |  7 +++
- MAINTAINERS                                   |  1 +
- kernel/liveupdate/luo_core.c                  | 50 +++++++++++++++++++
- kernel/liveupdate/luo_file.c                  | 16 +++++-
- kernel/liveupdate/luo_internal.h              | 34 +++++++++++++
- kernel/liveupdate/luo_session.c               |  6 +++
- 7 files changed, 156 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-class-misc-liveupdate
+ tools/testing/selftests/liveupdate/Makefile   |   1 +
+ tools/testing/selftests/liveupdate/init.c     |   5 +
+ .../selftests/liveupdate/luo_handover_stats.c | 198 ++++++++++++++++++
+ .../selftests/liveupdate/run-vmtests.sh       |   1 +
+ tools/testing/selftests/liveupdate/vmtest.sh  |   2 +
+ 5 files changed, 207 insertions(+)
+ create mode 100644 tools/testing/selftests/liveupdate/luo_handover_stats.c
 
-diff --git a/Documentation/ABI/testing/sysfs-class-misc-liveupdate b/Documentation/ABI/testing/sysfs-class-misc-liveupdate
+diff --git a/tools/testing/selftests/liveupdate/Makefile b/tools/testing/selftests/liveupdate/Makefile
+index 634211c66652..78a4419ff610 100644
+--- a/tools/testing/selftests/liveupdate/Makefile
++++ b/tools/testing/selftests/liveupdate/Makefile
+@@ -2,6 +2,7 @@
+ 
+ TEST_GEN_PROGS += liveupdate
+ 
++TEST_GEN_PROGS_EXTENDED += luo_handover_stats
+ TEST_GEN_PROGS_EXTENDED += luo_kexec_simple
+ TEST_GEN_PROGS_EXTENDED += luo_multi_session
+ TEST_GEN_PROGS_EXTENDED += luo_stress_sessions
+diff --git a/tools/testing/selftests/liveupdate/init.c b/tools/testing/selftests/liveupdate/init.c
+index fb08bd58b9b9..31bd8f0ec3a9 100644
+--- a/tools/testing/selftests/liveupdate/init.c
++++ b/tools/testing/selftests/liveupdate/init.c
+@@ -37,6 +37,11 @@ static int mount_filesystems(void)
+ 		return -1;
+ 	}
+ 
++	if (mount("sysfs", "/sys", "sysfs", 0, NULL) < 0) {
++		fprintf(stderr, "INIT: Failed to mount sysfs\n");
++		return -1;
++	}
++
+ 	return 0;
+ }
+ 
+diff --git a/tools/testing/selftests/liveupdate/luo_handover_stats.c b/tools/testing/selftests/liveupdate/luo_handover_stats.c
 new file mode 100644
-index 000000000000..25e3b49d7aeb
+index 000000000000..f18df79dda55
 --- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-class-misc-liveupdate
-@@ -0,0 +1,44 @@
-+What:		/sys/class/misc/liveupdate/incoming/
-+Date:		Nov 2026
-+Contact:	kexec@lists.infradead.org
-+Description:
-+		Incoming Live Update Orchestrator (LUO) state and counters.
-+		Present when live update is enabled. Each attribute is read
-+		independently.
-+Users:		system monitoring
++++ b/tools/testing/selftests/liveupdate/luo_handover_stats.c
+@@ -0,0 +1,198 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +
-+What:		/sys/class/misc/liveupdate/incoming/state
-+Date:		Nov 2026
-+Contact:	kexec@lists.infradead.org
-+Description:	read only
-+		Status of incoming LUO sessions:
++/* Copyright (c) 2026 Meta Platforms, Inc. and affiliates. */
 +
-+		"none"          No sessions were handed over.
-+		"pending"       Deserialization has not finished. It
-+		                starts on the first open of /dev/liveupdate.
-+		"deserialized"  The sessions can be retrieved.
-+		"failed"        Deserialization failed. Opening
-+		                /dev/liveupdate returns -EIO.
-+Users:		system monitoring
++#include <fcntl.h>
++#include <limits.h>
++#include <stdio.h>
++#include <string.h>
++#include <unistd.h>
++#include <libliveupdate.h>
 +
-+What:		/sys/class/misc/liveupdate/incoming/sessions
-+What:		/sys/class/misc/liveupdate/incoming/files
-+Date:		Nov 2026
-+Contact:	kexec@lists.infradead.org
-+Description:	read only
-+		Number of sessions deserialized and number of files in
-+		those sessions, respectively. Counts can be partial while
-+		state is "pending" or after it changes to "failed".
-+Users:		system monitoring
++#define INCOMING_DIR "/sys/class/misc/liveupdate/incoming/"
 +
-+What:		/sys/class/misc/liveupdate/incoming/files_retrieved
-+What:		/sys/class/misc/liveupdate/incoming/files_failed
-+What:		/sys/class/misc/liveupdate/incoming/files_dropped
-+Date:		Nov 2026
-+Contact:	kexec@lists.infradead.org
-+Description:	read only
-+		Number of successful retrieves, permanent retrieve failures,
-+		and files discarded at session finish without a recorded
-+		retrieve outcome, respectively. Retrieves and failures are
-+		counted when they occur.
-+Users:		system monitoring
-diff --git a/Documentation/userspace-api/liveupdate.rst b/Documentation/userspace-api/liveupdate.rst
-index cdd74627ab75..39bbb91d0dd4 100644
---- a/Documentation/userspace-api/liveupdate.rst
-+++ b/Documentation/userspace-api/liveupdate.rst
-@@ -45,6 +45,13 @@ For details, see:
- - `sd_pid_notify_with_fds(3)
-   <https://www.freedesktop.org/software/systemd/man/latest/sd_pid_notify_with_fds.html>`_
- 
-+Monitoring
-+==========
++#define SESSION_CLAIMED "stats-claimed"
++#define SESSION_UNCLAIMED "stats-unclaimed"
 +
-+Read ``/sys/class/misc/liveupdate/incoming/`` to monitor incoming
-+sessions and file retrievals without opening ``/dev/liveupdate``.
-+See Documentation/ABI/testing/sysfs-class-misc-liveupdate for the sysfs ABI.
++#define MFD_RETRIEVED_TOKEN 0x51
++#define MFD_DROPPED_TOKEN 0x52
++#define MFD_UNCLAIMED_TOKEN 0x53
 +
- See Also
- ========
- 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1572f6c905aa..b98b95cd6d12 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15523,6 +15523,7 @@ L:	kexec@lists.infradead.org
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git
-+F:	Documentation/ABI/testing/sysfs-class-misc-liveupdate
- F:	Documentation/core-api/liveupdate.rst
- F:	Documentation/mm/memfd_preservation.rst
- F:	Documentation/userspace-api/liveupdate.rst
-diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
-index 1b2bda22902d..ba174e9aae03 100644
---- a/kernel/liveupdate/luo_core.c
-+++ b/kernel/liveupdate/luo_core.c
-@@ -75,6 +75,8 @@ static struct {
-  */
- DECLARE_RWSEM(luo_register_rwlock);
- 
-+struct luo_incoming_stats luo_incoming_stats;
++#define MFD_RETRIEVED_DATA "retrieved before finish"
++#define MFD_DROPPED_DATA "never retrieved"
++#define MFD_UNCLAIMED_DATA "session never retrieved"
 +
- static int __init early_liveupdate_param(char *buf)
- {
- 	return kstrtobool(buf, &luo_global.enabled);
-@@ -423,11 +425,59 @@ static const struct file_operations luo_fops = {
- 	.unlocked_ioctl	= luo_ioctl,
- };
- 
-+static const char * const luo_incoming_state_names[] = {
-+	[LUO_INCOMING_NONE]		= "none",
-+	[LUO_INCOMING_PENDING]		= "pending",
-+	[LUO_INCOMING_DESERIALIZED]	= "deserialized",
-+	[LUO_INCOMING_FAILED]		= "failed",
-+};
++#define STATE_SESSION_NAME "handover_stats_state"
++#define STATE_MEMFD_TOKEN 997
 +
-+static ssize_t state_show(struct device *dev, struct device_attribute *attr,
-+			  char *buf)
++/* The first open starts deserialization. */
++static char state_before_open[16];
++
++static void read_incoming(const char *name, char *buf, size_t len)
 +{
-+	enum luo_incoming_state state = READ_ONCE(luo_incoming_stats.state);
++	char path[128];
++	ssize_t n;
++	int fd;
 +
-+	return sysfs_emit(buf, "%s\n", luo_incoming_state_names[state]);
-+}
-+static DEVICE_ATTR_RO(state);
++	snprintf(path, sizeof(path), INCOMING_DIR "%s", name);
++	fd = open(path, O_RDONLY);
++	if (fd < 0)
++		fail_exit("open %s", path);
 +
-+#define LUO_INCOMING_ATTR_RO(_name)					\
-+static ssize_t _name##_show(struct device *dev,				\
-+			    struct device_attribute *attr, char *buf)	\
-+{									\
-+	return sysfs_emit(buf, "%ld\n",					\
-+			  atomic_long_read(&luo_incoming_stats._name));	\
-+}									\
-+static DEVICE_ATTR_RO(_name)
++	n = read(fd, buf, len - 1);
++	if (n < 0)
++		fail_exit("read %s", path);
++	close(fd);
 +
-+LUO_INCOMING_ATTR_RO(sessions);
-+LUO_INCOMING_ATTR_RO(files);
-+LUO_INCOMING_ATTR_RO(files_retrieved);
-+LUO_INCOMING_ATTR_RO(files_failed);
-+LUO_INCOMING_ATTR_RO(files_dropped);
++	/* A full buffer could hide the rest of a malformed value */
++	if ((size_t)n == len - 1)
++		ksft_exit_fail_msg("%s is longer than %zu bytes\n", path,
++				   len - 2);
 +
-+static struct attribute *luo_incoming_attrs[] = {
-+	&dev_attr_state.attr,
-+	&dev_attr_sessions.attr,
-+	&dev_attr_files.attr,
-+	&dev_attr_files_retrieved.attr,
-+	&dev_attr_files_failed.attr,
-+	&dev_attr_files_dropped.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group luo_incoming_group = {
-+	.name	= "incoming",
-+	.attrs	= luo_incoming_attrs,
-+};
-+__ATTRIBUTE_GROUPS(luo_incoming);
-+
- static struct luo_device_state luo_dev = {
- 	.miscdev = {
- 		.minor = MISC_DYNAMIC_MINOR,
- 		.name  = "liveupdate",
- 		.fops  = &luo_fops,
-+		.groups = luo_incoming_groups,
- 	},
- 	.in_use = ATOMIC_INIT(0),
- };
-diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
-index a39992da504f..3aac1afa05c0 100644
---- a/kernel/liveupdate/luo_file.c
-+++ b/kernel/liveupdate/luo_file.c
-@@ -543,6 +543,16 @@ void luo_file_unfreeze(struct luo_file_set *file_set,
- 	memset(file_set_ser, 0, sizeof(*file_set_ser));
- }
- 
-+/* Record the first retrieve result. A negative status is permanent. */
-+static void luo_file_set_retrieve_status(struct luo_file *luo_file, int status)
-+{
-+	luo_file->retrieve_status = status;
-+	if (status > 0)
-+		atomic_long_inc(&luo_incoming_stats.files_retrieved);
-+	else
-+		atomic_long_inc(&luo_incoming_stats.files_failed);
++	buf[n] = '\0';
++	if (n > 0 && buf[n - 1] == '\n')
++		buf[n - 1] = '\0';
 +}
 +
- /**
-  * luo_retrieve_file - Restores a preserved file from a file_set by its token.
-  * @file_set: The file_set from which to retrieve the file.
-@@ -611,7 +621,7 @@ int luo_retrieve_file(struct luo_file_set *file_set, u64 token,
- 	err = luo_file->fh->ops->retrieve(&args);
- 	if (err) {
- 		/* Keep the error code for later use. */
--		luo_file->retrieve_status = err;
-+		luo_file_set_retrieve_status(luo_file, err);
- 		return err;
- 	}
- 
-@@ -624,7 +634,7 @@ int luo_retrieve_file(struct luo_file_set *file_set, u64 token,
- 			  luo_file->file, GFP_KERNEL));
- 
- 	*filep = luo_file->file;
--	luo_file->retrieve_status = 1;
-+	luo_file_set_retrieve_status(luo_file, 1);
- 
- 	return 0;
- }
-@@ -719,6 +729,8 @@ int luo_file_finish(struct luo_file_set *file_set)
- 					   struct luo_file, list);
- 
- 		luo_file_finish_one(file_set, luo_file);
-+		if (!luo_file->retrieve_status)
-+			atomic_long_inc(&luo_incoming_stats.files_dropped);
- 
- 		if (luo_file->file) {
- 			xa_erase(&luo_preserved_files,
-diff --git a/kernel/liveupdate/luo_internal.h b/kernel/liveupdate/luo_internal.h
-index dac6644bfb18..504963fc9898 100644
---- a/kernel/liveupdate/luo_internal.h
-+++ b/kernel/liveupdate/luo_internal.h
-@@ -77,6 +77,40 @@ struct luo_session {
- 
- extern struct rw_semaphore luo_register_rwlock;
- 
-+/**
-+ * enum luo_incoming_state - Deserialization state of incoming sessions
-+ * @LUO_INCOMING_NONE: No incoming sessions.
-+ * @LUO_INCOMING_PENDING: Deserialization has not finished.
-+ * @LUO_INCOMING_DESERIALIZED: Sessions are ready to retrieve.
-+ * @LUO_INCOMING_FAILED: Deserialization failed.
-+ */
-+enum luo_incoming_state {
-+	LUO_INCOMING_NONE,
-+	LUO_INCOMING_PENDING,
-+	LUO_INCOMING_DESERIALIZED,
-+	LUO_INCOMING_FAILED,
-+};
++static void expect_state(const char *state, const char *expected)
++{
++	if (strcmp(state, expected))
++		ksft_exit_fail_msg("state is '%s', expected '%s'\n", state,
++				   expected);
++}
 +
-+/**
-+ * struct luo_incoming_stats - Incoming session and file counters
-+ * @state: Deserialization state.
-+ * @sessions: Sessions deserialized.
-+ * @files: Files in deserialized sessions.
-+ * @files_retrieved: Files retrieved.
-+ * @files_failed: Permanent retrieve failures.
-+ * @files_dropped: Files discarded without a retrieve outcome.
-+ */
-+struct luo_incoming_stats {
-+	enum luo_incoming_state state;
-+	atomic_long_t sessions;
-+	atomic_long_t files;
-+	atomic_long_t files_retrieved;
-+	atomic_long_t files_failed;
-+	atomic_long_t files_dropped;
-+};
++static unsigned long long read_number(const char *name)
++{
++	unsigned long long val = 0;
++	char buf[32];
++	char *p;
 +
-+extern struct luo_incoming_stats luo_incoming_stats;
++	read_incoming(name, buf, sizeof(buf));
++	for (p = buf; *p >= '0' && *p <= '9'; p++) {
++		if (val > (ULLONG_MAX - (*p - '0')) / 10)
++			break;
++		val = val * 10 + (*p - '0');
++	}
++	if (p == buf || *p)
++		ksft_exit_fail_msg("%s%s reads '%s', not a 64-bit unsigned number\n",
++				   INCOMING_DIR, name, buf);
++	return val;
++}
 +
- static inline struct liveupdate_session *luo_session_from_file_set(struct luo_file_set *file_set)
- {
- 	struct luo_session *session;
-diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
-index 74bc66929f4b..1a40607bfc45 100644
---- a/kernel/liveupdate/luo_session.c
-+++ b/kernel/liveupdate/luo_session.c
-@@ -549,6 +549,7 @@ int __init luo_session_setup_incoming(u64 sessions_pa)
- 		return err;
- 
- 	sh->active = true;
-+	luo_incoming_stats.state = LUO_INCOMING_PENDING;
- 	return 0;
- }
- 
-@@ -583,6 +584,9 @@ static int luo_session_deserialize_one(struct luo_session_header *sh,
- 		return err;
- 	}
- 
-+	atomic_long_inc(&luo_incoming_stats.sessions);
-+	atomic_long_add(session->file_set.count, &luo_incoming_stats.files);
++static void expect_count(const char *name, unsigned long long expected)
++{
++	unsigned long long val = read_number(name);
 +
- 	return 0;
- }
++	if (val != expected)
++		ksft_exit_fail_msg("%s is %llu, expected %llu\n", name, val,
++				   expected);
++}
++
++static void expect_counts(long retrieved, long dropped)
++{
++	char state[16];
++
++	read_incoming("state", state, sizeof(state));
++	expect_state(state, "deserialized");
++
++	/* Three sessions, including the one carrying the test stage. */
++	expect_count("sessions", 3);
++	expect_count("files", 4);
++	expect_count("files_retrieved", retrieved);
++	expect_count("files_failed", 0);
++	expect_count("files_dropped", dropped);
++}
++
++static void run_stage_1(int luo_fd)
++{
++	int claimed_fd, unclaimed_fd;
++
++	ksft_print_msg("[STAGE 1] Checking state on a cold boot...\n");
++	expect_state(state_before_open, "none");
++	expect_count("sessions", 0);
++	expect_count("files", 0);
++
++	create_state_file(luo_fd, STATE_SESSION_NAME, STATE_MEMFD_TOKEN, 2);
++
++	ksft_print_msg("[STAGE 1] Preserving two memfds in '%s'...\n",
++		       SESSION_CLAIMED);
++	claimed_fd = luo_create_session(luo_fd, SESSION_CLAIMED);
++	if (claimed_fd < 0)
++		fail_exit("luo_create_session for '%s'", SESSION_CLAIMED);
++	if (create_and_preserve_memfd(claimed_fd, MFD_RETRIEVED_TOKEN,
++				      MFD_RETRIEVED_DATA) < 0)
++		fail_exit("create_and_preserve_memfd for token %#x",
++			  MFD_RETRIEVED_TOKEN);
++	if (create_and_preserve_memfd(claimed_fd, MFD_DROPPED_TOKEN,
++				      MFD_DROPPED_DATA) < 0)
++		fail_exit("create_and_preserve_memfd for token %#x",
++			  MFD_DROPPED_TOKEN);
++
++	ksft_print_msg("[STAGE 1] Preserving one memfd in '%s'...\n",
++		       SESSION_UNCLAIMED);
++	unclaimed_fd = luo_create_session(luo_fd, SESSION_UNCLAIMED);
++	if (unclaimed_fd < 0)
++		fail_exit("luo_create_session for '%s'", SESSION_UNCLAIMED);
++	if (create_and_preserve_memfd(unclaimed_fd, MFD_UNCLAIMED_TOKEN,
++				      MFD_UNCLAIMED_DATA) < 0)
++		fail_exit("create_and_preserve_memfd for token %#x",
++			  MFD_UNCLAIMED_TOKEN);
++
++	close(luo_fd);
++	daemonize_and_wait();
++}
++
++static void run_stage_2(int luo_fd, int state_session_fd)
++{
++	int claimed_fd, mfd, stage;
++
++	ksft_print_msg("[STAGE 2] Checking state before and after the first open...\n");
++	expect_state(state_before_open, "pending");
++	expect_counts(0, 0);
++
++	restore_and_read_stage(state_session_fd, STATE_MEMFD_TOKEN, &stage);
++	if (stage != 2)
++		fail_exit("Expected stage 2, but state file contains %d", stage);
++
++	/* The retrieve must count before the session finishes. */
++	expect_counts(1, 0);
++
++	ksft_print_msg("[STAGE 2] Retrieving one of the two memfds in '%s'...\n",
++		       SESSION_CLAIMED);
++	claimed_fd = luo_retrieve_session(luo_fd, SESSION_CLAIMED);
++	if (claimed_fd < 0)
++		fail_exit("luo_retrieve_session for '%s'", SESSION_CLAIMED);
++
++	mfd = restore_and_verify_memfd(claimed_fd, MFD_RETRIEVED_TOKEN,
++				       MFD_RETRIEVED_DATA);
++	if (mfd < 0)
++		fail_exit("restore_and_verify_memfd for token %#x",
++			  MFD_RETRIEVED_TOKEN);
++	close(mfd);
++	expect_counts(2, 0);
++
++	ksft_print_msg("[STAGE 2] Finishing '%s'...\n", SESSION_CLAIMED);
++	if (luo_session_finish(claimed_fd) < 0)
++		fail_exit("luo_session_finish for '%s'", SESSION_CLAIMED);
++	close(claimed_fd);
++
++	expect_counts(2, 1);
++
++	ksft_print_msg("[STAGE 2] Finishing the state session...\n");
++	if (luo_session_finish(state_session_fd) < 0)
++		fail_exit("luo_session_finish for state session");
++	close(state_session_fd);
++
++	/* Finishing the state session must not drop anything. */
++	expect_counts(2, 1);
++
++	ksft_print_msg("\n--- HANDOVER STATS TEST PASSED ---\n");
++}
++
++int main(int argc, char *argv[])
++{
++	read_incoming("state", state_before_open, sizeof(state_before_open));
++
++	return luo_test(argc, argv, STATE_SESSION_NAME,
++			run_stage_1, run_stage_2);
++}
+diff --git a/tools/testing/selftests/liveupdate/run-vmtests.sh b/tools/testing/selftests/liveupdate/run-vmtests.sh
+index 6f592aec0f85..bce7679279d4 100755
+--- a/tools/testing/selftests/liveupdate/run-vmtests.sh
++++ b/tools/testing/selftests/liveupdate/run-vmtests.sh
+@@ -16,6 +16,7 @@ failed=0
+ skipped=0
  
-@@ -626,12 +630,14 @@ int luo_session_deserialize(void)
- 	}
- 
- 	kho_block_set_destroy(&sh->block_set);
-+	WRITE_ONCE(luo_incoming_stats.state, LUO_INCOMING_DESERIALIZED);
- 
- 	return 0;
- 
- save_err:
- 	kho_block_set_destroy(&sh->block_set);
- 	saved_err = err;
-+	WRITE_ONCE(luo_incoming_stats.state, LUO_INCOMING_FAILED);
- 	return err;
- }
- 
+ TEST_NAMES=(
++	"luo_handover_stats"
+ 	"luo_kexec_simple"
+ 	"luo_multi_session"
+ 	"luo_stress_files"
+diff --git a/tools/testing/selftests/liveupdate/vmtest.sh b/tools/testing/selftests/liveupdate/vmtest.sh
+index dea5a6fb2abc..76ffea7d4eb8 100755
+--- a/tools/testing/selftests/liveupdate/vmtest.sh
++++ b/tools/testing/selftests/liveupdate/vmtest.sh
+@@ -145,6 +145,7 @@ function mkinitrd() {
+ 	cat > "$workspace_dir/cpio_list_inner" <<EOF
+ dir /dev 0755 0 0
+ dir /proc 0755 0 0
++dir /sys 0755 0 0
+ dir /debugfs 0755 0 0
+ nod /dev/console 0600 0 0 c 5 1
+ file /init $workspace_dir/init 0755 0 0
+@@ -157,6 +158,7 @@ EOF
+ 	cat > "$workspace_dir/cpio_list" <<EOF
+ dir /dev 0755 0 0
+ dir /proc 0755 0 0
++dir /sys 0755 0 0
+ dir /debugfs 0755 0 0
+ nod /dev/console 0600 0 0 c 5 1
+ file /init $workspace_dir/init 0755 0 0
 -- 
 2.54.0
 
