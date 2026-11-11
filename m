@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C83C2606A33B
-	for <kexec@archiver.kernel.org>; Wed, 11 Nov 2026 09:18:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B97060A2600
+	for <kexec@archiver.kernel.org>; Wed, 11 Nov 2026 09:56:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=lZyEBF7A;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nPQ/W3tB
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=sHB4mvAU;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jfdjwyV7
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -14,53 +14,53 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=QWs1gzgqO1A59hoKs3tuMBi4edD/w8k5cYwrGVQ+cB0=; b=lZyEBF7AE2arBggj9d7B+ow1hY
-	0HWqE1mitGL4LrfpjbAoHc/ru6zhQ3gW62cKLMcDkxJVNSctpmThhIkOqYrEhgg+7UWRXiuEhUYtm
-	JF6hwQoY4X72aKX39IZ+q450q7MwoyJvL6nf3FeCusWZDgOWSI1V5s8Kzs0tKdXjZL6POlIUhHy3W
-	/h2KzKauPaVF8qhJjvsv1QMmEJXxw2oNMBHZuzqXtXwq2rG7AOgoB+i06rgth4fwidzWtyAkLYMX3
-	ReMBdxQ+T1LK7OKU3viTWBL4XVQEIk/QRQ1oOiNaKhtIkQYba5/bURuamhWZRWJ5e35nW5zQ84INH
-	XearWuWA==;
+	bh=diWWembtglhqYOPIvis4i129yRh0famPUXEo2wrIz2U=; b=sHB4mvAUGdh1sJe12RaR9j0+6C
+	ylqG9JDVa83rnTSuI8fxnIwn/KZn9QT8YTNN2oQY3FOJbYNOKlcnozESzhyoKZJK3qmgTLiUSClfE
+	8ewdYtDJFMJaRZ5jySz4qB7IYHYYfF/4Z8r+WnwZ1vScYq6hGHWi8UPULF37KzSIdEGnrY7KjYGbg
+	5KCgygQiUe68Tp+7S27B2Du6ySfNpoDpQY+XJh/fqeZvhyyx9TgBI9to+tMaTLb4e0bPb5DBaARlO
+	2w4sATwJ5RbddV0LpxZtEOz1sNajyHjr2q+xmHrTDwv8sxUQxFvodjaHCw301rko+zrFtEEcnJn/0
+	xWdBMoCA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xR4TA-000000069ER-44AJ;
-	Wed, 11 Nov 2026 09:18:16 +0000
+	id 1xR53y-00000006GWS-0SUo;
+	Wed, 11 Nov 2026 09:56:18 +0000
 Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xR4T9-000000069Dp-2HVZ
+	id 1xR53x-00000006GV2-0xTl
 	for kexec@lists.infradead.org;
-	Wed, 11 Nov 2026 09:18:15 +0000
+	Wed, 11 Nov 2026 09:56:17 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 9CB9F63BB0;
-	Wed, 11 Nov 2026 09:18:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7CCA1F00A05;
-	Wed, 11 Nov 2026 09:18:11 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 34A2D60DC0;
+	Wed, 11 Nov 2026 09:56:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8389C1F00A07;
+	Wed, 11 Nov 2026 09:56:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794388694;
-	bh=QWs1gzgqO1A59hoKs3tuMBi4edD/w8k5cYwrGVQ+cB0=;
+	s=k20260515; t=1794390975;
+	bh=diWWembtglhqYOPIvis4i129yRh0famPUXEo2wrIz2U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=nPQ/W3tBH7IXMyeKIqwMvWCKjOnatvPKh87fP3UWoe4psnTdQu3w//a4sVvyE5zyz
-	 WF6vpLmRhLQ185mGVjNFBZhQ7xCxtNeg3hFPeJzQXaTIUVMFg/S3s9Qe1Cxt8RCkJF
-	 HhDBZ6WdHgptQZ2NRfBJiRcBr5kB7SouvZozxUO2+UN1neTwxcLQmC61yWu1KPQ6by
-	 gwpvXemy6XTmp/oBzm6UWZvKSQ0ZwHAhr3GU5rLIhfedrpY5pUWiqZLQpnLKj4hkNR
-	 5zs8NjAKyNYimLPdfruEqZ6OUkajo6zoVMkPD0cWEzSrrHnr+VdqzG9d/rcN2NXPxd
-	 95DJQsE3IFJIA==
-Date: Wed, 11 Nov 2026 11:18:08 +0200
+	b=jfdjwyV7bUSfgDZ02cMgBlkUPVzLsUIHBZpEZ9gjxJLEB7RQQotgrvJDisFBP2mGe
+	 1NHuCT0JkZNr+UP/Ybs26Lu+/9fKSssvhnCOKdmX7d9DcmfLg+SIOFKhUvkSfwW7ab
+	 HRtGRji2oHVakaCzi+qGkCEI7raAQ2t7BsCKCAhnGnHmFNCbzBewT2P0phoWMuaozQ
+	 cXI5F+lpiu9h/tgByfAOB+GrgTYhtXSaWyZXt4tt9baW75C+zFBV+IUEbq6Q60eMQw
+	 Co897B6NUq24lQqOADAhxfrdpeoY1uvOzL8cYDQ8MRlCFdEiVtHcAStNfURIKZ3Ovz
+	 pfm7uj1uJMbyA==
+Date: Wed, 11 Nov 2026 11:56:07 +0200
 From: Mike Rapoport <rppt@kernel.org>
-To: Chris Down <chris@chrisdown.name>
-Cc: pasha.tatashin@soleen.com, pratyush@kernel.org, graf@amazon.com,
-	kexec@lists.infradead.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH] kho: Prevent reuse of preserved pages after a
- reservation failure
-Message-ID: <avQy0MUl6eOplwhh@kernel.org>
-References: <avQUquBK6cO6tUUI@chrisdown.name>
- <avQg0_jFY3get3wG@kernel.org>
- <avQka0wY-EdLkspv@chrisdown.name>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: linux-api@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	shuah@kernel.org, linux-mm@kvack.org, skhan@linuxfoundation.org,
+	linux-doc@vger.kernel.org, vipinsh@google.com,
+	linux-kernel@vger.kernel.org, corbet@lwn.net, dmatlack@google.com,
+	kexec@lists.infradead.org, pratyush@kernel.org,
+	rdunlap@infradead.org, graf@amazon.com
+Subject: Re: [PATCH v5 0/6] liveupdate: Add LIVEUPDATE_SESSION_FREEZE ioctl
+Message-ID: <avQ7t_ijdR4nm-RO@kernel.org>
+References: <20261105050053.3063001-1-pasha.tatashin@soleen.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <avQka0wY-EdLkspv@chrisdown.name>
+In-Reply-To: <20261105050053.3063001-1-pasha.tatashin@soleen.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -71,67 +71,146 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Wed, Nov 11, 2026 at 12:16:43AM -0800, Chris Down wrote:
-> Hi Mike,
-> 
-> Mike Rapoport writes:
-> > On Tue, Nov 10, 2026 at 11:09:30PM -0800, Chris Down wrote:
-> > > kho_preserved_memory_reserve() reserves each range of preserved memory
-> > > in memblock and marks it noinit, but ignores both return values. Either
-> > > can fail when memblock has to grow its reserved array and can't find
-> > > room, which at this point in boot it may only take from KHO bootmem.
-> > 
-> > Is it an LLM analysis or you seen this happen?
-> 
-> Are those the only two options nowadays! :-) In this case it's just eyeballs.
+(adding linux-api@)
 
-Didn't think anybody still uses those :)
-Kudos!
- 
-> I happened to notice this while preparing my KHO/LUO observability patchset
-> and thought it made sense to send as a separate patch, since it doesn't
-> depend on anything there.
+On Thu, Nov 05, 2026 at 12:00:46AM -0500, Pasha Tatashin wrote:
+> Currently, LUO freezes outgoing sessions only inside the
+> reboot(LINUX_REBOOT_CMD_KEXEC) syscall path, serially under global write
+> locks, and binds every outgoing session's lifetime strictly to an open
+> session FD until reboot.
 > 
-> It's probably realistically quite unlikely, I would think it would require a
-> lot of fragmentation or a very small kho_bootmem=.
-
-It's unlikely indeed and if that happens we'll panic on memory map
-allocation anyway :)
- 
-> > > Dropping the handover at this point isn't safe either. reserve_mem=
-> > > revives its regions from the handover before mm_core_init(), and
-> > > relies on this walk to reserve them.
-> > 
-> > reserve_mem_kho_revive() can memblock_reserve() its memory itself and we
-> > can carry on, can't we?
+> On hosts running many workloads (such as VMs or stateful daemons),
+> workloads do not all pause simultaneously inside reboot(): they quiesce
+> one by one ahead of the host kexec. Userspace needs an explicit
+> per-session freeze point to snapshot final file state (.freeze()) as
+> each workload pauses -- concurrently across sessions under per-session
+> locks -- along with a way to commit a frozen session into KHO so it
+> survives closing the session FD.
 > 
-> Thanks, that's better. I had thought carryong on wasn't possible because
-> reserve_mem has already reserved its regions by the time we get to the walk,
-> but actually you're right that there's no reason reserve_mem_kho_revive()
-> can't just do it itself...
+> This series introduces LIVEUPDATE_SESSION_FREEZE on session FDs:
 > 
-> Looking at the code one thing we would likely trip over then is that
-> kho_mem_retrieve()'s error path only clears fdt_phys, but not bootmem_phys.
-> kho_init() then thinks that it's a cold boot and runs
-> init_cma_reserved_pageblock() over the inherited bootmem which has already
-> been handed to the buddy allocator, so this would need adjustment first.
+> 1. Freeze (flags == 0):
+>    Freezes all preserved files in the session under the per-session
+>    mutex while keeping session lifetime tied to the session FD. The
+>    session stays frozen as long as the FD remains open; closing the
+>    session FD before reboot (for example, to abort the session or on
+>    process exit/crash) runs .unfreeze() and .unpreserve() and reclaims
+>    all resources. At kexec time, already-frozen sessions skip the late
+>    auto-freeze step and are published into the outgoing KHO subtree.
 > 
-> So then, let me send v2 with reserve_mem_kho_revive() sorting out its own
-> range, and making kho_init() skip the bootmem setup when the bootmem was
-> inherited, if that sounds good?
-
-Yeah, just keep them as two patches please :)
- 
-> Thanks!
+> 2. Freeze and commit (LIVEUPDATE_SESSION_FREEZE_COMMIT):
+>    Freezes preserved files, immediately inserts the session and its FLB
+>    dependencies into the outgoing KHO subtree in O(1), and commits the
+>    session so it survives close() with full ownership retained by LUO
+>    until reboot. Once committed, closing the session FD (or another
+>    session failing to freeze during reboot) never unfreezes or
+>    unpreserves it. This allows processes to hand off preserved state to
+>    LUO and exit prior to kexec, and makes committed sessions immediately
+>    visible in the outgoing KHO subtree before the host reboots.
 > 
-> Chris
+> Overview of the series:
+> - Patch 1 decouples luo_file_freeze()/unfreeze() from
+>   struct luo_file_set_ser.
+> - Patches 2-4 add incremental KHO publication helpers for kho_block
+>   (kho_block_set_it_append()), LUO sessions (luo_session_publish_one()),
+>   and outgoing FLBs (luo_flb_ser_publish_one(), replacing the late
+>   luo_flb_serialize() reboot pass).
+> - Patch 5 introduces LIVEUPDATE_SESSION_FREEZE and
+>   LIVEUPDATE_SESSION_FREEZE_COMMIT and updates the LUO core and uAPI
+>   documentation.
+> - Patch 6 adds selftests covering both uncommitted and committed session
+>   freezes across unit and multi-session kexec tests.
+> 
+> This series is based on liveupdate/next commit d80a5528df4c ("Merge
+> branch 'lu-pci-preservation' into next").
+> 
+> Changelog:
+> v5:
+> - Rebase onto latest liveupdate/next.
+> - Replace reserved field in struct liveupdate_session_freeze with flags
+>   and add LIVEUPDATE_SESSION_FREEZE_COMMIT so userspace can either
+>   freeze a session while keeping it bound to its FD (rolled back on
+>   close()) or commit the frozen session (inserted immediately into KHO
+>   and retained by LUO across close() until reboot).
+> - Add incremental KHO publication helpers in kho_block, luo_session, and
+>   luo_flb so committed sessions and their FLB dependencies are inserted
+>   into the outgoing KHO subtree immediately on freeze, dropping the
+>   separate luo_flb_serialize() pass at reboot.
+> - Keep luo_session_freeze_one() / luo_session_unfreeze_one() in Patch 1
+>   rather than renaming them to luo_session_serialize_one() /
+>   luo_session_unserialize_one() and back once luo_session_publish_one()
+>   is introduced.
+> - Update Documentation/userspace-api/liveupdate.rst and kernel-doc
+>   across kho_block, luo_flb, luo_file, and luo_session.
+> - Drop v4 Reviewed-by tag on the modified freeze and selftest patches,
+>   and expand selftests to cover both uncommitted and committed freezes.
+> v4:
+> - Split out a preparatory patch that drops struct luo_file_set_ser *
+>   from luo_file_freeze() / luo_file_unfreeze() and moves file_set_ser
+>   handling into luo_session_serialize_one() /
+>   luo_session_unserialize_one() (Suggested by Mike Rapoport).
+> - Few more nits from Mike.
+> v3:
+> - Renamed session->frozen to session->user_frozen, - Pratyush
+> - Added Reviewed-by's
+> v2:
+> - Rebased onto liveupdate/next (commit 27be83a12b24 ("Merge branch
+>   'lu-pci-preservation' into next")) and split out early session freeze
+>   into a standalone series (tmpfs preservation and its per-file user
+>   argument plumbing were spun out into a separate series).
+> - Patch 1:
+>   - Drop struct luo_file_set_ser * from luo_file_freeze() and
+>     luo_file_unfreeze(), and rename the session helpers to
+>     luo_session_serialize_one() / luo_session_unserialize_one() so all
+>     of struct luo_session_ser is populated and cleared in one place
+>     (Suggested by Pratyush Yadav).
+>   - Unfreeze the session's files if luo_ucmd_respond() fails in
+>     luo_session_freeze().
+>   - Update remaining reboot-only wording in luo_file.c kernel-doc
+>     comments.
+> - Patch 2:
+>   - Add checks verifying that non-zero reserved bits and freezing an
+>     incoming post-kexec session fail with -EINVAL.
+> Link: https://lore.kernel.org/all/20261015093816.2438942-1-pasha.tatashin@soleen.com/ # v1
+> 
+> Pasha Tatashin (6):
+>   liveupdate: Move file_set_ser handling to luo_session_serialize()
+>   kho: support incremental entry publication in kho_block
+>   liveupdate: luo: serialize sessions via per-session publish helper
+>   liveupdate: luo_flb: support incremental outgoing FLB publication
+>   liveupdate: Add LIVEUPDATE_SESSION_FREEZE ioctl to freeze sessions
+>     early
+>   selftests: liveupdate: Add tests for LIVEUPDATE_SESSION_FREEZE
+> 
+>  Documentation/userspace-api/liveupdate.rst    |  30 +++
+>  include/linux/kho_block.h                     |   1 +
+>  include/linux/liveupdate.h                    |   3 +-
+>  include/uapi/linux/liveupdate.h               |  46 +++++
+>  kernel/liveupdate/kho_block.c                 |  86 ++++++++-
+>  kernel/liveupdate/luo_core.c                  |  10 +-
+>  kernel/liveupdate/luo_file.c                  |  94 ++++-----
+>  kernel/liveupdate/luo_flb.c                   | 111 +++++++----
+>  kernel/liveupdate/luo_internal.h              |  16 +-
+>  kernel/liveupdate/luo_session.c               | 178 ++++++++++++++----
+>  .../liveupdate/lib/include/libliveupdate.h    |   5 +-
+>  .../selftests/liveupdate/lib/lu_utils.c       |  21 ++-
+>  .../testing/selftests/liveupdate/liveupdate.c | 107 +++++++++++
+>  .../selftests/liveupdate/luo_kexec_simple.c   |  22 ++-
+>  .../selftests/liveupdate/luo_multi_session.c  |  33 +++-
+>  15 files changed, 612 insertions(+), 151 deletions(-)
+> 
+> 
+> base-commit: d80a5528df4cdee5871243e392da08c2d5c92e43
+> -- 
+> 2.56.0.398.g882cbad275-goog
+> 
 
 -- 
 Sincerely yours,
