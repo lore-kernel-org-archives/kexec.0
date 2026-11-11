@@ -2,94 +2,94 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E3A60A2606
-	for <kexec@archiver.kernel.org>; Wed, 11 Nov 2026 06:33:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBDB8606A320
+	for <kexec@archiver.kernel.org>; Wed, 11 Nov 2026 07:09:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=pyN0Acwi;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=aMVAeHnr
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=0BWoQNVc;
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=IHVRJJBR
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
 	List-Unsubscribe-Post:List-Owner;
-	bh=N2mgW6LEnNu8wNmnoa3+p3F6g8tYE7yJEu2kZeiGcR0=; b=pyN0AcwiK96qs0HSSWPY/iw2SG
-	ZvNC/lHIwFDWOMghqJmF95VXDakJV7rzz0vZiLBT7JQUybRnbMx3lWOzWWT9RJXBbbZLLcZuRLsKx
-	1iK6E2BSDKSLVe2DmsX7sJNT7a1kHgvK00I5zDKXLboxI804rSLXvoludyF8i3FX18yl7ZNOBJdIz
-	YDz5wJDcKDkEATmfFMa2hVrIhfWGgP6oEeYjZstENHW7e2lfVhU13rbh1CEPDha9hreQZFYx9JY+Y
-	6TRoqS+pEOY68OwmvJuCW98httslORw7VVD5TuuHuTl5153zH29D6TUZrIeKJFo+MucmWi3VQSxPy
-	spIfrXFg==;
+	bh=pfnkpC25liOJ53c0mQZ6/TSQvyf0Bspw+v/pqKKkn6s=; b=0BWoQNVcKW/0OtSzZzfYNEjSfZ
+	NeSrCGR59Xcn6ghj8CAKX5frhAbwj0PcguFUdGG7v4D9Tf+oFj/Yu26NUl1HbCAPkC4VuzupdADyU
+	C7fKM3uKOh8ZdHgtf+NhCrrEfV9tTxB6ZyU3TwZe8W2ZQGgp8j3T+pLyQ4Y47P7p0NyYZVNCsG/0S
+	q0Juj+IKDjp2VvpkLvGcbHGnPQIgRTK8bM2SsFtom0npTkQ5Jnwy8FOVGd/96sLxbXNj+09yTZpzL
+	qL/lg9jHWB6er+clMaNVh6jCiQq7Uv5NeCmfKqKrRteyPHslnfasCDmvK6O7TjNUSZha35cdz1MzR
+	8CtY+mYQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xR1tz-00000005nMs-48Oj;
-	Wed, 11 Nov 2026 06:33:47 +0000
-Received: from mail-ej1-x647.google.com ([2a00:1450:4864:20::647])
+	id 1xR2Sg-00000005qaD-1gFf;
+	Wed, 11 Nov 2026 07:09:38 +0000
+Received: from mail-pj1-x102e.google.com ([2607:f8b0:4864:20::102e])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xR1ty-00000005nLx-1G6M
+	id 1xR2Sd-00000005qZp-0uxX
 	for kexec@lists.infradead.org;
-	Wed, 11 Nov 2026 06:33:47 +0000
-Received: by mail-ej1-x647.google.com with SMTP id a640c23a62f3a-c42888c50c4so251172866b.0
-        for <kexec@lists.infradead.org>; Tue, 10 Nov 2026 22:33:45 -0800 (PST)
+	Wed, 11 Nov 2026 07:09:36 +0000
+Received: by mail-pj1-x102e.google.com with SMTP id 98e67ed59e1d1-3b155f50c24so2011068a91.3
+        for <kexec@lists.infradead.org>; Tue, 10 Nov 2026 23:09:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794378824; x=1794983624; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+        d=chrisdown.name; s=google; t=1794380974; x=1794985774; darn=lists.infradead.org;
+        h=user-agent:content-disposition:content-type:mime-version:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=N2mgW6LEnNu8wNmnoa3+p3F6g8tYE7yJEu2kZeiGcR0=;
-        b=aMVAeHnrx+sspRJmEUn6cmk6O5u16bSIdPty5SQcjZ/jVmgBrI6QHGqx0fbeS3A4JL
-         N+KMoAYKUPG5cGR1cGKJu14dMhrGaw4cRc0vhqMXALOQyTqR3abtZzmdPY1CqcxaN/2G
-         cr/Tshd4KuYIQzFL1FhYMYP0n3g7qO2KfSUqMov47bN6yCgNUwHGNNr9tjCVq/BK3UZQ
-         JrcSliFDZnO+OIrmsucEAZoimC1YjBam0T/xuMw7LVNWI3uxVhximr8ck7fTFKG02Cbr
-         iV1hR0kXpQxXfCM6byDRiYf3DshpHJGAPnmbgrmt7vHySYko+1M28VXf9ihCFqhYDira
-         8GRA==
+        bh=pfnkpC25liOJ53c0mQZ6/TSQvyf0Bspw+v/pqKKkn6s=;
+        b=IHVRJJBRwiG87ToGkVi9+V3cw6SLMT3WO2kB3ULbUjwndf6FEwAPBlF5x7fivHjDYS
+         KMclETQSBUJ6GnmF3vdPOF+LaXwPSsyeDCNBCCVTScvyjYMiKrcAXxefGEVDJi5tFT3P
+         6Sj5xJTgPu1lIeD+CuPN85slhe10tMgwMuiKU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794378824; x=1794983624;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=N2mgW6LEnNu8wNmnoa3+p3F6g8tYE7yJEu2kZeiGcR0=;
-        b=r2Qnt/s6Nk2oiLlrwirMTCcXJIgQJqCfFLEWpL/hSRGkT/hRKPaLvTQBrej1a/53ZE
-         qSkIiOnA2f0lZhumjOBAEoAd2+RBEUzEORHuBkfVkmH9PsPzBvZZ/yDZBoKzsyfREtth
-         rtdYF7GUC3xP1smNGKgFxxE9BlkjWQuRyZh2vstcaL6QMP8aAkNFR3TzPGTOuONxDkhk
-         tsegEvGWNXhm4e8MyN0Hn+1ERxxkvZwknJ/wpIhottKgMbejw0k/eYXFkM03zoqIT0mh
-         cNAZtyD4GDAdJ7xtWzDuzcxS60ZCkWxX3/+qxlRss5oarIIRogWZN4//6HuLhWtGpqa/
-         W/cw==
-X-Forwarded-Encrypted: i=1; AL+hErF43HUmGSCtYb497dZu9cyOJLxvBKge4dUGP9owLQR1OfFrCwPMStXrhGBpVLp8yM9ZRYCl/w==@lists.infradead.org
-X-Gm-Message-State: APuU4Z/BCL2XVi9csltl37++6JQCZqiKg2yjYjnuh2I66lJBPQ2SoPjz
-	5eK/AUOM4pH5sADCZkz9fUGnhMcUlK/V41kw3Oiu9swHKYHU9hplZ7hc7ET3zHQ4mgxTM3iWhZ1
-	glC7h1uqvATm+Poi1Pw==
-X-Received: from edgi9-n1.prod.google.com ([2002:a05:6402:a589:10b0:6b7:8226:b2f0])
- (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6402:613:b0:6b1:ce0f:eb6b with SMTP id 4fb4d7f45d1cf-6b777700516mr806340a12.31.1794378823419;
- Tue, 10 Nov 2026 22:33:43 -0800 (PST)
-Date: Wed, 11 Nov 2026 06:33:42 +0000
-In-Reply-To: <179432329215.2329176.14453669404153142360.b4-review@b4>
+        d=1e100.net; s=20260707; t=1794380974; x=1794985774;
+        h=user-agent:content-disposition:content-type:mime-version:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=pfnkpC25liOJ53c0mQZ6/TSQvyf0Bspw+v/pqKKkn6s=;
+        b=mP/NDSnH06ZlH2RaS3XaCpGPCJYNztPFT3FuCzy/P54fmkgQFoQ+HS2Ne6+J9NqizA
+         4PSWWEPNULbz6Qd+ucOCUHQjuz7XDZAtL87V7PnAd6JjrvjGmB/bOEjs7w5yC2uD53mU
+         dgXQMvDMTkXYLT7lJsf0mwBo0uaYJNxvCPrK647bp/5DFAnT99LC0SS5HOQRgIPXL5Lp
+         /ru6VdHBgoCKRpfgr5w7ZerFgODveCjQr8T48vx1+ndOHKaamFnnyZp+kh6fiztNzYMZ
+         Pv1JoNEj2lMLvjHUTmM22RanC+9ZlN03sEdW9R844JIzM8boE0ImYhw1M1I8ackOvu0X
+         ax7w==
+X-Forwarded-Encrypted: i=1; AL+hErGknn4u/Vtj3pqEqgKA/7FuOA4qLkBYPbODW81pN8y+L9gdJBmcsvKZgFt+uzsLizOCDZmROA==@lists.infradead.org
+X-Gm-Message-State: APuU4Z9zBbyBwJv/hxb7j51fEXW4APqPT8nVR1v9an/lemCKQf2BjQoS
+	s7ikpFn3DE+farzST83ffexXU9iUEDa53v4Wi6sR31LzHkx5ji17DxDWFJcOQQCihR9mHef8MHM
+	naJgSp4YttQRFYbg=
+X-Gm-Gg: AYBFou3uuRs4ENQfVVI+hv3x/7YfeuaXWMB88YYfoqdXIS80Jkismocgu41IhxIDSEL
+	VAESqoYWq3FYh5qzo3fIghsrOSxNpshUZ4RkKMcY85eTYiOw1THM3MUISH0gwoXmqmQj3fgwAVN
+	mTIXDF280vxirR/i6JSl1LXLXBepcHzb2+4J7HVvDHZPqkKMDBd/5rIpkyiP9oJMVrxZQJo1n0r
+	fr4zwcYduC9HFca54XRXVvDRKTm9ALD73+Kos/lzQuXvk6gQX1LJcT+jhTDI9yCf9cs5lyZn4Lp
+	p0dyEpJq0j5th6xC+DHO6xEm1h2b1RhnS6bj0V42SwpmjiqDku9+f0QAjNJLe56B+cbRxd1QYXg
+	S+vhcdRVueLNGuLtLiGAKLnlw44tNOGBqX9iXaQuF/nMBVoMdVJgqnC3vQC5MOtgitBuOfjuBAY
+	PcjuBPl1TVafW2433f9PJF02SMfSVSKhHI+jtIoQDYxvYI7nQi4A055HtyzcxhLXR172ywqytbU
+	4RxgqbwpkKiJXoI04WPHOM3iBS+TLCtEOIAFzmeECjBWUhK9Oimt5rMpyzF63tEhzhHmcbMniOh
+	OK81xbIYB1l7MLFIvPnbCPLk3D9Y8ewCb1aedOeiLMIYSwKrUEZ9pyUM2N5sURkn2Y/9dtyM6az
+	SP6BfB/mo3WtF1P5K+8WWfLqrDTYvL22UfSXmukoQKFDi/qy1cWW/P87tvNLXJ7cvjDuYQ1shQE
+	z8rHC1dj1y8pewfncd7xY5yz3YYX/+VZSY5/na3qAViBZ2f2+rmXll
+X-Received: by 2002:a17:90b:17c8:b0:3ac:9f24:44be with SMTP id 98e67ed59e1d1-3b182edc482mr1816027a91.29.1794380974284;
+        Tue, 10 Nov 2026 23:09:34 -0800 (PST)
+Received: from localhost ([199.201.64.8])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b17da51f80sm3175523a91.1.2026.11.10.23.09.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Nov 2026 23:09:33 -0800 (PST)
+Date: Tue, 10 Nov 2026 23:09:30 -0800
+From: Chris Down <chris@chrisdown.name>
+To: rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org
+Cc: graf@amazon.com, kexec@lists.infradead.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com
+Subject: [PATCH] kho: Prevent reuse of preserved pages after a reservation
+ failure
+Message-ID: <avQUquBK6cO6tUUI@chrisdown.name>
 X-Archived-By: <archiver.kernel.org>
-Mime-Version: 1.0
-References: <20261110050202.529473-1-tarunsahu@google.com> <20261110050202.529473-7-tarunsahu@google.com>
- <179432329215.2329176.14453669404153142360.b4-review@b4>
-Message-ID: <9huzv763q3ll.fsf@tarunix.c.googlers.com>
-Subject: Re: [PATCH v4 06/19] kho: kexec_metadata: Add the feature header
-From: tarunsahu@google.com
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>, robin.murphy@arm.com, 
-	maz@kernel.org, will@kernel.org, David Matlack <dmatlack@google.com>, 
-	Alexander Graf <graf@amazon.com>, seanjc@google.com, jgg@nvidia.com, loganodell@google.com, 
-	arnd@arndb.de, dwmw2@infradead.org, baolu.lu@linux.intel.com, 
-	Bjorn Helgaas <bhelgaas@google.com>, oupton@kernel.org, alex@shazbot.org, 
-	gle.com@google.com, pbonzini@redhat.com, 
-	Andrew Morton <akpm@linux-foundation.org>, kevin.tian@intel.com, joro@8bytes.org, 
-	kvmarm@lists.linux.dev, linux-pci@vger.kernel.org, 
-	Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org, kvm@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	skhawaja@google.com, sagis@google.com, linux-arch@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/2.3.3 (9073d26d) (2026-06-12)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261110_223346_350705_F640078A 
-X-CRM114-Status: GOOD (  21.29  )
-X-Spam-Score: -9.5 (---------)
+X-CRM114-CacheID: sfid-20261110_230935_290935_C8F47C53 
+X-CRM114-Status: GOOD (  16.34  )
+X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,106 +100,66 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-23.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=4.0.1
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Pasha Tatashin <pasha.tatashin@soleen.com> writes:
+kho_preserved_memory_reserve() reserves each range of preserved memory
+in memblock and marks it noinit, but ignores both return values. Either
+can fail when memblock has to grow its reserved array and can't find
+room, which at this point in boot it may only take from KHO bootmem.
+The boot then goes on as if the range were reserved, and two things
+can follow:
 
->> The kexec metadata subtree currently uses a monolithic u32 version field
->> to identify the metadata structure layout. Any change to the structure,
->> even an optional additive field, requires incrementing the version and
->> breaks compatibility between adjacent kernels.
->> 
->> Replace the u32 version field in struct kho_kexec_metadata with
->> struct kho_ser_hdr using DECLARE_KHO_SER. Later fields can be appended
->> under new feature indices without breaking compatibility across kexec.
->> Also make the 3-byte padding hole between previous_release and kexec_count
->> explicit as reserved[3].
->> 
->> During deserialization, validate the blob size against the header size
->> and reject unknown required features. A legacy v1 metadata blob is
->> ignored with a warning.
->> 
->> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
->>
->> diff --git a/include/linux/kho/abi/kexec_metadata.h b/include/linux/kho/abi/kexec_metadata.h
->> index e9e3f7e38a7c..316b3e5ad01b 100644
->> --- a/include/linux/kho/abi/kexec_metadata.h
->> +++ b/include/linux/kho/abi/kexec_metadata.h
->> @@ -18,28 +18,31 @@
->>  #ifndef _LINUX_KHO_ABI_KEXEC_METADATA_H
->>  #define _LINUX_KHO_ABI_KEXEC_METADATA_H
->>  
->> +#include <linux/build_bug.h>
->> +#include <linux/kho/abi/feature.h>
->>  #include <linux/types.h>
->>  #include <linux/utsname.h>
->>  
->> -#define KHO_KEXEC_METADATA_VERSION 1
->> -
->>  /**
->>   * struct kho_kexec_metadata - Kexec metadata passed between kernels
->> - * @version: ABI version of this struct (must be first field)
->>   * @previous_release: Kernel version string that initiated the kexec
->> + * @reserved: Reserved for structure alignment; must be zero
->>   * @kexec_count: Number of kexec boots since last cold boot
->>   *
->> - * This structure is preserved across kexec and allows the new kernel to
->> + * This structure is preserved across kexec and allows the target kernel to
->>   * identify which kernel it was booted from and how many kexec reboots
->> - * have occurred.
->> + * have occurred. Preceded by &struct kho_ser_hdr.
->>   *
->>   * __NEW_UTS_LEN is part of uABI, so it safe to use it in here.
->>   */
->>  struct kho_kexec_metadata {
->> -	u32 version;
->>  	char previous_release[__NEW_UTS_LEN + 1];
->> +	u8 reserved[3];
->>  	u32 kexec_count;
->> -} __packed;
->> +} __aligned(8);
->
-> Why __packed was not removed in the first commit? __aligned(8) should 
-> not be needed, given that it must follow DECLARE_KHO_SER which is 8-byte 
-> aligned.
+- If the reservation failed, memblock_free_all() hands the range to the
+  page allocator with the previous kernel's data still in it, while its
+  KHO user still expects to restore it. A memfd preserved through LUO
+  can then get back pages that belong to someone else. Oh dear!
+- If only the noinit marking failed, the struct pages can be
+  initialised later, wiping the KHO magic, so restoring the range fails.
 
-because this structure is not naturally aligned and we have o add
-reserved[3] to make it aligned. So it will be ABI breakage. Adding
-the KHO_SER_HDR is also ABI breakage, So I kept both changes in the same patch.
+Dropping the handover at this point isn't safe either. reserve_mem=
+revives its regions from the handover before mm_core_init(), and
+relies on this walk to reserve them.
 
-For the __aligned(8) part, yes we can remove it, I will update it.
+Carrying on could hand out private data, so let's panic if either call
+fails.
 
->
->> +
->> +/* Register kho_kexec_metadata with KHO serialization accessors */
-> here and in all other places, please remove this comment.
->
-Got it.
+Fixes: fc33e4b44b27 ("kexec: enable KHO support for memory preservation")
+Signed-off-by: Chris Down <chris@chrisdown.name>
+---
+ kernel/liveupdate/kexec_handover.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-~Tarun
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index eeec298aa9d6..0faa21ebb0cf 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -629,9 +629,14 @@ static int __init kho_preserved_memory_reserve(unsigned long key, void *data)
+ 	sz = 1UL << (order + PAGE_SHIFT);
+ 	page = kho_get_preserved_page(phys, order);
+ 
+-	/* Reserve the memory preserved in KHO in memblock */
+-	memblock_reserve(phys, sz);
+-	memblock_reserved_mark_noinit(phys, sz);
++	/*
++	 * Reserve the memory preserved in KHO in memblock. It's too late to
++	 * drop the handover if that fails: reserve_mem may already have revived
++	 * regions from it.
++	 */
++	if (memblock_reserve(phys, sz) || memblock_reserved_mark_noinit(phys, sz))
++		panic("KHO: failed to reserve preserved memory %pa+%#llx\n",
++		      &phys, sz);
+ 	info.magic = KHO_PAGE_MAGIC;
+ 	info.order = order;
+ 	page->private = info.page_private;
 
->> +DECLARE_KHO_SER(kho_kexec_metadata, 72, 0, 0);
->>  
->>  #define KHO_METADATA_NODE_NAME "kexec-metadata"
->>  
->> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
->> index 6f1f55fe3181..2edd772bb6d3 100644
->> --- a/kernel/liveupdate/kexec_handover.c
->> +++ b/kernel/liveupdate/kexec_handover.c
->> @@ -1740,6 +1740,7 @@ static __init int kho_out_fdt_setup(void)
->>  
->>  static void __init kho_in_kexec_metadata(void)
->>  {
->> +	DECLARE_KHO_SER_HDR(kho_kexec_metadata, *fhdr);
->
-> Please don't do this, use kho_ser_hdr directly.
->
-> -- 
-> Pasha
+base-commit: a0dc8eddbfdb6dd9c5c2b70eb66ab49cb1978425
+-- 
+2.54.0
+
 
