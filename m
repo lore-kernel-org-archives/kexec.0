@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106B260A2601
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309C160A2604
 	for <kexec@archiver.kernel.org>; Wed, 11 Nov 2026 06:16:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=O4+qryJa;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Wc+xg9hT
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=MNsQTpha;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KM9itt4L
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,51 +14,51 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=jmri/3hIXC1hkulfS1LbY1DwiOs1O/U8k06v0LuYAfU=; b=O4+qryJaQGCHlHpf084WlHZuFj
-	qyNMjIxz0mZ5hOqMxIsQB4EQP8VHVK32PDYoisKUZMiz3PcNJt92fQFwmZr/FKnX61NlwJRWKAQ5S
-	zgQsCwF2S3N+0xvds/tKmCILLItC8xT5dwAVOabIc6KAGPKLghagHdyzZ4WfCer1v9j4tPWtRE4HL
-	fspJt1ooHOiTJbQWvfgqvNxBjxvfQYzStFFmHXQsimOjAIPRGObNiXd9eXksyEEybozhqaePk/6Ip
-	6EJqdJ+ZCXITQRDeNMwsd2KdHI05ps0gpnfw9pULr1BJwr5ZLWQsGoemkQRj+DV6mBpnY9LOe571A
-	mldqf2zg==;
+	bh=JERGqFws7qn21ShXzjckTRjjEX/5sLFCO5JaN4J8wCg=; b=MNsQTphayuCEoqOSvuCwyF2Oqm
+	D7YFDt3k5uNHAZ0IbzVnZEjTDzRxxW+QHzeWSkeRxQZMKAv0FgJI2Kzrgt+7Ow24KOECyD4CyABAQ
+	BxtQjzachvF2eI6JhvHhnYjJZpWc5Q59EzmTYx8EFedV4jfwH+dYx0wZGry8cCOkEjYzjGCsUIuBr
+	q7n/r0CE6GHLpwtM1pQH0whT2Ez0Q2LKYj56YjMZHYyJXbxp+P5Mqn6gPF/yH1p0Z9rHcRA/QEADX
+	pqZMnO50R/cnOPj5LU5zMerDUhUQPO4Dpt52Y+nNIax1dfTqrZ+YzLuMqQ2DgJF+ynWdy5T0M6yKL
+	TYK2h6lw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xR1dR-00000005j4D-343K;
+	id 1xR1dR-00000005j4Y-3bh4;
 	Wed, 11 Nov 2026 06:16:41 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xR1dO-00000005j0g-2xqn
+	id 1xR1dQ-00000005j2t-2l4w
 	for kexec@lists.infradead.org;
-	Wed, 11 Nov 2026 06:16:38 +0000
+	Wed, 11 Nov 2026 06:16:40 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 27B3B61CD0;
+	by tor.source.kernel.org (Postfix) with ESMTP id 1BC4F612BF;
+	Wed, 11 Nov 2026 06:16:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AD181F00A06;
 	Wed, 11 Nov 2026 06:16:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91BDA1F00A06;
-	Wed, 11 Nov 2026 06:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794377797;
-	bh=jmri/3hIXC1hkulfS1LbY1DwiOs1O/U8k06v0LuYAfU=;
+	s=k20260515; t=1794377799;
+	bh=JERGqFws7qn21ShXzjckTRjjEX/5sLFCO5JaN4J8wCg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Wc+xg9hT5y5WkcAg7unw4Vgvrn/WaES8C73CCGxuxj62uYfJ1ys2T7cn5dPN8lKzE
-	 xEtbc3Fb2BGBrqVohk2iEVY+3ybuyvy9FWLfn51iM6XNXvJo9WbaF2imxSV/wCg5IZ
-	 8z2eQoaHPSi26C1lVj1HXoeUOWo6JdJQgdDeaDEHuWe3sLEynXVF0A8wd2Hopo/Jf2
-	 Js4nOEdzoS20+4EeegSi1oTgmOMaVgLBBabJwy9g4QcSuI+mHY1w2ALylp6hGgulzu
-	 kE5e/Lgc923grLjIIX5wGwxLnJbCx9hDh09o8twSuIsbp4HOvqv1zzRbOr+aRB8aSg
-	 VZo29WtpQkF3Q==
-Message-ID: <sashiko-outbox-208409@kernel.org>
+	b=KM9itt4Li+SU8W4ZUm6NUV+NH2YtdQgT3L8jEt3MPeFsmYirWnAZopelOz8bCf0pG
+	 iqHmWS6HgsFtY4lfE3JD4l2pJYVw6hUULXKp5CDhwbs7ZOhfCpPygc8p4KO5K8zoas
+	 99HMJRArDHIopB+FH5oO56JwJhLZa27s+v24ZNo5LSY8P15evCwp0ZxExmcxPxGGAo
+	 7uq/JhmST7nQc7BgHVRrAgK1UAJkuK9Rzz9fc71C36mrNYsxsoqnjWWRRQrRAuVJH6
+	 a2N0EpdzBd+a5ORwmaxcKZD5QLP5VULR8QvK7Ov6tAc4qp/loTXqiL3hdxb87ru8I0
+	 gQEBag1wDFS9A==
+Message-ID: <sashiko-outbox-208410@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 06/19] kho: kexec_metadata: Add the feature header
+Subject: Re: [PATCH v4 07/19] kho: vmalloc: Add the feature header
 To: "Tarun Sahu" <tarunsahu@google.com>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Mike
  Rapoport" <rppt@kernel.org>, robin.murphy@arm.com, maz@kernel.org, will@kernel.org, "David
  Matlack" <dmatlack@google.com>, "Alexander Graf" <graf@amazon.com>, seanjc@google.com, jgg@nvidia.com, loganodell@google.com, arnd@arndb.de, dwmw2@infradead.org, baolu.lu@linux.intel.com, "Bjorn
  Helgaas" <bhelgaas@google.com>, oupton@kernel.org, alex@shazbot.org, gle.com@google.com, pbonzini@redhat.com, "Andrew
  Morton" <akpm@linux-foundation.org>, kevin.tian@intel.com, joro@8bytes.org
-Cc: linux-pci@vger.kernel.org, "Pratyush Yadav" <pratyush@kernel.org>, kexec@lists.infradead.org, skhawaja@google.com, sagis@google.com
-In-Reply-To: <20261110050202.529473-7-tarunsahu@google.com>
+Cc: kvmarm@lists.linux.dev, linux-pci@vger.kernel.org, "Pratyush Yadav" <pratyush@kernel.org>, kexec@lists.infradead.org, kvm@vger.kernel.org, skhawaja@google.com, sagis@google.com, linux-mm@kvack.org
+In-Reply-To: <20261110050202.529473-8-tarunsahu@google.com>
 References: <20261110050202.529473-1-tarunsahu@google.com>
- <20261110050202.529473-7-tarunsahu@google.com>
+ <20261110050202.529473-8-tarunsahu@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 11 Nov 2026 06:16:36 +0000
+Date: Wed, 11 Nov 2026 06:16:37 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,33 +72,110 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> The kexec metadata subtree currently uses a monolithic u32 version field
-> to identify the metadata structure layout. Any change to the structure,
-> even an optional additive field, requires incrementing the version and
-> breaks compatibility between adjacent kernels.
->=20
-> Replace the u32 version field in struct kho_kexec_metadata with
-> struct kho_ser_hdr using DECLARE_KHO_SER. Later fields can be appended
-> under new feature indices without breaking compatibility across kexec.
-> Also make the 3-byte padding hole between previous_release and kexec_count
-> explicit as reserved[3].
->=20
-> During deserialization, validate the blob size against the header size
-> and reject unknown required features. A legacy v1 metadata blob is
-> ignored with a warning.
->=20
-> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Low] kho: missing DECLARE_KHO_SER_HDR() kdoc transform breaks
+  kernel-doc
+--
 
-Sashiko has reviewed this patch and found no issues.
+commit 5eeff1f169bf967112c6cc25130cc4d0e9b8a838
+Author: Tarun Sahu <tarunsahu@google.com>
+
+kho: vmalloc: Add the feature header
+
+This commit registers struct kho_vmalloc with the KHO serialization feature
+header mechanism and updates kho_preserve_vmalloc(), kho_unpreserve_vmalloc=
+(),
+kho_restore_vmalloc(), and their callers to pass typed feature header
+pointers.
+
+> diff --git a/include/linux/kho/abi/memfd.h b/include/linux/kho/abi/memfd.h
+> index 7b49dd6d7e2af..b0597c4389732 100644
+> --- a/include/linux/kho/abi/memfd.h
+> +++ b/include/linux/kho/abi/memfd.h
+> @@ -80,9 +80,9 @@ static_assert(!IS_ENABLED(CONFIG_64BIT) ||
+>   * @seals:     The seals present on the memfd. The seals are uABI so it =
+is safe
+>   *             to directly use them in the ABI.
+>   * @flags:     Flags for the file. Unused flag bits must be set to 0.
+> - * @nr_folios: Number of folios in the folios array.
+> - * @folios:    Pointer to KHO vmalloc descriptor for the array of
+> - *             struct memfd_luo_folio_ser.
+> + * @nr_folios:   Number of folios in the folios array.
+> + * @folios_fhdr: Pointer to KHO vmalloc descriptor for the array of
+> + *               struct memfd_luo_folio_ser.
+>   */
+>  struct memfd_luo_ser {
+>  	u64 pos;
+> @@ -90,7 +90,7 @@ struct memfd_luo_ser {
+>  	u32 seals;
+>  	u32 flags;
+>  	u64 nr_folios;
+> -	DECLARE_KHOSER_PTR(folios, struct kho_vmalloc *);
+> +	DECLARE_KHOSER_PTR(folios_fhdr, DECLARE_KHO_SER_HDR(kho_vmalloc, *));
+>  };
+> =20
+>  static_assert(sizeof(struct memfd_luo_ser) =3D=3D 40);
+> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec=
+_handover.c
+> index 369ce411928d3..919210d7a91ab 100644
+> --- a/kernel/liveupdate/kexec_handover.c
+> +++ b/kernel/liveupdate/kexec_handover.c
+> @@ -1382,20 +1382,20 @@ static void kho_vmalloc_unpreserve_chunk(struct k=
+ho_vmalloc_chunk *chunk,
+>  /**
+>   * kho_preserve_vmalloc - preserve memory allocated with vmalloc() acros=
+s kexec
+>   * @ptr: pointer to the area in vmalloc address space
+> - * @preservation: placeholder for preservation metadata
+> + * @fhdr:         placeholder for preservation metadata
+>   *
+>   * Instructs KHO to preserve the area in vmalloc address space at @ptr. =
+The
+>   * physical pages mapped at @ptr will be preserved and on successful ret=
+urn
+> - * @preservation will hold the physical address of a structure that desc=
+ribes
+> - * the preservation.
+> + * @fhdr will hold the preservation metadata.
+>   *
+>   * NOTE: The memory allocated with vmalloc_node() variants cannot be rel=
+iably
+>   * restored on the same node
+>   *
+>   * Return: 0 on success, error code on failure
+>   */
+> -int kho_preserve_vmalloc(void *ptr, struct kho_vmalloc *preservation)
+> +int kho_preserve_vmalloc(void *ptr, DECLARE_KHO_SER_HDR(kho_vmalloc, *fh=
+dr))
+
+[Severity: Low]
+Does using DECLARE_KHO_SER_HDR() here and in kho_unpreserve_vmalloc(),
+kho_restore_vmalloc(), and struct memfd_luo_ser break kernel-doc without a
+matching CTransforms rule in tools/lib/python/kdoc/xforms_lists.py?
+
+In kernel/liveupdate/kexec_handover.c, KernelDoc.create_parameter_list()
+replaces the comma inside DECLARE_KHO_SER_HDR(kho_vmalloc, *fhdr) with '#'
+and parses the parameter name as "fhdr)", causing W=3D1 builds and make
+htmldocs to warn about undescribed parameter "fhdr)" and excess parameter
+"fhdr" while emitting malformed ReST c:function directives.  In
+include/linux/kho/abi/memfd.h, CTokenArgs.groups() splits the outer
+DECLARE_KHOSER_PTR() on the inner comma of DECLARE_KHO_SER_HDR(), truncating
+the struct member in the generated documentation to
+"DECLARE_KHO_SER_HDR(kho_vmalloc folios_fhdr;".
+
+Adding (CMatch("DECLARE_KHO_SER_HDR"), r"struct kho_ser_hdr \2") to
+CTransforms.struct_xforms (before DECLARE_KHOSER_PTR) and
+CTransforms.function_xforms in tools/lib/python/kdoc/xforms_lists.py would
+avoid both issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261110050202.5294=
-73-1-tarunsahu@google.com?part=3D6
-
+73-1-tarunsahu@google.com?part=3D7
 
