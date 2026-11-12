@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18667606A327
-	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 00:00:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E90B606A326
+	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 00:31:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=JAdBtG1n;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DFX0oUvX
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=jdu17cy7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=V4YIVq7Z
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,51 +14,56 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=kcLQLePRECmW/OukG6ShdGIS6F+D+KlfSzofEC+RGPM=; b=JAdBtG1nukrF0edsYjyemaLfWy
-	qnBUvuWTwDmsgR7BrLAGezZH/l498ILLM3BFSo1xdj3tNPGh5/E4uUqBr7AfZoKhuNS/Hj2J8ilJv
-	OYeMKQhh7v1Dl82qdbhm7h44V4FofcCAHfDwzA31nhplSuoUNHZUe0ILAeteC308a79Md36z9oCMl
-	P8vVQdX5QTUrcifwHgHaHKEN4d7Kddel/85JmP11kb/Fh69XuqFU+cXRQgnpaZEsawbosukRAfjBw
-	9eqd+8Qj5rWlE+1+9oNcr9d/2sdh2ta25fy+3vzLkSJIE3MI8lUi7VYP9juUCU8Vql77QWi786CMi
-	IeBGcHvw==;
+	bh=SSdv0wyk2rlJG6ciU4dq52+vBtW3OJU7gH3UwSloYGQ=; b=jdu17cy7MYHzEgk3AIKKAXUx7D
+	i5GhX4oepVJUnxQTez3VzeSvsu4u9ioAP+k4152Lw0KnZ1MWoqFG7sNbc2FyWxX5yb8lAlyKtAtEw
+	0ZcqwbE6J8SQyqnvEii3J4WoU1baUcbyR5CQdkgP9vjbY2U4JtNtxruy7tLVYGWPkkNfSbAfbh9Bb
+	dpxs5WC5WKbDksM6+jSfbraWrSw88BU6eIBZ+Z+YtI5rEHaoBaPffpjadsQybGtLEL2u9RWbN/d2b
+	za8Fmz/5D8ZiwbluZ44jwvicGlTng7MuH/sFUL8MhcOfCyROJfdVjSnQ8glj9ii5u4BtOO6vAG7rh
+	GMJmhUpw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRIEf-00000008CaX-2jdZ;
-	Thu, 12 Nov 2026 00:00:13 +0000
+	id 1xRIiY-00000008F13-2zus;
+	Thu, 12 Nov 2026 00:31:06 +0000
 Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRIEd-00000008CaN-3joO
+	id 1xRIiY-00000008F0s-09jM
 	for kexec@lists.infradead.org;
-	Thu, 12 Nov 2026 00:00:12 +0000
+	Thu, 12 Nov 2026 00:31:06 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 4860945D20;
-	Thu, 12 Nov 2026 00:00:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 789FE1F00A05;
-	Thu, 12 Nov 2026 00:00:10 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 6E4ED42282;
+	Thu, 12 Nov 2026 00:31:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A28C1F00A07;
+	Thu, 12 Nov 2026 00:31:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794441611;
-	bh=kcLQLePRECmW/OukG6ShdGIS6F+D+KlfSzofEC+RGPM=;
+	s=k20260515; t=1794443465;
+	bh=SSdv0wyk2rlJG6ciU4dq52+vBtW3OJU7gH3UwSloYGQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DFX0oUvXLH6M1+stGvR8q7GSrkkpuYXh42bB/2n1N00IE83twYwY1D356M8NwNlhL
-	 Pm/BtVQLZ4iPjXkJ3AMktrMFZrm9m0WkR9zjsEI6Wg8Hm9KeKdtx7uZVv4hc9REXB0
-	 Wc/pH0DcGaj3cXfpwlqhKz1PCkPp1Vc2enTJIdURiEOm+XgKtr7Af22xj2kKuUBSn0
-	 CcN6siZxUiqwWCi+gvj9Z93nHQXWjEHPi1ypiPwdWLi2TTfV+h7oOiLWvXvnNvyDmy
-	 Ju7PSlR+k6/YMHYFyu0qnwOV1Kjly8Gwhm6s2kHXeulgUqsVzekpM1Gn7FjDuSeoaj
-	 oaC96YTT9ydrg==
-Message-ID: <sashiko-outbox-209872@kernel.org>
+	b=V4YIVq7ZsbrM79OpFCOHHWRcmFbBUyTBdjQdtd1ASSYdh41PqJKNh8nzdjV0OLO0/
+	 trM0yTlaiBoKIY1IzcyHG7Rm/I7E6cF6383U25zfsA8xNH59h/uxf/kYxaDtlaKcYC
+	 XOF+Sa4E/QlNFblSkAGBl0dz7d+ZBezpQf6doap1aF/cT2l5/qYQjca1pvLjo5INym
+	 bFSISRZai2mMfwyPSlcj9O/FlEh04/evtULO/xcV0/Tm78nmSRBm9OTZeNma6blQgv
+	 Y83nrDpR7heOfmtCRseHiKWSeZnVYDyzy5UBD4GJfJogHQUpSMq1/Lv60Y0qf5kSEr
+	 TA8siNYSUypXw==
+Message-ID: <sashiko-outbox-209933@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] x86/kexec: Type relocate_kernel() to drop __nocfi
-To: "Ben Cressey" <ben@cressey.dev>, "Thomas Gleixner" <tglx@kernel.org>, "Ingo
- Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>, "Dave Hansen" <dave.hansen@linux.intel.com>, "H.
- Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org, "Sami Tolvanen" <samitolvanen@google.com>, "Kees Cook" <kees@kernel.org>, "Nathan
- Chancellor" <nathan@kernel.org>, "Josh Poimboeuf" <jpoimboe@kernel.org>, "Peter
- Zijlstra" <peterz@infradead.org>, kexec@lists.infradead.org, "David
- Woodhouse" <dwmw2@infradead.org>
-In-Reply-To: <20261111-x86-kexec-kcfi-v1-1-b4d41ea14deb@cressey.dev>
-References: <20261111-x86-kexec-kcfi-v1-1-b4d41ea14deb@cressey.dev>
+Subject: Re: [PATCH v4 01/19] liveupdate: Remove the list of steps from
+ luo_preserve_file()'s comment
+To: "David Matlack" <dmatlack@google.com>, kexec@lists.infradead.org
+Cc: "Alexander Graf" <graf@amazon.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Baolin
+ Wang" <baolin.wang@linux.alibaba.com>, "Christian Brauner" <brauner@kernel.org>, "David
+ Hildenbrand" <david@kernel.org>, "Hugh Dickins" <hughd@google.com>, "Jonathan
+ Corbet" <corbet@lwn.net>, "Liam R. Howlett" <liam@infradead.org>, "Lorenzo
+ Stoakes" <ljs@kernel.org>, "Michal Hocko" <mhocko@suse.com>, "Mike Rapoport" <rppt@kernel.org>, "Pasha
+ Tatashin" <pasha.tatashin@soleen.com>, "Pratyush Yadav" <pratyush@kernel.org>, "Randy
+ Dunlap" <rdunlap@infradead.org>, "Samiullah Khawaja" <skhawaja@google.com>, "Shuah
+ Khan" <skhan@linuxfoundation.org>, "Suren Baghdasaryan" <surenb@google.com>, "Vlastimil
+ Babka" <vbabka@kernel.org>
+In-Reply-To: <20261111002358.1842967-2-dmatlack@google.com>
+References: <20261111002358.1842967-1-dmatlack@google.com>
+ <20261111002358.1842967-2-dmatlack@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 00:00:09 +0000
+Date: Thu, 12 Nov 2026 00:31:03 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,36 +83,20 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> machine_kexec() calls the control page's copy of relocate_kernel()
-> indirectly. The routine has no kCFI type, so all of machine_kexec() is
-> exempt since commit 2114796ca041 ("x86/kexec: Mark machine_kexec() with
-> __nocfi"), and ANNOTATE_NOCFI_SYM() silences objtool.
+> Remove the numbered list of steps from the kernel-doc comment of
+> luo_preserve_file(), along with the sentence that introduces it, which
+> repeats the first sentence of the previous paragraph.
 >=20
-> No other call there loses its check today, but one added later would.
-> Review of that mark on arm64 preferred a typed entry, and objected to
-> covering a whole function, on x86 too [1].
+> The list only restates what the code does, and goes stale whenever the
+> code changes.
 >=20
-> Typing the routine was set aside in 2025 as not worth it [2]: a type
-> from the caller cannot catch a prototype that drifts, and
-> machine_kexec() seemed unlikely to follow a stray pointer.
->=20
-> Type the routine with SYM_TYPED_START(), emit an ENDBR only under
-> CONFIG_FINEIBT, whose boot-time rewrite skips a function without one,
-> and drop both exemptions, along with kexec as a valid use in annotate.h.
->=20
-> The check guards only the pointer, and not reliably under plain FineIBT,
-> which checks in the callee with IBT off. A failed check panics or hangs
-> with no CFI report, since load_segments() has reset GS.
->=20
-> Link: https://lore.kernel.org/202609241804.BB23BF10@keescook # [1]
-> Link: https://lore.kernel.org/9c41ab61efc573e3ab5a75b6e4031f81db84a846.ca=
-mel@infradead.org # [2]
-> Signed-off-by: Ben Cressey <ben@cressey.dev>
+> Suggested-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+> Signed-off-by: David Matlack <dmatlack@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111-x86-kexec-=
-kcfi-v1-1-b4d41ea14deb@cressey.dev?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111002358.1842=
+967-1-dmatlack@google.com?part=3D1
 
 
