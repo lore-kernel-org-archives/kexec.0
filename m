@@ -2,64 +2,65 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03F660A380A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A312F60A380C
 	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 11:21:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=tNReqMLW;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=mXVofjlO
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=eySF/7ho;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=oJxqo34b
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=lC+9K7m31nV3/2QQkVjAe/TtZtgo2BwTPtLYsIKTfLw=; b=tNReqMLWzm8+Q1
-	8ADGrwMv8C8JlUoJXcMKI9kuflct2+LGeiTnbnExAJ4h/hBggpXBe3HAbnKNYr/mbpGarZvdhTkvM
-	RkOmlVGyQFXYDJ4UffilCOXoHykOytmvmkj6ve3Q8erg4gpu4Srjuyoozds3Za7SFu0g7uSh3n8Hk
-	CIJAWHH8DbwJQD3vD0cFsQlasLrn/5CtQuxN6S2jlGFqhNUBj9w46ytv5ysGS20StesH6JT9/3XZ5
-	qlddNsOCU+9TE9CwK0VnvpqF9gViJuBMazKvPWeMgXESvS8fXADvk3zBC3/YdHlljF771s2s6Wzzg
-	itUZtMTOjL401VHJ4DfQ==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Unsubscribe-Post:List-Owner;
+	bh=dMQzlaOhC0NJ2jQZCEyAjAtCjP1I71c1fUfbkYQEpNg=; b=eySF/7hoL12ljAnJKALcdpKOz2
+	I77xUtJhtT+q7JO6EdcJy8wbXNj1MQtl3tTM+sl23Hxxcy2VXM57OE1rEdXNtvJx+6M73oyT+LAM5
+	nOwbDlplOyQBFtAw5orHO9FYc3XRWI9jwl5GJXzMH+pn4csgS2EiPo7kRb2b426zI3y/gZlmwecc3
+	R+cmTi690cYigWIxzs7XRvxGAJhM83IdFKaekB3bASu1WCxEM5NzfZzz/FvDoALCErMKx+QJG8utK
+	kZccUcLzyFOUAsOw77DxcGCg/qaWNrzzClLLIuqL/cHis4NZuF9XO7zcPcIBugBWPLrXj1petz+27
+	7jbmmkkw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRSrw-00000009faC-0Jsr;
+	id 1xRSrw-00000009fb3-0uM8;
 	Thu, 12 Nov 2026 11:21:28 +0000
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRSrp-00000009fUj-3ApN
+	id 1xRSrp-00000009fUk-3ACc
 	for kexec@lists.infradead.org;
-	Thu, 12 Nov 2026 11:21:22 +0000
+	Thu, 12 Nov 2026 11:21:25 +0000
 Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AC2iX6W1214888;
-	Thu, 12 Nov 2026 11:21:11 GMT
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AC2jP5n1218154;
+	Thu, 12 Nov 2026 11:21:10 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=lC+9K7m31nV3/2QQk
-	VjAe/TtZtgo2BwTPtLYsIKTfLw=; b=mXVofjlO9pd4fRh4AsqKB4coQxcqBxjwm
-	nyd9hjER9E9nKDEwfCD4YChC8wQ8nAgto3rbqKEu00V5NIzq+CTsNgLRdwSjZibc
-	1ju/rhLxuwUzC0vo+8oQWvutaGEnFWkG8Hp/xemIJt8yOMW58uxrDLthFRq7k3UK
-	b3/9AQrGlUmobneegzK+6CfTB+qA0oOVizeMwRS/DZXOHsHI5z1Dbet7eJCZrO4R
-	zDZDtDlZRfl1QbAXGGfgR8ud7wAxy30lHaL8AI/pgVaWi3H42Y3a5n3g7EMeOqxc
-	u3PEYB9Yt79oittT3NbqEqockfYtper71F558VpLr8ZtEj2HlZc8w==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4hsuntf68m-1
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=dMQzlaOhC0NJ2jQZCEyAjAtCjP1I71c1fUfbkYQEp
+	Ng=; b=oJxqo34b781OhpL+tpyILzK+QUjLHY+82ILMNF5jzzVhd77cKlN8eTHle
+	EkGhrC04kdA+YhkDWR49pihV5QgrR9/ItC148lHlnMFVC62NFBMZmBZ/6Xqz3fEV
+	dZ9j2ZRMVySiB687+FJVNbR7z0p0Lo/O7SC8lwFD3v6wywqG1/rEEVJXY2Rhnrph
+	uT0TrnxEXZpsChswueRQy7behRRJw78C4b1aFrkgJ2jVN7lHg4KupnAXFLrvhPmJ
+	nkBzACiRvVHi5UgIDbcQROFfJhsIhVoTeEYkKmQ11W60l9AMzx2sZPsMOKHIvFRJ
+	MOY1m1AmUPyEmfLLkbIVIGaoTtSsg==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4hsuntf68k-1
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
 	Thu, 12 Nov 2026 11:21:10 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6AC8Mj2O016699;
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6AC8FvOt106626;
 	Thu, 12 Nov 2026 11:21:09 GMT
 Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4hv3328hhf-1
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4hv4nt05mh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 12 Nov 2026 11:21:09 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6ACBL5aN31392250
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6ACBL5Zd31392246
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Thu, 12 Nov 2026 11:21:05 GMT
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D299320043;
+	by IMSVA (Postfix) with ESMTP id 6F4DC2004B;
 	Thu, 12 Nov 2026 11:21:05 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A532B2004B;
+	by IMSVA (Postfix) with ESMTP id 3FAA020043;
 	Thu, 12 Nov 2026 11:21:05 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
 	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -76,33 +77,32 @@ Cc: Ilya Leoshkevich <iii@linux.ibm.com>,
         Jonathan Corbet <corbet@lwn.net>, Usama Arif <usama.arif@linux.dev>,
         linux-s390@vger.kernel.org, kexec@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/8] s390/kdump: Reserve crashkernel CMA memory
-Date: Thu, 12 Nov 2026 12:20:59 +0100
-Message-ID: <20261112112105.1169118-3-zaslonko@linux.ibm.com>
+Subject: [PATCH v1 0/8] s390/kdump: Add crashkernel CMA support
+Date: Thu, 12 Nov 2026 12:20:57 +0100
+Message-ID: <20261112112105.1169118-1-zaslonko@linux.ibm.com>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261112112105.1169118-1-zaslonko@linux.ibm.com>
-References: <20261112112105.1169118-1-zaslonko@linux.ibm.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTEyMDA0NCBTYWx0ZWRfX0I71AEaRk7iv
- 1usCxmc6Z4jZ5ETjnbi1GqGR5QI0lBgMmhTtH78HqGhRnnNYC/UM16aStPctUoWjiItgtdk8V6J
- WMBuq1ShVEKltHWIrCV0HtMTg2Y584v7Z4SdltTw+R4eL32zjwoR1D9YRzscXaJ7L8LDbWUORDa
- KGXnBCGNaQzJ/GbQMxQVW1mmnfPAhZ5k4C3Yneo4buIwvFSF6utShQrPb/Si29lPND4fabr13uL
- Oskntzvqm7h6j2ytYvrzDzXZfUm1XGMcmzPJR8/kkvAH4loXFzEQhMvz30eWGm5yIAxOs1gHhep
- ZAmjDfwL+V8ZQW3jWEpOgP5cSEjqLf8aeD5oC97ZUFxmdZAbobm0ixEHxGFAe2b8Wmf+uxmdJ9z
- o3ycPBcvbRtj+IcUK9cI293lBTmdlRpzUH3Ed3BscurBjv89NpfCJe2nvt8h5FhmkCLfgcgCgsK
- Tld3RMCRgqooLZw+ivw==
-X-Proofpoint-ORIG-GUID: m09EYvVI8TTqkItO4SPbC1RNX4B1OaU6
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMTEyMDA0NCBTYWx0ZWRfX823UQbcbuL29
- I6XVyfok2u4U5/WXyuuymlDmGd4SFAnASGs5Cix08EG9aPVE8VNueYTLU5hXalsFi6WEXwelQW8
- 4Q4a84kReLf+8RJvxsHvoxP8eyMn1c4=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTEyMDA0NCBTYWx0ZWRfXxfg+s85PnR5B
+ Ek8l8Pe0rogT2619BuqATwmnogWLxm3b0nbd38K0s66W1WqsxycVm/wpBXliyJAiLo2RN4t0Yfo
+ 4f3iJmc80+UGo4wR/7Alrh6R7FzcEwFH74s54dEfnhovo3hGgc0RnRHXxKh6padnOn07AbwL1ZX
+ gjl458wXZWUvYBwYsf/XcaKtZVbY6IwKhXd71PylWXo4fppB+CdpgRneTj1a0Hh3A29uybnkYOr
+ fVyE6VqYoOIbITw49kR1tSbmNipHini+lOdTFhpMr4voA6dDbkpDxa2LBHNJbqv0+XynfF48Iuk
+ ruoegp/sJpDMrFM9jDJNLE540yOLLxgGPsOQITViqAjpNvuEdiJuNS33J8Ff4QpMs4SysXRX7qw
+ 8ToSKHVDyQV2W8QHqtZ9Qx9Qi100AxLw+kDG1uvBjdt6s4d87Tr2rj2ARzJVi1scwzMciVHZKj5
+ S9v/4p0U9WiM77Sa3GA==
+X-Proofpoint-ORIG-GUID: EamHxN_Cq4HCc-6renuVCVV03ROzoTwg
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTEyMDA0NCBTYWx0ZWRfXxWMKw6hdfaS5
+ VDEFaFVKXhx3nRSgjyS1wHZpAxTkrfJKtgwjw+iq+p7gHQX+V3SNc5xn2y+Ht7NrDOf/PwdWX/U
+ OxBzXLz2PFyinRChIj4QZWgZ26c0C4k=
 X-Authority-Analysis: v=2.4 cv=euZKXYpX c=1 sm=1 tr=0 ts=6af5a126 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
  a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=J6rJnp0CUSF8FWxXyooA:9
-X-Proofpoint-GUID: m09EYvVI8TTqkItO4SPbC1RNX4B1OaU6
+ a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
+ a=jh6tBn02ksXXyNAtQEMA:9
+X-Proofpoint-GUID: EamHxN_Cq4HCc-6renuVCVV03ROzoTwg
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
  definitions=2026-11-12_01,2026-11-11_03,2025-10-01_01
@@ -112,8 +112,8 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2611040001 definitions=main-2611120044
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261112_032121_825378_F328D5E0 
-X-CRM114-Status: GOOD (  15.51  )
+X-CRM114-CacheID: sfid-20261112_032121_825681_65339F26 
+X-CRM114-Status: GOOD (  28.15  )
 X-Spam-Score: -2.6 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -125,55 +125,127 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-16.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=4.0.1
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Parse the ",cma" suffix of crashkernel= and reserve the CMA memory with
-reserve_crashkernel_cma(). A kdump kernel does not reserve any, it uses
-the CMA memory of the crashed kernel instead.
+This series adds support for crashkernel=size,cma on s390, as already
+available on x86, arm64, riscv and powerpc. In addition to the regular
+crashkernel reservation, CMA memory is reserved. The production kernel
+uses it for movable allocations, and the kdump kernel uses it as
+additional memory. The regular reservation then only needs to hold the
+kdump kernel and its initrd.
 
-Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
----
- arch/s390/kernel/setup.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+On s390 the kdump kernel runs in the crashkernel memory, which is
+swapped to address 0, and its decompressor limits usable memory to the
+crashkernel size. All other memory belongs to the crashed kernel and
+makes up the dump. To use the CMA memory, the kdump kernel has to know
+where it is, and the decompressor has to handle usable memory above
+that limit.
 
-diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-index b60284328fe3..0251bd35954a 100644
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -598,12 +598,12 @@ static void __init reserve_pgtables(void)
- static void __init reserve_crashkernel(void)
- {
- #ifdef CONFIG_CRASH_DUMP
--	unsigned long long crash_base, crash_size;
-+	unsigned long long crash_base, crash_size, cma_size = 0;
- 	phys_addr_t low, high;
- 	int rc;
- 
- 	rc = parse_crashkernel(boot_command_line, ident_map_size,
--			       &crash_size, &crash_base, NULL, NULL, NULL);
-+			       &crash_size, &crash_base, NULL, &cma_size, NULL);
- 
- 	crash_base = ALIGN(crash_base, KEXEC_CRASH_MEM_ALIGN);
- 	crash_size = ALIGN(crash_size, KEXEC_CRASH_MEM_ALIGN);
-@@ -658,6 +658,13 @@ static void __init reserve_crashkernel(void)
- 		crash_size >> 20, crash_base >> 20,
- 		(unsigned long)memblock.memory.total_size >> 20);
- 	os_info_crashkernel_add(crash_base, crash_size);
-+
-+	/*
-+	 * A kdump kernel is handed the CMA ranges of the crashed kernel
-+	 * instead of reserving its own.
-+	 */
-+	if (!oldmem_data.start)
-+		reserve_crashkernel_cma(cma_size);
- #endif
- }
- 
+Patches 1-3 reserve the CMA memory with the generic
+reserve_crashkernel_cma() and store the ranges in the parmarea of a
+kdump kernel loaded with kexec_file_load(). They use 64 of the 72
+padding bytes before the command line, enough for the four ranges the
+generic code reserves at most. Kernel images have this area zeroed, so
+older and newer kernels keep working together, just without CMA memory
+for kdump. kexec_load() needs a matching kexec-tools change, which can
+read the ranges from /sys/kernel/kexec_crash_cma_ranges.
+
+Patch 4 replaces the decompressor's usable memory limit with a small
+sorted array of usable ranges, physmem_info.usable[]. The iterator
+returns their intersection with online memory, and the boot allocator
+walks only these ranges, top-down from ident_map_size. The identity
+mapping, the KASAN shadow and memblock use the same iterator. A normal
+boot has a single range from 0 to ident_map_size and behaves as before.
+
+Patch 5 excludes the CMA ranges from /proc/vmcore. They are kept in
+oldmem_data and added to oldmem_type next to the crashkernel memory, so
+no PT_LOAD headers are created for them.
+
+Patch 6 lets the kdump kernel use the CMA memory. If the parmarea
+contains CMA ranges, the decompressor does not limit ident_map_size to
+the crashkernel size and adds the crashkernel memory and the CMA ranges
+as usable ranges. All other memory up to ident_map_size is treated as
+a memory hole. The CMA memory is then mapped, added to memblock and
+freed to the buddy allocator like any other memory. Boot allocations can
+use it as well: page tables, the KASAN shadow and the initrd.
+
+Patch 7 skips the generic 10 second wait for pending DMA before the
+kdump kernel is started. s390 does not need it, as s390_reset_system()
+terminates all in-flight I/O before the kdump kernel starts. The patch
+makes the timeout overridable in kernel/crash_core.c and sets it to 0
+on s390. It is the only patch in the series that touches generic code.
+
+Patch 8 updates the documentation.
+
+Without ",cma", the behavior is the same as before: the decompressor
+has a single usable range, and a kdump kernel uses only the crashkernel
+memory.
+
+Tested on a 32G z/VM guest and on a 64G LPAR:
+- crashkernel=82M crashkernel=1G,cma: the kdump kernel has ~1.1G of
+  memory and writes a dump that contains all memory except the
+  crashkernel and CMA ranges. With crashkernel=128M alone, the same
+  kdump kernel and initrd run out of memory.
+- 26G of CMA in four ranges (z/VM, with the two generic fixes below):
+  same result.
+- With ",cma", the kdump kernel starts without the 10 second wait.
+- Without ",cma": same memory layout and dump as before.
+
+Two generic crashkernel CMA fixes are queued in kexec-next. This series
+applies without them, but both problems show up on s390:
+- kdump: Give crashkernel CMA areas unique names [1]
+  When the reservation is split into several CMA areas, the CMA sysfs
+  setup fails, and debugfs shows only the first crashkernel area.
+- crash: keep crashkernel CMA pages reserved if activation fails [2]
+  A CMA area that crosses a zone boundary fails to activate, and its
+  pages go to the buddy allocator although the kdump kernel still uses
+  that memory. On s390 ZONE_DMA ends at 2G so this can happen when an
+  area does not fit above 4G.
+
+Usama Arif's hugetlb CMA v2 [3] changes reserve_crashkernel_cma() for
+all architectures. This series needs to adapt the s390 call in patch 2
+if hugetlb CMA patch goes in.
+
+[1] https://lore.kernel.org/lkml/20261106104309.3669583-1-zaslonko@linux.ibm.com/
+[2] https://lore.kernel.org/lkml/20261104145600.3708886-1-usama.arif@linux.dev/
+[3] https://lore.kernel.org/r/20261106165142.2847916-1-usama.arif@linux.dev/
+
+Mikhail Zaslonko (8):
+  s390/kdump: Enable crashkernel CMA infrastructure
+  s390/kdump: Reserve crashkernel CMA memory
+  s390/kexec: Pass crashkernel CMA ranges to the kdump kernel
+  s390/boot: Allow additional usable memory ranges
+  s390/kdump: Exclude crashkernel CMA memory from vmcore
+  s390/kdump: Use crashkernel CMA memory in the kdump kernel
+  s390/kdump: Skip the crashkernel CMA DMA wait
+  Documentation: kdump: Add s390 to crashkernel CMA
+
+ Documentation/admin-guide/kdump/kdump.rst     |  3 +
+ .../admin-guide/kernel-parameters.txt         |  4 +-
+ arch/s390/Kconfig                             |  3 +
+ arch/s390/boot/boot.h                         |  3 +-
+ arch/s390/boot/kaslr.c                        |  4 +-
+ arch/s390/boot/physmem_info.c                 | 65 ++++++++++++++++---
+ arch/s390/boot/startup.c                      | 30 +++++++--
+ arch/s390/boot/vmem.c                         |  7 +-
+ arch/s390/include/asm/crash_reserve.h         | 24 +++++++
+ arch/s390/include/asm/kexec.h                 |  3 +
+ arch/s390/include/asm/physmem_info.h          | 63 +++++++++++++-----
+ arch/s390/include/asm/setup.h                 | 10 ++-
+ arch/s390/kernel/crash_dump.c                 | 48 +++++++++++---
+ arch/s390/kernel/machine_kexec_file.c         |  5 ++
+ arch/s390/kernel/setup.c                      | 17 ++++-
+ kernel/crash_core.c                           |  2 +
+ 16 files changed, 241 insertions(+), 50 deletions(-)
+ create mode 100644 arch/s390/include/asm/crash_reserve.h
+
+
+base-commit: 067c5c24cef23d913b67eaaf71ae67e7169a6620
 -- 
 2.55.0
 
