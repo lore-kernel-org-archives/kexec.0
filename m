@@ -2,56 +2,55 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB3D606A32E
-	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 10:39:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FFB8606A8A7
+	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 10:39:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=qsDwB1Fp;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YiiROZ3c
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ONpel2Ri;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=acKLejRj
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=bWRG9mq5c0zudy8yzUdur6pFFwDbg0IZ+6kaZgluVLQ=; b=qsDwB1FplnMIM5
-	W/PDvvVoRe/mXGT6TJ/wkV9TDiA1PtGRSXKEgKoM9SBxeHLQx4urJosp5zQmhbSc7qzBRDlHobrKe
-	QzwOePrpaoMbJLl/M2fU3S0yxhlrdWX1+F77GizuouExm+XE8bpUvM7A5ZqZkdfukKUI3kyaPkR0t
-	/v8zPfJnlrcZbAPVEF0yUkkr0uKdGQ4/t6KO96Jbt7TJbDSTOY1vnx4pwu2GLN+fuiD4hfoCg++yk
-	uLDqBF516L9KzDgD+Too7X2KOBC73r4gwtWDTDIZmye0kSq1HbmVU4wH9wDGAouAatD+3UhVG+rG7
-	VQ5tJ3D/MVGH3umZWIFQ==;
+	List-Owner; bh=ajyrEiwf6H5409PUsnOKabsSDBay2mJauseGK/YVr4g=; b=ONpel2RiOWT0IP
+	Yix31ySSr3PWk7XquOlpNK5o/0//LMR9E/TOVYVnEYrCvfwX9jY2M3k+vXn8dznsAjO4nRfXlMjUW
+	RjR7+wTs/94SKVcO65exxP/PsCryxGBtQuok8zN7UI5R+rNqjZFCt/BkiQKIl0lDifqnCx7SShq6C
+	mKQ+IQ1EtKVSyuNopBlOp2zh+zLFuMp2+OHa6Eqv4s8mk+RH++bUZV3TEKxf55sQxRRaU/Pk0Fo2f
+	7sizQqWS3fkfgbp/Et1hDd3E4B2gYO5MFk3mCXSgN8YDMQHDz25R/qLtJzCAFrCOKvdsdMxaaRrAM
+	4TGUTuHZog2kyIPTKtSw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRSDA-00000009YMy-2lZv;
-	Thu, 12 Nov 2026 10:39:20 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xRSDC-00000009YP4-3DzB;
+	Thu, 12 Nov 2026 10:39:22 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRSD7-00000009YLB-0abi
+	id 1xRSDB-00000009YNy-2Ho7
 	for kexec@lists.infradead.org;
-	Thu, 12 Nov 2026 10:39:19 +0000
+	Thu, 12 Nov 2026 10:39:21 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 952CD63A5A;
+	by tor.source.kernel.org (Postfix) with ESMTP id 00B8C656E5;
+	Thu, 12 Nov 2026 10:39:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C71081F00A05;
 	Thu, 12 Nov 2026 10:39:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66C061F00A05;
-	Thu, 12 Nov 2026 10:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794479956;
-	bh=bWRG9mq5c0zudy8yzUdur6pFFwDbg0IZ+6kaZgluVLQ=;
+	s=k20260515; t=1794479960;
+	bh=ajyrEiwf6H5409PUsnOKabsSDBay2mJauseGK/YVr4g=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=YiiROZ3cKFwEsmv/gaH+0ZzA+ApxCkE8LSgohRoc7zn2sawnCN40m+wmKbMhtJW+L
-	 prDkmksozAzOpV+vtBhenY31ISzHgT3ZecPebQXQPbINiS5S+0RFXEV8ZYpPExIAvv
-	 bSo7f/aSMTDacB3UwsQivWCoQRjvWpxqqnGC5NrZD5Jmw3PCTy69/qdjHGdIEJZOia
-	 9F07LE+lVOBP9RBWHXNeNRrbaX45LTJp6mdI6lvw+n43VlNjzeU+7UEWBu1NfqyUYj
-	 5VNa3SGPrgd6M88pnXeh98m2BO+9THUqVRGuoD/gnxO+2DDyQm5vPEQwGjnxDE7Vlh
-	 juAuFAxk2t6HA==
+	b=acKLejRjKHzZpGXehTjroNWz7OSm/RDok9tQ6JeCy4clnmS39scEhM3NJqDBR4c1G
+	 /9CqECnzjjW9yG5sRRg4WjnpebCuoK5dcH5kfMYSunGvqi1dHTwEeu8keUWObmMPUx
+	 QS9jaxK3ppkWHarktYytg8jMcnkOoOCKAIkgy61kDAYYEsh0NMduPIb7jeg/+Xa7lo
+	 FMN7Bmslf5mDJfBPNOvu0vaMyLhx6W1fqbpsc37Io4ajwaXaruOz1t46sxq9x+hJ/X
+	 Cq/4j06UJGKwBbJdFF0gv/u26JU7vZIbdL+zlqnptiMZE3069uwTcGna0Gdl5rL+qg
+	 qwTNq+vG79kCw==
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Date: Thu, 12 Nov 2026 12:38:55 +0200
-Subject: [PATCH v3 3/5] kho: skip zero-sized lowmem and global bootmem
- areas
+Date: Thu, 12 Nov 2026 12:38:56 +0200
+Subject: [PATCH v3 4/5] kho: fix bootmem sizing
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261112-kho-bootmem-sizing-v3-3-f0c8d00295d5@kernel.org>
+Message-Id: <20261112-kho-bootmem-sizing-v3-4-f0c8d00295d5@kernel.org>
 References: <20261112-kho-bootmem-sizing-v3-0-f0c8d00295d5@kernel.org>
 In-Reply-To: <20261112-kho-bootmem-sizing-v3-0-f0c8d00295d5@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>, Mike Rapoport <rppt@kernel.org>, 
@@ -85,148 +84,185 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-The lowmem and the global bootmem areas can have zero size, for example
-when none or all of the memory is below ARCH_LOW_ADDRESS_LIMIT, or when
-either of those areas is explicitly set to zero with kho_bootmem=.
+Bootmem areas are sized from overlapping views of the memory reserved in
+memblock:
 
-For a zero-sized allocation memblock returns an address without reserving
-anything, and that empty area is recorded in kho_bootmem. If there is no
-memory below ARCH_LOW_ADDRESS_LIMIT, allocation of the empty lowmem area
-fails and KHO gets disabled.
+* the global area is sized from all reserved memory, including memory
+  allocated on specific nodes, so on NUMA systems everything allocated
+  on a node is accounted in both the global area and the area of that
+  node.
+* per-node sizes are calculated after the lowmem and the global areas
+  are reserved. With CONFIG_NUMA=n all memblock regions belong to node 0,
+  so the lowmem and the global areas are accounted in the size of node 0
+  area and scaled once again.
 
-Extract a helper that checks for zero size and allocates memory from
-memblock, and use it to skip empty areas the same way as empty per-node
-areas are skipped.
+As a result, bootmem is about twice bigger than it should be on NUMA
+systems and about four times bigger with CONFIG_NUMA=n. On small systems
+reservation of the bootmem may fail and then KHO gets disabled.
+
+Make the areas cover separate parts of the reserved memory: the lowmem
+area covers allocations below ARCH_LOW_ADDRESS_LIMIT, per-node areas
+cover allocations above it on each node and the global area covers
+allocations that are not bound to any node. Calculate all sizes before
+reserving any of the areas.
+
+With CONFIG_NUMA=n the global area becomes empty and it is not reserved.
+
+If ARCH_LOW_ADDRESS_LIMIT covers all memory, as may happen on arm64, any
+area can serve lowmem allocations, so don't reserve the lowmem area.
+
+Bootmem sizes in MiB in x86 QEMU VMs, before -> after:
+
+                     CONFIG_NUMA=y     CONFIG_NUMA=n
+  1G,  1 node         176 ->   92       320 ->   80
+  4G,  1 node         508 ->  332      1264 ->  316
+  16G, 2 nodes       1268 ->  704      2944 ->  736
+  32G, 4 nodes       2296 -> 1224      5196 -> 1300
+  64G, 4 nodes       4344 -> 2248      9664 -> 2420
 
 Fixes: 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation helpers")
-Reported-by: Chen Pei <cp0613@linux.alibaba.com>
-Closes: https://lore.kernel.org/all/20261026131851.9942-1-cp0613@linux.alibaba.com
+Reported-by: Kexin Liu <liukexin@kylinos.cn>
+Reported-by: George Guo <guodongtai@kylinos.cn>
+Closes: https://lore.kernel.org/all/20260904025101.9959-1-dongtai.guo@linux.dev
+Reported-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+Closes: https://lore.kernel.org/all/20260922131217.698809-1-sourabhjain@linux.ibm.com
 Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 Reviewed-by: Jose A. Perez de Azpillaga <azpijr@gmail.com>
 Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
 Reviewed-by: Mukesh Pilaniya <mpilaniy@redhat.com>
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- kernel/liveupdate/kexec_handover.c | 66 +++++++++++++++++---------------------
- 1 file changed, 30 insertions(+), 36 deletions(-)
+ kernel/liveupdate/kexec_handover.c | 92 ++++++++++++++++++++++----------------
+ 1 file changed, 54 insertions(+), 38 deletions(-)
 
 diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index df4a972a860da..bbc9e644addc9 100644
+index bbc9e644addc9..e9cefe22a6e6f 100644
 --- a/kernel/liveupdate/kexec_handover.c
 +++ b/kernel/liveupdate/kexec_handover.c
-@@ -835,6 +835,26 @@ static int __init kho_bootmem_cmp(const void *_a, const void *_b)
- 	return cmp_int(a->addr, b->addr);
- }
+@@ -685,6 +685,7 @@ static unsigned int bootmem_scale __initdata = 200;
+ static phys_addr_t bootmem_size_global __initdata;
+ static phys_addr_t bootmem_size_pernode __initdata;
+ static phys_addr_t bootmem_size_lowmem __initdata;
++static phys_addr_t bootmem_size_node[MAX_NUMNODES] __initdata;
  
-+static int __init kho_reserve_bootmem_area(phys_addr_t size, phys_addr_t end,
-+					   int nid)
+ static int __init kho_parse_bootmem_size(char *p)
+ {
+@@ -760,29 +761,58 @@ static int __init kho_parse_bootmem_size(char *p)
+ }
+ early_param("kho_bootmem", kho_parse_bootmem_size);
+ 
++static phys_addr_t __init reserved_mem_size(phys_addr_t limit, int nid)
 +{
-+	phys_addr_t addr;
-+
-+	if (!size)
-+		return 0;
-+
-+	addr = memblock_alloc_range_nid(size, BOOTMEM_ALIGNMENT_BYTES, 0, end,
-+					nid, numa_valid_node(nid));
-+	if (!addr)
-+		return -ENOMEM;
-+
-+	kho_bootmem[kho_bootmem_cnt].addr = addr;
-+	kho_bootmem[kho_bootmem_cnt].size = size;
-+	kho_bootmem_cnt++;
-+
-+	return 0;
++	return memblock_reserved_kern_size(limit, nid) -
++	       memblock_reserved_hugetlb_size(limit, nid);
 +}
 +
- /**
-  * kho_reserve_bootmem - Reserve a contiguous chunk of memory for kexec
-  *
-@@ -846,8 +866,8 @@ static int __init kho_bootmem_cmp(const void *_a, const void *_b)
-  */
- static void __init kho_reserve_bootmem(void)
++static phys_addr_t __init bootmem_scale_size(phys_addr_t size)
++{
++	return size * bootmem_scale / 100;
++}
++
++/*
++ * The lowmem area covers allocations below ARCH_LOW_ADDRESS_LIMIT, per-node
++ * areas cover allocations above it on each node and the global area covers
++ * allocations that are not bound to any node.
++ *
++ * The reserved memory on a node and the total reserved memory include
++ * lowmem, so it is subtracted from both.
++ *
++ * If ARCH_LOW_ADDRESS_LIMIT covers all memory, any area can serve lowmem
++ * allocations and there is no lowmem area.
++ *
++ * All sizes must be calculated before any area is reserved, otherwise the
++ * areas reserved first will be accounted in the sizes of the others.
++ */
+ static void __init bootmem_size_update(void)
  {
--	int nid, i = 0, max_nr_bootmem;
--	phys_addr_t addr, size;
-+	int nid, max_nr_bootmem;
-+	phys_addr_t size;
- 
- 	if (!kho_enable)
- 		return;
-@@ -867,66 +887,40 @@ static void __init kho_reserve_bootmem(void)
- 	 * reserve bootmem area in low memory for lowmem allocations in the
- 	 * next kernel
- 	 */
--	size = bootmem_size_lowmem;
--	addr = memblock_phys_alloc_range(size, BOOTMEM_ALIGNMENT_BYTES, 0,
--					 ARCH_LOW_ADDRESS_LIMIT);
--	if (!addr) {
-+	if (kho_reserve_bootmem_area(bootmem_size_lowmem, ARCH_LOW_ADDRESS_LIMIT,
-+				     NUMA_NO_NODE)) {
- 		pr_err("Failed to reserve lowmem bootmem\n");
- 		goto err_free_bootmem_desc;
+-	/*
+-	 * If fixed sizes are not provided via command line, calculate them now.
+-	 * Remove HugeTLB allocations from it because they never get allocated
+-	 * from bootmem.
+-	 */
++	int nid;
++
+ 	if (bootmem_scale) {
+-		phys_addr_t size;
+-
+-		size = memblock_reserved_kern_size(ARCH_LOW_ADDRESS_LIMIT,
+-						   NUMA_NO_NODE);
+-		size -= memblock_reserved_hugetlb_size(ARCH_LOW_ADDRESS_LIMIT,
+-						       NUMA_NO_NODE);
+-		size = size * bootmem_scale / 100;
+-		bootmem_size_lowmem = size;
+-
+-		size = memblock_reserved_kern_size(MEMBLOCK_ALLOC_ANYWHERE,
+-						   NUMA_NO_NODE);
+-		size -= memblock_reserved_hugetlb_size(MEMBLOCK_ALLOC_ANYWHERE,
+-						       NUMA_NO_NODE);
+-		size = size * bootmem_scale / 100 - bootmem_size_lowmem;
+-		bootmem_size_global = size;
++		phys_addr_t low_limit = ARCH_LOW_ADDRESS_LIMIT;
++		phys_addr_t lowmem, global, size;
++
++		if (low_limit >= memblock_end_of_DRAM() - 1)
++			low_limit = 0;
++
++		lowmem = reserved_mem_size(low_limit, NUMA_NO_NODE);
++		global = reserved_mem_size(MEMBLOCK_ALLOC_ANYWHERE, NUMA_NO_NODE);
++		global -= lowmem;
++
++		for_each_node_state(nid, N_MEMORY) {
++			size = reserved_mem_size(MEMBLOCK_ALLOC_ANYWHERE, nid) -
++			       reserved_mem_size(low_limit, nid);
++			bootmem_size_node[nid] = bootmem_scale_size(size);
++			global -= size;
++		}
++
++		bootmem_size_lowmem = bootmem_scale_size(lowmem);
++		bootmem_size_global = bootmem_scale_size(global);
++	} else {
++		for_each_node_state(nid, N_MEMORY)
++			bootmem_size_node[nid] = bootmem_size_pernode;
  	}
  
--	kho_bootmem[i].addr = addr;
--	kho_bootmem[i].size = size;
--	i++;
--
- 	/* reserve large contiguous area for allocations without nid */
--	size = bootmem_size_global;
--	addr = memblock_phys_alloc(size, BOOTMEM_ALIGNMENT_BYTES);
--	if (!addr) {
-+	if (kho_reserve_bootmem_area(bootmem_size_global,
-+				     MEMBLOCK_ALLOC_ACCESSIBLE, NUMA_NO_NODE)) {
- 		pr_err("Failed to reserve global bootmem\n");
- 		goto err_free_bootmem_areas;
- 	}
- 
--	kho_bootmem[i].addr = addr;
--	kho_bootmem[i].size = size;
--	i++;
--
  	/*
- 	 * Loop over nodes that have both memory and are online. Skip
+@@ -791,24 +821,10 @@ static void __init bootmem_size_update(void)
+ 	 */
+ 	bootmem_size_lowmem = round_up(bootmem_size_lowmem, BOOTMEM_ALIGNMENT_BYTES);
+ 	bootmem_size_global = round_up(bootmem_size_global, BOOTMEM_ALIGNMENT_BYTES);
+-}
+-
+-static phys_addr_t __init bootmem_size_node(int nid)
+-{
+-	phys_addr_t size;
+-
+-	if (bootmem_scale) {
+-		size = memblock_reserved_kern_size(MEMBLOCK_ALLOC_ANYWHERE,
+-						   nid);
+-		/* Do not count HugeTLB pages. */
+-		size -= memblock_reserved_hugetlb_size(MEMBLOCK_ALLOC_ANYWHERE,
+-						       nid);
+-		size = size * bootmem_scale / 100;
+-	} else {
+-		size = bootmem_size_pernode;
++	for_each_node_state(nid, N_MEMORY) {
++		bootmem_size_node[nid] = round_up(bootmem_size_node[nid],
++						  BOOTMEM_ALIGNMENT_BYTES);
+ 	}
+-
+-	return round_up(size, BOOTMEM_ALIGNMENT_BYTES);
+ }
+ 
+ bool kho_bootmem_overlap(phys_addr_t phys, size_t size)
+@@ -905,7 +921,7 @@ static void __init kho_reserve_bootmem(void)
  	 * memoryless nodes, as we can not allocate bootmem areas there.
  	 */
  	for_each_node_state(nid, N_MEMORY) {
--		size = bootmem_size_node(nid);
--		if (!size)
--			continue;
--
--		addr = memblock_alloc_range_nid(size, BOOTMEM_ALIGNMENT_BYTES,
--						0, MEMBLOCK_ALLOC_ACCESSIBLE,
--						nid, true);
--		if (!addr) {
-+		if (kho_reserve_bootmem_area(bootmem_size_node(nid),
-+					     MEMBLOCK_ALLOC_ACCESSIBLE, nid)) {
+-		if (kho_reserve_bootmem_area(bootmem_size_node(nid),
++		if (kho_reserve_bootmem_area(bootmem_size_node[nid],
+ 					     MEMBLOCK_ALLOC_ACCESSIBLE, nid)) {
  			pr_err("Failed to reserve nid %d bootmem\n", nid);
  			goto err_free_bootmem_areas;
- 		}
--
--		kho_bootmem[i].addr = addr;
--		kho_bootmem[i].size = size;
--		i++;
- 	}
- 
--	/*
--	 * Nodes that needed no bootmem were skipped, so fewer areas than
--	 * initially estimated may have been reserved.
--	 */
--	kho_bootmem_cnt = i;
--
- 	sort(kho_bootmem, kho_bootmem_cnt, sizeof(*kho_bootmem),
- 	     kho_bootmem_cmp, NULL);
- 
- 	return;
- 
- err_free_bootmem_areas:
--	for (i--; i >= 0; i--)
-+	for (int i = 0; i < kho_bootmem_cnt; i++)
- 		memblock_phys_free(kho_bootmem[i].addr, kho_bootmem[i].size);
-+	kho_bootmem_cnt = 0;
- err_free_bootmem_desc:
- 	memblock_free(kho_bootmem, max_nr_bootmem * sizeof(*kho_bootmem));
- err_disable_kho:
 
 -- 
 2.53.0
