@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F323606A32A
-	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 07:54:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E44606A323
+	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 07:54:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=eMc4sMPw;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Gy753nN7
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=AdzRj7P7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aa3IyC+v
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,50 +14,50 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=IB8SqNd+bfmQlxAZGy2UafWtc6X2soxRHK0a2GmJo3k=; b=eMc4sMPwcyHtefgorHoow0Mz2L
-	ndaDduPolnMnLAP4YGcvQLb3t03rdyAQncmU2KQJ0RDerJK/Ejd6c0TotyCjWNfgtP9S/Fwc0PG3b
-	jIyY4P52KlRHFAxxJqtfNyxZBYGnS8/jwcosIc1x+ZvxT0UpWbAes6shj0ZiHsWVvp1mvt3Qhl3wo
-	PVWPFX6mezF1aynLwK32Q2oZmMXOVLo0CyMav904uxG2MspxrMoDmNRTMeOMjlljat3UfHh0Nmxxv
-	2C79IsLpE2BYUL1mpjnpvXRnH35OVX3FOqQCOHNLwmga27PSWh9vsJp369976++14cWy26t1c3yiN
-	9UF3J53Q==;
+	bh=CuK022ag0VSXsjjw0D8E1fROTE4SPJIw30kO6iQ5eGs=; b=AdzRj7P7XgDZrr8HWzCuMc17dA
+	OC/73e47aavLUpRKZG0O0gqXKHfHThBgjmTO4RnOOVn36gutiUPRcylZay91dIY9s+OWkUZ28qLFL
+	SXgiDG99uDz+pSEJ6+r/NhngdWH6dR5A1lXhQIe8PknTOfT7Y+fKM0EcEs3Q0mr8IKAvwL0C39yKm
+	ymC+wEwTUJdk7XUw1gYPHNCqK1AcyEYBnAMZ6lem/K40W4HMCd1tlDBWHHOG4vExZFTNS7P/8/7r8
+	EAE9CKyy6j3wTrHYI6DfazFvzVlHQaPG75Bf13lkjRlPDR3Vlng4xgheon2cfo4N7ziVyMkx2HfdT
+	gUOra+YQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRPdW-00000008yrg-3EFA;
-	Thu, 12 Nov 2026 07:54:23 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xRPdY-00000008ytx-2FUt;
+	Thu, 12 Nov 2026 07:54:24 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRPdK-00000008ymB-3SY4
+	id 1xRPdP-00000008ynK-3tOJ
 	for kexec@lists.infradead.org;
-	Thu, 12 Nov 2026 07:54:10 +0000
+	Thu, 12 Nov 2026 07:54:16 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 93EF143A51;
-	Thu, 12 Nov 2026 07:54:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECCCE1F00A05;
-	Thu, 12 Nov 2026 07:54:09 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id DF0746380E;
+	Thu, 12 Nov 2026 07:54:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20E7F1F00A05;
+	Thu, 12 Nov 2026 07:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794470050;
-	bh=IB8SqNd+bfmQlxAZGy2UafWtc6X2soxRHK0a2GmJo3k=;
+	s=k20260515; t=1794470054;
+	bh=CuK022ag0VSXsjjw0D8E1fROTE4SPJIw30kO6iQ5eGs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Gy753nN7JmpSsz4BacirPz/11kRWThOELbRDvuvb7INRPTucd2fbkg5Ve83/fAX5s
-	 tlIYXxTZ1tZbxGE1tWJV9ZhMuxptgve580rH6uUuf2+4vOKAraE6NAJjCw97Ym9PcB
-	 +atOcSeqU+3A+PP0KbASjCFSTrFjBMQKsh4+D4aKpGiBfVmQW6Ukmx78+komHxfY9q
-	 Dbx9LHbRI9csm5CeuB0QGfEVVbGTh/8yxbCutWeIdslIkJF7cX8ih/hWiAini4Vr1v
-	 30citSikods76iznJvVJa27Sz6xOshZkKCxoeJbO9gZfXfNDEt+d3xJyl71vgNewP8
-	 thqP8xkpdhuTQ==
-Message-ID: <sashiko-outbox-210640@kernel.org>
+	b=aa3IyC+vWGdSV6Tn5+75ASzvm47kWJMv2UTAFIrP8bjPBXt/Np8joRSHF2FxF+U9M
+	 SI5kvVE26xVrr7TE679b63HpSV+u5xsDbW8zPKRexN8l+tLi+wsEd76894TRrYTJPY
+	 tSb8ignhxSWWiWfowTeA7pQn6KXx/Bc3PIaKgYzwGygldR+HFOAeupt5jbF7v8dnMd
+	 PgzJhJgmd+9Dwkqg81vf29/qOh6SNVCCiLVzYX8G8TnK1V+yR/Zhs5O0Vhu4DpGfAL
+	 /OxfKheiPqmPG6vmjWdHS4wR1Oy8YuD+KjTK6xCy5v9c32pm4pLA2NQo5+6YT4bSB5
+	 2lI4jBO7CSPqg==
+Message-ID: <sashiko-outbox-210644@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 4/9] selftests/liveupdate: Catch incorrect file
- accounting across kexec
+Subject: Re: [PATCH 8/9] liveupdate: Expose the sequence number for
+ consecutive live updates
 To: "Chris Down" <chris@chrisdown.name>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Mike
  Rapoport" <rppt@kernel.org>, "Pratyush Yadav" <pratyush@kernel.org>
 Cc: "Alexander Graf" <graf@amazon.com>, "Baoquan He" <baoquan.he@linux.dev>, "Jonathan
  Corbet" <corbet@lwn.net>, "Shuah Khan" <skhan@linuxfoundation.org>, kexec@lists.infradead.org, kernel-team@meta.com
-In-Reply-To: <d339c0af9c4ee54a5ee8052d5fe59c81302d82a7.1794383544.git.chris@chrisdown.name>
+In-Reply-To: <6f10302874805eccc3960531194c989cdd1588c4.1794383544.git.chris@chrisdown.name>
 References: <cover.1794383544.git.chris@chrisdown.name>
- <d339c0af9c4ee54a5ee8052d5fe59c81302d82a7.1794383544.git.chris@chrisdown.name>
+ <6f10302874805eccc3960531194c989cdd1588c4.1794383544.git.chris@chrisdown.name>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 07:54:09 +0000
+Date: Thu, 12 Nov 2026 07:54:13 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,9 +77,12 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Check that each retrieve is counted while the session is still open.
-> Finishing the session should count its unretrieved file as dropped,
-> while a file in an unclaimed session should still be held.
+> Export LUO's live update sequence number, so that fleet monitoring can
+> compare hosts on their first live update with hosts that have been
+> through several.
+>=20
+> We want this because some bugs, like memory corruption, may only show up
+> after several live updates in a row.
 >=20
 > Signed-off-by: Chris Down <chris@chrisdown.name>
 
@@ -87,6 +90,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1794383544.gi=
-t.chris@chrisdown.name?part=3D4
+t.chris@chrisdown.name?part=3D8
 
 
