@@ -2,63 +2,77 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B276E606A321
-	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 13:08:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F9960A3812
+	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 13:10:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=xrrRNQAu;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JALX64Fd
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=uaH9Uw2N
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
-	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
 	List-Unsubscribe-Post:List-Owner;
-	bh=xvq/3l5gEtz/ZJql/KSJ15Ym1MTTiZiNMKFxG73RPHM=; b=xrrRNQAuLcrZ1nbOtaAnvEQU95
-	+VrN0xvIZpVuJYpdLMcy6/TgtdR8sVpLjuxiQvq6oagbb6pdvLcffQnfPR08O1h0tpSAhZ/Ueqe7/
-	oUHqVn4BfpaYlgbE6WtqymdvOHHzwtXnxCZKkp1mnZi/YJqPvRLHeY6Crc2Q8JxZ8OHy65Hi9jDfD
-	eg6mUsQyB/FAG9HMiIbrIpBwHoXPZs3c11Gxre0UGs9RfCEQZB/RRVuDd/rw42hpRotza1xKZwASc
-	Nx/i1nLU84BEcjZmWdV4htt+9sXa/SbHqO53OI9g7IU/U3Kiivu9qdqtlvzQlHW378ZkJebUubBtU
-	UEa6tXtg==;
+	bh=Ldztcd661H3PvjadDzPRtXuuc2zNJ5aCxMHzlzHgHqc=; b=uaH9Uw2Na0i4d0VZ5LMX5AkPIa
+	vF5CFhFsDZ8RyUCsONDYVX9gyjBNCajvc6eShIvy/4mxcVxz5toYla326+BPVNn6Xv+0WZEH752pH
+	pH6XTJnqBjq4aQjgrZht/LrwoS6oMBx1dxYaJiRom5kGsmyDeqDKsIlA2Gz9MchThigDS+GPbJfug
+	w9IlYIoxrfnhg8/SDx7936kbkQTWa1EyKQswt+U0NbYkOA+OStbZsoaYHHwjkcU2ClWz2KcFbm8aa
+	MSvLSyNGG3nbK8CAuJnZbOTkKZOdREo6Zxq+cxy3EFUAUoNaQ/Nt+r6x+vZTRrrpwIb78tuwwAm7N
+	115zVwZA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRUXV-00000009yFq-1m1q;
-	Thu, 12 Nov 2026 13:08:29 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xRUZo-00000009yNN-2oqW;
+	Thu, 12 Nov 2026 13:10:52 +0000
+Received: from mailgw.kylinos.cn ([124.126.103.232])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRUXU-00000009yFi-16o6
+	id 1xRUZi-00000009yMf-40XW
 	for kexec@lists.infradead.org;
-	Thu, 12 Nov 2026 13:08:28 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id B300362FD0;
-	Thu, 12 Nov 2026 13:08:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D28881F00A05;
-	Thu, 12 Nov 2026 13:08:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794488907;
-	bh=xvq/3l5gEtz/ZJql/KSJ15Ym1MTTiZiNMKFxG73RPHM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=JALX64FdNTB1p/xiJ2wQYrFi1oi+KlBDGUeOoPJDTQSIVn3yJkonlrPSuosT/y/vI
-	 tyh+73Zy85YU6zK86xb2teJ5O+DDJxf86dU1vqCcDRnq3trcj4AJ4rHBbmZajHh8V2
-	 zYxysTPThUWDXHgXMjLJS2zPUv8Nuz70D2kC8zDqqLHxdjciej99XyH9HzwsknGne2
-	 PFsAZiRjZD0aL4hfeuyV9ZQYjSJEWrrJSLGwDtBEyjDry4yDfOyQv7EqEiVre7cNqR
-	 aav1ccNNiFEM/po3koXepX7kvM5EKFDGx9J/05K55t6/0BjR/dW0lEdsmh7DvAFOo1
-	 3CxgQ62bYJnrQ==
-Message-ID: <sashiko-outbox-211145@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 3/3] ima: clear kexec state when replacing file image
-To: =?utf-8?b?SsOpcsOpbXkgSmVhbg==?= <Jeremy.Jean@oss.cyber.gouv.fr>, "Andrew
- Morton" <akpm@linux-foundation.org>, "Baoquan He" <baoquan.he@linux.dev>, "Mike
- Rapoport" <rppt@kernel.org>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Pratyush
- Yadav" <pratyush@kernel.org>, "Mimi Zohar" <zohar@linux.ibm.com>, "Roberto
- Sassu" <roberto.sassu@huawei.com>, "Dmitry Kasatkin" <dmitry.kasatkin@gmail.com>
-Cc: "Eric Snowberg" <eric.snowberg@oracle.com>, linux-security-module@vger.kernel.org, kexec@lists.infradead.org
-In-Reply-To: <20261112125246.2715174-5-Jeremy.Jean@oss.cyber.gouv.fr>
-References: <20261112125246.2715174-2-Jeremy.Jean@oss.cyber.gouv.fr>
- <20261112125246.2715174-5-Jeremy.Jean@oss.cyber.gouv.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 13:08:24 +0000
+	Thu, 12 Nov 2026 13:10:50 +0000
+X-UUID: 7056f720de9a11f19a56ed5b684f684d-20261112
+X-CTIC-Tags: HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_TRUSTED, SRC_TRUSTED, SA_EXISTED, SN_EXISTED, SPF_NOPASS
+	DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD, CIE_GOOD_SPF
+	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.19,REQID:2df4f2ec-27fa-4d88-8fe7-389c3a28cc42,IP:10,
+	URL:0,TC:0,Content:-25,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:10
+X-CID-INFO: VERSION:1.3.19,REQID:2df4f2ec-27fa-4d88-8fe7-389c3a28cc42,IP:10,UR
+	L:0,TC:0,Content:-25,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:10
+X-CID-META: VersionHash:7db8b62,CLOUDID:918fd7e2ba06005f2a779a888a181c05,BulkI
+	D:2611122109330BEIYUWH,BulkQuantity:1,SF:17|19|66|78|102|127|850|865|898,T
+	C:nil,Content:0|15|50|99,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:40,QS:nil,
+	BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 7056f720de9a11f19a56ed5b684f684d-20261112
+X-User: litenglong@kylinos.cn
+Received: from localhost.localdomain [(114.244.3.119)] by mailgw.kylinos.cn
+	(envelope-from <litenglong@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1054885156; Thu, 12 Nov 2026 21:10:31 +0800
+From: litenglong <litenglong@kylinos.cn>
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au,
+	litenglong <litenglong@kylinos.cn>
+Subject: [PATCH] Fix buffer overflow in dump_dmesg_structured and dump_record
+Date: Thu, 12 Nov 2026 21:10:23 +0800
+Message-Id: <20261112131022.1076471-1-litenglong@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+X-Archived-By: <archiver.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261112_051047_334598_28EE3EDB 
+X-CRM114-Status: GOOD (  12.22  )
+X-Spam-Score: -1.9 (-)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -68,116 +82,107 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-16.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
-X-Archived-By: <archiver.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Medium] kexec: skipped ima_kexec_cleanup() with crash flags when
-  !CONFIG_CRASH_DUMP
---
+Both functions accumulate output across multiple dmesg records into a
+fixed-size stack buffer out_buf[OUT_BUF_SIZE] (4096 bytes) via sprintf
+with a cumulative offset that is never reset across loop iterations.
 
-commit bddeb1d64059b337f4ac9e46300e35fd5ccaa690
-Author: J=C3=A9r=C3=A9my Jean <Jeremy.Jean@oss.cyber.gouv.fr>
+The hex-byte escape loops already have a post-write flush guard at each
+character boundary (len >= OUT_BUF_SIZE - 64), which was present in the
+original upstream code. However, two write sites in each function lacked
+any bounds check:
 
-ima: clear kexec state when replacing file image
+  dump_dmesg_structured:
+    - timestamp prefix sprintf:  len += sprintf(out_buf + len, "[%5llu.%06llu] ", ...)
+    - trailing newline:          out_buf[len++] = '\n'
 
-This commit tracks the kimage associated with ima_kexec_buffer and clears
-the IMA kexec state when a normal kexec image is unloaded or replaced via
-kexec_load() or kexec_file_load().
+  dump_record:
+    - timestamp prefix sprintf:  offset += sprintf(out_buf + offset, "[%5llu.%06llu] ", ...)
+    - trailing newline at out::  out_buf[offset++] = '\n'
 
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index 90756dc6339b0..297f4657869bc 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-[ ... ]
-> @@ -114,6 +115,10 @@ static int do_kexec_load(unsigned long entry, unsign=
-ed long nr_segments,
-> =20
->  	if (nr_segments =3D=3D 0) {
->  		/* Uninstall image */
-> +#ifdef CONFIG_IMA_KEXEC
-> +		if (!(flags & KEXEC_ON_CRASH))
-> +			ima_kexec_cleanup();
-> +#endif
->  		kimage_free(xchg(dest_image, NULL));
->  		ret =3D 0;
->  		goto out_unlock;
-> @@ -163,6 +168,12 @@ static int do_kexec_load(unsigned long entry, unsign=
-ed long nr_segments,
->  	if (ret)
->  		goto out;
-> =20
-> +	/* A kexec_load image has no IMA measurement segment. */
-> +#ifdef CONFIG_IMA_KEXEC
-> +	if (!(flags & KEXEC_ON_CRASH))
-> +		ima_kexec_cleanup();
-> +#endif
-> +
->  	/* Install the new kernel and uninstall the old */
->  	image =3D xchg(dest_image, image);
-> =20
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 6c5724aa3c749..866601712e994 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -399,8 +399,13 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int=
-, initrd_fd,
->  #endif
->  		dest_image =3D &kexec_image;
-> =20
-> -	if (flags & KEXEC_FILE_UNLOAD)
-> +	if (flags & KEXEC_FILE_UNLOAD) {
-> +#ifdef CONFIG_IMA_KEXEC
-> +		if (image_type =3D=3D KEXEC_TYPE_DEFAULT)
-> +			ima_kexec_cleanup();
-> +#endif
->  		goto exchange;
-> +	}
+On a long log record, the cumulative offset can approach OUT_BUF_SIZE.
+Without a guard before these writes, the timestamp sprintf (up to ~30
+bytes) or the newline byte can write past out_buf[OUT_BUF_SIZE - 1],
+causing a stack buffer overflow.
 
-[Severity: Medium]
-Can these checks skip ima_kexec_cleanup() while still freeing kexec_image
-when CONFIG_CRASH_DUMP is disabled?
+Fix: add a flush-and-reset guard before each of the four unprotected
+write sites, using the same threshold (OUT_BUF_SIZE - 64) as the
+existing loop guards. When the buffer is nearly full, the accumulated
+output is emitted via the handler callback and the offset resets to
+zero, so subsequent writes start from the beginning of the buffer.
 
-In both do_kexec_load() and SYSCALL_DEFINE5(kexec_file_load), selecting
-kexec_crash_image is guarded by CONFIG_CRASH_DUMP:
+The 64-byte margin is sufficient: the timestamp prefix is at most ~30
+bytes, and the newline is a single byte. The loop guards continue to
+protect the character-by-character escape writes as before.
 
-kernel/kexec.c:do_kexec_load() {
-    ...
-#ifdef CONFIG_CRASH_DUMP
-	if (flags & KEXEC_ON_CRASH) {
-		dest_image =3D &kexec_crash_image;
-		if (kexec_crash_image)
-			arch_kexec_unprotect_crashkres();
-	} else
-#endif
-		dest_image =3D &kexec_image;
-    ...
-}
+Signed-off-by: litenglong <litenglong@kylinos.cn>
+---
+ util_lib/elf_info.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-When CONFIG_IMA_KEXEC=3Dy and CONFIG_CRASH_DUMP=3Dn, calling kexec_load() w=
-ith
-KEXEC_ON_CRASH or kexec_file_load() with KEXEC_FILE_UNLOAD |
-KEXEC_FILE_ON_CRASH sets dest_image to &kexec_image and frees the active
-kexec_image, but the !(flags & KEXEC_ON_CRASH) and image_type =3D=3D
-KEXEC_TYPE_DEFAULT checks skip ima_kexec_cleanup().  That leaves
-ima_kexec_buffer mapped to freed pages and ima_kexec_image dangling; if a
-subsequent load allocates a new struct kimage at the same slab address,
-ima_update_kexec_buffer() sees ima_kexec_image =3D=3D kexec_image and writes
-the measurement list into the freed pages (use-after-free).
+diff --git a/util_lib/elf_info.c b/util_lib/elf_info.c
+index cfbbea3..17588d7 100644
+--- a/util_lib/elf_info.c
++++ b/util_lib/elf_info.c
+@@ -888,6 +888,12 @@ static void dump_dmesg_structured(int fd, void (*handler)(char*, unsigned int))
+ 		imaxdiv_sec = imaxdiv(ts_nsec, 1000000000);
+ 		imaxdiv_usec = imaxdiv(imaxdiv_sec.rem, 1000);
+ 
++		if (len >= OUT_BUF_SIZE - 64) {
++			if (handler)
++				handler(out_buf, len);
++			len = 0;
++		}
++
+ 		len += sprintf(out_buf + len, "[%5llu.%06llu] ",
+ 			(long long unsigned int)imaxdiv_sec.quot,
+ 			(long long unsigned int)imaxdiv_usec.quot);
+@@ -922,6 +928,11 @@ static void dump_dmesg_structured(int fd, void (*handler)(char*, unsigned int))
+ 			}
+ 		}
+ 
++		if (len >= OUT_BUF_SIZE - 1) {
++			if (handler)
++				handler(out_buf, len);
++			len = 0;
++		}
+ 		out_buf[len++] = '\n';
+ 		free(msg);
+ 		/*
+@@ -1124,6 +1135,12 @@ static void dump_record(int fd, struct prb_map *m, unsigned long id,
+ 	imaxdiv_sec = imaxdiv(ts_nsec, 1000000000);
+ 	imaxdiv_usec = imaxdiv(imaxdiv_sec.rem, 1000);
+ 
++	if (offset >= OUT_BUF_SIZE - 64) {
++		if (handler)
++			handler(out_buf, offset);
++		offset = 0;
++	}
++
+ 	offset += sprintf(out_buf + offset, "[%5llu.%06llu] ",
+ 		(long long unsigned int)imaxdiv_sec.quot,
+ 		(long long unsigned int)imaxdiv_usec.quot);
+@@ -1169,6 +1186,11 @@ static void dump_record(int fd, struct prb_map *m, unsigned long id,
+ 		}
+ 	}
+ out:
++	if (offset >= OUT_BUF_SIZE - 1) {
++		if (handler)
++			handler(out_buf, offset);
++		offset = 0;
++	}
+ 	out_buf[offset++] = '\n';
+ 
+ 	if (offset && handler)
+-- 
+2.25.1
 
-Checking dest_image =3D=3D &kexec_image instead would match the image actua=
-lly
-being replaced or unloaded.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261112125246.2715=
-174-2-Jeremy.Jean@oss.cyber.gouv.fr?part=3D3
 
