@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDFA9606A31C
-	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 00:31:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF54606A326
+	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 00:31:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=zF0AB5i8;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Yqb5GSF6
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=OPNGIYQA;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=J1SwE/Rd
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=XLcmW6k9cUsAndVOmZ2UJBXIC6qWQDPqUdlwIwcky4A=; b=zF0AB5i8l2vz+KOFOMe8IBSbOD
-	yNU2/txzCY8fz/qv2ihtD/gFevchwJvu7Dy9w4GXize8MTmsErZbAQOSpSuPwnWxwrVn9ymK5GK+F
-	S5HNGQ5ij+533LnzM3e318WFDeDJTXz2nT5RLGC9SXZf9lg/Pf63PyTvxnVamtr8KRBTix5nejm55
-	ejUeb++XUYBaEgO83eP2U5zj0G2zD4oCw0pqdBKFwwu5m6/LOijNn3CS4tOtgxZ0kjhj9bKLXswgl
-	cpXU1JZ+/p716nUUgVwlefnNm7BMBG4EHvBHChiRmMIoX4Ibwf7z3Rj90D5KZjTr/FtUWpHohAIpy
-	NWh1o+5A==;
+	bh=j3xvoEb3g3glJg28RtEPef6QMPui8LetZrRu5/jxIUo=; b=OPNGIYQA2KJytbX6akFHEwJMzN
+	rKIN2S3X0bHIxzTFRnIFl4MlYwMAsswqGTIYpTx6smVjqUWQ3qfp9wGHSvPzCpz5v+SV5OxTPOZSY
+	U2sH46fso+SdYjcV/blQ3AaU8TiYCPbSZe5VLzb1u39dlNure8zXh+SBtPy+IOhL3ndCnJedN8E0T
+	2AIT2QvbU+wXy/XrVXceIzMZog/lVymH6gXpABTALKMDFVGG2UHb43JANF4RoQx3KMUz9LGZJNrt0
+	Z9gUJI+7yY0wOyu3TVOAS5ZKuDlP0ftJtRYJSlqVlypE9s2x/0Wc/LYWfPBvb+f992hOSpxMqagi7
+	WDJWzpVA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRIip-00000008FKc-2GOc;
-	Thu, 12 Nov 2026 00:31:23 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xRIir-00000008FNE-2l15;
+	Thu, 12 Nov 2026 00:31:25 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRIil-00000008FEm-25ho
+	id 1xRIim-00000008FGj-35pG
 	for kexec@lists.infradead.org;
-	Thu, 12 Nov 2026 00:31:19 +0000
+	Thu, 12 Nov 2026 00:31:20 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id DDE9F632AB;
-	Thu, 12 Nov 2026 00:31:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7D001F00A09;
-	Thu, 12 Nov 2026 00:31:17 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 2CCE040415;
+	Thu, 12 Nov 2026 00:31:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D2541F00A05;
+	Thu, 12 Nov 2026 00:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794443478;
-	bh=XLcmW6k9cUsAndVOmZ2UJBXIC6qWQDPqUdlwIwcky4A=;
+	s=k20260515; t=1794443480;
+	bh=j3xvoEb3g3glJg28RtEPef6QMPui8LetZrRu5/jxIUo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Yqb5GSF6mND2jfWgqMEHZqeEI82fVv+MCY1JHtzShd2YqoM9OIsVqyXKombyXBfWq
-	 QccWTQ5suvFmCecAlcTXMajnOp8saAiFSFXyhss5hPd2RUmf6BrkGodyO9XhW0b/Ay
-	 7cveO/Xnt2RyjiaU3/sDGZHwxlrKcd0NZ4qM4czJqwlqQiLVdGkAx0S5eEVmLbbvK/
-	 5BpnhyF36OFqkieC9R3LUfnDOttaK1Zkn2ZiXnD1hjzVYtxLpIVpa0B0/bNntlPRu3
-	 ndlC1Zwm+8XHTQhKwf3trSrOpp752+FqH8mcnPUTDui+lwRRLFl1GcKVzL8IFTouad
-	 ipahfxtKONA1A==
-Message-ID: <sashiko-outbox-209942@kernel.org>
+	b=J1SwE/RdYpFB3wo9AJ/veY2fBXojCQERhtI5UGfuckzG3gQ/qBRjoubKPnDOGrTcG
+	 +PfDv0QVayQt6VJGJnPq8PMBThW+F6D+sRM47VYiLIJ4zGilXxCuuMGxMBdSbdbqi+
+	 GgutByUWj1zom7ms/VUEaG/MUuMfRfYAbU29hIn56EYAflKCYOeIcD6MbcHSzMGjZM
+	 DX0RwKUSTGZbMWt2P1wZUv7MLRjw+xQJnqa60unCUcRD3EppW07oFECm2QAZuMPpvz
+	 22JVEtbYFJi/fZ2+yJMAudV5nIGUbVb22CTDOGy9UHoO/tMyGKDlWJpvnXigQmRR4y
+	 AG2chZxSBN24Q==
+Message-ID: <sashiko-outbox-209943@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 10/19] mm/shmem_luo: Don't make early retrieve
- failures permanent
+Subject: Re: [PATCH v4 11/19] mm/shmem_luo: Require permission to preserve a
+ file
 To: "David Matlack" <dmatlack@google.com>, kexec@lists.infradead.org
 Cc: "Alexander Graf" <graf@amazon.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Baolin
  Wang" <baolin.wang@linux.alibaba.com>, "Christian Brauner" <brauner@kernel.org>, "David
@@ -58,12 +58,12 @@ Cc: "Alexander Graf" <graf@amazon.com>, "Andrew Morton" <akpm@linux-foundation.o
  Dunlap" <rdunlap@infradead.org>, "Samiullah Khawaja" <skhawaja@google.com>, "Shuah
  Khan" <skhan@linuxfoundation.org>, "Suren Baghdasaryan" <surenb@google.com>, "Vlastimil
  Babka" <vbabka@kernel.org>
-In-Reply-To: <20261111002358.1842967-11-dmatlack@google.com>
+In-Reply-To: <20261111002358.1842967-12-dmatlack@google.com>
 References: <20261111002358.1842967-1-dmatlack@google.com>
- <20261111002358.1842967-11-dmatlack@google.com>
+ <20261111002358.1842967-12-dmatlack@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 00:31:17 +0000
+Date: Thu, 12 Nov 2026 00:31:18 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,18 +83,29 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Mark failures in shmem_luo_retrieve() before it starts restoring the
-> folios as retryable. If no retrieve succeeds, finish() frees the
-> preserved state, like it does for a file that was never retrieved.
+> Require the file to be opened for reading and the caller to have
+> permission to write to it in order to preserve it. Also let the owner
+> preserve a file that is immutable or on a read-only superblock, and
+> reject append-only files.
 >=20
-> Until the folios are restored, nothing has consumed the preserved state.
-> Leave it for another retrieve, which may succeed, e.g. if
-> memfd_alloc_file() failed with -ENOMEM.
+> While a file is preserved, its size is frozen for all of its users:
+> truncating it, fallocate() and writes past its end fail with -EPERM.
+> Today any process with an fd for a memfd can do that, even one that was
+> only given a read-only fd. Requiring write permission limits this to
+> callers that could truncate the file themselves. A file descriptor
+> opened for writing isn't required, since that would rule out preserving
+> a running binary, which can't be opened for writing. Only the permission
+> of the inode is checked, so the mount doesn't need to be writable
+> either. The size of an immutable file or of a file on a read-only
+> superblock can't change anyway, so its owner may also preserve it.
+> Append-only files are rejected, since their writers can only append to
+> them, and freezing the size would stop all writes.
 >=20
-> The exception is a preserved file that this kernel can't restore, e.g.
-> because it has seals that this kernel doesn't support. Retrying can't
-> help, so keep that failure permanent, so that every later retrieve
-> returns the same error.
+> The retrieved file can be read, so also require the file to be opened
+> for reading. Otherwise a caller with a write-only fd could preserve the
+> file to read its contents.
+>=20
+> Document the frozen size and the permission requirements.
 >=20
 > Signed-off-by: David Matlack <dmatlack@google.com>
 
@@ -102,6 +113,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111002358.1842=
-967-1-dmatlack@google.com?part=3D10
+967-1-dmatlack@google.com?part=3D11
 
 
