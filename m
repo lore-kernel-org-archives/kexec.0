@@ -2,49 +2,49 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD4E60A2606
-	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 13:34:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1209E60A2629
+	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 13:34:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=WzCnPozm;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=0/VHn0iE
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=GHKjEIFN;
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=WXo9wn0N
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
-	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
-	:Subject:To:From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:To:From:
+	Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
 	List-Unsubscribe-Post:List-Owner;
-	bh=IIjwTcz15PyMsksQJ/ixjXOV4ou2zq7XqHr0HTbVuxU=; b=WzCnPozmNHIx/CRHSPeRHzBtwo
-	ZwzOBuWrUfPkVTn5MFFyiGffUhIDUZYOPCf0gsMkEFhQaj235silh6HzK1Y1OY/cQtdVcd3mHQq9v
-	3t3st8mDcRrsHFi5Y7utxAsQK/H6k+TOdjcm9iCXqmWmGl4U4/HEh9JshcpINjUnixrT3S6KKy0JT
-	taA/AvKlULvCToLMFmsWgAYscVmtLIPRbdESj9tJwe2Qfi09NG75GNU3jJwCk6pBrpxSLQ/js6h1O
-	7les5OHXAVO3R5SajIWnGL0jD2rQ45A4nOq30MQRf5gltoEOYhCmS/VztCBdZTF7+pprN7SRyzH9r
-	ksscv76Q==;
+	bh=ZBHTfkePstkdhYPStihPwpZhe6evYsJ4HxGFWI7xQIQ=; b=GHKjEIFNNGM61NFPM7ylTilm9/
+	hH4Cidc76hKIrNwpNuPIq58rGUjBuJSIAmkqfNvMIpPrOG+VjplR2VG0kpLgZqPEtjxGZmGwCZAH+
+	+1Pl6l4YdJVJuUKG22PKsst6BRW3eKIc86Nr4UgkR13g9MCnKYyjmd/sSS7ci1RYknAyQoGDH8GqU
+	UraHi3xVuHVxQDLZ9Ad3kGt7K1NyQ4U6lhrBn5a8j5Tpc8IzhHZTIm72egBXt6iLv9VPFLarj1A+x
+	aSXFN2pfqTLC9S6sgatMcbvSpfhAjh8xXoR9/VEsha+GTdg05DkQTDyTYVawgI+IkCPu9688VhMDv
+	SYEeFUCQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRUx0-0000000A5KA-0HNJ;
-	Thu, 12 Nov 2026 13:34:50 +0000
-Received: from canpmsgout08.his.huawei.com ([113.46.200.223])
+	id 1xRUx2-0000000A5Mj-1w08;
+	Thu, 12 Nov 2026 13:34:52 +0000
+Received: from canpmsgout03.his.huawei.com ([113.46.200.218])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRUwv-0000000A5GA-1mdN;
-	Thu, 12 Nov 2026 13:34:47 +0000
+	id 1xRUww-0000000A5GG-003p;
+	Thu, 12 Nov 2026 13:34:49 +0000
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=IIjwTcz15PyMsksQJ/ixjXOV4ou2zq7XqHr0HTbVuxU=;
-	b=0/VHn0iEGb0IPORrcHUCZuDCJqtkFCHQM1NvMeBpdC1cNSBSUA9ZqE98TmpC22IvlErEFnlCh
-	h+a12v7jlnaSmyZbkdGSAsEFlj1ySCiupETxSkoDPMfuxOYFM03TJgZiBrMi9ML4/XkTAqnfd9Y
-	/SEuLRkPeN9uDFXLxgENIxM=
-Received: from mail.maildlp.com (unknown [172.19.163.163])
-	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4jQLvz4gDQzmV8H;
-	Thu, 12 Nov 2026 21:34:23 +0800 (CST)
+	bh=ZBHTfkePstkdhYPStihPwpZhe6evYsJ4HxGFWI7xQIQ=;
+	b=WXo9wn0NXhZX7pp7ZUMh/iOPIRLVlUIH2p8LTgXE7ANDOBqTMLMcJn+ioAx56LEYcQClNy3LR
+	fhpJPlEmx97/Kbdl53DCIYli9z7cMxKnOY197T93hS34sNl3vH29acpUDwGroc1TguVRSPeD6C6
+	amzAd2VIz8neRJeZS5pH9T0=
+Received: from mail.maildlp.com (unknown [172.19.162.197])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4jQLvT1RGbzpSt9;
+	Thu, 12 Nov 2026 21:33:57 +0800 (CST)
 Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6E9CE4048B;
-	Thu, 12 Nov 2026 21:34:39 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id B50E040579;
+	Thu, 12 Nov 2026 21:34:36 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemk200008.china.huawei.com
  (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Thu, 12 Nov
- 2026 21:34:37 +0800
+ 2026 21:34:35 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
@@ -71,12 +71,10 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<linux-kernel@vger.kernel.org>, <loongarch@lists.linux.dev>,
 	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
 	<kexec@lists.infradead.org>
-Subject: [PATCH v8 02/11] kexec: Add helpers to load the elf core header, initrd and FDT
-Date: Thu, 12 Nov 2026 21:34:09 +0800
-Message-ID: <20261112133418.4044428-3-ruanjinjie@huawei.com>
+Subject: [PATCH v8 00/11] kexec: Rework segment loading and fix CMA retries
+Date: Thu, 12 Nov 2026 21:34:07 +0800
+Message-ID: <20261112133418.4044428-1-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20261112133418.4044428-1-ruanjinjie@huawei.com>
-References: <20261112133418.4044428-1-ruanjinjie@huawei.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -84,8 +82,8 @@ Content-Type: text/plain
 X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
  kwepemk200008.china.huawei.com (7.202.194.74)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261112_053446_174838_FC2A7E38 
-X-CRM114-Status: GOOD (  18.22  )
+X-CRM114-CacheID: sfid-20261112_053446_463927_E36EA27B 
+X-CRM114-Status: GOOD (  13.52  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -99,189 +97,92 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-x86, arm64, LoongArch, RISC-V and powerpc all build an elf core header,
-load the initrd by hand before loading the kdump kernel, while arm64 and
-RISC-V also duplicate the code that builds the device tree for the kexec
-kernel
+ARM64, LoongArch, RISC-V, x86 and powerpc build the elf core header
+and place it together with the initrd and the DTB with almost identical
+code.
 
-Add the following 4 helpers for reuse:
-- kexec_prepare_elf_core_header() builds the header once per image and
-  returns the number of memory ranges, which x86 needs to reserve room
-  for the crash hotplug updates.
+This series reworks that path into common helpers that the architectures
+reuse, and fixes the CMA page and elf core header leaks in the arm64
+and LoongArch placement retry loops.
 
-- kexec_add_elf_core_header() places the prepared header as a segment.
-  The caller provides the kexec_buf with its placement policy and the
-  size to reserve.  On success it also records the segment index that
-  the crash hotplug code uses to find the header.
+The patch organization is as follows:
 
-- kexec_add_initrd() places the initrd from the image with the placement
-  policy the caller put into the kexec_buf.
+- Patch 1 moves the release of the elf core header into the generic
+  post-load cleanup, so that the architectures no longer free it
+  themselves.
 
-- kexec_add_fdt() builds the device tree for the kexec kernel, packs
-  it and places it with the kexec_buf the caller passes in.
+- Patch 2 adds the common helpers
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan He <baoquan.he@linux.dev>
-Cc: Mike Rapoport <rppt@kernel.org>
-Link: https://lore.kernel.org/all/179430504583.425130.15302016434972990362.b4-review@b4/
-Suggested-by: Mike Rapoport <rppt@kernel.org>
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
- include/linux/kexec.h |  11 +++++
- kernel/kexec_file.c   | 104 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 115 insertions(+)
+- Patches 3-7 convert arm64, LoongArch, RISC-V, X86 and Powerpc to
+  reuse the common helpers
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index bac11e940e74..89cb47521d6d 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -258,6 +258,17 @@ int kexec_kernel_verify_pe_sig(const char *kernel, unsigned long kernel_len);
- 
- extern int kexec_add_buffer(struct kexec_buf *kbuf);
- int kexec_locate_mem_hole(struct kexec_buf *kbuf);
-+int kexec_add_initrd(struct kimage *image, struct kexec_buf *kbuf);
-+#ifdef CONFIG_CRASH_DUMP
-+int kexec_prepare_elf_core_header(struct kimage *image, bool need_kernel_map,
-+				  unsigned long *nr_ranges);
-+int kexec_add_elf_core_header(struct kimage *image, struct kexec_buf *kbuf);
-+#endif
-+#if defined(CONFIG_OF) && defined(CONFIG_OF_FLATTREE)
-+int kexec_add_fdt(struct kimage *image, struct kexec_buf *kbuf,
-+		  unsigned long initrd_load_addr, const char *cmdline,
-+		  void **fdt);
-+#endif
- 
- #ifndef arch_kexec_apply_relocations_add
- /*
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 1f128c6e6fa3..25c9bef639d2 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -14,7 +14,9 @@
- #include <linux/file.h>
- #include <linux/slab.h>
- #include <linux/kexec.h>
-+#include <linux/libfdt.h>
- #include <linux/memblock.h>
-+#include <linux/of.h>
- #include <linux/mutex.h>
- #include <linux/list.h>
- #include <linux/fs.h>
-@@ -109,6 +111,108 @@ static void kexec_free_elf_headers(struct kimage *image)
- 	image->elf_headers_sz = 0;
- }
- 
-+#ifdef CONFIG_CRASH_DUMP
-+int kexec_prepare_elf_core_header(struct kimage *image, bool need_kernel_map,
-+				  unsigned long *nr_ranges)
-+{
-+	int ret;
-+
-+	if (image->elf_headers)
-+		return 0;
-+
-+	ret = crash_prepare_headers(need_kernel_map, &image->elf_headers,
-+				    &image->elf_headers_sz, nr_ranges);
-+	if (ret)
-+		pr_err("Preparing elf core header failed\n");
-+
-+	return ret;
-+}
-+
-+int kexec_add_elf_core_header(struct kimage *image, struct kexec_buf *kbuf)
-+{
-+	unsigned long memsz = kbuf->memsz;
-+	int ret;
-+
-+	kbuf->buffer = image->elf_headers;
-+	kbuf->bufsz = image->elf_headers_sz;
-+	kbuf->mem = KEXEC_BUF_MEM_UNKNOWN;
-+
-+	ret = kexec_add_buffer(kbuf);
-+	if (ret)
-+		return ret;
-+
-+	image->elf_load_addr = kbuf->mem;
-+
-+	/* The crash hotplug reservation can exceed the header size. */
-+	if (memsz > image->elf_headers_sz) {
-+		image->elf_headers_sz = memsz;
-+#ifdef CONFIG_CRASH_HOTPLUG
-+		image->elfcorehdr_index = image->nr_segments - 1;
-+#endif
-+	}
-+
-+	kexec_dprintk("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-+		      image->elf_load_addr, kbuf->bufsz, kbuf->memsz);
-+
-+	return 0;
-+}
-+#endif /* CONFIG_CRASH_DUMP */
-+
-+int kexec_add_initrd(struct kimage *image, struct kexec_buf *kbuf)
-+{
-+	int ret;
-+
-+	kbuf->buffer = image->initrd_buf;
-+	kbuf->bufsz = kbuf->memsz = image->initrd_buf_len;
-+	kbuf->mem = KEXEC_BUF_MEM_UNKNOWN;
-+
-+	ret = kexec_add_buffer(kbuf);
-+	if (ret)
-+		return ret;
-+
-+	kexec_dprintk("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-+		      kbuf->mem, kbuf->bufsz, kbuf->memsz);
-+
-+	return 0;
-+}
-+
-+#if defined(CONFIG_OF) && defined(CONFIG_OF_FLATTREE)
-+int kexec_add_fdt(struct kimage *image, struct kexec_buf *kbuf,
-+		  unsigned long initrd_load_addr, const char *cmdline,
-+		  void **fdt)
-+{
-+	void *new_fdt;
-+	int ret;
-+
-+	new_fdt = of_kexec_alloc_and_setup_fdt(image, initrd_load_addr,
-+					       image->initrd_buf_len,
-+					       cmdline, 0);
-+	if (!new_fdt) {
-+		pr_err("Preparing for new dtb failed\n");
-+		return -EINVAL;
-+	}
-+
-+	fdt_pack(new_fdt);
-+
-+	kbuf->buffer = new_fdt;
-+	kbuf->bufsz = kbuf->memsz = fdt_totalsize(new_fdt);
-+	kbuf->mem = KEXEC_BUF_MEM_UNKNOWN;
-+
-+	ret = kexec_add_buffer(kbuf);
-+	if (ret) {
-+		kvfree(new_fdt);
-+		return ret;
-+	}
-+
-+	*fdt = new_fdt;
-+
-+	kexec_dprintk("Loaded dtb at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-+		      kbuf->mem, kbuf->bufsz, kbuf->memsz);
-+
-+	return 0;
-+}
-+#endif /* CONFIG_OF && CONFIG_OF_FLATTREE */
-+
- /*
-  * Free up memory used by kernel, initrd, and command line. This is temporary
-  * memory allocation which is not needed any more after these buffers have
+- Patches 8-11 fix the CMA pages leaked by the retry loops and
+  the loop that makes no progress
+
+Tested with kexec_file_load() on arm64, LoongArch, RISC-V, X86 and
+Powerpc under QEMU, including the CMA retry paths, loading a crash
+kernel and booting the second kernel, with the agent help.
+
+This series is also available at:
+	https://github.com/ruanjinjie-eng/linux/tree/kexec_rework_cma_bugfx_v9
+
+Changes in v8:
+- Rework the common code as Mike suggested: the core provides building
+  blocks and the architectures uses them (Mike)
+- Build the elf core header once and only place it on the retries (Mike)
+- Keep the segment order and the arch placement policy unchanged (Mike)
+- Convert x86 and powerpc as well
+- Move the CMA fixes to the end of the series (Mike)
+- Link to v7: https://lore.kernel.org/all/20261026075201.699550-1-ruanjinjie@huawei.com/
+
+Previous Versions are as below:
+- v6: https://lore.kernel.org/all/20260921090450.807575-1-ruanjinjie@huawei.com/
+- v5: https://lore.kernel.org/all/20260918100442.3841135-1-ruanjinjie@huawei.com/
+- v4: https://lore.kernel.org/all/20260907125404.922123-1-ruanjinjie@huawei.com/
+- v3: https://lore.kernel.org/all/20260826092541.3905933-1-ruanjinjie@huawei.com/
+- v2: https://lore.kernel.org/all/20260729031235.2840255-1-ruanjinjie@huawei.com/
+- v1: https://lore.kernel.org/all/20260723131242.1537633-1-ruanjinjie@huawei.com/#t
+
+Jinjie Ruan (11):
+  kexec: Free the elf core header in kimage_file_post_load_cleanup()
+  kexec: Add helpers to load the elf core header, initrd and FDT
+  arm64: kexec_file: Load the other segments with common helpers
+  LoongArch: kexec_file: Load the other segments with common helpers
+  riscv: kexec_file: Load the extra segments with common helpers
+  x86: kexec_file: Use the common segment helpers
+  powerpc: kexec_file: Use the common segment helpers
+  kexec: Extract kexec_free_segment_cma() from kimage_free_cma()
+  kexec: Add kexec_rollback_segments() helper
+  arm64: kexec_file: Fix CMA segment placement retries
+  LoongArch: kexec_file: Fix CMA segment placement retries
+
+ arch/arm64/include/asm/kexec.h             |   4 +-
+ arch/arm64/kernel/kexec_image.c            |  15 ++-
+ arch/arm64/kernel/machine_kexec_file.c     |  87 ++++----------
+ arch/loongarch/include/asm/kexec.h         |   3 +-
+ arch/loongarch/kernel/kexec_efi.c          |  15 ++-
+ arch/loongarch/kernel/kexec_elf.c          |   3 +-
+ arch/loongarch/kernel/machine_kexec_file.c |  80 +++++--------
+ arch/powerpc/kexec/elf_64.c                |   9 +-
+ arch/powerpc/kexec/file_load_64.c          |  18 +--
+ arch/riscv/include/asm/kexec.h             |   4 +-
+ arch/riscv/kernel/kexec_elf.c              |   3 +-
+ arch/riscv/kernel/kexec_image.c            |   3 +-
+ arch/riscv/kernel/machine_kexec_file.c     |  83 ++++----------
+ arch/x86/kernel/crash.c                    |  25 +----
+ arch/x86/kernel/kexec-bzimage64.c          |   8 +-
+ arch/x86/kernel/machine_kexec_64.c         |   4 -
+ include/linux/kexec.h                      |  14 +++
+ kernel/kexec_core.c                        |  25 +++--
+ kernel/kexec_file.c                        | 125 +++++++++++++++++++++
+ 19 files changed, 254 insertions(+), 274 deletions(-)
+
 -- 
 2.34.1
 
