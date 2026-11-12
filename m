@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AAF8606A336
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8F9606A338
 	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 07:54:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=g4mECGnE;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ljaSl9hF
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=T0u958Bp;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nAhVXvzC
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,50 +14,50 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=agNKstLXJEXNp3BKeTYt5YjcSGhrhzJiaNPuo7/BBRo=; b=g4mECGnEeRwgn3kUnHBODP+vrY
-	v0wrHU+88P3ihO20KGtocJYIDvg2mvRXTLRf3D8XXnt+z4xJ7PQmkSQ+8UfHRdcc/xfhz1pDztiTt
-	j1rHwNyUWgvOll0GrCHHWAT7gE1ugJivH8sao3a5Thcc5UyqN6OibOu7VoHXZMIWe8T6Wr8Tqpy28
-	l3EeWJzlQQbaAgJbGkivKI4XzkRu7TEveQt+oaPWCmugQRFFzDqazKT4AJYEWX+CwrhgjMinLVf8D
-	V0lwwX1AXqtKyU11P3/0Sg+Ti5j7NP2KGzMvweAbeIosQ9uX/QUFms8rbiSdPDHZLSyIK5AFSFalr
-	A5H6+ZRA==;
+	bh=ylMAasGLBe1UBExKZfXHtgaSjDMzOhHHdLoDYukBrDI=; b=T0u958BpMp8yU8RLdJSpHdLbhx
+	HlImf5m9w85+r/asRP1+46GMU6ARPt7jJn2vse6deX+y3Dsrr6UWHHTvqIfhz1M4I9MX7IQvBoHQL
+	vfiZnTnq0BrfatW5IoWxgzB9LYjh119MWEWjHkDp2R06MVvjQNMbqpSQerjhXyCkSlOXiU/T8iuo0
+	2qgU9Ah+l80BkGY+D5aZh7taKWvX8QOaN8uMapqfmvFABht3xKhXjt7H5/ob/aomJvGWePmRzLS0+
+	+fsKNThanHrXnNs9mrIHVGz092bedIu90RbGfDyr0Px3nggFITsnrsMq77xpCOkAbwsLY0lOd1OSG
+	3c4jfH+Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRPdi-00000008yzR-1u0V;
-	Thu, 12 Nov 2026 07:54:34 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xRPdj-00000008z14-1Z2H;
+	Thu, 12 Nov 2026 07:54:35 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRPdM-00000008ymy-3vFT
+	id 1xRPdQ-00000008ynM-21hD
 	for kexec@lists.infradead.org;
 	Thu, 12 Nov 2026 07:54:16 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id AF72941FE2;
-	Thu, 12 Nov 2026 07:54:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BF291F00A06;
-	Thu, 12 Nov 2026 07:54:12 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id E1338638DB;
+	Thu, 12 Nov 2026 07:54:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D62A1F00A05;
+	Thu, 12 Nov 2026 07:54:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794470052;
-	bh=agNKstLXJEXNp3BKeTYt5YjcSGhrhzJiaNPuo7/BBRo=;
+	s=k20260515; t=1794470055;
+	bh=ylMAasGLBe1UBExKZfXHtgaSjDMzOhHHdLoDYukBrDI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ljaSl9hFiGsUT+W3Q61qKHS565ziHtNC6CdA8JwuxqtdyNPrZduFArqxECYMEhM2J
-	 CBJRXEvnBo0MntojSjBfwvfDYwTZt/D63uvQdLdhpTANk1rZQbheKPTB/jRmuxge6z
-	 NGIMpuAEtPdEiIi1m0BuCAaSlAFAl3J3BQpCidi4JaTkZw8O9//0joXfEDlB3Ids1L
-	 dGkOdHU7HJ6I2AbkCY6mVTWneNmN+uFtZic0HYhTBgzV6NW93AZEW5rmCYs/uSdxnN
-	 /vAPXbZiGfOaTJLDjGR3AUeOYTVbGTkegvxYQwarAy4adIUN92Ywaz0L+kmY7u29ka
-	 1qP0FcOzTux0g==
-Message-ID: <sashiko-outbox-210642@kernel.org>
+	b=nAhVXvzCGhoYHnBvNc9kPKTs57KxAG8vTK/RkQSxezJs7bKftUf3+nZuvVvsDuVNL
+	 TcIZRHiRnjm08Y/HfhKPQnCTUCOrvfxb6a+OMCK5dSeEl130FpY7O00vthO1xfpRSp
+	 Kdx20OZOG+G3ARh2LQuKhm3EvBBCzDpteciAXyvlzVS/fNHc9E/ciH3q7v3LqqF+vB
+	 JhHhErpkG0TBzPki5MfGpRaYd1rKmu2aRHehwtnLR87vPiLM2k2naME1075CAVRaj7
+	 YjXT8t8mQ45PfDsaqKhCXYY8amxkuhNSU+7P0LUp9QbqUTlvXKGlS8u3zRNmO08JxD
+	 PeW52ZZGnJYTg==
+Message-ID: <sashiko-outbox-210645@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 6/9] kho: Expose rejected handovers that look like cold
- boots
+Subject: Re: [PATCH 9/9] selftests/liveupdate: Check handover revival,
+ sequence and memory stats
 To: "Chris Down" <chris@chrisdown.name>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Mike
  Rapoport" <rppt@kernel.org>, "Pratyush Yadav" <pratyush@kernel.org>
 Cc: "Alexander Graf" <graf@amazon.com>, "Baoquan He" <baoquan.he@linux.dev>, "Jonathan
  Corbet" <corbet@lwn.net>, "Shuah Khan" <skhan@linuxfoundation.org>, kexec@lists.infradead.org, kernel-team@meta.com
-In-Reply-To: <abfe907e8da92802cd5e0c843d8013e4d229aab3.1794383544.git.chris@chrisdown.name>
+In-Reply-To: <738fbfd19034ce495de9b22c705a7815a236907d.1794383544.git.chris@chrisdown.name>
 References: <cover.1794383544.git.chris@chrisdown.name>
- <abfe907e8da92802cd5e0c843d8013e4d229aab3.1794383544.git.chris@chrisdown.name>
+ <738fbfd19034ce495de9b22c705a7815a236907d.1794383544.git.chris@chrisdown.name>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 07:54:11 +0000
+Date: Thu, 12 Nov 2026 07:54:14 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,17 +77,14 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> At Meta, our rollout needs to stop if the new kernel rejects the KHO
-> handover. For example, if it doesn't recognise the handover FDT's
-> compatible string, it can boot normally with all the preserved state
-> lost. LUO's incoming/state reads "none", as on a cold boot. We log
-> "disabling KHO revival", but our fleet collector reads procfs and sysfs
-> and can't rely on kernel logs from every host.
+> Extend the handover stats test to cover the new files. On the first
+> boot, kho_incoming/state should be none, liveupdate_num 0, and both KHO
+> sizes 0. After the kexec, the handover should be revived and
+> liveupdate_num should be 1.
 >=20
-> Let's add /sys/kernel/kexec/kho_incoming/state so the collector can tell
-> a rejected handover from an ordinary boot. "revived" means the kernel
-> accepted the handover and completed the preserved memory map walk. LUO
-> reports the outcome of restoring sessions separately.
+> restored_size should grow by at least a page each time a memfd is
+> retrieved or dropped. The memfd in the unclaimed session is retrieved
+> last, once everything else is done.
 >=20
 > Signed-off-by: Chris Down <chris@chrisdown.name>
 
@@ -95,6 +92,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1794383544.gi=
-t.chris@chrisdown.name?part=3D6
+t.chris@chrisdown.name?part=3D9
 
 
