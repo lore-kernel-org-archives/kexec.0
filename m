@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83DE606A31C
-	for <kexec@archiver.kernel.org>; Wed, 11 Nov 2026 23:43:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18667606A327
+	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 00:00:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=AGemxVaz;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kzqpPxlf
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=JAdBtG1n;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DFX0oUvX
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,53 +14,51 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=BDXI5t6HYFkwBkTs5giGrH4imh+3Bz2X2SUCTz6+bNM=; b=AGemxVazqWs64PIjzJ+WMzs0ru
-	KyUIKQ4CML1HEUPcfHLkHB2mYbuK1/egNQzV7X/I1Gk/Mk8A35U/W6wJTb0ZASrADyYRW51dGBfn2
-	egN83UOLVCF+XItgqyLXv+r/rGPfYgAyt+65BWMGvsDKYYJlqu2oQSp0UpduHtkgq0MfGkB7Uzr4x
-	BHY/nZeJFUxAZTCq9riWuE9TwlDIwkC/zmC60EOxcydHqPDsKr6Bk+GYtN7fFrE1v5BeG8Awi6vpN
-	2N4c/QpVTnuuCLhl4sfLkgJhBwvMDOAPQtR0TOIIk3rReylk/zUTvkkgTxM9alYNoZB670VeReEC0
-	8F81TDBQ==;
+	bh=kcLQLePRECmW/OukG6ShdGIS6F+D+KlfSzofEC+RGPM=; b=JAdBtG1nukrF0edsYjyemaLfWy
+	qnBUvuWTwDmsgR7BrLAGezZH/l498ILLM3BFSo1xdj3tNPGh5/E4uUqBr7AfZoKhuNS/Hj2J8ilJv
+	OYeMKQhh7v1Dl82qdbhm7h44V4FofcCAHfDwzA31nhplSuoUNHZUe0ILAeteC308a79Md36z9oCMl
+	P8vVQdX5QTUrcifwHgHaHKEN4d7Kddel/85JmP11kb/Fh69XuqFU+cXRQgnpaZEsawbosukRAfjBw
+	9eqd+8Qj5rWlE+1+9oNcr9d/2sdh2ta25fy+3vzLkSJIE3MI8lUi7VYP9juUCU8Vql77QWi786CMi
+	IeBGcHvw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRHyC-00000008A8k-2XQ5;
-	Wed, 11 Nov 2026 23:43:12 +0000
+	id 1xRIEf-00000008CaX-2jdZ;
+	Thu, 12 Nov 2026 00:00:13 +0000
 Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRHyB-00000008A8c-3KJw
+	id 1xRIEd-00000008CaN-3joO
 	for kexec@lists.infradead.org;
-	Wed, 11 Nov 2026 23:43:11 +0000
+	Thu, 12 Nov 2026 00:00:12 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 2D61540E83;
-	Wed, 11 Nov 2026 23:43:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71E921F00A05;
-	Wed, 11 Nov 2026 23:43:10 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 4860945D20;
+	Thu, 12 Nov 2026 00:00:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 789FE1F00A05;
+	Thu, 12 Nov 2026 00:00:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794440591;
-	bh=BDXI5t6HYFkwBkTs5giGrH4imh+3Bz2X2SUCTz6+bNM=;
+	s=k20260515; t=1794441611;
+	bh=kcLQLePRECmW/OukG6ShdGIS6F+D+KlfSzofEC+RGPM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kzqpPxlfc1R1Tp8Fxl543PtXrV22+J6O6JcG14poCNnjWlBl7uctEIsGiV8eFFO/k
-	 R51Pi+t8YPCfIbhGw/UTu4RYX0COAlZxdC8d1nROneRj2m/7LrapJtiYQzx+wYyJcE
-	 99cRkw6GO4EyQmBXxh17NwcTyf0VzkoU1MEXzQxci6HUJ4eMs46WDiOzS3I8EXeMvT
-	 WoXhVZqJ4Z8WP1KYaXTmvU3qtt/yVT6SEeDEMe+3uS28ZLQT91g3BksYtgEYzVwdE8
-	 5WmE63uyrztKOzIwTDAXoDvVMFmBFLKiQM0y79OB0FrckAfwEJHuM6oPVRZqRQYbkU
-	 Cca7elTtYdkAQ==
-Message-ID: <sashiko-outbox-209863@kernel.org>
+	b=DFX0oUvXLH6M1+stGvR8q7GSrkkpuYXh42bB/2n1N00IE83twYwY1D356M8NwNlhL
+	 Pm/BtVQLZ4iPjXkJ3AMktrMFZrm9m0WkR9zjsEI6Wg8Hm9KeKdtx7uZVv4hc9REXB0
+	 Wc/pH0DcGaj3cXfpwlqhKz1PCkPp1Vc2enTJIdURiEOm+XgKtr7Af22xj2kKuUBSn0
+	 CcN6siZxUiqwWCi+gvj9Z93nHQXWjEHPi1ypiPwdWLi2TTfV+h7oOiLWvXvnNvyDmy
+	 Ju7PSlR+k6/YMHYFyu0qnwOV1Kjly8Gwhm6s2kHXeulgUqsVzekpM1Gn7FjDuSeoaj
+	 oaC96YTT9ydrg==
+Message-ID: <sashiko-outbox-209872@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 2/2] arm64: hibernate: use a typed entry to drop
- __nocfi
-To: "Ben Cressey" <ben@cressey.dev>, "Catalin Marinas" <catalin.marinas@arm.com>, "Will
- Deacon" <will@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>, "Pasha
- Tatashin" <pasha.tatashin@soleen.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Pavel
- Machek" <pavel@kernel.org>
-Cc: "Kees Cook" <kees@kernel.org>, "Sami Tolvanen" <samitolvanen@google.com>, kexec@lists.infradead.org, "Nathan
- Chancellor" <nathan@kernel.org>, "Zhaoyang Huang" <zhaoyang.huang@unisoc.com>, "Jeson
- Gao" <jeson.gao@unisoc.com>
-In-Reply-To: <20261111-arm64-kexec-nocfi-v2-2-ddf0c4aa326f@cressey.dev>
-References: <20261111-arm64-kexec-nocfi-v2-0-ddf0c4aa326f@cressey.dev>
- <20261111-arm64-kexec-nocfi-v2-2-ddf0c4aa326f@cressey.dev>
+Subject: Re: [PATCH] x86/kexec: Type relocate_kernel() to drop __nocfi
+To: "Ben Cressey" <ben@cressey.dev>, "Thomas Gleixner" <tglx@kernel.org>, "Ingo
+ Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>, "Dave Hansen" <dave.hansen@linux.intel.com>, "H.
+ Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org, "Sami Tolvanen" <samitolvanen@google.com>, "Kees Cook" <kees@kernel.org>, "Nathan
+ Chancellor" <nathan@kernel.org>, "Josh Poimboeuf" <jpoimboe@kernel.org>, "Peter
+ Zijlstra" <peterz@infradead.org>, kexec@lists.infradead.org, "David
+ Woodhouse" <dwmw2@infradead.org>
+In-Reply-To: <20261111-x86-kexec-kcfi-v1-1-b4d41ea14deb@cressey.dev>
+References: <20261111-x86-kexec-kcfi-v1-1-b4d41ea14deb@cressey.dev>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 11 Nov 2026 23:43:10 +0000
+Date: Thu, 12 Nov 2026 00:00:09 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,32 +78,36 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> swsusp_arch_resume() calls the safe page's copy of
-> swsusp_arch_suspend_exit() indirectly, without a kCFI check. The MMU is
-> on at the call and TTBR0 maps only that page. The copy starts at the
-> page's first byte, so the check's load of the type hash in front of it
-> would fault. SYM_CODE_START() also gives the routine no hash.
-> Commit e2f8216ca2d8 ("arm64: Set __nocfi on swsusp_arch_resume()")
-> disabled the check "for now", since the entry had to be first
-> in .hibernate_exit.text.
+> machine_kexec() calls the control page's copy of relocate_kernel()
+> indirectly. The routine has no kCFI type, so all of machine_kexec() is
+> exempt since commit 2114796ca041 ("x86/kexec: Mark machine_kexec() with
+> __nocfi"), and ANNOTATE_NOCFI_SYM() silences objtool.
 >=20
-> SYM_TYPED_FUNC_START() emits the hash inside that section, and
-> create_safe_exec_page() already copies the whole section, at most 4 KiB,
-> to the page's start, so the page holds both hash and entry. Relax the
-> linker script's ASSERT, so the entry need only be in the section.
+> No other call there loses its check today, but one added later would.
+> Review of that mark on arm64 preferred a typed entry, and objected to
+> covering a whole function, on x86 too [1].
 >=20
-> Fix by typing the routine, with a C prototype, entering the copy at the
-> symbol's offset in the section, and dropping __nocfi.
+> Typing the routine was set aside in 2025 as not worth it [2]: a type
+> from the caller cannot catch a prototype that drifts, and
+> machine_kexec() seemed unlikely to follow a stray pointer.
 >=20
-> Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> Link: https://lore.kernel.org/linux-arm-kernel/arZSe8hNnRPM5FqY@J2N7QTR9R=
-3.cambridge.arm.com/
+> Type the routine with SYM_TYPED_START(), emit an ENDBR only under
+> CONFIG_FINEIBT, whose boot-time rewrite skips a function without one,
+> and drop both exemptions, along with kexec as a valid use in annotate.h.
+>=20
+> The check guards only the pointer, and not reliably under plain FineIBT,
+> which checks in the callee with IBT off. A failed check panics or hangs
+> with no CFI report, since load_segments() has reset GS.
+>=20
+> Link: https://lore.kernel.org/202609241804.BB23BF10@keescook # [1]
+> Link: https://lore.kernel.org/9c41ab61efc573e3ab5a75b6e4031f81db84a846.ca=
+mel@infradead.org # [2]
 > Signed-off-by: Ben Cressey <ben@cressey.dev>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111-arm64-kexe=
-c-nocfi-v2-0-ddf0c4aa326f@cressey.dev?part=3D2
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111-x86-kexec-=
+kcfi-v1-1-b4d41ea14deb@cressey.dev?part=3D1
 
 
