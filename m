@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2A1606A321
-	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 16:42:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A34606A321
+	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 16:43:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=shEYiEeP;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Jq+83qij
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=kHuk66is;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TaSo0gm1
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,50 +14,50 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=zgqol6BdGGz8uUItEWiY11rkyvb0aLXuc+QDZ5HubA8=; b=shEYiEeP6PVWhgPmDgTHGb3yts
-	0h/49VISNf8hWcP/raNKKDVMOHLMdR1ol13fAdO3uEPB6s5jrGqAINE5YRa05pC0e247bppdHehct
-	3VizDaCnrDMvIkjzIXmIgsS+1pv15t+W1uCzRxvNeUcD9FrWfa/BW1bwf+mmseUWnXb9D4AtQNdE3
-	l1HwRw6gG6VYabw4pkjucnh2af9gmFGs39BeACYn0fskB0TRryqhrM57i/uVlvBgfky+FNfQtJL25
-	12X8V+4i2tGRi0KHJ7u3xkjr3cNRIs2UCcKfqOBw0J0woUFurd202S+iPM2mkQzvv/nFwii4ycvX9
-	n5DGeTPg==;
+	bh=qMPAKcfOiDx77Aw4OnsNyGUu0CKw5fyN/4q2Bj4VySY=; b=kHuk66isit+QEyPdM1qVPqnQCa
+	aQxaq8a0NougTjn5HFsauCTzxJji/gXGiSCJPJXN2BLVG3BqQUkQuujKU7MTMLM3sIcgQezyw4/oi
+	r02gXxDnxvQIu3csCA1FueTYz4bBJxTDtU+7ahd3u4dFgDCaEny8xF0MekvVUvVSHAI3kEuZxIkkO
+	9DbNipRmhUuNOm+sJRSMnwStOUk1h8yqD+C2NvsuxFYKvaLfq56Ct83nr0tSBMY4vrp5hM/J4gGrW
+	K8dhqtjWa6yhH86LOPHXrRnsiSJzmnYJwJwf8AsmmZUdOs/BK1fhBurpBFIako2heSYTUo3Cwgd4B
+	GxvR+IUQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRXsG-0000000Aedj-1Kza;
-	Thu, 12 Nov 2026 16:42:08 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xRXtV-0000000AesP-2vKi;
+	Thu, 12 Nov 2026 16:43:25 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRXsF-0000000AedJ-2dzH
+	id 1xRXtG-0000000Aepp-41Wl
 	for kexec@lists.infradead.org;
-	Thu, 12 Nov 2026 16:42:07 +0000
+	Thu, 12 Nov 2026 16:43:13 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id E3E9E6234C;
-	Thu, 12 Nov 2026 16:42:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47DF81F000C4;
-	Thu, 12 Nov 2026 16:42:06 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 72EF561D3E;
+	Thu, 12 Nov 2026 16:43:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5B731F000C4;
+	Thu, 12 Nov 2026 16:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794501726;
-	bh=zgqol6BdGGz8uUItEWiY11rkyvb0aLXuc+QDZ5HubA8=;
+	s=k20260515; t=1794501789;
+	bh=qMPAKcfOiDx77Aw4OnsNyGUu0CKw5fyN/4q2Bj4VySY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Jq+83qijWrTw6srx8yNKrZ6jRor/t9lJKQOqD3+A8ou8lGd5mVLlC1HEodq++gwIQ
-	 0i0rrPquKU9uJnTbtyV7vmtF4/zeAdVJSnKzM42Z41ycxdQ0rfRwuxx3IwUyvOKEWP
-	 YCB8dzYPg+91jnwKh11Z6smoI/gEcF8DiKOfQqLAkMriuMVqYsWxSxfdT2hmDEPGqO
-	 xUH+CfVw8dfGgBEXqD75+KlLYucl9pW6FNEjmrLcTrBZaLQLoFsbw0xAYsyIHk0nRe
-	 Cw6udEtJtMk1HS4pPYblZAFP/aJvenTtYbRnYhzN2I9lyjtccSlXY8hF67P3OxfYnP
-	 nfH7mmorgK4JA==
-Message-ID: <sashiko-outbox-211524@kernel.org>
+	b=TaSo0gm1mYVTOTO0UFE67te3sagvpRZaWy9QUQxWkPpogSV0tBpYEYQpFe+4Cf95+
+	 L4586K7G3YxuNkc2tiv3voC9dIfCYPA2nCziKbAXq21rN5KlS0D+hMrvDmfUwAVXSb
+	 PaFD5lcNTA54geZkwjUExJHnr5FXfSkbhoKJ206zJlVuHvM6QAOxNJsPSyxGF76mMb
+	 rvZijIj3vflDycmHpcR0ZxdNqx9twGEGE6LGF8kKyL/Y6WEMrQTuIPVcux9dn49b7G
+	 1gzcBsSBY/iXB9Fd2X60+YDqCW2RXuvhRQ8Hh4afmdQaTKzOZ4zntwtgbd8MSoAtoz
+	 ZYNianvMddO8A==
+Message-ID: <sashiko-outbox-211529@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC 2/4] sh/crash_dump: check ioremap() in
- copy_oldmem_page()
+Subject: Re: [PATCH RFC 4/4] crash_dump: use copy_oldmem_to_iter()
+ everywhere
 To: "Christian Brauner" <brauner@kernel.org>
 Cc: "Linus Torvalds" <torvalds@linux-foundation.org>, "Breno Leitao" <leitao@debian.org>, "Chris
  Mason" <mason@kernel.org>, "Thomas Gleixner" <tglx@kernel.org>, x86@kernel.org, kexec@lists.infradead.org, "David
  Hildenbrand" <david@kernel.org>
-In-Reply-To: <20261112-work-procfs-oldmem-v1-2-ecdcafd99265@kernel.org>
+In-Reply-To: <20261112-work-procfs-oldmem-v1-4-ecdcafd99265@kernel.org>
 References: <20261112-work-procfs-oldmem-v1-0-ecdcafd99265@kernel.org>
- <20261112-work-procfs-oldmem-v1-2-ecdcafd99265@kernel.org>
+ <20261112-work-procfs-oldmem-v1-4-ecdcafd99265@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 16:42:05 +0000
+Date: Thu, 12 Nov 2026 16:43:08 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,21 +77,26 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> copy_oldmem_page() maps a page of the old kernel with ioremap() and
-> copies from it without checking whether the mapping worked. If it
-> didn't, the copy reads from an offset into the NULL page.
+> Make the remaining copy_oldmem_page() implementations copy the page of
+> the crashed kernel with copy_oldmem_to_iter() like x86_64 and powerpc
+> do. None of these architectures has a machine check safe copy today, so
+> for them this is copy_to_iter() under another name. But the copy of a
+> page of the old kernel is in one place now, and an architecture that
+> gains ARCH_HAS_COPY_MC later gets the recovery without touching its
+> crash dump code.
 >=20
-> Return -ENOMEM like the other architectures do. read_from_oldmem() turns
-> that into -EFAULT like any other short copy.
+> s390 stays as it is. It copies the old kernel's memory through its real
+> address mode window in memcpy_real_iter(), and an uncorrected storage
+> error is fatal on s390 anyway (cf. s390_handle_damage()).
 >=20
-> Fixes: 4d5ade5b29c6 ("sh: kdump support.")
-> Cc: stable@vger.kernel.org
+> No functional changes.
+>=20
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261112-work-procf=
-s-oldmem-v1-0-ecdcafd99265@kernel.org?part=3D2
+s-oldmem-v1-0-ecdcafd99265@kernel.org?part=3D4
 
 
