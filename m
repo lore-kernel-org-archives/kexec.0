@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF54606A89F
-	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 10:47:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C224C606A331
+	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 10:48:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=POvkzBGQ;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hDkP6biZ
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=BUhaBH7w;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LDdLZCF9
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,54 +14,52 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=oFKR9yNEKumpUkj+R+V7Il5eKMS7QYAR0aRlqbeK+Xs=; b=POvkzBGQEfCJdls1r91swagTSh
-	SrMGZldNwaSLjaAiqc98I4bj+og7RkckHWt72EMpzZTvUygpABGm7g/X32/6ZipckqgDJWobhVnLK
-	ipZKDOuwRxpQkrSdLMBoclSxD594mQ6TduH2Og2B4r8enKRLLTTrIzgdYt2JslN2M3HCKOS5P3GwJ
-	ANq1EE84pekgndfhL9gInhsvU2YdloHgCL5/++8Fe0Dkp0tgQzQdPI1H8qKI6hBDYocWTT26oKK4w
-	ValJJFYvirfhpEmKVQ/cYDb07ox3jbSzirf2jjbSSfEo2uc/ec1qqda+bxlDsfCOkn+ltEEUxW7RW
-	wPTU1PzQ==;
+	bh=8w0gKzFTe55eUAn7Zuejuv/Ru0HVhu/LD9nYp3PWpMc=; b=BUhaBH7wIZ8egIlbTo/W0S79Gr
+	0XQCKHwxxeOvucH+KmqdhSsO85oAOY7QOByHmTTfYIWdHuOGg16A1qjE/TX5AdhafgX7DyjR5MixL
+	8xfC+Bfscvu0QDB3rU8ptXExLKEC/U+K3J9V97KdkefCJDFcYm8hvhPMOMLCLz8mmH2hBW50ff0lj
+	ONa59UPoaCK/EG/Jhvlvy1XoJCbUdjm6NmHbKUjnQVwSnQwOylRW53zKIEjirM9Hv/Mu0Ag2ie1lZ
+	GXmN4IoOAcgDecb06Mzm9+3yg1sPGBxX/JGg5B5vRb0WyQlaD/d9lQgUx5Jf8JcRQ2T6SAu/6FNLp
+	J2ooskfA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRSLW-00000009aMC-1Gct;
-	Thu, 12 Nov 2026 10:47:58 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xRSLb-00000009aPY-1uyw;
+	Thu, 12 Nov 2026 10:48:03 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRSLR-00000009aKp-3851
+	id 1xRSLT-00000009aLK-2Olx
 	for kexec@lists.infradead.org;
-	Thu, 12 Nov 2026 10:47:54 +0000
+	Thu, 12 Nov 2026 10:47:57 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 104DE6122A;
-	Thu, 12 Nov 2026 10:47:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 126BE1F00A06;
-	Thu, 12 Nov 2026 10:47:52 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 37F78479E6;
+	Thu, 12 Nov 2026 10:47:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7984E1F00A06;
+	Thu, 12 Nov 2026 10:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794480472;
-	bh=oFKR9yNEKumpUkj+R+V7Il5eKMS7QYAR0aRlqbeK+Xs=;
+	s=k20260515; t=1794480475;
+	bh=8w0gKzFTe55eUAn7Zuejuv/Ru0HVhu/LD9nYp3PWpMc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=hDkP6biZ0VPsL6SM5KJYZ/0cpmg3Wl0D3r9JZfIRlSu4jmwoW9X61fmK65B+XBQJ/
-	 YNnGU21TUV+VPYescsXRXva/bFSHK+Kgv/PEz/IIyJ3gkiIKqOVwwJQO1p9IAEdNe3
-	 NRVlJAvrdyEInIaoYNJGHXKHxFxrxL1NnzIBxiW/o1GZh6w7aHTYq1/Ozu3kP/cvQz
-	 aCjdVS3cuOdNZKg+5GKrcP+Ts5EQ8Dj5lUsf/n8QqJPnElCdbeQfkxsDHnveUhzTZw
-	 EO/9wteU0lvOQ5vRvn7D8xVVqmgtWr2MBw0GcycwglzR5VBATAtecwui4n3FEbCqyE
-	 iEkyiXxRTcZ0Q==
-Message-ID: <sashiko-outbox-210971@kernel.org>
+	b=LDdLZCF9TS48ZF5jpytvzbU+YAkooFc33hiNfKf5PX+lF8bWmCG04N3ZaDRxIfTWd
+	 UyJ80HXEKd++f9Xl1VOmB/h9qbaXKQikkhNVXv3qszQfxfehdicDCf0JwsQRGkqCZQ
+	 qHHXSdnaVizFECJXg4QkfAOUPBAmS98e3RV0eVJ2FpgmKJN9ltJMhSK2plx6/ppiDl
+	 Bu/EbDPA9ApYCprDc+uOYneOTlQ5EskeYoumhYSCd+i1anNXEXa5jzgR/mqozwCqXJ
+	 fpI7H3cfcnmDDz6FV9vPo5krtht5dEvL/+ycQwu3F4xhhZdiDzM7/N/WwVouFbSp1Y
+	 hFPUF1K/6IzYA==
+Message-ID: <sashiko-outbox-210973@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 3/5] kho: skip zero-sized lowmem and global bootmem
- areas
+Subject: Re: [PATCH v3 5/5] kho: docs: update description of bootmem regions
 To: =?utf-8?b?TWlrZSBSYXBvcG9ydCAoTWljcm9zb2Z0KQ==?= <rppt@kernel.org>, "Jonathan
  Corbet" <corbet@lwn.net>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Pratyush
  Yadav" <pratyush@kernel.org>
 Cc: "Alexander Graf" <graf@amazon.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Chen
  Pei" <cp0613@linux.alibaba.com>, "George Guo" <guodongtai@kylinos.cn>, "Kexin
  Liu" <liukexin@kylinos.cn>, "Randy Dunlap" <rdunlap@infradead.org>, "Shuah
- Khan" <skhan@linuxfoundation.org>, "Sourabh Jain" <sourabhjain@linux.ibm.com>, kexec@lists.infradead.org, "Jose
- A. Perez de Azpillaga" <azpijr@gmail.com>, "Mukesh Pilaniya" <mpilaniy@redhat.com>
-In-Reply-To: <20261112-kho-bootmem-sizing-v3-3-f0c8d00295d5@kernel.org>
+ Khan" <skhan@linuxfoundation.org>, "Sourabh Jain" <sourabhjain@linux.ibm.com>, kexec@lists.infradead.org
+In-Reply-To: <20261112-kho-bootmem-sizing-v3-5-f0c8d00295d5@kernel.org>
 References: <20261112-kho-bootmem-sizing-v3-0-f0c8d00295d5@kernel.org>
- <20261112-kho-bootmem-sizing-v3-3-f0c8d00295d5@kernel.org>
+ <20261112-kho-bootmem-sizing-v3-5-f0c8d00295d5@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 10:47:51 +0000
+Date: Thu, 12 Nov 2026 10:47:54 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,33 +79,23 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> The lowmem and the global bootmem areas can have zero size, for example
-> when none or all of the memory is below ARCH_LOW_ADDRESS_LIMIT, or when
-> either of those areas is explicitly set to zero with kho_bootmem=3D.
+> The description of the boot memory regions does not mention the low
+> memory region and claims there is always a region per node plus a global
+> region, while the low memory and the global regions are not allocated
+> when they would be empty.
 >=20
-> For a zero-sized allocation memblock returns an address without reserving
-> anything, and that empty area is recorded in kho_bootmem. If there is no
-> memory below ARCH_LOW_ADDRESS_LIMIT, allocation of the empty lowmem area
-> fails and KHO gets disabled.
+> List all types of the boot memory regions and describe when they are not
+> allocated.
 >=20
-> Extract a helper that checks for zero size and allocates memory from
-> memblock, and use it to skip empty areas the same way as empty per-node
-> areas are skipped.
+> While on it, fix grammar and split the description of the regions size
+> and of the CMA usage into separate paragraphs.
 >=20
-> Fixes: 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation helpers")
-> Reported-by: Chen Pei <cp0613@linux.alibaba.com>
-> Closes: https://lore.kernel.org/all/20261026131851.9942-1-cp0613@linux.al=
-ibaba.com
-> Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> Reviewed-by: Jose A. Perez de Azpillaga <azpijr@gmail.com>
-> Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
-> Reviewed-by: Mukesh Pilaniya <mpilaniy@redhat.com>
 > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261112-kho-bootme=
-m-sizing-v3-0-f0c8d00295d5@kernel.org?part=3D3
+m-sizing-v3-0-f0c8d00295d5@kernel.org?part=3D5
 
 
