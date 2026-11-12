@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854C8606A31C
-	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 07:54:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4340F606A31C
+	for <kexec@archiver.kernel.org>; Thu, 12 Nov 2026 07:54:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=toL5N+wR;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RhlTASHM
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=QQDVQiv2;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QCcCJ8x/
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,50 +14,50 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=+4s6DPtHecaIws8OsEjwA4Nb5nI6DVYgPSkzZcGuLcM=; b=toL5N+wRn1M9UlM0vRSJShidVH
-	6yRMfiwUy4S4EUIk7s1txnoWroLoMMG3mDYD2MLg8auG3bVB2TSURw/P9FJIdcFxnuH/bLr/Pq7hw
-	SKSDvWH0b4Py+rbTMmW3Xi5wQE8wPdQCjUmygUo2Pv2Yr5X+8J+5zGgX7iExR8o+2kHHg+AqjChcG
-	TgTP3XohNAyu9oPGqCIOuWv47+UCrbtvkrMCRgu+pv3uNICIurto+brM2q/LR1FxL7ml8ad0nUZot
-	TRqP8cxhCL0X52nTyTaIHIGBx6ude/HaQe7+JxxDJ9OrMmo7ULbuoA+1CT7Dmwxde1z7JVQLoFI7b
-	WU/F8LJg==;
+	bh=srOQgDgWOAX6/I0jdHPGkFLTExl16V3iCD3iaXGFZbc=; b=QQDVQiv2aU5Fq1cZtUSDO0im7Y
+	Q9b/lYxY+7E2JPOjnwEiaBafinfJoZNlHTdbL/WQKxpcPerMQ9PzcuV/ZCyDwMnraH2btVoeGJo52
+	3+qhOJ8Pd10Eq8E+Rr4uU0kzYNfWuhEtCxCVQK9Ay2NfAgmYUV0inasQTe0XqY/490lwK6FUEIURZ
+	OH4Rw6HWoCwH+6VkHaM6FqLGV4ezKp4DYQ8/AvYhFeXN5gzilWq2+UDpEdOhRPumtsQKIp0cFEDSo
+	9WcpCYYftKMZ64ChIDjaoQ8kkio1vAxZO18z0l5a5tXdR7DO+7YfRyAhIRVyTXkzdh1r3Sgy0mo+s
+	9a3Lc2ow==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRPdL-00000008ymL-1aME;
-	Thu, 12 Nov 2026 07:54:13 +0000
+	id 1xRPdQ-00000008ynj-3yVq;
+	Thu, 12 Nov 2026 07:54:16 +0000
 Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRPdJ-00000008ylQ-0LIh
+	id 1xRPdJ-00000008ylf-3QxD
 	for kexec@lists.infradead.org;
 	Thu, 12 Nov 2026 07:54:09 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 8F3B242AE1;
+	by sea.source.kernel.org (Postfix) with ESMTP id 91C8041FE2;
+	Thu, 12 Nov 2026 07:54:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA5741F00A05;
 	Thu, 12 Nov 2026 07:54:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDD071F00A05;
-	Thu, 12 Nov 2026 07:54:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794470048;
-	bh=+4s6DPtHecaIws8OsEjwA4Nb5nI6DVYgPSkzZcGuLcM=;
+	s=k20260515; t=1794470049;
+	bh=srOQgDgWOAX6/I0jdHPGkFLTExl16V3iCD3iaXGFZbc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=RhlTASHMzabC8bj4fEMXxIGzC6N7xi791Bo2ze7sQ2rLOukIlIefeX4XbztTCvb/v
-	 uF8pAVxBjc6hbq/CcfpuWdOdHCIOkv94Ht8jSgl5pc99Lo0sSknoA4gy86VoyBC4yA
-	 SpbuQ/kKhUqSKaYDJi/qpv9f4PSf+sFPL7vncH64nf320YaYh1KuZn4Al4qOGQrzSU
-	 PWypapSr5E6lhbdYWvxXJ2VtFjRDahrcUQYVvF2mV04MA1zVOpni8+OwnTOsNffHtY
-	 YviIPXKVcFI0y5Nn7riJPzx9L4mfLDjYnFAm7lDJ6Kr6FPrGvDZIprK+SWvO2vXPpO
-	 UDmKERlWLKYpQ==
-Message-ID: <sashiko-outbox-210638@kernel.org>
+	b=QCcCJ8x/RCBqNneH4WLnogtIy8nJ+mADSpqmiS2iU2yt3Xw6Xs6MXkn82gym9ZfmP
+	 SX1G7oQyisadY4glTOtkD1xYymXtm1VcBG5OxSLGm9kQvyKsLhKzECxIra+OnMFcnb
+	 pT8kFGSjTdDi89bK1GGi4+LgTX4UTKdcCBZGnRzYKnNHKQlY8w5GLm6HNS56oY+Onk
+	 dlXUpnsJiaJPethe3oXSPeKhUNGvEXwPrOJnuRZexggndWle5qryODtfXOcFqFiin0
+	 uPZBR12WOn43THE4p+5sdS1b+WNVQwlAxsoZrAe3v+w29UgtSN7RODONuyfCSCRB7i
+	 OMeEYVQtST4cQ==
+Message-ID: <sashiko-outbox-210639@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/9] kho: Make bootmem reservations visible to fleet
- monitoring
+Subject: Re: [PATCH 3/9] liveupdate: Make failed retrieves distinguishable
+ from dropped files
 To: "Chris Down" <chris@chrisdown.name>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Mike
  Rapoport" <rppt@kernel.org>, "Pratyush Yadav" <pratyush@kernel.org>
 Cc: "Alexander Graf" <graf@amazon.com>, "Baoquan He" <baoquan.he@linux.dev>, "Jonathan
  Corbet" <corbet@lwn.net>, "Shuah Khan" <skhan@linuxfoundation.org>, kexec@lists.infradead.org, linux-mm@kvack.org, kernel-team@meta.com
-In-Reply-To: <c41c639fc5f453d60a265ba42a233f2ea5b48319.1794383544.git.chris@chrisdown.name>
+In-Reply-To: <772c150d0a90139a327803cecf087f6865702753.1794383544.git.chris@chrisdown.name>
 References: <cover.1794383544.git.chris@chrisdown.name>
- <c41c639fc5f453d60a265ba42a233f2ea5b48319.1794383544.git.chris@chrisdown.name>
+ <772c150d0a90139a327803cecf087f6865702753.1794383544.git.chris@chrisdown.name>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 07:54:07 +0000
+Date: Thu, 12 Nov 2026 07:54:08 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,81 +79,118 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 X-Archived-By: <archiver.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found no new issues
-in this patch, but noticed 1 related pre-existing issue it does not
+in this patch, but noticed 2 related pre-existing issues it does not
 introduce:
-- [Critical] kho: scratch memory corruption on error path in kho_init()
-  [1]
+- [Critical] liveupdate: uninitialized file pointer in
+  luo_session_retrieve_fd() [1]
+- [High] liveupdate: pointer used as XArray index in luo_preserve_file()
+  [2]
 --
 
-commit 96d77d1af62b4778bf7f34ac023280de65f57337
+commit acd081aa3a5ef33bac09be5e151d1de15512ea3e
 Author: Chris Down <chris@chrisdown.name>
 
-kho: Make bootmem reservations visible to fleet monitoring
+liveupdate: Make failed retrieves distinguishable from dropped files
 
-This commit exposes the total KHO bootmem reservation size in bytes via a
-new read-only sysfs attribute at /sys/kernel/kexec/kho_bootmem_size.
+This commit exposes incoming live update deserialization state and session
+and file retrieval counters under /sys/class/misc/liveupdate/incoming/.
 
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec=
-_handover.c
-> index 3046b89e5db49..21d77e29d2bb8 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -942,6 +942,21 @@ static void __init kho_reserve_bootmem(void)
->  	kho_enable =3D false;
+> diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
+> index a39992da504fb..3aac1afa05c09 100644
+> --- a/kernel/liveupdate/luo_file.c
+> +++ b/kernel/liveupdate/luo_file.c
+> @@ -543,6 +543,16 @@ void luo_file_unfreeze(struct luo_file_set *file_set,
+>  	memset(file_set_ser, 0, sizeof(*file_set_ser));
 >  }
 > =20
-> +phys_addr_t kho_bootmem_size(void)
+> +/* Record the first retrieve result. A negative status is permanent. */
+> +static void luo_file_set_retrieve_status(struct luo_file *luo_file, int =
+status)
 > +{
-> +	phys_addr_t size =3D 0;
-> +	unsigned int i;
-> +
-> +	/* kho_init() can disable KHO without clearing kho_bootmem_cnt. */
-> +	if (!kho_enable)
-> +		return 0;
-> +
-> +	for (i =3D 0; i < kho_bootmem_cnt; i++)
-> +		size +=3D kho_bootmem[i].size;
-> +
-> +	return size;
+> +	luo_file->retrieve_status =3D status;
+> +	if (status > 0)
+> +		atomic_long_inc(&luo_incoming_stats.files_retrieved);
+> +	else
+> +		atomic_long_inc(&luo_incoming_stats.files_failed);
 > +}
+> +
+>  /**
+>   * luo_retrieve_file - Restores a preserved file from a file_set by its =
+token.
+>   * @file_set: The file_set from which to retrieve the file.
+> @@ -611,7 +621,7 @@ int luo_retrieve_file(struct luo_file_set *file_set, =
+u64 token,
+>  	err =3D luo_file->fh->ops->retrieve(&args);
+>  	if (err) {
+>  		/* Keep the error code for later use. */
+> -		luo_file->retrieve_status =3D err;
+> +		luo_file_set_retrieve_status(luo_file, err);
+>  		return err;
+>  	}
 
 [Severity: Critical]
-This problem wasn't introduced by this patch, but on the kho_init() error
-path referenced by this comment, can err_free_bootmem corrupt active memory
-during a KHO kexec boot [1]?
+This problem wasn't introduced by this patch, but can a positive return from
+fh->ops->retrieve() cause luo_session_retrieve_fd() to pass an uninitialized
+struct file pointer to fd_install() [1]?
 
-During a KHO boot (when fdt is non-NULL), early memblock allocations are
-served from the incoming kho_bootmem regions, and memblock_free_all()
-releases the remaining unallocated bootmem pages to the buddy allocator.
-While the normal path in kho_init() returns early when fdt is non-NULL
-before converting kho_bootmem to CMA, the error path frees every
-kho_bootmem region unconditionally:
+If fh->ops->retrieve() returns a positive value, luo_retrieve_file() returns
+without initializing *filep (and luo_file_set_retrieve_status() records it =
+as
+a retrieved file with status > 0).  luo_session_retrieve_fd() only checks
+for negative errors before installing the stack variable into the process
+file descriptor table:
 
-kernel/liveupdate/kexec_handover.c:kho_init() {
-    ...
-	if (fdt)
-		return 0;
-    ...
-err_free_bootmem:
-	kho_out.fdt =3D NULL;
-	for (int i =3D 0; i < kho_bootmem_cnt; i++) {
-		void *start =3D __va(kho_bootmem[i].addr);
-		void *end =3D start + kho_bootmem[i].size;
+kernel/liveupdate/luo_session.c:luo_session_retrieve_fd() {
+	...
+	struct file *file;
+	...
+	err =3D luo_retrieve_file(&session->file_set, argp->token, &file);
+	mutex_unlock(&session->mutex);
+	if (err < 0)
+		goto err_put_fd;
 
-		free_reserved_area(start, end, -1, "");
-	}
-	kho_enable =3D false;
-	return err;
+	err =3D luo_ucmd_respond(ucmd, sizeof(*argp));
+	if (err)
+		goto err_put_file;
+
+	fd_install(argp->fd, file);
 }
 
-If an initialization step such as kho_alloc_preserve() fails on a KHO boot,
-free_reserved_area() runs on pages that are either in use by early-boot
-allocations or already managed by the buddy allocator, causing
-use-after-free and double free memory corruption.
+luo_ioctl_retrieve_session() has the same pattern with luo_session_retrieve=
+().
+Any subsequent syscall on the installed fd dereferences the uninitialized
+stack pointer.
 
-[1] https://sashiko.dev/#/bug/linux-5ae80b0f-97ab-4112-a0a4-c767da72f4a8
+> @@ -624,7 +634,7 @@ int luo_retrieve_file(struct luo_file_set *file_set, =
+u64 token,
+>  			  luo_file->file, GFP_KERNEL));
+> =20
+>  	*filep =3D luo_file->file;
+> -	luo_file->retrieve_status =3D 1;
+> +	luo_file_set_retrieve_status(luo_file, 1);
+> =20
+>  	return 0;
+>  }
+
+[Severity: High]
+This problem wasn't introduced by this patch, but why does
+luo_preserved_files use raw kernel pointers from luo_get_id() as XArray
+indices [2]?
+
+kernel/liveupdate/luo_file.c:luo_get_id() {
+	return fh->ops->get_id ? fh->ops->get_id(file) : (unsigned long)file;
+}
+
+Both luo_preserve_file() and luo_retrieve_file() pass luo_get_id() directly
+as the index to xa_insert(&luo_preserved_files, ...).  Because XArray is a
+radix tree designed for dense small integer indices, indexing it by sparse
+64-bit pointer values forces the allocation of up to 11 levels of
+intermediate tree nodes per entry, wasting memory and risking OOM.
+
+[1] https://sashiko.dev/#/bug/linux-65e3446e-27d6-4415-82bb-0036dcc7aa0b
+[2] https://sashiko.dev/#/bug/linux-80cdb953-2e71-4aca-9067-108b66f83aaa
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1794383544.gi=
-t.chris@chrisdown.name?part=3D2
+t.chris@chrisdown.name?part=3D3
 
