@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B3A606A8A0
-	for <kexec@archiver.kernel.org>; Fri, 13 Nov 2026 09:38:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD87606A891
+	for <kexec@archiver.kernel.org>; Fri, 13 Nov 2026 13:04:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=HOaBWKZm;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=UpCRHb2K
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=LAZtpv6r;
+	dkim=pass (2048-bit key, unprotected) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.a=rsa-sha256 header.s=h01 header.b=oSaGoiFO
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -14,61 +14,56 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=8Pc1VZfIDVGJzZNtwuo8QG46Hbc/13m3DgBGkiUdd+o=; b=HOaBWKZmwASmLhycwaqnFXQP8a
-	q4Bx7rXEzFTkzhrxVQXnRPQTem1Hs6aMXaLz7le9HOknM4DUHhzU6D7Q+2Ck5XJe6h4W5SawTaTPg
-	t+9hMHVNmb9JI2IRbHMuEt2X5Mgtk0e69NBUu2x+y/dKk5vkFXJ6FzGfsEijuLRJHarZMhazsojDQ
-	2p/K8c010mpvGZva+LKbl653OcC2InDB4nUmK4V2zuWKcK6BYT9qjISqZE5/dbkrSI3nouz8gU54y
-	qdtn5fbogeiDBvTd6643770hcmZPsb7u9WnMTkYFOCes4/km3bh5jomj9gwFHxJV1y0D8gcEK+Nnf
-	A88ekfog==;
+	bh=HqTuUMXfM22ySYhQPGjeWLFpYJZoIXrpBRITb/aVutg=; b=LAZtpv6rLnAVBAVT/S+r6RnVcf
+	S/VSxff48X8rDxEoTjfBrXMUuu3h8imBQJE27A7VELvyZJngSpHEQlHZq4ZigXrWgm/ZxlGftxdDE
+	t3ce13M8Hg7e5oCSPDHdqA/Thr1my+Z/TR6okIMNX3EE91UGIAiKqSWuk5z68LgqsMU2tGNjYt3lh
+	NtOQ4HmBiBzR0FKkBIt5ROvsC08/ypT3fnDD4Gz0PinZB5pTzxB+ICpAFRCX+1YX0TPuGBSzeQD9c
+	m4LvNGweFNnaQeoo9X/uc3Al0sj1VJEo6SkOnH9X66rfibE7KNVaHak752r6Tt+znixF3GctxE53p
+	qVYREBlw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRnk1-0000000CEpn-4C1h;
-	Fri, 13 Nov 2026 09:38:42 +0000
-Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
+	id 1xRqwp-0000000Cp6r-2idl;
+	Fri, 13 Nov 2026 13:04:07 +0000
+Received: from abb.hmeau.com ([180.181.231.80])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRnjz-0000000CEnk-1CE1;
-	Fri, 13 Nov 2026 09:38:41 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=8Pc1VZfIDVGJzZNtwuo8QG46Hbc/13m3DgBGkiUdd+o=; b=UpCRHb2KbmBJPwtI+DbP0LaL8d
-	sOk0q8WFr88S3iAMSHj2p/NnbWVzQGiNdZN3nNdO1zLyJsTHzDT2AYpDsszvlBsPXovwNFHmP0hr1
-	SY9lV829yFxFIN3zvj63ln8CFFNj2wJUNMYIHBmKmY/JsW4XoVGlDKbDaDwxxN5mWJ+s4cUXlOuR/
-	42UfaRA1qiSu2ICNxybe2yLc35tfTycNpZWbHnjQ/jcxlqy6tYUcS/Bi6fkLYSwXtlLGPpV1jMI8t
-	xnhOZeXq4yQ0FVHQXpu6b4xvxJ6oAklL5bw8J+RqC+cFo9eyWVg+5AE204arB4mOGXs0IEiF0Nobe
-	Yc0NfHCw==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1xRnjp-00Eeb5-2V;
-	Fri, 13 Nov 2026 09:38:30 +0000
-Date: Fri, 13 Nov 2026 01:38:22 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Chris Mason <mason@kernel.org>, 
-	Thomas Gleixner <tglx@kernel.org>, x86@kernel.org, kexec@lists.infradead.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	David Hildenbrand <david@kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH RFC 3/4] crash_dump: recover from a machine check in
- copy_oldmem_page()
-Message-ID: <avbagwxWrmFrjrtV@gmail.com>
-References: <20261112-work-procfs-oldmem-v1-0-ecdcafd99265@kernel.org>
- <20261112-work-procfs-oldmem-v1-3-ecdcafd99265@kernel.org>
+	id 1xRqwk-0000000Cp51-2RU6
+	for kexec@lists.infradead.org;
+	Fri, 13 Nov 2026 13:04:04 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=gondor.apana.org.au; s=h01; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:cc:to:subject:message-id:date:
+	from:content-type:reply-to; bh=HqTuUMXfM22ySYhQPGjeWLFpYJZoIXrpBRITb/aVutg=; 
+	b=oSaGoiFOdjh0rfYr65GZKf3juj7y7Mmj+eDclXhQ+3MngLaduAamh1ryN0xXowbAU6BkkYuPOsM
+	llhb8CP/yOBB/KCpcdzSLhos9sH8thV1kTr3DMVyqyUTXA864m+Ki/KRffvtM7l1+Rlp/bMYEJmfF
+	RCorlpclBc5J6Ez9CJFZOadkUTAiYkv4pebTfHnnN01VLB+6Ga9kyLeD7lsXaf9lu8m2X2hCRDmm5
+	nEedynDzkXDcwrg9yFpUJ98XTvWpB2OQ0KTQu5qxZ88dQjljthv07Y1F3n6wLE0YAx69jfye+NvFE
+	SDBvFndpdIucLkZfIwtKjSl5wKOhpcQf43RQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.98.2 #2 (Debian))
+	id 1xRqwf-0000000EfCh-2DZ2;
+	Fri, 13 Nov 2026 21:03:58 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 13 Nov 2026 21:03:57 +0800
+Date: Fri, 13 Nov 2026 21:03:57 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Gu Bowen <gubowen5@huawei.com>
+Cc: David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>,
+	Ignat Korchagin <ignat@linux.win>, keyrings@vger.kernel.org,
+	linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	lujialin4@huawei.com
+Subject: Re: [PATCH -next] crypto: asymmetric_keys: verify_pefile: fix
+ integer underflow in pefile_strip_sig_wrapper
+Message-ID: <avcKvXmCOXYwJM5D@gondor.apana.org.au>
+References: <20261102074934.2925339-1-gubowen5@huawei.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261112-work-procfs-oldmem-v1-3-ecdcafd99265@kernel.org>
-X-Debian-User: leitao
+In-Reply-To: <20261102074934.2925339-1-gubowen5@huawei.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261113_013839_356303_688AC177 
-X-CRM114-Status: GOOD (  23.83  )
-X-Spam-Score: -4.4 (----)
+X-CRM114-CacheID: sfid-20261113_050403_255857_859AF30E 
+X-CRM114-Status: GOOD (  18.42  )
+X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,103 +74,74 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Thu, Nov 12, 2026 at 05:37:09PM +0100, Christian Brauner wrote:
-> A capture kernel reads the memory of the crashed kernel, and that memory
-> may well have uncorrectable errors. That is after all what the first
-> kernel often died of. Every architecture that maps a page of the old
-> kernel and copies it out does so with copy_to_iter(), and a machine
-> check in that copy takes the capture kernel down.
+On Mon, Nov 02, 2026 at 03:49:34PM +0800, Gu Bowen wrote:
+> The pefile_strip_sig_wrapper() function validates the win_certificate
+> wrapper that precedes the PKCS#7 signature in a PE binary.  It checks
+> that the wrapper length does not exceed the certificate table size
+> (``wrapper.length > ctx->sig_len``) but fails to verify that the
+> wrapper length is at least ``sizeof(struct win_certificate)`` (8 bytes).
 > 
-> On x86 a machine check in the kernel is only recovered from if the
-> instruction that took it has a machine check safe exception table entry
-> or copies from userspace (cf. error_context()). The copy of an old page
-> is neither. Its source is kernel memory, whether it goes to the buffer
-> of a read() or, since commit 4a22fd20379c ("vmcore: convert
-> __read_vmcore to use an iov_iter"), into a kernel page for splice(),
-> sendfile() and copy_file_range(). So a read of /proc/vmcore that runs
-> into a poisoned page panics the capture kernel, and so do vmcore's own
-> reads of the ELF headers and notes. Breno sees the result on a fleet:
-> the first kernel dies of a machine check and the capture kernel produces
-> no usable vmcore at all (cf. [1]).
+> When a crafted PE image supplies a wrapper with ``length`` in the range
+> [1, 7], the subsequent arithmetic::
 > 
-> On book3s64 a machine check in the kernel is recovered from if the
-> instruction that took it has an exception table entry (cf.
-> mce_common_process_ue()). The user copy has them, so a read() comes up
-> short there and read_from_oldmem() returns -EFAULT. The copies into
-> kernel pages have none and panic the same way. Other powerpc platforms
-> don't recover from a machine check in such a copy at all.
+>     ctx->sig_len = wrapper.length;      /* e.g. 1 */
+>     ctx->sig_offset += sizeof(wrapper);
+>     ctx->sig_len -= sizeof(wrapper);    /* 1 - 8 = 0xFFFFFFF9 (unsigned) */
 > 
-> Copy with _copy_mc_to_iter() instead. x86_64 and PPC64 select
-> ARCH_HAS_COPY_MC, and on x86_64 and book3s64 the machine check safe copy
-> turns the machine check into a short copy, which read_from_oldmem()
-> turns into -EFAULT like any other short copy. On x86 that holds for the
-> fragile and the enhanced fast string variant, a CPU with neither gets
-> the plain copy it has today. Everywhere else _copy_mc_to_iter() is
-> _copy_to_iter(). Put the call into a helper, copy_oldmem_to_iter(), so
-> that the copy of a page of the old kernel lives in one place and an
-> architecture that gains a machine check safe copy later gets this for
-> free. The helper does the same check_copy_size() as copy_to_iter(), so
-> hardened usercopy keeps checking the copy.
+> underflows the unsigned ``ctx->sig_len`` to a value near UINT_MAX.  The
+> following ``sig_len < 4`` sanity check is bypassed because 0xFFFFFFF9 is
+> greater than 4.
 > 
-> With a v7.4-rc1 capture kernel reading /proc/vmcore and a machine check
-> injected into the copy of an old page the capture kernel is gone. A
-> machine check panic prints no trace of its own, this one comes from
-> panic_sys_info=all_bt:
+> The underflowed ``sig_len`` is then passed to verify_pkcs7_signature()
+> and onwards to asn1_ber_decoder().  The ASN.1 decoder's own
+> ``datalen > 65535`` entry guard can be satisfied by constructing a
+> PKCS#7 length field of exactly 65535 (e.g. ``30 82 ff fb``), allowing
+> the decoder to proceed and attempt to read OID octets beyond the
+> allocated vmalloc buffer, triggering a page fault in look_up_OID()::
 > 
-> [    0.580568] mce: [Hardware Error]: CPU 0: Machine Check Exception: 7 Bank 1: bd80000000000134
-> [    0.580574] mce: [Hardware Error]: RIP 10:<ffffffff81909b11> {_copy_to_iter+0x81/0x850}
-> [    0.580584] mce: [Hardware Error]: TSC 202f2117f ADDR 10000000 MISC 8c
-> [    0.580587] mce: [Hardware Error]: PROCESSOR 2:aa0f02 TIME 1794493617 SOCKET 0 APIC 0 microcode aa0021c
-> [    0.580589] mce: [Hardware Error]: Machine check: Uncorrected unrecoverable error in kernel context
-> [    0.580591] Kernel panic - not syncing: Fatal local machine check
-> [    0.582587] CPU: 0 UID: 0 PID: 1 Comm: init Not tainted 7.4.0-rc1-g6628e7d4c6b2 #1 PREEMPT(lazy)
-> [    0.583101] Call Trace:
-> [    0.583198]  <#MC>
-> [    0.583279]  dump_stack_lvl+0x4d/0x70
-> [    0.583419]  nmi_cpu_backtrace.cold+0x18/0x6e
-> [    0.583584]  ? __pfx_nmi_raise_cpu_backtrace+0x10/0x10
-> [    0.583772]  nmi_trigger_cpumask_backtrace+0xba/0xf0
-> [    0.583955]  sys_info+0x83/0xb0
-> [    0.584075]  vpanic+0x1b4/0x303
-> [    0.584197]  panic+0x66/0x70
-> [    0.584488]  mce_panic+0x19e/0x290
-> [    0.584799]  do_machine_check+0x627/0x9a0
-> [    0.584953]  ? _copy_to_iter+0x81/0x850
-> [    0.585099]  exc_machine_check+0x68/0xb0
-> [    0.585246]  asm_exc_machine_check+0x1e/0x40
-> [    0.587747]  </#MC>
-> [    0.587831]  <TASK>
-> [    0.588092]  ? iomem_map_sanity_check+0x98/0xb0
-> [    0.588430]  ? __ioremap_caller.isra.0+0x1a9/0x300
-> [    0.588604]  ? __copy_oldmem_page+0x3d/0xb0
-> [    0.588928]  __copy_oldmem_page+0x5e/0xb0
-> [    0.589079]  read_from_oldmem.part.0+0xe3/0x140
-> [    0.589247]  read_vmcore+0x137/0x280
-> [    0.589381]  proc_reg_read_iter+0x49/0x90
-> [    0.589533]  vfs_read+0x348/0x490
-> [    0.589666]  ksys_read+0x76/0x100
-> [    0.589792]  do_syscall_64+0xde/0x4b0
-> [    0.590103]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>   BUG: unable to handle page fault for address: ffffd1e986cb2000
+>   #PF: supervisor read access in kernel mode
+>   RIP: 0010:look_up_OID+0x14/0x100
+>   Call Trace:
+>    pkcs7_note_OID+0x33/0xa0
+>    asn1_ber_decoder+0x363/0xbd0
+>    pkcs7_parse_message+0xd9/0x1b0
+>    verify_pkcs7_signature+0x24/0x80
+>    verify_pefile_signature+0x7b/0xf0
+>    kexec_kernel_verify_pe_sig+0x1b/0x40
+>    kimage_file_alloc_init+0x1d8/0x3f0
+>    __se_sys_kexec_file_load+0xc6/0x270
 > 
-> With this patch the same injection ends the read() with -EFAULT, the
-> capture kernel logs the machine check and keeps running.
+> This is reachable through the kexec_file_load syscall on architectures
+> that verify PE signatures (x86 bzImage with
+> CONFIG_KEXEC_BZIMAGE_VERIFY_SIG, arm64 Image with
+> CONFIG_KEXEC_IMAGE_VERIFY_SIG), requiring CAP_SYS_BOOT.
 > 
-> [1]: https://lore.kernel.org/all/avRXzzCSzT9Qj2FC@gmail.com/
+> The oops occurs while the caller holds kexec_lock; if the faulting task
+> is killed, the lock is never released, leaving all subsequent kexec and
+> kdump operations permanently returning -EBUSY until reboot.
 > 
-> Reported-by: Chris Mason <mason@kernel.org>
-> Suggested-by: Breno Leitao <leitao@debian.org>
-> Fixes: 4ae362be5093 ("[PATCH] kdump: read previous kernel's memory")
-> Fixes: 54c32021eb6f ("[PATCH] powerpc: Add arch-dependent copy_oldmem_page")
-> Fixes: 4a22fd20379c ("vmcore: convert __read_vmcore to use an iov_iter")
+> Add a lower-bound check on wrapper.length before the subtraction to
+> prevent the underflow.
+> 
+> Fixes: 09dacbbda935 ("pefile: Strip the wrapper off of the cert data block")
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
+> Signed-off-by: Gu Bowen <gubowen5@huawei.com>
+> ---
+>  crypto/asymmetric_keys/verify_pefile.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 
-Reviewed-by: Breno Leitao <leitao@debian.org>
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
 
