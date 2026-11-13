@@ -2,87 +2,87 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0F5606A333
-	for <kexec@archiver.kernel.org>; Fri, 13 Nov 2026 17:06:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659646084365
+	for <kexec@archiver.kernel.org>; Fri, 13 Nov 2026 17:22:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=sPbVamzF;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=e2gHZ26b
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=XRQ4kvSc;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=an7qNshc
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=TmmnV/ymSMAI2Dol5zCaEFZv43vlX+d7yneKTBH5aJI=; b=sPbVamzFHkoMPh
-	qXamAr2yZYeBWiYAsgMrw6oYzsIuKT+uVqZJOD6m5PW9yWZUYP6xhKJHpEJNDMbzjHjMqXDgdyt6h
-	ocXpHfReAWK/sC3uMICnYZpg1Np0/XymhZah2A4ZHmSW1YDbiTUkgfcob6TAg/3SZmtin5rFidUd0
-	TjfXkYcffl4WIWhszbV+uDkw4xB0l8+iqcGdoNv3Z5fjzGW2T13LybnumpgRxM+Bsh8midq+WNF0T
-	SSRZKDGs5Kpssw7bc4XQ9glWLGVqg8Dd4lj2EkkAT6KOhdBxadtlxK5EIcJL08MPV6S+vsv8mM2Hq
-	Z+4khFd6y94oFILga+oQ==;
+	List-Owner; bh=z43uFM3Pjo7vfGW2mID+1SupLltnf5Xt8DNDDQTTcdI=; b=XRQ4kvSc8mYtiu
+	FKScddFli80LEbODgVdq/C4rrneEMeSJlMA1HIwT7aFRJ5Gm12xryKPC+MA0d1voID/l5ksC0vaCt
+	4TZ3TgfgkgTX9Oy97HcDwLQbcA2T72kc+wt/zkVGztUeqtzPwwHOVitq1QIUTPuCnc5ZHZdcBHVC5
+	nu6CXHRLryUekvOdwLcuvfAaj7gsibVb8v48EtijA9pkmL8R7v3Z2Ev3q5IGANVQV2IvAldt4bPMz
+	t6UUDcRPcNLDcX//5r8MvbzflKSGDTYc1faqNCTy5PYgSjD14VcewE1gz5ALZvNXHozm9kbNriynL
+	dJe25tXSz1DAWrCk13oQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRujc-0000000Dh0R-2CnD;
-	Fri, 13 Nov 2026 17:06:44 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1xRuz1-0000000DjQh-3aeB;
+	Fri, 13 Nov 2026 17:22:39 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRujZ-0000000DgzW-2cn3
+	id 1xRuyy-0000000DjPp-265v
 	for kexec@lists.infradead.org;
-	Fri, 13 Nov 2026 17:06:42 +0000
+	Fri, 13 Nov 2026 17:22:37 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1794589600;
+	s=mimecast20190719; t=1794590555;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TmmnV/ymSMAI2Dol5zCaEFZv43vlX+d7yneKTBH5aJI=;
-	b=e2gHZ26bDcZVmjNnP5itMSUk0JgsqlVoufhv6xY8lYsxY1w3opJu7NVXsJL0AvdpI63mfY
-	ABeRWr3Z5VBwI85EXuKBY+LG3gX0iEyduiduJrFtDNQWcOkXykG9mnQavh7414TxRav0Te
-	t7zj0wuaEfaVh0tk0jA8CP6k7naMr3E=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=z43uFM3Pjo7vfGW2mID+1SupLltnf5Xt8DNDDQTTcdI=;
+	b=an7qNshcty32otm5qc6CSPxErGcMnyUYWXQa8X2t7Wm7rmmS2RBjZ9GNdTNRIwjpIF8iAb
+	UlezVmtgYquLGDTsS8QBdBAOiVnfOwFYZepup5h9hTPFUvP5uKAcP4efq2CvLNy2InrgLl
+	VZC3e6d68eeiNBko8aMNA31HguofSvw=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-341-jajO78T_Ps6MtBd7p-C2Qw-1; Fri, 13 Nov 2026 12:06:39 -0500
-X-MC-Unique: jajO78T_Ps6MtBd7p-C2Qw-1
-X-Mimecast-MFC-AGG-ID: jajO78T_Ps6MtBd7p-C2Qw_1794589598
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-3b15e47e57fso721779a91.3
-        for <kexec@lists.infradead.org>; Fri, 13 Nov 2026 09:06:39 -0800 (PST)
+ us-mta-544-wUjNE_m6Ozuhp1pfPVLjKw-1; Fri, 13 Nov 2026 12:22:34 -0500
+X-MC-Unique: wUjNE_m6Ozuhp1pfPVLjKw-1
+X-Mimecast-MFC-AGG-ID: wUjNE_m6Ozuhp1pfPVLjKw_1794590553
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2e8dd9b9743so16115595ad.1
+        for <kexec@lists.infradead.org>; Fri, 13 Nov 2026 09:22:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794589598; x=1795194398;
+        d=1e100.net; s=20260707; t=1794590553; x=1795195353;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=TmmnV/ymSMAI2Dol5zCaEFZv43vlX+d7yneKTBH5aJI=;
-        b=Q9Q77g+l6VIw/Xuo2X3PaR6csGLJ0D9aSvxQ5qK3wvL/9wjbgwX1DqVqXoS/bxnkON
-         vg/cuZAtsC6QXjsCXv8BAdeneTwnj3HqiYMa0NH735ZhNUN+Y8xYv0kBYv+vxklI+5Oi
-         /6alqnafM8N3oggJ4l0h5iF8OY875fsk/Ahn7q8WqE0zv9JVvXUUJaKIAm0ONW5kp+lM
-         fyUGL2TkrgEIUYrU8utOdJiRF1/Wb/mqEUQKpKKERcrYJWgWEdFh6TyVZ3R1iS0OQW65
-         bwbMfDiVrI1nYQRuj3wt+e+604ihBDJVHmDPho0NqMr095UrR9Zq7+gllwxm+IBQ+6hW
-         1lEw==
-X-Forwarded-Encrypted: i=1; AL+hErHNlxhqkuoqehm9JlR7XFjRyqvtxspQG5c2wa7GXWGxl3zezFqZXZ5uLY9hv8ZZmeRsOa6X8g==@lists.infradead.org
-X-Gm-Message-State: APuU4Z9IWrWdDibcLlNJIsJx06UvHwUK+Y0JIuPur5yqK6Ndk20TXl7J
-	ApWgNNzrnNOSXA5bD42KyiX9YIuma3vFx15Hehejcv5rVyXhF3vLkCd2VTH9ogYJNxlt1SzaI+E
-	iaJhNQW2+RydoH2Hcbjc3O/1cv4ucDxUAx9hxN8ez7aG/Dce3HlkPMtjlT41GRg==
-X-Gm-Gg: AYBFou23E0BjLriurWYqPEFPkhjv3HF1LRmaEokvarBg3UbUETHg50S+1Kjg4RB3vx/
-	IeT1xlgTeL3b7uHTlRdfI/4LVqKEzulTgS/reQG4OnLcf92juAu7gfaSpsApUphtj3TN/MQJcsQ
-	MS1nXhvVmHS1B/3kuzhbbfwZ6Y2JmmHuHWxtYmHOZe1QABZYYY01lOdpy9IWsMKswuG1ynukUgK
-	jbXDC3lnaL+oMz3TEcW0K1gJ/OlGuyzXrt6hkNsmIoCJcW5wFyK9GNzWVV8QRoFpob8wNOsjiLs
-	rq1ON/tjwAXEeXixSLkewHO4C6VZAEfvjcTalmTEes1ql1NYyBdxLXD6vfN8yprVFlzCkg1TkgW
-	gz1FLCMl8HtaD3iQ9kL0EZkT/FqBqjf4r8nDllSI/qfa1/gJtJqI6QeSGQS4VQAggHLextAU=
-X-Received: by 2002:a17:90a:dfcf:b0:3ac:7556:8eda with SMTP id 98e67ed59e1d1-3b1b0a1b56fmr2668130a91.26.1794589598110;
-        Fri, 13 Nov 2026 09:06:38 -0800 (PST)
-X-Received: by 2002:a17:90a:dfcf:b0:3ac:7556:8eda with SMTP id 98e67ed59e1d1-3b1b0a1b56fmr2668105a91.26.1794589597671;
-        Fri, 13 Nov 2026 09:06:37 -0800 (PST)
+        bh=z43uFM3Pjo7vfGW2mID+1SupLltnf5Xt8DNDDQTTcdI=;
+        b=GC+PkzhSwIAVcfWpgsGKff+Los2kYwFZ4kmFuVVEMyudgUKDOPzo0MLVWhbPWn4vOu
+         ore0vJ9C1JIfSFNrL7ZZLYciYg/VhPNXpeOhbh/TD89OMa4H2D6zvXaWPMv97EPcJNaP
+         ZOQ4niuOBwePd00utk/8v1el/NhuGCyC0jwsW+dXYO2DCeT989CebpOHJyekCjW6ZzQc
+         DBb1tqrx1vcjYKqPeIabtPDOdtOSFWqdxer18BC29NQGAcs8B2nBZ20rApYHIOPr84cm
+         10WaIhSeb0/G0jtOzuxpp8z0LorNawodmNTkFnIK4MhY+eVGsgjIiGNGLCYiluv2wMkm
+         zkEA==
+X-Forwarded-Encrypted: i=1; AL+hErFxwiDsQOQ/UPk2mKAgHUUIKzJ+Wf42lWJh4AZUVRiqsaAXzr8teqSoudZibBRT27plJvSiNg==@lists.infradead.org
+X-Gm-Message-State: APuU4Z82LutUo7A8qA2kQkhiRdSCZqOvtJ9fL9R/rxmMC0Ny8djMxjxy
+	//b3uNe5MGsybqcu3DbE9b+yS7A8ahxGoMylg9NfYHboHypljvSeycM0H2gzXEpL1r5lWsbluNz
+	zihqj9N5hal8znM6M8le6WHBleT+m+2Ej1Cd3C7ZUraPaQW0nYJ5vu3GawYRHPQ==
+X-Gm-Gg: AYBFou1FecbbTmurIZZsSU/xoYIQ7iH1kqP0YH1ldbdXDGcaFed6lG+fLQOUz7W6cHt
+	bsX+er9NIn9zfuZkN0zLJ6KTxMh5Gjok+EAkuC3imvX2ze/rnefea4EhoYxRvjHZLzOiDXfuclj
+	zexsNHiWIyg7G1j2hqFQRFqeZ9tuh0ZHHdiHgKJOzXId7r3zMBskC0aJAIIeu/kZUVO8VcQxdk9
+	SPBNNHApn7ZBMVxayB9xRlIq2wi+q3MG6o2sEQQhopQMkdlUX66dO/Vy8hWgaznOaOAnecpMktS
+	n63DzDYd/EoLDFdkxDZ3uKjYKqiEWPrqe51QSyjWJXTS9gmmFFrsDIJJqtZJ/EKS3MDHS41uGGx
+	n1WID0Qq5h7A3l7a8YhCOkv4S+2GD4tbLjYJstCTIdHwprPumWeNw1nxPEdgNuSChyXvkM8c=
+X-Received: by 2002:a17:902:d550:b0:2e9:6f2c:71b9 with SMTP id d9443c01a7336-2ee0d6654a8mr33241535ad.1.1794590552873;
+        Fri, 13 Nov 2026 09:22:32 -0800 (PST)
+X-Received: by 2002:a17:902:d550:b0:2e9:6f2c:71b9 with SMTP id d9443c01a7336-2ee0d6654a8mr33241305ad.1.1794590552278;
+        Fri, 13 Nov 2026 09:22:32 -0800 (PST)
 Received: from [192.168.1.102] ([117.245.168.128])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b1b3b110c0sm2247977a91.3.2026.11.13.09.06.31
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ee0f809867sm14050805ad.41.2026.11.13.09.22.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Nov 2026 09:06:37 -0800 (PST)
-Message-ID: <2bae83be-bb44-4541-bf1c-5861f73a7394@redhat.com>
-Date: Fri, 13 Nov 2026 22:36:30 +0530
+        Fri, 13 Nov 2026 09:22:31 -0800 (PST)
+Message-ID: <9eac28b2-1931-434a-ad06-ceddf34869f1@redhat.com>
+Date: Fri, 13 Nov 2026 22:52:24 +0530
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/5] kho: reject zero bootmem scale
+Subject: Re: [PATCH v3 5/5] kho: docs: update description of bootmem regions
 To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
  Jonathan Corbet <corbet@lwn.net>, Pasha Tatashin
  <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>
@@ -94,18 +94,18 @@ Cc: Alexander Graf <graf@amazon.com>,
  Sourabh Jain <sourabhjain@linux.ibm.com>, kexec@lists.infradead.org,
  linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
 References: <20261112-kho-bootmem-sizing-v3-0-f0c8d00295d5@kernel.org>
- <20261112-kho-bootmem-sizing-v3-1-f0c8d00295d5@kernel.org>
+ <20261112-kho-bootmem-sizing-v3-5-f0c8d00295d5@kernel.org>
 From: Mukesh Pilaniya <mpilaniy@redhat.com>
-In-Reply-To: <20261112-kho-bootmem-sizing-v3-1-f0c8d00295d5@kernel.org>
+In-Reply-To: <20261112-kho-bootmem-sizing-v3-5-f0c8d00295d5@kernel.org>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Aj1_-a7epFsesZE9vVRVBmLXZZM1StFNYt34H47Kn9I_1794589598
+X-Mimecast-MFC-PROC-ID: ne7S3MmXmDtWYzFjR7z95P77RzQlF9PLTwPqbFLx3XM_1794590553
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261113_090641_749871_A191DD9E 
-X-CRM114-Status: GOOD (  16.05  )
+X-CRM114-CacheID: sfid-20261113_092236_775114_5D111D02 
+X-CRM114-Status: GOOD (  24.95  )
 X-Spam-Score: -2.8 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -128,52 +128,66 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 
 
 On 12/11/26 4:08 pm, Mike Rapoport (Microsoft) wrote:
-> kho_bootmem=0% sets bootmem_scale to 0, and then the bootmem areas are
-> sized using the explicit sizes that default to 0. KHO remains enabled,
-> but there is no usable bootmem to load the next kernel.
+> The description of the boot memory regions does not mention the low
+> memory region and claims there is always a region per node plus a global
+> region, while the low memory and the global regions are not allocated
+> when they would be empty.
 > 
-> Reject zero scale the same way zero explicit sizes are rejected.
+> List all types of the boot memory regions and describe when they are not
+> allocated.
 > 
-> Fixes: 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation helpers")
+> While on it, fix grammar and split the description of the regions size
+> and of the CMA usage into separate paragraphs.
+> 
 > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 > ---
->  kernel/liveupdate/kexec_handover.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
+>  Documentation/core-api/kho/index.rst | 31 ++++++++++++++++++++-----------
+>  1 file changed, 20 insertions(+), 11 deletions(-)
 > 
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-> index 6f1f55fe31819..b30ba686cb301 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -703,16 +703,22 @@ static int __init kho_parse_bootmem_size(char *p)
->  	if (p[len - 1] == '%') {
->  		/* unsigned int max is 4,294,967,295, 10 chars */
->  		char s_scale[11] = {};
-> +		unsigned int scale;
->  		int ret = 0;
+> diff --git a/Documentation/core-api/kho/index.rst b/Documentation/core-api/kho/index.rst
+> index e78a2bbe2be1d..ce2bf9cf66514 100644
+> --- a/Documentation/core-api/kho/index.rst
+> +++ b/Documentation/core-api/kho/index.rst
+> @@ -52,17 +52,26 @@ allocations before during boot up to the initialization of the page allocator.
 >  
->  		if (len > ARRAY_SIZE(s_scale))
->  			return -EINVAL;
->  
->  		memcpy(s_scale, p, len - 1);
-> -		ret = kstrtouint(s_scale, 10, &bootmem_scale);
-> -		if (!ret)
-> -			pr_notice("bootmem scale is %d%%\n", bootmem_scale);
-> -		return ret;
-> +		ret = kstrtouint(s_scale, 10, &scale);
-> +		if (ret)
-> +			return ret;
-> +		if (!scale)
-> +			return -EINVAL;
-Reviewed-by: Mukesh Pilaniya <mpilaniy@redhat.com>
-
+>  We guarantee that we always have such regions through the boot memory regions:
+>  On first boot KHO allocates several physically contiguous memory regions. Since
+> -after kexec these regions will be used by early memory allocations, there is a
+> -boot memory region per NUMA node plus a boot memory region to satisfy
+> -allocations requests that do not require particular NUMA node assignment. By
+> -default, size of the boot memory region is calculated based on amount of memory
+> -allocated during boot. The ``kho_bootmem`` kernel command line option may be
+> -used to explicitly define size of the boot memory regions. The boot memory
+> -regions are declared as CMA when page allocator is initialized so that their
+> -memory can be used during system lifetime. CMA gives us the guarantee that no
+> -handover pages land in that region, because handover pages must be at a static
+> -physical memory location and CMA enforces that only movable pages can be located
+> -inside.
+> +after kexec these regions will be used by early memory allocations, there are
+> +several types of such regions to ensure that all boot-time allocations work:
 > +
-> +		bootmem_scale = scale;
-> +		pr_notice("bootmem scale is %d%%\n", bootmem_scale);
-> +		return 0;
->  	}
+> +* a low memory region for allocations below ``ARCH_LOW_ADDRESS_LIMIT``
+> +* a region per NUMA node
+> +* a global region for allocations that do not require a particular NUMA node
+> +
+> +Regions that would be empty are not allocated. For example, there is no low
+> +memory region when ``ARCH_LOW_ADDRESS_LIMIT`` covers all memory, and there is
+> +no global region when ``CONFIG_NUMA`` is disabled.
+> +
+> +By default, the size of the boot memory regions is calculated based on the
+> +amount of memory allocated during boot. The ``kho_bootmem`` kernel command line
+> +option may be used to explicitly define the size of the boot memory regions.
+> +
+> +The boot memory regions are declared as CMA when the page allocator is
+> +initialized so that their memory can be used during system lifetime. CMA gives
+> +us the guarantee that no handover pages land in that region, because handover
+> +pages must be at a static physical memory location and CMA enforces that only
+> +movable pages can be located inside.
 >  
->  	/* parse ll[KMG],mm[KMG],nn[KMG] */
+>  After KHO kexec, we ignore the ``kho_bootmem`` kernel command line option and
+>  instead reuse the exact same region that was originally allocated. This allows
 > 
+Reviewed-by: Mukesh Pilaniya <mpilaniy@redhat.com>
 
 -- 
 Regards,
