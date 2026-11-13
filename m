@@ -2,68 +2,164 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD87606A891
-	for <kexec@archiver.kernel.org>; Fri, 13 Nov 2026 13:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8613606A8B3
+	for <kexec@archiver.kernel.org>; Fri, 13 Nov 2026 13:24:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=LAZtpv6r;
-	dkim=pass (2048-bit key, unprotected) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.a=rsa-sha256 header.s=h01 header.b=oSaGoiFO
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=S5+c6NYG;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=KOXjRmgO;
+	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=I8M+/Lsl
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=HqTuUMXfM22ySYhQPGjeWLFpYJZoIXrpBRITb/aVutg=; b=LAZtpv6rLnAVBAVT/S+r6RnVcf
-	S/VSxff48X8rDxEoTjfBrXMUuu3h8imBQJE27A7VELvyZJngSpHEQlHZq4ZigXrWgm/ZxlGftxdDE
-	t3ce13M8Hg7e5oCSPDHdqA/Thr1my+Z/TR6okIMNX3EE91UGIAiKqSWuk5z68LgqsMU2tGNjYt3lh
-	NtOQ4HmBiBzR0FKkBIt5ROvsC08/ypT3fnDD4Gz0PinZB5pTzxB+ICpAFRCX+1YX0TPuGBSzeQD9c
-	m4LvNGweFNnaQeoo9X/uc3Al0sj1VJEo6SkOnH9X66rfibE7KNVaHak752r6Tt+znixF3GctxE53p
-	qVYREBlw==;
+	bh=OEbssf/iPew9KcBZFoXr9uJ3U1Ef0Mi0uoKhVrqhNLI=; b=S5+c6NYGPyvN6xCMnt8+siKu2z
+	hTebHqgYZIeE+cNMHThJ8TYQ4xK8Vu9gPE6AaT35dk8h3oZseLoFr6QRyr7yn+DUzAt3pvGdksQcu
+	3+cbtpY2rrEQQ/puPdsPvfgRZDjffq9pr7nwWQkLGFWzVTiyQWOb7qwLJzxi1rQcc1g8ijo1PElj0
+	InQDpV+hIwInsa4V4lWhpBFHIcPEjST2lQh2+arR0tDC6Q0xVdh1eltaS6p7GhctkJ3Plv8Emjfih
+	OsRV6L0Pgj/L1MFywDpV75cfWTL2MW7pHI/qNcYKajv8J9KkCGFExbEmsFeYg5v2xkPTaAE/qmQa6
+	erv+VMQQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRqwp-0000000Cp6r-2idl;
-	Fri, 13 Nov 2026 13:04:07 +0000
-Received: from abb.hmeau.com ([180.181.231.80])
+	id 1xRrGT-0000000Cv0y-21nb;
+	Fri, 13 Nov 2026 13:24:25 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRqwk-0000000Cp51-2RU6
-	for kexec@lists.infradead.org;
-	Fri, 13 Nov 2026 13:04:04 +0000
+	id 1xRrGS-0000000CuyH-0BBS
+	for kexec@bombadil.infradead.org;
+	Fri, 13 Nov 2026 13:24:24 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=gondor.apana.org.au; s=h01; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:cc:to:subject:message-id:date:
-	from:content-type:reply-to; bh=HqTuUMXfM22ySYhQPGjeWLFpYJZoIXrpBRITb/aVutg=; 
-	b=oSaGoiFOdjh0rfYr65GZKf3juj7y7Mmj+eDclXhQ+3MngLaduAamh1ryN0xXowbAU6BkkYuPOsM
-	llhb8CP/yOBB/KCpcdzSLhos9sH8thV1kTr3DMVyqyUTXA864m+Ki/KRffvtM7l1+Rlp/bMYEJmfF
-	RCorlpclBc5J6Ez9CJFZOadkUTAiYkv4pebTfHnnN01VLB+6Ga9kyLeD7lsXaf9lu8m2X2hCRDmm5
-	nEedynDzkXDcwrg9yFpUJ98XTvWpB2OQ0KTQu5qxZ88dQjljthv07Y1F3n6wLE0YAx69jfye+NvFE
-	SDBvFndpdIucLkZfIwtKjSl5wKOhpcQf43RQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.98.2 #2 (Debian))
-	id 1xRqwf-0000000EfCh-2DZ2;
-	Fri, 13 Nov 2026 21:03:58 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 13 Nov 2026 21:03:57 +0800
-Date: Fri, 13 Nov 2026 21:03:57 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Gu Bowen <gubowen5@huawei.com>
-Cc: David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>,
-	Ignat Korchagin <ignat@linux.win>, keyrings@vger.kernel.org,
-	linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	lujialin4@huawei.com
-Subject: Re: [PATCH -next] crypto: asymmetric_keys: verify_pefile: fix
- integer underflow in pefile_strip_sig_wrapper
-Message-ID: <avcKvXmCOXYwJM5D@gondor.apana.org.au>
-References: <20261102074934.2925339-1-gubowen5@huawei.com>
+	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Transfer-Encoding
+	:Content-Type:In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=OEbssf/iPew9KcBZFoXr9uJ3U1Ef0Mi0uoKhVrqhNLI=; b=KOXjRmgOaG2ZvQTtH2nf1Xenfy
+	ciyQvklb+DDGoi33PU0idalOZoTHNdjo5yjG6pBikFUb8Lzlm1kvtT18QymZsQG+8WbfCm4HohwS+
+	RVCCHoZPSMjCYLPdNHCkmaa+vs/eI7d6xYhY6BavTdgVxCd+F+aqqqT3U81UdYcVIxxWS+Ar5HzEF
+	Z/ZXkI6Thv8nUGsyxhzBJ5LTv9+XZYwJ9aQC4/makvpMs+zz9fccqWNB5BzY4Bm6Ui0du31ekWZq/
+	u8gsH1WNs0NsJgy2D/6/3twarKRzpxBrTQSmTGlyhkwvYx8fs9aVzW1dG988hQqDvV5Ubpnvh4DNj
+	MwgEqCww==;
+Received: from mail-westusazlp170120002.outbound.protection.outlook.com ([2a01:111:f403:c001::2] helo=SJ2PR03CU001.outbound.protection.outlook.com)
+	by desiato.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xRrGO-0000000BJ3L-0fTa
+	for kexec@lists.infradead.org;
+	Fri, 13 Nov 2026 13:24:22 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sJ711i+U0RKDupFxB7IR7x36zOWg2qWCWXIhgxcOwH4Hy5XqBcbCE/izAkOl9GIrCW9+AOoxXdhip26slzgYTDWoFiKx4K8g3ornXdNm9L04Uj478EULCgiJUU178pvucz1zRbWSdfIc8+0BQn2yyOvRgqe7RLzZ6NFUVoqiSC6osveea+Y6yZ4PfJ20hknQrvsXCNPase2/aPCr2b3FvD+W3IqIL/5ihooIhP4Rn215Es4kK8aHBLDE1/HvyAstd1M6VfVRb6oc+0EvPcqCC+NNGv+diLqSABfc5dIljMEyXm7rTqe3MaQBKVYfFzqmROrgvV2PVF3b4q6Sd82fMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OEbssf/iPew9KcBZFoXr9uJ3U1Ef0Mi0uoKhVrqhNLI=;
+ b=C49UK4UrQPcTdh+DK8fK9spFRkIh3OTDwyZkhUzu81yMb5vAZ59470/BVOuUnVAvyuNJFHOLx7JBWMvi8yXqC6f67vr06+AVvLMoR0VZq/GbwAzIOaJ3Ku3jrQqIdX06g61/wWyg5NAMGu40kvW0/a6O/pEABjbYSvBbebwLB79DoBIMXiVhUT21H1MoZ4z0d+gPiQgCnt9YVf1BVTVYK6G5CmxvvVEC2yxiwqq79Nyz3Bb77osYGjstwdRoz6NBwTxhMGBXk3IByfrNc19PTmb1Lm+FWP36iizGZHF+uXJXqaIDonxU32zMtjimcLMLd9w5Egl1bSPmjj2BT29ppQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OEbssf/iPew9KcBZFoXr9uJ3U1Ef0Mi0uoKhVrqhNLI=;
+ b=I8M+/LslWgbIN5XeTXs7nAKZsmNJv4b3mYd09U2VpFJwx59GubvXXxi8aRHTe+GqVNMgUPwZHnnVhxACaqpgqHqbiRFNVdG41Hnho35qiOj+X4DEpPXTNX+/qV/oFd/DytaMsSCuRlbXg2ayTsIXSoLi1FvhuWmJU6kpnHmPeeQ=
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CY1PR12MB9697.namprd12.prod.outlook.com (2603:10b6:930:107::6)
+ by PH7PR12MB7796.namprd12.prod.outlook.com (2603:10b6:510:275::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.13; Fri, 13 Nov
+ 2026 13:24:05 +0000
+Received: from CY1PR12MB9697.namprd12.prod.outlook.com
+ ([fe80::3a41:55a0:8203:596d]) by CY1PR12MB9697.namprd12.prod.outlook.com
+ ([fe80::3a41:55a0:8203:596d%4]) with mapi id 15.21.0592.012; Fri, 13 Nov 2026
+ 13:24:05 +0000
+Message-ID: <5acdf1f0-7b77-48f7-ac22-2095830936d8@amd.com>
+Date: Fri, 13 Nov 2026 18:52:09 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] mm/cma: reject CMA areas that overlap the kernel
+ image
+To: Mike Rapoport <rppt@kernel.org>,
+ Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+Cc: robh@kernel.org, saravanak@kernel.org, akpm@linux-foundation.org,
+ david@kernel.org, ljs@kernel.org, liam@infradead.org, vbabka@kernel.org,
+ surenb@google.com, mhocko@suse.com, m.szyprowski@samsung.com,
+ robin.murphy@arm.com, baoquan.he@linux.dev, pasha.tatashin@soleen.com,
+ pratyush@kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux.dev,
+ kexec@lists.infradead.org, anirudha.sarangi@amd.com
+References: <20261103162429.2053989-1-radhey.shyam.pandey@amd.com>
+ <20261103162429.2053989-4-radhey.shyam.pandey@amd.com>
+ <avBXZ8iW2XPyVbmF@kernel.org>
+Content-Language: en-US
+From: "Pandey, Radhey Shyam" <radheys@amd.com>
+In-Reply-To: <avBXZ8iW2XPyVbmF@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN5P287CA0025.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:c01:263::7) To CY1PR12MB9697.namprd12.prod.outlook.com
+ (2603:10b6:930:107::6)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261102074934.2925339-1-gubowen5@huawei.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY1PR12MB9697:EE_|PH7PR12MB7796:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7f3a29d1-f88e-43f6-8f2d-08df418963a8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|23010399003|376014|366016|1800799024|4143699003|261102123227099003|56012099006|11063799006|261021121427099003|261009223027099003|261022075727099003|261022115727099003|261026121527099003|22082099003|18002099003|6133799003|10067099003;
+X-Microsoft-Antispam-Message-Info: FdwqzHqJMRArJxppoAaaSlO2j6swueGrQbB3FhEcLIWSMvwGYtTq8zOl8EsMkKBEEWqUZvj7UBLupgH0GyBnJit+3Htw7Sh6S3mu9MF2+PTYttn5u4suaL7QR8KjuvhVOrExI7nzTKIxxrziFNO08XZPIb+yreYE08buS0l+BgEb3KZu6Wv4jqyp2+YpBAUXiWdSekyyIRpIRlSXsSMEw86R/JD8l8nr4Qg/OVoNcm4BkBswBVkfFlWOR+mpHHwCby7xVMbRzByeeEasjA06naEc2kiIqdcOPw18THyPDemLPO40KFGoFPJCZtf9L6+63jD+WCJqVaU7dxI9KP01tSS2gli+pLuK7DPBw0D9H7NEzmWr/wWtjyy8sDyQTHIHMk43l2pb2GtyQDn7f/5VuPxeTq1JCrodLewnJ9lkNw7NAecSWpdqlvXx7jcTuEFp/DInZWuWlhrKSEFUtR3I9cdMqkhYKeMLvqPBHnE5/Fb9rSiv+zZqJug3wx9fKva679rH9mvECkDfc+5s0Z9Mr+r44toZbALx0uky6XhL0fVfbLA+GfMR+hOHUuBLmS7td50gdpemYqnsrpMuDogS1u3hzImwqRER91LKoyWToqBjt3aSk3rQoq5hTKsI2I3g
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY1PR12MB9697.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(23010399003)(376014)(366016)(1800799024)(4143699003)(261102123227099003)(56012099006)(11063799006)(261021121427099003)(261009223027099003)(261022075727099003)(261022115727099003)(261026121527099003)(22082099003)(18002099003)(6133799003)(10067099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bWxwWXV6QmhnRVNhekpXcHJpTXk2QWJvV0RhSFpjakhuRnhtakxZb1l6a1FS?=
+ =?utf-8?B?RGRSVW44Ykg4L3BUaHlwMVJ4VTBIaUt3U1BzZjhUbUNtUnc5NklYZXN0VWll?=
+ =?utf-8?B?VTBQUUdOZmVoWDN3VmJwcGdFNnlnSGZIbWZHN2RiclliK01kNzFGRUJiOXdm?=
+ =?utf-8?B?eE1GcjRTTDg5ak5pczc5R2VOWVIxUVp4cjk4OS9HVDFxNTZjazBFRUxDa3RZ?=
+ =?utf-8?B?akVuRTl3MVVOV053MUFNV0R4K0txcjFwU3p2Qjdrbnk1dCtadm8vaVVZREV6?=
+ =?utf-8?B?dzdZa0RZN2x1WCtzMDVjRjFuNlVRcHZCWkpBTXY3WUxndjlvYjk0bHJMRU5H?=
+ =?utf-8?B?NWpCM3VVenhuTU84YXRkdnM2MW14S0dzcDI3eTlNVkdKVHBBeWt6RXhBT2Yv?=
+ =?utf-8?B?UzNmQm1BQlQwUEhueHdlWTF4SGVEUkpjSTJSR3FReFIxdEx3Nks5ZkphY0lY?=
+ =?utf-8?B?NmhKTVVmMWhXOTRDMTgwdnZoQ3JFRU5wODBlOHFGaTZubWRQV3pUMVB4T2t3?=
+ =?utf-8?B?a29DOHFGaE53QkZCUUlCRXNPTjI5VzFCaWtVUU55UFhRTytlbHo4MXJZMGs4?=
+ =?utf-8?B?YXhCOUhXZHpER1Y0Wk1FSDJWcTE4L0tOTjJMd1dmR1pHMThDOFNMem05UHBK?=
+ =?utf-8?B?ZkJkRjlsT0s3aFBudUlOeDY0aXFHREZCSUtNY0t1Ym1renF4NVl3UjNPUE83?=
+ =?utf-8?B?R3ozRnJneHlyTW80Zno1a0ZFQ0xIVlJJaTdGN3czRlpWeU8vVXh4RWVaQ3Vi?=
+ =?utf-8?B?S0NTdlFUdzlQekQyRFpYSjBxSXovdDRGSWRkcXZsUDlibzNaTlcyNEU3LzNl?=
+ =?utf-8?B?RjFWYjErb09kZkxsc2VlMG9vZFp5eXBWSkFib0FueEw4QjIrM2RLR2dacWl0?=
+ =?utf-8?B?VGplWjQrdDVvNlBMUUszeTN2ZnFQb3RjZmUvTlprYmpmV1l1VnlQNUJNbUFM?=
+ =?utf-8?B?cnFzUE9RNmU5Y29yMm1USWFJMXVpZ1NHdWtVS3FzSEVtRVlWSnh0enpwWld3?=
+ =?utf-8?B?Q2pVYjZzTFdLbUxRTTFWNFVjRjhzZGh2b05PbG1vbS9Yd1FiSkxIeHBocXZ4?=
+ =?utf-8?B?K1MyZlJrUE1vWE80a21PVkR0WlN3MGlNaWhzelhJWlBDQUdRQmJjdm9yanFI?=
+ =?utf-8?B?dStsbDZNVnVZUVB2VVBJMnR4RFY2cm1vbVdLTjJCU3dXUEhtdTFpMUlkSU5j?=
+ =?utf-8?B?S2VVcWdrRVBNWVB1dXdFVWRuUTNneU80dC9ZUEtONkJlSHkvM0wzdzFhaVlC?=
+ =?utf-8?B?dlAwR2hLNFhmQVdtazFSYzlsNzVkM2hrQzRYOXVkZnhySmZHbVhpb2JrVmJK?=
+ =?utf-8?B?TGpYRGtEaENKVGZWdG1XeFA1VmRVN3UwS1FxYmNIL3A1R1dWYWlKWlJYblN3?=
+ =?utf-8?B?a1VJU2NYL0JYYzZYV1Nxelh4SkxnTmlBa3NKMXFjbWFGQ2kvaXo0djRjTFBG?=
+ =?utf-8?B?NGJqU01YMGVuV0N5ZHlrSFpJd0J2cjJ1SFltRGlnd1ZlNVN0L0UzWlRiM1Zn?=
+ =?utf-8?B?Wi9GVkdZWlZNRkdqMXdUUE5JekhjTjd3NFNsSFc1aDVWMVV4WG9Rb1ZuRURC?=
+ =?utf-8?B?OVlSRTkwWWJmVndZWnc3YVM2ZW15U09EaEFYdGgzNG1tUjg2Ynk4VzhxZDhs?=
+ =?utf-8?B?QnZmVXdHR2JydjVNTmpMU0orUlhmTDN3OEJ1WXVTTjJBRldJcUZTYThzR0RP?=
+ =?utf-8?B?YTdyamVvTWQwaCtUaDB6NmVUeURDM0JwZWFYeElVWWNnamoxemJyc0YyZXBM?=
+ =?utf-8?B?VEU4aVB3RTRYV1ZXR1QrRTl1QmY2bk9hSm16bTFtSkdmQjlTb3JDVFUxQkFv?=
+ =?utf-8?B?enE3MitPSUJVRDRPamo4ZWJMN0xRY29BZlNBVlZSQU5EQjBSNytuTWNlRDQ5?=
+ =?utf-8?B?ajZwZHBqbzF0Q1h5R3pOTkg5NUQ4bkRXRXRqSStsdDZqQUJpdWRES0M5WmN5?=
+ =?utf-8?B?emIwYWhMdlJ1dWhtSGJFYmdWUXpLNDJEcVV5Yy85aDdrOFM2Ukc1K3VqS0t0?=
+ =?utf-8?B?WHVPVERFMzVmSU40amRsTTVrUDUyM2wzK0t2VEpiY05MWlNraTNYQjdES0FY?=
+ =?utf-8?B?Z0dGUEtoVno0RTM1elYrZS8wOHNLaEU5a3RJQW1ENWdIY0N0WWRwTUVPUnVw?=
+ =?utf-8?B?ZGNqc3N3UnhVekNjbVdUMWh4b21xUStXVFZleEk3QUUrYW1MRDlwSmI0U0wy?=
+ =?utf-8?B?dzg4U0plbU4xZXMrTTVFL1REUGRldWpqMGlkYmtxdTBFU0sxQnpVbFFoNnF2?=
+ =?utf-8?B?bVVGSzNoTGJBUEpxUzBBc21XZkpWN1N3cHpSNmV1SFRtM3Z1V0VFaDdRUlk5?=
+ =?utf-8?Q?u8rWBC3Pd0l8txJDJJ?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f3a29d1-f88e-43f6-8f2d-08df418963a8
+X-MS-Exchange-CrossTenant-AuthSource: CY1PR12MB9697.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2026 13:24:04.9889
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ux+EzuLBNrQKak57PHZRxL8ax4FclglJKa0jbs3t7k+TVoQ00mA0bA7C5WCbiF5h
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7796
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261113_050403_255857_859AF30E 
-X-CRM114-Status: GOOD (  18.42  )
-X-Spam-Score: -2.1 (--)
+X-CRM114-CacheID: sfid-20261113_132420_093316_AB4BD808 
+X-CRM114-Status: GOOD (  19.70  )
+X-Spam-Score: -0.2 (/)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,74 +170,103 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=4.0.1
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Mon, Nov 02, 2026 at 03:49:34PM +0800, Gu Bowen wrote:
-> The pefile_strip_sig_wrapper() function validates the win_certificate
-> wrapper that precedes the PKCS#7 signature in a PE binary.  It checks
-> that the wrapper length does not exceed the certificate table size
-> (``wrapper.length > ctx->sig_len``) but fails to verify that the
-> wrapper length is at least ``sizeof(struct win_certificate)`` (8 bytes).
+On 11/8/2026 4:35 PM, Mike Rapoport wrote:
+> Hi,
 > 
-> When a crafted PE image supplies a wrapper with ``length`` in the range
-> [1, 7], the subsequent arithmetic::
+> On Tue, Nov 03, 2026 at 09:54:28PM +0530, Radhey Shyam Pandey wrote:
+>> cma_init_reserved_mem() takes a base chosen by its caller and only requires
+>> that the range already be reserved, so an overlap with the kernel image is
+>> indistinguishable from the normal case. cma_activate_area() then clears
+>> PageReserved on those pages and frees them into MIGRATE_CMA, overriding the
+>> memblock_reserve() of [_text, _end), so live kernel text reaches userspace.
+>> kexec reached this until the fix this series builds on; a device tree
+>> placing a shared-dma-pool over where the bootloader loaded the kernel still
+>> can. Reject the overlap rather than let such a caller corrupt the kernel.
+>>
+>> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+>> ---
+>> Changes since RFC:
+>> - Drop Pratyush reviewed-by tag as there were few changes.
+>> - Trim the commit description.
+>> - Drop the redundant comment as suggested by Mike.
+>> - cma_overlaps_kernel_image() is kept as helpers in asm-generic/sections.h
+>>    are virtual-address helpers.
+>> ---
+>>   mm/cma.c | 21 +++++++++++++++++++++
+>>   1 file changed, 21 insertions(+)
+>>
+>> diff --git a/mm/cma.c b/mm/cma.c
+>> index 9c53b2b70dc8..3231a53161cd 100644
+>> --- a/mm/cma.c
+>> +++ b/mm/cma.c
+>> @@ -31,6 +31,8 @@
+>>   #include <linux/kmemleak.h>
+>>   #include <trace/events/cma.h>
+>>   
+>> +#include <asm/sections.h>
 > 
->     ctx->sig_len = wrapper.length;      /* e.g. 1 */
->     ctx->sig_offset += sizeof(wrapper);
->     ctx->sig_len -= sizeof(wrapper);    /* 1 - 8 = 0xFFFFFFF9 (unsigned) */
-> 
-> underflows the unsigned ``ctx->sig_len`` to a value near UINT_MAX.  The
-> following ``sig_len < 4`` sanity check is bypassed because 0xFFFFFFF9 is
-> greater than 4.
-> 
-> The underflowed ``sig_len`` is then passed to verify_pkcs7_signature()
-> and onwards to asn1_ber_decoder().  The ASN.1 decoder's own
-> ``datalen > 65535`` entry guard can be satisfied by constructing a
-> PKCS#7 length field of exactly 65535 (e.g. ``30 82 ff fb``), allowing
-> the decoder to proceed and attempt to read OID octets beyond the
-> allocated vmalloc buffer, triggering a page fault in look_up_OID()::
-> 
->   BUG: unable to handle page fault for address: ffffd1e986cb2000
->   #PF: supervisor read access in kernel mode
->   RIP: 0010:look_up_OID+0x14/0x100
->   Call Trace:
->    pkcs7_note_OID+0x33/0xa0
->    asn1_ber_decoder+0x363/0xbd0
->    pkcs7_parse_message+0xd9/0x1b0
->    verify_pkcs7_signature+0x24/0x80
->    verify_pefile_signature+0x7b/0xf0
->    kexec_kernel_verify_pe_sig+0x1b/0x40
->    kimage_file_alloc_init+0x1d8/0x3f0
->    __se_sys_kexec_file_load+0xc6/0x270
-> 
-> This is reachable through the kexec_file_load syscall on architectures
-> that verify PE signatures (x86 bzImage with
-> CONFIG_KEXEC_BZIMAGE_VERIFY_SIG, arm64 Image with
-> CONFIG_KEXEC_IMAGE_VERIFY_SIG), requiring CAP_SYS_BOOT.
-> 
-> The oops occurs while the caller holds kexec_lock; if the faulting task
-> is killed, the lock is never released, leaving all subsequent kexec and
-> kdump operations permanently returning -EBUSY until reboot.
-> 
-> Add a lower-bound check on wrapper.length before the subtraction to
-> prevent the underflow.
-> 
-> Fixes: 09dacbbda935 ("pefile: Strip the wrapper off of the cert data block")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gu Bowen <gubowen5@huawei.com>
-> ---
->  crypto/asymmetric_keys/verify_pefile.c | 5 +++++
->  1 file changed, 5 insertions(+)
+> You probably don't need this.
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Thanks , will drop it.
+
+> 
+>> +
+>>   #include "internal.h"
+>>   #include "cma.h"
+>>   #include "mm_init.h"
+>> @@ -68,6 +70,16 @@ bool cma_has_dynamic_base(const struct cma *cma)
+>>   	return test_bit(CMA_DYNAMIC_BASE, &cma->flags);
+>>   }
+>>   
+>> +static bool cma_overlaps_kernel_image(phys_addr_t base, phys_addr_t size)
+>> +{
+>> +	phys_addr_t end;
+>> +
+>> +	if (check_add_overflow(base, size, &end))
+>> +		return true;
+>> +
+>> +	return base < __pa_symbol(_end) && __pa_symbol(_text) < end;
+>> +}
+>> +
+>>   static unsigned long cma_bitmap_aligned_mask(const struct cma *cma,
+>>   					     unsigned int align_order)
+>>   {
+>> @@ -295,6 +307,15 @@ int __init cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
+>>   	if (!size || !memblock_is_region_reserved(base, size))
+>>   		return -EINVAL;
+>>   
+>> +	if (cma_overlaps_kernel_image(base, size)) {
+>> +		phys_addr_t text = __pa_symbol(_text);
+>> +		phys_addr_t end = __pa_symbol(_end);
+>> +
+>> +		pr_err("area %s (%pa, size %pa) overlaps kernel image [%pa-%pa]\n",
+>> +		       name ?: "(unnamed)", &base, &size, &text, &end);
+> 
+> We don't want to expose addresses of the kernel image.
+> I'd drop text, end, and probably even base from the printout.
+
+Thanks. I will fix it in next version.
+pr_err("area %s overlaps the kernel image\n", name ?: "(unnamed)");
+
+
+I also want to discuss on this patch sashiko review.
+https://lore.kernel.org/all/sashiko-outbox-197614@kernel.org/
+Sashiko says:
+Because _text is below KERNEL_START on 32-bit ARM, won't calling
+cma_init_reserved_mem() -> cma_overlaps_kernel_image() with
+base < __pa_symbol(_end) trigger VIRTUAL_BUG_ON() during early boot?
+
+any suggestion on how to address it? one option is to switch
+to __pa_symbol(_stext).
+
+Thanks,
+Radhey
 
