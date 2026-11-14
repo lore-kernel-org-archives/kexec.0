@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854ED606A323
-	for <kexec@archiver.kernel.org>; Sat, 14 Nov 2026 09:34:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032B1606A336
+	for <kexec@archiver.kernel.org>; Sat, 14 Nov 2026 17:36:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=A2D8/VmD;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ldih58LA
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ZBqTK6+i;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=G6IJMeDa
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
@@ -14,63 +14,63 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=cYfB8ZYjzkbZTu8PkWr5VdyVYonCx+ZsO65KHqfQojE=; b=A2D8/VmDXujCSfNtCAIZk1KHUq
-	vUSi3CP4iDp61JFQ7/sXgG2WrXUwR17yc04iU9AQ3qESKQ0y80DxDLz3/I3nv+cNa1jaHWXIQ0YZs
-	fkbTudT4ZCPHfYX2iY/gZRrFoynq7+0X7YfuG9YgoeIp3NuhJnj1d6jmBfrX/ajloUqQnMBOb+/xl
-	c6HxW94rFfnn1+Nw6CKV8SV87NUOjtpkH/PLh6gwaWndqaa2Aw6lG5+SOGub3cIXIAAZWlPEiHRz+
-	MPzqj9f2S/cOmeCOLqoi5mk3yknsM6urpsM9Pqsk6pAi31NoY6yO1r4jnQ3S4WZ9pCx4iusBkdmR5
-	urhRsB/g==;
+	bh=JNaJcXdU6JL88Hplnr1u9aTEynknq2tK7kpa3hgYbA8=; b=ZBqTK6+iaHn9Nq/1ZsLvKZxz7t
+	iDp6RuKazNW5PreAX5y8Xs2nXlpaLNJ/hHLmerL+8ajRAJjnJgp+sqVLQ0wCeqtggVQrMekE0Bd4M
+	Ef39GTZbbvdK3Rvkm6SoZk/f/YFZ5tud+H8aA84Q7KAeYvm7/jhTnnUFE8rQIz+R3WXUemY/328PV
+	h0e5R5vXqauqY2Z+Aj3TxGyysk/+pPp79RzBPqdIlAREo5xL70C60DHdXNGkGTi50hOaUl+y7E7Hw
+	cfZLrYFnemBwPWbotlJFCJfyfsypjE2LPQ45I5iKWAiMNUw2G5U+SeKor/Uh9n8ZlvwlPhvNyfsuR
+	o0ivDh+A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xSA9p-0000000Ffv0-0MHi;
-	Sat, 14 Nov 2026 09:34:49 +0000
-Received: from mail-ej1-x647.google.com ([2a00:1450:4864:20::647])
+	id 1xSHfS-0000000GY8O-3Y2j;
+	Sat, 14 Nov 2026 17:35:58 +0000
+Received: from mail-ej1-x645.google.com ([2a00:1450:4864:20::645])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xSA9m-0000000FfuK-2EOk
+	id 1xSHfK-0000000GY6e-43T7
 	for kexec@lists.infradead.org;
-	Sat, 14 Nov 2026 09:34:47 +0000
-Received: by mail-ej1-x647.google.com with SMTP id a640c23a62f3a-c5051881421so91417266b.2
-        for <kexec@lists.infradead.org>; Sat, 14 Nov 2026 01:34:45 -0800 (PST)
+	Sat, 14 Nov 2026 17:35:54 +0000
+Received: by mail-ej1-x645.google.com with SMTP id a640c23a62f3a-c37b2763f1bso244877466b.1
+        for <kexec@lists.infradead.org>; Sat, 14 Nov 2026 09:35:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794648884; x=1795253684; darn=lists.infradead.org;
+        d=google.com; s=20260707; t=1794677748; x=1795282548; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=cYfB8ZYjzkbZTu8PkWr5VdyVYonCx+ZsO65KHqfQojE=;
-        b=ldih58LAEER3ycXNawWg+XdwOIKcT9HZtXqbojAywUOiBXZHA+I8SKPIC64hd4O5GD
-         g9lJyWaCpNTFNSqOPSts3SSlwrZwlKXeZSj5waq9AgsBMJMhNyUbNFmPEzdFkvxzQowZ
-         1io4eTAFfIyNQJoBUQWLgSWMtC1gw1N5JOiHgONEb52e44EbRdnZx5grebffVzm3HH2r
-         l0tKGC0fEZZxzJt5m+U/Ud8+7nup1A6/DXfuq6VorRGTQb/RLcTO2ooUHxHMCN6THPC4
-         skP8rsITVOjQrDxFaSU5322+tBBnrHJfC9/EC6v9ekvkofTxv7nsn8qiEmP05vXCVpKD
-         cHAw==
+        bh=JNaJcXdU6JL88Hplnr1u9aTEynknq2tK7kpa3hgYbA8=;
+        b=G6IJMeDaUi1eOo0oNvqt/VEzSCFMtNzGOab1/IMNLfvDn0NtNfGnz0XUA7gGKxBSLP
+         T+mGEEBegJzdYVQMoQv0jjjuiQgInQpMDU3Gj8mU0WoKsqRbxMiyWUxhSNvPogazo35+
+         F4iErExvxGdAhE2RzHBrxIU9mmnfENOT0w+ax/u3GCyPAsyC81ElCr/G9PHB9mEMv0PC
+         ANSW5gYX+QYTh3rkJDypJkAvleHSHk3xtofS/EDUZNemh8bux+gCdN4gVr3ypWX255BS
+         92UZyLHFM+3PAW24ii13ZGLlEjQn1Mj5e04hhYmL0FI0bOEd5/x9DXU7S4BJC0FRx3HS
+         WnDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794648884; x=1795253684;
+        d=1e100.net; s=20260707; t=1794677748; x=1795282548;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=cYfB8ZYjzkbZTu8PkWr5VdyVYonCx+ZsO65KHqfQojE=;
-        b=C6cCPID9CRZtUtTloq2zZCiNoa96HOEubD48HoJdALvYLN1mQbflvGysKJ/f4ShzSi
-         L7bczj/0MUtxudEHwSDr04K+r6qCmdFY7hmM1AZTJQIAfDXPEuHeL7orCbwMHQCbhdTn
-         Kj4D1T5c6bs7cqKtMbb66KVF1aq/EyeLe7L1OMQV4xTUcAd0QVCgDrRhKokj0ErEHzkk
-         fGD4Ru0a3KoxCn8fEqe2ZFdpaLZH+GCyBSyTX2ESLandDXJr9VYxoNuH3dv7R7E47Vxg
-         2+Y8Ax4JJtV0y8B9+uAXtQX5BmqohHb6GX4RmW4dLSr5IQeRdog0kPgsi+P8jdsYplNT
-         JQkw==
-X-Forwarded-Encrypted: i=1; AL+hErE+fp5NqiaFH6cXBk8R+3hlWISIKGPXmWUtlSrY1ZahfgxqucJR4S5cqa5bC12joKunzWU81w==@lists.infradead.org
-X-Gm-Message-State: APuU4Z+0+2zsu/C0ZRG8V/rUXZh1nYj2hh/PgfOW7GezT+uhgFRQl9OQ
-	uidO0Ro7v3JwOPe58G5qlm4SP0SJAZnp5UFchJKpmaq3SzxMwczmDbMZJ0zwoP8ey4CHBReK3T2
-	WpuBIiLZG/yXc7JmH+Q==
-X-Received: from ejbgl17.prod.google.com ([2002:a17:906:e0d1:b0:c50:537a:6835])
+        bh=JNaJcXdU6JL88Hplnr1u9aTEynknq2tK7kpa3hgYbA8=;
+        b=OCpgygTBohVYvpNjvnwphHo0cOFZwkR0y3pEYJ59syENhZXS/jGTaKv9tzKm7jHYpX
+         bVT/tcLCSm+wGgEzrjt7TM82Eewv6qiozhzOE9M858FEqpUSJbVNminhr/H5zDvyVRPp
+         kwmRbnTeW803tSfysFGfnzTIXlXAOoZ81LzQLfrgU162Rr7MoT7rndiMTwR0Lr8wAZew
+         RZrVJHYFLpyrtNdW0W4l7Lf7q+PhUGZ9syhd/qIrGRvAfIr5oZAXfe3s/+DW0PaEUMqI
+         RLeoSL913dnZSUSIaugn21LOybs4cFDF9ZZGI0nK+mtt9Tom8VUnfAvn8QvciJJRWtYi
+         614A==
+X-Forwarded-Encrypted: i=1; AL+hErHcDvJ3uDwOHv2mw/Pzbcazm2pZt6S7X9yO8fsDrR/w4qPneAwVmDjqhvXOL51romV8RieDdg==@lists.infradead.org
+X-Gm-Message-State: APuU4Z/tJigv6XAkUQF9hBUPQqABeoyg+MwVEt534vkMN9AH3pAImnuU
+	2gi2mFpt2iv1YCy0jacijzpnBTTdYLOVDQ6sQ+G0nCKFIprEW0mjGsE3zLH/9RNClwgi0piCE/H
+	YSJ7fk//W6qji+4INbA==
+X-Received: from ejfz7.prod.google.com ([2002:a17:906:ac7:b0:c2e:3202:ef75])
  (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:907:7b83:b0:c41:b4e4:7958 with SMTP id a640c23a62f3a-c5095dd7931mr418395066b.0.1794648883281;
- Sat, 14 Nov 2026 01:34:43 -0800 (PST)
-Date: Sat, 14 Nov 2026 09:34:41 +0000
-In-Reply-To: <DMRP21FATCC0.ARAURXWV85JP@google.com>
+ 2002:a17:907:868f:b0:c33:ae8b:817d with SMTP id a640c23a62f3a-c509654f9admr515384166b.46.1794677747981;
+ Sat, 14 Nov 2026 09:35:47 -0800 (PST)
+Date: Sat, 14 Nov 2026 17:35:47 +0000
+In-Reply-To: <DMRO4QXXB8H4.127C1CPT3RZ18@google.com>
 X-Archived-By: <archiver.kernel.org>
 Mime-Version: 1.0
-References: <20261110050202.529473-1-tarunsahu@google.com> <20261110050202.529473-9-tarunsahu@google.com>
- <DMRP21FATCC0.ARAURXWV85JP@google.com>
-Message-ID: <9huzse13pxhq.fsf@tarunix.c.googlers.com>
-Subject: Re: [PATCH v4 08/19] kho: block: Add the feature header to blocks
+References: <20261110050202.529473-1-tarunsahu@google.com> <20261110050202.529473-17-tarunsahu@google.com>
+ <DMRO4QXXB8H4.127C1CPT3RZ18@google.com>
+Message-ID: <9huzmrrbpb7w.fsf@tarunix.c.googlers.com>
+Subject: Re: [PATCH v4 16/19] PCI: liveupdate: Add feature header to struct pci_dev_ser
 From: tarunsahu@google.com
 To: David Matlack <dmatlack@google.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
 	Mike Rapoport <rppt@kernel.org>, robin.murphy@arm.com, maz@kernel.org, will@kernel.org, 
@@ -86,8 +86,8 @@ Cc: kvmarm@lists.linux.dev, linux-pci@vger.kernel.org,
 	linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261114_013446_579463_10321E6C 
-X-CRM114-Status: GOOD (  21.51  )
+X-CRM114-CacheID: sfid-20261114_093553_514718_658D09DE 
+X-CRM114-Status: GOOD (  32.44  )
 X-Spam-Score: -9.5 (---------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -110,48 +110,113 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 "David Matlack" <dmatlack@google.com> writes:
 
 > On Tue Nov 10, 2026 at 5:01 AM UTC, Tarun Sahu wrote:
->> Precede struct kho_block_header_ser with struct kho_ser_hdr using
->> DECLARE_KHO_SER. Each block in a block set starts with struct
->> kho_ser_hdr followed by struct kho_block_header_ser. Serialized entries
->> start immediately after the header payload at offset fhdr->size.
+>> Precede each serialized PCI device entry in the PCI Live Update KHO block
+>> set with struct kho_ser_hdr via DECLARE_KHO_SER so future per-device PCI
+>> Live Update features can append fields to struct pci_dev_ser without
+>> breaking compatibility between adjacent kernels.
 >
-> This adds a feature header to every block in the set, but the layout it
-> describes is a property of the whole set: all blocks are written by the
-> same kernel with the same header.
->
-> Blocks are only ever added and removed at the tail, so the head block
-> is stable for the lifetime of the set. I'd put a single set-wide
-> header in the first block only, e.g. a struct kho_block_set_ser with
-> its own feature header, and keep the per-block header to next and
-> count.
->
-> entry_size (added in patch 2) is another set-wide property that belongs
-> there. All blocks in a set have the same entry size, so recording it in
-> every block is redundant, and restore has to check that the copies
-> agree.
+> Elements of a collection should not have their own feature headers. This
+> applies to patches 10, 12, 14, 16 and 18. I raised this during the v2
+> discussion [1][2], but I don't think it was addressed.
 >
 
-Yes, adding a ser_hdr to each block_header is unnecessary and also cause
-8 bytes to get added to every block. This can be solved like you said by
-adding it only to the first block. But this will make number of entries
-in block[0] to be less than blocks 1..N. I am not sure if that is
-acceptable but if it can be then we can avoid adding ser_hdr to each
-block. Same for entry_size which can be moved to the first block only
-like you suggested part of struct kho_block_set_ser.
+As per [3], I tried to add feature header to all possible instances of
+ser structs. Maybe this is the right time to audit these structs and decide
+which one will never need feature header.
 
+[3]: https://lore.kernel.org/kexec/CA+CK2bB9xoAWP0kC+KtXeDTdwt0kWqb-PLHN=6DsA=mnRpMfxA@mail.gmail.com/
+
+> All entries in a KHO block set are written by the same kernel using the
+> same struct, and the block set has a single entry_size, so every entry
+> header is necessarily identical. They don't convey anything that the
+> header of the struct that owns the collection can't. In this case,
+> struct pci_ser's header can define features that describe fields in
+> struct pci_dev_ser, and the PCI core checks them once before iterating.
+> If a feature only applies to some devices, the field's value in each
+> entry says whether that device uses it.
+>
+
+pci_dev_ser can be refrained from using kho_ser_hdr but not
+memfd_luo_folio_ser.
+
+The difference lies in their API usage. one use kho block and other one
+kho_vmalloc. With kho block, we carry entry_size, so the parent
+pci_ser's kho_ser_hdr can communicate about the new field/feature in the
+pci_dev_ser and entry_size will carry correct the size of pci_dev_ser
+for iterator on deserialization. But for memfd_luo_ser, kho_vmalloc does
+not carry such entry_size. So we can solve this by adding the
+folio_ser_size into memfd_luo_ser struct.
+
+Without entry_size, we can only add new changes to such structs by
+adding feature in parent struct with required = 1. That way rollback or
+upgrade will fail to the kernel which does not support this required
+feature. Incase, if we have entry_size (folio_ser_size in above
+example), it will help marking such feature to be optional also and
+deserialization can correctly parse with entry_size and can ignore those
+changes if the kernel wants to.
+
+
+> Per-entry headers also cost a lot for small entries. struct pci_dev_ser
+> goes from 8 to 16 bytes, and to 24 bytes once the first feature is
+> added. Patch 18 does the same for every preserved memfd folio, which for
+> a large guest backed by 4K pages adds gigabytes of preserved metadata.
+>
+
+Yeah, we are carrying 8/16 byte of extra memory where every entry share
+the same header. Which is a waste.
+
+> They also add new ways to read out of bounds. kho_ser_payload() trusts
+> nr_required/nr_optional in each entry, and nothing checks that the entry
+> header plus payload fit within entry_size. In patches 14 and 18 the walk
+> uses each entry's fhdr->size to find the next entry, so one bad header
+> throws off every entry after it.
+
+Bad feature header is not the reasoning here we should back this
+requirement. A bad feature header already imply the deserialization is
+compromised and hence accessing anything further is undefined. This
+holds true for any struct with feature header.
+
+>
+> Instead I would keep struct pci_dev_ser as a plain struct, take the
+> entry size from the KHO block header (patch 2), and in pci_flb_retrieve()
+> check once that the entry size covers the base fields, plus the fields
+> of any features set in struct pci_ser's header, e.g.:
+>
+> 	entry_size = kho_block_set_entry_size(&incoming->block_set);
+> 	if (entry_size < offsetofend(struct pci_dev_ser, refcount))
+> 		panic(...);
+>
+> That also restores the minimum entry size check that the v10 PCI series
+> had with PCI_DEV_SER_MIN_SIZE, which this version drops.
+
+offsetofend() is a good idea to replace PCI_DEV_SER_MIN_SIZE.
+
+>
 > [...]
 >
->>  		entry_size = ser->entry_size;
->>  		bs->entry_size = entry_size;
->> -		capacity = (KHO_BLOCK_SIZE - sizeof(*ser)) / bs->entry_size;
->> +		capacity = (KHO_BLOCK_SIZE - fhdr->size) / bs->entry_size;
->>  		bs->count_per_block = capacity;
+>> -	kho_block_set_init(&incoming->block_set, sizeof(struct pci_dev_ser));
+>> +	kho_block_set_init(&incoming->block_set, kho_ser_size(pci_dev_ser));
 >
-> Nothing checks that the blocks agree. Each block's entries start at its
-> own fhdr->size, and count_per_block ends up being whatever the last
-> block implies. With a single set-wide header this can't happen.
+> This size is never used. kho_block_set_restore() overwrites it with the
+> entry size recorded by the previous kernel. Passing this kernel's size
+> here is misleading: pci_flb_retrieve() (and the LUO session/file restore
+> paths) read as if they iterate incoming entries with the outgoing entry
+> size, which would be a bug.
+>
+> Incoming block sets should not take an entry size at all.
+> kho_block_set_restore() should initialize the block set itself from the
+> incoming block headers, and the incoming paths should drop the
+> kho_block_set_init() call.
 
-yes.
+Yes, We can avoid this dual initialization. kho_block_set_restore can
+take care of it. Also once we will agree on having having
+kho_block_set_ser to have entry_size which will be part of only
+block[0], then we will not have to update the entry_size inside the loop
+again and again and count_per_block can also be calculated before the
+loop for block 0 and 1..N.
 
 ~Tarun
+>
+> [1] https://lore.kernel.org/kexec/atl6K2Juy6Bh29lh@google.com/
+> [2] https://lore.kernel.org/kexec/at-8vkVpN2SF3XgB@google.com/
 
