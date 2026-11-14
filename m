@@ -2,104 +2,65 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CDD9606A33E
-	for <kexec@archiver.kernel.org>; Sat, 14 Nov 2026 03:49:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FA8606A327
+	for <kexec@archiver.kernel.org>; Sat, 14 Nov 2026 03:58:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=rDm4QTQO;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=pQp1k5/c
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=jThNX3YL;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NUY7JL1n
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
+	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=/G7/lmek4y2FIJhQPQXzBX6rPtR2uzbHmwhsN2tO0nU=; b=rDm4QTQOg7qYX9AQENBkzrLUKp
-	8Q1TM2mDaGC1Kl+sgLIEWY896R+hWVrStJqBCaiJgS6nCF7L7oW6wsGTPmLnDMNd6A5zUi+FkgPGP
-	D5sAhN6FpK23mdqieEgZ4O+iQxeg1vT2yBYEqb5pSCEgXvOkCob9tujcU1+g0LPEalEtLPrXkxqZq
-	Psyc+fjITox+QGjes0tFBRLzJRlyXkFl8nYHBBzjTTM9+W1PyV4ol1ufoYGyVYNXtWMTimGNmCPS3
-	hMdXKSayLTcsljRS7XxAwFOj27a6QYPY27T8w/Q1UZxUNgiQ+6NdX/i6CXvIPhpwxC9tPUt/velkm
-	UO9J6Z1g==;
+	bh=GkSfmbD2YBZQajWcIiu7fpby40IrMSPQ3GDDx7zbFTc=; b=jThNX3YL67Y61mYewnzp0CRe0M
+	O7nTho/3jenwbOHCm/bk91EufOg/AYp6UB2CZywnhSfRc9ydI6ss/WIB45HGm8zfwM5akS4SlEbJh
+	i8YeofUzMAiuKc8ddEQU6rKU3Bpdl9gCk2yq/KUDh64hs+rpicy8EfM416jEI3gR4RzFC+6d2M0ic
+	Y7tE9I4veyco7sLMd4mgc9w2WCAJeoAdt7x/jB7iEjehPpAxjuYODATrYw+u5Cha00v242h4Q8dCY
+	PA6veEyqy0OWfWIoHLQcIF3Ms3T2yvP+D0LG48Mo4+S0ZH0r02mAUx7yI2RcbUN9LveGASFYTG2SH
+	iGwjKOpQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xS4lH-0000000FJVZ-16VU;
-	Sat, 14 Nov 2026 03:49:07 +0000
-Received: from mail-dy1-x1332.google.com ([2607:f8b0:4864:20::1332])
+	id 1xS4uj-0000000FKiu-2l9G;
+	Sat, 14 Nov 2026 03:58:53 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xS4lE-0000000FJUk-3mDO
+	id 1xS4uh-0000000FKic-2Js5
 	for kexec@lists.infradead.org;
-	Sat, 14 Nov 2026 03:49:06 +0000
-Received: by mail-dy1-x1332.google.com with SMTP id 5a478bee46e88-36eb1cb7aabso2101088eec.0
-        for <kexec@lists.infradead.org>; Fri, 13 Nov 2026 19:49:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794628144; x=1795232944; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=/G7/lmek4y2FIJhQPQXzBX6rPtR2uzbHmwhsN2tO0nU=;
-        b=pQp1k5/cPR2iibmWVZ72ZtpoNUVK0iWJUAptM6K1EbJFbib7cCtye6OsAbNl/mTf0s
-         CECl/n2pP47wb99VrxptgxaemIzs5w9r/nGnVyTuL3kcBKiIHsJB4D4dZZBeLK5vsm1w
-         /BjXi9adI15NoMfFz9VkKrhDXo2Z8zUiMF3fCrH/8X42lxJe6+pwXCzk6roM5sLe9yNO
-         n3V5ogzHWFZPpGMs/hBISsCYR563SMDCt0OXCB2PjPwPNnKdXQNeeMTnn0KP17Ah5Xy7
-         2i+TbBfNfcq5d9r0Unk7r8J+l/pj/Xx3BiePDGwKU7ks1M5uex4bu8WxtrUcdRjiBMgx
-         OJgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794628144; x=1795232944;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=/G7/lmek4y2FIJhQPQXzBX6rPtR2uzbHmwhsN2tO0nU=;
-        b=E9DRyjzxOoe1m9tIg+x2OiqaQR/4mWNOLmlFcf5JdjyQ7BHkwhXNd8XIeTl2Sc17yS
-         YXEEUdNsL702TUHrImrUUz2FfJFrmWWgRooUceFVz6X3xWDuKh/Op0nDqnD4pRC45wE5
-         5jwz1y4cxlywzMZcIwHHAGOLil6O6K4qNdwpLhZh4X9Y/WWBP4zAAgSFZ0px++ThJfIF
-         wNh04EkVwdQb76AdXf30Tbwjt5vrmqv11xWtYig+UI6T6BsOHoD+AOJd5SQljmqx5wcC
-         +58QXbAxqnI3Vz0xFZDT23x3+Es62tfG/hnniZqSlP2h2vP1ZWRyN8CXiSJZ9AVFwtTn
-         zH+g==
-X-Forwarded-Encrypted: i=1; AL+hErHgFGtqllWl3jtI+FsIv8qNK/qJeNcUcAzTKeN8jLDfYq7AUgvZtjH7g6juSSF3H1LJXcIbLg==@lists.infradead.org
-X-Gm-Message-State: APuU4Z8/mO16bXh7xPDkIkj/9dtYt6V/z9M6duoHhyXNdb8pDV5ANn0e
-	qyD1g9I8IeUPOnEc4dMBHozVQAf6p+KOe0I3sAxG4nYOIPk6rFTuAflW
-X-Gm-Gg: AYBFou0EOlSkmdDl7OuLXEx+zWzJyFF5QX61tXIDqSIVZWIl6gICsb2pZifG8cHzr9H
-	UFn0XFwbfI5uMrr6ITzWy9uaDJuMx4JDvAtsNCbaAU35y/R8YZy5PELHV/2RzkBtccec4tfFfVz
-	Ivl0XeYmrcFAtV8dhU5nF5MLut6MRY/HfY/rxWeJzZFoZMFzQRmX2i1e5BFIxhGmonldEp+Yt3q
-	2i2chin/WtN9LnjbYUquDxpf39PtxwhgqIci45XFaQVx1nAKhkyE/K/oVdq+FwGoi6RGvSbQL8a
-	AHrHfi6n1a6Lbw9JCfaj7ydkTAwZvWgc5b3cNNl9KGMTvoy+yRBVeKZUpgzIkQ5dUunTHqKfDR2
-	8a4TCxAUJFI3y4UC/Dj+9q2BqWypcdp6m7tRoaf0aM6HZy0sZNoOvq8m8w0HuyZsnoQSMUvRSFu
-	v5yInfbNbQcdJWKzvYENCn0JDEaTrMKghScW55I0m9PKewpbF0yR1hTiJq0oDuZyExQhCmpcv7y
-	cLiQeMSMx94rtIKhWmPB9S25r90jAapI8TXgA/wDJfyq+qp+6PbnlWO6hqtkClHFYj3QDLFKzf5
-	pkPMyALNNP4ojGOo3xSx0if3MZ+2FqyWWfawhfXHbcMAWfrGvC3mK1tSuR8yrkQUXWc7gTAM5iN
-	VcY3c0AgtpQU5
-X-Received: by 2002:a05:7300:fb17:b0:36f:6d81:3f99 with SMTP id 5a478bee46e88-3796676fd59mr3950614eec.7.1794628143470;
-        Fri, 13 Nov 2026 19:49:03 -0800 (PST)
-Received: from pop-os.tail4adac7.ts.net ([2601:647:4084:777d:f1b2:179a:680c:6345])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-379563e6b6dsm19901637eec.21.2026.11.13.19.49.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2026 19:49:02 -0800 (PST)
-From: Cong Wang <xiyou.wangcong@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	linux-riscv@lists.infradead.org
-Cc: Song Shuai <songshuaishuai@tinylab.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Han Gao <gaohan@iscas.ac.cn>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Baoquan He <baoquan.he@linux.dev>,
-	Guo Ren <guoren@kernel.org>,
-	kexec@lists.infradead.org,
-	Cong Wang <cwang@multikernel.io>
-Subject: [PATCH] riscv: kexec_file: Keep segments out of the new kernel's PMD padding
-Date: Fri, 13 Nov 2026 19:49:00 -0800
-Message-ID: <20261114034901.107028-1-xiyou.wangcong@gmail.com>
-X-Mailer: git-send-email 2.43.0
-X-Archived-By: <archiver.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261113_194904_935286_924C526F 
-X-CRM114-Status: GOOD (  14.48  )
-X-Spam-Score: -2.1 (--)
+	Sat, 14 Nov 2026 03:58:51 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 476DB4047E;
+	Sat, 14 Nov 2026 03:58:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C7711F000C4;
+	Sat, 14 Nov 2026 03:58:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794628730;
+	bh=GkSfmbD2YBZQajWcIiu7fpby40IrMSPQ3GDDx7zbFTc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=NUY7JL1n1czoojhZ+kdedpFeB97zqPDBNx3eKFPLMzDa/t95/ic93mzn7O8z6ck7P
+	 Da2Kc2Oz/KicihD86fnx2MXlnWV63Po/md8uqF1kX82SOC8LucfSQsqGhdMbtAH+/F
+	 kxQLIwVLsjjRNNuCINz73sTAumCjnYIQxy3Hwg/UeAtvPrTVyfmq8bVu0v48XCV2/q
+	 3pMUJp7Yvo2Kt63JIZXakMnAfNq+NeYHcsvazME1IRI/lm6HGuSesgpcQjeRsyekWX
+	 /bKRkx4ufurgUAnKr6reIH/8k4NQ5H7gNwdo/jEcs89LvS3LiktToifs52weqWnUZt
+	 WklS8OQG7D/YA==
+Message-ID: <sashiko-outbox-214131@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] riscv: kexec_file: Keep segments out of the new
+ kernel's PMD padding
+To: "Cong Wang" <xiyou.wangcong@gmail.com>, "Paul Walmsley" <pjw@kernel.org>, "Palmer
+ Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>, "Alexandre
+ Ghiti" <alex@ghiti.fr>
+Cc: "Song Shuai" <songshuaishuai@tinylab.org>, =?utf-8?b?QmrDtnJuIFTDtnBl?=
+ =?utf-8?b?bA==?= <bjorn@kernel.org>, "Han Gao" <gaohan@iscas.ac.cn>, "Jinjie
+ Ruan" <ruanjinjie@huawei.com>, "Mike Rapoport" <rppt@kernel.org>, "Baoquan
+ He" <baoquan.he@linux.dev>, "Guo Ren" <guoren@kernel.org>, kexec@lists.infradead.org, "Cong
+ Wang" <cwang@multikernel.io>
+In-Reply-To: <20261114034901.107028-1-xiyou.wangcong@gmail.com>
+References: <20261114034901.107028-1-xiyou.wangcong@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 14 Nov 2026 03:58:49 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,70 +70,86 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
+X-Archived-By: <archiver.kernel.org>
 
-From: Cong Wang <cwang@multikernel.io>
+Thank you for your contribution! Sashiko AI review found no new issues
+in this patch, but noticed 1 related pre-existing issue it does not
+introduce:
+- [High] kexec_file: missing placement bounds checks in
+  kexec_alloc_contig() [1]
+--
 
-A 64-bit kernel with STRICT_KERNEL_RWX reserves itself up to the next
-PMD boundary past _end in setup_bootmem(). load_extra_segments() only
-keeps the other segments above kernel_start + kernel_len, which is the
-unaligned _end of the new kernel, so they may be placed in that padding.
+commit e91ae0bea9270620f64704189d1d94046334bdb0
+Author: Cong Wang <cwang@multikernel.io>
 
-The segments are placed top-down, which normally keeps them far from
-the kernel. A kdump kernel's segments are confined to the crashkernel
-region though, and when it has little room to spare, the lowest of
-them, the initrd and the device tree, end up in the padding. The kdump
-kernel then finds its initrd in memory it reserved for itself, drops
-it, and panics without a root file system:
+riscv: kexec_file: Keep segments out of the new kernel's PMD padding
 
-  crashkernel reserved: 0x000000017be00000 - 0x000000017fe00000 (64 MB)
-  Loaded kernel at 0x17be00000 bufsz=0x1c40600 memsz=0x1cb1000
-  Loaded initrd at 0x17db58000
-  ...
-  Starting crashdump kernel...
-  INITRD: 0x17db58000+0x022a4000 overlaps in-use memory region
-  ...
-  Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(0,0)
+This commit aligns kbuf.buf_min in load_extra_segments() to PMD_SIZE so
+extra kexec segments are not placed inside the new kernel's PMD padding.
 
-The load itself succeeds, so this only shows once the system crashes.
+> diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/m=
+achine_kexec_file.c
+> index 26cd2a8bd0cd3..0d2d43a7dbfaa 100644
+> --- a/arch/riscv/kernel/machine_kexec_file.c
+> +++ b/arch/riscv/kernel/machine_kexec_file.c
+> @@ -251,7 +251,8 @@ int load_extra_segments(struct kimage *image, unsigne=
+d long kernel_start,
+>  	char *modified_cmdline =3D NULL;
+> =20
+>  	kbuf.image =3D image;
+> -	kbuf.buf_min =3D kernel_start + kernel_len;
+> +	/* The new kernel reserves itself up to the next PMD boundary */
+> +	kbuf.buf_min =3D ALIGN(kernel_start + kernel_len, PMD_SIZE);
+>  	kbuf.buf_max =3D PFN_PHYS(max_low_pfn);
+> =20
+>  #ifdef CONFIG_CRASH_DUMP
 
-The kernel being loaded may be any version or configuration that
-reserves the padding, so the loader has to keep clear of it. Start the
-other segments at the next PMD boundary. A crashkernel region too small
-for them now fails the load with -EADDRNOTAVAIL, and one with enough
-room boots the kdump kernel with its initrd.
+[Severity: High]
+This problem wasn't introduced by this patch, but can kexec_alloc_contig()
+bypass kbuf.buf_min and kbuf.buf_max when allocating a CMA segment for a
+non-crash kexec_file_load() [1]?
 
-This was found while testing multikernel, which loads a kernel with
-kexec_file and hits the same overlap.
+Unlike locate_mem_hole_top_down() and locate_mem_hole_bottom_up(), which
+check kbuf->buf_min, kbuf->buf_max, and arch_check_excluded_range(),
+kexec_alloc_contig() only checks kimage_is_destination_range() (and passes
+the exclusive end mem + kbuf->memsz rather than mem + kbuf->memsz - 1):
 
-Fixes: 809a11eea8e8 ("riscv: kexec_file: Support loading Image binary file")
-Signed-off-by: Cong Wang <cwang@multikernel.io>
----
- arch/riscv/kernel/machine_kexec_file.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+kernel/kexec_file.c:kexec_alloc_contig() {
+	...
+	p =3D dma_alloc_from_contiguous(NULL, nr_pages, get_order(kbuf->buf_align)=
+, true);
+	if (!p)
+		return -ENOMEM;
+	...
+	mem =3D page_to_boot_pfn(p) << PAGE_SHIFT;
 
-diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
-index 26cd2a8bd0cd..0d2d43a7dbfa 100644
---- a/arch/riscv/kernel/machine_kexec_file.c
-+++ b/arch/riscv/kernel/machine_kexec_file.c
-@@ -251,7 +251,8 @@ int load_extra_segments(struct kimage *image, unsigned long kernel_start,
- 	char *modified_cmdline = NULL;
- 
- 	kbuf.image = image;
--	kbuf.buf_min = kernel_start + kernel_len;
-+	/* The new kernel reserves itself up to the next PMD boundary */
-+	kbuf.buf_min = ALIGN(kernel_start + kernel_len, PMD_SIZE);
- 	kbuf.buf_max = PFN_PHYS(max_low_pfn);
- 
- #ifdef CONFIG_CRASH_DUMP
--- 
-2.43.0
+	if (kimage_is_destination_range(kbuf->image, mem, mem + kbuf->memsz)) {
+		...
+		dma_release_from_contiguous(NULL, p, nr_pages);
+		return -EBUSY;
+	}
 
+	kbuf->mem =3D page_to_boot_pfn(p) << PAGE_SHIFT;
+	kbuf->cma =3D p;
+	...
+}
+
+When CMA is enabled, kexec_add_buffer() -> kexec_locate_mem_hole() ->
+kexec_alloc_contig() can place the initrd, DTB, or purgatory below
+kbuf.buf_min, Above kbuf.buf_max, or inside an architecture-excluded range,
+causing the new kernel to fail to boot or crash on kexec.
+
+[1] https://sashiko.dev/#/bug/linux-83c15bd9-0ce0-4413-9330-a4e797594079
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261114034901.1070=
+28-1-xiyou.wangcong@gmail.com?part=3D1
 
