@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFE4606A32C
-	for <kexec@archiver.kernel.org>; Sun, 15 Nov 2026 09:20:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34294606A88E
+	for <kexec@archiver.kernel.org>; Sun, 15 Nov 2026 17:35:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=tvFAjIvi;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mvO+EHx+
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ldqoVS/x;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ddU/m/1O
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -14,59 +14,62 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=ISHXbdncGdAEHxOHpmuqEiN2RbSSTwBk5vjVfgEgHGo=; b=tvFAjIvipZ8Vxky6WtoTlmS5Tu
-	/wcPPn2VAK3woPMrQ4stE7bfW2FZ+z7dcm/b7bgsguYRqoMHjMwxcQlwnRZ8aMXIs4ppA+wMGHr3e
-	YxWxvtwxsLjMpXOF3ZdbXhNKSduVrLN+EeL0wlroxDg1yogNEGjggP3H1mLJafb+0MGvrcRKAWL25
-	qOZG3olQz0PTdIAo8SurGXFNqdRneL2EmA11ClOUcNGp44VE3CWqHYY6HlMbUylH9Rnop2LahGGkm
-	/DAOuIP147n42t43o8y40mm/GSwH486qI01sxdi7ytyAURRUQavy92MqGloOj2ldFy1i9b1oB2H5X
-	5wmdY8zw==;
+	bh=fcvhgN18/XYE74JlLdDetDkiu4aCL1FUsX9bNl85AkY=; b=ldqoVS/xNkO4ZUTiCoUSBH+e+u
+	wAOsOhJhf/8DOxUp83xjPQ880GbcKGDLDz3PWexPMUZqBw3RW+qZ7lH9js9keHNDC5lDKPjQDLjXJ
+	ZrQ39ERSTFeWbK0sll9LZjlSxb6LWaLUvk7H3xmv5RgDRCdpm/i9uKov/REN28OzDaoSZCGx0dVos
+	AjaBiLsbgIu4aGEfxdWHwYDcwq5nWhNrC8JHjgTdyWxw4W2gFnIgo8V9ckZ09DX3/AqaxxaP4qfB4
+	tZ1BGUSAy473+NNswvrdUIxtRUL8ZhaXzsNq90WiWpVtVWZaiFr+hFs7Whl1GF/cUlaC5U1m+5U6+
+	gTMV2xkA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xSWPD-0000000HJ41-2niD;
-	Sun, 15 Nov 2026 09:20:11 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xSe8m-00000000Geb-3CnQ;
+	Sun, 15 Nov 2026 17:35:44 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xSWPC-0000000HJ3n-2Ayp
-	for kexec@lists.infradead.org;
-	Sun, 15 Nov 2026 09:20:10 +0000
+	id 1xSe8l-00000000Ge6-25Bd;
+	Sun, 15 Nov 2026 17:35:43 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id E8C20456E1;
-	Sun, 15 Nov 2026 09:20:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 150851F000C4;
-	Sun, 15 Nov 2026 09:20:05 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id E6DAC4175A;
+	Sun, 15 Nov 2026 17:35:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C20351F000C7;
+	Sun, 15 Nov 2026 17:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794734409;
-	bh=ISHXbdncGdAEHxOHpmuqEiN2RbSSTwBk5vjVfgEgHGo=;
+	s=k20260515; t=1794764142;
+	bh=fcvhgN18/XYE74JlLdDetDkiu4aCL1FUsX9bNl85AkY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=mvO+EHx+rCi9DzTNLXh7+1mktt3J7djeXO7FbkITEbbfxl1iOmT2FB0418jF0/0wf
-	 UomovW0IpoQ8kid36TrTAc8Koq+DcrnumFutM+I4CqmypdxSGdOAt8eaR+wR0PvbRp
-	 LG0q4OSY8Mlhw3Zkco3bu7nqd4ykRAaAHmwFDB3kT1R3MxIp3h0/jmW38jrSEnBVMD
-	 XwzOU5GOdnhjGFkEK1bgm7o4K6t5T34FHcWmJe+ss2W8ujyxOnpcDRClFpBffs/ySh
-	 onr8SjTwqurbwnH2Mlj3UB5oA3olzct6XlgHChNX/F67yvtzzFux9tPUyAj/FQEUNv
-	 Banf2CkHyeaqQ==
-Date: Sun, 15 Nov 2026 11:20:02 +0200
+	b=ddU/m/1Ov9hH52C17Sf1BxhZx39khyeZ73nswpSZtY3X610LZRBj0Idbdtnd8O4T/
+	 EN4L7mJHIP90IjKjPaVbuRABJRbCOFNs789jv1X/5x2xRUJV9rkbUsZCBa9T1q7cIu
+	 mXovLK/9jRwlwDkMfLKVRB6VcXBPkMhFXDlxbOv54EPM9joTvwF761sm+dzD5jiPKA
+	 ku00S0Tc0YtsZmBVrp36zvAcqfUSnx0FPUQpd4J20hQkwHNyXRghC2rIG3RrOXVC5u
+	 MOVkj0NIqYJuFV43NNl2an85+Dbj/v1rVbrpoXoYLzDFTOHSo1H/UsUmcXwD1o8oaK
+	 9mR1epb9dYlUQ==
+Date: Sun, 15 Nov 2026 19:35:29 +0200
 From: Mike Rapoport <rppt@kernel.org>
-To: Mukesh Pilaniya <mpilaniy@redhat.com>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Chen Pei <cp0613@linux.alibaba.com>,
-	George Guo <guodongtai@kylinos.cn>, Kexin Liu <liukexin@kylinos.cn>,
-	Sourabh Jain <sourabhjain@linux.ibm.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2 1/3] kho: walk bootmem areas in address order
-Message-ID: <avl5QjUdYWcCP8Yo@kernel.org>
-References: <20261104-kho-bootmem-sizing-v2-0-b0d1a834780f@kernel.org>
- <20261104-kho-bootmem-sizing-v2-1-b0d1a834780f@kernel.org>
- <990cc079-70ab-4fcf-9974-679aaf07849e@redhat.com>
- <avV9qoaPMBLCNOXD@kernel.org>
- <7d5f300f-ab18-4086-8a61-c3347168067a@redhat.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Tarun Sahu <tarunsahu@google.com>, robin.murphy@arm.com, maz@kernel.org,
+	will@kernel.org, David Matlack <dmatlack@google.com>,
+	Alexander Graf <graf@amazon.com>, seanjc@google.com, jgg@nvidia.com,
+	loganodell@google.com, arnd@arndb.de, dwmw2@infradead.org,
+	baolu.lu@linux.intel.com, Bjorn Helgaas <bhelgaas@google.com>,
+	oupton@kernel.org, alex@shazbot.org, gle.com@google.com,
+	pbonzini@redhat.com, Andrew Morton <akpm@linux-foundation.org>,
+	kevin.tian@intel.com, joro@8bytes.org, kvmarm@lists.linux.dev,
+	linux-pci@vger.kernel.org, Pratyush Yadav <pratyush@kernel.org>,
+	kexec@lists.infradead.org, kvm@vger.kernel.org,
+	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	skhawaja@google.com, sagis@google.com, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 02/19] kho: block: Record the entry size in the block
+ header
+Message-ID: <avntYdLF2xvDh47A@kernel.org>
+References: <20261110050202.529473-1-tarunsahu@google.com>
+ <20261110050202.529473-3-tarunsahu@google.com>
+ <DMRK0PU0VCN3.15F59WLOQ05P4@soleen.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7d5f300f-ab18-4086-8a61-c3347168067a@redhat.com>
+In-Reply-To: <DMRK0PU0VCN3.15F59WLOQ05P4@soleen.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,187 +88,127 @@ X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Fri, Nov 13, 2026 at 10:34:06PM +0530, Mukesh Pilaniya wrote:
-> Hi Mike,
+On Tue, Nov 10, 2026 at 08:10:32AM -0500, Pasha Tatashin wrote:
+> On Tue Nov 10, 2026 at 12:01 AM EST, Tarun Sahu wrote:
+> > Subsystems using the KHO Serialization Blocks framework currently do
+> > not record the serialized entry size in the block header. The entry size
+> > is only known to individual callers, which must track and store it in an
+> > owning serialized data structure. If a newer source kernel adds fields
+> > to an entry, the changed entry size breaks the stride when an older
+> > target kernel iterates over blocks.
+> >
+> > Add an entry_size field to struct kho_block_header_ser. On the outgoing
+> > side, record bs->entry_size into every block header during allocation.
+> > During restoration, derive the entry stride directly from the block
+> > header instead of relying on caller-supplied dimensions. The
+> > kho_block_set_init() interface remains unchanged. A zero entry size,
+> > or one that differs between blocks of a set, is rejected during
+> > restoration.
+> >
+> > This change modifies the serialized layout of struct kho_block_header_ser
+> > and shifts the offset of serialized entries within preserved blocks.
+> > Bump KHO_FDT_COMPATIBLE from kho-v4 to kho-v5 so that pre-v5 and post-v5
+> > kernels cleanly reject mismatched handover state during boot. Also
+> > update the stale compatible string example in the documentation.
+> >
+> > Suggested-by: Pratyush Yadav <pratyush@kernel.org>
+> > Signed-off-by: Tarun Sahu <tarunsahu@google.com>
+> > ---
+> >  include/linux/kho/abi/block.h          | 10 ++++----
+> >  include/linux/kho/abi/kexec_handover.h |  6 ++---
+> >  kernel/liveupdate/kho_block.c          | 32 +++++++++++++++++++++++---
+> >  3 files changed, 38 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/include/linux/kho/abi/block.h b/include/linux/kho/abi/block.h
+> > index 36bdbaf9b3b8..a40b0906c821 100644
+> > --- a/include/linux/kho/abi/block.h
+> > +++ b/include/linux/kho/abi/block.h
+> > @@ -40,9 +40,10 @@
+> >  
+> >  /**
+> >   * struct kho_block_header_ser - Header for the serialized data block.
+> > - * @next:  Physical address of the next struct kho_block_header_ser.
+> > - * @count: The number of entries that immediately follow this header in the
+> > - *         memory block.
+> > + * @next:       Physical address of the next struct kho_block_header_ser.
+> > + * @count:      The number of entries that immediately follow this header in the
+> > + *              memory block.
+> > + * @entry_size: The size in bytes of each serialized entry in the block.
+> >   *
+> >   * This structure is located at the beginning of a block of physical memory
+> >   * preserved across a kexec. It provides the necessary metadata to interpret
+> > @@ -51,9 +52,10 @@
+> >  struct kho_block_header_ser {
+> >  	u64 next;
+> >  	u64 count;
+> > +	u64 entry_size;
+> >  };
+> >  
+> > -static_assert(sizeof(struct kho_block_header_ser) == 16);
+> > +static_assert(sizeof(struct kho_block_header_ser) == 24);
+> >  static_assert(!IS_ENABLED(CONFIG_64BIT) ||
+> >  	      __alignof__(struct kho_block_header_ser) == 8);
 > 
-> Thanks for the quick check. I apologies in advance if I am missing
-> something obvious.
-> 
-> On 12/11/26 2:19 pm, Mike Rapoport wrote:
-> > On Thu, Nov 12, 2026 at 12:02:05PM +0530, Mukesh Pilaniya wrote:
-> >> Hi Mike,
-> >>
-> >> On 04/11/26 10:20 pm, Mike Rapoport (Microsoft) wrote:
-> >>> kexec_add_buffer() users may depend on the order in which memory holes are
-> >>> searched. For instance, arm64 places the kernel bottom-up and then
-> >>> requires the DTB to be above the kernel.
-> >>>
-> >>> kho_walk_bootmem() walks the bootmem areas in the order they were
-> >>> reserved, so if the kernel lands in a small area at the top of the memory
-> >>> there is no room left for the DTB and kexec fails. For example, on an
-> >>> arm64 VM with 2G of RAM and kho_bootmem=8M,64M,64M, the lowmem area is
-> >>> reserved first at the top of the memory, the kernel image takes most of
-> >>> it and kexec fails with
-> >>>
-> >>>   kexec_file(Image): Could not find any suitable kernel location!
-> >>>
-> >>> Sort the bootmem areas by address and walk them in ascending order, or in
-> >>> descending order for top-down searches, like kexec_walk_resources() does.
-> >>>
-> >>> Fixes: 3bdecc3c93f9 ("kexec: add KHO support to kexec file loads")
-> >>> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> >>> ---
-> >>>  kernel/liveupdate/kexec_handover.c | 57 ++++++++++++++++++++++++++++++--------
-> >>>  1 file changed, 46 insertions(+), 11 deletions(-)
-> >>>
-> >>> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-> >>> index 6f1f55fe31819..2ac5d94f33fd4 100644
-> >>> --- a/kernel/liveupdate/kexec_handover.c
-> >>> +++ b/kernel/liveupdate/kexec_handover.c
-> >>> @@ -26,6 +26,7 @@
-> >>>  #include <linux/list.h>
-> >>>  #include <linux/memblock.h>
-> >>>  #include <linux/page-isolation.h>
-> >>> +#include <linux/sort.h>
-> >>>  #include <linux/unaligned.h>
-> >>>  #include <linux/vmalloc.h>
-> >>>  
-> >>> @@ -820,6 +821,14 @@ bool kho_bootmem_overlap(phys_addr_t phys, size_t size)
-> >>>  	return false;
-> >>>  }
-> >>>  
-> >>> +static int __init kho_bootmem_cmp(const void *_a, const void *_b)
-> >>> +{
-> >>> +	const struct kho_bootmem *a = _a;
-> >>> +	const struct kho_bootmem *b = _b;
-> >>> +
-> >>> +	return cmp_int(a->addr, b->addr);
-> >>> +}
-> >>> +
-> >>>  /**
-> >>>   * kho_reserve_bootmem - Reserve a contiguous chunk of memory for kexec
-> >>>   *
-> >>> @@ -904,6 +913,9 @@ static void __init kho_reserve_bootmem(void)
-> >>>  	 */
-> >>>  	kho_bootmem_cnt = i;
-> >>>  
-> >>> +	sort(kho_bootmem, kho_bootmem_cnt, sizeof(*kho_bootmem),
-> >>> +	     kho_bootmem_cmp, NULL);
-> >> This only covers the case where this kernel allocated the areas itself.
-> >> On a KHO boot the array comes from the previous kernel. A kernel with
-> >> this series that is handed over from one without it therefore keeps
-> >> walking the areas in reservation order for every following
-> >> kexec_file_load, and the arm64 failure you describe comes back until the
-> >> next cold boot and vise versa because the ABI string is still
-> >> "kho-v4".
-> > 
-> > If we were able to kexec from a kernel with no reservation ordering, the
-> > issue is not there, isn't it?
-> IMHO that holds for the image that was just handed over, but maybe not
-> for the next one. The producer's last kexec_file_load did place that
-> exact Image, DTB and command line through the areas in that order, so I
-> agree that reloading the same image from the consumer will find the same
-> spot. The order is still arbitrary though, and whether it works seems to
-> depend on the size of the image being loaded.
-> 
-> To give you the case I was looking at: on a QEMU arm64 guest with 4K
-> pages, 2 GiB of RAM and kho_bootmem=44M,64M,64M, the 44 MiB lowmem area
-> is reserved first, at the top of RAM (0xb8800000). The Image is about
-> 38 MiB, and the DTB has to go above it on a 2 MiB boundary, which lands
-> exactly on 0xbb400000, the end of that area. The load then fails with
-> "kexec_file_load failed: Cannot assign requested address", and the next
-> area is never tried, because the walk stops at the first area that
-> cannot take the buffer. With the areas walked in address order the same
-> image is placed in a lower, larger area and boots. So the first area
-> decides, and a few MiB of growth in the Image or a larger DTB is enough
-> to flip the result -- which is the part that makes me a bit nervous
-> about the first kexec after a handover.
-
-There's always a risk that KHO will run out of bootmem, even presuming we
-fixed all our bugs :)
-
-In your example it happens sooner then it should because there's still
-free memory that kexec won't use, but it's still the same - we've run out
-of bootmem.
-
-I prefer to keep the sorting in the cold boot going forward to save a few
-cycles at kexec time, so I'd rather not add sorting to the kexec'ed boot.
-
-So the kernel from 7.5 will have it right and if there's a case when we use
-an older stable kernel for the cold boot, and we see that we *really* need
-sorting after kexec there we can just add such sort as a fix for stable.
-
-BTW, in your case it's enough to switch lowmem and global sizes to gain a
-few megs for future image growth, isn't it?
- 
-> It also does not settle down the chain, as far as I can tell. A kernel
-> booted by KHO never reserves, so it never sorts: B inherits A's order,
-> C inherits B's order, and only a cold boot sorts. That makes the same
-> binary behave differently depending on how it was started. Sorting in
-> kho_mem_retrieve as well would cover it.
-> > 
-> > And after a cycle of KHO boots to newer kernels we anyway can get to the
-> > point when bootmem is not large enough.
-> That is the same argument, and it is probably why I am not fully
-> convinced that the previous successful kexec covers the ordering case
-> either. The inherited state was adequate for the load that produced the
-> running kernel, not necessarily for the load it is about to perform.
+> The above change goes away once my comment on the previous patch 
+> is addressed.
 > 
 > >  
-> >>> +static int kho_bootmem_walk_top_down(struct kexec_buf *kbuf,
-> >>> +				     int (*func)(struct resource *, void *))
-> >>>  {
-> >>>  	int ret = 0;
-> >>> -	int i;
-> >>>  
-> >>> -	for (i = 0; i < kho_bootmem_cnt; i++) {
-> >>> -		struct resource res = {
-> >>> -			.start = kho_bootmem[i].addr,
-> >>> -			.end = kho_bootmem[i].addr + kho_bootmem[i].size - 1,
-> >>> -		};
-> >>> +	for (int i = kho_bootmem_cnt - 1; i >= 0; i--) {
-> >>
-> >> kho_bootmem_cnt is unsigned, but the reverse loops in
-> >> kho_reserve_bootmem() and kho_bootmem_walk_top_down() start an int
-> >> counter at kho_bootmem_cnt - 1, which for a zero count is UINT_MAX
-> >> converted to int.  That conversion is implementation-defined; with the
-> >> current compilers it yields -1 and the loop body is skipped.
-> > 
-> > We never get here with kho_bootmem_cnt == 0.
-> Unless I am misreading it, we do, via kho_bootmem=0%. The parser accepts
-> it and stores the scale without a zero check, then bootmem_size_update()
-> takes the explicit-size branch and assigns the zero-initialised
-> bootmem_size_pernode to every node. kho_reserve_bootmem_area() returns
-> early for a zero size without recording the area, so kho_bootmem_cnt
-> stays 0 and kho_enable is left alone and only the error path clears it.
+> > diff --git a/include/linux/kho/abi/kexec_handover.h b/include/linux/kho/abi/kexec_handover.h
+> > index 2f4fb9c63942..6f12f5037ea5 100644
+> > --- a/include/linux/kho/abi/kexec_handover.h
+> > +++ b/include/linux/kho/abi/kexec_handover.h
+> > @@ -41,7 +41,7 @@
+> >   *   restore the preserved data.::
+> >   *
+> >   *     / {
+> > - *         compatible = "kho-v3";
+> > + *         compatible = "kho-v5";
+> >   *
+> >   *         preserved-memory-map = <0x...>;
+> >   *
+> > @@ -62,7 +62,7 @@
+> >   *     };
+> >   *
+> >   *   Root KHO Node (/):
+> > - *     - compatible: "kho-v3"
+> > + *     - compatible: "kho-v5"
 > 
-> kho_locate_mem_hole() is guarded by kho_enable only, so with cnt == 0
-> both walks return 0 and the caller turns that into -EADDRNOTAVAIL: KHO
-> is enabled with no regions and every kexec_file_load fails with "Cannot
-> assign requested address".
+> These are just examples, don't update them.
 > 
-> FWIW this became possible with 214f9649 commit, before it the
-> zero-sized areas were recorded, so cnt was never 0. The zero-scale patch
-> you posted in the v4 series [v3 1/5]thread closes this one.
-> 
+> >   *
+> >   *       Identifies the overall KHO ABI version.
+> >   *
+> > @@ -90,7 +90,7 @@
+> >   */
 > >  
-> >> How about using this one.
-> >> 	for (unsigned int i = kho_bootmem_cnt; i-- > 0;)
-> >>
-> >> Reviewed-by: Mukesh Pilaniya <mpilaniy@redhat.com>
-> > 
-> > Thanks!
+> >  /* The compatible string for the KHO FDT root node. */
+> > -#define KHO_FDT_COMPATIBLE "kho-v4"
+> > +#define KHO_FDT_COMPATIBLE "kho-v5"
 > >  
-> >> -- 
-> >> Regards,
-> >> Mukesh Pilaniya
-> >>
-> > 
+> >  /* The FDT property for the preserved memory map. */
+> >  #define KHO_FDT_MEMORY_MAP_PROP_NAME "preserved-memory-map"
+> > diff --git a/kernel/liveupdate/kho_block.c b/kernel/liveupdate/kho_block.c
+> > index 0d2a342ef422..9b148009085e 100644
+> > --- a/kernel/liveupdate/kho_block.c
+> > +++ b/kernel/liveupdate/kho_block.c
+> > @@ -16,6 +16,12 @@
+> >   * array of serialized entries. Multiple blocks are linked together via a
+> >   * physical pointer in the header, forming a linked list that can be easily
+> >   * traversed in both the current and the next kernel.
+> > + *
+> > + * Each block header also records the size of its entries. A newer kernel may
 > 
-> -- 
-> Regards,
-> Mukesh Pilaniya
-> 
+> "newer kernel" does not make sense in the documentation comment, as any 
+> kernel can do that. I would suggest "outgoing kernel." 
+
+My understanding that here "newer" kernel refers to a newer kernel version
+rather than incoming or outgoing. So the docs should say something like
+"different kernel versions may have different size of the entry"
+
+> By the way, in this series you use the terms "source" and "destination"
+> kernel, whereas traditionally we have used "outgoing" and "incoming."
+> While both conventions work, it would be preferable to maintain
+> consistency.
 
 -- 
 Sincerely yours,
