@@ -2,73 +2,90 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF39606A333
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778E9606A88A
 	for <kexec@archiver.kernel.org>; Mon, 16 Nov 2026 23:07:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=YOjlcOsv;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=Oh2kYb3Q
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=VvLxIsJH;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=Om4Zhlf/;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=kG+SvUCI
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=7noARN/sft+NtmJTHmUDUAvU1Dihrn7FLenu365oKlA=; b=YOjlcOsvuuGq34
-	P3jVZjxu9FWKFjZtJSj93pEgWamq/SR2/FOEgZCXmW+y1D9IsBkjuk0L59Xp6u0MALM/JKQtcJkDP
-	L3HB/oDJFtNFYlhbcbHi67o9ACIUahcd9Ak9vGDPQZkqcG+V/wc//O85AiAVxFlU0RbjeUKtSy9GF
-	D/GaIWV8pZqYEAhsWjZwmDlAjT76XLS5Fzc78lCbVbBFuT6f2YRLl48qJKYoPIEQhCmrrqDBlmv20
-	4qRqIVorYM3BUPpX/3UG79sAH9Db7YqCrr00LBXKZEEjK8wdHmkTxkr4TxNTuacifujE7lxv9XMLp
-	CdcOLUlFqeKO0oMjp0Eg==;
+	List-Owner; bh=Ov7f0jCh2x7/B/l+YrluktAKi2O0zfS/6BcSjEJkDWQ=; b=VvLxIsJH7Rq9EH
+	g8lqoob9fIP6fXS8lTceuBF9c1o5NQg0O7KtQQIQC4lGe6AcdCvoQkXcGcj/AZyyOikGXjZ3M9EgR
+	7SHUg4z3EjG5amHuKBXR1AIs3JLm35ELYZsjq/S3bg4WOCGQt8OMBpYahXFJxNdoJQs8uJaGbVWiJ
+	NHIYwwmYYP9imeaVt/2JlEDdZDKkPg2cGjvA9uzSO97Km30RKN2QSJlpAsRVfe4z9HcJVW9eaqOgh
+	TQpWCvYboeM+J2zxgzvAfnMaIBW613hotv0DsnuVWELl6jZfx+oGIX3B5Nzd0ADZWpNwZ1G2w6n5T
+	fokYvQCad7SMI4CyZWCA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xT5n9-000000046y3-3zVN;
-	Mon, 16 Nov 2026 23:07:15 +0000
-Received: from mail-pj1-x1033.google.com ([2607:f8b0:4864:20::1033])
+	id 1xT5nA-000000046yR-0YRt;
+	Mon, 16 Nov 2026 23:07:16 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xT5mv-000000046kz-3hLO
+	id 1xT5n3-000000046sN-0VUA
+	for kexec@bombadil.infradead.org;
+	Mon, 16 Nov 2026 23:07:09 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
+	:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-Type:Content-ID:Content-Description;
+	bh=Ov7f0jCh2x7/B/l+YrluktAKi2O0zfS/6BcSjEJkDWQ=; b=Om4Zhlf/jbzsyaQ8ecnNutf2Kl
+	kclR09QMBF48cocTXUc5xt5HA3cU/XHP7Bp+oWXRQWSeGfSP5Qa/LSYo5DaHDfqQhg4Ol7iKlawg4
+	4AQf1vygspKYAq6jVqrx9MruAvnXOsg1b/ZZmcK+0TSU+5U79++/Ea/esgw7rPTwtfyN6qEt4qHIq
+	L1L+t1r/gMeMC4r0k7oaeAwUXh5mhGUvF1PPH17J5rty6Uf+oXW5207L7Cy6F01dxHcueyQjx/1jS
+	QXJlhuEnx1EPWq5qDK5xZTlC8A2i4vag794OYh4UtKsWmp44ZzSOKI6fsVr/TGQuy2Ml9nfsWUNtB
+	I0FA7YbA==;
+Received: from mail-pj1-x1030.google.com ([2607:f8b0:4864:20::1030])
+	by desiato.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xT5n0-0000000EOzu-1rSG
 	for kexec@lists.infradead.org;
-	Mon, 16 Nov 2026 23:07:05 +0000
-Received: by mail-pj1-x1033.google.com with SMTP id 98e67ed59e1d1-3b083afebe4so728161a91.0
-        for <kexec@lists.infradead.org>; Mon, 16 Nov 2026 15:07:01 -0800 (PST)
+	Mon, 16 Nov 2026 23:07:07 +0000
+Received: by mail-pj1-x1030.google.com with SMTP id 98e67ed59e1d1-3b09cc7ed1aso489101a91.2
+        for <kexec@lists.infradead.org>; Mon, 16 Nov 2026 15:07:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1794870421; x=1795475221; darn=lists.infradead.org;
+        d=chromium.org; s=google; t=1794870424; x=1795475224; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=7noARN/sft+NtmJTHmUDUAvU1Dihrn7FLenu365oKlA=;
-        b=Oh2kYb3Q0CDNYToRJtgMSgGziMIRn8bga23IUIEQQPqnpZU9OETq2dmv7BOO2BMIC1
-         Vxodz5JtESIQrAV4p3wqpiAv7WHAePpyFcMHH7Mz7aqFuOhl+XdyNjRd3dLFxDzSV7ND
-         79F/k1e5EfaurVDWwDlaSqyEZLSjvkWlEHiYU=
+        bh=Ov7f0jCh2x7/B/l+YrluktAKi2O0zfS/6BcSjEJkDWQ=;
+        b=kG+SvUCIshXk0Hm9Y16yKPPmiU7s32jdZpFUy7mbUpSDRnmpeNLbf9HsNo8+W5UhKp
+         k4aiLd3esa2Qu5nlv5pPORJoj6/JVF5DS1srwDj71hoY5KJLESCUbWhKLMudf6lLVhv/
+         GvH+ITNZOj31PBT01o+c5rgYMtYJxRKAFSvIM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794870421; x=1795475221;
+        d=1e100.net; s=20260707; t=1794870424; x=1795475224;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=7noARN/sft+NtmJTHmUDUAvU1Dihrn7FLenu365oKlA=;
-        b=NsHLM0r6Zy02xN7JVxMPZdtHPJ/VkxXqQpAqm4I8vm7MpKeFLc0kzEs+9wx5eEX3EI
-         5TExGoqE0Zrfwn8xPFVgawwrXt0Ohbpb9J9DbN7GfhEGtW+L6iHbMllLZSW8H1xrTAtR
-         o6btxeu1U/AyhtT4Lba7pZ5Ns9muSe8fw0O/DBwthlVZFi49LuqZloc202Uu+ndEmJVq
-         6+HVNPJssOyxz2rjkxjkLFH3EPB0TeRsoodC9CglFDv/m78CmwcwEwwQxwjv4Vs5C3yt
-         AWYTGeR8/JniK4obKPBzoRNHqbV1orZTLzA5psoxXQYSd3OmlYDZVAugwDb9nAEWMcn7
-         KkYg==
-X-Forwarded-Encrypted: i=1; AL+hErFdT7ryl1S3bS9+veY0XXspt38CGHjvpkhf+iigFC+MCHEPkXAdiz1hxzyp4H+4ZtsqQPyPtw==@lists.infradead.org
-X-Gm-Message-State: APuU4Z9iPH9UWbdic+bi5ap7tvx0msg/7aJKhhEMDlgd7AbetpA07Ogc
-	jy14UsIvv8cMzo+KhNZ2VpHg6/lInsfeu67brkRJSqcdQaqG9F+ee91YqjjsEOfpgQ==
-X-Gm-Gg: AZFdTZfQ1nveaemvrHmsEELmgdqJPlyTKajb6sKpwJOBblEzt/2+ZU7bAGIr64tqEUF
-	eMhLuI3KvEAiWfErED9tc+8mHfRrWfEDw8KmwAvMrzpIcSj6yaw86YsOMZdJSFhYxEfTyZMx69L
-	9VlWijGZk+7V79C3qYBziiK1Clw0dG4vkWKPJLmtxmJ2A7wlK3+mXm6Cve50dS4DCWv4fOmSXNK
-	ZTxTD7d5W65y3981/k4f98DYtLjAELSRiVvRSO0VBcdemXqLwmNRKHGjc6GXU/ouAdGk8LENAzw
-	PwH/nAeOA3x3Arsnmi+ZuNIjTAX3h71wRxwflyzbR7iweUsCQ99ShRMF4urn/acoYKfr4Mv0rHC
-	pTUs0AUDQA374tQjtzKWVVvDanqoJP6FeS32PJOPWcaa8wnOqUtHpO2jTyoeNqbdcKtzOPVFjB4
-	e3dghX1IsrmXbXb+fQZUXNCAMI6XBumfLIJKuzyQHqe1ZX7UeQAPrMsjxazBfuJhp/66jhmZ2Nu
-	RaKm/t4VTQMUaU3TI8YLtSq/TlnQsW/oC8quNhRjgiD1ljylGWDu1rXMmMuswhtY/TShoPyzTsN
-	EnK4VdyKBe34ORwkaQe4O0zdUNoFScEYlZOwlk1Bn7JQb0bYaqKBI6Xpe6/JkLrPSEfaefE=
-X-Received: by 2002:a17:90a:c88f:b0:3b0:9a3e:bf8b with SMTP id 98e67ed59e1d1-3b1b0b5d63amr16850510a91.6.1794870420893;
-        Mon, 16 Nov 2026 15:07:00 -0800 (PST)
+        bh=Ov7f0jCh2x7/B/l+YrluktAKi2O0zfS/6BcSjEJkDWQ=;
+        b=CAQ84Ltwge3XHscIaFogW+IQMWjVnwN/5ijrikvDyUZmLPxtot7/LIKwHaNwSIlFFF
+         OtVuYJ86vEIFuvgIcDtMc36CzD8Kn+j5VWB+dsjL5GiLTag89VudG/uZGo0C0h8oQfVc
+         /NsR2yFdJg9V4c5P9B+uDov/6YrTgsm2ZbXtGaliJMWKvogM7yecnYJKl4ztD8+ZFtoe
+         HIhv0S0ZVWmN8RsrhH5RlEZCNPiqoF7P6twQ0mRZBpDkaSTukpIzpICYsqiNny5AVCA8
+         TfmdcvH74zhmT80vuK+5uf2MAAhyS5nMxkGWH9/GpCO9qTviQwF6ju8/Y+S0A3mVEBtl
+         QL/w==
+X-Forwarded-Encrypted: i=1; AL+hErEPmQux/qWpFmvWx3vKCFPp6OC+JLXYv44unm+Nx7UZv0xUPKQCmcXKv+S8hGEDFDGS4hirhg==@lists.infradead.org
+X-Gm-Message-State: APuU4Z8YDjUfa5QitomwPBuyGpTjijsi9BPj4xd0vnU3p2DMJelyrhPw
+	Yr2XimiP0WtCObVK/eqr2O9UrYQfsQsj2cNaKljMh2aNrnkAC0IvIl4UDV40jDyV4w==
+X-Gm-Gg: AZFdTZdvEJf6nR+jSHuWyLatwp7WlWrZyTDOHU+E+fB6iFT1CuOYtoleoDAHe0QsFR+
+	H4IKFUYx/ULSAL2c7gILCKMwLI0iCQaUcQUnZZrsQy8F2Iikvrz9Kybfi31miuub+WIjs57EPnd
+	iJBlqqU3mEucr03AeCXn6OhYwLZQNKjoPlNep7MuulY/COSMac7W6CsnCSR04UdaGI2OesjfsM+
+	hzCO1SXNo4m/DrGFInyLW2G+wYIsEJqvK/PSvXrde1+KHPFQPgNBlfmbNCVg0wVFZ37MQ75IEvr
+	CSomgTDRr5CFWhRCbqujUxr91AdK77EOCyizLDEfCLKMCQz8wjBVGygOjvtuZd9RKzIRysVvHbR
+	5HObhrQ+96CPZPR2o2txnIsEk9/UFOOOV6GOLS8FwIcrVunoK0frDtNlAjW2ou+CK+JLo4AhFoF
+	nmXcH5lxtrGqpVN7O6VXIuGWw+ct4HDfvogWlWTIF34Y+aUhdUwk/gmTZ8SZTWPrEI5vMcaSkmA
+	TcPRgwqmEFQQ+7V4rStW0ff3U9pL95pMSuxS1h3c9FcvOdqR+1z7ICTwhWzTijFvnpztoknCU8H
+	mvy0Ud/VHejLFf2afS+h1EZYI2fRW+8UG7JMnKkEMpJIN2LMHoSbwMerq9U6YOztKeSoJVUhSxT
+	/gK4EUQgqw6xrSeGL
+X-Received: by 2002:a17:90b:5906:b0:3b0:d0be:f02c with SMTP id 98e67ed59e1d1-3b1b0b4ffffmr17720470a91.6.1794870423621;
+        Mon, 16 Nov 2026 15:07:03 -0800 (PST)
 Received: from localhost (221.247.125.34.bc.googleusercontent.com. [34.125.247.221])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-cddc1873531sm4674755a12.10.2026.11.16.15.06.58
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-cddc13275cfsm5035019a12.0.2026.11.16.15.07.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Nov 2026 15:07:00 -0800 (PST)
+        Mon, 16 Nov 2026 15:07:03 -0800 (PST)
 From: Jeff Xu <jeffxu@chromium.org>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	David Hildenbrand <david@kernel.org>,
@@ -127,9 +144,9 @@ Cc: Jeff Xu <jeffxu@chromium.org>,
 	linux-rdma@vger.kernel.org,
 	rds-devel@oss.oracle.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 6/7] mm/kasan/kunit: add page_alloc_skip_kasan test
-Date: Mon, 16 Nov 2026 15:06:26 -0800
-Message-ID: <20261116230627.3537051-7-jeffxu@chromium.org>
+Subject: [PATCH v1 7/7] mm/kasan/kunit: add page_alloc_highuser_kasan test
+Date: Mon, 16 Nov 2026 15:06:27 -0800
+Message-ID: <20261116230627.3537051-8-jeffxu@chromium.org>
 X-Mailer: git-send-email 2.56.0.679.gc527c65306-goog
 In-Reply-To: <20261116230627.3537051-1-jeffxu@chromium.org>
 References: <20261116230627.3537051-1-jeffxu@chromium.org>
@@ -137,9 +154,9 @@ X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261116_150701_964037_68535F06 
-X-CRM114-Status: GOOD (  14.83  )
-X-Spam-Score: -2.1 (--)
+X-CRM114-CacheID: sfid-20261116_230706_507277_02DC3E68 
+X-CRM114-Status: GOOD (  14.92  )
+X-Spam-Score: -0.2 (/)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -158,81 +175,69 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Add a KUnit test (page_alloc_skip_kasan) to verify that page allocations
-using __GFP_SKIP_KASAN (GFP_KERNEL | __GFP_SKIP_KASAN, GFP_HIGHUSER, and
-GFP_HIGHUSER_MOVABLE) under CONFIG_KASAN_HW_TAGS:
-1. Reset page_kasan_tag() to KASAN_TAG_KERNEL (0xff) across all sub-pages
-   of a high-order allocation, and
-2. Return a match-all (0xff) linear-map pointer from page_address() that
-   does not trigger a KASAN fault even when the underlying physical
-   granules carry a mismatched tag (such as KASAN_TAG_INVALID or
-   restored userspace PROT_MTE tags).
+Add a KUnit test (page_alloc_highuser_kasan) to verify that, unlike
+GFP_HIGHUSER, page allocations using GFP_HIGHUSER_KASAN under
+CONFIG_KASAN_HW_TAGS:
+1. Get a KASAN tag in page_kasan_tag() across all sub-pages of a
+   high-order allocation, and the same tag in the pointer returned by
+   page_address(), and
+2. Are poisoned on free, so that a use-after-free through the stale
+   pointer is reported.
+
+The test fails if __GFP_SKIP_KASAN is added to GFP_HIGHUSER_KASAN.
+
+Tested on arm64 with CONFIG_KASAN_HW_TAGS under QEMU (virt,mte=on) with
+kasan.mode=sync, async and asymm.
 
 Assisted-by: LLM
 Signed-off-by: Jeff Xu <jeffxu@chromium.org>
 ---
- mm/kasan/kasan_test_c.c | 44 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ mm/kasan/kasan_test_c.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
 diff --git a/mm/kasan/kasan_test_c.c b/mm/kasan/kasan_test_c.c
-index f34163e19bd6..72342137bb18 100644
+index 72342137bb18..285b82793bdd 100644
 --- a/mm/kasan/kasan_test_c.c
 +++ b/mm/kasan/kasan_test_c.c
-@@ -380,6 +380,49 @@ static void page_alloc_uaf(struct kunit *test)
- 	KUNIT_EXPECT_KASAN_FAIL_READ(test, ((volatile char *)ptr)[0]);
+@@ -423,6 +423,33 @@ static void page_alloc_skip_kasan(struct kunit *test)
+ 	page_alloc_skip_kasan_helper(test, GFP_HIGHUSER_MOVABLE);
  }
  
-+static void page_alloc_skip_kasan_helper(struct kunit *test, gfp_t gfp)
++static void page_alloc_highuser_kasan(struct kunit *test)
 +{
 +	struct page *pages;
 +	size_t order = 2;
 +	char *ptr;
 +	size_t i;
 +
-+	pages = alloc_pages(gfp, order);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pages);
-+
-+	for (i = 0; i < (1UL << order); i++) {
-+		/*
-+		 * __GFP_SKIP_KASAN allocations must carry the match-all tag
-+		 * in page->flags, and so in page_address(), not a random tag.
-+		 */
-+		KUNIT_EXPECT_EQ(test, page_kasan_tag(pages + i),
-+				(u8)KASAN_TAG_KERNEL);
-+
-+		ptr = page_address(pages + i);
-+		KUNIT_EXPECT_EQ(test, (u8)get_tag(ptr), (u8)KASAN_TAG_KERNEL);
-+
-+		/*
-+		 * The memory tags of such pages are arbitrary: stale poison,
-+		 * or tags set by userspace through PROT_MTE. Accesses via
-+		 * page_address() must not fault regardless.
-+		 */
-+		kasan_poison(ptr, PAGE_SIZE, KASAN_TAG_INVALID, false);
-+		KUNIT_EXPECT_KASAN_RESULT(test, WRITE_ONCE(*ptr, 0),
-+					  "WRITE_ONCE(*ptr, 0)", false);
-+	}
-+
-+	__free_pages(pages, order);
-+}
-+
-+static void page_alloc_skip_kasan(struct kunit *test)
-+{
 +	KASAN_TEST_NEEDS_CONFIG_ON(test, CONFIG_KASAN_HW_TAGS);
 +
-+	page_alloc_skip_kasan_helper(test, GFP_KERNEL | __GFP_SKIP_KASAN);
-+	page_alloc_skip_kasan_helper(test, GFP_HIGHUSER);
-+	page_alloc_skip_kasan_helper(test, GFP_HIGHUSER_MOVABLE);
++	pages = alloc_pages(GFP_HIGHUSER_KASAN, order);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pages);
++	ptr = page_address(pages);
++
++	/* Unlike GFP_HIGHUSER, these pages must get a KASAN tag. */
++	for (i = 0; i < (1UL << order); i++) {
++		KUNIT_EXPECT_GE(test, page_kasan_tag(pages + i),
++				(u8)KASAN_TAG_MIN);
++		KUNIT_EXPECT_LT(test, page_kasan_tag(pages + i),
++				(u8)KASAN_TAG_KERNEL);
++	}
++	KUNIT_EXPECT_EQ(test, (u8)get_tag(ptr), page_kasan_tag(pages));
++
++	/* They are poisoned on free, so a use-after-free is reported. */
++	__free_pages(pages, order);
++	KUNIT_EXPECT_KASAN_FAIL_READ(test, READ_ONCE(*ptr));
 +}
 +
  static void krealloc_more_oob_helper(struct kunit *test,
  					size_t size1, size_t size2)
  {
-@@ -2369,6 +2412,7 @@ static struct kunit_case kasan_kunit_test_cases[] = {
- 	KUNIT_CASE(kmalloc_large_invalid_free),
+@@ -2413,6 +2440,7 @@ static struct kunit_case kasan_kunit_test_cases[] = {
  	KUNIT_CASE(page_alloc_oob_right),
  	KUNIT_CASE(page_alloc_uaf),
-+	KUNIT_CASE(page_alloc_skip_kasan),
+ 	KUNIT_CASE(page_alloc_skip_kasan),
++	KUNIT_CASE(page_alloc_highuser_kasan),
  	KUNIT_CASE(krealloc_more_oob),
  	KUNIT_CASE(krealloc_less_oob),
  	KUNIT_CASE(krealloc_large_more_oob),
