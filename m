@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA56606A32F
-	for <kexec@archiver.kernel.org>; Mon, 16 Nov 2026 23:15:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5807606A323
+	for <kexec@archiver.kernel.org>; Mon, 16 Nov 2026 23:15:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=RjJvuqRO;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KdU25Kpi
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=L8uTxKW0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IKkvvYxV
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,39 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=bt6ts7L0bnKOqPzNlt3dfuoXHJ5Bu4Y7hwSjTnQSAp0=; b=RjJvuqROt8mdZwgDZT937HWLwR
-	RDzAFnCZfGyEopSq0wz0muOgVtRlmjGaDxCPChn+5xRLurDEGYC3A3Z44Zzzx/odpJFVrqDP/s6Ua
-	Foa5tUixGDDoxk9C42yMs1C9Gi+PiDvqWrDaDENw3z4Y8UlG+62DtBn7GYyH2ZTLU4RDe2MpFhtq6
-	VZyzRqPcmTg1NxdJTF0G+DCDSYlIr/Do0IKJ0J3mxw+nKFjTplIWg9hVnbS2U34rhAuxOPTCVe9LG
-	kbM9I8Lq3FxC0M0KLsOy3ABf6R6EmvvCcvJUd4lsX6BQ7N2aeS6g/HyatB62rxUUU7nxo8J/99Ed9
-	yk3H3jcQ==;
+	bh=irlTfbuxdiMpDcvP4FHkEhCPa2hhZ00WVQ6MUSYj6Pc=; b=L8uTxKW0KIno1PmhfnCDp4Lkng
+	Op3t7NrW3eCgwWFKFj/l+qxqJanSz1KXepNA0cP8vhNk7H7Jnw9y5yl6Pb4FFXUf+v5wpTKg3pYI5
+	P/Vf0jUaSv282jAwxSFHyMUt+hdD1yWzN0bG5fjrfctTymY0zMHs0qrkZapk9GJMaem1AEsG16gXe
+	ObYZduPUAXUU5yLLFpeyBibW74OarmqrhaeSi9gafydMnGsomE9Yto4LrUalfmmAVGOwytehLpr/F
+	OrsYXXCI/lGZobLx9ys+q1YxS0hCf/jagu5y1qA1SpKliX2vdoGtWWYr/pUdZKu7HAzWq2d0fVvF3
+	ajv380aw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xT5v9-000000048Yh-2oLz;
-	Mon, 16 Nov 2026 23:15:31 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xT5vL-000000048bf-2cRt;
+	Mon, 16 Nov 2026 23:15:43 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xT5v8-000000048XX-1NuG
+	id 1xT5vF-000000048bF-0ht5
 	for kexec@lists.infradead.org;
-	Mon, 16 Nov 2026 23:15:30 +0000
+	Mon, 16 Nov 2026 23:15:37 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 9D72562C95;
+	by sea.source.kernel.org (Postfix) with ESMTP id D97FD43CC1;
+	Mon, 16 Nov 2026 23:15:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBE711F000C5;
 	Mon, 16 Nov 2026 23:15:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0172B1F000C4;
-	Mon, 16 Nov 2026 23:15:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794870929;
-	bh=bt6ts7L0bnKOqPzNlt3dfuoXHJ5Bu4Y7hwSjTnQSAp0=;
+	s=k20260515; t=1794870936;
+	bh=irlTfbuxdiMpDcvP4FHkEhCPa2hhZ00WVQ6MUSYj6Pc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=KdU25KpibMhMkKr2wZ3OtXRIMin7b5HBDedncFx0nAWpUwFpLlALdWJ3w2Snnt64E
-	 Q0N3IaTMuq8NA2CHcxJk6xLDLO2uZjbbuitRqYDBVrsaWH7XnTNfzdxXLzsEQ44suP
-	 gLXWdd7Lbkbu5K7LSnY3BMXqUBDaQ7yZ/MC6wD9Ah8K2I60XT4tt5323E7gBVIMwFe
-	 ULWP7leobkb6ZHZJad5mgTPI7dIEc6DOybB7njeiL42IBg3N5JJaveAnUxYFgWd1gp
-	 z1AVQDfdigaaascYmBbNm692jyeBHSGtCxr2abZruqLqyBQFTTxmmjSrYDtrpAXd+w
-	 lwRd4RgAKCfhQ==
-Message-ID: <sashiko-outbox-217864@kernel.org>
+	b=IKkvvYxVqcZvdS1TDlwoU2qoUoA5xI9SLsm+DXbuUwb0vz9kbwET7e8B6Cm4jiEtF
+	 A+OpELWCjjj0DERNQQSR6+Yuo1dXpQzsNZsQf2/FELRJA7Yw/SVomlqGooaqXkvOhY
+	 KhxY7j6827+UFVOH7QsTPhubv5IMORt0lXEhLwhqGjeqQ14outAW41QAU4ErKFA0I3
+	 rMtt0BJcEOMjscthUUUCR4womdcHk+MmBWeOZzzfxFigSKhTVlSKoV4IlRUibj8PIz
+	 huff0kFBiA/h3qvNgxA6sUJ7CzFrqvv0Xg4GXO6YoV1rvLdK6/Lm/+lB40RBgOcfT2
+	 /vQFi/FF113Yw==
+Message-ID: <sashiko-outbox-217865@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 3/7] kexec: use GFP_HIGHUSER_KASAN for segment pages
+Subject: Re: [PATCH v1 4/7] net/rds: use GFP_HIGHUSER_KASAN for message
+ pages
 To: "Jeff Xu" <jeffxu@chromium.org>, "Andrew Morton" <akpm@linux-foundation.org>, "David
  Hildenbrand" <david@kernel.org>, "Vlastimil Babka" <vbabka@kernel.org>, "Johannes
  Weiner" <hannes@cmpxchg.org>, "Andrey Ryabinin" <ryabinin.a.a@gmail.com>
@@ -69,12 +70,12 @@ Cc: "Lorenzo Stoakes" <ljs@kernel.org>, "Liam R . Howlett" <liam@infradead.org>,
  Henderson" <achender@kernel.org>, "David S . Miller" <davem@davemloft.net>, "Eric
  Dumazet" <edumazet@kernel.org>, "Jakub Kicinski" <kuba@kernel.org>, "Paolo
  Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>, kasan-dev@googlegroups.com, kexec@lists.infradead.org, linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com
-In-Reply-To: <20261116230627.3537051-4-jeffxu@chromium.org>
+In-Reply-To: <20261116230627.3537051-5-jeffxu@chromium.org>
 References: <20261116230627.3537051-1-jeffxu@chromium.org>
- <20261116230627.3537051-4-jeffxu@chromium.org>
+ <20261116230627.3537051-5-jeffxu@chromium.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 16 Nov 2026 23:15:25 +0000
+Date: Mon, 16 Nov 2026 23:15:29 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,9 +95,11 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> kimage_load_normal_segment() allocates the pages that hold the segments
-> of the next kernel. The kernel clears and fills them through
-> kmap_local_page(), and they are never mapped into userspace.
+> RDS allocates the pages that carry message payload with GFP_HIGHUSER:
+> the receive fragments in rds_ib_recv_refill_one() and the send payload
+> in rds_message_copy_from_user(). The kernel fills and drains them
+> through copy_page_from_iter(), copy_page_to_iter() and kmap_atomic(),
+> and they are not mapped into userspace.
 >=20
 > Allocate them with GFP_HIGHUSER_KASAN, so that they keep their KASAN
 > tagging when GFP_HIGHUSER starts to skip it later in this series.
@@ -105,16 +108,21 @@ X-Archived-By: <archiver.kernel.org>
 > GFP_HIGHUSER at this point. Build tested only.
 >=20
 > Assisted-by: LLM
-> Cc: Baoquan He <baoquan.he@linux.dev>
-> Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
-> Cc: Pratyush Yadav <pratyush@kernel.org>
-> Cc: kexec@lists.infradead.org
+> Cc: Allison Henderson <achender@kernel.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@kernel.org>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: Simon Horman <horms@kernel.org>
+> Cc: netdev@vger.kernel.org
+> Cc: linux-rdma@vger.kernel.org
+> Cc: rds-devel@oss.oracle.com
 > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261116230627.3537=
-051-1-jeffxu@chromium.org?part=3D3
+051-1-jeffxu@chromium.org?part=3D4
 
 
