@@ -2,74 +2,73 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CEC6606A891
-	for <kexec@archiver.kernel.org>; Mon, 16 Nov 2026 23:06:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C3F606A894
+	for <kexec@archiver.kernel.org>; Mon, 16 Nov 2026 23:06:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Mjlcx4Hm;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=oa32e0dJ
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=I81Ue4Et;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=PnNhKLCb
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Unsubscribe-Post:List-Owner;
-	bh=TIKThpPDZ4NJSXYRfFfOL841Z/zWYVoqxjZupCxQAek=; b=Mjlcx4HmfS9g4C3KnIIVxdfSm7
-	+qpG//FyF5HgkMiDi8MEO8czN4BRanWeu96zQ/oZU5oNT76PQuGYspqyIXf1lFgP5fYYCHjGx7BpU
-	gaPS56t4AM6nRQBi8V2XWpSDm9D86y4mNO4tYWWmm+1Ps0EnPRPkGjhHFMPOr7dimOUPu4W9dIOTW
-	9Wodc0R/Do3VhgUAGJdd75OkQV9E3mwiMZu+sXOIGuVfwkg/zAEf0AlnA/ege7j/Rd2QGH2lTOsos
-	+QnQwxqr/CfOQlynyE1x1WzQMCcUQfoDcOXyOzrOmF8QTKum5XuPO53dwCEZrDsTLI6cEQsotIRIB
-	ybH28Q6g==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=jGcgw87oL+/aayCG1LZRiyRs5ahRDiLzP62eRx4RAEM=; b=I81Ue4EtUsshhe
+	GQlkzxQGuCRxAo0/tuAVf0gXGSuwB58dYyEB/Ng9gWU4FWTohRgIKLoB2yISF76DnagWI033eubas
+	JJIJRCJTuyG7Ob4/l1ma8VYtAWAhjrTF/9SShNyDTJC9YnFL6wEC90Q9dRqjIv+qG6Cs+Xv56zNnv
+	zz6L89C2urUuySdxJFyXYzWuK1X+RiFGUa3wzdPFtZnaiuFsM1wGUjZx8E0AUk9AKCzGCUFcYVe0i
+	at8jh3vKeiMV8vSLW5u8gbscQgEhobZhV4R/jAda83wgBNbw/sZYEXJ7Bo8BzPb7fuAq9s4OaTV8F
+	GIYKjjQiQXVbc5vthHKw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xT5ml-000000046ai-37RA;
-	Mon, 16 Nov 2026 23:06:51 +0000
-Received: from mail-pj1-x102d.google.com ([2607:f8b0:4864:20::102d])
+	id 1xT5mn-000000046bF-0R1a;
+	Mon, 16 Nov 2026 23:06:53 +0000
+Received: from mail-pg1-x52e.google.com ([2607:f8b0:4864:20::52e])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xT5mg-000000046Xv-3mkP
+	id 1xT5mi-000000046Yf-3gbM
 	for kexec@lists.infradead.org;
-	Mon, 16 Nov 2026 23:06:50 +0000
-Received: by mail-pj1-x102d.google.com with SMTP id 98e67ed59e1d1-3b083afebe4so728112a91.0
-        for <kexec@lists.infradead.org>; Mon, 16 Nov 2026 15:06:46 -0800 (PST)
+	Mon, 16 Nov 2026 23:06:51 +0000
+Received: by mail-pg1-x52e.google.com with SMTP id 41be03b00d2f7-cdda6625e2aso221897a12.1
+        for <kexec@lists.infradead.org>; Mon, 16 Nov 2026 15:06:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1794870405; x=1795475205; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=TIKThpPDZ4NJSXYRfFfOL841Z/zWYVoqxjZupCxQAek=;
-        b=oa32e0dJK7rmFFxKmgOnt7pGmNsZys2iy5Kr741TAtopb/FdPmA7GAyOvV4OvXWZZu
-         7+mLDLaPw3gHZ8S/Q0RNtV1hVkEuXc2Exx5rF8YVv0UPNz2A7ku4lP5OiVjJgjlV3nEn
-         7XFC33yxNwdvL7kQltrbLbxqLFiC6IokrEsWE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794870405; x=1795475205;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1794870408; x=1795475208; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=TIKThpPDZ4NJSXYRfFfOL841Z/zWYVoqxjZupCxQAek=;
-        b=Ca7RyrOc8oApys2XZORCCob0xlroHZPAPV/7PoAamR/Ayel/prXPbFimv9QfHWR1+h
-         vrrXvY/Bw/huJN43dQkhsxmL+G0G5fDJQCpj5UjETqI8ZpxXZopAB3PN4PIqcbiPUMUc
-         2J7srD9LkMUo71OihXwA3O2MAVdnEa1WEtz4a1rYelbC2ScrWkQRLYiAqMT6uvy+42Q0
-         WU9RZpItALYfXqQDJYKgrVR6SnwkTy6uN9x8GjnUsxHuGUNhKOm3fjRzslmH4vlK8/Rn
-         Y/GsIG9tSwB1eEHw6raE0g5CMXP0H2btVSjxpulRj0nMOVUx7tFER/0uwwlzin5Qa2SV
-         o2Vg==
-X-Forwarded-Encrypted: i=1; AL+hErHtdmHYDYkYgBkbKvlu0btbjyql+7DINrZeRLv3Ni9dRqUZmYdIDEQu30XZccvrWluh/IJCEg==@lists.infradead.org
-X-Gm-Message-State: APuU4Z/yg0ZHHeT4OlzuJGCQ2Vv7n6b+qJQ7+bzjDodU6oHkd1KKfFHf
-	KvVmQEv2i9INda1mv2CpXEk4RAhgmqCydmDXQ24rzlY5+9TLCCC3H6Z/3b4j8q+6Ag==
-X-Gm-Gg: AZFdTZepg/o6gfMafInxWwSkqzGF/7X94qvMIezmWDrCaQFwDVneZf+E62RymsmY+DQ
-	0TzizKmHv9F9vzMdwjYVyuYO6Pf2WnYVBARw8T/y6KJLiDn0mUDTDfgBQFy6uwZf+iIDe50aF0U
-	MYwWQlPgjJLA8hiV9GH1S8pSTV21HIZMmn5hxuu8V4vmZTMnY+xp0JXB6zvkfUpJK/P74pl8Erc
-	SMbjo2tri0jRwD8tfu1Akf/sQFrL17COh4LEWWsDhk1GAvEQauifcD/XLzGNOk6G41kBjdGGMIf
-	8IkzrzSGythGNx14pIIpGD/KdWH8SCObaMmmph7cWp6p30M80+v7WMf+iInNYk+TynS5WpqS6YM
-	9SfbAZJhejzACDC4mp1D7ZLRS8/RsrD1urWmWJa+AOaBY9uKQcnreUUCElrmIc+9h8bvFEOgntF
-	lQ/4AdqZnYHzm4p90smMwh9GRFPHtMhAyS5O8DWI46WbnaDF4otSyZ2nRbqRzC/epxd10bEhLKA
-	+8+QR9q/DjFlRQDFLRRpG6sU/M5+RBzjpvQ0dkNXgHIWFSKOOQvuq70GHF6w3Ze3ymDe0iHnIow
-	QopfEtocMpCx0YgLsrn5tOZv7AY2Xy7yLIHJDN7Hwzw6LGruRdcOeii8CXZeTdVheCw8ACEvCbJ
-	ztWnbhfFVW7WYQOvV
-X-Received: by 2002:a17:90b:5546:b0:3a0:238b:db4d with SMTP id 98e67ed59e1d1-3b1b0a49be1mr17581397a91.5.1794870405500;
-        Mon, 16 Nov 2026 15:06:45 -0800 (PST)
+        bh=jGcgw87oL+/aayCG1LZRiyRs5ahRDiLzP62eRx4RAEM=;
+        b=PnNhKLCbQDfb0gEYfDo4KAaZwmwggQaTISy9nPdeU+8XBi8Khk2bG+SkcCK+5vZsaZ
+         dsr+rUAVmKKMHNksDFgEgomn+SuG6ViuWEnQvFCL4aVXBFlJfIAomY9jL4sLnIS34el2
+         2Q4wJysKDM7JhpCcXUjm6J2GmdE/Zu9jgKzz0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794870408; x=1795475208;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=jGcgw87oL+/aayCG1LZRiyRs5ahRDiLzP62eRx4RAEM=;
+        b=mejeo6bJppzzRmXZ9ywjDnWj/uhj5nVDuljwCjYHr8IrrhJeFR6c0iJR8HkX/TQPe3
+         QVLzeN27NgG62v+499RRXmsHD/HuxD2nyan1w6gRUgf7ebW51JavyRhiWrz13RMcaI1t
+         XDqq/slIUx1lxRWCQ1EyZy6qg3xY38RKm+ihGthbBl6/VnOl95mKe5zq0MHULqIQuo5c
+         mgHPXaBnyrZn/njBxKmuS9jdFKCEqiZ7fAh1lHfhSx1j6GcjOcrmpL2pJ+D2VpbK6Dsn
+         Il7l25oawAeTjza6ToaiB1CKM7hAtFpmh5c7E24mZz5X2lg8tWGmYeW7hCGx2q0X2gxX
+         Ivtg==
+X-Forwarded-Encrypted: i=1; AL+hErEa+ggOJ7keZ431XAW6HAyY93fpD/jPXn+ZE5CftPEOE+EVIh51qnUoyrS87H1NvZ6ezJk7Zg==@lists.infradead.org
+X-Gm-Message-State: APuU4Z/No0SjnUQvNCGILTxGl4+kOV/eQRDhSHkj3sB82oh+DOcG7uCX
+	U0KGmqYUCVgEYbTb2rR2cOUiUjr8sBo+xflUOFi/FTPPUeCzkylg5Basy49EjxU7Jg==
+X-Gm-Gg: AZFdTZdSuPJ7tPiX7sfJlroCWaJJNj0mcAfGz+AmjqooHBZloXQ56A6mgl5job/ixtf
+	Y1cgWekvIuT1PML6EprVcjmDNcPCN0nbD+CJ94ElwY7xRRyMRo38Oo7vBzK3QBFZL/nUgdUvysm
+	OcrBUe7ekkuzqQrjFpkvdP0oHhVX9IFYlyj7iA//3t7WTmP0w0HVweQ+U02c1+XV6TWfrUTDwM0
+	ILzSAhmt8jqVQAYOVTlQ9lrmCzVRCqQBb6tVXGdq/w/se8F46LxG59EYxpzOQlKOLq64yPPcm25
+	yEjDNr1YHS7onWPmaGoTsFo6tfXrCsfIv/EM4K7l4PCPTkWny8+MjvbBQGRSn3957VqBZ2hB4Kj
+	RLc+aHUKA7F2TMTf8MQ9PNYBZGv9lEDCBGZvyWzq8nxEvYV55P8ItzaTk3VtQoZD0KqV1yfIicS
+	yWoBsQZIqr9nNWiobEjFPF1+6YKFotyhLpIOB76oPE/cUaoKbwoKTcnuT03YciiQNXVspSdHb7P
+	oCxk8AvJ86UM22OVh+y3Di5j8n1Jvzhzem6YtwIXLqsg6THwcQdDTnxgSFwP2MNzrAjkuFK5IYZ
+	UgwGc/TYtYaNdZH7V9a68QfpgPWpPON6m3ejNSUiGknH5+/JBGI5JOwJL4EVWFlM/6DWbPw=
+X-Received: by 2002:a17:90a:9f98:b0:3b3:b15f:eb89 with SMTP id 98e67ed59e1d1-3b3b15feeb1mr321766a91.1.1794870408006;
+        Mon, 16 Nov 2026 15:06:48 -0800 (PST)
 Received: from localhost (221.247.125.34.bc.googleusercontent.com. [34.125.247.221])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3b1b3b110c0sm9530818a91.3.2026.11.16.15.06.43
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3b3ab9f3c5dsm1108222a91.0.2026.11.16.15.06.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Nov 2026 15:06:45 -0800 (PST)
+        Mon, 16 Nov 2026 15:06:47 -0800 (PST)
 From: Jeff Xu <jeffxu@chromium.org>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	David Hildenbrand <david@kernel.org>,
@@ -128,16 +127,18 @@ Cc: Jeff Xu <jeffxu@chromium.org>,
 	linux-rdma@vger.kernel.org,
 	rds-devel@oss.oracle.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 0/7] mm: kasan: skip KASAN for GFP_HIGHUSER
-Date: Mon, 16 Nov 2026 15:06:20 -0800
-Message-ID: <20261116230627.3537051-1-jeffxu@chromium.org>
+Subject: [PATCH v1 1/7] mm: add GFP_HIGHUSER_KASAN
+Date: Mon, 16 Nov 2026 15:06:21 -0800
+Message-ID: <20261116230627.3537051-2-jeffxu@chromium.org>
 X-Mailer: git-send-email 2.56.0.679.gc527c65306-goog
+In-Reply-To: <20261116230627.3537051-1-jeffxu@chromium.org>
+References: <20261116230627.3537051-1-jeffxu@chromium.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261116_150646_981634_F19EC951 
-X-CRM114-Status: GOOD (  22.18  )
+X-CRM114-CacheID: sfid-20261116_150649_691260_636C979B 
+X-CRM114-Status: GOOD (  18.68  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -149,133 +150,79 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Hi all,
+A later patch in this series adds __GFP_SKIP_KASAN to GFP_HIGHUSER, so
+that with CONFIG_KASAN_HW_TAGS its pages are neither tagged on
+allocation nor poisoned on free. That suits pages whose contents belong
+to userspace and are mapped there.
 
-Currently, GFP_HIGHUSER_MOVABLE includes __GFP_SKIP_KASAN (commits
-c275c5c6d50a, 70c248aca9e7, and 0a54864f8dfb), allowing movable
-userspace page allocations to skip KASAN page unpoisoning on allocation
-and poisoning on free under CONFIG_KASAN_HW_TAGS (ARM64 MTE). However,
-GFP_HIGHUSER does not include __GFP_SKIP_KASAN, even though it shares
-the same kernel-accessibility contract in include/linux/gfp_types.h
-("for userspace allocations that may be mapped to userspace, do not need
-to be directly accessible by the kernel but that cannot move once in
-use") and differs only by !__GFP_MOVABLE.
+Some GFP_HIGHUSER users allocate buffers that the kernel itself fills
+and drains through kmap_local_page(), such as pipe buffers. While such
+pages are tagged, KASAN can report a linear overflow out of the page
+and an access to it while it is free.
 
-Moving __GFP_SKIP_KASAN to GFP_HIGHUSER addresses the performance issue
-below (following up on the earlier drm/panthor discussion [1, 2]). The
-swap issue from that discussion is not addressed by this series:
+Add GFP_HIGHUSER_KASAN for these users, so that they can be converted
+before GFP_HIGHUSER changes. It has the value GFP_HIGHUSER has today
+and will not gain __GFP_SKIP_KASAN. The two stay identical without
+CONFIG_KASAN_HW_TAGS, where __GFP_SKIP_KASAN is 0.
 
-1. Performance: For every 4 KB page without __GFP_SKIP_KASAN,
-   mte_set_mem_tag_range() tags all 256 16-byte MTE granules (via
-   STG/STZG and DC GVA/GZVA) on allocation and again on free. In
-   graphics and UI workloads, DMA-BUF (system_heap) and DRM/GPU
-   (shmem/TTM) buffers use GFP_HIGHUSER; while steady-state rendering
-   reuses buffers, window resizes, surface transitions, and app launches
-   synchronously allocate and free tens to hundreds of megabytes (~32 MB
-   per 4K RGBA frame) on UI/compositor/render threads. That takes a
-   significant share of the 8.3 ms (120 Hz) / 16.7 ms (60 Hz) frame
-   budget and thrashes CPU data/MTE tag caches (especially on
-   cold-cache free). On Armv9.2-A, skipping KASAN cuts ~32 MB DMA-BUF
-   alloc+free latency by ~80% (~98% faster close()) and improves the
-   OpenGL score of an app-loading benchmark by 15-23%.
+GFP_HIGHUSER_KASAN must not be used for memory that userspace can map
+with PROT_MTE (anonymous, shmem and hugetlb pages). Userspace sets the
+memory tags of such a page, while the kernel keeps accessing it through
+page_address() with the KASAN tag from page->flags. The two do not
+match, and kernel accesses are reported as KASAN faults. arm64 does not
+reset the tag in page->flags when the page is mapped; it relies on the
+page having been allocated with __GFP_SKIP_KASAN. Nothing checks for
+misuse at allocation or mapping time.
 
-2. False-positive KASAN report after shmem swap-in readahead [1] (not
-   addressed here): when a shmem page is swapped in,
-   swap_cluster_readahead() also reads the neighboring swap slots and
-   allocates their swap-cache folios with the gfp mask of that shmem
-   mapping. A neighboring slot can hold an unrelated page that
-   userspace maps with PROT_MTE. If the mask lacks __GFP_SKIP_KASAN,
-   that page's folio gets a KASAN tag in page->flags. When its owner
-   faults it in, arch_swap_restore() writes the saved userspace tags to
-   the memory, but page->flags keeps the KASAN tag. Later kernel
-   accesses through page_address() then use a tag that does not match
-   the memory and are reported by KASAN.
+No functional change. The kernel-doc describes GFP_HIGHUSER as it will
+be once it skips KASAN tagging.
 
-   This series does not fix the readahead path. It only removes one
-   way to hit it: shmem mappings that use GFP_HIGHUSER (e.g.
-   drm_gem_shmem_helper / panthor) now pass __GFP_SKIP_KASAN to
-   readahead, so the neighboring folios no longer get a KASAN tag.
-   Shmem mappings with other gfp masks that lack __GFP_SKIP_KASAN
-   (e.g. GFP_KERNEL) can still trigger the report. That issue should
-   be followed up separately, for example in [1].
+Assisted-by: LLM
+Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+---
+ include/linux/gfp_types.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-What changes for users of GFP_HIGHUSER pages under CONFIG_KASAN_HW_TAGS
-(other KASAN modes are not affected):
-
-- Access through vmap(): nothing changes. Those pointers already carry
-  the match-all tag and are not checked today.
-- Access through kmap_local_page() or page_address() (for example
-  ramfs): accesses are no longer checked by KASAN, as is already the
-  case for GFP_HIGHUSER_MOVABLE pages.
-- Buffers that the kernel itself fills (pipe, FUSE, kexec, RDS) keep
-  KASAN checking by using the new GFP_HIGHUSER_KASAN (patches 1-4).
-
-GFP_KERNEL, GFP_USER, slab and vmalloc() allocations are not affected.
-
-Patch 1 adds GFP_HIGHUSER_KASAN, and Patches 2-4 use it for the pipe
-buffer pages of pipe and FUSE, kexec segment pages and RDS message
-pages, with no functional change. Patch 5 then moves __GFP_SKIP_KASAN
-from GFP_HIGHUSER_MOVABLE to GFP_HIGHUSER. Patch 6 adds a KUnit test
-(page_alloc_skip_kasan) verifying the __GFP_SKIP_KASAN page allocation
-contract under CONFIG_KASAN_HW_TAGS, and Patch 7 adds one for
-GFP_HIGHUSER_KASAN (page_alloc_highuser_kasan).
-
-The conversions come first so that these buffers keep their KASAN
-checking at every commit of the series.
-
-Testing: on arm64 with CONFIG_KASAN_HW_TAGS under QEMU (virt,mte=on),
-every commit builds and boots, and the KASAN KUnit suite was run with
-kasan.mode=sync, async and asymm. The two new tests pass, and each
-fails when the property it checks is broken on purpose. vmalloc_oob
-and kasan_strings (async and asymm) fail there with or without this
-series, and a few other tests fail intermittently under QEMU. The
-changed files also build on arm64 with generic and software tag-based
-KASAN and without KASAN, and on x86_64 with generic KASAN and without.
-The FUSE, kexec and RDS changes are build tested only, and the KUnit
-tests were not run on real hardware.
-
-Tooling: an AI coding assistant was used under the author's direction
-to audit GFP_HIGHUSER callers, draft GFP_HIGHUSER_KASAN (patch 1),
-the subsystem conversions (patches 2-4), the page_alloc_highuser_kasan
-test (patch 7), and the revised skip-test helper (patch 6), and revise
-patch 5's changelog and this cover letter. It also scripted and ran the
-builds and QEMU KUnit tests above.
-
-Feedback and thoughts -- particularly on whether any other bare
-GFP_HIGHUSER caller using kmap_local_page() would prefer opting back
-into KASAN via GFP_HIGHUSER_KASAN -- are very welcome.
-
-Link: https://lore.kernel.org/r/20260519-panthor-kasan-v2-1-b7384458f076@gmail.com/ [1]
-Link: https://lore.kernel.org/r/20260521105148.5497c281@fedora/ [2]
-
-Jeff Xu (7):
-  mm: add GFP_HIGHUSER_KASAN
-  pipe, fuse: use GFP_HIGHUSER_KASAN for pipe buffer pages
-  kexec: use GFP_HIGHUSER_KASAN for segment pages
-  net/rds: use GFP_HIGHUSER_KASAN for message pages
-  mm: kasan: skip KASAN for GFP_HIGHUSER
-  mm/kasan/kunit: add page_alloc_skip_kasan test
-  mm/kasan/kunit: add page_alloc_highuser_kasan test
-
- fs/fuse/dev.c             |  2 +-
- fs/pipe.c                 |  4 +--
- include/linux/gfp_types.h | 15 ++++++--
- kernel/kexec_core.c       |  2 +-
- mm/kasan/kasan_test_c.c   | 72 +++++++++++++++++++++++++++++++++++++++
- net/rds/ib_recv.c         |  2 +-
- net/rds/message.c         |  2 +-
- 7 files changed, 91 insertions(+), 8 deletions(-)
-
+diff --git a/include/linux/gfp_types.h b/include/linux/gfp_types.h
+index c1331bf0b239..567c93fc1cfb 100644
+--- a/include/linux/gfp_types.h
++++ b/include/linux/gfp_types.h
+@@ -356,6 +356,16 @@ enum {
+  * move once in use. An example may be a hardware allocation that maps
+  * data directly into userspace but has no addressing limitations.
+  *
++ * %GFP_HIGHUSER_KASAN is %GFP_HIGHUSER for pages that the kernel itself reads
++ * and writes, such as pipe buffers. Unlike %GFP_HIGHUSER it does not skip
++ * KASAN tagging: with CONFIG_KASAN_HW_TAGS the pages get a KASAN tag, which
++ * page_address() and kmap_local_page() return in the pointer. It must not be
++ * used for memory that userspace can map with PROT_MTE (anonymous, shmem and
++ * hugetlb pages). Userspace sets the memory tags of such a page, so the
++ * kernel's tagged pointer no longer matches them and kernel accesses to the
++ * page are reported as KASAN faults. Nothing checks for this at allocation
++ * or mapping time; those reports are the only sign of misuse.
++ *
+  * %GFP_HIGHUSER_MOVABLE is for userspace allocations that the kernel does not
+  * need direct access to but can use kmap() when access is required. They
+  * are expected to be movable via page reclaim or page migration. Typically,
+@@ -377,6 +387,7 @@ enum {
+ #define GFP_DMA		__GFP_DMA
+ #define GFP_DMA32	__GFP_DMA32
+ #define GFP_HIGHUSER	(GFP_USER | __GFP_HIGHMEM)
++#define GFP_HIGHUSER_KASAN	(GFP_USER | __GFP_HIGHMEM)
+ #define GFP_HIGHUSER_MOVABLE	(GFP_HIGHUSER | __GFP_MOVABLE | __GFP_SKIP_KASAN)
+ #define GFP_TRANSHUGE_LIGHT	((GFP_HIGHUSER_MOVABLE | __GFP_COMP | \
+ 			 __GFP_NOMEMALLOC | __GFP_NOWARN) & ~__GFP_RECLAIM)
 
 base-commit: 4b028d0cedf95f66b8c5294fde2d7d698bf830da
 -- 
 2.56.0.611.g1030f0b940-goog
+
 
