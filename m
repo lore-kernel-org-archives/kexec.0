@@ -2,86 +2,98 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE57C606A32A
-	for <kexec@archiver.kernel.org>; Tue, 17 Nov 2026 21:16:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B692B606A31C
+	for <kexec@archiver.kernel.org>; Tue, 17 Nov 2026 21:24:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Lq2LaarW;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=XOZR6QIA
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=0Ww+6F7A;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=R89GajvD;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=LCsI095Z
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:From:
-	Subject:Cc:To:Message-Id:Date:Content-Type:Content-Transfer-Encoding:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:To:
+	From:Subject:Cc:Message-Id:Date:Content-Type:Content-Transfer-Encoding:
 	Mime-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=Ays1EfzTLcRjTY+4yI71x15YxEo2laYpKiSTCWHUOoo=; b=Lq2LaarWuePHMy
-	Zyj3xsGbRQhhA+4i00m1s0AdUj3x/Wvr5AhOeAywXDwoY41/0G5K3wzGtwqeQM1jqtT1tQJw+GVom
-	KQiKXWeYoi0lLGIc1sQ6EVRQ4nrXmEw9CfXOjIFZUFdEidNdjYxOZ8aFRlqxNBge5xBAR+ic1mTea
-	ybY5zhAW5n+3c01Fi8SXuMuYYvpKwfDJOxbIhQ2PRvz1QxLdP8fCFpuhxilWgNYL9F1yh4yHL2U+9
-	bTUWcrOXhr14z7Rpo9eLkxPfigBlFe3+A4VrmMgrJxiBasbh/ssYtzfBmjvSIxfLdkJzDqFJwRF3M
-	YcOUEsHdcsbo4zUli4/g==;
+	List-Owner; bh=J/fjCpBeMUF8gNXxUY7RYX8CVW+S81rP+s0YQaibwOw=; b=0Ww+6F7AFXuybz
+	qSov0JAjJdpVUMI1q5RpIY/B0k6a7Abdl0NS9XxbL37neUSH/fWZ4Nmo0fRPZhuq/e2lJoy5YX9Av
+	E+M9z0vkWrtrcLH/MTmKzusBGGhKenQhrFN1QYRWcuu7tfKhbbjWRl3UELv25g7hK/abfCyBpx1Nr
+	bOum4BMa9OGzNUKd5DmhmfDuvzmq+GiOQZE9AeUi554m2PyjrRYyW+673E22rVd63Q8QFGMa6E/KK
+	bIfEf2YvOCjXViKgklEROgbUyye5wIZERvpTsvl6tfCFSxcpIULpvr9qRJKzPzQunNN4OIMooEysa
+	RXJs6cJmMvANHGIeKKjg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTQXZ-000000076SL-1IlN;
-	Tue, 17 Nov 2026 21:16:33 +0000
-Received: from mail-pl1-x62b.google.com ([2607:f8b0:4864:20::62b])
+	id 1xTQfA-000000077Cv-1eFQ;
+	Tue, 17 Nov 2026 21:24:24 +0000
+Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTQXR-000000076Rt-2odM
+	id 1xTQf9-000000077Cg-2SRr
+	for kexec@bombadil.infradead.org;
+	Tue, 17 Nov 2026 21:24:23 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:References:To:From:Subject:
+	Cc:Message-Id:Date:Content-Type:Content-Transfer-Encoding:Mime-Version:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=J/fjCpBeMUF8gNXxUY7RYX8CVW+S81rP+s0YQaibwOw=; b=R89GajvDL1rG1SV0LNyfakb5C6
+	e3Jje9jbkt6C7nEFmbjOwco8B6bga7LO+mChm8Sp7qnsLH1uPGSGHp+Mf4sRAUcC8/813c6CLpnmM
+	6hr6LezJlkkUorSkazZZDle2C+XfKLktfIOAxG6dLnPkFY5XoOvStkT3UYoKVyTgNtkv+xpQKQNoL
+	z9yvPp4kmqAUPUGAoZMdLch6SMhc8HU6N6L4W6yJ7NmeGcXfXPkPgLoH0PJz3sL+q5SPT9EeslwqG
+	/bwDPvFJi/ap6foMPdIeAukgOfFWIcxTA1r/vh1EDZ49Tpzm+8kSIpweHMGLeoJhHJzEnzDG3GLRP
+	0Lz7NJIQ==;
+Received: from mail-pl1-x632.google.com ([2607:f8b0:4864:20::632])
+	by casper.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xTQf6-00000006ACc-2tQu
 	for kexec@lists.infradead.org;
-	Tue, 17 Nov 2026 21:16:27 +0000
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-2e977109392so1601295ad.0
-        for <kexec@lists.infradead.org>; Tue, 17 Nov 2026 13:16:24 -0800 (PST)
+	Tue, 17 Nov 2026 21:24:22 +0000
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-2ed2bfe3252so1115365ad.3
+        for <kexec@lists.infradead.org>; Tue, 17 Nov 2026 13:24:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794950184; x=1795554984; darn=lists.infradead.org;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
+        d=google.com; s=20260707; t=1794950657; x=1795555457; darn=lists.infradead.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
          :content-type:content-transfer-encoding:mime-version:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=Ays1EfzTLcRjTY+4yI71x15YxEo2laYpKiSTCWHUOoo=;
-        b=XOZR6QIAcuXFNX3BkN/aCzeMRBvYKW//eUNvijx+jHF5W9OQ11zaadg8FymIRZaXwl
-         ueY/gHnnwvrdEkzVGZggreKMFv68c83quPuV42+yBtwoUkv2PbuecaKUB/m0E0T+kacW
-         ygTUga5x92Q4RFFBhwS8FJYUNCizV3QWO1JzbijW0ExiZ4D+D4ZtxspnpVJsbpMW4I75
-         ErOAXIutP2Cwf+IIdN+fmFAEhNKjHk6lgGPFlvvWmL4D5sHOj5PVzxolaLbdEBI+tPtD
-         /5z/cnGygdjkEBdiaPtcsCpywrVmMhdtY03ph6Cvotuv6ugBBbZfTvpsmzit3menC/8A
-         7UIA==
+        bh=J/fjCpBeMUF8gNXxUY7RYX8CVW+S81rP+s0YQaibwOw=;
+        b=LCsI095Zt8kfp6M5wUclOe6evbDY2ZGbfEIxpYslFOlfPXSaJOz32ZewXJmMhCriQ9
+         F9TD9CcuKsZ8LRjNenhkGkk1NMYJmvjLI/I38GNOlCxmdb3iLqEi8ZXIZRzjNnBMD/3C
+         w3uYcCc2MbN5Bzsm4GTeNVPS9bS1/dBrG/TAtXmQbAWKcm3KUpsHkUMLQVHvz9F0Y7a2
+         zIfJAYKOmFEzBIdX/fqDV36vZn39dVIGatfv3wiGNDHqCtrTebDGnMvMVpAt9kTeh7F5
+         x8ZnsrAgLeOo0h4Vu26ztbuSUp1kfVEpoPUHpbsaEN9TYvpYO3ttzc+YEh+rBqqbaZmp
+         1Jpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794950184; x=1795554984;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
+        d=1e100.net; s=20260707; t=1794950657; x=1795555457;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
          :content-type:content-transfer-encoding:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Ays1EfzTLcRjTY+4yI71x15YxEo2laYpKiSTCWHUOoo=;
-        b=KstjbgIOl1HYwdZ/wClDuEkuXpn/IP9gyjv+ZUcl01YQbI2G+W1+1Amu5d2yUyFTQh
-         CUc+Px670H6tbUx532VZK4uNm7yIjVCqQfFEZNxtBvv5KPnGsBTOdNEuCJRnmHHnfzvP
-         rEUKdvjt9XwWbX5WXtMX0uX4OFVIQaz8kAi4EfOilGTs1j2WxyAD0OsNKOBBvU72nR5P
-         nhS58ftQG5Qrl/iCx//nGcePbFSVXMZ98lYruMUt8J8qlmkzcv+f/eNhAenvdzEAJLxh
-         sqKju37owiC48Hw6D0GN8Yq8TGT5bXE9EhTiyjbh3gHqAEH0+UjgcirFyZiJysLDCh9k
-         iurA==
-X-Gm-Message-State: APuU4Z9Qw/jn63ATI1VS49KVnpmyFBlpMdhmzmGc/Ds6F3qVB0ECz3TA
-	S+sk0Oo3JHzQ37ldqQGroInVn/Ol8ZTgqVbB3FB0nRwmglpmpFsIFDn9+wSoH066eKcf1vIAJng
-	cZykKVHzd
-X-Gm-Gg: AZFdTZe4ssoQSrlfICCQsi8aZcjGY/gEXkh8ApOwA9S1rnz2RwlNIGNYDH+HMe+rw7L
-	CrkYywMQFm7fUp+ndpqA0YngXCDMtlFqmWf8K2RPo2mm1XZ9Kj12O/vnwGN7lraHnF/AjwwMDRV
-	upcAtSM8VASv7Dbhg0cBwhppo+Te79wYRQsEsRjfwCHX8fDcQEmKLKrTKdl3V3QaQB+eMrOkC5j
-	XLvI1XZlsJIcvqiB6RyuR3iUGXbtwrf7B2Eh7OA/bmcWxKdmPS8bvMXrFq7y5UmeKu9DtNoeRYB
-	Eq1RplNRMvkFdxNWaSwt5jKvAkaIcvti6nAKN4eKxpfoKlssqTGufT+98DpwntqIlEFTwqGnZDa
-	9Uet8aU8k+ug3GQWSOZ9bWq/7pNJf5x1n/VcGWKoa+XW/nK7LLpbYVx2vHj0knUMSz/Akjw5IIC
-	X9WNPtv5pJQNmOlOaoRTUv67JtLdQjOfPAbY8o+R63Fhl6dwFnWUOaVqR/vOaDGu5awnqMjKRZn
-	L50D1Hgtlk6YHNSQ3VSnGia/JCUgCj9wLfqsRZjWq9VoXRA1V1/T/fsc/TlvzT4e8YH+x3LIvrJ
-	vjCbFXxrBFWZtJ6oDUNuUUAP1FvVM/4zq5VpybCO49tKnVXb1AXMMboTGisbu9JQ/POXMI5geqc
-	RKuF3kKpNOg==
-X-Received: by 2002:a17:902:f790:b0:2e9:460e:ca57 with SMTP id d9443c01a7336-2eff7529757mr5030915ad.15.1794950183338;
-        Tue, 17 Nov 2026 13:16:23 -0800 (PST)
+        bh=J/fjCpBeMUF8gNXxUY7RYX8CVW+S81rP+s0YQaibwOw=;
+        b=E8ZMPmbk5GlBB9tT3AdkPHjAQfs+DDWN0T8xMQwVfSgmaGdF87dcaRC04noJFyU/Fn
+         49B8XMNS1Y2Fzg+x4khSe5/UDCUSkLDLEWRLKujtTtp5Kzep/1E+wu/tHxR+z6376ycp
+         bYC2IfQz0d3gW7FzOMVrD/3S1l8C7nsVw7WYfLq6ZnSfKrMYqvzL+3hMMzr9AKa8bEIt
+         4t/3d/E65yYguDLrhFeDvdYlVKxZ6Ln8TPjHPYcY3VQq8skvFm2AWM3YsoBS9nKrnjYd
+         NNs6c4sNZ/692RmO3qyRPSK2IRivZYozPOpIq1hjWmBHZhpH1Y7nYuW0fQAlOH4l++gp
+         5h1A==
+X-Gm-Message-State: APuU4Z/lafp5RTuMBH/OqL1i6ZD1IP9id//J3q37iadBNLn5BEe2SmOP
+	yS1pHD7UHRgXpHqNrxdL9IUV9cgRntkDfWJFmVRskZpTniWFiug4UL2CXZsnDOBKRA==
+X-Gm-Gg: AZFdTZdi5hcnjWivDfxcqesVuauBdIzaoZ4D4aCCVk0NZzNpJJQtOUsOlUy59+XyYLa
+	4pUFQbav9bUaWPBNPCJ1Uf1rKk9oS9SWOrTA9SAH+W7fs2POFHghzx8x27riwXUgE82ZY26aNIW
+	HwV+vmKiJ4GYznzJE5/4o7TRChmO/wk5NnhX3nkJc0s7xVPqDv1dh3RaImYNBQpFYM3sHnii9Ij
+	Mm0y01iM2OGA8f8HeUc+zDqM2oh9pUOoIFRMDsZ4/zOe2lD1pVbT1KQYd3PqLMclG47o0SqY0BY
+	2OeRjJzN77VylKSxgt8Q+2oi/su/N27hHiYQvF/VS44ZPAjmFNOC7az3K7msECYjlqVP2fFliUI
+	qIDxge1Z/4LYGOaHaYzmvCKG1Y5PpUtNyEZ+dkCIcH/GRmddC4oDQRRaIS4BYtYRReRCPD18HkA
+	EfaYSgy4Q/lVE1hJQqH1GzBL2tILMydrOLn5P1KaKSll6UTFyKYfdciKbUHiYYHuj3dwrtqSCfZ
+	D7wAsWKDWD6YdCNWoLnomM7JW1yaWINMpgIylNDEeuHT/jV+lTfZXXQabtb3vBU4YO+kJcPW7gP
+	4xo4bXue1qkSQ2G2Xwc+XifJEltdB3a1W5/luk+8nWtHMRnPbAtmlQI/KTr22VVM
+X-Received: by 2002:a17:902:d583:b0:2ef:ee74:78e with SMTP id d9443c01a7336-2eff72ea998mr4954175ad.13.1794950656357;
+        Tue, 17 Nov 2026 13:24:16 -0800 (PST)
 Received: from localhost (33.79.127.34.bc.googleusercontent.com. [34.127.79.33])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eff61841aasm2714705ad.34.2026.11.17.13.16.22
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eff617eb61sm2650725ad.28.2026.11.17.13.24.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Nov 2026 13:16:22 -0800 (PST)
+        Tue, 17 Nov 2026 13:24:15 -0800 (PST)
 X-Archived-By: <archiver.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 17 Nov 2026 13:16:21 -0800
-Message-Id: <DMXSQHZG5L27.2NIIT7F6FW0ME@google.com>
-To: "Alex Williamson" <alex@shazbot.org>, "David Matlack"
- <dmatlack@google.com>
+Date: Tue, 17 Nov 2026 13:24:15 -0800
+Message-Id: <DMXSWJDPGJLE.30NVP7WQSZIZ7@google.com>
 Cc: <kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>,
  <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
  <linux-pci@vger.kernel.org>, "Adithya Jayachandran"
@@ -98,17 +110,19 @@ Cc: <kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>,
  Khawaja" <skhawaja@google.com>, "Shuah Khan" <skhan@linuxfoundation.org>,
  "Vipin Sharma" <vipinsh@google.com>, "William Tu" <witu@nvidia.com>, "Yi
  Liu" <yi.l.liu@intel.com>
-Subject: Re: [PATCH v10 09/13] PCI: liveupdate: Adopt ACS controls in
- incoming preserved devices
+Subject: Re: [PATCH v10 08/13] PCI: Save and restore the ACS Control
+ register and Egress Control Vector
 From: "David Matlack" <dmatlack@google.com>
+To: "Alex Williamson" <alex.williamson@nvidia.com>, "David Matlack"
+ <dmatlack@google.com>
 X-Mailer: aerc 0.21.0
 References: <20261013162529.1928093-1-dmatlack@google.com>
- <20261013162529.1928093-10-dmatlack@google.com>
- <20261116170942.720b06fd@shazbot.org>
-In-Reply-To: <20261116170942.720b06fd@shazbot.org>
+ <20261013162529.1928093-9-dmatlack@google.com>
+ <20261116171017.2342bd11@nvidia.com>
+In-Reply-To: <20261116171017.2342bd11@nvidia.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261117_131625_744046_AE3E0118 
-X-CRM114-Status: GOOD (  24.85  )
+X-CRM114-CacheID: sfid-20261117_212420_796124_F509C1D7 
+X-CRM114-Status: GOOD (  11.95  )
 X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -120,106 +134,44 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Mon Nov 16, 2026 at 5:09 PM PST, Alex Williamson wrote:
-> On Tue, 13 Oct 2026 16:25:25 +0000
+On Mon Nov 16, 2026 at 5:10 PM PST, Alex Williamson wrote:
+> On Tue, 13 Oct 2026 16:25:24 +0000
 > David Matlack <dmatlack@google.com> wrote:
->> +int pci_liveupdate_adopt_acs(struct pci_dev *dev)
+>> +static void pci_allocate_acs_save_buffer(struct pci_dev *dev)
 >> +{
->> +	/*
->> +	 * Check if the device was preserved over a previous Live Update (even
->> +	 * if it has already gone through pci_liveupdate_finish()). This ensur=
-es
->> +	 * that the device continues to use the ACS controls established by th=
-e
->> +	 * previous kernel.
->> +	 */
->> +	if (!dev->liveupdate.was_incoming)
->> +		return -EINVAL;
+>> +	size_t size;
+>> +	int pos;
 >> +
->> +	/*
->> +	 * The previous kernel should not have preserved any devices that
->> +	 * require device-specific quirks to enable ACS, but if such a device =
-is
->> +	 * detected (e.g. new device-specific ACS quirk in the current kernel)=
-,
->> +	 * log a big warning and fall back to the normal enable ACS path.
->> +	 */
->> +	if (pci_need_dev_specific_enable_acs(dev)) {
->> +		pci_warn(dev, "Device-specific quirk required to enable ACS!\n");
->> +		WARN_ON_ONCE(true);
->> +		return -EINVAL;
->> +	}
 >
-> This looks pretty unsafe and the comment is only explaining how we
-> might get here, not why we shouldn't panic.  IIUC, the IOMMU lho
-> support requires singleton groups, but I'm not sure what it does if a
-> group becomes non-singleton in the new kernel (such as via a new quirk).
+> Nit, moving the device specific enable test here:
 >
-> Is a warning related to what might be a parent bridge rather than the
-> endpoint device, really sufficient here?  Thanks,
+> 	if (pci_need_dev_specific_enable_acs(dev))
+> 		return;
+>
+> Would avoid:
+>
+>  - Allocating a buffer that will never be restored
+>  - Saving ACS state to a buffer that will never be restored
+>  - Testing for the device specific enable at restore
+>
+> Otherwise,
+>
+> Reviewed-by: Alex Williamson <alex.williamson@nvidia.com>
 
-It's not necessarily safe. The new quirk could change how TLPs are being
-routed while a downstream preserved device is still sending memory
-transactions.
+Thanks for the review.
 
-I think a better approach would be for a preserved device to always
-adopt the ACS controls left by the previous kernel, and keep them
-across resets through the ACS save state. So a new device-specific quirk
-for the device is ignored, apart from logging a warning. IOW, new ACS
-quirks only take effect on cold boot.
-
-If a preserved device has an ACS capability but no save state (i.e. the
-allocation failed), then we can panic, since its adopted controls would
-be lost by the first reset..
-
-Roughly:
-
-	int pci_liveupdate_adopt_acs(struct pci_dev *dev)
-	{
-		if (!dev->liveupdate.was_incoming)
-			return -EINVAL;
-
-		if (pci_need_dev_specific_enable_acs(dev))
-			pci_warn(dev, "Ignoring ACS quirk, adopting ACS controls from previous k=
-ernel\n");
-
-		if (dev->acs_cap && !pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ACS))
-			panic("%s: No ACS save state for preserved device\n",
-			      pci_name(dev));
-
-		return 0;
-	}
-
-The panic would only happen if allocating the save state fails. Ideally
-I'd like save state allocation failures to cause the whole device setup
-to fail. That's something I'm hoping to do in the future on top of the
-pci_save_state rework [1], and then we can remove this panic. Until
-then, the panic is constrained to Live Update, and the allocation
-shouldn't fail in practice.
-
-As for IOMMU groups: Sami's IOMMU Live Update series refuses to let any
-device join a group that contains a preserved device, in both the
-outgoing and incoming kernel (__iommu_probe_device() fails with -EBUSY)
-[2][3]. So if the new kernel considers the path less isolated than the
-previous kernel did, e.g. because of a new quirk, the group grows and
-the IOMMU core refuses the second device rather than putting both in
-one group. The system comes up with that device unavailable, which can
-be debugged and recovered by rebooting, instead of panicking.
-
-[1] https://lore.kernel.org/linux-pci/20261106004218.604799-1-dmatlack@goog=
-le.com/
-[2] https://lore.kernel.org/linux-iommu/20261110040828.1774343-6-skhawaja@g=
-oogle.com/
-[3] https://lore.kernel.org/linux-iommu/20261110040828.1774343-13-skhawaja@=
-google.com/
-
-Does that sound reasonable?
+I'll make this change as you described. Preserved devices will still
+need the buffer even if they match a device-specific quirk (see my reply
+on 09), so 09 will also allocate it for devices that were preserved by
+the previous kernel. Since restore then just checks whether the buffer
+exists, that is all it takes for preserved devices to keep their adopted
+controls across a reset.
 
