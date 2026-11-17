@@ -2,144 +2,90 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20B2606A332
-	for <kexec@archiver.kernel.org>; Tue, 17 Nov 2026 01:10:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92BC606A33D
+	for <kexec@archiver.kernel.org>; Tue, 17 Nov 2026 09:21:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=nZtYEJPH;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=Un97rvNg
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=RaH+QEwx;
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=wcMqPt0Q
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Unsubscribe-Post:List-Owner;
-	bh=dfft3FxSAS6eoNGEWMG30BVw5Pica96XKTQg/v7qC94=; b=nZtYEJPHSOu/KQ4Cbfugzk1G0w
-	QWBOZWxsapB2u0ZnBUnjTrxRcWgeONL9l1uzVjrtV/R19pQnrpYQD1orS4zOq2LzpIzpbI69dOFVQ
-	S52oTxCLo0/wX7guXk1W5nGY0hTLSwUXl68C3yeaecEoP3p1/AFnP4/3LYfAOmt/1iyBA0OPv/hoZ
-	mZ+xN7q4OuiXjaTb5Dy1ya47oZ+WSeOAshAx85JRyHZ2ADM5M6WwY9xvC7IaeRbAv2ooQVYl9XxYA
-	c2GjJ0sp6ifsZxVCSy/2Bz+sMCtWGe19y4tXbMlSRPGwPIjoFCS4srj+Rx8FCbv/Wu3MDc7ugZ3UO
-	rNsbXZ/g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:CC:To:
+	Subject:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=NelY0F3SQaoHpZaa48RfVKojhT0mMWhbxVhRpg0tfCU=; b=RaH+QEwxfBm+xl
+	I+bA+LXbMtjpe421VG/QRF/SsD2cG2HqpVfJDWRm3gz7Enyc4UPhWXcsiUgiJnNR5+kXmlTbDpw1q
+	ywB64jvbZtl39GddvKg/4PI34Bvo1MVu47X22GI/JMUsWBKlD8qAhA98zsLdtBjlQXWuUUEVe4eMd
+	z81gLryPJ1A3RDpkq8UunLmJ1y7F9e+brb0Dpq3NvPg8fg2/EvThmiTQwqeoKbPKDk6YGGXxec5k5
+	k6pUFiZW3mLiidMRsQC3fY9ZB3xrw13RBuymc0AeT6cdcky+ljWcEXYhCsNQjQbTSp0uBelnAm/Va
+	iJtgCta8tr+D+azCCPjw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xT7im-00000004Hyz-1SSe;
-	Tue, 17 Nov 2026 01:10:52 +0000
-Received: from mail-westcentralusazlp170100005.outbound.protection.outlook.com ([2a01:111:f403:c112::5] helo=CY7PR03CU001.outbound.protection.outlook.com)
+	id 1xTFNg-000000053de-2Ysm;
+	Tue, 17 Nov 2026 09:21:36 +0000
+Received: from canpmsgout05.his.huawei.com ([113.46.200.220])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xT7ih-00000004HyW-0bqd
-	for kexec@lists.infradead.org;
-	Tue, 17 Nov 2026 01:10:51 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=k6Mx9m+9RzPcRI2OJ8k1BngtPVwmYH04WA+JcjzBGfWmDQ2F6Hd6lL1RdG6tDp49TkzBDz7UQy2biinc7xpX0ScroOPpO19gPnT1ikCmzRR5girguHCrZR3wk8o7Jwa6+HU83U3u4JzZT9TsLUYtWvJQy9rF2ZCIJ8kEHPvFy9cIzIy1k1D2pyCi1K8h+5R6nECl1rK0UxDw0zJG9q+wh2HTx8HpCkwohNyDmOStmPfjIOt8vAw9X+wO/Wm4cSpcYYmS7ZLb6PSkxqpcHRnz8VFDYP2zplH97lla3hRMIToSgl+D+lv/534I4liI1h3jgU2dtmugKtBvvHK9VqjxUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dfft3FxSAS6eoNGEWMG30BVw5Pica96XKTQg/v7qC94=;
- b=vBaxvGphxrFnEhtjZ//TmUOsGdeOy9pmt5cya2kER8A0CF/+/aFiJDnpYRp/HPJN72GLEGEuqj2TapJtvmoOhsxjH6yJguIi3tjKAoHRmVUUueudS1Li2yT7jrVbia9ixyUzgdONPEQc32dq66Gz01TStmOm+LphNlqY/ImvZMHN6WcMgebw1MlvZQSZMgRJHRfEPo+G72HntALjGrzdd0vhq2YCtXG1PvSGfl56VNw2ZPmit8mG3deftckqY0wETYHRWkBmBWRHYR5NM8uR8AppPLXWHV+Dfnv0L/EmhCw4ir4COVNfJpvYPxmNlKdX9msn9ToHV1UZyKNdDhmQOA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dfft3FxSAS6eoNGEWMG30BVw5Pica96XKTQg/v7qC94=;
- b=Un97rvNge6bXtxxtxa+HxVLlDgfAo6GWzUtJBMANd+KK5UdsfYuRdOuktzztV5TrGvf63VWiq/xIB2VDKt5WVGZbRq5hIm7AUNu4Kn19guuVKvudMM9uuFVCZiBc94O1cExdZFSg5RwvooOgzh7v/B5gK0M+aqNqoSDrKT0CEsFj9U3D7QFriNouW4ouqBxtd2QeN/w+e3UJFCKuwX2F4Hh/O1gdoXzqUx0ZP+amXGiZHvSN4jpoKAIedmUlJKiz3hHR3TxCEyNc1FeRcOOGEM214nsDodDv9UoJbNXgQ7XCede0lhuXm62zeXIdh/ybIIA8IxCr2qVX2gE+uWGSTg==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV3PR12MB9411.namprd12.prod.outlook.com (2603:10b6:408:215::20)
- by PH0PR12MB7011.namprd12.prod.outlook.com (2603:10b6:510:21c::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.10; Tue, 17 Nov
- 2026 01:10:36 +0000
-Received: from LV3PR12MB9411.namprd12.prod.outlook.com
- ([fe80::98b7:86de:b69:2a15]) by LV3PR12MB9411.namprd12.prod.outlook.com
- ([fe80::98b7:86de:b69:2a15%5]) with mapi id 15.21.0615.013; Tue, 17 Nov 2026
- 01:10:36 +0000
-Date: Mon, 16 Nov 2026 17:10:17 -0800
-From: Alex Williamson <alex.williamson@nvidia.com>
-To: David Matlack <dmatlack@google.com>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-pci@vger.kernel.org, Adithya Jayachandran <ajayachandra@nvidia.com>,
- Alexander Graf <graf@amazon.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Chris Li <chrisl@kernel.org>, David Rientjes <rientjes@google.com>, Jacob
- Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>,
- Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, Leon
- Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>, Mike
- Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, Pasha Tatashin
- <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>,
- Pratyush Yadav <pratyush@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja
- <skhawaja@google.com>, Shuah Khan <skhan@linuxfoundation.org>, Vipin Sharma
- <vipinsh@google.com>, William Tu <witu@nvidia.com>, Yi Liu
- <yi.l.liu@intel.com>
-Subject: Re: [PATCH v10 08/13] PCI: Save and restore the ACS Control
- register and Egress Control Vector
-Message-ID: <20261116171017.2342bd11@nvidia.com>
-In-Reply-To: <20261013162529.1928093-9-dmatlack@google.com>
-References: <20261013162529.1928093-1-dmatlack@google.com>
-	<20261013162529.1928093-9-dmatlack@google.com>
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0214.namprd03.prod.outlook.com
- (2603:10b6:a03:39f::9) To LV3PR12MB9411.namprd12.prod.outlook.com
- (2603:10b6:408:215::20)
+	id 1xTFNd-000000053ZP-1TNh;
+	Tue, 17 Nov 2026 09:21:36 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=NelY0F3SQaoHpZaa48RfVKojhT0mMWhbxVhRpg0tfCU=;
+	b=wcMqPt0QhszyRzva4g7wZmx964J1LB82GE/yeVL9LyN+DZ3q7eziWeveRgCFaAaPBdYeCBQiX
+	9FaWQ1vHk5u3RT5eFgJLnfpdsyXTk+FiUTHQg8fFnGbdIKoRqYmksHh6O0iFhakPsKKPB35Ps5S
+	cmyonBF0d5EmEbjEKCpSmik=
+Received: from mail.maildlp.com (unknown [172.19.162.140])
+	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4jTK2j3ctZz12LD4;
+	Tue, 17 Nov 2026 17:20:29 +0800 (CST)
+Received: from whupemk100004.china.huawei.com (unknown [7.152.185.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id 503DB203AB;
+	Tue, 17 Nov 2026 17:21:22 +0800 (CST)
+Received: from [10.173.125.21] (10.173.125.21) by
+ whupemk100004.china.huawei.com (7.152.185.74) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Tue, 17 Nov 2026 17:21:18 +0800
+Subject: Re: [PATCH v6 3/7] mm/memory-failure: add hwpoison_boot_page() to
+ flag an inherited frame
+To: Breno Leitao <leitao@debian.org>
+CC: <linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-cxl@vger.kernel.org>,
+	<driver-core@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
+	<rmikey@meta.com>, <riel@surriel.com>, <harry@kernel.org>,
+	<kernel-team@meta.com>, Ard Biesheuvel <ardb@kernel.org>, Ilias Apalodimas
+	<ilias.apalodimas@linaro.org>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
+	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
+	<hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand
+	<david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett"
+	<liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport
+	<rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
+	<mhocko@suse.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>, Oscar Salvador
+	<osalvador@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael
+ J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Catalin
+ Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, <kas@kernel.org>,
+	<kexec@lists.infradead.org>, Brendan Jackman <brendan.jackman@linux.dev>,
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+	<shakeel.butt@linux.dev>
+References: <20261016-hwpoison-kho-v6-0-f304255147da@debian.org>
+ <20261016-hwpoison-kho-v6-3-f304255147da@debian.org>
+From: Miaohe Lin <linmiaohe@huawei.com>
+Message-ID: <869891e5-3f4f-e404-1068-53e6ff169805@huawei.com>
+Date: Tue, 17 Nov 2026 17:21:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR12MB9411:EE_|PH0PR12MB7011:EE_
-X-MS-Office365-Filtering-Correlation-Id: 07b5d6ac-384d-4c4e-5c4b-08df444795b1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|23010399003|376014|366016|7416014|4143699003|5023799004|11063799006|56012099006|261026121527099003|261021123027099003|261022075727099003|261021121427099003|261102130727099003|261102123227099003|10067099003|261009223027099003|22082099003|6133799003|18002099003;
-X-Microsoft-Antispam-Message-Info: qTFc4EU+y7ycnOGx+y0cWTtFVfpott28BPCG1ellZw4Qw7q+xF1idJqD+cEm/iIMoPayGh11HsQwrCwxzGMGDcgx6Ajy9iPUfDvi0yiroaXb64lKXtXSPVDVJp1v0Ehhxn3k21K4B/kN9BUW1WmJsXVu3FdIslEJ/no3+iVdGBGi1uzP5gkSKa0EPQvbgL/B9A7gwQtNWQy+/Yy0TKKA8GQe4a/1qeYNT2+wh1kAgLG9BMSgMBrFa+bnrEDmQxp2Cb+d/Iryp9WX4PRaHnzrfYD2Wh91qXY04/2ooyu4Ci0gKo8x+cUYgNsFZ/+hEyDIQGCIMlXWTo3dt1RnwOxO0yE/aG25fOH98fnCPcnD9fl1cr9yoGjP2GZZ5qZedVlVVXE2GQHxepPHTop7/bCqGCizYF44n4PCB4fL7niKlQaaL4BpUGX7DXfNC9o/wOjpGsQRX05R/vZ9MrZtC+NqYqAPTMvxloEAUh9xXPqGNRKtOAWN6Kat40UQoSZDB2uAExGY76gy6lGvRtsuh93URO0QCqo9rMW5sufpRNHs9t43Lxb4lCC5qZDTeklEuw3ywSdB7eep3i2gnol1VH5z4tknkgaqVrFPHWLFsE9o2pruS4s4l0ZBDhLRPVRcRR9N3MEW4NQEyO9cc+aamLrYZ5AX5uWDJTU6yEOC5c6lJxo=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR12MB9411.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(376014)(366016)(7416014)(4143699003)(5023799004)(11063799006)(56012099006)(261026121527099003)(261021123027099003)(261022075727099003)(261021121427099003)(261102130727099003)(261102123227099003)(10067099003)(261009223027099003)(22082099003)(6133799003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?4Q2KuJvDgxhmI8OOxuLhhyJXU3AQ9Ywvwl5FKkGKcWZJIFARuVcuIgpnjDjB?=
- =?us-ascii?Q?TMIiAM5D2z/Uok5xMdYk5wOmBHIzsrAy5eF/ZIR3pkHcME23Lli0LqegAWuw?=
- =?us-ascii?Q?VHm+ENVtIqFNT5uQKfKQ10EuvCaYCAsI98Ih0T8PApslf7+/I1E94SOpZN+9?=
- =?us-ascii?Q?bvKUhg4zJWqYNJCs4gZH51R/7wJ8cQz3ANchY0fyANtzC2HRIzzAhWzadMgw?=
- =?us-ascii?Q?08LkES94UNe/uJTh5OXpLV+b2sPm1+xjsnZgwWHHxdKN1VNbzSuUJSRE7a1g?=
- =?us-ascii?Q?S8RDuA7hkNngJd1n1AUrTUTkHiqZaFGlWZQtEjf1gwZoqYnTY62XJllhoVtp?=
- =?us-ascii?Q?5QSKNjBEbIl9w0VVdiea+QDo6myH9ZfkFA8/KkgS/2WUUvKr+Fo1rnfac+DX?=
- =?us-ascii?Q?1bC8y4pxVeZOQK8zupntTw8Ljn3HYMRRMgJg82uyUz3S7KV64FygFEUDKVRV?=
- =?us-ascii?Q?u/OOX+o2M39Sab5B1tXbt8XBoRyGsSPqIiyKQ2yW/pc2PMXqESB5CPQPjVmx?=
- =?us-ascii?Q?DVII1B+vhMP89vmNS0qAEwMosuR4L+dj5HagfDXSURGC6SoqLXXOvNO0hNgv?=
- =?us-ascii?Q?+X1aaK6NEbfPdKQO5zkZZXQrTCfycljpG5cAFe4BiBzvP2uwvkXk0MSIXmc6?=
- =?us-ascii?Q?ydwiI4jcDPpbKI9KKW3cLZZJ3mp+2f6g/3w9YVRwgFPw4XGJsEwBOf8yuN41?=
- =?us-ascii?Q?cNhndnUalXZxs4RS9EuMFef+9vGb/CD+BJu56twdsDPxtXbaJRYg5zlY1zP7?=
- =?us-ascii?Q?RM1BAdsGTbdb7SDTGyUJfCWHThO0zo+7mcWtcQxaNdGDI//5dJHAx8abQt0V?=
- =?us-ascii?Q?/fdSX7TF2IfHEWrgyHvAhoGN2ZjRKlYGFEai9OXXIObdsP02zk/tUim2B1wu?=
- =?us-ascii?Q?djU6sgh/kujgBDuO+EI2NwvB+QAQKyIBN09jEPm0mGzv1IJbaNWoUN7DN34A?=
- =?us-ascii?Q?vprLV67RoAzMXVe+Bg4pmxMv0JuIKAyhHeGRG/XjU+p8yx6WgiFrLV+0c99U?=
- =?us-ascii?Q?i6OY+hrsSfWnfKHrLqDrMvNe1MtWMoP39E2lsnVwmJjFGQ35U1Nfi+OJXZRU?=
- =?us-ascii?Q?l794YvH898jRhxaZ+3LqDBB7aYg76mgrX/DA+FQnlVL/hd/u1Sp7TnuL/tDd?=
- =?us-ascii?Q?llzNAN5Go92oX0KOGmYj2h5yGgxfjbsNypla5HIBPGnk0LJ4DgM8fzf9Mg2k?=
- =?us-ascii?Q?XDR214NU0OUw3SsSWB7Ft1GAyBy1x5IFHGqH+G+X4AGjxL8BwsPw0C+Hh0kP?=
- =?us-ascii?Q?pkOAuSKWMIqZvDVWSJdxo0f1T0Zumc222g1KsK/ZRbSy6us12sXlEhgkI2x+?=
- =?us-ascii?Q?lgtaO9Eo2S+6p/dTz0kAMcrVUBVhfG55a6hqrc7IsD9FXWXWse2JCJhI8RTW?=
- =?us-ascii?Q?2VrX+7ggEqEi49+17YCaJbh1ywF8wlvm2mXxLuCatlGM8wgWQMn02NZx4E2U?=
- =?us-ascii?Q?Wl2wFsNrugw5Bd9fL15ExoWely2y75/bJ4D20QgFmou44uafv3L5SYRL9uAJ?=
- =?us-ascii?Q?KgKTVxAMR5FkOwqL6ExyxToAPQCjoiLo2UPp59xMsnhOTqEhY06G+/DrL0kt?=
- =?us-ascii?Q?Cm1i8dWqBjKMTtZcGEh0HOz8P6ZPLANncrnTJbpYt6+30UY7f7QFyYj8VcLw?=
- =?us-ascii?Q?LVEOTh/SJadZt+iyx+oP5kn1Pt4ARI5qFkEGBPnInvteK+0bO+0UgWwPx+Ql?=
- =?us-ascii?Q?RTg7mCbOuqyis0x2wbSszE81xqNYDgQzIhTyOwQhoMiCVb6kazAckPX1IIVs?=
- =?us-ascii?Q?jKwTa8Jjag=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 07b5d6ac-384d-4c4e-5c4b-08df444795b1
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR12MB9411.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2026 01:10:36.4690
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nnbg4ALepdpXVKRDbC5b2FqEKxX+aSQi9g6/E/KRIxytdSnfayQ64RQ7iQegmHzOM7A1+zAqQ+s1CnymsesE9Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7011
+In-Reply-To: <20261016-hwpoison-kho-v6-3-f304255147da@debian.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ whupemk100004.china.huawei.com (7.152.185.74)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261116_171047_270769_94643D50 
-X-CRM114-Status: GOOD (  40.05  )
-X-Spam-Score: -2.1 (--)
+X-CRM114-CacheID: sfid-20261117_012134_040238_2B00376C 
+X-CRM114-Status: GOOD (  25.65  )
+X-Spam-Score: -3.8 (---)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -150,308 +96,100 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=4.0.1
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Tue, 13 Oct 2026 16:25:24 +0000
-David Matlack <dmatlack@google.com> wrote:
+On 2026/10/16 20:15, Breno Leitao wrote:
+> A kernel that kexecs inherits the frames its predecessor found
+> hardware-poisoned. It has to carry them as PG_hwpoison in its own memmap,
+> so that everything that already understands the flag covers them,
+> including the kexec segment placement check.
+> 
+> Add a helper that sets the flag and counts the frame in
+> num_poisoned_pages. It runs while the memmap is initialised, before
+> memory_dev_init() has run. memblk_nr_poison_inc() divides by
+> sections_per_block, which memory_dev_init() sets, so the helper
+> increments num_poisoned_pages itself instead of calling
+> num_poisoned_pages_inc().
+> 
+> An inherited frame is a hardware failure like any other, so the helper
+> sets hw_memory_failure. Without it, unpoison_memory() accepts the frame,
+> clears the flag and drops the last reference, which frees a frame that
+> is still bad.
+> 
+> The helper also counts the frame as managed, as a frame that fails at
+> run time stays counted. Memory offlining subtracts every frame of the
+> block that is not PageOffline, so a frame that was never counted leaves
+> the managed page count too low after an offline.
+> 
+> The per-node memory failure statistics are not updated. This kernel
+> handled no failure, it only inherited one.
+> 
 
-> Save the ACS Control register and the ACS Egress Control Vector in
-> pci_save_state() and write them back in pci_restore_state(), instead of
-> recomputing the ACS controls from scratch with pci_enable_acs().
-> 
-> This makes ACS symmetric with the rest of a device's saved state. Today
-> pci_save_state() ignores ACS entirely and pci_restore_state() re-enables
-> the ACS controls from the kernel's current ACS policy. As a result, a
-> device can come out of a reset with different ACS controls than it went
-> in with, e.g. any controls programmed outside of pci_enable_acs() are
-> silently dropped.
-> 
-> Notably, this prepares the kernel to be able to adopt the ACS controls
-> established by a previous kernel across a Live Update rather than
-> assigning new ones through pci_enable_acs().
-> 
-> Save and restore the Egress Control Vector as well to keep it in sync
-> with the now-properly-restored Egress Control Enable bit in the ACS
-> control register. The kernel never enables Egress Controls or programs
-> the vector, but the firmware could have and they need to be kept in sync
-> to avoid changing how P2P traffic is routed.
-> 
-> The Egress Control Vector Size is a HwInit field of the ACS Capability
-> register, so read it directly from the device to size the save buffer
-> in pci_allocate_cap_save_buffers(), similar to how the VC capability
-> relies on its HwInit fields.
-> 
-> pci_enable_acs() runs when a driver binds to a device
-> (pci_dma_configure()), i.e. after pci_bus_add_device() has already saved
-> the device's state. Refresh the saved ACS state there as well, otherwise
-> a subsequent reset would revert ACS back to the configuration left
-> behind by firmware.
-> 
-> Devices that rely on device-specific quirks to enable an ACS equivalent
-> keep that configuration outside of the ACS Control register, so keep
-> configuring ACS from scratch for them. Do the same for devices that have
-> no saved ACS state at all.
-> 
-> Assisted-by: LLM
-> Signed-off-by: David Matlack <dmatlack@google.com>
+Thanks for your patches. :) Some questions below.
+
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 > ---
->  drivers/pci/pci.c    | 146 ++++++++++++++++++++++++++++++++++++++++++-
->  drivers/pci/pci.h    |   5 ++
->  drivers/pci/quirks.c |   7 +++
->  3 files changed, 157 insertions(+), 1 deletion(-)
+>  mm/internal.h       | 5 +++++
+>  mm/memory-failure.c | 8 ++++++++
+>  2 files changed, 13 insertions(+)
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b2879a6be5f8..944590fdef48 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1021,6 +1021,139 @@ static void pci_std_enable_acs(struct pci_dev *dev, struct pci_acs *caps)
->  		caps->ctrl |= (dev->acs_capabilities & PCI_ACS_TB);
->  }
->  
-> +/*
-> + * Layout of the ACS save buffer. @ecv holds the ACS Egress Control Vector, if
-> + * implemented, and is sized by pci_allocate_acs_save_buffer().
-> + */
-> +struct pci_acs_saved_state {
-> +	u16 ctrl;
-> +	u32 ecv[];
-> +};
-> +
-> +/*
-> + * Return the number of DWORDs in the ACS Egress Control Vector, or 0 if the
-> + * device does not implement P2P Egress Control. The Egress Control Vector
-> + * Size is HwInit, so it is read directly from the ACS Capability register.
-> + */
-> +static unsigned int pci_acs_ecv_dwords(struct pci_dev *dev, int pos)
-> +{
-> +	unsigned int bits;
-> +	u16 cap;
-> +	u8 size;
-> +
-> +	pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
-> +	if (!(cap & PCI_ACS_EC))
-> +		return 0;
-> +
-> +	/* An Egress Control Vector Size of 0 means 256 bits */
-> +	pci_read_config_byte(dev, pos + PCI_ACS_EGRESS_BITS, &size);
-> +	bits = size ?: 256;
-> +
-> +	return DIV_ROUND_UP(bits, 32);
-> +}
-> +
-> +/*
-> + * Return the number of Egress Control Vector DWORDs held in @save_state, as
-> + * sized by pci_allocate_acs_save_buffer().
-> + */
-> +static unsigned int
-> +pci_acs_saved_ecv_dwords(struct pci_cap_saved_state *save_state)
-> +{
-> +	return (save_state->cap.size -
-> +		offsetof(struct pci_acs_saved_state, ecv)) / sizeof(u32);
-> +}
-> +
-> +static void pci_allocate_acs_save_buffer(struct pci_dev *dev)
-> +{
-> +	size_t size;
-> +	int pos;
-> +
-
-Nit, moving the device specific enable test here:
-
-	if (pci_need_dev_specific_enable_acs(dev))
-		return;
-
-Would avoid:
-
- - Allocating a buffer that will never be restored
- - Saving ACS state to a buffer that will never be restored
- - Testing for the device specific enable at restore
-
-Otherwise,
-
-Reviewed-by: Alex Williamson <alex.williamson@nvidia.com>
-
-Thanks,
-Alex
-
-
-
-> +	/* dev->acs_cap is not set yet, pci_acs_init() runs later */
-> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
-> +	if (!pos)
-> +		return;
-> +
-> +	size = struct_size_t(struct pci_acs_saved_state, ecv,
-> +			     pci_acs_ecv_dwords(dev, pos));
-> +	if (pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ACS, size))
-> +		pci_err(dev, "unable to allocate suspend buffer for ACS\n");
-> +}
-> +
-> +/**
-> + * pci_save_acs_state - save the ACS Control register and Egress Control Vector
-> + * @dev: the PCI device
-> + *
-> + * Record the ACS configuration currently programmed in hardware so that
-> + * pci_restore_acs_state() can reapply it after a reset.
-> + */
-> +static void pci_save_acs_state(struct pci_dev *dev)
-> +{
-> +	struct pci_cap_saved_state *save_state;
-> +	struct pci_acs_saved_state *acs;
-> +	unsigned int i, dwords;
-> +	int ecv_pos;
-> +
-> +	if (!dev->acs_cap)
-> +		return;
-> +
-> +	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ACS);
-> +	if (!save_state)
-> +		return;
-> +
-> +	acs = (struct pci_acs_saved_state *)save_state->cap.data;
-> +
-> +	pci_read_config_word(dev, dev->acs_cap + PCI_ACS_CTRL, &acs->ctrl);
-> +
-> +	ecv_pos = dev->acs_cap + PCI_ACS_EGRESS_CTL_V;
-> +	dwords = pci_acs_saved_ecv_dwords(save_state);
-> +	for (i = 0; i < dwords; i++)
-> +		pci_read_config_dword(dev, ecv_pos + i * sizeof(u32),
-> +				      &acs->ecv[i]);
-> +}
-> +
-> +/**
-> + * pci_restore_acs_state - restore the ACS Control register and Egress Control
-> + *			   Vector
-> + * @dev: the PCI device
-> + */
-> +static void pci_restore_acs_state(struct pci_dev *dev)
-> +{
-> +	struct pci_cap_saved_state *save_state = NULL;
-> +	struct pci_acs_saved_state *acs;
-> +	unsigned int i, dwords;
-> +	int ecv_pos;
-> +
-> +	if (dev->acs_cap && !pci_need_dev_specific_enable_acs(dev))
-> +		save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ACS);
-> +
-> +	/*
-> +	 * Devices that rely on device-specific quirks to enable an ACS
-> +	 * equivalent keep that configuration outside of the ACS Control
-> +	 * register, so there is nothing useful to restore for them. Configure
-> +	 * ACS from scratch instead, which also covers devices that have no
-> +	 * saved ACS state at all.
-> +	 */
-> +	if (!save_state) {
-> +		pci_enable_acs(dev);
-> +		return;
-> +	}
-> +
-> +	acs = (struct pci_acs_saved_state *)save_state->cap.data;
-> +
-> +	/*
-> +	 * Restore the Egress Control Vector before the ACS Control register.
-> +	 * The vector resets to zero, so enabling P2P Egress Control first
-> +	 * would briefly apply the reset vector instead of the saved one.
-> +	 */
-> +	ecv_pos = dev->acs_cap + PCI_ACS_EGRESS_CTL_V;
-> +	dwords = pci_acs_saved_ecv_dwords(save_state);
-> +	for (i = 0; i < dwords; i++)
-> +		pci_write_config_dword(dev, ecv_pos + i * sizeof(u32),
-> +				       acs->ecv[i]);
-> +
-> +	pci_write_config_word(dev, dev->acs_cap + PCI_ACS_CTRL, acs->ctrl);
-> +}
-> +
->  /**
->   * pci_enable_acs - enable ACS if hardware support it
->   * @dev: the PCI device
-> @@ -1057,6 +1190,15 @@ void pci_enable_acs(struct pci_dev *dev)
->  	__pci_config_acs(dev, &caps, config_acs_param, 0, 0);
->  
->  	pci_write_config_word(dev, pos + PCI_ACS_CTRL, caps.ctrl);
-> +
-> +	/*
-> +	 * pci_enable_acs() runs when a driver binds to the device, i.e. after
-> +	 * pci_bus_add_device() has already saved the device's state. Refresh
-> +	 * the saved ACS state so that a subsequent reset restores the
-> +	 * configuration programmed here rather than the one left behind by
-> +	 * firmware.
-> +	 */
-> +	pci_save_acs_state(dev);
->  }
->  
->  /**
-> @@ -1800,6 +1942,7 @@ int pci_save_state(struct pci_dev *dev)
->  	pci_save_aer_state(dev);
->  	pci_save_ptm_state(dev);
->  	pci_save_tph_state(dev);
-> +	pci_save_acs_state(dev);
->  	return pci_save_vc_state(dev);
->  }
->  EXPORT_SYMBOL(pci_save_state);
-> @@ -1877,7 +2020,7 @@ void pci_restore_state(struct pci_dev *dev)
->  	pci_restore_msi_state(dev);
->  
->  	/* Restore ACS and IOV configuration state */
-> -	pci_enable_acs(dev);
-> +	pci_restore_acs_state(dev);
->  	pci_restore_iov_state(dev);
->  
->  	dev->state_saved = false;
-> @@ -3532,6 +3675,7 @@ void pci_allocate_cap_save_buffers(struct pci_dev *dev)
->  	if (error)
->  		pci_err(dev, "unable to allocate suspend buffer for LTR\n");
->  
-> +	pci_allocate_acs_save_buffer(dev);
->  	pci_allocate_vc_save_buffers(dev);
->  }
->  
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index ba3c3fddddc2..037c1674f164 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -1095,6 +1095,7 @@ void pci_acs_init(struct pci_dev *dev);
->  void pci_enable_acs(struct pci_dev *dev);
->  #ifdef CONFIG_PCI_QUIRKS
->  int pci_dev_specific_acs_enabled(struct pci_dev *dev, u16 acs_flags);
-> +bool pci_need_dev_specific_enable_acs(struct pci_dev *dev);
->  int pci_dev_specific_enable_acs(struct pci_dev *dev);
->  int pci_dev_specific_disable_acs_redir(struct pci_dev *dev);
->  void pci_disable_broken_acs_cap(struct pci_dev *pdev);
-> @@ -1105,6 +1106,10 @@ static inline int pci_dev_specific_acs_enabled(struct pci_dev *dev,
+> diff --git a/mm/internal.h b/mm/internal.h
+> index da14c56fb24e11..4bd3bbce86e0ad 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -1169,6 +1169,7 @@ void SetPageHWPoisonTakenOff(struct page *page);
+>  void ClearPageHWPoisonTakenOff(struct page *page);
+>  bool take_page_off_buddy(struct page *page);
+>  bool put_page_back_buddy(struct page *page);
+> +void __init hwpoison_boot_page(struct page *page);
+>  struct task_struct *task_early_kill(struct task_struct *tsk, int force_early);
+>  void add_to_kill_ksm(struct task_struct *tsk, const struct page *p,
+>  		     struct vm_area_struct *vma, struct list_head *to_kill,
+> @@ -1181,6 +1182,10 @@ static inline int unmap_poisoned_folio(struct folio *folio, unsigned long pfn, b
 >  {
->  	return -ENOTTY;
+>  	return -EBUSY;
 >  }
-> +static inline bool pci_need_dev_specific_enable_acs(struct pci_dev *dev)
+> +
+> +static inline void hwpoison_boot_page(struct page *page)
 > +{
-> +	return false;
 > +}
->  static inline int pci_dev_specific_enable_acs(struct pci_dev *dev)
->  {
->  	return -ENOTTY;
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 7aee30734303..e500c202d2ec 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5476,6 +5476,13 @@ static const struct pci_dev_acs_ops *pci_dev_acs_ops_get(struct pci_dev *dev)
->  	return NULL;
+>  #endif
+>  
+>  extern unsigned long  __must_check vm_mmap_pgoff(struct file *, unsigned long,
+> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> index a2ca8df501caee..d0d6b184ee469f 100644
+> --- a/mm/memory-failure.c
+> +++ b/mm/memory-failure.c
+> @@ -96,6 +96,14 @@ void num_poisoned_pages_sub(unsigned long pfn, long i)
+>  		memblk_nr_poison_sub(pfn, i);
 >  }
 >  
-> +bool pci_need_dev_specific_enable_acs(struct pci_dev *dev)
+> +void __init hwpoison_boot_page(struct page *page)
+
+Should we add some debug aids to let users know the origin of these hwpoisoned pages?
+
 > +{
-> +	const struct pci_dev_acs_ops *p = pci_dev_acs_ops_get(dev);
-> +
-> +	return p && p->enable_acs;
-> +}
-> +
->  int pci_dev_specific_enable_acs(struct pci_dev *dev)
->  {
->  	const struct pci_dev_acs_ops *p = pci_dev_acs_ops_get(dev);
+> +	SetPageHWPoison(page);
+
+Should we try to hold an extra page refcnt, as memory_failure does?
+
+> +	atomic_long_inc(&num_poisoned_pages);
+> +	hw_memory_failure = true;
+> +	adjust_managed_page_count(page, 1);
+
+Is what adjust_managed_page_count does inconsistent with what the hwpoison_boot_page
+function describes? Should it be factored out?
+Also, is adjust_managed_page_count time-consuming? Should we consider batching the calls
+to reduce the impact on system boot latency? Maybe I'm overthinking it...
+
+Thanks.
+.
 
 
