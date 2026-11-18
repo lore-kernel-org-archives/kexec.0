@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03559606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F58606A31C
 	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 16:07:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=USpmxH1Z;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=lP4ktd3o
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=FuWP4rkg;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=LbaYVcNJ
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
@@ -14,63 +14,63 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
 	List-Unsubscribe-Post:List-Owner;
-	bh=+SeKbT7pvvzAaFvJPKqgVyv8fE128ULCoWbISyM1XrU=; b=USpmxH1ZhtjXylO6alSwGuvhP0
-	IopaTuO17WT+seKhf03K86aGehnxHxeCMwQpXuLq5EICkWDlVu8PpOJREAz1gDotBnv8tUhrXs86w
-	wtTqOpCGnsu3jIJx+Iy/6NI0p1CdkPWIEHH8i1pNe9h75mAaz9JtigZOq5mR1CxlsIGUXTlsyz2pI
-	tKwUPajEBilRAd9RiblnuLVBxfMd7rVwBpm0ppf9Bb1lzApXil5uQDm3BiH7hRJ/+Ukl96jRTlneJ
-	a5h81DprxVAyfFUxCvIPBuaw9ss8hzRTabGM3j5I5FmQYEtWbRtJUsj3oc2KRCkiSLWnz5wPjWoKn
-	CMafHjJQ==;
+	bh=W+Ci0Vn4NZYOmuR2UNT1OEqaOsDaxUWVSTpB2Dbtk00=; b=FuWP4rkgcf20V4i8Swp5o1L1XJ
+	TthW8cDzqBZVSaSWhH8PxLb2sqSyQt3TuO6IB5hH+kEafbmlhzyXM2XXVrXxP+nOQ+lnw7Upo8S2N
+	I6ukkHzjgwx+AF96ci+mzU9ndKmXxSNwCQsd6Jao61QqxSAeT/d45ZEvrrJcE4Tqz9Uv3RCbqxHzO
+	XBaMqMmy+/feO+1Xxs83dMUopN5/9a3PlnM/RJWhlGiMho8WCCVkdernk12Lcj4Uim1RgWlOR66aF
+	zfwA4Mj/B9L3wkSDuj+rZx7zkdCZVc+jKXod2mKFMb3feougPwhN8ZtUo1Y74KD+M9dWpvrfBOgwe
+	3GTJ6ltg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTiBg-00000009PKR-4A0w;
-	Wed, 18 Nov 2026 16:07:10 +0000
+	id 1xTiBj-00000009PLW-2dpj;
+	Wed, 18 Nov 2026 16:07:11 +0000
 Received: from mgamail.intel.com ([192.198.163.13])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTiBe-00000009PJL-0nW7
+	id 1xTiBe-00000009PJi-2whk
 	for kexec@lists.infradead.org;
-	Wed, 18 Nov 2026 16:07:07 +0000
+	Wed, 18 Nov 2026 16:07:10 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1795018026; x=1826554026;
   h=date:from:to:cc:subject:message-id;
-  bh=i5gMT02Shi3AXmX7FeWkInKN2qjsP5x5MS5G1BnIMMo=;
-  b=lP4ktd3opbZrckS+DQxjipQiQuo7Itd2J97tuyRUF8YYuin7LT3hk+u/
-   cOFxqZM7f5Of3a/Xhg4DBvuznojlSOXXcA7Fxqh9rSq7OGciWQIPsumP1
-   g7Zmz3nCUpQ0tEDaqYlShoFTQB7znu+yMLPnmcbKjpZzGr9qDGuMkSQCH
-   AWPi3nvs4pyYXovvEXQWrLiivYk2jDKeHHHNSwc3dB2WqxTSr2J1Jno72
-   Qg0+64TPja9MTgdInUEIwC7O6PYklpFDoSFqTuF9Pn5wHwJRYRPdGDU5F
-   XNWcK+qQz+tRdgTupDzj6r36KG9sgwm2YBl8CFrSqGrTTNWRiGJcSaA+c
+  bh=3eYWfIv3ICr29/bLv4lAjLGd0tLVm2UL0OH6XVXN3LA=;
+  b=LbaYVcNJmf2U8wfZMf1irU8EZOddEZ3nQaG9RvETWqKo5V9pKWxEwi8d
+   bB7fmfK9jRIFE2V50lhTkhbzqXNNMk32mVlsS1xvlUqwJx+K1JFAjeyyi
+   2hpoDJnQ95fGr+LcBPovJC11QeUmpPu3uXUuYn9xH9osrWj/ebkXFE3KV
+   yt+wOoodQXnkZNf83gsB9mrIyQs7Ajm9IhT8lTnMLUl2RFh+8DMSeqKXD
+   AGBwSX2GA9Xewpm0uRGKGD4bX6s6EbeoAnfbjmoBpfc2V8ROjKRxksqKx
+   gkwC4PcuLTS5ATerW9FCt5haj1ql4AYv/mGh6BLBVbvxfzLo6M+tbjOS6
    w==;
-X-CSE-ConnectionGUID: +QCU4gBmTCSFv/q+3TNk+A==
-X-CSE-MsgGUID: PmwW4ETMRrqT96VEXdRWXA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11970"; a="3826085"
+X-CSE-ConnectionGUID: 3JEdO0FcStOqVrdSsn+v5Q==
+X-CSE-MsgGUID: ciYIt2zJQPS3APxwqnABFw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11970"; a="3826081"
 X-IronPort-AV: E=Sophos;i="6.27,219,1787036400"; 
-   d="scan'208";a="3826085"
+   d="scan'208";a="3826081"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
   by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2026 08:06:20 -0800
-X-CSE-ConnectionGUID: N0ijxK4lQ4C1RPEdrqQffg==
-X-CSE-MsgGUID: MZkeAYbGTzyn2xAobuPCXQ==
+X-CSE-ConnectionGUID: uaOLQ7ozSJWeSEGl+jr/oQ==
+X-CSE-MsgGUID: P3ighPFRTQWFZOeokwYULA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,219,1787036400"; 
-   d="scan'208";a="10576895"
+   d="scan'208";a="10576893"
 Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
   by fmviesa007.fm.intel.com with ESMTP; 18 Nov 2026 08:06:18 -0800
 Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1xTiAq-00000001Dlk-0lNA;
+	id 1xTiAq-00000001Dlh-0YT0;
 	Wed, 18 Nov 2026 16:06:16 +0000
-Date: Thu, 19 Nov 2026 00:06:05 +0800
+Date: Thu, 19 Nov 2026 00:05:57 +0800
 From: kernel test robot <lkp@intel.com>
 To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
  Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org
-Subject: [liveupdate:kexec-next] BUILD SUCCESS
- c3ff569943c0cd4acfd83eba8ad99f439c2ce093
-Message-ID: <20261119000605.G2cEvACQ-lkp@intel.com>
+Subject: [liveupdate:kexec-7.5] BUILD SUCCESS
+ 97d3ca782028b62a26e5855e2af07308da41d972
+Message-ID: <20261119000557.dNH0kLSb-lkp@intel.com>
 User-Agent: s-nail v14.9.25
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261118_080706_258434_2C8C6024 
-X-CRM114-Status: UNSURE (   4.59  )
+X-CRM114-CacheID: sfid-20261118_080706_862782_F9EF0251 
+X-CRM114-Status: UNSURE (   4.74  )
 X-CRM114-Notice: Please train this message.
 X-Spam-Score: -4.4 (----)
 X-BeenThere: kexec@lists.infradead.org
@@ -91,8 +91,8 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git kexec-next
-branch HEAD: c3ff569943c0cd4acfd83eba8ad99f439c2ce093  Merge branch 'kexec-7.5' into kexec-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git kexec-7.5
+branch HEAD: 97d3ca782028b62a26e5855e2af07308da41d972  mm/hugetlb: allow crashkernel to reuse hugetlb CMA memory
 
 elapsed time: 1508m
 
