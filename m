@@ -2,146 +2,99 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4203F606A89A
-	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 01:29:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5EFB606A336
+	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 01:37:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=eNYZMmaj;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=Z0hKLUbx
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ocPsX0T9;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=kOeEl9X+
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=w3JSCXNwcogBu1PJnd6LhkuPj4w6tsB9fs1YwGA31yI=; b=eNYZMmajM1Oiow
-	zMSY8QuWn++LHmAwJmqbynzz9C1YliG4DBCrLGfZrPItrL38yPIgoKHse9pbVCm6yBcJpa8Q6vKIk
-	aDnCCqjWYin9B5KZVgrGC0YrZL/W8snJp0amal/WW0HXjsIiiEuWWyq+Is00JKL/twiV3flXNhqly
-	dBz7x6iMhqTVtDjubNgKbB9Mmz1fppZmmwEuReGVkPIMVtWgzFeXcvJ7cIsCYYTR6peSwmjHOxq15
-	fqVL/0amB5tDthwvdHkxITQLl+zs4y6x9WRsMZUoOjSoEbfvudUPXIgdR6/K6GRXNY6Y9YxWMvCTb
-	kfNRJWqx/+AqeZyYCP0Q==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Unsubscribe-Post:List-Owner;
+	bh=V9EREMneO4XizL3Clpv5CY8sfTjFH2UvufjSaKqXPZM=; b=ocPsX0T9u3z4off1lJ01XX53K4
+	pVUeNcNizoI2G/y9lIFLwvTv2zCvTpty+5DDO6XyRrerl+NFjDJc+mvd22rjcTabZ7o8Pm8WlodwU
+	OM9ZY35HZzqc/k2kg/G2IPZv22BucwHuotr7Z0rekuWwYi0qy9Mh7Pc4giX7kFGCYsJ2U3fo46AGX
+	MOplWspDAFOBqhTYxWl3JZmmXisxmQQCArMNA2IBjJ+VokH4CkYcRIU4YlLB9XgwkoHAOn9YGgy5+
+	H+lC3X6Czu0A9RnhZDJX74lJQaX0LOTWE/doKYVxk9FVl6L+taFEI/3v9OjnBOYD+DtVrNoPNcdKI
+	ELZMgrJw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTUUS-00000007S6V-47z3;
-	Wed, 18 Nov 2026 01:29:36 +0000
-Received: from mail-pl1-x633.google.com ([2607:f8b0:4864:20::633])
+	id 1xTUcD-00000007SsR-0FMc;
+	Wed, 18 Nov 2026 01:37:37 +0000
+Received: from mail-dy1-x1333.google.com ([2607:f8b0:4864:20::1333])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTUUQ-00000007S5Z-21j6
+	id 1xTUcA-00000007SrY-1DEC
 	for kexec@lists.infradead.org;
-	Wed, 18 Nov 2026 01:29:36 +0000
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-2eac4936dfdso607025ad.2
-        for <kexec@lists.infradead.org>; Tue, 17 Nov 2026 17:29:34 -0800 (PST)
+	Wed, 18 Nov 2026 01:37:36 +0000
+Received: by mail-dy1-x1333.google.com with SMTP id 5a478bee46e88-381d542bc29so954180eec.1
+        for <kexec@lists.infradead.org>; Tue, 17 Nov 2026 17:37:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1794965374; x=1795570174; darn=lists.infradead.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=w3JSCXNwcogBu1PJnd6LhkuPj4w6tsB9fs1YwGA31yI=;
-        b=Z0hKLUbxgdxUppp4EepjknuKXC1w0VkarHHVx9pG3pOhOpqjrsZM6cXwnrZD6sVE5r
-         WCjNaklinLbTerWQojqUCDK45le/SVrPKdGoAy6AVPM9v8NH/Votg4+QZ4jgZZgur/yx
-         GJBJ182YGN1PNmYBV87luZGr6WpW3GOEU7nWg=
+        d=gmail.com; s=20260707; t=1794965853; x=1795570653; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=V9EREMneO4XizL3Clpv5CY8sfTjFH2UvufjSaKqXPZM=;
+        b=kOeEl9X+KBzaJPycJplqRZmSXBFm3P3yTaWpKatq0wKya+GWuGnWDezNj78+csof+4
+         /NNki8vlYvIj5hge5PQc7ucg9hgyZLqXSgu/0WjSHAqJctrJv9LcZ5vqH00kLmLRPKVb
+         Vrw3+NkwAzJwEXNMXJm1QzHb7J2574bv7OEQ4WQvk6IqpxEH95UASJShN+b9IrFzPpUS
+         scLDN4Ftg4n8WFxkc/HNuU49H17GLx2EQ76LHINto79sBouTgK7O2OaJC8L4qCvDAazC
+         6Xi1yraWd0IoiV9VGDzQedE/zt48b+k+9zEMTqC8pcHg7a7sqkq3jRxTXjXWgmPW3lbG
+         HoxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794965374; x=1795570174;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=w3JSCXNwcogBu1PJnd6LhkuPj4w6tsB9fs1YwGA31yI=;
-        b=WMNz2xKf58TyzPz0ikOZhi3z9E1uGj3wA9IHsRCRJio6kvnqbH3ExlrUmTSkCW04T0
-         d+B7Zfuzpl7gAgufn4nLkILz1UInLOKufvQP2bh0P/ZGnnhfjg5B6q+DtNfiI8Ssmya0
-         a3A7xeIudsCPcDmaiabDnIfjeG26sBED213TKVtcvlcx4d4JbqyhJH3/U3i5sq/6DNa/
-         LpO1kfyMXhclbxF772ZquFDtRm6YlJoORey7w5JmURtS4FlWI53wSqJiipqzozaqq4xd
-         JufEW0rkE0r0G8xaPRZavWikhkMV7o89NSVh3b5/ASpAtnMmU+9INVsM8IEL65RcgSuQ
-         qN2Q==
-X-Forwarded-Encrypted: i=1; AL+hErH/FOlS/GQAAG8vHvhC4Row31nr0JfxHVgSwtPazbOUFWB/D2BMVWzqzpIUpIsWib3wuSk0aQ==@lists.infradead.org
-X-Gm-Message-State: APuU4Z9RC7SEEtCF0DLDLxRH18D044pKs8foEHLWwfKQ1FT4zd4NLNjP
-	EyM+PEf2swWYUroYrwxr2m3ru83jn7Lps3lxpvx+FcWtzoLH35OziaZg9zEJTQQvnQ==
-X-Gm-Gg: AZFdTZcEJt4RmoT3DEJ/0x1f3b2HczGR7XPsxs9LN9QeD1KVOCDteOOgMpiZTcIcpWY
-	duFk4y/29ZN1S3AAwVyD+B/zEtY7n16XPytsGbD7uq3kuvTBp+aqKa4+hlDgYtjE068PBoit8ih
-	I8ho7sffm9sC0zL4/EYFBjRGWWaOfwhCX5gIzdFC6t58DNLqXeUNF8EehxLiCMy2L8du3YXxPUN
-	AkADlMW6AiZfMh6vCMhGiZhZlZosaSRGAUs43vEPcgiBIEIyCRhuZZK2y3XgkNkfoT6qgKTkZz0
-	+uS+UbnJCZZNR5MIKOjVWn0BbETmDMwYVCLrHC5MXnTiyd297Tcl3wD6ouC/pge8e0q1G+efTTg
-	ly1nxR7CtQvcB6IEqjMrGMQOnlhfYS98TGAoKPslaYVi75g5HVgfQdw1LjW5agj2YUo11tfPTgP
-	GIzufHZMDi/vWL6Mtb0xD75nG6CB0ekhygm9aPEOSmPE9CM3fmnc/tKk1fOIh4c8/hToCxGQ1EF
-	fasY2ov2Ts/o9C/6zoeI4CJsBjero71PJ1GqIge+ma7eTxatcCvdaRlAfHT2F9guZy/BMda4ND1
-	5pjolG+Xk8HHwuCqIOF9GHxJIXxO0j+oC/sxfsJigJMfMRBbzq5rkEDwsUBqRc9yfdUiTHVWG3X
-	6QQnVYWA7rXSD57Zc
-X-Received: by 2002:a17:903:3bd0:b0:2ef:eadc:5c98 with SMTP id d9443c01a7336-2eff6f86b0emr15976975ad.0.1794965373725;
-        Tue, 17 Nov 2026 17:29:33 -0800 (PST)
-Received: from localhost (221.247.125.34.bc.googleusercontent.com. [34.125.247.221])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2eff5ed09b4sm4409835ad.9.2026.11.17.17.29.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Nov 2026 17:29:33 -0800 (PST)
-From: Jeff Xu <jeffxu@chromium.org>
-To: Lorenzo Stoakes <ljs@kernel.org>
-Cc: Jeff Xu <jeffxu@chromium.org>,
+        d=1e100.net; s=20260707; t=1794965853; x=1795570653;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=V9EREMneO4XizL3Clpv5CY8sfTjFH2UvufjSaKqXPZM=;
+        b=ecykwXZ8vBm6v5nK8M+C9YPXk70hmxhHX+0aBlUj13k0H4YWQDEEJCMPNCeU932Nhz
+         dOuspqGfLQYaAmeFbtBso5887p7FF6GuHPgtlhNvUgbasHtR5mJ7u/VV45zX+y+3HDGJ
+         250UyZ2rSfd1PQVuSLiKHy9CV8RUktH50ESPCsgvv21uxXeY7EaKKTJqZ11bp76kLF+y
+         kl/jlB5o4wyrr9cxFzkLchpNYhAM2NQyQe65lqr7l38VG84OZLewonjt2JwFgkGo7Ucj
+         O3AguobIwfj3h1D0PLWQFXcTX/w27RRzNx/nEwoasN7Azz0AScLyw1V751EIBsQvc4FW
+         LlqQ==
+X-Forwarded-Encrypted: i=1; AL+hErGRM/GSHWn0E7Xr7iv+pMsiwu1kuLRfZiTglahMobMZR70q40mE82OdPvR5kbv3RrmwKzAIbQ==@lists.infradead.org
+X-Gm-Message-State: APuU4Z/o8Rs3smLwRtl7aSBkh8qIQLSrK3egTfayuD06Gi2EJY2XBD7C
+	YL63qfUh2iiKs8v+IlgcxCz0Pn6kU6Yg1HxTdJpSf0dJc6XklzZrkkNW
+X-Gm-Gg: AZFdTZcpSAXsjqGBvVcvHMMoj6BYwKVX4cOT40lb/mDwTr5Cn0lPKYkidDp9z+/DxVA
+	9CZwk6irNkRdIFfQAu0yewP6DC6nglL1k/z6BMnprHERZf9SyIqIjRQAKV6mrEOJJY0Oedo4Kqu
+	7VPBHPoyd8xmLElaTeYxX/9OIv4AU65imNjyJ2V7bHblpnc2ulDIUHi02RQfiSx4TgICHKKrZ5n
+	teg14SFNK3hjVOne2YIJ1XFsa9PWX1HE8EKikdFRgyilxuCBiFM8vFZM5heObi6mkG67SW65J+b
+	zJ2geMgsTCY3BGb5ibEUzj0iqI2eopoSHFuHXh7Ew6hCSBOz0QHSpss46h3r37Ko9DFyE5mybNE
+	UTsJSTYX/WjYas5VHVyZM5KvVJRKhBF10eYywIEO8ymPt+3+5BmfhEugcf1ykB4V+50/S6eCZYp
+	+2ha16zSR6OqXktOeRi0um1EHfAum5Cf71DLn6DQYbbI3tfD3WFTaJobCcRmafugCYkAilOY4EW
+	Sd+mfIWh6XnCPG8S2lIHvtbyJcZ5W+jD0huwJVBr+qIuDcmv0kdsT1/i52yaRsvnvj/ZQFOQIgR
+	RrShI+S05hqu5iYsO2c07PuxtRJZ9I3cM8gNgcZDI90xJugjs4JqFDn+Tr2BjIEBvCO1InUpt0A
+	H9SMHKGGuy0H5YBLZlW0l8c1wh5QT90U7Fg==
+X-Received: by 2002:a05:693c:88d7:20b0:36e:aa5c:7851 with SMTP id 5a478bee46e88-3828141dd08mr1114681eec.27.1794965852612;
+        Tue, 17 Nov 2026 17:37:32 -0800 (PST)
+Received: from pop-os.tail4adac7.ts.net ([2601:647:4084:777d:b8c6:5c98:d786:f7f1])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-382a72eb2f3sm2171733eec.18.2026.11.17.17.37.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Nov 2026 17:37:31 -0800 (PST)
+From: Cong Wang <xiyou.wangcong@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	"Liam R . Howlett" <liam@infradead.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Brendan Jackman <brendan.jackman@linux.dev>,
-	Zi Yan <ziy@nvidia.com>,
-	Alexander Potapenko <glider@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Marco Elver <elver@google.com>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Chia-I Wu <olvaffe@gmail.com>,
-	Dev Jain <dev.jain@arm.com>,
-	Evgenii Stepanov <eugenis@google.com>,
-	Ian Rickards <ian.rickards@arm.com>,
-	Jann Horn <jannh@google.com>,
-	Jeff Vander Stoep <jeffv@google.com>,
-	Jeff Xu <jeffxu@google.com>,
-	Kees Cook <kees@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Collingbourne <peter@pcc.me.uk>,
-	=?UTF-8?q?Pierre-Cl=C3=A9ment=20Tosi?= <ptosi@google.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Tomasz Figa <tfiga@chromium.org>,
-	Will Deacon <will@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Miklos Szeredi <miklos@szeredi.hu>,
 	Baoquan He <baoquan.he@linux.dev>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Allison Henderson <achender@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	linux-mm@kvack.org,
-	kasan-dev@googlegroups.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org,
-	fuse-devel@lists.linux.dev,
+	Mike Rapoport <rppt@kernel.org>
+Cc: Alexandre Ghiti <alex@ghiti.fr>,
+	linux-riscv@lists.infradead.org,
 	kexec@lists.infradead.org,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	rds-devel@oss.oracle.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 5/7] mm: kasan: skip KASAN for GFP_HIGHUSER
-Date: Tue, 17 Nov 2026 17:29:29 -0800
-Message-ID: <20261118012929.290499-1-jeffxu@chromium.org>
-X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
-In-Reply-To: <avwp1ZpVudiT1Gux@gremlin>
-References: <20261116230627.3537051-1-jeffxu@chromium.org> <20261116230627.3537051-6-jeffxu@chromium.org> <avwp1ZpVudiT1Gux@gremlin>
+	Cong Wang <cwang@multikernel.io>
+Subject: [PATCH] riscv: kexec_file: Verify the signature of Image files
+Date: Tue, 17 Nov 2026 17:37:29 -0800
+Message-ID: <20261118013729.576325-1-xiyou.wangcong@gmail.com>
+X-Mailer: git-send-email 2.43.0
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261117_172934_531452_53A83B1A 
-X-CRM114-Status: GOOD (  14.29  )
+X-CRM114-CacheID: sfid-20261117_173734_337224_509C6DC3 
+X-CRM114-Status: GOOD (  15.52  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -153,32 +106,100 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Tue, Nov 17, 2026 at 10:21 AM Lorenzo Stoakes (ARM) <ljs@kernel.org> wrote:
->
-> This commit message is just inscrutable. It's like reading Finnegan's Wake :)
-> LLMs are obscenely terrible at this stuff unfortunately.
->
-> You seem to have rewritten commit messages for the other patches, could you do
-> the same for this one? Thanks.
->
-> > Link: https://lore.kernel.org/r/20260519-panthor-kasan-v2-1-b7384458f076@gmail.com/ [1]
-> > Link: https://lore.kernel.org/r/20260521105148.5497c281@fedora/ [2]
-> > Assisted-by: LLM
->
-> This tag isn't used any longer! Thanks for acking LLM usage though, we prefer
-> you disclose it but in the commit message or the cover letter etc.
+From: Cong Wang <cwang@multikernel.io>
 
-Fair point -- looking at patch 5 again, it is way too wordy. I will
-rewrite it concisely from scratch for v2, and drop the Assisted-by:
-tags (keeping the note in the cover letter).
+kexec_file_load() on riscv cannot check that the kernel it is given is
+trusted. KEXEC_SIG is not selectable, so a kernel that is locked down
+has to refuse kexec_file_load() altogether, and there is no way to
+restrict it to kernels signed with a trusted key.
 
-Thanks for the review!
-Jeff
+With CONFIG_EFI the riscv Image is a PE file, the same as on arm64, and
+can carry an Authenticode signature added by tools such as sbsign.
+Verify it with kexec_kernel_verify_pe_sig(), as arm64 does, and let
+riscv select KEXEC_SIG, KEXEC_SIG_FORCE and KEXEC_IMAGE_VERIFY_SIG.
+
+KEXEC_IMAGE_VERIFY_SIG is no longer specific to arm64, so drop "(ARM)"
+from its prompt.
+
+The ELF loader has no signature format, so a vmlinux is rejected
+whenever signature verification is enforced.
+
+Tested on QEMU virt with KEXEC_SIG_FORCE=y and a test certificate in
+the built-in trusted keyring:
+
+  signed Image                    loads and boots
+  unsigned Image                  -ENODATA
+  signed Image, one byte flipped  -EKEYREJECTED
+  Image signed by an unknown key  -ENOKEY
+  vmlinux                         -EKEYREJECTED
+
+This is needed by multikernel, which loads its kernels with kexec_file,
+but nothing here depends on it: it applies to any kexec_file_load() user.
+
+Signed-off-by: Cong Wang <cwang@multikernel.io>
+---
+ arch/riscv/Kconfig              | 12 ++++++++++++
+ arch/riscv/kernel/kexec_image.c |  3 +++
+ kernel/Kconfig.kexec            |  2 +-
+ 3 files changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index e7891a2a89da..f47bca71aa35 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -1122,6 +1122,18 @@ config ARCH_SELECTS_KEXEC_FILE
+ 	select HAVE_IMA_KEXEC if IMA
+ 	select KEXEC_ELF
+ 
++config ARCH_SUPPORTS_KEXEC_SIG
++	def_bool y
++
++config ARCH_SUPPORTS_KEXEC_SIG_FORCE
++	def_bool y
++
++config ARCH_SUPPORTS_KEXEC_IMAGE_VERIFY_SIG
++	def_bool y
++
++config ARCH_DEFAULT_KEXEC_IMAGE_VERIFY_SIG
++	def_bool y
++
+ config ARCH_SUPPORTS_KEXEC_PURGATORY
+ 	def_bool ARCH_SUPPORTS_KEXEC_FILE
+ 
+diff --git a/arch/riscv/kernel/kexec_image.c b/arch/riscv/kernel/kexec_image.c
+index 963a25f5b55b..b1cec911adc5 100644
+--- a/arch/riscv/kernel/kexec_image.c
++++ b/arch/riscv/kernel/kexec_image.c
+@@ -93,4 +93,7 @@ static void *image_load(struct kimage *image,
+ const struct kexec_file_ops image_kexec_ops = {
+ 	.probe = image_probe,
+ 	.load = image_load,
++#ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
++	.verify_sig = kexec_kernel_verify_pe_sig,
++#endif
+ };
+diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
+index a97ed9605602..24c28978f21b 100644
+--- a/kernel/Kconfig.kexec
++++ b/kernel/Kconfig.kexec
+@@ -69,7 +69,7 @@ config KEXEC_SIG_FORCE
+ 	  the kexec_file_load() syscall.
+ 
+ config KEXEC_IMAGE_VERIFY_SIG
+-	bool "Enable Image signature verification support (ARM)"
++	bool "Enable Image signature verification support"
+ 	default ARCH_DEFAULT_KEXEC_IMAGE_VERIFY_SIG
+ 	depends on ARCH_SUPPORTS_KEXEC_IMAGE_VERIFY_SIG
+ 	depends on KEXEC_SIG
+-- 
+2.43.0
+
 
