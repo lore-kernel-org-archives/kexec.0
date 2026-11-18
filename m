@@ -2,108 +2,90 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE720606A31C
-	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 06:55:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4A2606A31C
+	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 07:00:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=blqeGY43;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=U1vgkwY8
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=47zk1XkW;
+	dkim=pass (1024-bit key, unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=J7jSSrjT
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Unsubscribe-Post:List-Owner;
-	bh=D3IFWTA7ou2igClaDYSbsGTVSgzRWm+OXVAzSzama/M=; b=blqeGY43992lpKQWzZgYfE/SVu
-	t9q0CVw4ytgj/vyHKDJy7iBckN+BUTEHUaYMWCDQBMZ4euHQWBQX7RZzY3m8xJv8shc9GHH8YxRmI
-	zTdnVJ29gZoDU82Sglivkq89M5qgjKAIOlW8W+lJp3331B/FZHfC/DaGuZzr7NF5ThlYTgaxAHAdF
-	+US41pDwqYQpOBuqBz73GPaJV4j0ESivOu4B5ZzgP8kjmvnBfJA9UjDgHIAN8Jx6jwy+XHmTka382
-	HFXpYewFfACSISWNWtDVHtk/kR+mU364GPH57lADwtb/gjLX3MTTS3pt7eGGpynmoY7t83ULSX0h/
-	ioq0GIRA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:CC:To:
+	Subject:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=P7MAWPsIyxJf7EbFe+B6P/kIKs4QOghNXNz4nngxpow=; b=47zk1XkW74nesu
+	dVhb9Xf+JXTfa1jrIbNqP9uZvSpoRkh/1mCLdLXH7sq74hu5sbWPmlcmJyNOCQv5fWnEN/8jL1hRZ
+	krETOD+YWGP7eHyakfqQDc10Ao4pC73bWK9L28qy83htGI25nedmFCLLsL49AB/QFqzsrvD5nDIYG
+	gYVaf2l6vEKfR4paao4l1soY9XQg3rTlkupEz7XCabqlUD5tXOB5MV5kGPOVY8Nr8bRum0+cS9vOj
+	A2jlwemdJN9kWmOxdvjOc2pYekFFQtIA4EKR8AQpPManui9V5jJxdZewlKvsZ5KG05hPxTgMxWrkj
+	cDzpmTs60CdNYHdPoENw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTZaD-00000007wq2-0WcJ;
-	Wed, 18 Nov 2026 06:55:53 +0000
-Received: from mail-pl1-x630.google.com ([2607:f8b0:4864:20::630])
+	id 1xTZf4-00000007xLD-3msS;
+	Wed, 18 Nov 2026 07:00:54 +0000
+Received: from canpmsgout01.his.huawei.com ([113.46.200.216])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTZa9-00000007wpS-3oFN
-	for kexec@lists.infradead.org;
-	Wed, 18 Nov 2026 06:55:51 +0000
-Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-2efc4a84e75so28985ad.1
-        for <kexec@lists.infradead.org>; Tue, 17 Nov 2026 22:55:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794984949; x=1795589749; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=D3IFWTA7ou2igClaDYSbsGTVSgzRWm+OXVAzSzama/M=;
-        b=U1vgkwY87BlmGAwviRCTV9ZFG/IdwOFuACElbBTdpayUq7HQVcFfJrzL26anjU1JFn
-         T1KS7A944/WmAvnXImAHyvV4pn8WO3CXPTBH8tYJNQptjVeXWpP0mNr1O3QiCndYyJCM
-         guaw0EU0XC9xCciKJWjyiXv9DQ/puv6UfG3d9OoeVY8ZuhDTMY46rxwDqMcCv6Y1SaU3
-         BP75JcUcjAcT/WmFpzbiMgUHCWs6efKT45maCs569/VbDRFdC2ON5wqSQbJrH3jPZrh2
-         0MSBKWEghY+qoiFlbunn+pg5r2siAvaWNVaJG772VxO3mFUyH5qaTG+R18xOUHGkukhP
-         eCEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794984949; x=1795589749;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=D3IFWTA7ou2igClaDYSbsGTVSgzRWm+OXVAzSzama/M=;
-        b=hawGssOf6wA25IxZzS/5pqEHWINaE2tfBaqnGKoHg/mTmPg9WDf4vUS5vkA5b+DI0w
-         1bVybRwfsWusQ1eMXB5aTPgO3sC0KbzmkJGwuKD+RnLa39I4caHifjpWCVaybv/UpOc8
-         9WArVEMBqNPYEuPppx3B5jp0TXuekyeqPRSOkoq0PYP5fxIeS+PPEG5xZa4rFNFtMdu3
-         iZzjjtWxWOAo89rAIVYJTwN0G00ncI9Rli0WV1edO/C1kxPvNaEMvDvk1YF4IKrnns1j
-         7AL4Z/81hbjvbthQXjvIzbBMSSXNtQGnVhNszHPxsztH+NsgxYGfQCKo67QS636nK2em
-         EiwA==
-X-Gm-Message-State: APuU4Z9O9fuDMp1Bj+CcguNHM3KyOOqpM7dtZfSCbGoPIRSQq+KpHlWR
-	cBE7dPVyTlU22S0MEC2xq+aXVlwCQM7l43by+CnTj/16/sOwlJa3J5PaFmc85zpPEA==
-X-Gm-Gg: AZFdTZdfPJ7mSrG857D36VqddHaN0BOBcE7depUFCKXQzTIvlHn80gC9VGBaR22m7lj
-	WUf8t5cx+OwSnQQjlsFbzjJzuI+90p8elfeoqanGVP+xohcCmrVV7seFdMOOzJiXBisFwDwv7oE
-	ZPm40ecHoSvB6kxq3mxFfw/v2qhj1KMXyum8bIuQ8bWe7e4aTJWBFRbx3GSuTGCZ1vPfr6k/3d7
-	DmwRAKkhi6E4rHQibms2ZcKeaWSS9lU2E+a19MlXkgM5N9nSUh1hwV6kdQD3tXCa3egQo9B35AH
-	2T87au8lQs5HWjkiWmhxB6oc0tV/fYUROmzt9OAVH2v6WXqLX1HhgJ2S3BGsIdlX98Dfwpy5S/Y
-	vnI1zFm57kPZdBziZooeK4QKPOilyJbYWqH38PQSjMHWGzpL+Bod1Sj074P/VC+egE8ZWg0wBco
-	/X4zvmhN1UB47Qq0FfcxRA2yhJ1CE5wTKjrF72Qw0kkuZDlmApA5bK6++SFjPnZAVCwkOk4z8wt
-	gJnpkzOUNQqYFqgzKgf4E16sNxsdLqkPEYqTxcYfDTLLavgIHmw1WnCeCJAo7V+302K6fs0SGIA
-	tafqgHhdiiETpSlbGVw7+kOaFxN8ZzRxrj/sNxhA4s524AWzR94Foy0R8tMuKYbT
-X-Received: by 2002:a17:902:ce10:b0:2e9:73e0:2a6e with SMTP id d9443c01a7336-2eff9952062mr2886095ad.17.1794984948419;
-        Tue, 17 Nov 2026 22:55:48 -0800 (PST)
-Received: from google.com (60.89.247.35.bc.googleusercontent.com. [35.247.89.60])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8c5ca5bf959sm657169b3a.20.2026.11.17.22.55.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Nov 2026 22:55:47 -0800 (PST)
-Date: Tue, 17 Nov 2026 22:55:44 -0800
-From: Vipin Sharma <vipinsh@google.com>
-To: Samiullah Khawaja <skhawaja@google.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org, ajayachandra@nvidia.com, 
-	alex@shazbot.org, amastro@fb.com, ankita@nvidia.com, apopple@nvidia.com, 
-	bhelgaas@google.com, chrisl@kernel.org, christian.koenig@amd.com, corbet@lwn.net, 
-	dmatlack@google.com, graf@amazon.com, jacob.pan@linux.microsoft.com, jgg@nvidia.com, 
-	jgg@ziepe.ca, jrhilke@google.com, julianr@linux.ibm.com, kees@kernel.org, 
-	kevin.tian@intel.com, leon@kernel.org, leonro@nvidia.com, lukas@wunner.de, 
-	mattev@meta.com, michal.winiarski@intel.com, parav@nvidia.com, 
-	pasha.tatashin@soleen.com, praan@google.com, pratyush@kernel.org, rananta@google.com, 
-	rdunlap@infradead.org, rientjes@google.com, rodrigo.vivi@intel.com, rppt@kernel.org, 
-	saeedm@nvidia.com, schnelle@linux.ibm.com, skhan@linuxfoundation.org, 
-	vivek.kasireddy@intel.com, witu@nvidia.com, yanjun.zhu@linux.dev, yi.l.liu@intel.com
-Subject: Re: [PATCH v6 07/27] vfio/pci: Preserve vfio-pci device files across
- Live Update
-Message-ID: <20261118064707.GD2250529.vipinsh@google.com>
-References: <20261102153656.1431701-1-vipinsh@google.com>
- <20261102153656.1431701-8-vipinsh@google.com>
- <au5VMy7zhOb65xIE@google.com>
+	id 1xTZf1-00000007xJK-0AOs;
+	Wed, 18 Nov 2026 07:00:53 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=P7MAWPsIyxJf7EbFe+B6P/kIKs4QOghNXNz4nngxpow=;
+	b=J7jSSrjT45mE5pHwCz2jP6dil7Qtqxs30D1JSCVyUZxDpTWnLABaUARqY/hWeyFvY/IB9XGsp
+	P+tfgFIg8WIVjm1rA89skfheUdG6YkoeqBaYgCDEUNGssDh+oDpRHRydEVFk6/GpGQol0k0xnUJ
+	vFIRtHpdkDpniGa5blvowA4=
+Received: from mail.maildlp.com (unknown [172.19.162.140])
+	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4jTstD2f2Yz1T4KR;
+	Wed, 18 Nov 2026 15:00:04 +0800 (CST)
+Received: from whupemk100004.china.huawei.com (unknown [7.152.185.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id E0224203AB;
+	Wed, 18 Nov 2026 15:00:43 +0800 (CST)
+Received: from [10.173.125.21] (10.173.125.21) by
+ whupemk100004.china.huawei.com (7.152.185.74) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Wed, 18 Nov 2026 15:00:40 +0800
+Subject: Re: [PATCH v6 5/7] drivers/base/memory: count the poison a block
+ already holds when creating it
+To: Breno Leitao <leitao@debian.org>
+CC: <linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-cxl@vger.kernel.org>,
+	<driver-core@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
+	<rmikey@meta.com>, <riel@surriel.com>, <harry@kernel.org>,
+	<kernel-team@meta.com>, Ard Biesheuvel <ardb@kernel.org>, Ilias Apalodimas
+	<ilias.apalodimas@linaro.org>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
+	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
+	<hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand
+	<david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett"
+	<liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport
+	<rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
+	<mhocko@suse.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>, Oscar Salvador
+	<osalvador@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael
+ J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Catalin
+ Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, <kas@kernel.org>,
+	<kexec@lists.infradead.org>, Brendan Jackman <brendan.jackman@linux.dev>,
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+	<shakeel.butt@linux.dev>
+References: <20261016-hwpoison-kho-v6-0-f304255147da@debian.org>
+ <20261016-hwpoison-kho-v6-5-f304255147da@debian.org>
+From: Miaohe Lin <linmiaohe@huawei.com>
+Message-ID: <f0f5e60a-819e-68e7-09b2-4080f4716e9e@huawei.com>
+Date: Wed, 18 Nov 2026 15:00:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <au5VMy7zhOb65xIE@google.com>
+In-Reply-To: <20261016-hwpoison-kho-v6-5-f304255147da@debian.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ whupemk100004.china.huawei.com (7.152.185.74)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261117_225550_057161_10BAA4FF 
-X-CRM114-Status: GOOD (  18.20  )
-X-Spam-Score: -17.6 (-----------------)
+X-CRM114-CacheID: sfid-20261117_230051_740871_A3833766 
+X-CRM114-Status: GOOD (  26.42  )
+X-Spam-Score: -3.8 (---)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -114,67 +96,100 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=4.0.1
+X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Fri, Nov 06, 2026 at 10:35:27PM +0000, Samiullah Khawaja wrote:
-> On Mon, Nov 02, 2026 at 07:36:36AM -0800, Vipin Sharma wrote:
-> > +/**
-> > + * struct vfio_pci_core_device_ser - Serialized state of a single VFIO PCI
-> > + * device.
-> > + *
-> > + * @domain: The device's PCI domain number (segment).
-> > + * @bdf: The device's PCI bus, device, and function number.
-> > + * @cfg_size: Size in bytes of the device's PCI configuration space
-> > + *            (``PCI_CFG_SPACE_SIZE`` or ``PCI_CFG_SPACE_EXP_SIZE``).
-> > + * @size: Total size in bytes of this serialized buffer, equal to
-> > + *        ``sizeof(struct vfio_pci_core_device_ser) + 2 * @cfg_size + @saved_state_size``.
-> > + * @flags: Bitmask of ``VFIO_PCI_SER_*`` flags; unknown bits are rejected.
-> > + * @saved_state_size: Size in bytes of the serialized &struct pci_saved_state_ser
-> > + *                    blob stored in @data after ``config_map``, or 0 if none.
-> > + * @reserved: Reserved for future use; must be 0.
-> > + * @data: Variable-length payload containing, in order:
-> > + *        1. ``u8 vconfig[@cfg_size]`` - VFIO virtualized config space snapshot
-> > + *           captured during ``freeze()``.
-> > + *        2. ``u8 config_map[@cfg_size]`` - VFIO capability map snapshot
-> > + *           captured during ``freeze()``.
-> > + *        3. ``u8 saved_state[@saved_state_size]`` - serialized
-> > + *           &struct pci_saved_state_ser captured during ``preserve()``.
-> > + */
-> > +struct vfio_pci_core_device_ser {
-> > +	u32 domain;
-> > +	u16 bdf;
-> > +	u16 cfg_size;
-> > +	u32 size;
-> > +	u32 flags;
-> > +	u32 saved_state_size;
+On 2026/10/16 20:15, Breno Leitao wrote:
+> A frame flagged poisoned before memory_dev_init() runs cannot be counted
+> on its memory block. memblk_nr_poison_inc() divides by sections_per_block,
+> which memory_dev_init() sets, and the block does not exist yet. The block
+> is then created reading zero, however many of its frames are poisoned.
 > 
-> We will need space for iommufd_token when we preserve that, we should
-> probably add it now as otherwise the compatibility would be broken when
-> we add it? Is the reserved here for that?
+> Until now nothing could poison a frame that early. It becomes possible
+> once a kernel flags the frames it inherits from the one that kexeced into
+> it, as it initializes its memmap.
+> 
+> memory_block_online() refuses a block that holds a poisoned frame, and a
+> counter stuck at zero lets one through.
+> 
+> Count what a block holds when it is created at boot. The walk sits behind
+> num_poisoned_pages, so a machine with no poison does not pay for it.
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+>  drivers/base/memory.c | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index 5eead3346f1e32..77481f375c2206 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -220,11 +220,16 @@ int memory_notify(enum memory_block_state state, void *v)
+>  
+>  #if defined(CONFIG_MEMORY_FAILURE) && defined(CONFIG_MEMORY_HOTPLUG)
+>  static unsigned long memblk_nr_poison(struct memory_block *mem);
+> +static void memblk_nr_poison_init(struct memory_block *mem);
+>  #else
+>  static inline unsigned long memblk_nr_poison(struct memory_block *mem)
+>  {
+>  	return 0;
+>  }
+> +
+> +static inline void memblk_nr_poison_init(struct memory_block *mem)
+> +{
+> +}
 
-No, reserved was just to align data[] to 4 bytes boundary.
+If defined(CONFIG_MEMORY_FAILURE) but CONFIG_MEMORY_HOTPLUG is not defined, memory block
+created at boot time will lose nr_hwpoison count. Is this expected?
 
-Based on David's suggestion, I am gonna get rid of variable length
-data[]. This whole serialization struct will be fixed length.
+>  #endif
+>  
+>  /*
+> @@ -807,6 +812,7 @@ static int add_memory_block(unsigned long block_id, int nid, unsigned long state
+>  	mem->state = state;
+>  	mem->nid = nid;
+>  	INIT_LIST_HEAD(&mem->group_next);
+> +	memblk_nr_poison_init(mem);
+>  
+>  #ifndef CONFIG_NUMA
+>  	if (state == MEM_ONLINE)
+> @@ -1251,4 +1257,28 @@ static unsigned long memblk_nr_poison(struct memory_block *mem)
+>  {
+>  	return atomic_long_read(&mem->nr_hwpoison);
+>  }
+> +
+> +/*
+> + * Frames poisoned before the block existed were never counted on it. Count
+> + * them now, or the first unpoison takes the counter below zero.
+> + */
+> +static void memblk_nr_poison_init(struct memory_block *mem)
+> +{
+> +	unsigned long pfn = section_nr_to_pfn(mem->start_section_nr);
+> +	unsigned long end = pfn + PAGES_PER_SECTION * sections_per_block;
+> +	unsigned long nr = 0;
+> +
+> +	/* A hotplugged block is created before its pages are online. */
+> +	if (mem->state != MEM_ONLINE || !atomic_long_read(&num_poisoned_pages))
+> +		return;
+> +
+> +	for (; pfn < end; pfn++) {
+> +		struct page *page = pfn_to_online_page(pfn);
 
-I think it will be fine to extend this struct by adding a new field at
-the end of struct in your series along with updated flag when you add
-iommufd support. 
+Above comment says the pages of this memory block are not online. So pfn_to_online_page
+here will return the wanted page?
 
-iommufd preserved vfio device cannot be rollbacked to this kernel where
-there is no support for iommufd preservation, so, flags will be correct
-to reject the change.
+> +
+> +		if (page && PageHWPoison(page))
+> +			nr++;
 
-Do you have some other concerns when yiou compatibility would be broken?
+Now that the table is a bitmap with one bit per 2MB of physical memory, would it be more
+appropriate to process it at 2 MB granularity?
 
-> > +	u32 reserved;
-> > +	u8 data[];
-> > +} __packed;
-> > +
+Thanks.
+.
 
