@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DCDE606A320
-	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 09:44:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6E7606A31C
+	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 09:44:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=XtUObOkL;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=id+XqXBl
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=DhuVWaj0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=A5q3SYIV
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,47 +14,47 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=CzZ9Av/3wS7z6KydxH5rNyXx2HhScCX+vojD4NTXzJE=; b=XtUObOkLgIHNf0V/J45Iq/0zB4
-	yABQlVDHGQ1WOpuZoRUiCvzEoO6v4cHuaw2+HaO4Ud89KaCDRoUYvkxLjxubqh9b8xapx++bRd20s
-	ZDwAivXHWvuzT+CHK54KNPmom8Fk2OT1HaMZdlqrgWP7u0JI8S2Ve3EQQBUpMlO9AiQJyiVII0JNv
-	eT0SV9TyirYnymjHjldZCXkvTepv2v++a12bUZHEyzieHBx86pzknncIBPCCgpapBPE+X9mXEj/qK
-	TMH7La2oL8Jgnllz67Nihp6ds0nAArt9j6g4RgUoGVNGtt4GsVqqGHDb+oTIvRILDmtzobkflr6rP
-	ORrcJ1jA==;
+	bh=s7i6JdBwQQPMq7nuqWGD2TbVytoZLm3o9kopwugOm/g=; b=DhuVWaj02Us32Wn6ae08OZGoGW
+	124kPG2563OFBFXfWUr0hNKg7Jca9L5I9TgoQ8MN5/OECcc8/3vtOYfejqpKM60+J0Dg9foy/NzFa
+	6NtFNHL5RlxHf4gG3iYB8cYllERlMSs9O/cQM4jkSm5HZ3v4V3xcNx3ZcBkaKWOsFcqd8MKOhWhZH
+	VnxM1vGY4F5z1Jr4Q5PraWObj/Y0JN6acl8xfkffzzu2TTrV6XYdDxQdPB5Lg5+7q1i469+7Cipg8
+	iCsFFNCOFSbXOT4Yb0kEZGnl3Bg2EByAyBTQFJ/vfaQ4AWKiSXnukVKFC7MTFgnzXk2im++FKW3ka
+	BiZxl+/w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTcD5-00000008Ptj-2v9m;
-	Wed, 18 Nov 2026 09:44:11 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xTcD9-00000008PxC-3Tel;
+	Wed, 18 Nov 2026 09:44:15 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTcD4-00000008PsO-0nZB
+	id 1xTcD5-00000008Pt5-3RkR
 	for kexec@lists.infradead.org;
-	Wed, 18 Nov 2026 09:44:10 +0000
+	Wed, 18 Nov 2026 09:44:11 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id C0A0343F2B;
-	Wed, 18 Nov 2026 09:44:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17F101F000C4;
-	Wed, 18 Nov 2026 09:44:09 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 15ACC62055;
+	Wed, 18 Nov 2026 09:44:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 284591F000C5;
+	Wed, 18 Nov 2026 09:44:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794995049;
-	bh=CzZ9Av/3wS7z6KydxH5rNyXx2HhScCX+vojD4NTXzJE=;
+	s=k20260515; t=1794995050;
+	bh=s7i6JdBwQQPMq7nuqWGD2TbVytoZLm3o9kopwugOm/g=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=id+XqXBlLOt5LSBIS1KMRsH4q7DvdsNbyJMmpTo8+OPMBv0M7RkFmErIcQN0jSO/J
-	 mqDgyuFvkdrVlJszDQpIzpfCafRiETrZnpZMMOkdoAsRxSHyNVOQ+328E3yPz80Dk4
-	 sEjIV70qhWGIfLjHYORJW/snddcfUaP2ZMH2L70ajO/LrAYTEvw0iUJpPRpa/mi75C
-	 wt6NVkUI3PmKQIkdMb5VGk6ZHrxgLSOovjIevVInwZBaxtu0JbcY2IfxxQgWJm+Ryz
-	 T9NpmNZhZTnXDxclYpJTc4h6rsrnuZiboKjJl0gFVGAi4fTKpKJ3klLl+nmefLHVWr
-	 LtwWnaqQsLy6w==
-Message-ID: <sashiko-outbox-220615@kernel.org>
+	b=A5q3SYIVLhT6ViCgKmwHt4snBTBXfDf55t5yArPoGF4dO5V/7/REFhvRxrcDdlGGT
+	 vNbs553NZL2LhVerceGY78MDn+8phuqaJETuSgLYyiI+xyp3+Am2nb4ciS0mmN7HwZ
+	 p1XwWyN1cBhFiaLLegGQF8YuWr9vC0TqBE0A5lGwAowphCJTW2moNpW1BEVgCmW9gC
+	 /xWcd+yRYaEXDCWu/Tx03mjFOmCSkZ3hEkBKS/jfKDozNy+XZ0PHdE34fY2vXI23xP
+	 q52hsYmCg3RkfFXf43IZdu8MI0W9xXddawkiGAS33mow2DhJchso6Z7YLNFR9EgAQA
+	 3mIvWz4H4Mq3A==
+Message-ID: <sashiko-outbox-220616@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 3/4] selftests: kho: Add riscv support
+Subject: Re: [PATCH v4 4/4] selftests: liveupdate: Add riscv support
 To: "Chen Pei" <cp0613@linux.alibaba.com>, pjw@kernel.org, palmer@dabbelt.com, alex@ghiti.fr, rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org, graf@amazon.com, shuah@kernel.org
 Cc: guoren@kernel.org, kexec@lists.infradead.org
-In-Reply-To: <20261118091603.979-4-cp0613@linux.alibaba.com>
+In-Reply-To: <20261118091603.979-5-cp0613@linux.alibaba.com>
 References: <20261118091603.979-1-cp0613@linux.alibaba.com>
- <20261118091603.979-4-cp0613@linux.alibaba.com>
+ <20261118091603.979-5-cp0613@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 18 Nov 2026 09:44:08 +0000
+Date: Wed, 18 Nov 2026 09:44:09 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,8 +74,11 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Describe the machine the KHO vmtest runner needs to boot riscv64, so the
-> test stops being skipped on this architecture.
+> Teach the live update vmtest runners about riscv64, so the LUO tests can
+> be run on this architecture.
+>=20
+> LIVEUPDATE depends only on KEXEC_HANDOVER, enabled for riscv64 by the
+> previous commit, so nothing in the tests stood in the way.
 >=20
 > Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
 
@@ -83,6 +86,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118091603.979-=
-1-cp0613@linux.alibaba.com?part=3D3
+1-cp0613@linux.alibaba.com?part=3D4
 
 
