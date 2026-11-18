@@ -2,77 +2,78 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC6460A2610
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1B160A260A
 	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 21:28:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ruUJ4Zt2;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=UFyQr3M0
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=37fxj7w2;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=kse2xzMM
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
-	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=hq4FetZ9TbMuXfM2xTa4nRWlSTgcNRWAkocFboOGKak=; b=ruUJ4Zt2xBAu+K
-	rBPsV7XkOwM2Ds7sNAx45VcB4qsdBvXXmPKT3nH5UAdfcdET7oYKYdp99nfN68/76Fzo3verOodNu
-	e9bCtJprDiBDrneoMTYt0r2KNng6O2Qrqksun+Tdw0yINJEUWCEOEghT46OSpmYjIbr6N3v0v9TrV
-	t0n9rnR6XJf58MCRvFx4GQbQQY2yFgtc8nidHREf2VRt25gppvRfcU3f6UcLZu68TiXWMZnCCBzbs
-	TOYwgGDEbKikeGjrxTN8+NwVneAskxYRjIb0Bb/dURAd8nROm8K1Q/F/mTIt1Le3QeBFE+RNnJ367
-	f5vLZfG0a8zFwB0864bQ==;
+	MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Unsubscribe-Post:List-Owner;
+	bh=RinnfRqFmJMbnCr6d3DXp7w2qk/BhwlH7a68zOSwViI=; b=37fxj7w2OY9uDHcw7+HCuogtuF
+	qi2vHJLZl41/OkcTGq1BJQ3xRuF9A0Xy7Dw5bMhQqamjZkA947ZCx5/Zd/3fQUccCLUF2WSYT6p0U
+	57YPEEGkp+gX87f/7yOOIhtWzgFK9ENRmOVCJJtyf1cOF/sGL3Zs0/LMrwDOp/pCDN0DFvoVZDLJm
+	CdRAC0Le8Hwdpxoxen67AySFT7X0ediuytm/TFmLDZ3MkdNhwwZ/fkTLKCHQ+0m8JTZ6H/k2tVdVV
+	pkufYuzQ/qHC8StftbLDaSxpIh+xE7cdmqf5RV8+k64Xr2z7FaWedGcV87B/aP/xTuX5xBemIKFoL
+	uv6gfSiw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTnD8-0000000AJeN-2Kne;
-	Wed, 18 Nov 2026 21:28:58 +0000
-Received: from mail-vk1-xa2f.google.com ([2607:f8b0:4864:20::a2f])
+	id 1xTnD5-0000000AJbQ-3445;
+	Wed, 18 Nov 2026 21:28:57 +0000
+Received: from mail-ua1-x936.google.com ([2607:f8b0:4864:20::936])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTnD1-0000000AJaW-3lqo
+	id 1xTnD0-0000000AJaF-0Zqi
 	for kexec@lists.infradead.org;
-	Wed, 18 Nov 2026 21:28:53 +0000
-Received: by mail-vk1-xa2f.google.com with SMTP id 71dfb90a1353d-5eaa5e03c47so230342e0c.0
-        for <kexec@lists.infradead.org>; Wed, 18 Nov 2026 13:28:51 -0800 (PST)
+	Wed, 18 Nov 2026 21:28:51 +0000
+Received: by mail-ua1-x936.google.com with SMTP id a1e0cc1a2514c-990703f817fso784784241.1
+        for <kexec@lists.infradead.org>; Wed, 18 Nov 2026 13:28:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1795037330; x=1795642130; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=hq4FetZ9TbMuXfM2xTa4nRWlSTgcNRWAkocFboOGKak=;
-        b=UFyQr3M0koDbO95ptYyjPEVuIv7YW8CxnpNzxjNStkKTgL7oYPpYXSm4qBrSpVjueu
-         MgJ893/PRgH6civBkrEHmIoOlclfe6a71x8KPAGQm5rBPWVxSFDM0Xk0ja7zuCyJFaUP
-         RqRy/+gz8DExOJCLX6M4uYzR7376C6k+X2OZ7eLUICAWReWm6NKiqQIRToHoAn+/DwiE
-         z9PUZlBx0tMwRITYq9zCISv1WlkQxpA+Rp6+beERYHwSQr7ibCO2FS7cKEYZcb4M01lD
-         VW/pvhc/tPj6norEGPbxa8bJb0cvgA5MnDQrrC3LAYCXKONh3Lx6h8UICCSSX1R5H8Og
-         XIBg==
+        d=soleen.com; s=google; t=1795037329; x=1795642129; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=RinnfRqFmJMbnCr6d3DXp7w2qk/BhwlH7a68zOSwViI=;
+        b=kse2xzMM9DJK9Qu0g6f9Cnf+zDSxuzwd8Tv1TOJsxzXYTcd0Ka8FjHKuTMd0905PCE
+         ZzFWRkotp8saiSaXh6GE4yYmDGNzwy9rPG58ERdyxbJKJ3HQNMUYTM6KTCLCAdyASQta
+         TmZJwin266p+vEspRDhNHcTS6aWvD8XdeuUPUjoHll60SvEQWiCLxbS1tIQnUQ2KGVO1
+         57r4xplk5bMc1EiHNxyufFMNAB/n3i4DvbDrO+DrK39JNfHwAG1bFE7zIC3dwWrAEItE
+         7Ombm5398K+We9JnMGGssydgup0DRdtMMRtWuV9DrCnkZWmkEX+t8iS6CrDzIoGkeJoZ
+         tNUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795037330; x=1795642130;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=hq4FetZ9TbMuXfM2xTa4nRWlSTgcNRWAkocFboOGKak=;
-        b=y1sPuE9q8fCQ77a0g3WS0C3b+U4EC8hAUvCnxThGGzRv8iBaM32ChSaR5lGdrUfQHP
-         H8NN3syAcCCmqSjE2weDQUKsNbZibyB/E9iha/infzvas73izUax1Ezd6R67k0Y8ftOY
-         VoxYtN8uEkCtNVekQ6+G14Jnl2+Hn1lYO/vPrW+k+FCR/IAK0okmRtcI2JeVUvzJyNzE
-         eq16BF4eC+wN+Dc32dKLgEBVAbjmSv85nrZIrkq1MP4IJQWqD5mn6A6lVgm173lLEUj1
-         EkHZxKGk3kXW7ahVkjje1xAoKV1PISFutQZa2PbMlnWz8MZeX1aiofl9KiuouTwCf7nN
-         UACQ==
-X-Forwarded-Encrypted: i=1; AL+hErG9bdbXFndoJK21iVxILnNnH9WWnLxkXG/VSKHyq1VTI5oD8wu77ZxxRJxHZKRZ8oHegG7Ntg==@lists.infradead.org
-X-Gm-Message-State: APuU4Z9F46PzpVJ3b9oiXP9oIfaSTy0/6Wj8oZaYaIXiaZeGcqouk5jJ
-	6mBQlocr6uct3H4OM2BBVzNuNVGMkR1peNHtceIyO6JrQtRWqqexEZJ4IcBiHyN+AA0=
-X-Gm-Gg: AYBFou0815S15Og/kG8gGwX8we+skDYVRIA+SAEtl6e6l+Prs2Du048LgdQ5lhJTyD3
-	iAhvqSdLQO9C6mN5vsVSIcKBwIk/yzcQobAQVSsCVEOK3LTAZKhzztsd10PXlsPv4m/yEY8rd4+
-	vB4zjXvdGEci+/3fUnAiaJPvInMHArt6lvVISUZNXk/9apTFixxcHxvgMEDsiUhjHNIcQqrN6Yl
-	/l/CRct8CY6zTeZzz2+95P6A/4rffi8MsTceP1wIglqsYfrfecWds/b0qAQKj0ahbLHCtvs3Omf
-	0a7HXwfRjXXvd4Oi0aG9JFLkknSqQvqZSX2tGpeh6BX7d+A/KbI4OGTfPa/qC/MhgCbUSo/hG4h
-	UTrnc7YHV5Cv+E+aYOCrFn2nokKI6Fdjl2AvR0IGntciebReV0vY8msp8QZY2BjBfun150B8scc
-	03hZ0i7xbDPGvONiI8sipowdo2B+7p5Jp20X5cmQytW8vuUQxAVHCuG5slAKZtb3kJgvk7diORk
-	P3cqRH6kXJverAFaQDWhS6c6RpcMEv6oe/QvRhb0fCJBJrovrraZpC32r3zDJESIx9INzJG3xh/
-	aySVAzSRANpEXgbByhQ9EtCoQDyYYvvne4j+rj2d6OA6AzcI+MicltGwPWITW262N3YrdNBCi+j
-	65cHmOL8jduWAeg//nIKKOThdDiWYLr+DczqujbFy//IO8I2p9E6y
-X-Received: by 2002:a05:6102:548e:b0:7ba:b5ea:c4b8 with SMTP id ada2fe7eead31-7d6cb42f39emr262542137.1.1795037330488;
-        Wed, 18 Nov 2026 13:28:50 -0800 (PST)
+        d=1e100.net; s=20260707; t=1795037329; x=1795642129;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=RinnfRqFmJMbnCr6d3DXp7w2qk/BhwlH7a68zOSwViI=;
+        b=i1zN2vhoNTh5nXeRQ6UDX3UxcgCsMlLE1EMl5TmTwmjT2xJmqB/Ggf+9QSSldBh64a
+         KdVDKMrGXB9Dg15BK09fmXrypJo6MbipGmphSI2O9VbnirUORyWehkovWY46z3vMTRdh
+         czOezB7M8XPeqkMKcksgYN6CYoK8QlhNqQZIHo7RMkrTuFcC1Ktgfd/bWdLqnom3wFBN
+         xmZWZ1CIXz2MlGASicdWAOUd4jJwLEHBEqEnrWxdQsfj0IHDBtVqRBIVv8NKnhIQs2n8
+         El5BBdTsZ/yK9ZWa5WeNycDzX4nGdis5bN9H373gpbCinZYXzj/sSbkuiOm1R7MYLPft
+         AjZw==
+X-Forwarded-Encrypted: i=1; AL+hErF2PUZuF9dBXzaJTI5hJZSvpMtjk6f3cMjVCcAmp5v7AJwxp1X2xkF6fYsy26sSGaMwxqfhmA==@lists.infradead.org
+X-Gm-Message-State: APuU4Z/fkHKJUaNtBd/CT8zDssqibo9AzNzLorO3o8X0IErQLvlE4Yt5
+	UiCQnCbiKvwCrMEp7uoI+SdVppAOCAcOZAVp/GF0r246xG8IMPBTZekldr+JH4CLY5zkOuqKB/Z
+	fmKUB
+X-Gm-Gg: AYBFou0jC6rdIrX360vd/ChnT1T+1cgPyhBf3QGpBoK6eqpv7O2oG+xDztymwTnxm3B
+	cd2TXLdMoh41n9qjbAaZGZoPDuwOVTSToS6xv5acOUjHbwUHc9NuYsSGyX1Lr/WDkTpcCymkF13
+	JMf30qbTW4IOPjpyiEQa45t3Mm+X3CCG8rhtj18TnDxcM4LuLTe7b6IFeGCJBVtPw3bfmPKDWs6
+	AfjBpVj+bDGxCukbHr/fH401agGe84VwpbNpwbhV8Ux6OGGatUd2QbYL5Xacx0CZ6Z/QalYj529
+	YDMdGlf7hviiB6cRQ5bS32qB45q0NZfp73JgaYTVcCz76690xZ41rhewiXlDo3hlTteOFCIGRGm
+	bcv45wdYy2U6ShBAYqf8M3eHc2QiiUomXbMyg5XoKVcnJ9wPFuqUlcvhNLaIeXEw74gwodeKJgu
+	0/6nCaLX+TNTP9F8rwdHCzgHl/ndyUb7x1qSqbFuHchkyssRV+za303gUs1BOrX7sjtDOAaBI03
+	GRJsaDRKh3jsQiJ2pgzgBvwZyfv2ud3uePk+rJFjjUypH1HRZ9ohyQswkLRlxkhTTQSahXxB+nq
+	rP2r1D30IWcLnHGJMBfRrrYkqGtFRnQAc0TVnR9gLjiGKuUxnjKPlsZC3bjy0zGI7J1kC8uQzN4
+	9rmcWMp17qChp5iCVawijkrp6M43FEy+t4qjZPalqTFn1FRvl6f0q
+X-Received: by 2002:a05:6102:4455:b0:7cc:25bc:3b30 with SMTP id ada2fe7eead31-7d6ba438d36mr1283355137.21.1795037328579;
+        Wed, 18 Nov 2026 13:28:48 -0800 (PST)
 Received: from soleen.c.googlers.com.com (57.233.150.34.bc.googleusercontent.com. [34.150.233.57])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-7d6b9185bc3sm2724635137.5.2026.11.18.13.28.49
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-7d6b9185bc3sm2724635137.5.2026.11.18.13.28.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Nov 2026 13:28:50 -0800 (PST)
+        Wed, 18 Nov 2026 13:28:48 -0800 (PST)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: linux-kselftest@vger.kernel.org,
 	rppt@kernel.org,
@@ -89,18 +90,16 @@ To: linux-kselftest@vger.kernel.org,
 	pratyush@kernel.org,
 	rdunlap@infradead.org,
 	graf@amazon.com
-Subject: [PATCH v6 2/7] kho: link outgoing blocks lazily in kho_block
-Date: Wed, 18 Nov 2026 16:28:37 -0500
-Message-ID: <20261118212845.2855249-3-pasha.tatashin@soleen.com>
+Subject: [PATCH v6 0/7] liveupdate: Add LIVEUPDATE_SESSION_FREEZE ioctl
+Date: Wed, 18 Nov 2026 16:28:35 -0500
+Message-ID: <20261118212845.2855249-1-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.56.1.708.g77570a6a1d-goog
-In-Reply-To: <20261118212845.2855249-1-pasha.tatashin@soleen.com>
-References: <20261118212845.2855249-1-pasha.tatashin@soleen.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261118_132851_954573_CD87F954 
-X-CRM114-Status: GOOD (  19.73  )
+X-CRM114-CacheID: sfid-20261118_132850_235398_B9917D9E 
+X-CRM114-Status: GOOD (  10.38  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -112,153 +111,114 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Currently, kho_block_add() links each preallocated block onto the
-serialized chain immediately, even while it is still empty. This
-assumes all preallocated blocks are populated together before the
-chain is referenced by KHO.
+This series adds the LIVEUPDATE_SESSION_FREEZE ioctl on outgoing session
+FDs. Once frozen, no additional files can be preserved in the session
+and repeated freeze calls return -EBUSY.
 
-When sessions are serialized incrementally ahead of reboot, extra
-blocks may be preallocated for sessions that have not been serialized
-yet. Keeping those blocks linked leaves empty trailing blocks on the
-KHO chain.
+Currently, LUO freezes sessions only during reboot(LINUX_REBOOT_CMD_KEXEC),
+serially under global write locks. On hosts running multiple workloads
+such as VMs, freezing sessions early under their per-session mutexes
+lets workloads freeze in parallel as they pause ahead of kexec,
+reducing blackout time.
 
-Keep preallocated outgoing blocks unlinked in kho_block_add() and link
-each block lazily in kho_block_set_it_reserve_entry() when advancing
-into it. Also unlink blocks in kho_block_set_clear() and stop at
-unlinked blocks in kho_block_set_it_read_entry().
+By default, session lifetime remains tied to the session FD: closing
+the FD before reboot unfreezes and unpreserves the session, while
+keeping it open skips late auto-freeze at kexec.
 
-Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
----
- kernel/liveupdate/kho_block.c | 38 +++++++++++++++++++++++------------
- 1 file changed, 25 insertions(+), 13 deletions(-)
+Userspace can optionally set LIVEUPDATE_SESSION_FREEZE_COMMIT in flags
+to serialize the frozen session and its FLBs into the outgoing KHO state
+immediately and transfer ownership to LUO until reboot. Committed
+sessions survive closing the session FD, allowing processes to hand off
+preserved state and exit prior to kexec.
 
-diff --git a/kernel/liveupdate/kho_block.c b/kernel/liveupdate/kho_block.c
-index 0d2a342ef422..21cee45fa1cc 100644
---- a/kernel/liveupdate/kho_block.c
-+++ b/kernel/liveupdate/kho_block.c
-@@ -16,6 +16,11 @@
-  * array of serialized entries. Multiple blocks are linked together via a
-  * physical pointer in the header, forming a linked list that can be easily
-  * traversed in both the current and the next kernel.
-+ *
-+ * Outgoing blocks preallocated via kho_block_set_grow() remain unlinked until
-+ * entries are reserved via kho_block_set_it_reserve_entry(). This allows
-+ * entries to be serialized incrementally without exposing empty trailing blocks
-+ * on the physical chain.
-  */
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-@@ -79,7 +84,7 @@ static struct kho_block_header_ser *kho_block_alloc_ser(struct kho_block_set *bs
- static int kho_block_add(struct kho_block_set *bs,
- 			 struct kho_block_header_ser *ser)
- {
--	struct kho_block *block, *last;
-+	struct kho_block *block;
- 
- 	if (bs->nblocks >= KHO_MAX_BLOCKS)
- 		return -ENOSPC;
-@@ -89,15 +94,11 @@ static int kho_block_add(struct kho_block_set *bs,
- 		return -ENOMEM;
- 
- 	block->ser = ser;
--	last = list_last_entry_or_null(&bs->blocks, struct kho_block, list);
-+	if (list_empty(&bs->blocks))
-+		bs->head_pa = virt_to_phys(ser);
- 	list_add_tail(&block->list, &bs->blocks);
- 	bs->nblocks++;
- 
--	if (last)
--		last->ser->next = virt_to_phys(ser);
--	else
--		bs->head_pa = virt_to_phys(ser);
--
- 	return 0;
- }
- 
-@@ -144,9 +145,9 @@ static void kho_block_set_shrink_one(struct kho_block_set *bs)
-  * @bs:    The block set.
-  * @count: The target number of valid entries to accommodate.
-  *
-- * Dynamically preallocates and links preserved memory blocks if the target
-- * entry count exceeds the current total capacity of the set, ensuring they
-- * are available during serialization/deserialization.
-+ * Dynamically preallocates preserved memory blocks if the target entry count
-+ * exceeds the current total capacity of the set, ensuring they are available
-+ * during serialization/deserialization.
-  *
-  * Context: Caller must hold a lock protecting the block set.
-  * Return: 0 on success, or a negative errno on failure.
-@@ -312,12 +313,15 @@ void kho_block_set_destroy(struct kho_block_set *bs)
- /**
-  * kho_block_set_clear - Clear all serialized data in a block set.
-  * @bs: The block set to clear.
-+ *
-+ * Resets entry counts, unlinks blocks, and zeroes all entry payloads.
-  */
- void kho_block_set_clear(struct kho_block_set *bs)
- {
- 	struct kho_block *block;
- 
- 	list_for_each_entry(block, &bs->blocks, list) {
-+		block->ser->next = 0;
- 		block->ser->count = 0;
- 		memset(block->ser + 1, 0, KHO_BLOCK_SIZE - sizeof(*block->ser));
- 	}
-@@ -340,14 +344,16 @@ void kho_block_set_it_init(struct kho_block_set_it *it, struct kho_block_set *bs
-  * @it: The block iterator.
-  *
-  * Reserves a slot in the current block during state serialization to add a new
-- * entry, advancing the internal index. If the current block is full, it
-- * automatically moves to the next block in the set.
-+ * entry, advancing the internal index. If the current block is full, it moves
-+ * to the next preallocated block and links it onto the serialized chain via
-+ * the previous block's header.
-  *
-  * Return: A pointer to the reserved entry slot, or NULL if the block set's
-  * capacity is fully exhausted.
-  */
- void *kho_block_set_it_reserve_entry(struct kho_block_set_it *it)
- {
-+	struct kho_block *prev = NULL;
- 	void *entry;
- 
- 	if (!it->block)
-@@ -356,12 +362,16 @@ void *kho_block_set_it_reserve_entry(struct kho_block_set_it *it)
- 	if (it->i == it->bs->count_per_block) {
- 		if (list_is_last(&it->block->list, &it->bs->blocks))
- 			return NULL;
-+		prev = it->block;
- 		it->block = list_next_entry(it->block, list);
- 		it->i = 0;
- 	}
- 
- 	entry = kho_block_entry(it, it->i++);
- 	it->block->ser->count = it->i;
-+	if (prev)
-+		prev->ser->next = virt_to_phys(it->block->ser);
-+
- 	return entry;
- }
- 
-@@ -381,7 +391,9 @@ void *kho_block_set_it_read_entry(struct kho_block_set_it *it)
- 		return NULL;
- 
- 	if (it->i == it->block->ser->count) {
--		if (list_is_last(&it->block->list, &it->bs->blocks))
-+		if (!it->block->ser->next)
-+			return NULL;
-+		if (WARN_ON_ONCE(list_is_last(&it->block->list, &it->bs->blocks)))
- 			return NULL;
- 		it->block = list_next_entry(it->block, list);
- 		it->i = 0;
+Overview:
+- Patch 1 decouples luo_file_freeze()/unfreeze() from
+  struct luo_file_set_ser.
+- Patches 2-4 add lazy block linking in kho_block and incremental
+  serialization for LUO sessions and outgoing FLBs, dropping the
+  separate luo_flb_serialize() pass in liveupdate_reboot().
+- Patch 5 adds LIVEUPDATE_SESSION_FREEZE and
+  LIVEUPDATE_SESSION_FREEZE_COMMIT along with uAPI and core docs.
+- Patches 6-7 add unit and multi-session kexec selftests.
+
+This series is based on liveupdate/next commit 079c138d2b68 ("Merge
+branch 'lu-pci-preservation' into next").
+
+Changelog:
+v6:
+- Rebase onto latest liveupdate/next (079c138d2b68).
+- Replace "publish" terminology with "serialize" across the series (Mike).
+- Drop kho-ro concurrent-reader prep (ordering helpers and
+  kho_block_set_it_append()), deferring them to the kho-ro series (Mike).
+- Tighten commit messages, docs, and address remaining nits from Mike.
+v5:
+- Rebase onto latest liveupdate/next.
+- Replace reserved field in struct liveupdate_session_freeze with flags
+  and add LIVEUPDATE_SESSION_FREEZE_COMMIT.
+- Add incremental KHO serialization support in kho_block, luo_session, and
+  luo_flb so committed sessions and their FLB dependencies are serialized
+  immediately on freeze, dropping the separate luo_flb_serialize() pass
+  at reboot.
+- Keep luo_session_freeze_one() / luo_session_unfreeze_one() in Patch 1.
+- Update Documentation/userspace-api/liveupdate.rst and kernel-doc.
+- Drop v4 Reviewed-by tag on the modified freeze and selftest patches,
+  and expand selftests to cover both uncommitted and committed freezes.
+v4:
+- Split out a preparatory patch that drops struct luo_file_set_ser *
+  from luo_file_freeze() / luo_file_unfreeze() and moves file_set_ser
+  handling into session serialization helpers (Suggested by Mike
+  Rapoport).
+- Few more nits from Mike.
+v3:
+- Renamed session->frozen to session->user_frozen, - Pratyush
+- Added Reviewed-by's
+v2:
+- Rebased onto liveupdate/next and split out early session freeze into a
+  standalone series.
+- Dropped struct luo_file_set_ser * from luo_file_freeze() /
+  luo_file_unfreeze() (Suggested by Pratyush Yadav).
+- Unfreeze the session's files if luo_ucmd_respond() fails in
+  luo_session_freeze().
+- Updated reboot-only wording in luo_file.c kernel-doc comments and
+  added incoming session -EINVAL / invalid flag selftest checks.
+Link: https://lore.kernel.org/all/20261105050053.3063001-1-pasha.tatashin@soleen.com/ # v5
+Link: https://lore.kernel.org/all/20261015093816.2438942-1-pasha.tatashin@soleen.com/ # v1
+
+Pasha Tatashin (7):
+  liveupdate: Move file_set_ser handling to luo_session_serialize()
+  kho: link outgoing blocks lazily in kho_block
+  liveupdate: luo_session: support incremental session serialization
+  liveupdate: luo_flb: serialize outgoing FLBs incrementally
+  liveupdate: Add LIVEUPDATE_SESSION_FREEZE ioctl to freeze sessions
+    early
+  selftests: liveupdate: Add unit tests for LIVEUPDATE_SESSION_FREEZE
+  selftests: liveupdate: Test LIVEUPDATE_SESSION_FREEZE across kexec
+
+ Documentation/userspace-api/liveupdate.rst    |  20 +++
+ include/linux/liveupdate.h                    |   2 +-
+ include/uapi/linux/liveupdate.h               |  38 +++++
+ kernel/liveupdate/kho_block.c                 |  38 +++--
+ kernel/liveupdate/luo_core.c                  |  10 +-
+ kernel/liveupdate/luo_file.c                  |  76 +++++----
+ kernel/liveupdate/luo_flb.c                   | 102 +++++++-----
+ kernel/liveupdate/luo_internal.h              |  15 +-
+ kernel/liveupdate/luo_session.c               | 151 +++++++++++++-----
+ .../liveupdate/lib/include/libliveupdate.h    |   1 +
+ .../selftests/liveupdate/lib/lu_utils.c       |  13 ++
+ .../testing/selftests/liveupdate/liveupdate.c | 107 +++++++++++++
+ .../selftests/liveupdate/luo_multi_session.c  |  36 ++++-
+ 13 files changed, 473 insertions(+), 136 deletions(-)
+
+
+base-commit: 079c138d2b6870bb658b6e638077264aefc03833
 -- 
 2.56.1.708.g77570a6a1d-goog
 
