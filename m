@@ -2,70 +2,116 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC38606A320
-	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 14:37:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C545C606A320
+	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 16:00:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=A+ACSlKe;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=iGfSqlI4
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Llb6PYc6;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=WKGNZWqS
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:
-	Message-ID:Subject:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Unsubscribe-Post:List-Owner;
-	bh=5Uv1kv8Fyhvm9H5I85dSa/PbCA5mggh9KfNOAnb9QWM=; b=A+ACSlKeAzYAKP6L9s2jz+TczS
-	WHnlH9jPM1Qod1h9OZw+wysloO2jKLIywTeV0QxAxpyyng22dCyEDlYUGmswS85al3zk0+J20vu+/
-	Hb6OnRmN6aI3xRyWMadO7AHIfyJLsn/Eor9mbQkKgi52IqdU7OPCVOaxrt60zyMOfshb4aw8kDZvG
-	WXU+Lo/0UEKU8e/IytjO34hf5oOL8yDAZgtu0/NwA7BNLWVNgZMdsmzMGSm/Q13HXTfA42i3oVaxN
-	esCoS0viqNxz7BQYlfzyEwpHxTEXyDpnVxwU3RiZSntyd8A2es4KU3cKcqZazjG5rTRSQtOlX583J
-	ag9fnAUg==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Date:Message-Id:Subject:References:In-Reply-To:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=gN7nvCApkpNJjBBl+gdS00SQSe9taX0A7DICocon5Uk=; b=Llb6PYc690CIEw
+	t/x0EeHel2OVOKLxUlioE3+QVbnoWRjYfNLqhcDu0Klcxbo509H7w7b02Umidm6Qkj697hUf7hKkR
+	fgLwp9Mgw4kUq4xYQwFi83537msTIksQRyHGg2im/U7K4LwwhojnXEOAPDIBkHiAHDxZtTwUfZ3eI
+	nckvIMann9jPB94jwcPzhg6c3lXiBCs7SJAPiO8kJGuZY8Bun4J1bbqFPJGdn0bMtRp1cZ/xaGjZO
+	3Lq0QjbtYqbluKveOClYeoosqSt0K7akTmfLw2dDkq/UNUUkl1tXxXUqAbB0lZHZHsLeP7QiVsEIj
+	Z1ldpWAz31BRR3R0YzUA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTgmX-000000097vB-446J;
-	Wed, 18 Nov 2026 14:37:05 +0000
-Received: from smtprelay0013.hostedemail.com ([216.40.44.13] helo=relay.hostedemail.com)
+	id 1xTi5B-00000009OMU-30bM;
+	Wed, 18 Nov 2026 16:00:25 +0000
+Received: from mail-vk1-xa32.google.com ([2607:f8b0:4864:20::a32])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTgmT-000000097ub-2wT2
+	id 1xTi52-00000009OFT-1eeT
 	for kexec@lists.infradead.org;
-	Wed, 18 Nov 2026 14:37:04 +0000
-Received: from omf13.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 88883120785;
-	Wed, 18 Nov 2026 14:36:54 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 472A92000E;
-	Wed, 18 Nov 2026 14:36:46 +0000 (UTC)
-Date: Wed, 18 Nov 2026 09:36:44 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Baoquan He <baoquan.he@linux.dev>
-Subject: Re: [PATCH v4 3/4] x86/vmware: Add the vmware_record_panic_msg
- sysctl
-Message-ID: <20261118093644.10644df9@gandalf.local.home>
-In-Reply-To: <av1IuMZ2W0SXWcNn@MiWiFi-R3L-srv>
-References: <cover.1794980455.git.zack.rusin@broadcom.com>
-	<4c5de34b10f579368b890eaa9333a2755886bad3.1794980455.git.zack.rusin@broadcom.com>
-	<sashiko-outbox-220212@kernel.org>
-	<av1IuMZ2W0SXWcNn@MiWiFi-R3L-srv>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	Wed, 18 Nov 2026 16:00:18 +0000
+Received: by mail-vk1-xa32.google.com with SMTP id 71dfb90a1353d-5eac319a6c2so810814e0c.0
+        for <kexec@lists.infradead.org>; Wed, 18 Nov 2026 08:00:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1795017611; x=1795622411; darn=lists.infradead.org;
+        h=content-transfer-encoding:content-type:mime-version:date:message-id
+         :subject:references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=gN7nvCApkpNJjBBl+gdS00SQSe9taX0A7DICocon5Uk=;
+        b=WKGNZWqS5o6w54DxZhdFNwbV8ZuzPSrBoFZkWjOFl+anQ605b5CIowiEBQE115YK2A
+         LqObCdBrLKnPOgUE/I3KXwCVCXPoJ0Y9cIAu07yAKtmJkqCvt+znl34TbfMPKYn5slwP
+         fdqdDCOsaTdAMgFsa4h9rqClEypJMOzDGgrq/VHFBuZTorERolCQAErocG+nRuXVe+0y
+         JlKdi4xt9IsdPMaz+2RVYfhGR3pVo9BbqL9fp1+RIz86MFb7aMtdx8rNGhXrDgXiLnAo
+         FFX5GKWy4bQv5sIam/gt1HXMMUhO+22ASZdv+7aNX/7luPOmHCpbafFA9nTP0V1DEezn
+         PY1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795017611; x=1795622411;
+        h=content-transfer-encoding:content-type:mime-version:date:message-id
+         :subject:references:in-reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=gN7nvCApkpNJjBBl+gdS00SQSe9taX0A7DICocon5Uk=;
+        b=oil5XXedd5JB13T+w52mIQ4eoJwMQUyvmc8bJ/Nubffk9r4h/rLl3Z0twOGtzBWeiD
+         5LQeA+GHHK4ADbDs66dyE3jRswTeK+yx1Zl0FZTiQBM+E3mS0rJU9a3I3ESwR9jR96qn
+         2ZXgzPa5sYRWkL/UVAm0u1D0etjzQ6V7bbvUYlU+sxkrfd7nBZ73cF+Xkpw70wh+J926
+         Z/xcQ1KLTV5CBAwgmjp4C4eXMqXpyGsPuwXqHlnEpMruVz22aT20wZblakWlIkPlphwl
+         uoI3b4ekKNBG0GCiR19/euSeLbVO6J4IB6s9wMfeMZmQC8V2N20x0s2v7Xa9vE+PqgAw
+         k6IQ==
+X-Forwarded-Encrypted: i=1; AL+hErF4kJYP+kkipmk9tF5PpqIuuh2qDXlx6OnJH30r6SbmGZ9Eb8wB5eRDxSKd1DzOpwSogyeEVg==@lists.infradead.org
+X-Gm-Message-State: APuU4Z/CwBhvAMV9gJ9hOuef684f5Q6/TSwoHVh3c086xIwck0pQIAov
+	tlTnOCk0cdGL0mN1aNCN82fMAbqdjxnUdHJzBgFPyUe7Aog/gco7byUE38OwDuUrOOY=
+X-Gm-Gg: AYBFou00uk/6f7KVumNZW5C7k22GRqsWErDi20zV79qwbCyh4eeVrGIRp0B6+oXSZhS
+	sYtHKXrMCFuYV1XoAT519LiCw7qzIOQFm0xYG7ss6xwpzvT0LmdnnqZZ1RT3xKZyYbB0sBZQio9
+	kzusoCOEELic/cNHMfCr4VSFDbYAW76lSMIhRn5Z/8bgqi4jfRwECSZw98sjyrKH7B2v4Vgam8J
+	sRAUOyhEMsZrPF9emQ5JCbR4ySoRximwrnEu9EmCmLRQwkRt4frLwJIrKRM0a3msHO05cWB+GQx
+	5jOup1W1+X5iOgHAxqOhONTb/dSAOYv5uodW8RM3iNejKq8aqprHM6HvMTX7zlb3TptfL0SqOpJ
+	Zk/YPyAscQm9aYnc+pKpNRzGlfyaeEf0Nm0mkPfIA5EbROqTzh9rh5coEGgL0jCqN43AwyxCvzF
+	Bydb0CXxJcTKTKaLrw9+4dxZlKBuyxbOshO5JyIorR536jikcjOpH9Mdkg0WUyQ6KgPe4mopOsW
+	80mAcBIHSYEBD3THDbRHsvebt+3QEfAJ6GTRTFyxoVijVsjPn/Q1GNCswmi5n1B7D+MS4nNi2ed
+	SXkogzo90laPu4sHmCm374Qts0ArITr3YFoLBeQWuaW9DGMisMKFHt3r3x7qisLf+64Mp3Zj7z0
+	qRYg5HiBdJVTWF1h5EsbWHiBxayHpGvW1Jip6YskCYOQcBHj6MA0EoL/WG2+7tZy2nX/3
+X-Received: by 2002:a05:6122:3a15:b0:5ea:389c:51e4 with SMTP id 71dfb90a1353d-5ee645faa03mr1663031e0c.2.1795017611348;
+        Wed, 18 Nov 2026 08:00:11 -0800 (PST)
+Received: from soleen.c.googlers.com (57.233.150.34.bc.googleusercontent.com. [34.150.233.57])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5ee64ec2730sm2002506e0c.14.2026.11.18.08.00.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Nov 2026 08:00:10 -0800 (PST)
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: pjw@kernel.org, palmer@dabbelt.com, alex@ghiti.fr, rppt@kernel.org, 
+ pratyush@kernel.org, graf@amazon.com, shuah@kernel.org, 
+ Chen Pei <cp0613@linux.alibaba.com>
+Cc: guoren@kernel.org, linux-riscv@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+ linux-kselftest@vger.kernel.org, kexec@lists.infradead.org
+In-Reply-To: <20261118091603.979-1-cp0613@linux.alibaba.com>
+References: <20261118091603.979-1-cp0613@linux.alibaba.com>
+Subject: Re: [PATCH v4 0/4] riscv: Enable kexec handover and live update
+Message-Id: <179501759947.250261.1712117569683645423.b4-ty@b4>
+Date: Wed, 18 Nov 2026 10:59:59 -0500
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 472A92000E
-X-Rspamd-Server: rspamout08
-X-Stat-Signature: nsnhqchs79u4e17w4yf3cscerw5q6qjw
-X-Spam-Status: No, score=-10.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=4.0.1
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19ZBBweeRonAcIW3Sj8e1zyecfJ8umsG9A=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=5Uv1kv8Fyhvm9H5I85dSa/PbCA5mggh9KfNOAnb9QWM=; b=iGfSqlI4S5Jo9GiY8tlcxhyjxCE0unaS0t24fuxlAGdpNjHwyDHZj+ARmOszbO/EKCO1t2Ugca5wEWxdj+vnHq9p0zClr1EqkpIXcw0AKRzDFnMXQXE7hjS1KzJqqCKlsrgb3ii+t4Nx6MEhcyOUhiDAegNBAC6zR6uHfwR5QaI=
-X-HE-Tag: 1795012606-378161
-X-HE-Meta: U2FsdGVkX19ahj7+sR8308Zi2QXrJe1XafgKhfctr/grJYjwlB9Y8ZEh/wCDLdA3ilqVbgcd9/psAC2D02fnr5NUfybeZ8dc2HRYcO/cre8NmsHiAH7z4QB2+ChzEVX6QXqA8HfV1e1a0kC83FEElkujKiAX8EP0rmw1Qg87CIqmP4+nRaJOlE0C+GcOa6xa0zLDxZ+bzRw3rN2idlYOeuy5fAv88aSpKGahWNzLysA5buZCVrgVlj9rFtLgQarpJXo29VVm+Jp7Aruj752oLohZgu25tt6ki2pKen4lvDNRGDC+kc25u30CI0RfQ0Cbkale1qu0klm6mwdUMDphGbgdaUT81kCrCO0IFbQ5G+k0R5R+Lmk0oA==
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1086;
+ i=pasha.tatashin@soleen.com; h=from:subject:message-id;
+ bh=yx/6YU4ftdolIH+TM3tFCIqxwpFna+tV5pnuszpTgAM=;
+ b=owEBbQKS/ZANAwAKAbt3KEzbc3reAcsmYgBq/cuKW1Ven/TsYWcH9R9JVtNZvIr/Wrzbj9eUF
+ VZnu673CJ2JAjMEAAEKAB0WIQRBMaqT7LRvGvB/NmK7dyhM23N63gUCav3LigAKCRC7dyhM23N6
+ 3l0zD/9GkT2xiw3xOPo4dtrl50v/Zo+28SEOr65ml35aBi52o28TK4homX8OAljUtDYygGhutpM
+ WxnvBmRGuzLI5PV5A7/SV+WgkIZ52fXibj+mPS9LI2vYsbaTB7qWpXD/tPjUXOLL3sp8s0nWgA/
+ xzgDZjJbri0YhMen/qMzef3v9u09p3Wn4uVIdtlK0LLcBqgYpEtW1xCFKqg8Plgdmm8VzBkMBqm
+ 201gts8eO1QmJ87giSN1+mgcvDTecZXC7TLBmWsfh6zueYb2h7iy18luOHRy2FcgK/fG6x6oK+/
+ q5kb3mOX9vuWeOn4JfkYG9JvRemmTyttU4mvzXS7wc56lZd8ObMBpcWCRJaliTNo4Fwky6rrbSU
+ ubyyFqvQGzUjfL2/Rp3rc+Cie1RnXgh0XXw4RSGXf6YrqAi8dVFfXKbWikrk5D9dqJ+2t6zEbFK
+ +GHKpssJeeElG+UOr2KEGjpeWljj+Alhh73XBEVezYA9oWQYDth78nJKELwFtPq8Xcfc4Br9O1V
+ Iu1DpxwaZOV4fUHtQpY9XdoUQSLklPkalqeaaIppy2vDIKY2IMWWeLNhVX7XrCsNIO3L/BO4EIS
+ BjJYaBZ3qqGAfTeisqH8//T8U/uQq7h8rHx7J2zXA1bXqN+ErinqAopKFwtALn0trP8D1sYJivX
+ Ntme4+UlYo8oAIg==
+X-Developer-Key: i=pasha.tatashin@soleen.com; a=openpgp;
+ fpr=CAAAB722DD22A081F0D49F35633A6A993D43B569
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261118_063702_075111_4D56CE14 
-X-CRM114-Status: GOOD (  17.61  )
+X-CRM114-CacheID: sfid-20261118_080016_458477_97ADD238 
+X-CRM114-Status: UNSURE (   7.18  )
+X-CRM114-Notice: Please train this message.
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -76,39 +122,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: Ajay Kaher <ajay.kaher@broadcom.com>, Kees Cook <kees@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Young <ruirui.yang@linux.dev>, Stephen Brennan <stephen.s.brennan@oracle.com>, Bo Gan <bo.gan@broadcom.com>, "H. Peter Anvin" <hpa@zytor.com>, Zack Rusin <zack.rusin@broadcom.com>, Jonathan Corbet <corbet@lwn.net>, Brennan Lamoreaux <brennan.lamoreaux@broadcom.com>, x86@kernel.org, Joel Granados <joel.granados@kernel.org>, Alexey Makhalov <alexey.makhalov@broadcom.com>, Eugenio Perez <eperezma@redhat.com>, Ingo Molnar <mingo@redhat.com>, bcm-kernel-feedback-list@broadcom.com, Thomas Gleixner <tglx@kernel.org>, Petr Mladek <pmladek@suse.com>, Bradley Morgan <brads@mainlining.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, John Ogness <john.ogness@linutronix.de>, virtualization@lists.linux.dev, Maaz Mombasawala <maaz.mombasawala@broadcom.com>, Borislav Petkov <bp@alien8.de>, Shuah Khan <skhan@linuxfoundation.org>, Michael Kelley <mhklinux@outlook.com>, sashiko-reviews@lists.linux.dev, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, Ian Forbes <ian.forbes@broadcom.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, "Michael S. Tsirkin" <mst@redhat.com>, Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Pratyush Yadav <pratyush@kernel.org>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Wed, 18 Nov 2026 14:42:00 +0800
-Baoquan He <baoquan.he@linux.dev> wrote:
-
-> On 11/18/26 at 06:14am, sashiko-bot@kernel.org wrote:
-> > > Allow administrators to disable host log transfer on ordinary guests or
-> > > opt in on encrypted guests. Expose the boolean recording policy through
-> > > kernel.vmware_record_panic_msg using proc_dobool(), as Joel suggested.
-> > > Zero disables recording, nonzero integers enable it, and reads return
-> > > 0 or 1.
-> > > 
-> > > Register the sysctl only after the logger is ready. A registration failure
-> > > leaves the internal default in force. Document that the log is sent
-> > > before kdump, and that disable_panic_notifiers_platform_list also skips
-> > > it.
-> > > 
-> > > Link: https://lore.kernel.org/r/4e73yd2ofpdzl6rptzvd74no3hnyfblknoq7wzxlw7f3zjbz7c@srfabx6lsusj
-> > > Signed-off-by: Zack Rusin <zack.rusin@broadcom.com>  
-> > 
-> > Sashiko has reviewed this patch and found no issues.  
+On Wed, 18 Nov 2026 17:15:59 +0800, Chen Pei wrote:
+> riscv: Enable kexec handover and live update
 > 
-> It might be better to turn off this message if not issues found, just
-> like what LKP bot has been doing.
+> Host kernel updates in the cloud should not require draining the
+> machine: next to live migration to another host, replacing the kernel in
+> place while preserving selected workload state ("live update") is what
+> KHO/LUO were built for, and LUO's documentation names hypervisor hosts as
+> its primary use case. This series closes the gap for riscv64 and
+> validates it with both upstream test runners.
+> 
+> [...]
 
-I believe that's an option per mailing list. I personally like it because
-to me it does add value. It tells me it was able to apply it and it didn't
-find anything wrong with it. This way I know sashiko didn't ignore it.
+Applied, thanks!
 
-But I understand others may not find that useful.
+https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git/log/?h=liveupdate-7.5
 
--- Steve
+[1/4] riscv: Call early_ioremap_setup() before parsing the DTB
+      commit: dc821c9badf7b2558e206804c2adaae28d25477d
+[2/4] riscv: Add support for KHO
+      commit: 48ea610913a6d6fc513d082afad04ff342120931
+[3/4] selftests: kho: Add riscv support
+      commit: 30c6fc85b4fb89fc867bdea413403bf169e7e194
+[4/4] selftests: liveupdate: Add riscv support
+      commit: 9615c5074cdccb651684e61cd8872ca8b0b30e52
+
+Best regards,
+-- 
+Pasha
+
+
 
