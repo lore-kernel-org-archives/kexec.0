@@ -2,78 +2,78 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DF660A2612
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6433560A260E
 	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 21:29:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ci9WBb7b;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=RRVbYw/3
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ZNISvWHw;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=YWTuZn5B
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=N1YtoeDwdmtEaztn3lsHUvSs0nnXrghWj9Y62uQyguw=; b=ci9WBb7bIj8q5j
-	lTV36TldCdaxWyRW4x8sTyI6S99yH2v+d4bGHCoPWG+xrGrSSOxJ+8SaVEuqz3Je7QGfhqIbQwfLy
-	qgbWBJfRRMND618JH0arPSH88OcgVFpTqYttdg/fYngsBK785/T5b2iRce3NA6ICDAe5HFb6toMyK
-	UNWX3x0S+SDeOdIC/dXGDRLlUXjNOJG6OftCC27bD8wRter+aGQBzQEfxMdS7UHLyi2QB+udyIlST
-	eM+1iPQKdZU8zWwk2YWY+j7zeCPulDvXZCfHaRh4C+AVNmBNSDgSE4mcUwwjhi3UuMddZKhaIuWMj
-	HljW0EhDx6Trg66ToxPw==;
+	List-Owner; bh=s4n5oLhMYFN0GZT8T1PCl7tWuEXQGuvdSxMt72RME2E=; b=ZNISvWHwY3aHTk
+	NQCMyhbJFczVYukhSr9zcIdE8bs6Uv0rie9Ctwcsli6KDgZMSxRzWcJpjFbWvPujYl9Aoys55dyGX
+	si8GRCGzu4CS2T9T1G1mcVax2S59wNBzOkiKenXEaw3zFBBSdC2oqdjYwCgPtwKGKbxP8+xeOwcjq
+	YVDkca4pafZlWfrMSZYrKvCmAnY9CftGrxhj/SFN1thSVTY45OpjnNw5rD/0zJSufYEjyAKYH8WXl
+	jILVuWbShdl/bklQ0c/5ZVhMKi1i06LnEaScdq0G8/PYEhPXOGQRHhySTmO2SpNVUz2xlusQxp0ie
+	puzeJN5ZRrlA23l5CKNw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTnDA-0000000AJgB-3SLk;
-	Wed, 18 Nov 2026 21:29:00 +0000
-Received: from mail-vk1-xa2a.google.com ([2607:f8b0:4864:20::a2a])
+	id 1xTnDB-0000000AJgt-0F6m;
+	Wed, 18 Nov 2026 21:29:01 +0000
+Received: from mail-ua1-x933.google.com ([2607:f8b0:4864:20::933])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTnD3-0000000AJbY-3XWr
+	id 1xTnD5-0000000AJcC-26Pj
 	for kexec@lists.infradead.org;
-	Wed, 18 Nov 2026 21:28:54 +0000
-Received: by mail-vk1-xa2a.google.com with SMTP id 71dfb90a1353d-5eaaa9b1591so1135890e0c.3
-        for <kexec@lists.infradead.org>; Wed, 18 Nov 2026 13:28:53 -0800 (PST)
+	Wed, 18 Nov 2026 21:28:59 +0000
+Received: by mail-ua1-x933.google.com with SMTP id a1e0cc1a2514c-99c042cee7dso703519241.1
+        for <kexec@lists.infradead.org>; Wed, 18 Nov 2026 13:28:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1795037333; x=1795642133; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1795037334; x=1795642134; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=N1YtoeDwdmtEaztn3lsHUvSs0nnXrghWj9Y62uQyguw=;
-        b=RRVbYw/3oMlV18ADCdIt9bewvovvlHSc7SJW1yjWoDGP7UIqbBzAcwtElmuUhbtC7x
-         JSyhHewDeVG++xlfqgb96/M6FvgDp36ph6hVVweha+Zz7uL8JHyU/BycKLJUFkDELhUy
-         t4dTRrRGLbimH0hVGpSwB0+2khhrttXDGK0GVerFA1ogIVJWh0E6baWSE1g+CXUyKWOq
-         dj0Osl6riBZvk2NZ26sljWS8UwcFAhfn7vxyz0hLJCzJtRfB1ydKJoQmmnFU6gYuN6hg
-         thFuZPlr3rjbTIlfzgDLce23VRHoXQ1OkKPe3+qoFjm93lRrG8Eouo20CWyVltLiez3t
-         XwdQ==
+        bh=s4n5oLhMYFN0GZT8T1PCl7tWuEXQGuvdSxMt72RME2E=;
+        b=YWTuZn5BY+Bwz2WaCPBjtogB987Z4X21KT5kFZThl201HWXMrbtyZE621EQDU+1/oz
+         0qSv10dutCKmcw9hWtk7Y3KUy3JyOFrFl/4ixWxAQnQs1leWKBHjWgHGYxNDxsAvu1TV
+         Po7UyiNxddMUvsMYUji9Q5/zYVPj9aRxYGynB8Ds3vUqPPr7eeZ9Yx26RJrK+m3mqAxH
+         zZW6QK4dmeE7sJhTcGgoTvbC+fyk7Nl3xeTvftUGLS3igYjdyC630uR+xBjEzceoXTrX
+         IdE/3gCC2YreTI2qwhvkyhDubCh5JW3w0d8NfSPEt+5zPVRyEs1GzBzDN7cbX/llC53r
+         sHcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795037333; x=1795642133;
+        d=1e100.net; s=20260707; t=1795037334; x=1795642134;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to:content-type;
-        bh=N1YtoeDwdmtEaztn3lsHUvSs0nnXrghWj9Y62uQyguw=;
-        b=L+KC96Km09CLie0fFQreS1z0QAgdAGU8XKJ0mpZIsShm5EzMQEO8G1bbJgXvSpHtEX
-         W8UjgQl7S6FsLN1mX4WshqoVaVjLdQxKpI+fzfsGiU6HTbQq6dfOKAect2sUUODpu2tC
-         gl7PCt6sMrJXmAcn+8aI83li54THV4/eJnyUqAGtfdzrHWat5wTunOI85r6BK2GgdSbf
-         skaAW9VnN34h3FCTry3db93ih07J+TEUccVZMtm2O3eduXaZmD/ijn3WJSBOmm/ckEEo
-         qlYfVsUyqYhFibverG+WHCRadAy55TqJX2iRoaSFdNYxli2ZVhkLfUPbsSS1NORyTShI
-         Odjw==
-X-Forwarded-Encrypted: i=1; AL+hErF4EOTxR+306x3uIL84VcTyh7+BVMsieIKNLn+6AiB9UHtyacZs659wIMZLWWRp2hQROUz9qw==@lists.infradead.org
-X-Gm-Message-State: APuU4Z9TxYVa6jS6LZv1Qxi26pkRImxYKzAWXuwCs8eH6mVLuHmSfmYe
-	wt5nBtWZiauwbwk7pOs7Etwg/crSeCKYS65oy5qI0TK52JmqQGZ1ryb2o9/1JPJFYKo=
-X-Gm-Gg: AYBFou1zFdt3YHYb7t8u+Hp2qpw9ypKBcYDz3V/RoOKe1KaGyJZkAzcfSoyN4HKaxa9
-	APJi+EZPAdPz15CQS34wHbHXD3WsTbNgZBAtjkBxtaDjeZQ/9v29LZSH+U2KXrRB0XAa+M4/SyF
-	rNuyBWe3HS8kBC3WJMTy5QZgSIF+etTiVzF5XpkdKmR1hN3GSTBHNdkLTSqfAlBW9taSTshNF42
-	0q0LIf4otKNfZrd/sAiyf2telahaZOYhTd1oARDFizZUo1blEE8OFML+OQHJNYoaRWdJwLogBf8
-	ow3WQiPZ+Qf/lSjfl6KLaT5aTqB6Qj5wAZKPrEpR7V9TRr9BPYM0KShuacYGpFphFhBd6T+39HO
-	spMkuQM8uMdzn7rFdQ1FbK9onP5P87Nf6rmzAtjF+/6GdKIU4ZFPTI3SjE8Sy8Hw+Sp7rFPXdoO
-	nouB03rR/JVTQi1DncUAunT9h8+P3DiHriSVBECQD7ruunIQdig8d9BHO66Uqik00JuAnT6g/va
-	0tjYFB5CTcrdjViM2BYVFNTEOTCFYL6PoDyUWKR5A/zp08IP6IkYxBFUscjNGtoN45CU+OTqKIf
-	PbRuk/df7ZY8T50NlkUOgE/Kh86bxYKFLXdx3ffLsFr58Yb02ixELp3b2hF1zSYh06/KlquipfM
-	OMQzAwrMtU84Sb3gDzjV/+9u4P9IsfbsUztTzID+uH2VRxRWb8hqKG6+yvTZrf4MlDrBtl1qXCA
+        bh=s4n5oLhMYFN0GZT8T1PCl7tWuEXQGuvdSxMt72RME2E=;
+        b=n3htJ5XoDeq9dF7yudg63JsVQ0184UQMdcY29Wyx4Sa+TMhJiPk5jhglAbeVfV+5/O
+         ztj/UsY3dLgNAIaCF73PNL66eY46nl4TTmMqyLtUS1dzNe8UXxtTPr0VQrvNqNrqJxNO
+         98lc9tUYEeo78+IU0VcXkIint2OuVWX51ypwwfuTHQQz/CRR8Yp2lcgc4CCHGxnRG4MK
+         Y/ddzVjn8DPCmKXE6nSygNN6qZzuiY5+LYHAIU2wuFDmUznF9NAnXHV37QRKJ+M1rWVH
+         RnjzVPNSDl8WD7Wet2vI6X7NFH0zXpc5KgBipZQvPH/1rNkyFH+Bx7uddcYTN3FT9Tef
+         Jbbw==
+X-Forwarded-Encrypted: i=1; AL+hErG7BHzIR3FrRU3wPG9dgAFWi0NeUVHFJ6Pd2xDy5acaToC2sNQqpyvLB3MSIFj/It+aQwJIDw==@lists.infradead.org
+X-Gm-Message-State: APuU4Z+q8SuvXGo4ENw1odTOyo8674DhC3vmDeTyxdmbgVhgv7ndFE/y
+	I+XvyBgnLtj/wl89lC0VAeLNRlDdxLwoSiQ4tzCAu63v1FSXpnkInlo5Vjht46j1xpY=
+X-Gm-Gg: AYBFou3GVly+od0sJpdlF+6U/fnnBzuV2EVaaC1pNGYTc2oXcsIYQzgHbnl9YIQXn0C
+	9nzgcLRWz7bUEHOJJbKsrND/mBBxbK7MgFzDoG8iK1t7UEBbqQWnf45/lQ1Z+hXi8zmOGZlBuWy
+	n3fms8229fvMhJnrO5piufD4kl0ymE18jY0Wn0DK2cSno/6BkaMnw34B8X/uzDBLNh3HtAAlcFA
+	fabf9mc7Go1/RcL+AGJr7ss1s2/SzvTr9NPy7AcdZmeRzflApjq1iWGDNdbSmFORAgAArXs7le+
+	9kfzxN4t+YGb+SVpkosrcMOxtvMIYHRnFBHfqm7X24TNZLfFfvinNquAeJ5KpzuRXq/gxJjj5PL
+	i5x1ElIz9K+JFL4e01dbSQITui8wXwfKcQbBTBl19WQJSiVw5aJ6+8gOERLJz+DVpLHuSymUb6H
+	/aiYgm5CQeJZnFhLPdePYPGHPZusY+31NffZHuGz0eT5KrLTlrxD1XBYJgPxPfKCX+9sWuXaHdF
+	tUEag9z/XssLWyWM3smEag0cR197udAARb7N/lYywZWnmJNqTFBZfgfAkvCFs5xAAMqdnN6whRd
+	1f+WI/E4x7963aHtHQ86i8EdAWxco7tT0q1dipPtk5ygadvh9yop4Gi9ZK0VVm/JUqSAFxmC+iY
+	YW4T6OmB09mC5/9Q6X+2xi88xbqmfIX5nCeIoPaV6uQuJpsw79FNnjMoLlVc53elmrYfH8KCEPQ
 	==
-X-Received: by 2002:a05:6102:943:b0:7cc:174b:f7c3 with SMTP id ada2fe7eead31-7d6ba465cadmr1768828137.30.1795037332845;
-        Wed, 18 Nov 2026 13:28:52 -0800 (PST)
+X-Received: by 2002:a05:6102:4412:b0:7d2:8529:6892 with SMTP id ada2fe7eead31-7d6ba3e7857mr1999245137.11.1795037334470;
+        Wed, 18 Nov 2026 13:28:54 -0800 (PST)
 Received: from soleen.c.googlers.com.com (57.233.150.34.bc.googleusercontent.com. [34.150.233.57])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-7d6b9185bc3sm2724635137.5.2026.11.18.13.28.51
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-7d6b9185bc3sm2724635137.5.2026.11.18.13.28.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Nov 2026 13:28:51 -0800 (PST)
+        Wed, 18 Nov 2026 13:28:54 -0800 (PST)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: linux-kselftest@vger.kernel.org,
 	rppt@kernel.org,
@@ -90,9 +90,9 @@ To: linux-kselftest@vger.kernel.org,
 	pratyush@kernel.org,
 	rdunlap@infradead.org,
 	graf@amazon.com
-Subject: [PATCH v6 4/7] liveupdate: luo_flb: serialize outgoing FLBs incrementally
-Date: Wed, 18 Nov 2026 16:28:39 -0500
-Message-ID: <20261118212845.2855249-5-pasha.tatashin@soleen.com>
+Subject: [PATCH v6 6/7] selftests: liveupdate: Add unit tests for LIVEUPDATE_SESSION_FREEZE
+Date: Wed, 18 Nov 2026 16:28:41 -0500
+Message-ID: <20261118212845.2855249-7-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.56.1.708.g77570a6a1d-goog
 In-Reply-To: <20261118212845.2855249-1-pasha.tatashin@soleen.com>
 References: <20261118212845.2855249-1-pasha.tatashin@soleen.com>
@@ -100,8 +100,8 @@ X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261118_132853_913906_9B2B2670 
-X-CRM114-Status: GOOD (  24.02  )
+X-CRM114-CacheID: sfid-20261118_132857_981529_62860F26 
+X-CRM114-Status: GOOD (  10.91  )
 X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -121,257 +121,172 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Currently, outgoing FLB metadata is written in a single pass by
-luo_flb_serialize() during liveupdate_reboot(). When sessions are
-serialized ahead of reboot, any FLBs their files depend on must also
-be serialized at that time so the outgoing KHO state stays consistent.
-
-Serialize each file's FLB dependencies from luo_session_serialize_one(),
-appending new FLB entries or incrementing the serialized file count in
-place. Since every serialized session now updates its FLBs as it is
-serialized, drop the separate luo_flb_serialize() pass from
-liveupdate_reboot().
-
-Because serialized sessions never unpreserve their files, FLB
-serialization is one-way: once an FLB is serialized, its .unpreserve()
-callback will not run and its root handle from .preserve() remains
-fixed for the rest of the boot.
+Add a luo_session_freeze() helper and unit tests in liveupdate.c for
+LIVEUPDATE_SESSION_FREEZE. Verify negative cases (unsupported flags,
+double freeze, and preserving files after freeze), that closing a
+frozen uncommitted session unfreezes and returns resources, and that
+closing a committed session retains LUO ownership of the session and
+its preserved files.
 
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- kernel/liveupdate/luo_core.c     |  10 +--
- kernel/liveupdate/luo_file.c     |  15 +++++
- kernel/liveupdate/luo_flb.c      | 102 ++++++++++++++++++++-----------
- kernel/liveupdate/luo_internal.h |   3 +-
- kernel/liveupdate/luo_session.c  |   2 +
- 5 files changed, 85 insertions(+), 47 deletions(-)
+ .../liveupdate/lib/include/libliveupdate.h    |   1 +
+ .../selftests/liveupdate/lib/lu_utils.c       |  13 +++
+ .../testing/selftests/liveupdate/liveupdate.c | 107 ++++++++++++++++++
+ 3 files changed, 121 insertions(+)
 
-diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
-index 1b2bda22902d..9fef5161a1f3 100644
---- a/kernel/liveupdate/luo_core.c
-+++ b/kernel/liveupdate/luo_core.c
-@@ -219,18 +219,10 @@ late_initcall(luo_late_startup);
-  */
- int liveupdate_reboot(void)
- {
--	int err;
--
- 	if (!liveupdate_enabled())
- 		return 0;
+diff --git a/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h b/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
+index fa07fed08364..34657d6eb67b 100644
+--- a/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
++++ b/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
+@@ -26,6 +26,7 @@ int luo_create_session(int luo_fd, const char *name);
+ int luo_retrieve_session(int luo_fd, const char *name);
+ int luo_session_finish(int session_fd);
+ int luo_get_session_name(int session_fd, char *name, size_t name_len);
++int luo_session_freeze(int session_fd, __u32 flags);
  
--	err = luo_session_serialize();
--	if (err)
--		return err;
--
--	luo_flb_serialize();
--
--	return 0;
-+	return luo_session_serialize();
+ int luo_ensure_nofile_limit(long min_limit);
+ int luo_session_preserve_fd(int session_fd, int fd, __u64 token);
+diff --git a/tools/testing/selftests/liveupdate/lib/lu_utils.c b/tools/testing/selftests/liveupdate/lib/lu_utils.c
+index 74d41115c281..51384374305d 100644
+--- a/tools/testing/selftests/liveupdate/lib/lu_utils.c
++++ b/tools/testing/selftests/liveupdate/lib/lu_utils.c
+@@ -198,6 +198,19 @@ int luo_session_finish(int session_fd)
+ 	return 0;
  }
  
- /**
-diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
-index 988eb313a135..cdd3c466e5ac 100644
---- a/kernel/liveupdate/luo_file.c
-+++ b/kernel/liveupdate/luo_file.c
-@@ -380,6 +380,21 @@ void luo_file_unpreserve_files(struct luo_file_set *file_set)
- 	kho_block_set_destroy(&file_set->block_set);
- }
- 
-+/**
-+ * luo_file_serialize_flbs - Serialize FLBs for all preserved files in a file_set.
-+ * @file_set: The file_set being serialized.
-+ *
-+ * Iterates through all preserved files in @file_set and serializes their
-+ * associated FLB metadata into the outgoing KHO FLB array.
-+ */
-+void luo_file_serialize_flbs(struct luo_file_set *file_set)
++int luo_session_freeze(int session_fd, __u32 flags)
 +{
-+	struct luo_file *luo_file;
++	struct liveupdate_session_freeze arg = {
++		.size = sizeof(arg),
++		.flags = flags,
++	};
 +
-+	list_for_each_entry(luo_file, &file_set->files_list, list)
-+		luo_flb_file_serialize(luo_file->fh);
++	if (ioctl(session_fd, LIVEUPDATE_SESSION_FREEZE, &arg) < 0)
++		return -errno;
++
++	return 0;
 +}
 +
- static int luo_file_freeze_one(struct luo_file_set *file_set,
- 			       struct luo_file *luo_file)
+ void create_state_file(int luo_fd, const char *session_name, int token,
+ 		       int next_stage)
  {
-diff --git a/kernel/liveupdate/luo_flb.c b/kernel/liveupdate/luo_flb.c
-index cd715a7c1d99..4ac534171d42 100644
---- a/kernel/liveupdate/luo_flb.c
-+++ b/kernel/liveupdate/luo_flb.c
-@@ -34,6 +34,12 @@
-  * This reference-counted approach ensures that shared state is saved exactly
-  * once and restored exactly once, regardless of how many files depend on it,
-  * and that its lifecycle is correctly managed across the kexec transition.
-+ *
-+ * Serialization: Outgoing FLB metadata is serialized into the KHO FLB array
-+ * incrementally as sessions are serialized. Once serialized, the FLB's
-+ * .unpreserve() callback is never invoked and its root KHO handle from
-+ * .preserve() remains fixed, while later sessions may still update per-FD
-+ * state in the shared live object under the FLB handler's own locking.
-  */
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-@@ -72,6 +78,13 @@ static struct luo_flb_global luo_flb_global = {
- 	.list = LIST_HEAD_INIT(luo_flb_global.list),
- };
+diff --git a/tools/testing/selftests/liveupdate/liveupdate.c b/tools/testing/selftests/liveupdate/liveupdate.c
+index 2dedd5fc2534..4b0c0fb1be87 100644
+--- a/tools/testing/selftests/liveupdate/liveupdate.c
++++ b/tools/testing/selftests/liveupdate/liveupdate.c
+@@ -530,4 +530,111 @@ TEST_F(liveupdate_device, preserve_many_files)
+ 	ASSERT_EQ(close(session_fd), 0);
+ }
  
 +/*
-+ * Serializes updates to luo_flb_global.outgoing.header_ser and .ser[].
-+ * Lock hierarchy:
-+ *   luo_register_rwlock -> private->outgoing.lock -> luo_flb_ser_lock
++ * Test Case: Session Freeze
++ *
++ * Verifies LIVEUPDATE_SESSION_FREEZE with flags == 0: unsupported flags return
++ * -EOPNOTSUPP, repeated freeze and post-freeze preserve return -EBUSY, and
++ * closing the session FD unfreezes the session and returns all resources.
 + */
-+static DEFINE_MUTEX(luo_flb_ser_lock);
-+
- /*
-  * struct luo_flb_link - Links an FLB definition to a file handler's internal
-  * list of dependencies.
-@@ -104,6 +117,32 @@ static struct luo_flb_private *luo_flb_get_private(struct liveupdate_flb *flb)
- 	return private;
- }
- 
-+static void luo_flb_serialize_one(const struct liveupdate_flb *flb, u64 data)
++TEST_F(liveupdate_device, session_freeze)
 +{
-+	struct luo_flb_header *fh = &luo_flb_global.outgoing;
-+	u64 nr;
++	int session_fd, mem_fd1, mem_fd2;
 +
-+	guard(mutex)(&luo_flb_ser_lock);
-+	if (!fh->active)
-+		return;
++	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
++	if (self->fd1 < 0 && errno == ENOENT)
++		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
++	ASSERT_GE(self->fd1, 0);
 +
-+	nr = fh->header_ser->count;
-+	for (u64 i = 0; i < nr; i++) {
-+		if (!strcmp(fh->ser[i].name, flb->compatible)) {
-+			fh->ser[i].count++;
-+			return;
-+		}
-+	}
++	session_fd = luo_create_session(self->fd1, "session-freeze");
++	ASSERT_GE(session_fd, 0);
 +
-+	if (WARN_ON_ONCE(nr >= LUO_FLB_MAX))
-+		return;
++	mem_fd1 = memfd_create("freeze-memfd-1", 0);
++	ASSERT_GE(mem_fd1, 0);
++	ASSERT_EQ(luo_session_preserve_fd(session_fd, mem_fd1, 0x1111), 0);
 +
-+	strscpy(fh->ser[nr].name, flb->compatible, sizeof(fh->ser[nr].name));
-+	fh->ser[nr].data = data;
-+	fh->ser[nr].count = 1;
-+	fh->header_ser->count = nr + 1;
++	/* Unsupported flag bits must fail with -EOPNOTSUPP */
++	EXPECT_EQ(luo_session_freeze(session_fd, 1U << 1), -EOPNOTSUPP);
++
++	/* Freeze the session */
++	ASSERT_EQ(luo_session_freeze(session_fd, 0), 0);
++
++	/* Subsequent freeze attempts must fail with -EBUSY */
++	EXPECT_EQ(luo_session_freeze(session_fd, 0), -EBUSY);
++	EXPECT_EQ(luo_session_freeze(session_fd,
++				     LIVEUPDATE_SESSION_FREEZE_COMMIT),
++		  -EBUSY);
++
++	/* Preserving a file after freeze must fail with -EBUSY */
++	mem_fd2 = memfd_create("freeze-memfd-2", 0);
++	ASSERT_GE(mem_fd2, 0);
++	EXPECT_EQ(luo_session_preserve_fd(session_fd, mem_fd2, 0x2222), -EBUSY);
++
++	/* Closing the session FD must unfreeze and unpreserve resources */
++	ASSERT_EQ(close(session_fd), 0);
++
++	session_fd = luo_create_session(self->fd1, "session-freeze");
++	ASSERT_GE(session_fd, 0);
++	ASSERT_EQ(luo_session_preserve_fd(session_fd, mem_fd1, 0x1111), 0);
++
++	ASSERT_EQ(close(session_fd), 0);
++	ASSERT_EQ(close(mem_fd1), 0);
++	ASSERT_EQ(close(mem_fd2), 0);
 +}
 +
- static int luo_flb_file_preserve_one(struct liveupdate_flb *flb)
- {
- 	struct luo_flb_private *private = luo_flb_get_private(flb);
-@@ -296,6 +335,32 @@ void luo_flb_file_unpreserve(struct liveupdate_file_handler *fh)
- 		liveupdate_flb_put_outgoing(iter->flb);
- }
- 
-+/**
-+ * luo_flb_file_serialize - Serialize FLB metadata for a preserved file's handler.
-+ * @fh: The file handler of the preserved file being serialized.
++/*
++ * Test Case: Session Freeze and Commit
 + *
-+ * Adds each FLB associated with @fh to the outgoing KHO FLB array on first
-+ * use, or increments its serialized file reference count by one.
-+ *
-+ * Context: Called when a session containing preserved files is serialized.
++ * Verifies LIVEUPDATE_SESSION_FREEZE with LIVEUPDATE_SESSION_FREEZE_COMMIT:
++ * once committed, the frozen session is serialized into KHO and survives
++ * closing the session FD with ownership retained by LUO until reboot.
 + */
-+void luo_flb_file_serialize(struct liveupdate_file_handler *fh)
++TEST_F(liveupdate_device, session_freeze_commit)
 +{
-+	struct list_head *flb_list = &ACCESS_PRIVATE(fh, flb_list);
-+	struct luo_flb_link *iter;
++	char name[LIVEUPDATE_SESSION_NAME_LENGTH];
++	int session_fd, session_fd2, mem_fd1, mem_fd2;
 +
-+	guard(rwsem_read)(&luo_register_rwlock);
-+	list_for_each_entry(iter, flb_list, list) {
-+		struct luo_flb_private *private = luo_flb_get_private(iter->flb);
++	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
++	if (self->fd1 < 0 && errno == ENOENT)
++		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
++	ASSERT_GE(self->fd1, 0);
 +
-+		scoped_guard(mutex, &private->outgoing.lock) {
-+			if (WARN_ON_ONCE(!refcount_read(&private->outgoing.count)))
-+				continue;
-+			luo_flb_serialize_one(iter->flb, private->outgoing.data);
-+		}
-+	}
++	snprintf(name, sizeof(name), "freeze-commit-%d", getpid());
++	session_fd = luo_create_session(self->fd1, name);
++	ASSERT_GE(session_fd, 0);
++
++	mem_fd1 = memfd_create("freeze-commit-memfd-1", 0);
++	ASSERT_GE(mem_fd1, 0);
++	ASSERT_EQ(luo_session_preserve_fd(session_fd, mem_fd1, 0x1111), 0);
++
++	/* Freeze and commit the session */
++	ASSERT_EQ(luo_session_freeze(session_fd,
++				     LIVEUPDATE_SESSION_FREEZE_COMMIT), 0);
++
++	/* Subsequent freeze attempts must fail with -EBUSY */
++	EXPECT_EQ(luo_session_freeze(session_fd, 0), -EBUSY);
++	EXPECT_EQ(luo_session_freeze(session_fd,
++				     LIVEUPDATE_SESSION_FREEZE_COMMIT),
++		  -EBUSY);
++
++	/* Preserving a file after freeze must fail with -EBUSY */
++	mem_fd2 = memfd_create("freeze-commit-memfd-2", 0);
++	ASSERT_GE(mem_fd2, 0);
++	EXPECT_EQ(luo_session_preserve_fd(session_fd, mem_fd2, 0x2222), -EBUSY);
++
++	/* Closing the session FD must retain LUO ownership of session & files */
++	ASSERT_EQ(close(session_fd), 0);
++
++	EXPECT_EQ(luo_create_session(self->fd1, name), -EEXIST);
++
++	session_fd2 = luo_create_session(self->fd1, "freeze-commit-check");
++	ASSERT_GE(session_fd2, 0);
++	EXPECT_EQ(luo_session_preserve_fd(session_fd2, mem_fd1, 0x3333),
++		  -EBUSY);
++
++	ASSERT_EQ(close(session_fd2), 0);
++	ASSERT_EQ(close(mem_fd1), 0);
++	ASSERT_EQ(close(mem_fd2), 0);
 +}
 +
- /**
-  * luo_flb_file_finish - Notifies FLBs that a dependent file has been finished.
-  * @fh: The file handler for the finished file.
-@@ -587,40 +652,3 @@ void __init luo_flb_setup_incoming(u64 flbs_pa)
- 	luo_flb_global.incoming.ser = (void *)(header_ser + 1);
- 	luo_flb_global.incoming.active = true;
- }
--
--/**
-- * luo_flb_serialize - Serializes all active FLB objects for KHO.
-- *
-- * This function is called from the reboot path. It iterates through all
-- * registered File-Lifecycle-Bound (FLB) objects. For each FLB that has been
-- * preserved (i.e., its reference count is greater than zero), it writes its
-- * metadata into the memory region designated for Kexec Handover.
-- *
-- * The serialized data includes the FLB's compatibility string, its opaque
-- * data handle, and the final reference count. This allows the new kernel to
-- * find the appropriate handler and reconstruct the FLB's state.
-- *
-- * Context: Called from liveupdate_reboot() just before kho_finalize().
-- */
--void luo_flb_serialize(void)
--{
--	struct luo_flb_header *fh = &luo_flb_global.outgoing;
--	struct liveupdate_flb *gflb;
--	int i = 0;
--
--	guard(rwsem_read)(&luo_register_rwlock);
--	list_private_for_each_entry(gflb, &luo_flb_global.list, private.list) {
--		struct luo_flb_private *private = luo_flb_get_private(gflb);
--		long count = refcount_read(&private->outgoing.count);
--
--		if (count > 0) {
--			strscpy(fh->ser[i].name, gflb->compatible,
--				sizeof(fh->ser[i].name));
--			fh->ser[i].data = private->outgoing.data;
--			fh->ser[i].count = count;
--			i++;
--		}
--	}
--
--	fh->header_ser->count = i;
--}
-diff --git a/kernel/liveupdate/luo_internal.h b/kernel/liveupdate/luo_internal.h
-index 77dac2742877..3d948279f018 100644
---- a/kernel/liveupdate/luo_internal.h
-+++ b/kernel/liveupdate/luo_internal.h
-@@ -106,6 +106,7 @@ int luo_session_deserialize(void);
- 
- int luo_preserve_file(struct luo_file_set *file_set, u64 token, int fd);
- void luo_file_unpreserve_files(struct luo_file_set *file_set);
-+void luo_file_serialize_flbs(struct luo_file_set *file_set);
- int luo_file_freeze(struct luo_file_set *file_set);
- void luo_file_unfreeze(struct luo_file_set *file_set);
- int luo_retrieve_file(struct luo_file_set *file_set, u64 token,
-@@ -118,11 +119,11 @@ void luo_file_set_destroy(struct luo_file_set *file_set);
- 
- int luo_flb_file_preserve(struct liveupdate_file_handler *fh);
- void luo_flb_file_unpreserve(struct liveupdate_file_handler *fh);
-+void luo_flb_file_serialize(struct liveupdate_file_handler *fh);
- void luo_flb_file_finish(struct liveupdate_file_handler *fh);
- void luo_flb_unregister_all(struct liveupdate_file_handler *fh);
- int __init luo_flb_setup_outgoing(u64 *flbs_pa);
- void __init luo_flb_setup_incoming(u64 flbs_pa);
--void luo_flb_serialize(void);
- 
- #ifdef CONFIG_LIVEUPDATE_TEST
- void liveupdate_test_register(struct liveupdate_file_handler *fh);
-diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
-index 56d7f76c0282..013386534b69 100644
---- a/kernel/liveupdate/luo_session.c
-+++ b/kernel/liveupdate/luo_session.c
-@@ -222,6 +222,8 @@ static void luo_session_serialize_one(struct luo_session *session)
- 	if (WARN_ON_ONCE(!ser))
- 		return;
- 
-+	luo_file_serialize_flbs(&session->file_set);
-+
- 	strscpy(ser->name, session->name, sizeof(ser->name));
- 	ser->file_set_ser.count = session->file_set.count;
- 	ser->file_set_ser.files =
+ TEST_HARNESS_MAIN
 -- 
 2.56.1.708.g77570a6a1d-goog
 
