@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6CA606A325
-	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 21:36:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1E1606A333
+	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 21:37:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=aYYbkMgu;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oTvG7bDa
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=wGMRzKgc;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UFkJOEKN
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,47 +14,46 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	:Message-ID:Cc:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=2NZpyB9t623uL5dQnZ6f8f6YXap/qWRuUhL4dHrhvis=; b=aYYbkMguFWvVUQi51IsM9+GtG8
-	+TV7p7tt1wZxc/Bu/iyQCsMas3ME5te2AuVM8RmpwW1weAsSHYTe24jkwmqP5UbHLSVP9Te52JK8C
-	sPitplmbY7aZ05A2nEMvKLLULWG9Y04+v58+ROqpeeUV4Jqj74dc0o/FTkitOde6nnLM8SJM4PU+5
-	gcJ5h7c2ke/18LMk6FViGjDhImac6G48vxPXgOR4oBfs/Nx1i4KCQBiG1G6D7KQ0ouI7aEie09Pm+
-	JsvHfTY2jIC/2zOs6s0Xb9b2jeHK237WqgtMY6+qXMJFS719pD0UBOb+2yOVIF0Lh4LQ1DiqisfpP
-	ZJEz1X0A==;
+	bh=7iyiA15Lra8dC3NIy8IcJ9TxehM68cQQGrV3SSR991c=; b=wGMRzKgcrCmuGesNPqqEZZAyXl
+	ISaVq4cwFU1ZESJrEPW3yYr6IRK1GzICzwjffqFnzQwRpKzNW7IjTiY5WUCY77cXVRxVPDZL6XnP4
+	F3FZBI8tAjh6DattMzZo2WipzSYngXhs2t412oSXVravTUGP7LZWsl+cEg9NSkT+MHOm2+SZfHKBc
+	cktqMsqA9NN352nSt03/Pg6q9Rp8k10rzos/N5N+E9c2REN1l8nhSUYzyDzlGmWZxgTMEgWEqJHY3
+	1FpNPO99lmnUz8LVwiX6EhCh7xOFxObe0P8W8oQ66SVKIhlMsyFa9V6pivh6d2Xbf9df8q9mcm3yv
+	N8PAdxBA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTnKE-0000000AKuY-2rag;
-	Wed, 18 Nov 2026 21:36:18 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xTnLm-0000000AL8q-4Bna;
+	Wed, 18 Nov 2026 21:37:55 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTnKD-0000000AKu9-1XXd
+	id 1xTnLl-0000000AL8j-0xtP
 	for kexec@lists.infradead.org;
-	Wed, 18 Nov 2026 21:36:17 +0000
+	Wed, 18 Nov 2026 21:37:53 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 7472D63E9F;
-	Wed, 18 Nov 2026 21:36:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A814A1F000C4;
-	Wed, 18 Nov 2026 21:36:15 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 9DAC263EBE;
+	Wed, 18 Nov 2026 21:37:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C61001F000C5;
+	Wed, 18 Nov 2026 21:37:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795037776;
-	bh=2NZpyB9t623uL5dQnZ6f8f6YXap/qWRuUhL4dHrhvis=;
+	s=k20260515; t=1795037872;
+	bh=7iyiA15Lra8dC3NIy8IcJ9TxehM68cQQGrV3SSR991c=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=oTvG7bDarH80o08w0pjmEq8w7w/7bqdlpOmB9OretpMHfktc3RxX6YGYOBV2xkvNA
-	 QP6mqlwCEiU2CVWjMxEwO4jW6F8uNS9muGJqyRfSFxk75aSVFx27bAszOVGs+YSjxN
-	 J6tlfaHdfMNX6OT6W6l69wgLTPiCRBUyKVl1vEJIE/8tyr3cqAHOAil+0/404FdGnp
-	 /GGFWM1wGhejw5gFAaBJJDmlQiQsha5Y6jCCGlJ62E9h/9+OUUFx5FL3Kp0Pj/LZba
-	 g1ujTOqyqES5IBZXLKzCAJxkj9Sy2I0g5f/uIjEwfWeNP4+F6xsmOQZgq93gC3VyNx
-	 X00P7znVRAWTA==
-Message-ID: <sashiko-outbox-222013@kernel.org>
+	b=UFkJOEKNtIYX73ey5FuzHL1TdNs4vezV+jgA9s/oktY+TDDqReGHmPsf0q6RbuVa2
+	 4yfmhDVRMWNhda7ZInZpk06gGo0LYWl7UWXJGB+1OhUZLkKJDen0nEqPRi3tjL3z3g
+	 E1OfroCTLRZjW4opJvW/CBBg4pIXi1NDMlXKpLI0KzpTT+PIMectL2TDa/gaRE6B2i
+	 Ngr49l+sAjqe3/hC4itDy7E+OMEbTNLjGXaMLzM/TJtgXkRHz5hMlUhQvH2zdc2uSp
+	 eK+AHLkB6u3WJmEfArnADUbzPYcoRap2uFdfNwL3j3hd4sPqBM5cDPN9eRzNWqZrnF
+	 xzFIdUlFi6hPQ==
+Message-ID: <sashiko-outbox-222015@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 5/7] liveupdate: Add LIVEUPDATE_SESSION_FREEZE ioctl
- to freeze sessions early
+Subject: Re: [PATCH v6 2/7] kho: link outgoing blocks lazily in kho_block
 To: "Pasha Tatashin" <pasha.tatashin@soleen.com>, rppt@kernel.org, shuah@kernel.org, skhan@linuxfoundation.org, vipinsh@google.com, corbet@lwn.net, dmatlack@google.com, kexec@lists.infradead.org, pratyush@kernel.org, rdunlap@infradead.org, graf@amazon.com
-In-Reply-To: <20261118212845.2855249-6-pasha.tatashin@soleen.com>
+In-Reply-To: <20261118212845.2855249-3-pasha.tatashin@soleen.com>
 References: <20261118212845.2855249-1-pasha.tatashin@soleen.com>
- <20261118212845.2855249-6-pasha.tatashin@soleen.com>
+ <20261118212845.2855249-3-pasha.tatashin@soleen.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 18 Nov 2026 21:36:15 +0000
+Date: Wed, 18 Nov 2026 21:37:51 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,25 +73,20 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Add the LIVEUPDATE_SESSION_FREEZE ioctl on outgoing session FDs. Once
-> frozen, no additional files can be preserved in the session and
-> repeated freeze calls return -EBUSY.
+> Currently, kho_block_add() links each preallocated block onto the
+> serialized chain immediately, even while it is still empty. This
+> assumes all preallocated blocks are populated together before the
+> chain is referenced by KHO.
 >=20
-> Currently, LUO freezes sessions only during reboot(LINUX_REBOOT_CMD_KEXEC=
-),
-> serially under global write locks. On hosts running multiple workloads
-> such as VMs, freezing sessions early under their per-session mutexes
-> lets workloads freeze in parallel as they pause ahead of kexec,
-> reducing blackout time.
+> When sessions are serialized incrementally ahead of reboot, extra
+> blocks may be preallocated for sessions that have not been serialized
+> yet. Keeping those blocks linked leaves empty trailing blocks on the
+> KHO chain.
 >=20
-> By default, session lifetime remains tied to the session FD: closing
-> the FD before reboot unfreezes and unpreserves the session, while
-> keeping it open skips late auto-freeze at kexec.
->=20
-> Add optional flag LIVEUPDATE_SESSION_FREEZE_COMMIT to serialize the
-> frozen session and its FLBs immediately and transfer ownership to LUO
-> until reboot. Committed sessions survive closing the session FD,
-> allowing processes to hand off preserved state and exit prior to kexec.
+> Keep preallocated outgoing blocks unlinked in kho_block_add() and link
+> each block lazily in kho_block_set_it_reserve_entry() when advancing
+> into it. Also unlink blocks in kho_block_set_clear() and stop at
+> unlinked blocks in kho_block_set_it_read_entry().
 >=20
 > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 
@@ -100,6 +94,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118212845.2855=
-249-1-pasha.tatashin@soleen.com?part=3D5
+249-1-pasha.tatashin@soleen.com?part=3D2
 
 
