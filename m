@@ -2,98 +2,122 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E00F60A3834
-	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 23:03:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A78606A334
+	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 23:18:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=elzJzDjO;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=GWTc4g5k;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=+hgwRrve
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=4lsvok0+;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=qHP3oCgQ
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Unsubscribe-Post:List-Owner;
-	bh=leI1FFs3wJSFLMy2XFplwoNsj0EC2A+qYx8KybwPYGI=; b=elzJzDjOy59/HfD6l/DLHT19B2
-	ogw1BWI0lktFRL/a9yEYZWrUw2Hr8NdmCHiJif+ievycdF0hShLe7j2swrf3NnbHOy4tqd/N08dm0
-	KBqabTpWtvVXNK/Pwm5U5zvJDVTDpsvkRURUnYojRfvQw9A7g4HCV8MgAwbF6q7qWrw/+3PIAJ8P2
-	v+L9MwBIqJIDkjtvCaqG8MOmgFlKsazJfGMpnHEeC30GpnVpRLCay0ys3Rdpmt2PK1e1Tv5R+hkSA
-	oY4Ytm3EqOdeIC2YN3bI97RHm5So3ar1uXp0arbtjgbgYf315KT61dGnC/Tf9Dq25wzNef99M8NO4
-	wCxwi+WA==;
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=JPC1RAeyqbYuGOqMmGUi58uvgG+tJSEuOdphvL+a1Uw=; b=4lsvok0+knPMVi
+	hiHc98l65QpUzIOg++N6NMJ05VlBb6sJMRss4F35Ifc8kVOS5UT9YzUivp+oP5boO1syG5jp9tCjb
+	sW9lM+sYMf0JWvJfqyd7QVOongBULRbBiR+x1j1iSLuA+vsp31v9rVCoGPpUJufPUZ1DUl0wQZxLH
+	Q38eLRJxb/6Dnu/2CbOooX/0AW/VNUhw+anIf7mO1UaEGTJsO6MHWhWOuUbsTyeq02OPRen15SrUw
+	QFzOQa1IpBQvE59sl0vwIxerjWyvQVxZBbofqwd57CVkKG98h3kwKTXtexuuV+vybX9F8IT0qcp9d
+	Q3VOV7IPGKTHL1E5cz2g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xToh0-0000000AS3A-2tKJ;
-	Wed, 18 Nov 2026 23:03:54 +0000
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+	id 1xToun-0000000ATCL-48u2;
+	Wed, 18 Nov 2026 23:18:09 +0000
+Received: from mail-ej1-x636.google.com ([2a00:1450:4864:20::636])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTogx-0000000AS2U-1ccT
+	id 1xTouk-0000000ATB8-2qn8
 	for kexec@lists.infradead.org;
-	Wed, 18 Nov 2026 23:03:53 +0000
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1795043026;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=leI1FFs3wJSFLMy2XFplwoNsj0EC2A+qYx8KybwPYGI=;
-	b=GWTc4g5krJCo/IU3KT4WlFaHCvB8m9M/xw8MeC2cfC1s0cjtUbe5NG8yILU83QC6s3imyx
-	/8HCRV9PridoX7WomHLKgFCtV1ZhW5SqYGViN7lYoeOMNFVZQHT92dgzxDbex6gtpTgG4a
-	nyObo8wXZsFCBM9Bz0kH7PIW0f1W2bstVPEuznhefzIIViRWPsaffS0ph4Bpppb7Htrg1C
-	v/qIrjOKuWGvYqaODtam8QY5oilpxz7PJo93yQSajnFeVtnA9yce5gG9NZS8Za1ZwiB39o
-	QCHIumEOh3jg9FvOPWOihVHGNY97xfWeuWe8/jk5+x3Gkee5XUk75Ouu7o8G1A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1795043026;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=leI1FFs3wJSFLMy2XFplwoNsj0EC2A+qYx8KybwPYGI=;
-	b=+hgwRrveBfg7slz3C4Vs75suxSJVdS1shAjY/DRaX0xP4hfUqwuXZ3KAMpp7efAl3obEwA
-	aK+OVSrV3WC8w2AQ==
-To: Petr Mladek <pmladek@suse.com>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Breno Leitao <leitao@debian.org>,
-	printk@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Rio <rioo.tsukatsukii@gmail.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Aaron Tomlin <atomlin@atomlin.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Alessandro Carminati <acarmina@redhat.com>,
-	Pnina Feder <pnina.feder@mobileye.com>,
-	Gal Pressman <gal@nvidia.com>,
-	Baoquan He <baoquan.he@linux.dev>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Dave Young <ruirui.yang@linux.dev>,
-	Bradley Morgan <include@grrlz.net>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	"Cen Zhang (Microsoft)" <blbllhy@gmail.com>,
-	kexec@lists.infradead.org,
-	Gustavo Luiz Duarte <gustavold@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org
-Subject: [PATCH printk v3 0/7] Introduce policies for unsafe flushing
-Date: Thu, 19 Nov 2026 00:09:36 +0106
-Message-ID: <20261118230345.808560-1-john.ogness@linutronix.de>
+	Wed, 18 Nov 2026 23:18:08 +0000
+Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-c4d5b2db4bbso90816766b.0
+        for <kexec@lists.infradead.org>; Wed, 18 Nov 2026 15:18:05 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795043884; cv=none;
+        d=google.com; s=arc-20260327;
+        b=IE1MK0QEujDxMPv5OwlwwtL6ORPKcuNEST93wrAraFQ5sQnzojyP7HYU7YaG2XfNyD
+         izu6VgFVTpUrPyH/wOIL9KR8McfEsGLnVLZ+mtbhgmblHRmfj7dehtLINMnTBlGV/YNC
+         M/m/Ui46SpUxercVHP22jVEw6CvQmeAgkYbbU0oNCs9p5rkJ9yUu8JUQ5TDNLHwbJ9BN
+         dSH+B7tIkthxFS2/FjY2hkLdOuDIsEU+6bZMHSE66b78AyiSEHj8Zxbdx1V4lRz8OE+T
+         eNVLgQISSfxfGDYHm01rPALS8DSr4TFz59r0XOBa3a3UCeXXdj/nHJs+gYKDDCRMQ42j
+         M7bA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=JPC1RAeyqbYuGOqMmGUi58uvgG+tJSEuOdphvL+a1Uw=;
+        fh=8Kj42eixH0KsdmyjSGX14cGPxA+m/Z8m7pLr6RiuaTE=;
+        b=HTVLzeZ3jeLSuUK5VJxefu2IQRtEEw2G3AGIfnFBfROS+jASdaHyCr8Oc9mSPtdcMD
+         iNXD15CL5Hb8VYgSH4K/Ybmpuk4FewnH8Ll7O1iuv7UyYMjQ5FwNCMqQcC4MO6NtHt+/
+         91vzuJjBCnv1PTGjoeTjrf8uid1xlXhKm4OipakWv4pGxIBrG+pXz9W88PlpAmLqXeCn
+         Kfjn/I2LKj66KXmV/trfv39QZyUyV+WQG1TpPiIwDvp/msqwhzm08dHfuslBATx8Y9SH
+         DLcc/gy5JqodS357cv26EnBvdiKvab9ygyS9js8Bt7/+Rp2QyjOoi0W8NAKD9xtroIer
+         Hlrw==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1795043884; x=1795648684; darn=lists.infradead.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=JPC1RAeyqbYuGOqMmGUi58uvgG+tJSEuOdphvL+a1Uw=;
+        b=qHP3oCgQ9YPpmS3JXl1SfdYFudRJrQvWFDzeZgp8nxb7ST7Md4dA4hArnarJls2Lnf
+         IxOVGGg7BNI6wQTa4+AZpGhqL1IMrKZLtO6+45Q/GeqWykGLJNu4sWppcWRckgNxmQWf
+         K1p414chxjiK7QI6jCNR3cDmW6KULcO3cwQDmtDatplF+33dU0j1HfEzN3IW97atscnU
+         ntjSX36uw5HRdnBGSGE3YQ2kG7b20b4MWLN3yF8m9rpRk9iJVUkyWcDjWSX4KXcwyWlV
+         jMOj84cx5rPEAbk0VXByI0+mawBSbatE80fPgEI7eZU/f1batfcahf2NijOeFWTnLspR
+         E9rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795043884; x=1795648684;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=JPC1RAeyqbYuGOqMmGUi58uvgG+tJSEuOdphvL+a1Uw=;
+        b=0t+oznYJMDTDjtVJdJXYGqj1mYwOdQZgoNuANa5NieZdUqDdyUGIq5ydR/XITQM85y
+         bYYg8xTdxRHGyN067BM4qGm+RrNOOMaUzpLbbks+Pegrea53nx0eDMeZoJP7oFxjdEWc
+         xT2u3FcFmLRS4Q7qhXP06NiLdB4r57dG60FbrFwEEq6xNT2TwBy7iZ90rJJQYhU9CrCs
+         MXY/YdINvkqnK5OT6qizOyxY9uYHNkW8Z7s11rI7Mgk1tK+7Ic+QwQOy33KAzM/srRBT
+         wVBBA5mZ7VrRe/ASRBBRplw4GUQojm4O54Act2MZmTbPYdca7Bj1LSQXPh9k8R+LqVwl
+         jvMA==
+X-Forwarded-Encrypted: i=1; AL+hErEwKLzfblEG5hR91RB3JibckZtvP4EOh/kzEkNLtiil3+CSlth6gz6TF1ABuDsgCJZn8uTpcA==@lists.infradead.org
+X-Gm-Message-State: APuU4Z/EefhcuGkCQFCmMOBbjGMavFDwn01bxM4Nl4K8mgT6MrFFaREI
+	/ZgND0F5WgW3ZxxbKEva3MFuruZfzzQ05nOPGt2twgDqiVSOWO28p0aI2nPnAfw3/u1JbjBwD4t
+	HXViVEXA/1Ov18BkcFeP68faZXgWqsQgsTGOgO9lF
+X-Gm-Gg: AYBFou2HeTfFCMz/v1Xt2IKB3kyqbvE7TjH8t7Jf5m61Rv2kaWx0itaYtED0XFg4Wei
+	M+WmJq4t5pGkPYxk1hs+CJlsKsUFN8g4/KhNtvoyIMHwTZ0+M+XGtsw7BjNUU+PwcQOwqQ/EUH0
+	p203i5WCFqzMdPP/47b1pRfMaBygvFPOlBKJkyYaCaF6G4xFWgOdwM0eaJ9w0dtrRk4f9L117J7
+	K72zIoOHSCJGGDXRfsZdTxJrW4Oa3QZrryZk/0nc5mD5cj1zu+LovRTtPYusDyxrto+CwDt4Eue
+	se+9Uc5J6uk+Evqnc73mYinEfIxPhxdA5loSEk3dDrzaDeE0aQfr+H+dDY6CRLS0vb+O62rpwLQ
+	9XT/sW+jvzL+LzSXHCslZPn/tSSsakXANfaN2GA==
+X-Received: by 2002:a17:906:f58f:b0:c51:2e3:f426 with SMTP id
+ a640c23a62f3a-c512b79e2demr9058066b.18.1795043883126; Wed, 18 Nov 2026
+ 15:18:03 -0800 (PST)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20261013162529.1928093-1-dmatlack@google.com> <autxCZPJ9yiE2ucq@google.com>
+ <aut0H65XKAHUqPR9@google.com> <CALzav=dp8HvdK=9cAkGfbsJAeckyU3_y7rCRM22R7+AmTTtxMQ@mail.gmail.com>
+In-Reply-To: <CALzav=dp8HvdK=9cAkGfbsJAeckyU3_y7rCRM22R7+AmTTtxMQ@mail.gmail.com>
+From: David Matlack <dmatlack@google.com>
+Date: Wed, 18 Nov 2026 15:17:35 -0800
+X-Gm-Features: AclHuK_BmYZZLmsTICieOxQ9QtDw0U6EdYtEs__fOCufTHy2p7TcHAXRToh2pGA
+Message-ID: <CALzav=cj3GuYU3wmW5GPSy8Rp+4xYjm3vonDBdi8TTyWSgxPCw@mail.gmail.com>
+Subject: Re: [PATCH v10 00/13] PCI: liveupdate: PCI core support for Live Update
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, kexec@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-pci@vger.kernel.org, Adithya Jayachandran <ajayachandra@nvidia.com>, 
+	Alexander Graf <graf@amazon.com>, Alex Williamson <alex@shazbot.org>, Chris Li <chrisl@kernel.org>, 
+	David Rientjes <rientjes@google.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, 
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>, 
+	Parav Pandit <parav@nvidia.com>, Pranjal Shrivastava <praan@google.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Vipin Sharma <vipinsh@google.com>, 
+	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261118_150351_796532_871B11C5 
-X-CRM114-Status: GOOD (  13.64  )
-X-Spam-Score: -3.9 (---)
+X-CRM114-CacheID: sfid-20261118_151806_758842_5D94B161 
+X-CRM114-Status: GOOD (  27.86  )
+X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,102 +128,84 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-10.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-v2 is here [0].
+On Mon, Nov 16, 2026 at 8:45=E2=80=AFAM David Matlack <dmatlack@google.com>=
+ wrote:
+>
+> On Wed, Nov 4, 2026 at 10:06=E2=80=AFAM David Matlack <dmatlack@google.co=
+m> wrote:
+> >
+> > On 2026-11-04 01:00 PM, Pasha Tatashin wrote:
+> > > On 10-13 16:25, David Matlack wrote:
+> > > > v10:
+> > > >  - Save and restore the ACS Egress Control Vector along with the AC=
+S
+> > > >    Control register, sizing the save buffer from the HwInit Egress
+> > > >    Control Vector Size field (Alex) and drop Bjorn's R-b tag
+> > > >  - Make CONFIG_PCI_LIVEUPDATE depend on 64BIT from the first patch
+> > > >    rather than adding the dependency later in the series (Pratyush,
+> > > >    Mike)
+> > > >  - Reword kernel-doc comments to read better in the HTML docs and
+> > > >    spell out "reference count" (Mike)
+> > > >  - Replace the version number at the start of struct pci_ser with
+> > > >    required_flags and optional_flags, and record the size of struct
+> > > >    pci_dev_ser, so that the PCI FLB ABI can be extended (LPC BoF)
+> > >
+> > > Hi Bjorn,
+> > >
+> > > I am planning to target this series for the 7.5 merge window through =
+the
+> > > liveupdate tree, as we previously agreed. However, there are still 6
+> > > patches that lack an Acked-by from you. I believe you might have
+> > > reviewed some of them before, but the tags were lost during subsequen=
+t
+> > > refactoring. Could you please take another look at the following to m=
+ake
+> > > sure everything is in order for us to merge the series:
+> > >
+> > > PCI: liveupdate: Set up FLB handler for the PCI core
+> > > PCI: liveupdate: Track incoming preserved PCI devices
+> > > PCI: liveupdate: Document driver binding responsibilities
+> > > PCI: liveupdate: Auto-preserve upstream bridges across Live Update
+> > > PCI: Save and restore the ACS Control register and Egress Control Vec=
+tor
+> > > PCI: liveupdate: Adopt ACS controls in incoming preserved devices
+> >
+> > Thanks Pasha. One more for Bjorn's list:
+> >
+> >   [06/13] PCI: liveupdate: Preserve bus numbers during Live Update
+> >           https://lore.kernel.org/linux-pci/20261013162529.1928093-7-dm=
+atlack@google.com/
+> >
+> > Bjorn's Reviewed-by on it was dropped in v9 when it changed materially
+> > (albeit based on his feedback).
+> >
+> > Alex, could you also take a look at the two ACS patches? 08 includes th=
+e
+> > Egress Control Vector save/restore you asked for in v9.
+> >
+> >   [08/13] PCI: Save and restore the ACS Control register and Egress Con=
+trol Vector
+> >           https://lore.kernel.org/linux-pci/20261013162529.1928093-9-dm=
+atlack@google.com/
+> >   [09/13] PCI: liveupdate: Adopt ACS controls in incoming preserved dev=
+ices
+> >           https://lore.kernel.org/linux-pci/20261013162529.1928093-10-d=
+matlack@google.com/
+>
+> Bjorn and Alex, these 2 patches still need your R-b or A-b tags, and
+> then this series will be all ready for 7.5.
 
-Until now unsafe flushing is only performed at the very end of
-panic(), before entering the infinite loop. For other situations
-(such as panic-kexec or panic-reboot or emergency-reboot) no
-unsafe flushing is performed. The reasoning for this is because
-an unsafe flush could lead to fireworks, which could prevent the
-kexec or reboot from occurring.
+Thanks for the reviews on v10, Alex. I've pushed v11 addressing your
+feedback. Patch 09 on v11 is now the last commit that needs a tag.
 
-However, some users may be willing to take on such risks in order
-to see panic output. Indeed, for the netconsole (which does not
-support safe atomic printing) it is a regression that such unsafe
-printing does not occur. [1] 
-
-This series adds unsafe flushing policy flags per-console to
-allow individual consoles to perform unsafe flushing for such
-scenarios. The unsafe flushing is hard-code-enabled for the
-netconsole in patch 7/7. The justification is that this is not
-less safe than the legacy netconsole.
-
-Later these policy flags could be easily exposed to userspace
-via /sys/class/consoles/, once the sysfs per-console interface
-is available.
-
-For this version I reduced the unsafe flush policies to the
-minimum required by the netconsole: panic+restart and
-emergency+restart. I also keep nbcon_atomic_flush_unsafe() and
-use only this function for specifying the flush reasons. This
-allows us to pinpoint where unsafe flushing is evaluated and,
-as a nice bonus, to avoid all the legacy madness.
-
-The first 4 patches have no functional changes. Hopefully they
-are each small enough that a review is relatively trivial. The
-functional changes (5-7) are also compact.
-
-Changes since v2:
-
-- Specify flush reason in nbcon_atomic_flush_unsafe() instead
-  of console_flush_on_panic() and printk_trigger_flush(). This
-  automatically avoids the need for any legacy handling.
-
-- Remove KDB, PRINTK, NOTHREAD unsafe flush policies. (Not
-  needed for now.)
-
-- Add EMERGENCY_RESTART unsafe flush policy to be used for
-  emergency_restart() when non-panic.
-
-- Rename console.unsafe_flush_flags to
-  console.allow_unsafe_policy.
-
-- Change console_is_usable() to _never_ report
-  CON_NBCON_ATOMIC_UNSAFE as usable.
-
-- Introduce nbcon_is_unsafe_usable() as a variant to
-  console_is_usable() to report CON_NBCON_ATOMIC_UNSAFE as
-  usable. The caller decides if unsafe printing should occur.
-  This is only used for nbcon+atomic flushing.
-
-- Perform unsafe flush policy check higher up in
-  __nbcon_atomic_flush_pending() instead of
-  __nbcon_atomic_flush_pending_con().
-
-John Ogness
-
-[0] https://lore.kernel.org/lkml/20261111181942.593695-1-john.ogness@linutronix.de
-[1] https://lore.kernel.org/lkml/20260915100140.3631650-1-ryan.roberts@arm.com
-
-John Ogness (7):
-  printk: Introduce and specify flush reasons
-  printk: nbcon: Move unsafe takeover check to higher level
-  printk: Move unsafe takeover check out of console_is_usable()
-  printk: Use @reason instead of global variable to check flush policy
-  console: Support unsafe flushing for panic/emergency restarts
-  printk: Add unsafe flush points for panic+kexec and emergency_restart
-  netconsole: Perform unsafe flushing on panic and emergency restart
-
- drivers/net/netconsole.c |  2 +
- include/linux/console.h  | 60 ++++++++++++++++++++------
- include/linux/printk.h   | 20 ++++++++-
- kernel/crash_core.c      |  1 +
- kernel/panic.c           |  2 +-
- kernel/printk/nbcon.c    | 91 +++++++++++++++++++++++++++-------------
- kernel/reboot.c          |  1 +
- 7 files changed, 131 insertions(+), 46 deletions(-)
-
-
-base-commit: ef19063ad84f8ed58ee44ebd49ba035fd5159e74
--- 
-2.47.3
-
+  https://lore.kernel.org/linux-pci/20261118223704.3286085-10-dmatlack@goog=
+le.com/
 
