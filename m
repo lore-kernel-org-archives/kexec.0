@@ -2,90 +2,61 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4A2606A31C
-	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 07:00:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD38D606A325
+	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 07:02:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=47zk1XkW;
-	dkim=pass (1024-bit key, unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=J7jSSrjT
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=yTnABqYw;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.a=rsa-sha256 header.s=korg header.b=onWjqs9i
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:CC:To:
-	Subject:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=P7MAWPsIyxJf7EbFe+B6P/kIKs4QOghNXNz4nngxpow=; b=47zk1XkW74nesu
-	dVhb9Xf+JXTfa1jrIbNqP9uZvSpoRkh/1mCLdLXH7sq74hu5sbWPmlcmJyNOCQv5fWnEN/8jL1hRZ
-	krETOD+YWGP7eHyakfqQDc10Ao4pC73bWK9L28qy83htGI25nedmFCLLsL49AB/QFqzsrvD5nDIYG
-	gYVaf2l6vEKfR4paao4l1soY9XQg3rTlkupEz7XCabqlUD5tXOB5MV5kGPOVY8Nr8bRum0+cS9vOj
-	A2jlwemdJN9kWmOxdvjOc2pYekFFQtIA4EKR8AQpPManui9V5jJxdZewlKvsZ5KG05hPxTgMxWrkj
-	cDzpmTs60CdNYHdPoENw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
+	Content-Transfer-Encoding:Content-Type:Mime-Version:References:In-Reply-To:
+	Message-Id:Subject:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=pC6bu7iSXyV8W9whBUiuoNGv5YhTizVhbT+HSAZuHzc=; b=yTnABqYwHgWk5tZuIAGz6XbuZT
+	hK4IMbpCmqiqZUGHy4dRoysqXTv4eLck1dMNfpOrMcHg+XlDxOhwAVCVyvLt02LPmpVpCnSv8rtLb
+	HCEhsVMq2AOr8Tb1JOQi4Asp3uoxAk9A4zQY153SaM5+evhsdjeYu9bloV53r1diFEBAXgaOE3K8q
+	u40PWmCCliS/QiYVF9WCBhBK9rDngebQLWyY1/q+MnGtNMzOq4IOg2anz7wQHbdhMO+moKgy+0fLe
+	SKmCx8B1kflGCCbSLaDwy104+wbBNXY7UxVqMgusbKK86PHiLVIQxjG6yzRObSl/E0ILknt7GBeja
+	G3EEJwCw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTZf4-00000007xLD-3msS;
-	Wed, 18 Nov 2026 07:00:54 +0000
-Received: from canpmsgout01.his.huawei.com ([113.46.200.216])
+	id 1xTZgE-00000007xdz-21mR;
+	Wed, 18 Nov 2026 07:02:06 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTZf1-00000007xJK-0AOs;
-	Wed, 18 Nov 2026 07:00:53 +0000
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=P7MAWPsIyxJf7EbFe+B6P/kIKs4QOghNXNz4nngxpow=;
-	b=J7jSSrjT45mE5pHwCz2jP6dil7Qtqxs30D1JSCVyUZxDpTWnLABaUARqY/hWeyFvY/IB9XGsp
-	P+tfgFIg8WIVjm1rA89skfheUdG6YkoeqBaYgCDEUNGssDh+oDpRHRydEVFk6/GpGQol0k0xnUJ
-	vFIRtHpdkDpniGa5blvowA4=
-Received: from mail.maildlp.com (unknown [172.19.162.140])
-	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4jTstD2f2Yz1T4KR;
-	Wed, 18 Nov 2026 15:00:04 +0800 (CST)
-Received: from whupemk100004.china.huawei.com (unknown [7.152.185.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id E0224203AB;
-	Wed, 18 Nov 2026 15:00:43 +0800 (CST)
-Received: from [10.173.125.21] (10.173.125.21) by
- whupemk100004.china.huawei.com (7.152.185.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45; Wed, 18 Nov 2026 15:00:40 +0800
-Subject: Re: [PATCH v6 5/7] drivers/base/memory: count the poison a block
- already holds when creating it
-To: Breno Leitao <leitao@debian.org>
-CC: <linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-cxl@vger.kernel.org>,
-	<driver-core@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
-	<rmikey@meta.com>, <riel@surriel.com>, <harry@kernel.org>,
-	<kernel-team@meta.com>, Ard Biesheuvel <ardb@kernel.org>, Ilias Apalodimas
-	<ilias.apalodimas@linaro.org>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
-	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
-	<hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand
-	<david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett"
-	<liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport
-	<rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
-	<mhocko@suse.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>, Oscar Salvador
-	<osalvador@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael
- J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Catalin
- Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, <kas@kernel.org>,
-	<kexec@lists.infradead.org>, Brendan Jackman <brendan.jackman@linux.dev>,
-	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
-	<shakeel.butt@linux.dev>
-References: <20261016-hwpoison-kho-v6-0-f304255147da@debian.org>
- <20261016-hwpoison-kho-v6-5-f304255147da@debian.org>
-From: Miaohe Lin <linmiaohe@huawei.com>
-Message-ID: <f0f5e60a-819e-68e7-09b2-4080f4716e9e@huawei.com>
-Date: Wed, 18 Nov 2026 15:00:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+	id 1xTZgD-00000007xdA-2dRq
+	for kexec@lists.infradead.org;
+	Wed, 18 Nov 2026 07:02:05 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id B445561CCE;
+	Wed, 18 Nov 2026 07:02:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 249391F000C4;
+	Wed, 18 Nov 2026 07:02:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux-foundation.org; s=korg; t=1794985323;
+	bh=pC6bu7iSXyV8W9whBUiuoNGv5YhTizVhbT+HSAZuHzc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=onWjqs9iJE3AO0poYc6hGpoTohnUGtCzhLcUFlojn8PVCZr2vg99c3Fj1fhmP1+FJ
+	 vzPtPTP+a8et5gVCC13vLaRdyEkNvtMZn+VzWjtGGssl9YrrjxakWM3ZkCqRfGoDOj
+	 He5c8nVj9LUwgAn9BJRQMe7t+28pI3PpaTgwiJYs=
+Date: Tue, 17 Nov 2026 23:02:01 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Baoquan He <baoquan.he@linux.dev>
+Subject: Re: [PATCH v4 3/4] x86/vmware: Add the vmware_record_panic_msg
+ sysctl
+Message-Id: <20261117230201.921ec5bddf49cd459ddb8428@linux-foundation.org>
+In-Reply-To: <av1IuMZ2W0SXWcNn@MiWiFi-R3L-srv>
+References: <cover.1794980455.git.zack.rusin@broadcom.com>
+	<4c5de34b10f579368b890eaa9333a2755886bad3.1794980455.git.zack.rusin@broadcom.com>
+	<sashiko-outbox-220212@kernel.org>
+	<av1IuMZ2W0SXWcNn@MiWiFi-R3L-srv>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Archived-By: <archiver.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20261016-hwpoison-kho-v6-5-f304255147da@debian.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- whupemk100004.china.huawei.com (7.152.185.74)
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261117_230051_740871_A3833766 
-X-CRM114-Status: GOOD (  26.42  )
-X-Spam-Score: -3.8 (---)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,101 +66,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Cc: Ajay Kaher <ajay.kaher@broadcom.com>, Kees Cook <kees@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Young <ruirui.yang@linux.dev>, Stephen Brennan <stephen.s.brennan@oracle.com>, Bo Gan <bo.gan@broadcom.com>, "H. Peter Anvin" <hpa@zytor.com>, Zack Rusin <zack.rusin@broadcom.com>, Jonathan Corbet <corbet@lwn.net>, Brennan Lamoreaux <brennan.lamoreaux@broadcom.com>, x86@kernel.org, sashiko@lists.linux.dev, Joel Granados <joel.granados@kernel.org>, Alexey Makhalov <alexey.makhalov@broadcom.com>, Eugenio Perez <eperezma@redhat.com>, Ingo Molnar <mingo@redhat.com>, bcm-kernel-feedback-list@broadcom.com, Thomas Gleixner <tglx@kernel.org>, Petr Mladek <pmladek@suse.com>, Bradley Morgan <brads@mainlining.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, John Ogness <john.ogness@linutronix.de>, virtualization@lists.linux.dev, Steven Rostedt <rostedt@goodmis.org>, Maaz Mombasawala <maaz.mombasawala@broadcom.com>, Borislav Petkov <bp@alien8.de>, Shuah Khan <skhan@linuxfoundation.org>, Michael Kelley <mhklinux@outlook.com>, sashiko-reviews@lists.linux.dev, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, Ian Forbes <ian.forbes@broadcom.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, "Michael S. Tsirkin" <mst@redhat.com>, Pratyush Yadav <pratyush@kernel.org>, Mike Rapoport <rppt@kernel.org>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 2026/10/16 20:15, Breno Leitao wrote:
-> A frame flagged poisoned before memory_dev_init() runs cannot be counted
-> on its memory block. memblk_nr_poison_inc() divides by sections_per_block,
-> which memory_dev_init() sets, and the block does not exist yet. The block
-> is then created reading zero, however many of its frames are poisoned.
+On Wed, 18 Nov 2026 14:42:00 +0800 Baoquan He <baoquan.he@linux.dev> wrote:
+
+> On 11/18/26 at 06:14am, sashiko-bot@kernel.org wrote:
+> > > Allow administrators to disable host log transfer on ordinary guests or
+> > > opt in on encrypted guests. Expose the boolean recording policy through
+> > > kernel.vmware_record_panic_msg using proc_dobool(), as Joel suggested.
+> > > Zero disables recording, nonzero integers enable it, and reads return
+> > > 0 or 1.
+> > > 
+> > > Register the sysctl only after the logger is ready. A registration failure
+> > > leaves the internal default in force. Document that the log is sent
+> > > before kdump, and that disable_panic_notifiers_platform_list also skips
+> > > it.
+> > > 
+> > > Link: https://lore.kernel.org/r/4e73yd2ofpdzl6rptzvd74no3hnyfblknoq7wzxlw7f3zjbz7c@srfabx6lsusj
+> > > Signed-off-by: Zack Rusin <zack.rusin@broadcom.com>
+> > 
+> > Sashiko has reviewed this patch and found no issues.
 > 
-> Until now nothing could poison a frame that early. It becomes possible
-> once a kernel flags the frames it inherits from the one that kexeced into
-> it, as it initializes its memmap.
-> 
-> memory_block_online() refuses a block that holds a poisoned frame, and a
-> counter stuck at zero lets one through.
-> 
-> Count what a block holds when it is created at boot. The walk sits behind
-> num_poisoned_pages, so a machine with no poison does not pay for it.
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
->  drivers/base/memory.c | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
-> 
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index 5eead3346f1e32..77481f375c2206 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -220,11 +220,16 @@ int memory_notify(enum memory_block_state state, void *v)
->  
->  #if defined(CONFIG_MEMORY_FAILURE) && defined(CONFIG_MEMORY_HOTPLUG)
->  static unsigned long memblk_nr_poison(struct memory_block *mem);
-> +static void memblk_nr_poison_init(struct memory_block *mem);
->  #else
->  static inline unsigned long memblk_nr_poison(struct memory_block *mem)
->  {
->  	return 0;
->  }
-> +
-> +static inline void memblk_nr_poison_init(struct memory_block *mem)
-> +{
-> +}
+> It might be better to turn off this message if not issues found, just
+> like what LKP bot has been doing.
 
-If defined(CONFIG_MEMORY_FAILURE) but CONFIG_MEMORY_HOTPLUG is not defined, memory block
-created at boot time will lose nr_hwpoison count. Is this expected?
+(+sashiko@lists.linux.dev)
 
->  #endif
->  
->  /*
-> @@ -807,6 +812,7 @@ static int add_memory_block(unsigned long block_id, int nid, unsigned long state
->  	mem->state = state;
->  	mem->nid = nid;
->  	INIT_LIST_HEAD(&mem->group_next);
-> +	memblk_nr_poison_init(mem);
->  
->  #ifndef CONFIG_NUMA
->  	if (state == MEM_ONLINE)
-> @@ -1251,4 +1257,28 @@ static unsigned long memblk_nr_poison(struct memory_block *mem)
->  {
->  	return atomic_long_read(&mem->nr_hwpoison);
->  }
-> +
-> +/*
-> + * Frames poisoned before the block existed were never counted on it. Count
-> + * them now, or the first unpoison takes the counter below zero.
-> + */
-> +static void memblk_nr_poison_init(struct memory_block *mem)
-> +{
-> +	unsigned long pfn = section_nr_to_pfn(mem->start_section_nr);
-> +	unsigned long end = pfn + PAGES_PER_SECTION * sections_per_block;
-> +	unsigned long nr = 0;
-> +
-> +	/* A hotplugged block is created before its pages are online. */
-> +	if (mem->state != MEM_ONLINE || !atomic_long_read(&num_poisoned_pages))
-> +		return;
-> +
-> +	for (; pfn < end; pfn++) {
-> +		struct page *page = pfn_to_online_page(pfn);
+Yes please.
 
-Above comment says the pages of this memory block are not online. So pfn_to_online_page
-here will return the wanted page?
+These emails do have a little bit of value: they tell you that Sashiko
+was able to apply the patch and to review it.  I guess.  Or something.
 
-> +
-> +		if (page && PageHWPoison(page))
-> +			nr++;
 
-Now that the table is a bitmap with one bit per 2MB of physical memory, would it be more
-appropriate to process it at 2 MB granularity?
+Me:
 
-Thanks.
-.
+:0 D:
+* ^From:[ 	]*sashiko-bot@kernel\.org[ 	]*$
+* B ?? ^Sashiko has reviewed this patch and found no issues\.$
+/home/akpm/.nsmail-zip/Trash
+
+hp2:/home/akpm> grep "From:.*sashiko-bot" .nsmail-zip/Trash | wc -l
+1140
+hp2:/home/akpm> 
+
 
