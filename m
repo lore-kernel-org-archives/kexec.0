@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913D9606A335
-	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 21:34:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61AF606A32C
+	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 21:34:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=29lVXyjj;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bPpfmmkv
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=3/p4EEjI;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W3K3MhGu
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,47 +14,47 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	:Message-ID:Cc:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=UlpI4GQ7yqIId5MqKlorgIMDKAUcLnv9Id74zHLZKh8=; b=29lVXyjjf2wmr/midiKCLZu+zO
-	JoqbTPtyMtg7wjcFMjVevkJMboeiCTPXmy+eCmK4q3h0vUgrdd4p6hByNRFdV2GfdJB8+IWURbUfv
-	0Jb2K8tcJ/1YcjfiHfhyB5lU3y0vL8TIxFBiFVkYhUQ9TDtEov6y41MY/6/y+zA/Br9Uu9pAnbjc2
-	2XMqgjrk9ctDr3+kjODL286WnYS4CF4tOOe3YMV1IX/5mzmtI4toPUsGl/nVZpmtrV8aZN5Z4uxGj
-	TcYC4TDHAxBGRLsitYXoznOK0P3VfLpgnbGq2T1qMWz0K0ICZSrFv/uJHaSrkjptdXqG12X9qF7mD
-	rJhSXZLg==;
+	bh=exR4MwSWCJr6j3nDZscguxLY8qOox/tiNrn8/Duc6h4=; b=3/p4EEjIRzoV2ijDvgM17i3ZL3
+	h/Le9CnJ90B1ltcMgXN+tsaGybtaY/yDYtnYjWH/pYRzDHUQ8Bj+UW8a6w0riGhLyaY4vBtTJEql5
+	Az13xkUc+q8E0lKCnEyH8fCIud+s3DEGrOV+mVMYfnWNAxV2b1QPct4kH85QsC3rHjiDPL7cHX5hD
+	WNTPlWaT0nIyi/FQqq22ZiuKFKwr5AekexKl8dSR5zEjZLsi2otVQxmrrChbvFKP02LQOQyvuEqPz
+	tBP01/3k8eQJOrM7WeUSpbgmg3UtxZcAhjfnyUtX0cPigIKWDNuzTFLdTEa2i1SMpte38tUk8cudd
+	CaXBR5qw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTnIR-0000000AKd0-1I9p;
-	Wed, 18 Nov 2026 21:34:27 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xTnIX-0000000AKfN-1g2f;
+	Wed, 18 Nov 2026 21:34:33 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTnIQ-0000000AKcq-2eiD
+	id 1xTnIV-0000000AKeu-3hvK
 	for kexec@lists.infradead.org;
-	Wed, 18 Nov 2026 21:34:26 +0000
+	Wed, 18 Nov 2026 21:34:31 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id BCAE163A6B;
-	Wed, 18 Nov 2026 21:34:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6FE81F000C4;
-	Wed, 18 Nov 2026 21:34:24 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 98E08408B2;
+	Wed, 18 Nov 2026 21:34:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F028E1F000C6;
+	Wed, 18 Nov 2026 21:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795037665;
-	bh=UlpI4GQ7yqIId5MqKlorgIMDKAUcLnv9Id74zHLZKh8=;
+	s=k20260515; t=1795037671;
+	bh=exR4MwSWCJr6j3nDZscguxLY8qOox/tiNrn8/Duc6h4=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=bPpfmmkvO25wmvYZMH4EX8pDTNQWWvjLLhxADTWPoXCJ/4nhpzSFd+bzQRt9KxkVx
-	 7LOUbZTvIzb1PdvJUnAN5j2PYFAMBlZ5q+9anyyJgm6RyAwZ+MGdg5QW/f3fa+b8DI
-	 nstKqmtUpkh8SEILPOCtBTv1r/t5YVjxj3iLiTtiHrIAViWtLX08Mr//NxVRcoPINH
-	 ebT9l6+Qxwc1DmacpwLusRI2KcZNhXStrWO8OJfvLmBFQS+vvgXEzRUHSx2yFvh0MG
-	 u7fTWP8/n4Me/SAZGzQxbCjeBgM1kog763ApqeoTDGWVMMP4KTsjOvFOeYdCpZKPxA
-	 qKgXOtulu8pGQ==
-Message-ID: <sashiko-outbox-222005@kernel.org>
+	b=W3K3MhGuS8dH5N8bhT4I8v5qFCFcMIxMeRc4m8d2bxrX0PToF2tHRTisC3HAMUsGH
+	 gPSLqH/EI5heLTz/z3579urhHqaHCYVjlZ6fyRoLVQPF//O9oHBNPJUKWFXYvqKf/G
+	 VIG7W4FyE+F7vijb5mBpwXoU6ZYilVLArWXEPx8jM58UKt6kLPyxgw5EQcEYJRpWtx
+	 +faW4BCFHwGxfiWNRF9G9wKBB0HiBnNI3fV2J/NFGaBOqN5XadEWPV9UP3G13P/QW3
+	 9xg6mAX1HbxOvyJRr4IPnj8d267WKyl6ZiBVTtyfq6ok1ZtfK+eeT6yw3aFB07Q/+d
+	 /VTx2ioeXJFyQ==
+Message-ID: <sashiko-outbox-222007@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 7/7] selftests: liveupdate: Test
- LIVEUPDATE_SESSION_FREEZE across kexec
+Subject: Re: [PATCH v6 4/7] liveupdate: luo_flb: serialize outgoing FLBs
+ incrementally
 To: "Pasha Tatashin" <pasha.tatashin@soleen.com>, rppt@kernel.org, shuah@kernel.org, skhan@linuxfoundation.org, vipinsh@google.com, corbet@lwn.net, dmatlack@google.com, kexec@lists.infradead.org, pratyush@kernel.org, rdunlap@infradead.org, graf@amazon.com
-In-Reply-To: <20261118212845.2855249-8-pasha.tatashin@soleen.com>
+In-Reply-To: <20261118212845.2855249-5-pasha.tatashin@soleen.com>
 References: <20261118212845.2855249-1-pasha.tatashin@soleen.com>
- <20261118212845.2855249-8-pasha.tatashin@soleen.com>
+ <20261118212845.2855249-5-pasha.tatashin@soleen.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 18 Nov 2026 21:34:24 +0000
+Date: Wed, 18 Nov 2026 21:34:30 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,10 +74,21 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Extend luo_multi_session.c to exercise auto-frozen, kept-open frozen,
-> closed uncommitted frozen, and closed committed sessions together across
-> a kexec reboot, and verify that freezing an incoming session returns
-> -EINVAL.
+> Currently, outgoing FLB metadata is written in a single pass by
+> luo_flb_serialize() during liveupdate_reboot(). When sessions are
+> serialized ahead of reboot, any FLBs their files depend on must also
+> be serialized at that time so the outgoing KHO state stays consistent.
+>=20
+> Serialize each file's FLB dependencies from luo_session_serialize_one(),
+> appending new FLB entries or incrementing the serialized file count in
+> place. Since every serialized session now updates its FLBs as it is
+> serialized, drop the separate luo_flb_serialize() pass from
+> liveupdate_reboot().
+>=20
+> Because serialized sessions never unpreserve their files, FLB
+> serialization is one-way: once an FLB is serialized, its .unpreserve()
+> callback will not run and its root handle from .preserve() remains
+> fixed for the rest of the boot.
 >=20
 > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 
@@ -85,6 +96,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118212845.2855=
-249-1-pasha.tatashin@soleen.com?part=3D7
+249-1-pasha.tatashin@soleen.com?part=3D4
 
 
