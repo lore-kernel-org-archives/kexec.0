@@ -2,137 +2,71 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1797606A334
-	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 09:46:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC38606A320
+	for <kexec@archiver.kernel.org>; Wed, 18 Nov 2026 14:37:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=hh4ILUjD;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RQYGohhW
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=A+ACSlKe;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=iGfSqlI4
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=CtaieybfS6BQtpEqYoffKr95cQJaQPqI7rmHn30lmpg=; b=hh4ILUjDPC1XbS
-	wUPQVoKaFCtEfkbCdLjc9m4pfKroGp4RSrad7OMXFCoB3i0Cwvr6WJgGED6tGbNTs9ghmiGvJEK22
-	0dx/edtDYn67juQaacOno5p3saJAGcUtMYllLsNYvOs8K7JWRTYwRRpXsEhfdfjtzoOnJ3BOXTWXi
-	H/9li5cdtt89nBZXzHeCYoFsWuA8EdrMy3B2wr+91ntW4OhPYy04Um25xql9eKpSPDCASGiGSvoH7
-	Kkih6fFKxu4oYyzxTXYag/Y7qu/j6o6SC2zaPhEPC9mx+R8H7qbLXYu6kiKmcerDTPMxtFPLcfEp4
-	1ck4qWubY6EMp8h+58Ug==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:
+	Message-ID:Subject:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=5Uv1kv8Fyhvm9H5I85dSa/PbCA5mggh9KfNOAnb9QWM=; b=A+ACSlKeAzYAKP6L9s2jz+TczS
+	WHnlH9jPM1Qod1h9OZw+wysloO2jKLIywTeV0QxAxpyyng22dCyEDlYUGmswS85al3zk0+J20vu+/
+	Hb6OnRmN6aI3xRyWMadO7AHIfyJLsn/Eor9mbQkKgi52IqdU7OPCVOaxrt60zyMOfshb4aw8kDZvG
+	WXU+Lo/0UEKU8e/IytjO34hf5oOL8yDAZgtu0/NwA7BNLWVNgZMdsmzMGSm/Q13HXTfA42i3oVaxN
+	esCoS0viqNxz7BQYlfzyEwpHxTEXyDpnVxwU3RiZSntyd8A2es4KU3cKcqZazjG5rTRSQtOlX583J
+	ag9fnAUg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTcFZ-00000008QY3-20Ba;
-	Wed, 18 Nov 2026 09:46:45 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xTgmX-000000097vB-446J;
+	Wed, 18 Nov 2026 14:37:05 +0000
+Received: from smtprelay0013.hostedemail.com ([216.40.44.13] helo=relay.hostedemail.com)
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTcFY-00000008QXd-0UgW;
-	Wed, 18 Nov 2026 09:46:44 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id D34C94568E;
-	Wed, 18 Nov 2026 09:46:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA1101F000C4;
-	Wed, 18 Nov 2026 09:46:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794995203;
-	bh=CtaieybfS6BQtpEqYoffKr95cQJaQPqI7rmHn30lmpg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=RQYGohhWWhAMmEGxIAzOYr6Fx+D3c8etuGKHMFcbyKBYk19gb0PmTU3vg4xr2/6an
-	 SJ/qop6o7easXoypEONyiMJCk8cgR+yJjAnGlWhqyYJ/ziD1aNlj2ESpXtYiDNRwlj
-	 e5B2ZdNugULbszT5sBs7bvHePzJ8bmuqz1BjALmVdtQaVhFWk40mYXG3RtN1ZfLaG8
-	 CO7RPHtrPQW3mS0ouvPJuJjTBrscheUKbE+yzjJIA5+EdbTjFPpS41EOhTYuSfpYXk
-	 m2o215lUT4PGALLB0rFVQlxsiCFea6eOd2CBZHCy/6uKXDd0NHCR7gWa9XW+UGFy9f
-	 mZGW3Ic1lhhTw==
-Message-ID: <332f315d-ea27-488a-9a3c-28cdfdcd5f27@kernel.org>
-Date: Wed, 18 Nov 2026 10:46:24 +0100
+	id 1xTgmT-000000097ub-2wT2
+	for kexec@lists.infradead.org;
+	Wed, 18 Nov 2026 14:37:04 +0000
+Received: from omf13.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 88883120785;
+	Wed, 18 Nov 2026 14:36:54 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 472A92000E;
+	Wed, 18 Nov 2026 14:36:46 +0000 (UTC)
+Date: Wed, 18 Nov 2026 09:36:44 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Baoquan He <baoquan.he@linux.dev>
+Subject: Re: [PATCH v4 3/4] x86/vmware: Add the vmware_record_panic_msg
+ sysctl
+Message-ID: <20261118093644.10644df9@gandalf.local.home>
+In-Reply-To: <av1IuMZ2W0SXWcNn@MiWiFi-R3L-srv>
+References: <cover.1794980455.git.zack.rusin@broadcom.com>
+	<4c5de34b10f579368b890eaa9333a2755886bad3.1794980455.git.zack.rusin@broadcom.com>
+	<sashiko-outbox-220212@kernel.org>
+	<av1IuMZ2W0SXWcNn@MiWiFi-R3L-srv>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/7] mm: kasan: skip KASAN for GFP_HIGHUSER
-To: Jeff Xu <jeffxu@chromium.org>, Tomasz Figa <tfiga@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Vlastimil Babka <vbabka@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R . Howlett" <liam@infradead.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Brendan Jackman <brendan.jackman@linux.dev>, Zi Yan <ziy@nvidia.com>,
- Alexander Potapenko <glider@google.com>,
- Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>, Marco Elver
- <elver@google.com>, Boris Brezillon <boris.brezillon@collabora.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Chia-I Wu <olvaffe@gmail.com>,
- Dev Jain <dev.jain@arm.com>, Evgenii Stepanov <eugenis@google.com>,
- Ian Rickards <ian.rickards@arm.com>, Jann Horn <jannh@google.com>,
- Jeff Vander Stoep <jeffv@google.com>, Jeff Xu <jeffxu@google.com>,
- Kees Cook <kees@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Peter Collingbourne <peter@pcc.me.uk>, =?UTF-8?Q?Pierre-Cl=C3=A9ment_Tosi?=
- <ptosi@google.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Will Deacon <will@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Miklos Szeredi <miklos@szeredi.hu>, Baoquan He <baoquan.he@linux.dev>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, Allison Henderson
- <achender@kernel.org>, "David S . Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- linux-mm@kvack.org, kasan-dev@googlegroups.com,
- linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org,
- fuse-devel@lists.linux.dev, kexec@lists.infradead.org,
- netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
- rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
- Ryan Roberts <ryan.roberts@arm.com>
-References: <20261116230627.3537051-1-jeffxu@chromium.org>
- <2066d131-f999-4747-beb8-520d5e0ce1db@kernel.org>
- <CAAFQd5DzTmyeVQxNdhdy8pPi+ts1cCgbztVJiMoNBeJWBzjdQQ@mail.gmail.com>
- <20261118012858.289236-1-jeffxu@chromium.org>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20261118012858.289236-1-jeffxu@chromium.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 472A92000E
+X-Rspamd-Server: rspamout08
+X-Stat-Signature: nsnhqchs79u4e17w4yf3cscerw5q6qjw
+X-Spam-Status: No, score=-10.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=4.0.1
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19ZBBweeRonAcIW3Sj8e1zyecfJ8umsG9A=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=5Uv1kv8Fyhvm9H5I85dSa/PbCA5mggh9KfNOAnb9QWM=; b=iGfSqlI4S5Jo9GiY8tlcxhyjxCE0unaS0t24fuxlAGdpNjHwyDHZj+ARmOszbO/EKCO1t2Ugca5wEWxdj+vnHq9p0zClr1EqkpIXcw0AKRzDFnMXQXE7hjS1KzJqqCKlsrgb3ii+t4Nx6MEhcyOUhiDAegNBAC6zR6uHfwR5QaI=
+X-HE-Tag: 1795012606-378161
+X-HE-Meta: U2FsdGVkX19ahj7+sR8308Zi2QXrJe1XafgKhfctr/grJYjwlB9Y8ZEh/wCDLdA3ilqVbgcd9/psAC2D02fnr5NUfybeZ8dc2HRYcO/cre8NmsHiAH7z4QB2+ChzEVX6QXqA8HfV1e1a0kC83FEElkujKiAX8EP0rmw1Qg87CIqmP4+nRaJOlE0C+GcOa6xa0zLDxZ+bzRw3rN2idlYOeuy5fAv88aSpKGahWNzLysA5buZCVrgVlj9rFtLgQarpJXo29VVm+Jp7Aruj752oLohZgu25tt6ki2pKen4lvDNRGDC+kc25u30CI0RfQ0Cbkale1qu0klm6mwdUMDphGbgdaUT81kCrCO0IFbQ5G+k0R5R+Lmk0oA==
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261118_063702_075111_4D56CE14 
+X-CRM114-Status: GOOD (  17.61  )
+X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -142,87 +76,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Cc: Ajay Kaher <ajay.kaher@broadcom.com>, Kees Cook <kees@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Young <ruirui.yang@linux.dev>, Stephen Brennan <stephen.s.brennan@oracle.com>, Bo Gan <bo.gan@broadcom.com>, "H. Peter Anvin" <hpa@zytor.com>, Zack Rusin <zack.rusin@broadcom.com>, Jonathan Corbet <corbet@lwn.net>, Brennan Lamoreaux <brennan.lamoreaux@broadcom.com>, x86@kernel.org, Joel Granados <joel.granados@kernel.org>, Alexey Makhalov <alexey.makhalov@broadcom.com>, Eugenio Perez <eperezma@redhat.com>, Ingo Molnar <mingo@redhat.com>, bcm-kernel-feedback-list@broadcom.com, Thomas Gleixner <tglx@kernel.org>, Petr Mladek <pmladek@suse.com>, Bradley Morgan <brads@mainlining.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, John Ogness <john.ogness@linutronix.de>, virtualization@lists.linux.dev, Maaz Mombasawala <maaz.mombasawala@broadcom.com>, Borislav Petkov <bp@alien8.de>, Shuah Khan <skhan@linuxfoundation.org>, Michael Kelley <mhklinux@outlook.com>, sashiko-reviews@lists.linux.dev, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, Ian Forbes <ian.forbes@broadcom.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, "Michael S. Tsirkin" <mst@redhat.com>, Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Pratyush Yadav <pratyush@kernel.org>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 11/18/26 02:28, Jeff Xu wrote:
-> On Tue, Nov 17, 2026 at 11:11 PM Tomasz Figa <tfiga@chromium.org> wrote:
->>
->> On Tue, Nov 17, 2026 at 7:10 PM David Hildenbrand (Arm)
->> <david@kernel.org> wrote:
->>>
->>> I really don't want us to spread KASAN-related GFP flags in the kernel.
->>>
->>> There must be a proper way to abstract this.
->>>
->>> Why is GFP_HIGHUSER not sufficient? We were already told that this is memory to
->>> be mapped into user space. Placing data structure on it and handing out pointers
->>> to that would already be a bit questionable.
->>>
->>> So what are the ways to avoid GFP_HIGHUSER_KASAN?
->>
->> I think the idea behind GFP_HIGHUSER_KASAN is to make it possible to
->> skip KASAN for GFP_HIGHUSER by default (for most of its users), but
->> keep it for some of the users which today use GFP_HIGHUSER for their
->> memory allocations, but could benefit from the added security. As per
->> the other patches in the series:
->>
->>   pipe, fuse: use GFP_HIGHUSER_KASAN for pipe buffer pages
->>   kexec: use GFP_HIGHUSER_KASAN for segment pages
->>   net/rds: use GFP_HIGHUSER_KASAN for message pages
->>
->> That said, I'm not familiar with any of the code mentioned by those
->> patches, so I can't really tell how much they would benefit from KASAN
->> or if their choice of GFP_HIGHUSER to begin with is correct.
+On Wed, 18 Nov 2026 14:42:00 +0800
+Baoquan He <baoquan.he@linux.dev> wrote:
+
+> On 11/18/26 at 06:14am, sashiko-bot@kernel.org wrote:
+> > > Allow administrators to disable host log transfer on ordinary guests or
+> > > opt in on encrypted guests. Expose the boolean recording policy through
+> > > kernel.vmware_record_panic_msg using proc_dobool(), as Joel suggested.
+> > > Zero disables recording, nonzero integers enable it, and reads return
+> > > 0 or 1.
+> > > 
+> > > Register the sysctl only after the logger is ready. A registration failure
+> > > leaves the internal default in force. Document that the log is sent
+> > > before kdump, and that disable_panic_notifiers_platform_list also skips
+> > > it.
+> > > 
+> > > Link: https://lore.kernel.org/r/4e73yd2ofpdzl6rptzvd74no3hnyfblknoq7wzxlw7f3zjbz7c@srfabx6lsusj
+> > > Signed-off-by: Zack Rusin <zack.rusin@broadcom.com>  
+> > 
+> > Sashiko has reviewed this patch and found no issues.  
 > 
-> Thanks David and Tomasz for the feedback.
-> 
-> Tomasz is right about why I added GFP_HIGHUSER_KASAN in v1: out of
-> caution, I audited existing GFP_HIGHUSER callers to find any that never
-> map the pages to userspace and instead fill/drain them in the kernel via
-> kmap_local_page() (pipe, FUSE, kexec, rds). Since this series intends to
-> improve KASAN performance while preserving its security aspects, and the
-> performance impact on pipe/FUSE/kexec/rds was negligible in my testing,
-> v1 was optimized for minimum behavioral change.
-> 
-> Looking closer at both of your questions, I agree that the security
-> benefit of keeping those 4 under KASAN is minimal -- e.g., only linear
-> overflows out of the pipe/FUSE/kexec/rds page, since none of them store
-> kernel structures or pointers. That is the exact same trade-off we
-> already make for GFP_HIGHUSER_MOVABLE.
+> It might be better to turn off this message if not issues found, just
+> like what LKP bot has been doing.
 
-Yes, that's my understanding as well.
+I believe that's an option per mailing list. I personally like it because
+to me it does add value. It tells me it was able to apply it and it didn't
+find anything wrong with it. This way I know sashiko didn't ignore it.
 
-> 
-> To avoid introducing GFP_HIGHUSER_KASAN, I see two options:
-> 
-> 1) Simply keep those 4 cases under GFP_HIGHUSER (drop patches 1-4 and
->    7), reducing the series to just the GFP_HIGHUSER change and its KUnit
->    test.
+But I understand others may not find that useful.
 
-That's what I would look into first.
-
-> 
-> 2) Switch those 4 callers to GFP_USER. Since CONFIG_KASAN_HW_TAGS is
->    64-bit arm64 only (!CONFIG_HIGHMEM), GFP_USER is identical to today's
->    GFP_HIGHUSER on arm64 and all other 64-bit builds (and if 32-bit
->    CONFIG_HIGHMEM=y builds still need ZONE_HIGHMEM, that could be gated
->    on CONFIG_HIGHMEM, though that feels ugly at call sites).
-> 
-> (1) seems much cleaner to me. David, would (1) work for you?
-
-Agreed, (2) looks more hacky and I don't see the value of doing it like that
-just yet.
-
-
--- 
-Cheers,
-
-David
+-- Steve
 
