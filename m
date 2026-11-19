@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95887606A337
-	for <kexec@archiver.kernel.org>; Thu, 19 Nov 2026 22:38:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA08606A320
+	for <kexec@archiver.kernel.org>; Thu, 19 Nov 2026 22:38:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=n796toV3;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VaBBy+Pe
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=sAHV9DhN;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aBCXgTzd
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=Coph6eFhW2l3OLj95aOAwsUun97wVKoM1gQqRkRPxkM=; b=n796toV38Ze63ahoRMgkO69SId
-	O+V/ShazZDu+mvEvsMZc9gXgy6WVyy7aRfPV3wfFbt82X6TQei15TnYzpN8KiFk2cfGGLMILmOO4x
-	L/2RQY6E6aPQbEdpzineQELBPm52T/BSogPKZGG+s9dSSGb0AwI7z6VNwv5ZjN0v0/tJApfa6Vb//
-	ys3X2rBB7b2m7ByjfFnNHVjdqG3sFprEuLeXP5LpxzkUJNjJnOIcGHa4JrVw+6SwvvSiyQrpGpw0V
-	j15KWdJYZ2jHPkgM16/afMVWqYp3uGZgKUuu42RuO2saT2pkEni1MsdNCsDbxpJIS5cF2Cw/nFBtQ
-	hIhhFT3A==;
+	bh=eWJNfm9GtGG5Ubanl3qk25zMJ042O5sWVEAKnjQLJPY=; b=sAHV9DhNxEB75eUR3aZ6wvKb46
+	7h1kY30cD1qFwV2ou0i+6pGXYtAKZ28QQQ/Kh14Ivr8XusGe8vvRJQqRhsB5NlJ5jBQ4Ypcy/ipuj
+	Cq5yxyM/6XeMibpxnaSNvJd1ZcDc5XVRG0YZ68/++VKIm/msJhQ0HE8NHjfCK0byHb3AVL6t4nN3/
+	G8fmB3lb+ji+aqs3rdCNqQ03Q4L3fWm+u2gCMidwcbYVGtPpgEQtDwQcSPry3kk+jh1l52qAq6oMH
+	16YBxrjFpmUws1dg0ofTN7ZPdG620a3R4av8z9WzWCXOZAJ3gimqf3QbkQTVklY/WWFonzRs9PCVw
+	Cjii2JjA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUAm0-0000000DaR2-1FGS;
-	Thu, 19 Nov 2026 22:38:32 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xUAm4-0000000DaWY-1j3b;
+	Thu, 19 Nov 2026 22:38:36 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUAly-0000000DaOx-17HZ
+	id 1xUAm0-0000000DaQY-06B1
 	for kexec@lists.infradead.org;
-	Thu, 19 Nov 2026 22:38:30 +0000
+	Thu, 19 Nov 2026 22:38:32 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id ED5C64133D;
-	Thu, 19 Nov 2026 22:38:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35E701F000D1;
-	Thu, 19 Nov 2026 22:38:28 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id C2007416D1;
+	Thu, 19 Nov 2026 22:38:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56EB01F000C4;
+	Thu, 19 Nov 2026 22:38:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795127909;
-	bh=Coph6eFhW2l3OLj95aOAwsUun97wVKoM1gQqRkRPxkM=;
+	s=k20260515; t=1795127911;
+	bh=eWJNfm9GtGG5Ubanl3qk25zMJ042O5sWVEAKnjQLJPY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=VaBBy+PeRlIBgewixRGlvlwxRM80bTUxG+q34R8xZ7Gs/rsAXu4ocXwTvN6fBfvFX
-	 YaAnwwGGLqbuuXY68R7z2IQXMr/HYKs4snMCfvsxrMJ4mC8vdfTNOXs7TW7AxoDsXD
-	 8iUHnv9L/2tY2wWVOsfNHoo6yZ/MnC2UaX+2ZIyXJR0vbvyKFSnd2kfrcvfmadLxca
-	 bkmJ2egtYlerHoh+lY+S/2vNhJmzcRWEPLTquj19Vq0Q0Taqu3+A/fhKInNByiPO5/
-	 sZgFsMx5KkT8rAgBsVuvOEMVl57CBmooUfJCZS8YSnSafenX3g3TJPFd02cks2pkDF
-	 HbmkzMMGD6YIQ==
-Message-ID: <sashiko-outbox-224140@kernel.org>
+	b=aBCXgTzdXOi/7DOeX1CsqbC6s08zU0plDgVxTJCBLg5OOqYF701jlXIfu3xyeqrtR
+	 /XbYvyEwX4oJ1ZuGw0y3FDlJgHpfBC/MDy2mVQJhLvFYyvA8kNpcB1Rjd7eyNImyij
+	 Cm8HDiOQTIt88OCKXtzBCJiHfEgdu5e0Khuj9UaSsvoSg+BnBtDNxCIBcUU6kX/MIJ
+	 dDppknI5UtdlK9CvjjmUNhfh4em92yMtJtqOnzOD1Zu3oDzcEBX5b4yPqOAH8IidpO
+	 oDGHKq4YUdcH+2Yd3w/ElsGWahoqAWO3Whd+07LmUByZ18rxvat8Le6AlIJDZp0ulx
+	 w0at2sll7flYw==
+Message-ID: <sashiko-outbox-224141@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v11 05/13] PCI: liveupdate: Auto-preserve upstream
- bridges across Live Update
+Subject: Re: [PATCH v11 06/13] PCI: liveupdate: Preserve bus numbers during
+ Live Update
 To: "David Matlack" <dmatlack@google.com>, kexec@lists.infradead.org, linux-pci@vger.kernel.org
 Cc: "Adithya Jayachandran" <ajayachandra@nvidia.com>, "Alexander Graf" <graf@amazon.com>, "Alex
  Williamson" <alex@shazbot.org>, "Alex Williamson" <alex.williamson@nvidia.com>, "Bjorn
@@ -61,12 +61,12 @@ Cc: "Adithya Jayachandran" <ajayachandra@nvidia.com>, "Alexander Graf" <graf@ama
  Mahameed" <saeedm@nvidia.com>, "Samiullah Khawaja" <skhawaja@google.com>, "Shuah
  Khan" <skhan@linuxfoundation.org>, "Vipin Sharma" <vipinsh@google.com>, "William
  Tu" <witu@nvidia.com>, "Yi Liu" <yi.l.liu@intel.com>
-In-Reply-To: <20261118223704.3286085-6-dmatlack@google.com>
+In-Reply-To: <20261118223704.3286085-7-dmatlack@google.com>
 References: <20261118223704.3286085-1-dmatlack@google.com>
- <20261118223704.3286085-6-dmatlack@google.com>
+ <20261118223704.3286085-7-dmatlack@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 22:38:27 +0000
+Date: Thu, 19 Nov 2026 22:38:29 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,22 +86,25 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Automatically preserve every bridge between a preserved device and its
-> root port when the device is preserved.
+> Keep the secondary and subordinate bus numbers that the previous kernel
+> programmed into bridges, rather than assigning new ones, if the previous
+> kernel preserved any device across a Live Update. Do this even when
+> pcibios_assign_all_busses() is true, e.g. with pci=3Dassign-busses.
 >=20
-> Subsequent commits use this to ensure that preserved devices can
-> continue performing memory transactions without a disruption or change
-> in routing.
+> Preserved devices must be allowed to continue performing memory
+> transactions across a Live Update, so the kernel cannot change the
+> fabric topology. Changing the bus numbers of a bridge changes the
+> Requester IDs of the devices below it, which would require disabling and
+> flushing any in-flight memory transactions first.
 >=20
-> Track the number of preserved devices at or below each bridge with a
-> reference count in struct pci_dev_ser. A bridge stays preserved until
-> all of its downstream preserved devices are unpreserved or finish their
-> participation in the Live Update.
+> Apply the policy globally rather than only to the paths that contain
+> preserved devices. Bus numbers have to be preserved above a preserved
+> device anyway, since an upstream bridge cannot expand its window. A
+> global policy matches the scope of pcibios_assign_all_busses(), and
+> [ ... ]
 >=20
-> struct pci_ser::nr_devices counts the struct pci_dev_ser entries that are
-> in use, so it only changes when a device's entry is allocated or
-> released, i.e. when its reference count goes from 0 to 1 or from 1 to 0,
-> not on every preserve and unpreserve.
+> Make PCI_LIVEUPDATE depend on !CARDBUS, since preserving bus numbers on
+> CardBus bridges is not implemented.
 >=20
 > Signed-off-by: David Matlack <dmatlack@google.com>
 
@@ -109,6 +112,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118223704.3286=
-085-1-dmatlack@google.com?part=3D5
+085-1-dmatlack@google.com?part=3D6
 
 
