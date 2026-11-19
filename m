@@ -2,75 +2,69 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0046E60A2600
-	for <kexec@archiver.kernel.org>; Thu, 19 Nov 2026 18:38:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373C2606A324
+	for <kexec@archiver.kernel.org>; Thu, 19 Nov 2026 21:00:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Hy4DZMJ/;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OvmSX7Hc
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=NVfEpOlr;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=orn6ElUm
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=2iQ0+2zXaYo8rBW1GuAj8YJKBX93rhlTN+lHKRkNO2k=; b=Hy4DZMJ/A4vVyLp8vf7recxqpO
-	nLIVJYhI3895u6ImvTNSvFjIolhspfQ7s+aDCWvYSs2iYnsdKnKTzMbFtta0r08YR7wc/viP5BhH+
-	zQ+CbrV0kEDPyeuAjxfkKgNo1cG/EjwuY+megwdymc2d+LSVSS2ND9Js4rNEWKg23+3Q7McMWIBK+
-	iEqbxQFbVT/Sz2goCwEGT7GZY3e0tdkDmO+rEnEafwSU7VOEWyoYhtpYdyolt1fjZp95KO8VBQFey
-	6DRmFXge6Xnx/InHIg1cn7PQC0bhjoaSvMwQYiWqqLp3v4s3shtVEwqYzz2xe5h+VPxXPrk1YA6MT
-	x7au11Xg==;
+	bh=jRzgudTO1qkSGuzOPfaR+Ba0Lwqyafb02x6YrJau0gQ=; b=NVfEpOlrLuOGZHMS8rdCZgcq+g
+	C6mehoAgxBYmC7owVWUt0soPUNWHg7ZkZpXz2KAjkXg3awsy+RuU1YimgevNVzAx3FXeATWcNdPOF
+	4zVjKc7ymB2gFa/1GpX4cb8Vsntp3pq1UmUpqr6/KFHqhD4deJF11+BaqS95GoLDoaUPgMVEYqQdd
+	6Iy+sDqiPstcIBpF0qx7+Ne04VbYJkF0jUG05I2XkEv0L3nuYRAR8dMuMYR3v/uz+qL0umSpKoxI3
+	oXaXE6AgJz+1WAG4QAVKzaNTZuo0aBEgVjp7DleDcsxcI3eqJfHZ2NULD9e3QBZVRULi+mb5eqsye
+	DYIqeOlw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xU727-0000000D21l-2POX;
-	Thu, 19 Nov 2026 18:38:55 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xU9FP-0000000DRgb-2gwG;
+	Thu, 19 Nov 2026 21:00:47 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xU726-0000000D21X-0TEZ
+	id 1xU9FO-0000000DRgT-2mbG
 	for kexec@lists.infradead.org;
-	Thu, 19 Nov 2026 18:38:54 +0000
+	Thu, 19 Nov 2026 21:00:46 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 5865A60F74;
-	Thu, 19 Nov 2026 18:38:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9CDE1F000C5;
-	Thu, 19 Nov 2026 18:38:48 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 0E5B761F55;
+	Thu, 19 Nov 2026 21:00:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88A7F1F000C6;
+	Thu, 19 Nov 2026 21:00:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795113533;
-	bh=2iQ0+2zXaYo8rBW1GuAj8YJKBX93rhlTN+lHKRkNO2k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=OvmSX7HcrPPojaHOsd8NleIm2QS/jlCNMIe69IhvmdlCp3xKGXevQNai3c5PWEhxP
-	 kIaL8l3fUXCeUiH0LNCQ+X6kZwm5F3Dpc2i/PMstTdqP/nukUfU0b85PvAMxwF0LI2
-	 heLb7Igind9TbtSXW+JFsUQswMaxQaFrf632hY2qIp07pZS7QEa9wlDGpb/24a/qnw
-	 DU9iWW/loeye7T2UAzXxuqLow/iuGATHu1vfCouJLbrzX7fVu8aT+AsQoZabwkYUxj
-	 Ui24b2/nklqI0U2yGVklRIgdVEwDdoqd/PYq/9l2I2QlHTnZdVQeWcEZDXxKwbCTYW
-	 5hT5R8giR7ceg==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: David Matlack <dmatlack@google.com>
-Cc: kexec@lists.infradead.org,  linux-doc@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  linux-kselftest@vger.kernel.org,
-  linux-mm@kvack.org,  Alexander Graf <graf@amazon.com>,  Andrew Morton
- <akpm@linux-foundation.org>,  Baolin Wang <baolin.wang@linux.alibaba.com>,
-  Christian Brauner <brauner@kernel.org>,  David Hildenbrand
- <david@kernel.org>,  Hugh Dickins <hughd@google.com>,  Jonathan Corbet
- <corbet@lwn.net>,  "Liam R. Howlett" <liam@infradead.org>,  Lorenzo
- Stoakes <ljs@kernel.org>,  Michal Hocko <mhocko@suse.com>,  Mike Rapoport
- <rppt@kernel.org>,  Pasha Tatashin <pasha.tatashin@soleen.com>,  Pratyush
- Yadav <pratyush@kernel.org>,  Randy Dunlap <rdunlap@infradead.org>,
-  Samiullah Khawaja <skhawaja@google.com>,  Shuah Khan
- <skhan@linuxfoundation.org>,  Suren Baghdasaryan <surenb@google.com>,
-  Vlastimil Babka <vbabka@kernel.org>
-Subject: Re: [PATCH v4 04/19] liveupdate: Allow file handlers to mark
- retrieve failures as retryable
-In-Reply-To: <20261111002358.1842967-5-dmatlack@google.com> (David Matlack's
-	message of "Wed, 11 Nov 2026 00:23:42 +0000")
-References: <20261111002358.1842967-1-dmatlack@google.com>
-	<20261111002358.1842967-5-dmatlack@google.com>
-Date: Thu, 19 Nov 2026 18:38:47 +0000
-Message-ID: <2vxzmrr43buw.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=k20260515; t=1795122045;
+	bh=jRzgudTO1qkSGuzOPfaR+Ba0Lwqyafb02x6YrJau0gQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=orn6ElUmwk+wOC3TWMCK1D63fKBmQ66tvx/fNy/R1n50ZqHw1OpgnTw5sSOZkyaJG
+	 f9qQu/IDo5aUE4eEs5j0qIIiK9CO727Ltm4ttNMYWC7BR8WTmLDhNjl6EjjRG7gADl
+	 MMq9ZKC5M6XMbPTNjxCelZpzuwUG1uW0mRbrRpHm5GgDNYl4s/J+YfRjMRKk7uN1/o
+	 Af9WF86DUIRObuR/qpoNARO65+rd318lrMb1OP5tbT25DR1rYP+FxCALKxN2tXCkHp
+	 ZX0eaBUzRlkedL6sFRSqNvtScDw+qMyXF3wdCGDCOgep6jJ6Cyi9FQPJCCGeoOP6CD
+	 Djtx2LjVYD2xw==
+Date: Thu, 19 Nov 2026 15:00:43 -0600
+From: Rob Herring <robh@kernel.org>
+To: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+Cc: saravanak@kernel.org, akpm@linux-foundation.org, david@kernel.org,
+	ljs@kernel.org, liam@infradead.org, vbabka@kernel.org,
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+	m.szyprowski@samsung.com, robin.murphy@arm.com,
+	baoquan.he@linux.dev, pasha.tatashin@soleen.com,
+	pratyush@kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	iommu@lists.linux.dev, kexec@lists.infradead.org
+Subject: Re: [PATCH 2/4] of: reserved_mem: keep the reservation when
+ node_init returns -EBUSY
+Message-ID: <20261119210043.GA532410-robh@kernel.org>
+References: <20261103162429.2053989-1-radhey.shyam.pandey@amd.com>
+ <20261103162429.2053989-3-radhey.shyam.pandey@amd.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261103162429.2053989-3-radhey.shyam.pandey@amd.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,44 +75,58 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Wed, Nov 11 2026, David Matlack wrote:
+On Tue, Nov 03, 2026 at 09:54:27PM +0530, Radhey Shyam Pandey wrote:
+> fdt_init_reserved_mem_node() treats any error from a region's init function
+> as "this node is unusable" and calls memblock_phys_free() on the whole
+> range, although the range was reserved earlier during the FDT scan by code
+> unrelated to that init function. Give -EBUSY the meaning "cannot be used as
+> described, but must stay reserved" and skip the release for it. Nothing
+> returns -EBUSY from node_init today. The next patch does, to refuse a CMA
+> pool overlapping the kernel image, which without this would free
+> [_text, _end) rather than protect it.
+> 
+> Suggested-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+> ---
+> Changes since RFC:
+> - New patch
+> ---
+>  drivers/of/of_reserved_mem.c    | 14 ++++++++++++++
+>  include/linux/of_reserved_mem.h |  5 +++++
+>  2 files changed, 19 insertions(+)
+> 
+> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+> index 0fd1683cba01..d67a2b3a4d44 100644
+> --- a/drivers/of/of_reserved_mem.c
+> +++ b/drivers/of/of_reserved_mem.c
+> @@ -621,6 +621,20 @@ static void __init fdt_init_reserved_mem_node(unsigned long node, const char *un
+>  
+>  	err = __reserved_mem_init_node(rmem, node);
+>  	if (err != 0 && err != -ENODEV) {
+> +		/*
+> +		 * The region was reserved before its init function ran, so it
+> +		 * is not ours to release. -EBUSY says the init function is
+> +		 * declining it for a reason that outlives this node; freeing
+> +		 * it would hand the range to the page allocator even though
+> +		 * something else still owns it.
+> +		 */
+> +		if (err == -EBUSY) {
+> +			pr_info("node %s init failed, keeping reservation\n",
+> +				rmem->name);
+> +			rmem->name = NULL;
+> +			return;
+> +		}
 
-> From: Pasha Tatashin <pasha.tatashin@soleen.com>
->
-> Add a retryable output flag to struct liveupdate_file_op_args, which a
-> handler's .retrieve() can set on error to tell LUO that it hasn't
-> consumed the preserved state. LUO then lets userspace retry the
-> retrieve, and .finish() still releases the preserved state if the file
-> is never retrieved.
->
-> When luo_retrieve_file() invokes a handler's .retrieve() callback and it
-> returns an error, LUO currently records the error in
-> luo_file->retrieve_status and blocks any subsequent retrieve attempts.
-> This is necessary when the handler has already partially consumed or
-> freed the preserved KHO state.
->
-> However, with user arguments passed to .retrieve(), a handler may fail
-> early while validating caller-supplied parameters, such as a missing or
-> invalid argument, before touching any preserved KHO state. In such
-> cases, userspace should be able to fix the argument and retry
-> LIVEUPDATE_SESSION_RETRIEVE_FD.
->
-> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> Signed-off-by: David Matlack <dmatlack@google.com>
+I would move this out of the outer 'if' and and make the outer if an 
+'else if'.
 
-Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-
-[...]
-
--- 
-Regards,
-Pratyush Yadav
+Rob
 
