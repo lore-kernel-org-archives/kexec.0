@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26641606A320
-	for <kexec@archiver.kernel.org>; Thu, 19 Nov 2026 22:38:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EAB606A320
+	for <kexec@archiver.kernel.org>; Thu, 19 Nov 2026 22:38:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=EklAqqn0;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OL/Xy+ag
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=T3rCQxn5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h4R0qDbZ
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=SC8h+zDQaBZWH6G2HF3lPpzecIAbPoNIyVZcCrTdZfY=; b=EklAqqn0O0ziz3Can78O5OCcvn
-	mTS04wq+yzIObgLdAzrZmtj4aE0bthX+oCavU/RqrpOR4SX+MBb6LV5EIoAdqsZ0+pBQLm0DxaIWj
-	66Pf5eE+EVAYdYaIhOOlUXSwl6Uv29/ZJgWIKNWGSztLshh01iKJihyHUuVQiimYPtpfwdp+K6wdb
-	lyB/SuCQOVxrlRVNp5GZ6QTBtwsJfNfSIGPj79uBy8fVxWJKQbcGG3EdHe/ocqQ+FbsjMcUQdvD7e
-	+7Yc017Aw8cKpwr2ZIIveYJkIMW46Te4WawxN6rM2MFS9OV4BifjMkroMQ/ED2bYFXGcy202rFxMU
-	Mh+hawyg==;
+	bh=h+V3LMWnhSAOQbYaMO5Wnwd+d6TugLH8Q5qaI2Zp0Zc=; b=T3rCQxn5KuXWOvTRgR4pnR+S4g
+	MYl7qrWtJLGDeZ9ppv1UWrPa/7AHHyzZ6e3g8fA/ZJp2ie3t00hC46y+M62zvLeQanEpRICRte3FQ
+	sN4AVCKL65Vu9Nb8AaXAV1hpyc4NhNjXzO/jo3n8x0nqMYCSyyP2yrrzKuwH5l1Dc3OPbpR0TPJX9
+	SthtDxvJmVvrHqd+0hfl6GoXATBcYvNP6yvWEN6WjQpYqK5K1a5quXt0XKQ9PGIOGVUBgm+tZI9Bc
+	czyvKYO8qaANLF4VkWJJ0YfPPsD70jQrcNHT53veFQA4f/SK+D91voYoh+5+ZtwXavLU+xk1AMlj3
+	sz5VVSRw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUAm7-0000000Daaz-33vT;
-	Thu, 19 Nov 2026 22:38:39 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xUAm9-0000000DadW-3hFD;
+	Thu, 19 Nov 2026 22:38:41 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUAm4-0000000DaWo-342q
+	id 1xUAm7-0000000DaZB-0aQz
 	for kexec@lists.infradead.org;
-	Thu, 19 Nov 2026 22:38:36 +0000
+	Thu, 19 Nov 2026 22:38:39 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 730344029E;
+	by tor.source.kernel.org (Postfix) with ESMTP id 828BE62206;
+	Thu, 19 Nov 2026 22:38:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CED571F000CF;
 	Thu, 19 Nov 2026 22:38:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E96EF1F000C0;
-	Thu, 19 Nov 2026 22:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795127916;
-	bh=SC8h+zDQaBZWH6G2HF3lPpzecIAbPoNIyVZcCrTdZfY=;
+	s=k20260515; t=1795127918;
+	bh=h+V3LMWnhSAOQbYaMO5Wnwd+d6TugLH8Q5qaI2Zp0Zc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=OL/Xy+agxNjttpyvulvD2puIJoN9OHjCLeeXHxNOdpGcs/pH2lYU4EdUETX5zAkUD
-	 UDjimiUsEk00GPq2eR0kVX+nFd508/XdmRU+ldYfl+Q78FSXRRI7oLN/OOewoUSQDh
-	 zhaYbzVPH+hiC2fNGTMu8do80O2BXKcywQsWi1ZVuaXn9pbGG0vkRdHeF/H6opLPcu
-	 4u7b4bf7xAn1szzjdmQVSr7lUz1QBhPywk3CIwmFFtF3EHCqHnbgY0Vju5arJaXbOI
-	 qPH2E9ozTlZawBN0JDJSC5gxqrXdYYwyIz8/gC+N9JsjtfRKOwjnL7iP4ZKe3kgiXi
-	 MKAT0ZUdC6hKA==
-Message-ID: <sashiko-outbox-224143@kernel.org>
+	b=h4R0qDbZSHu/Bmiz9yDL1jUK7cnWi5HVS7JQmBp/FTROlSLxBHpMZhr+jWgsdUfcx
+	 fc+D0JrdAqsOr0UkN2KjGmNEB83n40WvaDWetXs/40uxmy3AQP/9jvkrdnP1P7ZFpy
+	 z/jyTkQPXgRETT9J5is+sZ1SVgNR6bzWPZNHJV0uGBhv8LiMPmKh8DGHPmKvLPV16c
+	 aPfygyoFMgJ0F1+XNcu9N5IfmKMkZjM5/LLw45PJq8TOvHeTErxzttbLwBpFFjDRVt
+	 mrCiTbP4JpOcwaGwpFY2EsUGnuDq3ntWLqPmE+YoevyKHLA6CsD5huvh+YZCL5xdVd
+	 NJDQc379lintg==
+Message-ID: <sashiko-outbox-224144@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v11 08/13] PCI: Save and restore the ACS Control
- register and Egress Control Vector
+Subject: Re: [PATCH v11 09/13] PCI: liveupdate: Adopt ACS controls in
+ incoming preserved devices
 To: "David Matlack" <dmatlack@google.com>, kexec@lists.infradead.org, linux-pci@vger.kernel.org
 Cc: "Adithya Jayachandran" <ajayachandra@nvidia.com>, "Alexander Graf" <graf@amazon.com>, "Alex
  Williamson" <alex@shazbot.org>, "Alex Williamson" <alex.williamson@nvidia.com>, "Bjorn
@@ -61,12 +61,12 @@ Cc: "Adithya Jayachandran" <ajayachandra@nvidia.com>, "Alexander Graf" <graf@ama
  Mahameed" <saeedm@nvidia.com>, "Samiullah Khawaja" <skhawaja@google.com>, "Shuah
  Khan" <skhan@linuxfoundation.org>, "Vipin Sharma" <vipinsh@google.com>, "William
  Tu" <witu@nvidia.com>, "Yi Liu" <yi.l.liu@intel.com>
-In-Reply-To: <20261118223704.3286085-9-dmatlack@google.com>
+In-Reply-To: <20261118223704.3286085-10-dmatlack@google.com>
 References: <20261118223704.3286085-1-dmatlack@google.com>
- <20261118223704.3286085-9-dmatlack@google.com>
+ <20261118223704.3286085-10-dmatlack@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 22:38:33 +0000
+Date: Thu, 19 Nov 2026 22:38:36 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,25 +86,26 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Save the ACS Control register and the ACS Egress Control Vector in
-> pci_save_state() and write them back in pci_restore_state(), instead of
-> recomputing the ACS controls from scratch with pci_enable_acs().
+> Adopt Access Control Services (ACS) controls on all incoming preserved
+> devices (endpoints and upstream bridges) during a Live Update.
 >=20
-> This makes ACS symmetric with the rest of a device's saved state. Today
-> pci_save_state() ignores ACS entirely and pci_restore_state() re-enables
-> the ACS controls from the kernel's current ACS policy. As a result, a
-> device can come out of a reset with different ACS controls than it went
-> in with, e.g. any controls programmed outside of pci_enable_acs() are
-> silently dropped.
+> Adopting ACS controls avoids changing routing rules while memory
+> transactions are in flight from preserved devices. It also keeps IOMMU
+> groups from changing during or after Live Update.
 >=20
-> This also lets a later patch adopt the ACS controls established by a
-> previous kernel across a Live Update rather than assigning new ones
-> through pci_enable_acs().
+> The adopted controls are recorded by the pci_save_state() call in
+> pci_bus_add_device(), which runs before drivers bind, so they are
+> reapplied by pci_restore_state() if the device is reset. Allocate the
+> ACS save buffer for incoming preserved devices even if they match a
+> device-specific ACS quirk, since their adopted controls live in the ACS
+> capability, and panic if it could not be allocated.
 >=20
-> [ ... ]
-> keep that configuration outside of the ACS Control register, so don't
-> allocate an ACS save buffer for them. Keep configuring ACS from scratch
-> on restore for any device that has no saved ACS state.
+> To simplify ACS adoption, reject preserving any devices that require
+> quirks to enable ACS as those quirks would also have to take Live Update
+> into account. If such a quirk matches an incoming preserved device
+> anyway, e.g. because it was added in the new kernel, log a warning and
+> adopt the device's ACS controls regardless, rather than reprogram a
+> device in the path of a preserved device's memory transactions.
 >=20
 > Signed-off-by: David Matlack <dmatlack@google.com>
 
@@ -112,6 +113,6 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118223704.3286=
-085-1-dmatlack@google.com?part=3D8
+085-1-dmatlack@google.com?part=3D9
 
 
