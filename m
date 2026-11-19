@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBE8606A326
-	for <kexec@archiver.kernel.org>; Thu, 19 Nov 2026 22:38:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAD5606A337
+	for <kexec@archiver.kernel.org>; Thu, 19 Nov 2026 23:04:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=iXaOHMfs;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iEhYgGIv
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=yLMLMPE5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HTvovdIg
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,59 +14,55 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=irXaiLNxNIRor6WB81c8MCLuB6vzrviLIeUiIXwvLkw=; b=iXaOHMfsMco/r04GRUbisNshec
-	7uvi0jdQViE82A5tH1KUsayr62p1EpA0veYjhV1bbVU/H1OyBMWpEoAWzt2C4I8dLcSXVOQSvXlom
-	2nKzg4ZxBOo9ntI1JLeEVf8wzoWBOs4iJUSpDfkVODk6l48Ey56LZuDj4ZOpuH5if/Au78mcGbNYe
-	nY92t3c2pTDtSLhC5gGKTgCfbA/r3RjjYixxKIoCtwEW9FdTr+BeSABJDJ/63UKBSgiTfmASS9L7O
-	1W/X+JRw5Qskah06joudYHewGOok9S9NZlimhayvhCZC22Hq6QElWLhFNKIDMtDmGACVI2cIzF1hk
-	Yf+Dn2Yw==;
+	bh=bN14zBhVa6ehM2qoqvgVakYsuLN6hYwejnbYVzR1c/A=; b=yLMLMPE5FOHPK269Lu+Z6WkaIk
+	yxjda8UisX4XViOl7eQAHvjABi3kcKL/LjGKh36yNOyIhwJA84c+tBNGGczDjo9fywnBpFAiLmxDn
+	SLP83ADSwRpu91kYuQMcFUoRTYeWnNyUeM8CH5+1QgOikz+uHUWTlTxpZmo+AeuZiIZS8N0/rDXXV
+	zBfwvvS1hmEwIY9izuFGeIxW68Q4Fz5flNJQdvd7QuaPe0afQZu+cbdYG0NGC+PtWO7iWsYaKQuL6
+	+2RclyMT5MQ8riDDEcYCJIP1eZTQznYj9y4ZpcylppfTz8qPVckC0cKzjvxXgwIj0JNj7E5aWU9S+
+	VpEFpTWA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUAmJ-0000000Dans-2Rbc;
-	Thu, 19 Nov 2026 22:38:51 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xUBAe-0000000DdLA-3Fpm;
+	Thu, 19 Nov 2026 23:04:00 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUAmH-0000000Daku-1hna
+	id 1xUBAe-0000000DdL4-0v6b
 	for kexec@lists.infradead.org;
-	Thu, 19 Nov 2026 22:38:49 +0000
+	Thu, 19 Nov 2026 23:04:00 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id D45E5623AD;
-	Thu, 19 Nov 2026 22:38:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 420571F000C4;
-	Thu, 19 Nov 2026 22:38:47 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id E48F842A69;
+	Thu, 19 Nov 2026 23:03:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE4AE1F000C4;
+	Thu, 19 Nov 2026 23:03:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795127928;
-	bh=irXaiLNxNIRor6WB81c8MCLuB6vzrviLIeUiIXwvLkw=;
+	s=k20260515; t=1795129439;
+	bh=bN14zBhVa6ehM2qoqvgVakYsuLN6hYwejnbYVzR1c/A=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=iEhYgGIvRTH185Wz3HIJSmjnBqXEoow0hpHIF39JYGfu8ZGY5CxlPUwC8hRqXcFap
-	 SV1OPq0caLVxEAqJmgVNkkrCzUf95RBDqRqawkBF2kdsCsdLXuoQNVucpCoAiXMF+Q
-	 lE6G0AI1uMtFAspf1bvjYj8a37VJCsEUfrx/HhqRw1GyUBajsoWTpMZEb9U8uMFnDp
-	 vpDZRXz88/55BxuFNf2qJM2Ctwjkf5p9+gg5vzWq5De83h+EhWsGFGH07f1wjjzJag
-	 E+vl7kkUMYj7D+X7h2d6S3kIjd5A7J8JwJwKjPDE3IIKSRCurJMT8B6wK+u8eXhZE4
-	 dAuvtF+wVVxfQ==
-Message-ID: <sashiko-outbox-224148@kernel.org>
+	b=HTvovdIgeZG09l5qIayYNdav8+t7sy6uO4lcU7QFH3xO8d3wRK3cvjvGrNXbJ5y5F
+	 dneu/gQOL9jdOlbVdsxfInPNalgaVPlHzf880gIL7v4JDwMba5KEyV3mAm4NZG5F56
+	 x3AzWUzrrbXH0awSMDqTajduy82cmM8oVCROO/yiu1CAMyQ/jXGQzmk5DJjSwxoWRv
+	 9IKqY5BOUZILGdORShhFF4Y3mo7XdCy2Egk1Op+Cf6kO3N7RDlJ9AqrDGFULPOEO8Z
+	 1b/4es3SAxwvxjGbprhlig9sVzycTop75LECYgwgLqEB5SYkl5D8+hqg1ry6yOA+8h
+	 wGji4vccknGJw==
+Message-ID: <sashiko-outbox-224169@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v11 13/13] Documentation: PCI: Add documentation for
- Live Update
-To: "David Matlack" <dmatlack@google.com>, kexec@lists.infradead.org, linux-pci@vger.kernel.org
-Cc: "Adithya Jayachandran" <ajayachandra@nvidia.com>, "Alexander Graf" <graf@amazon.com>, "Alex
- Williamson" <alex@shazbot.org>, "Alex Williamson" <alex.williamson@nvidia.com>, "Bjorn
- Helgaas" <bhelgaas@google.com>, "Chris Down" <chris@chrisdown.name>, "Chris
- Li" <chrisl@kernel.org>, "David Rientjes" <rientjes@google.com>, "Jacob Pan" <jacob.pan@linux.microsoft.com>, "Jason
- Gunthorpe" <jgg@nvidia.com>, "Jonathan Corbet" <corbet@lwn.net>, "Josh
- Hilke" <jrhilke@google.com>, "Leon Romanovsky" <leonro@nvidia.com>, "Lukas
- Wunner" <lukas@wunner.de>, "Mike Rapoport" <rppt@kernel.org>, "Parav Pandit" <parav@nvidia.com>, "Pasha
- Tatashin" <pasha.tatashin@soleen.com>, "Pranjal Shrivastava" <praan@google.com>, "Pratyush
- Yadav" <pratyush@kernel.org>, "Randy Dunlap" <rdunlap@infradead.org>, "Saeed
- Mahameed" <saeedm@nvidia.com>, "Samiullah Khawaja" <skhawaja@google.com>, "Shuah
- Khan" <skhan@linuxfoundation.org>, "Vipin Sharma" <vipinsh@google.com>, "William
- Tu" <witu@nvidia.com>, "Yi Liu" <yi.l.liu@intel.com>
-In-Reply-To: <20261118223704.3286085-14-dmatlack@google.com>
-References: <20261118223704.3286085-1-dmatlack@google.com>
- <20261118223704.3286085-14-dmatlack@google.com>
+Subject: Re: [PATCH printk v3 6/7] printk: Add unsafe flush points for
+ panic+kexec and emergency_restart
+To: "John Ogness" <john.ogness@linutronix.de>, "Petr Mladek" <pmladek@suse.com>
+Cc: "Sergey Senozhatsky" <senozhatsky@chromium.org>, "Steven Rostedt" <rostedt@goodmis.org>, "Ryan
+ Roberts" <ryan.roberts@arm.com>, "Breno Leitao" <leitao@debian.org>, printk@lists.linux.dev, "Andrew
+ Morton" <akpm@linux-foundation.org>, "Baoquan He" <baoquan.he@linux.dev>, "Mike
+ Rapoport" <rppt@kernel.org>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Pratyush
+ Yadav" <pratyush@kernel.org>, "Dave Young" <ruirui.yang@linux.dev>, "Bradley
+ Morgan" <include@grrlz.net>, "Oleg Nesterov" <oleg@redhat.com>, "Pavel
+ Tikhomirov" <ptikhomirov@virtuozzo.com>, "Petr Pavlu" <petr.pavlu@suse.com>,
+ =?utf-8?b?Q2VuIFpoYW5nIChNaWNyb3NvZnQp?= <blbllhy@gmail.com>, kexec@lists.infradead.org
+In-Reply-To: <20261118230345.808560-7-john.ogness@linutronix.de>
+References: <20261118230345.808560-1-john.ogness@linutronix.de>
+ <20261118230345.808560-7-john.ogness@linutronix.de>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 22:38:46 +0000
+Date: Thu, 19 Nov 2026 23:03:58 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,22 +76,85 @@ Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Add Documentation/PCI/liveupdate.rst, which pulls in the kernel-doc from
-> drivers/pci/liveupdate.c and include/linux/kho/abi/pci.h, and link it
-> from the PCI index and the Live Update Orchestrator documentation.
->=20
-> Signed-off-by: David Matlack <dmatlack@google.com>
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Medium] printk: nbcon: con->pbufs corruption on hostile takeover in
+  emergency_restart()
+--
 
-Sashiko has reviewed this patch and found no issues.
+commit bc98e7fe84227c1b12eaff8bf1021023be510742
+Author: John Ogness <john.ogness@linutronix.de>
+
+printk: Add unsafe flush points for panic+kexec and emergency_restart
+
+This commit adds nbcon_atomic_flush_unsafe(PR_FLUSH_RESTART) calls to
+__crash_kexec() and emergency_restart() so that CON_NBCON_ATOMIC_UNSAFE
+consoles can flush when permitted by their unsafe policy.
+
+> diff --git a/kernel/reboot.c b/kernel/reboot.c
+> index a93c23b9e1948..b26d131c54151 100644
+> --- a/kernel/reboot.c
+> +++ b/kernel/reboot.c
+> @@ -102,6 +102,7 @@ void emergency_restart(void)
+>  	 */
+>  	nbcon_cpu_emergency_enter();
+>  	printk_trigger_flush();
+> +	nbcon_atomic_flush_unsafe(PR_FLUSH_RESTART);
+> =20
+>  	machine_emergency_restart();
+>  }
+
+[Severity: Medium]
+Can this corrupt con->pbufs when emergency_restart() performs a hostile
+takeover outside of panic()?
+
+When emergency_restart() is invoked directly (for example via SysRq-b)
+rather than from panic(), panic_on_this_cpu() is false and other CPUs remain
+active.  If a console permits unsafe takeover on PR_FLUSH_RESTART (such as
+netconsole with NBCON_EMERGENCY_RESTART_FLUSH) while an NBCON_PRIO_NORMAL
+context holds it inside an unsafe section, nbcon_context_try_acquire()
+performs an unsafe hostile takeover at NBCON_PRIO_EMERGENCY but still
+assigns con->pbufs instead of panic_nbcon_pbufs:
+
+kernel/printk/nbcon.c:nbcon_context_try_acquire() {
+	...
+	/* Assign the appropriate buffer for this context. */
+	if (panic_on_this_cpu())
+		ctxt->pbufs =3D &panic_nbcon_pbufs;
+	else
+		ctxt->pbufs =3D con->pbufs;
+	...
+}
+
+CPU0 (NBCON_PRIO_NORMAL)          CPU1 (emergency_restart)
+nbcon_emit_next_record()
+  nbcon_context_enter_unsafe()
+  printk_get_next_message()
+    // writes con->pbufs->outbuf
+                                  nbcon_atomic_flush_unsafe(PR_FLUSH_RESTAR=
+T)
+                                    ...
+                                    nbcon_context_try_acquire_hostile()
+                                    ctxt->pbufs =3D con->pbufs
+                                    nbcon_emit_next_record()
+                                      printk_get_next_message()
+                                        // overwrites con->pbufs->outbuf
+  con->write_thread()
+    // reads corrupted con->pbufs->outbuf  <-- buffer corruption
+
+Both contexts then concurrently read and write con->pbufs->outbuf and
+con->pbufs->scratchbuf.  For netconsole_ext, overwriting the formatted
+message while send_msg_fragmented() is scanning wctxt->outbuf for the ';'
+header delimiter can trigger WARN_ON_ONCE(!msgbody) or match a ';' past
+MAX_PRINT_CHUNK, overflowing nt->buf[].
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118223704.3286=
-085-1-dmatlack@google.com?part=3D13
-
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118230345.8085=
+60-1-john.ogness@linutronix.de?part=3D6
 
