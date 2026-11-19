@@ -2,66 +2,64 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3389606A333
-	for <kexec@archiver.kernel.org>; Thu, 19 Nov 2026 11:04:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8E8606A32A
+	for <kexec@archiver.kernel.org>; Thu, 19 Nov 2026 11:07:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=eEYggKie;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iZf3M2id
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=IHJDH66o;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=heaEZpr7
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
-	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=+E60zXbU4oZy8RU/l5/D1E6F0ffRVJUETCZ7wv1F10Y=; b=eEYggKiemw92fK
-	lk2PrxlrdYPDKMd1LWW6Gj0aZeYD/gp9eAT4A8ak+vc3Vc3jBD4DBbIKWbRIdyO8o4WhIEYZsk/0c
-	t+AHqCqQSo+M+1qymix3WRHTpAU7mSgp3CA+pYm7CCOE/tjOOVav3poOBbWPSzhS7UulMZsPXX54p
-	s+GZO67L4+uS6BCH52uO/+bheiyF4vHv/71Ffm0dxCrqjuCQqe2Pi9nsT9Q0oo1gbrbMd3LLLpq4d
-	/w6tVZSKRh3GCTPWkeBbYmbA18tuqjIG3KSSi4Lppwyx4ZwMT37ad/ccDRj3Jb3sA4LBVL0rN2UqX
-	IHiQGDWPWeSMHiMRKPDA==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=Ji/rZwxiSW0gG4Mvn53YHSbXtC5FbPqPXsT1gfczIuE=; b=IHJDH66o6u3wE2ZQdbQmPw7X0y
+	XPPZpg4l9ZB9uQtLwhRDGUAEHw5xOr95LN6bMXmiuzF+nQHdB7H7g9ZECoRrrDppSUyOt7TRZ/mgb
+	62uHvhFdVge6vx5SUpVQ06Om+1QtgV0wVgN7/C8yaoy0fBElXsq4DUZarvDYA8rbdxC5Ib+PTd6a6
+	W7n7bErPpYII1tcpf5gvBbVxsDrfQwZgx/Am0hwSEhrmKrAwUsQ/vNGhuHAqhRMuxikldv77dne0f
+	dY3DkYU1g0I0ltt15km2K/He67KtT2ys9UjKlyhwbK+OU2UehlFjiEkSbHcfHGMHRajdzt0vhdF1h
+	cHM4zD0w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTzvy-0000000Bemi-2k8l;
-	Thu, 19 Nov 2026 11:04:06 +0000
+	id 1xTzzX-0000000BfKW-1eP7;
+	Thu, 19 Nov 2026 11:07:47 +0000
 Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTzvx-0000000Belm-0iHv
+	id 1xTzzU-0000000BfJR-0xOt
 	for kexec@lists.infradead.org;
-	Thu, 19 Nov 2026 11:04:05 +0000
+	Thu, 19 Nov 2026 11:07:44 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id E48424631D;
-	Thu, 19 Nov 2026 11:04:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E6501F000C7;
-	Thu, 19 Nov 2026 11:04:01 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 8747D407EE;
+	Thu, 19 Nov 2026 11:07:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46E331F000C9;
+	Thu, 19 Nov 2026 11:07:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795086244;
-	bh=+E60zXbU4oZy8RU/l5/D1E6F0ffRVJUETCZ7wv1F10Y=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=iZf3M2iddgqXAWp5PVcDNrzgtm00kzCg06gw8t+TeOb1CTN+vP3Dm6wrJHlX/lBSC
-	 gfE9WusKIiVvR1yelUFMEIBx5rIngYtV7aQTWMJMVGF40lG6LoaYU5dhlHK+zgr6Gy
-	 rRm7vu9AEAowDAmLsFbPia/q5iYbL71Apw9VFRs1AXor0RqV7EOcPmr8oJxfmqcZv+
-	 63cOOoImihCw1bgSW3VoaUyGzqHdY16Tfe08muqNcUQfvOwDt+39WCdfmCSws3hm2P
-	 GmfzvD8aBf+7HLG298opziRGaMZ9S4xqYZyjjgiW+egzOg3f/463r3RBcis2WlA98M
-	 ry/6gzUUN1eqA==
+	s=k20260515; t=1795086463;
+	bh=Ji/rZwxiSW0gG4Mvn53YHSbXtC5FbPqPXsT1gfczIuE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=heaEZpr7V3NBLDI0usDA+AdsJvsPsidYzAf0n5/3kPoFzBY2XFgjITLpjvkEwUx6v
+	 R2y9WCZu5EX4VQXsjAZsMWfy/h2dyTMc2mZPxeV9xxNNmtXMIC5Zp/y28BETLSWHdx
+	 C3BdhTrYju2+scSHodr1VBT/fVjji6V5quDrsSBiGtCNBDaTmd8d8KwjRQPYzTgEkG
+	 SmAx/pPPxOeMaYhed/yV7ynQZ0+ohwDrN+X5Id55qQBAYHuS0sNbfxXQW9ON38p26o
+	 mLDttVexQMYCjqjDtfcDoMVTDf3XaCWL+oYUUdXdheTBUeGHCN9JVDjR6tzzWJxTf9
+	 trhKJ33C85/oA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Baoquan He <baoquan.he@linux.dev>
+Subject: Re: [PATCH v4 3/4] x86/vmware: Add the vmware_record_panic_msg sysctl
+In-Reply-To: <av1ZB3ia13M420_I@MiWiFi-R3L-srv> (Baoquan He's message of "Wed,
+	18 Nov 2026 15:51:35 +0800")
+References: <cover.1794980455.git.zack.rusin@broadcom.com>
+	<4c5de34b10f579368b890eaa9333a2755886bad3.1794980455.git.zack.rusin@broadcom.com>
+	<sashiko-outbox-220212@kernel.org> <av1IuMZ2W0SXWcNn@MiWiFi-R3L-srv>
+	<20261117230201.921ec5bddf49cd459ddb8428@linux-foundation.org>
+	<av1ZB3ia13M420_I@MiWiFi-R3L-srv>
+Date: Thu, 19 Nov 2026 11:07:34 +0000
+Message-ID: <2vxzzev52i6h.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v6 5/7] liveupdate: Add LIVEUPDATE_SESSION_FREEZE ioctl
- to freeze sessions early
-From: Mike Rapoport <rppt@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: linux-kselftest@vger.kernel.org, rppt@kernel.org, shuah@kernel.org, 
- skhan@linuxfoundation.org, linux-doc@vger.kernel.org, vipinsh@google.com, 
- linux-kernel@vger.kernel.org, corbet@lwn.net, linux-api@vger.kernel.org, 
- dmatlack@google.com, kexec@lists.infradead.org, pratyush@kernel.org, 
- rdunlap@infradead.org, graf@amazon.com
-In-Reply-To: <20261118212845.2855249-6-pasha.tatashin@soleen.com>
-References: <20261118212845.2855249-1-pasha.tatashin@soleen.com>
- <20261118212845.2855249-6-pasha.tatashin@soleen.com>
-Date: Thu, 19 Nov 2026 13:03:49 +0200
-Message-Id: <179508622989.425130.16923155682094971634.b4-review@b4>
-X-Mailer: b4 0.16.1-dev
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -71,408 +69,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Cc: Ajay Kaher <ajay.kaher@broadcom.com>, Kees Cook <kees@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Young <ruirui.yang@linux.dev>, Stephen Brennan <stephen.s.brennan@oracle.com>, Bo Gan <bo.gan@broadcom.com>, "H. Peter Anvin" <hpa@zytor.com>, Zack Rusin <zack.rusin@broadcom.com>, Jonathan Corbet <corbet@lwn.net>, Brennan Lamoreaux <brennan.lamoreaux@broadcom.com>, x86@kernel.org, sashiko@lists.linux.dev, Joel Granados <joel.granados@kernel.org>, Alexey Makhalov <alexey.makhalov@broadcom.com>, Eugenio Perez <eperezma@redhat.com>, Ingo Molnar <mingo@redhat.com>, bcm-kernel-feedback-list@broadcom.com, Thomas Gleixner <tglx@kernel.org>, Petr Mladek <pmladek@suse.com>, Bradley Morgan <brads@mainlining.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, John Ogness <john.ogness@linutronix.de>, virtualization@lists.linux.dev, Steven Rostedt <rostedt@goodmis.org>, Maaz Mombasawala <maaz.mombasawala@broadcom.com>, Borislav Petkov <bp@alien8.de>, Shuah Khan <skhan@linuxfoundation.org>, Michael Kelley <mhklinux@outlook.com>, sashiko-reviews@lists.linux.dev, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, Ian Forbes <ian.forbes@broadcom.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, "Michael S. Tsirkin" <mst@redhat.com>, Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Pratyush Yadav <pratyush@kernel.org>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-10.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Hi,
+On Wed, Nov 18 2026, Baoquan He wrote:
 
-> Add the LIVEUPDATE_SESSION_FREEZE ioctl on outgoing session FDs. Once
-> frozen, no additional files can be preserved in the session and
-> repeated freeze calls return -EBUSY.
-> 
-> Currently, LUO freezes sessions only during reboot(LINUX_REBOOT_CMD_KEXEC),
-> serially under global write locks. On hosts running multiple workloads
-> such as VMs, freezing sessions early under their per-session mutexes
-> lets workloads freeze in parallel as they pause ahead of kexec,
-> reducing blackout time.
-> 
-> By default, session lifetime remains tied to the session FD: closing
-> the FD before reboot unfreezes and unpreserves the session, while
-> keeping it open skips late auto-freeze at kexec.
-> 
-> Add optional flag LIVEUPDATE_SESSION_FREEZE_COMMIT to serialize the
-> frozen session and its FLBs immediately and transfer ownership to LUO
-> until reboot. Committed sessions survive closing the session FD,
-> allowing processes to hand off preserved state and exit prior to kexec.
-> 
-> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> ---
->  Documentation/userspace-api/liveupdate.rst | 20 ++++++
->  include/linux/liveupdate.h                 |  2 +-
->  include/uapi/linux/liveupdate.h            | 38 ++++++++++++
->  kernel/liveupdate/luo_file.c               | 37 +++++------
->  kernel/liveupdate/luo_internal.h           |  3 +
->  kernel/liveupdate/luo_session.c            | 71 ++++++++++++++++++++--
->  6 files changed, 146 insertions(+), 25 deletions(-)
+> On 11/17/26 at 11:02pm, Andrew Morton wrote:
+>> On Wed, 18 Nov 2026 14:42:00 +0800 Baoquan He <baoquan.he@linux.dev> wrote:
+>> 
+>> > On 11/18/26 at 06:14am, sashiko-bot@kernel.org wrote:
+>> > > > Allow administrators to disable host log transfer on ordinary guests or
+>> > > > opt in on encrypted guests. Expose the boolean recording policy through
+>> > > > kernel.vmware_record_panic_msg using proc_dobool(), as Joel suggested.
+>> > > > Zero disables recording, nonzero integers enable it, and reads return
+>> > > > 0 or 1.
+>> > > > 
+>> > > > Register the sysctl only after the logger is ready. A registration failure
+>> > > > leaves the internal default in force. Document that the log is sent
+>> > > > before kdump, and that disable_panic_notifiers_platform_list also skips
+>> > > > it.
+>> > > > 
+>> > > > Link: https://lore.kernel.org/r/4e73yd2ofpdzl6rptzvd74no3hnyfblknoq7wzxlw7f3zjbz7c@srfabx6lsusj
+>> > > > Signed-off-by: Zack Rusin <zack.rusin@broadcom.com>
+>> > > 
+>> > > Sashiko has reviewed this patch and found no issues.
+>> > 
+>> > It might be better to turn off this message if not issues found, just
+>> > like what LKP bot has been doing.
+>> 
+>> (+sashiko@lists.linux.dev)
+>> 
+>> Yes please.
+>> 
+>> These emails do have a little bit of value: they tell you that Sashiko
+>> was able to apply the patch and to review it.  I guess.  Or something.
 >
-> diff --git a/Documentation/userspace-api/liveupdate.rst b/Documentation/userspace-api/liveupdate.rst
-> index cdd74627ab75b..c298b5d0dfe75 100644
-> --- a/Documentation/userspace-api/liveupdate.rst
-> +++ b/Documentation/userspace-api/liveupdate.rst
-> @@ -22,6 +22,26 @@ change, so compatibility is not guaranteed when kexec rebooting between
->  different kernel versions. This is expected to change and stabilize in a future
->  version.
->  
-> +Session Freeze
-> +==============
-> +
-> +By default, LUO freezes active sessions during reboot, and an outgoing session
-> +stays alive only while its session fd remains open. Closing the fd before
-> +reboot aborts preservation and releases the session's resources.
-> +
-> +Userspace can freeze an outgoing session earlier with LIVEUPDATE_SESSION_FREEZE
-> +once it is done preserving and modifying the session's files:
-> +
-> +- Freeze: freezes the session's preserved files, allowing sessions to freeze
-> +  concurrently ahead of reboot. The session remains tied to its fd, so closing
-> +  the fd before reboot rolls back and releases the session.
-> +
-> +- Freeze and commit: userspace can optionally set
-> +  LIVEUPDATE_SESSION_FREEZE_COMMIT in flags to commit the frozen session. This
-> +  serializes the session and its FLBs into the outgoing KHO state immediately
-> +  and hands ownership to LUO. Once committed, the session survives closing its
-> +  fd until reboot, allowing processes to exit before kexec.
-> +
->  Userspace Integration
->  =====================
->  
-> diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
-> index 6051abc0612ce..ead033c59c22d 100644
-> --- a/include/linux/liveupdate.h
-> +++ b/include/linux/liveupdate.h
-> @@ -59,7 +59,7 @@ struct liveupdate_file_op_args {
->   *                compatible with the given file.
->   * @preserve:     Required. Performs state-saving for the file.
->   * @unpreserve:   Required. Cleans up any resources allocated by @preserve.
-> - * @freeze:       Optional. Final actions just before kernel transition.
-> + * @freeze:       Optional. Final actions on session freeze or reboot.
->   * @unfreeze:     Optional. Undo freeze operations.
->   * @retrieve:     Required. Restores the file in the new kernel.
->   * @can_finish:   Optional. Check if this FD can finish, i.e. all restoration
-> diff --git a/include/uapi/linux/liveupdate.h b/include/uapi/linux/liveupdate.h
-> index 4043d40387125..ac456f4014c5d 100644
-> --- a/include/uapi/linux/liveupdate.h
-> +++ b/include/uapi/linux/liveupdate.h
-> @@ -60,6 +60,7 @@ enum {
->  	LIVEUPDATE_CMD_SESSION_RETRIEVE_FD = 0x41,
->  	LIVEUPDATE_CMD_SESSION_FINISH = 0x42,
->  	LIVEUPDATE_CMD_SESSION_GET_NAME = 0x43,
-> +	LIVEUPDATE_CMD_SESSION_FREEZE = 0x44,
->  };
->  
->  /**
-> @@ -236,4 +237,41 @@ struct liveupdate_session_get_name {
->  #define LIVEUPDATE_SESSION_GET_NAME					\
->  	_IO(LIVEUPDATE_IOCTL_TYPE, LIVEUPDATE_CMD_SESSION_GET_NAME)
->  
-> +/**
-> + * enum liveupdate_session_freeze_flags - Flags for LIVEUPDATE_SESSION_FREEZE
-> + * @LIVEUPDATE_SESSION_FREEZE_COMMIT: Commit the frozen session so it is
-> + *                                    serialized immediately and survives
-> + *                                    closing the session FD until reboot.
-> + */
-> +enum liveupdate_session_freeze_flags {
-> +	LIVEUPDATE_SESSION_FREEZE_COMMIT = 1 << 0,
-> +};
-> +
-> +/**
-> + * struct liveupdate_session_freeze - ioctl(LIVEUPDATE_SESSION_FREEZE)
-> + * @size:  Input; sizeof(struct liveupdate_session_freeze)
-> + * @flags: Input; Bitmask of enum liveupdate_session_freeze_flags.
-> + *
-> + * Freezes an outgoing session before kexec reboot. Once frozen, no further
-> + * files can be preserved in the session and repeated freeze calls return
-> + * -EBUSY. Calling this on an incoming session returns -EINVAL.
-> + *
-> + * With @flags set to 0, session lifetime stays tied to the session FD:
-> + * closing the FD before reboot unfreezes and unpreserves the session.
-> + *
-> + * With %LIVEUPDATE_SESSION_FREEZE_COMMIT set, the frozen session is
-> + * serialized immediately and ownership transfers to LUO until reboot.
-> + * Closing the FD or another session failing to freeze during reboot will
-> + * not unfreeze or unpreserve a committed session.
+> In that case a message saying Sashiko can't apply the entire patchset
+> is better.
 
-Once a session is committed and its fd is closed, there's no way back. The
-memory stays preserved, the name returns -EEXIST, and if the update is
-aborted the session will be handed over on whatever next kexec happens.
+Yeah, sounds better.
 
-How is userspace expected to recover from an aborted live update after it
-committed some sessions? Should there be a way to reclaim or discard a
-committed session, e.g. by reopening it by name or by a separate command?
+Or, perhaps Sashiko can reply to the cover with a list of patches it
+found no issues with. That should reduce the spam on big series at
+least, while still keeping the signal of "Sashiko looked at this".
 
-> + *
-> + * Return: 0 on success, negative error code on failure.
-> + */
-> +struct liveupdate_session_freeze {
-> +	__u32		size;
-> +	__u32		flags;
-> +};
-> +
-> +#define LIVEUPDATE_SESSION_FREEZE					\
-> +	_IO(LIVEUPDATE_IOCTL_TYPE, LIVEUPDATE_CMD_SESSION_FREEZE)
-> +
->  #endif /* _UAPI_LIVEUPDATE_H */
-> diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
-> index cdd3c466e5ac3..2cbac44d37cce 100644
-> --- a/kernel/liveupdate/luo_file.c
-> +++ b/kernel/liveupdate/luo_file.c
-> @@ -31,9 +31,8 @@
->   *   - unpreserve(): Cleans up any resources allocated by .preserve(), called
->   *     if the preservation process is aborted before the reboot (i.e. session is
->   *     closed).
-> - *   - freeze(): A final pre-reboot opportunity to prepare the state for kexec.
-> - *     We are already in reboot syscall, and therefore userspace cannot mutate
-> - *     the file anymore.
-> + *   - freeze(): Prepares the final state for kexec, invoked either on an
-
-GitHub Copilot <copilot@localhost>:
-
-The removed sentence was the only place documenting what .freeze() may
-assume. With early freeze userspace still has the files and can keep using
-them after freeze returns. For example, memfd_luo_freeze() snapshots f_pos,
-and the memfd documentation says the current file position is preserved,
-which is no longer true if the file is used after the freeze.
-
-memfd is fine otherwise because size and folios are pinned at preserve time,
-but please spell out in the liveupdate_file_ops kernel-doc that a file may
-be accessed after .freeze() and that handlers must not rely on it being
-quiescent.
-
-> + *     explicit session freeze or during the reboot() syscall.
->   *   - unfreeze(): Undoes the actions of .freeze(), called if the live update
->   *     is aborted after the freeze phase.
->   *   - retrieve(): Reconstructs the file in the new kernel from the preserved
-> @@ -48,7 +47,7 @@
->   *    handler, calls its .preserve() operation, and creates an internal &struct
->   *    luo_file to track the live state.
->   *
-> - * 2. Freeze (Pre-Reboot): Just before the kexec, luo_file_freeze() is called.
-> + * 2. Freeze (Pre-Reboot): When a session freezes, luo_file_freeze() is called.
->   *    It iterates through all preserved files, calls their respective .freeze()
->   *    operation, and serializes their final metadata (compatible string, token,
->   *    and data handle) into a contiguous memory block for KHO.
-> @@ -77,12 +76,15 @@
->   *    descriptor), the session's release handler calls
->   *    luo_file_unpreserve_files(). This invokes the .unpreserve() callback on
->   *    all preserved files, ensuring all allocated resources are cleaned up and
-> - *    returning the system to a clean state.
-> + *    returning the system to a clean state. If the session was frozen early
-> + *    without committing, its files are unfrozen first. Committed sessions stay
-> + *    preserved until reboot even after the session FD is closed.
->   *
->   * 2. Freeze Failure: During the reboot() syscall, if any handler's .freeze()
->   *    op fails, the .unfreeze() op is invoked on all previously *successful*
->   *    freezes to roll back their state. The reboot() syscall then returns an
-> - *    error to userspace, canceling the live update.
-> + *    error to userspace, canceling the live update. On an explicit session
-> + *    freeze, only that session's frozen files are rolled back via .unfreeze().
->   *
->   * 3. Finish Failure: In the new kernel, if a handler's .finish() op fails,
->   *    the luo_file_finish() operation is aborted. LUO retains ownership of
-> @@ -457,9 +459,9 @@ static void __luo_file_unfreeze(struct luo_file_set *file_set,
->   * luo_file_freeze - Freezes all preserved files and serializes their metadata.
->   * @file_set: The file_set whose files are to be frozen.
->   *
-> - * This function is called from the reboot() syscall path, just before the
-> - * kernel transitions to the new image via kexec. Its purpose is to perform the
-> - * final preparation and serialization of all preserved files in the file_set.
-> + * This function is called on explicit session freeze or from the reboot()
-> + * syscall path to perform final preparation and serialization of all
-> + * preserved files in the file_set.
->   *
->   * It iterates through each preserved file in FIFO order (the order of
->   * preservation) and performs two main actions:
-> @@ -476,13 +478,12 @@ static void __luo_file_unfreeze(struct luo_file_set *file_set,
->   *
->   * Error Handling (Rollback):
->   * This function is atomic. If any handler's .freeze() operation fails, the
-> - * entire live update is aborted. The __luo_file_unfreeze() helper is
-> - * immediately called to invoke the .unfreeze() op on all files that were
-> - * successfully frozen before the point of failure, rolling them back to a
-> - * running state. The function then returns an error, causing the reboot()
-> - * syscall to fail.
-> + * __luo_file_unfreeze() helper is immediately called to invoke the .unfreeze()
-> + * op on all files that were successfully frozen before the point of failure,
-> + * rolling them back to an unfrozen state, and an error is returned to the
-> + * caller, canceling the live update if called from the reboot() path.
->   *
-> - * Context: Called only from the liveupdate_reboot() path.
-> + * Context: Called on explicit session freeze or from liveupdate_reboot().
->   * Return: 0 on success, or a negative errno on failure.
->   */
->  int luo_file_freeze(struct luo_file_set *file_set)
-> @@ -532,15 +533,15 @@ int luo_file_freeze(struct luo_file_set *file_set)
->   * @file_set: The file_set whose files are to be unfrozen.
->   *
->   * This function rolls back the state of all files in a file_set after the
-> - * freeze phase has begun but must be aborted. It is the counterpart to
-> - * luo_file_freeze().
-> + * freeze phase has begun. It is the counterpart to luo_file_freeze().
->   *
->   * It invokes the __luo_file_unfreeze() helper with a NULL argument, which
->   * signals the helper to iterate through all files in the file_set, call their
->   * respective .unfreeze() handler callbacks, and clear the serialized blocks.
->   *
->   * Context: This is called when the live update is aborted during
-> - *          the reboot() syscall, after luo_file_freeze() has been called.
-> + *          the reboot() syscall, after luo_file_freeze() has been called,
-> + *          or when a frozen uncommitted session is released before kexec.
->   */
->  void luo_file_unfreeze(struct luo_file_set *file_set)
->  {
-> diff --git a/kernel/liveupdate/luo_internal.h b/kernel/liveupdate/luo_internal.h
-> index 3d948279f018c..bd3f0d1926218 100644
-> --- a/kernel/liveupdate/luo_internal.h
-> +++ b/kernel/liveupdate/luo_internal.h
-> @@ -66,6 +66,8 @@ struct luo_file_set {
->   *              retrieved by a consumer in the new kernel.
->   * @serialized: A boolean flag indicating whether this outgoing session has
->   *              been serialized into KHO.
-> + * @user_frozen: A boolean flag indicating whether this session has been
-> + *               frozen explicitly from userspace.
->   * @file_set:   A set of files that belong to this session.
->   * @mutex:      protects fields in the luo_session.
->   */
-> @@ -74,6 +76,7 @@ struct luo_session {
->  	struct list_head list;
->  	bool retrieved;
->  	bool serialized;
-> +	bool user_frozen;
->  	struct luo_file_set file_set;
->  	struct mutex mutex;
->  };
-> diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
-> index 013386534b698..bf58718fa61ba 100644
-> --- a/kernel/liveupdate/luo_session.c
-> +++ b/kernel/liveupdate/luo_session.c
-> @@ -34,10 +34,11 @@
->   * 1.  Creation: A userspace agent calls `luo_session_create()` to create a
->   *     new, empty session and receives a file descriptor for it.
->   *
-> - * 2.  Serialization: When the `reboot(LINUX_REBOOT_CMD_KEXEC)` syscall is
-> - *     made, `luo_session_serialize()` is called. It iterates through all
-> - *     active sessions and writes their metadata into a memory area preserved
-> - *     by KHO.
-> + * 2.  Serialization: Sessions may be frozen ahead of reboot via
-> + *     `LIVEUPDATE_SESSION_FREEZE`, and optionally committed to serialize
-> + *     their metadata into KHO immediately so they survive closing the FD.
-> + *     When `reboot(LINUX_REBOOT_CMD_KEXEC)` is called,
-> + *     `luo_session_serialize()` freezes and serializes any remaining sessions.
->   *
->   * 3.  Deserialization (in new kernel): After kexec, `luo_session_deserialize()`
->   *     runs, reading the serialized data and creating a list of `struct
-> @@ -254,12 +255,21 @@ static int luo_session_finish_one(struct luo_session *session)
->  static void luo_session_unfreeze_one(struct luo_session *session)
->  {
->  	guard(mutex)(&session->mutex);
-> -	luo_file_unfreeze(&session->file_set);
-> +	/*
-> +	 * Only unfreeze sessions that were auto-frozen by
-> +	 * luo_session_freeze_one(); sessions frozen explicitly by
-> +	 * userspace stay frozen until the session FD is closed.
-> +	 */
-> +	if (!session->user_frozen)
-> +		luo_file_unfreeze(&session->file_set);
->  }
->  
->  static int luo_session_freeze_one(struct luo_session *session)
->  {
->  	guard(mutex)(&session->mutex);
-> +	if (session->user_frozen)
-> +		return 0;
-> +
->  	return luo_file_freeze(&session->file_set);
->  }
->  
-> @@ -280,8 +290,13 @@ static int luo_session_release(struct inode *inodep, struct file *filep)
->  		}
->  		sh = &luo_session_global.incoming;
->  	} else {
-> -		scoped_guard(mutex, &session->mutex)
-> +		scoped_guard(mutex, &session->mutex) {
-> +			if (session->serialized)
-> +				return 0;
-> +			if (session->user_frozen)
-> +				luo_file_unfreeze(&session->file_set);
->  			luo_file_unpreserve_files(&session->file_set);
-> +		}
->  		sh = &luo_session_global.outgoing;
->  	}
->  
-> @@ -298,6 +313,9 @@ static int luo_session_preserve_fd(struct luo_session *session,
->  	int err;
->  
->  	guard(mutex)(&session->mutex);
-> +	if (session->user_frozen)
-> +		return -EBUSY;
-> +
->  	err = luo_preserve_file(&session->file_set, argp->token, argp->fd);
->  	if (err)
->  		return err;
-> @@ -371,11 +389,50 @@ static int luo_session_get_name(struct luo_session *session,
->  	return luo_ucmd_respond(ucmd, sizeof(*argp));
->  }
->  
-> +static int luo_session_freeze(struct luo_session *session,
-> +			      struct luo_ucmd *ucmd)
-> +{
-> +	struct liveupdate_session_freeze *argp = ucmd->cmd;
-> +	int err;
-> +
-> +	if (argp->flags & ~LIVEUPDATE_SESSION_FREEZE_COMMIT)
-> +		return -EOPNOTSUPP;
-> +
-> +	scoped_guard(mutex, &session->mutex) {
-> +		if (session->user_frozen)
-> +			return -EBUSY;
-
-This means that a session frozen without COMMIT can never be committed. A
-VMM that freezes early to shorten the blackout time has to decide right
-then whether the session is handed off.
-
-Can we allow COMMIT on a session that is user_frozen but not yet
-serialized? That would let userspace freeze early and commit later, which
-looks like a more natural flow.
-
-> +
-> +		err = luo_file_freeze(&session->file_set);
-> +		if (err)
-> +			return err;
-> +
-> +		err = luo_ucmd_respond(ucmd, sizeof(*argp));
-> +		if (err) {
-> +			luo_file_unfreeze(&session->file_set);
-> +			return err;
-> +		}
-> +
-> +		session->user_frozen = true;
-> +	}
-> +
-> +	if (argp->flags & LIVEUPDATE_SESSION_FREEZE_COMMIT) {
-> +		struct luo_session_header *sh = &luo_session_global.outgoing;
-> +
-> +		guard(rwsem_write)(&sh->rwsem);
-> +		guard(mutex)(&session->mutex);
-> +
-> +		luo_session_serialize_one(session);
-
-The response is already copied to userspace above and
-luo_session_serialize_one() returns void, so if it fails the ioctl still
-reports success. 
-
-AFAIU the failure there is a WARN that shouldn't happen because the
-capacity is reserved in sh->count, so this is minor, but having
-luo_session_serialize_one() return an error and responding after the
-commit would be cleaner.
+[...]
 
 -- 
-Sincerely yours,
-Mike.
-
+Regards,
+Pratyush Yadav
 
