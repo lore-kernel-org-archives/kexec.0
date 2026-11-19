@@ -2,67 +2,144 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAD5606A337
-	for <kexec@archiver.kernel.org>; Thu, 19 Nov 2026 23:04:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E043606A331
+	for <kexec@archiver.kernel.org>; Thu, 19 Nov 2026 23:37:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=yLMLMPE5;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HTvovdIg
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=S+jm9Afc;
+	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=IcT+QyZ4
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
-	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:In-Reply-To:References:Message-ID:Date
+	:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=bN14zBhVa6ehM2qoqvgVakYsuLN6hYwejnbYVzR1c/A=; b=yLMLMPE5FOHPK269Lu+Z6WkaIk
-	yxjda8UisX4XViOl7eQAHvjABi3kcKL/LjGKh36yNOyIhwJA84c+tBNGGczDjo9fywnBpFAiLmxDn
-	SLP83ADSwRpu91kYuQMcFUoRTYeWnNyUeM8CH5+1QgOikz+uHUWTlTxpZmo+AeuZiIZS8N0/rDXXV
-	zBfwvvS1hmEwIY9izuFGeIxW68Q4Fz5flNJQdvd7QuaPe0afQZu+cbdYG0NGC+PtWO7iWsYaKQuL6
-	+2RclyMT5MQ8riDDEcYCJIP1eZTQznYj9y4ZpcylppfTz8qPVckC0cKzjvxXgwIj0JNj7E5aWU9S+
-	VpEFpTWA==;
+	bh=3W3BEpopRHrA28FnbTo+KMgeFZlTTfszsznmzKm7qTo=; b=S+jm9AfcwOe7R/IdYblzkU7k+F
+	bMprUc39K4TchqvDjXwkNP6tejfdtvvyMpZjrG43Q/uKKa82LpcR8FWwCXyva6FnJr+Oioq1gO0pS
+	Sj7gomlUdJqwTXDBksq05QR6nQVBtys/sz6tYdUrhpbpCBAh/hTq8V0C2h8wmC5IvlIeRBas/EXUM
+	2Xk5M/jh5kq+/cod2RJMa31MJeScTRreR1pjtibnze93X0t0fnl2Kcp/XcSrGg12wVcl23xVmJqHh
+	Eb9msXqhgtYvvk+Y93lV+X6OV2q8LECeB+asRPg8ZrQ5oCr8x9XsE19OGFMkarYz3pQM7dyXBAqKb
+	IDB0ZCLw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUBAe-0000000DdLA-3Fpm;
-	Thu, 19 Nov 2026 23:04:00 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xUBhT-0000000Dfol-2dnw;
+	Thu, 19 Nov 2026 23:37:55 +0000
+Received: from mail-westusazlp170100005.outbound.protection.outlook.com ([2a01:111:f403:c001::5] helo=BYAPR05CU005.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUBAe-0000000DdL4-0v6b
+	id 1xUBhQ-0000000DfoN-3nHR
 	for kexec@lists.infradead.org;
-	Thu, 19 Nov 2026 23:04:00 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id E48F842A69;
-	Thu, 19 Nov 2026 23:03:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE4AE1F000C4;
-	Thu, 19 Nov 2026 23:03:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795129439;
-	bh=bN14zBhVa6ehM2qoqvgVakYsuLN6hYwejnbYVzR1c/A=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HTvovdIgeZG09l5qIayYNdav8+t7sy6uO4lcU7QFH3xO8d3wRK3cvjvGrNXbJ5y5F
-	 dneu/gQOL9jdOlbVdsxfInPNalgaVPlHzf880gIL7v4JDwMba5KEyV3mAm4NZG5F56
-	 x3AzWUzrrbXH0awSMDqTajduy82cmM8oVCROO/yiu1CAMyQ/jXGQzmk5DJjSwxoWRv
-	 9IKqY5BOUZILGdORShhFF4Y3mo7XdCy2Egk1Op+Cf6kO3N7RDlJ9AqrDGFULPOEO8Z
-	 1b/4es3SAxwvxjGbprhlig9sVzycTop75LECYgwgLqEB5SYkl5D8+hqg1ry6yOA+8h
-	 wGji4vccknGJw==
-Message-ID: <sashiko-outbox-224169@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH printk v3 6/7] printk: Add unsafe flush points for
- panic+kexec and emergency_restart
-To: "John Ogness" <john.ogness@linutronix.de>, "Petr Mladek" <pmladek@suse.com>
-Cc: "Sergey Senozhatsky" <senozhatsky@chromium.org>, "Steven Rostedt" <rostedt@goodmis.org>, "Ryan
- Roberts" <ryan.roberts@arm.com>, "Breno Leitao" <leitao@debian.org>, printk@lists.linux.dev, "Andrew
- Morton" <akpm@linux-foundation.org>, "Baoquan He" <baoquan.he@linux.dev>, "Mike
- Rapoport" <rppt@kernel.org>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Pratyush
- Yadav" <pratyush@kernel.org>, "Dave Young" <ruirui.yang@linux.dev>, "Bradley
- Morgan" <include@grrlz.net>, "Oleg Nesterov" <oleg@redhat.com>, "Pavel
- Tikhomirov" <ptikhomirov@virtuozzo.com>, "Petr Pavlu" <petr.pavlu@suse.com>,
- =?utf-8?b?Q2VuIFpoYW5nIChNaWNyb3NvZnQp?= <blbllhy@gmail.com>, kexec@lists.infradead.org
-In-Reply-To: <20261118230345.808560-7-john.ogness@linutronix.de>
-References: <20261118230345.808560-1-john.ogness@linutronix.de>
- <20261118230345.808560-7-john.ogness@linutronix.de>
-Content-Type: text/plain; charset=utf-8
+	Thu, 19 Nov 2026 23:37:54 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tdOFjry2z9Tk57IdRF0MYG1TSulLknvZTJtJn197ueuSl38uBc1tMFdObCseSXDo9bkWBFWxdkGf5jWiaL8FFOLUGA6Ua/6OHfdMQadWjEAOCx9YhpQvpr+mLv8MccFZO4kBFDqVIXukKwjRpdGybo4CJmvioYBkXP08/dn9mvMTE+MQuSJ1D+a5HZrRRYHor7dP25WiMAfWS9wxf55cDpcge2VNqCLR1Pu04sC6PfgFzik97zZ3k/7XrlcfvOoNqikes69mawKAphpgPGZWUd6ueWrjCWhd86rmk2gOUOexiUcKhYgSVqyg4vp3Rdx8PgBOX+/mX7zlXWP+7yQQog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3W3BEpopRHrA28FnbTo+KMgeFZlTTfszsznmzKm7qTo=;
+ b=lqVdzjBGO1YEuVDxloNNCX3bCYWSVSQ9lRpWWYxmKcUMwbTa+HXD8vt9utGySyvepM2tiSgdq0qf3jglB+D2ZzEOLeW70VYJXXH+GqODRudFVMivhzG4fhAPz5BtqpOnneUTLgv6xwYGxu++/wS9N6L/s3RobKSefJdYLqgmDcsRmHwyX4U+V5NwQMaOTcfZXmiLJ/tfN3xmcZAyu3byiNNmkxmI6HtRc4WX5Os9wYnXDPzYczWBd1V+4lPnKKct108cnzUx9sobns2hDs7Q5y14gJc9RgYGimV0h96bYcrfk9FuJdACLtN35fAER7mplgUC/blkqaSygOs20NgXxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3W3BEpopRHrA28FnbTo+KMgeFZlTTfszsznmzKm7qTo=;
+ b=IcT+QyZ43/34P33dGQwLbFpKWKQGeOaXogpqIrAGJJbjkxIiD3BIIibw9d1tv43STlfm9nmVFSWNyB+RBK3xCle+7N8EncSb2NASrRFsOUBWwkoqFQWwE1/ehbMqIxNifdzY9pveIrUucEkcWqG+1jopdSQq21d2aYldveJ+P09HkQ3aG6UyEX21H04A/sJUt99Jrpg7G4U3aEpEnxf5gQHRLal0xQi4hkGiIz6YwJZ2Q9z+k689CsJkHfJL7NzBt3Wfm72HApwg+GH26AGNGf6u6U+CXFIFqrsH4cj/TQtpE8EItZmL4o2Ytx+4g4BebXoXlVPfTHPXSlgn9tE6Zw==
+Received: from DM4PR12MB6136.namprd12.prod.outlook.com (2603:10b6:8:a9::14) by
+ SN7PR12MB7299.namprd12.prod.outlook.com (2603:10b6:806:2af::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.14; Thu, 19 Nov
+ 2026 23:37:44 +0000
+Received: from DM4PR12MB6136.namprd12.prod.outlook.com
+ ([fe80::75c4:de57:e254:243a]) by DM4PR12MB6136.namprd12.prod.outlook.com
+ ([fe80::75c4:de57:e254:243a%4]) with mapi id 15.21.0615.013; Thu, 19 Nov 2026
+ 23:37:44 +0000
+From: Manuel Huber <manuelh@nvidia.com>
+To: Andrew Halaney <andrew@amutable.com>
+CC: Fan Wu <wufan@kernel.org>, David Howells <dhowells@redhat.com>, Jarkko
+ Sakkinen <jarkko@kernel.org>, Christian Brauner <brauner@kernel.org>, Paul
+ Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge E.
+ Hallyn" <serge@hallyn.com>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+	<skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Luca
+ Boccassi <luca.boccassi@gmail.com>, James Bottomley
+	<James.Bottomley@hansenpartnership.com>,
+	"linux-security-module@vger.kernel.org"
+	<linux-security-module@vger.kernel.org>, "keyrings@vger.kernel.org"
+	<keyrings@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "kexec@lists.infradead.org"
+	<kexec@lists.infradead.org>
+Subject: Re: [PATCH v2 1/3] ipe: add the .ipe policy keyring
+Thread-Topic: [PATCH v2 1/3] ipe: add the .ipe policy keyring
+Thread-Index: AQHdZzzTq01P8UHk60+Ce2yq7RogGrcU+wSAgCEx93A=
+Date: Thu, 19 Nov 2026 23:37:44 +0000
+Message-ID: <DM4PR12MB613619C0D9857E94C7C06B0BDE792@DM4PR12MB6136.namprd12.prod.outlook.com>
+References: <20261029-b4-ipe-keyring-rfc-v2-0-77727b205844@nvidia.com>
+ <20261029-b4-ipe-keyring-rfc-v2-1-77727b205844@nvidia.com>
+ <auOn9CzT_gku-5cH@toolbx>
+In-Reply-To: <auOn9CzT_gku-5cH@toolbx>
+Accept-Language: en-CA, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM4PR12MB6136:EE_|SN7PR12MB7299:EE_
+x-ms-office365-filtering-correlation-id: 44a88353-1e3d-4028-84cf-08df46961c5a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|23010399003|7416014|376014|366016|18002099003|22082099003|11063799006|261026121527099003|56012099006|4143699003|10067099003|38070700021;
+x-microsoft-antispam-message-info: hSN62qfkSeJGYthMdKD0U/ny4QirEzqbTjGoQqWM4Qkc7/DYJDxFfk+vAZx1DpUvZCuoyrS/VGDjQhROG+Kedxlbn/cicThK5wfvAALRqWB5YfyJT2srssAp87uFsRkjqdApVujSQz/1vK5N7fneteZqVrA9SqZxjTsJ04/EhHURtLqebSnsuyi7UjfVWjKoJ1yhhMnozLmErAchAVumO9Bkb1JOnTWu19gbKPLDWoxGBSAm3Fwv4eUV6jmuJzRGwBFM5tS4fw2cnNtW+xniyixMXI3fetJXua552ep8t+dpiGMnkzISHLhFbOPqje3SXQek1RukY2Ecrk/frNDSAnRjqoIxk571b1A7pme1/mOGg/Or8T3p9vbG/yxELFdCIZUR6nClX3In8kj6gNOAgiCSaSTgqehEmZngtoHYRBHWSl+wpcK8iggrTvJxT5UFsWswKvWyKlH7o0Vhj4yIQNLGI1WLtUVQoZ0CZ6wIdUG02j6mEq+6u+ygeV8MgoalkidwT64G4jiCb3pH3VTqwWYIvKmFwDovRwm7A+vyH1hWklNcyNKhA0BBwNzZn/3dlVJ9kRdzW2QVmSdXh8q9anfmO5EC6Ght/We2zGqkR3bqCnjdqC1pUJfyMtLTtKLnZ1/8JWkHZ6TA9OFekefeGBPDWwd7a2P8TxTBTGal/YsxqeLVjAmbTJnk6Y55Pxwdut42wbEL5PeZbxjISjHmvD9ru6khB9WBKWqQkZFTDYg=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6136.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(7416014)(376014)(366016)(18002099003)(22082099003)(11063799006)(261026121527099003)(56012099006)(4143699003)(10067099003)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?iuaxQHwfxIomh5uJUHU5tiBdTmZvV4mFHhLK9a1WPZdB+ZpP77GjqgK1kZcc?=
+ =?us-ascii?Q?ouv8OAYJuhvLZMMlqmfbim8TV7quv9wu/cikLbKzlDjXwdAas3WQ7etFcjQD?=
+ =?us-ascii?Q?avZLCqz4a8LWfZa+EIbS/QfUTpw+6o2NBTvLPhpHHNxbkMiamGuVwtxok1fN?=
+ =?us-ascii?Q?N6k0gPk0U5A/3pBpPWnIPQkKmtpbwwvC5i2J6bCpqmoKuEykhPpxv1m//G2s?=
+ =?us-ascii?Q?5FBRxOiQUwA2sf45tS3dm2KNEvUYnSt83UtV4iSzSet+ktKJ4lbZX2LUwzGz?=
+ =?us-ascii?Q?HLFP19lS0MZyJPjaBiav2/xTlMtfGkdfVrICAy9pLko5RJBFX/zoXaU8mekj?=
+ =?us-ascii?Q?eiJA4g54mdjVUlVtyknK9zDs7UpIevYKEkYMvxjdGbJdoZyU4mQay/dKnEm1?=
+ =?us-ascii?Q?UmVrXw1yufBHiCljoubrAcXAQNJ+3gmOo19Wagki+vzK9OJRj1PV8bcpYoPK?=
+ =?us-ascii?Q?DdOJLY9QoFBI7cDDt4dCQAuNrwHX3kuk5PnBXEl6ayAFQpoTVLCT5//Pzp5g?=
+ =?us-ascii?Q?/EaxlBz28bE/YuXOqrmZLYjngnjY6TONKhcN8+6StH2H2ETeDbJCtff3I7i8?=
+ =?us-ascii?Q?P1JykCEEnzKA7HhhtA7YNiXTANvJAO8NSInDa4uytHbdWdfO2kgBc95eSUS2?=
+ =?us-ascii?Q?HPW8Vsq8yY2qkAHItkYgIPqE5fxOSQkVpvGSJ4Jvwy6nrvpmKqJ5UWSISmTl?=
+ =?us-ascii?Q?uTPf84kxVS69u1ELrG9DM4+yxNzs4oClgPxJNJni+qlNcMvWKwrFHggVGxyB?=
+ =?us-ascii?Q?5f+3V0iQrbQOWlhsJNQc3oAjmF+MNdH110eVELz+JPvpJxs0u+vKaXe8cC5U?=
+ =?us-ascii?Q?cp6nfFZOz+M4rVVGWlFbm4qyuXKOSifRvLgv1ZibQ+JtzvRRJjjICrDHy6ba?=
+ =?us-ascii?Q?ucG23Eb55CmalCxpvktHyVV44g17F/20pEsvnXoqacO1cxMmwfvbPTwrUpRd?=
+ =?us-ascii?Q?PN0+5OILm4GSM4ndD9iZ8w7bQpExpv1J+jgxJYdu0Q1PNsxEEbl+KM3+lcB4?=
+ =?us-ascii?Q?530lRY/U5te6VSBH8xl7B5PPA6+7x411K7fmWZ/x3/3puRULRy2tHUkZ/Dap?=
+ =?us-ascii?Q?jCnP9zEQi5rkSgDUM70TUTLoCdZcTtGem5X9aykUAhTI6V3uvfj2q0MYT7SK?=
+ =?us-ascii?Q?eV7wuINMjforgfzTHNv2AzVTMtn8xL/NMyPFLSV1YsaehMsrjxhrNUSP5Joq?=
+ =?us-ascii?Q?O5E1RF2hwsdez1FXqE5LTuGUSdmpD6+SC/3+VVXLdijT8A7gQ1y5r54evflo?=
+ =?us-ascii?Q?t1Gs/hLyJq+vuDBemJn0aKJW2xTHROlmmCsmnG3vNaNERhu8pnAi78QiIb2i?=
+ =?us-ascii?Q?OLI543GcxZUhV4s0PeLKAesPy5kmv9c5ArfGZ0/iHNmJLnYj6uvxj3CMpMjb?=
+ =?us-ascii?Q?79glPILoD9LY//D/KoKLANCvGi6l6gmkzrZCixTTj8DHXfMlwrS4tIlBJPRw?=
+ =?us-ascii?Q?9rjsksOXexzSYt9OY3JkmMf+aYnwJvJa5g9Wz71V0tMQvXigkkp4ttGUbo16?=
+ =?us-ascii?Q?2nu9EztGZ/iuia1S2Ru0J9XXXGE5Yn8/x9uKcwqyyU9W/BbpvlpYX2yMn2Bm?=
+ =?us-ascii?Q?Wzju7n5Wl3mORQlq+lchpxjHL/L/75O3d+LrGgeqzYK5tsD90VgH3viNCirb?=
+ =?us-ascii?Q?ys9AuFZKFu+nLZPbJiskmyI3bINo6fxaeI+2zQihtve1MDMuY1bdx70kbTYt?=
+ =?us-ascii?Q?OyzvriaDNFHu4PB3erMRb5kDeZJiPbbW8G6JYMqsD0xQnfHT?=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 23:03:58 +0000
+X-Archived-By: <archiver.kernel.org>
+MIME-Version: 1.0
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6136.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44a88353-1e3d-4028-84cf-08df46961c5a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2026 23:37:44.3843
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fjpN326nlHShgjWQF5N1UNMQu/exIzIFn8Fbv2OBrmzQ+SZ0U/U8CHOsTMSGBapzmkS5w9zG8F+/G7gwfOo3gw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7299
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261119_153752_959294_F030A76A 
+X-CRM114-Status: GOOD (  10.79  )
+X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,89 +149,23 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
-X-Archived-By: <archiver.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Medium] printk: nbcon: con->pbufs corruption on hostile takeover in
-  emergency_restart()
---
+On Thu, Oct 29, 2026 at 03:33:25PM -0500, Andrew Halaney wrote:
+> Not trying to muddy the water here, but I stared / thought about this
+> a while and wonder if I'm missing something below...
 
-commit bc98e7fe84227c1b12eaff8bf1021023be510742
-Author: John Ogness <john.ogness@linutronix.de>
-
-printk: Add unsafe flush points for panic+kexec and emergency_restart
-
-This commit adds nbcon_atomic_flush_unsafe(PR_FLUSH_RESTART) calls to
-__crash_kexec() and emergency_restart() so that CON_NBCON_ATOMIC_UNSAFE
-consoles can flush when permitted by their unsafe policy.
-
-> diff --git a/kernel/reboot.c b/kernel/reboot.c
-> index a93c23b9e1948..b26d131c54151 100644
-> --- a/kernel/reboot.c
-> +++ b/kernel/reboot.c
-> @@ -102,6 +102,7 @@ void emergency_restart(void)
->  	 */
->  	nbcon_cpu_emergency_enter();
->  	printk_trigger_flush();
-> +	nbcon_atomic_flush_unsafe(PR_FLUSH_RESTART);
-> =20
->  	machine_emergency_restart();
->  }
-
-[Severity: Medium]
-Can this corrupt con->pbufs when emergency_restart() performs a hostile
-takeover outside of panic()?
-
-When emergency_restart() is invoked directly (for example via SysRq-b)
-rather than from panic(), panic_on_this_cpu() is false and other CPUs remain
-active.  If a console permits unsafe takeover on PR_FLUSH_RESTART (such as
-netconsole with NBCON_EMERGENCY_RESTART_FLUSH) while an NBCON_PRIO_NORMAL
-context holds it inside an unsafe section, nbcon_context_try_acquire()
-performs an unsafe hostile takeover at NBCON_PRIO_EMERGENCY but still
-assigns con->pbufs instead of panic_nbcon_pbufs:
-
-kernel/printk/nbcon.c:nbcon_context_try_acquire() {
-	...
-	/* Assign the appropriate buffer for this context. */
-	if (panic_on_this_cpu())
-		ctxt->pbufs =3D &panic_nbcon_pbufs;
-	else
-		ctxt->pbufs =3D con->pbufs;
-	...
-}
-
-CPU0 (NBCON_PRIO_NORMAL)          CPU1 (emergency_restart)
-nbcon_emit_next_record()
-  nbcon_context_enter_unsafe()
-  printk_get_next_message()
-    // writes con->pbufs->outbuf
-                                  nbcon_atomic_flush_unsafe(PR_FLUSH_RESTAR=
-T)
-                                    ...
-                                    nbcon_context_try_acquire_hostile()
-                                    ctxt->pbufs =3D con->pbufs
-                                    nbcon_emit_next_record()
-                                      printk_get_next_message()
-                                        // overwrites con->pbufs->outbuf
-  con->write_thread()
-    // reads corrupted con->pbufs->outbuf  <-- buffer corruption
-
-Both contexts then concurrently read and write con->pbufs->outbuf and
-con->pbufs->scratchbuf.  For netconsole_ext, overwriting the formatted
-message while send_msg_fragmented() is scanning wctxt->outbuf for the ';'
-header delimiter can trigger WARN_ON_ONCE(!msgbody) or match a ';' past
-MAX_PRINT_CHUNK, overflowing nt->buf[].
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118230345.8085=
-60-1-john.ogness@linutronix.de?part=3D6
+I do not disagree with these points here. This current v2 is a result of im=
+plementing the feedback on v1. If we do not want to use the pattern from v1=
+ (alignment with dm-verity, BPF keyring patterns with a command line option=
+), Andrew's suggestion for v2 sounds safer despite resulting in more code. =
+Either variant - v1, or v2, or v2 with using the command line option - work=
+s for the use case I described. Fan, did you make more thoughts on this in =
+the meantime?
 
