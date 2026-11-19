@@ -2,79 +2,65 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A908606A320
-	for <kexec@archiver.kernel.org>; Thu, 19 Nov 2026 08:23:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA2D60A261B
+	for <kexec@archiver.kernel.org>; Thu, 19 Nov 2026 08:26:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=e5mw9SOu;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=TLtOz3/V
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=BTiiWfPX;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Sj8B4eAd
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
+	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=9xtLTQESNoyZANIpHgUGyLeoukqSPARphk8aXo+VHwE=; b=e5mw9SOuoezl6T
-	7BOuyZCtRijEsBpcy5aCw1MtxStv3ZHylSglQ8X6g0nfPdnHBLxoCX4PTJWoMnQIe+9nbKI5AzqRn
-	obBUDBmr4mNPyUXM/jQ32wItDJisrc5i57EAl2hi+KRpHGFKjET8MK2N88lHJ06zoLcVB6klzSTtK
-	mKBF7uQyJF60g2Ay5uCCuX0LONZNU/SgzPXt8kc57xkBAC9g48gGEYWQfNfaQhdGKma8D6Jve6bxS
-	5u3iQsLE2LwREkzCye+rUm0xlkwRwfP68/7Aj4nRIbBUOui2wl2cFEhzCJqkK06NUP+X/b8KKmD+m
-	p7/04afAj1QbgkT8K0Vg==;
+	List-Owner; bh=lD0avvf7a0W4YUjuR/w8gv8cSrs+orKdOF7+3MwyUNQ=; b=BTiiWfPXpPnzRi
+	NMKn++C8+gvzzOjveIo174vps2L7bNafuQeTzMlpnXe/7lTf6y3Ey43gByRuZubeZ0B8iRXQd1s2H
+	Jk1iR6Vj9xj30NfhqSCGSLK2jlGgh0Tv/PFQ7Nf6tLL8xGWv1lpDhEuP7PRkpp8GqrU9Tl47s5/Kf
+	UM1q1+gzizDVG0mPGQiaAsmZ1NL8J47OrqQAYrb59hm7vY5agc5XIt4zHzJeXRvzJ8g9YN/9jNf0r
+	MWkTznbs+nRkyKrnB229DMjGHl92uam0qA8jNGpiqyWod2rohITQ9ng0Q8Bf7W06cH888U3jTOWLC
+	KSzuKTjgWz2HYYtHJeaQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTxQ9-0000000BAeP-3zf2;
-	Thu, 19 Nov 2026 08:23:05 +0000
-Received: from out-31.mta1.migadu.com ([95.215.58.31] helo=mta1.migadu.com)
+	id 1xTxTX-0000000BAoO-1UBX;
+	Thu, 19 Nov 2026 08:26:35 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTxQ6-0000000BAe1-3y3i
+	id 1xTxTV-0000000BAo5-2QKL
 	for kexec@lists.infradead.org;
-	Thu, 19 Nov 2026 08:23:04 +0000
-X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=v7j+so0A9nPKyNFG/7i7Z4Ia8f3AlnUzgV4OZVQCLNk=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795076577; v=1; x=1795681377;
- b=TLtOz3/Vwuj2oRnKgQShgwM2JXmHAm/33S/i82MEq1IycE+UakLvzLvRpgvUdIVIZ0BHoC8l
- Akr2G97MGgshl1tAB1+QvcUIremLvLiFkC4ETGpEHGZ+DwWlMmW7F3ywhbnde1jS4mbSipLh4lc
- vXrUVH6O539xox5E6fdKLvsI=
-X-Envelope-To: kexec@lists.infradead.org
-Received: by smtp.migadu.com with ESMTPS id 09da8324dc43e42a;
-	Thu, 19 Nov 2026 08:22:57 +0000
-X-Mizu-Trace-ID: 09da8324dc43e42a
-X-Migadu-Flow: FLOW_OUT
-From: George Guo <dongtai.guo@linux.dev>
-To: chenhuacai@kernel.org,
-	ardb@kernel.org,
-	pratyush@kernel.org
-Cc: rppt@kernel.org,
-	pasha.tatashin@soleen.com,
-	shuah@kernel.org,
-	ilias.apalodimas@linaro.org,
-	akpm@linux-foundation.org,
-	baoquan.he@linux.dev,
-	ruirui.yang@linux.dev,
-	guodongtai@kylinos.cn,
-	kernel@xen0n.name,
-	graf@amazon.com,
-	liukexin@kylinos.cn,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: Re: [PATCH v6 1/8] efi: Pass KHO state to the next kernel in a configuration table
-Date: Thu, 19 Nov 2026 17:22:52 +0900
-Message-ID: <20261119082252.9120-1-dongtai.guo@linux.dev>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <CAAhV-H5Vse=pKC3Beqhqxa7fqadiGVNqkSy_06HZ3Luw2Pmj5Q@mail.gmail.com>
-References: <CAAhV-H5Vse=pKC3Beqhqxa7fqadiGVNqkSy_06HZ3Luw2Pmj5Q@mail.gmail.com>
+	Thu, 19 Nov 2026 08:26:33 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id F02FE477F6;
+	Thu, 19 Nov 2026 08:26:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B79641F000C7;
+	Thu, 19 Nov 2026 08:26:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795076792;
+	bh=lD0avvf7a0W4YUjuR/w8gv8cSrs+orKdOF7+3MwyUNQ=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date;
+	b=Sj8B4eAdm1rPA9A9kvkOW8aa2I5KLj2Xu/ZsKGea/JgXDyGjOlLQUJtWAc0TAxLtg
+	 eJ2tczDWSyNfNQwR4liU98aTbgD5uB3R7u42kznXNtoxXjknWDEOEPssSP/IP/eD2V
+	 hllgA1tTb5DIeyTnCjLheGcOjcgekHLHkk8H+85MimiyKJ/LE6FvyQtLBUwE82qMIZ
+	 e2y0muasl5jH+rFsYyYpQVYpUQItMrhoO4w+o4NMMFtJB5b6p1LMBxB9GA2D4qzdV5
+	 J34lgUafiEKU5K/Km9nyJjLo7P7cuZ01M6BzfiCxMDeMxnmgxW1T+zdxRh2GyQoXJS
+	 jg6Uopcz1f/0w==
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261119_002303_213152_8DD24869 
-X-CRM114-Status: GOOD (  13.60  )
-X-Spam-Score: -2.1 (--)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 0/2] kho: drop the incoming sub-blob debugfs view
+From: Mike Rapoport <rppt@kernel.org>
+To: Long Wei <longwei27@huawei.com>
+Cc: rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org, 
+ akpm@linux-foundation.org, graf@amazon.com, leitao@debian.org, 
+ corbet@lwn.net, rdunlap@infradead.org, linux-mm@kvack.org, 
+ kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, hewenliang4@huawei.com
+In-Reply-To: <20261119063800.698863-1-longwei27@huawei.com>
+References: <20261117092951.4017931-1-longwei27@huawei.com>
+ <20261119063800.698863-1-longwei27@huawei.com>
+Date: Thu, 19 Nov 2026 10:26:26 +0200
+Message-Id: <179507678647.425130.13205346175314463200.b4-review@b4>
+X-Mailer: b4 0.16.1-dev
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -88,47 +74,34 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=4.0.1
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Hi Huacai, Ard, Pratyush,
+Hi,
 
-On Wed, Nov 04 2026, Huacai Chen wrote:
-> I prefer to keep it in LoongArch until a second architecture, and I
-> think Ard is the same. But this is not a strong objection to Pratyush.
+Please don't send vN+1 as a reply to vN.
 
-Kexin Liu and I have tried x86 as the second user, to see whether the
-common table holds up. It needed only small changes:
+> kho/in/sub_fdts exposes the raw contents of the sub-blobs described by
+> the incoming KHO FDT.  KHO does not own those pages: they belong to the
+> producers' consumers and have independent lifetimes.  LUO, for example,
+> restores and frees its state in early_initcall, before kho_init()
+> (fs_initcall) creates the debugfs view, so the blobs point at pages that
+> are already back in the buddy allocator.  Reading them triggers a KASAN
+> use-after-free in _copy_to_user().
+> 
+> The same information is already available to user space from in/fdt,
+> which KHO does own and which stays reserved.  Drop the directory rather
+> than adding another interface to describe it, keeping the -rc fix small.
+> 
+> Patch 1 removes the interface, patch 2 drops its documentation.
 
-- The x86 EFI stub installs the table, as the LoongArch stub does.
-  install_kho_table() moves from efi-stub.c to efi-stub-helper.c so
-  that the x86 stub can call it.
+Patch 2 is only four lines of documentation for the interface patch 1
+removes. It could be folded into patch 1 so that a stable backport
+removes the documentation together with the code.
 
-- kexec_file_load() skips the SETUP_KEXEC_KHO record when the table
-  exists and the next kernel will get efi_info. Otherwise, for example
-  on a legacy BIOS boot or with noefi, it falls back to setup_data.
+-- 
+Sincerely yours,
+Mike.
 
-- When there is no SETUP_KEXEC_KHO record, the decompressor's KASLR
-  code looks up the KHO bootmem areas in the table, so the kernel is
-  not decompressed onto preserved memory.
-
-The table layout did not change. The only change to the common code is
-that efi_kho_table_found() is no longer __init, since x86 calls it at
-kexec load time.
-
-Tested in QEMU on x86_64. With OVMF, the KHO vmtest and
-luo_kexec_simple pass, and the second kernel finds the KHO state
-through the table. With SeaBIOS, the KHO vmtest passes through
-setup_data.
-
-So I would like to keep the table common in v7. Would you prefer the
-x86 patches in the same series, so that the generic code comes with a
-second user, or as a separate series on top?
-
-Pratyush, does this match what you had in mind for x86?
-
-Thanks,
-George
 
