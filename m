@@ -2,83 +2,89 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19BA60A2638
-	for <kexec@archiver.kernel.org>; Fri, 20 Nov 2026 19:11:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539A5606A33B
+	for <kexec@archiver.kernel.org>; Fri, 20 Nov 2026 19:25:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=0Vf0q+2L;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=UCSM5FDH
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=TNjgBRFh;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=NNOB6ST/
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:To:
-	From:Subject:Cc:Message-Id:Date:Content-Type:Content-Transfer-Encoding:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:Cc:To
+	:From:Subject:Message-Id:Date:Content-Type:Content-Transfer-Encoding:
 	Mime-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=ckLOMz2fV3kY9YEywvc/HmidWwaCPHWXqmOxBtkfgk0=; b=0Vf0q+2Lb0rgNG
-	nVQP4TqnzUzMZfnwe7NiTA9m7Ic1nE7pGUu7Rghg+YgcVht11DQpdjxiTaDFEzAT9wh6UU624wceX
-	VpnqdWSNF1xsYjy8jmDNQVXyzBFIpLIU5cQJNOqhEuITQAxIcMX46Jf4aks+gB3A1Measool94/c5
-	f222lSOcKfG8zOW9K+F9AVJSvHB2r6qhxRvip22fygNM9pNoKvizZyOANvyRW+rrAFI33Uxq1jm+8
-	O3Gq3PXChHw9whZ2BxJdB5bsAfWmJ+8eQuYblB0oZB4dPl/fbG4oqgUyHq0+ACvIsxDrw+LN40C4w
-	gyeqfQ0x+tllLZ/sFAnA==;
+	List-Owner; bh=/RuK77T8Pc2yA26RkCicA7q1V6UBHbE6inBIYLOkP8Y=; b=TNjgBRFhXM4bzG
+	6z2GC0/HQe7/mRpcumZEruGOrYuHFuM4935tWwS9TuVwHQXITQ/Wgm2bF5t+7DOCKt1yt23Mp46fU
+	4KxAb/ztGNNGDbvFBaR34aKO81xaP7qm6gN/KpyfKsNRakoKRKzs2GYJnPbVep2lGXro7Y7flp+5J
+	zZ5nI3Ja4YxQebX/ivMgAbAKAjwPSq/L9YdGLHXpYYyyNw/lezFH+Uyb3dnlnfsfxD13L43XHOcN1
+	R5Gv6FGP25CixcqAjMWkEGJSNhO8Y36hI8Xt7htfV+5Nslo6VBLM9HUY7W5XaTf3jjKQGRXflpWgS
+	bQx1m8nSZUFfWFfHcYRA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUU14-0000000G1eh-0RS1;
-	Fri, 20 Nov 2026 19:11:22 +0000
-Received: from mail-pl1-x633.google.com ([2607:f8b0:4864:20::633])
+	id 1xUUEn-0000000G5Hw-0zIu;
+	Fri, 20 Nov 2026 19:25:33 +0000
+Received: from mail-pf1-x42d.google.com ([2607:f8b0:4864:20::42d])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUU0p-0000000G1ck-1kh0
+	id 1xUUEM-0000000G5Am-1FvY
 	for kexec@lists.infradead.org;
-	Fri, 20 Nov 2026 19:11:10 +0000
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-2f0458cc9easo8323915ad.3
-        for <kexec@lists.infradead.org>; Fri, 20 Nov 2026 11:11:07 -0800 (PST)
+	Fri, 20 Nov 2026 19:25:30 +0000
+Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-8b9c51097e2so526167b3a.1
+        for <kexec@lists.infradead.org>; Fri, 20 Nov 2026 11:25:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795201866; x=1795806666; darn=lists.infradead.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
+        d=google.com; s=20260707; t=1795202704; x=1795807504; darn=lists.infradead.org;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
          :content-type:content-transfer-encoding:mime-version:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=ckLOMz2fV3kY9YEywvc/HmidWwaCPHWXqmOxBtkfgk0=;
-        b=UCSM5FDH3udRNWfrK+S+4EQgq92OFYkpwTG5ZnqKvXpUnonUlKpBnlLEgFNOarSTdq
-         /BlD1Tt1nCeDMh9o5p4srHCCKJAz6XcZ30QrQNJbSlKE/C/Moq0l1P+0oBilhBPaP2YM
-         R8xVAWLI0etBKSAyKVPfL/YthBMw8whEq27Kmzmsz2wkUW62VBty3GcC2JzYsbEj0v74
-         0/9f+5wx/NwXEK6eTAgXm9Sk8gn5WCvJwdBDou4ZAqVxHso3YWypUYi7+1skokPm5Nw7
-         ZQ2tYdDBQLUrcv/98IZTLMQTANMzu6yZQNwnWB4mKhyYnGGAOKsx7VaTT4PEenzZf7vW
-         PtgA==
+        bh=/RuK77T8Pc2yA26RkCicA7q1V6UBHbE6inBIYLOkP8Y=;
+        b=NNOB6ST/6Bfny4SlJY4e8nmUszySXgS0RgsYpG50qTUjYDYjPhQGCLJEOsxranaTG9
+         oylhME/zfwHuCPZKacdWwvbdaCX0RPw6MiVXe1WU59lbdA9cgDxza1m7LKrl7k6w9KMG
+         NFaM4/EJ4jcKFHtHPJ0xJ9uTwWbHcvQlY8eG2CJ/BTNuLFkzmtaf0+Uj65yRbtVtvBZk
+         Az+Esm1AZCn2h37wtzRWjRjRFEpRqzePm1UJdv/aZp0Po1N6XT3XrsOypYwQKYOBPlrS
+         FQ7HL3BwwiALLD/ouNu1D4dN3z20VGoQ6mjoZ7+Mp/FJRwSMUyXJ6BNJVCwXP9D+wt1Y
+         Sf8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795201866; x=1795806666;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
+        d=1e100.net; s=20260707; t=1795202704; x=1795807504;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
          :content-type:content-transfer-encoding:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=ckLOMz2fV3kY9YEywvc/HmidWwaCPHWXqmOxBtkfgk0=;
-        b=IGQB4pJCcDPMx/giBrfASAmAaC165YOYXTSlThK1zayQ65EkSDZD1D2yAHGXe19t4n
-         UuxUJVbCubjUwKOfjDBq0rqDlUDS3GNNzm3E9omNX5JlBTMo737qJzdWey8Xuf8rWpR9
-         NAI/aHpcyA8ki4EEq2fPz0lPns8i6aTUCgAAW5vEkmhbgontxOO8G0VH3nbN34Q9RJiQ
-         O0vmUUu5WXNQxT3CE576EwfTM+/7nunIixjgZV3jIZvNqYN5fN/aXZvSco0IrSO8Z57i
-         iQol1OTuSUy1wsiAg2zY2/Bq4LYtXiLBhSK3l+Q307txe9TenYn6lUz3u95oIOor52AN
-         v+bw==
-X-Forwarded-Encrypted: i=1; AL+hErENLm92xTxOpxDWaAhy0GdEpQp2sQiJ0jSu4Q5fFzo5VwIgksFZ8dw8e05QuGd0gDwTWTr6pQ==@lists.infradead.org
-X-Gm-Message-State: APuU4Z8onmh5KdbBazSXcNIv3uwb18bm16D9vw95RuBHOIHHm13YeOIt
-	DMpV5k7p4IGq/Fwuqw7SKQRxsL9O/5uBXkAOR04rF0yCbclHAmP6ye1VExGXWaLJ5g==
-X-Gm-Gg: AZFdTZet/NWxaWyd0yiWMqSbSs1dpwRmXDNFpfKdh7CqMvG9BSstOt0a3MLjxPTLTRc
-	WQuJoAGtfMCfPvST3CVCis07UaVDDoVqnRAPkEAcsdvD04hNFqc6na4+uRw2Nv7fGm/1T0zvso6
-	BX2aFw2dPzq5z9z7Wqi+Eli4nxxMp9KaziPPwvbScLBibEgdDQw6L46sRZRH1iUoWFH2+caKypy
-	3XgjDDaRWWWuH7k8KRervaI1pOV+6rZvmWEDCwlari+gHO9e6FPt7o+q91KGwrLW8wraFIUBWVO
-	BFciAfPUq0gpNViRbPFJoavpdRV33ABSwBQ1eQDN16OB3vngcsVWsF/uFUuZYb16tItfxAAgi1M
-	BT8Fj/EsSDmb7YF6i+xJ4nIa4wix5r23RofDxlAeA8qI8fMHBzpQYbXzW9I5trLZ/8+lEe7hC8N
-	+dWIFzo+bRJU0BiXyQIHlbY/0fCVfl1l97YHh3mdsaxDQO3w1GBAWpc4IeBzmQwd44Jvh/jOfeN
-	bdXZRLehn7j2t8nC85iNMRxp6GoZAYvGVuntHHDjqPNoSRbTZdDpSh5eVQiZk8Otx7F9PG8uORD
-	znJki7M+R9MMye8witUsOx8vOHuZzUuJvcEUUxcf7stkFN2iVMc9FA5jLA+C0oVu
-X-Received: by 2002:a17:903:3b8d:b0:2e9:5714:6079 with SMTP id d9443c01a7336-2f03f1a4a0dmr40668915ad.31.1795201865671;
-        Fri, 20 Nov 2026 11:11:05 -0800 (PST)
+        bh=/RuK77T8Pc2yA26RkCicA7q1V6UBHbE6inBIYLOkP8Y=;
+        b=vLkN+l8vXBrhgCqZgvKI8bNxZfTVIihnTe5HFg4vwkxxdlorx0DOw19pgdhWIQZswX
+         wQwh70l67DWuPj9ANwXU+FLSAsZtABUC5HBlGQknYCuMdj5c3C5bQGEu+N2Y+OyZcx4U
+         dMmRB+sF0tW4RO1jhLdoHLDy9mevjccTFknhA1l1jzWxrMsAYnVM4X2TWy+7x4g+zgvR
+         MjaD+9qIkALLesFR/34OdzSI2KHEc/ShGEcCwNlQWpIwp6U/x+hzzZvfMSK/Zm+LcUC9
+         peZmxxlTXvd4P8SpALxkN32SZapH2yJZwg0PvB1CzjQoUjMn/t6huGZ6aL19pwKSqMbC
+         BN/A==
+X-Forwarded-Encrypted: i=1; AL+hErG5u52hG+WdD243g4zlye+qQCJ22EzOTmOEfwv29zq1sHU50EsfVITujVLNjAEXD369sWQoMA==@lists.infradead.org
+X-Gm-Message-State: APuU4Z/99PVEv3Ha6zP1wE8GPWZZkylC0cVmkLK8mye/lyKpWTXcA5be
+	iqsuU4gCvKxmWFviLGeVuGqEJbhNZFbiL8ujxdsjFmJ6mEl4J8ypngUMK8QtKoy5ag==
+X-Gm-Gg: AZFdTZf5VSbAe9DuGJ/RZ/NvkPxILmZLxAgpcYykh9dlwp4qyGbu+gq5LbozfkDSUpS
+	r3xeHoOqNtgM+qT12f+l4G4WmI2Ljkh23V91xTXOeDkWu3U+QBCCw7BVJFRkeq4J8I6THakDn5S
+	/e/rDscxuYDN6IbElPyGDSwO1oDk1q5G7Ljlyx4PjfJ99uWOJf9mD76Lf5opRHCHCG9yoHXCEjG
+	m0YFLz4LICnkjLrKNWRRKcjeR5utVAX0YJYlwNhKsG/my9af7pOhOaM3rgpUohJ8t3/QefVUDs8
+	WaLe5N/dSc22eLAH1BUuV3uLlv7BibCzC6V3BD+KF1uzX+PhMkUuAEN0/IRsWpBN0f9bbMLPU6I
+	eKVRwE7i1XwtpFmjbXFHn4X1jkn86uA6lV8x9u35pKe7PD+V+05k3gEmO7vQctJ9MMaLplRLNzG
+	dk96+8l9caaCuXw4FKBUZ9JX6GBAWYtxZ8nReU9SV3itA4yyTUInoVHBGJ1VqEGRPD/eVq3d3O1
+	cyYfKWjLmgpkMC8OaLxq/R1eO1GhcIcYn8JARo72cousL3kI+ctqoD6GAO3mk2VMN6xddoB8qn8
+	R6HEs6QWPF3jyiIx9ek1W4W5v6HRrkcvxiBpRT+KI5jrGMr0ujpsxz6FxUUJzqJoWQ==
+X-Received: by 2002:a05:6a00:f8e:b0:89f:d620:232 with SMTP id d2e1a72fcca58-8c87c864543mr3577508b3a.35.1795202703993;
+        Fri, 20 Nov 2026 11:25:03 -0800 (PST)
 Received: from localhost (33.79.127.34.bc.googleusercontent.com. [34.127.79.33])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2f03f1413f3sm17535745ad.68.2026.11.20.11.11.04
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8c87343f83dsm1923249b3a.39.2026.11.20.11.25.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Nov 2026 11:11:04 -0800 (PST)
+        Fri, 20 Nov 2026 11:25:02 -0800 (PST)
 X-Archived-By: <archiver.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Fri, 20 Nov 2026 11:11:04 -0800
-Message-Id: <DN09Y7673R13.3GB4PTE9ZPXAE@google.com>
+Date: Fri, 20 Nov 2026 11:25:01 -0800
+Message-Id: <DN0A8VWPLTYF.3Q0MIEDWLJYN4@google.com>
+Subject: Re: [PATCH v11 10/13] PCI: liveupdate: Adopt ARI Forwarding Enable
+ on preserved bridges
+From: "David Matlack" <dmatlack@google.com>
+To: <sashiko-reviews@lists.linux.dev>, "David Matlack"
+ <dmatlack@google.com>, <kexec@lists.infradead.org>, <linux-mm@kvack.org>,
+ <linux-pci@vger.kernel.org>
 Cc: "Adithya Jayachandran" <ajayachandra@nvidia.com>, "Alexander Graf"
  <graf@amazon.com>, "Alex Williamson" <alex@shazbot.org>, "Alex Williamson"
  <alex.williamson@nvidia.com>, "Bjorn Helgaas" <bhelgaas@google.com>, "Chris
@@ -94,20 +100,14 @@ Cc: "Adithya Jayachandran" <ajayachandra@nvidia.com>, "Alexander Graf"
  Khawaja" <skhawaja@google.com>, "Shuah Khan" <skhan@linuxfoundation.org>,
  "Vipin Sharma" <vipinsh@google.com>, "William Tu" <witu@nvidia.com>, "Yi
  Liu" <yi.l.liu@intel.com>
-Subject: Re: [PATCH v11 11/13] PCI: liveupdate: Freeze preservation status
- during shutdown
-From: "David Matlack" <dmatlack@google.com>
-To: <sashiko-reviews@lists.linux.dev>, "David Matlack"
- <dmatlack@google.com>, <kexec@lists.infradead.org>, <linux-mm@kvack.org>,
- <linux-pci@vger.kernel.org>
 X-Mailer: aerc 0.21.0
 References: <20261118223704.3286085-1-dmatlack@google.com>
- <20261118223704.3286085-12-dmatlack@google.com>
- <sashiko-outbox-224146@kernel.org>
-In-Reply-To: <sashiko-outbox-224146@kernel.org>
+ <20261118223704.3286085-11-dmatlack@google.com>
+ <sashiko-outbox-224145@kernel.org>
+In-Reply-To: <sashiko-outbox-224145@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261120_111108_542384_DEA6B139 
-X-CRM114-Status: GOOD (  20.00  )
+X-CRM114-CacheID: sfid-20261120_112506_351093_34B00847 
+X-CRM114-Status: GOOD (  25.71  )
 X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -130,99 +130,102 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 On Thu Nov 19, 2026 at 2:38 PM PST, sashiko-bot wrote:
 > Thank you for your contribution! Sashiko AI review found 1 potential
 > issue to consider:
-> - [High] pci: liveupdate: panic on session teardown after
->   pci_liveupdate_freeze()
+> - [Medium] PCI: liveupdate: stale ARI state in pci_configure_ari() with
+>   pci=3Dnoari
 > --
 >
-> commit a3120ec70b92ea26f3e1d92d3bd0d1531b5a73b6
+> commit ee2b5e1cebde3231a1c9acaaf68c272dbf3c6e8e
 > Author: David Matlack <dmatlack@google.com>
 >
-> PCI: liveupdate: Freeze preservation status during shutdown
+> PCI: liveupdate: Adopt ARI Forwarding Enable on preserved bridges
 >
-> This commit freezes a PCI device's outgoing live update preservation
-> status in pci_device_shutdown() so that devices cannot be preserved or
-> unpreserved once shutdown begins.
+> This commit adopts the ARI Forwarding Enable bit from hardware on
+> incoming-preserved bridges during a Live Update, even when pci=3Dnoari is
+> passed on the kernel command line.
 >
->> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
->> index a45ad86370d5d..e26d2f5c2338c 100644
->> --- a/drivers/pci/liveupdate.c
->> +++ b/drivers/pci/liveupdate.c
->
-> [ ... ]
->
->> @@ -520,6 +523,11 @@ static int pci_liveupdate_unpreserve_device(struct =
-pci_flb_outgoing *outgoing,
->>  {
->>  	struct pci_dev_ser *dev_ser =3D dev->liveupdate.outgoing;
+>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>> index ebc565b4780a1..b5b578355a1b6 100644
+>> --- a/drivers/pci/pci.c
+>> +++ b/drivers/pci/pci.c
+>> @@ -3748,7 +3748,7 @@ void pci_configure_ari(struct pci_dev *dev)
+>>  	u32 cap;
+>>  	struct pci_dev *bridge;
 >> =20
->> +	if (dev->liveupdate.frozen) {
->> +		pci_warn(dev, "Cannot unpreserve device after it is frozen!\n");
->> +		return -EINVAL;
->> +	}
+>> -	if (pcie_ari_disabled || !pci_is_pcie(dev) || dev->devfn)
+>> +	if (!pci_is_pcie(dev) || dev->devfn)
+>>  		return;
+>> =20
+>>  	bridge =3D dev->bus->self;
+>> @@ -3759,6 +3759,12 @@ void pci_configure_ari(struct pci_dev *dev)
+>>  	if (!(cap & PCI_EXP_DEVCAP2_ARI))
+>>  		return;
+>> =20
+>> +	if (!pci_liveupdate_adopt_ari(bridge))
+>> +		return;
+>> +
+>> +	if (pcie_ari_disabled)
+>> +		return;
+>> +
+>>  	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ARI)) {
+>>  		pcie_capability_set_word(bridge, PCI_EXP_DEVCTL2,
+>>  					 PCI_EXP_DEVCTL2_ARI);
 >
-> [Severity: High]
-> Can rejecting pci_liveupdate_unpreserve_device() on a frozen device trigg=
-er a
-> panic in pci_check_all_devices_released() when a Live Update session is
-> closed during a non-kexec shutdown?
+> [Severity: Medium]
+> Does returning early on pcie_ari_disabled leave PCI_EXP_DEVCTL2_ARI and
+> bridge->ari_enabled set to 1 if a new device is hot-plugged after the
+> preserved devices below the bridge have finished Live Update?
 >
-> Unlike kernel_kexec(), which calls liveupdate_reboot() to serialize sessi=
-ons
-> before device_shutdown(), non-kexec shutdown paths (kernel_restart(),
-> kernel_halt(), and kernel_power_off()) call device_shutdown() ->
-> pci_device_shutdown() -> pci_liveupdate_freeze() without serializing Live
-> Update sessions.
+> When booting with pci=3Dnoari, pci_liveupdate_adopt_ari() sets
+> bridge->ari_enabled =3D 1 while bridge->liveupdate.incoming is set.  Once
+> the preserved devices finish Live Update and bridge->liveupdate.incoming
+> is cleared, hot-plugging or rescanning a non-ARI multi-function device
+> below the bridge causes pci_liveupdate_adopt_ari() to return -EINVAL and
+> pci_configure_ari() to return at pcie_ari_disabled without reaching the
+> else branch that clears PCI_EXP_DEVCTL2_ARI and bridge->ari_enabled.
+> Because bridge->ari_enabled stays 1, next_fn() calls next_ari_fn(), which
+> returns -ENODEV and skips enumerating functions 1..7 on the new device.
 >
-> If a task closes an open session FD with a preserved PCI device during or
-> after pci_device_shutdown(), luo_file_unpreserve_files() invokes the file
-> handler's .unpreserve() callback and then unconditionally drops the outgo=
-ing
-> FLB reference:
->
-> kernel/liveupdate/luo_file.c:luo_file_unpreserve_files() {
->     ...
-> 		luo_file->fh->ops->unpreserve(&args);
-> 		luo_flb_file_unpreserve(luo_file->fh);
->     ...
-> }
->
-> Because dev->liveupdate.frozen is set, pci_liveupdate_unpreserve_device()
-> returns -EINVAL without decrementing dev_ser->refcount or
-> outgoing->ser->nr_devices.  When luo_flb_file_unpreserve() drops the fina=
-l
-> FLB reference, pci_flb_unpreserve() calls pci_check_all_devices_released(=
-),
-> which panics because outgoing->ser->nr_devices is still non-zero.
+> Checking !pcie_ari_disabled alongside pci_find_ext_capability(dev,
+> PCI_EXT_CAP_ID_ARI) instead of returning early would allow the else branc=
+h
+> to clear PCI_EXP_DEVCTL2_ARI and bridge->ari_enabled.
 
-Yes, this can happen, although only in a narrow window.
-kernel_restart(), kernel_halt(), and kernel_power_off() do not freeze
-userspace or serialize Live Update sessions, so a task that still holds
-a session FD when reboot(2) is called (e.g. reboot -f, which skips
-killing userspace first) can close it after its devices have been
-frozen. In v10 this only resulted in a warning, but the panic added to
-pci_flb_unpreserve() in v11 turns it into a panic during reboot.
+Yes, but only in a very narrow case: the next kernel is booted with
+pci=3Dnoari, the previous kernel enabled ARI Forwarding on a bridge above
+a preserved device, the preserved devices below that bridge finish, and
+then a _different_ multi-function device without ARI is hot-plugged below
+the same bridge. The only impact is that functions 1-7 of the
+hot-plugged device are not enumerated. There is no corruption or crash.
 
-The freeze only matters during kexec. pci_device_shutdown() only checks
-pci_liveupdate_is_outgoing() when kexec_in_progress is set, and
-kernel_kexec() serializes all sessions via liveupdate_reboot() before
-device_shutdown(), so nothing can be unpreserved after devices are
-frozen.
+I don't think this is worth changing more PCI core code in
+pci_configure_ari() for in this series. It can be addressed in a future
+patch if someone really wants to do that.
 
-I will fix this in v12 by only freezing devices during kexec, so that a
-non-kexec shutdown no longer refuses to unpreserve devices:
+The comment in pci_liveupdate_adopt_ari() can be improved though, since
+it claims ARI Forwarding Enable is always recomputed after the preserved
+devices finish. I will update it in v12 to document the pci=3Dnoari
+behavior:
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 08b768b9e905..2748ca22e9cf 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -560,7 +560,8 @@ static void pci_device_shutdown(struct device *dev)
- 	struct pci_dev *pci_dev =3D to_pci_dev(dev);
- 	struct pci_driver *drv =3D pci_dev->driver;
+diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+index 493576119a76..7582b87df3ad 100644
+--- a/drivers/pci/liveupdate.c
++++ b/drivers/pci/liveupdate.c
+@@ -937,9 +937,14 @@ int pci_liveupdate_adopt_ari(struct pci_dev *dev)
 =20
--	pci_liveupdate_freeze(pci_dev);
-+	if (kexec_in_progress)
-+		pci_liveupdate_freeze(pci_dev);
- 	pm_runtime_resume(dev);
-=20
- 	if (drv && drv->shutdown)
+ 	/*
+ 	 * Unlike ACS, only adopt ARI while the bridge is incoming-preserved.
+-	 * Once all devices below the bridge have finished, recomputing ARI
+-	 * Forwarding Enable yields the same result for the same device, and
+-	 * must be allowed to change if a different device is hot-plugged.
++	 * Once all devices below the bridge have finished, pci_configure_ari()
++	 * configures ARI Forwarding Enable as usual the next time a device is
++	 * added below the bridge, e.g. if a different device is hot-plugged.
++	 *
++	 * The exception is pci=3Dnoari, where pci_configure_ari() does not touch
++	 * the bridge, so the adopted ARI Forwarding Enable persists after the
++	 * preserved devices finish, even if a device without ARI is later
++	 * hot-plugged below the bridge.
+ 	 */
+ 	if (!dev->liveupdate.incoming)
+ 		return -EINVAL;
 
