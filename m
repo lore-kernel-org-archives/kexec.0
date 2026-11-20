@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC8E606A33A
-	for <kexec@archiver.kernel.org>; Fri, 20 Nov 2026 15:44:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740D1606A330
+	for <kexec@archiver.kernel.org>; Fri, 20 Nov 2026 16:11:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=PVYjkcXK;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mmeJ271N
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=QePzERZx;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=H/VuAI5B
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
@@ -14,51 +14,59 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=NGj0qVuLIFFATf6LyggXZB3De6ZTU5Fq7s/WOWKevVw=; b=PVYjkcXK07TPcYPrX4tLvDcLmg
-	vhwjVg1TvYMCzDRhLbFmuWcn0LXNeX7Wkxulys/5yKygMBO7YQfmWYaREqNPX84Jj1e2XVcnv84PI
-	0zcXORuqcrPc5+/SVjK2TqqmrhJXHvEdHxPgCEwhTrUVgLCMtqCd03zB40Nbb7rPuDpLfBr1v2k07
-	KWz/+pbm7F062MRVi7TIzF6Mxmmt/tJjLpzGgqFrK8PkKNBXPvNZKdQVkmVIfWXeIeW1Wp30OdfnV
-	WfuIy3Fjk4OzFj8vSnOQgVjxzMSBFoVgaD1QBiIra33+y3TAAcFJxY2bOzm8lSGY6o9D6YexkW8Bf
-	gsXH4QjA==;
+	bh=ZFb+S8Es0NvUmNBR5T6fgVNGrRH2yKZK48f5XbLVIEc=; b=QePzERZxDnqwzHfc3fs66OUC8p
+	lMbxnUNrsqfShcXiWwOAYgWaY9jFytDy78ntNq6z7RzXcVeQg4/jV/D9uGXJYJNMPo+g0SBSZHHbr
+	KUoJ77xs7f6OKyqlbwQWEYSN20qaddsw4CwuExr86F8Tx9zjz8ojuYy5xQ1pEL2BHUwZ/my50/Dmt
+	pAXwha4gKByEorCnFeZt3x0kwom8JGdSZQoKF5YaQHcSOrrWPbYMZATiEJF8L1bjBf6ChostzWIvz
+	R1rMuKO3Z5ZLLzpPNdCocZeyZUBL7Ns7+RvyGLdJOAG5koBR/hxhLwB1BRMX5vo48DK3627QVhVlf
+	jcnKiriw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUQmz-0000000FSy9-0ly3;
-	Fri, 20 Nov 2026 15:44:37 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xURCi-0000000FWVy-4713;
+	Fri, 20 Nov 2026 16:11:12 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUQmy-0000000FSxx-22pl
-	for kexec@lists.infradead.org;
-	Fri, 20 Nov 2026 15:44:36 +0000
+	id 1xURCg-0000000FWVS-0qbO;
+	Fri, 20 Nov 2026 16:11:10 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id B989C629CF;
-	Fri, 20 Nov 2026 15:44:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62B4D1F000CF;
-	Fri, 20 Nov 2026 15:44:33 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 9ACC640C12;
+	Fri, 20 Nov 2026 16:11:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12A251F000C6;
+	Fri, 20 Nov 2026 16:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795189475;
-	bh=NGj0qVuLIFFATf6LyggXZB3De6ZTU5Fq7s/WOWKevVw=;
+	s=k20260515; t=1795191069;
+	bh=ZFb+S8Es0NvUmNBR5T6fgVNGrRH2yKZK48f5XbLVIEc=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=mmeJ271N5f02C0B1RJgXSd6hkgBzr5xSxlMsyenlDXMd0wCPGTa7FRYam0L+pK+Nd
-	 2nDwSnDOv012h1FYqMdYNMO6bs1iHUSB9PaeWSr6tD3E999ON/i1nZJrZlbyopx/zH
-	 1WOxAslRKxAb9EIJj4yAqjf8N6R6HgMZS6aqktcvJIpdXVTkB3T81w8/pracVLAw5I
-	 wSJIVpaYPJpzClqE6eNqFKYfrkrqP4tYZGjR6OqUAdtKVVC5HgrjgK71tSO2C0h5E2
-	 +yEM8XVc3jF9BMQI6AHMNt7a5VhqmQ68piHOjE1DJhS6l88PoRjNwWQFZutTDw4942
-	 yHBaa6mbzgwGw==
+	b=H/VuAI5BtuQwQd0zk9hcNYwSPn6N63WihBmZ3f6agPjw5j6X4nhjl+xkuBInj2K3G
+	 pOag/mfhsLJCuDBPE43lBZguYkWm5Q0XnOYHt8I9NqdQ+atTKMgFYlb1IaF+jtQGld
+	 3sUfi6lcLYmIyXlLtnVutUfX01YNRwxTD426bjxP/ztOBKmBROpGn/s6ksznIb2w4q
+	 Au1te+hWzLmOyeSjczvD2gxa37Gi2iRY6JeY1uNgS+FOo6aHN7HdwWzWJ76IhqubZC
+	 I7wV52HU+JBPo3Q8L36yOGgOyjynFxkC/8obE8WBrvul2HbGE4EceWsI1QomsynUz+
+	 KVYj1KF0dneuA==
 From: Pratyush Yadav <pratyush@kernel.org>
-To: Chris Down <chris@chrisdown.name>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Pasha Tatashin
- <pasha.tatashin@soleen.com>,  Mike Rapoport <rppt@kernel.org>,  Andrew
- Morton <akpm@linux-foundation.org>,  Samiullah Khawaja
- <skhawaja@google.com>,  kexec@lists.infradead.org,
-  linux-kernel@vger.kernel.org,  linux-mm@kvack.org
-Subject: Re: [PATCH v2 2/2] mm/memfd_luo: keep memfd frozen until finish
-In-Reply-To: <20261114220528.f7d9874a014dbb5d@chrisdown.name> (Chris Down's
-	message of "Sat, 14 Nov 2026 22:05:28 -0800")
-References: <20261110175855.2437084-1-pratyush@kernel.org>
-	<20261110175855.2437084-3-pratyush@kernel.org>
-	<20261114220528.f7d9874a014dbb5d@chrisdown.name>
-Date: Fri, 20 Nov 2026 15:44:31 +0000
-Message-ID: <2vxzcxrz1p9c.fsf@kernel.org>
+To: Tarun Sahu <tarunsahu@google.com>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,  Mike Rapoport
+ <rppt@kernel.org>,  robin.murphy@arm.com,  maz@kernel.org,
+  will@kernel.org,  David Matlack <dmatlack@google.com>,  Alexander Graf
+ <graf@amazon.com>,  seanjc@google.com,  jgg@nvidia.com,
+  loganodell@google.com,  arnd@arndb.de,  dwmw2@infradead.org,
+  baolu.lu@linux.intel.com,  Bjorn Helgaas <bhelgaas@google.com>,
+  oupton@kernel.org,  alex@shazbot.org,  gle.com@google.com,
+  pbonzini@redhat.com,  Andrew Morton <akpm@linux-foundation.org>,
+  kevin.tian@intel.com,  joro@8bytes.org,  kvmarm@lists.linux.dev,
+  linux-pci@vger.kernel.org,  Pratyush Yadav <pratyush@kernel.org>,
+  kexec@lists.infradead.org,  kvm@vger.kernel.org,  iommu@lists.linux.dev,
+  linux-arm-kernel@lists.infradead.org,  skhawaja@google.com,
+  sagis@google.com,  linux-arch@vger.kernel.org,  linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 02/19] kho: block: Record the entry size in the block
+ header
+In-Reply-To: <20261110050202.529473-3-tarunsahu@google.com> (Tarun Sahu's
+	message of "Tue, 10 Nov 2026 05:01:45 +0000")
+References: <20261110050202.529473-1-tarunsahu@google.com>
+	<20261110050202.529473-3-tarunsahu@google.com>
+Date: Fri, 20 Nov 2026 16:11:01 +0000
+Message-ID: <2vxz8q2n1o16.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
@@ -73,48 +81,95 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Sat, Nov 14 2026, Chris Down wrote:
+On Tue, Nov 10 2026, Tarun Sahu wrote:
 
-> Hi Pratyush,
+> Subsystems using the KHO Serialization Blocks framework currently do
+> not record the serialized entry size in the block header. The entry size
+> is only known to individual callers, which must track and store it in an
+> owning serialized data structure. If a newer source kernel adds fields
+> to an entry, the changed entry size breaks the stride when an older
+> target kernel iterates over blocks.
 >
-> Pratyush Yadav writes:
->>+ * Restrictions
->>+ * ============
->>+ *
->>+ * While a memfd is preserved, and after it is retrieved until the session is
->>+ * finished, its size can't be changed and holes can't be punched in it.
->>+ * Operations that would do so (``ftruncate()``, ``fallocate()``, writes past
->>+ * the end of the file) fail.
->
-> Not a big deal, but there's one more thing that fails in this window and
-> isn't listed here. Adding F_SEAL_WRITE to a retrieved memfd before finish
-> now waits about 150ms and then fails with EBUSY. That's because
-> memfd_wait_for_pins() sees the reference kept from kho_restore_folio() as
-> an extra reference on every folio. Once the session is finished it
-> succeeds straight away. The same already happens while the memfd is
-> preserved in the old kernel, so maybe it's worth mentioning here for both?
->
-> Also, fallocate() fails with EPERM in every mode while the file is frozen.
-> That includes FALLOC_FL_KEEP_SIZE inside i_size, which neither changes the
-> size nor punches a hole. "Operations that would do so" makes it sound like
-> only some fallocate() calls fail.
->
-> Otherwise I've tested this across a kexec and it works well.
->
-> Once those are fixed, please feel free to add:
->
-> Reviewed-by: Chris Down <chris@chrisdown.name>
-> Tested-by: Chris Down <chris@chrisdown.name>
+> Add an entry_size field to struct kho_block_header_ser. On the outgoing
+> side, record bs->entry_size into every block header during allocation.
+> During restoration, derive the entry stride directly from the block
+> header instead of relying on caller-supplied dimensions. The
+> kho_block_set_init() interface remains unchanged. A zero entry size,
+> or one that differs between blocks of a set, is rejected during
+> restoration.
 
-Thanks! I'll fixup the two documentation things and send out a v3.
+Yeah, I agree with David here. It makes little sense to have callers
+pass in the entry size only to have it ignored (or, only used for
+rejection). It would be much better to use the recorded entry size and
+hand it over to callers.
+
+>
+> This change modifies the serialized layout of struct kho_block_header_ser
+> and shifts the offset of serialized entries within preserved blocks.
+> Bump KHO_FDT_COMPATIBLE from kho-v4 to kho-v5 so that pre-v5 and post-v5
+> kernels cleanly reject mismatched handover state during boot. Also
+> update the stale compatible string example in the documentation.
+>
+> Suggested-by: Pratyush Yadav <pratyush@kernel.org>
+> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
+> ---
+>  include/linux/kho/abi/block.h          | 10 ++++----
+>  include/linux/kho/abi/kexec_handover.h |  6 ++---
+>  kernel/liveupdate/kho_block.c          | 32 +++++++++++++++++++++++---
+>  3 files changed, 38 insertions(+), 10 deletions(-)
+>
+> diff --git a/include/linux/kho/abi/block.h b/include/linux/kho/abi/block.h
+> index 36bdbaf9b3b8..a40b0906c821 100644
+> --- a/include/linux/kho/abi/block.h
+> +++ b/include/linux/kho/abi/block.h
+> @@ -40,9 +40,10 @@
+>  
+>  /**
+>   * struct kho_block_header_ser - Header for the serialized data block.
+> - * @next:  Physical address of the next struct kho_block_header_ser.
+> - * @count: The number of entries that immediately follow this header in the
+> - *         memory block.
+> + * @next:       Physical address of the next struct kho_block_header_ser.
+> + * @count:      The number of entries that immediately follow this header in the
+> + *              memory block.
+> + * @entry_size: The size in bytes of each serialized entry in the block.
+>   *
+>   * This structure is located at the beginning of a block of physical memory
+>   * preserved across a kexec. It provides the necessary metadata to interpret
+> @@ -51,9 +52,10 @@
+>  struct kho_block_header_ser {
+>  	u64 next;
+>  	u64 count;
+> +	u64 entry_size;
+
+I think this is the wrong place to put this. This header goes before
+each block, so it should only hold metadata _for this block_, not for
+the whole data structure. Because if you do that, you end up having the
+field present in each block, but only the first block is special and the
+value is only valid there. The feature header coming later makes this
+problem worse.
+
+I think we should follow down the lines of kho_vmalloc and have a
+out-of-band structure that describes the whole block set, and then each
+block only holds metadata relevant to it.
+
+So this would look like:
+
+	struct kho_block_ser {
+		DECLARE_KHOSER_PTR(first, struct kho_block_header_ser *);
+		u64 entry_size;
+		/* Other things like flags, size, etc... */
+	};
+
+[...]
 
 -- 
 Regards,
