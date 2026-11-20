@@ -2,113 +2,111 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF75D606A336
-	for <kexec@archiver.kernel.org>; Fri, 20 Nov 2026 00:16:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B55606A326
+	for <kexec@archiver.kernel.org>; Fri, 20 Nov 2026 00:19:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=WRVmDOJA;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=XImeq63N
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=3xPMqxrH;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Zt4M2vga
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:To:
 	From:Subject:Cc:Message-Id:Date:Content-Type:Content-Transfer-Encoding:
 	Mime-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=hAC07b8lFLojHV0Uml6G9ei5fnLsVAdumfXqcmefGN4=; b=WRVmDOJAtYZWdi
-	7MvTHnHftg39gCoZ0A1pg6SiQ1EG5PiZxcUVWylYAFxvGvsGtrgFb6qZ1jsFLvfS7ZLkoMopoGXTf
-	snXuvk6QNDqzGrmMjqRBueJxOGKlDKgcOslfKpRhuxuLeBijaLt0HjqvE1IKzmqNLT7B1tXtwOfRr
-	XKbLFpssrgLzG/8HOd0mfKp5ORxyx4yrS7vUDzFrVLn2wKzMf/UDYWaD7PMJpxrHm+GLdcyylyKi9
-	m3C7kyggiCuPM2Fx+5Z9OzCUM0zIrukB3FRcGPxg0s8OtcVSeK6ZxnXUL54FJORoa2Y75sHoUJ8T8
-	u625RoSwVVWTKUeoCW0Q==;
+	List-Owner; bh=n7l+AyO/cRMVQJwJa64VigJKwgCGiEZe5FhWi4AHvFM=; b=3xPMqxrH5DVXl7
+	rBdywiPvhZaAaX4sDdCOHJl6ZpoB5S5XR/r8w5Pd/5vtZQEb9gyWrDTCla/zfCwZbtY81CkmSGPep
+	WprtlncPaz2xssUeVuZu0YwveyMXZJF34WbpjX/pu2hzjGb+gYAXd0W+z22Yt0IYKbxjSusT44c+f
+	5H3cF1z4BzMMyFcizxRSSs45LWwzYv4p9vhxpKYgNWrt/3Qi54dFhOf7vcLPGeX9YO/Lss3uqzWf9
+	n5ejsWENncP/Snmi1hM2dWih1m+dH6kgAx0WnJ0Mwg00Vfk4fBwBQk+jr34UJOphW69c11tG8pe0t
+	td/HiTPO7YOIUPX1cIzw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUCIh-0000000Djcl-0jqH;
-	Fri, 20 Nov 2026 00:16:23 +0000
-Received: from mail-pl1-x630.google.com ([2607:f8b0:4864:20::630])
+	id 1xUCLs-0000000Djjb-2exo;
+	Fri, 20 Nov 2026 00:19:40 +0000
+Received: from mail-pl1-x62e.google.com ([2607:f8b0:4864:20::62e])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUCId-0000000DjcN-2t8a
+	id 1xUCLp-0000000DjjF-26Kg
 	for kexec@lists.infradead.org;
-	Fri, 20 Nov 2026 00:16:21 +0000
-Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-2e98798cbddso1369715ad.0
-        for <kexec@lists.infradead.org>; Thu, 19 Nov 2026 16:16:19 -0800 (PST)
+	Fri, 20 Nov 2026 00:19:38 +0000
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-2ed408b0d9dso1312925ad.2
+        for <kexec@lists.infradead.org>; Thu, 19 Nov 2026 16:19:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795133779; x=1795738579; darn=lists.infradead.org;
+        d=google.com; s=20260707; t=1795133976; x=1795738776; darn=lists.infradead.org;
         h=in-reply-to:references:to:from:subject:cc:message-id:date
          :content-type:content-transfer-encoding:mime-version:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=hAC07b8lFLojHV0Uml6G9ei5fnLsVAdumfXqcmefGN4=;
-        b=XImeq63NPfpEpRynKPeZWb3sxYIfc+wOEWPz8sjzJ/xYRP+Iu88xWjl6ycBUym2QKE
-         wWinYjQMwNkal2ztuwHRSg+JQdCd1jxG8muUNjYXRDLRj7AORomv+qyTiyJkii4zgeNO
-         AFrX92HMuNqEaYbb9soOhA7jH7RYsUFtyfSqgyhvZNkAJknhwLz4JJsUtUP39KDVEfh4
-         5iGtCno+ExQyd5pkDbH71jdGoMunMJb/58OKqG9CAHTWw/50NBXYyurKNciYRfhO9jHr
-         2xmfHFMBSJ6s2gI2ArOh3XZ5GxndeqU78NDWYRW5Eao+K1jUE+W+h0ej2sH+Kt59fIGF
-         0kRg==
+        bh=n7l+AyO/cRMVQJwJa64VigJKwgCGiEZe5FhWi4AHvFM=;
+        b=Zt4M2vgaB75l7bkf27czqwoLFrQDnFArJqbUpsWuSiHYp5C9DRuJJXxQ6f8uvZ8xLP
+         t0nOUE/tm0zS5ONIKaNFhnUBVU+GIpasvpVLIw29PNL795EM6iltXx8ZVjpKKrEFKLSL
+         t6WeFhWBIFSYocO3gq/KIYkQAKL8TcUWAVo69yp9BGBHzL15vTJNnrgRLJGaF+kn/iVw
+         75TbhNDnkms/3nnlCJiWxgiytrHW1eyNeSZ7UhxqVXNRrgVMs+zbnQwLg1jQdKYyDrDh
+         9Dipb9Y895BSy44cl2n+oTKSvCnF81WZr7jygeM0GMg0Pg9CVOyxmzizvOjTPIBWHX8A
+         8UMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795133779; x=1795738579;
+        d=1e100.net; s=20260707; t=1795133976; x=1795738776;
         h=in-reply-to:references:to:from:subject:cc:message-id:date
          :content-type:content-transfer-encoding:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=hAC07b8lFLojHV0Uml6G9ei5fnLsVAdumfXqcmefGN4=;
-        b=gvM5dGqG6eAucWqqj3UBVovOvYA+lipj226JscO0o2IHtTWI0adPDX/VQsvgR1Ya+2
-         xM83jBWcvVt5ny+fuSaSI+kC1/vnSgOJOTSYgJqKMQF8pOhAnX+MOObXnQtwKqS2aShP
-         hr9X4rn1tp11fD3fYbuXJP6RuClvNZ8pVGfRT3TYU7YHZqnt2iYprInbMmuK2OuBsCGT
-         iO9RHD4SfRdoTglxCY+idBgspd9Zc2AnPGcvllBtuksh8SM2GQZtozrUwCnSr6SwAvu7
-         YyMF+WBWqqBORFe3OxcKTgt8s90QZA4k+loKPIZ+OmDCd9D97lp8tnesWraTX8J5nn8d
-         hGXg==
-X-Gm-Message-State: APuU4Z9M5MpZggbsEwXEX3/4K5W9Zj47Ps2cCOZVutSbFWGDHa+uJwc/
-	nHBodXw8zjU43zvFkyEQnkXj+vyvsE+BVKmOeCVy8W+1peCpqEu3as+vU8mnVBpp/w==
-X-Gm-Gg: AZFdTZfarubbdpkwL8YLT5Y5ZO4L/wJogrzhRdR0jNjpN7N7BmKI4MkBnsLF/cte/tU
-	G9zXMzExrP6SwA3+G43r4PDXy0ZswpZtvRDqq9IMAF526Gft0i9cP0PD/02j46SNa6i4/2lqIAi
-	NGXd/bclxlPB1w7WfAYfNWSGcikMYef2C4StLxk9+umDHvjW3+QqK5FJKqCuXiVfcSxHzZWJnoo
-	BQMkXvLVVU4PVZq41rewsoyy6AhUgwUvQg2nzeB0Ka/xoO7SVrjbJ6hGLlSVy8G2TWUeRcLnWVQ
-	qaJpWxIa9J/bRQYLaCQNEz9qj0ZAP92QWaDT8+OMz23Kjm/NXv99oTmI6TMF+b3KPuPv70rwjKi
-	bpQG0GahGKLS/VdoPUzEcfeXkIHyD3XGAnqzX+yImbFvkcmclvPQs9EaTi9oaRGmn3dT3Sw3xDz
-	X+ywgiAcyGFSq1tosoByIPy3uu4e24Z/eQ+S1RykCgAZJJv5YjevYkUl7XUavClvkmmcpAaFyjN
-	JIG2nEi/tPKi2a0bMQQheox0au+W5I/YipSH2Kjvwep27PFJWC9Felp6tYwRSHH7w2cYvie7SST
-	kUzkIWyME3Ib5p0QV83BXKrk/PyhG4Lzmco9w6F12Sg1vrY7B9YXEjliP1dq8yB2
-X-Received: by 2002:a17:903:2b0f:b0:2e2:dfb8:818a with SMTP id d9443c01a7336-2f03f20f8c5mr14954585ad.62.1795133778058;
-        Thu, 19 Nov 2026 16:16:18 -0800 (PST)
+        bh=n7l+AyO/cRMVQJwJa64VigJKwgCGiEZe5FhWi4AHvFM=;
+        b=tHR9kqMyTzzoN8pI3jstVH9FOS3OvmAbtrUhbjJt1VJlI6sVjP3crioS0LQnzZwYhb
+         DcGzKCE0I7/CyedbtVqcH5xsSf/LBzmNgNAQrXrF11DqwZ6EpXaKDX92U183X6I0upNg
+         Z9VB/wvlcFGhVnaHYuKKr0v46IWQ8524MXvJ1uNiIEd+pYOQ5TrhFYVhOeoC5Selvn/E
+         hR7dup8Fn+O6Cy/0OpCYBSEOS3SL0FjVFcDlpma9kks5uNgXbbLi+4ad54Mpq+r6m8yw
+         8prB+ZW2WjalFa+j/modbEUbQj93+WAxIJOBtYGn+etaxKLmSlUrvc4CzjSBzxfNAFV6
+         qCKg==
+X-Forwarded-Encrypted: i=1; AL+hErH9BNqchQJ4YGD15sGslvVUu4h5LtW0df5ZGYHlDBLRHVfrYXlmpe/uAlJee5PnIXaef66jWA==@lists.infradead.org
+X-Gm-Message-State: APuU4Z9OElexo6d4ymKKs3DV2gNzrR13jv1GSdw0whxHxFVhoFt4qWwW
+	3ZhJlXFenK3A8TyBBTtiON97eqgEC1LOZxYcjxGV+j8pDj+eobkk9Xvuef5OnHKDdg==
+X-Gm-Gg: AZFdTZf77cyyyVfOq5ceF38uPyMcHQtmW9xJSGpLnSq30Li8oXje4Ep6taPQ9vOx4lZ
+	+XT1p8kcteKyFw+rthmLrPsoCPryai+MFjEZTdRyd4HcyENgTEGWoE7mZeBSjfxW+u/4+F9aWhd
+	itOc1QnPI2w4uLN5lcvVKhig/rLkn9dbaqhiYNN8bwqWNiNPPbw1UjEKwaioA7Mj64hcRhewZmM
+	ejMOlzpULpsp9TVEIdRCWISU4i5uPk+1Ge802lpWmSGo92uWu59srb3Cj+WtGlA2Ec66A4N3HF7
+	GNJ4YsAwDPXQosoKtkUfAT4LVmDs3TVcMq8xp5+MEUKFLTZ0dgwNk92CpoVU74fWNDnjp/h9k0l
+	PuPN5KgFe/AKruMC2QxcvO96llQF+RybWGS1fPGzCmKEIuWzW9M0kZJfFpok7LvjSqQ4Pjjme23
+	U8k9Y63+jSy0KNe+t/0IV/kojgDCiy+pTTrdq/gYNRepyVa+QsJmMdivPM0f5SZg4hSHpG437cM
+	yxgvCJbkoiUagZYz6WviNkMAkx5dhdy3VO6w6OXa7OgDua5tQiJUyE+PZ/Nrv0OR9bw4WKQptE/
+	+0To9ltqF3MUYctMNIXR7dwgYUdxNsqIYK4RtkUoyDIJXViFWxPiPV1P+hDyrcQI
+X-Received: by 2002:a17:902:e542:b0:2e9:6b5b:3db6 with SMTP id d9443c01a7336-2f03f1a4967mr13941365ad.30.1795133975980;
+        Thu, 19 Nov 2026 16:19:35 -0800 (PST)
 Received: from localhost (33.79.127.34.bc.googleusercontent.com. [34.127.79.33])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2f03f0c6e50sm6072095ad.13.2026.11.19.16.16.17
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2f03f0ddf40sm5969655ad.37.2026.11.19.16.19.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Nov 2026 16:16:17 -0800 (PST)
+        Thu, 19 Nov 2026 16:19:35 -0800 (PST)
 X-Archived-By: <archiver.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 19 Nov 2026 16:16:16 -0800
-Message-Id: <DMZLTC9U6DBX.3FR19X5M2IT3W@google.com>
-Cc: <kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <kvm@vger.kernel.org>, <linux-mm@kvack.org>,
- <linux-kselftest@vger.kernel.org>, <linux-pci@vger.kernel.org>,
- <ajayachandra@nvidia.com>, <alex@shazbot.org>, <amastro@fb.com>,
+Date: Thu, 19 Nov 2026 16:19:34 -0800
+Message-Id: <DMZLVV5YW6GW.1HMW8L8NIQ1XR@google.com>
+Cc: <ajayachandra@nvidia.com>, <alex@shazbot.org>, <amastro@fb.com>,
  <ankita@nvidia.com>, <apopple@nvidia.com>, <bhelgaas@google.com>,
  <chrisl@kernel.org>, <christian.koenig@amd.com>, <corbet@lwn.net>,
- <graf@amazon.com>, <jacob.pan@linux.microsoft.com>, <jgg@nvidia.com>,
- <jgg@ziepe.ca>, <jrhilke@google.com>, <julianr@linux.ibm.com>,
- <kees@kernel.org>, <kevin.tian@intel.com>, <leon@kernel.org>,
- <leonro@nvidia.com>, <lukas@wunner.de>, <mattev@meta.com>,
- <michal.winiarski@intel.com>, <parav@nvidia.com>,
+ <dmatlack@google.com>, <graf@amazon.com>, <jacob.pan@linux.microsoft.com>,
+ <jgg@nvidia.com>, <jgg@ziepe.ca>, <jrhilke@google.com>,
+ <julianr@linux.ibm.com>, <kees@kernel.org>, <kevin.tian@intel.com>,
+ <leon@kernel.org>, <leonro@nvidia.com>, <lukas@wunner.de>,
+ <mattev@meta.com>, <michal.winiarski@intel.com>, <parav@nvidia.com>,
  <pasha.tatashin@soleen.com>, <praan@google.com>, <pratyush@kernel.org>,
  <rananta@google.com>, <rdunlap@infradead.org>, <rientjes@google.com>,
  <rodrigo.vivi@intel.com>, <rppt@kernel.org>, <saeedm@nvidia.com>,
  <schnelle@linux.ibm.com>, <skhan@linuxfoundation.org>,
  <skhawaja@google.com>, <vivek.kasireddy@intel.com>, <witu@nvidia.com>,
  <yanjun.zhu@linux.dev>, <yi.l.liu@intel.com>
-Subject: Re: [PATCH v6 11/27] vfio/pci: Retrieve preserved device files
- after Live Update
+Subject: Re: [PATCH v6 12/27] vfio: Enforce preserved devices are retrieved
+ via LIVEUPDATE_SESSION_RETRIEVE_FD
 From: "David Matlack" <dmatlack@google.com>
-To: "Vipin Sharma" <vipinsh@google.com>, "David Matlack"
- <dmatlack@google.com>
+To: "Vipin Sharma" <vipinsh@google.com>, <kexec@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+ <kvm@vger.kernel.org>, <linux-mm@kvack.org>,
+ <linux-kselftest@vger.kernel.org>, <linux-pci@vger.kernel.org>
 X-Mailer: aerc 0.21.0
 References: <20261102153656.1431701-1-vipinsh@google.com>
- <20261102153656.1431701-12-vipinsh@google.com>
- <DMOAT4VV939P.2DI8CEOMMSKMY@google.com>
- <20261118065653.GE2250529.vipinsh@google.com>
-In-Reply-To: <20261118065653.GE2250529.vipinsh@google.com>
+ <20261102153656.1431701-13-vipinsh@google.com>
+In-Reply-To: <20261102153656.1431701-13-vipinsh@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261119_161619_755286_A95A342D 
-X-CRM114-Status: GOOD (  23.92  )
+X-CRM114-CacheID: sfid-20261119_161937_545732_039E1C48 
+X-CRM114-Status: GOOD (  13.53  )
 X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -120,64 +118,53 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Tue Nov 17, 2026 at 11:51 PM PST, Vipin Sharma wrote:
-> On Fri, Nov 06, 2026 at 05:19:28PM +0000, David Matlack wrote:
->> On Mon Nov 2, 2026 at 3:36 PM UTC, Vipin Sharma wrote:
->> >  * Open and return an anonymous VFIO cdev file via
->> >    vfio_device_liveupdate_cdev_open().
->>=20
->> Here's an idea for how the device file could be created on retrieve,
->> which I'd like to hear your thoughts on.
->>=20
->> The patches from Pasha at [1] lets userspace pass a
->> file-handler-specific argument to LIVEUPDATE_SESSION_RETRIEVE_FD. In the
->> next version of the tmpfs series, I'm planning to use that to have
->> userspace create the file and pass it in the argument, and the kernel
->> then restores the preserved file into it.
->>=20
->> I wonder if VFIO should work the same way, e.g.:
->>=20
->>   struct liveupdate_vfio_retrieve_arg {
->>           __u32 size;
->>           __s32 fd;
->>   };
->>=20
->> Userspace would open /dev/vfio/devices/noiommu-vfioX itself and pass
->> the fd. retrieve() would check that it's an unbound vfio-pci cdev file
->> for the preserved device (domain/BDF, noiommu, incoming, cfg_size),
->> attach the incoming state to that file, and LUO would track that file
->> as the retrieved file. VFIO_DEVICE_BIND_IOMMUFD would then take over the
->> device as it does now. Since VFIO preservation is new, the argument
->> could simply be required.
->>
->> What do you think?
->
-> Overall, I agree with the strategy. I think VFIO cdev retrieval should
-> happen as the flow you mentioned above. I want to hightlight two things:
->
-> 1. This will lead to lot of code changes happening in vfio core. This
->    means VFIO PCI live update code change will spill in vfio core.
->    Should I create a config VFIO_LIVEUPDATE for VFIO core code. It will
->    not be visible menuconfig option but selected when
->    VFIO_PCI_LIVEUPDATE is enabled.
-> 2. List of other inflight series that this series will depend on is
->    increasing. It will be 3 (reset function, pci saved state, and
->    restore into fd).
->
-> For '2', should I send v7 without changes you are recommending in this
-> patch and future version of this series can transition to the approach
-> you are suggesting after LUO changes are landed. VFIO liveupdate series
-> will go through more iterations, so we will have opportunity to make the
-> change. WDYT?
+On Mon Nov 2, 2026 at 7:36 AM PST, Vipin Sharma wrote:
+> diff --git a/drivers/vfio/vfio.h b/drivers/vfio/vfio.h
+> index 12557d45dfee..e6ca4c3fda06 100644
+> --- a/drivers/vfio/vfio.h
+> +++ b/drivers/vfio/vfio.h
+> @@ -11,6 +11,7 @@
+>  #include <linux/cdev.h>
+>  #include <linux/module.h>
+>  #include <linux/vfio.h>
+> +#include <linux/pci.h>
+> =20
+>  struct iommufd_ctx;
+>  struct iommu_group;
+> @@ -446,4 +447,21 @@ static inline void vfio_device_debugfs_init(struct v=
+fio_device *vdev) { }
+>  static inline void vfio_device_debugfs_exit(struct vfio_device *vdev) { =
+}
+>  #endif /* CONFIG_VFIO_DEBUGFS */
+> =20
+> +#ifdef CONFIG_VFIO_PCI_LIVEUPDATE
+> +static inline bool vfio_liveupdate_incoming_is_preserved(struct vfio_dev=
+ice *device)
+> +{
+> +	struct device *d =3D device->dev;
+> +
+> +	if (dev_is_pci(d))
+> +		return pci_liveupdate_is_incoming(to_pci_dev(d));
+> +
+> +	return false;
+> +}
+> +#else
+> +static inline bool vfio_liveupdate_incoming_is_preserved(struct vfio_dev=
+ice *device)
+> +{
+> +	return false;
+> +}
+> +#endif /* CONFIG_VFIO_PCI_LIVEUPDATE */
 
-Sounds good. I am not 100% convinced yet we should switch to a
-retrieve-into approach. But let's keep discussing it VFIO and IOMMUFD.
+No need for the ifdef here and 2 definitions here. If
+CONFIG_PCI_LIVEUPDATE is not enabled then the compiler should be able to
+optimize vfio_liveupdate_incoming_is_preserved() to false.
 
