@@ -2,144 +2,113 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E043606A331
-	for <kexec@archiver.kernel.org>; Thu, 19 Nov 2026 23:37:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF5560A2612
+	for <kexec@archiver.kernel.org>; Fri, 20 Nov 2026 00:06:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=S+jm9Afc;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=IcT+QyZ4
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=CZRwFfR3;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=hd5ZeImn
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:In-Reply-To:References:Message-ID:Date
-	:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Unsubscribe-Post:List-Owner;
-	bh=3W3BEpopRHrA28FnbTo+KMgeFZlTTfszsznmzKm7qTo=; b=S+jm9AfcwOe7R/IdYblzkU7k+F
-	bMprUc39K4TchqvDjXwkNP6tejfdtvvyMpZjrG43Q/uKKa82LpcR8FWwCXyva6FnJr+Oioq1gO0pS
-	Sj7gomlUdJqwTXDBksq05QR6nQVBtys/sz6tYdUrhpbpCBAh/hTq8V0C2h8wmC5IvlIeRBas/EXUM
-	2Xk5M/jh5kq+/cod2RJMa31MJeScTRreR1pjtibnze93X0t0fnl2Kcp/XcSrGg12wVcl23xVmJqHh
-	Eb9msXqhgtYvvk+Y93lV+X6OV2q8LECeB+asRPg8ZrQ5oCr8x9XsE19OGFMkarYz3pQM7dyXBAqKb
-	IDB0ZCLw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:
+	Subject:Cc:To:From:Message-Id:Date:Content-Type:Content-Transfer-Encoding:
+	Mime-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=8PsDwtqZ7ZOXHEr9V4C4myUyqMWkC/3w4Fd9za5pDc8=; b=CZRwFfR3ZuQaWM
+	0nSuYNCUMDyb/pzkCJX09qNTuAvLc+1VPXeyIIkP6pFxXo+qSbfwnYNAmVkQCWVnIbCzKpCS2iUE5
+	ILM5lU8uaIkd1EwS6qrzMikP6FVOld0oLSymgjzAKCCoS/2btUcaf1f9aXcvx6EQjhJnLcxdt3MSx
+	rO3fao9SVwh4Y4MrEuKhDgcpFTs8kYTHQ3mhvatENsIdgdnVdvnhUj5PzONIpK/4Hz8SmOpsXfvgn
+	7Z7WIUMa7KiV40YUXq3ft4LipxRjttrg7P59eBW7y42IBkgdbXoD4SoPQ1AvF4a3bkZsWqbtXxlf+
+	y3VogsCmLuR/k/L+GEsA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUBhT-0000000Dfol-2dnw;
-	Thu, 19 Nov 2026 23:37:55 +0000
-Received: from mail-westusazlp170100005.outbound.protection.outlook.com ([2a01:111:f403:c001::5] helo=BYAPR05CU005.outbound.protection.outlook.com)
+	id 1xUC9P-0000000DirO-1P33;
+	Fri, 20 Nov 2026 00:06:47 +0000
+Received: from mail-pj1-x102e.google.com ([2607:f8b0:4864:20::102e])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUBhQ-0000000DfoN-3nHR
+	id 1xUC9M-0000000Dipq-1aiS
 	for kexec@lists.infradead.org;
-	Thu, 19 Nov 2026 23:37:54 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tdOFjry2z9Tk57IdRF0MYG1TSulLknvZTJtJn197ueuSl38uBc1tMFdObCseSXDo9bkWBFWxdkGf5jWiaL8FFOLUGA6Ua/6OHfdMQadWjEAOCx9YhpQvpr+mLv8MccFZO4kBFDqVIXukKwjRpdGybo4CJmvioYBkXP08/dn9mvMTE+MQuSJ1D+a5HZrRRYHor7dP25WiMAfWS9wxf55cDpcge2VNqCLR1Pu04sC6PfgFzik97zZ3k/7XrlcfvOoNqikes69mawKAphpgPGZWUd6ueWrjCWhd86rmk2gOUOexiUcKhYgSVqyg4vp3Rdx8PgBOX+/mX7zlXWP+7yQQog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3W3BEpopRHrA28FnbTo+KMgeFZlTTfszsznmzKm7qTo=;
- b=lqVdzjBGO1YEuVDxloNNCX3bCYWSVSQ9lRpWWYxmKcUMwbTa+HXD8vt9utGySyvepM2tiSgdq0qf3jglB+D2ZzEOLeW70VYJXXH+GqODRudFVMivhzG4fhAPz5BtqpOnneUTLgv6xwYGxu++/wS9N6L/s3RobKSefJdYLqgmDcsRmHwyX4U+V5NwQMaOTcfZXmiLJ/tfN3xmcZAyu3byiNNmkxmI6HtRc4WX5Os9wYnXDPzYczWBd1V+4lPnKKct108cnzUx9sobns2hDs7Q5y14gJc9RgYGimV0h96bYcrfk9FuJdACLtN35fAER7mplgUC/blkqaSygOs20NgXxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3W3BEpopRHrA28FnbTo+KMgeFZlTTfszsznmzKm7qTo=;
- b=IcT+QyZ43/34P33dGQwLbFpKWKQGeOaXogpqIrAGJJbjkxIiD3BIIibw9d1tv43STlfm9nmVFSWNyB+RBK3xCle+7N8EncSb2NASrRFsOUBWwkoqFQWwE1/ehbMqIxNifdzY9pveIrUucEkcWqG+1jopdSQq21d2aYldveJ+P09HkQ3aG6UyEX21H04A/sJUt99Jrpg7G4U3aEpEnxf5gQHRLal0xQi4hkGiIz6YwJZ2Q9z+k689CsJkHfJL7NzBt3Wfm72HApwg+GH26AGNGf6u6U+CXFIFqrsH4cj/TQtpE8EItZmL4o2Ytx+4g4BebXoXlVPfTHPXSlgn9tE6Zw==
-Received: from DM4PR12MB6136.namprd12.prod.outlook.com (2603:10b6:8:a9::14) by
- SN7PR12MB7299.namprd12.prod.outlook.com (2603:10b6:806:2af::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.14; Thu, 19 Nov
- 2026 23:37:44 +0000
-Received: from DM4PR12MB6136.namprd12.prod.outlook.com
- ([fe80::75c4:de57:e254:243a]) by DM4PR12MB6136.namprd12.prod.outlook.com
- ([fe80::75c4:de57:e254:243a%4]) with mapi id 15.21.0615.013; Thu, 19 Nov 2026
- 23:37:44 +0000
-From: Manuel Huber <manuelh@nvidia.com>
-To: Andrew Halaney <andrew@amutable.com>
-CC: Fan Wu <wufan@kernel.org>, David Howells <dhowells@redhat.com>, Jarkko
- Sakkinen <jarkko@kernel.org>, Christian Brauner <brauner@kernel.org>, Paul
- Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge E.
- Hallyn" <serge@hallyn.com>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
-	<skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Luca
- Boccassi <luca.boccassi@gmail.com>, James Bottomley
-	<James.Bottomley@hansenpartnership.com>,
-	"linux-security-module@vger.kernel.org"
-	<linux-security-module@vger.kernel.org>, "keyrings@vger.kernel.org"
-	<keyrings@vger.kernel.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "kexec@lists.infradead.org"
-	<kexec@lists.infradead.org>
-Subject: Re: [PATCH v2 1/3] ipe: add the .ipe policy keyring
-Thread-Topic: [PATCH v2 1/3] ipe: add the .ipe policy keyring
-Thread-Index: AQHdZzzTq01P8UHk60+Ce2yq7RogGrcU+wSAgCEx93A=
-Date: Thu, 19 Nov 2026 23:37:44 +0000
-Message-ID: <DM4PR12MB613619C0D9857E94C7C06B0BDE792@DM4PR12MB6136.namprd12.prod.outlook.com>
-References: <20261029-b4-ipe-keyring-rfc-v2-0-77727b205844@nvidia.com>
- <20261029-b4-ipe-keyring-rfc-v2-1-77727b205844@nvidia.com>
- <auOn9CzT_gku-5cH@toolbx>
-In-Reply-To: <auOn9CzT_gku-5cH@toolbx>
-Accept-Language: en-CA, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM4PR12MB6136:EE_|SN7PR12MB7299:EE_
-x-ms-office365-filtering-correlation-id: 44a88353-1e3d-4028-84cf-08df46961c5a
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|23010399003|7416014|376014|366016|18002099003|22082099003|11063799006|261026121527099003|56012099006|4143699003|10067099003|38070700021;
-x-microsoft-antispam-message-info: hSN62qfkSeJGYthMdKD0U/ny4QirEzqbTjGoQqWM4Qkc7/DYJDxFfk+vAZx1DpUvZCuoyrS/VGDjQhROG+Kedxlbn/cicThK5wfvAALRqWB5YfyJT2srssAp87uFsRkjqdApVujSQz/1vK5N7fneteZqVrA9SqZxjTsJ04/EhHURtLqebSnsuyi7UjfVWjKoJ1yhhMnozLmErAchAVumO9Bkb1JOnTWu19gbKPLDWoxGBSAm3Fwv4eUV6jmuJzRGwBFM5tS4fw2cnNtW+xniyixMXI3fetJXua552ep8t+dpiGMnkzISHLhFbOPqje3SXQek1RukY2Ecrk/frNDSAnRjqoIxk571b1A7pme1/mOGg/Or8T3p9vbG/yxELFdCIZUR6nClX3In8kj6gNOAgiCSaSTgqehEmZngtoHYRBHWSl+wpcK8iggrTvJxT5UFsWswKvWyKlH7o0Vhj4yIQNLGI1WLtUVQoZ0CZ6wIdUG02j6mEq+6u+ygeV8MgoalkidwT64G4jiCb3pH3VTqwWYIvKmFwDovRwm7A+vyH1hWklNcyNKhA0BBwNzZn/3dlVJ9kRdzW2QVmSdXh8q9anfmO5EC6Ght/We2zGqkR3bqCnjdqC1pUJfyMtLTtKLnZ1/8JWkHZ6TA9OFekefeGBPDWwd7a2P8TxTBTGal/YsxqeLVjAmbTJnk6Y55Pxwdut42wbEL5PeZbxjISjHmvD9ru6khB9WBKWqQkZFTDYg=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6136.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(7416014)(376014)(366016)(18002099003)(22082099003)(11063799006)(261026121527099003)(56012099006)(4143699003)(10067099003)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?iuaxQHwfxIomh5uJUHU5tiBdTmZvV4mFHhLK9a1WPZdB+ZpP77GjqgK1kZcc?=
- =?us-ascii?Q?ouv8OAYJuhvLZMMlqmfbim8TV7quv9wu/cikLbKzlDjXwdAas3WQ7etFcjQD?=
- =?us-ascii?Q?avZLCqz4a8LWfZa+EIbS/QfUTpw+6o2NBTvLPhpHHNxbkMiamGuVwtxok1fN?=
- =?us-ascii?Q?N6k0gPk0U5A/3pBpPWnIPQkKmtpbwwvC5i2J6bCpqmoKuEykhPpxv1m//G2s?=
- =?us-ascii?Q?5FBRxOiQUwA2sf45tS3dm2KNEvUYnSt83UtV4iSzSet+ktKJ4lbZX2LUwzGz?=
- =?us-ascii?Q?HLFP19lS0MZyJPjaBiav2/xTlMtfGkdfVrICAy9pLko5RJBFX/zoXaU8mekj?=
- =?us-ascii?Q?eiJA4g54mdjVUlVtyknK9zDs7UpIevYKEkYMvxjdGbJdoZyU4mQay/dKnEm1?=
- =?us-ascii?Q?UmVrXw1yufBHiCljoubrAcXAQNJ+3gmOo19Wagki+vzK9OJRj1PV8bcpYoPK?=
- =?us-ascii?Q?DdOJLY9QoFBI7cDDt4dCQAuNrwHX3kuk5PnBXEl6ayAFQpoTVLCT5//Pzp5g?=
- =?us-ascii?Q?/EaxlBz28bE/YuXOqrmZLYjngnjY6TONKhcN8+6StH2H2ETeDbJCtff3I7i8?=
- =?us-ascii?Q?P1JykCEEnzKA7HhhtA7YNiXTANvJAO8NSInDa4uytHbdWdfO2kgBc95eSUS2?=
- =?us-ascii?Q?HPW8Vsq8yY2qkAHItkYgIPqE5fxOSQkVpvGSJ4Jvwy6nrvpmKqJ5UWSISmTl?=
- =?us-ascii?Q?uTPf84kxVS69u1ELrG9DM4+yxNzs4oClgPxJNJni+qlNcMvWKwrFHggVGxyB?=
- =?us-ascii?Q?5f+3V0iQrbQOWlhsJNQc3oAjmF+MNdH110eVELz+JPvpJxs0u+vKaXe8cC5U?=
- =?us-ascii?Q?cp6nfFZOz+M4rVVGWlFbm4qyuXKOSifRvLgv1ZibQ+JtzvRRJjjICrDHy6ba?=
- =?us-ascii?Q?ucG23Eb55CmalCxpvktHyVV44g17F/20pEsvnXoqacO1cxMmwfvbPTwrUpRd?=
- =?us-ascii?Q?PN0+5OILm4GSM4ndD9iZ8w7bQpExpv1J+jgxJYdu0Q1PNsxEEbl+KM3+lcB4?=
- =?us-ascii?Q?530lRY/U5te6VSBH8xl7B5PPA6+7x411K7fmWZ/x3/3puRULRy2tHUkZ/Dap?=
- =?us-ascii?Q?jCnP9zEQi5rkSgDUM70TUTLoCdZcTtGem5X9aykUAhTI6V3uvfj2q0MYT7SK?=
- =?us-ascii?Q?eV7wuINMjforgfzTHNv2AzVTMtn8xL/NMyPFLSV1YsaehMsrjxhrNUSP5Joq?=
- =?us-ascii?Q?O5E1RF2hwsdez1FXqE5LTuGUSdmpD6+SC/3+VVXLdijT8A7gQ1y5r54evflo?=
- =?us-ascii?Q?t1Gs/hLyJq+vuDBemJn0aKJW2xTHROlmmCsmnG3vNaNERhu8pnAi78QiIb2i?=
- =?us-ascii?Q?OLI543GcxZUhV4s0PeLKAesPy5kmv9c5ArfGZ0/iHNmJLnYj6uvxj3CMpMjb?=
- =?us-ascii?Q?79glPILoD9LY//D/KoKLANCvGi6l6gmkzrZCixTTj8DHXfMlwrS4tIlBJPRw?=
- =?us-ascii?Q?9rjsksOXexzSYt9OY3JkmMf+aYnwJvJa5g9Wz71V0tMQvXigkkp4ttGUbo16?=
- =?us-ascii?Q?2nu9EztGZ/iuia1S2Ru0J9XXXGE5Yn8/x9uKcwqyyU9W/BbpvlpYX2yMn2Bm?=
- =?us-ascii?Q?Wzju7n5Wl3mORQlq+lchpxjHL/L/75O3d+LrGgeqzYK5tsD90VgH3viNCirb?=
- =?us-ascii?Q?ys9AuFZKFu+nLZPbJiskmyI3bINo6fxaeI+2zQihtve1MDMuY1bdx70kbTYt?=
- =?us-ascii?Q?OyzvriaDNFHu4PB3erMRb5kDeZJiPbbW8G6JYMqsD0xQnfHT?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	Fri, 20 Nov 2026 00:06:45 +0000
+Received: by mail-pj1-x102e.google.com with SMTP id 98e67ed59e1d1-3b179528d56so186466a91.3
+        for <kexec@lists.infradead.org>; Thu, 19 Nov 2026 16:06:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1795133202; x=1795738002; darn=lists.infradead.org;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-type:content-transfer-encoding:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=8PsDwtqZ7ZOXHEr9V4C4myUyqMWkC/3w4Fd9za5pDc8=;
+        b=hd5ZeImnGKZzsDRFsXb9n5am627itcGNTaaj0NtzYi7zVNvKoQQceM7K/KtWWpi0fS
+         CDoCFRiAJXkG7kFXFSIw9zLvvYwprezPbGbev7MMBBpeEuJGl6Ife+p/eikf2EAx682v
+         g25WktectE75ucvkEpLcHr+7hSfvPzGNYfa1COgU3kzSDihabpQYEbLsA0+9GJR9M2Dt
+         jyoJhAQCCodrn5r4tA+YbuuUtIlBUiysP9IVI9TPTQVPeHK2mpKRUnEcJUy9T01IvqUU
+         XrsupDIuHqdl6fMxPUxOBifTp0NGAgwBBVKmjygByHBPP8O6G6dF+hwB27OM7CRLHa88
+         CjaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795133202; x=1795738002;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-type:content-transfer-encoding:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=8PsDwtqZ7ZOXHEr9V4C4myUyqMWkC/3w4Fd9za5pDc8=;
+        b=kwsXa1NmXAp1oe0H6CkPNLg65Z66FxDaJ/dbTV8GOcpAyLRnqRAL2nFfyNkGO85sEW
+         VIEOjUlWVBfxkQd+jgYHsrT+QbNvFVyCCQ5jAvgYxE+vxk0X2Qf/AmRAesOf1FHFDGau
+         jQrFxv2p4rkVQfOhPL5UhwchHXwaanutO2ZnuXUU1qYafQ/ScB2Ynba75162Ta7913IZ
+         TVjxzpj094KJp02VuD3suTjln9pNkbLvGXQaKKXsgck3ogo2Pr+hBmnFfs60g7EtyAcX
+         Y4yw9kSPNcHo0FEsl06YVc4thjF51ycHIQP7SOTpvm0phRqcc8FGH39MRldM/ogCnOnT
+         Ap7g==
+X-Gm-Message-State: APuU4Z9zUVzlDFCsVSpBCnKalGrlo9HjeBTAusWywqx94SHJ+Dwg74JO
+	AHvC2mi85no49K0p+bhxeARlT3vp+K5S1EYpfFy+N2MDiLKjddMD5gxlnSFmTJ6x1Q==
+X-Gm-Gg: AZFdTZd0FZDWR35IlCBWGUbIoPuzu2TET0zCAXSgj2nRdEfj/YV7tA3Eb3yNYuE068r
+	/yx9ivDNPr8sxSUvP8VRUd5EL95rRiMD3cily0cQ3nhNpEmMDMIQCpK1QlXLiU2pFq++RGE7mB3
+	eyFDSYE452EBNYy0q3xofD4GeySGrDApgUtmcNmcx0T124AIy3K1wBsqgYT0kmyYQsCjegSSeqF
+	pyoCg1TVNFoU5cUCniKVMx4J9A2EWMU2dU57YN7EQx/Y55lnaLDBVpl6wEKTLTBAQidjKgu3iYC
+	2ki1PAkE2IevOYpwLh+N1IYqy2fiWt/vP+mlCS7XVeRZo9RONUW8Qi7xWrpbjlLyaMl4RaEJIqq
+	s091x6iDL/G7rqWJA+b9pyXSmF24aoP6WpkrydE1MeWq2AigeVcWF37HVHbw//nwcrIKqIwSYZv
+	BqMhYTsNzDtVbQwyT7LFCXgU80JBqxddDHdro4nNycdZ55SnmlBA/5QxoOvGTZqOD+Z6eDgQQnC
+	IarSl+cfzJ7ce+7GBCLa4LYIKgg+yBHgsiDoBieEhoU9bEfZiPVtS1EwzQ8pRXV6xv6XRx/Ovaw
+	5q0+qqxOlOD7Jf1Ou11QVBUheonx0Tx9fxWZDqwR15KAVxsXqW/5BKOYh2hd2d77
+X-Received: by 2002:a17:90b:442c:b0:3b3:ab74:cc9b with SMTP id 98e67ed59e1d1-3b41c554624mr967136a91.0.1795133201767;
+        Thu, 19 Nov 2026 16:06:41 -0800 (PST)
+Received: from localhost (33.79.127.34.bc.googleusercontent.com. [34.127.79.33])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b41ff5d3easm328044a91.1.2026.11.19.16.06.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Nov 2026 16:06:40 -0800 (PST)
 X-Archived-By: <archiver.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6136.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 44a88353-1e3d-4028-84cf-08df46961c5a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2026 23:37:44.3843
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fjpN326nlHShgjWQF5N1UNMQu/exIzIFn8Fbv2OBrmzQ+SZ0U/U8CHOsTMSGBapzmkS5w9zG8F+/G7gwfOo3gw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7299
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 19 Nov 2026 16:06:38 -0800
+Message-Id: <DMZLLYOVIGOU.1RXWYJN6UQTM@google.com>
+From: "David Matlack" <dmatlack@google.com>
+To: "Vipin Sharma" <vipinsh@google.com>, "David Matlack"
+ <dmatlack@google.com>
+Cc: <kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <kvm@vger.kernel.org>, <linux-mm@kvack.org>,
+ <linux-kselftest@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+ <ajayachandra@nvidia.com>, <alex@shazbot.org>, <amastro@fb.com>,
+ <ankita@nvidia.com>, <apopple@nvidia.com>, <bhelgaas@google.com>,
+ <chrisl@kernel.org>, <christian.koenig@amd.com>, <corbet@lwn.net>,
+ <graf@amazon.com>, <jacob.pan@linux.microsoft.com>, <jgg@nvidia.com>,
+ <jgg@ziepe.ca>, <jrhilke@google.com>, <julianr@linux.ibm.com>,
+ <kees@kernel.org>, <kevin.tian@intel.com>, <leon@kernel.org>,
+ <leonro@nvidia.com>, <lukas@wunner.de>, <mattev@meta.com>,
+ <michal.winiarski@intel.com>, <parav@nvidia.com>,
+ <pasha.tatashin@soleen.com>, <praan@google.com>, <pratyush@kernel.org>,
+ <rananta@google.com>, <rdunlap@infradead.org>, <rientjes@google.com>,
+ <rodrigo.vivi@intel.com>, <rppt@kernel.org>, <saeedm@nvidia.com>,
+ <schnelle@linux.ibm.com>, <skhan@linuxfoundation.org>,
+ <skhawaja@google.com>, <vivek.kasireddy@intel.com>, <witu@nvidia.com>,
+ <yanjun.zhu@linux.dev>, <yi.l.liu@intel.com>
+Subject: Re: [PATCH v6 07/27] vfio/pci: Preserve vfio-pci device files
+ across Live Update
+X-Mailer: aerc 0.21.0
+References: <20261102153656.1431701-1-vipinsh@google.com>
+ <20261102153656.1431701-8-vipinsh@google.com> <auzftbPFO_6XBYVw@google.com>
+ <20261117220059.GA2250529.vipinsh@google.com>
+In-Reply-To: <20261117220059.GA2250529.vipinsh@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261119_153752_959294_F030A76A 
-X-CRM114-Status: GOOD (  10.79  )
-X-Spam-Score: -2.1 (--)
+X-CRM114-CacheID: sfid-20261119_160644_424250_8EC6BA1E 
+X-CRM114-Status: GOOD (  37.64  )
+X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -150,22 +119,132 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Thu, Oct 29, 2026 at 03:33:25PM -0500, Andrew Halaney wrote:
-> Not trying to muddy the water here, but I stared / thought about this
-> a while and wonder if I'm missing something below...
+On Tue Nov 17, 2026 at 10:44 PM PST, Vipin Sharma wrote:
+>> pci_config_map doesn't need to be preserved. PATCH 14 already rebuilds
+>> it with vfio_config_init() in the next kernel and only uses the
+>> preserved copy to check that the two are identical.
+>>=20
+>> I assume the intent is to detect changes to vfio-pci's config emulation
+>> between the two kernels, but the map isn't a good proxy for that. It
+>> changes for differences that don't matter (e.g. hiding a capability or
+>> learning the length of a new extended capability), which would fail
+>> take-over and lose the Live Update on exactly the kernel upgrades Live
+>> Update is meant for. And it doesn't change for differences that do
+>> matter, like which bits are virtualized or writable within a capability.
+>
+> I think it does matter because reads and writes of unitialized
+> capabilities in VFIO PCI config space goes to hardware directly. So, in
+> the new kernel if pci_config_map changes it from PCI_CAP_ID_INVALID to
+> others then those reads/writes can go to vconfig which will contain
+> stale unitialized data from the old kernel's heap.
+>
+> This also changes behavior under a running user. Writes that reached
+> hardware before Live Update can be silently dropped or redirected to
+> vconfig. See the comment above struct perm_bits unassigned_perms{}
+> in vfio_pci_config.c
 
-I do not disagree with these points here. This current v2 is a result of im=
-plementing the feedback on v1. If we do not want to use the pattern from v1=
- (alignment with dm-verity, BPF keyring patterns with a command line option=
-), Andrew's suggestion for v2 sounds safer despite resulting in more code. =
-Either variant - v1, or v2, or v2 with using the command line option - work=
-s for the use case I described. Fan, did you make more thoughts on this in =
-the meantime?
+That's true. Unassigned bytes passed through and vconfig is never
+initialized for them, so hiding or exposing a capability does matter.
+For example, 6467d0740a2b ("vfio/pci: Add DVSEC PCI Extended Config
+Capability to user visible list") changed DVSEC from hidden (all bytes
+raw) to exposed with a virtualized header. Across that boundary, v6
+would have served DVSEC from uninitialized bytes in vconfig.
+
+> How would a userspace opt-in? New kernel can change a capability visiblit=
+y
+> or virt and write permission of the bits inside a capability. Kernel
+> cannot know if userspace used the capability or not. Creating a VFIO
+> device in the new kernel by default results in a opt-in and currently
+> there is no way for userspace to opt-out unless we add a new
+> functionality where userspace can disable/enable features something
+> similar to KVM capabilities.
+>
+> For now, I think we don't need to worry about it. As this version will
+> be a base and if any serialized data with flags set received in this
+> kernel will lead to erroring out restore.
+
+We don't need an opt-in mechanism in this series. Detecting mismatches
+is enough to make Live Update safe in both directions: if the next
+kernel would emulate the device in an incompatible way, retrieve should
+fail.
+
+But an opt-in is needed to make rollback possible once vfio-pci starts
+changing its emulation. I imagine something like a VFIO_DEVICE_FEATURE
+that userspace can use to enable new emulation behavior right after
+opening the device, with the enabled bits recorded in a field appended
+to struct vfio_pci_core_device_ser behind a required flag. Devices that
+don't opt in keep the baseline emulation and stay compatible with older
+kernels. But that can come in a follow-on series.
+
+> In the next version, I will not preserve pci_config_map. Hopefully,
+> anyone changing VFIO code doesn't forget to update flags if they change
+> capability or permission bits (I will write comments at appropriate
+> places.)
+>
+> If we want to be very careful, we can do two things in this series:
+>
+> 1. Create a per bit valid mask for the vconfig and compare this between
+>    new and old kernel during restore. In the new kernel, VFIO then takes
+>    each bit from the preserved copy only where the mask says it was
+>    valid, and keeps its own freshly initialized value elsewhere.
+> 2. Create a hash or store virt and writable bits in config space.
+>    Compare it with the new kernel.
+>
+> Both of the above combined will safeguard against forgotten flag update
+> in the code.
+>
+> We don't have to do it but it safeguards against mistakes. Let me know
+> what you prefer.
+
+I think we should do both in this series, as two per-bit masks over
+config space, preserved in place of pci_config_map:
+
+ - virt[]: the bits whose value vfio-pci keeps in vconfig and returns
+   instead of the device's value. This says which bits of the preserved
+   vconfig are valid.
+
+ - write[]: the bits whose writes take effect. For bits in virt they
+   update vconfig, and for other bits they are forwarded to the device
+   (possibly after validation). Writes to other bits are ignored.
+
+The masks should describe what vfio-pci actually does rather than copy
+perm->virt and perm->write.
+
+vfio-pci can keep changing its implementation in ways that don't break
+Live Update, e.g. start intercepting writes to a register to sanity
+check them before forwarding them to the device.
+
+Something like:
+
+  struct vfio_pci_core_device_ser {
+          ...
+          u8 virt[PCI_CFG_SPACE_EXP_SIZE];
+          u8 write[PCI_CFG_SPACE_EXP_SIZE];
+          u8 vconfig[PCI_CFG_SPACE_EXP_SIZE];
+  } __packed;
+
+
+[ Note: I'd probably store virt[], write[], and vconfig[] on their
+  own folios to avoid multi-order folio allocations, but I am embedding
+  them here for simplicity. ]
+
+The outgoing kernel computes virt[] and write[] through a helper in
+vfio_pci_config.c and saves vconfig[] during freeze().
+
+The incoming kernel computes its own virt[] and write[] masks and
+requires both to match exactly with what's in vfio_pci_core_device_ser,
+otherwise it fails the retrieve. On take-over it uses the preserved
+value for bits in virt and its own freshly initialized value for the
+rest, like your option 1.
+
+I'd store the full masks rather than a hash, so that a mismatch can be
+pinpointed.
 
