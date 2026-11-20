@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37053606A326
-	for <kexec@archiver.kernel.org>; Fri, 20 Nov 2026 14:44:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E2B606A320
+	for <kexec@archiver.kernel.org>; Fri, 20 Nov 2026 15:17:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=H7YOGTij;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=J9UW1AUO
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=RZkshWvE;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=MnzalJel
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -14,67 +14,67 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=UAmEuVaLj2um1QYSHCqaR42KS0RtEEeYHE8D0ahDr3M=; b=H7YOGTijhEp1Bu6V9w5vnPQaaX
-	i6GWWsuxxcK3dpnWdFyXAKJWrFXh6NIzPshJlowF9bYl0D1vqkhBAKE2FwbjwYgpEhFs+j2+IcFpE
-	WYD0FClZ4aT/rrvklI2Sqb6G4hd7sgF4BidRW0MuC2PVxsToB8MCUApg1WCuw2h/y4+4HVdVyOHFj
-	i8UY9OWOiQMP9raZSevn1jMbazR5YR7GCuEhtqv5mfKL6XHc1lyYpnxjmMwrbqO9X9jVxIEH7wAmw
-	xkBffvJWeryzv7KuAVYE00R40Izd+LaAew9x/XB6TzA9HQLbhPmwRo8mWZQO0z0RYq8Vc3s8ozKYI
-	K+771BiQ==;
+	bh=qAjYne+BgcE8DA63sQsMZ990H8S9yK78zgr2NZdv76Y=; b=RZkshWvENze7p0UCvXu642SO7d
+	5PVIcvgGSYnviRxjOdoRMCD/z5lt52kxiE2Pw91gxHy8Enh5q+XWDIdin3FCe4596h3ITiEHeGwGd
+	1nRh0YEyVo+fs+VT60hLlhHjB7EtaKzCJYibXt3ifmreqGTQcEy2rM/K/aPeyuEDJhwl6aREmM0fb
+	Cw8u1zMwTVS4dWEzra4narF7MxXk9rgeFvkUlVwrn0d9N+OH9YLNZTrpcgq0Fd3i1uv4AuRQUfQwR
+	Eo+rNNM1YN7pqHBuKgAJeSvI5tJoSzNnOprXSRnUZO+sju60ObOTbApiWsQWyGEtUmGFegaAs7RCn
+	7p6nLYqA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUPrA-0000000FIej-3atC;
-	Fri, 20 Nov 2026 14:44:52 +0000
-Received: from mail-qt1-x82b.google.com ([2607:f8b0:4864:20::82b])
+	id 1xUQMu-0000000FO2o-0q4z;
+	Fri, 20 Nov 2026 15:17:40 +0000
+Received: from mail-dl1-x122b.google.com ([2607:f8b0:4864:20::122b])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUPr7-0000000FIdr-2sgK
+	id 1xUQMo-0000000FO2F-3BAl
 	for kexec@lists.infradead.org;
-	Fri, 20 Nov 2026 14:44:51 +0000
-Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-55be673e029so240681cf.1
-        for <kexec@lists.infradead.org>; Fri, 20 Nov 2026 06:44:48 -0800 (PST)
+	Fri, 20 Nov 2026 15:17:37 +0000
+Received: by mail-dl1-x122b.google.com with SMTP id a92af1059eb24-150ef97e790so7391c88.1
+        for <kexec@lists.infradead.org>; Fri, 20 Nov 2026 07:17:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795185887; x=1795790687; darn=lists.infradead.org;
+        d=google.com; s=20260707; t=1795187854; x=1795792654; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=UAmEuVaLj2um1QYSHCqaR42KS0RtEEeYHE8D0ahDr3M=;
-        b=J9UW1AUOd2P1uJDR6NpXIw3hxoqrSaQsmrEGFYypJ4vpKcCVA5duxjwaAOL0tevPq8
-         gBssa5e60rD8wRS7yYo8yHTPNbED15pShSNoDSjhK11y8Tx3Mslg9AVfqrxPNQ91qJ9U
-         bMYBYCSLNEmMiLlst1EgxbMmQYO98rkEHO+fZm3f8PQJMsO2ucPlGETO8lnOMmO01vZt
-         S9kp/i0MWoCO9oyHlxEsZqcai9xuf066rOGYapQAILtGLoSb+OSt34mixbCJxcaFqS5I
-         bGVUwIecY/wbfibd6hoRAiOV0E4CcRt2Z4Yd8whsLeDm6+ml6d4+SWgFQKziUiZFGynO
-         akwQ==
+        bh=qAjYne+BgcE8DA63sQsMZ990H8S9yK78zgr2NZdv76Y=;
+        b=MnzalJelDmdH/nPJOxmSwnhIJGchyUhKOaqeIsP7PaTNUOmmr4J/Vjz6Yjim5I4OEU
+         HnqHyqRr6dI5J5AprAziExi01XbNsq912rH+KFnLRY6gINycGXdnvkT+BIMDgxNoJLhr
+         4dk4oE/abfaeYHD/TN35633vdn4XgI2FwMAt0BHLXYJl1HubhxazrRsb+KB3oTVKSut/
+         D7uczAlEe1Q7SLnf+R2ocr8RxvTITJc5QQeffGhTTzceWwBCr86bl82uUIV1N61gvzjE
+         YtSqUljdbXKgl2jG2Yurtnin6mvU4GpHiF/SbxzoTUfJU5P/alNJdooNvPruwAaZJSb8
+         rLWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795185887; x=1795790687;
+        d=1e100.net; s=20260707; t=1795187854; x=1795792654;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=UAmEuVaLj2um1QYSHCqaR42KS0RtEEeYHE8D0ahDr3M=;
-        b=AtKUKFbWWtZ06wJEOrVZfPrZv71QCHQ/0F84RK3O+OURE/X6c/3Dh1C3r+xKd3KCmf
-         WqgRZNbnwTS2TLxkYSpOhcNJHg1Xipy2iVtr3qD3ollAYQQAM2am6D/SOsSkYK1mAnwp
-         oQdJhD09/VZAFryFvKSNOmO6mfbTAlqtPA1SSCaz+1nphsUVutXA263MO9+U5kSVij9J
-         bhgOMQamtqhgxjE/prbe5X9S0hLzynKRWSBHdl/h1klh95sk6qEMWx06bBpWIWda/XF9
-         +A+VFzUBuyQ43iBiv5lEhgenfY9vNZHBkgk6rfpAss6VZjRuN/UTB+sFbNQneGzWY6K3
-         /pfA==
-X-Gm-Message-State: APuU4Z+DxW+/j/ANLC4YOKUQOh6FMkFWrEgnG6XY3xxXiBnlrKfyDlSn
-	zd8x7CRzY33gSKA014QDYJuK9vjdsWZkOXErGW4HGbWXpkvyIMNh1GxC/IxU7P/Leg==
-X-Gm-Gg: AYBFou2xKfoGdX/7JKF4uf8yoMRCOeAvm58kTPYQiiUJm1+emzAqrkYkL+qwTzjuNKz
-	/boBeXPtRb013rfXKW7Q1LI76K9C3f50fMq0/qABmJGZkGPhB3F0vaH1r8qHpzlPPdjQC4Iphjc
-	fUUT8iMVd40AidsSa4FscsHQpeMvtaDDFo+DtQV2289qK6QfkBV/jf/oGJQGvdNOpiYNuaF+IKt
-	6IxhShsk3tm4HfR+WGdEsj0Q1uP2o9Y2ZQ6a0HXwQcPr8yRmHgNp75cHGLGQofmy1fjtUOHwd+z
-	J0N1lXl5/Vx5PGHW/LTVgHAzDauxRGqc3QJkEw4VdP2EuYMi4JOUYe/5qVJ2gXiHR8d+ofzTJrK
-	NqUGWMlaAA68FhVTpLAYHmWxfTdD4WRXMhzmtWgV0vJzbsW3F/rzMXW5ULrz0kAntcZYcd81rAv
-	LdqRKz2zwsBfaNd5QKhGX9scw5T+qNTWvbBewwrG7tbHGL6v29Z5PF2pDxgXDAXss59jCHvamdR
-	cRJZjpbxLlw5bvlhaMZWtJ5od1MfCYouxWz/w5X3OcrEj+zgVLpRflz23/1vlUbWG5HYhATtu7x
-	gMCGiXJ8IER/KGhhbT+tPyXY3IZIYZy5+rI4f0wQk5Yd/AHzCeyJozuo5iddB8W4vLUhKFvUtAR
-	f++QmjLBGH6f3
-X-Received: by 2002:a05:622a:2b07:b0:536:6ea4:e6a0 with SMTP id d75a77b69052e-55d7a35af5emr17844321cf.11.1795185886849;
-        Fri, 20 Nov 2026 06:44:46 -0800 (PST)
+        bh=qAjYne+BgcE8DA63sQsMZ990H8S9yK78zgr2NZdv76Y=;
+        b=sqxUxCYP/6SkeIJXz28ZJBd336Hduk/C5SxvjQla/rZ7YLRvYiW3PAzAvJE7vVXbsh
+         hsSpKdytbRS75GDwPjW0P2sVXDd4CH+CLQt9y4/rn2NAr2eA4QwdmnEoZzfX6986rAfD
+         T4Nj+fS22NA5WgWQnhnx1+cNiIUg0rR2t4Ifd2Bv2e+jsVR/8J1+OcLMZoI5QxmIAbdi
+         0HvVFqn4oLBqX2f3RmBcZdh34/DM4hqPTmgBt2u+Yz32qrxlkn+Of9qUyvpJXmV7m0QB
+         1q/kL4wroWrBvA89vHiHerF6AskmEJ5fQBmmvRK8Ll2H7j8o/TCZVZX/aNY7uoe1VS0d
+         Ktxg==
+X-Gm-Message-State: APuU4Z/DfP2QJYsqUkjmI7ItUWQXnVcspDSFNQ1vmBMCumUks8Il2BUJ
+	9pZ0dZdchm38FeszMNI/PNS9/xrYKh1xMoBfqZ6haOkrV+0gygHOMiGWONlk/BHIhA==
+X-Gm-Gg: AYBFou3ELBbK4JKRHlZsTq6UrQgISGJZTCAYrPegNdCeWtWe7jl6uS6izxv938xt09X
+	QR5JjD+up5OcPKhas368q5aDnknt3HgNrJ4XD6p9rvmS+zaL9RQN8Yt0Hh6Z44aseHPhG4kzRqr
+	bWhABh6c7KeNhA7KgvJKz2RKCH6jEFaI1qB/3Z7YSAf2LToEhvkt25obOEoYV+Lv51uYd95CEJJ
+	w3mf9ofqEF38Ql+Z8Pwqx9oe0+PHK9mlQUwHyWrBXe2lStZlJhvIuodWHEHqWLcqJ69y7SKztZw
+	95pfbanwk+FN0rs2Oxwtli3UHas/o05Hn9YYjNkJ4pt8HRAy1CbOysgG7S00p1NWSXiP89Jmbee
+	JgrPDxPhM5mIHZJZsBIkZfFqL0ylknfO/eJnHX4pdiDsSjSiPdXow0U/XbqFcxqsHYmuXf/yVFP
+	nWCVyrTvoBhBRaoCFtGgUp0DnUCrPoDYvBQ2QZP5ELu/G03JVSaOeTo9ltlrluEQ0ytBMDNAAvL
+	VjvEuBwt0juEFT+mNvFG2fHo15zBEixUERWDPOB6gTcT2bR5VBPKrsfCIWWyzpgd+n2gHoXMBEE
+	azfQvGpqT2bzPEqDCQWhZggK6iSnTeQxA1N4/x1fZPbzJEBBnQjRB+VxBb49PD75jeu54K5NZyT
+	bpmvyKdXLGzwV
+X-Received: by 2002:a05:701b:4516:20b0:1b3:c4ba:8e0b with SMTP id a92af1059eb24-1b557b69270mr1215594c88.2.1795187852837;
+        Fri, 20 Nov 2026 07:17:32 -0800 (PST)
 Received: from google.com (105.211.142.34.bc.googleusercontent.com. [34.142.211.105])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-8b52028c80dsm14013017b3.13.2026.11.20.06.44.38
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b5567e2bd1sm7441365c88.3.2026.11.20.07.17.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Nov 2026 06:44:46 -0800 (PST)
-Date: Fri, 20 Nov 2026 14:44:34 +0000
+        Fri, 20 Nov 2026 07:17:32 -0800 (PST)
+Date: Fri, 20 Nov 2026 15:17:23 +0000
 From: Pranjal Shrivastava <praan@google.com>
 To: David Matlack <dmatlack@google.com>
 Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
@@ -100,19 +100,19 @@ Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
 	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v11 08/13] PCI: Save and restore the ACS Control register
- and Egress Control Vector
-Message-ID: <awBc0m4oW9nW4hgX@google.com>
+Subject: Re: [PATCH v11 09/13] PCI: liveupdate: Adopt ACS controls in
+ incoming preserved devices
+Message-ID: <awBkg0ODE436CZy0@google.com>
 References: <20261118223704.3286085-1-dmatlack@google.com>
- <20261118223704.3286085-9-dmatlack@google.com>
+ <20261118223704.3286085-10-dmatlack@google.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261118223704.3286085-9-dmatlack@google.com>
+In-Reply-To: <20261118223704.3286085-10-dmatlack@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261120_064449_737515_6A0FCBA1 
-X-CRM114-Status: GOOD (  21.65  )
+X-CRM114-CacheID: sfid-20261120_071735_600333_2C11A801 
+X-CRM114-Status: GOOD (  29.23  )
 X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -124,54 +124,86 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-18.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-23.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Wed, Nov 18, 2026 at 10:36:59PM +0000, David Matlack wrote:
-> Save the ACS Control register and the ACS Egress Control Vector in
-> pci_save_state() and write them back in pci_restore_state(), instead of
-> recomputing the ACS controls from scratch with pci_enable_acs().
+On Wed, Nov 18, 2026 at 10:37:00PM +0000, David Matlack wrote:
+> Adopt Access Control Services (ACS) controls on all incoming preserved
+> devices (endpoints and upstream bridges) during a Live Update.
 > 
-> This makes ACS symmetric with the rest of a device's saved state. Today
-> pci_save_state() ignores ACS entirely and pci_restore_state() re-enables
-> the ACS controls from the kernel's current ACS policy. As a result, a
-> device can come out of a reset with different ACS controls than it went
-> in with, e.g. any controls programmed outside of pci_enable_acs() are
-> silently dropped.
+> Adopting ACS controls avoids changing routing rules while memory
+> transactions are in flight from preserved devices. It also keeps IOMMU
+> groups from changing during or after Live Update.
 > 
-> This also lets a later patch adopt the ACS controls established by a
-> previous kernel across a Live Update rather than assigning new ones
-> through pci_enable_acs().
+> The adopted controls are recorded by the pci_save_state() call in
+> pci_bus_add_device(), which runs before drivers bind, so they are
+> reapplied by pci_restore_state() if the device is reset. Allocate the
+> ACS save buffer for incoming preserved devices even if they match a
+> device-specific ACS quirk, since their adopted controls live in the ACS
+> capability, and panic if it could not be allocated.
 > 
-> Save and restore the Egress Control Vector as well to keep it in sync
-> with the Egress Control Enable bit in the ACS Control register, which is
-> now restored from saved state. The kernel never enables Egress Controls
-> or programs the vector, but the firmware could have and they need to be
-> kept in sync to avoid changing how P2P traffic is routed.
-> 
-> The Egress Control Vector Size is a HwInit field of the ACS Capability
-> register (PCIe r7.1, sec 7.7.12.2), so read it directly from the device
-> to size the save buffer in pci_allocate_cap_save_buffers(), similar to
-> how the VC capability relies on its HwInit fields.
-> 
-> pci_enable_acs() runs when a driver binds to a device
-> (pci_dma_configure()), i.e. after pci_bus_add_device() has already saved
-> the device's state. Refresh the saved ACS state there as well, otherwise
-> a subsequent reset would revert ACS back to the configuration left
-> behind by firmware.
-> 
-> Devices that rely on device-specific quirks to enable an ACS equivalent
-> keep that configuration outside of the ACS Control register, so don't
-> allocate an ACS save buffer for them. Keep configuring ACS from scratch
-> on restore for any device that has no saved ACS state.
+> To simplify ACS adoption, reject preserving any devices that require
+> quirks to enable ACS as those quirks would also have to take Live Update
+> into account. If such a quirk matches an incoming preserved device
+> anyway, e.g. because it was added in the new kernel, log a warning and
+> adopt the device's ACS controls regardless, rather than reprogram a
+> device in the path of a preserved device's memory transactions.
 > 
 > Signed-off-by: David Matlack <dmatlack@google.com>
-> Reviewed-by: Alex Williamson <alex.williamson@nvidia.com>
+> ---
+>  drivers/pci/liveupdate.c | 75 ++++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/liveupdate.h | 16 +++++++++
+>  drivers/pci/pci.c        | 13 +++++--
+>  3 files changed, 102 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+> index 00d6fa5236e9..b99a88c2c199 100644
+> --- a/drivers/pci/liveupdate.c
+> +++ b/drivers/pci/liveupdate.c
+> @@ -123,6 +123,9 @@
+>   *
+>   *  * The device cannot be a Virtual Function (VF).
+>   *
+> + *  * The device cannot require device-specific quirks to enable Access
+> + *    Control Services (ACS).
+> + * 
+
+[...]
+
+> +#include "liveupdate.h"
+>  #include "pci.h"
+>  
+>  DEFINE_MUTEX(pci_slot_mutex);
+> @@ -1071,9 +1073,13 @@ static void pci_allocate_acs_save_buffer(struct pci_dev *dev)
+>  	/*
+>  	 * Devices that rely on device-specific quirks to enable an ACS
+>  	 * equivalent keep that configuration outside of the ACS Control
+> -	 * register, so they are configured from scratch on restore.
+> +	 * register, so they are configured from scratch on restore. The
+> +	 * exception is devices preserved across a Live Update, which always
+> +	 * adopt the ACS controls established by the previous kernel and need
+> +	 * the buffer to keep them across resets.
+>  	 */
+> -	if (pci_need_dev_specific_enable_acs(dev))
+> +	if (pci_need_dev_specific_enable_acs(dev) &&
+> +	    !pci_liveupdate_was_incoming(dev))
+>  		return;
+>  
+
+The ACS save buffer is forced for incoming devices that match an
+enable_acs quirk, but neither existing quirk keeps its controls where
+the generic code saves them (Intel PCH Root Ports have no ACS cap, 
+SPT/UPT has the Control register at +8, not +6). Is the intent that 
+such devices just lose their adopted controls if they ever lose config
+state later? (e.g. a Root Port D3 cycle after pci_liveupdate_finish())
+If so, maybe worth calling it out in a comment?
+
+Apart from that:
 
 Reviewed-by: Pranjal Shrivastava <praan@google.com>
 
