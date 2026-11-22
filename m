@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E82606A330
-	for <kexec@archiver.kernel.org>; Sun, 22 Nov 2026 16:30:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8D1606A31D
+	for <kexec@archiver.kernel.org>; Sun, 22 Nov 2026 21:19:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=cs6+IZA2;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ghF7CWUM
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=D9IExhja;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=aTTCHqHx
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
@@ -14,54 +14,96 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=KzrVEQ03EK5eu+7tSDtmCyEtJgI25e3+3defglUPBK0=; b=cs6+IZA20HZYoVlLFDupZVi9ZG
-	TqWzTuuNwzpZYJPwvbgb1QG8Vb8ezZhOAJXRtSZ4daPAv7UOxht0oTXF3qM+3yqrYKH5gwKv5pnpg
-	aOjZjh7qRoMnkBKfigZROP4w8CHv62/Rs/G4sKFN7ZIZYVbJF2s9rIP6vFO+YlpstiSMJqDL+50up
-	F0vAcvr3NDx3LIsHcsk0z6jF5WyNrIs+/NofXznj5bSB+NUWxSS1I+wljqfu2GUP5bDuhA+7SEif2
-	qJpIilU5YtlXTwJr7tFx/dVI11ADqNaeYgB2RNaxx71Z137n5oSPRUtGD8HjLOdd5Grz9KSZiSAbj
-	KC+prrmw==;
+	bh=jlHx3q8hlvOapQpFRbpBP1dZTmv+VTbbRyW9rgzkxFM=; b=D9IExhjaySGcKM5aqB1SgRvv2I
+	KtOc3nEYJPpkvvnGSd+B7l0n1d6dLJo7Bquf/e4BKkQIl2wxc5NKnNcUvKl6qyR2KSULL/XNOdApC
+	5jyR0Na8ClwbUG1vw2RBsO4zKYyv9ktE2Kv1uBP3RIExqFTwKIuNHWVkGvE11nfdS+liVTryAvg5N
+	tH+Ec7cEwWyHvP+lt4cvx1g1V7s5NcjnlLQHqBb2HIdhLPk1uoL7gHfUrv1LBw2gaC12pGDIpxHu4
+	ULXidoGQN0NQqFXc5mQ7Bgt2bEXMOEOyQAQXsTnpXq12IyQNQA7PrXY1m63K0sugvzVyJttwBRNoT
+	dB1WX+5w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVASP-00000001MON-2eQi;
-	Sun, 22 Nov 2026 16:30:26 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xVEyZ-00000001mdr-2Pj3;
+	Sun, 22 Nov 2026 21:19:55 +0000
+Received: from mail-pl1-x629.google.com ([2607:f8b0:4864:20::629])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVASN-00000001MNz-2j6q;
-	Sun, 22 Nov 2026 16:30:24 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 0821341709;
-	Sun, 22 Nov 2026 16:30:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD7601F000C6;
-	Sun, 22 Nov 2026 16:30:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795365022;
-	bh=KzrVEQ03EK5eu+7tSDtmCyEtJgI25e3+3defglUPBK0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ghF7CWUMVugPxg90sHHKYEuZ3yfSWM233Kz7XPmsYFNoH8ePGcEbFvq+3tjJvwARM
-	 C31VtR89lcPiYAdWjzKHdq0uDAHG0vykVegt4OhFNQAnrE9uc50dm2/ucEFtc5H307
-	 z9ipHD7izlqUI7oLV3OzY3TPmA/V3FAinMcG70EnZV5PW+Nz27ECsoIn64+Qm3lyw9
-	 amEOLkCTcLr+6CNiqBmmK1pi+RiViiPRpGmeCK4JtyQb1BwsjhkhXR9GQzDryKfCTA
-	 74r2U3LJpqelptWe/c0EjDwCDfzMsxk2zPAFgvuXvS4X18hw1f6OC+2XCKwWbk4SkB
-	 aiusnbaFYdUvg==
-Date: Sun, 22 Nov 2026 18:30:15 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Bradley Morgan <bradley.morgan@linux.dev>
-Cc: fparola@amazon.de, akpm@linux-foundation.org, alex@ghiti.fr,
-	aou@eecs.berkeley.edu, baoquan.he@linux.dev,
-	kexec@lists.infradead.org, linux-riscv@lists.infradead.org,
-	nh-open-source@amazon.com, palmer@dabbelt.com,
-	pasha.tatashin@soleen.com, pjw@kernel.org, pratyush@kernel.org,
-	stable@vger.kernel.org, thunder.leizhen@huawei.com
-Subject: Re: [PATCH] crash: Fix crash memory reserve dead loop when low and
- high limits match
-Message-ID: <awMYl7QyfPtbM-PC@kernel.org>
-References: <20261119093730.49471-1-fparola@amazon.de>
- <CAEBC780-5EA0-425E-84DA-F16817BE884C@linux.dev>
+	id 1xVEyU-00000001mdC-40eH
+	for kexec@lists.infradead.org;
+	Sun, 22 Nov 2026 21:19:53 +0000
+Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-2f048bc09d7so61315ad.0
+        for <kexec@lists.infradead.org>; Sun, 22 Nov 2026 13:19:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1795382389; x=1795987189; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=jlHx3q8hlvOapQpFRbpBP1dZTmv+VTbbRyW9rgzkxFM=;
+        b=aTTCHqHxcPzw5alwQDQpzFJw6stYPv9bVF7HYmnHWCzsJzL3kH2zOsBbpUCYlZeY80
+         M8MljgbFrImKYdFTEkyJlwVb+jEmm2dgKTSTSjkbfiWTotKN/VD7+/ks4EwyUtLaM2vI
+         Yq8Zx6wcOJggxKEuvGg7YN04DTxDPhwgebOnZwQf7++p2iMY+Ibc+5pptIvvLqzvCBtH
+         64L+v9en6h32kfhfKeCXvVShssGDSwJH5WpxQ0J/AYpXMujr9xbWL4TO7GmEsMfhyIPc
+         8k0pj0Bl7RdInnZ6QcyBCTeLW5ZuZ02E4sLJfjI/zPGQOP4UJjGhpOBFI6exOVrvvpz8
+         DfTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795382389; x=1795987189;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=jlHx3q8hlvOapQpFRbpBP1dZTmv+VTbbRyW9rgzkxFM=;
+        b=kHagzRli+XMbm+zT6X88B6i6GG0/RHbHSqOKPMpchoJhLwjaXmv/0L2D3acLmTHAqz
+         9iGAysaIxDrC4z3VRzWhEj19/nZxeSiqFUBvDPmVl0l71s05h+ZW4GVr8osunBxy7Fa0
+         27mPX5X8yFtXw3yPPXnxHeWLHDu7r0dk5ndSDd1QjhEiO5Nd3v9pc8OBv5ZoX5soWYOR
+         dAmKMC0/wCW5ntBspW6/g/blzsq68W5Gsm1p8eo6u9ckmuvgbqrZ05S5P5X0eeyuRqLc
+         XdyIyfmF2fZ9usmyRLdLZohAIgbEf6eaVGAyH3alp7tiVtKHKX2A7yaQKZTzJB3PsJuM
+         aO+w==
+X-Gm-Message-State: APuU4Z+hQiGvnm+gHY2J4ZdcYyCN4LXKasGnrMA40Klfj4ddzqembD74
+	mMxMfB8sKlmN3FkOF+tDyopH707/5uFfIHgkpR2AYnQWPwfaiZBo6w8TWiDPfVuijA==
+X-Gm-Gg: AZFdTZfqky/j9U9/SwBrw9Ri5r9a+jdFNuulxFp8vGV/YKd3cr202U3fwlNPDg/fFB4
+	snNu60RRl0J5isBQ/ccDcPkZLdA+ngl8XBZax0Ya8dI3TiGCZREkArZWaSAruqpQPiWksP9zdmE
+	DHsH+t6ETMeso04+hxItzngewd2ZSpxX3iNOP5RBFCTQ55teYjWc+XRkmt8Ai3Ss4+5h6pQpHWH
+	bAmsVDGQYFRNUioXoFlgJ/qLIiOeZkkUrc3Aq89Sbir7+L9Xi1A+v6tyAw/YgG0dV4P5lXAZuET
+	75ddjG+QOmkq2iYw9iAqgGw6Aer1VdwgbBtxZrobuQ8f9x+0B5LDutmWyW7kTFs9Q9kvwXOYUoU
+	/HofTUig7bB1L4qb+IzOzmbfdz3OE/PPe5GSebML9c1lT5sbr5aUYYYTSEX198xvaBMF/c+IO0Q
+	sG8UsrxpkRJ5TGn1UaFbRezO1xS17FGaQJ24sB2/FQN4II0ua//+hFUll/oT+On6/69AXqzkAQR
+	H2kHh+dJ4Y49Nl06fI6Eckn1LW1QEukLrtKOg2dAFoTCyuJrwTafse/8yqkLklt3zvpDdUTYHtC
+	H0pv5IIg5LA+yws3NN//CrsMO7ijASOVFqeWSCefUJ0qUDfOnkZ1Tlf7BobjDX6VV5f8D1nC95V
+	5mB9Kq9mO0hEm0FIEuSlZnA==
+X-Received: by 2002:a17:903:19e3:b0:2d5:db38:8010 with SMTP id d9443c01a7336-2f066708a17mr4257845ad.15.1795382388397;
+        Sun, 22 Nov 2026 13:19:48 -0800 (PST)
+Received: from google.com (25.75.145.34.bc.googleusercontent.com. [34.145.75.25])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b405d63728sm18461423a91.8.2026.11.22.13.19.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Nov 2026 13:19:47 -0800 (PST)
+Date: Sun, 22 Nov 2026 21:19:42 +0000
+From: Samiullah Khawaja <skhawaja@google.com>
+To: Vipin Sharma <vipinsh@google.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org, ajayachandra@nvidia.com, 
+	alex@shazbot.org, amastro@fb.com, ankita@nvidia.com, apopple@nvidia.com, 
+	bhelgaas@google.com, chrisl@kernel.org, christian.koenig@amd.com, corbet@lwn.net, 
+	dmatlack@google.com, graf@amazon.com, jacob.pan@linux.microsoft.com, jgg@nvidia.com, 
+	jgg@ziepe.ca, jrhilke@google.com, julianr@linux.ibm.com, kees@kernel.org, 
+	kevin.tian@intel.com, leon@kernel.org, leonro@nvidia.com, lukas@wunner.de, 
+	mattev@meta.com, michal.winiarski@intel.com, parav@nvidia.com, 
+	pasha.tatashin@soleen.com, praan@google.com, pratyush@kernel.org, rananta@google.com, 
+	rdunlap@infradead.org, rientjes@google.com, rodrigo.vivi@intel.com, rppt@kernel.org, 
+	saeedm@nvidia.com, schnelle@linux.ibm.com, skhan@linuxfoundation.org, 
+	vivek.kasireddy@intel.com, witu@nvidia.com, yanjun.zhu@linux.dev, yi.l.liu@intel.com
+Subject: Re: [PATCH v6 03/27] liveupdate: Export symbols needed by modules
+Message-ID: <awNVk3q6Q6sAHn6U@google.com>
+References: <20261102153656.1431701-1-vipinsh@google.com>
+ <20261102153656.1431701-4-vipinsh@google.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <CAEBC780-5EA0-425E-84DA-F16817BE884C@linux.dev>
+In-Reply-To: <20261102153656.1431701-4-vipinsh@google.com>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261122_131951_022634_EA82EA26 
+X-CRM114-Status: UNSURE (   9.12  )
+X-CRM114-Notice: Please train this message.
+X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,80 +114,55 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+X-Spam-Status: No, score=-23.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=4.0.1
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Hi,
+On Mon, Nov 02, 2026 at 07:36:32AM -0800, Vipin Sharma wrote:
+>Export liveupdate_register_file_handler() and
+>liveupdate_unregister_file_handler(). All of these will be used by
+>vfio-pci in a subsequent commit, which can be built as a module.
+>
+>Reviewed-by: Samiullah Khawaja <skhawaja@google.com>
+>Reviewed-by: Pranjal Shrivastava <praan@google.com>
+>Signed-off-by: David Matlack <dmatlack@google.com>
+>Signed-off-by: Vipin Sharma <vipinsh@google.com>
+>---
+> kernel/liveupdate/luo_file.c | 2 ++
+> 1 file changed, 2 insertions(+)
+>
+>diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
+>index dbae0715220b..6aaa9a531428 100644
+>--- a/kernel/liveupdate/luo_file.c
+>+++ b/kernel/liveupdate/luo_file.c
+>@@ -916,6 +916,7 @@ int liveupdate_register_file_handler(struct liveupdate_file_handler *fh)
+> 	up_write(&luo_register_rwlock);
+> 	return err;
+> }
+>+EXPORT_SYMBOL_GPL(liveupdate_register_file_handler);
+>
+> /**
+>  * liveupdate_unregister_file_handler - Unregister a liveupdate file handler
+>@@ -933,6 +934,7 @@ void liveupdate_unregister_file_handler(struct liveupdate_file_handler *fh)
+> 	luo_flb_unregister_all(fh);
+> 	list_del(&ACCESS_PRIVATE(fh, list));
+> }
+>+EXPORT_SYMBOL_GPL(liveupdate_unregister_file_handler);
+>
+> /**
+>  * liveupdate_get_token_outgoing - Get the token for a preserved file.
+>-- 
+>2.56.0.317.g454f8302e1-goog
+>
 
-On Thu, Nov 19, 2026 at 04:07:41PM +0000, Bradley Morgan wrote:
-> On 19 November 2026 09:37:27 GMT, Federico Parola <fparola@amazon.de>
-> wrote:
-> >On arm64 with neither CONFIG_ZONE_DMA nor CONFIG_ZONE_DMA32,
-> >arm64_dma_phys_limit is PHYS_MASK + 1, so CRASH_ADDR_LOW_MAX equals
-> >CRASH_ADDR_HIGH_MAX. If the first crashkernel=size[KMG] attempt fails,
-> >reserve_crashkernel_generic() falls back to [CRASH_ADDR_LOW_MAX,
-> >CRASH_ADDR_HIGH_MAX), which is empty. That attempt fails too, and since
-> >search_end still equals CRASH_ADDR_LOW_MAX the fallback is taken again,
-> >forever. Boot stalls after the "Initmem setup" messages.
+Can you please send this separately, it can probably go in without rest
+of the vfio changes? This is required by iommufd and guest_memfd also I
+think.
 
-This is really hard to read :/
-
-> >
-> >The first attempt can fail on a kexec handover (KHO) boot, where early
-> >allocations are confined to the KHO scratch areas.
-> >
-> >Commit edb907a61333 ("crash: fix riscv64 crash memory reserve dead
-> >loop") fixed the same loop for crashkernel=size[KMG],high. Skip the
-
-How is this related?
-
-> >fallback to high memory when there is none, so the reservation fails
-> >with "cannot allocate crashkernel" and boot continues.
-> >
-> >Fixes: 0ab97169aa05 ("crash_core: add generic function to do reservation")
-> >CC: stable@vger.kernel.org
-
-Do you see this in field or it's what some sort of analysis shows?
- 
-> Oki.
-> 
-> >Signed-off-by: Federico Parola <fparola@amazon.de>
-> >---
-> > kernel/crash_reserve.c | 6 ++++--
-> > 1 file changed, 4 insertions(+), 2 deletions(-)
-> >
-> >diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
-> >index eee37a11380ce..1417b429b45c6 100644
-> >--- a/kernel/crash_reserve.c
-> >+++ b/kernel/crash_reserve.c
-> >@@ -421,9 +421,11 @@ void __init reserve_crashkernel_generic(unsigned long long crash_size,
-> > 		/*
-> > 		 * For crashkernel=size[KMG], if the first attempt was for
-> > 		 * low memory, fall back to high memory, the minimum required
-> >-		 * low memory will be reserved later.
-> >+		 * low memory will be reserved later. There is no high memory to
-> >+		 * fall back to if CRASH_ADDR_LOW_MAX equals CRASH_ADDR_HIGH_MAX.
-> > 		 */
-> >-		if (!high && search_end == CRASH_ADDR_LOW_MAX) {
-> >+		if (!high && search_end == CRASH_ADDR_LOW_MAX &&
-> >+		    CRASH_ADDR_LOW_MAX < CRASH_ADDR_HIGH_MAX) {
-> 
-> Reviewed-by: Bradley Morgan <bradley.morgan@linux.dev>
-> 
-> 
-> > 			search_end = CRASH_ADDR_HIGH_MAX;
-> > 			search_base = CRASH_ADDR_LOW_MAX;
-> > 			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
-> >
-> 
-> --- Thanks!
-
--- 
-Sincerely yours,
-Mike.
+Thanks,
+Sami
 
