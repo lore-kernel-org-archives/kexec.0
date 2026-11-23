@@ -2,11 +2,12 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BDB0606A6BC
-	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 23:39:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F51606A6AD
+	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 23:39:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=HrUv3OLn;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=D4L/w0He
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=pk8xIcjo;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=D6YTgIB2;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=cwAsP/KX
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
@@ -14,63 +15,78 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=+dO/10Kb1crg9LuSPobtfRm8dvZ5s9kHfaOxT9vk0Y4=; b=HrUv3OLnPa/SDC7WDjLnc8oG+e
-	IoT24b/EFT9JZfFXCv7ojrLL4yywGBEbiHz3a6VN+UxuLs586BjQgcjbzgn9yJwFlf80+XU2DAzQf
-	aK6aWjiWsZlixICoFJlG4LYm5EaakJyG0KXF6d69/oEZYpJBptAd80dSghZKTIo759QlgW3clC6cW
-	Fq0zHBqPC8u/cFE962c0To2chKWlBb9/JvNc+Z7vq8p0ZmuyYyUk6U/1JzH3Bg8e34GG8fx7hMjB9
-	8o2zdWMy78Tg58/2KCFMD3x02dE3MQGGi400bhOFS638F2jorcxWbI/TWFdqG7V0ji4SA8dxoMg0Q
-	rvzlUCRA==;
+	bh=aggP6JcaAjhqbHGLe6VQCft8I9oupyLjhzJry8SU42I=; b=pk8xIcjo7zCG5A4/5e8uB01iUs
+	j/eFBFkJmZuProa3rzNfSFY3hBOlCMS2YjARnrY80M1olyjsE1NKHOAXtoCacRpQh4DScftq+Dtfu
+	hER8UfUm/PXvFz6e0SPgc1DGJqiDGN3csRVQLBkwDqoDgpSZRa2PeWDro/3vtZRv0s6T/TybG11PW
+	U+pHfOhZfq57Yk9Wzu8AiUZ6txT8VaA+y8C7Eu1ou/B4wgyTsdfUTOWhb+t8ppm3alOz31yuLMXMN
+	tyzN1ld+itx9PoSVGZsG6Dd42xTb1WrOi3R9fH9rcC6TmC8G2eQDUdx91dtQY2YDjb1sjXRMO7dPi
+	4XEsZJFg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVddZ-00000005BhK-0oQR;
-	Mon, 23 Nov 2026 23:39:53 +0000
-Received: from mail-oi1-x246.google.com ([2607:f8b0:4864:20::246])
+	id 1xVddd-00000005BoG-2Tcc;
+	Mon, 23 Nov 2026 23:39:57 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVddT-00000005Bak-27Id
+	id 1xVddY-00000005BdL-3qgY
+	for kexec@bombadil.infradead.org;
+	Mon, 23 Nov 2026 23:39:53 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Type:Cc:To:From:Subject:
+	Message-ID:References:Mime-Version:In-Reply-To:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=aggP6JcaAjhqbHGLe6VQCft8I9oupyLjhzJry8SU42I=; b=D6YTgIB2taOJ8htABjXHEveBx0
+	CixXDgIzSib/2IFzOEOkuyWGl/mPjcLiZACdauvOY7JX3AFk35ruiqA3YQZ+R5A9Oyf41GvFUF+iS
+	igVAUokuhez8TGkHoXhAYTIdwiopaMC7fB/C5Q4B8shhB906g2j6VhzuJR7rVV2+5UZsO5MZz8RYJ
+	BKBBKO/7S/Kp4Y/ypuJBAwZuL7Z73F/3hGSK5cPsF5fL405La30MoTJ4h12BBhO1ByawYTAU/xsQm
+	pAiUS53NoH/e6MV/kB1EE6LsL9212i0LRz+oUiR78At5blKKZD53N3c5WncYjdbGAvi8Jr9Un86AE
+	uByFxT5Q==;
+Received: from mail-ot1-f70.google.com ([209.85.210.70])
+	by desiato.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xVddS-00000003gZN-3RI8
 	for kexec@lists.infradead.org;
-	Mon, 23 Nov 2026 23:39:49 +0000
-Received: by mail-oi1-x246.google.com with SMTP id 5614622812f47-4e778acdbc6so4876460b6e.3
-        for <kexec@lists.infradead.org>; Mon, 23 Nov 2026 15:39:46 -0800 (PST)
+	Mon, 23 Nov 2026 23:39:48 +0000
+Received: by mail-ot1-f70.google.com with SMTP id 46e09a7af769-862b952fb06so3079115a34.0
+        for <kexec@lists.infradead.org>; Mon, 23 Nov 2026 15:39:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795477186; x=1796081986; darn=lists.infradead.org;
+        d=google.com; s=20260707; t=1795477183; x=1796081983; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=+dO/10Kb1crg9LuSPobtfRm8dvZ5s9kHfaOxT9vk0Y4=;
-        b=D4L/w0HeoYrY/scS+TKpOnSfG2NvKNZPwGf03vlxLs8mWFJzyt0muF9X+ucCeL9KIs
-         p4tC86FYeq9tTmYZKlFCl/Cjk9ZMY0YXLX06/elCw/FhW8fepM+mSuXC1d0fkcFZiiOl
-         uyvCnm1rJt6MFFUEhCLkApS5qzdlJfChxQZ5d2g3YlHXGJk7uZ4KZo0+eZXM6sY6lEL/
-         mDh5gBzdvV2pcJcsxwgZhUorHB4rPCidsN5ubZLvBE/R9v0b0sOSbx+/QX+s5S0POSKx
-         T7V4EGtDiBLSd5v7jmQvv08d/fJsXvl/B+RsTvqllX5q8Z7+jwa9f0emwSuEYnu4DK9i
-         6UlQ==
+        bh=aggP6JcaAjhqbHGLe6VQCft8I9oupyLjhzJry8SU42I=;
+        b=cwAsP/KXywMNU97JjK4rp5Dq3FiJnThUwZKgnO7nWzE7JLY5gzssGJnvgtpQHW2ujl
+         mMUxQZdBK0DDV3IbEjp6vjhSsIcVSK/LY/Bf6y1vag51fKv7GqtkUGO8QNRCicd8RH8X
+         cNxmcM2e5CWBu7wrGXk2OEN2IBYyV4exOu5spz3D8foJIyCr0JixE8fCyxcNb8HDann1
+         dFSZKwTZD2fENEjxlCU5q9lNpZ80FobIcpDydx5g17NxUGk0GJ339q+XerE5XOZn0Hgx
+         YAbD7AM22fh4cTcpgTgPeY+t22/mbP5w5RZaBLqzArhsymWuxo+vKiwO4f/4qrzy5IJC
+         qJDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795477186; x=1796081986;
+        d=1e100.net; s=20260707; t=1795477183; x=1796081983;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=+dO/10Kb1crg9LuSPobtfRm8dvZ5s9kHfaOxT9vk0Y4=;
-        b=O7kHCtJkKRPn2is3+0GsMCPck/lVtU8kqi9nAkOiE+9TNybwsnUUHe7yNPi+wpEC0t
-         kVubyCbsiKfoQ/C1NkprXe98QDlbCry18SBxoyGHqmYTXuIMtBl1ifnZbXQ/hmVEgow8
-         cF2LfLYO1fDseyhMRrLKDy/Rwgo/jib4BryvYh26tY2c0oCPexp7sek+qqbaVCtO3vNM
-         d/G3tOsZPLVTMzXheDpSbRByqgPEq2DLtjlpXLtTpmbp0bp7OWDggtMRHdrOxViMPbO1
-         zbZGzR1MqjGoW052fy6WKR5z8LQHK0rVIAaRfGS4LstFDmhx1r4cO5DGkKM11hQHzfwa
-         u1eg==
-X-Gm-Message-State: APuU4Z+40V5dMmcgHLH/oa95pmjuTQmd9Dn0L6DvF4efm2eeGz2hjYtD
-	FqiOtIPCehphUxCPGFi51jtnk7H5D7IKNNmffVVfGREB6EBRG/GCQ+CelYgozOyG8G/JB0jEdw+
-	Zkzf354gzUvavlJvSl4j3bQwPqAXji2TljFMpzcHOYmCfcUSVxbHwNDGzbgmLUkKVR677aJOYUb
-	YcqosZWcTRDGdCwr3FnCuEBWQT/upmJzH8cySwmtEHBFENvNFQIkw=
-X-Received: from ilej7-n1.prod.google.com ([2002:a05:6e02:6207:10b0:54e:a760:20a7])
+        bh=aggP6JcaAjhqbHGLe6VQCft8I9oupyLjhzJry8SU42I=;
+        b=AOcVOxQkt4pPnowfNFc+OPHdtKGZN72sLwkc8vpl62K4YyxVaVzKaWAtWCzVoaJH/9
+         YYw1wwML9kFsgY8jUO/M3lOg+o9zDMOkp3yPE90tLOx03clgAnDw0bkgCR1eOfXdZ708
+         xSk98LWs5I+uI9OdWa8rGou09OahYqNd2u9GN4XhWfV5KQqpyUzSjB1imKDRC9tYxb8g
+         HEka87MGRSrT/lR7DHAthW8eqmQLey7bPBOvI/ZzYFmZHupeHNh5iWNV9D9tVbI/X4iF
+         V1dJVLfC5F96DVoIrH1sUsrTjagvMRcZYY0UhYsdY7jSxCDhfPHlm6HBD0KUCPNG72pe
+         tQ3A==
+X-Gm-Message-State: APuU4Z/fhHcDKmHHqDUZe1U8qWn2aQmxjCSgaha9YVHsXeJN96H3iHg4
+	PkF64uyvLbYRAYvovw/w9fHxtFUJebY1HDoeyR2J9Q7o8dpE6En9VmOB4rPUOj6ApfafxLvFlFw
+	Gl2Sid5kngQVTP71Ifg8YOBgYk3Amlwle9d2mRaHbTutGywFvq3yZZ+KEHGsO4Uuziq2ppGY3G3
+	RbdCMz0ZN5dpG/Hb9+LOvF/EQ2fJywlhY/b2pg5MzOK/IHsHj4NsM=
+X-Received: from japq5.prod.google.com ([2002:a05:6638:405:b0:620:5afe:8b1b])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6808:308b:b0:4f1:6c9c:78d3 with SMTP id 5614622812f47-57a0a92272dmr14361377b6e.26.1795477185579;
- Mon, 23 Nov 2026 15:39:45 -0800 (PST)
-Date: Mon, 23 Nov 2026 23:39:17 +0000
+ 2002:a05:6808:1a10:b0:564:48f3:dfa8 with SMTP id 5614622812f47-57a0a111c93mr14525917b6e.11.1795477182891;
+ Mon, 23 Nov 2026 15:39:42 -0800 (PST)
+Date: Mon, 23 Nov 2026 23:39:15 +0000
 In-Reply-To: <20261123233924.3970932-1-dmatlack@google.com>
 X-Archived-By: <archiver.kernel.org>
 Mime-Version: 1.0
 References: <20261123233924.3970932-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
-Message-ID: <20261123233924.3970932-13-dmatlack@google.com>
-Subject: [PATCH v5 12/18] mm/shmem_luo: Allow preserving tmpfs files
+Message-ID: <20261123233924.3970932-11-dmatlack@google.com>
+Subject: [PATCH v5 10/18] mm/shmem_luo: Require permission to preserve a file
 From: David Matlack <dmatlack@google.com>
 To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
@@ -86,9 +102,9 @@ Cc: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>,
 	David Matlack <dmatlack@google.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261123_153947_555687_8D13CC6C 
-X-CRM114-Status: GOOD (  14.47  )
-X-Spam-Score: -9.5 (---------)
+X-CRM114-CacheID: sfid-20261123_233946_874298_B95FE35E 
+X-CRM114-Status: GOOD (  22.76  )
+X-Spam-Score: -7.6 (-------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,43 +123,108 @@ X-Spam-Status: No, score=-26.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Allow preserving files on tmpfs mounts by dropping the link count check
-from shmem_luo_can_preserve(). The check was meant to limit preservation
-to memfds, which never have links. It isn't needed anymore, since tmpfs
-files are now retrieved into a file on a tmpfs mount.
+Require the file to be opened for reading and the caller to have
+permission to write to it in order to preserve it. As an exception, let
+the owner preserve a file that is immutable or on a read-only superblock
+without write permission, and reject append-only files.
 
-Userspace can keep using a linked file by its path until the Live
-Update. The path of the file isn't preserved. Userspace creates the file
-to retrieve it into, and can then link that file at the path it wants.
+While a file is preserved, its size is frozen for all of its users:
+truncating it, fallocate() and writes past its end fail with -EPERM.
+Today any process with an fd for a memfd can do that, even one that was
+only given a read-only fd. Requiring write permission limits this to
+callers that could truncate the file themselves. A file descriptor
+opened for writing isn't required, since that would rule out preserving
+a running binary, which can't be opened for writing. Only the permission
+of the inode is checked, so the mount doesn't need to be writable
+either. The size of an immutable file or of a file on a read-only
+superblock can't change anyway, so its owner may also preserve it.
+Append-only files are rejected, since their writers can only append to
+them, and freezing the size would stop all writes.
 
-Preserving a linked file affects everyone who opens it by its path,
-since its size is frozen while it is preserved. The permission check
-added by "mm/shmem_luo: Require permission to preserve a file" covers
-that: Callers need permission to write to the file, or must own it if
-its size can't change anyway.
+The retrieved file can be read, so also require the file to be opened
+for reading. Otherwise a caller with a write-only fd could preserve the
+file to read its contents.
+
+Document the frozen size and the permission requirements.
 
 Signed-off-by: David Matlack <dmatlack@google.com>
 Acked-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
- mm/shmem_luo.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ mm/shmem_luo.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
 diff --git a/mm/shmem_luo.c b/mm/shmem_luo.c
-index 2ea161fb00fc..ab7e5f51dc7d 100644
+index 46b33a00c2a2..854a49cd0aaa 100644
 --- a/mm/shmem_luo.c
 +++ b/mm/shmem_luo.c
-@@ -777,9 +777,7 @@ static int shmem_luo_retrieve(struct liveupdate_file_op_args *args)
- static bool shmem_luo_can_preserve(struct liveupdate_file_handler *handler,
- 				   struct file *file)
- {
--	struct inode *inode = file_inode(file);
--
--	return shmem_file(file) && !inode->i_nlink;
-+	return shmem_file(file);
+@@ -27,6 +27,15 @@
+  * the file are preserved. All others are reset to default. The preserved
+  * properties are described below.
+  *
++ * Preserving a file requires it to be opened for reading and the caller to have
++ * permission to write to it, but it doesn't need to be opened for writing. The
++ * owner of a file that is immutable or on a read-only superblock may also
++ * preserve it. Append-only files can't be preserved.
++ *
++ * While a file is preserved, its size can't change and no holes can be punched
++ * into it: Truncating the file, ``fallocate()`` and writes past the end of the
++ * file fail with ``-EPERM``. This applies to all users of the file.
++ *
+  * .. note::
+  *    The LUO API is not stabilized yet, so the preserved properties of a memfd
+  *    are also not stable and are subject to backwards incompatible changes.
+@@ -255,6 +264,30 @@ static void shmem_luo_unpreserve_folios(struct kho_vmalloc *kho_vmalloc,
+ 	vfree(folios_ser);
  }
  
- static unsigned long shmem_luo_get_id(struct file *file)
++/*
++ * Preserving a file freezes its size for all of its users, and the retrieved
++ * file can be read. So require a file opened for reading, and permission to
++ * write to the file or ownership of a file whose size can't change anyway.
++ * Reject append-only files, since freezing their size would stop all writes.
++ */
++static int shmem_luo_may_preserve(struct file *file)
++{
++	const struct mnt_idmap *idmap = file_mnt_idmap(file);
++	struct inode *inode = file_inode(file);
++
++	if (!(file->f_mode & FMODE_READ))
++		return -EBADF;
++
++	if (IS_APPEND(inode))
++		return -EPERM;
++
++	if ((sb_rdonly(inode->i_sb) || IS_IMMUTABLE(inode)) &&
++	    inode_owner_or_capable(idmap, inode))
++		return 0;
++
++	return inode_permission(idmap, inode, MAY_WRITE);
++}
++
+ static int shmem_luo_preserve(struct liveupdate_file_op_args *args)
+ {
+ 	struct inode *inode = file_inode(args->file);
+@@ -264,6 +297,11 @@ static int shmem_luo_preserve(struct liveupdate_file_op_args *args)
+ 	int err = 0, seals;
+ 
+ 	inode_lock(inode);
++
++	err = shmem_luo_may_preserve(args->file);
++	if (err)
++		goto err_unlock_inode;
++
+ 	shmem_freeze(inode, true);
+ 
+ 	/* Allocate the main serialization structure in preserved memory */
+@@ -317,6 +355,7 @@ static int shmem_luo_preserve(struct liveupdate_file_op_args *args)
+ 	kho_unpreserve_free(ser);
+ err_unlock:
+ 	shmem_freeze(inode, false);
++err_unlock_inode:
+ 	inode_unlock(inode);
+ 	return err;
+ }
 -- 
 2.56.1.809.ga0b61035b5-goog
 
