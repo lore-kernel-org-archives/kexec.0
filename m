@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102F0606A698
-	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 23:39:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B8E606A32C
+	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 23:39:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=WR3uxeri;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=DdEgakSz
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=VeFxonzR;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=U3D0r/p5
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
@@ -14,63 +14,63 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=/ZHoT97tqf5Dj8g+JDW8nW3DDYyt8I058/DSNhpOZoc=; b=WR3uxeribFjzdyIuGGh3jcgEkm
-	4GvF7huKXxGgczrrwVzuvDHFUtHxFHbyaXA3XakPO9v4dX6TIJReki9VAWatT3JctfDIpBPzVbKH5
-	+kjH6FVItdYdmouY1XYy5pQUN4+PnuZSPu2mIuidIw5/bBGevS9o9vOHIhzuao9qfPXI1cycySCgQ
-	Wl9tGsolkEixwYsVjc9GUUhoJJ5i16TN9Sxk1/R2GZNZzx0k+IcwBfsdNX82QCTWRCqhLPtND69Sv
-	ZXRAyuzY33YHZ92t+JEjSudXUduI6/FBQ3CQ075WOqIGiuBGlhzIMAF35cStvquA8FaalX0idxXyn
-	mnoaIprg==;
+	bh=7LV8lhNkJFfTRLs461bEq0N2TyeH7KvDdqPK2bQlIlc=; b=VeFxonzRT5WG752EN/YZPjTaVe
+	B5WsDzb0aLZy5Bq0tEIfMUgoflMp3Fi4BVu6VpFleAFh9inrFp5kx4yLW8HZYh64ziQEO6mWuNdcM
+	R7FOJBgSCFu4tUE2C3IlbzeqOr2bj2EOMW3WxWyXO8/is6Q1cFFJePnRd+BwuI2zmtJKEVQBh7a1S
+	qeWQ/FQO+LlQ8Khi764V9PAEoigOyqPtyXEnY7l1wl9Z0ni+dbhcM18FQ6ckJ23+zXgUS6DQDtq0B
+	LGqz3I+OC7lrfXHgVzJx4osQX3JNwQso3Tblrc+aOjn5CUJ3p/x51W+C/t8og9n0ylmTpTlc8QyH6
+	kmHSZ/yw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVddR-00000005BYJ-2hmp;
-	Mon, 23 Nov 2026 23:39:45 +0000
-Received: from mail-oa1-x47.google.com ([2001:4860:4864:20::47])
+	id 1xVddY-00000005Bgv-3bsX;
+	Mon, 23 Nov 2026 23:39:52 +0000
+Received: from mail-ot1-x346.google.com ([2607:f8b0:4864:20::346])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVddM-00000005BOv-3vHX
+	id 1xVddQ-00000005BUg-0hoP
 	for kexec@lists.infradead.org;
-	Mon, 23 Nov 2026 23:39:42 +0000
-Received: by mail-oa1-x47.google.com with SMTP id 586e51a60fabf-45e6091d8a1so2897937fac.1
-        for <kexec@lists.infradead.org>; Mon, 23 Nov 2026 15:39:38 -0800 (PST)
+	Mon, 23 Nov 2026 23:39:45 +0000
+Received: by mail-ot1-x346.google.com with SMTP id 46e09a7af769-862b2e1885cso4486724a34.3
+        for <kexec@lists.infradead.org>; Mon, 23 Nov 2026 15:39:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795477177; x=1796081977; darn=lists.infradead.org;
+        d=google.com; s=20260707; t=1795477182; x=1796081982; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=/ZHoT97tqf5Dj8g+JDW8nW3DDYyt8I058/DSNhpOZoc=;
-        b=DdEgakSz3DQyXWbkqfvx8nqa4aQdnU/9NYbakFaXPUAc0Us4yLmmyewWrA3q+InDw5
-         4twsVTGHyBLznqEzq8H0YUJzw9vq082w7QzG5KPLlbUslRIulnIWi3B8oQXoF1m8+lD1
-         uXWraX+0H6qkzQDvNKBq5oLDdH0l08BmP3IIHwZubaF7w9QiiQxogigTKKWRxvTe7s5k
-         DfL0Jkp5QhvhIq0QI+XzoczCNUdUwgmap7Z8DQ+r10xxitHYl8XtL3oUKbSkdXfystYr
-         CY0ky45jQcOZXjC6ohH6oelWL6M9HISqY+lfWK85ReM7cs03Q0wJTB8pJOvTg2FhCD6y
-         bvkg==
+        bh=7LV8lhNkJFfTRLs461bEq0N2TyeH7KvDdqPK2bQlIlc=;
+        b=U3D0r/p5dQmuLDXwxPmSQwrc7jF1Jg0gqA7MRQeSRJUYmwtrH1UpbBkTx8wQbaQIbX
+         6QVgSSp8o7K3tSCZxhQDTKR52FTlJPJhDCHkd2gVKk7Qt5SHg9Y2ZlXCZvqmVRJxQKhR
+         /S970HbVHvgI8MqPVudQKEK6g1deUEanfEBee1W+J/o2sAveETrwCbdJXGBfHx+e6GwX
+         j7afxzNnYP2IaEbg0R6zdVRpoKNQQU8UIlRA34UJHRCAa0iPfN7owKMU7uCmgbaiQg+N
+         sR3KsGXZrk2A4uAy2NODHKJ/+8k4yVY0H2cHCOgL/GhNiFnaRsRVStA52ETPK+sS9Z8k
+         CCZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795477177; x=1796081977;
+        d=1e100.net; s=20260707; t=1795477182; x=1796081982;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=/ZHoT97tqf5Dj8g+JDW8nW3DDYyt8I058/DSNhpOZoc=;
-        b=M7yYAuT0qFaLRc0cGz5Dmj56eFJP1sc8Aw755y+bKlftFE+ptE+soLjmHRLpP+w3x5
-         W39Uzrr+yQ5ux/CeGanRPgy4QL0n1CQ8zOBWNkAKkwWxt7Ju7YoeYD3vkTpR77lNfKbe
-         gFeMpms0qxH+arFqrte6Uw9fd4yeUVBm6qq4gv28qX66O5+MWfojvNAwu6KiFueYFOlF
-         jKowVqKRc43aU1jY+VbNI/wSx6MRjgmFy9T63OksYacpzO8hU3ayp7jlgc2Z9BoZA0CH
-         nYJU5NBpf1gpI5jX6Rag8+duRO+N9AuLsAxpX8DAp9q5+zw8/sZX6+Rf3ncAul7aiQ74
-         WMVA==
-X-Gm-Message-State: APuU4Z+pbSi3nzWvSd/U7pixr/Iy4xk7zVnTQ1W5cdDkhvnjdlWjt0nN
-	T/VCpoZUbjZ9rUm0A3oFwy621w/pCTmQGlUGhbDWT8px9590F7feTUDhXpRhR+1PtQGptw7q1FU
-	ik3ZdTqRyUBah6Q8nGvvd7fhfqXhdpaHES+BhmAm4q5C5VLwjlHUVr3HOtoKet2dW4DHRafs2w0
-	QrtdBxAOb9zcOtRaJ7FgK5vIkyrtwik9F2d96sMak3kpdPswaAcGI=
-X-Received: from ioi24-n1.prod.google.com ([2002:a05:6602:c658:10b0:9d3:b408:7991])
+        bh=7LV8lhNkJFfTRLs461bEq0N2TyeH7KvDdqPK2bQlIlc=;
+        b=DB4Caf/nq6GTsRuqoTMjKT9pOQxTBUVUwtwkbJKLpUCfND6h9CzxDa+m8cyxTnGsbp
+         aJO+mcYrGRM6fiTTBmxYWlgWUI7FprZ1kxnQUW+RZqrA+yHBDb2mM7OII1g7uD9SFkFI
+         bKUzcAM1h1BW3IaR6wtQQpWpF6JrYaDaFz+iSqMKGF+Hp+rPY5AISFGUWIXFud3ehmVC
+         alVkvOrKndPWGC1ZsuEfXRN3YwsgGk80aC6ztPV+TmfOVzgXNt53Dc3ZR5HYmCI82fis
+         nHTQFodGYVUifqEwwr2kdzQZ1LdptFxZ0OL5gsnSFYN6DBVojavQqkxzSGr1XRpsmM0y
+         SwEA==
+X-Gm-Message-State: APuU4Z+q5VUIUCj7kdZnIGXjhYzokgFJtwKcdyRIoKbdAGowEyn7XQXy
+	U9C5KEUtoQdN2V8qiRsoaU6utxlG8e7IKc4+GvxkbMQvrK+2xyxB6N4etkD6xXqXmB5x98Av2Ht
+	ubFUKu/PAHr/OXBXa3SRVuCrBbHhOdbVmFCWfEKBSj5aYC9P8T65c4wKd+lVCSUdu6mukBPVOSx
+	3yVcTr63cecpbjrnLszKBK54Syi2DBRASfCxLsT4HV/SnOwnYxFEc=
+X-Received: from jahq23-n2.prod.google.com ([2002:a05:6638:e017:20b0:620:2968:9641])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6808:2381:b0:50a:7162:87df with SMTP id 5614622812f47-57a06b2491amr12786319b6e.2.1795477176976;
- Mon, 23 Nov 2026 15:39:36 -0800 (PST)
-Date: Mon, 23 Nov 2026 23:39:11 +0000
+ 2002:a05:6808:6711:b0:4c4:a240:9c3a with SMTP id 5614622812f47-57a077151demr13100240b6e.4.1795477181670;
+ Mon, 23 Nov 2026 15:39:41 -0800 (PST)
+Date: Mon, 23 Nov 2026 23:39:14 +0000
 In-Reply-To: <20261123233924.3970932-1-dmatlack@google.com>
 X-Archived-By: <archiver.kernel.org>
 Mime-Version: 1.0
 References: <20261123233924.3970932-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
-Message-ID: <20261123233924.3970932-7-dmatlack@google.com>
-Subject: [PATCH v5 06/18] liveupdate: Don't WARN if tracking a retrieved file fails
+Message-ID: <20261123233924.3970932-10-dmatlack@google.com>
+Subject: [PATCH v5 09/18] mm/shmem_luo: Don't make early retrieve failures permanent
 From: David Matlack <dmatlack@google.com>
 To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
@@ -86,8 +86,8 @@ Cc: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>,
 	David Matlack <dmatlack@google.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261123_153941_101983_E944568F 
-X-CRM114-Status: GOOD (  18.81  )
+X-CRM114-CacheID: sfid-20261123_153944_217367_ADF72C1E 
+X-CRM114-Status: GOOD (  14.99  )
 X-Spam-Score: -9.5 (---------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -107,83 +107,71 @@ X-Spam-Status: No, score=-26.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Handle a failure to add a retrieved file to luo_preserved_files instead
-of triggering a WARN_ON(). Make the failure permanent, and keep the file
-until the file set is finished, like any other retrieved file. Only warn
-if the file is already tracked (-EBUSY), which would be a kernel bug,
-since a retrieved file is always a new file.
+Mark failures in shmem_luo_retrieve() before it starts restoring the
+folios as retryable. If no retrieve succeeds, finish() frees the
+preserved state, like it does for a file that was never retrieved.
 
-xa_insert() can fail with -ENOMEM, and userspace can trigger that with
-LIVEUPDATE_SESSION_RETRIEVE_FD, so warning about it lets userspace crash
-systems with panic_on_warn.
+Until the folios are restored, nothing has consumed the preserved state.
+Leave it for another retrieve, which may succeed, e.g. if
+memfd_alloc_file() failed with -ENOMEM.
 
-The handler has already consumed the preserved state when this happens,
-so the retrieve can't be retried. Keeping the file ensures that its
-resources are not released before the file set is finished. When
-finishing the file set, only erase successfully retrieved files from
-luo_preserved_files, so that the id of a file that was never added
-doesn't erase the entry of another file.
+The exception is a preserved file that this kernel can't restore, e.g.
+because it has seals that this kernel doesn't support. Retrying can't
+help, so keep that failure permanent: every later retrieve returns the
+same error.
 
-Fixes: 00d0b372374f ("liveupdate: prevent double management of files")
 Signed-off-by: David Matlack <dmatlack@google.com>
 Acked-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
- kernel/liveupdate/luo_file.c | 27 +++++++++++++++++++++------
- 1 file changed, 21 insertions(+), 6 deletions(-)
+ mm/shmem_luo.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
-index 9d98438b0166..0755a6478aec 100644
---- a/kernel/liveupdate/luo_file.c
-+++ b/kernel/liveupdate/luo_file.c
-@@ -675,14 +675,28 @@ int luo_retrieve_file(struct luo_file_set *file_set, u64 token,
- 		return err;
+diff --git a/mm/shmem_luo.c b/mm/shmem_luo.c
+index e747a0442295..46b33a00c2a2 100644
+--- a/mm/shmem_luo.c
++++ b/mm/shmem_luo.c
+@@ -532,6 +532,14 @@ static int shmem_luo_retrieve(struct liveupdate_file_op_args *args)
+ 		goto free_ser;
  	}
  
-+	err = xa_insert(&luo_preserved_files,
-+			luo_get_id(luo_file->fh, args.file), args.file,
-+			GFP_KERNEL);
-+	if (err) {
-+		/* A retrieved file is new, so it can't be tracked already. */
-+		WARN_ON_ONCE(err == -EBUSY);
++	/*
++	 * Nothing consumes the preserved state until the folios are restored
++	 * below. If the retrieve fails before that, leave the state for another
++	 * retrieve, or for finish() to free. The checks above can't succeed on
++	 * a retry, so they fail permanently.
++	 */
++	args->retryable = true;
 +
-+		/*
-+		 * The handler has consumed the preserved state, so the retrieve
-+		 * can't be retried. Keep the file until the file set is
-+		 * finished, so that its resources are released at the same
-+		 * time as those of other retrieved files.
-+		 */
-+		luo_file->file = args.file;
-+		luo_file->retrieve_status = err;
+ 	/*
+ 	 * The seals are preserved. Allow sealing here so they can be added
+ 	 * later.
+@@ -539,19 +547,22 @@ static int shmem_luo_retrieve(struct liveupdate_file_op_args *args)
+ 	file = memfd_alloc_file("", MFD_ALLOW_SEALING);
+ 	if (IS_ERR(file)) {
+ 		pr_err("failed to setup file: %pe\n", file);
+-		err = PTR_ERR(file);
+-		goto free_ser;
++		return PTR_ERR(file);
+ 	}
+ 
+ 	err = memfd_add_seals(file, ser->seals);
+ 	if (err) {
+ 		pr_err("failed to add seals: %pe\n", ERR_PTR(err));
+-		goto put_file;
++		fput(file);
 +		return err;
-+	}
+ 	}
+ 
+ 	vfs_setpos(file, ser->pos, MAX_LFS_FILESIZE);
+ 	i_size_write(file_inode(file), ser->size);
+ 
++	/* The preserved state is consumed from here on. */
++	args->retryable = false;
 +
- 	luo_file->file = args.file;
- 	/* Get reference so we can keep this file in LUO until finish */
- 	get_file(luo_file->file);
- 
--	WARN_ON(xa_insert(&luo_preserved_files,
--			  luo_get_id(luo_file->fh, luo_file->file),
--			  luo_file->file, GFP_KERNEL));
--
- 	*filep = luo_file->file;
- 	luo_file->retrieve_status = 1;
- 
-@@ -780,11 +794,12 @@ int luo_file_finish(struct luo_file_set *file_set)
- 
- 		luo_file_finish_one(file_set, luo_file);
- 
--		if (luo_file->file) {
-+		/* Only a successfully retrieved file was tracked. */
-+		if (luo_file->retrieve_status > 0)
- 			xa_erase(&luo_preserved_files,
- 				 luo_get_id(luo_file->fh, luo_file->file));
-+		if (luo_file->file)
- 			fput(luo_file->file);
--		}
- 		module_put(luo_file->fh->ops->owner);
- 		list_del(&luo_file->list);
- 		file_set->count--;
+ 	if (ser->nr_folios) {
+ 		folios_ser = kho_restore_vmalloc(&ser->folios);
+ 		if (!folios_ser) {
 -- 
 2.56.1.809.ga0b61035b5-goog
 
