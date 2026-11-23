@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A89D606A322
-	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 23:45:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631BE606A327
+	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 23:45:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Sex5JEhN;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=iaiJuSn7
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=w3XsZyCO;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=oMA316vU
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
@@ -14,64 +14,64 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=9ytNBCR2jYlgllUMHRB50Dw2nGY412Q9kFnUKp8ufOE=; b=Sex5JEhNG8XHk5gb5HiNg5+lvu
-	+uaCVdcO5ubZlZaZIXkwX9J1VwFOseleTBTX5GCgy7eUActiAB/2PT2SQcrtMQmVdbzhF9U1eO1e4
-	zx283xVSwrO0hXO6WYlmzKO2dK70OH8/k3c1BXPqxEPVmt0ZzOSe4WL/FFUAWFgToo4XbJsfo7FQy
-	V/dhF/b7pn+Vi7lvTSk5Ho+y1H0HEGrpolQR5uRSf1uXHQKyv7UcMBfTQ4cJeN2+Vsy4bilcctcDd
-	G2HNGqT45SiN3OJJSVgTy8Ihwh6DfWGIK4bKg/5xVT1JU0AILdxykFNTO58aX6iAqFzR/3dF9Hktl
-	gSOCBiAA==;
+	bh=iKJ0YhG5KuD0pKI8GbolHfK4XjQIGbL51iUEGtZcrrg=; b=w3XsZyCOXDKuKakKg14MtTEr6A
+	+H1usMILUlYmEOPeAHvd8kvJVngdubrqvk2NnF6u2rFNWL/nwzIL21ZXaJBNcMOJu1g32LyGL78lJ
+	KpQYR3k9xXnD/pU6Fwp3cU+Nz/D4tfyw7XNOnFy+uagL7VTUlyLNDaBshekmBgzDD9bEG4vMXE2AF
+	Pz/diPFH2YawB7qkf22zcpDNkbmMQ0b4o7Go7dmjtfmZhTnqCiIUriO8BksszbVDV93riyJGHRtp0
+	5X8YtfJW70shPT4aM3bjln0Tgl977O/qlK+uhqB2brouVGIk8UMzcvZ9291WYj3DRu7E/HKeeKl69
+	EYUtHFhw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVdjA-00000005CmR-487X;
-	Mon, 23 Nov 2026 23:45:40 +0000
+	id 1xVdjT-00000005Cpo-0Vn4;
+	Mon, 23 Nov 2026 23:45:59 +0000
 Received: from mail-qk1-x746.google.com ([2607:f8b0:4864:20::746])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVdj8-00000005Cm0-1K9X
+	id 1xVdjR-00000005Coz-1tRu
 	for kexec@lists.infradead.org;
-	Mon, 23 Nov 2026 23:45:40 +0000
-Received: by mail-qk1-x746.google.com with SMTP id af79cd13be357-94960131befso592363985a.0
-        for <kexec@lists.infradead.org>; Mon, 23 Nov 2026 15:45:37 -0800 (PST)
+	Mon, 23 Nov 2026 23:45:58 +0000
+Received: by mail-qk1-x746.google.com with SMTP id af79cd13be357-93cb7f9bb86so778317085a.2
+        for <kexec@lists.infradead.org>; Mon, 23 Nov 2026 15:45:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795477536; x=1796082336; darn=lists.infradead.org;
+        d=google.com; s=20260707; t=1795477555; x=1796082355; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=9ytNBCR2jYlgllUMHRB50Dw2nGY412Q9kFnUKp8ufOE=;
-        b=iaiJuSn75JtK77kGWBj7bN2rNdbGO6rBBrmD4i6e9clqY4rdiCrHMwFhgzZjukvkiT
-         +ZbeMeLNHKYOiQd4AMvwBvArEcJoHD7vrysOTDthDkzc1WxxTkhpDHyPJVkRI8elHZc0
-         ZijBzdBYpvfqWYyXif1io78xhsYW5tCWh9gicoLLDHIuQyvweTXnMOXt2UplVOtlA/vi
-         P1pEU7P+7bHrsJ0riIm9ekbPRe5ql/jPt9b2ccd3k2ikBwnn0fc0NQKmip5CiI4NdWpW
-         Aq0TuEFpizwXTdkFN0oDbgzTkNpO/vUFxgh9H0CEULVliBbGGck9fQQHJb38XQvG2u8w
-         2AZQ==
+        bh=iKJ0YhG5KuD0pKI8GbolHfK4XjQIGbL51iUEGtZcrrg=;
+        b=oMA316vUqa5BJc/Qhk7+Q3AFxtM5puE8DgX/FRNzK1DUdRGDJhC5lG8NDnrrlrNmPP
+         TawackA0j0cLWQWw/tiL7at0mIuXkMiZcnPmViUX8AZ1WA1niCTO16+NB9SYpXF4k2EO
+         0uInbpeXw2gGqHeqO4RYTZ9svIVOMQzRlxyx6fnFURNCZLC8Ud94lO+1lC7g9w+mZjiU
+         zqkifyssnj8DLrT7r1639UA7fMTkStF04YI5AfcT1TD1pKkb44sjeWzf8rbgRtGXDUqa
+         gdiwz8YbnBZTrqJ3Wf6nexf+wLGlwLArUHjpD5y7Pfba+FcTtTLMGEs2lLJ9O5OPfzzt
+         E8Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795477536; x=1796082336;
+        d=1e100.net; s=20260707; t=1795477555; x=1796082355;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=9ytNBCR2jYlgllUMHRB50Dw2nGY412Q9kFnUKp8ufOE=;
-        b=yuKX75OYo+fcotpfj6cQ/PtuDqysk/WKmhRoxnfTqz39/u0TeJBU9p/OPbZ8pJX7Hz
-         nnvifo4jM5YLaelcDQNRemc7yLXfkOBUp6j7eN6nDHUOtlJnO8UYhGxAZRdQBRU+nd2w
-         cigiDJV5wNjGJ/4AWwzVuYk6H1mlPDP81fzdtKEoXFSRqnVzCFSFOXgud9MG+aPl58U0
-         6F/ONPupGsG8fQRo4HCFZDSCTHvgfIHLC3h0OE9Z5mqKJB3HkU849WC/O6H4j+9A0LBt
-         4x0w6xHA6U9JXglSSncNh1Ajsc9YGc3RoA0/WpF1r+++ZnYMwh7r+VafaipTFfgs++z4
-         nSZQ==
-X-Gm-Message-State: APuU4Z9GIZlRPCwBcC7hVcPShI+88AV7/2OQZA/CpwTO1Mrei1UfFIDd
-	3ebt4u3Ev8kJUAeSTBf1sNUnOnsO0pN7XLbkFyuUWiQfq6qKpYc4kdhI0AjJXBWfw6SUI0PXThq
-	zIXJnBPQ4dW4uH83jTorTq/YDLT0k8MsTz2Dn0U2dr66b6c7lqDZNpXHFnT5lo6GDLALzY/j/pX
-	5D5A5aNgRKR7rLrRii09fJMQf76x8jhBEzvHCbCcD+bwzAQr8pnGE=
-X-Received: from ila23-n1.prod.google.com ([2002:a05:6e02:5217:10b0:542:fc1f:755f])
+        bh=iKJ0YhG5KuD0pKI8GbolHfK4XjQIGbL51iUEGtZcrrg=;
+        b=SJqCSjK+y2Xl0f20pbBc2Bjp37dv/f2joG5STu42c21U5U3hv8jNGGQrDIj1FMhJZH
+         WkdPRA/s96fhweqFJNFd5Kb9BeJL3tb+BW2LhW/U1yCQvvvYrhEkJCcANPw8sSxt90SL
+         1Jw6xdvZooA3zMv4FbMYRTW5MaQPbDU8pS0/nVdW6ZuqAN2GrFV515N/deZgYLUnX9aK
+         NeqCq+HeCecmRwhaWDscxLy3qnN5dwdMa+2O8GnHwGepqEjjHK8FgUuyY0fsFTkW0mCe
+         a9FuccDENAo2b1Uktdzl3AzpnYo6qn66LbpoL6Kw97+vN/EWxSCDxeCIBTkXAI9nURQ2
+         9vzQ==
+X-Gm-Message-State: APuU4Z/+8izgEE1xkemxEKxhSzJNjlWKD7nXq/T49vULcVg9HxvtQuxU
+	ZRSP3YWirG79A+ASmE91EO8AomPP3aeKPICVXcKMMQuJOm367YwivVBEtYEADu/xTmFZ3HwHM7o
+	YWnSB30qI8+YWgwjlVfjS3o106xDY0LFhxcmvxwhXhTNdDppSav5aU3xqoP1VwN6ANAU9eX02aC
+	s9a3H1FJeK/p9YEVDI++n7fJJpoV8HP+KHGG6dl/82whZjxCkUhlk=
+X-Received: from ilei3-n2.prod.google.com ([2002:a05:6e02:61c3:20b0:53c:e043:6f2d])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6808:13d3:b0:531:7f68:842e with SMTP id 5614622812f47-57a06d1a865mr14280931b6e.8.1795477184113;
- Mon, 23 Nov 2026 15:39:44 -0800 (PST)
-Date: Mon, 23 Nov 2026 23:39:16 +0000
+ 2002:a05:6808:50a1:b0:55b:f8cc:aef1 with SMTP id 5614622812f47-57a0a930345mr13528096b6e.15.1795477192273;
+ Mon, 23 Nov 2026 15:39:52 -0800 (PST)
+Date: Mon, 23 Nov 2026 23:39:22 +0000
 In-Reply-To: <20261123233924.3970932-1-dmatlack@google.com>
 X-Archived-By: <archiver.kernel.org>
 Mime-Version: 1.0
 References: <20261123233924.3970932-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
-Message-ID: <20261123233924.3970932-12-dmatlack@google.com>
-Subject: [PATCH v5 11/18] mm/shmem_luo: Retrieve tmpfs files into a file
- created by userspace
+Message-ID: <20261123233924.3970932-18-dmatlack@google.com>
+Subject: [PATCH v5 17/18] selftests/liveupdate: Test retrieving tmpfs files
+ preserved read-only
 From: David Matlack <dmatlack@google.com>
 To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
@@ -87,8 +87,8 @@ Cc: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>,
 	David Matlack <dmatlack@google.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261123_154538_486979_69AC0FDB 
-X-CRM114-Status: GOOD (  40.68  )
+X-CRM114-CacheID: sfid-20261123_154557_519375_BD22E67E 
+X-CRM114-Status: GOOD (  21.24  )
 X-Spam-Score: -9.5 (---------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -109,518 +109,356 @@ X-Spam-Status: No, score=-26.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Add support for retrieving files that were preserved from a tmpfs mount
-by restoring them into a file that userspace created on a tmpfs mount.
-Add struct liveupdate_shmem_retrieve_arg, which userspace passes as the
-retrieve argument of LIVEUPDATE_SESSION_RETRIEVE_FD with a file
-descriptor for that file, and record which files were on a tmpfs mount
-with a new SHMEM_LUO_FLAG_TMPFS flag in struct shmem_luo_ser. The next
-commit allows preserving tmpfs files.
-
-The mount a tmpfs file was on doesn't exist in the new kernel, and the
-path, owner, mode, extended attributes and other metadata of the file
-are not preserved. Userspace knows what they should be, so let it create
-the file, e.g. with O_TMPFILE, and only restore the contents and size of
-the preserved file into it. Userspace can then link the file at the path
-it wants. Like for any other retrieve, LIVEUPDATE_SESSION_RETRIEVE_FD
-returns a new file descriptor for the file.
-
-This also fixes a bug: shmem_luo_can_preserve() is meant to only accept
-memfds, but it only checks that the file has no links, so it accepts
-unlinked tmpfs files by mistake. They are then retrieved as memfds,
-which moves them off their mount and out from under the size limit and
-quotas of the mount. Retrieving such a file without an argument now
-fails with -EINVAL if it was preserved by a kernel with this commit. The
-new flag uses an existing field that is zero otherwise, so an older
-kernel that this kernel live updates to ignores it, and still retrieves
-tmpfs files as memfds.
-
-The target must be an empty regular file on a tmpfs mount, opened for
-writing. Like the preserved file, it must be on a tmpfs mount, so that
-memfds stay memfds and tmpfs files stay tmpfs files. Files on tmpfs
-mounts always have exactly F_SEAL_SEAL, so there are no seals to
-restore. The file position isn't restored either, since the open file
-belongs to userspace.
-
-A preserved file with unknown flags or seals, or a tmpfs file with
-seals other than F_SEAL_SEAL, can't be restored, so fail its retrieve
-permanently.
-
-Fill the target like a write does: with write access to the superblock
-and the inode lock held, calling file_modified() before and
-fsnotify_modify() after. Add the folios while i_size is still 0, and set
-i_size last. Reads, page faults and memfd_pin_folios() don't look past
-i_size, so they don't see the folios until the file is complete, and if
-adding them fails, the folios can be removed again to leave the target
-empty. Like fallocate(), raise fallocend while adding the folios, so
-that splitting a large folio doesn't drop its pages past i_size.
-
-Userspace must not use the target until the retrieve returns. For
-example, MADV_COLLAPSE on a mapping of the target could change its page
-cache while the folios are added, and make the restore fail. Document
-that, instead of trying to reject every such use. Userspace that creates
-the target with O_TMPFILE controls who can access it.
-
-Claim the target with liveupdate_claim_file() before modifying it, so
-that a file that LUO already manages is rejected, e.g. a file that is
-preserved in an outgoing session and whose size is frozen.
-
-Like the other failures before the folios are restored, problems with
-the argument and the target can be retried.
+Add test cases to luo_tmpfs for source files preserved through a
+read-only fd, through a read-only mount, on a read-only superblock, and
+immutable files. Each of these cases except the first also preserves a
+sparse file, whose holes are filled when it is preserved. Check that
+the files are retrieved with their contents. Also check that the size of
+a preserved file is frozen, even when the file is opened by its path,
+and that writes within the file are preserved.
 
 Signed-off-by: David Matlack <dmatlack@google.com>
 ---
- Documentation/mm/shmem_preservation.rst |  12 +-
- include/linux/kho/abi/shmem.h           |  22 ++-
- include/uapi/linux/liveupdate.h         |  48 +++++++
- kernel/liveupdate/Kconfig               |   6 +-
- mm/internal.h                           |   1 +
- mm/shmem.c                              |   9 ++
- mm/shmem_luo.c                          | 178 ++++++++++++++++++++++--
- 7 files changed, 247 insertions(+), 29 deletions(-)
+ .../testing/selftests/liveupdate/luo_tmpfs.c  | 305 ++++++++++++++++++
+ 1 file changed, 305 insertions(+)
 
-diff --git a/Documentation/mm/shmem_preservation.rst b/Documentation/mm/shmem_preservation.rst
-index e79bf8afaa9e..193c044ca637 100644
---- a/Documentation/mm/shmem_preservation.rst
-+++ b/Documentation/mm/shmem_preservation.rst
-@@ -1,14 +1,14 @@
- .. SPDX-License-Identifier: GPL-2.0-or-later
- 
--==========================
--Memfd Preservation via LUO
--==========================
-+====================================
-+Memfd and Tmpfs Preservation via LUO
-+====================================
- 
- .. kernel-doc:: mm/shmem_luo.c
--   :doc: Memfd Preservation via LUO
-+   :doc: Memfd and Tmpfs Preservation via LUO
- 
--Memfd Preservation ABI
--======================
-+Memfd and Tmpfs Preservation ABI
-+================================
- 
- .. kernel-doc:: include/linux/kho/abi/shmem.h
-    :doc: shmem Live Update ABI
-diff --git a/include/linux/kho/abi/shmem.h b/include/linux/kho/abi/shmem.h
-index b61687e358a2..30fac9a9234b 100644
---- a/include/linux/kho/abi/shmem.h
-+++ b/include/linux/kho/abi/shmem.h
-@@ -18,8 +18,8 @@
-  * DOC: shmem Live Update ABI
-  *
-  * The shmem file handler, which preserves memfds created without
-- * ``MFD_HUGETLB``, uses the ABI defined below for preserving their state across
-- * a kexec reboot using the LUO.
-+ * ``MFD_HUGETLB`` and tmpfs files, uses the ABI defined below for preserving
-+ * their state across a kexec reboot using the LUO.
-  *
-  * The state is serialized into a packed structure `struct shmem_luo_ser`
-  * which is handed over to the next kernel via the KHO mechanism.
-@@ -69,12 +69,24 @@ struct shmem_luo_folio_ser {
- 			     F_SEAL_EXEC)
- 
- /**
-- * struct shmem_luo_ser - Main serialization structure for a memfd.
-+ * SHMEM_LUO_FLAG_TMPFS - The file was on a tmpfs mount.
-+ *
-+ * Set for files on a user-visible tmpfs mount. Such files can only be retrieved
-+ * into a file on a tmpfs mount, and never as a memfd.
-+ */
-+#define SHMEM_LUO_FLAG_TMPFS		BIT(0)
-+
-+/* The set of flags this version supports. */
-+#define SHMEM_LUO_ALL_FLAGS		SHMEM_LUO_FLAG_TMPFS
-+
-+/**
-+ * struct shmem_luo_ser - Serialized state of a shmem file.
-  * @pos:       The file's current position (f_pos).
-  * @size:      The total size of the file in bytes (i_size).
-- * @seals:     The seals present on the memfd. The seals are uABI so it is safe
-+ * @seals:     The seals of the file. The seals are uABI so it is safe
-  *             to directly use them in the ABI.
-- * @flags:     Flags for the file. Unused flag bits must be set to 0.
-+ * @flags:     Flags for the file (SHMEM_LUO_FLAG_*). Unused flag bits must be
-+ *             set to 0.
-  * @nr_folios: Number of folios in the folios array.
-  * @folios:    KHO vmalloc descriptor pointing to the array of
-  *             struct shmem_luo_folio_ser.
-diff --git a/include/uapi/linux/liveupdate.h b/include/uapi/linux/liveupdate.h
-index 38ba1cf23d2c..5ebd62e0d294 100644
---- a/include/uapi/linux/liveupdate.h
-+++ b/include/uapi/linux/liveupdate.h
-@@ -252,4 +252,52 @@ struct liveupdate_session_get_name {
- #define LIVEUPDATE_SESSION_GET_NAME					\
- 	_IO(LIVEUPDATE_IOCTL_TYPE, LIVEUPDATE_CMD_SESSION_GET_NAME)
- 
-+/**
-+ * struct liveupdate_shmem_retrieve_arg - Argument to retrieve a tmpfs file
-+ * @size: Input; sizeof(struct liveupdate_shmem_retrieve_arg)
-+ * @fd:   Input; The file to restore the preserved file into.
-+ *
-+ * Passed via &struct liveupdate_session_retrieve_fd.arg to retrieve a file that
-+ * was preserved from a tmpfs mount. Such files can only be retrieved with this
-+ * argument, and memfds can only be retrieved without it. Otherwise, the
-+ * retrieve fails with -EINVAL.
-+ *
-+ * The kernel restores the contents and size of the preserved file into @fd,
-+ * which must be an empty regular file on a tmpfs mount, opened for writing, and
-+ * returns a new file descriptor for the same open file as @fd in &struct
-+ * liveupdate_session_retrieve_fd.fd. Userspace creates the file, and its path,
-+ * owner, mode and file status flags are left unchanged. To keep anyone from
-+ * accessing the file before it is complete, userspace can create it with
-+ * O_TMPFILE and link it with linkat() after the retrieve. The blocks of the
-+ * file are charged to the mount of @fd, and its memory to the memory cgroup of
-+ * the caller.
-+ *
-+ * Userspace must not use the file, e.g. map it, until the retrieve returns.
-+ * Otherwise, the retrieve can fail permanently.
-+ *
-+ * LUO keeps a reference to the file until the session is finished. Since the
-+ * file is open for writing, it can't be executed until then (execve() fails
-+ * with -ETXTBSY).
-+ *
-+ * The following errors can be retried, e.g. with another file:
-+ *
-+ * - EBADF: @fd is not a file descriptor opened for writing.
-+ * - EINVAL: @fd is not an empty regular file on a tmpfs mount.
-+ * - EPERM: @fd is immutable.
-+ * - EBUSY: LUO already manages @fd, e.g. because it is preserved in an
-+ *   outgoing session.
-+ *
-+ * The following errors happen while restoring the contents, or because this
-+ * kernel can't restore the preserved file. They are permanent, and retrieving
-+ * the token again returns the same error. @fd is left empty.
-+ *
-+ * - ENOMEM: Out of memory.
-+ * - ENOSPC: The contents don't fit on the mount of @fd.
-+ * - EOPNOTSUPP, EINVAL: This kernel can't restore the preserved file.
-+ */
-+struct liveupdate_shmem_retrieve_arg {
-+	__u32	size;
-+	__s32	fd;
-+};
-+
- #endif /* _UAPI_LIVEUPDATE_H */
-diff --git a/kernel/liveupdate/Kconfig b/kernel/liveupdate/Kconfig
-index 79fbf4aa4842..98373af5fcd8 100644
---- a/kernel/liveupdate/Kconfig
-+++ b/kernel/liveupdate/Kconfig
-@@ -76,9 +76,9 @@ config LIVEUPDATE_SHMEM
- 	depends on SHMEM
- 	default LIVEUPDATE
- 	help
--	  Enable live update support for shmem files, i.e. memfds created
--	  without MFD_HUGETLB. This allows preserving memfd-backed memory
--	  across kernel live updates.
-+	  Enable live update support for shmem files: memfds created without
-+	  MFD_HUGETLB and files on tmpfs mounts. This allows preserving their
-+	  contents across kernel live updates.
- 
- 	  This can be used to back VM memory with memfds, allowing the guest
- 	  memory to persist, or for other user workloads needing to preserve
-diff --git a/mm/internal.h b/mm/internal.h
-index 566cbd2dce48..609e09f60309 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1432,6 +1432,7 @@ int shmem_add_to_page_cache(struct folio *folio,
- 			    pgoff_t index, void *expected, gfp_t gfp);
- int shmem_inode_acct_blocks(struct inode *inode, long pages);
- bool shmem_recalc_inode(struct inode *inode, long alloced, long swapped);
-+bool shmem_inode_internal(const struct inode *inode);
- 
- #ifdef CONFIG_SHRINKER_DEBUG
- static inline __printf(2, 0) int shrinker_debugfs_name_alloc(
-diff --git a/mm/shmem.c b/mm/shmem.c
-index af21a89abb0f..48bd144e7f00 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -468,6 +468,15 @@ bool shmem_recalc_inode(struct inode *inode, long alloced, long swapped)
- 	return first_swapped;
+diff --git a/tools/testing/selftests/liveupdate/luo_tmpfs.c b/tools/testing/selftests/liveupdate/luo_tmpfs.c
+index 27ec750351da..7911ac28188f 100644
+--- a/tools/testing/selftests/liveupdate/luo_tmpfs.c
++++ b/tools/testing/selftests/liveupdate/luo_tmpfs.c
+@@ -462,6 +462,13 @@ static int preserve_memfd(struct test_case *tc, unsigned int flags,
+ 	return ret;
  }
  
-+/*
-+ * Whether @inode is on the internal shmem mount, which is used by
-+ * shmem_file_setup() and thus by memfd_create().
-+ */
-+bool shmem_inode_internal(const struct inode *inode)
++/* Skip a case whose source file couldn't be preserved in stage 1. */
++static int skip_not_preserved(struct test_case *tc)
 +{
-+	return inode->i_sb == shm_mnt->mnt_sb;
++	ksft_print_msg("%s: The source file was not preserved\n", tc->name);
++	return KSFT_SKIP;
 +}
 +
- bool shmem_charge(struct inode *inode, long pages)
+ static int drop_privileges(void)
  {
- 	struct address_space *mapping = inode->i_mapping;
-diff --git a/mm/shmem_luo.c b/mm/shmem_luo.c
-index 854a49cd0aaa..2ea161fb00fc 100644
---- a/mm/shmem_luo.c
-+++ b/mm/shmem_luo.c
-@@ -9,19 +9,20 @@
-  */
- 
- /**
-- * DOC: Memfd Preservation via LUO
-+ * DOC: Memfd and Tmpfs Preservation via LUO
-  *
-  * Overview
-  * ========
-  *
-- * Memory file descriptors (memfd) can be preserved over a kexec using the Live
-- * Update Orchestrator (LUO) file preservation. This allows userspace to
-- * transfer its memory contents to the next kernel after a kexec.
-+ * Memory file descriptors (memfd) and tmpfs files can be preserved over a kexec
-+ * using the Live Update Orchestrator (LUO) file preservation. This allows
-+ * userspace to transfer its memory contents to the next kernel after a kexec.
-  *
-  * In this document, "memfd" means a memfd created without ``MFD_HUGETLB``, i.e.
-- * a shmem file on the kernel's internal shmem mount. Memfds created with
-- * ``MFD_HUGETLB`` are hugetlbfs files, which this file handler doesn't
-- * preserve. Preserving them fails with ``-ENOENT``.
-+ * a shmem file on the kernel's internal shmem mount, and "tmpfs file" means a
-+ * file on any other tmpfs mount. Memfds created with ``MFD_HUGETLB`` and other
-+ * files on hugetlbfs are not shmem files, and this file handler doesn't
-+ * preserve them. Preserving them fails with ``-ENOENT``.
-  *
-  * The preservation is not intended to be transparent. Only select properties of
-  * the file are preserved. All others are reset to default. The preserved
-@@ -37,13 +38,14 @@
-  * file fail with ``-EPERM``. This applies to all users of the file.
-  *
-  * .. note::
-- *    The LUO API is not stabilized yet, so the preserved properties of a memfd
-- *    are also not stable and are subject to backwards incompatible changes.
-+ *    The serialization format is not stabilized yet, so the preserved
-+ *    properties of a memfd or tmpfs file are also not stable and are subject
-+ *    to backwards incompatible changes.
-  *
-  * Preserved Properties
-  * ====================
-  *
-- * The following properties of the memfd are preserved across kexec:
-+ * The following properties of the file are preserved across kexec:
-  *
-  * File Contents
-  *   All data stored in the file is preserved.
-@@ -53,17 +55,21 @@
-  *   allocating pages for them during preservation.
-  *
-  * File Position
-- *   The current file position is preserved, allowing applications to continue
-- *   reading/writing from their last position.
-+ *   The current file position of a memfd is preserved, allowing applications to
-+ *   continue reading/writing from their last position. The position of a tmpfs
-+ *   file is not restored, since it is retrieved into a file that userspace
-+ *   opened, as described in "Retrieving Tmpfs Files" below.
-  *
-  * File Status Flags
-  *   memfds are always opened with ``O_RDWR`` and ``O_LARGEFILE``. This property
-- *   is maintained.
-+ *   is maintained. The file status flags of tmpfs files are not preserved.
-+ *   They are those of the file that userspace retrieves them into.
-  *
-  * Seals
-- *   File seals set on the memfd are preserved and re-applied on restore.
-+ *   The seals of a memfd are preserved and re-applied on restore.
-  *   Only seals known to this LUO version (see ``SHMEM_LUO_ALL_SEALS``) may
-- *   be present; preservation fails with ``-EOPNOTSUPP`` otherwise.
-+ *   be present; preservation fails with ``-EOPNOTSUPP`` otherwise. Files on
-+ *   tmpfs mounts always have exactly ``F_SEAL_SEAL``.
-  *
-  * Non-Preserved Properties
-  * ========================
-@@ -76,13 +82,31 @@
-  *   A memfd can be created with the ``MFD_CLOEXEC`` flag that sets the
-  *   ``FD_CLOEXEC`` on the file. This flag is not preserved and must be set
-  *   again after restore via ``fcntl()``.
-+ *
-+ * Inode Attributes
-+ *   The name, path, owner, mode, timestamps and extended attributes of the
-+ *   file are not preserved.
-+ *
-+ * Retrieving Tmpfs Files
-+ * ======================
-+ *
-+ * A tmpfs file is retrieved into an empty file that userspace creates on a
-+ * tmpfs mount of its choice, and passes in ``struct
-+ * liveupdate_shmem_retrieve_arg`` to ``LIVEUPDATE_SESSION_RETRIEVE_FD`` (see
-+ * its documentation). The kernel only restores the contents and size of the
-+ * preserved file. Userspace decides everything else about the file, e.g. its
-+ * path, owner and mode. The blocks of the file are charged to that mount, so
-+ * its size limit and quotas apply.
-  */
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/bits.h>
- #include <linux/err.h>
-+#include <linux/fcntl.h>
- #include <linux/file.h>
-+#include <linux/fs.h>
-+#include <linux/fsnotify.h>
- #include <linux/io.h>
- #include <linux/kexec_handover.h>
- #include <linux/kho/abi/shmem.h>
-@@ -337,6 +361,8 @@ static int shmem_luo_preserve(struct liveupdate_file_op_args *args)
- 
- 	ser->size = inode_size;
- 	ser->seals = seals;
-+	if (!shmem_inode_internal(inode))
-+		ser->flags |= SHMEM_LUO_FLAG_TMPFS;
- 
- 	err = shmem_luo_preserve_folios(args->file, &ser->folios,
- 					&folios_ser, &nr_folios);
-@@ -554,6 +580,108 @@ static int shmem_luo_retrieve_folios(struct file *file,
- 	return err;
+ 	CHECK_EQ(syscall(__NR_setgroups, 0, NULL), 0);
+@@ -838,6 +845,175 @@ static int linked_target_verify(struct test_case *tc)
+ 	return KSFT_PASS;
  }
  
-+/*
-+ * Restore a preserved tmpfs file into the file that userspace passed in the
-+ * retrieve argument.
-+ */
-+static int shmem_luo_retrieve_into(struct liveupdate_file_op_args *args,
-+				   struct shmem_luo_ser *ser)
++static int rdonly_source_preserve(struct test_case *tc)
 +{
-+	const struct liveupdate_shmem_retrieve_arg *arg = args->arg;
-+	struct shmem_luo_folio_ser *folios_ser;
-+	struct shmem_inode_info *info;
-+	pgoff_t fallocend;
-+	struct inode *inode;
-+	struct file *file;
-+	int err;
++	int fd, ret;
 +
-+	if (!arg)
-+		return -EINVAL;
++	fd = create_source("src/rdonly_source", tc->size, tc->token);
++	CHECK(fd >= 0);
++	close(fd);
 +
-+	CLASS(fd, target)(arg->fd);
-+	if (fd_empty(target))
-+		return -EBADF;
++	fd = open("src/rdonly_source", O_RDONLY);
++	CHECK(fd >= 0);
++	ret = preserve_fd(fd, tc->pos, tc->token);
++	close(fd);
 +
-+	file = fd_file(target);
-+	inode = file_inode(file);
-+	info = SHMEM_I(inode);
-+
-+	/* Like the preserved file, the file must be on a tmpfs mount. */
-+	if (!shmem_file(file) || shmem_inode_internal(inode))
-+		return -EINVAL;
-+
-+	if (!(file->f_mode & FMODE_WRITE))
-+		return -EBADF;
-+
-+	/* Fill the file like a write, which also takes these locks. */
-+	file_start_write(file);
-+	inode_lock(inode);
-+
-+	err = -EPERM;
-+	if (IS_IMMUTABLE(inode))
-+		goto unlock;
-+
-+	err = -EINVAL;
-+	if (i_size_read(inode) || !mapping_empty(inode->i_mapping))
-+		goto unlock;
-+
-+	err = liveupdate_claim_file(args, file);
-+	if (err)
-+		goto unlock;
-+
-+	err = file_modified(file);
-+	if (err)
-+		goto unclaim;
-+
-+	/* The preserved state is consumed from here on. */
-+	args->retryable = false;
-+
-+	fallocend = info->fallocend;
-+	if (ser->nr_folios) {
-+		folios_ser = kho_restore_vmalloc(&ser->folios);
-+		if (!folios_ser) {
-+			err = -EINVAL;
-+			goto free_ser;
-+		}
-+
-+		/*
-+		 * The folios are past the end of the file until i_size is set
-+		 * below, so reads, page faults and memfd_pin_folios() don't see
-+		 * them, and they can be removed again if adding one fails. Like
-+		 * fallocate(), raise fallocend meanwhile, so that splitting a
-+		 * large folio doesn't drop its pages past i_size.
-+		 */
-+		info->fallocend = ULONG_MAX;
-+		err = shmem_luo_retrieve_folios(file, folios_ser,
-+						ser->nr_folios);
-+		vfree(folios_ser);
-+		if (err)
-+			goto truncate;
-+	}
-+
-+	i_size_write(inode, ser->size);
-+	info->fallocend = fallocend;
-+	inode_unlock(inode);
-+	file_end_write(file);
-+	fsnotify_modify(file);
-+
-+	args->file = get_file(file);
-+	kho_restore_free(ser);
-+	return 0;
-+
-+truncate:
-+	shmem_truncate_range(inode, 0, (uoff_t)-1);
-+	info->fallocend = fallocend;
-+free_ser:
-+	kho_restore_free(ser);
-+unclaim:
-+	liveupdate_unclaim_file(args, file);
-+unlock:
-+	inode_unlock(inode);
-+	file_end_write(file);
-+	return err;
++	return ret;
 +}
 +
- static int shmem_luo_retrieve(struct liveupdate_file_op_args *args)
++/* Create a sparse file at @path, with a hole after the first page. */
++static int create_sparse_source(const char *path, __u64 token)
++{
++	int fd;
++
++	fd = create_source(path, page_size, token);
++	if (fd < 0)
++		return -1;
++
++	if (ftruncate(fd, 2 * page_size)) {
++		close(fd);
++		return -1;
++	}
++
++	return fd;
++}
++
++/* Open @path with O_RDONLY and try to preserve it with @token. */
++static int try_preserve_path(const char *path, __u64 token)
++{
++	int fd, ret;
++
++	fd = open(path, O_RDONLY);
++	if (fd < 0)
++		return -errno;
++
++	ret = luo_session_preserve_fd(session_fd, fd, token);
++	close(fd);
++	return ret;
++}
++
++/* Check that the file preserved with @token has the source of @tc. */
++static int check_preserved(struct test_case *tc, __u64 token, size_t size)
++{
++	int fd;
++
++	fd = retrieve_new(token, "dst");
++	CHECK(fd >= 0);
++	CHECK_EQ(file_size(fd), size);
++	TRY(check_contents(fd, size, tc->token));
++
++	close(fd);
++	return KSFT_PASS;
++}
++
++/* Check that the file preserved with @token is a create_sparse_source(). */
++static int check_sparse_preserved(struct test_case *tc, __u64 token)
++{
++	unsigned char *p;
++	int fd;
++
++	fd = retrieve_new(token, "dst");
++	CHECK(fd >= 0);
++	CHECK_EQ(file_size(fd), 2 * page_size);
++
++	/* Preserving the file filled the hole. */
++	CHECK_EQ(file_pages(fd), 2);
++	p = mmap(NULL, 2 * page_size, PROT_READ, MAP_SHARED, fd, 0);
++	CHECK(p != MAP_FAILED);
++	TRY(check_range(p, 0, page_size, tc->token));
++	TRY(check_range(p, page_size, 2 * page_size, 0));
++
++	munmap(p, 2 * page_size);
++	close(fd);
++	return KSFT_PASS;
++}
++
++static int rdonly_mount_source_preserve(struct test_case *tc)
++{
++	int fd;
++
++	fd = create_source("src/rdonly_mount_source", tc->size, tc->token);
++	CHECK(fd >= 0);
++	close(fd);
++	fd = create_sparse_source("src/rdonly_mount_sparse", tc->token);
++	CHECK(fd >= 0);
++	close(fd);
++
++	CHECK_EQ(mkdir("src_ro", 0755), 0);
++	CHECK_EQ(do_mount("src", "src_ro", NULL, MS_BIND, NULL), 0);
++	CHECK_EQ(do_mount("none", "src_ro", NULL,
++			  MS_REMOUNT | MS_BIND | MS_RDONLY, NULL), 0);
++
++	/*
++	 * Files can be preserved through a read-only mount. Their holes are
++	 * filled as if by read faults, which work through read-only mounts too.
++	 */
++	CHECK_EQ(try_preserve_path("src_ro/rdonly_mount_source", tc->token), 0);
++	CHECK_EQ(try_preserve_path("src_ro/rdonly_mount_sparse", tc->token + 1),
++		 0);
++	return KSFT_PASS;
++}
++
++static int rdonly_mount_source_verify(struct test_case *tc)
++{
++	CHECK_EQ(mount_tmpfs("dst", 16, NULL), 0);
++	TRY(check_preserved(tc, tc->token, tc->size));
++	TRY(check_sparse_preserved(tc, tc->token + 1));
++	return KSFT_PASS;
++}
++
++static int rdonly_sb_source_child(struct test_case *tc)
++{
++	TRY(drop_privileges());
++
++	/* The owner can preserve a file whose size can't change anyway... */
++	CHECK_EQ(try_preserve_path("src_rosb/own", tc->token + 1), 0);
++
++	/* ... but nobody else can. */
++	CHECK(try_preserve_path("src_rosb/other", tc->token + 2) < 0);
++	return KSFT_PASS;
++}
++
++static int rdonly_sb_source_preserve(struct test_case *tc)
++{
++	int fd;
++
++	CHECK_EQ(mount_tmpfs("src_rosb", 16, NULL), 0);
++	fd = create_source("src_rosb/root", tc->size, tc->token);
++	CHECK(fd >= 0);
++	close(fd);
++	fd = create_source("src_rosb/own", tc->size, tc->token);
++	CHECK(fd >= 0);
++	close(fd);
++	CHECK_EQ(chown("src_rosb/own", NOBODY, NOBODY), 0);
++	fd = create_source("src_rosb/other", tc->size, tc->token);
++	CHECK(fd >= 0);
++	close(fd);
++	fd = create_sparse_source("src_rosb/sparse", tc->token);
++	CHECK(fd >= 0);
++	close(fd);
++
++	CHECK_EQ(do_mount(NULL, "src_rosb", NULL, MS_REMOUNT | MS_RDONLY, NULL),
++		 0);
++
++	CHECK_EQ(try_preserve_path("src_rosb/root", tc->token), 0);
++	TRY(run_child(rdonly_sb_source_child, tc));
++
++	/* Holes are filled as if by read faults, even on a read-only sb. */
++	CHECK_EQ(try_preserve_path("src_rosb/sparse", tc->token + 3), 0);
++	return KSFT_PASS;
++}
++
++static int rdonly_sb_source_verify(struct test_case *tc)
++{
++	CHECK_EQ(mount_tmpfs("dst", 16, NULL), 0);
++	TRY(check_preserved(tc, tc->token, tc->size));
++	TRY(check_preserved(tc, tc->token + 1, tc->size));
++	CHECK_EQ(luo_session_retrieve_fd(session_fd, tc->token + 2), -ENOENT);
++	TRY(check_sparse_preserved(tc, tc->token + 3));
++	return KSFT_PASS;
++}
++
+ /* Set the inode flag @flag, e.g. FS_IMMUTABLE_FL, on the file at @path. */
+ static int set_inode_flag(const char *path, int flag)
  {
- 	struct shmem_luo_folio_ser *folios_ser;
-@@ -565,6 +693,18 @@ static int shmem_luo_retrieve(struct liveupdate_file_op_args *args)
- 	if (!ser)
- 		return -EINVAL;
+@@ -859,6 +1035,104 @@ static int set_inode_flag(const char *path, int flag)
+ 	return ret;
+ }
  
-+	/* Make sure the file only has flags this version supports. */
-+	if (ser->flags & ~SHMEM_LUO_ALL_FLAGS) {
-+		err = -EOPNOTSUPP;
-+		goto free_ser;
++static int immutable_source_preserve(struct test_case *tc)
++{
++	int fd, ret;
++
++	fd = create_source("src/immutable_source", tc->size, tc->token);
++	CHECK(fd >= 0);
++	close(fd);
++	fd = create_sparse_source("src/immutable_sparse", tc->token);
++	CHECK(fd >= 0);
++	close(fd);
++
++	ret = set_inode_flag("src/immutable_source", FS_IMMUTABLE_FL);
++	if (ret == -ENOTTY || ret == -EOPNOTSUPP) {
++		ksft_print_msg("%s: FS_IOC_SETFLAGS is not supported\n",
++			       tc->name);
++		return KSFT_SKIP;
 +	}
++	CHECK_EQ(ret, 0);
++	CHECK_EQ(set_inode_flag("src/immutable_sparse", FS_IMMUTABLE_FL), 0);
 +
-+	/* Files on tmpfs mounts can only have F_SEAL_SEAL. */
-+	if ((ser->flags & SHMEM_LUO_FLAG_TMPFS) && ser->seals != F_SEAL_SEAL) {
-+		err = -EINVAL;
-+		goto free_ser;
-+	}
++	/*
++	 * The size of an immutable file can't change anyway, so its owner can
++	 * preserve it. Its holes are filled as if by read faults.
++	 */
++	CHECK_EQ(try_preserve_path("src/immutable_source", tc->token), 0);
++	CHECK_EQ(try_preserve_path("src/immutable_sparse", tc->token + 1), 0);
++	return KSFT_PASS;
++}
 +
- 	/* Make sure the file only has seals supported by this version. */
- 	if (ser->seals & ~SHMEM_LUO_ALL_SEALS) {
- 		err = -EOPNOTSUPP;
-@@ -579,6 +719,13 @@ static int shmem_luo_retrieve(struct liveupdate_file_op_args *args)
- 	 */
- 	args->retryable = true;
- 
-+	if (ser->flags & SHMEM_LUO_FLAG_TMPFS)
-+		return shmem_luo_retrieve_into(args, ser);
++static int immutable_source_verify(struct test_case *tc)
++{
++	int fd;
 +
-+	/* Memfds are restored into a new memfd, so they take no argument. */
-+	if (args->arg)
-+		return -EINVAL;
++	CHECK_EQ(mount_tmpfs("dst", 16, NULL), 0);
++	fd = retrieve_new(tc->token, "dst");
++	if (fd == -ENOENT)
++		return skip_not_preserved(tc);
++	CHECK(fd >= 0);
++	CHECK_EQ(file_size(fd), tc->size);
++	TRY(check_contents(fd, tc->size, tc->token));
++	close(fd);
 +
- 	/*
- 	 * The seals are preserved. Allow sealing here so they can be added
- 	 * later.
-@@ -648,6 +795,7 @@ static const struct liveupdate_file_ops shmem_luo_file_ops = {
- 	.unpreserve = shmem_luo_unpreserve,
- 	.can_preserve = shmem_luo_can_preserve,
- 	.get_id = shmem_luo_get_id,
-+	.rarg = LIVEUPDATE_ARG(struct liveupdate_shmem_retrieve_arg, fd),
- 	.owner = THIS_MODULE,
- };
- 
++	TRY(check_sparse_preserved(tc, tc->token + 1));
++	return KSFT_PASS;
++}
++
++#define FROZEN_OFFSET		100
++#define FROZEN_DATA		"frozen"
++
++static int frozen_source_preserve(struct test_case *tc)
++{
++	size_t len = strlen(FROZEN_DATA);
++	int fd;
++
++	TRY(preserve_file(tc));
++
++	/* The size of a preserved file can't change, even through its path. */
++	fd = open("src/frozen_source", O_RDWR);
++	CHECK(fd >= 0);
++	CHECK_ERRNO(ftruncate(fd, tc->size / 2), EPERM);
++	CHECK_ERRNO(ftruncate(fd, tc->size * 2), EPERM);
++	CHECK_ERRNO(do_fallocate(fd, 0, 0, tc->size * 2), EPERM);
++	CHECK_ERRNO(do_fallocate(fd, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
++				 0, page_size), EPERM);
++	CHECK_EQ(lseek(fd, tc->size, SEEK_SET), tc->size);
++	CHECK_ERRNO(write(fd, "x", 1), EPERM);
++	CHECK_EQ(file_size(fd), tc->size);
++
++	/* Writes within the file work, and the data is preserved. */
++	CHECK_EQ(lseek(fd, FROZEN_OFFSET, SEEK_SET), FROZEN_OFFSET);
++	CHECK_EQ(write(fd, FROZEN_DATA, len), len);
++
++	close(fd);
++	return KSFT_PASS;
++}
++
++static int frozen_source_verify(struct test_case *tc)
++{
++	size_t len = strlen(FROZEN_DATA);
++	unsigned char *p;
++	int fd;
++
++	CHECK_EQ(mount_tmpfs("dst", 16, NULL), 0);
++	fd = retrieve_new(tc->token, "dst");
++	CHECK(fd >= 0);
++	CHECK_EQ(file_size(fd), tc->size);
++
++	p = mmap(NULL, tc->size, PROT_READ, MAP_SHARED, fd, 0);
++	CHECK(p != MAP_FAILED);
++	TRY(check_range(p, 0, FROZEN_OFFSET, tc->token));
++	CHECK(!memcmp(p + FROZEN_OFFSET, FROZEN_DATA, len));
++	TRY(check_range(p, FROZEN_OFFSET + len, tc->size, tc->token));
++
++	munmap(p, tc->size);
++	close(fd);
++	return KSFT_PASS;
++}
++
+ static int target_rdonly_verify(struct test_case *tc)
+ {
+ 	int target, rd_fd;
+@@ -1319,6 +1593,37 @@ static struct test_case test_cases[] = {
+ 		.size = SMALL_SIZE,
+ 		.verify = linked_target_verify,
+ 	},
++	/* Preserving files. */
++	{
++		.name = "rdonly_source",
++		.size = SMALL_SIZE,
++		.preserve = rdonly_source_preserve,
++		.verify = restore_verify,
++	},
++	{
++		.name = "rdonly_mount_source",
++		.size = SMALL_SIZE,
++		.preserve = rdonly_mount_source_preserve,
++		.verify = rdonly_mount_source_verify,
++	},
++	{
++		.name = "rdonly_sb_source",
++		.size = SMALL_SIZE,
++		.preserve = rdonly_sb_source_preserve,
++		.verify = rdonly_sb_source_verify,
++	},
++	{
++		.name = "immutable_source",
++		.size = SMALL_SIZE,
++		.preserve = immutable_source_preserve,
++		.verify = immutable_source_verify,
++	},
++	{
++		.name = "frozen_source",
++		.size = SMALL_SIZE,
++		.preserve = frozen_source_preserve,
++		.verify = frozen_source_verify,
++	},
+ 	/* The target file. */
+ 	{
+ 		.name = "target_rdonly",
 -- 
 2.56.1.809.ga0b61035b5-goog
 
