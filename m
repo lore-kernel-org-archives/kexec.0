@@ -2,124 +2,94 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B7E606A327
-	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 22:15:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB08606A680
+	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 23:39:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Y8QoVvCj;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=mCgvu+J2
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=tqrdEgeb;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=FqPwDvAy
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=F2nxXw1xsNQYaaD8ZR5Wp773q2x9Fzid0kC42p4+1HM=; b=Y8QoVvCjCp1PPJ
-	r3mdVMcNVs7jV/N9eGV/Wc8nTIwTpMFqqTXkx1cKK9laqjBKnSGJdXHomCK6Vjpmm5bBT3cXAS5jG
-	t5GnMrAqkXt0t+NkL+FWcMyUGURg+yU1XcOyS5XrRpLKMhTE5TXix6y5z9gg9qEIfxrMylEJGD2yt
-	AGnZ50/XSnzYXLx51ITa3W0MFdWl2COeIdmoVn0olQ5Yrd3IZxwrDokUaQw31owVTC6e+XznXaTAM
-	v3AGDnEgQI4jBw5Xsu5+frZy1/NcfQq8kxXkeTkI9AZ0uqXsObe6mbTHHtPB/rj+hA7n/5RQLUw6G
-	LVCQ4keOi9ZoF08DnyOg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=NNY7sb7Lc3fUr2Yc/4c0jbyfUC5yRtKrBOqqupJLhM4=; b=tqrdEgebIrJjQiiInxDcGT5Qvr
+	iyrIbe/FpOXD3URdOMAiZB48V5dUS42FPOF2lnlGoTL2Vp635ktaNwqW4ZlOVsi0LKY+K9kVsI/M8
+	PRVp71a+sBYYcJxIBcmCYzRhovdQm3a/aO6t/TYB3X768OhTAjk5g6e9H0YmDh8FehPM01EnSQ3ZE
+	6tUoXI3cRdU3ij87OnHrY4J1CVIv6A64lDqHMcAZa1M61CWkrpLZQQ7d0YwS/1jClip8v4458gnVV
+	mbt3RcJEvysLJFzIhwBclhpGsBuigDTO8L6a/mGF2umvuAOntRH3ZakZaWkfCPzGDLB8QFpTJvbRo
+	vEYFHstw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVcJi-000000053if-2Bq2;
-	Mon, 23 Nov 2026 22:15:18 +0000
-Received: from mail-ot1-x332.google.com ([2607:f8b0:4864:20::332])
+	id 1xVddG-00000005BMa-1qnV;
+	Mon, 23 Nov 2026 23:39:34 +0000
+Received: from mail-oi1-x248.google.com ([2607:f8b0:4864:20::248])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVcJe-000000053iG-3Jet
+	id 1xVddE-00000005BLS-15m1
 	for kexec@lists.infradead.org;
-	Mon, 23 Nov 2026 22:15:16 +0000
-Received: by mail-ot1-x332.google.com with SMTP id 46e09a7af769-861967d1845so390487a34.2
-        for <kexec@lists.infradead.org>; Mon, 23 Nov 2026 14:15:14 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795472113; cv=none;
-        d=google.com; s=arc-20260327;
-        b=V5yskMBLwibgd8evoN2JEoPhbnxzkobYmz8Ot5yeWXSfZs+kwfp2FWWIlb1yTjQuD5
-         uO+WmKsRcYf3AoNWnb4bOEC83s08C3V3I2owZGHhLxbJ7brYPOXtcze+rnnQ1NpZeOSF
-         tr0TrcWH7/4bRpjo1NLY0N5tsiZaUsSatRi6dSzvQgDAYsAvmHz1SwCa2Ng08QoTx/H2
-         +Vvo6MsbpB6pRUkPHsSqd/d2zfMFY8NB39/RhjXhULCe7Cwge621VqGWTb9J4S8F/LfY
-         2J5aVQwX2dnnsLHBqSxL5Lxc7zJDxsr9F74gBPOqqlarLX8iCymL9iZ30oWutjSYZXZ4
-         MJyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=F2nxXw1xsNQYaaD8ZR5Wp773q2x9Fzid0kC42p4+1HM=;
-        fh=SRg5qieCKPhAax034S2cuIxREDtuKEwnYy5ofEIcxhg=;
-        b=n6OTpaSVBjdAGQ+booVARhhjFo/HB5iwxJRP7vvi0/XFSshKyEL+cvuAncnN5PAz5q
-         IbTSlHVBdG9c+XuKNBoXMOlI15yyXOswXi0vBa+cXW/1/VlVgc4+BCpWn8mx+G499/pj
-         K1ab8s9xiil9wPQwDCDnjejKtEwYj4XJg4QrfAoXDJ1n0SERn7wAMfhuuo69jMptC44S
-         Q1vEg5fh3ywMD0FmfgUQ93soS3mazF+4dSNUbnO/UrNvqSldRsv0m98fQV86M9Dt7Nng
-         IkWvYiyTrtpvo28ffWzZ+AsiipB9pyu4EZZWLkIhDo8ZBY0Lva6x4pjtht68oBxopQvo
-         PaeQ==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	Mon, 23 Nov 2026 23:39:33 +0000
+Received: by mail-oi1-x248.google.com with SMTP id 5614622812f47-4a41f46d629so5746407b6e.3
+        for <kexec@lists.infradead.org>; Mon, 23 Nov 2026 15:39:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795472113; x=1796076913; darn=lists.infradead.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=F2nxXw1xsNQYaaD8ZR5Wp773q2x9Fzid0kC42p4+1HM=;
-        b=mCgvu+J2jEHQk7VK5NVf/7eWWLCrCCpOQTm5eBUxJUNyu/vfy6zSrq/ttQNkzniD7N
-         tBVrz0EG1IyDg7ok06I/FvhksArhCj32ymIc3gnfaE48zHhirt4i4vhD07lZdoCK/k5t
-         QOqSG08eZDGOJhGfGLyyZWuYYgsAm9sqqBl4xoF+CgIpTe00cyVX0OCQ6Jpk2/OonEcX
-         x0bvFmlCkPPMn4kpCyMsXwEYSBTKF2M+hKp/fBHg/1HLG6qmdFPP1yCJrK51wMiU0q+8
-         ss2smZ4ZPAYJTE5CZKqpvTozZ7a56Uudsq2+ZJ6/KLs0sOPAtw+0Euknqz0+eBNPVe8A
-         UUmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795472113; x=1796076913;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20260707; t=1795477171; x=1796081971; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=F2nxXw1xsNQYaaD8ZR5Wp773q2x9Fzid0kC42p4+1HM=;
-        b=ePC0GlIuC0RZMTmEG3Nx27s2ta6J4wMe47qKOaW3fOEboekIMx8eHZgp299TSFIwIG
-         2K+5bcDd8jIR4n8yvx4t1k8hl9RJVgr2wRDCaKyumOPgF4Azcaamscjm/ezorCxmmdi0
-         l4nV1Yuso/ajIkzgzTwlxAs/hX6DK0wSTjPiGLa4IvS6T9d2jKTiQA5kO4g9X0qawxmF
-         3Xy9tVJAoZpzsBhnxdjnnSH/qjL/QxWrkL7mHq7qvYrcPlILDZRhFrrqw+f7hubPNqqD
-         jBXNf0NgQaLVfakyyw0pN6OiDeW3vfpd5VRwU5tSY/U5gnOr5mkz8VTXmxTELt0VpdDb
-         ZFag==
-X-Forwarded-Encrypted: i=1; AL+hErEACK80qUfs5LrRvyIn6A68eW0hW8mSl0lO5O9DOHfxeXY9DnxQ+tOctD5H8qfSvmjnKZuQhA==@lists.infradead.org
-X-Gm-Message-State: APuU4Z+Hq79Ek6wNH+WQuiK1aE8yzYe7RD1dLR8i/AGZC4ybtqcd1U8b
-	3cSXyLs/dMutguagIvsiabl7P65sMLTB13mwFuhzC48rssOIz/Ib3p3RtY3acr6HLmhg+IijKz3
-	FcRW0d4CHkVInS9AL1QkKepZPn/ffkJg=
-X-Gm-Gg: AZFdTZfjT089tYIRjsMrnR2Nj+DO7hMnlrU/Tx/4SKZHh7z0EJoAXI6rpAnquBn0z8b
-	cA9p+wT6Kv8FebCemQld7zghm9R/E2FWQ28LbBIUr4LkQFMaVVTL/TTV+SMop5+fLZ+keOpkfrz
-	E/ap5Q/LWznSawtcQ9ciaTf4aLG9bk9cSLV2s0VCRpywXO5fGmlCasSnnlGfaV4SRlq0IswLuVz
-	fcKcA7Lujn0gn9y/rY2WvROvAJBjc2zCkkAjbeZHAnsaLoCjyFGGbJz2O4CEdy05Q8NjeLbFJtx
-	5xm4VtueWhcoIfmfG+qfV8RyhKxibybwW24OGJoGsgnEQRo3nQESPofE8WMuV3ouGkxYi4Lq/oB
-	Eo/yi1m8b+8eljm0+RjMnfpKEWlYEiuCch4+by+SNJ95InpWPDgqUaA==
-X-Received: by 2002:a05:6808:3199:b0:4e8:b729:3ebe with SMTP id
- 5614622812f47-57a0b953d28mr19799401b6e.4.1795472113383; Mon, 23 Nov 2026
- 14:15:13 -0800 (PST)
+        bh=NNY7sb7Lc3fUr2Yc/4c0jbyfUC5yRtKrBOqqupJLhM4=;
+        b=FqPwDvAy1/2cvav24PX7F9HZl8aU2/rUmTQZMbhDgx1UE+Mz86fDjOInbFiEoI0sX4
+         kWXkbWJo4Xv9/mlBF/MphgoK9tALD21NAiLEvlaB99urY6cuYnNV2yV59o/DjZ8eG/2x
+         0GgS2CtI21bENZBIgOgjn7Vn2F/gYL6LquyEre1ZC7Mm9fJSN4B0HMaxOK6ACNS8Mw4n
+         wtsYQuCPrT/GJeNinDifYTjB/p/RBMuyGe8Zme2Xtnv6oG1hZfpS4WnnT5kLU2QJJLo8
+         0mw/BTSA6YSj0kCKMKVqkc0LNCgpKp2z3gXGn1Gzd8Cmc6LXf26oq8h55WslRL5N7KF7
+         GORQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795477171; x=1796081971;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=NNY7sb7Lc3fUr2Yc/4c0jbyfUC5yRtKrBOqqupJLhM4=;
+        b=I4qtPtoomL1p6xwU9rjaH56ZN5ZX3AO+H1gqVlS4KW3yphB517gWN3SxMsrj4zcEtU
+         UKkbysSraYOS96tUKRR5m4YEZxXkWOxO82LxGn/I3KFVujvnRJdpxwf5cug2YBkz8Ubz
+         oMrLNYeI8be1f2TwPkuWqRahHo4AWVOe6z6svIEfHGd1b+iyFabSTE61YqPbCxLbu71U
+         v4x052TQyZTpCFRsNXK8ePt/dlZcqyGxgvso1Q3+R1tq6Y8hKmknYRFvlcBHTOvaAHcI
+         XiTBx91t5dw0sbsbIG3+cxCo1LaJ80un1CcHCxxLUxvMJI0vgC3SxKaTV+mYVRIcKD9t
+         bupw==
+X-Gm-Message-State: APuU4Z+E0hCIoEqX7cLh206y6JxWVKkrc2ZMSbQgD/A4RmQi/prZyBp0
+	gTtQhCrIsvF6qiYwdBcwFRniSgnkwpgl8W2bwpdNRtbV98cRN8CgVdyCpXiUMdeoTEIzCIJelWU
+	Wy03O+vJ2HZz/7cv4p/7HR4rW8996DgyVoGxAIZkTtgs1kTmwbKsyWyLF+8JJb17hysDBbVPwAE
+	pSzAj+8RrEE2CgyaRxHePBJEDqyUcQmrC89x8Nz3k92CrsO9qYC/g=
+X-Received: from iobdo25.prod.google.com ([2002:a05:6602:4619:b0:9ca:bcca:dd8b])
+ (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6808:6615:b0:573:1dfa:f0cf with SMTP id 5614622812f47-57a0a404865mr13656920b6e.51.1795477170400;
+ Mon, 23 Nov 2026 15:39:30 -0800 (PST)
+Date: Mon, 23 Nov 2026 23:39:06 +0000
+In-Reply-To: <20261123233924.3970932-1-dmatlack@google.com>
 X-Archived-By: <archiver.kernel.org>
-MIME-Version: 1.0
-References: <20261121163557.963029-1-john.ogness@linutronix.de>
-In-Reply-To: <20261121163557.963029-1-john.ogness@linutronix.de>
-From: Gustavo Luiz Duarte <gustavold@gmail.com>
-Date: Mon, 23 Nov 2026 22:15:02 +0000
-X-Gm-Features: Aa3M54r8PgRgIYfuYsniaBnSQY5MIggTDgAoabLc7fQl-pQOC2s44IKG_HVebgI
-Message-ID: <CAGSyskX=DHDJiUxWOqG5_rYhA=OGoHbe_=GtGbOPsGPfgZAonQ@mail.gmail.com>
-Subject: Re: [PATCH printk v4 0/8] Introduce policies for unsafe flushing
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ryan Roberts <ryan.roberts@arm.com>, 
-	Breno Leitao <leitao@debian.org>, printk@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Rio <rioo.tsukatsukii@gmail.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Bradley Morgan <brads@mainlining.org>, Pnina Feder <pnina.feder@mobileye.com>, 
-	Alessandro Carminati <acarmina@redhat.com>, Gal Pressman <gal@nvidia.com>, Baoquan He <baoquan.he@linux.dev>, 
+Mime-Version: 1.0
+References: <20261123233924.3970932-1-dmatlack@google.com>
+X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
+Message-ID: <20261123233924.3970932-2-dmatlack@google.com>
+Subject: [PATCH v5 01/18] liveupdate: Remove the list of steps from
+ luo_preserve_file()'s comment
+From: David Matlack <dmatlack@google.com>
+To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org
+Cc: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Christian Brauner <brauner@kernel.org>, 
+	David Hildenbrand <david@kernel.org>, Hugh Dickins <hughd@google.com>, Jonathan Corbet <corbet@lwn.net>, 
+	"Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>, Michal Hocko <mhocko@suse.com>, 
 	Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Dave Young <ruirui.yang@linux.dev>, 
-	Pavel Tikhomirov <ptikhomirov@virtuozzo.com>, Oleg Nesterov <oleg@redhat.com>, 
-	Bradley Morgan <include@grrlz.net>, Alex Elder <elder@riscstar.com>, 
-	"Cen Zhang (Microsoft)" <blbllhy@gmail.com>, Petr Pavlu <petr.pavlu@suse.com>, kexec@lists.infradead.org, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	netdev@vger.kernel.org
+	Pratyush Yadav <pratyush@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@kernel.org>, 
+	David Matlack <dmatlack@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261123_141514_842161_51212836 
-X-CRM114-Status: GOOD (  22.53  )
-X-Spam-Score: -2.1 (--)
+X-CRM114-CacheID: sfid-20261123_153932_303469_78C493B5 
+X-CRM114-Status: GOOD (  13.10  )
+X-Spam-Score: -9.5 (---------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -130,67 +100,52 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-26.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Sat, Nov 21, 2026 at 4:36=E2=80=AFPM John Ogness <john.ogness@linutronix=
-.de> wrote:
->
-> v3 is here [0].
->
-> Until now unsafe flushing is only performed at the very end of
-> panic(), before entering the infinite loop. For other situations
-> (such as panic-kexec or panic-reboot or emergency-reboot) no
-> unsafe flushing is performed. The reasoning for this is because
-> an unsafe flush could lead to fireworks, which could prevent the
-> kexec or reboot from occurring.
->
-> However, some users may be willing to take on such risks in order
-> to see panic output. Indeed, for the netconsole (which does not
-> support safe atomic printing) it is a regression that such unsafe
-> printing does not occur. [1]
->
-> This series adds unsafe flushing policy flags per-console to
-> allow individual consoles to perform unsafe flushing for such
-> scenarios. The unsafe flushing is hard-code-enabled for the
-> netconsole in patch 8/8. The justification is that this is not
-> less safe than the legacy netconsole.
->
-> Later these policy flags could be easily exposed to userspace
-> via /sys/class/consoles/, once the sysfs per-console interface
-> is available.
->
-> The first 5 patches have no functional changes.
->
-> Changes since v3:
->
-> - Restore WARN for non-panic hostile takeover attempts and
->   expand the comment so I don't attempt this again.
->
-> - Rename nbcon_allow_unsafe_takeover() to nbcon_allow_unsafe()
->   because it now allows general unsafe usage and not
->   specifically hostile takeovers.
->
-> - In __nbcon_atomic_flush_pending(), additionally use
->   panic_on_this_cpu() to determine if a hostile takeover is
->   allowed.
+Remove the numbered list of steps from the kernel-doc comment of
+luo_preserve_file(), along with the sentence that introduces it, which
+repeats the first sentence of the previous paragraph.
 
-Thanks for following up on this, John!
-This version looks good to me. Netconsole needs more work before we
-can have a completely safe write_atomic(), but this will allow users
-to make a choice between reboot safety and observability.
+The list only restates what the code does, and goes stale whenever the
+code changes.
 
-I tested it triggering a crash with and without kdump enabled, from
-normal context and from NMI context (simulating panic on hardlockup).
-In all cases it fixed the regression: messages were sent correctly via
-netconsole with no unexpected errors or warnings.
+Suggested-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+Signed-off-by: David Matlack <dmatlack@google.com>
+Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+---
+ kernel/liveupdate/luo_file.c | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-For the series:
-Reviewed-by: Gustavo Luiz Duarte <gustavold@gmail.com>
-Tested-by: Gustavo Luiz Duarte <gustavold@gmail.com>
+diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
+index a39992da504f..a42b60356d52 100644
+--- a/kernel/liveupdate/luo_file.c
++++ b/kernel/liveupdate/luo_file.c
+@@ -214,18 +214,6 @@ static bool luo_token_is_used(struct luo_file_set *file_set, u64 token)
+  * unpreserved or successfully finished in the next kernel, preventing the file
+  * from being prematurely destroyed.
+  *
+- * This function orchestrates the first phase of preserving a file. It performs
+- * the following steps:
+- *
+- * 1. Validates that the @token is not already in use within the file_set.
+- * 2. Ensures the file_set's memory for files serialization is allocated
+- *    (allocates if needed).
+- * 3. Iterates through registered handlers, calling can_preserve() to find one
+- *    compatible with the given @fd.
+- * 4. Calls the handler's .preserve() operation, which saves the file's state
+- *    and returns an opaque private data handle.
+- * 5. Adds the new instance to the file_set's internal list.
+- *
+  * On success, LUO takes a reference to the 'struct file' and considers it
+  * under its management until it is unpreserved or finished.
+  *
+-- 
+2.56.1.809.ga0b61035b5-goog
+
 
