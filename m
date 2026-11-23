@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE8F606A31A
-	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 19:04:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1C8606A32A
+	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 19:05:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=kTzuNVIm;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=apiKKH9J
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=rQqcFSlv;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HEBmzn5x
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=EKwQUwz0yWxrcL6JeB0c02x+qfb+CTKWxiC1vuBRywM=; b=kTzuNVImNU8JnSPikkzugiSmAj
-	CLcwTAEMPt6R3qVyQR7ZdfiQ3V2OC2GvD4UeoQMEMHdMB6pFqGbZUeCqJSKxALKhla/x/no11Hq9P
-	E3CkND12q+I0IE5tbWmIl76uNUwBxzIYo59euK33pAK0iN6sgJSDRB+yLQ5e4z1OB87Bkq7LCoJY+
-	l8hDST7Ec92BDgwVp5xnYmA17wgRN3881FG4zMbL4WciLiUreGtDjvJ7oN/wyqHgBXviDDHejOh9S
-	jqcNBTlGsTlgxle/6O+GIHbvdsmF14Nqwy40WZCRErvBFTUMuLrNTTi45vMk/P381F0qRieb3ASwI
-	zaOyVARg==;
+	bh=8yNQkmQ9W7+6H0nowxTvFVztBcdqeEWifqsvT5sSXQc=; b=rQqcFSlvCKPVmpwLw+jQ0W8HAm
+	uE/WUlRe3BL4il/MX/so9Jhg+ECzAdvg08UfiPWhs0lBdOx9OU/cP//FB/7iQ86SIyc7JRA2jbdCv
+	zP5lrmoWauxe1u9mOrVs8rZJannNoUg0NJx+zLlWGWaUfE3pjyFUTzsBTEEIs6CbKQ/TdVnUFqHTT
+	gnRwE9lhTT68eT81J3y6CVfeqsz5QtCs/+YW87F3jo3JIEuPILI89d0ZkAnBxw/KI6fYl7/XEVpiF
+	ww4AiP8lJXkMf4M4UhUOd1e44jeXzSRiD1s5HHDxFmyFrZaT6yhi/5Zid7VWxhtZg7+tx7fIZdlRA
+	IcICtblQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVZLP-00000004btm-2fb7;
-	Mon, 23 Nov 2026 19:04:51 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xVZLZ-00000004by0-3dRW;
+	Mon, 23 Nov 2026 19:05:01 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVZLO-00000004btX-1oGc
+	id 1xVZLY-00000004bwc-0EwH
 	for kexec@lists.infradead.org;
-	Mon, 23 Nov 2026 19:04:50 +0000
+	Mon, 23 Nov 2026 19:05:00 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 31E0940675;
-	Mon, 23 Nov 2026 19:04:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12AB11F000C6;
-	Mon, 23 Nov 2026 19:04:48 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 1188B61285;
+	Mon, 23 Nov 2026 19:04:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2454B1F000C4;
+	Mon, 23 Nov 2026 19:04:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795460690;
-	bh=EKwQUwz0yWxrcL6JeB0c02x+qfb+CTKWxiC1vuBRywM=;
+	s=k20260515; t=1795460698;
+	bh=8yNQkmQ9W7+6H0nowxTvFVztBcdqeEWifqsvT5sSXQc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=apiKKH9JSz8QPW1M0/SO1hoRbY3BGfdMp4zg16LOH5i0hm4GSKKgkLeFq0Z4nvjSY
-	 dlB7toGtjqfp1i3dRdL4L4BJ8wji5mOrtPNcpGePUYNI8pJKV74t2X8sVWrE2PVA/8
-	 +fxrOQ4cT2CxdTmuqOCS/82mbADZ5/soIOQeZph/baVaDWLyrMIUxomkWMvd4VWm7L
-	 sBKfoBxnu2SPQzxIt3tssc5clPUiGqavLRPsGDbwdOdEdQeQAxymyMwUfbAOGoJPWE
-	 fkZXuNDp9lzj6PLw4VbN4+U9TvHDEUehFaB3+goNgseUyPK4wkpbo31K9Rw93qWVOC
-	 URf81o3DwIlTQ==
-Message-ID: <sashiko-outbox-229907@kernel.org>
+	b=HEBmzn5xQMmzwun5/DxZ22UzPCD2jKX/bQDvPKrMHsor7HNC4pIf5nh6EIejmJps0
+	 EI2vp6qgoHMZ4hZEtkPgxLq3ft2hdDonJO8HZdqORS2g1vPPK87FtWympSEAo+g3Lb
+	 rpdD6x5ru0d1hQBx8gQF8vE1FhrggKCfDwRQ982AtOgQrS2/f7aMid4P9yXgsgObHG
+	 /V754oOG0zXkcahTENS6GSRwHWDxatJwfT0q1SZ8qN8lJkrHPgn6fMHBUa53pBYrgT
+	 T7UlDfoWvLnB3S2ks8W1Ni5G9kmN3SDvQF0ebU5ztSGijo/510L4jvdc/tr/K47vGx
+	 OpjMHp0f7KW2w==
+Message-ID: <sashiko-outbox-229908@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] amend! PCI: liveupdate: Adopt ACS controls in incoming
- preserved devices
+Subject: Re: [PATCH] amend! PCI: liveupdate: Freeze preservation status
+ during shutdown
 To: "David Matlack" <dmatlack@google.com>, kexec@lists.infradead.org, linux-pci@vger.kernel.org
 Cc: "Adithya Jayachandran" <ajayachandra@nvidia.com>, "Alex Williamson" <alex.williamson@nvidia.com>, "Alex
  Williamson" <alex@shazbot.org>, "Alexander Graf" <graf@amazon.com>, "Bjorn
@@ -61,12 +61,12 @@ Cc: "Adithya Jayachandran" <ajayachandra@nvidia.com>, "Alex Williamson" <alex.wi
  Mahameed" <saeedm@nvidia.com>, "Samiullah Khawaja" <skhawaja@google.com>, "Shuah
  Khan" <skhan@linuxfoundation.org>, "Vipin Sharma" <vipinsh@google.com>, "William
  Tu" <witu@nvidia.com>, "Yi Liu" <yi.l.liu@intel.com>
-In-Reply-To: <20261123190045.2166865-2-dmatlack@google.com>
-References: <20261118223704.3286085-10-dmatlack@google.com>
- <20261123190045.2166865-2-dmatlack@google.com>
+In-Reply-To: <20261123190045.2166865-4-dmatlack@google.com>
+References: <20261118223704.3286085-12-dmatlack@google.com>
+ <20261123190045.2166865-4-dmatlack@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 23 Nov 2026 19:04:47 +0000
+Date: Mon, 23 Nov 2026 19:04:56 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,35 +86,29 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> PCI: liveupdate: Adopt ACS controls in incoming preserved devices
+> PCI: liveupdate: Freeze preservation status during shutdown
 >=20
-> Adopt Access Control Services (ACS) controls on all incoming preserved
-> devices (endpoints and upstream bridges) during a Live Update.
+> Freeze a device's outgoing preservation status (preserved or not
+> preserved) during shutdown for kexec. This enables the PCI core and
+> drivers to safely make decisions based on the device's preservation
+> status during shutdown.
 >=20
-> Adopting ACS controls avoids changing routing rules while memory
-> transactions are in flight from preserved devices. It also keeps IOMMU
-> groups from changing during or after Live Update.
+> The PCI core freezes every device in pci_device_shutdown(), not just
+> preserved ones, so that no device can be preserved or unpreserved after
+> its shutdown starts.
 >=20
-> The adopted controls are recorded by the pci_save_state() call in
-> pci_bus_add_device(), which runs before drivers bind, so they are
-> reapplied by pci_restore_state() if the device is reset. Panic if an
-> incoming preserved device has no ACS save buffer, since the adopted
-> controls would be silently lost by the first reset.
->=20
-> To simplify ACS adoption, reject preserving any devices that require
-> quirks to enable ACS as those quirks would also have to take Live Update
-> into account. If such a quirk matches an incoming preserved device
-> anyway, e.g. because it was added in the new kernel, log a warning and
-> adopt the device's ACS controls regardless, rather than reprogram a
-> device in the path of a preserved device's memory transactions. The
-> previous kernel did not apply such a quirk, so it programmed the
-> standard ACS Control register. Allocate the ACS save buffer for these
-> devices too, so that the adopted controls are kept across resets.
+> Only freeze devices during kexec. Other shutdowns do not depend on the
+> preservation status, and they do not serialize Live Update sessions
+> first, so a session can still be torn down after its devices are shut
+> down. Refusing to unpreserve those devices would make pci_flb_unpreserve()
+> panic because they were never released.
 >=20
 > Signed-off-by: David Matlack <dmatlack@google.com>
 > Reviewed-by: Pranjal Shrivastava <praan@google.com>
-> Reviewed-by: Alex Williamson <alex.williamson@nvidia.com>
-> Link: https://patch.msgid.link/20261118223704.3286085-10-dmatlack@google.=
+> Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> Reviewed-by: Samiullah Khawaja <skhawaja@google.com>
+> Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+> Link: https://patch.msgid.link/20261118223704.3286085-12-dmatlack@google.=
 com
 > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
@@ -122,5 +116,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261123190045.2166=
-865-2-dmatlack@google.com?part=3D1
+865-4-dmatlack@google.com?part=3D1
 
