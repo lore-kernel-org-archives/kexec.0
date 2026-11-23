@@ -2,62 +2,75 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62ACF606A68D
-	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 19:55:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCBC606A32D
+	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 20:08:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=iJMKz0yH;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Fme3Kdwb
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=PRniekCy;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=outgoing.csail.mit.edu header.i=@outgoing.csail.mit.edu header.a=rsa-sha256 header.s=test20231205 header.b=XuIqji4G
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
-	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=b5xkBqtOz/cxSYio3ZQFvWPZV907+8EypMB85HFz3iM=; b=iJMKz0yHmv2Nby
-	M5GX3OQ/+JuE4hCST+8c+l+yp2u30gQyOJy6tPUiDBwbmIYMtwgF/xpGFwqSRU6qI7fmqyR0E7YMG
-	rNcUYwYeIVZmD2/svVwMmu54Fn/4f6BF/6BL9V9/vHk6sh47NB7QmJJ1QMkcKSe3Z8JRjUF7K/7i7
-	4U3bNaE2L5dCJ2FJO3LOg6l0CH338xNUJarv1sOGLyzoftzweYsY2qSpp4fICBQVT/l5z7jh06ZFx
-	4gKjsmIdpCQ4jRovHkLq1oIQfEiAKCMrXW2MPaJabrbxjiCB4QkiBLy0M/nw+hyaqYXMq80iz0km5
-	BVjyHFCmGV4La+8K6XFg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Message-Id:Date:Subject:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Unsubscribe-Post:List-Owner;
+	bh=OhsoY+g6owXOc1DL4OmeSM9RwI0X3DHSQa1NGA0YGEg=; b=PRniekCyGK55GzrNBE9AMwnxag
+	u6p8KcMtldO4BznG0ruDsfY7a1W+fKt1GlbPRGVCqYoz4ZFabghDmue8f9Ioz6yJf90h8g5LvSYtX
+	nGM0ijszF7h04hAvBGkSwGOLC0SrLrsSxnJzueKpUhE9ZE6vkiHdV6zwLed6Xafk7kM+O2KgCuqGN
+	j77SQ51NEGXI3ibdOOQpZYwlM7B+nXsvEhBMNBJfgdevO3egfEbFuWCgBR4e0x/gY3gosY65065D6
+	7i5FKvrq1RvwaMTJcR6QHW+ZRTmGMYBfuj2F0IwdD3EOcLZHnoc23CFhUoBquwSdZgvpPMuudZroU
+	zyiCHkxg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVa80-00000004l25-1Yer;
-	Mon, 23 Nov 2026 19:55:04 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xVaKn-00000004nDd-1Nrs;
+	Mon, 23 Nov 2026 20:08:17 +0000
+Received: from outgoing2021.csail.mit.edu ([128.30.2.78])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVa7y-00000004l1l-1GNF
+	id 1xVaKk-00000004nD3-1OzR
 	for kexec@lists.infradead.org;
-	Mon, 23 Nov 2026 19:55:02 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id AB602406BA;
-	Mon, 23 Nov 2026 19:55:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF9681F000CF;
-	Mon, 23 Nov 2026 19:54:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795463701;
-	bh=b5xkBqtOz/cxSYio3ZQFvWPZV907+8EypMB85HFz3iM=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=Fme3Kdwb7X9HKaSgS+tsMCzmvD6INAAinoHdB/9i0GwoDs+wAXAYOx4tdn8N9UumG
-	 UbDEJGtnucVzivH4BB9Cf2sRXCnDcsIeEMSFiDWXqkv2Z9hu+mbZevKMOp8KC9k1fd
-	 5p69kp3Xb9NzBE2f5lEI+OQn8Grh1ysEMoG9GljgeTUzKZkwoOOPTfrYCxrtwjsxHU
-	 6f4IO7jhFHat9GvLp4EDpEp6ENj1GEN7bwctGQA4ZLrdfCD0eetKk7kCT4BEP4mpm3
-	 FLCYSyf6wQMq6IgiAGTwkOUzXvDnHcAwkz5lZQzsn8N6hP92ldF/tXT7bgjOQ1chNj
-	 TSIWaVj+tsQqg==
+	Mon, 23 Nov 2026 20:08:16 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=outgoing.csail.mit.edu; s=test20231205; h=Cc:To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-Id:Date:Subject:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=OhsoY+g6owXOc1DL4OmeSM9RwI0X3DHSQa1NGA0YGEg=; t=1795464494; x=1796328494; 
+	b=XuIqji4GKfdNSUkH0YsrC6yJOdJssUnoGMaKPJBpwzQ4S7yhNhDGJ/v5sdjZffBdbDUD3HS7AdN
+	x5Yt85PtGsl7B9x+4LSNBvOr7VXfC+8Cs+rnDIR+WFdmM+2dk3+V5oQVC8kWJSg/KFZEvS7NBbjzR
+	zMftbOsmlDQpRpbJUZqyu3tNGpDbZvSosfr9IyOVlPfbdiNTA+thCAerRMqrEaFtrYmnszQmaQUH/
+	cr573lwwtYDbNikv4QIxvO2/7gsu7nkyPvF0si3Y0MYnuucZjSYaH+5oQaDOzaVpmrXiafjsW75da
+	ZsCdgbmYWeK9E6kVe7jc+W3i8aAzjyEue9yQ==;
+Received: from [49.207.211.146] (helo=[127.0.1.1])
+	by outgoing2021.csail.mit.edu with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <srivatsa@csail.mit.edu>)
+	id 1xVaKc-006jgv-OW;
+	Mon, 23 Nov 2026 15:08:06 -0500
+From: "Srivatsa S. Bhat (Microsoft)" <srivatsa@csail.mit.edu>
+Subject: [PATCH 0/2] MAINTAINERS: Add missing files to KEXEC, KHO and KDUMP
+ subsystems
+Date: Tue, 24 Nov 2026 01:37:52 +0530
+Message-Id: <20261124-fix-kexec-kdump-maintainers-v1-0-79c6a6144de4@csail.mit.edu>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v3] mm/memfd_luo: don't use memfd_pin_folios()
-From: Mike Rapoport <rppt@kernel.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
- kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
-In-Reply-To: <20261123130115.4021199-1-pratyush@kernel.org>
-References: <20261123130115.4021199-1-pratyush@kernel.org>
-Date: Mon, 23 Nov 2026 21:54:56 +0200
-Message-Id: <179546369651.425130.14155931836758567682.b4-review@b4>
-X-Mailer: b4 0.16.1-dev
+X-B4-Tracking: v=1; b=H4sIABidBGsC/x2M0QpAQBAAf0X7bMvdSfgVedhYbHJ0h67k320e5
+ mFqmgciB+EIbfZA4Fui7F7F5BkMC/mZUUZ1sIWtjLElTpJw5cQDruO1HbiR+FPhEHFy5OqGqHK
+ 2AT0cgTX/713/vh8jKNq+bQAAAA==
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>
+Cc: kexec@lists.infradead.org, linux-mm@kvack.org, 
+ linux-kernel@vger.kernel.org, "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+X-Mailer: b4 0.13.0
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261123_120814_512011_2DE45B3A 
+X-CRM114-Status: UNSURE (   6.26  )
+X-CRM114-Notice: Please train this message.
+X-Spam-Score: -1.9 (-)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -68,222 +81,36 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=4.0.1
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Hi,
+Several files relevant to the KEXEC, KHO and KDUMP subsystems are
+currently not listed against them in the MAINTAINERS file, which would
+cause scripts/get_maintainers.pl to miss recommending these subsystem
+maintainers or mailing lists for changes to those files. This series
+addresses those gaps.
 
-> memfd_luo takes a snapshot of the folios in the file's mapping. To make
-> sure the snapshot does not go out of sync, it pins the folios in the
-> file via memfd_pin_folios(). The pinning also migrates the folios out of
-> MIGRATE_MOVABLE to make sure doesn't land in KHO boot memory or in a CMA
-> region.
-> 
-> memfd_pin_folios() does not lock the folios. So it can race with
-> shmem_writeout(). A folio returned by memfd_pin_folios() might already
-> be in swap cache. This happens to work but is fragile. memfd_luo looks
-> at folio flags and index on a folio that isn't in the memfd's page
-> cache.
-> 
-> In addition, memfd_pin_folios() needs the caller to allocate an array of
-> folios. memfd_luo does not really need that since it will vmalloc
-> folios_ser and store the information there anyway. The folios array is
-> unnecessary overhead.
-> 
-> Finally, memfd_pin_folios() fills in holes in the memfd. This makes
-> preserving sparse memfds very expensive in both compute and memory.
-> While this patch doesn't yet stop filling in the holes, it sets up the
-> infrastructure to make it simpler.
-> 
-> Fix all this by walking the page cache directly using shmem_get_folio()
-> with SGP_CACHE. This returns a locked folio with an elevated refcount.
-> memfd_luo holds that reference until the memfd is unpreserved. This
-> blocks compaction, migration, etc.
-> 
-> There is still a need to migrate folios out of MIGRATE_MOVABLE page
-> blocks. This is because those might be CMA or KHO scratch. memfd_luo
-> will hold a longterm reference to the folios so it will block migration
-> in that pageblock. Introduce memfd_luo_migrate_folio() to do this.
-> 
-> Also factor out folio unpreservation logic into memfd_luo_put_folios()
-> and use it from memfd_luo_unpreserve_folios() and from error paths in
-> memfd_luo_preserve_folios().
-> 
-> Since shmem_get_folio() always returns uptodate folios, drop the folio
-> zeroing logic.
-> 
-> This change also improves preservation performance, shown in the table
-> below.
-> 
-> |------------------+----------+------------+-------|
-> | memfd            | baseline | this patch | delta |
-> |------------------+----------+------------+-------|
-> | 4K pages, 32 GiB | 748 ms   | 600 ms     |  -20% |
-> | THP, 4 GiB       | 0.59 ms  | 0.59 ms    |    0% |
-> | THP, 16 GiB      | 2.99 ms  | 2.61 ms    |  -13% |
-> | THP, 32 GiB      | 4.83 ms  | 5.21 ms    |   +8% |
-> | sparse, 32 GiB   | 8695 ms  | 7269 ms    |  -16% |
-> |------------------+----------+------------+-------|
-> 
-> Acked-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-> ---
-> The diff is unfortunately hard to read. It would be easier to review the
-> patch by applying it and looking at the final code.
-> 
-> This patch is picked from a separate series I sent [0]. It is more or
-> less an independent change. It fixed a race for that series so I added
-> it there, but since that series might take longer to go through, I think
-> it is useful to take this patch separately.
-> 
-> [0] https://lore.kernel.org/all/20261027173031.763213-2-pratyush@kernel.org/
-> 
-> Changes since v2:
-> 
-> - Reword the comments on memfd_luo_migrate_folio(), memfd_luo_get_folio()
->   and the allocation comment in memfd_luo_preserve_folios() so they no
->   longer say folios are "held until the next kernel". Instead, say that
->   preservation holds a longterm reference on them.
-> - Use a bounded for loop in memfd_luo_get_folio() instead of an open
->   ended one with a separate busy retry counter.
-> - Collect tags.
-> 
-> Changes since v1:
-> 
-> - Add memfd_luo_get_folio() which combines shmem_get_folio() and the
->   migration logic.
-> - Collect tags.
-> - Rebase to v7.4-rc1.
-> 
-> ---
->  mm/memfd_luo.c | 306 ++++++++++++++++++++++++++++++-------------------
->  1 file changed, 190 insertions(+), 116 deletions(-)
->
-> diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
-> index 6b68220275ebe..c963bc3522e61 100644
-> --- a/mm/memfd_luo.c
-> +++ b/mm/memfd_luo.c
-> @@ -77,26 +77,161 @@
->  #include <linux/kexec_handover.h>
->  #include <linux/kho/abi/memfd.h>
->  #include <linux/liveupdate.h>
-> +#include <linux/migrate.h>
-> +#include <linux/sched/mm.h>
-> +#include <linux/sched/signal.h>
->  #include <linux/shmem_fs.h>
-> +#include <linux/swap.h>
->  #include <linux/vmalloc.h>
->  #include <linux/memfd.h>
->  #include <uapi/linux/memfd.h>
->  
->  #include "internal.h"
->  
-> +static void memfd_luo_put_folios(const struct memfd_luo_folio_ser *folios_ser,
-> +				 u64 nr_folios)
-> +{
-> +	u64 i;
-> +
-> +	for (i = 0; i < nr_folios; i++) {
-> +		const struct memfd_luo_folio_ser *pfolio = &folios_ser[i];
-> +		struct folio *folio;
-> +
-> +		if (!pfolio->pfn)
-> +			continue;
-> +
-> +		folio = pfn_folio(pfolio->pfn);
-> +
-> +		kho_unpreserve_folio(folio);
-> +		folio_put(folio);
-> +	}
-> +}
-> +
-> +/* How many times to try migrating a folio that is not longterm pinnable. */
-> +#define MEMFD_LUO_MIGRATE_RETRIES	3
-> +
-> +/*
-> + * Preservation holds a longterm reference on the folio. This would block
-> + * migration in ZONE_MOVABLE or CMA. Move it out.
-> + *
-> + * Must be called with folio unlocked. Drops the reference to folio. The caller
-> + * must look it up again.
-> + *
-> + * Returns 0 on success, -EBUSY if the folio could not be isolated (e.g.
-> + * because someone else has it isolated right now), or -ENOMEM if migration
-> + * failed.
-> + */
-> +static int memfd_luo_migrate_folio(struct folio *folio)
-> +{
-> +	struct migration_target_control mtc = {
-> +		.nid = NUMA_NO_NODE,
-> +		/* Not movable, so the target is neither in ZONE_MOVABLE nor CMA. */
-> +		.gfp_mask = GFP_USER | __GFP_NOWARN,
-> +		.reason = MR_LONGTERM_PIN,
-> +	};
-> +	LIST_HEAD(source);
-> +	bool isolated;
-> +
-> +	/* Flush per-CPU LRU batches holding the folio so isolation works. */
-> +	lru_cache_drain_for_folio(folio, 1, NULL);
-> +	isolated = isolate_folio_to_list(folio, &source);
-> +	/* Isolation holds its own reference. */
-> +	folio_put(folio);
-> +	if (!isolated)
-> +		return -EBUSY;
-> +
-> +	if (migrate_pages(&source, alloc_migration_target, NULL,
-> +			  (unsigned long)&mtc, MIGRATE_SYNC, MR_LONGTERM_PIN,
-> +			  NULL)) {
-> +		putback_movable_pages(&source);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Look up the folio at @index, allocating it if needed. Preservation holds a
-> + * longterm reference on the folio, so folios that are not longterm pinnable are
-> + * migrated out first, retrying a few times if someone else has them isolated.
-> + *
-> + * On success, returns 0 with *@foliop locked and holding a reference.
-> + */
-> +static int memfd_luo_get_folio(struct inode *inode, pgoff_t index,
-> +			       struct folio **foliop)
-> +{
-> +	struct folio *folio;
-> +	int err, retry;
-> +
-> +	for (retry = 0; retry < MEMFD_LUO_MIGRATE_RETRIES; retry++) {
-> +		err = shmem_get_folio(inode, index, 0, &folio, SGP_CACHE);
-> +		if (err)
-> +			return err;
-> +
-> +		if (likely(folio_is_longterm_pinnable(folio))) {
-> +			*foliop = folio;
-> +			return 0;
-> +		}
-> +
-> +		folio_unlock(folio);
-> +		err = memfd_luo_migrate_folio(folio);
-> +		/* Someone else might have it isolated, retry a bit. */
-> +		if (err && err != -EBUSY)
-> +			return err;
-> +	}
-> +
-> +	return -EBUSY;
+These patches apply on on top of Mike Rapoport's series:
+"arch, kexec: declare kexec and crash capabilities in Kconfig.kexec"
 
-In v2 we did another shmem_get_folio() after a successfull migration,
-now even if the last iteration migrates successfully we still return
--EBUSY and don't update *foloip.
+https://lore.kernel.org/kexec/20261119-arch-kconfig-v1-0-37c276fe4d26@kernel.org/
 
--- 
-Sincerely yours,
-Mike.
+---
+Srivatsa S. Bhat (Microsoft) (2):
+      MAINTAINERS: Add missing files to KEXEC and KHO subsystems
+      MAINTAINERS: Add missing files to KDUMP subsystem
+
+ MAINTAINERS | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+---
+base-commit: 3e14cad9ff9ece9c0115ee1d80eef398659db0e9
+change-id: 20261124-fix-kexec-kdump-maintainers-f3a389aa6329
+
+Regards,
+Srivatsa
 
 
