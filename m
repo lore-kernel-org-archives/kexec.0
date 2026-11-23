@@ -2,12 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F51606A6AD
-	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 23:39:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52233606A68D
+	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 23:40:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=pk8xIcjo;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=D6YTgIB2;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=cwAsP/KX
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=NM5/IwLQ;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=E72qA2B+
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
@@ -15,78 +14,64 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=aggP6JcaAjhqbHGLe6VQCft8I9oupyLjhzJry8SU42I=; b=pk8xIcjo7zCG5A4/5e8uB01iUs
-	j/eFBFkJmZuProa3rzNfSFY3hBOlCMS2YjARnrY80M1olyjsE1NKHOAXtoCacRpQh4DScftq+Dtfu
-	hER8UfUm/PXvFz6e0SPgc1DGJqiDGN3csRVQLBkwDqoDgpSZRa2PeWDro/3vtZRv0s6T/TybG11PW
-	U+pHfOhZfq57Yk9Wzu8AiUZ6txT8VaA+y8C7Eu1ou/B4wgyTsdfUTOWhb+t8ppm3alOz31yuLMXMN
-	tyzN1ld+itx9PoSVGZsG6Dd42xTb1WrOi3R9fH9rcC6TmC8G2eQDUdx91dtQY2YDjb1sjXRMO7dPi
-	4XEsZJFg==;
+	bh=TfpmwInLEGo5frDChwR3ktzWoQYmqPnvABEvfJfxR3I=; b=NM5/IwLQ9DCFVP7FD6gdidLWPA
+	AtzSlhmwWEpV7v9RQDJ74puJkHzg2Vs2bdPIum0WKWUIQi8nQd0no7fFm+gmcC8sMzhsTpH9IwEzs
+	Ouynfp/PseQNjy9GDxliuf6//Eq5slUpniEQqQTXeeuicg530izPLzupNOQ4EL21wEqJCNPuu7neM
+	2lGXtORpYFg5o8pxP3eZyGxbG93O0rOBYUKbMFrnfIs4y10EqYBgFJ8CIt3MEMSpjCblTI3OpE/Nu
+	UWxlsPewxNBpM7/O0vGgXxTq+Zy/IT/bHTAhP9q0jXskmCAp8jow2nTVX4hgCQPrsVunwfP+OZO6G
+	4w/gsZqw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVddd-00000005BoG-2Tcc;
-	Mon, 23 Nov 2026 23:39:57 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1xVddg-00000005BrO-3jk5;
+	Mon, 23 Nov 2026 23:40:00 +0000
+Received: from mail-oi1-x247.google.com ([2607:f8b0:4864:20::247])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVddY-00000005BdL-3qgY
-	for kexec@bombadil.infradead.org;
-	Mon, 23 Nov 2026 23:39:53 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Type:Cc:To:From:Subject:
-	Message-ID:References:Mime-Version:In-Reply-To:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=aggP6JcaAjhqbHGLe6VQCft8I9oupyLjhzJry8SU42I=; b=D6YTgIB2taOJ8htABjXHEveBx0
-	CixXDgIzSib/2IFzOEOkuyWGl/mPjcLiZACdauvOY7JX3AFk35ruiqA3YQZ+R5A9Oyf41GvFUF+iS
-	igVAUokuhez8TGkHoXhAYTIdwiopaMC7fB/C5Q4B8shhB906g2j6VhzuJR7rVV2+5UZsO5MZz8RYJ
-	BKBBKO/7S/Kp4Y/ypuJBAwZuL7Z73F/3hGSK5cPsF5fL405La30MoTJ4h12BBhO1ByawYTAU/xsQm
-	pAiUS53NoH/e6MV/kB1EE6LsL9212i0LRz+oUiR78At5blKKZD53N3c5WncYjdbGAvi8Jr9Un86AE
-	uByFxT5Q==;
-Received: from mail-ot1-f70.google.com ([209.85.210.70])
-	by desiato.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVddS-00000003gZN-3RI8
+	id 1xVddb-00000005Bjm-2Hf8
 	for kexec@lists.infradead.org;
-	Mon, 23 Nov 2026 23:39:48 +0000
-Received: by mail-ot1-f70.google.com with SMTP id 46e09a7af769-862b952fb06so3079115a34.0
-        for <kexec@lists.infradead.org>; Mon, 23 Nov 2026 15:39:45 -0800 (PST)
+	Mon, 23 Nov 2026 23:39:57 +0000
+Received: by mail-oi1-x247.google.com with SMTP id 5614622812f47-4e937c5bd4fso3393377b6e.2
+        for <kexec@lists.infradead.org>; Mon, 23 Nov 2026 15:39:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795477183; x=1796081983; darn=lists.infradead.org;
+        d=google.com; s=20260707; t=1795477194; x=1796081994; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=aggP6JcaAjhqbHGLe6VQCft8I9oupyLjhzJry8SU42I=;
-        b=cwAsP/KXywMNU97JjK4rp5Dq3FiJnThUwZKgnO7nWzE7JLY5gzssGJnvgtpQHW2ujl
-         mMUxQZdBK0DDV3IbEjp6vjhSsIcVSK/LY/Bf6y1vag51fKv7GqtkUGO8QNRCicd8RH8X
-         cNxmcM2e5CWBu7wrGXk2OEN2IBYyV4exOu5spz3D8foJIyCr0JixE8fCyxcNb8HDann1
-         dFSZKwTZD2fENEjxlCU5q9lNpZ80FobIcpDydx5g17NxUGk0GJ339q+XerE5XOZn0Hgx
-         YAbD7AM22fh4cTcpgTgPeY+t22/mbP5w5RZaBLqzArhsymWuxo+vKiwO4f/4qrzy5IJC
-         qJDg==
+        bh=TfpmwInLEGo5frDChwR3ktzWoQYmqPnvABEvfJfxR3I=;
+        b=E72qA2B+JDQbtEBqvbGhivJuuGghDevVizwpkDxqidzgA03wRzVPGiHqXXFnN2DR4N
+         P3MtfownicivCH/FRnlS05LwiaCDQaiKS2h4zkotnH++wRjuUrRrVuYZ4rgy79M+h7MS
+         3ZXPNhhOrQaf9cpEacpf+1kAgJWGvTSgzdM0qSLWC8yJssMPDK3Guwkv0jA+iQqjkzM/
+         9Y67Ww4TTYqC13zMnGZgoXBBmWeLsDemy9ixn2k9Xp8kOwookat7T9y9R7eT2hUzPQGD
+         bk6r910k2VEHVM7UP2+sIeakdxu2ozGLIothjJyJ9WHed/TotIgR+qm3ChCVnUS0hlaa
+         M5Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795477183; x=1796081983;
+        d=1e100.net; s=20260707; t=1795477194; x=1796081994;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=aggP6JcaAjhqbHGLe6VQCft8I9oupyLjhzJry8SU42I=;
-        b=AOcVOxQkt4pPnowfNFc+OPHdtKGZN72sLwkc8vpl62K4YyxVaVzKaWAtWCzVoaJH/9
-         YYw1wwML9kFsgY8jUO/M3lOg+o9zDMOkp3yPE90tLOx03clgAnDw0bkgCR1eOfXdZ708
-         xSk98LWs5I+uI9OdWa8rGou09OahYqNd2u9GN4XhWfV5KQqpyUzSjB1imKDRC9tYxb8g
-         HEka87MGRSrT/lR7DHAthW8eqmQLey7bPBOvI/ZzYFmZHupeHNh5iWNV9D9tVbI/X4iF
-         V1dJVLfC5F96DVoIrH1sUsrTjagvMRcZYY0UhYsdY7jSxCDhfPHlm6HBD0KUCPNG72pe
-         tQ3A==
-X-Gm-Message-State: APuU4Z/fhHcDKmHHqDUZe1U8qWn2aQmxjCSgaha9YVHsXeJN96H3iHg4
-	PkF64uyvLbYRAYvovw/w9fHxtFUJebY1HDoeyR2J9Q7o8dpE6En9VmOB4rPUOj6ApfafxLvFlFw
-	Gl2Sid5kngQVTP71Ifg8YOBgYk3Amlwle9d2mRaHbTutGywFvq3yZZ+KEHGsO4Uuziq2ppGY3G3
-	RbdCMz0ZN5dpG/Hb9+LOvF/EQ2fJywlhY/b2pg5MzOK/IHsHj4NsM=
-X-Received: from japq5.prod.google.com ([2002:a05:6638:405:b0:620:5afe:8b1b])
+        bh=TfpmwInLEGo5frDChwR3ktzWoQYmqPnvABEvfJfxR3I=;
+        b=X2ePSWY8NaCoOLr+B5xXjgQbC/ZxqjXzKvZUhYqpYgKHRNMFNxyOgUQw3aUfYKp1ZU
+         lLGL3ni3smOgjKXkiq3WGQBoUb0eMKrRWJAa8Irs7zXgEKtD/JUUAIGwOHviEjBIypaN
+         UEDD04HXIIwTn5BccydHDQ/9AfVJTQqCr1rQtpLvbZvl6ZtkIIzo8zztSp2rSmg+XJYn
+         zELZzwgjOjnLXYk/oxj6kzFxN44u9MBGPMBtIe1SOQTlNzSyrVbEeONr/CNKQ+3ysO4E
+         /aOVQikPMavzGV7MVmC0GBAtjuRs6zmfzMZJBbynPC2ADCOouy6H6yuPViKM0+L6kw99
+         B7Xg==
+X-Gm-Message-State: APuU4Z92w/mowN+cJsquw56kGrGv9KVEbbKwasQ7tmraIzDNYYUc0Q4H
+	nO6SjfjLgJp9a0Q050WYSDiaJ3vlwD/aoDF+KCZxluipM5ha7epga2Ht28v8lZk36gGQt+v37EI
+	Map7IO1zpfZ4pwfmIcZ9prBOmMmN9RRAc6KwpINeuuMNMdSRxvVHQKGhl9RGm5oLpWOPsskvo21
+	3YyDm8yO6mRBDLI9BFWC8EsqP/CZBzr36XoqLXxoqqwKqTdlhpICs=
+X-Received: from jats20.prod.google.com ([2002:a05:6638:2594:b0:61c:f132:938b])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6808:1a10:b0:564:48f3:dfa8 with SMTP id 5614622812f47-57a0a111c93mr14525917b6e.11.1795477182891;
- Mon, 23 Nov 2026 15:39:42 -0800 (PST)
-Date: Mon, 23 Nov 2026 23:39:15 +0000
+ 2002:a05:6808:c3d2:b0:579:293a:52ac with SMTP id 5614622812f47-57a06a0f737mr14141383b6e.9.1795477193657;
+ Mon, 23 Nov 2026 15:39:53 -0800 (PST)
+Date: Mon, 23 Nov 2026 23:39:23 +0000
 In-Reply-To: <20261123233924.3970932-1-dmatlack@google.com>
 X-Archived-By: <archiver.kernel.org>
 Mime-Version: 1.0
 References: <20261123233924.3970932-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
-Message-ID: <20261123233924.3970932-11-dmatlack@google.com>
-Subject: [PATCH v5 10/18] mm/shmem_luo: Require permission to preserve a file
+Message-ID: <20261123233924.3970932-19-dmatlack@google.com>
+Subject: [PATCH v5 18/18] selftests/liveupdate: Test block accounting of
+ retrieved tmpfs files
 From: David Matlack <dmatlack@google.com>
 To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
@@ -102,9 +87,9 @@ Cc: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>,
 	David Matlack <dmatlack@google.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261123_233946_874298_B95FE35E 
-X-CRM114-Status: GOOD (  22.76  )
-X-Spam-Score: -7.6 (-------)
+X-CRM114-CacheID: sfid-20261123_153955_633180_D1B171B1 
+X-CRM114-Status: GOOD (  31.73  )
+X-Spam-Score: -9.5 (---------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -123,108 +108,388 @@ X-Spam-Status: No, score=-26.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-Require the file to be opened for reading and the caller to have
-permission to write to it in order to preserve it. As an exception, let
-the owner preserve a file that is immutable or on a read-only superblock
-without write permission, and reject append-only files.
+Add test cases to luo_tmpfs for how the blocks of a retrieved file are
+charged: The file fits a mount of exactly its size, and a large folio
+that extends past the end of the file is charged in full. Running out of
+space on the mount, or hitting the memcg limit, fails permanently,
+leaves the target empty and nothing charged to the mount or the memcg,
+and the session can still be finished.
 
-While a file is preserved, its size is frozen for all of its users:
-truncating it, fallocate() and writes past its end fail with -EPERM.
-Today any process with an fd for a memfd can do that, even one that was
-only given a read-only fd. Requiring write permission limits this to
-callers that could truncate the file themselves. A file descriptor
-opened for writing isn't required, since that would rule out preserving
-a running binary, which can't be opened for writing. Only the permission
-of the inode is checked, so the mount doesn't need to be writable
-either. The size of an immutable file or of a file on a read-only
-superblock can't change anyway, so its owner may also preserve it.
-Append-only files are rejected, since their writers can only append to
-them, and freezing the size would stop all writes.
+Enable CONFIG_TRANSPARENT_HUGEPAGE for the large folio test cases, and
+CONFIG_CGROUPS and CONFIG_MEMCG for the memcg test case. They are
+skipped without them.
 
-The retrieved file can be read, so also require the file to be opened
-for reading. Otherwise a caller with a write-only fd could preserve the
-file to read its contents.
-
-Document the frozen size and the permission requirements.
+tmpfs quotas are not tested.
 
 Signed-off-by: David Matlack <dmatlack@google.com>
-Acked-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
- mm/shmem_luo.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ tools/testing/selftests/liveupdate/config     |   3 +
+ .../testing/selftests/liveupdate/luo_tmpfs.c  | 283 +++++++++++++++++-
+ 2 files changed, 284 insertions(+), 2 deletions(-)
 
-diff --git a/mm/shmem_luo.c b/mm/shmem_luo.c
-index 46b33a00c2a2..854a49cd0aaa 100644
---- a/mm/shmem_luo.c
-+++ b/mm/shmem_luo.c
-@@ -27,6 +27,15 @@
-  * the file are preserved. All others are reset to default. The preserved
-  * properties are described below.
-  *
-+ * Preserving a file requires it to be opened for reading and the caller to have
-+ * permission to write to it, but it doesn't need to be opened for writing. The
-+ * owner of a file that is immutable or on a read-only superblock may also
-+ * preserve it. Append-only files can't be preserved.
-+ *
-+ * While a file is preserved, its size can't change and no holes can be punched
-+ * into it: Truncating the file, ``fallocate()`` and writes past the end of the
-+ * file fail with ``-EPERM``. This applies to all users of the file.
-+ *
-  * .. note::
-  *    The LUO API is not stabilized yet, so the preserved properties of a memfd
-  *    are also not stable and are subject to backwards incompatible changes.
-@@ -255,6 +264,30 @@ static void shmem_luo_unpreserve_folios(struct kho_vmalloc *kho_vmalloc,
- 	vfree(folios_ser);
+diff --git a/tools/testing/selftests/liveupdate/config b/tools/testing/selftests/liveupdate/config
+index 37230f4c488f..7f38291c979d 100644
+--- a/tools/testing/selftests/liveupdate/config
++++ b/tools/testing/selftests/liveupdate/config
+@@ -1,4 +1,5 @@
+ CONFIG_BLK_DEV_INITRD=y
++CONFIG_CGROUPS=y
+ CONFIG_DEVTMPFS=y
+ CONFIG_KEXEC_FILE=y
+ CONFIG_KEXEC_HANDOVER=y
+@@ -7,7 +8,9 @@ CONFIG_KEXEC_HANDOVER_DEBUGFS=y
+ CONFIG_KEXEC_HANDOVER_DEBUG=y
+ CONFIG_LIVEUPDATE=y
+ CONFIG_LIVEUPDATE_TEST=y
++CONFIG_MEMCG=y
+ CONFIG_MEMFD_CREATE=y
+ CONFIG_TMPFS=y
+ CONFIG_TMPFS_XATTR=y
+ CONFIG_SHMEM=y
++CONFIG_TRANSPARENT_HUGEPAGE=y
+diff --git a/tools/testing/selftests/liveupdate/luo_tmpfs.c b/tools/testing/selftests/liveupdate/luo_tmpfs.c
+index 7911ac28188f..df2bc1488c01 100644
+--- a/tools/testing/selftests/liveupdate/luo_tmpfs.c
++++ b/tools/testing/selftests/liveupdate/luo_tmpfs.c
+@@ -62,8 +62,9 @@
+ 
+ /*
+  * Everything happens on a tmpfs mounted at TEST_DIR. In stage 1, the source
+- * files are created on the tmpfs mounted at TEST_DIR/src. In stage 2, each
+- * case runs in the directory TEST_DIR/<name of the case>.
++ * files are created on the tmpfs mounted at TEST_DIR/src, or at
++ * TEST_DIR/src_huge for files that need large folios. In stage 2, each case
++ * runs in the directory TEST_DIR/<name of the case>.
+  */
+ #define TEST_DIR		"/luo_tmpfs"
+ 
+@@ -145,6 +146,7 @@ struct test_case {
+ static unsigned long page_size;
+ static int dev_fd;
+ static int session_fd;
++static bool have_huge_src;
+ 
+ /* nolibc doesn't have these, so use syscall() where needed. */
+ static int do_fcntl(int fd, int cmd, long arg)
+@@ -213,6 +215,16 @@ static long mnt_used(const char *path)
+ 	return buf.f_blocks - buf.f_bfree;
  }
  
-+/*
-+ * Preserving a file freezes its size for all of its users, and the retrieved
-+ * file can be read. So require a file opened for reading, and permission to
-+ * write to the file or ownership of a file whose size can't change anyway.
-+ * Reject append-only files, since freezing their size would stop all writes.
-+ */
-+static int shmem_luo_may_preserve(struct file *file)
++static long mnt_free(const char *path)
 +{
-+	const struct mnt_idmap *idmap = file_mnt_idmap(file);
-+	struct inode *inode = file_inode(file);
++	struct statfs buf;
 +
-+	if (!(file->f_mode & FMODE_READ))
-+		return -EBADF;
++	if (do_statfs(path, &buf))
++		return -1;
 +
-+	if (IS_APPEND(inode))
-+		return -EPERM;
-+
-+	if ((sb_rdonly(inode->i_sb) || IS_IMMUTABLE(inode)) &&
-+	    inode_owner_or_capable(idmap, inode))
-+		return 0;
-+
-+	return inode_permission(idmap, inode, MAY_WRITE);
++	return buf.f_bfree;
 +}
 +
- static int shmem_luo_preserve(struct liveupdate_file_op_args *args)
+ /* Mount a tmpfs with room for @pages pages at @dir. */
+ static int mount_tmpfs(const char *dir, unsigned long pages, const char *opts)
  {
- 	struct inode *inode = file_inode(args->file);
-@@ -264,6 +297,11 @@ static int shmem_luo_preserve(struct liveupdate_file_op_args *args)
- 	int err = 0, seals;
- 
- 	inode_lock(inode);
-+
-+	err = shmem_luo_may_preserve(args->file);
-+	if (err)
-+		goto err_unlock_inode;
-+
- 	shmem_freeze(inode, true);
- 
- 	/* Allocate the main serialization structure in preserved memory */
-@@ -317,6 +355,7 @@ static int shmem_luo_preserve(struct liveupdate_file_op_args *args)
- 	kho_unpreserve_free(ser);
- err_unlock:
- 	shmem_freeze(inode, false);
-+err_unlock_inode:
- 	inode_unlock(inode);
- 	return err;
+@@ -248,6 +260,26 @@ static long read_long(const char *path)
+ 	return strtol(buf, NULL, 10);
  }
+ 
++/* Write @str to the file at @path. Return 0 or -errno. */
++static int write_file(const char *path, const char *str)
++{
++	ssize_t len = strlen(str), ret;
++	int fd;
++
++	fd = open(path, O_WRONLY);
++	if (fd < 0)
++		return -errno;
++
++	ret = write(fd, str, len);
++	if (ret != len)
++		ret = ret < 0 ? -errno : -EIO;
++	else
++		ret = 0;
++
++	close(fd);
++	return ret;
++}
++
+ /* Retrieve with the argument @arg. Return the new fd or -errno. */
+ static int retrieve_arg(__u64 token, struct liveupdate_shmem_retrieve_arg *arg)
+ {
+@@ -462,6 +494,33 @@ static int preserve_memfd(struct test_case *tc, unsigned int flags,
+ 	return ret;
+ }
+ 
++/* Preserve a file from the tmpfs mounted with huge=always. */
++static int preserve_huge_file(struct test_case *tc)
++{
++	char path[128];
++	int fd, ret;
++
++	if (!have_huge_src)
++		return KSFT_SKIP;
++
++	snprintf(path, sizeof(path), "src_huge/%s", tc->name);
++	fd = create_source(path, tc->size, tc->token);
++	CHECK(fd >= 0);
++
++	/* The test needs the last, partial page to be in a large folio. */
++	if (tc->size % page_size && file_pages(fd) <= nr_pages(tc->size)) {
++		ksft_print_msg("%s: No large folio for the source file\n",
++			       tc->name);
++		close(fd);
++		return KSFT_SKIP;
++	}
++
++	ret = preserve_fd(fd, tc->pos, tc->token);
++	close(fd);
++
++	return ret;
++}
++
+ /* Skip a case whose source file couldn't be preserved in stage 1. */
+ static int skip_not_preserved(struct test_case *tc)
+ {
+@@ -1335,6 +1394,186 @@ static int exec_after_finish(struct test_case *tc)
+ 	return KSFT_PASS;
+ }
+ 
++static int mount_fits_verify(struct test_case *tc)
++{
++	unsigned long pages = nr_pages(tc->size);
++	int fd;
++
++	/* The file can be retrieved into a mount it fits exactly. */
++	CHECK_EQ(mount_tmpfs("fit", pages, NULL), 0);
++	fd = retrieve_new(tc->token, "fit");
++	CHECK(fd >= 0);
++	TRY(check_restored(tc, fd));
++	CHECK_EQ(mnt_used("fit"), pages);
++	CHECK_EQ(mnt_free("fit"), 0);
++
++	CHECK_EQ(ftruncate(fd, 0), 0);
++	CHECK_EQ(mnt_used("fit"), 0);
++
++	close(fd);
++	return KSFT_PASS;
++}
++
++static int mount_too_small_verify(struct test_case *tc)
++{
++	unsigned long pages = nr_pages(tc->size);
++	int target;
++
++	/* The failure leaves the target empty, and the mount untouched... */
++	CHECK_EQ(mount_tmpfs("small", pages - 1, NULL), 0);
++	target = new_target("small");
++	CHECK(target >= 0);
++	CHECK_EQ(retrieve_into(tc->token, target), -ENOSPC);
++	CHECK_EQ(file_size(target), 0);
++	CHECK_EQ(file_pages(target), 0);
++	CHECK_EQ(mnt_used("small"), 0);
++	close(target);
++
++	/*
++	 * ... but the preserved contents were restored before it was detected,
++	 * so the failure is permanent. Finishing the session frees them.
++	 */
++	CHECK_EQ(mount_tmpfs("big", pages, NULL), 0);
++	CHECK_EQ(retrieve_new(tc->token, "big"), -ENOSPC);
++	CHECK_EQ(luo_session_retrieve_fd(session_fd, tc->token), -ENOSPC);
++	CHECK_EQ(mnt_used("big"), 0);
++
++	return KSFT_PASS;
++}
++
++static int huge_folios_verify(struct test_case *tc)
++{
++	unsigned long pages = nr_pages(tc->size);
++	int fd;
++
++	CHECK_EQ(mount_tmpfs("dst", pages, "huge=never"), 0);
++	fd = retrieve_new(tc->token, "dst");
++	if (fd == -ENOENT)
++		return skip_not_preserved(tc);
++	CHECK(fd >= 0);
++	TRY(check_restored(tc, fd));
++	CHECK_EQ(mnt_used("dst"), pages);
++
++	/* LUO keeps a reference to the file until the session is finished. */
++	close(fd);
++	CHECK_EQ(mnt_used("dst"), pages);
++
++	return KSFT_PASS;
++}
++
++static int huge_folios_after_finish(struct test_case *tc)
++{
++	CHECK_EQ(mnt_used("dst"), 0);
++	return KSFT_PASS;
++}
++
++static int huge_folio_tail_verify(struct test_case *tc)
++{
++	long pages;
++	int fd;
++
++	CHECK_EQ(mount_tmpfs("dst", 4096, "huge=never"), 0);
++	fd = retrieve_new(tc->token, "dst");
++	if (fd == -ENOENT)
++		return skip_not_preserved(tc);
++	CHECK(fd >= 0);
++	CHECK_EQ(file_size(fd), tc->size);
++	TRY(check_contents(fd, tc->size, tc->token));
++
++	/* The whole folio is charged, including the part past EOF. */
++	pages = file_pages(fd);
++	CHECK(pages > 1);
++	CHECK_EQ(mnt_used("dst"), pages);
++
++	CHECK_EQ(ftruncate(fd, 0), 0);
++	CHECK_EQ(mnt_used("dst"), 0);
++
++	close(fd);
++	return KSFT_PASS;
++}
++
++static int huge_folio_tail_enospc_verify(struct test_case *tc)
++{
++	int ret;
++
++	/* There is room for the file, but not for its last folio. */
++	CHECK_EQ(mount_tmpfs("small", 1, "huge=never"), 0);
++	ret = retrieve_new(tc->token, "small");
++	if (ret == -ENOENT)
++		return skip_not_preserved(tc);
++	CHECK_EQ(ret, -ENOSPC);
++	CHECK_EQ(mnt_used("small"), 0);
++
++	return KSFT_PASS;
++}
++
++static int memcg_limit_child(struct test_case *tc)
++{
++	long limit = tc->size / 2, usage;
++	int ret;
++
++	/*
++	 * Charging a large folio doesn't invoke the memcg OOM killer, but the
++	 * source may have gotten small folios. Protect the child, so that the
++	 * retrieve fails with -ENOMEM instead.
++	 */
++	CHECK_EQ(write_file("/proc/self/oom_score_adj", "-1000"), 0);
++	CHECK_EQ(write_file("memcg/small/cgroup.procs", "0"), 0);
++
++	/* The folios are charged to the memcg of the caller, which is full. */
++	ret = retrieve_new(tc->token, "dst");
++	if (ret == -ENOENT)
++		return skip_not_preserved(tc);
++	CHECK_EQ(ret, -ENOMEM);
++
++	/* The failure leaves the mount and the memcg untouched. */
++	CHECK_EQ(mnt_used("dst"), 0);
++	usage = read_long("memcg/small/memory.current");
++	CHECK(usage >= 0 && usage < limit);
++
++	return KSFT_PASS;
++}
++
++static int memcg_limit_verify(struct test_case *tc)
++{
++	unsigned long pages = nr_pages(tc->size);
++	char limit[32];
++	int ret;
++
++	CHECK_EQ(mkdir("memcg", 0755), 0);
++	if (do_mount("cgroup2", "memcg", "cgroup2", 0, NULL)) {
++		ksft_print_msg("%s: cgroup2 is not available\n", tc->name);
++		return KSFT_SKIP;
++	}
++	if (write_file("memcg/cgroup.subtree_control", "+memory")) {
++		ksft_print_msg("%s: The memory controller is not available\n",
++			       tc->name);
++		return KSFT_SKIP;
++	}
++
++	CHECK_EQ(mount_tmpfs("dst", pages, "huge=never"), 0);
++
++	/* A memcg without room for the file. */
++	CHECK_EQ(mkdir("memcg/small", 0755), 0);
++	snprintf(limit, sizeof(limit), "%zu", tc->size * 3 / 4);
++	ret = write_file("memcg/small/memory.max", limit);
++	if (ret) {
++		ksft_print_msg("%s: Can't set memory.max: %d\n", tc->name, ret);
++		ret = KSFT_FAIL;
++	} else {
++		ret = run_child(memcg_limit_child, tc);
++	}
++	rmdir("memcg/small");
++	if (ret != KSFT_PASS)
++		return ret;
++
++	/* The preserved contents were restored, so the failure is permanent. */
++	CHECK_EQ(retrieve_new(tc->token, "dst"), -ENOMEM);
++	CHECK_EQ(mnt_used("dst"), 0);
++
++	return KSFT_PASS;
++}
++
+ static int memfd_preserve(struct test_case *tc)
+ {
+ 	return preserve_memfd(tc, 0, 0);
+@@ -1661,6 +1900,42 @@ static struct test_case test_cases[] = {
+ 		.verify = exec_verify,
+ 		.after_finish = exec_after_finish,
+ 	},
++	/* Block accounting. */
++	{
++		.name = "mount_fits",
++		.size = 2 << 20,
++		.verify = mount_fits_verify,
++	},
++	{
++		.name = "mount_too_small",
++		.size = 2 << 20,
++		.verify = mount_too_small_verify,
++	},
++	{
++		.name = "huge_folios",
++		.size = 4 << 20,
++		.preserve = preserve_huge_file,
++		.verify = huge_folios_verify,
++		.after_finish = huge_folios_after_finish,
++	},
++	{
++		.name = "huge_folio_tail",
++		.size = 100,
++		.preserve = preserve_huge_file,
++		.verify = huge_folio_tail_verify,
++	},
++	{
++		.name = "huge_folio_tail_enospc",
++		.size = 100,
++		.preserve = preserve_huge_file,
++		.verify = huge_folio_tail_enospc_verify,
++	},
++	{
++		.name = "memcg_limit",
++		.size = 4 << 20,
++		.preserve = preserve_huge_file,
++		.verify = memcg_limit_verify,
++	},
+ 	/* memfds. */
+ 	{
+ 		.name = "memfd",
+@@ -1765,6 +2040,10 @@ static void run_stage_1(int luo_fd)
+ 	if (chdir(TEST_DIR) || mount_tmpfs("src", 4096, "huge=never"))
+ 		fail_exit("Failed to mount the source tmpfs");
+ 
++	have_huge_src = !mount_tmpfs("src_huge", 4096, "huge=always");
++	if (!have_huge_src)
++		ksft_print_msg("[STAGE 1] huge=always is not supported\n");
++
+ 	session_fd = luo_create_session(luo_fd, SESSION_NAME);
+ 	if (session_fd < 0)
+ 		fail_exit("luo_create_session for '%s'", SESSION_NAME);
 -- 
 2.56.1.809.ga0b61035b5-goog
 
