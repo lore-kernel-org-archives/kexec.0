@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE26606A687
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365AB606A685
 	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 19:01:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=Dy5cyDMF;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ioUv6tOt
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ohKT8QyP;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=l2QzmBUO
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
@@ -14,63 +14,64 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=2BPu+oA30t3CvvayfJGBtOo4KEcsTgY7xbV9OZz0KkY=; b=Dy5cyDMFdMIcLHjmupSFBoozls
-	+FZpubSGD/YJZceGgbg6JNmZgPh3M7W1DQlVIpexyFitQalkYkbLHg0vMq7ceUYllgDw71ktIAbdq
-	U1Vb6l53tR3ZfAdAg3tYxe0QGLnJJi9EpJxH8y3Ny/fvzWnmJxd9eU/xvqRZMYxg4jzhpsjj3nB3/
-	o5HSYVe/Zb78I+c095qJBai51glIDKyNgT4is5N62IaaMmDZvd33+I9keh98pOXP8MGz5usNzpV1S
-	LrQ43Sc3WjC5RxvXi4D8pjuvwOy6riJVtZsuQCqGF6d5k5DJS1vxVaF1zIbUb5jeVPq2XHHRvGhPu
-	wMrq4Pdw==;
+	bh=/qPu3il+pjsqwuiugOKKp5YPgP+PXsAspKhyyUg3SNA=; b=ohKT8QyP4IjCXUrYVLol3FaovJ
+	xobPgARAQthzxH9aywya1pSPXKWtbyujxHeM62KQKiDBhpys5RBhIwcYbieyAjXTY978chlN2/jyL
+	g6zyaNEaBPmCP75o6lqAmC4GjAzVWTWrH23vcDe3/cxREAEZGEMyAInSOxPenSYQSj5HG/TKryrHh
+	xEjgxsaDPP9o1c32c7PRNPaOgs+vPDwS4k14p3J9DT18V3G05kZj+6wb8xNxj58OG5TSjAnZ28uMp
+	rzk8gNBxqHs19z8VwW8wXu+lN+hZkJEZaasL3mgcMqIlMj/jGGwFcnvnH8Ww8z3Ay1g+Fs9V2BSbs
+	5oNQKNfQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVZHv-00000004bGS-06so;
-	Mon, 23 Nov 2026 19:01:15 +0000
-Received: from mail-oi1-x246.google.com ([2607:f8b0:4864:20::246])
+	id 1xVZHu-00000004bG8-3pwo;
+	Mon, 23 Nov 2026 19:01:14 +0000
+Received: from mail-oi1-x247.google.com ([2607:f8b0:4864:20::247])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVZHl-00000004bAw-3nvh
+	id 1xVZHl-00000004bAS-1wim
 	for kexec@lists.infradead.org;
 	Mon, 23 Nov 2026 19:01:13 +0000
-Received: by mail-oi1-x246.google.com with SMTP id 5614622812f47-57e3f40cc16so423905b6e.3
-        for <kexec@lists.infradead.org>; Mon, 23 Nov 2026 11:01:03 -0800 (PST)
+Received: by mail-oi1-x247.google.com with SMTP id 5614622812f47-4dc57e2a3f2so4772023b6e.0
+        for <kexec@lists.infradead.org>; Mon, 23 Nov 2026 11:01:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795460463; x=1796065263; darn=lists.infradead.org;
+        d=google.com; s=20260707; t=1795460460; x=1796065260; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=2BPu+oA30t3CvvayfJGBtOo4KEcsTgY7xbV9OZz0KkY=;
-        b=ioUv6tOtcMVzmEWuyJG3D/XdMVy+OhOqMduKLrv7kyc2e2Y//Gwwo4SbzXuAx6h+mM
-         Kcp4+d9ByvRTOSazNpG2XHcfztscXUh9oC2Aj4NgIwl8mvbBiVUJl69wcePclWVGKsfs
-         7s3O/f+Onu+6z4bvHRYiZTBk4zl3rxDvUnLlruQ7lh6dDnzIydDVW1Cb8WPdAYyDL1rn
-         qe27TiVVyAHkD6Nm4LqIanlX6BSA40r4rrm35Z2A4wHvVw4v8qq6lnGNlWirCppe3K0M
-         NXvHEZL8yKsm1zKd9LjBzS9Bmvt6EhCbJQPqa08tJjhfzcdro8dAqHhjBdCRYnfyeCjm
-         dopA==
+        bh=/qPu3il+pjsqwuiugOKKp5YPgP+PXsAspKhyyUg3SNA=;
+        b=l2QzmBUOMsJqTepas2cxZWn53o5UL6od3nB3gQn5mPBg7MeiN5+XHPOZOmFxi9+0f9
+         P+nXKQSLAqIZTE+zRFN6oy0niFtxuMd1yxpdamVbOETjn1/w+XFPrR03pGjW7SrMdgCT
+         /8o9UK6pUukLGhsRu46eSOEyTaEHyJ1A1LEL/Vmt4FdcqwAOCP4n9Z19dZyx5SJNlW+M
+         lib+k73JhgPLrM6dC4YOzmF1gTvY2YvrUXnQy1PWTJ+dqRhUjnU7/1oBEfABSIGZW2Xp
+         JvhHH99El+Y0UuWElY5DL+jJgx7lhjynBS0Hhl0A3u48bAIY3mHUp6Th7DxhtTApvf6L
+         TLmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795460463; x=1796065263;
+        d=1e100.net; s=20260707; t=1795460460; x=1796065260;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=2BPu+oA30t3CvvayfJGBtOo4KEcsTgY7xbV9OZz0KkY=;
-        b=FHreXVze3ehJN/7ggp8OZMBm0huP6LKSxpl04zLY+peAf/RrRuEowrYt02U+lNt/FV
-         iyDHIMpAd2VzqEKYaoPlETlRQC2adp+omSjv/183SrM84w6tXynO1xbRVz1rifxWfXFH
-         I8pZX3/LveBul6wzdg87Mfx7YG6AfvbSd87We6lX805ij4+58CDOwn7HVlO1KHlIAq++
-         pxQdXTDOEgAffhjC0NUZIAOvNe8I/QvXvlE6LUiSZoyoVeMfe0U6qEP2gc3d+sNxdvcs
-         TYZW+HMyrphAasQvEZaCwDymapMMFlTH3MKh2ScFk68DEYIyvugXEkNpSMHh6AFxfLK4
-         ixZA==
-X-Gm-Message-State: APuU4Z9nC61GbJG6wbqbhms1WuO+XrIiZXP3T4gp5y88ez6qa1X4UiJy
-	0lnnehKlyBx/h5JKirG9dxELDmYf4e/sNbpcCxzlGRdO7n5q+ZVJQuJK25aMZw5EVcZC/DMKQqG
-	0cqrjbKF0BpFlWMJS16y0aYXQGlIcHl/qKEz220fCdIvTMMztBy4N7bwG8xIhYw6vp40eSujLUF
-	PJul/oa0OI9SZMqiPBwgwfsyntA9TcMcjZsLYibhmdl2jKVkbViZ4=
-X-Received: from iobhj14.prod.google.com ([2002:a05:6602:1d8e:b0:9c7:4d20:1320])
+        bh=/qPu3il+pjsqwuiugOKKp5YPgP+PXsAspKhyyUg3SNA=;
+        b=n9CFFdkCp3XlYFrJ0fRXUwcMTlqm2t7cwEJZBk1DPexR0OJs4gPUQWl5+2abx9zsvB
+         G5l+HmUo52dal1iqWDfKJC8lWkwVu55XNo8GRaehQ4obi4fzE2lLxsKWpDKzYtWboj/j
+         Wv6mHE6IZ8EoQr/AG0zNu1lIOpPjHgRzNCDQONeNCzIqiu8Vs+iGAbEB8aAcB1RDxjDH
+         IbBt1xkLs2VPVthOjqU2IfODZr60VzksngT7w03O2OQfoV7x60eIABHGXNo2u/Q3PSbH
+         192C8IhwAPvuyvvLwCViQ+4m33TXRY8K4rwXSM+EZ6rh2m/bnGDy7KCfwTSZyL5S8EJX
+         nnfA==
+X-Gm-Message-State: APuU4Z/azdxJTb0M9vxNDhK2b7d/z2vxpk58Y4IP8spTzffh9mNIz2/L
+	ZqeWS3Rf876PMr/H/7LA4ijp1gndx/3DifG1cTorq7g2G9f7JkBXZRtcrJbkaymZnopdaYoLyGq
+	jSfZNm1kC5c7GbycoZP/6Pjn4CGmJEygl9zLPvT9aMWq5gIFLprdTd4QQHZsB7NY4wfZ7NbnS9Q
+	7tWdGiCcvCJp66X/8IDg8g8Sx2/Ry++CBiO0iLMTuLANqWmiYGNNY=
+X-Received: from jakj15.prod.google.com ([2002:a05:6638:148f:b0:61c:e96b:9d4d])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6808:3514:b0:571:a186:d6b9 with SMTP id 5614622812f47-57a0a30a106mr14736384b6e.13.1795460462155;
- Mon, 23 Nov 2026 11:01:02 -0800 (PST)
-Date: Mon, 23 Nov 2026 19:00:45 +0000
-In-Reply-To: <20261118223704.3286085-12-dmatlack@google.com>
+ 2002:a05:6808:22a2:b0:572:d0fb:ae61 with SMTP id 5614622812f47-57a0a20e564mr12818304b6e.49.1795460459403;
+ Mon, 23 Nov 2026 11:00:59 -0800 (PST)
+Date: Mon, 23 Nov 2026 19:00:43 +0000
+In-Reply-To: <20261118223704.3286085-10-dmatlack@google.com>
 X-Archived-By: <archiver.kernel.org>
 Mime-Version: 1.0
-References: <20261118223704.3286085-12-dmatlack@google.com>
+References: <20261118223704.3286085-10-dmatlack@google.com>
 X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
-Message-ID: <20261123190045.2166865-4-dmatlack@google.com>
-Subject: [PATCH] amend! PCI: liveupdate: Freeze preservation status during shutdown
+Message-ID: <20261123190045.2166865-2-dmatlack@google.com>
+Subject: [PATCH] amend! PCI: liveupdate: Adopt ACS controls in incoming
+ preserved devices
 From: David Matlack <dmatlack@google.com>
 To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org
@@ -88,8 +89,8 @@ Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alex Williamson <alex.willia
 	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261123_110105_968558_12FAF7C3 
-X-CRM114-Status: GOOD (  13.65  )
+X-CRM114-CacheID: sfid-20261123_110105_931588_FE7348F3 
+X-CRM114-Status: GOOD (  18.17  )
 X-Spam-Score: -9.5 (---------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -110,74 +111,74 @@ X-Spam-Status: No, score=-26.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-PCI: liveupdate: Freeze preservation status during shutdown
+PCI: liveupdate: Adopt ACS controls in incoming preserved devices
 
-Freeze a device's outgoing preservation status (preserved or not
-preserved) during shutdown for kexec. This enables the PCI core and
-drivers to safely make decisions based on the device's preservation
-status during shutdown.
+Adopt Access Control Services (ACS) controls on all incoming preserved
+devices (endpoints and upstream bridges) during a Live Update.
 
-The PCI core freezes every device in pci_device_shutdown(), not just
-preserved ones, so that no device can be preserved or unpreserved after
-its shutdown starts.
+Adopting ACS controls avoids changing routing rules while memory
+transactions are in flight from preserved devices. It also keeps IOMMU
+groups from changing during or after Live Update.
 
-Only freeze devices during kexec. Other shutdowns do not depend on the
-preservation status, and they do not serialize Live Update sessions
-first, so a session can still be torn down after its devices are shut
-down. Refusing to unpreserve those devices would make pci_flb_unpreserve()
-panic because they were never released.
+The adopted controls are recorded by the pci_save_state() call in
+pci_bus_add_device(), which runs before drivers bind, so they are
+reapplied by pci_restore_state() if the device is reset. Panic if an
+incoming preserved device has no ACS save buffer, since the adopted
+controls would be silently lost by the first reset.
+
+To simplify ACS adoption, reject preserving any devices that require
+quirks to enable ACS as those quirks would also have to take Live Update
+into account. If such a quirk matches an incoming preserved device
+anyway, e.g. because it was added in the new kernel, log a warning and
+adopt the device's ACS controls regardless, rather than reprogram a
+device in the path of a preserved device's memory transactions. The
+previous kernel did not apply such a quirk, so it programmed the
+standard ACS Control register. Allocate the ACS save buffer for these
+devices too, so that the adopted controls are kept across resets.
 
 Signed-off-by: David Matlack <dmatlack@google.com>
 Reviewed-by: Pranjal Shrivastava <praan@google.com>
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: Samiullah Khawaja <skhawaja@google.com>
-Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-Link: https://patch.msgid.link/20261118223704.3286085-12-dmatlack@google.com
+Reviewed-by: Alex Williamson <alex.williamson@nvidia.com>
+Link: https://patch.msgid.link/20261118223704.3286085-10-dmatlack@google.com
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
 
 Notes:
     This amend! also replaces the commit message when squashed with
-    git rebase --autosquash, to explain why devices are only frozen during
-    kexec. The message already includes your Link: and Signed-off-by:
-    trailers from lu-pci-preservation.
+    git rebase --autosquash: it explains the ACS quirk save buffer case
+    (Pranjal) and collects the Reviewed-by tags from Pranjal and Alex. The
+    message already includes your Link: and Signed-off-by: trailers from
+    lu-pci-preservation.
 
- drivers/pci/liveupdate.c | 2 +-
- drivers/pci/pci-driver.c | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/pci/pci.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-index 08451452fa54..76e939ea52eb 100644
---- a/drivers/pci/liveupdate.c
-+++ b/drivers/pci/liveupdate.c
-@@ -127,7 +127,7 @@
-  *    Control Services (ACS).
-  *
-  * In addition, a device cannot be preserved or unpreserved once the PCI core
-- * has started shutting it down (pci_device_shutdown()).
-+ * has started shutting it down for kexec (pci_device_shutdown()).
-  *
-  * Driver Binding
-  * ==============
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 08b768b9e905..2748ca22e9cf 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -560,7 +560,8 @@ static void pci_device_shutdown(struct device *dev)
- 	struct pci_dev *pci_dev = to_pci_dev(dev);
- 	struct pci_driver *drv = pci_dev->driver;
- 
--	pci_liveupdate_freeze(pci_dev);
-+	if (kexec_in_progress)
-+		pci_liveupdate_freeze(pci_dev);
- 	pm_runtime_resume(dev);
- 
- 	if (drv && drv->shutdown)
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index b5b578355a1b..f3d58b5e7a5d 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1073,10 +1073,14 @@ static void pci_allocate_acs_save_buffer(struct pci_dev *dev)
+ 	/*
+ 	 * Devices that rely on device-specific quirks to enable an ACS
+ 	 * equivalent keep that configuration outside of the ACS Control
+-	 * register, so they are configured from scratch on restore. The
+-	 * exception is devices preserved across a Live Update, which always
+-	 * adopt the ACS controls established by the previous kernel and need
+-	 * the buffer to keep them across resets.
++	 * register, so they are configured from scratch on restore.
++	 *
++	 * The exception is devices preserved across a Live Update. The
++	 * previous kernel refuses to preserve devices that need such a quirk,
++	 * so a quirk can only match here if the previous kernel did not apply
++	 * it (e.g. the quirk is new in this kernel). The previous kernel then
++	 * programmed the standard ACS Control register, so save it to keep
++	 * the adopted controls across resets.
+ 	 */
+ 	if (pci_need_dev_specific_enable_acs(dev) &&
+ 	    !pci_liveupdate_was_incoming(dev))
 
 base-commit: fd54e32f7903199e8acb2762dd2debfffe4501c4
 prerequisite-patch-id: ac616bdf67b652da754c7b00a368613d345ae384
-prerequisite-patch-id: 9c324eb4a47b659efcf7c0c8bb14acfcbf5d615c
-prerequisite-patch-id: a1ec7135c2c0c8f90b12743df9e4620ab2ee2f2a
 -- 
 2.56.1.809.ga0b61035b5-goog
 
