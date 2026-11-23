@@ -2,78 +2,91 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406E5606A31A
-	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 03:41:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4747A606A31A
+	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 07:11:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=CoQeeONu;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HuTvG9Ls
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=jJdL4s9o;
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=guV9eUba
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:Subject:
-	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Unsubscribe-Post:List-Owner;
-	bh=O2PDXHMEw4Fy1/k2MO0pkbPKF0H2GXDc7bKdUmva7j0=; b=CoQeeONuR+vtX0ZnkiavLI4mXz
-	t4V4AY/CCosaz3obg+FNG81VJfDspQ6nVmf7pjARQqvSOyPsKPzeI6jtgSSwfugy+z4stlpOpKwZU
-	EQ2DbksxzmJzN4V7sjUDLc/9l5j70Apyp4YzMIBCX/XljuzWFzgBcGJN5L4/qVmXJiNdxCGlr96P7
-	BU5tIXQLQb5paUvSlHyMwVqKHtKUQAqKas5oJexVAr2lSjz3cJ8pmGGDBawoV94aPstP+gjiyBHwm
-	EApNDFFqnOh57X6Kt2iuCbaFCFluCvCEomEyJZjhOFnnj0l09janpGHH5UKcgEA5g6MOJ/Dh/tudE
-	oG38w3/Q==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
+	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=aUC6dwvADLWcIIFgIfO7ZojWD6NXidysfo4b9W39AAY=; b=jJdL4s9oK8LaH6
+	hBE0bO6k6f/oNDYqnFYo6dDzcPhRufM8QcmwTJYDo1SdrWNiNbeH2HSzAma1i37VluJrl65aQnURU
+	HjuC+8KjPTMjIKkK8qvqohw8ugfNK/wODAis2+huZZkIQiVkZqq61tCa7zcDkPzAWfpje2H+cQoCf
+	wlezqpGMzmpNJdLbN8FjsfBXL/0BvP6kGUFRcICL7ib2lh+XIszL3Huvhf8hpKB38hN8RT+sq0HjH
+	+3+WFnjKDNgWtyiN0grWIg5Bd/9lzfPhCrsvizvobEiIyIeLibxZNl1tjFzp4x5hrkb8ikw2D3Uci
+	XJ2aySTePLt5tIqC4kAw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVKvz-00000002E2D-2q66;
-	Mon, 23 Nov 2026 03:41:39 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xVODJ-00000002RIo-3mnS;
+	Mon, 23 Nov 2026 07:11:46 +0000
+Received: from canpmsgout06.his.huawei.com ([113.46.200.221])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVKvy-00000002E24-0y4G
-	for kexec@lists.infradead.org;
-	Mon, 23 Nov 2026 03:41:38 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id A580C409FC;
-	Mon, 23 Nov 2026 03:41:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2D551F000C0;
-	Mon, 23 Nov 2026 03:41:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795405297;
-	bh=O2PDXHMEw4Fy1/k2MO0pkbPKF0H2GXDc7bKdUmva7j0=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HuTvG9LsMTyG96xK4He1xnM4Eg6W/7bkzxLa9wAADy8G8YTM6SSATsQz7ndTQg4hU
-	 YHF7hfCesJBna1yd/N2+Bt28V9UGpsPZ7gZJv3MiH82D+2mXXkceKkPQ2hhYpGdBEP
-	 Jvf1LhzArln55BIY5qwd3p6/XtoePRi3H7yEnl+JCioe1qdAmdURrSYVGosQJ22mzV
-	 7L3xfHZHf5XdYI8UkpgNcgk8c3QcXFkpDJSv8FxxDIot0OLoj4Y+h6UuCigirmzPsJ
-	 r+gALl2drqsJ8M88YYI0RR9E+Pna5NHsvUztfOVTWdHCgpgLAekrD7n1UIFmvgLZY0
-	 X3NbWvWnL48MQ==
-Message-ID: <sashiko-outbox-228597@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 0/2] mm: kasan: skip KASAN for GFP_HIGHUSER
-To: "Jeff Xu" <jeffxu@chromium.org>, "Andrew Morton" <akpm@linux-foundation.org>, "David
- Hildenbrand" <david@kernel.org>, "Vlastimil Babka" <vbabka@kernel.org>, "Johannes
- Weiner" <hannes@cmpxchg.org>, "Andrey Ryabinin" <ryabinin.a.a@gmail.com>
-Cc: "Lorenzo Stoakes" <ljs@kernel.org>, "Liam R . Howlett" <liam@infradead.org>, "Mike
- Rapoport" <rppt@kernel.org>, "Suren Baghdasaryan" <surenb@google.com>, "Michal
- Hocko" <mhocko@suse.com>, "Brendan Jackman" <brendan.jackman@linux.dev>, "Zi
- Yan" <ziy@nvidia.com>, "Alexander Potapenko" <glider@google.com>, "Andrey
- Konovalov" <andreyknvl@gmail.com>, "Dmitry Vyukov" <dvyukov@google.com>, "Vincenzo
- Frascino" <vincenzo.frascino@arm.com>, "Marco Elver" <elver@google.com>, "Boris
- Brezillon" <boris.brezillon@collabora.com>, "Catalin Marinas" <catalin.marinas@arm.com>, "Chia-I
- Wu" <olvaffe@gmail.com>, "Dev Jain" <dev.jain@arm.com>, "Ian Rickards" <ian.rickards@arm.com>, "Jann
- Horn" <jannh@google.com>, "Jeff Vander Stoep" <jeffv@google.com>, "Jeff Xu" <jeffxu@google.com>, "Kees
- Cook" <kees@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>, "Peter
- Collingbourne" <peter@pcc.me.uk>, =?utf-8?b?UGllcnJlLUNsw6ltZW50IFRvc2k=?= <ptosi@google.com>, "Ryan
- Roberts" <ryan.roberts@arm.com>, "Tomasz Figa" <tfiga@chromium.org>, "Will
- Deacon" <will@kernel.org>, "Alexander Viro" <viro@zeniv.linux.org.uk>, "Christian
- Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>, "Miklos Szeredi" <miklos@szeredi.hu>, "Baoquan
- He" <baoquan.he@linux.dev>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Pratyush
- Yadav" <pratyush@kernel.org>, "Allison Henderson" <achender@kernel.org>, "David
- S . Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@kernel.org>, "Jakub
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Simon
- Horman" <horms@kernel.org>, kasan-dev@googlegroups.com, kexec@lists.infradead.org, linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com
-In-Reply-To: <20261123033111.2349160-1-jeffxu@chromium.org>
-References: <20261123033111.2349160-1-jeffxu@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 23 Nov 2026 03:41:34 +0000
+	id 1xVOCg-00000002RHa-0iUL;
+	Mon, 23 Nov 2026 07:11:09 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=aUC6dwvADLWcIIFgIfO7ZojWD6NXidysfo4b9W39AAY=;
+	b=guV9eUba+R5PDayFm8H06i5ZTYBsUhnHD4vQWNFcLcZtduyG4gmBeeAB+LML0q7m2R3X3WcAk
+	hq/BWQ1RYPlOPu9P52463fbpuoyQt2HGQ1Yx/Ul7gbqJV/FVf0Mc5IJKgZSNsosmbXxuWk9wJBd
+	tEXKc1taTNkcoLdTc3eqClM=
+Received: from mail.maildlp.com (unknown [172.19.162.197])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4jXxt80klzzRhRC;
+	Mon, 23 Nov 2026 15:10:40 +0800 (CST)
+Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id 81BD440579;
+	Mon, 23 Nov 2026 15:10:57 +0800 (CST)
+Received: from [10.67.110.68] (10.67.110.68) by kwepemk200008.china.huawei.com
+ (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Mon, 23 Nov
+ 2026 15:10:54 +0800
+Message-ID: <584a0e7a-230e-4a95-9e09-a1d6499a6ea9@huawei.com>
+Date: Mon, 23 Nov 2026 15:10:53 +0800
+X-Archived-By: <archiver.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 00/11] kexec: Rework segment loading and fix CMA
+ retries
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
+	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
+	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
+	<ritesh.list@gmail.com>, <sshegde@linux.ibm.com>, <pjw@kernel.org>,
+	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
+	<tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
+	<baoquan.he@linux.dev>, <rppt@kernel.org>, <pasha.tatashin@soleen.com>,
+	<pratyush@kernel.org>, <leitao@debian.org>, <yeoreum.yun@arm.com>,
+	<mpilaniy@redhat.com>, <robh@kernel.org>, <coiby.xu@gmail.com>,
+	<Yeking@Red54.com>, <prudo@redhat.com>, <brads@mainlining.org>,
+	<sourabhjain@linux.ibm.com>, <mkchauras@gmail.com>, <blum@kernel.org>,
+	<adityag@linux.ibm.com>, <qirui.001@bytedance.com>, <hui.wang@canonical.com>,
+	<sohammetha01@gmail.com>, <guoren@kernel.org>, <gaohan@iscas.ac.cn>,
+	<ionut.nechita@windriver.com>, <vishal.l.verma@intel.com>,
+	<seanjc@google.com>, <ardb@kernel.org>, <richard.lyu@suse.com>,
+	<arnd@arndb.de>, <tzimmermann@suse.de>, <rick.p.edgecombe@intel.com>,
+	<kai.huang@intel.com>, <kas@kernel.org>, <piliu@redhat.com>,
+	<thuth@redhat.com>, <shradhagupta@linux.microsoft.com>,
+	<ebiggers@kernel.org>, <jbouron@amazon.com>, <me@linux.beauty>,
+	<mclapinski@google.com>, <graf@amazon.com>, <tangyouling@kylinos.cn>,
+	<x86@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
+	<kexec@lists.infradead.org>
+References: <20261112133418.4044428-1-ruanjinjie@huawei.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <20261112133418.4044428-1-ruanjinjie@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemk200008.china.huawei.com (7.202.194.74)
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261122_231107_219561_EE50C3B3 
+X-CRM114-Status: GOOD (  19.16  )
+X-Spam-Score: -2.8 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,19 +96,112 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: sashiko-reviews@lists.linux.dev
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
-X-Archived-By: <archiver.kernel.org>
 
-Sashiko has reviewed this 2-patch series and found no issues.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261123033111.2349=
-160-1-jeffxu@chromium.org
+
+在 2026/11/12 21:34, Jinjie Ruan 写道:
+> ARM64, LoongArch, RISC-V, x86 and powerpc build the elf core header
+> and place it together with the initrd and the DTB with almost identical
+> code.
+> 
+> This series reworks that path into common helpers that the architectures
+> reuse, and fixes the CMA page and elf core header leaks in the arm64
+> and LoongArch placement retry loops.
+> 
+> The patch organization is as follows:
+> 
+> - Patch 1 moves the release of the elf core header into the generic
+>   post-load cleanup, so that the architectures no longer free it
+>   themselves.
+> 
+> - Patch 2 adds the common helpers
+> 
+> - Patches 3-7 convert arm64, LoongArch, RISC-V, X86 and Powerpc to
+>   reuse the common helpers
+> 
+> - Patches 8-11 fix the CMA pages leaked by the retry loops and
+>   the loop that makes no progress
+> 
+> Tested with kexec_file_load() on arm64, LoongArch, RISC-V, X86 and
+> Powerpc under QEMU, including the CMA retry paths, loading a crash
+> kernel and booting the second kernel, with the agent help.
+> 
+> This series is also available at:
+> 	https://github.com/ruanjinjie-eng/linux/tree/kexec_rework_cma_bugfx_v9
+> 
+> Changes in v8:
+> - Rework the common code as Mike suggested: the core provides building
+>   blocks and the architectures uses them (Mike)
+> - Build the elf core header once and only place it on the retries (Mike)
+> - Keep the segment order and the arch placement policy unchanged (Mike)
+> - Convert x86 and powerpc as well
+> - Move the CMA fixes to the end of the series (Mike)
+
+Hi Mike,
+
+Does this refactoring now meet your expectations?
+
+In my view, there is still an issue worth discussing: should we reserve
+for the crash hotplug elf core header in the framework code
+kexec_add_elf_core_header(), or only implement it in the x86
+architecture code, and consider generalizing it after the ARM64
+implementation is available?
+
+Best regards,
+Jinjie
+
+
+> - Link to v7: https://lore.kernel.org/all/20261026075201.699550-1-ruanjinjie@huawei.com/
+> 
+> Previous Versions are as below:
+> - v6: https://lore.kernel.org/all/20260921090450.807575-1-ruanjinjie@huawei.com/
+> - v5: https://lore.kernel.org/all/20260918100442.3841135-1-ruanjinjie@huawei.com/
+> - v4: https://lore.kernel.org/all/20260907125404.922123-1-ruanjinjie@huawei.com/
+> - v3: https://lore.kernel.org/all/20260826092541.3905933-1-ruanjinjie@huawei.com/
+> - v2: https://lore.kernel.org/all/20260729031235.2840255-1-ruanjinjie@huawei.com/
+> - v1: https://lore.kernel.org/all/20260723131242.1537633-1-ruanjinjie@huawei.com/#t
+> 
+> Jinjie Ruan (11):
+>   kexec: Free the elf core header in kimage_file_post_load_cleanup()
+>   kexec: Add helpers to load the elf core header, initrd and FDT
+>   arm64: kexec_file: Load the other segments with common helpers
+>   LoongArch: kexec_file: Load the other segments with common helpers
+>   riscv: kexec_file: Load the extra segments with common helpers
+>   x86: kexec_file: Use the common segment helpers
+>   powerpc: kexec_file: Use the common segment helpers
+>   kexec: Extract kexec_free_segment_cma() from kimage_free_cma()
+>   kexec: Add kexec_rollback_segments() helper
+>   arm64: kexec_file: Fix CMA segment placement retries
+>   LoongArch: kexec_file: Fix CMA segment placement retries
+> 
+>  arch/arm64/include/asm/kexec.h             |   4 +-
+>  arch/arm64/kernel/kexec_image.c            |  15 ++-
+>  arch/arm64/kernel/machine_kexec_file.c     |  87 ++++----------
+>  arch/loongarch/include/asm/kexec.h         |   3 +-
+>  arch/loongarch/kernel/kexec_efi.c          |  15 ++-
+>  arch/loongarch/kernel/kexec_elf.c          |   3 +-
+>  arch/loongarch/kernel/machine_kexec_file.c |  80 +++++--------
+>  arch/powerpc/kexec/elf_64.c                |   9 +-
+>  arch/powerpc/kexec/file_load_64.c          |  18 +--
+>  arch/riscv/include/asm/kexec.h             |   4 +-
+>  arch/riscv/kernel/kexec_elf.c              |   3 +-
+>  arch/riscv/kernel/kexec_image.c            |   3 +-
+>  arch/riscv/kernel/machine_kexec_file.c     |  83 ++++----------
+>  arch/x86/kernel/crash.c                    |  25 +----
+>  arch/x86/kernel/kexec-bzimage64.c          |   8 +-
+>  arch/x86/kernel/machine_kexec_64.c         |   4 -
+>  include/linux/kexec.h                      |  14 +++
+>  kernel/kexec_core.c                        |  25 +++--
+>  kernel/kexec_file.c                        | 125 +++++++++++++++++++++
+>  19 files changed, 254 insertions(+), 274 deletions(-)
+> 
+
 
