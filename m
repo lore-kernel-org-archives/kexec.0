@@ -2,82 +2,82 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A4B606A32C
-	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 18:13:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7FD606A32C
+	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 18:16:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=d2EgNVF/;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=JbR77K2m
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=0NbpksQd;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=RpqPJ9Lx
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:To:
 	From:Subject:Cc:Message-Id:Date:Content-Type:Content-Transfer-Encoding:
 	Mime-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=JF9DK5BWLD1MHzXf1P6k3Cfpg7JcJUIjQB9CILaEZzU=; b=d2EgNVF/F0ym+C
-	EwkCx7jVd6aXBa9Ie91nLvE22kujQHLv4v89zVmVEoV+jAn2R2umccC5ZCAGTBi0Nea2eKyCNV/ID
-	FfC7ZBnGasiOR8/vqoTjakew2B16JCMUloL8zteU2vq11A9IH5r/spGhGexS0XquV1dmF+6WvCjPz
-	4HoI8ocvHG4b8Mnv/PWGXDgfu7H2jr2YBMUZoV8HymULa3QzA3ZLVbMTx722QjdsMvlMPGqVOjncn
-	n6/ymEs3cYpgGeXIp7sUj9F0WSEFEjr0X/vdTOin0bpBIfnzCBoGDSwtGN0cKhBBBlWpp/bk5QqSN
-	typl/yguMnGS7gBCx9zQ==;
+	List-Owner; bh=TFQZ5Vfgmmi8vCbKTEjvDQ3KYqVEpaJ0qjUpV/3d3M4=; b=0NbpksQdcwsnKF
+	gSaDJQiteJF5BUOcwd/VJvkuLkJ2wWD1IjMgOI6TGd5l9xbCSa5/EAoSgWzq3P6ryvJykWMOztG71
+	f7Pxn+He5qEn8l5KCbrjDu5Zvc56ZxQ3tY7Y+sbelPVzDNg4lyHm8lhG+vfFA9ErIe+q88JluRoj3
+	6XuglpTeVK0fJjRhn5LM9ZuoJy0o46aguOkkWk2c9FoxVZy4zd6RuBWHuAGRA5X0ObrJ4HXe1iz/0
+	rMzjiLrjmo+DpWTuLeIqiHxe6vnqSmb/GX3atLpy1D6B79TXLhIRFrZQ706yJ4EKwv7bnpJJ4VHdI
+	GB9u4faONWb6UNB3iLKA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVYXy-00000004Seq-0T1N;
-	Mon, 23 Nov 2026 18:13:46 +0000
-Received: from mail-pf1-x42a.google.com ([2607:f8b0:4864:20::42a])
+	id 1xVYaC-00000004Spa-1ed6;
+	Mon, 23 Nov 2026 18:16:04 +0000
+Received: from mail-pl1-x635.google.com ([2607:f8b0:4864:20::635])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVYXt-00000004SeM-3Ft9
+	id 1xVYa8-00000004Sp6-3mz0
 	for kexec@lists.infradead.org;
-	Mon, 23 Nov 2026 18:13:43 +0000
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-8b67f25e6e1so1738490b3a.0
-        for <kexec@lists.infradead.org>; Mon, 23 Nov 2026 10:13:41 -0800 (PST)
+	Mon, 23 Nov 2026 18:16:02 +0000
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-2f046b0adc0so17973125ad.1
+        for <kexec@lists.infradead.org>; Mon, 23 Nov 2026 10:16:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795457621; x=1796062421; darn=lists.infradead.org;
+        d=google.com; s=20260707; t=1795457760; x=1796062560; darn=lists.infradead.org;
         h=in-reply-to:references:to:from:subject:cc:message-id:date
          :content-type:content-transfer-encoding:mime-version:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=JF9DK5BWLD1MHzXf1P6k3Cfpg7JcJUIjQB9CILaEZzU=;
-        b=JbR77K2maUy6ArEpivzQNO9aHmCWuBRedTzL8xcYJxglRtRbSzJdTatsT3fUM91F8K
-         sC4Vgln7mbGWfJaCW2nXgq3V0s2N6CxD79ZI9d+NvLqLgLHdL8wCogadIBmb7eVULJ7e
-         rGk+DSmGPjVq4d1pK6dEP4SiYkZRlKOLFnv9iTxdh7bXh9++uFI3gpKzasMmf4yHT9yL
-         dF1qEZEiQEZOj3Cl5KTBINDq6VGpnOzKMcL3tEXwMJrFxXnP3/rMfa2lW/tQcbgFRXuE
-         oXEG5S+c0xwbChHZE2SAq7Rj+rnF86Kb3WvW0/Kd49KmzMdOSQHjD/3rbfnywLBSTXRW
-         a6pA==
+        bh=TFQZ5Vfgmmi8vCbKTEjvDQ3KYqVEpaJ0qjUpV/3d3M4=;
+        b=RpqPJ9LxMoCG5zh7tDkxsl5mpkgr3QmupfssbX+EY0A/F8iM9uO8ZF02t4928gFoeB
+         c0zfa80Rd/mXLk9qEeoxmTDTbte88kfzun16o+U1Uet9OXyF6/4LxN9r5a+U92gSSE3W
+         lOWJIoywoKntFXChV8uQgHbeiCWqHmI7EiUtx0kPgqUZLT5nWr4Jfic4Nz+vD4Qah4tG
+         mX+xs8HAz/xp//s/1H8y1dGkt1kKZ60JdHa5acO7bajUQm1YLCQeDMM3jYFixNEPX95+
+         XQi7qq56a6X8Xcb9cnIjkR2XJCLRJcwP3AZlnHOlVJJQVbsZPiFGdm1ljgIJR0KuUZbu
+         9eUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795457621; x=1796062421;
+        d=1e100.net; s=20260707; t=1795457760; x=1796062560;
         h=in-reply-to:references:to:from:subject:cc:message-id:date
          :content-type:content-transfer-encoding:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=JF9DK5BWLD1MHzXf1P6k3Cfpg7JcJUIjQB9CILaEZzU=;
-        b=ZSz80qrBkkI48b4Gt+3LC90Y6SoE0u02w7ohDiphNIG3iSuMPF84CJx8yLCJE1+6Bk
-         0OWD7D2AoKcIUjYZ/QNc/LdwTkAVDrqkAGr9v5M0PPtMWWvxYLLS+kgwW/gmntgyu1uU
-         SdgtdGsGHPHV09oEl6lGSd+RfBxsQq7rZ1zl5EVAoCRagvx708bEPxCttqiz0qM6bCwE
-         a/+mrrZsGUJaTUc7VHPS+Qx3WuevyonCpu1aMaPbEyKtgTfkJUnU5y8TJdeAPzrSY1xY
-         4YOeIizoO8poLPIhUNn6b+Vl6SdJ6jEqRVJrCQXJwgbhFFp82FiQR8HaD7tOdqOscxw1
-         HaNg==
-X-Gm-Message-State: APuU4Z8OLk1dwmepNrzVJm1cTGvyXccbBVhfWug4MbhfS0HlFJ1Bfig5
-	TqaH6ytk1HRhaNLDomcrXffhkfy528eo4haHj1Io4W2JmxzxNb4s3HDQdMi7rKBR3w==
-X-Gm-Gg: AZFdTZdAs2vmq0whhdS0/ZAUb0xeNFI182W/mktk+aJqFgwk2TMnmEWY00rqXhdVzrK
-	sbdVH6umMYygatKjjlQ66O4hp4Kmgt6nTfi1rz/JSE4IEP7G7snc6h+Njt2HEjDSFKbRLWTPuQT
-	k1pyRJfq/XoLeUSleeFHhQzIy7E64kUTJh9G43bQS7NC4ick0JCRCb1JPTLOffx2fSyAIfLN2yW
-	fNRHQszAGeII9AyavO0OGhzP54iqxUCY5ZCYGocm5x6COiAwRKLmnSrqo8YIgLjD/2oR81nxIt/
-	y6Q/BB9easnj7CnnIdrFvm0ud/008rnQpcoaAbeZKaSL8rx4H0EbijmV56Lr9xin7x+QDeIuOsz
-	/DkzHg8PQ2SDDfS1qerLZWzO9KQWBkguBG70Eiv0CsMWODO9LxIdc+9rHrsTcfYpphlB9ZMFlNQ
-	2k7az1oLUaAB8W6HgogG5YLooUSCQxPRffd7adkUHS0Lujnyz+8o8I793KbADwmjf0fhrn40jVq
-	f7yAUMvqUHauqvatH2p6bzfrnaGExdaJB91Puc7nkoVbOrKerTmtx0fgI3l1MYpf+xsoQOixQhv
-	qqWQn/N72XSaqvalb2Sw3o8xHHlw1LiDqd9tK6DSplNJCa+KusSblfcSM0tUijaK
-X-Received: by 2002:a05:6a00:9084:b0:89e:9c7e:fd56 with SMTP id d2e1a72fcca58-8c87c768251mr11001006b3a.33.1795457620349;
-        Mon, 23 Nov 2026 10:13:40 -0800 (PST)
+        bh=TFQZ5Vfgmmi8vCbKTEjvDQ3KYqVEpaJ0qjUpV/3d3M4=;
+        b=G4XrOXBaF6g1tPEjYuAzh8rph56oCi8QovuuWdd46Uql9LSQnSviXqL6dIegBEU/8k
+         9bzdv6CuVbNAs5enlfIJP1UUcMGGrE9vJEztCuFAta6nTypmiNH38+QzoE9HJHar23Ww
+         a5LdR86qHjwmaBTLdlRt7VGmcBfmNUVE1CsxfCL81oWPaxc0jyDzxi367awniL7sAEiz
+         FYFdKuKvZoUb0bS97s0pIcdWYNL9N8QUUt+1p0raCLU9ZToD80AUhAl7Grs7MpIaivmu
+         Uj28hDEYrTHVfZ3U5L2qrOOlIkotxfpVEr31nX+S0MPQsoxoj+LAukQC3//Rj+pLqDMa
+         nA2Q==
+X-Gm-Message-State: APuU4Z9+AWLFnsOHJzyL7IW9Z7p428g1TYNodJ8tJMroiNrcn56W869e
+	DHQ2jUOa7X5wTnSG8tNiPcAiheDrSLF5p5SMzXnkrhuXObiuOv0iwyRjEDXgVZed1A==
+X-Gm-Gg: AZFdTZf5FcXTWChg7qS44qL0TTG62JsYnEgXvakit7DnTOROaxlPH4dU/R6cPyWX8vu
+	8Y2YL3pGnEJ0llHhOzZw/TaQvEjDyfbghwcCKjXGDdBR7d2SW4twx5qUCS24HNsYJZ8vX/YvLl8
+	1iV3Vlfkk9tp83dsWqa9uzj5NpK2EgGilC03qXCrtRaOh3Gb+aazBo6il060/8YBqQy0N/SJFlD
+	loo2BhKBeg6n/nlzLiS86c7BU1ZgaBvSN5hPUmInM8WFvoKWuOvNYxM0jaJjByPgtXcdfdDZZTP
+	WJtGOJfV8C62jQPAAAo1P1IR+k0DL92rAxCu930Fpr79nWVhdzAC9X8FHELzi7EhbGu+mtO6CYl
+	KBJPtbh3pJSCqbVR/oSqrnAKv5M/Fjzzwc+o78H3pUuUyCgALQo54YnyDQsq5KNf4sbDtJkb8Ro
+	E/r9O8rq7xUhDI6KwC6av3xHXNfBYaEf9go7M6NCqkr8E8DnuHaV7hOd6ZxsrqJDnsOL6ToFT/d
+	urdNYZzI8gPLi1aiVW0xK0Ik839Zmwn4QDdqyVwi7gYdijI15huYIMKpb68AUUKW5LF0u8ihwUV
+	Sm7PvPIKaQeeY0+W4gewQ1YDsvCMbeO27XyiaB6SNDa2jLQexLeoCegPV7rEsbjN
+X-Received: by 2002:a17:903:94b:b0:2f0:3618:f170 with SMTP id d9443c01a7336-2f03f1acb10mr114729435ad.66.1795457759518;
+        Mon, 23 Nov 2026 10:15:59 -0800 (PST)
 Received: from localhost (33.79.127.34.bc.googleusercontent.com. [34.127.79.33])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8c87285c263sm5956386b3a.11.2026.11.23.10.13.38
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2f03f120016sm57723715ad.58.2026.11.23.10.15.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Nov 2026 10:13:38 -0800 (PST)
+        Mon, 23 Nov 2026 10:15:58 -0800 (PST)
 X-Archived-By: <archiver.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 23 Nov 2026 10:13:37 -0800
-Message-Id: <DN2SLUVNO0L5.3NUHFPC0J7QTG@google.com>
+Date: Mon, 23 Nov 2026 10:15:58 -0800
+Message-Id: <DN2SNNBMY48X.2HS6KSB38QPK3@google.com>
 Cc: <kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>,
  <linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
  <linux-mm@kvack.org>, "Alexander Graf" <graf@amazon.com>, "Andrew Morton"
@@ -90,19 +90,19 @@ Cc: <kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>,
  Dunlap" <rdunlap@infradead.org>, "Samiullah Khawaja" <skhawaja@google.com>,
  "Shuah Khan" <skhan@linuxfoundation.org>, "Suren Baghdasaryan"
  <surenb@google.com>, "Vlastimil Babka" <vbabka@kernel.org>
-Subject: Re: [PATCH v4 07/19] liveupdate: Add helpers to track the files
- that LUO manages
+Subject: Re: [PATCH v4 09/19] mm/shmem_luo: Leave freeing the preserved
+ state to finish()
 From: "David Matlack" <dmatlack@google.com>
 To: "Pratyush Yadav" <pratyush@kernel.org>, "David Matlack"
  <dmatlack@google.com>
 X-Mailer: aerc 0.21.0
 References: <20261111002358.1842967-1-dmatlack@google.com>
- <20261111002358.1842967-8-dmatlack@google.com>
- <2vxzbj7j3ga2.fsf@kernel.org>
-In-Reply-To: <2vxzbj7j3ga2.fsf@kernel.org>
+ <20261111002358.1842967-10-dmatlack@google.com>
+ <2vxz33sv3ef3.fsf@kernel.org>
+In-Reply-To: <2vxz33sv3ef3.fsf@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261123_101341_818068_4CD3D065 
-X-CRM114-Status: GOOD (  17.42  )
+X-CRM114-CacheID: sfid-20261123_101600_940861_4956CD02 
+X-CRM114-Status: GOOD (  12.98  )
 X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -114,53 +114,29 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-18.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Fri Nov 20, 2026 at 3:15 AM PST, Pratyush Yadav wrote:
+On Fri Nov 20, 2026 at 3:55 AM PST, Pratyush Yadav wrote:
 > On Wed, Nov 11 2026, David Matlack wrote:
->> @@ -788,8 +797,7 @@ int luo_file_finish(struct luo_file_set *file_set)
->>  		luo_file_finish_one(file_set, luo_file);
->> =20
->>  		if (luo_file->file) {
->> -			xa_erase(&luo_preserved_files,
->> -				 luo_get_id(luo_file->fh, luo_file->file));
->> +			luo_untrack_file(luo_file->fh, luo_file->file);
+[...]
+> I think some of this is already fixed by [0]. It holds the folios until
+> finish, but only in the success case. On failure to parse seals for
+> example, it leaks them. Except, as Sashiko also points out, in
+> memfd_luo_retrieve_folios() the folios are freed.
 >
-> This looks dangerous.
+> I don't think this is strictly related to your series so can you please
+> send something on top of [0] to fix these bugs, and perhaps drop this
+> patch?
 >
-> Since the previous patch set luo_file->file when xa_insert() failed,
-> this will trigger in a failed retrieve. Except, the file was never
-> tracked to begin with.
->
-> While I don't see anything that actually breaks because of this today,
-> I think it is a bug in the making.
->
-> I think the below is a bit better. Although this change probably makes
-> more sense in the previous patch, since that introduced the problem.
-> This patch should just replace the xa_erase() with luo_untrack_file().
->
-> 	if (luo_file->file)
-> 		fput(luo_file->file);
->
-> 	if (luo_file->retrieve_status > 0)
-> 		luo_untrack_file(luo_file->fh, luo_file->file);
+> [0] https://lore.kernel.org/kexec/20261110175855.2437084-3-pratyush@kerne=
+l.org/
 
-Good catch, I'll fix this in the previous patch in v5.
-
-(But luo_untrack_file() needs to be called before fput() in case the
-latter drops the last reference.)
-
-So:
-
-	if (luo_file->retrieve_status > 0)
-		luo_untrack_file(luo_file->fh, luo_file->file);
-
-	if (luo_file->file)
-		fput(luo_file->file);
+Sure, I'll drop this patch from v5 and send the fixes separately on top
+of your series.
 
