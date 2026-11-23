@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC263606A32D
-	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 19:04:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE8F606A31A
+	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 19:04:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=XkydlM6u;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LBKfv2W/
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=kTzuNVIm;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=apiKKH9J
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:
@@ -14,40 +14,40 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	From:Message-ID:MIME-Version:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=d0+2tNhiFJflov+MWXi2AvsUab0DMDTfOzzEpvXOaCo=; b=XkydlM6uXmovh+Pxs1/4Z1VrB3
-	eE4bf3pyoU7C9hfwijHW9b11VrgYQ/amWbTUIIfPr/oI+luJfBhd56FIHhcm/t3OPT+nyKBUqEiya
-	MOIdCqCIZYI2zMkEf2uYH2AO+/hk7XyfkI5ne4vVKKtDQR9h3voiB2HLvkshM5DdqHnQloZ/ZbU4N
-	BAwW3erXnekkI3A4hNg0t57iPDy94AcfI9IjWwptRseYq7x7mDvUbu/mTs20ixb6G16qW2yizlu4q
-	zz0XNrtKq52CrerRdo5QWzB3qOwbtOopVKAuUp4ny58PQ+cFhmtOIcE7bG1QtAKmFXorYr3iBfkRz
-	bSZmXg1g==;
+	bh=EKwQUwz0yWxrcL6JeB0c02x+qfb+CTKWxiC1vuBRywM=; b=kTzuNVImNU8JnSPikkzugiSmAj
+	CLcwTAEMPt6R3qVyQR7ZdfiQ3V2OC2GvD4UeoQMEMHdMB6pFqGbZUeCqJSKxALKhla/x/no11Hq9P
+	E3CkND12q+I0IE5tbWmIl76uNUwBxzIYo59euK33pAK0iN6sgJSDRB+yLQ5e4z1OB87Bkq7LCoJY+
+	l8hDST7Ec92BDgwVp5xnYmA17wgRN3881FG4zMbL4WciLiUreGtDjvJ7oN/wyqHgBXviDDHejOh9S
+	jqcNBTlGsTlgxle/6O+GIHbvdsmF14Nqwy40WZCRErvBFTUMuLrNTTi45vMk/P381F0qRieb3ASwI
+	zaOyVARg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVZL4-00000004box-2J45;
-	Mon, 23 Nov 2026 19:04:30 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xVZLP-00000004btm-2fb7;
+	Mon, 23 Nov 2026 19:04:51 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVZL1-00000004boB-3Jgb
+	id 1xVZLO-00000004btX-1oGc
 	for kexec@lists.infradead.org;
-	Mon, 23 Nov 2026 19:04:28 +0000
+	Mon, 23 Nov 2026 19:04:50 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id BAAB261285;
-	Mon, 23 Nov 2026 19:04:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 213491F000C4;
-	Mon, 23 Nov 2026 19:04:24 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 31E0940675;
+	Mon, 23 Nov 2026 19:04:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12AB11F000C6;
+	Mon, 23 Nov 2026 19:04:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795460666;
-	bh=d0+2tNhiFJflov+MWXi2AvsUab0DMDTfOzzEpvXOaCo=;
+	s=k20260515; t=1795460690;
+	bh=EKwQUwz0yWxrcL6JeB0c02x+qfb+CTKWxiC1vuBRywM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=LBKfv2W/WihCUWBZCD/WeN8/kea/RHHGPfzxz97KZLlJGvjc0xkZydEace0hfP2JP
-	 pWaGgajMts6nc5VZYACrCzx6wCMavBIxtBX/6VVQzNabEl0d4MRCXX8qaDB/WDR+fi
-	 Bb//hH80RG7wTQ9kspMVExrL5oy7SXDACL5YmOYvxtvLmdsaYy+wkcVEd1s7LBXTGW
-	 lvU+s6fosVoNgMzc/9ZpESP1QXgmMXaAhRjVn+RNuMTjIq4dgeg6YIyVkoyHCIGOYD
-	 luvUGRUJatHQpnQZ7NZH0uxnTTti6ckBlFsDKSnhDQwcbTRJvU14Ct2M9Hc6DGI5lM
-	 CGw/xmE4kn2Fg==
-Message-ID: <sashiko-outbox-229906@kernel.org>
+	b=apiKKH9JSz8QPW1M0/SO1hoRbY3BGfdMp4zg16LOH5i0hm4GSKKgkLeFq0Z4nvjSY
+	 dlB7toGtjqfp1i3dRdL4L4BJ8wji5mOrtPNcpGePUYNI8pJKV74t2X8sVWrE2PVA/8
+	 +fxrOQ4cT2CxdTmuqOCS/82mbADZ5/soIOQeZph/baVaDWLyrMIUxomkWMvd4VWm7L
+	 sBKfoBxnu2SPQzxIt3tssc5clPUiGqavLRPsGDbwdOdEdQeQAxymyMwUfbAOGoJPWE
+	 fkZXuNDp9lzj6PLw4VbN4+U9TvHDEUehFaB3+goNgseUyPK4wkpbo31K9Rw93qWVOC
+	 URf81o3DwIlTQ==
+Message-ID: <sashiko-outbox-229907@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] fixup! PCI: liveupdate: Adopt ARI Forwarding Enable on
- preserved bridges
+Subject: Re: [PATCH] amend! PCI: liveupdate: Adopt ACS controls in incoming
+ preserved devices
 To: "David Matlack" <dmatlack@google.com>, kexec@lists.infradead.org, linux-pci@vger.kernel.org
 Cc: "Adithya Jayachandran" <ajayachandra@nvidia.com>, "Alex Williamson" <alex.williamson@nvidia.com>, "Alex
  Williamson" <alex@shazbot.org>, "Alexander Graf" <graf@amazon.com>, "Bjorn
@@ -61,12 +61,12 @@ Cc: "Adithya Jayachandran" <ajayachandra@nvidia.com>, "Alex Williamson" <alex.wi
  Mahameed" <saeedm@nvidia.com>, "Samiullah Khawaja" <skhawaja@google.com>, "Shuah
  Khan" <skhan@linuxfoundation.org>, "Vipin Sharma" <vipinsh@google.com>, "William
  Tu" <witu@nvidia.com>, "Yi Liu" <yi.l.liu@intel.com>
-In-Reply-To: <20261123190045.2166865-3-dmatlack@google.com>
-References: <20261118223704.3286085-11-dmatlack@google.com>
- <20261123190045.2166865-3-dmatlack@google.com>
+In-Reply-To: <20261123190045.2166865-2-dmatlack@google.com>
+References: <20261118223704.3286085-10-dmatlack@google.com>
+ <20261123190045.2166865-2-dmatlack@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 23 Nov 2026 19:04:23 +0000
+Date: Mon, 23 Nov 2026 19:04:47 +0000
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,19 +86,41 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 X-Archived-By: <archiver.kernel.org>
 
-> Fix the comment in pci_liveupdate_adopt_ari(), which claimed that ARI
-> Forwarding Enable is always recomputed after the preserved devices below
-> the bridge finish. That is not true with pci=3Dnoari, where
-> pci_configure_ari() leaves the bridge alone, so document that the adopted
-> setting persists in that case.
+> PCI: liveupdate: Adopt ACS controls in incoming preserved devices
 >=20
-> Reported by Sashiko.
+> Adopt Access Control Services (ACS) controls on all incoming preserved
+> devices (endpoints and upstream bridges) during a Live Update.
+>=20
+> Adopting ACS controls avoids changing routing rules while memory
+> transactions are in flight from preserved devices. It also keeps IOMMU
+> groups from changing during or after Live Update.
+>=20
+> The adopted controls are recorded by the pci_save_state() call in
+> pci_bus_add_device(), which runs before drivers bind, so they are
+> reapplied by pci_restore_state() if the device is reset. Panic if an
+> incoming preserved device has no ACS save buffer, since the adopted
+> controls would be silently lost by the first reset.
+>=20
+> To simplify ACS adoption, reject preserving any devices that require
+> quirks to enable ACS as those quirks would also have to take Live Update
+> into account. If such a quirk matches an incoming preserved device
+> anyway, e.g. because it was added in the new kernel, log a warning and
+> adopt the device's ACS controls regardless, rather than reprogram a
+> device in the path of a preserved device's memory transactions. The
+> previous kernel did not apply such a quirk, so it programmed the
+> standard ACS Control register. Allocate the ACS save buffer for these
+> devices too, so that the adopted controls are kept across resets.
 >=20
 > Signed-off-by: David Matlack <dmatlack@google.com>
+> Reviewed-by: Pranjal Shrivastava <praan@google.com>
+> Reviewed-by: Alex Williamson <alex.williamson@nvidia.com>
+> Link: https://patch.msgid.link/20261118223704.3286085-10-dmatlack@google.=
+com
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261123190045.2166=
-865-3-dmatlack@google.com?part=3D1
+865-2-dmatlack@google.com?part=3D1
 
