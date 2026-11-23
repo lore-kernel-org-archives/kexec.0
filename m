@@ -2,110 +2,109 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34FB1606A31A
-	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 17:32:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ABA3606A31A
+	for <kexec@archiver.kernel.org>; Mon, 23 Nov 2026 18:05:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=C3AY92ct;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=KeAaU+Oj
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=K987IpYh;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=dp952qeb
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:
 	Subject:Cc:To:From:Message-Id:Date:Content-Type:Content-Transfer-Encoding:
 	Mime-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=P+l/VRR07HqPbgm9tEPK7SVr6Tlf5vY5XKwCiYVXpnE=; b=C3AY92ctsxDv1/
-	C/X1bOn9JNXOfAoEM6b8tpxVxBYFRmKzHT4OULnZ+fU11kQT633DBkTiYo/YTd2vDahGvq6dQ1jcb
-	4WCZ4+HRZCqbuY0Kim2Nw1ftbWfAWB9aK5a2anxC1l84Jl3J0K9KbE2BQuCqvckP1tLr9iUHpaOyY
-	49mL75ec1vfXKtGoZwhaTM5a0AmzepwHHz/+3dM1P3prn364rvS9ggkPYWBBtutB3v4VulwBhs4sU
-	R0V2QjizV47/PX5mYnsyCiWlb/74UVPnDXX8jJptpGwDwSoLZlV3HBc4p8bW0DGOOKggB2AOJ1qZz
-	EtQzltEC1hJ/ZMkYoljw==;
+	List-Owner; bh=Jw8SilefRf5vO5k7eeVpHgnCi78conTEfmhaXVb/RAo=; b=K987IpYhi48sn3
+	ecagCD1q+kQFvxKToTQtDA3DmJ+8syXcGMjfeilEZGDO2psDOsVKBz68VMWvrvjVf/YYW1+MBFVlC
+	FunQ4q1ka5strm6ADmPRJrtcvgXW3U8D5pS2MVR0XV/mEW1l8NBxSE8aOg4egGUkE7b22J5Wn6LeJ
+	2nIatB0eCUTeUecHut18Os4QZHH9rGuv96eAYUtovZKcCShHBE0NuVY/ibsNZu3j1tD4cWfEHMeQ6
+	hrDu2hHCD4XbiY++rkshlyuUStsPkk1lgG331cAqAfOII/1oYWIvt52wuUykgU9kECVDFZ0XZ2Ggs
+	RhI+qiV1HXn3O5vK7s4A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVXu0-00000004N6b-0qyE;
-	Mon, 23 Nov 2026 17:32:28 +0000
-Received: from mail-pl1-x629.google.com ([2607:f8b0:4864:20::629])
+	id 1xVYPu-00000004SHt-28Pk;
+	Mon, 23 Nov 2026 18:05:26 +0000
+Received: from mail-pl1-x632.google.com ([2607:f8b0:4864:20::632])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVXtu-00000004N5C-3164
+	id 1xVYPi-00000004SH2-1A8A
 	for kexec@lists.infradead.org;
-	Mon, 23 Nov 2026 17:32:23 +0000
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-2f07a960666so16497155ad.1
-        for <kexec@lists.infradead.org>; Mon, 23 Nov 2026 09:32:21 -0800 (PST)
+	Mon, 23 Nov 2026 18:05:16 +0000
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-2f020d0169eso16640435ad.0
+        for <kexec@lists.infradead.org>; Mon, 23 Nov 2026 10:05:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795455141; x=1796059941; darn=lists.infradead.org;
+        d=google.com; s=20260707; t=1795457113; x=1796061913; darn=lists.infradead.org;
         h=in-reply-to:references:subject:cc:to:from:message-id:date
          :content-type:content-transfer-encoding:mime-version:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=P+l/VRR07HqPbgm9tEPK7SVr6Tlf5vY5XKwCiYVXpnE=;
-        b=KeAaU+Ojji3ypKnJz2934acR/kWFHV/7WwY55qOH0rp2DAG9dKy7Z0GbI95M3tfYrE
-         V6dO0zvT3a1nO61tEO6C4hE2d4Klt6iqPyyXkQwKid/mWnV2F0JBHq1c7+lB21dLVlVR
-         PxcwzQnjR0Iscl/dEdlXxgSHTbDznkRGPVm7muGNtpKhzvMjz4RDfzGapw4I+FSq8Sc3
-         jMg0dMw+cm9Ae3GtI6sr4cfpZ9tZFHhIRXRr1S3JGFpPTTwJu2FEdlcTAfWtBkSQAPEP
-         cbP4vcIZErDjdViptSICJtbxR8/F+oZuBR/G5xrblQ+trmVJ+iK3GwyyUCRdvgzfXg4x
-         FMSw==
+        bh=Jw8SilefRf5vO5k7eeVpHgnCi78conTEfmhaXVb/RAo=;
+        b=dp952qebB/RATDfTHp9Mucq/EoQn2iQi8Q29CvY1sfXv+VMVsQP5iC781ijGmsR3vj
+         54FDRt7Xrq6D1PmLkcBphfedXCZT7O/M9Msrws+Jcwt+FqEPZsX/KJm+B+AY++drWgr6
+         YBgB2FwfIizyYCTFGTyVK2K87MbIp8k1uY6HmYOHhM+SjG//Hroid+AFmA4wnUhu+9ao
+         VMisL3z4ss5nASlEXB5CXz+7AV1/NNQ95xY63iKxhob69GhkJcaseyWpCSFFHKt+IeAc
+         K1ivlpznNGeElR3moIhNbCc5etO5hJBQXcetmo2tx34t6mUQfvBBQVVR9r3tPjDZXGyv
+         +Ngw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795455141; x=1796059941;
+        d=1e100.net; s=20260707; t=1795457113; x=1796061913;
         h=in-reply-to:references:subject:cc:to:from:message-id:date
          :content-type:content-transfer-encoding:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=P+l/VRR07HqPbgm9tEPK7SVr6Tlf5vY5XKwCiYVXpnE=;
-        b=DwHII0F9W0lQ3k9Dnc/t4cUhI/7NDwCcOp/x4rgHQ4rLAnCw5hUM8U4oubKD+W3KkM
-         0AmOMqrgX7Wq8atC0ANhzde2p40Ls/eV5Bu7dkZKKjoVzzZOY24u9G9z9v9V5UImZNPC
-         PiQ7sQHsVbZW1oXP5bG3zbmYRHbOdAv9Q644M1gX2N4mdwturkzuR9BiD5K85mNIoGsc
-         uEWgmrkHCOxntUxoHodF6uZOQy69JB7S15WUts420UrGUpHeBzh1rNDYZstfzE83as16
-         ulwySIa1BhA5kHjtqh8oh5TMAvY/I6DgNKcnYpOg25oSjVjHrkwYRqyjlAp44EZoQPnC
-         aXtA==
-X-Forwarded-Encrypted: i=1; AL+hErENio5sa953Lv2QBn8ofVbsX4hLakpXved/BCU0GCHdmwme7cUygrpjYlHmB92qzbtzHf712Q==@lists.infradead.org
-X-Gm-Message-State: APuU4Z93ogfGtqRYnB4QB1neOWPEdVxvYQoCA5SPi3efy4tMr5Fwr9RQ
-	XxmPuJrg18jLSZkiVxUc/75324L7XM8SmawRlNDPkevz/LoYgjkK2AmyMNdSYuAj2g==
-X-Gm-Gg: AZFdTZehAQWfcPnJlF5ZvnZYb9hPIwW6l5uzFC3NYX217lkyA2M9LLw4gv0CY0fGA5H
-	zlv/2fcvyxTnNNCvMEQOgAg3RjupaHfCysAUW6DLMDmDURU8mGw5Qwsh1FD72ZsgqqOhTCXJgMy
-	NI8BPIDeqBf8bRS7eTlJABGfcGpyk9QJleS+YHToll0teRDzeQhGA6UqCBGm2x/RBP11JMDxxwk
-	lRz+ivlOSCg7LTgHXc/Ut7o3OLE4GeDsSqyCim6qOJr1zqprvYcfuzLSBVlNnu8qn++lYUn/AS0
-	bPKsjRsvFgcOejNaskY1ZwewtjJcGXGyQDSzuxhQrOtMs3TeXk/eBexl/JlRSODrC41vuuuAfuB
-	nC2/jiOV08a0G++3wCQydwTjKiGzT/tHj1K7nGA282WnhLgKbiF3kWFUAW8rgwbMT1rtPFnJFtt
-	kQ7rah0A2ZjWbRQuUMmI4OQ1038Bhb+mqlRST/FEv+tZjof7HyCJd1/See1rxO9/F7y1ntmqLsT
-	jHxH8tKURLOirrlCYZ/Ypzs/1KbrXjqMVDagaHDtDaCQFDvm0YbfZv080dSRUGKrMa3Jx8PoRr1
-	evPYTrion3Dr3TJVi5AQbV2rwoZTeRauR3NhvGtvBxao74OdKnJE2K1QmARI42bn
-X-Received: by 2002:a17:902:e807:b0:2ee:1fab:158f with SMTP id d9443c01a7336-2f03f167d4emr115089865ad.43.1795455139780;
-        Mon, 23 Nov 2026 09:32:19 -0800 (PST)
+        bh=Jw8SilefRf5vO5k7eeVpHgnCi78conTEfmhaXVb/RAo=;
+        b=ryQqTC699sVUlpmbKZVv+VB7MSBtVLQ7FiZhGCMph4G+Lgzu3z+9P3N1v62n4l0vnE
+         1R6M7+ldwMZXtx6zRJp+Yq0POa6jzf92MP+e5cykUvNd4/gARy27BwKdYYlUAV4ZdJOB
+         TdcTgmXZ1Hdf4yjT+NP1+ln1byQic5qZbd+o1EKgKgFQPp0SDmwzRLJUOW2Rr46fq30T
+         s+SGJrIp8kf60piIA9+anLHf2oGITdJIHNyOoy7694EHHL850fRrqkZ+dsLzdyAijCAo
+         MVmbiOdqq+mo15DBqWugPMI7CubmVm6M/2hGxlkrhioWU5lssEyCkLurpRW9mPCg0aUF
+         aq7A==
+X-Forwarded-Encrypted: i=1; AL+hErGaSDgdi6+eE8cX+6hFBq87zzdTbaFYRKKwaOHKaHHIsXPrbko5ar5lmUB03hDBaDMtFGEOdQ==@lists.infradead.org
+X-Gm-Message-State: APuU4Z/AwTUURqPOlt7x6UMrmjZ634DpzXXQii4L8NQhdVK7zSORWBAU
+	uUEblL8B+pfzOaeQrLHJm41dm5HkX7jz0WaSFF2opjgy7tDbTUf6NSG3uaBJKOUWFg==
+X-Gm-Gg: AZFdTZdNa+Zq1EIgLddOfhoeJTescJDcRuKQK3TyAj+MTcvA9gIQMZmdsUyOOWCKRHV
+	+9FY5lqaq2OV3mXm47gLN+bShOjN6DjE+VPMygOy1urspacgjCxECMEkBVe89wK1KbF1a253D0r
+	l/ArWl+GWpcY2CF3Ms7Cs5Dn91SUDA8N1Zhux0fzCKA1CS9npz2g0lsdwkgCWvwEXfGKkOMFz6V
+	q5q4/BbusZg9s2wcNQIFujpurQXcCECa6Pvs+J+7/pK4jRuPbMiL3m4CzyyotAYUE0ksGEX+64l
+	eHs2C2SBSQf+sJpChAuGknke3afxVVNbmMOZLWmL+0uiks7bnYIR1DZVokFNoAai/9JrQJ+f9IU
+	rXKS2IGKz1ZvpZ2gCQEHAvioFHOVlfXLxiwdCTTprwh6QWUGEpMOHnHLNbc7ZyMed/jTjoJpDz3
+	OcGgZS0KPC6U4XiYrDWt0Ct2ZHCJNC0LoXi7iEHBmOf+VlXZodTBinMQCK9QagIXQObIUHWe9cn
+	XMjMXSoygAfYAEcL/FO2c7IisoqWWTmNAohssLw6v7VTJ3PwQLzDfyaoJjwcIRC/JmBlhVMihu+
+	P9O4dkTV2869sPyPFgpo2Qum5FbQtQCjcFCzsk8jsRL0y1gujJLaqMfbwWgxXSG6
+X-Received: by 2002:a17:90b:1d4d:b0:3b4:ca86:8bc4 with SMTP id 98e67ed59e1d1-3b4ca868c1emr225054a91.46.1795457112373;
+        Mon, 23 Nov 2026 10:05:12 -0800 (PST)
 Received: from localhost (33.79.127.34.bc.googleusercontent.com. [34.127.79.33])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2f051a566f7sm45650825ad.41.2026.11.23.09.32.18
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b41ad46ef5sm18802720a91.8.2026.11.23.10.05.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Nov 2026 09:32:18 -0800 (PST)
+        Mon, 23 Nov 2026 10:05:11 -0800 (PST)
 X-Archived-By: <archiver.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 23 Nov 2026 09:32:17 -0800
-Message-Id: <DN2RQ7LGX224.3W3PSQ2PBHTJZ@google.com>
+Date: Mon, 23 Nov 2026 10:05:11 -0800
+Message-Id: <DN2SFE0VTWYZ.30XIXLSZ0OQAQ@google.com>
 From: "David Matlack" <dmatlack@google.com>
-To: "Pratyush Yadav" <pratyush@kernel.org>, "Tarun Sahu"
- <tarunsahu@google.com>
-Cc: "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Mike Rapoport"
- <rppt@kernel.org>, <robin.murphy@arm.com>, <maz@kernel.org>,
- <will@kernel.org>, "David Matlack" <dmatlack@google.com>, "Alexander Graf"
- <graf@amazon.com>, <seanjc@google.com>, <jgg@nvidia.com>,
- <loganodell@google.com>, <arnd@arndb.de>, <dwmw2@infradead.org>,
- <baolu.lu@linux.intel.com>, "Bjorn Helgaas" <bhelgaas@google.com>,
- <oupton@kernel.org>, <alex@shazbot.org>, <gle.com@google.com>,
- <pbonzini@redhat.com>, "Andrew Morton" <akpm@linux-foundation.org>,
- <kevin.tian@intel.com>, <joro@8bytes.org>, <kvmarm@lists.linux.dev>,
- <linux-pci@vger.kernel.org>, <kexec@lists.infradead.org>,
- <kvm@vger.kernel.org>, <iommu@lists.linux.dev>,
- <linux-arm-kernel@lists.infradead.org>, <skhawaja@google.com>,
- <sagis@google.com>, <linux-arch@vger.kernel.org>, <linux-mm@kvack.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 05/19] kho: Add feature header for fine-grained ABI
- compatibility
+To: "Pratyush Yadav" <pratyush@kernel.org>, "Christian Brauner"
+ <brauner@kernel.org>
+Cc: "David Matlack" <dmatlack@google.com>, <kexec@lists.infradead.org>,
+ <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <linux-mm@kvack.org>, "Alexander Graf"
+ <graf@amazon.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Baolin
+ Wang" <baolin.wang@linux.alibaba.com>, "David Hildenbrand"
+ <david@kernel.org>, "Hugh Dickins" <hughd@google.com>, "Jonathan Corbet"
+ <corbet@lwn.net>, "Liam R. Howlett" <liam@infradead.org>, "Lorenzo Stoakes"
+ <ljs@kernel.org>, "Michal Hocko" <mhocko@suse.com>, "Mike Rapoport"
+ <rppt@kernel.org>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Randy
+ Dunlap" <rdunlap@infradead.org>, "Samiullah Khawaja" <skhawaja@google.com>,
+ "Shuah Khan" <skhan@linuxfoundation.org>, "Suren Baghdasaryan"
+ <surenb@google.com>, "Vlastimil Babka" <vbabka@kernel.org>
+Subject: Re: [PATCH v4 08/19] liveupdate: Let file handlers retrieve into an
+ existing file
 X-Mailer: aerc 0.21.0
-References: <20261110050202.529473-1-tarunsahu@google.com>
- <20261110050202.529473-6-tarunsahu@google.com>
- <2vxzse0rzjdn.fsf@kernel.org>
-In-Reply-To: <2vxzse0rzjdn.fsf@kernel.org>
+References: <20261111002358.1842967-1-dmatlack@google.com>
+ <20261111002358.1842967-9-dmatlack@google.com>
+ <20261120-gedulden-rausgeflogen-spruch-cea76174d5e2@brauner>
+ <2vxz7bi73fby.fsf@kernel.org>
+In-Reply-To: <2vxz7bi73fby.fsf@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261123_093222_766470_322531E8 
-X-CRM114-Status: GOOD (  23.27  )
+X-CRM114-CacheID: sfid-20261123_100515_325128_0C7CC498 
+X-CRM114-Status: GOOD (  20.02  )
 X-Spam-Score: -17.6 (-----------------)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -125,60 +124,41 @@ X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Mon Nov 23, 2026 at 6:56 AM PST, Pratyush Yadav wrote:
-[...]
+On Fri Nov 20, 2026 at 3:36 AM PST, Pratyush Yadav wrote:
+> On Fri, Nov 20 2026, Christian Brauner wrote:
+>
+>> One thing: Please just install a new fd like for every other retrieve.
+>> I think it's pretty meaningless to return the fd number the userspace
+>> just passed to the ioctl.
+>>
+>> The fd number is also not useful as it's not tied to anything. The shmem
+>> handler looks the fd up once and LUO keeps a reference to the struct
+>> file:
+>>
+>> 	CLASS(fd, target)(arg->fd);
+>> 	[...]
+>> 	args->file =3D get_file(file);
+>> 	args->fd =3D arg->fd;
+>>
+>> Which means, another thread can close() that fd or dup2() something else
+>> over it before the ioctl returns and the fd you hand back refers to a
+>> different file fucking over the caller (shared fdtable etc pp).
+>>
+>> That also gets rid of @fd in struct liveupdate_file_op_args and the
+>> special case in luo_session_retrieve_fd(). And a retrieve into an
+>> existing file then behaves exactly like retrieving the token again.
+>
+> I suggested this approach because I found it odd to return a FD that
+> userspace already asked us to retrieve into. Any sane userspace would
+> just end up closing one of the two. I didn't think of this race though.
+> I reckon we could return -1 in the FD that LUO returns, and let
+> userspace use the FD it already has to work around this. If userspace
+> wants to close the FD in the meantime, that's their problem. They don't
+> get the file they asked for.
+>
+> While I like this more, it's not a super strong preference. So if you
+> still insist on having a new FD, that's fine too I suppose.
 
-> When we have all this available, I don't see the point in
-> differentiating between optional and required features at the ABI level.
-> At the ABI level, all that matters is what the incoming kernel
-> understands. If the incoming kernel does not understand a specific
-> field, the outgoing kernel should just not use it. There's no point.
-> Best case, it gets ignored.
-
-I pretty strongly disagree.
-
-An optional feature is one that the next kernel does not need to
-understand to correctly restore the object. A required feature is one
-that the next kernel must understand to correctly restore the object.
-Optional features can be enabled without any compatibility concerns.
-Required features must be enabled carefully (IMO via uAPI) to avoid
-breaking Live Update.
-
-I agree it's a good idea for the outgoing kernel to check that the next
-kernel supports all of the required features it is using, so the Live
-Update can be stopped before the kexec. But that doesn't remove the
-need for the distinction. The next kernel still has to decide what to
-do when it sees a feature bit it doesn't understand, e.g. because no
-spec was provided, the spec was wrong, or we kexec'd into a different
-kernel than planned. Without the distinction it can only:
-
- A. Treat all features as optional, which risks misinterpreting state
-    and corrupting memory if the previous kernel did not properly
-    validate the next kernel's capabilities.
-
- B. Treat all features as required, which means no new feature can be
-    enabled until every kernel it might Live Update to (including
-    rollback targets) understands it, even when those kernels could
-    safely ignore it.
-
-Neither of those is a good outcome.
-
-> The semantics of required or optional then become "can I describe this
-> object with the capabilities I can use?". If the answer is yes,
-> serialization succeeds, if the answer is no, serialization fails. So
-> with this, KHO_MAP_F_MULTI_INDEX or KHO_MAP_F_DYN_DEPTH are indeed
-> optional. All memfds can be described without these, they just will be
-> less efficient.
-
-I think this is a different meaning of "optional". Whether the outgoing
-kernel can choose not to use a feature is a decision for the serializer.
-Whether the next kernel can safely ignore a feature's data is a property
-of the ABI. KHO_MAP_F_MULTI_INDEX is optional in the first sense, but
-required in the second: a kernel that doesn't understand it will
-misinterpret the map. The header needs to convey the second.
-
-So I see the spec and required bits as complementary: the spec lets the
-outgoing kernel avoid features the next kernel doesn't support and fail
-before kexec, and required bits let the next kernel fail safely if that
-check was skipped or wrong.
+Thanks both. I'll go back to installing a new fd in v5, like for any
+other retrieve.
 
