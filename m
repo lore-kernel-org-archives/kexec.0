@@ -2,134 +2,87 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72CE606A321
-	for <kexec@archiver.kernel.org>; Tue, 24 Nov 2026 08:18:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28898606A33E
+	for <kexec@archiver.kernel.org>; Tue, 24 Nov 2026 10:15:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=DMnOdvK8;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jDfksFj9
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=GyFP/Ww8;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dPWKFZ5L
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=FXF3amYK4zVK9HrsHP25oSXQsLclmm6eVoNLKiPVVAk=; b=DMnOdvK8lePyiH
-	wXPgE352MsE47Dx7tPwTeelERkocT1JsZm+8HpTz8MrBn9tfmpKmP8omNSAo419/fIrk/dM19JnkH
-	6z2nYZamFJ3QWV20ZJlIEgOhtnKbAjhGCUAAb6owqaFxuwxbjhh/s8B6LrvH8ebfLtB36pd14lrlj
-	b6rDJs3YBpa6VOiiHmgzXn1hMvQ2Bs9QdY/dyzY31pzfiLO4PwUeEMjyWhoTwINDZKoOjDhVTw7jC
-	zcw0vCWO/zr8i/4WpleRQngfo8uLFnWnc2u2LraUzOEbasPjYUu2sDI+NqJlHc0dnsu6J40U+SiEp
-	KUGUh/x66bb7N+kesBgA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=hHECIuUR9HcEzeZJ8C7pKu2f5dLD2DBLgztjbd6Qj3I=; b=GyFP/Ww8OBIPzjwBe+Knyr5/8C
+	xZkTfaifpYmFdkdIjq1+nQ86HDWjnwpv9p32b14M+lzotmzMF64mnI1FbwGJTSJ9JIvM4AKN4offD
+	Xm/lY4XEkocGTtuC2D9ekGDDGZzrP0bnqecLnEapvaFIZWWVrUIt6QiqwQ57X0xWrfPhbLfCHAheu
+	aUGI3GEQlx8syhyUGBtNeL25EEMQ6ER8lTvulD9CGBAmTob/3L0wJ5/+U9MjU1euhGKaDbC8hfKm4
+	xLYsIPD8ieTngh+CGsN16L91C1FbLBNaE5QroSaW31e5Nv/4WtHGLCcZGHAcEDzJxfStTgbieMVGY
+	lzQ9zkpw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVlj1-00000005raP-0ab2;
-	Tue, 24 Nov 2026 08:18:03 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xVnYV-00000006CFV-3QQa;
+	Tue, 24 Nov 2026 10:15:19 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVlj0-00000005raF-0UMa;
-	Tue, 24 Nov 2026 08:18:02 +0000
+	id 1xVnYU-00000006CFL-1vZv
+	for kexec@lists.infradead.org;
+	Tue, 24 Nov 2026 10:15:18 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 527C760A05;
-	Tue, 24 Nov 2026 08:18:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B505E1F000C4;
-	Tue, 24 Nov 2026 08:17:48 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 885F943984;
+	Tue, 24 Nov 2026 10:15:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88E031F000C0;
+	Tue, 24 Nov 2026 10:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795508281;
-	bh=FXF3amYK4zVK9HrsHP25oSXQsLclmm6eVoNLKiPVVAk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=jDfksFj90RJuUYMvQl/D3DcouK7J4WV7mZz3xt4Ni+IJnZVhJeicGKcJbs7h1ClSc
-	 umDt4lfTGeLUThRvmvaMVMkyL8DZ1vNmwfedc0zwkDaEcBb4yw3Np6ZLJ35arCmyW9
-	 A5ZgWhVN6lINi9/7peguLU5acV7966donpMgCZXSUxFIYAQTH8GwsoiEg5phANvA8P
-	 YrQzrNCR8FajQyg8aCkJ4ufXQMkJeC+OfUeruoDxyo8N45lFVUks5DGI9X0RGYp3H+
-	 I2vgTRhcthwLELfGV7udxRMB5gHre/OVC9exQklOIYSZxpUkrtjtwlBPTHbkrzxi/B
-	 6d73Z4BcdjGqQ==
-Message-ID: <74dd67a2-eaff-4bbb-8105-4481fbbdd016@kernel.org>
-Date: Tue, 24 Nov 2026 09:17:45 +0100
+	s=k20260515; t=1795515317;
+	bh=hHECIuUR9HcEzeZJ8C7pKu2f5dLD2DBLgztjbd6Qj3I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=dPWKFZ5LG9YCMDzt2kiKA/v9gin8Z5x5M8m2NT7aGz3CCfIJbdV04+DqSdm8fUw/y
+	 HcfWdjV/MgD4Q+SHwFPx6zJVZQvjtnQ44m9MwLz8lV8p5m2D43+hdZwctL1wLtvWuz
+	 yODDoYeYLT6gtj4nJIDi6u7UIh1VTYeU0hn88qSrp126h1r9fY0p8eBz61Hj6TaKu9
+	 i2SuPF0ywEaGPdevN74Hb2UVMyQLGn4R0MwB4yjw8L/t7p09RHj3wuhsEvDAvaP+MA
+	 shL/P5t2LSFLsKwtd4zWfCarVE5KK448QJf/Vzn/+6WbPNQ1cwJX4LJqYk5tPHWz5v
+	 aWTdOo//a6l6w==
+Date: Tue, 24 Nov 2026 12:15:04 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: David Matlack <dmatlack@google.com>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Alexander Graf <graf@amazon.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Alex Williamson <alex.williamson@nvidia.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Chris Down <chris@chrisdown.name>, Chris Li <chrisl@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
+	Josh Hilke <jrhilke@google.com>,
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
+	Parav Pandit <parav@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pranjal Shrivastava <praan@google.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v11 00/13] PCI: liveupdate: PCI core support for Live
+ Update
+Message-ID: <awVjqLFrXY_PCm7X@kernel.org>
+References: <20261118223704.3286085-1-dmatlack@google.com>
+ <DN0FL1752MH5.1FSZE620OJBM0@google.com>
+ <awKlfqlQYhphXCvf@kernel.org>
+ <DN2TQRX57C04.ZT5UUS6AQ1L6@google.com>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] mm/kasan/kunit: add page_alloc_skip_kasan test
-To: Jeff Xu <jeffxu@chromium.org>, Andrew Morton <akpm@linux-foundation.org>,
- Vlastimil Babka <vbabka@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: Lorenzo Stoakes <ljs@kernel.org>, "Liam R . Howlett"
- <liam@infradead.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Brendan Jackman <brendan.jackman@linux.dev>, Zi Yan <ziy@nvidia.com>,
- Alexander Potapenko <glider@google.com>,
- Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>, Marco Elver
- <elver@google.com>, Boris Brezillon <boris.brezillon@collabora.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Chia-I Wu <olvaffe@gmail.com>,
- Dev Jain <dev.jain@arm.com>, Ian Rickards <ian.rickards@arm.com>,
- Jann Horn <jannh@google.com>, Jeff Vander Stoep <jeffv@google.com>,
- Jeff Xu <jeffxu@google.com>, Kees Cook <kees@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Peter Collingbourne <peter@pcc.me.uk>,
- =?UTF-8?Q?Pierre-Cl=C3=A9ment_Tosi?= <ptosi@google.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Tomasz Figa <tfiga@chromium.org>,
- Will Deacon <will@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Miklos Szeredi <miklos@szeredi.hu>, Baoquan He <baoquan.he@linux.dev>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, Allison Henderson
- <achender@kernel.org>, "David S . Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- linux-mm@kvack.org, kasan-dev@googlegroups.com,
- linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org,
- fuse-devel@lists.linux.dev, kexec@lists.infradead.org,
- netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
- rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-References: <20261123033111.2349160-1-jeffxu@chromium.org>
- <20261123033111.2349160-3-jeffxu@chromium.org>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20261123033111.2349160-3-jeffxu@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DN2TQRX57C04.ZT5UUS6AQ1L6@google.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -140,117 +93,27 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 11/23/26 04:31, Jeff Xu wrote:
-> Add a KUnit test (page_alloc_skip_kasan) to verify that page allocations
-> using __GFP_SKIP_KASAN (GFP_KERNEL | __GFP_SKIP_KASAN, GFP_HIGHUSER, and
-> GFP_HIGHUSER_MOVABLE) under CONFIG_KASAN_HW_TAGS:
+On Mon, Nov 23, 2026 at 11:07:04AM -0800, David Matlack wrote:
+> On Sun Nov 22, 2026 at 12:19 AM PST, Mike Rapoport wrote:
 > 
-> 1. Reset page_kasan_tag() to KASAN_TAG_KERNEL (0xff) across all sub-pages
->    of a high-order allocation, and
-> 2. Return a match-all (0xff) linear-map pointer from page_address() that
->    does not trigger a KASAN fault even when the underlying physical
->    granules carry a mismatched tag (such as KASAN_TAG_INVALID or
->    restored userspace PROT_MTE tags).
-> 
-> Tested on arm64 with CONFIG_KASAN_HW_TAGS under QEMU (virt,mte=on) with
-> kasan.mode=sync, async and asymm.
-> 
-> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-> ---
->  mm/kasan/kasan_test_c.c | 44 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
-> 
-> diff --git a/mm/kasan/kasan_test_c.c b/mm/kasan/kasan_test_c.c
-> index f34163e19bd6..72342137bb18 100644
-> --- a/mm/kasan/kasan_test_c.c
-> +++ b/mm/kasan/kasan_test_c.c
-> @@ -380,6 +380,49 @@ static void page_alloc_uaf(struct kunit *test)
->  	KUNIT_EXPECT_KASAN_FAIL_READ(test, ((volatile char *)ptr)[0]);
->  }
->  
-> +static void page_alloc_skip_kasan_helper(struct kunit *test, gfp_t gfp)
-> +{
-> +	struct page *pages;
-> +	size_t order = 2;
+> Hopefully I did this all correctly... This is my first time sending
+> in-reply-to fixup! patches.
 
-Why magic value two?
+This is my first time merging !fixup patches and it seems b4 managed it
+well :)
 
-Should be const.
+Please check I didn't miss anything:
 
-> +	char *ptr;
-> +	size_t i;
-> +
-> +	pages = alloc_pages(gfp, order);
-> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pages);
-> +
-> +	for (i = 0; i < (1UL << order); i++) {
-
-"1 << order" is sufficient.
-
-> +		/*
-> +		 * __GFP_SKIP_KASAN allocations must carry the match-all tag
-> +		 * in page->flags, and so in page_address(), not a random tag.
-> +		 */
-> +		KUNIT_EXPECT_EQ(test, page_kasan_tag(pages + i),
-> +				(u8)KASAN_TAG_KERNEL);
-
-Squeeze this into a single line.
-
-> +
-> +		ptr = page_address(pages + i);
-> +		KUNIT_EXPECT_EQ(test, (u8)get_tag(ptr), (u8)KASAN_TAG_KERNEL);
-> +
-> +		/*
-> +		 * The memory tags of such pages are arbitrary: stale poison,
-> +		 * or tags set by userspace through PROT_MTE. Accesses via
-> +		 * page_address() must not fault regardless.
-> +		 */
-> +		kasan_poison(ptr, PAGE_SIZE, KASAN_TAG_INVALID, false);
-> +		KUNIT_EXPECT_KASAN_RESULT(test, WRITE_ONCE(*ptr, 0),
-> +					  "WRITE_ONCE(*ptr, 0)", false);
-
-Why do we care about checking HW behavior? (match-all working)
-
-> +	}
-> +
-> +	__free_pages(pages, order);
-> +}
-> +
-> +static void page_alloc_skip_kasan(struct kunit *test)
-> +{
-> +	KASAN_TEST_NEEDS_CONFIG_ON(test, CONFIG_KASAN_HW_TAGS);
-> +
-> +	page_alloc_skip_kasan_helper(test, GFP_KERNEL | __GFP_SKIP_KASAN);
-> +	page_alloc_skip_kasan_helper(test, GFP_HIGHUSER);
-> +	page_alloc_skip_kasan_helper(test, GFP_HIGHUSER_MOVABLE);
-> +}
-> +
->  static void krealloc_more_oob_helper(struct kunit *test,
->  					size_t size1, size_t size2)
->  {
-> @@ -2369,6 +2412,7 @@ static struct kunit_case kasan_kunit_test_cases[] = {
->  	KUNIT_CASE(kmalloc_large_invalid_free),
->  	KUNIT_CASE(page_alloc_oob_right),
->  	KUNIT_CASE(page_alloc_uaf),
-> +	KUNIT_CASE(page_alloc_skip_kasan),
-
-Don't we have to limit this case to having actual MTE-capable HW etc?
-
->  	KUNIT_CASE(krealloc_more_oob),
->  	KUNIT_CASE(krealloc_less_oob),
->  	KUNIT_CASE(krealloc_large_more_oob),
-
+https://git.kernel.org/liveupdate/linux/l/lu-pci-preservation
 
 -- 
-Cheers,
-
-David
+Sincerely yours,
+Mike.
 
