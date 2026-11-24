@@ -2,52 +2,52 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF37606A31E
-	for <kexec@archiver.kernel.org>; Tue, 24 Nov 2026 08:11:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72CE606A321
+	for <kexec@archiver.kernel.org>; Tue, 24 Nov 2026 08:18:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=vKBSnEFg;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nTnIoYeC
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=DMnOdvK8;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jDfksFj9
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=HT0r4HcDbQnSXCvlZ/RECDLVWuKCcbSUYpyd1IXB0iM=; b=vKBSnEFgd0/HTV
-	3VwXo3HrkNUUacfnXl6bO5cM1NbLI+nDMl+LuCWT3IJzxzvXllwcAdokErjBQGXHlRyUiQH0rvQ7O
-	KqjKOrYo1bAM4YPKvz2QoY0XO6FpI39gIy+rw1BLDvxy+d9w/SzmnXzEt6ahvBzLojcaH2bWzB01F
-	RJAjd2pOjF8Te4z1sGB6S5GkiGgAPvbRcoCshP/KAIeXpM5td0uVFtSj7yAfO+PTU4iBf0iGkAlFT
-	p8Y3zHzgaFb8DCqZi+RMpoFsqv0OvkALiPvwHyK7npcbvhwYb04AActyPSf3RNyoUq5E0Rnvi17eK
-	929RSVMW0vPn4lLXN4Ng==;
+	List-Owner; bh=FXF3amYK4zVK9HrsHP25oSXQsLclmm6eVoNLKiPVVAk=; b=DMnOdvK8lePyiH
+	wXPgE352MsE47Dx7tPwTeelERkocT1JsZm+8HpTz8MrBn9tfmpKmP8omNSAo419/fIrk/dM19JnkH
+	6z2nYZamFJ3QWV20ZJlIEgOhtnKbAjhGCUAAb6owqaFxuwxbjhh/s8B6LrvH8ebfLtB36pd14lrlj
+	b6rDJs3YBpa6VOiiHmgzXn1hMvQ2Bs9QdY/dyzY31pzfiLO4PwUeEMjyWhoTwINDZKoOjDhVTw7jC
+	zcw0vCWO/zr8i/4WpleRQngfo8uLFnWnc2u2LraUzOEbasPjYUu2sDI+NqJlHc0dnsu6J40U+SiEp
+	KUGUh/x66bb7N+kesBgA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVlcQ-00000005r7X-3tXN;
-	Tue, 24 Nov 2026 08:11:14 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xVlj1-00000005raP-0ab2;
+	Tue, 24 Nov 2026 08:18:03 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xVlcN-00000005r7O-05bF;
-	Tue, 24 Nov 2026 08:11:11 +0000
+	id 1xVlj0-00000005raF-0UMa;
+	Tue, 24 Nov 2026 08:18:02 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 1F5844434B;
-	Tue, 24 Nov 2026 08:11:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA4B61F000C0;
-	Tue, 24 Nov 2026 08:10:57 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 527C760A05;
+	Tue, 24 Nov 2026 08:18:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B505E1F000C4;
+	Tue, 24 Nov 2026 08:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795507869;
-	bh=HT0r4HcDbQnSXCvlZ/RECDLVWuKCcbSUYpyd1IXB0iM=;
+	s=k20260515; t=1795508281;
+	bh=FXF3amYK4zVK9HrsHP25oSXQsLclmm6eVoNLKiPVVAk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=nTnIoYeC7NpBkbQZJv/CMbaZo4bkDmpeccQb9Gf4juySQf3zaSYGjjOQDpfz3LVoA
-	 7gwFR0TIw3+Qi4g6ZkX3nIy5l/JZi/nqwsTpj6sOz9qZnoMMmswBQnZ2wXtRq4ZBf/
-	 7gjIDylfQXm5mAOGeOq8RX1pOp8dELAb4tSY/t3s0QKPMTiZAPXi794iYxQBvdrNF6
-	 zcMf37Gev3dZOOKtngRQWB58H+LAYVTmGUJV5sgnPAZbj0/ULKYX7QPyJ6MExILy5r
-	 7VqhHRw649o6ZE2jl1sU1ZxMRnK9E6W6Cu3NhrwzXtedpDQZWP9XUv9nQFCi9qWjNi
-	 E5IfY33x8mH4g==
-Message-ID: <7ed1f755-5759-4b5b-ae00-a814f16b7903@kernel.org>
-Date: Tue, 24 Nov 2026 09:10:53 +0100
+	b=jDfksFj90RJuUYMvQl/D3DcouK7J4WV7mZz3xt4Ni+IJnZVhJeicGKcJbs7h1ClSc
+	 umDt4lfTGeLUThRvmvaMVMkyL8DZ1vNmwfedc0zwkDaEcBb4yw3Np6ZLJ35arCmyW9
+	 A5ZgWhVN6lINi9/7peguLU5acV7966donpMgCZXSUxFIYAQTH8GwsoiEg5phANvA8P
+	 YrQzrNCR8FajQyg8aCkJ4ufXQMkJeC+OfUeruoDxyo8N45lFVUks5DGI9X0RGYp3H+
+	 I2vgTRhcthwLELfGV7udxRMB5gHre/OVC9exQklOIYSZxpUkrtjtwlBPTHbkrzxi/B
+	 6d73Z4BcdjGqQ==
+Message-ID: <74dd67a2-eaff-4bbb-8105-4481fbbdd016@kernel.org>
+Date: Tue, 24 Nov 2026 09:17:45 +0100
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] mm: kasan: skip KASAN for GFP_HIGHUSER
+Subject: Re: [PATCH v2 2/2] mm/kasan/kunit: add page_alloc_skip_kasan test
 To: Jeff Xu <jeffxu@chromium.org>, Andrew Morton <akpm@linux-foundation.org>,
  Vlastimil Babka <vbabka@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
  Andrey Ryabinin <ryabinin.a.a@gmail.com>
@@ -80,7 +80,7 @@ Cc: Lorenzo Stoakes <ljs@kernel.org>, "Liam R . Howlett"
  netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
  rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
 References: <20261123033111.2349160-1-jeffxu@chromium.org>
- <20261123033111.2349160-2-jeffxu@chromium.org>
+ <20261123033111.2349160-3-jeffxu@chromium.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -127,7 +127,7 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20261123033111.2349160-2-jeffxu@chromium.org>
+In-Reply-To: <20261123033111.2349160-3-jeffxu@chromium.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
@@ -144,51 +144,110 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=4.0.1
+	autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
 On 11/23/26 04:31, Jeff Xu wrote:
-> Move __GFP_SKIP_KASAN from GFP_HIGHUSER_MOVABLE to GFP_HIGHUSER so
-> non-movable userspace page allocations also skip KASAN tagging on
-> allocation and poisoning on free under CONFIG_KASAN_HW_TAGS.
+> Add a KUnit test (page_alloc_skip_kasan) to verify that page allocations
+> using __GFP_SKIP_KASAN (GFP_KERNEL | __GFP_SKIP_KASAN, GFP_HIGHUSER, and
+> GFP_HIGHUSER_MOVABLE) under CONFIG_KASAN_HW_TAGS:
 > 
-> GFP_HIGHUSER_MOVABLE already skips KASAN because user pages do not hold
-> kernel data structures and tagging every 16-byte MTE granule on
-> allocation and free is expensive. GFP_HIGHUSER has the same contract and
-> differs only in being non-movable, used mainly by DMA-BUF, DRM/GPU
-> buffers, and non-movable HugeTLB.
+> 1. Reset page_kasan_tag() to KASAN_TAG_KERNEL (0xff) across all sub-pages
+>    of a high-order allocation, and
+> 2. Return a match-all (0xff) linear-map pointer from page_address() that
+>    does not trigger a KASAN fault even when the underlying physical
+>    granules carry a mismatched tag (such as KASAN_TAG_INVALID or
+>    restored userspace PROT_MTE tags).
 > 
-> On an Armv9.2-A device (6.12 kernel, kasan.mode=sync), this reduces
-> 32 MB /dev/dma_heap/system alloc+free latency by ~80% (~59% alloc, ~98%
-> close) and improves an app-loading OpenGL benchmark by 15-23%.
-> 
-> Callers that access GFP_HIGHUSER pages through kmap_local_page() or
-> page_address() (such as ramfs, pipe/FUSE buffers, kexec, and RDS) lose
-> HW_TAGS checking on those pages. None of them store kernel structs
-> there; this matches the trade-off already made for GFP_HIGHUSER_MOVABLE.
-> Generic and SW_TAGS KASAN are unaffected.
+> Tested on arm64 with CONFIG_KASAN_HW_TAGS under QEMU (virt,mte=on) with
+> kasan.mode=sync, async and asymm.
 > 
 > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
 > ---
->  include/linux/gfp_types.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  mm/kasan/kasan_test_c.c | 44 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
 > 
-> diff --git a/include/linux/gfp_types.h b/include/linux/gfp_types.h
-> index c1331bf0b239..bb54c7abfb02 100644
-> --- a/include/linux/gfp_types.h
-> +++ b/include/linux/gfp_types.h
-> @@ -376,8 +376,8 @@ enum {
->  #define GFP_USER	(__GFP_RECLAIM | __GFP_IO | __GFP_FS | __GFP_HARDWALL)
->  #define GFP_DMA		__GFP_DMA
->  #define GFP_DMA32	__GFP_DMA32
-> -#define GFP_HIGHUSER	(GFP_USER | __GFP_HIGHMEM)
-> -#define GFP_HIGHUSER_MOVABLE	(GFP_HIGHUSER | __GFP_MOVABLE | __GFP_SKIP_KASAN)
-> +#define GFP_HIGHUSER	(GFP_USER | __GFP_HIGHMEM | __GFP_SKIP_KASAN)
-> +#define GFP_HIGHUSER_MOVABLE	(GFP_HIGHUSER | __GFP_MOVABLE)
+> diff --git a/mm/kasan/kasan_test_c.c b/mm/kasan/kasan_test_c.c
+> index f34163e19bd6..72342137bb18 100644
+> --- a/mm/kasan/kasan_test_c.c
+> +++ b/mm/kasan/kasan_test_c.c
+> @@ -380,6 +380,49 @@ static void page_alloc_uaf(struct kunit *test)
+>  	KUNIT_EXPECT_KASAN_FAIL_READ(test, ((volatile char *)ptr)[0]);
+>  }
+>  
+> +static void page_alloc_skip_kasan_helper(struct kunit *test, gfp_t gfp)
+> +{
+> +	struct page *pages;
+> +	size_t order = 2;
 
-Can we please add a big fat comment above GFP_HIGHUSER, explaining why we use
-__GFP_SKIP_KASAN and which security impact this has?
+Why magic value two?
+
+Should be const.
+
+> +	char *ptr;
+> +	size_t i;
+> +
+> +	pages = alloc_pages(gfp, order);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pages);
+> +
+> +	for (i = 0; i < (1UL << order); i++) {
+
+"1 << order" is sufficient.
+
+> +		/*
+> +		 * __GFP_SKIP_KASAN allocations must carry the match-all tag
+> +		 * in page->flags, and so in page_address(), not a random tag.
+> +		 */
+> +		KUNIT_EXPECT_EQ(test, page_kasan_tag(pages + i),
+> +				(u8)KASAN_TAG_KERNEL);
+
+Squeeze this into a single line.
+
+> +
+> +		ptr = page_address(pages + i);
+> +		KUNIT_EXPECT_EQ(test, (u8)get_tag(ptr), (u8)KASAN_TAG_KERNEL);
+> +
+> +		/*
+> +		 * The memory tags of such pages are arbitrary: stale poison,
+> +		 * or tags set by userspace through PROT_MTE. Accesses via
+> +		 * page_address() must not fault regardless.
+> +		 */
+> +		kasan_poison(ptr, PAGE_SIZE, KASAN_TAG_INVALID, false);
+> +		KUNIT_EXPECT_KASAN_RESULT(test, WRITE_ONCE(*ptr, 0),
+> +					  "WRITE_ONCE(*ptr, 0)", false);
+
+Why do we care about checking HW behavior? (match-all working)
+
+> +	}
+> +
+> +	__free_pages(pages, order);
+> +}
+> +
+> +static void page_alloc_skip_kasan(struct kunit *test)
+> +{
+> +	KASAN_TEST_NEEDS_CONFIG_ON(test, CONFIG_KASAN_HW_TAGS);
+> +
+> +	page_alloc_skip_kasan_helper(test, GFP_KERNEL | __GFP_SKIP_KASAN);
+> +	page_alloc_skip_kasan_helper(test, GFP_HIGHUSER);
+> +	page_alloc_skip_kasan_helper(test, GFP_HIGHUSER_MOVABLE);
+> +}
+> +
+>  static void krealloc_more_oob_helper(struct kunit *test,
+>  					size_t size1, size_t size2)
+>  {
+> @@ -2369,6 +2412,7 @@ static struct kunit_case kasan_kunit_test_cases[] = {
+>  	KUNIT_CASE(kmalloc_large_invalid_free),
+>  	KUNIT_CASE(page_alloc_oob_right),
+>  	KUNIT_CASE(page_alloc_uaf),
+> +	KUNIT_CASE(page_alloc_skip_kasan),
+
+Don't we have to limit this case to having actual MTE-capable HW etc?
+
+>  	KUNIT_CASE(krealloc_more_oob),
+>  	KUNIT_CASE(krealloc_less_oob),
+>  	KUNIT_CASE(krealloc_large_more_oob),
+
 
 -- 
 Cheers,
