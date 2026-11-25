@@ -2,77 +2,107 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0575606A32E
-	for <kexec@archiver.kernel.org>; Wed, 25 Nov 2026 14:43:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934C0606A31E
+	for <kexec@archiver.kernel.org>; Wed, 25 Nov 2026 15:51:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=JWfrUs17;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IaxxUP7L
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=0WaTf8o1;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ohxyzMNl
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
 	List-Unsubscribe-Post:List-Owner;
-	bh=DSDBbrxDF7QE7mJ7cGh5psk8NDNsiMzdc0pE9t4TEt8=; b=JWfrUs17aLLgtQ/rRgwhGK2U67
-	EFNkePoiQqk0GbJmU5MHTM2oGMzwuWfVknfbMqwIXvOuNjvMJylli/BbpQ9gcm6WZ1P+jdtOEWNTl
-	TTpU9imqpLZmjRQhycFwcWin+DDoVHR7TSUjdJ7Rf1g1rY0Fv9kaAED4Kigd+l+oA7s26NjTrE+ub
-	W2OS6H55+MYSdq4YUazICwePO4IIjhPtUHUsyBuzk4khqcy8ezbgCL0VXmUxSaHHIZhhet9PjY2nY
-	g42D6hZrwXMRWyd/fKvsiaLUJlMiqOkImwKcs4S/qVZdCs6mMoiwJ6jZXgtgrfwKA6odHl8U5gelq
-	cPxwkbXA==;
+	bh=VHe5Uw67z1Y8nTKWeloBeO0r936iChXIFhmIiPgc1Jk=; b=0WaTf8o1MII/9EMlpvOhSMT33T
+	L5DRDSw/xDMvdC0y4O1Ej05qlHpmMrLdq8bFw7Rw2rJBn4EKwEUVHIOeShND8Bi7Np0LCV5Mnuikc
+	WAcl3YrZLAh35hOaDWWlAfa3peOwQar83VlXxP128h5PmHpGiT9Fr/pi5GFCKe8RoZtNZ7OTLhAHM
+	3ucfYZm2u/a/f4HvwYWc/Es0SnRIsAkK347pG8Tc4AJseBdWMtJL4IsmOhY1FUDTuVcSbh2XlwFiy
+	W5FJtqLMVYD1JSVQZgOt7Qnv4EMJa5Rwizu1d3bwHj0/r55q+nt3Xx3e/QyaeOPpMWEblYf6g9gHE
+	hhiJr/Cw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xWEE2-0000000ADZH-27Vk;
-	Wed, 25 Nov 2026 14:43:58 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1xWFHN-0000000ASC9-3Kyv;
+	Wed, 25 Nov 2026 15:51:29 +0000
+Received: from mail-pg1-x52a.google.com ([2607:f8b0:4864:20::52a])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xWEE0-0000000ADZ3-2P07;
-	Wed, 25 Nov 2026 14:43:56 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 9802761140;
-	Wed, 25 Nov 2026 14:43:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F3521F000C6;
-	Wed, 25 Nov 2026 14:43:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795617835;
-	bh=DSDBbrxDF7QE7mJ7cGh5psk8NDNsiMzdc0pE9t4TEt8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=IaxxUP7LRnqywT22he7m+Fp7ezJgAfkpHSw5REph0tRYPRC/9tQDBnxNGaqFCUe0P
-	 HC4OCPR1FvefXZR0jreOarx1/ItxF0Kd5XwRm18+njWXI6kfrP7K+QHWF1l9XvxXHk
-	 Wb3T7KBp5sU8Uq3JjMSsDtDz2cQ1vDbxW6cRqzm0jkDQjr5S84bbH7Zbc/9r5XtFga
-	 tXPaD+SS8GZvYPYpD187DBOSIhZ28zt4gF80M0lT+Uc0vOeuoEM5ntTj2myprO+Uo6
-	 0KAYN/vccLRY3U4aBHQmotXHdObAadnDVOITnax/jMq8UASOsc7R09dQV9GiPujVaw
-	 zu/OOYjuPVOYA==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: "David Matlack" <dmatlack@google.com>
-Cc: "Pratyush Yadav" <pratyush@kernel.org>,  "Tarun Sahu"
- <tarunsahu@google.com>,  "Pasha Tatashin" <pasha.tatashin@soleen.com>,
-  "Mike Rapoport" <rppt@kernel.org>,  <robin.murphy@arm.com>,
-  <maz@kernel.org>,  <will@kernel.org>,  "Alexander Graf"
- <graf@amazon.com>,  <seanjc@google.com>,  <jgg@nvidia.com>,
-  <loganodell@google.com>,  <arnd@arndb.de>,  <dwmw2@infradead.org>,
-  <baolu.lu@linux.intel.com>,  "Bjorn Helgaas" <bhelgaas@google.com>,
-  <oupton@kernel.org>,  <alex@shazbot.org>,  <gle.com@google.com>,
-  <pbonzini@redhat.com>,  "Andrew Morton" <akpm@linux-foundation.org>,
-  <kevin.tian@intel.com>,  <joro@8bytes.org>,  <kvmarm@lists.linux.dev>,
-  <linux-pci@vger.kernel.org>,  <kexec@lists.infradead.org>,
-  <kvm@vger.kernel.org>,  <iommu@lists.linux.dev>,
-  <linux-arm-kernel@lists.infradead.org>,  <skhawaja@google.com>,
-  <sagis@google.com>,  <linux-arch@vger.kernel.org>,  <linux-mm@kvack.org>,
-  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 03/19] kho, memfd_luo: Reference struct kho_vmalloc
- via serialized pointer
-In-Reply-To: <DN3VG4JCILOO.YN40XHHSWRPH@google.com> (David Matlack's message
-	of "Tue, 24 Nov 2026 16:39:52 -0800")
-References: <20261110050202.529473-1-tarunsahu@google.com>
-	<20261110050202.529473-4-tarunsahu@google.com>
-	<2vxz4idb1i2w.fsf@kernel.org> <DN3VG4JCILOO.YN40XHHSWRPH@google.com>
-Date: Wed, 25 Nov 2026 14:43:47 +0000
-Message-ID: <2vxzld6hx97g.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	id 1xWFHI-0000000ASBI-32vX
+	for kexec@lists.infradead.org;
+	Wed, 25 Nov 2026 15:51:28 +0000
+Received: by mail-pg1-x52a.google.com with SMTP id 41be03b00d2f7-cc4be0e5351so4395139a12.0
+        for <kexec@lists.infradead.org>; Wed, 25 Nov 2026 07:51:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795621883; x=1796226683; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=VHe5Uw67z1Y8nTKWeloBeO0r936iChXIFhmIiPgc1Jk=;
+        b=ohxyzMNlIpakfIVLJz/0SKGysPoP2cDGksT2WLWHav99uQ8/uqiifbY6pkqGHRPDGj
+         sdex+qEPjnaUVAam+9QyM6z55cxaEXsJpMyWSL2IvkF/3UTr0pAdlf7SiY5BTYWNJH9x
+         WEjXsc4QrKngiH95k0mun9NMIiWJ+obHoSY7A2fRuzB1DrkcIOzIwjgYTHmrJCLCaaq5
+         7gQFRLcND7xCZRzyEJiLWoli5vBYu8lYiHL85GV7vaoCmIbJYFGxMm5a8NfNuqaWI53/
+         pQiTBhXgMZlDDfYPLZIOkUr++MvfJolqPlof7GujYkalr8gT2kx0GdMm3JjMcITBhcwc
+         XVyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795621883; x=1796226683;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=VHe5Uw67z1Y8nTKWeloBeO0r936iChXIFhmIiPgc1Jk=;
+        b=MPCIC0wY03cvDSRqPsOw/me4oTlogfyC8rKa1/7sdUjc4KIx1QVEWM9jvQ9y+3ZSxH
+         dBvTK1L5RM1OCxm6MPXFnTTSb3c48N6xB3U6+6yAW0x0wITiF+DrXR0Txg2h4AYUBQJd
+         uJ7DwFhvaLTF0PGjq2744YZ4lxGno1pQtohFkeqsCm2wptveAQCZJtXShifD1DsKhEVJ
+         Uqvh75aL4YXaEH/UqdKEZJKXyDIf1E/xSsNwT3bSPbBDgyOVWaIOVzIX4oGqWL2X14nx
+         lLvg4XFiEohQhETsDPFfofsmO4ZWPmc7YXEl7tA3o0YT530AiX5NQXVejl0LRVDiQaHS
+         CjLA==
+X-Forwarded-Encrypted: i=1; AL+hErHuBlPoFCpNO8UI3AtDQyPO57uRHf3THHQfAkoJ3GanCntUxSByQ5psOvik4wREx2z5Fvny3Q==@lists.infradead.org
+X-Gm-Message-State: APuU4Z/oVMQFg/bELmrKQIyiSzE3/V1q++3WgN56ZCAQjniAEhlxnIdF
+	muWnjF3DtS56KxvUmY4/zm8vf+QQw1YvyzP+Y/jsSIHMQQ3TUfby4nqG
+X-Gm-Gg: AZFdTZd9Enb8piq0XraTRupjkVk/fu+M8pB0MVTk6bpfeP153WQ9zRlQPAEYhOUavKo
+	P+fl3k3df1C4/5sMeiOxRYpFOyn4Y8i4Bsdcm44zpWccZuwk+SiLKJbYIlAMetdUp3UsTCjdykv
+	rmsytyPBhNGKBcy3PJIYrhS+E0fGKuapGVDWTiK8pKX2vsRjkKBKm8wqemKBi1uHml9RswTcsIw
+	Om1/SvlfKo/woPjD6XWzKjsmnQZmhUql7kCF0JooIWz286kdL5PTIMmD8Ak91yqYCegCqgC7kAK
+	dAH8avBuwb8ndcE0jNVomgFbvPtJBNn5MsQArC8Zpt9fd28DtRtFkPkpd4HlnlRpxgkdbAt6bvM
+	ActFWMnXtauVflPDGptg/lagvTGdVt8zK7007FzOxwuoauYa69k0vasQorcHi/91TH10+kIiSFP
+	z13ZjLaAlu27NKuuPUl4JypdoucKbxjft7RXsiu9DnE2shSK9W+TKRpdN6lQRDTqP+nykSGwUG3
+	A1whlhFebwNMxpTUJa3Ls6OO0T9JA/wJVroJJ5frA4uD9oPxnq1z1EW9eB5HDc3jW0r4ymo0lGu
+	W2vq4Cmt3xoXGYrSm2Epnys+DB4pptRfdciA/x5NtOOWjiTOFZo9
+X-Received: by 2002:a05:6a21:8201:b0:3f5:ef59:3aaa with SMTP id adf61e73a8af0-4014ae81ebbmr19762858637.16.1795621883355;
+        Wed, 25 Nov 2026 07:51:23 -0800 (PST)
+Received: from ubuntu ([110.9.142.4])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cde6d0818c1sm9058205a12.30.2026.11.25.07.51.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Nov 2026 07:51:22 -0800 (PST)
+From: Sang-Heon Jeon <ekffu200098@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>
+Cc: "Liam R. Howlett" <liam@infradead.org>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	Michal Hocko <mhocko@suse.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Usama Arif <usama.arif@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	Frank van der Linden <fvdl@google.com>,
+	Kiryl Shutsemau <kas@kernel.org>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Jiri Bohac <jbohac@suse.cz>,
+	kexec@lists.infradead.org
+Subject: [PATCH] mm/cma: reject long-term pins of HugeTLB folios overlapping crashkernel CMA
+Date: Thu, 26 Nov 2026 00:51:06 +0900
+Message-ID: <20261125155108.24098-1-ekffu200098@gmail.com>
+X-Mailer: git-send-email 2.53.0
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261125_075124_766628_458C9C22 
+X-CRM114-Status: GOOD (  16.16  )
+X-Spam-Score: -1.9 (-)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,87 +113,86 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=4.0.1
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Tue, Nov 24 2026, David Matlack wrote:
+crashkernel=size,cma uses existing hugetlb_cma memory, so
+crashk_cma_ranges[] may contain HugeTLB folios. HugeTLB folios allocated
+from hugetlb_cma can be long-term pinned without being migrated.
 
-> On Fri Nov 20, 2026 at 10:19 AM PST, Pratyush Yadav wrote:
-> [...]
->
->>> +static size_t memfd_luo_ser_size(void)
->>> +{
->>> +	return sizeof(struct memfd_luo_ser) + sizeof(struct kho_vmalloc);
->>> +}
->>> +
->>> +static struct memfd_luo_ser *memfd_luo_ser_init(void *mem)
->>> +{
->>> +	struct kho_vmalloc *kho_vmalloc = mem + sizeof(struct memfd_luo_ser);
->>> +	struct memfd_luo_ser *ser = mem;
->>> +
->>> +	KHOSER_STORE_PTR(ser->folios, kho_vmalloc);
->>> +	return ser;
->>> +}
->>> +
->>
->> Hmm, I am not a huge fan of this. This makes doing such allocations
->> quite annoying, and I reckon we will be seeing a fair bit of them in
->> many places.
->>
->> The key observation here is that most file handlers need to allocate a
->> bunch of preserved memory, but they usually can free it all at once. So
->> we can get away with a very simple allocator that hands out memory
->> linearly.
->>
->> I have sketched out some code for this, take a look at the patch below.
->> Note that it is only compile tested.
->>
->> Perhaps give it a try and see if it does the job better.
->
-> I agree the manual packing in memfd_luo_ser_init() isn't great, but I'm
-> not sure we need an arena. This seems like something KHO slab support
-> will solve properly, and since kho_alloc_preserve() already takes a
-> size, KHO slab can be dropped in underneath it later without changing
-> any callers.
+After a crash, the crash kernel uses the memory in crashk_cma_ranges[],
+but a device can still write to a long-term pinned folio.
 
-While it would be nice to have, I peeked at what we need for slab
-support and it sounds overkill. For one, a slab cache is for fixed size
-objects. So you'd need a bucket of slabs for different sizes, similar to
-what kmalloc() does. You probably don't want to preserve objects spread
-around in kmalloc's buckets, so you would need a set of buckets
-dedicated for LUO/KHO.
+So reject long-term pins of HugeTLB folios overlapping
+crashk_cma_ranges[].
 
-For another, slab cache is great when you are allocating and freeing a
-bunch of objects of varying sizes. But that isn't really the workload
-preservation has. Each preservation hook needs to allocate a handful of
-objects, and then hold them until unpreserve. This arena style allocator
-does the job pretty well.
+Signed-off-by: Sang-Heon Jeon <ekffu200098@gmail.com>
+---
+The above scenario is only possible with the two patches below applied.
+Currently only linux-next, which is targeting v7.5, has both of them.
 
-And finally, the object layout within a page/slab of the cache can
-change based on configs or kernel versions. See SLAB_RED_ZONE or KASAN
-for example. We would need to standardize the layout without
-compromising the non-KHO slab users. We can probably solve these
-problems, but I don't expect it to be easy.
+  "mm/hugetlb: allow crashkernel to reuse hugetlb CMA memory" (kexec-next)
+  "mm: gup: allow long-term pins of CMA-allocated HugeTLB folios" (mm-unstable)
+---
+ mm/cma.c | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
-So I wouldn't want to support slab until we have file handlers that
-churn through a lot of preserved objects.
+diff --git a/mm/cma.c b/mm/cma.c
+index 0c97aadcfea4..cb4a92e2b9f5 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -32,6 +32,8 @@
+ #include <linux/hugetlb.h>
+ #include <trace/events/cma.h>
+ #include <linux/page-isolation.h>
++#include <linux/crash_reserve.h>
++#include <linux/range.h>
+ 
+ #include "internal.h"
+ #include "cma.h"
+@@ -42,12 +44,33 @@ unsigned int cma_area_count;
+ 
+ bool cma_folio_is_longterm_pinnable(struct folio *folio)
+ {
++	struct range r;
++	int i;
++
+ 	/*
+ 	 * Explicitly allocated CMA folios own their CMA memory and can be
+ 	 * pinned even in ZONE_MOVABLE, as CMA memory cannot be offlined.
+ 	 * For now, only HugeTLB tracks these allocations with a folio flag.
+ 	 */
+-	return folio_test_hugetlb(folio) && folio_test_hugetlb_cma(folio);
++	if (!folio_test_hugetlb(folio) || !folio_test_hugetlb_cma(folio))
++		return false;
++
++	/*
++	 * The crash kernel uses the memory in crashk_cma_ranges[], but a
++	 * device can still write to a long-term pinned folio after a crash.
++	 */
++	if (!crashk_cma_cnt)
++		return true;
++
++	r.start = PFN_PHYS(folio_pfn(folio));
++	r.end = r.start + folio_size(folio) - 1;
++
++	for (i = 0; i < crashk_cma_cnt; i++) {
++		if (range_overlaps(&crashk_cma_ranges[i], &r))
++			return false;
++	}
++
++	return true;
+ }
+ 
+ phys_addr_t cma_get_base(const struct cma *cma)
 
->
-> Until then, maybe we should just allocate struct kho_vmalloc separately
-> with kho_alloc_preserve() and accept wasting a folio per object. For
-> memfd that's one extra page per preserved file.
-
-Yeah, that is fine too I suppose, at least until we start to run into
-problems with the memory overhead. I think the arena style allocator is
-fairly straightforward and makes the memory savings easy so to me it
-sounds promising.
-
+base-commit: a036649714c3446abfdc36d0ae483046432b16c5
 -- 
-Regards,
-Pratyush Yadav
+2.53.0
+
 
