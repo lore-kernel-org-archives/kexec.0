@@ -2,11 +2,11 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471AC606A330
-	for <kexec@archiver.kernel.org>; Thu, 26 Nov 2026 19:08:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CFB606A31E
+	for <kexec@archiver.kernel.org>; Thu, 26 Nov 2026 19:14:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=xZMjo5QJ;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZjhVBDf7
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=hLoa5x2O;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mC7UtwFI
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
@@ -14,55 +14,49 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	List-Unsubscribe-Post:List-Owner;
-	bh=gzDN1QG2r+ew53MNcYjRJsztIJ6bXJi3dv7JbJUryts=; b=xZMjo5QJTrYoUo/qAd5G2Zn0mB
-	7aO9RjXgVgwl2ZE4MTJ1WPWXwzkERo9TdMYYEXhvs28XpRZJdn/XpkIHLvxRvqjsLIZqRdhpgvgko
-	mo2Hz5Iy9sUxIK0YoSVZspAj73lwbnh3l1EvWS4b+Y1QDGK/kuO299cHQZ+Vp+kl3y/vTBBJDLZpb
-	K0y0+6Q1Laj0C7tYLgB+YU5aibT2ZUH6cnXYO3OYBpPDLMbh1zSPvPzQpdwltEXwIkCRe+CDg+fqN
-	dzp0kJesl/7SIQbA0v88wTfjMDMjnaDdvYSh0vrF0RdJdK53T4ngnXJLPn0Ci23y98ls8SWJdnSqy
-	2m0qIF0w==;
+	bh=CuVLv2i2GOptfnACX7l3LiPUxZvYfKOmSODmwPhhkPw=; b=hLoa5x2OFtZZQ5TsWK+h6qWcOG
+	rE/SoDi9Qj6c3XxgyDUeootm6YTjJ3ZPgvoi+I4rPr0MO8MS0E5nQGSBfadlv6MjlQyoG8mcXu3Mc
+	ddqZ29nOlLTGMTWpZ5NOixzEGDoeSik1CkUqn3bfCDCYvgM1rV7FytTwVedDvpQti2ZbuHsmppPJX
+	zwAF2NCT4rNbHQPaMorKtM+99+I58exp13QnsJB3xveNRYunC6paSxrN7aVzgYcz/+de2+hNWjNpj
+	FNmTu9ErFM6nB2R+lQCZwELA+A7q/Swpz05bBpB4Y33w4wQeRapDZX1KhV8lwfZoRBxkGTYlzNujd
+	9OwD1oMA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xWepy-0000000EE7b-0qzt;
-	Thu, 26 Nov 2026 19:08:54 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1xWevn-0000000EGtj-3pkj;
+	Thu, 26 Nov 2026 19:14:55 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xWepx-0000000EE7T-28lZ
+	id 1xWevk-0000000EGtV-22lZ
 	for kexec@lists.infradead.org;
-	Thu, 26 Nov 2026 19:08:53 +0000
+	Thu, 26 Nov 2026 19:14:52 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 0A4FF43D9A;
-	Thu, 26 Nov 2026 19:08:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06DF91F000C0;
-	Thu, 26 Nov 2026 19:08:49 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 9B1C460D72;
+	Thu, 26 Nov 2026 19:14:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B11D1F000C4;
+	Thu, 26 Nov 2026 19:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795720132;
-	bh=gzDN1QG2r+ew53MNcYjRJsztIJ6bXJi3dv7JbJUryts=;
+	s=k20260515; t=1795720491;
+	bh=CuVLv2i2GOptfnACX7l3LiPUxZvYfKOmSODmwPhhkPw=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=ZjhVBDf7i01xUwHDBDd6t5Dd9jfrgoOKt66dR9QNrrc7L0T0YpubcyqvMK0wbN/ia
-	 N5atc2f24UBtRU0S+Od103hhN6aomFIo4lUV8NH7otae9s9CkrP1XNak7SusKsyuNi
-	 JkL+MoY04YXrIsQU1zFKVFP9T3f4PE1zgUKcKB7/NL84/k+6u74vQKvJZyupKIEt0o
-	 AZfV4KXHHyeCjiK2GYQNrImZuCoSUW/eVZRcsXIQFlsap0dkg8rCu7Ve55neanZp3M
-	 VUneTvy83IDOxnbJ490HE8Lefc1MHbwcbYRzOzVKlpqtjxIzuSYB9j8bRAoC5SerdJ
-	 hF+qL17Mb0c0Q==
+	b=mC7UtwFIZfgl362g4XVFFQa/G8viDzYK9zciLeNK4vN3HA19avPzi/zfmTg9BbGIU
+	 dgelNbTa7s4yMuoGmp8foEhEPgNckZ0kOOxjjZzmt6CBra5rShY0LwesOtWrGrviCT
+	 BXQwqJfB3mNv/WrPnyop1ygoMYYseBWl1YAbDtlasemS/PkApEcvJLQwZ6e3eGygqI
+	 Z3OXnQlvYs/Yo8WSSjFWvSEvKBPp5MXU4m+OUQkmI7PKHw5pZhjyTruSefXYjiNpzB
+	 VjRtOH2rC9Q8ru9ADi02DdfamuJWXQkm/qynGSBxdwbpRo+RVi6rEgIwh1Zb8voVhL
+	 ocZCZs24Dg2eQ==
 From: Pratyush Yadav <pratyush@kernel.org>
-To: Chris Down <chris@chrisdown.name>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,  Mike Rapoport
- <rppt@kernel.org>,  Pratyush Yadav <pratyush@kernel.org>,  Alexander Graf
- <graf@amazon.com>,  Baoquan He <baoquan.he@linux.dev>,  Jonathan Corbet
- <corbet@lwn.net>,  Shuah Khan <skhan@linuxfoundation.org>,
-  kexec@lists.infradead.org,  linux-mm@kvack.org,
-  linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org,
-  linux-kselftest@vger.kernel.org,  kernel-team@meta.com
-Subject: Re: [PATCH 2/9] kho: Make bootmem reservations visible to fleet
- monitoring
-In-Reply-To: <20261113003059.056dd036a6546756@chrisdown.name> (Chris Down's
-	message of "Fri, 13 Nov 2026 00:30:59 -0800")
-References: <cover.1794383544.git.chris@chrisdown.name>
-	<c41c639fc5f453d60a265ba42a233f2ea5b48319.1794383544.git.chris@chrisdown.name>
-	<179443886218.2329176.10742245280418377061.b4-review@b4>
-	<20261113003059.056dd036a6546756@chrisdown.name>
-Date: Thu, 26 Nov 2026 19:08:48 +0000
-Message-ID: <2vxz4id3wgu7.fsf@kernel.org>
+To: sashiko-bot@kernel.org
+Cc: "Pratyush Yadav" <pratyush@kernel.org>,  "Pasha Tatashin"
+ <pasha.tatashin@soleen.com>,  "Mike Rapoport" <rppt@kernel.org>,  "Andrew
+ Morton" <akpm@linux-foundation.org>,  sashiko-reviews@lists.linux.dev,
+  kexec@lists.infradead.org,  linux-mm@kvack.org
+Subject: Re: [PATCH v4] mm/memfd_luo: don't use memfd_pin_folios()
+In-Reply-To: <sashiko-outbox-234004@kernel.org> (sashiko-bot@kernel.org's
+	message of "Wed, 25 Nov 2026 18:40:57 +0000")
+References: <20261124184042.1823277-1-pratyush@kernel.org>
+	<sashiko-outbox-234004@kernel.org>
+Date: Thu, 26 Nov 2026 19:14:47 +0000
+Message-ID: <2vxzzeuvv1zs.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
@@ -77,69 +71,92 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On Fri, Nov 13 2026, Chris Down wrote:
-> Pasha Tatashin writes:
-[...]
->>> Today the collector would have to sum kho/out/bootmem_len in debugfs,
->>> which isn't a userspace ABI. In /proc/meminfo, free bootmem contributes
->>> to CmaFree, but the reservation doesn't contribute to CmaTotal. The cma
->>
->>Is this a different bug?
+On Wed, Nov 25 2026, sashiko-bot@kernel.org wrote:
+
+> Thank you for your contribution! Sashiko AI review found 1 potential
+> issue to consider:
+> - [Medium] mm/memfd_luo: unbatched migration and LRU drain in
+>   memfd_luo_migrate_folio()
+> --
 >
-> I think so, yes. Bootmem pageblocks are MIGRATE_CMA, so their free pages are
-> counted in NR_FREE_CMA_PAGES, but totalcma_pages only counts the areas that
-> mm/cma.c knows about.
+> commit 36bee618bf022031606488c041334f6b85cc82a9
+> Author: Pratyush Yadav (Google) <pratyush@kernel.org>
 >
-> zone->cma_pages is a separate problem. It only gets bootmem added by
-> init_cma_reserved_pageblock() in kho_init(), and on a KHO boot we return before
-> we get there.
+> mm/memfd_luo: don't use memfd_pin_folios()
 >
-> I can send patches for those separately if you agree that bootmem should be
-> counted in both. It wouldn't give us the bootmem size though, because CmaTotal
-> would still include any other CMA areas.
-
-I have a internal bug assigned to me to fix this. It would be great if
-you could fix it for me. I'd owe you a beer ;-)
-
-On cold boot it is pretty easy. Call cma_init_reserved_mem() on each
-bootmem region.
-
-On a KHO boot it gets tricky. Not all of bootmem is CMA, since some of
-it is given out to early boot allocators like memmap. So we need to
-count the pageblocks that we mark as MIGRATE_CMA during MM init. And
-then update totalcma_pages directly, which already sounds kinda iffy.
-
-Plugging the accounting directly into kho_bootmem_migratetype() might
-work, but I don't like giving it a side effect. Maybe we do it directly
-in pageblock_migratetype_init_range() and __init_deferred_page()?
-
-None of it is super elegant and I never got around to figuring out
-something good.
-
+> This commit replaces memfd_pin_folios() with a direct page cache walk
+> using shmem_get_folio() and migrates folios out of movable or CMA
+> pageblocks individually via memfd_luo_migrate_folio().
 >
->>I have some concerns about exposing this as a stable API. What if we get
->>rid of bootmem or make it resizable? We only recently renamed it from
->>scratch to bootmem, and we have been exploring for way to optimize it.
->>
->>I would keep this exposed under /sys/kernel/debug/kho/bootmem_size for
->>now, and not worry about it being stable.
+>> diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
+>> index 6b68220275ebe..38584ecfa70be 100644
+>> --- a/mm/memfd_luo.c
+>> +++ b/mm/memfd_luo.c
+>> @@ -77,26 +77,168 @@
 >
-> That's fair. I'll move it to /sys/kernel/debug/kho/bootmem_size in v2, and we
-> can look at sysfs again once bootmem has settled down.
+> [ ... ]
+>
+>> +static int memfd_luo_migrate_folio(struct folio *folio)
+>> +{
+>> +	struct migration_target_control mtc = {
+>> +		.nid = NUMA_NO_NODE,
+>> +		/* Not movable, so the target is neither in ZONE_MOVABLE nor CMA. */
+>> +		.gfp_mask = GFP_USER | __GFP_NOWARN,
+>> +		.reason = MR_LONGTERM_PIN,
+>> +	};
+>> +	LIST_HEAD(source);
+>> +	bool isolated;
+>> +
+>> +	/* Flush per-CPU LRU batches holding the folio so isolation works. */
+>> +	lru_cache_drain_for_folio(folio, 1, NULL);
+>> +	isolated = isolate_folio_to_list(folio, &source);
+>> +	/* Isolation holds its own reference. */
+>> +	folio_put(folio);
+>> +	if (!isolated)
+>> +		return -EBUSY;
+>> +
+>> +	if (migrate_pages(&source, alloc_migration_target, NULL,
+>> +			  (unsigned long)&mtc, MIGRATE_SYNC, MR_LONGTERM_PIN,
+>> +			  NULL)) {
+>> +		putback_movable_pages(&source);
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>
+> [Severity: Medium]
+> Does migrating one folio at a time here regress preservation latency when
+> folios in the memfd already reside in ZONE_MOVABLE or MIGRATE_CMA
+> pageblocks?
+>
+> Previously, memfd_pin_folios() called check_and_migrate_movable_folios(),
+> which shared a single enum lru_cache_drained state across the scan so
+> lru_add_drain() and lru_add_drain_all() ran at most once, and passed all
+> movable folios to a single migrate_pages() call so migrate_pages_batch()
+> could batch TLB shootdowns across up to NR_MAX_BATCHED_MIGRATION (512)
+> unmapped pages.
+>
+> Calling memfd_luo_migrate_folio() per folio passes NULL for the drained
+> state to lru_cache_drain_for_folio(), which can trigger repeated local and
+> all-CPU LRU cache drains, and invokes migrate_pages() on a single-folio
+> list, forcing a cross-CPU TLB shootdown IPI for every mapped folio that
+> needs migration.
 
-Is it really that hard for your collector to sum up the areas. I don't
-mind this change since it is in debugfs and very simple, but I'm curious
-if you really need it.
+I measured the performance before and after this patch with
+movablecore=75%, and it found that with 4k pages, performance does
+indeed drop, but the difference is quite small. Only 5-8% slower. THPs
+stay about the same.
 
-[...]
+So I think the slowdown is small enough to not matter.
 
 -- 
 Regards,
