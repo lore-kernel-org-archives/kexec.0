@@ -2,64 +2,61 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4946606A323
-	for <kexec@archiver.kernel.org>; Thu, 26 Nov 2026 11:45:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4390D606A688
+	for <kexec@archiver.kernel.org>; Thu, 26 Nov 2026 11:46:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=i9OCfipq;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LGPLwRl5
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=REEWOEdt;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UVTmWd+T
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=hZduP2sQE9gkeUneqSWpAXjGsaRT+wkgF+eZBdvryg4=; b=i9OCfipqdVbzky
-	PGYBjITkCYFTLkJr1r4nfHGDYtkMBCWnvOe1/vkDd7XCuT00BtA0pRnyGVgz4/6AnXQGJQiA8z5Ol
-	ZwW6hmkFWhCydGPhWCFtWkY14SLTVOJCwjGLxKdZCSWguRFbW9Ji5MCsYdSExSqJvNfcSIdnZVVEx
-	DK/GMUkrs4FYfl+jFymzoi0PBWvIEnQlqP+25T7HKWAc1t0oh+1fyE6w3ThimigStrBUOIVpQgPhJ
-	umH6gT5oEPDSNhRwcu09+MZc7mvHy9px0aI19ya9+vnXlLsWGuGGpFN3NpLVRHNyQzIGcg1exsKH9
-	FN+4hk67AA6PsCtu4SbA==;
+	List-Owner; bh=SuAWMmZdzveERe5wGAvKIhuET3HUUjSDoRGpZWpoiN4=; b=REEWOEdtt21WjT
+	rkG0gInLIj5/XndeTOKvJkfFqWJX1RkDbEpzYA+lUCF6suJqJAZhobtouX3e7q93lWO2hzuF3qCzf
+	qDN+AM1gY4PhuxfrepSqWNXyJgmD930fe+y5lzq2I9BYntAiEdlsG4O7zCwASMJGNDi1hjEAriuHY
+	HezIlH89mKvwpk37FGNkkW5JyEZf5yo7x6NG7pe4pBmmhl6KWWdHHmejsAvLP4pTPsonFoD62BuwZ
+	CoaaiJYXIHI42KtNf1xNBFFJ6xdpktQvrUx2nRhy4sQ8LoikLFDkkfnYFH5fZq1RdGNWm/+65w9LN
+	gn13JDDdrWBfd1nMklaw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xWXue-0000000D34n-277S;
-	Thu, 26 Nov 2026 11:45:16 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1xWXvS-0000000D3Oh-3rGT;
+	Thu, 26 Nov 2026 11:46:06 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xWXuc-0000000D33R-1iEO
+	id 1xWXvR-0000000D3Nk-22Ht
 	for kexec@lists.infradead.org;
-	Thu, 26 Nov 2026 11:45:14 +0000
+	Thu, 26 Nov 2026 11:46:05 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 1C5E14096F;
-	Thu, 26 Nov 2026 11:45:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 408FF1F00AD3;
-	Thu, 26 Nov 2026 11:45:11 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 8824C6284D;
+	Thu, 26 Nov 2026 11:46:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 241731F000D4;
+	Thu, 26 Nov 2026 11:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795693513;
-	bh=hZduP2sQE9gkeUneqSWpAXjGsaRT+wkgF+eZBdvryg4=;
+	s=k20260515; t=1795693564;
+	bh=SuAWMmZdzveERe5wGAvKIhuET3HUUjSDoRGpZWpoiN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=LGPLwRl5itV+aeR1X/ZTZEjZE9n7QTLS5WeN9wxiW5eJ+G3sNzUwTPUhdM6f95cI3
-	 aEYQD/hdunuQJwqmxqetz9p3RsnaENUjUysATniX8cgDzy6/Apr/7YiWo4XXltcpFY
-	 texh2cyxoIfGpf/OSY8vfmoW5wBEwBkctQeKz8cubK2CTWZ7kXJGQp5heASixPFUN5
-	 P5jO2b6AAEhzGMVLOPSi1bcr8jZgsPz8XSIZy14ZvCw0ANQuUD9R0ZJysBe43/BKOH
-	 pbVGrivRY2h/2vaKGSZoHxfAHfYq+R3LlaLNYMqvmXoYp/E+39CgDHSYmNdvHy4lMV
-	 tQQCFWro6PQvQ==
+	b=UVTmWd+TjuqmNcuaD+3/boezFDT3Nb6MZaU90+QdbhN/8bMRCxpwD+LvHpSYkK3u0
+	 rmkBKsswjbVOYtPNYUmksxY/x1xDKhTP0DjoX0YTId+v15cdlErKYzgnD9fhSac0A8
+	 K2jBDxZeemK7Cic3hbqSyJc95cJwounTOi3gdv1xJoxCWZQKlk62WSE+KHafJAEL1E
+	 VLlUIW688QTgH8HF1U7gcJzZLZZ1VUOpK0Nrh7gzSdrT2n9OpvedTGq8dyxovrusa8
+	 UXxbPxgaFRq7jydsOcqX2Qw7z8M2Ro8Dx4TJvbPdGcVc4bQjoUGdTa69xUp7EMnRi6
+	 s7ahSM5UYJCkg==
 From: Mike Rapoport <rppt@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <baoquan.he@linux.dev>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Alexander Graf <graf@amazon.com>,
-	"Srivatsa S. Bhat (Microsoft)" <srivatsa@csail.mit.edu>
+To: pasha.tatashin@soleen.com,
+	pratyush@kernel.org,
+	Xiaotao Zeng <zengxiaotao@kylinos.cn>
 Cc: Mike Rapoport <rppt@kernel.org>,
 	kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] MAINTAINERS: Add missing files to KEXEC, KHO and KDUMP subsystems
-Date: Thu, 26 Nov 2026 13:44:54 +0200
-Message-ID: <179569348035.4110350.13594456540362973475.b4-ty@b4>
+	linux-kernel@vger.kernel.org,
+	duanchenghao@kylinos.cn
+Subject: Re: [PATCH] liveupdate: drop redundant lower-bound check in luo_session_ioctl
+Date: Thu, 26 Nov 2026 13:45:57 +0200
+Message-ID: <179569355390.4110848.12568494599034735951.b4-ty@b4>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261124-fix-kexec-kdump-maintainers-v1-0-79c6a6144de4@csail.mit.edu>
-References: <20261124-fix-kexec-kdump-maintainers-v1-0-79c6a6144de4@csail.mit.edu>
+In-Reply-To: <20261120075252.684604-1-zengxiaotao@kylinos.cn>
+References: <20261120075252.684604-1-zengxiaotao@kylinos.cn>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -84,27 +81,23 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 
 From: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-On Tue, 24 Nov 2026 01:37:52 +0530, Srivatsa S. Bhat (Microsoft) wrote:
-> Several files relevant to the KEXEC, KHO and KDUMP subsystems are
-> currently not listed against them in the MAINTAINERS file, which would
-> cause scripts/get_maintainers.pl to miss recommending these subsystem
-> maintainers or mailing lists for changes to those files. This series
-> addresses those gaps.
+On Fri, 20 Nov 2026 15:52:52 +0800, Xiaotao Zeng wrote:
+> nr is unsigned, so for cmd values below LIVEUPDATE_CMD_SESSION_BASE the
+> subtraction nr - LIVEUPDATE_CMD_SESSION_BASE wraps to a large value that
+> is already rejected by the ARRAY_SIZE() upper-bound check. The lower
+> bound test is therefore redundant.
 > 
-> These patches apply on on top of Mike Rapoport's series:
-> "arch, kexec: declare kexec and crash capabilities in Kconfig.kexec"
+> Drop it so the check matches the one in luo_ioctl().
 > 
 > [...]
 
-Applied to kexec-7.5 branch of liveupdate/linux.git tree, thanks!
+Applied to liveupdate-7.5 branch of liveupdate/linux.git tree, thanks!
 
-[1/2] MAINTAINERS: Add missing files to KEXEC and KHO subsystems
-      commit: 77059f4e9b56d78e22b8fa55f294bb2b9ecef85b
-[2/2] MAINTAINERS: Add missing files to KDUMP subsystem
-      commit: fedac4c07bef7d3ad84110f51a8051e3655818f8
+[1/1] liveupdate: drop redundant lower-bound check in luo_session_ioctl
+      commit: cba589505b0ec93075c6b17abf502a777f034133
 
 tree: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux
-branch: kexec-7.5
+branch: liveupdate-7.5
 
 --
 Sincerely yours,
