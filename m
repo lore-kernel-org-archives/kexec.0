@@ -2,115 +2,110 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB7C606A334
-	for <kexec@archiver.kernel.org>; Wed, 25 Nov 2026 22:43:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F153C606A6AE
+	for <kexec@archiver.kernel.org>; Thu, 26 Nov 2026 08:21:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=ywAMGSm3;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aM6g4pbn
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=3NeLqmEp;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=google header.b=FjpZnLRN
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=rs1HN9vCwz6PNJ9aUfg5Y3QcmGo7HtSHwQkPXAqBJKE=; b=ywAMGSm3rFwnj0
-	JeR8gKybKLWPdGjCwyrSl6FpK9eE5KwikZf00qwZKrIEDrRTKldJuu09neb1aLVEcoIc/DOoBO7LX
-	1kMjeB8a3/mHrzSlbbV72C+yNCqEocel903K0Qr5GzqnkSEVnu262kMkJgcZ3EJcMg4gnzxAFYskg
-	1LT2Tsj0xjs++/eT5vglZDXKdnGZwJpUZV4XLN3Q8QpBHc5/an4tiz/8BbCxJCzANpDVHV4A7RWR+
-	Ok4PrQxo8/S298bc0/Pn9OFttEK1zlk571ONDeB9KCttbDkzpXy8aX04mvJUNNtHbadm7PsP+yyAy
-	V3ibGJkEpsGCpnibY1zw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Unsubscribe-Post:List-Owner;
+	bh=5XMVDmbH25df5MhEApmqQitq30RsFa91wwEAJ21DK2s=; b=3NeLqmEpn7SwCiUnCYWCrrpZ7Z
+	fprylxAUoJV2YvGYuxxeF4LVlwx8kudU5ylcN2uGMIm9lbLWZtdAy68OwFZs2Z99P4RwAUU3dhGTu
+	Uo18mD5Vo6TyNWp46hvtEXawv8gtg3+TUqIuxyUDCpgc5UwxhRV9VDClavzdVHDl15keqfsOyrSSE
+	B6fH46ywThTA8kc4mcgXxgjGNTLl2jIF6iObiKxQ7f2r5qBx/Bd/xbKcnsv7dVz0a7ljq2aAvrXOa
+	2kvBaMHONfo8ozJEGNEC6dff/92ovhnbU5xGW9LSkXsJf/lDjKG2rX6nE5QDDnpUx+YWFjOkz4ca7
+	CVUm/DkQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xWLiS-0000000BVWm-27En;
-	Wed, 25 Nov 2026 22:43:52 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xWUjA-0000000CN6A-02Uq;
+	Thu, 26 Nov 2026 08:21:12 +0000
+Received: from mail-wr1-x42f.google.com ([2a00:1450:4864:20::42f])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xWLiQ-0000000BVWC-3Nxs
+	id 1xWUj7-0000000CN4f-1l3D
 	for kexec@lists.infradead.org;
-	Wed, 25 Nov 2026 22:43:50 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id E570F60180;
-	Wed, 25 Nov 2026 22:43:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBC641F000C0;
-	Wed, 25 Nov 2026 22:43:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795646629;
-	bh=rs1HN9vCwz6PNJ9aUfg5Y3QcmGo7HtSHwQkPXAqBJKE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=aM6g4pbn0tnEc3WXkPsiTcXbY75AA47Eps0qDQkf8Awmqc9srBMfHP7fHwLoCe3Sc
-	 tK9D6fj0AhuIBsd8fZw9kW2pkKBko4xSFCjnXkarIH5cBEo8jgqvK0rEXTqgF4DdhS
-	 Geh9CjQEqO9rcPNZeeazGp5Z0iyEmqJ6WxuR1hyJLsyyxWY/h56Mi/nN6FfFUOMUza
-	 pkAoFbZDWJcBhN9MuQuLnmaI0F0SRwJlNfIJ5wVJh6faA+pJnB+NbjaljqzsMknYeP
-	 W9PGggIrwDFWDfn0rdnKbgRP6geHP5jzB5X2/bzypToHQ6BPX87zDY8PIp6lROYxc9
-	 RXUlAx9DAf9LA==
-Message-ID: <f79014e3-3c81-4b2b-87f6-df0c2d946357@kernel.org>
-Date: Wed, 25 Nov 2026 23:43:40 +0100
-X-Archived-By: <archiver.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+	Thu, 26 Nov 2026 08:21:10 +0000
+Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-491971ac844so5972265f8f.2
+        for <kexec@lists.infradead.org>; Thu, 26 Nov 2026 00:21:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1795681267; x=1796286067; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=5XMVDmbH25df5MhEApmqQitq30RsFa91wwEAJ21DK2s=;
+        b=FjpZnLRNs7cnhNw4LPIlEc+8jE++1WCz2LyziT3PaoaYD4LZhdwOPe5mQeBsi3rspQ
+         MSaCdAXXKLQNvv05DUyK8QDHDirh/eEA+oYFLsr8FC6WdY63hiAyjUnoE4xHyqB22aZ0
+         ReXalMLGfmEavMa0uRkI1+9/UZo66H704nSCgSnJxuK4yhKMjF7cr7fT6u4KLypKFAgL
+         eYLlJLda4yhx2goqmYbY96u8PJPFqVie8jUzAd5rqnE8HnsJJCb8rt5pOUtYqIPbl5KZ
+         wj3QhgUhC9L2vUx07pmSfAX5Y4Zmn0MRqrnN7N+FVAwBS4SSMjqCxb30fGqY2yUFUeo2
+         Z1Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795681267; x=1796286067;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=5XMVDmbH25df5MhEApmqQitq30RsFa91wwEAJ21DK2s=;
+        b=BTZXreHmfKPzhQbwZ0FF4AoLVa8RMVvvnnoue3/BiccmPSgrVF6kjC6nGctrLCW8sb
+         nkJq9KWA7ofxJFTwxYEjxYdQrZFFfA2wX6kof6IlkfYOvgGPIyWuWnFur5MTfRrHb/J3
+         o26er3OWa6JlVIaOHFxDusD5LAx+QLRk6B4NIx5NXODwpP5qC+unrt8w00d9JTBOQgF1
+         /i6J0pCwsk6BBjZEHPLz1E+yklQ2oQmqydNcw4JVFdr2IsC1O6CWwCm8fxhRi3wLlJd/
+         fGK4Euw3JxeD9L+mIzL5WNgGfjbiyKBBiWm4X3Rnt2xwzJpn9gPsKBO1XIly47eAm6iA
+         he2Q==
+X-Forwarded-Encrypted: i=1; AL+hErFvtttVsrkaP4IKltc8LE5oDHXK9nhHQaGdixI9vRgaBN2HbDy6MKq5MjGI7wSkapHVfh7GvA==@lists.infradead.org
+X-Gm-Message-State: APuU4Z8DrbcrEIhHj4ct0lHFMzjKK7vMeZhwUBGwM83SODrYUYdkDPIT
+	sYflS/gyK0RvadT89qGewpyg3ZkNoEikpIahvu8Fb6lhxs0PKXk+9SD3AeETJIZTa28=
+X-Gm-Gg: AZFdTZc+gE+aYI1jTvdJKBy8jaKk+pBL83yvhGro+Tz89umJzBm4ufIcx6EpB5EA2o0
+	kycGBIy/QoNGhRnjgKC3rIYiVndamIPSU4upel4t+aH7zBVS6ooKE8hq7ZWmYyXeHvC0JYP0Daj
+	sg6RAmAScx72hqpWYmjI6cy8LMp+35ge0tSZ2Fjl57zDpBcGWdSD1kcjP15+O4bcgjUYkeJZgm6
+	QfhIy3WNfmvvGNklqwsxAnidJqVQ5yfbpyjs6j6oAeeK2/aYpiOKMSl6B702QKOCdd2tu9NTaWC
+	RqisDBpLJ0S0Uo01iBh5oMv4Rv3onvwtTe1uOOMerwpBqyLghujCzKY2hsMXSmDc3KsjYD6XRiy
+	GTc24MURwxs+/wFhHIgPF3C7hNTiJ+fJecNfxyPGhiTcQo/Vq5DErQmOL1MD8BNqO9G9WDWGUfA
+	biSxSat/etMTdkqwV1dzp/h485J/LUEd/w8SKlc5WsLLzXERZrfj2dvRRbDa15Q2urFD9TP+vZ+
+	zLxwCRpVlnnED8LPWXVMvekL7wBiX6qo6fDvz9Y1mDpvbGBhFDramuMtqJFAnlKGcsH8+zzzL7B
+	NrIfpt4mLlJ3JZ6K4wQe5/t+GIvTKLU6aj5Ohr4ONpX2ywNpke++9Ie0XgJW2w==
+X-Received: by 2002:a5d:6f08:0:b0:4b7:7b8d:6b20 with SMTP id ffacd0b85a97d-4b77b8d6b73mr12609058f8f.46.1795681266888;
+        Thu, 26 Nov 2026 00:21:06 -0800 (PST)
+Received: from localhost (109-81-21-11.rct.o2.cz. [109.81.21.11])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6a67f1b2sm36108136f8f.25.2026.11.26.00.21.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Nov 2026 00:21:06 -0800 (PST)
+Date: Thu, 26 Nov 2026 09:21:05 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Sang-Heon Jeon <ekffu200098@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Mike Rapoport <rppt@kernel.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Usama Arif <usama.arif@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	Frank van der Linden <fvdl@google.com>,
+	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>, Jiri Bohac <jbohac@suse.cz>,
+	kexec@lists.infradead.org
 Subject: Re: [PATCH] mm/cma: reject long-term pins of HugeTLB folios
  overlapping crashkernel CMA
-To: Sang-Heon Jeon <ekffu200098@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: "Liam R. Howlett" <liam@infradead.org>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
- Mike Rapoport <rppt@kernel.org>, Vlastimil Babka <vbabka@kernel.org>,
- Qi Zheng <zhengqi.arch@bytedance.com>, Usama Arif <usama.arif@linux.dev>,
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Frank van der Linden <fvdl@google.com>, Kiryl Shutsemau <kas@kernel.org>,
- Baoquan He <baoquan.he@linux.dev>, Pasha Tatashin
- <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>,
- Jiri Bohac <jbohac@suse.cz>, kexec@lists.infradead.org
+Message-ID: <awfr8bnK7PQa6cyD@tiehlicka>
 References: <20261125155108.24098-1-ekffu200098@gmail.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20261125155108.24098-1-ekffu200098@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <f79014e3-3c81-4b2b-87f6-df0c2d946357@kernel.org>
+X-Archived-By: <archiver.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f79014e3-3c81-4b2b-87f6-df0c2d946357@kernel.org>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20261126_002109_473814_42F9E068 
+X-CRM114-Status: GOOD (  15.62  )
+X-Spam-Score: -2.1 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -121,38 +116,46 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=4.0.1
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
-On 11/25/26 16:51, Sang-Heon Jeon wrote:
-> crashkernel=size,cma uses existing hugetlb_cma memory, so
-> crashk_cma_ranges[] may contain HugeTLB folios. HugeTLB folios allocated
-> from hugetlb_cma can be long-term pinned without being migrated.
+On Wed 25-11-26 23:43:40, David Hildenbrand wrote:
+> On 11/25/26 16:51, Sang-Heon Jeon wrote:
+> > crashkernel=size,cma uses existing hugetlb_cma memory, so
+> > crashk_cma_ranges[] may contain HugeTLB folios. HugeTLB folios allocated
+> > from hugetlb_cma can be long-term pinned without being migrated.
+> > 
+> > After a crash, the crash kernel uses the memory in crashk_cma_ranges[],
+> > but a device can still write to a long-term pinned folio.
+> > 
+> > So reject long-term pins of HugeTLB folios overlapping
+> > crashk_cma_ranges[].
+> > 
+> > Signed-off-by: Sang-Heon Jeon <ekffu200098@gmail.com>
+> > ---
+> > The above scenario is only possible with the two patches below applied.
+> > Currently only linux-next, which is targeting v7.5, has both of them.
+> > 
+> >   "mm/hugetlb: allow crashkernel to reuse hugetlb CMA memory" (kexec-next)
 > 
-> After a crash, the crash kernel uses the memory in crashk_cma_ranges[],
-> but a device can still write to a long-term pinned folio.
+> I think that's a real problem with this thing.
 > 
-> So reject long-term pins of HugeTLB folios overlapping
-> crashk_cma_ranges[].
-> 
-> Signed-off-by: Sang-Heon Jeon <ekffu200098@gmail.com>
-> ---
-> The above scenario is only possible with the two patches below applied.
-> Currently only linux-next, which is targeting v7.5, has both of them.
-> 
->   "mm/hugetlb: allow crashkernel to reuse hugetlb CMA memory" (kexec-next)
+> The solution is not to disallow long-term pinning. :/
 
-I think that's a real problem with this thing.
+Yes, I would tend to agree. While there is a risk of stale writes from
+RDMA on long term pinned pages on the crash kernel I would simply advise
+admins to not use cma backing for crash kernel on those setups unless
+they are willing to live with unreliable dumping.
 
-The solution is not to disallow long-term pinning. :/
-
+I can see how reusing hugetlb cmas might be really helpful for
+crashkernel as this can consume a lot of memory and you rarely care
+about the content in the crash kernel - same as any other userspace
+memory.
 -- 
-Cheers,
-
-David
+Michal Hocko
+SUSE Labs
 
