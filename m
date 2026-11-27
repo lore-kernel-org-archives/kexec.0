@@ -2,48 +2,47 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3B3606A332
-	for <kexec@archiver.kernel.org>; Fri, 27 Nov 2026 12:25:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D7AB606A337
+	for <kexec@archiver.kernel.org>; Fri, 27 Nov 2026 12:25:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=kLfkisP6;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NqTI2cWq
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=EwIGLn6h;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XcjiUnC+
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Unsubscribe-Post:List-Owner;
-	bh=vIra0SPO6KCMA7V7+wMdA0YK65SWM0LHFYgUPK6Xstg=; b=kLfkisP6jDAtbcR6mpvfr3Q/hY
-	FpTsR1xRm2b7+1zUZe7opknQbP1gi39f270oPLCxrdHqEGGQO125xs0Q1S9/k2D/hNyxuUdwrqoph
-	l++l08fjm+i0wuzSHabpGKI6jnAmpxXJS2r1bmv8hn00eMMq20k1lskwNFcJ0KCN89CchEtuHJQMp
-	nlfFRXZLRje/Ebyy2+d4BO3zSFscPahx7Q4qWFZwogqS1r8S//qjkORlwk8OUYjseIKSL5+RQk37y
-	RIi/s7jMfcn6z7OCYBazuTnsVYB0oIFt9eWDYhrgbZaKhsbKrbfL7qFCwEvXFDkzq4HudeA5fqFuU
-	rj5FWcUQ==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
+	List-Owner; bh=a0qu0j6AmOnocb4ErsG1/P7x86Ov3PdyD2eIAJ7Q9CI=; b=EwIGLn6han8iGE
+	HHAc7HKYyzDP9spYONmzqEcH8J4C6Ds020JVtcixnLwV/Z8sVzA6uOJ1R8kqk4sZvvOeJQ4Gl5zjv
+	2BFUl7AOh1d43Q8bWwPxV988l3lNL/8I6FaUfAjcyP5oOuW1UWF3QTUjojSnIr1icg2K6/K6t2Ash
+	wOjWPwaJaC15LJ03Ezpqxi38YD8KxlM8r+AqT9PG+lJ8P7u719NbYS05ructV6fQdK3Vro3QbAD7+
+	tiwzajQoLrSKDWFQiiyBQheBm6pFiaZfwJGq4/lZ2On4f8ij5S1uEfi1vf05mX8p0yry/0qWT93Mh
+	Vh/z51XuRPIOWH6TxGKQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xWv1T-0000000G7Es-2kKc;
-	Fri, 27 Nov 2026 12:25:51 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1xWv1U-0000000G7GA-354r;
+	Fri, 27 Nov 2026 12:25:52 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xWv1P-0000000G7EI-3bgP
+	id 1xWv1T-0000000G7FL-1pZz
 	for kexec@lists.infradead.org;
-	Fri, 27 Nov 2026 12:25:47 +0000
+	Fri, 27 Nov 2026 12:25:51 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 5102761D96;
+	by tor.source.kernel.org (Postfix) with ESMTP id DD1E6621F5;
+	Fri, 27 Nov 2026 12:25:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74CEE1F0089A;
 	Fri, 27 Nov 2026 12:25:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA1CD1F000C1;
-	Fri, 27 Nov 2026 12:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795782346;
-	bh=vIra0SPO6KCMA7V7+wMdA0YK65SWM0LHFYgUPK6Xstg=;
-	h=From:To:Cc:Subject:Date;
-	b=NqTI2cWqT7sayH9ORaHeylVAF7fwQWncs7cD1N5+FvdBR+UTvK99Alc4u8fqJafnE
-	 UZ86EaZGc/EuW4a0MJrKqXsyQ8vQXSr8yL+e1C6Nobnr8pCzSPZK21j6YlULugFMmy
-	 R7e6RX27cnS5xW1ZtCxapH03I4ZLO7oRXvUXi+Wxe4L4XuR+X5bVnlXO7yBqxQnztI
-	 pRFvRynI9ct60n6Jhz/RmUpKwi7PjWmNDUPEjm7keqf9tiZqIJcw2oDloU2wKC+vtr
-	 EMvlxd73jP4ZtLE0d/kQftOpg9E8r+U8WMdPCT/CmUQ3TPBcl8t3ivNicv/1LtntRD
-	 HWZWcPjbgMMyw==
+	s=k20260515; t=1795782350;
+	bh=a0qu0j6AmOnocb4ErsG1/P7x86Ov3PdyD2eIAJ7Q9CI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=XcjiUnC+QzW1+A5q+f0vI+yQYATvfZE3rf+/VClnaksrClJRA0VBOqNUxEFicVdAO
+	 Xowu3GA9Xxw1sQ5V2Q3Pqd7gy6qqh5ePMP/Vv3jRF2bdQ2bfVMfFIQnwhQ9V7IlXBX
+	 ZAPjUnFKFmFoAIAk/cza7ql5yzSaEa4Xw7zeiTxVpYKgN9WfOzODcvW28KstEe5yQz
+	 9zqoCOZdGaipyqB97hbfWemWwSggmOFhvhGIlMIW5zeIFtV7xn47pGJ8UxEA50LdBx
+	 Dl23WXcx4qmnaGRNVdfYSMZwNeMmsbUB7+jH32gQj42UlCl9eiYwNCxJ8VyaP2WXxC
+	 ARwmGerIkA2iQ==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -59,10 +58,12 @@ Cc: kexec@lists.infradead.org,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH 0/6] kho: housekeeping
-Date: Fri, 27 Nov 2026 12:25:26 +0000
-Message-ID: <20261127122536.3708770-1-pratyush@kernel.org>
+Subject: [PATCH 1/6] kho: build KHO objects into a single kho.o
+Date: Fri, 27 Nov 2026 12:25:27 +0000
+Message-ID: <20261127122536.3708770-2-pratyush@kernel.org>
 X-Mailer: git-send-email 2.56.1.839.g22a8290db9-goog
+In-Reply-To: <20261127122536.3708770-1-pratyush@kernel.org>
+References: <20261127122536.3708770-1-pratyush@kernel.org>
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -76,60 +77,54 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-Hi,
+kho_block.o is part of the KHO infrastructure, but is currently built as
+part of luo.o, which ties it to CONFIG_LIVEUPDATE.
 
-This series is a collection of miscellaneous cleanups for KHO. The
-patches are all independent of each other for the most part. They are
-kept in a series mainly to keep things easier to track and manage.
+Group all KHO objects into a composite kho.o, built for
+CONFIG_KEXEC_HANDOVER, the same way the LUO objects are grouped into
+luo.o. This also gives a single place to add new KHO objects.
 
-Patch 1 is lifted from [0]. All others are new.
+Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+---
+ kernel/liveupdate/Makefile | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-[0] https://lore.kernel.org/kexec/20261116134013.1636689-3-pratyush@kernel.org/
-
-Regards,
-Pratyush Yadav
-
-Pratyush Yadav (Google) (6):
-  kho: build KHO objects into a single kho.o
-  kho: use acronym for KHO .c files
-  kho: move kho_{block,radix_tree}.h into include/linux/kho/
-  kho: use unsigned long for kho_preserve_pages() and co when KHO=n
-  kho: fix kernel-doc return for kho_alloc_preserve()
-  kho: don't reference subtree blobs as FDTs
-
- Documentation/core-api/kho/index.rst          |  6 +--
- MAINTAINERS                                   |  3 +-
- drivers/pci/liveupdate.c                      |  2 +-
- include/linux/kexec_handover.h                |  6 +--
- include/linux/{kho_block.h => kho/block.h}    |  0
- .../{kho_radix_tree.h => kho/radix_tree.h}    |  0
- kernel/liveupdate/Makefile                    | 12 +++--
- kernel/liveupdate/kho_block.c                 |  2 +-
- .../{kexec_handover.c => kho_core.c}          |  8 +--
- ...kexec_handover_debugfs.c => kho_debugfs.c} | 54 +++++++++----------
- ...xec_handover_internal.h => kho_internal.h} | 10 ++--
- kernel/liveupdate/luo_core.c                  |  2 +-
- kernel/liveupdate/luo_internal.h              |  2 +-
- kernel/liveupdate/luo_session.c               |  2 +-
- 14 files changed, 56 insertions(+), 53 deletions(-)
- rename include/linux/{kho_block.h => kho/block.h} (100%)
- rename include/linux/{kho_radix_tree.h => kho/radix_tree.h} (100%)
- rename kernel/liveupdate/{kexec_handover.c => kho_core.c} (99%)
- rename kernel/liveupdate/{kexec_handover_debugfs.c => kho_debugfs.c} (75%)
- rename kernel/liveupdate/{kexec_handover_internal.h => kho_internal.h} (87%)
-
-
-base-commit: fcddbfa7a3693f1225a4d32b28401543b3bbedaf
+diff --git a/kernel/liveupdate/Makefile b/kernel/liveupdate/Makefile
+index d9f469462556..bc679905ce3f 100644
+--- a/kernel/liveupdate/Makefile
++++ b/kernel/liveupdate/Makefile
+@@ -1,13 +1,17 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
++kho-y :=								\
++		kexec_handover.o				\
++		kho_block.o
++
++kho-$(CONFIG_KEXEC_HANDOVER_DEBUGFS) += kexec_handover_debugfs.o
++
++obj-$(CONFIG_KEXEC_HANDOVER)		+= kho.o
++
+ luo-y :=								\
+-		kho_block.o						\
+ 		luo_core.o						\
+ 		luo_file.o						\
+ 		luo_flb.o						\
+ 		luo_session.o
+ 
+-obj-$(CONFIG_KEXEC_HANDOVER)		+= kexec_handover.o
+-obj-$(CONFIG_KEXEC_HANDOVER_DEBUGFS)	+= kexec_handover_debugfs.o
+-
+ obj-$(CONFIG_LIVEUPDATE)		+= luo.o
 -- 
 2.56.1.839.g22a8290db9-goog
 
