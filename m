@@ -2,80 +2,69 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70A2606A31C
-	for <kexec@archiver.kernel.org>; Sat, 28 Nov 2026 02:58:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF81606A31F
+	for <kexec@archiver.kernel.org>; Sat, 28 Nov 2026 07:27:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=YlzglRKg;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=SfKvHHDA
+	dkim=pass (2048-bit key) header.d=lists.infradead.org header.i=@lists.infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=weupYLdn;
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=SQJC7cRS
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Unsubscribe-Post:
-	List-Owner; bh=iXm9bjNklHkCJkXC6cXS/6l9msjPSXzfutfiuU6LTJE=; b=YlzglRKgyuVryV
-	JWU1GcvXnvhsi9VH83VW0+rSMmaYPawDyVuxx2bBMKT8sjTmdYze2e/LZocIlo9ZGV5+R37ejJUir
-	M2hrxKSOnIFrqNlrxltZUJk7/gKFB6b6twrlgDeUPsekok7KzCTejf6TTldj3jKGb7Y3Ep2gnVu+L
-	MDg4AA0Mu5KXJnZh5CIaTDJxbvIrsJPhJa5oJZmriybVkRCelsn/hhrcxy+Qd0yTBnd7LRSGfRFoe
-	CAnwYCFUX1ckGElx90Ud7MrwPv1oSqVXvM46S/jJIB8thJcmGBzbfOx9e/sNMxkIdyRXnD+raTvmC
-	AhzKTqZ/hZNolgaKjGog==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Unsubscribe-Post:List-Owner;
+	bh=uXPgXvBJT57DR1S+V3IBkpL9Dt6mi6Z/uuu7CuFzrb8=; b=weupYLdnWoaLWlSpVXLBrySAVW
+	wJe9kq0bTkdiemk7mz4YbX5RHvSHXNyNvxk1PtisgF1jX3M7Jbf9VRTxGEef6PZ7dBd/Q9lUBZElY
+	2GfFCPenxuQc/GfQ1WMY++9aHqwtAInlI+xJknGsxdI7hXFG5EgQNcPIXrN+Po6BS8JW0FiDQM4rU
+	84QFVmH7VgDZbKL+T3N7vvSKKYDIR3WTTGS4dAzLzaorRvYBULOTz6T0uQyyZUlb2dd17DGqaFOpf
+	eNfC2dJSTh5c0dE4s8LyxyjwCxOywxl/xPkqs9kqIC6v213QK93IdoF8Xml+hOGAILZR/6AU06kq+
+	4uw/fFLw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xX8eA-00000000KL1-3QUv;
-	Sat, 28 Nov 2026 02:58:42 +0000
-Received: from canpmsgout03.his.huawei.com ([113.46.200.218])
+	id 1xXCqR-00000000TAM-0wkU;
+	Sat, 28 Nov 2026 07:27:39 +0000
+Received: from canpmsgout08.his.huawei.com ([113.46.200.223])
 	by bombadil.infradead.org with esmtps (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xX8e5-00000000KK6-1GVV;
-	Sat, 28 Nov 2026 02:58:41 +0000
+	id 1xXCqH-00000000T6k-3Apk
+	for kexec@lists.infradead.org;
+	Sat, 28 Nov 2026 07:27:37 +0000
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=iXm9bjNklHkCJkXC6cXS/6l9msjPSXzfutfiuU6LTJE=;
-	b=SfKvHHDA5DZy5PHVuUfUp7ZJIYPFO/O1wYHgqxN6U4/eJpLR+3Ela1UpPw9XS8p/TtJJrEZrr
-	gDPn1UZB2A8lTM0A3I9jkCqzQxTZVWI0Nmo8f3SKrZ6KPSFo+ihxjnn+PVobzzgk/65BELmIsiR
-	LEeIYm+6onwT1S/RxJyVyGY=
-Received: from mail.maildlp.com (unknown [172.19.162.140])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4jbw1Y64lPzpStH;
-	Sat, 28 Nov 2026 10:57:21 +0800 (CST)
-Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 102B5202E6;
-	Sat, 28 Nov 2026 10:58:29 +0800 (CST)
-Received: from [10.67.110.68] (10.67.110.68) by kwepemk200008.china.huawei.com
- (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Sat, 28 Nov
- 2026 10:58:28 +0800
-Message-ID: <ad0126a1-0d5d-47eb-87fd-1df6ccfece02@huawei.com>
-Date: Sat, 28 Nov 2026 10:58:27 +0800
+	bh=uXPgXvBJT57DR1S+V3IBkpL9Dt6mi6Z/uuu7CuFzrb8=;
+	b=SQJC7cRSWEjLbpHqVRB+BqMMel7rrly3hil4T6/9JLroEsRPJ7J9axzhBt/AYqMCverJa6To+
+	QQ51V35MLf4A36Vab01XTQM1VnVkLvh4PzsAyivPZ0/YlnEt0SJ2jsw8YAngiu3b+uGKW7Ew8JY
+	jZJzF/KYZUPKeMGBczEfZCo=
+Received: from mail.maildlp.com (unknown [172.19.163.15])
+	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4jc20Y6V9FzmV6J;
+	Sat, 28 Nov 2026 15:26:53 +0800 (CST)
+Received: from kwepemo200009.china.huawei.com (unknown [7.202.195.26])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7C12D40586;
+	Sat, 28 Nov 2026 15:27:19 +0800 (CST)
+Received: from localhost.localdomain (10.50.159.234) by
+ kwepemo200009.china.huawei.com (7.202.195.26) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Sat, 28 Nov 2026 15:27:18 +0800
+From: Long Wei <longwei27@huawei.com>
+To: <rppt@kernel.org>, <pasha.tatashin@soleen.com>, <pratyush@kernel.org>
+CC: <shuah@kernel.org>, <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+	<kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <hewenliang4@huawei.com>, Long Wei
+	<longwei27@huawei.com>
+Subject: [PATCH 0/2] mm: memfd_luo: pick up seals added after preserve at freeze
+Date: Sat, 28 Nov 2026 15:24:42 +0800
+Message-ID: <20261128072444.1114964-1-longwei27@huawei.com>
+X-Mailer: git-send-email 2.43.0
 X-Archived-By: <archiver.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 4/8] crash_core: replace for_each_mem_range() with
- for_each_mem_region()
-To: Wandun Chen <chenwandun1@gmail.com>, <pjw@kernel.org>,
-	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
-	<robh@kernel.org>, <baoquan.he@linux.dev>, <rppt@kernel.org>,
-	<m.szyprowski@samsung.com>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
-	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <tglx@kernel.org>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <hpa@zytor.com>, <saravanak@kernel.org>,
-	<akpm@linux-foundation.org>, <pasha.tatashin@soleen.com>,
-	<pratyush@kernel.org>, <ruirui.yang@linux.dev>, <robin.murphy@arm.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-riscv@lists.infradead.org>,
-	<devicetree@vger.kernel.org>, <kexec@lists.infradead.org>,
-	<linux-mm@kvack.org>, <iommu@lists.linux.dev>
-References: <20261127090723.741253-1-chenwandun1@gmail.com>
- <20261127090723.741253-5-chenwandun1@gmail.com>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20261127090723.741253-5-chenwandun1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- kwepemk200008.china.huawei.com (7.202.194.74)
+ kwepemo200009.china.huawei.com (7.202.195.26)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20261127_185839_205697_3381E040 
-X-CRM114-Status: GOOD (  13.02  )
+X-CRM114-CacheID: sfid-20261127_232732_315297_A0C8A0DC 
+X-CRM114-Status: GOOD (  12.85  )
 X-Spam-Score: -2.8 (--)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -87,85 +76,55 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=4.0.1
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on
 	aws-us-west-2-korg-listserv-alma10-1
 
+A seal added to a memfd after the memfd was preserved with a liveupdate
+session is accepted without any error, but the seal is silently gone once
+the kexec handover is over: the retrieved memfd no longer has it.
+
+memfd_luo_preserve() snapshots the file seals, but userspace may keep
+operating on the memfd until the handover, so the preserve-time snapshot
+is naturally incomplete.  memfd_luo_freeze() never re-read the seals and
+memfd_luo_retrieve() replays the stale snapshot, so seals added in the
+window between preserve() and kexec were dropped without any notice.
+
+Patch 1 re-reads the seals at freeze time, mirroring the file position
+handling: freeze is the last snapshot point before kexec and the only
+place where the final value can still be sampled and, when it diverged
+from the preserve-time snapshot, validated while the live update can
+still be aborted.
+
+Patch 2 adds a kexec round-trip selftest that adds F_SEAL_GROW after
+preserve and asserts that the seal survives the handover.
+
+Tested on arm64 and x86_64 with two consecutive kexec handovers each:
+with the fix the seal survives and dmesg stays free of new warnings.
+
+This series applies on the current next branch of liveupdate.git,
+where the file is still named memfd_luo.c. I am aware of the
+pending "mm: Rename memfd_luo to shmem_luo" series. If that series
+lands first, a trivial s/memfd_luo/shmem_luo/ rebase will be needed,
+which I am happy to provide.
 
 
-在 2026/11/27 17:07, Wandun Chen 写道:
-> From: Wandun Chen <chenwandun@lixiang.com>
-> 
-> for_each_mem_range() skips MEMBLOCK_NOMAP regions implicitly. Switch the
-> weak defaults to for_each_mem_region(), which exposes struct
-> memblock_region and per-region flags, and filter NOMAP regions explicitly
-> via the new crash_should_skip_region() helper. This prepares for a
-> subsequent patch to extend the skip filter.
-> 
-> No functional change.
-> 
-> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
-> Tested-by: Meijing Zhao <zhaomeijing@lixiang.com>
-> Acked-by: Baoquan He <baoquan.he@linux.dev>
-> ---
->  kernel/crash_core.c | 25 +++++++++++++++++--------
->  1 file changed, 17 insertions(+), 8 deletions(-)
-> 
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 8a861a946e26..e161c8b65e00 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -283,25 +283,34 @@ static struct crash_mem *alloc_cmem(unsigned int nr_ranges)
->  }
->  
->  #ifdef CONFIG_ARCH_KEEP_MEMBLOCK
-> +/* Exclude NOMAP regions from the vmcore. */
-> +static bool crash_should_skip_region(struct memblock_region *reg)
-> +{
-> +	return memblock_is_nomap(reg);
+Long Wei (2):
+  mm: memfd_luo: pick up seals added after preserve at freeze
+  selftests/liveupdate: add seal-after-preserve kexec test
 
+ mm/memfd_luo.c                                |  27 ++-
+ tools/testing/selftests/liveupdate/Makefile   |   1 +
+ .../liveupdate/luo_seal_after_preserve.c      | 170 ++++++++++++++++++
+ .../selftests/liveupdate/run-vmtests.sh       |   1 +
+ 4 files changed, 197 insertions(+), 2 deletions(-)
+ create mode 100644 tools/testing/selftests/liveupdate/luo_seal_after_preserve.c
 
-LGTM
-Reviewed-by: Jinjie Ruan <ruanjinjie@huawei.com>
-
-> +}
-> +
->  unsigned int __weak arch_get_system_nr_ranges(void)
->  {
->  	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* crashk_res + crashk_low_res, +CMA splits */
-> -	phys_addr_t start, end;
-> -	u64 i;
-> +	struct memblock_region *reg;
->  
-> -	for_each_mem_range(i, &start, &end)
-> +	for_each_mem_region(reg) {
-> +		if (crash_should_skip_region(reg))
-> +			continue;
->  		nr_ranges++;
-> +	}
->  	return nr_ranges;
->  }
->  
->  int __weak arch_crash_populate_cmem(struct crash_mem *cmem)
->  {
-> -	phys_addr_t start, end;
-> -	u64 i;
-> +	struct memblock_region *reg;
->  
-> -	for_each_mem_range(i, &start, &end) {
-> -		cmem->ranges[cmem->nr_ranges].start = start;
-> -		cmem->ranges[cmem->nr_ranges].end = end - 1;
-> +	for_each_mem_region(reg) {
-> +		if (crash_should_skip_region(reg))
-> +			continue;
-> +		cmem->ranges[cmem->nr_ranges].start = reg->base;
-> +		cmem->ranges[cmem->nr_ranges].end = reg->base + reg->size - 1;
->  		cmem->nr_ranges++;
->  	}
->  	return 0;
+-- 
+2.43.0
 
 
